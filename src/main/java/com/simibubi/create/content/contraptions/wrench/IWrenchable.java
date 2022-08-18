@@ -9,9 +9,9 @@ import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.utility.DirectionHelper;
-import com.simibubi.create.foundation.utility.VoxelShaper;
 
+import net.createmod.catnip.utility.DirectionHelper;
+import net.createmod.catnip.utility.VoxelShaper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

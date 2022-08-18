@@ -4,8 +4,8 @@ import com.simibubi.create.content.contraptions.components.actors.PloughBlock.Pl
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.logistics.trains.track.FakeTrackBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;

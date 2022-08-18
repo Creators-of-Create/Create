@@ -25,9 +25,9 @@ import com.simibubi.create.foundation.collision.OrientedBB;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -89,10 +89,10 @@ public class ContraptionCollider {
 				continue;
 
 			entity.getSelfAndPassengers().forEach(e -> {
-				if (e instanceof ServerPlayer) 
+				if (e instanceof ServerPlayer)
 					((ServerPlayer) e).connection.aboveGroundTickCount = 0;
 			});
-			
+
 			if (playerType == PlayerType.SERVER)
 				continue;
 

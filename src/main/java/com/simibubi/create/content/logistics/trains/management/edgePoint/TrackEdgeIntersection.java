@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
-import com.simibubi.create.foundation.utility.Couple;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 

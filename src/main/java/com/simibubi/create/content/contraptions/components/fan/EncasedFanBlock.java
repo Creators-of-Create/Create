@@ -4,8 +4,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -102,7 +102,7 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	public Class<EncasedFanTileEntity> getTileEntityClass() {
 		return EncasedFanTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends EncasedFanTileEntity> getTileEntityType() {
 		return AllTileEntities.ENCASED_FAN.get();

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
+import static net.createmod.catnip.utility.math.AngleHelper.angleLerp;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -17,11 +17,11 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -1,6 +1,10 @@
 package com.simibubi.create.foundation.config;
 
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
+
+import net.createmod.catnip.config.ConfigBase;
 
 public class CClient extends ConfigBase {
 
@@ -49,22 +53,6 @@ public class CClient extends ConfigBase {
 	public final ConfigInt overlayBorderColorBot = i(0x50_28007f, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderBotOverlay",
 			Comments.overlayBorderColorBot);
 
-	//placement assist group
-	public final ConfigGroup placementAssist = group(1, "placementAssist",
-			Comments.placementAssist);
-	public final ConfigEnum<PlacementIndicatorSetting> placementIndicator = e(PlacementIndicatorSetting.TEXTURE, "indicatorType",
-			Comments.placementIndicator);
-	public final ConfigFloat indicatorScale = f(1.0f, 0f, "indicatorScale",
-			Comments.indicatorScale);
-
-	//ponder group
-	public final ConfigGroup ponder = group(1, "ponder",
-			Comments.ponder);
-	public final ConfigBool comfyReading = b(false, "comfyReading",
-			Comments.comfyReading);
-	public final ConfigBool editingMode = b(false, "editingMode",
-		Comments.editingMode);
-
 	//sound group
 	public final ConfigGroup sound = group(1, "sound",
 			Comments.sound);
@@ -78,12 +66,9 @@ public class CClient extends ConfigBase {
 	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
 
 	@Override
+	@Nonnull
 	public String getName() {
 		return "client";
-	}
-
-	public enum PlacementIndicatorSetting {
-		TEXTURE, TRIANGLE, NONE
 	}
 
 	private static class Comments {
@@ -130,15 +115,6 @@ public class CClient extends ConfigBase {
 				"The custom bot color of the border gradient to use for the Goggle- and Hover- Overlays, if enabled",
 				"[in Hex: #AaRrGgBb]", ConfigAnnotations.IntDisplay.HEX.asComment()
 		};
-		static String placementAssist = "Settings for the Placement Assist";
-		static String[] placementIndicator = new String[]{
-				"What indicator should be used when showing where the assisted placement ends up relative to your crosshair",
-				"Choose 'NONE' to disable the Indicator altogether"
-		};
-		static String indicatorScale = "Change the size of the Indicator by this multiplier";
-		static String ponder = "Ponder settings";
-		static String comfyReading = "Slow down a ponder scene whenever there is text on screen.";
-		static String editingMode = "Show additional info in the ponder view and reload scene scripts more frequently.";
 		static String sound = "Sound settings";
 		static String enableAmbientSounds = "Make cogs rumble and machines clatter.";
 		static String ambientVolumeCap = "Maximum volume modifier of Ambient noise";

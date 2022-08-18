@@ -7,8 +7,9 @@ import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
+
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
 
 public class CarriageContraptionInstance extends EntityInstance<CarriageContraptionEntity> implements DynamicInstance {
 

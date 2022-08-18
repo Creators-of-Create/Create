@@ -11,8 +11,8 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
-import com.simibubi.create.foundation.utility.AngleHelper;
 
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 

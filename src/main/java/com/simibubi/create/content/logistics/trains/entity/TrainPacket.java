@@ -9,9 +9,9 @@ import java.util.function.Supplier;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;

@@ -7,8 +7,8 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.LevelAccessor;
 

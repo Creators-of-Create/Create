@@ -6,10 +6,10 @@ import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTil
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;

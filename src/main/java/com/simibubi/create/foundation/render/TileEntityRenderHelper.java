@@ -14,8 +14,8 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;

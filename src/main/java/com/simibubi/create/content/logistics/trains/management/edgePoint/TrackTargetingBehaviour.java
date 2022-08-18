@@ -21,15 +21,15 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
-import com.simibubi.create.content.schematics.SchematicWorld;
-import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
+import net.createmod.ponder.foundation.PonderWorld;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

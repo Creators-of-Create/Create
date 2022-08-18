@@ -5,8 +5,8 @@ import com.simibubi.create.content.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
@@ -182,7 +182,7 @@ public class MountedStorage {
 	public boolean isValid() {
 		return valid;
 	}
-	
+
 	public boolean canUseForFuel() {
 		return !noFuel;
 	}

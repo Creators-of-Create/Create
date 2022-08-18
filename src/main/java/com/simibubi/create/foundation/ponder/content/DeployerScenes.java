@@ -3,18 +3,19 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.utility.Pointing;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -30,7 +31,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class DeployerScenes {
 
-	public static void filter(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void filter(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("deployer", "Using the Deployer");
 		scene.configureBasePlate(0, 0, 5);
 
@@ -234,7 +236,8 @@ public class DeployerScenes {
 		}
 	}
 
-	public static void modes(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void modes(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("deployer_modes", "Modes of the Deployer");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -277,7 +280,7 @@ public class DeployerScenes {
 		scene.idle(46);
 
 		scene.overlay.showControls(new InputWindowElement(frontVec, Pointing.LEFT).rightClick()
-			.withWrench(), 40);
+			.withItem(AllItems.WRENCH.asStack()), 40);
 		scene.idle(7);
 		scene.world.modifyTileNBT(deployerSelection, DeployerTileEntity.class, nbt -> nbt.putString("Mode", "PUNCH"));
 		scene.idle(45);
@@ -307,7 +310,8 @@ public class DeployerScenes {
 		}
 	}
 
-	public static void processing(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void processing(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("deployer_processing", "Processing Items using Deployers");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -423,7 +427,8 @@ public class DeployerScenes {
 		scene.world.stallBeltItem(ingot2, false);
 	}
 
-	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void redstone(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("deployer_redstone", "Controlling Deployers with Redstone");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -489,7 +494,8 @@ public class DeployerScenes {
 
 	}
 
-	public static void contraption(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void contraption(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("deployer_contraption", "Using Deployers on Contraptions");
 		scene.configureBasePlate(0, 0, 6);
 		scene.scaleSceneView(.9f);

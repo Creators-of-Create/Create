@@ -9,9 +9,9 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
+import net.createmod.catnip.utility.IntAttached;
+import net.createmod.catnip.utility.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;

@@ -5,8 +5,9 @@ import java.util.function.Function;
 
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -16,9 +17,9 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	protected Consumer<Integer> onScroll;
 	protected int state;
-	protected Component title = Lang.translateDirect("gui.scrollInput.defaultTitle");
-	protected final Component scrollToModify = Lang.translateDirect("gui.scrollInput.scrollToModify");
-	protected final Component shiftScrollsFaster = Lang.translateDirect("gui.scrollInput.shiftScrollsFaster");
+	protected Component title = CreateLang.translateDirect("gui.scrollInput.defaultTitle");
+	protected final Component scrollToModify = CreateLang.translateDirect("gui.scrollInput.scrollToModify");
+	protected final Component shiftScrollsFaster = CreateLang.translateDirect("gui.scrollInput.shiftScrollsFaster");
 	protected Label displayLabel;
 	protected boolean inverted;
 	protected Function<Integer, Component> formatter;

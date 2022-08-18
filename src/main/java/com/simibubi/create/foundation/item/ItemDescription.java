@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.item;
 
-import static com.simibubi.create.foundation.item.TooltipHelper.cutStringTextComponent;
-import static com.simibubi.create.foundation.item.TooltipHelper.cutTextComponent;
+import static net.createmod.catnip.utility.FontHelper.cutStringTextComponent;
+import static net.createmod.catnip.utility.FontHelper.cutTextComponent;
 import static net.minecraft.ChatFormatting.AQUA;
 import static net.minecraft.ChatFormatting.BLUE;
 import static net.minecraft.ChatFormatting.DARK_GRAY;
@@ -27,10 +27,11 @@ import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.LangBuilder;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.lang.Lang;
+import net.createmod.catnip.utility.lang.LangBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -85,8 +86,8 @@ public class ItemDescription {
 		List<Component> list = new ArrayList<>();
 
 		CKinetics config = AllConfigs.SERVER.kinetics;
-		LangBuilder rpmUnit = Lang.translate("generic.unit.rpm");
-		LangBuilder suUnit = Lang.translate("generic.unit.stress");
+		LangBuilder rpmUnit = CreateLang.translate("generic.unit.rpm");
+		LangBuilder suUnit = CreateLang.translate("generic.unit.stress");
 
 		boolean hasGoggles = GogglesItem.isWearingGoggles(Minecraft.getInstance().player);
 
@@ -102,19 +103,19 @@ public class ItemDescription {
 		boolean hasStressCapacity = StressImpact.isEnabled() && BlockStressValues.hasCapacity(block);
 
 		if (hasStressImpact) {
-			Lang.translate("tooltip.stressImpact")
+			CreateLang.translate("tooltip.stressImpact")
 				.style(GRAY)
 				.addTo(list);
 
 			double impact = BlockStressValues.getImpact(block);
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
-			LangBuilder builder = Lang.builder()
-				.add(Lang.text(makeProgressBar(3, impactId.ordinal() + 1))
+			LangBuilder builder = CreateLang.builder()
+				.add(CreateLang.text(makeProgressBar(3, impactId.ordinal() + 1))
 					.style(impactId.getAbsoluteColor()));
 
 			if (hasGoggles) {
-				builder.add(Lang.number(impact))
+				builder.add(CreateLang.number(impact))
 					.text("x ")
 					.add(rpmUnit)
 					.addTo(list);
@@ -124,7 +125,7 @@ public class ItemDescription {
 		}
 
 		if (hasStressCapacity) {
-			Lang.translate("tooltip.capacityProvided")
+			CreateLang.translate("tooltip.capacityProvided")
 				.style(GRAY)
 				.addTo(list);
 
@@ -137,22 +138,22 @@ public class ItemDescription {
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.HIGH
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			StressImpact opposite = StressImpact.values()[StressImpact.values().length - 2 - impactId.ordinal()];
-			LangBuilder builder = Lang.builder()
-				.add(Lang.text(makeProgressBar(3, impactId.ordinal() + 1))
+			LangBuilder builder = CreateLang.builder()
+				.add(CreateLang.text(makeProgressBar(3, impactId.ordinal() + 1))
 					.style(opposite.getAbsoluteColor()));
 
 			if (hasGoggles) {
-				builder.add(Lang.number(capacity))
+				builder.add(CreateLang.number(capacity))
 					.text("x ")
 					.add(rpmUnit)
 					.addTo(list);
 
 				if (generatedRPM != null) {
-					LangBuilder amount = Lang.number(capacity * generatedRPM.getSecond())
+					LangBuilder amount = CreateLang.number(capacity * generatedRPM.getSecond())
 						.add(suUnit);
-					Lang.text(" -> ")
+					CreateLang.text(" -> ")
 						.add(!generatedRPM.getFirst()
-							.equals(generatedRPM.getSecond()) ? Lang.translate("tooltip.up_to", amount) : amount)
+							.equals(generatedRPM.getSecond()) ? CreateLang.translate("tooltip.up_to", amount) : amount)
 						.style(DARK_GRAY)
 						.addTo(list);
 				}
@@ -191,14 +192,14 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdDesc = Lang.translateDirect("tooltip.holdForDescription", "$")
+			String[] holdDesc = CreateLang.translateDirect("tooltip.holdForDescription", "$")
 				.getString()
 				.split("\\$");
-			String[] holdCtrl = Lang.translateDirect("tooltip.holdForControls", "$")
+			String[] holdCtrl = CreateLang.translateDirect("tooltip.holdForControls", "$")
 				.getString()
 				.split("\\$");
-			MutableComponent keyShift = Lang.translateDirect("tooltip.keyShift");
-			MutableComponent keyCtrl = Lang.translateDirect("tooltip.keyCtrl");
+			MutableComponent keyShift = CreateLang.translateDirect("tooltip.keyShift");
+			MutableComponent keyCtrl = CreateLang.translateDirect("tooltip.keyCtrl");
 			for (List<Component> list : Arrays.asList(lines, linesOnShift, linesOnCtrl)) {
 				boolean shift = list == linesOnShift;
 				boolean ctrl = list == linesOnCtrl;

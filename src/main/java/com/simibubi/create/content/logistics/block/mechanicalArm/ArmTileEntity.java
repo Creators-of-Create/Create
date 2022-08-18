@@ -19,11 +19,13 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
+import net.createmod.catnip.utility.lang.Lang;
+import net.createmod.catnip.utility.math.AngleHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -102,7 +104,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		super.addBehaviours(behaviours);
 
 		selectionMode = new ScrollOptionBehaviour<SelectionMode>(SelectionMode.class,
-			Lang.translateDirect("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
+			CreateLang.translateDirect("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
 		selectionMode.requiresWrench();
 		behaviours.add(selectionMode);
 

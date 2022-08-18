@@ -19,10 +19,10 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.client.SchematicEditScreen;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -87,7 +87,7 @@ public class SchematicItem extends Item {
 				tooltip.add(new TextComponent(ChatFormatting.GOLD + stack.getTag()
 					.getString("File")));
 		} else {
-			tooltip.add(Lang.translateDirect("schematic.invalid").withStyle(ChatFormatting.RED));
+			tooltip.add(CreateLang.translateDirect("schematic.invalid").withStyle(ChatFormatting.RED));
 		}
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}

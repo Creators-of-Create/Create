@@ -1,7 +1,10 @@
 package com.simibubi.create.content.curiosities;
 
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationServerWorld;
+import javax.annotation.Nonnull;
 
+import org.jetbrains.annotations.NotNull;
+
+import net.createmod.catnip.utility.worldWrappers.PlacementSimulationServerWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -93,14 +96,14 @@ public class TreeFertilizerItem extends Item {
 		}
 
 		@Override
-		public BlockState getBlockState(BlockPos pos) {
+		public @NotNull BlockState getBlockState(@Nonnull BlockPos pos) {
 			if (pos.getY() <= 9)
 				return soil;
 			return super.getBlockState(pos);
 		}
 
 		@Override
-		public boolean setBlock(BlockPos pos, BlockState newState, int flags) {
+		public boolean setBlock(@Nonnull BlockPos pos, @Nonnull BlockState newState, int flags) {
 			if (newState.getBlock() == Blocks.PODZOL)
 				return true;
 			return super.setBlock(pos, newState, flags);

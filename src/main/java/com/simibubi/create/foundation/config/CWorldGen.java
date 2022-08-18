@@ -1,7 +1,10 @@
 package com.simibubi.create.foundation.config;
 
+import javax.annotation.Nonnull;
+
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 
+import net.createmod.catnip.config.ConfigBase;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 
 public class CWorldGen extends ConfigBase {
@@ -9,7 +12,7 @@ public class CWorldGen extends ConfigBase {
 	public final ConfigBool disable = b(false, "disableWorldGen", Comments.disable);
 
 	@Override
-	protected void registerAll(Builder builder) {
+	public void registerAll(@Nonnull Builder builder) {
 		super.registerAll(builder);
 		AllWorldFeatures.fillConfig(builder);
 	}

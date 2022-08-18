@@ -52,20 +52,20 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
-import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
-import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
+import net.createmod.catnip.render.DefaultSuperRenderTypeBufferImpl;
+import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
+import net.createmod.catnip.utility.worldWrappers.WrappedClientWorld;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -88,7 +88,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
@@ -138,7 +137,6 @@ public class ClientEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 
-		PonderTooltipHandler.tick();
 		// ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
@@ -158,8 +156,7 @@ public class ClientEvents {
 		ArmInteractionPointHandler.tick();
 		EjectorTargetHandler.tick();
 		PlacementHelpers.tick();
-		CreateClient.OUTLINER.tickOutlines();
-		CreateClient.GHOST_BLOCKS.tickGhosts();
+		//CreateClient.OUTLINER.tickOutlines();
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
@@ -208,23 +205,21 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderLevelLastEvent event) {
-		Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera()
-			.getPosition();
+		Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		PoseStack ms = event.getPoseStack();
 		ms.pushPose();
 		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
-		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
+		SuperRenderTypeBuffer buffer = DefaultSuperRenderTypeBufferImpl.getInstance();
 
 		TrackBlockOutline.drawCurveSelection(ms, buffer);
 		TrackTargetingClient.render(ms, buffer);
 		CouplingRenderer.renderAll(ms, buffer);
 		CarriageCouplingRenderer.renderAll(ms, buffer);
 		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
-		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
 
-		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
+		//CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
 		buffer.draw();
 		RenderSystem.enableCull();
 
@@ -240,11 +235,6 @@ public class ClientEvents {
 
 		if (CameraAngleAnimationService.isPitchAnimating())
 			event.setPitch(CameraAngleAnimationService.getPitch(partialTicks));
-	}
-
-	@SubscribeEvent
-	public static void getItemTooltipColor(RenderTooltipEvent.Color event) {
-		PonderTooltipHandler.handleTooltipColor(event);
 	}
 
 	@SubscribeEvent
@@ -281,7 +271,6 @@ public class ClientEvents {
 			}
 		}
 
-		PonderTooltipHandler.addToTooltip(event.getToolTip(), stack);
 		SequencedAssemblyRecipe.addToTooltip(event.getToolTip(), stack);
 	}
 

@@ -4,8 +4,8 @@ import java.util.Random;
 
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleOptions;

@@ -6,8 +6,9 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.math.AngleHelper;
+
+import net.createmod.ponder.utility.WorldTickHolder;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -33,7 +34,7 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
 			.rotate(Direction.EAST,
-				AngleHelper.rad(te.getSpeed() / 4f * AnimationTickHolder.getRenderTime(te.getLevel()) % 360))
+				AngleHelper.rad(te.getSpeed() / 4f * WorldTickHolder.getRenderTime(te.getLevel()) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

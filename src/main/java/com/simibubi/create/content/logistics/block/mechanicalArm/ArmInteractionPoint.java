@@ -3,9 +3,9 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

@@ -4,8 +4,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageTileEntity;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;

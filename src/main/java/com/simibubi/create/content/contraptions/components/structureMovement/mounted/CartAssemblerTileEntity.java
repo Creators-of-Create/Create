@@ -19,11 +19,12 @@ import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxT
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -173,7 +174,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 			nbt.putDouble("PushX", 0);
 			cart.deserializeNBT(nbt);
 		}
-		
+
 		if (contraption.containsBlockBreakers())
 			award(AllAdvancements.CONTRAPTION_ACTORS);
 	}
@@ -234,7 +235,7 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		movementMode = new ScrollOptionBehaviour<>(CartMovementMode.class,
-			Lang.translateDirect("contraptions.cart_movement_mode"), this, getMovementModeSlot());
+			CreateLang.translateDirect("contraptions.cart_movement_mode"), this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);

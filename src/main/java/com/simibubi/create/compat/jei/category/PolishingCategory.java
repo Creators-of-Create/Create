@@ -7,12 +7,12 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

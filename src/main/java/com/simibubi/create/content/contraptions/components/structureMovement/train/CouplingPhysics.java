@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -64,10 +64,10 @@ public class CouplingPhysics {
 			Vec3 link = otherCart.position()
 				.subtract(pos);
 			float correctionMagnitude = firstLoop ? -stress / 2f : -stress;
-			
+
 			if (!MinecartSim2020.canAddMotion(cart))
 				correctionMagnitude /= 2;
-			
+
 			correction = shape != null
 				? followLinkOnRail(link, pos, correctionMagnitude, MinecartSim2020.getRailVec(shape)).subtract(pos)
 				: link.normalize()
@@ -93,7 +93,7 @@ public class CouplingPhysics {
 	public static void softCollisionStep(Level world, Couple<AbstractMinecart> carts, double couplingLength) {
 		Couple<Float> maxSpeed = carts.map(AbstractMinecart::getMaxCartSpeedOnRail);
 		Couple<Boolean> canAddmotion = carts.map(MinecartSim2020::canAddMotion);
-		
+
 		// Assuming Minecarts will never move faster than 1 block/tick
 		Couple<Vec3> motions = carts.map(Entity::getDeltaMovement);
 		motions.replaceWithParams(VecHelper::clamp, Couple.create(1f, 1f));
@@ -140,7 +140,7 @@ public class CouplingPhysics {
 					.scale(correctionMagnitude);
 
 			correction = VecHelper.clamp(correction, maxSpeed.get(current));
-			
+
 			motions.set(current, motions.get(current)
 				.add(correction));
 		}

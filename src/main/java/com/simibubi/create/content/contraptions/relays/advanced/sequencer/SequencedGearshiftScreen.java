@@ -4,16 +4,16 @@ import java.util.Vector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -33,7 +33,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private Vector<Vector<ScrollInput>> inputs;
 
 	public SequencedGearshiftScreen(SequencedGearshiftTileEntity te) {
-		super(Lang.translateDirect("gui.sequenced_gearshift.title"));
+		super(CreateLang.translateDirect("gui.sequenced_gearshift.title"));
 		this.instructions = te.instructions;
 		this.pos = te.getBlockPos();
 		compareTag = Instruction.serializeAll(instructions);
@@ -41,7 +41,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		setWindowSize(background.width, background.height);
+		setWindowSize(background.getWidth(), background.getHeight());
 		setWindowOffset(-20, 0);
 		super.init();
 
@@ -56,7 +56,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			initInputsOfRow(row, x, y);
 
 		confirmButton =
-			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+			new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
 		confirmButton.withCallback(() -> {
 			onClose();
 		});
@@ -78,13 +78,13 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			new SelectionScrollInput(x, y + rowHeight * row, 50, 18).forOptions(SequencerInstructions.getOptions())
 				.calling(state -> instructionUpdated(index, state))
 				.setState(instruction.instruction.ordinal())
-				.titled(Lang.translateDirect("gui.sequenced_gearshift.instruction"));
+				.titled(CreateLang.translateDirect("gui.sequenced_gearshift.instruction"));
 		ScrollInput value =
 			new ScrollInput(x + 58, y + rowHeight * row, 28, 18).calling(state -> instruction.value = state);
 		ScrollInput direction = new SelectionScrollInput(x + 88, y + rowHeight * row, 28, 18)
 			.forOptions(InstructionSpeedModifiers.getOptions())
 			.calling(state -> instruction.speedModifier = InstructionSpeedModifiers.values()[state])
-			.titled(Lang.translateDirect("gui.sequenced_gearshift.speed"));
+			.titled(CreateLang.translateDirect("gui.sequenced_gearshift.speed"));
 
 		rowInputs.add(type);
 		rowInputs.add(value);
@@ -105,7 +105,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		value.active = value.visible = hasValue;
 		if (hasValue)
 			value.withRange(1, def.maxValue + 1)
-				.titled(Lang.translateDirect(def.parameterKey))
+				.titled(CreateLang.translateDirect(def.parameterKey))
 				.withShiftStep(def.shiftStep)
 				.setState(instruction.value)
 				.onChanged();
@@ -136,7 +136,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 		for (int row = 0; row < instructions.capacity(); row++) {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
-			int yOffset = toDraw.height * row;
+			int yOffset = toDraw.getHeight() * row;
 			if (row >= instructions.size()) {
 				toDraw.render(ms, x, y + 14 + yOffset, this);
 				continue;
@@ -146,7 +146,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			SequencerInstructions def = instruction.instruction;
 			def.background.render(ms, x, y + 14 + yOffset, this);
 
-			label(ms, 36, yOffset - 3, Lang.translateDirect(def.translationKey));
+			label(ms, 36, yOffset - 3, CreateLang.translateDirect(def.translationKey));
 			if (def.hasValueParameter) {
 				String text = def.formatValue(instruction.value);
 				int stringWidth = font.width(text);
@@ -156,10 +156,10 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				label(ms, 127, yOffset - 3, instruction.speedModifier.label);
 		}
 
-		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		drawCenteredString(ms, font, title, x + (background.getWidth() - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(renderedItem)
-			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 56, -200)
+			.<GuiGameElement.GuiRenderBuilder>at(x + background.getWidth() + 6, y + background.getHeight() - 56, -200)
 			.scale(5)
 			.render(ms);
 	}

@@ -12,9 +12,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.core.Vec3i;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;

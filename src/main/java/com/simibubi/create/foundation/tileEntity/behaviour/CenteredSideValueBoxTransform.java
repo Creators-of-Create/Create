@@ -2,8 +2,7 @@ package com.simibubi.create.foundation.tileEntity.behaviour;
 
 import java.util.function.BiPredicate;
 
-import com.simibubi.create.foundation.utility.VecHelper;
-
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -15,7 +14,7 @@ public class CenteredSideValueBoxTransform extends ValueBoxTransform.Sided {
 	public CenteredSideValueBoxTransform() {
 		this((b, d) -> true);
 	}
-	
+
 	public CenteredSideValueBoxTransform(BiPredicate<BlockState, Direction> allowedDirections) {
 		this.allowedDirections = allowedDirections;
 	}

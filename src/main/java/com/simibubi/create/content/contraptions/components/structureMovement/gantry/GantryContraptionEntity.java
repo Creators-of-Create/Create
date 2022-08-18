@@ -10,9 +10,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Str
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftTileEntity;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -121,7 +121,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 		if (level.isClientSide)
 			return;
-		
+
 		axisMotion = pinionMovementSpeed;
 		setContraptionMotion(movementVec);
 	}

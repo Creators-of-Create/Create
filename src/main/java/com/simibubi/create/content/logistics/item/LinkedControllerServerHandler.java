@@ -14,10 +14,10 @@ import com.simibubi.create.content.logistics.IRedstoneLinkable;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.IntAttached;
+import net.createmod.catnip.utility.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 
@@ -73,8 +73,8 @@ public class LinkedControllerServerHandler {
 			ManualFrequencyEntry entry = new ManualFrequencyEntry(pos, activated);
 			Create.REDSTONE_LINK_NETWORK_HANDLER.addToNetwork(world, entry);
 			list.add(entry);
-			
-			for (IRedstoneLinkable linkable : Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(world, entry)) 
+
+			for (IRedstoneLinkable linkable : Create.REDSTONE_LINK_NETWORK_HANDLER.getNetworkOf(world, entry))
 				if (linkable instanceof LinkBehaviour lb && lb.isListening())
 					AllAdvancements.LINKED_CONTROLLER.awardTo(world.getPlayerByUUID(uniqueID));
 		}

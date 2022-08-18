@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

@@ -6,8 +6,8 @@ import java.util.Collections;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;

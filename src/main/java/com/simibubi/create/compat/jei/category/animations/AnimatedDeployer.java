@@ -5,8 +5,8 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 

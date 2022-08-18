@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
 
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;

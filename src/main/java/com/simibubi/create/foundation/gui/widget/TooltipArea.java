@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.minecraft.network.chat.Component;
 
 public class TooltipArea extends AbstractSimiWidget {

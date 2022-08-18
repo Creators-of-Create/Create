@@ -7,8 +7,8 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.simibubi.create.AllSpecialTextures;
 
+import net.createmod.catnip.enums.CatnipSpecialTextures;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -44,7 +44,7 @@ public class CubeParticle extends Particle {
 	private static final ParticleRenderType RENDER_TYPE = new ParticleRenderType() {
 		@Override
 		public void begin(BufferBuilder builder, TextureManager textureManager) {
-			AllSpecialTextures.BLANK.bind();
+			CatnipSpecialTextures.BLANK.bind();
 
 			// transparent, additive blending
 			RenderSystem.depthMask(false);
@@ -87,13 +87,13 @@ public class CubeParticle extends Particle {
 	public void averageAge(int age) {
 		this.lifetime = (int) (age + (random.nextDouble() * 2D - 1D) * 8);
 	}
-	
+
 	public void setHot(boolean hot) {
 		this.hot = hot;
 	}
-	
+
 	private boolean billowing = false;
-	
+
 	@Override
 	public void tick() {
 		if (this.hot && this.age > 0) {

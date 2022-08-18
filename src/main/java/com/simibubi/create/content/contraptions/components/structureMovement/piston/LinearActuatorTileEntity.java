@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.core.BlockPos;
@@ -49,7 +49,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		movementMode = new ScrollOptionBehaviour<>(MovementMode.class, Lang.translateDirect("contraptions.movement_mode"),
+		movementMode = new ScrollOptionBehaviour<>(MovementMode.class, CreateLang.translateDirect("contraptions.movement_mode"),
 			this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		movementMode.withCallback(t -> waitingForSpeedChange = false);

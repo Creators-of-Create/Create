@@ -2,8 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import java.util.function.UnaryOperator;
 
-import com.simibubi.create.foundation.utility.VecHelper;
-
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

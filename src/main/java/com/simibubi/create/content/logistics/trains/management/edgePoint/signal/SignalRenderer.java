@@ -9,7 +9,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import net.createmod.ponder.utility.WorldTickHolder;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -30,7 +30,7 @@ public class SignalRenderer extends SafeTileEntityRenderer<SignalTileEntity> {
 		SignalState signalState = te.getState();
 		OverlayState overlayState = te.getOverlay();
 
-		float renderTime = AnimationTickHolder.getRenderTime(te.getLevel());
+		float renderTime = WorldTickHolder.getRenderTime(te.getLevel());
 		if (signalState.isRedLight(renderTime))
 			CachedBufferer.partial(AllBlockPartials.SIGNAL_ON, blockState)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));

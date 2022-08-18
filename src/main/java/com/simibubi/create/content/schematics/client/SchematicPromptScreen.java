@@ -5,13 +5,13 @@ import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -20,9 +20,9 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 
 	private AllGuiTextures background;
 
-	private final Component convertLabel = Lang.translateDirect("schematicAndQuill.convert");
-	private final Component abortLabel = Lang.translateDirect("action.discard");
-	private final Component confirmLabel = Lang.translateDirect("action.saveToFile");
+	private final Component convertLabel = CreateLang.translateDirect("schematicAndQuill.convert");
+	private final Component abortLabel = CreateLang.translateDirect("action.discard");
+	private final Component confirmLabel = CreateLang.translateDirect("action.saveToFile");
 
 	private EditBox nameField;
 	private IconButton confirm;
@@ -30,13 +30,13 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	private IconButton convert;
 
 	public SchematicPromptScreen() {
-		super(Lang.translateDirect("schematicAndQuill.title"));
+		super(CreateLang.translateDirect("schematicAndQuill.title"));
 		background = AllGuiTextures.SCHEMATIC_PROMPT;
 	}
 
 	@Override
 	public void init() {
-		setWindowSize(background.width, background.height);
+		setWindowSize(background.getWidth(), background.getHeight());
 		super.init();
 
 		int x = guiLeft;
@@ -80,7 +80,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		background.render(ms, x, y, this);
-		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		drawCenteredString(ms, font, title, x + (background.getWidth() - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
 				.at(x + 22, y + 23, 0)
@@ -88,7 +88,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 
 		GuiGameElement.of(AllItems.SCHEMATIC_AND_QUILL.asStack())
 				.scale(3)
-				.at(x + background.width + 6, y + background.height - 40, -200)
+				.at(x + background.getWidth() + 6, y + background.getHeight() - 40, -200)
 				.render(ms);
 	}
 

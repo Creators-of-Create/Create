@@ -10,8 +10,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -42,7 +42,7 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer fanInner =
 				CachedBufferer.partialFacing(AllBlockPartials.ENCASED_FAN_INNER, te.getBlockState(), direction.getOpposite());
 
-		float time = AnimationTickHolder.getRenderTime(te.getLevel());
+		float time = WorldTickHolder.getRenderTime(te.getLevel());
 		float speed = te.getSpeed() * 5;
 		if (speed > 0)
 			speed = Mth.clamp(speed, 80, 64 * 20);

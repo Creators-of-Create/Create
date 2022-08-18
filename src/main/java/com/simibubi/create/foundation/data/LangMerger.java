@@ -23,9 +23,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.utility.FilesHelper;
 
+import net.createmod.ponder.foundation.PonderScene;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -60,7 +60,7 @@ public class LangMerger implements DataProvider {
 	private void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
-		langIgnore.add("create.gui.chromatic_projector"); 
+		langIgnore.add("create.gui.chromatic_projector");
 	}
 
 	private boolean shouldIgnore(String key) {

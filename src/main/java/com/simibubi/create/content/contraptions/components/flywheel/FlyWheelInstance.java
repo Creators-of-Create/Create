@@ -7,9 +7,9 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.Direction;
 
 public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements DynamicInstance {

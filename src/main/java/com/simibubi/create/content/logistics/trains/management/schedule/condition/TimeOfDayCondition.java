@@ -12,9 +12,9 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.nbt.CompoundTag;
@@ -74,16 +74,16 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 		int hour12raw = hour % 12 == 0 ? 12 : hour % 12;
 		String hr12 = doubleDigitHrs ? twoDigits(hour12raw) : ("" + hour12raw);
 		String hr24 = doubleDigitHrs ? twoDigits(hour) : ("" + hour);
-		return Lang.translateDirect("schedule.condition.time_of_day.digital_format", hr12, hr24, twoDigits(minute),
-			hour > 11 ? Lang.translateDirect("generic.daytime.pm") : Lang.translateDirect("generic.daytime.am"));
+		return CreateLang.translateDirect("schedule.condition.time_of_day.digital_format", hr12, hr24, twoDigits(minute),
+			hour > 11 ? CreateLang.translateDirect("generic.daytime.pm") : CreateLang.translateDirect("generic.daytime.am"));
 	}
 
 	@Override
 	public List<Component> getTitleAs(String type) {
-		return ImmutableList.of(Lang.translateDirect("schedule.condition.time_of_day.scheduled"),
+		return ImmutableList.of(CreateLang.translateDirect("schedule.condition.time_of_day.scheduled"),
 			getDigitalDisplay(intData("Hour"), intData("Minute"), false).withStyle(ChatFormatting.DARK_AQUA)
 				.append(new TextComponent(" -> ").withStyle(ChatFormatting.DARK_GRAY))
-				.append(Lang
+				.append(CreateLang
 					.translatedOptions("schedule.condition.time_of_day.rotation", "every_24", "every_12", "every_6",
 						"every_4", "every_3", "every_2", "every_1", "every_0_45", "every_0_30", "every_0_15")
 					.get(intData("Rotation"))
@@ -131,13 +131,13 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 		}, "Minute");
 
 		builder.addSelectionScrollInput(52, 62, (i, l) -> {
-			i.forOptions(Lang.translatedOptions("schedule.condition.time_of_day.rotation", "every_24", "every_12",
+			i.forOptions(CreateLang.translatedOptions("schedule.condition.time_of_day.rotation", "every_24", "every_12",
 				"every_6", "every_4", "every_3", "every_2", "every_1", "every_0_45", "every_0_30", "every_0_15"))
-				.titled(Lang.translateDirect("schedule.condition.time_of_day.rotation"));
+				.titled(CreateLang.translateDirect("schedule.condition.time_of_day.rotation"));
 		}, "Rotation");
 
 		hourInput.getValue()
-			.titled(Lang.translateDirect("generic.daytime.hour"))
+			.titled(CreateLang.translateDirect("generic.daytime.hour"))
 			.calling(t -> {
 				data.putInt("Hour", t);
 				timeLabel.getValue().text = getDigitalDisplay(t, minuteInput.getValue()
@@ -147,7 +147,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 			.withShiftStep(6);
 
 		minuteInput.getValue()
-			.titled(Lang.translateDirect("generic.daytime.minute"))
+			.titled(CreateLang.translateDirect("generic.daytime.minute"))
 			.calling(t -> {
 				data.putInt("Minute", t);
 				timeLabel.getValue().text = getDigitalDisplay(hourInput.getValue()
@@ -185,7 +185,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 		int departingHour = (departureTime / 1000 + 6) % 24;
 		int departingMinute = (departureTime % 1000) * 60 / 1000;
 
-		return Lang.translateDirect("schedule.condition.time_of_day.status")
+		return CreateLang.translateDirect("schedule.condition.time_of_day.status")
 			.append(getDigitalDisplay(departingHour, departingMinute, false));
 	}
 

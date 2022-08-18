@@ -7,10 +7,10 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.LangBuilder;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.LangBuilder;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -81,33 +81,33 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		double capacity = getNetworkCapacity();
 		double stressFraction = getNetworkStress() / (capacity == 0 ? 1 : capacity);
 
-		Lang.translate("gui.stressometer.title")
+		CreateLang.translate("gui.stressometer.title")
 			.style(ChatFormatting.GRAY)
 			.forGoggles(tooltip);
 
 		if (getTheoreticalSpeed() == 0)
-			Lang.text(ItemDescription.makeProgressBar(3, 0))
+			CreateLang.text(ItemDescription.makeProgressBar(3, 0))
 				.translate("gui.stressometer.no_rotation")
 				.style(ChatFormatting.DARK_GRAY)
 				.forGoggles(tooltip);
 		else {
 			StressImpact.getFormattedStressText(stressFraction)
 				.forGoggles(tooltip);
-			Lang.translate("gui.stressometer.capacity")
+			CreateLang.translate("gui.stressometer.capacity")
 				.style(ChatFormatting.GRAY)
 				.forGoggles(tooltip);
 
 			double remainingCapacity = capacity - getNetworkStress();
 
-			LangBuilder su = Lang.translate("generic.unit.stress");
-			LangBuilder stressTip = Lang.number(remainingCapacity)
+			LangBuilder su = CreateLang.translate("generic.unit.stress");
+			LangBuilder stressTip = CreateLang.number(remainingCapacity)
 				.add(su)
 				.style(StressImpact.of(stressFraction)
 					.getRelativeColor());
 
 			if (remainingCapacity != capacity)
 				stressTip.text(ChatFormatting.GRAY, " / ")
-					.add(Lang.number(capacity)
+					.add(CreateLang.number(capacity)
 						.add(su)
 						.style(ChatFormatting.DARK_GRAY));
 

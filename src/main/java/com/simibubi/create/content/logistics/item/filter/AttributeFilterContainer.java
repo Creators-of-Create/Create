@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.AllContainerTypes;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.utility.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;

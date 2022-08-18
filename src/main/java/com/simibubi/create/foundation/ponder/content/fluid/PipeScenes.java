@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.ponder.content.fluid;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
@@ -13,16 +14,17 @@ import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeTileE
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.Pointing;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -42,7 +44,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class PipeScenes {
 
-	public static void flow(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void flow(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("fluid_pipe_flow", "Moving Fluids using Copper Pipes");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -92,7 +95,7 @@ public class PipeScenes {
 		scene.idle(60);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.centerOf(2, 1, 1), Pointing.DOWN).rightClick()
-			.withWrench(), 40);
+			.withItem(AllItems.WRENCH.asStack()), 40);
 		scene.idle(7);
 		scene.world.restoreBlocks(util.select.position(2, 1, 1));
 		scene.overlay.showText(70)
@@ -103,7 +106,7 @@ public class PipeScenes {
 		scene.idle(40);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.centerOf(1, 1, 2), Pointing.DOWN).rightClick()
-			.withWrench(), 10);
+			.withItem(AllItems.WRENCH.asStack()), 10);
 		scene.idle(7);
 		scene.world.restoreBlocks(util.select.position(1, 1, 2));
 		scene.idle(40);
@@ -177,7 +180,8 @@ public class PipeScenes {
 		scene.idle(50);
 	}
 
-	public static void interaction(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void interaction(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("fluid_pipe_interaction", "Draining and Filling fluid containers");
 		scene.configureBasePlate(0, 1, 5);
 		scene.showBasePlate();
@@ -371,7 +375,8 @@ public class PipeScenes {
 		scene.idle(20);
 	}
 
-	public static void valve(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void valve(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("valve_pipe", "Controlling Fluid flow using Valves");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -465,7 +470,8 @@ public class PipeScenes {
 		scene.world.setKineticSpeed(valveKinetics, 0);
 	}
 
-	public static void smart(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void smart(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("smart_pipe", "Controlling Fluid flow using Smart Pipes");
 		scene.configureBasePlate(1, 0, 5);
 		scene.showBasePlate();
@@ -482,7 +488,7 @@ public class PipeScenes {
 		Selection pump = util.select.position(1, 1, 2);
 		Selection basin = util.select.position(basinPos);
 		BlockPos smartPos = util.grid.at(3, 1, 1);
-		
+
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
 			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), FluidAction.EXECUTE)));

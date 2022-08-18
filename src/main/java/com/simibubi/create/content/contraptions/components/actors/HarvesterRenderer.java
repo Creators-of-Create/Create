@@ -11,10 +11,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -63,7 +63,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 	public static void transform(Level world, Direction facing, SuperByteBuffer superBuffer, float speed) {
 		float originOffset = 1 / 16f;
 		Vec3 rotOffset = new Vec3(0, -2 * originOffset, originOffset).add(VecHelper.getCenterOf(BlockPos.ZERO));
-		float time = AnimationTickHolder.getRenderTime(world) / 20;
+		float time = WorldTickHolder.getRenderTime(world) / 20;
 		float angle = (time * speed) % 360;
 
 		superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing)))

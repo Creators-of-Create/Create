@@ -2,11 +2,11 @@ package com.simibubi.create.foundation.config.ui.entries;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.element.RenderElement;
-import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.gui.element.RenderElement;
+import net.createmod.catnip.gui.widget.BoxWidget;
+import net.createmod.catnip.utility.theme.Theme;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class BooleanEntry extends ValueEntry<Boolean> {
@@ -19,11 +19,11 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 		super(label, value, spec);
 
 		enabled = AllIcons.I_CONFIRM.asStencil()
-			.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_SUCCESS)))
+			.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.Key.BUTTON_SUCCESS.p()))
 			.at(10, 0);
 
 		disabled = AllIcons.I_DISABLE.asStencil()
-			.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_FAIL)))
+			.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.Key.BUTTON_FAIL.p()))
 			.at(10, 0);
 
 		button = new BoxWidget().showingElement(enabled)

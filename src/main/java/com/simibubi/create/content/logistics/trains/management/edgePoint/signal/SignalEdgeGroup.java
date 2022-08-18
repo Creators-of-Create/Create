@@ -13,7 +13,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import com.google.common.base.Predicates;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import net.createmod.catnip.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -29,7 +29,7 @@ public class SignalEdgeGroup {
 	public Map<UUID, UUID> intersecting;
 	public Set<SignalEdgeGroup> intersectingResolved;
 	public Set<UUID> adjacent;
-	
+
 	public boolean fallbackGroup;
 
 	public SignalEdgeGroup(UUID id) {
@@ -40,7 +40,7 @@ public class SignalEdgeGroup {
 		intersectingResolved = new HashSet<>();
 		color = EdgeGroupColor.getDefault();
 	}
-	
+
 	public SignalEdgeGroup asFallback() {
 		fallbackGroup = true;
 		return this;

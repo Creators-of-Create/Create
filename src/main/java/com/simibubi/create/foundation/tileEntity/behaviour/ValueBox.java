@@ -1,15 +1,17 @@
 package com.simibubi.create.foundation.tileEntity.behaviour;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.utility.outliner.ChasingAABBOutline;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
@@ -76,7 +78,7 @@ public class ValueBox extends ChasingAABBOutline {
 	}
 
 	@Override
-	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void render(@Nonnull PoseStack ms, @Nonnull SuperRenderTypeBuffer buffer, float pt) {
 		boolean hasTransform = transform != null;
 		if (transform instanceof Sided && params.getHighlightedFace() != null)
 			((Sided) transform).fromSide(params.getHighlightedFace());
@@ -87,9 +89,6 @@ public class ValueBox extends ChasingAABBOutline {
 		ms.translate(pos.getX(), pos.getY(), pos.getZ());
 		if (hasTransform)
 			transform.transform(blockState, ms);
-		transformNormals = ms.last()
-			.normal()
-			.copy();
 		params.colored(isPassive ? passiveColor : highlightColor);
 		super.render(ms, buffer, pt);
 
@@ -198,7 +197,7 @@ public class ValueBox extends ChasingAABBOutline {
 
 		public IconValueBox(Component label, INamedIconOptions iconValue, AABB bb, BlockPos pos) {
 			super(label, bb, pos);
-			subLabel(Lang.translateDirect(iconValue.getTranslationKey()));
+			subLabel(CreateLang.translateDirect(iconValue.getTranslationKey()));
 			icon = iconValue.getIcon();
 		}
 

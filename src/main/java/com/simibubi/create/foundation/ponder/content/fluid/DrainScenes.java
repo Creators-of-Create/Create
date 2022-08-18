@@ -1,15 +1,16 @@
 package com.simibubi.create.foundation.ponder.content.fluid;
 
 import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.Pointing;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +22,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class DrainScenes {
 
-	public static void emptying(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void emptying(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("item_drain", "Emptying Fluid Containers using Item Drains");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();

@@ -9,21 +9,21 @@ import java.util.Set;
 import com.jozufozu.flywheel.util.Color;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -279,10 +279,10 @@ public class TrackPlacement {
 		if (skipCurve && !Mth.equal(ascend, 0)) {
 			int hDistance = info.end1Extent;
 			if (axis1.y == 0 || !Mth.equal(absAscend + 1, dist / axis1.length())) {
-				
+
 				if (axis1.y != 0 && axis1.y == -axis2.y)
 					return info.withMessage("ascending_s_curve");
-				
+
 				info.end1Extent = 0;
 				double minHDistance = Math.max(absAscend < 4 ? absAscend * 4 : absAscend * 3, 6) / axis1.length();
 				if (hDistance < minHDistance)
@@ -443,10 +443,10 @@ public class TrackPlacement {
 			BlockItem paveItem = (BlockItem) offhandItem.getItem();
 			paveTracks(level, info, paveItem, false);
 		}
-		
+
 		if (info.curve != null && info.curve.getLength() > 29)
 			AllAdvancements.LONG_BEND.awardTo(player);
-		
+
 		return placeTracks(level, info, state1, state2, targetPos1, targetPos2, false);
 	}
 
@@ -609,17 +609,17 @@ public class TrackPlacement {
 			BlueprintOverlayRenderer.displayTrackRequirements(info, player.getOffhandItem());
 
 		if (info.valid)
-			player.displayClientMessage(Lang.translateDirect("track.valid_connection")
+			player.displayClientMessage(CreateLang.translateDirect("track.valid_connection")
 				.withStyle(ChatFormatting.GREEN), true);
 		else if (info.message != null)
-			player.displayClientMessage(Lang.translateDirect(info.message)
+			player.displayClientMessage(CreateLang.translateDirect(info.message)
 				.withStyle(info.message.equals("track.second_point") ? ChatFormatting.WHITE : ChatFormatting.RED),
 				true);
 
 		if (bhr.getDirection() == Direction.UP) {
 			Vec3 lookVec = player.getLookAngle();
 			int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
-			
+
 			if (!pos.equals(hintPos) || lookAngle != hintAngle) {
 				hints = Couple.create(ArrayList::new);
 				hintAngle = lookAngle;
@@ -636,11 +636,11 @@ public class TrackPlacement {
 			}
 
 			if (hints != null && !hints.either(Collection::isEmpty)) {
-				CreateClient.OUTLINER.showCluster("track_valid", hints.getFirst())
+				CatnipClient.OUTLINER.showCluster("track_valid", hints.getFirst())
 					.withFaceTexture(AllSpecialTextures.THIN_CHECKERED)
 					.colored(0x95CD41)
 					.lineWidth(0);
-				CreateClient.OUTLINER.showCluster("track_invalid", hints.getSecond())
+				CatnipClient.OUTLINER.showCluster("track_invalid", hints.getSecond())
 					.withFaceTexture(AllSpecialTextures.THIN_CHECKERED)
 					.colored(0xEA5C2B)
 					.lineWidth(0);
@@ -720,13 +720,13 @@ public class TrackPlacement {
 					.scale(0.5f);
 				Vec3 middle2 = rail2.add(previous2)
 					.scale(0.5f);
-				CreateClient.OUTLINER
+				CatnipClient.OUTLINER
 					.showLine(Pair.of(key, i * 2), VecHelper.lerp(s, middle1, previous1),
 						VecHelper.lerp(s, middle1, rail1))
 					.colored(railcolor)
 					.disableNormals()
 					.lineWidth(lw);
-				CreateClient.OUTLINER
+				CatnipClient.OUTLINER
 					.showLine(Pair.of(key, i * 2 + 1), VecHelper.lerp(s, middle2, previous2),
 						VecHelper.lerp(s, middle2, rail2))
 					.colored(railcolor)
@@ -739,8 +739,8 @@ public class TrackPlacement {
 		}
 
 		for (int i = segCount + 1; i <= lastLineCount; i++) {
-			CreateClient.OUTLINER.remove(Pair.of(key, i * 2));
-			CreateClient.OUTLINER.remove(Pair.of(key, i * 2 + 1));
+			CatnipClient.OUTLINER.remove(Pair.of(key, i * 2));
+			CatnipClient.OUTLINER.remove(Pair.of(key, i * 2 + 1));
 		}
 
 		lastLineCount = segCount;
@@ -749,7 +749,7 @@ public class TrackPlacement {
 	@OnlyIn(Dist.CLIENT)
 	private static void line(int id, Vec3 v1, Vec3 o1, Vec3 ex) {
 		int color = Color.mixColors(0xEA5C2B, 0x95CD41, animation.getValue());
-		CreateClient.OUTLINER.showLine(Pair.of("start", id), v1.subtract(o1), v1.add(ex))
+		CatnipClient.OUTLINER.showLine(Pair.of("start", id), v1.subtract(o1), v1.add(ex))
 			.lineWidth(1 / 8f)
 			.disableNormals()
 			.colored(color);

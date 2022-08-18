@@ -1,18 +1,21 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.catnip.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +27,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class ArmScenes {
 
-	public static void setup(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void setup(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_arm", "Setting up Mechanical Arms");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -242,7 +246,8 @@ public class ArmScenes {
 
 	}
 
-	public static void filtering(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void filtering(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_arm_filtering", "Filtering Outputs of the Mechanical Arm");
 		scene.configureBasePlate(0, 0, 6);
 		scene.scaleSceneView(0.9f);
@@ -263,7 +268,7 @@ public class ArmScenes {
 				scene.idle(2);
 			}
 		}
-		
+
 		scene.world.showSection(util.select.position(6, 1, 1), Direction.WEST);
 		scene.world.showSection(util.select.position(2, 1, 1), Direction.EAST);
 
@@ -380,7 +385,8 @@ public class ArmScenes {
 		scene.idle(120);
 	}
 
-	public static void modes(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void modes(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_arm_modes", "Distribution modes of the Mechanical Arm");
 		scene.configureBasePlate(0, 1, 5);
 		scene.world.setBlock(util.grid.at(3, 1, 0), Blocks.BARRIER.defaultBlockState(), false);
@@ -435,7 +441,7 @@ public class ArmScenes {
 		scene.idle(60);
 
 		scene.overlay.showControls(new InputWindowElement(scrollSlot, Pointing.RIGHT).scroll()
-			.withWrench(), 40);
+			.withItem(AllItems.WRENCH.asStack()), 40);
 		scene.idle(10);
 		scene.overlay.showText(50)
 			.text("Scrolling with a Wrench will allow you to configure it")
@@ -526,7 +532,8 @@ public class ArmScenes {
 
 	}
 
-	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void redstone(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_arm_redstone", "Controlling Mechanical Arms with Redstone");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);

@@ -17,10 +17,10 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -54,7 +54,7 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		movementDirection = new ScrollOptionBehaviour<>(RotationDirection.class,
-			Lang.translateDirect("contraptions.windmill.rotation_direction"), this, new SteamEngineValueBox());
+			CreateLang.translateDirect("contraptions.windmill.rotation_direction"), this, new SteamEngineValueBox());
 		movementDirection.requiresWrench();
 		movementDirection.onlyActiveWhen(() -> {
 			PoweredShaftTileEntity shaft = getShaft();

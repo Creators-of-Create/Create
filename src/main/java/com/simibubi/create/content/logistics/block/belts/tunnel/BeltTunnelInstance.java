@@ -13,9 +13,9 @@ import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.flap.FlapData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 
@@ -77,7 +77,7 @@ public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelTileEntity
     public void beginFrame() {
         tunnelFlaps.forEach((direction, keys) -> {
             LerpedFloat lerpedFloat = blockEntity.flaps.get(direction);
-            if (lerpedFloat == null) 
+            if (lerpedFloat == null)
                 return;
 
             float flapness = lerpedFloat.getValue(AnimationTickHolder.getPartialTicks());

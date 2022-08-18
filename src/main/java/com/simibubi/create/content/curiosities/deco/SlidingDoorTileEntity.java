@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;

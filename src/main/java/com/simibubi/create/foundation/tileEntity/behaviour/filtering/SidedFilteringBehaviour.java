@@ -11,9 +11,9 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

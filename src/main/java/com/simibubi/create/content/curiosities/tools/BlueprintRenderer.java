@@ -8,8 +8,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.Couple;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;

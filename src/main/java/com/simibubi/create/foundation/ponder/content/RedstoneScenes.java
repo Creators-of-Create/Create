@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock;
@@ -13,16 +14,17 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +40,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class RedstoneScenes {
 
-	public static void sticker(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void sticker(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("sticker", "Attaching blocks using the Sticker");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -112,7 +115,8 @@ public class RedstoneScenes {
 		scene.world.rotateSection(sticker, 0, 180 * 3, 0, 80);
 	}
 
-	public static void contact(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void contact(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("redstone_contact", "Redstone Contacts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -723,7 +727,7 @@ public class RedstoneScenes {
 		scene.idle(60);
 
 		scene.overlay.showControls(new InputWindowElement(link3Vec, Pointing.UP).rightClick()
-			.withWrench(), 40);
+			.withItem(AllItems.WRENCH.asStack()), 40);
 		scene.idle(7);
 		scene.world.modifyBlock(link3Pos, s -> s.cycle(RedstoneLinkBlock.RECEIVER), true);
 		scene.idle(10);

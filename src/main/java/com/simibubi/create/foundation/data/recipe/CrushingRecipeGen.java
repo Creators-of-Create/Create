@@ -20,8 +20,8 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;

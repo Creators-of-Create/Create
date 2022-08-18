@@ -6,8 +6,8 @@ import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;

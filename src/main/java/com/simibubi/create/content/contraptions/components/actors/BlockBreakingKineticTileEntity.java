@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.actors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -40,7 +40,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		if (destroyProgress == -1)
 			destroyNextTick();
 	}
-	
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -93,9 +93,9 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 			return;
 		if (getSpeed() == 0)
 			return;
-		
+
 		breakingPos = getBreakingPos();
-		
+
 		if (ticksUntilNextProgress < 0)
 			return;
 		if (ticksUntilNextProgress-- > 0)

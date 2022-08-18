@@ -18,11 +18,11 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;

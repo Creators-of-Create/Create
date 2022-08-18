@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.fluid;
 
-import com.simibubi.create.foundation.utility.Iterate;
-
+import net.createmod.catnip.utility.Iterate;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;

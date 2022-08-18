@@ -231,13 +231,13 @@ import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
 import com.simibubi.create.foundation.utility.ColorHandlers;
-import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;

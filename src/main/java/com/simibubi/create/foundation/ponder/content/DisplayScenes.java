@@ -2,16 +2,17 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
@@ -24,7 +25,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class DisplayScenes {
 
-	public static void link(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void link(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("display_link", "Setting up Display Links");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -156,7 +158,7 @@ public class DisplayScenes {
 		scene.world.moveSection(stressElement, util.vector.of(0, -2, 0), 0);
 		scene.idle(10);
 		scene.world.setDisplayBoardText(board, 1,
-			new TextComponent(1024 + " ").append(Lang.translateDirect("generic.unit.stress")));
+			new TextComponent(1024 + " ").append(CreateLang.translateDirect("generic.unit.stress")));
 		scene.world.flashDisplayLink(linkPos);
 		scene.idle(40);
 		scene.world.hideIndependentSection(stressElement, Direction.SOUTH);
@@ -185,7 +187,7 @@ public class DisplayScenes {
 		scene.world.moveSection(cuckooElement, util.vector.of(0, -1, 0), 0);
 		scene.idle(10);
 		scene.world.setDisplayBoardText(board, 1,
-			new TextComponent("6:00 ").append(Lang.translateDirect("generic.daytime.pm")));
+			new TextComponent("6:00 ").append(CreateLang.translateDirect("generic.daytime.pm")));
 		scene.world.setDisplayBoardText(board, 2, TextComponent.EMPTY);
 		scene.world.flashDisplayLink(linkPos);
 		scene.idle(90);
@@ -225,7 +227,8 @@ public class DisplayScenes {
 		scene.idle(60);
 	}
 
-	public static void board(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void board(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("display_board", "Using Display Boards");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -372,7 +375,8 @@ public class DisplayScenes {
 
 	}
 
-	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void redstone(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("display_link_redstone", "Redstone Control");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();

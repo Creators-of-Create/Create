@@ -11,11 +11,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.ControlsUtil;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -37,19 +37,19 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 
 	@Override
 	protected void init() {
-		setWindowSize(background.width, background.height + 4 + PLAYER_INVENTORY.height);
+		setWindowSize(background.getWidth(), background.getHeight() + 4 + PLAYER_INVENTORY.getHeight());
 		setWindowOffset(1, 0);
 		super.init();
 
 		int x = leftPos;
 		int y = topPos;
 
-		resetButton = new IconButton(x + background.width - 62, y + background.height - 24, AllIcons.I_TRASH);
+		resetButton = new IconButton(x + background.getWidth() - 62, y + background.getHeight() - 24, AllIcons.I_TRASH);
 		resetButton.withCallback(() -> {
 			menu.clearContents();
 			menu.sendClearPacket();
 		});
-		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+		confirmButton = new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
 		confirmButton.withCallback(() -> {
 			minecraft.player.closeContainer();
 		});
@@ -57,13 +57,13 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		addRenderableWidget(resetButton);
 		addRenderableWidget(confirmButton);
 
-		extraAreas = ImmutableList.of(new Rect2i(x + background.width + 4, y + background.height - 44, 64, 56));
+		extraAreas = ImmutableList.of(new Rect2i(x + background.getWidth() + 4, y + background.getHeight() - 44, 64, 56));
 	}
 
 	@Override
 	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
-		int invY = topPos + background.height + 4;
+		int invX = getLeftOfCentered(PLAYER_INVENTORY.getWidth());
+		int invY = topPos + background.getHeight() + 4;
 		renderPlayerInventory(ms, invX, invY);
 
 		int x = leftPos;
@@ -73,7 +73,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		font.draw(ms, title, x + 15, y + 4, 0x442000);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
-			.GuiRenderBuilder>at(x + background.width - 4, y + background.height - 56, -200)
+			.GuiRenderBuilder>at(x + background.getWidth() - 4, y + background.getHeight() - 56, -200)
 			.scale(5)
 			.render(ms);
 	}
@@ -109,7 +109,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	private List<Component> addToTooltip(List<Component> list, int slot) {
 		if (slot < 0 || slot >= 12)
 			return list;
-		list.add(Lang.translateDirect("linked_controller.frequency_slot_" + ((slot % 2) + 1), ControlsUtil.getControls()
+		list.add(CreateLang.translateDirect("linked_controller.frequency_slot_" + ((slot % 2) + 1), ControlsUtil.getControls()
 			.get(slot / 2)
 			.getTranslatedKeyMessage()
 			.getString())

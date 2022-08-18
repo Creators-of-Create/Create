@@ -6,8 +6,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +26,7 @@ public enum TerrainTools {
 	Flatten(AllIcons.I_FLATTEN),
 
 	;
-	
+
 	public String translationKey;
 	public AllIcons icon;
 

@@ -12,11 +12,11 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
+import net.createmod.catnip.utility.placement.PlacementOffset;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

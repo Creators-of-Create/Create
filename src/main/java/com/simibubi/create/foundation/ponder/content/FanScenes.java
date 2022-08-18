@@ -2,20 +2,21 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.FlappyPose;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.utility.Pointing;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.ParrotElement.FlappyPose;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,7 +30,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class FanScenes {
 
-	public static void direction(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void direction(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("fan_direction", "Air flow of Encased Fans");
 		scene.configureBasePlate(0, 1, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -86,7 +88,8 @@ public class FanScenes {
 
 	}
 
-	public static void processing(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void processing(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("fan_processing", "Processing Items using Encased Fans");
 		scene.configureBasePlate(1, 0, 5);
 		scene.world.showSection(util.select.layer(0)

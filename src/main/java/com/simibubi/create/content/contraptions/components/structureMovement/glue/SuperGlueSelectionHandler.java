@@ -7,12 +7,12 @@ import java.util.Set;
 import com.google.common.base.Objects;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
+import net.createmod.catnip.CatnipClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -63,7 +63,7 @@ public class SuperGlueSelectionHandler {
 		if (clusterCooldown > 0) {
 			if (clusterCooldown == 25)
 				player.displayClientMessage(TextComponent.EMPTY, true);
-			CreateClient.OUTLINER.keep(clusterOutlineSlot);
+			CatnipClient.OUTLINER.keep(clusterOutlineSlot);
 			clusterCooldown--;
 		}
 
@@ -97,7 +97,7 @@ public class SuperGlueSelectionHandler {
 			for (SuperGlueEntity glueEntity : glueNearby) {
 				boolean h = clusterCooldown == 0 && glueEntity == selected;
 				AllSpecialTextures faceTex = h ? AllSpecialTextures.GLUE : null;
-				CreateClient.OUTLINER.showAABB(glueEntity, glueEntity.getBoundingBox())
+				CatnipClient.OUTLINER.showAABB(glueEntity, glueEntity.getBoundingBox())
 					.colored(h ? HIGHLIGHT : PASSIVE)
 					.withFaceTextures(faceTex, faceTex)
 					.disableNormals()
@@ -115,7 +115,7 @@ public class SuperGlueSelectionHandler {
 		}
 
 		if (firstPos != null && !firstPos.closerThan(hovered, 24)) {
-			Lang.translate("super_glue.too_far")
+			CreateLang.translate("super_glue.too_far")
 				.color(FAIL)
 				.sendStatus(player);
 			return;
@@ -147,18 +147,18 @@ public class SuperGlueSelectionHandler {
 					key = "super_glue.click_to_discard";
 				}
 
-				Lang.translate(key)
+				CreateLang.translate(key)
 					.color(color)
 					.sendStatus(player);
 
 				if (currentSelectionBox != null)
-					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
+					CatnipClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
 						.colored(canReach && canAfford && !cancel ? HIGHLIGHT : FAIL)
 						.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.GLUE)
 						.disableNormals()
 						.lineWidth(1 / 16f);
 
-				CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
+				CatnipClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
 					.colored(0x4D9162)
 					.disableNormals()
 					.lineWidth(1 / 64f);
@@ -233,7 +233,7 @@ public class SuperGlueSelectionHandler {
 		firstPos = hoveredPos;
 		if (face != null)
 			SuperGlueItem.spawnParticles(level, firstPos, face, true);
-		Lang.translate("super_glue.first_pos")
+		CreateLang.translate("super_glue.first_pos")
 			.sendStatus(player);
 		AllSoundEvents.SLIME_ADDED.playAt(level, firstPos, 0.5F, 0.85F, false);
 		level.playSound(player, firstPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
@@ -244,7 +244,7 @@ public class SuperGlueSelectionHandler {
 		LocalPlayer player = Minecraft.getInstance().player;
 		currentCluster = null;
 		firstPos = null;
-		Lang.translate("super_glue.abort")
+		CreateLang.translate("super_glue.abort")
 			.sendStatus(player);
 		clusterCooldown = 0;
 	}
@@ -256,14 +256,14 @@ public class SuperGlueSelectionHandler {
 		player.level.playSound(player, hoveredPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
 
 		if (currentCluster != null)
-			CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
+			CatnipClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
 				.colored(0xB5F2C6)
 				.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.HIGHLIGHT_CHECKERED)
 				.disableNormals()
 				.lineWidth(1 / 24f);
 
 		discard();
-		Lang.translate("super_glue.success")
+		CreateLang.translate("super_glue.success")
 			.sendStatus(player);
 		clusterCooldown = 40;
 	}

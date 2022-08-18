@@ -6,7 +6,8 @@ import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.utility.Color;
+
+import net.createmod.catnip.utility.theme.Color;
 
 public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeTileEntity> implements TickableInstance {
 

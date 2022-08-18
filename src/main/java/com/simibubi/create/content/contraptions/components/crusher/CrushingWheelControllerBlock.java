@@ -8,8 +8,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -150,11 +150,11 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 					continue;
 				te.crushingspeed = Math.abs(cwte.getSpeed() / 50f);
 				te.sendData();
-				
+
 				cwte.award(AllAdvancements.CRUSHING_WHEEL);
-				if (cwte.getSpeed() > 255) 
+				if (cwte.getSpeed() > 255)
 					cwte.award(AllAdvancements.CRUSHER_MAXED);
-				
+
 				break;
 			}
 		});

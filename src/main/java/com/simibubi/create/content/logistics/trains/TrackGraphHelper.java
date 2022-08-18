@@ -10,8 +10,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
-import com.simibubi.create.foundation.utility.Couple;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.Level;

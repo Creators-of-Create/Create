@@ -10,8 +10,8 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 

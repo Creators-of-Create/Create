@@ -13,14 +13,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.ControlsUtil;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.FontHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -187,7 +187,7 @@ public class LinkedControllerClientHandler {
 			VoxelShape shape = mc.level.getBlockState(selectedLocation)
 				.getShape(mc.level, selectedLocation);
 			if (!shape.isEmpty())
-				CreateClient.OUTLINER.showAABB("controller", shape.bounds()
+				CatnipClient.OUTLINER.showAABB("controller", shape.bounds()
 					.move(selectedLocation))
 					.colored(0xB73C2D)
 					.lineWidth(1 / 16f);
@@ -196,7 +196,7 @@ public class LinkedControllerClientHandler {
 				LinkBehaviour linkBehaviour = TileEntityBehaviour.get(mc.level, selectedLocation, LinkBehaviour.TYPE);
 				if (linkBehaviour != null) {
 					AllPackets.channel.sendToServer(new LinkedControllerBindPacket(integer, selectedLocation));
-					Lang.translate("linked_controller.key_bound", controls.get(integer)
+					CreateLang.translate("linked_controller.key_bound", controls.get(integer)
 						.getTranslatedKeyMessage()
 						.getString())
 						.sendStatus(mc.player);
@@ -233,9 +233,9 @@ public class LinkedControllerClientHandler {
 		}
 
 		List<Component> list = new ArrayList<>();
-		list.add(Lang.translateDirect("linked_controller.bind_mode")
+		list.add(CreateLang.translateDirect("linked_controller.bind_mode")
 			.withStyle(ChatFormatting.GOLD));
-		list.addAll(TooltipHelper.cutTextComponent(Lang.translateDirect("linked_controller.press_keybind", keys),
+		list.addAll(FontHelper.cutTextComponent(CreateLang.translateDirect("linked_controller.press_keybind", keys),
 			ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		int width = 0;

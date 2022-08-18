@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.ISyncPersistentData.PersistentDataPacket;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
+import net.createmod.catnip.utility.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;

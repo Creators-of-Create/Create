@@ -3,10 +3,10 @@ package com.simibubi.create.compat.jei;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;

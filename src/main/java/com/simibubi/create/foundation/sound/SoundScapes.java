@@ -12,9 +12,9 @@ import java.util.function.BiFunction;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -60,7 +60,7 @@ public class SoundScapes {
 			.repeating(AllSoundEvents.CRUSHING_2.getMainEvent(), 0.425f, .75f, 2)
 			.repeating(AllSoundEvents.CRUSHING_3.getMainEvent(), 2f, 1.75f, 2);
 	}
-	
+
 	private static SoundScape milling(float pitch, AmbienceGroup group) {
 		return new SoundScape(pitch, group).repeating(AllSoundEvents.CRUSHING_1.getMainEvent(), 1.545f, .75f, 1)
 			.repeating(AllSoundEvents.CRUSHING_2.getMainEvent(), 0.425f, .75f, 2);

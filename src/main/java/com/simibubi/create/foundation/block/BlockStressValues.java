@@ -5,8 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.Couple;
-
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
@@ -76,7 +75,7 @@ public class BlockStressValues {
 	public interface IStressValueProvider {
 		/**
 		 * Gets the stress impact of a block.
-		 * 
+		 *
 		 * @param block The block.
 		 * @return the stress impact value of the block, or 0 if it does not have one.
 		 */
@@ -84,7 +83,7 @@ public class BlockStressValues {
 
 		/**
 		 * Gets the stress capacity of a block.
-		 * 
+		 *
 		 * @param block The block.
 		 * @return the stress capacity value of the block, or 0 if it does not have one.
 		 */
@@ -95,7 +94,7 @@ public class BlockStressValues {
 		boolean hasCapacity(Block block);
 
 		/**
-		 * 
+		 *
 		 * @param block
 		 * @return min, max generated RPM; null if block does not have a stress capacity
 		 */

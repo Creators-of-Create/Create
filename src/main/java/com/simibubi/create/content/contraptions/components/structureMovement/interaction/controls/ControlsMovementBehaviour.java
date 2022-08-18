@@ -8,10 +8,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
@@ -80,7 +80,7 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 			angles.speed.chase(0, 0, Chaser.EXP);
 		}
 
-		float pt = AnimationTickHolder.getPartialTicks(context.world);
+		float pt = WorldTickHolder.getPartialTicks(context.world);
 		ControlsRenderer.render(context, renderWorld, matrices, buffer, angles.equipAnimation.getValue(pt),
 			angles.speed.getValue(pt), angles.steering.getValue(pt));
 	}

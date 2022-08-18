@@ -18,11 +18,11 @@ import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;

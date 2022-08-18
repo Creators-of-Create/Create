@@ -13,12 +13,12 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainIconType;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -57,7 +57,7 @@ public class StationScreen extends AbstractStationScreen {
 		Consumer<String> onTextChanged;
 
 		onTextChanged = s -> nameBox.x = nameBoxX(s, nameBox);
-		nameBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y + 4, background.width - 20, 10,
+		nameBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y + 4, background.getWidth() - 20, 10,
 			new TextComponent(station.name));
 		nameBox.setBordered(false);
 		nameBox.setMaxLength(25);
@@ -92,7 +92,7 @@ public class StationScreen extends AbstractStationScreen {
 		addRenderableWidget(dropScheduleButton);
 
 		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
-		trainNameBox = new EditBox(font, x + 23, y + 47, background.width - 75, 10, new TextComponent(""));
+		trainNameBox = new EditBox(font, x + 23, y + 47, background.getWidth() - 75, 10, new TextComponent(""));
 		trainNameBox.setBordered(false);
 		trainNameBox.setMaxLength(35);
 		trainNameBox.setTextColor(0xC6C6C6);
@@ -154,7 +154,7 @@ public class StationScreen extends AbstractStationScreen {
 				addRenderableWidget(trainNameBox);
 
 				int trainIconWidth = getTrainIconWidth(imminentTrain);
-				int targetPos = background.width / 2 - trainIconWidth / 2;
+				int targetPos = background.getWidth() / 2 - trainIconWidth / 2;
 				if (trainIconWidth > 130)
 					targetPos -= trainIconWidth - 130;
 				float f = (float) (imminentTrain.navigation.distanceToDestination / 15f);
@@ -166,14 +166,14 @@ public class StationScreen extends AbstractStationScreen {
 		}
 
 		int trainIconWidth = getTrainIconWidth(train);
-		int targetPos = background.width / 2 - trainIconWidth / 2;
+		int targetPos = background.getWidth() / 2 - trainIconWidth / 2;
 		if (trainIconWidth > 130)
 			targetPos -= trainIconWidth - 130;
 
 		if (leavingAnimation > 0) {
 			disassembleTrainButton.active = false;
 			float f = 1 - (leavingAnimation / 80f);
-			trainPosition.setValue(targetPos + f * f * f * (background.width - targetPos + 5));
+			trainPosition.setValue(targetPos + f * f * f * (background.getWidth() - targetPos + 5));
 			leavingAnimation--;
 			if (leavingAnimation > 0)
 				return;
@@ -196,7 +196,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		if (te.trainHasSchedule)
 			dropScheduleButton.setToolTip(
-				Lang.translateDirect(te.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
+				CreateLang.translateDirect(te.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
 		else
 			dropScheduleButton.getToolTip()
 				.clear();
@@ -206,21 +206,21 @@ public class StationScreen extends AbstractStationScreen {
 	}
 
 	private int nameBoxX(String s, EditBox nameBox) {
-		return guiLeft + background.width / 2 - (Math.min(font.width(s), nameBox.getWidth()) + 10) / 2;
+		return guiLeft + background.getWidth() / 2 - (Math.min(font.width(s), nameBox.getWidth()) + 10) / 2;
 	}
 
 	private void updateAssemblyTooltip(String key) {
 		if (key == null) {
-			disassembleTrainButton.setToolTip(Lang.translateDirect("station.disassemble_train"));
-			newTrainButton.setToolTip(Lang.translateDirect("station.create_train"));
+			disassembleTrainButton.setToolTip(CreateLang.translateDirect("station.disassemble_train"));
+			newTrainButton.setToolTip(CreateLang.translateDirect("station.create_train"));
 			return;
 		}
 		for (IconButton ib : new IconButton[] { disassembleTrainButton, newTrainButton }) {
 			List<Component> toolTip = ib.getToolTip();
 			toolTip.clear();
-			toolTip.add(Lang.translateDirect("station." + key)
+			toolTip.add(CreateLang.translateDirect("station." + key)
 				.withStyle(ChatFormatting.GRAY));
-			toolTip.add(Lang.translateDirect("station." + key + "_1")
+			toolTip.add(CreateLang.translateDirect("station." + key + "_1")
 				.withStyle(ChatFormatting.GRAY));
 		}
 	}
@@ -238,7 +238,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		Train train = displayedTrain.get();
 		if (train == null) {
-			MutableComponent header = Lang.translateDirect("station.idle");
+			MutableComponent header = CreateLang.translateDirect("station.idle");
 			font.draw(ms, header, x + 97 - font.width(header) / 2, y + 47, 0x7A7A7A);
 			return;
 		}
@@ -254,7 +254,7 @@ public class StationScreen extends AbstractStationScreen {
 		List<Carriage> carriages = train.carriages;
 		for (int i = carriages.size() - 1; i > 0; i--) {
 			RenderSystem.setShaderColor(1, 1, 1, Math.min(1f,
-				Math.min((position + offset - 10) / 30f, (background.width - 40 - position - offset) / 30f)));
+				Math.min((position + offset - 10) / 30f, (background.getWidth() - 40 - position - offset) / 30f)));
 //			if (i == carriages.size() - 1 && train.doubleEnded) {
 //				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
 //				continue;
@@ -264,7 +264,7 @@ public class StationScreen extends AbstractStationScreen {
 		}
 
 		RenderSystem.setShaderColor(1, 1, 1,
-			Math.min(1f, Math.min((position + offset - 10) / 30f, (background.width - 40 - position - offset) / 30f)));
+			Math.min(1f, Math.min((position + offset - 10) / 30f, (background.getWidth() - 40 - position - offset) / 30f)));
 		offset += icon.render(TrainIconType.ENGINE, ms, x + offset, y + 20);
 		RenderSystem.disableBlend();
 		ms.popPose();
@@ -292,7 +292,7 @@ public class StationScreen extends AbstractStationScreen {
 	@Override
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
 		if (!nameBox.isFocused() && pMouseY > guiTop && pMouseY < guiTop + 14 && pMouseX > guiLeft
-			&& pMouseX < guiLeft + background.width) {
+			&& pMouseX < guiLeft + background.getWidth()) {
 			nameBox.setFocus(true);
 			nameBox.setHighlightPos(0);
 			setFocused(nameBox);

@@ -12,10 +12,10 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 

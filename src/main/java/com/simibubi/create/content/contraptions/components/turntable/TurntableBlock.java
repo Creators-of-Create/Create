@@ -5,8 +5,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -102,12 +102,12 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	public Class<TurntableTileEntity> getTileEntityClass() {
 		return TurntableTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends TurntableTileEntity> getTileEntityType() {
 		return AllTileEntities.TURNTABLE.get();
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

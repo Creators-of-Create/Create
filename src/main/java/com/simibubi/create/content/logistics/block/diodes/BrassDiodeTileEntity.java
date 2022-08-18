@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +29,7 @@ public abstract class BrassDiodeTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		maxState = new ScrollValueBehaviour(Lang.translateDirect("generic.delay"), this, new BrassDiodeScrollSlot())
+		maxState = new ScrollValueBehaviour(CreateLang.translateDirect("generic.delay"), this, new BrassDiodeScrollSlot())
 			.between(2, 60 * 20 * 30);
 		maxState.withStepFunction(this::step);
 		maxState.withFormatter(this::format);
@@ -98,10 +98,10 @@ public abstract class BrassDiodeTileEntity extends SmartTileEntity {
 
 	private Component getUnit(int value) {
 		if (value < 20)
-			return Lang.translateDirect("generic.unit.ticks");
+			return CreateLang.translateDirect("generic.unit.ticks");
 		if (value < 20 * 60)
-			return Lang.translateDirect("generic.unit.seconds");
-		return Lang.translateDirect("generic.unit.minutes");
+			return CreateLang.translateDirect("generic.unit.seconds");
+		return CreateLang.translateDirect("generic.unit.minutes");
 	}
 
 }

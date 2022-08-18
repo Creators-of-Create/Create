@@ -10,11 +10,11 @@ import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
+import net.createmod.catnip.utility.placement.PlacementOffset;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -9,13 +9,13 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
-import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
+import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.outliner.AABBOutline;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;

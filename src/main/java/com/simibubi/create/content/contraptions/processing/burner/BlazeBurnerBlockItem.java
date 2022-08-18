@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;

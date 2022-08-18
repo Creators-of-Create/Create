@@ -11,7 +11,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -58,7 +58,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 
 	@Override
 	public void addAssemblyIngredients(List<Ingredient> list) {}
-	
+
 	@Override
 	public void addAssemblyFluidIngredients(List<FluidIngredient> list) {
 		list.add(getRequiredFluid());
@@ -71,7 +71,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 			.getMatchingFluidStacks();
 		if (matchingFluidStacks.size() == 0)
 			return new TextComponent("Invalid");
-		return Lang.translateDirect("recipe.assembly.spout_filling_fluid",
+		return CreateLang.translateDirect("recipe.assembly.spout_filling_fluid",
 			matchingFluidStacks.get(0).getDisplayName().getString());
 	}
 
@@ -79,7 +79,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.SPOUT.get());
 	}
-	
+
 	@Override
 	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
 		return () -> SequencedAssemblySubCategory.AssemblySpouting::new;

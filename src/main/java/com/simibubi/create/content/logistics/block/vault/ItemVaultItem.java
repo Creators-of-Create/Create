@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.block.vault;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

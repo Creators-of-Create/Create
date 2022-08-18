@@ -4,15 +4,16 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidMovementActorScenes {
 
-	public static void transfer(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void transfer(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("portable_fluid_interface", "Contraption Fluid Exchange");
 		scene.configureBasePlate(0, 0, 6);
 		scene.scaleSceneView(0.95f);
@@ -193,7 +195,7 @@ public class FluidMovementActorScenes {
 		scene.idle(15);
 		scene.world.rotateBearing(bearing, 270, 120);
 		scene.world.rotateSection(contraption, 0, 270, 0, 120);
-		
+
 		scene.idle(100);
 		scene.markAsFinished();
 	}

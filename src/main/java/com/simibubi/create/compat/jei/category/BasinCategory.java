@@ -17,8 +17,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -26,6 +25,7 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -136,7 +136,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.render(matrixStack, 4, 80);
-		Minecraft.getInstance().font.draw(matrixStack, Lang.translateDirect(requiredHeat.getTranslationKey()), 9,
+		Minecraft.getInstance().font.draw(matrixStack, CreateLang.translateDirect(requiredHeat.getTranslationKey()), 9,
 				86, requiredHeat.getColor());
 	}
 

@@ -7,7 +7,6 @@ import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
@@ -15,15 +14,16 @@ import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
-import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.outliner.Outline;
-import com.simibubi.create.foundation.utility.outliner.Outliner.OutlineEntry;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.outliner.Outline;
+import net.createmod.catnip.utility.outliner.Outliner.OutlineEntry;
+import net.createmod.catnip.utility.theme.Color;
+import net.createmod.catnip.utility.theme.Theme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -45,7 +45,7 @@ public class GoggleOverlayRenderer {
 
 	public static final IIngameOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
 
-	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
+	private static final Map<Object, OutlineEntry> outlines = CatnipClient.OUTLINER.getOutlines();
 
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
@@ -146,7 +146,7 @@ public class GoggleOverlayRenderer {
 				tooltip.add(TextComponent.EMPTY);
 
 			tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-				.append(Lang.translateDirect("gui.goggles.pole_length"))
+				.append(CreateLang.translateDirect("gui.goggles.pole_length"))
 				.append(new TextComponent(" " + poles)));
 		}
 
@@ -178,13 +178,13 @@ public class GoggleOverlayRenderer {
 		float fade = Mth.clamp((hoverTicks + partialTicks) / 12f, 0, 1);
 		Boolean useCustom = cfg.overlayCustomColor.get();
 		Color colorBackground = useCustom ? new Color(cfg.overlayBackgroundColor.get())
-			: Theme.c(Theme.Key.VANILLA_TOOLTIP_BACKGROUND)
+			: Theme.Key.VANILLA_TOOLTIP_BACKGROUND.c()
 				.scaleAlpha(.75f);
 		Color colorBorderTop = useCustom ? new Color(cfg.overlayBorderColorTop.get())
-			: Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, true)
+			: Theme.Key.VANILLA_TOOLTIP_BORDER.c(true)
 				.copy();
 		Color colorBorderBot = useCustom ? new Color(cfg.overlayBorderColorBot.get())
-			: Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, false)
+			: Theme.Key.VANILLA_TOOLTIP_BORDER.c(false)
 				.copy();
 
 		if (fade < 1) {

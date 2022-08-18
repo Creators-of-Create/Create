@@ -13,12 +13,12 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -107,11 +107,11 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		String[] pitches = Lang.translateDirect("generic.notes")
+		String[] pitches = CreateLang.translateDirect("generic.notes")
 			.getString()
 			.split(";");
 		TextComponent textComponent = new TextComponent(spacing);
-		tooltip.add(textComponent.append(Lang.translateDirect("generic.pitch", pitches[pitch % pitches.length])));
+		tooltip.add(textComponent.append(CreateLang.translateDirect("generic.pitch", pitches[pitch % pitches.length])));
 		return true;
 	}
 

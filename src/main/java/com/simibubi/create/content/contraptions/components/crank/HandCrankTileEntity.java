@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.crank;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;

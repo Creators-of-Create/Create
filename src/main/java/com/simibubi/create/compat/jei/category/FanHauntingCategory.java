@@ -7,8 +7,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 

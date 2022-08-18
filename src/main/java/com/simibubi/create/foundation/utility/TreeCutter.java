@@ -17,6 +17,7 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.dynamictrees.DynamicTree;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -47,7 +48,7 @@ public class TreeCutter {
 
 	@Nonnull
 	public static Optional<AbstractBlockBreakQueue> findDynamicTree(Block startBlock, BlockPos pos) {
-		if (canDynamicTreeCutFrom(startBlock)) 
+		if (canDynamicTreeCutFrom(startBlock))
 			return Mods.DYNAMICTREES.runIfInstalled(() -> () -> new DynamicTree(pos));
 		return Optional.empty();
 	}
@@ -150,7 +151,7 @@ public class TreeCutter {
 				if (property instanceof IntegerProperty ip && property.getName()
 					.equals("distance"))
 					distanceProperty = ip;
-			
+
 			int distance = !isLeaf ? 0 : blockState.getValue(distanceProperty);
 			for (Direction direction : Iterate.directions) {
 				BlockPos offset = currentPos.relative(direction);
@@ -158,11 +159,11 @@ public class TreeCutter {
 					continue;
 				BlockState state = reader.getBlockState(offset);
 				BlockPos subtract = offset.subtract(pos);
-				
-				for (Property<?> property : state.getValues().keySet()) 
+
+				for (Property<?> property : state.getValues().keySet())
 					if (property instanceof IntegerProperty ip && property.getName().equals("distance"))
 						distanceProperty = ip;
-				
+
 				int horizontalDistance = Math.max(Math.abs(subtract.getX()), Math.abs(subtract.getZ()));
 				if (isLeaf(state) && state.getValue(distanceProperty) > distance
 					|| isNonDecayingLeaf(state) && horizontalDistance < 4)
@@ -247,7 +248,7 @@ public class TreeCutter {
 	}
 
 	private static boolean isLeaf(BlockState state) {
-		for (Property<?> property : state.getValues().keySet()) 
+		for (Property<?> property : state.getValues().keySet())
 			if (property instanceof IntegerProperty && property.getName().equals("distance"))
 				return true;
 		return false;

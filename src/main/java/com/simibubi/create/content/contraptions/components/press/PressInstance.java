@@ -8,8 +8,9 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.math.AngleHelper;
 
 public class PressInstance extends ShaftInstance implements DynamicInstance {
 

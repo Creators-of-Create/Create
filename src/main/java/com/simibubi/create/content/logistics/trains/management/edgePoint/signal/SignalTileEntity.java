@@ -11,7 +11,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTa
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock.SignalType;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import net.createmod.catnip.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -109,7 +109,7 @@ public class SignalTileEntity extends SmartTileEntity implements ITransformableT
 			boundary.updateTilePower(this);
 			notifyUpdate();
 		});
-		
+
 		blockState.getOptionalValue(SignalBlock.TYPE)
 			.ifPresent(stateType -> {
 				SignalType targetType = boundary.getTypeFor(worldPosition);

@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;

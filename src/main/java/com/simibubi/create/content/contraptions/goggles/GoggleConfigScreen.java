@@ -6,10 +6,10 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -27,27 +27,27 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 		Component componentSpacing = new TextComponent("    ");
 		tooltip = new ArrayList<>();
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.config.overlay1")));
+			.append(CreateLang.translateDirect("gui.config.overlay1")));
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.config.overlay2")
+			.append(CreateLang.translateDirect("gui.config.overlay2")
 				.withStyle(ChatFormatting.GRAY)));
 		tooltip.add(TextComponent.EMPTY);
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.config.overlay3")));
+			.append(CreateLang.translateDirect("gui.config.overlay3")));
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.config.overlay4")));
+			.append(CreateLang.translateDirect("gui.config.overlay4")));
 		tooltip.add(TextComponent.EMPTY);
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.config.overlay5")
+			.append(CreateLang.translateDirect("gui.config.overlay5")
 				.withStyle(ChatFormatting.GRAY)));
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.config.overlay6")
+			.append(CreateLang.translateDirect("gui.config.overlay6")
 				.withStyle(ChatFormatting.GRAY)));
 		tooltip.add(TextComponent.EMPTY);
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.config.overlay7")));
+			.append(CreateLang.translateDirect("gui.config.overlay7")));
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.config.overlay8")));
+			.append(CreateLang.translateDirect("gui.config.overlay8")));
 	}
 
 	@Override

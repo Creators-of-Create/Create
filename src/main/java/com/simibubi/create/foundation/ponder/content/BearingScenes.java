@@ -5,15 +5,17 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +32,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class BearingScenes {
 
-	public static void windmillsAsSource(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void windmillsAsSource(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("windmill_source", "Generating Rotational Force using Windmill Bearings");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
@@ -150,7 +153,7 @@ public class BearingScenes {
 
 		Vec3 surface = util.vector.blockSurface(windmill, Direction.WEST);
 		scene.overlay.showControls(new InputWindowElement(surface, Pointing.DOWN).scroll()
-			.withWrench(), 60);
+			.withItem(AllItems.WRENCH.asStack()), 60);
 		scene.overlay.showCenteredScrollInput(windmill, Direction.WEST, 50);
 		scene.overlay.showText(60)
 			.pointAt(surface)
@@ -181,7 +184,8 @@ public class BearingScenes {
 
 	}
 
-	public static void windmillsAnyStructure(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void windmillsAnyStructure(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("windmill_structure", "Windmill Contraptions");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
@@ -232,7 +236,8 @@ public class BearingScenes {
 		scene.world.modifyTileEntity(util.grid.at(2, 1, 5), HarvesterTileEntity.class, hte -> hte.setAnimatedSpeed(0));
 	}
 
-	public static void mechanicalBearing(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void mechanicalBearing(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_bearing", "Movings Structures using the Mechanical Bearing");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
@@ -323,7 +328,8 @@ public class BearingScenes {
 		scene.world.setKineticSpeed(all, 0);
 	}
 
-	public static void bearingModes(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void bearingModes(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("bearing_modes", "Movement Modes of the Mechanical Bearing");
 		scene.configureBasePlate(1, 1, 6);
 		scene.setSceneOffsetY(-1);
@@ -382,7 +388,7 @@ public class BearingScenes {
 		scene.overlay.showCenteredScrollInput(bearingPos, Direction.NORTH, 60);
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(bearingPos, Direction.NORTH), Pointing.DOWN).scroll()
-				.withWrench(),
+				.withItem(AllItems.WRENCH.asStack()),
 			60);
 		scene.idle(10);
 		scene.overlay.showText(60)
@@ -412,7 +418,8 @@ public class BearingScenes {
 
 	}
 
-	public static void stabilizedBearings(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void stabilizedBearings(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("stabilized_bearings", "Stabilized Contraptions");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
@@ -485,7 +492,8 @@ public class BearingScenes {
 		scene.world.setKineticSpeed(beltAndBearing, 0);
 	}
 
-	public static void clockwork(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void clockwork(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("clockwork_bearing", "Animating Structures using Clockwork Bearings");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
@@ -638,7 +646,8 @@ public class BearingScenes {
 		sails(scene, util, true);
 	}
 
-	private static void sails(SceneBuilder scene, SceneBuildingUtil util, boolean frame) {
+	private static void sails(SceneBuilder builder, SceneBuildingUtil util, boolean frame) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		String plural = frame ? "Sail Frames" : "Sails";
 		scene.title(frame ? "sail_frame" : "sail", "Assembling Windmills using " + plural);
 		scene.configureBasePlate(0, 0, 5);

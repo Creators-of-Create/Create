@@ -8,10 +8,10 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -57,10 +57,10 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 		if (helper.matchesItem(heldItem))
 			return helper.getOffset(pPlayer, pLevel, pState, pPos, pHit)
 				.placeInWorld(pLevel, (BlockItem) heldItem.getItem(), pPlayer, pHand, pHit);
-		
+
 		return InteractionResult.PASS;
 	}
-	
+
 	@Override
 	public RenderShape getRenderShape(BlockState pState) {
 		return RenderShape.ENTITYBLOCK_ANIMATED;

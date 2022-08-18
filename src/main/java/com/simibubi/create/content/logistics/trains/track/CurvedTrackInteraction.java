@@ -5,9 +5,9 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -118,7 +118,7 @@ public class CurvedTrackInteraction {
 			ItemStack heldItem = player.getMainHandItem();
 			Item item = heldItem.getItem();
 			if (AllBlocks.TRACK.isIn(heldItem)) {
-				player.displayClientMessage(Lang.translateDirect("track.turn_start")
+				player.displayClientMessage(CreateLang.translateDirect("track.turn_start")
 					.withStyle(ChatFormatting.RED), true);
 				player.swing(InteractionHand.MAIN_HAND);
 				return true;

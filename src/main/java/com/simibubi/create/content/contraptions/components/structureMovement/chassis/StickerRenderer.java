@@ -6,9 +6,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -29,7 +29,7 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 
 		BlockState state = te.getBlockState();
 		SuperByteBuffer head = CachedBufferer.partial(AllBlockPartials.STICKER_HEAD, state);
-		float offset = te.piston.getValue(AnimationTickHolder.getPartialTicks(te.getLevel()));
+		float offset = te.piston.getValue(WorldTickHolder.getPartialTicks(te.getLevel()));
 
 		if (te.getLevel() != Minecraft.getInstance().level && !te.isVirtual())
 			offset = state.getValue(StickerBlock.EXTENDED) ? 1 : 0;

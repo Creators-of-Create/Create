@@ -9,9 +9,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Blo
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.tileEntity.IMergeableTE;
-import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
+import net.createmod.catnip.utility.BBHelper;
+import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -61,7 +62,7 @@ public class SchematicPrinter {
 				schematicLoaded = true;
 			}
 		}
-		
+
 		printingEntityIndex = compound.getInt("EntityProgress");
 		printStage = PrintStage.valueOf(compound.getString("PrintStage"));
 		compound.getList("DeferredBlocks", 10).stream()
@@ -74,7 +75,7 @@ public class SchematicPrinter {
 			compound.put("CurrentPos", NbtUtils.writeBlockPos(currentPos));
 		if (schematicAnchor != null)
 			compound.put("Anchor", NbtUtils.writeBlockPos(schematicAnchor));
-		
+
 		compound.putInt("EntityProgress", printingEntityIndex);
 		compound.putString("PrintStage", printStage.name());
 		ListTag tagDeferredBlocks = new ListTag();
@@ -97,11 +98,11 @@ public class SchematicPrinter {
 
 		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, new BlockPos(activeTemplate.getSize())
 			.offset(-1, -1, -1));
-		blockReader.bounds = BBHelper.encapsulate(blockReader.bounds, extraBounds);
+		blockReader.setBounds(BBHelper.encapsulate(blockReader.getBounds(), extraBounds));
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());
-		for (BlockEntity te : blockReader.tileEntities.values())
+		for (BlockEntity te : blockReader.getTileEntities().values())
 			transform.apply(te);
 
 		printingEntityIndex = -1;
@@ -194,7 +195,7 @@ public class SchematicPrinter {
 		BlockState toReplace = world.getBlockState(pos);
 		BlockEntity toReplaceTE = world.getBlockEntity(pos);
 		BlockState toReplaceOther = null;
-		
+
 		if (state.hasProperty(BlockStateProperties.BED_PART) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
 				&& state.getValue(BlockStateProperties.BED_PART) == BedPart.FOOT)
 			toReplaceOther = world.getBlockState(pos.relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));

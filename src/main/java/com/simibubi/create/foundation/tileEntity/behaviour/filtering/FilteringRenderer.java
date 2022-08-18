@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.tileEntity.behaviour.filtering;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -12,11 +11,12 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox.ItemValueBox
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -67,7 +67,7 @@ public class FilteringRenderer {
 		boolean showCount = behaviour.isCountVisible();
 		boolean fluids = behaviour.fluidFilter;
 		Component label = isFilterSlotted ? TextComponent.EMPTY
-			: Lang.translateDirect(behaviour.recipeFilter ? "logistics.recipe_filter"
+			: CreateLang.translateDirect(behaviour.recipeFilter ? "logistics.recipe_filter"
 				: fluids ? "logistics.fluid_filter" : "logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getLocation()
 			.subtract(Vec3.atLowerCornerOf(pos)));
@@ -80,10 +80,10 @@ public class FilteringRenderer {
 
 		box.offsetLabel(behaviour.textShift)
 				.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
-				.scrollTooltip(showCount && !isFilterSlotted ? new TextComponent("[").append(Lang.translateDirect("action.scroll")).append("]") : TextComponent.EMPTY)
+				.scrollTooltip(showCount && !isFilterSlotted ? new TextComponent("[").append(CreateLang.translateDirect("action.scroll")).append("]") : TextComponent.EMPTY)
 				.passive(!hit);
 
-		CreateClient.OUTLINER.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
+		CatnipClient.OUTLINER.showOutline(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
 				.lineWidth(1 / 64f)
 				.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
 				.highlightFace(result.getDirection());

@@ -13,9 +13,9 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -89,7 +89,7 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 			for (int i = 0; i < line.size(); i++) {
 				FlapDisplaySection section = line.get(i);
 				renderOutput.nextSection(section);
-				int ticks = AnimationTickHolder.getTicks(te.getLevel());
+				int ticks = WorldTickHolder.getTicks(te.getLevel());
 				String text = section.renderCharsIndividually() || !section.spinning[0] ? section.text
 					: section.cyclingOptions[((ticks / 3) + i * 13) % section.cyclingOptions.length];
 				StringDecomposer.iterateFormatted(text, Style.EMPTY, renderOutput);
@@ -143,8 +143,8 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 
 		public boolean accept(int charIndex, Style style, int glyph) {
 			FontSet fontset = getFontSet();
-			int ticks = paused ? 0 : AnimationTickHolder.getTicks(level);
-			float time = paused ? 0 : AnimationTickHolder.getRenderTime(level);
+			int ticks = paused ? 0 : WorldTickHolder.getTicks(level);
+			float time = paused ? 0 : WorldTickHolder.getRenderTime(level);
 			float dim = 1;
 
 			if (section.renderCharsIndividually() && section.spinning[Math.min(charIndex, section.spinning.length)]) {

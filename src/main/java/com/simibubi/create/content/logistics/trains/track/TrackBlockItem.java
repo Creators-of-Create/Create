@@ -5,10 +5,10 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -62,7 +62,7 @@ public class TrackBlockItem extends BlockItem {
 			if (state.getBlock()instanceof TrackBlock track && track.getTrackAxes(level, pos, state)
 				.size() > 1) {
 				if (!level.isClientSide)
-					player.displayClientMessage(Lang.translateDirect("track.junction_start")
+					player.displayClientMessage(CreateLang.translateDirect("track.junction_start")
 						.withStyle(ChatFormatting.RED), true);
 				return InteractionResult.SUCCESS;
 			}
@@ -75,7 +75,7 @@ public class TrackBlockItem extends BlockItem {
 
 		} else if (player.isSteppingCarefully()) {
 			if (!level.isClientSide) {
-				player.displayClientMessage(Lang.translateDirect("track.selection_cleared"), true);
+				player.displayClientMessage(CreateLang.translateDirect("track.selection_cleared"), true);
 				stack.setTag(null);
 			} else
 				level.playSound(player, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.75f, 1);
@@ -101,7 +101,7 @@ public class TrackBlockItem extends BlockItem {
 		PlacementInfo info = TrackPlacement.tryConnect(level, player, pos, state, stack, hasGirder, extend);
 
 		if (info.message != null && !level.isClientSide)
-			player.displayClientMessage(Lang.translateDirect(info.message), true);
+			player.displayClientMessage(CreateLang.translateDirect(info.message), true);
 		if (!info.valid) {
 			AllSoundEvents.DENY.playFrom(player, 1, 1);
 			return InteractionResult.FAIL;

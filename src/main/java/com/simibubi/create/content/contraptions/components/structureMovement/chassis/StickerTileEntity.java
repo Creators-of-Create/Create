@@ -9,9 +9,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -85,7 +85,7 @@ public class StickerTileEntity extends SmartTileEntity {
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
 	}
-	
+
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);

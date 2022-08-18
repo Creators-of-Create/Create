@@ -1,20 +1,22 @@
 package com.simibubi.create.foundation.ponder.content.fluid;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -26,7 +28,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class PumpScenes {
 
-	public static void flow(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void flow(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_pump_flow", "Fluid Transportation using Mechanical Pumps");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -143,7 +146,7 @@ public class PumpScenes {
 		scene.idle(55);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(pumpPos), Pointing.DOWN).rightClick()
-			.withWrench(), 40);
+			.withItem(AllItems.WRENCH.asStack()), 40);
 		scene.idle(7);
 		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.EAST), true);
 		scene.overlay.showText(70)
@@ -166,7 +169,8 @@ public class PumpScenes {
 
 	}
 
-	public static void speed(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void speed(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_pump_speed", "Throughput of Mechanical Pumps");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -301,13 +305,13 @@ public class PumpScenes {
 
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(pumpPos.south()), Pointing.DOWN).rightClick()
-				.withWrench(), 30);
+				.withItem(AllItems.WRENCH.asStack()), 30);
 		scene.idle(7);
 		scene.world.modifyBlock(pumpPos.south(), s -> s.setValue(PumpBlock.FACING, Direction.WEST), true);
 		scene.idle(30);
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(pumpPos.north()), Pointing.DOWN).rightClick()
-				.withWrench(), 30);
+				.withItem(AllItems.WRENCH.asStack()), 30);
 		scene.idle(7);
 		scene.world.modifyBlock(pumpPos.north(), s -> s.setValue(PumpBlock.FACING, Direction.WEST), true);
 		scene.idle(30);

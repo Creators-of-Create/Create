@@ -8,8 +8,8 @@ import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Couple;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -61,11 +61,11 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 		BlockHitResult hit) {
 		withTileEntityDo(worldIn, pos, te -> te.turn(player.isShiftKeyDown()));
 		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
-		
+
 		if (player.getFoodData()
 			.getFoodLevel() == 0)
 			AllAdvancements.HAND_CRANK.awardTo(player);
-		
+
 		return InteractionResult.SUCCESS;
 	}
 
@@ -129,7 +129,7 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
-	
+
 	public static Couple<Integer> getSpeedRange() {
 		return Couple.create(32, 32);
 	}

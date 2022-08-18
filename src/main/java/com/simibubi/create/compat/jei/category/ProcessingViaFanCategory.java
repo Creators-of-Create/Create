@@ -13,7 +13,7 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -38,7 +38,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	public static Supplier<ItemStack> getFan(String name) {
 		return () -> AllBlocks.ENCASED_FAN.asStack()
-			.setHoverName(Lang.translateDirect("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
+			.setHoverName(CreateLang.translateDirect("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
 	}
 
 	@Override

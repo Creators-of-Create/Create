@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -74,7 +74,7 @@ public class CylinderBrush extends ShapedBrush {
 
 	@Override
 	Component getParamLabel(int paramIndex) {
-		return paramIndex == 0 ? Lang.translateDirect("generic.radius") : super.getParamLabel(paramIndex);
+		return paramIndex == 0 ? CreateLang.translateDirect("generic.radius") : super.getParamLabel(paramIndex);
 	}
 
 	@Override

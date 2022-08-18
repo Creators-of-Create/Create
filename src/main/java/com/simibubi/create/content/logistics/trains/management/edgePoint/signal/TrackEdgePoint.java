@@ -11,8 +11,8 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Couple;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

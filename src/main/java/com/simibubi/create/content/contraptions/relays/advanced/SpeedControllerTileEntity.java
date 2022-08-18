@@ -12,9 +12,9 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -45,15 +45,15 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		Integer max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
 
 		targetSpeed =
-			new ScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, new ControllerValueBoxTransform());
+			new ScrollValueBehaviour(CreateLang.translateDirect("generic.speed"), this, new ControllerValueBoxTransform());
 		targetSpeed.between(-max, max);
 		targetSpeed.value = DEFAULT_SPEED;
 		targetSpeed.moveText(new Vec3(9, 0, 10));
-		targetSpeed.withUnit(i -> Lang.translateDirect("generic.unit.rpm"));
+		targetSpeed.withUnit(i -> CreateLang.translateDirect("generic.unit.rpm"));
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(targetSpeed);
-		
+
 		registerAwardables(behaviours, AllAdvancements.SPEED_CONTROLLER);
 	}
 
@@ -63,7 +63,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		RotationPropagator.handleRemoved(level, worldPosition, this);
 		removeSource();
 		attachKinetics();
-		
+
 		if (isCogwheelPresent() && getSpeed() != 0)
 			award(AllAdvancements.SPEED_CONTROLLER);
 	}

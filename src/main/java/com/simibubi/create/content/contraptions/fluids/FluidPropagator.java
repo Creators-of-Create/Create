@@ -17,9 +17,9 @@ import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

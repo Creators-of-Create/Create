@@ -5,9 +5,9 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.IntAttached;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -47,7 +47,7 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 
 	private ImmutableList<IntAttached<MutableComponent>> notFound(String objective) {
 		return ImmutableList
-			.of(IntAttached.with(404, Lang.translateDirect("display_source.scoreboard.objective_not_found", objective)));
+			.of(IntAttached.with(404, CreateLang.translateDirect("display_source.scoreboard.objective_not_found", objective)));
 	}
 
 	@Override
@@ -60,9 +60,9 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 		if (isFirstLine)
 			builder.addTextInput(0, 137, (e, t) -> {
 				e.setValue("");
-				t.withTooltip(ImmutableList.of(Lang.translateDirect("display_source.scoreboard.objective")
+				t.withTooltip(ImmutableList.of(CreateLang.translateDirect("display_source.scoreboard.objective")
 					.withStyle(s -> s.withColor(0x5391E1)),
-					Lang.translateDirect("gui.schedule.lmb_edit")
+					CreateLang.translateDirect("gui.schedule.lmb_edit")
 						.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)));
 			}, "Objective");
 		else

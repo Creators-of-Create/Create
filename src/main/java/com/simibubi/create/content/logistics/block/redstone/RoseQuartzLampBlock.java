@@ -9,8 +9,8 @@ import java.util.function.BiConsumer;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;

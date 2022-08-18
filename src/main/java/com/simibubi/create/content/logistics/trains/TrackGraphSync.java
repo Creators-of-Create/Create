@@ -15,9 +15,9 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroupPacket;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.PacketDistributor;
 

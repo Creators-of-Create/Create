@@ -12,8 +12,8 @@ import com.simibubi.create.content.contraptions.particle.ICustomParticleData;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.content.curiosities.bell.SoulBaseParticle;
 import com.simibubi.create.content.curiosities.bell.SoulParticle;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;

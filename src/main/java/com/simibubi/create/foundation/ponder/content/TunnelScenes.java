@@ -7,19 +7,20 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pointing;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +33,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class TunnelScenes {
 
-	public static void andesite(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void andesite(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("andesite_tunnel", "Using Andesite Tunnels");
 		scene.configureBasePlate(0, 0, 5);
 
@@ -105,7 +107,8 @@ public class TunnelScenes {
 		scene.world.multiplyKineticSpeed(util.select.everywhere(), 16f);
 	}
 
-	public static void brass(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void brass(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("brass_tunnel", "Using Brass Tunnels");
 		scene.configureBasePlate(1, 0, 5);
 		scene.world.cycleBlockProperty(util.grid.at(3, 1, 2), BeltBlock.CASING);
@@ -228,7 +231,7 @@ public class TunnelScenes {
 
 		Vec3 tunnelTop = util.vector.topOf(tunnelPos);
 		scene.overlay.showControls(new InputWindowElement(tunnelTop, Pointing.DOWN).scroll()
-			.withWrench(), 80);
+			.withItem(AllItems.WRENCH.asStack()), 80);
 		scene.idle(7);
 		scene.overlay.showCenteredScrollInput(tunnelPos, Direction.UP, 120);
 		scene.overlay.showText(120)
@@ -344,7 +347,8 @@ public class TunnelScenes {
 			.add(0, 0.3, 0);
 	}
 
-	public static void brassModes(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void brassModes(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("brass_tunnel_modes", "Distribution Modes of the Brass Tunnel");
 		scene.configureBasePlate(0, 1, 5);
 		BlockState barrier = Blocks.BARRIER.defaultBlockState();
@@ -361,7 +365,7 @@ public class TunnelScenes {
 
 		Vec3 tunnelTop = util.vector.topOf(util.grid.at(2, 2, 3));
 		scene.overlay.showControls(new InputWindowElement(tunnelTop, Pointing.DOWN).scroll()
-			.withWrench(), 80);
+			.withItem(AllItems.WRENCH.asStack()), 80);
 		scene.idle(7);
 		scene.overlay.showCenteredScrollInput(util.grid.at(2, 2, 3), Direction.UP, 120);
 		scene.overlay.showText(120)

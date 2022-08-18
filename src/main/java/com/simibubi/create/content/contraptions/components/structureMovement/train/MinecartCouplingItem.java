@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

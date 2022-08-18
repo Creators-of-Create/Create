@@ -31,10 +31,10 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.Pair;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -251,7 +251,7 @@ public class Navigation {
 				return;
 			}
 		}
-		
+
 		topSpeed *= train.throttle;
 		double turnTopSpeed = Math.min(topSpeed, train.maxTurnSpeed());
 

@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -55,7 +55,7 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-		Lang.translate("gui.speedometer.title")
+		CreateLang.translate("gui.speedometer.title")
 			.style(ChatFormatting.GRAY)
 			.forGoggles(tooltip);
 		SpeedLevel.getFormattedSpeedText(speed, isOverStressed())

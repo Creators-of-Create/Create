@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
-import com.simibubi.create.foundation.gui.ScreenOpener;
+import net.createmod.catnip.gui.ScreenOpener;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;

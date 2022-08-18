@@ -13,8 +13,8 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -163,7 +163,7 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 	public Class<ContentObserverTileEntity> getTileEntityClass() {
 		return ContentObserverTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ContentObserverTileEntity> getTileEntityType() {
 		return AllTileEntities.CONTENT_OBSERVER.get();

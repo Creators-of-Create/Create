@@ -15,11 +15,11 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -176,11 +176,11 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 			List<Entity> passengers = cart().getPassengers();
 			if (!passengers.isEmpty()) {
 				Entity entity = passengers.get(0);
-				if (entity instanceof AbstractContraptionEntity) 
+				if (entity instanceof AbstractContraptionEntity)
 					((AbstractContraptionEntity) entity).disassemble();
 			}
 		}
-		
+
 		couplings.set(main, Optional.empty());
 		needsEntryRefresh |= main;
 		sendData();

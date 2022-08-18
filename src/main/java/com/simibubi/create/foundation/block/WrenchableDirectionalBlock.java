@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.block;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.utility.DirectionHelper;
+import net.createmod.catnip.utility.DirectionHelper;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;

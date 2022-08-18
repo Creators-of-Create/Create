@@ -13,15 +13,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
@@ -81,7 +81,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 		if (state == State.DETACH) {
 
-			tip = Lang.translateDirect("toolbox.outOfRange");
+			tip = CreateLang.translateDirect("toolbox.outOfRange");
 			if (hoveredX > -20 && hoveredX < 20 && hoveredY > -80 && hoveredY < -20)
 				hoveredSlot = UNEQUIP;
 
@@ -99,7 +99,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			ms.translate(0.5, -0.5, 0);
 			if (!scrollMode && hoveredSlot == UNEQUIP) {
 				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
-				tip = Lang.translateDirect("toolbox.detach")
+				tip = CreateLang.translateDirect("toolbox.detach")
 					.withStyle(ChatFormatting.GOLD);
 			}
 			ms.popPose();
@@ -117,7 +117,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			ms.translate(0.5, -0.5, 0);
 			if (!scrollMode && hoveredSlot == DEPOSIT) {
 				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
-				tip = Lang.translateDirect(state == State.SELECT_BOX ? "toolbox.depositAll" : "toolbox.depositBox")
+				tip = CreateLang.translateDirect(state == State.SELECT_BOX ? "toolbox.depositAll" : "toolbox.depositBox")
 					.withStyle(ChatFormatting.GOLD);
 			}
 			ms.popPose();
@@ -179,7 +179,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 				(scrollMode ? AllIcons.I_REFRESH : AllIcons.I_FLIP).render(ms, -9, -9, this);
 				if (!scrollMode && UNEQUIP == hoveredSlot) {
 					AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
-					tip = Lang.translateDirect("toolbox.unequip", minecraft.player.getMainHandItem()
+					tip = CreateLang.translateDirect("toolbox.unequip", minecraft.player.getMainHandItem()
 						.getHoverName())
 						.withStyle(ChatFormatting.GOLD);
 				}

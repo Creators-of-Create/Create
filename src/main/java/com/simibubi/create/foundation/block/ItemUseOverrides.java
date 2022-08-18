@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Block;

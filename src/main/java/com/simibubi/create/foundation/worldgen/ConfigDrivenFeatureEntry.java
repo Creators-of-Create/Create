@@ -6,10 +6,10 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.config.ConfigBase;
-import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.createmod.catnip.config.ConfigBase;
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.block.Block;

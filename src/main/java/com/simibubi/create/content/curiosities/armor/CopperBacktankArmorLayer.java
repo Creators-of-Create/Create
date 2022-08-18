@@ -4,12 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Color;
+import net.createmod.catnip.utility.math.AngleHelper;
+
+import net.createmod.ponder.utility.WorldTickHolder;
+
+import net.createmod.catnip.utility.theme.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -78,7 +80,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			.rotateY(180)
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
-			.rotate(Direction.EAST, AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.level) % 360))
+			.rotate(Direction.EAST, AngleHelper.rad(2 * WorldTickHolder.getRenderTime(entity.level) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 
 		cogs.forEntityRender()

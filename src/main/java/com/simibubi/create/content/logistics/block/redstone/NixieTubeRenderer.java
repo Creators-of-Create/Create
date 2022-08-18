@@ -9,12 +9,13 @@ import com.simibubi.create.content.logistics.block.redstone.DoubleFaceAttachedBl
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Couple;
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.catnip.utility.theme.Color;
+import net.createmod.catnip.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
-import com.simibubi.create.foundation.utility.Iterate;
+import net.createmod.ponder.utility.WorldTickHolder;
+
+import net.createmod.catnip.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -143,7 +144,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 		ms.pushPose();
 		ms.translate(1 / 2f, 7.5f / 16f, 1 / 2f);
-		float renderTime = AnimationTickHolder.getRenderTime(te.getLevel());
+		float renderTime = WorldTickHolder.getRenderTime(te.getLevel());
 
 		for (boolean first : Iterate.trueAndFalse) {
 			Vec3 lampVec = Vec3.atCenterOf(te.getBlockPos());
@@ -196,7 +197,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		ms.popPose();
 
 	}
-	
+
 	@Override
 	public int getViewDistance() {
 		return 128;

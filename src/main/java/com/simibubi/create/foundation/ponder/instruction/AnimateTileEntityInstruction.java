@@ -8,9 +8,10 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.IBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
-import com.simibubi.create.foundation.ponder.PonderScene;
-import com.simibubi.create.foundation.ponder.PonderWorld;
 
+import net.createmod.ponder.foundation.PonderScene;
+import net.createmod.ponder.foundation.PonderWorld;
+import net.createmod.ponder.foundation.instruction.TickingInstruction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -21,8 +22,8 @@ public class AnimateTileEntityInstruction extends TickingInstruction {
 	protected double target;
 	protected final BlockPos location;
 
-	private BiConsumer<PonderWorld, Float> setter;
-	private Function<PonderWorld, Float> getter;
+	private final BiConsumer<PonderWorld, Float> setter;
+	private final Function<PonderWorld, Float> getter;
 
 	public static AnimateTileEntityInstruction bearing(BlockPos location, float totalDelta, int ticks) {
 		return new AnimateTileEntityInstruction(location, totalDelta, ticks,

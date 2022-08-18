@@ -3,16 +3,17 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -25,7 +26,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class MechanicalSawScenes {
 
-	public static void processing(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void processing(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_saw_processing", "Processing Items on the Mechanical Saw");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -171,7 +173,8 @@ public class MechanicalSawScenes {
 		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 	}
 
-	public static void treeCutting(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void treeCutting(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_saw_breaker", "Cutting Trees with the Mechanical Saw");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(.9f);
@@ -264,7 +267,8 @@ public class MechanicalSawScenes {
 		}
 	}
 
-	public static void contraption(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void contraption(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_saw_contraption", "Using Mechanical Saws on Contraptions");
 		scene.configureBasePlate(1, 0, 6);
 		scene.scaleSceneView(.9f);

@@ -6,15 +6,17 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +30,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CrafterScenes {
 
-	public static void setup(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void setup(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_crafter", "Setting up Mechanical Crafters");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -59,7 +62,7 @@ public class CrafterScenes {
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 2), Direction.NORTH), Pointing.RIGHT)
 				.rightClick()
-				.withWrench(),
+				.withItem(AllItems.WRENCH.asStack()),
 			40);
 		scene.idle(7);
 		scene.world.cycleBlockProperty(util.grid.at(2, 3, 2), MechanicalCrafterBlock.POINTING);
@@ -76,7 +79,7 @@ public class CrafterScenes {
 		for (BlockPos pos : positions) {
 			scene.overlay.showControls(
 				new InputWindowElement(util.vector.blockSurface(pos, Direction.NORTH), Pointing.RIGHT).rightClick()
-					.withWrench(),
+						.withItem(AllItems.WRENCH.asStack()),
 				10);
 			scene.idle(7);
 			scene.world.cycleBlockProperty(pos, MechanicalCrafterBlock.POINTING);
@@ -234,7 +237,8 @@ public class CrafterScenes {
 		scene.world.toggleRedstonePower(redstone);
 	}
 
-	public static void connect(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void connect(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_crafter_connect", "Connecting Inventories of Crafters");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -285,7 +289,7 @@ public class CrafterScenes {
 
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, new Object(), bb, 45);
 		scene.overlay.showControls(new InputWindowElement(v, Pointing.LEFT).rightClick()
-			.withWrench(), 40);
+				.withItem(AllItems.WRENCH.asStack()), 40);
 		scene.idle(7);
 		scene.world.connectCrafterInvs(util.grid.at(2, 2, 2), util.grid.at(1, 2, 2));
 		scene.idle(40);
@@ -296,22 +300,22 @@ public class CrafterScenes {
 			.text("Using the Wrench at their backs, Mechanical Crafter inputs can be combined");
 		scene.idle(80);
 		scene.overlay.showControls(new InputWindowElement(v.add(0, 1, 0), Pointing.LEFT).rightClick()
-			.withWrench(), 20);
+				.withItem(AllItems.WRENCH.asStack()), 20);
 		scene.idle(7);
 		scene.world.connectCrafterInvs(util.grid.at(2, 3, 2), util.grid.at(1, 3, 2));
 		scene.idle(20);
 		scene.overlay.showControls(new InputWindowElement(v.add(0, -1, 0), Pointing.LEFT).rightClick()
-			.withWrench(), 20);
+				.withItem(AllItems.WRENCH.asStack()), 20);
 		scene.idle(7);
 		scene.world.connectCrafterInvs(util.grid.at(2, 1, 2), util.grid.at(1, 1, 2));
 		scene.idle(20);
 		scene.overlay.showControls(new InputWindowElement(v.add(.5, -.5, 0), Pointing.LEFT).rightClick()
-			.withWrench(), 20);
+				.withItem(AllItems.WRENCH.asStack()), 20);
 		scene.idle(7);
 		scene.world.connectCrafterInvs(util.grid.at(2, 1, 2), util.grid.at(2, 2, 2));
 		scene.idle(10);
 		scene.overlay.showControls(new InputWindowElement(v.add(.5, .5, 0), Pointing.LEFT).rightClick()
-			.withWrench(), 20);
+				.withItem(AllItems.WRENCH.asStack()), 20);
 		scene.idle(7);
 		scene.world.connectCrafterInvs(util.grid.at(2, 2, 2), util.grid.at(2, 3, 2));
 		scene.idle(20);
@@ -343,7 +347,9 @@ public class CrafterScenes {
 
 	}
 
-	public static void covers(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void covers(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+
 		scene.title("mechanical_crafter_covers", "Covering slots of Mechanical Crafters");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);

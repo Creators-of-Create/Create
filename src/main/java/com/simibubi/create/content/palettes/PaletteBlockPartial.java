@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -18,6 +17,7 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;

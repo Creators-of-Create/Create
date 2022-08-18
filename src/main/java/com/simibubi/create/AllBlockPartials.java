@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
 

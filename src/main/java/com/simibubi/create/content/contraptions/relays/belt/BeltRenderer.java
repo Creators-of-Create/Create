@@ -19,11 +19,11 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -75,7 +75,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			PoseStack localTransforms = new PoseStack();
             TransformStack msr = TransformStack.cast(localTransforms);
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-			float renderTick = AnimationTickHolder.getRenderTime(te.getLevel());
+			float renderTick = WorldTickHolder.getRenderTime(te.getLevel());
 
 			msr.centre()
 					.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0))

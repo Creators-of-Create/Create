@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleDataEntry;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 

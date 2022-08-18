@@ -16,14 +16,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.gui.element.StencilElement;
-import com.simibubi.create.foundation.utility.animation.Force;
-import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.gui.element.DelegatedStencilElement;
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.animation.Force;
+import net.createmod.catnip.utility.animation.PhysicalFloat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
@@ -75,7 +75,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 			renderMenuBackground(ms, partialTicks);
 		}
 
-		new StencilElement() {
+		/*new StencilElement() {
 			@Override
 			protected void renderStencil(PoseStack ms) {
 				renderCog(ms, partialTicks);
@@ -85,7 +85,12 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 			protected void renderElement(PoseStack ms) {
 				fill(ms, -200, -200, 200, 200, 0x60_000000);
 			}
-		}.at(width * 0.5f, height * 0.5f, 0).render(ms);
+		}*/
+
+		new DelegatedStencilElement(
+				(ps, x, y, alpha) -> renderCog(ps, partialTicks),
+				(ps, x, y, alpha) -> fill(ms, -200, -200, 200, 200, 0x60_000000)
+		).at(width * 0.5f, height * 0.5f, 0).render(ms);
 
 		super.renderWindowBackground(ms, mouseX, mouseY, partialTicks);
 

@@ -9,25 +9,25 @@ import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ModularGuiLine;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
-import com.simibubi.create.foundation.gui.widget.ElementWidget;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.ponder.PonderTag;
-import com.simibubi.create.foundation.ponder.ui.PonderTagScreen;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.ponder.CreatePonderTag;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.gui.widget.AbstractSimiWidget;
+import net.createmod.catnip.gui.widget.ElementWidget;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.ponder.foundation.ui.PonderTagScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -74,7 +74,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		setWindowSize(background.width, background.height);
+		setWindowSize(background.getWidth(), background.getHeight());
 		super.init();
 		clearWidgets();
 
@@ -84,7 +84,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 		initGathererOptions();
 
-		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+		confirmButton = new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
 		confirmButton.withCallback(this::onClose);
 		addRenderableWidget(confirmButton);
 	}
@@ -142,7 +142,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 			if (rows > 1) {
 				targetLineSelector = new ScrollInput(x + 61, y + 105, 135, 16).withRange(0, rows)
-						.titled(Lang.translateDirect("display_link.display_on"))
+						.titled(CreateLang.translateDirect("display_link.display_on"))
 						.inverted()
 						.calling(i -> targetLineLabel.text = target.getLineOptionText(i))
 						.setState(startIndex);
@@ -155,15 +155,15 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		sourceWidget = new ElementWidget(x + 37, y + 26)
 				.showingElement(GuiGameElement.of(sourceIcon))
 				.withCallback((mX, mY) -> {
-					ScreenOpener.open(new PonderTagScreen(PonderTag.DISPLAY_SOURCES));
+					ScreenOpener.open(new PonderTagScreen(CreatePonderTag.DISPLAY_SOURCES));
 				});
 
 		sourceWidget.getToolTip().addAll(List.of(
-				Lang.translateDirect("display_link.reading_from"),
+				CreateLang.translateDirect("display_link.reading_from"),
 				sourceState.getBlock().getName()
 						.withStyle(s -> s.withColor(sources.isEmpty() ? 0xF68989 : 0xF2C16D)),
-				Lang.translateDirect("display_link.attached_side"),
-				Lang.translateDirect("display_link.view_compatible")
+				CreateLang.translateDirect("display_link.attached_side"),
+				CreateLang.translateDirect("display_link.view_compatible")
 						.withStyle(ChatFormatting.GRAY)
 		));
 
@@ -172,15 +172,15 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		targetWidget = new ElementWidget(x + 37, y + 105)
 				.showingElement(GuiGameElement.of(targetIcon))
 				.withCallback((mX, mY) -> {
-					ScreenOpener.open(new PonderTagScreen(PonderTag.DISPLAY_TARGETS));
+					ScreenOpener.open(new PonderTagScreen(CreatePonderTag.DISPLAY_TARGETS));
 				});
 
 		targetWidget.getToolTip().addAll(List.of(
-				Lang.translateDirect("display_link.writing_to"),
+				CreateLang.translateDirect("display_link.writing_to"),
 				targetState.getBlock().getName()
 						.withStyle(s -> s.withColor(target == null ? 0xF68989 : 0xF2C16D)),
-				Lang.translateDirect("display_link.targeted_location"),
-				Lang.translateDirect("display_link.view_compatible")
+				CreateLang.translateDirect("display_link.targeted_location"),
+				CreateLang.translateDirect("display_link.view_compatible")
 						.withStyle(ChatFormatting.GRAY)
 		));
 
@@ -199,7 +199,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 						.toList();
 				sourceTypeSelector = new SelectionScrollInput(x + 61, y + 26, 135, 16).forOptions(options)
 						.writingTo(sourceTypeLabel)
-						.titled(Lang.translateDirect("display_link.information_type"))
+						.titled(CreateLang.translateDirect("display_link.information_type"))
 						.calling(this::initGathererSourceSubOptions)
 						.setState(startIndex);
 				sourceTypeSelector.onChanged();
@@ -218,8 +218,8 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 		if (targetLineSelector != null)
 			targetLineSelector
-					.titled(source instanceof SingleLineDisplaySource ? Lang.translateDirect("display_link.display_on")
-							: Lang.translateDirect("display_link.display_on_multiline"));
+					.titled(source instanceof SingleLineDisplaySource ? CreateLang.translateDirect("display_link.display_on")
+							: CreateLang.translateDirect("display_link.display_on_multiline"));
 
 		configWidgets.forEach(s -> {
 			s.forEach(this::removeWidget);
@@ -254,13 +254,13 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		background.render(ms, x, y, this);
-		MutableComponent header = Lang.translateDirect("display_link.title");
-		font.draw(ms, header, x + background.width / 2 - font.width(header) / 2, y + 4, 0x442000);
+		MutableComponent header = CreateLang.translateDirect("display_link.title");
+		font.draw(ms, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x442000);
 
 		if (sources.isEmpty())
-			font.drawShadow(ms, Lang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
+			font.drawShadow(ms, CreateLang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
 		if (target == null)
-			font.drawShadow(ms, Lang.translateDirect("display_link.no_target"), x + 65, y + 109, 0xD3D3D3);
+			font.drawShadow(ms, CreateLang.translateDirect("display_link.no_target"), x + 65, y + 109, 0xD3D3D3);
 
 		ms.pushPose();
 		ms.translate(0, guiTop + 46, 0);
@@ -274,7 +274,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		ms.pushPose();
 		TransformStack.cast(ms)
 				.pushPose()
-				.translate(x + background.width + 4, y + background.height + 4, 100)
+				.translate(x + background.getWidth() + 4, y + background.getHeight() + 4, 100)
 				.scale(40)
 				.rotateX(-22)
 				.rotateY(63);

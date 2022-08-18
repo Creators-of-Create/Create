@@ -1,8 +1,8 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;

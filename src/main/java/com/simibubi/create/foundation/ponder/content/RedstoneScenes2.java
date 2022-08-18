@@ -1,15 +1,16 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RoseQuartzLampBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 
@@ -114,7 +115,7 @@ public class RedstoneScenes2 {
 
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(centerLamp.east(2)), Pointing.DOWN).rightClick()
-				.withWrench(), 20);
+				.withItem(AllItems.WRENCH.asStack()), 20);
 		scene.idle(6);
 		scene.world.cycleBlockProperty(centerLamp.east(), RoseQuartzLampBlock.POWERING);
 		scene.world.toggleRedstonePower(comparator);
@@ -122,7 +123,7 @@ public class RedstoneScenes2 {
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(centerLamp), Pointing.DOWN).rightClick()
-			.withWrench(), 20);
+			.withItem(AllItems.WRENCH.asStack()), 20);
 		scene.idle(6);
 		scene.world.cycleBlockProperty(centerLamp.west(), RoseQuartzLampBlock.POWERING);
 		scene.world.toggleRedstonePower(comparator);

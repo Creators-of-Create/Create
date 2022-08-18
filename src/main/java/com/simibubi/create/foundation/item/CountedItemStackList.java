@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.IntAttached;
+import net.createmod.catnip.utility.IntAttached;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;

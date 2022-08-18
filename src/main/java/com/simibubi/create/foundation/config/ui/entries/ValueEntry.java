@@ -15,11 +15,11 @@ import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
-import com.simibubi.create.foundation.gui.widget.BoxWidget;
-import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.gui.element.DelegatedStencilElement;
+import net.createmod.catnip.gui.widget.BoxWidget;
+import net.createmod.catnip.utility.FontHelper;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -69,15 +69,15 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		labelTooltip.addAll(commentLines.stream()
 				.filter(Predicates.not(s -> s.startsWith("Range")))
 				.map(TextComponent::new)
-				.flatMap(stc -> TooltipHelper.cutTextComponent(stc, ChatFormatting.GRAY, ChatFormatting.GRAY)
+				.flatMap(stc -> FontHelper.cutTextComponent(stc, ChatFormatting.GRAY, ChatFormatting.GRAY)
 						.stream())
 				.collect(Collectors.toList()));
 
 		if (annotations.containsKey(ConfigAnnotations.RequiresRelog.TRUE.getName()))
-			labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("Changing this value will require a _relog_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.GOLD));
+			labelTooltip.addAll(FontHelper.cutTextComponent(new TextComponent("Changing this value will require a _relog_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.GOLD));
 
 		if (annotations.containsKey(ConfigAnnotations.RequiresRestart.CLIENT.getName()))
-			labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("Changing this value will require a _restart_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.RED));
+			labelTooltip.addAll(FontHelper.cutTextComponent(new TextComponent("Changing this value will require a _restart_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.RED));
 
 		labelTooltip.add(new TextComponent(ConfigScreen.modID + ":" + path.get(path.size() - 1)).withStyle(ChatFormatting.DARK_GRAY));
 	}

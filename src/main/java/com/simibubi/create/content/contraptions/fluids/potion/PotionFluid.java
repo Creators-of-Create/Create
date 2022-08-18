@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;

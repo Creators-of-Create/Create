@@ -23,12 +23,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -71,7 +71,7 @@ public class CarriageContraption extends Contraption {
 	// render
 	public int portalCutoffMin;
 	public int portalCutoffMax;
-	
+
 	static final IItemHandlerModifiable fallbackItems = new ItemStackHandler();
 	static final IFluidHandler fallbackFluids = new FluidTank(0);
 
@@ -104,9 +104,9 @@ public class CarriageContraption extends Contraption {
 		if (bogeys == 0)
 			return false;
 		if (bogeys > 2)
-			throw new AssemblyException(Lang.translateDirect("train_assembly.too_many_bogeys", bogeys));
+			throw new AssemblyException(CreateLang.translateDirect("train_assembly.too_many_bogeys", bogeys));
 		if (sidewaysControls)
-			throw new AssemblyException(Lang.translateDirect("train_assembly.sideways_controls"));
+			throw new AssemblyException(CreateLang.translateDirect("train_assembly.sideways_controls"));
 
 		for (BlockPos blazePos : assembledBlazeBurners)
 			for (Direction direction : Iterate.directionsInAxis(assemblyDirection.getAxis()))
@@ -235,7 +235,7 @@ public class CarriageContraption extends Contraption {
 	protected MountedStorageManager getStorageForSpawnPacket() {
 		return storageProxy;
 	}
-	
+
 	@Override
 	protected ContraptionType getType() {
 		return ContraptionType.CARRIAGE;

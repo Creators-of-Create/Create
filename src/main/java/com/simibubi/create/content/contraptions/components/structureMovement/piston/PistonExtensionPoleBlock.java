@@ -11,10 +11,10 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
+import com.simibubi.create.foundation.utility.placement.PoleHelper;
 
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -150,7 +150,7 @@ public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock impleme
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-        if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+        if (state.getValue(BlockStateProperties.WATERLOGGED))
             world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         return state;
     }

@@ -7,9 +7,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

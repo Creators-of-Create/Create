@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.theme.Color;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -67,7 +67,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	}
 
 	public void move(double x, double y, double z) {
-		float time = AnimationTickHolder.getTicks(level);
+		float time = WorldTickHolder.getTicks(level);
 		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / lifetime));
 		if (speed < 0 && axis.isVertical())
 			angle += 180;

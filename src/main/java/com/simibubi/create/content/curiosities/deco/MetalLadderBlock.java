@@ -5,10 +5,10 @@ import java.util.function.Predicate;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
+import net.createmod.catnip.utility.placement.PlacementOffset;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

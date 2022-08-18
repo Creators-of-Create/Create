@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.mojang.authlib.GameProfile;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -64,7 +64,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@Override
 	public Component getDisplayName() {
-		return Lang.translateDirect("block.deployer.damage_source_name");
+		return CreateLang.translateDirect("block.deployer.damage_source_name");
 	}
 
 	@Override

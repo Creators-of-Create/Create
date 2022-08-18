@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.network.chat.Component;
 
 public enum SequencerInstructions {
@@ -48,13 +49,13 @@ public enum SequencerInstructions {
 	static List<Component> getOptions() {
 		List<Component> options = new ArrayList<>();
 		for (SequencerInstructions entry : values())
-			options.add(Lang.translateDirect(entry.descriptiveTranslationKey));
+			options.add(CreateLang.translateDirect(entry.descriptiveTranslationKey));
 		return options;
 	}
 
 	String formatValue(int value) {
 		if (this == TURN_ANGLE)
-			return value + Lang.translateDirect("generic.unit.degrees").getString();
+			return value + CreateLang.translateDirect("generic.unit.degrees").getString();
 		if (this == TURN_DISTANCE)
 			return value + "m";
 		if (this == DELAY) {

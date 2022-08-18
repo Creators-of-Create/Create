@@ -7,8 +7,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
 
+import net.createmod.ponder.foundation.PonderRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;

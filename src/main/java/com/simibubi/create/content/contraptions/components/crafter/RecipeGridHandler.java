@@ -17,9 +17,9 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pointing;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pointing;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

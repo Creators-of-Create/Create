@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config;
 
+import net.createmod.catnip.config.ConfigBase;
+
 public class CServer extends ConfigBase {
 
 	public final ConfigGroup infrastructure = group(0, "infrastructure", Comments.infrastructure);

@@ -5,9 +5,9 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
+    "ContraptionDriverInteractMixin",
     "CustomItemUseEffectsMixin",
     "MapItemSavedDataMixin",
-    "ContraptionDriverInteractMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
@@ -15,19 +15,16 @@
     "accessor.ServerLevelAccessor"
   ],
   "client": [
-    "MapItemSavedDataMixinClient",
     "CameraMixin",
     "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
+    "MapItemSavedDataMixinClient",
     "MapRendererMixin",
     "ModelDataRefreshMixin",
-    "WindowResizeMixin",
-    "accessor.AgeableListModelAccessor",
-    "accessor.GameRendererAccessor",
-    "accessor.ParticleEngineAccessor"
+    "accessor.AgeableListModelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

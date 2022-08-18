@@ -11,12 +11,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.syn
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;

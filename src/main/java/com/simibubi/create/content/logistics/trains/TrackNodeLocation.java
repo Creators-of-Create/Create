@@ -5,8 +5,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.simibubi.create.foundation.utility.Iterate;
-
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +57,7 @@ public class TrackNodeLocation extends Vec3i {
 		return equalsIgnoreDim(pOther) && pOther instanceof TrackNodeLocation tnl
 			&& Objects.equals(tnl.dimension, dimension);
 	}
-	
+
 	public boolean equalsIgnoreDim(Object pOther) {
 		return super.equals(pOther);
 	}

@@ -4,8 +4,8 @@ import static com.simibubi.create.content.curiosities.weapons.PotatoProjectileRe
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.utility.AngleHelper;
 
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;

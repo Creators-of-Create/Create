@@ -6,9 +6,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -35,7 +35,7 @@ public class WhistleRenderer extends SafeTileEntityRenderer<WhistleTileEntity> {
 
 		float offset = te.animation.getValue(partialTicks);
 		if (te.animation.getChaseTarget() > 0 && te.animation.getValue() > 0.5f) {
-			float wiggleProgress = (AnimationTickHolder.getTicks(te.getLevel()) + partialTicks) / 8f;
+			float wiggleProgress = (WorldTickHolder.getTicks(te.getLevel()) + partialTicks) / 8f;
 			offset -= Math.sin(wiggleProgress * (2 * Mth.PI) * (4 - size.ordinal())) / 16f;
 		}
 

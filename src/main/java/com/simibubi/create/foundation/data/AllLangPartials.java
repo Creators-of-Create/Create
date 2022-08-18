@@ -5,9 +5,10 @@ import com.google.gson.JsonElement;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.utility.FilesHelper;
-import com.simibubi.create.foundation.utility.Lang;
+
+import net.createmod.catnip.utility.lang.Lang;
+import net.createmod.ponder.foundation.PonderLocalization;
 
 public enum AllLangPartials {
 
@@ -15,7 +16,7 @@ public enum AllLangPartials {
 	INTERFACE("UI & Messages"),
 	SUBTITLES("Subtitles", AllSoundEvents::provideLangEntries),
 	TOOLTIPS("Item Descriptions"),
-	PONDER("Ponder Content", PonderLocalization::provideLangEntries),
+	PONDER("Ponder Content", () -> PonderLocalization.provideLangEntries(Create.ID)),
 
 	;
 

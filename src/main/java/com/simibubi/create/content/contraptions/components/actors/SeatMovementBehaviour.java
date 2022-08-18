@@ -6,8 +6,8 @@ import java.util.UUID;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.SlabBlock;
@@ -28,7 +28,7 @@ public class SeatMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		MovementBehaviour.super.visitNewPosition(context, pos);
-		
+
 		AbstractContraptionEntity contraptionEntity = context.contraption.entity;
 		if (contraptionEntity == null)
 			return;

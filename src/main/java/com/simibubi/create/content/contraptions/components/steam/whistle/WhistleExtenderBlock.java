@@ -4,8 +4,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

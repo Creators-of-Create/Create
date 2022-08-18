@@ -19,8 +19,8 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.DebugPackets;
@@ -61,7 +61,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 		builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
 		super.createBlockStateDefinition(builder);
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);

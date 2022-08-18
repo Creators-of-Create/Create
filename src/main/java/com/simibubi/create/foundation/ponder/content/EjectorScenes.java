@@ -1,19 +1,21 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -26,7 +28,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class EjectorScenes {
 
-	public static void ejector(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void ejector(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("weighted_ejector", "Using Weighted Ejectors");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -154,7 +157,7 @@ public class EjectorScenes {
 		Vec3 input = util.vector.of(4.8, 1 + 12 / 16f, 2.5);
 		Vec3 topOfSlot = input.add(0, 2 / 16f, 0);
 		scene.overlay.showControls(new InputWindowElement(topOfSlot, Pointing.DOWN).scroll()
-			.withWrench(), 60);
+			.withItem(AllItems.WRENCH.asStack()), 60);
 		scene.overlay.showFilterSlotInput(input, 80);
 		scene.idle(10);
 		scene.overlay.showText(80)
@@ -213,7 +216,8 @@ public class EjectorScenes {
 
 	}
 
-	public static void splitY(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void splitY(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("weighted_ejector_tunnel", "Splitting item stacks using Weighted Ejectors");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -239,7 +243,7 @@ public class EjectorScenes {
 
 		BlockPos tunnel = util.grid.at(2, 2, 3);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(tunnel), Pointing.DOWN).scroll()
-			.withWrench(), 70);
+			.withItem(AllItems.WRENCH.asStack()), 70);
 		scene.idle(10);
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.topOf(tunnel), Pointing.UP).showing(AllIcons.I_TUNNEL_PREFER_NEAREST),
@@ -257,7 +261,7 @@ public class EjectorScenes {
 		Vec3 input = util.vector.of(2.5, 1 + 12 / 16f, 2.8);
 		Vec3 topOfSlot = input.add(0, 2 / 16f, 0);
 		scene.overlay.showControls(new InputWindowElement(topOfSlot, Pointing.DOWN).scroll()
-			.withWrench(), 60);
+			.withItem(AllItems.WRENCH.asStack()), 60);
 		scene.overlay.showFilterSlotInput(input, 80);
 		scene.idle(10);
 		scene.overlay.showText(80)
@@ -290,7 +294,8 @@ public class EjectorScenes {
 		scene.world.multiplyKineticSpeed(util.select.everywhere(), 16f);
 	}
 
-	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void redstone(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("weighted_ejector_redstone", "Controlling Weighted Ejectors with Redstone");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);

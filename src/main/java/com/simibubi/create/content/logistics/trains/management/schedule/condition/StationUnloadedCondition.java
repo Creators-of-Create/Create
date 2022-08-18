@@ -3,9 +3,9 @@ package com.simibubi.create.content.logistics.trains.management.schedule.conditi
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 public class StationUnloadedCondition extends ScheduleWaitCondition {
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(ItemStack.EMPTY, Lang.translateDirect("schedule.condition.unloaded"));
+		return Pair.of(ItemStack.EMPTY, CreateLang.translateDirect("schedule.condition.unloaded"));
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 		GlobalStation currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
-		if (level instanceof ServerLevel serverLevel) 
+		if (level instanceof ServerLevel serverLevel)
 			return !serverLevel.isPositionEntityTicking(currentStation.getTilePos());
 		return false;
 	}
@@ -43,6 +43,6 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
-		return Lang.translateDirect("schedule.condition.unloaded.status");
+		return CreateLang.translateDirect("schedule.condition.unloaded.status");
 	}
 }

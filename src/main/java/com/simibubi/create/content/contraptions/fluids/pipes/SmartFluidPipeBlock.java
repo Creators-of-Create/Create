@@ -8,8 +8,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VoxelShaper;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VoxelShaper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -142,7 +142,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 			: face == AttachFace.CEILING ? AllShapes.SMART_FLUID_PIPE_CEILING : AllShapes.SMART_FLUID_PIPE_WALL;
 		return shape.get(state.getValue(FACING));
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);

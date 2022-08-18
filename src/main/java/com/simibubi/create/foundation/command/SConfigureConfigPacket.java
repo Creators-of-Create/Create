@@ -12,13 +12,13 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
-import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
-import com.simibubi.create.foundation.ponder.ui.PonderIndexScreen;
-import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.ponder.foundation.PonderRegistry;
+import net.createmod.ponder.foundation.ui.PonderIndexScreen;
+import net.createmod.ponder.foundation.ui.PonderUI;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

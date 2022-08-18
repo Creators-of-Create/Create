@@ -16,19 +16,19 @@ public class ScreenResourceWrapper implements IDrawable {
 
 	@Override
 	public int getWidth() {
-		return resource.width;
+		return resource.getWidth();
 	}
 
 	@Override
 	public int getHeight() {
-		return resource.height;
+		return resource.getHeight();
 	}
 
 	@Override
 	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		resource.bind();
-		GuiComponent.blit(matrixStack, xOffset, yOffset, 0, resource.startX, resource.startY, resource.width,
-			resource.height, 256, 256);
+		GuiComponent.blit(matrixStack, xOffset, yOffset, 0, resource.getStartX(), resource.getStartY(), resource.getWidth(),
+				resource.getHeight(), 256, 256);
 	}
 
 }

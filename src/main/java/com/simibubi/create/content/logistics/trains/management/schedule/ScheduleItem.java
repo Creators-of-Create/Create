@@ -10,9 +10,9 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEn
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -98,27 +98,27 @@ public class ScheduleItem extends Item implements MenuProvider {
 				.get(seatIndex);
 			Couple<Boolean> directions = cc.conductorSeats.get(seatPos);
 			if (directions == null) {
-				pPlayer.displayClientMessage(Lang.translateDirect("schedule.non_controlling_seat"), true);
+				pPlayer.displayClientMessage(CreateLang.translateDirect("schedule.non_controlling_seat"), true);
 				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
 				return InteractionResult.SUCCESS;
 			}
 
 			if (train.runtime.getSchedule() != null) {
 				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
-				pPlayer.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
+				pPlayer.displayClientMessage(CreateLang.translateDirect("schedule.remove_with_empty_hand"), true);
 				return InteractionResult.SUCCESS;
 			}
 
 			if (schedule.entries.isEmpty()) {
 				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
-				pPlayer.displayClientMessage(Lang.translateDirect("schedule.no_stops"), true);
+				pPlayer.displayClientMessage(CreateLang.translateDirect("schedule.no_stops"), true);
 				return InteractionResult.SUCCESS;
 			}
 
 			train.runtime.setSchedule(schedule, false);
 			AllAdvancements.CONDUCTOR.awardTo(pPlayer);
 			AllSoundEvents.CONFIRM.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
-			pPlayer.displayClientMessage(Lang.translateDirect("schedule.applied_to_train")
+			pPlayer.displayClientMessage(CreateLang.translateDirect("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);
 			pStack.shrink(1);
 			pPlayer.setItemInHand(pUsedHand, pStack.isEmpty() ? ItemStack.EMPTY : pStack);

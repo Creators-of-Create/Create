@@ -5,8 +5,8 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.damagesource.DamageSource;
@@ -36,7 +36,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.CRUSHING_WHEEL, AllAdvancements.CRUSHER_MAXED);
 	}
-	
+
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);

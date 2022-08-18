@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.block.display;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -60,7 +60,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 		if (player.isSteppingCarefully() && stack.hasTag()) {
 			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
-			player.displayClientMessage(Lang.translateDirect("display_link.clear"), true);
+			player.displayClientMessage(CreateLang.translateDirect("display_link.clear"), true);
 			stack.setTag(null);
 			return InteractionResult.SUCCESS;
 		}
@@ -70,7 +70,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 				return InteractionResult.SUCCESS;
 			CompoundTag stackTag = stack.getOrCreateTag();
 			stackTag.put("SelectedPos", NbtUtils.writeBlockPos(pos));
-			player.displayClientMessage(Lang.translateDirect("display_link.set"), true);
+			player.displayClientMessage(CreateLang.translateDirect("display_link.set"), true);
 			stack.setTag(stackTag);
 			return InteractionResult.SUCCESS;
 		}
@@ -83,7 +83,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 			.isReplaceable() ? 0 : 1);
 
 		if (!selectedPos.closerThan(placedPos, AllConfigs.SERVER.logistics.displayLinkRange.get())) {
-			player.displayClientMessage(Lang.translateDirect("display_link.too_far")
+			player.displayClientMessage(CreateLang.translateDirect("display_link.too_far")
 				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.FAIL;
 		}
@@ -98,7 +98,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 		ItemStack itemInHand = player.getItemInHand(pContext.getHand());
 		if (!itemInHand.isEmpty())
 			itemInHand.setTag(null);
-		player.displayClientMessage(Lang.translateDirect("display_link.success")
+		player.displayClientMessage(CreateLang.translateDirect("display_link.success")
 			.withStyle(ChatFormatting.GREEN), true);
 		return useOn;
 	}
@@ -127,7 +127,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 			lastShownPos = selectedPos;
 		}
 
-		CreateClient.OUTLINER.showAABB("target", lastShownAABB)
+		CatnipClient.OUTLINER.showAABB("target", lastShownAABB)
 			.colored(0xffcb74)
 			.lineWidth(1 / 16f);
 	}

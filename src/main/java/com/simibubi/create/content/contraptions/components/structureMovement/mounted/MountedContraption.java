@@ -13,10 +13,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.NonStationaryLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -159,7 +159,7 @@ public class MountedContraption extends Contraption {
 		if (cart instanceof Container container)
 			storage.attachExternal(new ContraptionInvWrapper(true, new InvWrapper(container)));
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {

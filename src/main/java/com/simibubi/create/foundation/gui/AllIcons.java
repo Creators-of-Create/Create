@@ -5,10 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
-import com.simibubi.create.foundation.gui.element.ScreenElement;
-import com.simibubi.create.foundation.utility.Color;
 
+import net.createmod.catnip.gui.element.DelegatedStencilElement;
+import net.createmod.catnip.gui.element.ScreenElement;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;

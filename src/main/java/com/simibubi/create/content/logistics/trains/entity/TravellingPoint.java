@@ -24,9 +24,9 @@ import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;

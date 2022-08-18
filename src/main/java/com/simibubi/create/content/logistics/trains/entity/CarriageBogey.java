@@ -7,12 +7,12 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

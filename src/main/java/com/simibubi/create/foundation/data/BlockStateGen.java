@@ -25,12 +25,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pointing;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
@@ -76,7 +76,7 @@ public class BlockStateGen {
 		boolean customItem) {
 		return (c, p) -> horizontalAxisBlock(c, p, getBlockModel(customItem, c, p));
 	}
-	
+
 	public static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> simpleCubeAll(
 		String path) {
 		return (c, p) -> p.simpleBlock(c.get(), p.models()

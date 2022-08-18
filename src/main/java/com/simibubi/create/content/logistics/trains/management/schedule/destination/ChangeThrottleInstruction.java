@@ -6,9 +6,9 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -23,7 +23,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 		super();
 		data.putInt("Value", 100);
 	}
-	
+
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
 		return Pair.of(icon(), formatted());
@@ -50,7 +50,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 
 	@Override
 	public List<Component> getTitleAs(String type) {
-		return ImmutableList.of(Lang
+		return ImmutableList.of(CreateLang
 			.translateDirect("schedule." + type + "." + getId().getPath() + ".summary",
 				formatted().withStyle(ChatFormatting.WHITE))
 			.withStyle(ChatFormatting.GOLD));
@@ -62,7 +62,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 		builder.addScrollInput(0, 50, (si, l) -> {
 			si.withRange(5, 101)
 				.withStepFunction(c -> c.shift ? 25 : 5)
-				.titled(Lang.translateDirect("schedule.instruction.throttle_edit_box"));
+				.titled(CreateLang.translateDirect("schedule.instruction.throttle_edit_box"));
 			l.withSuffix("%");
 		}, "Value");
 	}
@@ -77,8 +77,8 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 
 	@Override
 	public List<Component> getSecondLineTooltip(int slot) {
-		return ImmutableList.of(Lang.translateDirect("schedule.instruction.throttle_edit_box"),
-			Lang.translateDirect("schedule.instruction.throttle_edit_box_1")
+		return ImmutableList.of(CreateLang.translateDirect("schedule.instruction.throttle_edit_box"),
+			CreateLang.translateDirect("schedule.instruction.throttle_edit_box_1")
 				.withStyle(ChatFormatting.GRAY));
 	}
 

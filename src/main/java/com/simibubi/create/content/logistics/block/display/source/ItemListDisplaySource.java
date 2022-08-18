@@ -7,8 +7,8 @@ import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileE
 import com.simibubi.create.foundation.item.CountedItemStackList;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
-import com.simibubi.create.foundation.utility.IntAttached;
 
+import net.createmod.catnip.utility.IntAttached;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.IItemHandler;

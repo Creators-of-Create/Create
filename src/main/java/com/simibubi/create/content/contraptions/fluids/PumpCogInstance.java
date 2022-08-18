@@ -8,9 +8,9 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;

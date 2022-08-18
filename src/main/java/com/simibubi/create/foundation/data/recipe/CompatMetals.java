@@ -4,7 +4,7 @@ import static com.simibubi.create.foundation.data.recipe.Mods.IE;
 import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
 import static com.simibubi.create.foundation.data.recipe.Mods.TH;
 
-import com.simibubi.create.foundation.utility.Lang;
+import net.createmod.catnip.utility.lang.Lang;
 
 public enum CompatMetals {
 	ALUMINUM(IE),

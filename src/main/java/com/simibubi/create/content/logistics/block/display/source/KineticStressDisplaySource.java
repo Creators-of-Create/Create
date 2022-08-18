@@ -4,9 +4,9 @@ import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEnti
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.LangBuilder;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.LangBuilder;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,7 +18,7 @@ public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySourc
 		int mode = getMode(context);
 		if (mode == 1)
 			return super.formatNumeric(context, currentLevel);
-		LangBuilder builder = Lang.number(currentLevel);
+		LangBuilder builder = CreateLang.number(currentLevel);
 		if (context.getTargetTE() instanceof FlapDisplayTileEntity)
 			builder.space();
 		return builder.translate("generic.unit.stress")
@@ -69,9 +69,9 @@ public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySourc
 			return;
 		builder.addSelectionScrollInput(0, 120,
 			(si, l) -> si
-				.forOptions(Lang.translatedOptions("display_source.kinetic_stress", "progress_bar", "percent",
+				.forOptions(CreateLang.translatedOptions("display_source.kinetic_stress", "progress_bar", "percent",
 					"current", "max", "remaining"))
-				.titled(Lang.translateDirect("display_source.kinetic_stress.display")),
+				.titled(CreateLang.translateDirect("display_source.kinetic_stress.display")),
 			"Mode");
 	}
 

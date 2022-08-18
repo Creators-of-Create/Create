@@ -11,10 +11,10 @@ import com.simibubi.create.content.logistics.block.display.source.RedstonePowerD
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -57,7 +57,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 		placed = placed.setValue(FACING, context.getClickedFace());
 		return placed.setValue(POWERED, shouldBePowered(placed, context.getLevel(), context.getClickedPos()));
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -151,7 +151,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 		if (!(player instanceof LocalPlayer))
 			return;
 		if (te.targetOffset.equals(BlockPos.ZERO)) {
-			player.displayClientMessage(Lang.translateDirect("display_link.invalid"), true);
+			player.displayClientMessage(CreateLang.translateDirect("display_link.invalid"), true);
 			return;
 		}
 		ScreenOpener.open(new DisplayLinkScreen(te));

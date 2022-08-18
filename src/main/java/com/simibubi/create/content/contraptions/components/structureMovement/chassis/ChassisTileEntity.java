@@ -16,9 +16,9 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.BulkScrollValueBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -41,7 +41,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		int max = AllConfigs.SERVER.kinetics.maxChassisRange.get();
-		range = new BulkScrollValueBehaviour(Lang.translateDirect("generic.range"), this, new CenteredSideValueBoxTransform(),
+		range = new BulkScrollValueBehaviour(CreateLang.translateDirect("generic.range"), this, new CenteredSideValueBoxTransform(),
 				te -> ((ChassisTileEntity) te).collectChassisGroup());
 		range.requiresWrench();
 		range.between(1, max);
@@ -56,7 +56,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 	public void initialize() {
 		super.initialize();
 		if (getBlockState().getBlock() instanceof RadialChassisBlock)
-			range.setLabel(Lang.translateDirect("generic.radius"));
+			range.setLabel(CreateLang.translateDirect("generic.radius"));
 	}
 
 	public int getRange() {

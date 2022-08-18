@@ -15,8 +15,8 @@ import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.CreateLang;
+import net.createmod.catnip.utility.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -30,19 +30,19 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	private static final String PREFIX = "gui.attribute_filter.";
 
-	private Component addDESC = Lang.translateDirect(PREFIX + "add_attribute");
-	private Component addInvertedDESC = Lang.translateDirect(PREFIX + "add_inverted_attribute");
+	private Component addDESC = CreateLang.translateDirect(PREFIX + "add_attribute");
+	private Component addInvertedDESC = CreateLang.translateDirect(PREFIX + "add_inverted_attribute");
 
-	private Component allowDisN = Lang.translateDirect(PREFIX + "allow_list_disjunctive");
-	private Component allowDisDESC = Lang.translateDirect(PREFIX + "allow_list_disjunctive.description");
-	private Component allowConN = Lang.translateDirect(PREFIX + "allow_list_conjunctive");
-	private Component allowConDESC = Lang.translateDirect(PREFIX + "allow_list_conjunctive.description");
-	private Component denyN = Lang.translateDirect(PREFIX + "deny_list");
-	private Component denyDESC = Lang.translateDirect(PREFIX + "deny_list.description");
+	private Component allowDisN = CreateLang.translateDirect(PREFIX + "allow_list_disjunctive");
+	private Component allowDisDESC = CreateLang.translateDirect(PREFIX + "allow_list_disjunctive.description");
+	private Component allowConN = CreateLang.translateDirect(PREFIX + "allow_list_conjunctive");
+	private Component allowConDESC = CreateLang.translateDirect(PREFIX + "allow_list_conjunctive.description");
+	private Component denyN = CreateLang.translateDirect(PREFIX + "deny_list");
+	private Component denyDESC = CreateLang.translateDirect(PREFIX + "deny_list.description");
 
-	private Component referenceH = Lang.translateDirect(PREFIX + "add_reference_item");
-	private Component noSelectedT = Lang.translateDirect(PREFIX + "no_selected_attributes");
-	private Component selectedT = Lang.translateDirect(PREFIX + "selected_attributes");
+	private Component referenceH = CreateLang.translateDirect(PREFIX + "add_reference_item");
+	private Component noSelectedT = CreateLang.translateDirect(PREFIX + "no_selected_attributes");
+	private Component selectedT = CreateLang.translateDirect(PREFIX + "selected_attributes");
 
 	private IconButton whitelistDis, whitelistCon, blacklist;
 	private Indicator whitelistDisIndicator, whitelistConIndicator, blacklistIndicator;

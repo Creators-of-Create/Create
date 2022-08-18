@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 

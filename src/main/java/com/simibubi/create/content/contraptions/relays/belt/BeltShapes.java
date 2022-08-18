@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.foundation.utility.VoxelShaper;
 
+import net.createmod.catnip.utility.VoxelShaper;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;

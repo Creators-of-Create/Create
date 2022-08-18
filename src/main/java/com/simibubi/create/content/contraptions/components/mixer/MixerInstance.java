@@ -8,8 +8,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogInstance;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 
 public class MixerInstance extends EncasedCogInstance implements DynamicInstance {

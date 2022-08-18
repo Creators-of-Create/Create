@@ -8,12 +8,12 @@ import java.util.Collections;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.recipe.Mods;
-import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.data.tags.TagsProvider.TagAppender;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -445,7 +445,7 @@ public class AllTags {
 		strippedWoodCompat(Mods.BOP, "fir", "redwood", "cherry", "mahogany", "jacaranda", "palm", "willow", "dead",
 			"magic", "umbran", "hellbark");
 		strippedWoodCompat(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry");
-		
+
 		AllItemTags.MODDED_STRIPPED_LOGS.addOptional(Mods.BYG, "stripped_bulbis_stem");
 		AllItemTags.MODDED_STRIPPED_WOOD.addOptional(Mods.BYG, "stripped_bulbis_wood");
 

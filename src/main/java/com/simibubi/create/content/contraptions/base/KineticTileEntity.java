@@ -19,13 +19,13 @@ import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.FontHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -397,10 +397,10 @@ public class KineticTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("gui.stressometer.overstressed")
+				.append(CreateLang.translateDirect("gui.stressometer.overstressed")
 					.withStyle(GOLD)));
-			Component hint = Lang.translateDirect("gui.contraptions.network_overstressed");
-			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
+			Component hint = CreateLang.translateDirect("gui.contraptions.network_overstressed");
+			List<Component> cutString = FontHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(componentSpacing.plainCopy()
 					.append(cutString.get(i)));
@@ -409,12 +409,12 @@ public class KineticTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 		if (notFastEnough) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.speedRequirement")
+				.append(CreateLang.translateDirect("tooltip.speedRequirement")
 					.withStyle(GOLD)));
 			Component hint =
-				Lang.translateDirect("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
+				CreateLang.translateDirect("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
 					.getDescriptionId()));
-			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
+			List<Component> cutString = FontHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(componentSpacing.plainCopy()
 					.append(cutString.get(i)));
@@ -434,19 +434,19 @@ public class KineticTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		if (Mth.equal(stressAtBase, 0))
 			return added;
 
-		Lang.translate("gui.goggles.kinetic_stats")
+		CreateLang.translate("gui.goggles.kinetic_stats")
 			.forGoggles(tooltip);
-		Lang.translate("tooltip.stressImpact")
+		CreateLang.translate("tooltip.stressImpact")
 			.style(GRAY)
 			.forGoggles(tooltip);
 
 		float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
 
-		Lang.number(stressTotal)
+		CreateLang.number(stressTotal)
 			.translate("generic.unit.stress")
 			.style(ChatFormatting.AQUA)
 			.space()
-			.add(Lang.translate("gui.goggles.at_current_speed")
+			.add(CreateLang.translate("gui.goggles.at_current_speed")
 				.style(ChatFormatting.DARK_GRAY))
 			.forGoggles(tooltip, 1);
 

@@ -9,9 +9,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -44,7 +44,7 @@ public sealed class BogeyInstance {
 	public void hiddenFrame() {
 		beginFrame(0, null);
 	}
-	
+
 	public void beginFrame(float wheelAngle, PoseStack ms) {
 		if (ms == null) {
 			for (int i : Iterate.zeroAndOne)

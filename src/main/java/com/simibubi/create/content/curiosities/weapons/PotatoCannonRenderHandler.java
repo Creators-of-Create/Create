@@ -6,8 +6,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetRenderHandler;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ItemParticleOption;

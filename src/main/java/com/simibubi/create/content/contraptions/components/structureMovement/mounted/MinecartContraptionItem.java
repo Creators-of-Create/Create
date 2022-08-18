@@ -13,9 +13,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -218,7 +218,7 @@ public class MinecartContraptionItem extends Item {
 		OrientedContraptionEntity contraption = (OrientedContraptionEntity) passengers.get(0);
 
 		if(ContraptionMovementSetting.isNoPickup(contraption.getContraption().getBlocks().values())) {
-			player.displayClientMessage(Lang.translateDirect("contraption.minecart_contraption_illegal_pickup")
+			player.displayClientMessage(CreateLang.translateDirect("contraption.minecart_contraption_illegal_pickup")
 					.withStyle(ChatFormatting.RED), true);
 			return;
 		}
@@ -236,7 +236,7 @@ public class MinecartContraptionItem extends Item {
 			NbtIo.write(generatedStack.serializeNBT(), dataOutput);
 			int estimatedPacketSize = dataOutput.toByteArray().length;
 			if (estimatedPacketSize > 2_000_000) {
-				player.displayClientMessage(Lang.translateDirect("contraption.minecart_contraption_too_big")
+				player.displayClientMessage(CreateLang.translateDirect("contraption.minecart_contraption_too_big")
 					.withStyle(ChatFormatting.RED), true);
 				return;
 			}
@@ -250,7 +250,7 @@ public class MinecartContraptionItem extends Item {
 			.getBlocks()
 			.size() > 200)
 			AllAdvancements.CART_PICKUP.awardTo(player);
-		
+
 		player.getInventory().placeItemBackInInventory(generatedStack);
 		contraption.discard();
 		entity.discard();

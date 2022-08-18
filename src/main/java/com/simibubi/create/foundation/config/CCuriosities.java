@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config;
 
+import net.createmod.catnip.config.ConfigBase;
+
 public class CCuriosities extends ConfigBase {
 
 	public final ConfigInt maxSymmetryWandRange = i(50, 10, "maxSymmetryWandRange", Comments.symmetryRange);

@@ -5,7 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.display.DisplayBehaviour;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +32,7 @@ public abstract class DisplayTarget extends DisplayBehaviour {
 	}
 
 	public Component getLineOptionText(int line) {
-		return Lang.translateDirect("display_target.line", line + 1);
+		return CreateLang.translateDirect("display_target.line", line + 1);
 	}
 
 	public static void reserve(int line, BlockEntity target, DisplayLinkContext context) {

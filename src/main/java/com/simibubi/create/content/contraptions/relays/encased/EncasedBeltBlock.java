@@ -5,9 +5,9 @@ import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

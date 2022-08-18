@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -38,7 +38,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 
 		// Core glows
 		float multiplier;
-		if (mainHand || offHand) 
+		if (mainHand || offHand)
 			multiplier = animation;
 		else
 			multiplier = Mth.sin(worldTime * 5);

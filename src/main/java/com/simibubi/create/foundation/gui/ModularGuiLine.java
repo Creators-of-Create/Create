@@ -7,9 +7,10 @@ import java.util.function.Consumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.TooltipArea;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;

@@ -13,16 +13,17 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -37,7 +38,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class KineticsScenes {
 
-	public static void shaftAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void shaftAsRelay(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("shaft", "Relaying rotational force using Shafts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -69,7 +71,8 @@ public class KineticsScenes {
 		scene.markAsFinished();
 	}
 
-	public static void shaftsCanBeEncased(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void shaftsCanBeEncased(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("shaft_casing", "Encasing Shafts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -110,7 +113,8 @@ public class KineticsScenes {
 		scene.idle(70);
 	}
 
-	public static void cogAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void cogAsRelay(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("cogwheel", "Relaying rotational force using Cogwheels");
 		scene.configureBasePlate(0, 0, 5);
 		BlockPos gauge = util.grid.at(4, 1, 1);
@@ -151,7 +155,8 @@ public class KineticsScenes {
 
 	}
 
-	public static void largeCogAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void largeCogAsRelay(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("large_cogwheel", "Relaying rotational force using Large Cogwheels");
 		scene.configureBasePlate(1, 1, 5);
 		scene.world.setBlock(util.grid.at(4, 2, 3), AllBlocks.LARGE_COGWHEEL.getDefaultState()
@@ -200,7 +205,8 @@ public class KineticsScenes {
 
 	}
 
-	public static void cogsSpeedUp(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void cogsSpeedUp(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("cog_speedup", "Gearshifting with Cogs");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -293,7 +299,8 @@ public class KineticsScenes {
 		scene.idle(40);
 	}
 
-	public static void cogwheelsCanBeEncased(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void cogwheelsCanBeEncased(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("cogwheel_casing", "Encasing Cogwheels");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -370,7 +377,7 @@ public class KineticsScenes {
 		Vec3 wrenchHere = util.vector.topOf(2, 1, 2)
 			.add(.25, 0, -.25);
 		scene.overlay.showControls(new InputWindowElement(wrenchHere, Pointing.RIGHT).rightClick()
-			.withWrench(), 25);
+			.withItem(AllItems.WRENCH.asStack()), 25);
 		scene.idle(7);
 		scene.world.cycleBlockProperty(util.grid.at(2, 1, 2), EncasedCogwheelBlock.TOP_SHAFT);
 		scene.idle(15);
@@ -388,13 +395,14 @@ public class KineticsScenes {
 		scene.idle(40);
 
 		scene.overlay.showControls(new InputWindowElement(wrenchHere, Pointing.RIGHT).rightClick()
-			.withWrench(), 25);
+			.withItem(AllItems.WRENCH.asStack()), 25);
 		scene.idle(7);
 		scene.world.cycleBlockProperty(util.grid.at(2, 1, 2), EncasedCogwheelBlock.TOP_SHAFT);
 		scene.world.setKineticSpeed(shaft2, 0);
 	}
 
-	public static void gearbox(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void gearbox(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("gearbox", "Relaying rotational force using Gearboxes");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
@@ -476,7 +484,8 @@ public class KineticsScenes {
 
 	}
 
-	public static void clutch(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void clutch(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("clutch", "Controlling rotational force using a Clutch");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -528,7 +537,8 @@ public class KineticsScenes {
 		scene.effects.indicateSuccess(gaugePos);
 	}
 
-	public static void gearshift(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void gearshift(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("gearshift", "Controlling rotational force using a Gearshift");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -576,7 +586,8 @@ public class KineticsScenes {
 		}
 	}
 
-	public static void creativeMotor(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void creativeMotor(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("creative_motor", "Generating Rotational Force using Creative Motors");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -622,7 +633,8 @@ public class KineticsScenes {
 		scene.rotateCameraY(-90);
 	}
 
-	public static void waterWheel(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void waterWheel(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("water_wheel", "Generating Rotational Force using Water Wheels");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -735,7 +747,8 @@ public class KineticsScenes {
 		manualSource(scene, util, true);
 	}
 
-	public static void valveHandle(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void valveHandle(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		manualSource(scene, util, false);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
 		scene.idle(20);
@@ -753,7 +766,8 @@ public class KineticsScenes {
 			.pointAt(centerOf);
 	}
 
-	private static void manualSource(SceneBuilder scene, SceneBuildingUtil util, boolean handCrank) {
+	private static void manualSource(SceneBuilder builder, SceneBuildingUtil util, boolean handCrank) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		String name = handCrank ? "Hand Cranks" : "Valve Handles";
 		scene.title(handCrank ? "hand_crank" : "valve_handle", "Generating Rotational Force using " + name);
 		scene.configureBasePlate(0, 0, 5);
@@ -816,7 +830,8 @@ public class KineticsScenes {
 		scene.idle(90);
 	}
 
-	public static void sequencedGearshift(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void sequencedGearshift(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("sequenced_gearshift", "Controlling Rotational Speed using Sequenced Gearshifts");
 		scene.configureBasePlate(1, 0, 5);
 		scene.showBasePlate();
@@ -971,7 +986,8 @@ public class KineticsScenes {
 		scene.world.setKineticSpeed(outputKinetics, 0);
 	}
 
-	public static void speedController(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void speedController(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("rotation_speed_controller", "Using the Rotational Speed Controller");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -1049,7 +1065,8 @@ public class KineticsScenes {
 		gauge(scene, util, false);
 	}
 
-	private static void gauge(SceneBuilder scene, SceneBuildingUtil util, boolean speed) {
+	private static void gauge(SceneBuilder builder, SceneBuildingUtil util, boolean speed) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		String component = speed ? "Speedometer" : "Stressometer";
 		String title = "Monitoring Kinetic information using the " + component;
 		scene.title(speed ? "speedometer" : "stressometer", title);

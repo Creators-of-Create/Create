@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +27,7 @@ public class DynamicBrush extends Brush {
 	}
 
 	Component getParamLabel(int paramIndex) {
-		return Lang.translateDirect("generic.range");
+		return CreateLang.translateDirect("generic.range");
 	}
 
 	@Override

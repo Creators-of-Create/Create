@@ -9,9 +9,9 @@ import com.simibubi.create.content.contraptions.components.actors.flwdata.ActorD
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 

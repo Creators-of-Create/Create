@@ -9,8 +9,8 @@ import com.simibubi.create.content.logistics.block.depot.SharedDepotBlockMethods
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
-import com.simibubi.create.foundation.gui.ScreenOpener;
 
+import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -69,7 +69,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);

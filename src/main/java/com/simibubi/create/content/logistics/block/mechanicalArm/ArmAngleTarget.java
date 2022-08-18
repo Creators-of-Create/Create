@@ -1,8 +1,7 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
-
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -25,7 +24,7 @@ public class ArmAngleTarget {
 	}
 
 	public ArmAngleTarget(BlockPos armPos, Vec3 pointTarget, Direction clawFacing, boolean ceiling) {
-//		if (ceiling) 
+//		if (ceiling)
 //			clawFacing = clawFacing.getOpposite();
 
 		Vec3 target = pointTarget;

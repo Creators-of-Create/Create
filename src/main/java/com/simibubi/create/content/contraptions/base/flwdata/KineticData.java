@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.base.flwdata;
 import com.jozufozu.flywheel.core.materials.BasicData;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.utility.Color;
 
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.core.BlockPos;
 
 public class KineticData extends BasicData {

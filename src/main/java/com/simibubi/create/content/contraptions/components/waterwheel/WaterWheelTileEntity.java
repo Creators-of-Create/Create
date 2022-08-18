@@ -9,8 +9,8 @@ import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +35,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.LAVA_WHEEL, AllAdvancements.WATER_WHEEL);
 	}
-	
+
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);

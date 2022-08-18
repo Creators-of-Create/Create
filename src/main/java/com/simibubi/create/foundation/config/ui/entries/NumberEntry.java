@@ -8,9 +8,10 @@ import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigTextField;
-import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.element.TextStencilElement;
+
+import net.createmod.catnip.utility.theme.Theme;
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.gui.element.TextStencilElement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -61,7 +62,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 		} else {
 			textField.setValue(String.valueOf(getValue()));
 		}
-		textField.setTextColor(Theme.i(Theme.Key.TEXT));
+		textField.setTextColor(Theme.Key.TEXT.i());
 
 		Object range = spec.getRange();
 		try {
@@ -76,13 +77,13 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 			if (min.doubleValue() > getTypeMin().doubleValue()) {
 				TextComponent t = new TextComponent(formatBound(min) + " < ");
 				minText = new TextStencilElement(font, t).centered(true, false);
-				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.p(Theme.Key.TEXT_DARKER)));
+				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.Key.TEXT_DARKER.p()));
 				minOffset = font.width(t);
 			}
 			if (max.doubleValue() < getTypeMax().doubleValue()) {
 				TextComponent t = new TextComponent(" < " + formatBound(max));
 				maxText = new TextStencilElement(font, t).centered(true, false);
-				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.p(Theme.Key.TEXT_DARKER)));
+				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.Key.TEXT_DARKER.p()));
 				maxOffset = font.width(t);
 			}
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException | NullPointerException ignored) {
@@ -95,11 +96,11 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 				if (!spec.test(number))
 					throw new IllegalArgumentException();
 
-				textField.setTextColor(Theme.i(Theme.Key.TEXT));
+				textField.setTextColor(Theme.Key.TEXT.i());
 				setValue(number);
 
 			} catch (IllegalArgumentException ignored) {
-				textField.setTextColor(Theme.i(Theme.Key.BUTTON_FAIL));
+				textField.setTextColor(Theme.Key.BUTTON_FAIL.i());
 			}
 		});
 

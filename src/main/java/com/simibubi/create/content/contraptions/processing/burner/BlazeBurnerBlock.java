@@ -12,8 +12,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;

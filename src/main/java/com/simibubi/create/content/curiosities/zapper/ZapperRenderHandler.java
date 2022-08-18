@@ -8,8 +8,8 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.CreateClient;
 
+import net.createmod.catnip.CatnipClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;
@@ -38,7 +38,7 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 			return;
 
 		cachedBeams.forEach(beam -> {
-			CreateClient.OUTLINER.endChasingLine(beam, beam.start, beam.end, 1 - beam.itensity, false)
+			CatnipClient.OUTLINER.endChasingLine(beam, beam.start, beam.end, 1 - beam.itensity, false)
 				.disableNormals()
 				.colored(0xffffff)
 				.lineWidth(beam.itensity * 1 / 8f);

@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.simibubi.create.AllTags;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
+import net.createmod.catnip.utility.Iterate;
+
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
@@ -23,6 +23,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;

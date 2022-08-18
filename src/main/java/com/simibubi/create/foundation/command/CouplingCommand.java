@@ -12,7 +12,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
-import com.simibubi.create.foundation.utility.Iterate;
+import net.createmod.catnip.utility.Iterate;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

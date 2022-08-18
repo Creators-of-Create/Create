@@ -4,8 +4,8 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.Theme;
 
+import net.createmod.catnip.utility.theme.Theme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
@@ -35,7 +35,7 @@ public class HintableTextFieldWidget extends EditBox {
 		if (!getValue().isEmpty())
 			return;
 
-		font.draw(ms, hint, x + 5, this.y + (this.height - 8) / 2, Theme.c(Theme.Key.TEXT).scaleAlpha(.75f).getRGB());
+		font.draw(ms, hint, x + 5, this.y + (this.height - 8) / 2, Theme.Key.TEXT.c().scaleAlpha(.75f).getRGB());
 	}
 
 	@Override

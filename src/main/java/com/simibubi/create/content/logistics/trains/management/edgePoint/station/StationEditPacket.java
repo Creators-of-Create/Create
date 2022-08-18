@@ -4,8 +4,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

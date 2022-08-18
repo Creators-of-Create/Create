@@ -2,9 +2,9 @@ package com.simibubi.create.content.logistics.trains.management.schedule.conditi
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +15,7 @@ public class ScheduledDelay extends TimedWaitCondition {
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(ItemStack.EMPTY, Lang.translateDirect("schedule.condition.delay_short", formatTime(true)));
+		return Pair.of(ItemStack.EMPTY, CreateLang.translateDirect("schedule.condition.delay_short", formatTime(true)));
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class ScheduledDelay extends TimedWaitCondition {
 		int time = context.getInt("Time");
 		if (time >= totalWaitTicks())
 			return true;
-		
+
 		context.putInt("Time", time + 1);
 		requestDisplayIfNecessary(context, time);
 		return false;

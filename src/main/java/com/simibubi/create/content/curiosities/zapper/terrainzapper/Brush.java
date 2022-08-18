@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
 import java.util.Collection;
 
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +30,7 @@ public abstract class Brush {
 	public TerrainTools[] getSupportedTools() {
 		return TerrainTools.values();
 	}
-	
+
 	public TerrainTools redirectTool(TerrainTools tool) {
 		return tool;
 	}
@@ -52,7 +52,7 @@ public abstract class Brush {
 	}
 
 	Component getParamLabel(int paramIndex) {
-		return Lang
+		return CreateLang
 			.translateDirect(paramIndex == 0 ? "generic.width" : paramIndex == 1 ? "generic.height" : "generic.length");
 	}
 

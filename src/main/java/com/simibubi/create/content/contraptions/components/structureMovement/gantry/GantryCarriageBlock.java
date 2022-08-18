@@ -6,8 +6,8 @@ import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -138,5 +138,5 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	public BlockEntityType<? extends GantryCarriageTileEntity> getTileEntityType() {
 		return AllTileEntities.GANTRY_PINION.get();
 	}
-	
+
 }

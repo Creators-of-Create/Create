@@ -15,10 +15,11 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.createmod.catnip.utility.lang.Lang;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -54,7 +55,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		operationMode = new ScrollOptionBehaviour<>(ClockHands.class,
-			Lang.translateDirect("contraptions.clockwork.clock_hands"), this, getMovementModeSlot());
+			CreateLang.translateDirect("contraptions.clockwork.clock_hands"), this, getMovementModeSlot());
 		operationMode.requiresWrench();
 		behaviours.add(operationMode);
 		registerAwardables(behaviours, AllAdvancements.CLOCKWORK_BEARING);
@@ -241,7 +242,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		hourHand.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
 		hourHand.setRotationAxis(direction.getAxis());
 		level.addFreshEntity(hourHand);
-		
+
 		if (contraption.getLeft()
 			.containsBlockBreakers())
 			award(AllAdvancements.CONTRAPTION_ACTORS);
@@ -254,12 +255,12 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 			minuteHand.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
 			minuteHand.setRotationAxis(direction.getAxis());
 			level.addFreshEntity(minuteHand);
-			
+
 			if (contraption.getRight()
 				.containsBlockBreakers())
 				award(AllAdvancements.CONTRAPTION_ACTORS);
 		}
-		
+
 		award(AllAdvancements.CLOCKWORK_BEARING);
 
 		// Run

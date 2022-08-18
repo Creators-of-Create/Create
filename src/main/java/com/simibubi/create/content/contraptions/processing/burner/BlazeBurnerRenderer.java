@@ -15,10 +15,10 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -55,7 +55,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		BlockState state = context.state;
 		if (BlazeBurnerBlock.getHeatLevelOf(state) == HeatLevel.KINDLED)
 			state = state.setValue(BlazeBurnerBlock.HEAT_LEVEL, HeatLevel.FADING);
-		float value = AngleHelper.rad(headAngle.getValue(AnimationTickHolder.getPartialTicks(context.world)));
+		float value = AngleHelper.rad(headAngle.getValue(WorldTickHolder.getPartialTicks(context.world)));
 		renderShared(context.world, buffer, matrices.getModel(), matrices.getViewProjection(), state, value, 0,
 			context.tileData.contains("Goggles"), conductor, context.hashCode());
 	}
@@ -66,7 +66,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 
 		boolean blockAbove = animation > 0.125f;
 		HeatLevel heatLevel = BlazeBurnerBlock.getHeatLevelOf(blockState);
-		float time = AnimationTickHolder.getRenderTime(level);
+		float time = WorldTickHolder.getRenderTime(level);
 		float renderTick = time + (hashCode % 13) * 16f;
 		float offsetMult = heatLevel.isAtLeast(HeatLevel.FADING) ? 64 : 16;
 		float offset = Mth.sin((float) ((renderTick / 16f) % (2 * Math.PI))) / offsetMult;

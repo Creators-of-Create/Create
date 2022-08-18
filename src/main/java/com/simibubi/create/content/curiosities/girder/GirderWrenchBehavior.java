@@ -8,13 +8,13 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -91,7 +91,7 @@ public class GirderWrenchBehavior {
 				.getNormal())
 				.scale(0.1 * normalMultiplier));
 
-		CreateClient.OUTLINER.showAABB("girderWrench", new AABB(corner1, corner2))
+		CatnipClient.OUTLINER.showAABB("girderWrench", new AABB(corner1, corner2))
 			.lineWidth(1 / 32f)
 			.colored(new Color(127, 127, 127));
 	}

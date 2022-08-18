@@ -7,9 +7,9 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

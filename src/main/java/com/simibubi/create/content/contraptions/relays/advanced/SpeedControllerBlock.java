@@ -11,10 +11,10 @@ import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
+import net.createmod.catnip.utility.placement.PlacementOffset;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -111,7 +111,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	public Class<SpeedControllerTileEntity> getTileEntityClass() {
 		return SpeedControllerTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SpeedControllerTileEntity> getTileEntityType() {
 		return AllTileEntities.ROTATION_SPEED_CONTROLLER.get();

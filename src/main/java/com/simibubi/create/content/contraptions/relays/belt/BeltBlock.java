@@ -26,7 +26,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.utility.Iterate;
+import net.createmod.catnip.utility.Iterate;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;

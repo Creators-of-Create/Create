@@ -5,16 +5,17 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -31,7 +32,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class FunnelScenes {
 
-	public static void intro(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void intro(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("funnel_intro", "Using funnels");
 		scene.configureBasePlate(0, 1, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -105,7 +107,8 @@ public class FunnelScenes {
 		scene.markAsFinished();
 	}
 
-	public static void directionality(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void directionality(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("funnel_direction", "Direction of Transfer");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -165,7 +168,7 @@ public class FunnelScenes {
 
 		// Wrench interaction
 		InputWindowElement wrenchControls = new InputWindowElement(topSide, Pointing.RIGHT).rightClick()
-			.withWrench();
+			.withItem(AllItems.WRENCH.asStack());
 		scene.overlay.showControls(wrenchControls, 40);
 		scene.idle(10);
 		scene.world.modifyBlock(topFunnel, s -> s.cycle(FunnelBlock.EXTRACTING), true);
@@ -248,7 +251,8 @@ public class FunnelScenes {
 		}
 	}
 
-	public static void compat(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void compat(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("funnel_compat", "Funnel compatibility");
 		scene.configureBasePlate(0, 0, 5);
 
@@ -348,7 +352,8 @@ public class FunnelScenes {
 		scene.idle(60);
 	}
 
-	public static void brass(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void brass(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("brass_funnel", "The Brass Funnel");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);

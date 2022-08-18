@@ -10,8 +10,8 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTa
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
-import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
+import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;

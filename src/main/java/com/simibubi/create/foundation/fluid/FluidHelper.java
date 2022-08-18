@@ -11,8 +11,8 @@ import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -48,15 +48,15 @@ public class FluidHelper {
 	public static boolean isLava(Fluid fluid) {
 		return convertToStill(fluid) == Fluids.LAVA;
 	}
-	
+
 	public static boolean isTag(Fluid fluid, TagKey<Fluid> pTag) {
 		return fluid.is(pTag);
 	}
-	
+
 	public static boolean isTag(FluidState fluid, TagKey<Fluid> pTag) {
 		return isTag(fluid.getType(), pTag);
 	}
-	
+
 	public static boolean isTag(FluidStack fluid, TagKey<Fluid> pTag) {
 		return isTag(fluid.getFluid(), pTag);
 	}

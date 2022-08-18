@@ -7,8 +7,9 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -108,10 +109,10 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 			if (signal != null) {
 				signal.cycleSignalType(pos);
 				if (player != null)
-					player.displayClientMessage(Lang.translateDirect("track_signal.mode_change." + signal.getTypeFor(pos)
+					player.displayClientMessage(CreateLang.translateDirect("track_signal.mode_change." + signal.getTypeFor(pos)
 						.getSerializedName()), true);
 			} else if (player != null)
-				player.displayClientMessage(Lang.translateDirect("track_signal.cannot_change_mode"), true);
+				player.displayClientMessage(CreateLang.translateDirect("track_signal.cannot_change_mode"), true);
 		});
 		return InteractionResult.SUCCESS;
 	}

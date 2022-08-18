@@ -8,8 +8,8 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 
 public class SchematicannonInstance extends BlockEntityInstance<SchematicannonTileEntity> implements DynamicInstance {

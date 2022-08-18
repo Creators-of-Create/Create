@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -48,7 +48,7 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 	public Object[] getTranslationParameters() {
 		String parameter = "";
 		if (levels != null)
-			parameter = Lang.translateDirect("item_attributes." + getTranslationKey() + "." + levels.key).getString();
+			parameter = CreateLang.translateDirect("item_attributes." + getTranslationKey() + "." + levels.key).getString();
 		return new Object[]{parameter};
 	}
 

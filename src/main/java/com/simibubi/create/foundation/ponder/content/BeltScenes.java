@@ -14,20 +14,21 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.FaceCursorPose;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.FacePointOfInterestPose;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.ParrotElement.FaceCursorPose;
+import net.createmod.ponder.foundation.element.ParrotElement.FacePointOfInterestPose;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -42,7 +43,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class BeltScenes {
 
-	public static void beltConnector(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void beltConnector(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("belt_connector", "Using Mechanical Belts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -145,7 +147,7 @@ public class BeltScenes {
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(shaftLocation), Pointing.DOWN).rightClick()
-			.withWrench(), 50);
+			.withItem(AllItems.WRENCH.asStack()), 50);
 		scene.idle(7);
 		scene.world.modifyBlock(shaftLocation, s -> s.setValue(BeltBlock.PART, BeltPart.MIDDLE), true);
 		scene.idle(10);
@@ -320,7 +322,8 @@ public class BeltScenes {
 		scene.markAsFinished();
 	}
 
-	public static void transport(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void transport(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("belt_transport", "Using Mechanical Belts for Logistics");
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);
@@ -472,7 +475,7 @@ public class BeltScenes {
 
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(beltPos.south()), Pointing.DOWN).rightClick()
-				.withWrench(), 40);
+				.withItem(AllItems.WRENCH.asStack()), 40);
 		scene.idle(7);
 		scene.world.modifyBlock(beltPos.south(), s -> s.setValue(BeltBlock.CASING, false), true);
 		scene.overlay.showText(80)
@@ -481,7 +484,8 @@ public class BeltScenes {
 			.pointAt(util.vector.blockSurface(beltPos.south(), Direction.WEST));
 	}
 
-	public static void depot(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void depot(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("depot", "Using Depots");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();

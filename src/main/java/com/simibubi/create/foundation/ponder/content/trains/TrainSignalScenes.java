@@ -4,18 +4,19 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.DancePose;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.FacePointOfInterestPose;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.ParrotElement.DancePose;
+import net.createmod.ponder.foundation.element.ParrotElement.FacePointOfInterestPose;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
@@ -23,7 +24,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class TrainSignalScenes {
 
-	public static void placement(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void placement(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("train_signal_placement", "Placing Train Signals");
 		scene.configureBasePlate(1, 0, 12);
 		scene.scaleSceneView(.65f);
@@ -48,7 +50,7 @@ public class TrainSignalScenes {
 		Selection secondNixie = util.select.position(8, 2, 9);
 		Selection thirdNixie = util.select.position(9, 4, 8);
 		Selection train = util.select.fromTo(5, 2, 5, 1, 3, 7);
-		
+
 		scene.world.toggleControls(util.grid.at(3, 3, 6));
 
 		Vec3 marker = util.vector.topOf(8, 0, 6)
@@ -202,7 +204,8 @@ public class TrainSignalScenes {
 		scene.idle(70);
 	}
 
-	public static void signaling(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void signaling(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("train_signal_signaling", "Collision Prevention with Signals");
 		scene.configureBasePlate(1, 0, 15);
 		scene.scaleSceneView(.5f);
@@ -214,7 +217,7 @@ public class TrainSignalScenes {
 			scene.world.showSection(util.select.position(i, 1, 15 - i), Direction.DOWN);
 			scene.idle(1);
 		}
-		
+
 		scene.world.toggleControls(util.grid.at(13, 3, 7));
 		scene.world.toggleControls(util.grid.at(13, 3, 1));
 		scene.world.toggleControls(util.grid.at(13, 3, 4));
@@ -341,7 +344,7 @@ public class TrainSignalScenes {
 
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(s1Pos, Direction.EAST), Pointing.RIGHT).rightClick()
-				.withWrench(),
+				.withItem(AllItems.WRENCH.asStack()),
 			80);
 		scene.idle(6);
 		scene.world.cycleBlockProperty(s1Pos, SignalBlock.TYPE);
@@ -486,7 +489,8 @@ public class TrainSignalScenes {
 		scene.idle(60);
 	}
 
-	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void redstone(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("train_signal_redstone", "Signals & Redstone");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(.75f);

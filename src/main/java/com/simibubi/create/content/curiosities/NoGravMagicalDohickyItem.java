@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities;
 
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.utility.VecHelper;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;

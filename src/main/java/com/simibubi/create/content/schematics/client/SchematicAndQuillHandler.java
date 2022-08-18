@@ -13,20 +13,20 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
-import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.FilesHelper;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.outliner.Outliner;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.outliner.Outliner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -91,7 +91,7 @@ public class SchematicAndQuillHandler {
 		firstPos = new BlockPos(bb.minX, bb.minY, bb.minZ);
 		secondPos = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
 		LocalPlayer player = Minecraft.getInstance().player;
-		Lang.translate("schematicAndQuill.dimensions", (int) bb.getXsize() + 1, (int) bb.getYsize() + 1,
+		CreateLang.translate("schematicAndQuill.dimensions", (int) bb.getXsize() + 1, (int) bb.getYsize() + 1,
 			(int) bb.getZsize() + 1)
 			.sendStatus(player);
 
@@ -117,20 +117,20 @@ public class SchematicAndQuillHandler {
 		}
 
 		if (selectedPos == null) {
-			Lang.translate("schematicAndQuill.noTarget")
+			CreateLang.translate("schematicAndQuill.noTarget")
 				.sendStatus(player);
 			return;
 		}
 
 		if (firstPos != null) {
 			secondPos = selectedPos;
-			Lang.translate("schematicAndQuill.secondPos")
+			CreateLang.translate("schematicAndQuill.secondPos")
 				.sendStatus(player);
 			return;
 		}
 
 		firstPos = selectedPos;
-		Lang.translate("schematicAndQuill.firstPos")
+		CreateLang.translate("schematicAndQuill.firstPos")
 			.sendStatus(player);
 	}
 
@@ -138,7 +138,7 @@ public class SchematicAndQuillHandler {
 		LocalPlayer player = Minecraft.getInstance().player;
 		firstPos = null;
 		secondPos = null;
-		Lang.translate("schematicAndQuill.abort")
+		CreateLang.translate("schematicAndQuill.abort")
 			.sendStatus(player);
 	}
 
@@ -221,7 +221,7 @@ public class SchematicAndQuillHandler {
 		t.fillFromWorld(level, origin, bounds, true, Blocks.AIR);
 
 		if (string.isEmpty())
-			string = Lang.translateDirect("schematicAndQuill.fallbackName")
+			string = CreateLang.translateDirect("schematicAndQuill.fallbackName")
 				.getString();
 
 		String folderPath = "schematics";
@@ -246,7 +246,7 @@ public class SchematicAndQuillHandler {
 		firstPos = null;
 		secondPos = null;
 		LocalPlayer player = Minecraft.getInstance().player;
-		Lang.translate("schematicAndQuill.saved", filepath)
+		CreateLang.translate("schematicAndQuill.saved", filepath)
 			.sendStatus(player);
 
 		if (!convertImmediately)
@@ -268,7 +268,7 @@ public class SchematicAndQuillHandler {
 	}
 
 	private Outliner outliner() {
-		return CreateClient.OUTLINER;
+		return CatnipClient.OUTLINER;
 	}
 
 }

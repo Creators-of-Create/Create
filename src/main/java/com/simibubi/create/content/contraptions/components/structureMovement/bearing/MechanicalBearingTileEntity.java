@@ -12,10 +12,10 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -51,7 +51,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translateDirect("contraptions.movement_mode"),
+		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, CreateLang.translateDirect("contraptions.movement_mode"),
 			this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
@@ -177,7 +177,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		level.addFreshEntity(movedContraption);
 
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);
-		
+
 		if (contraption.containsBlockBreakers())
 			award(AllAdvancements.CONTRAPTION_ACTORS);
 

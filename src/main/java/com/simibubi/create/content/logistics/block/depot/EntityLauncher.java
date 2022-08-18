@@ -1,8 +1,7 @@
 package com.simibubi.create.content.logistics.block.depot;
 
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
-
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -97,40 +96,40 @@ public class EntityLauncher {
 		 * Vertical Motion fv(x) = (x - 0.08) * 0.98
 		 * (Gravity modification ignored)
 		 * > See LivingEntity.travel()
-		 * 
+		 *
 		 ** n-th Iterative
 		 * (= given initial velocity x, motion after t ticks)
 		 * X'(x, t) = x * 0.91^t
 		 * Y'(x, t) = x * 0.98^t + ((0.98^t - 1) / (0.98 - 1)) * -0.0784
-		 * 
+		 *
 		 ** integral
 		 * (= given intial velocity x, location offset after t ticks)
 		 * X(x, t) = -10.6033x * (-1 + 0.91^t)
 		 * Y(x, t) = -49.4983x * 0.98^t + 49.4983x - 194.033 * 0.98^t - 3.92t + 194.033
-		 * 
+		 *
 		 ** argmax y
 		 * (= given initial y velocity, ticks at which y reaches top)
 		 * tPeak(x) = log(98 / (25x + 98)) / (2*log(7) - 2*log(5) - log(2))
-		 * 
+		 *
 		 ** max y
 		 * (= given initial y velocity, height offset at tPeak)
 		 * yPeak(x) = 889.636 + 49.4983x + 0.032928/(98 + 25x) + 194.033 * log(1/(98 + 25x))
-		 * 
+		 *
 		 ** yPeak inverse (Zelo's approximation)
 		 * (= given yPeak, initial y velocity required to reach it at max)
 		 * yMotion(h) = sqrt(2h/13) + 0.015h
-		 * 
+		 *
 		 ** Y'(x, t) inverse (Simi's approximation)
 		 * (= given yTarget and initial y velocity, elapsed ticks when arc hits yTarget on its way down)
 		 * t*(x, v) = sqrt(yPeak(v) - x) * 4.87 + 0.115 * (yPeak(v) - x) + tPeak(v)
-		 * 
+		 *
 		 ** xMotion
 		 * (= given t* and xTarget, initial x velocity such that X'(x, t*) = xTarget)
 		 * xMotion(t, x) = x / (-10.6033 * (-1 + 0.91^t));
-		 * 
+		 *
 		 ** xError
 		 * Interpolated correction function from observed inaccuracies in-game
-		 * 
+		 *
 		 */
 
 		double xError = (-0.0007 * Math.pow(xTarget + .5, 2) + 0.484)

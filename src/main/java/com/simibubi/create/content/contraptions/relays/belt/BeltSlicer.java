@@ -7,15 +7,15 @@ import java.util.Optional;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -169,14 +169,14 @@ public class BeltSlicer {
 					if (itemstack.isEmpty())
 						continue;
 					int count = itemstack.getCount();
-					
+
 					if (AllItems.BELT_CONNECTOR.isIn(itemstack)) {
 						if (!world.isClientSide)
 							itemstack.shrink(1);
 						beltFound = true;
 						continue;
 					}
-					
+
 					if (AllBlocks.SHAFT.isIn(itemstack)) {
 						int taken = Math.min(count, requiredShafts - amountRetrieved);
 						if (!world.isClientSide)
@@ -470,13 +470,13 @@ public class BeltSlicer {
 			return;
 
 		if (feedback.langKey != null)
-			mc.player.displayClientMessage(Lang.translateDirect(feedback.langKey)
+			mc.player.displayClientMessage(CreateLang.translateDirect(feedback.langKey)
 				.withStyle(feedback.formatting), true);
 		else
 			mc.player.displayClientMessage(new TextComponent(""), true);
 
 		if (feedback.bb != null)
-			CreateClient.OUTLINER.chaseAABB("BeltSlicer", feedback.bb)
+			CatnipClient.OUTLINER.chaseAABB("BeltSlicer", feedback.bb)
 				.lineWidth(1 / 16f)
 				.colored(feedback.color);
 	}

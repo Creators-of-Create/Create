@@ -8,10 +8,10 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -60,6 +60,8 @@ public class HarvesterActorInstance extends ActorInstance {
         double arcLength = context.motion.length();
 
         double radians = arcLength * oneOverRadius;
+
+
 
         float deg = AngleHelper.deg(radians);
 

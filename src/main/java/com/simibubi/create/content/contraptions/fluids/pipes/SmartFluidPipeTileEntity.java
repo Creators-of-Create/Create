@@ -10,8 +10,8 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.catnip.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

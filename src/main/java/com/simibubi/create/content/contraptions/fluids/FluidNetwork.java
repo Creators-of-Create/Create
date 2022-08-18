@@ -16,10 +16,10 @@ import com.simibubi.create.content.contraptions.components.actors.PortableFluidI
 import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.BlockFace;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

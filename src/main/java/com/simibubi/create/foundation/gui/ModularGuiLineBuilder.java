@@ -6,9 +6,9 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.gui.widget.TooltipArea;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.TextComponent;
@@ -40,12 +40,12 @@ public class ModularGuiLineBuilder {
 		addScrollInput(input, inputTransform, dataKey);
 		return this;
 	}
-	
+
 	public ModularGuiLineBuilder customArea(int x, int width) {
 		target.customBoxes.add(Couple.create(x, width));
 		return this;
 	}
-	
+
 	public ModularGuiLineBuilder speechBubble() {
 		target.speechBubble = true;
 		return this;

@@ -20,17 +20,18 @@ import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.ponder.content.PonderIndex;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.CreatePonderIndex;
+import com.simibubi.create.foundation.ponder.CreatePonderTag;
+import com.simibubi.create.foundation.ponder.CreateSharedPonderText;
+import com.simibubi.create.foundation.ponder.PonderWorldTileFix;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ShippedResourcePacks;
-import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
-import com.simibubi.create.foundation.utility.outliner.Outliner;
 
+import net.createmod.ponder.foundation.PonderIndex;
+import net.createmod.ponder.foundation.PonderWorld;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
@@ -48,8 +49,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class CreateClient {
 
 	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
-	public static final Outliner OUTLINER = new Outliner();
-	public static final GhostBlocks GHOST_BLOCKS = new GhostBlocks();
+	//public static final Outliner OUTLINER = new Outliner();
 	public static final ModelSwapper MODEL_SWAPPER = new ModelSwapper();
 	public static final CasingConnectivity CASING_CONNECTIVITY = new CasingConnectivity();
 
@@ -75,6 +75,8 @@ public class CreateClient {
 
 		ZAPPER_RENDER_HANDLER.registerListeners(forgeEventBus);
 		POTATO_CANNON_RENDER_HANDLER.registerListeners(forgeEventBus);
+
+		CreateSharedPonderText.loadClass();
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
@@ -83,7 +85,6 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
 		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
-		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
 
@@ -92,12 +93,13 @@ public class CreateClient {
 		AllBlockPartials.init();
 		AllStitchedTextures.init();
 
-		PonderIndex.register();
-		PonderIndex.registerTags();
+		CreatePonderIndex.register();
+		CreatePonderIndex.registerTags();
+		PonderIndex.addIndex(CreatePonderIndex::register);
+		PonderIndex.addIndex(CreatePonderTag::register);
+		PonderWorld.onRestore(PonderWorldTileFix::fixControllerTiles);
 
 		registerOverlays();
-
-		UIRenderHelper.init();
 	}
 
 	private static void registerOverlays() {

@@ -2,20 +2,20 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 
 public interface IControlContraption {
 
 	public boolean isAttachedTo(AbstractContraptionEntity contraption);
-	
+
 	public void attach(ControlledContraptionEntity contraption);
 
 	public void onStall();
 
 	public boolean isValid();
-	
+
 	public BlockPos getBlockPosition();
 
 	static enum MovementMode implements INamedIconOptions {

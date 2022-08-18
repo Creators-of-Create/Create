@@ -7,8 +7,8 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -189,7 +189,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	public Class<CrushingWheelTileEntity> getTileEntityClass() {
 		return CrushingWheelTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends CrushingWheelTileEntity> getTileEntityType() {
 		return AllTileEntities.CRUSHING_WHEEL.get();

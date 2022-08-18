@@ -9,9 +9,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.TickableGuiEventListener;
-import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 
+import net.createmod.catnip.gui.TickableGuiEventListener;
+import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -141,7 +141,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 			return false;
 		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
 	}
-	
+
 	@Override
 	public GuiEventListener getFocused() {
 		GuiEventListener focused = super.getFocused();

@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.tools.Tools;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,7 +18,7 @@ import net.minecraft.network.chat.TextComponent;
 
 public class ToolSelectionScreen extends Screen {
 
-	public final String scrollToCycle = Lang.translateDirect("gui.toolmenu.cycle")
+	public final String scrollToCycle = CreateLang.translateDirect("gui.toolmenu.cycle")
 		.getString();
 	public final String holdToFocus = "gui.toolmenu.focusKey";
 
@@ -75,7 +75,7 @@ public class ToolSelectionScreen extends Screen {
 		RenderSystem.setShaderColor(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
 
 		RenderSystem.setShaderTexture(0, gray.location);
-		blit(matrixStack, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
+		blit(matrixStack, x - 15, y, gray.getStartX(), gray.getStartY(), w, h, gray.getWidth(), gray.getHeight());
 
 		float toolTipAlpha = yOffset / 10;
 		List<Component> toolTip = tools.get(selection)
@@ -84,7 +84,7 @@ public class ToolSelectionScreen extends Screen {
 
 		if (toolTipAlpha > 0.25f) {
 			RenderSystem.setShaderColor(.7f, .7f, .8f, toolTipAlpha);
-			blit(matrixStack, x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
+			blit(matrixStack, x - 15, y + 33, gray.getStartX(), gray.getStartY(), w, h + 22, gray.getWidth(), gray.getHeight());
 			RenderSystem.setShaderColor(1, 1, 1, 1);
 
 			if (toolTip.size() > 0)
@@ -103,7 +103,7 @@ public class ToolSelectionScreen extends Screen {
 			int width = minecraft.getWindow()
 				.getGuiScaledWidth();
 			if (!focused)
-				drawCenteredString(matrixStack, minecraft.font, Lang.translateDirect(holdToFocus, keyName), width / 2,
+				drawCenteredString(matrixStack, minecraft.font, CreateLang.translateDirect(holdToFocus, keyName), width / 2,
 					y - 10, 0xCCDDFF);
 			else
 				drawCenteredString(matrixStack, minecraft.font, scrollToCycle, width / 2, y - 10, 0xCCDDFF);

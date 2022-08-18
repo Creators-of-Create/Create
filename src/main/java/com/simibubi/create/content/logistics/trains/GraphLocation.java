@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.trains;
 
-import com.simibubi.create.foundation.utility.Couple;
+import net.createmod.catnip.utility.Couple;
 
 public class GraphLocation {
-	
+
 	public TrackGraph graph;
 	public Couple<TrackNodeLocation> edge;
 	public double position;
-	
+
 }

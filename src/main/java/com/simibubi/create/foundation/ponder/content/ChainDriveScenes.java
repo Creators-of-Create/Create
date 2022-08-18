@@ -1,17 +1,19 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.TextWindowElement.Builder;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.TextWindowElement.Builder;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -20,7 +22,8 @@ import net.minecraft.world.phys.AABB;
 
 public class ChainDriveScenes {
 
-	public static void chainDriveAsRelay(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void chainDriveAsRelay(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("chain_drive", "Relaying rotational force with Chain Drives");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -76,7 +79,7 @@ public class ChainDriveScenes {
 
 		scene.addKeyframe();
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(rotatedECD), Pointing.DOWN).rightClick()
-			.withWrench(), 30);
+			.withItem(AllItems.WRENCH.asStack()), 30);
 		scene.idle(7);
 		scene.world.modifyBlock(rotatedECD, s -> s.setValue(EncasedBeltBlock.AXIS, Axis.Y), true);
 		scene.idle(40);
@@ -94,7 +97,8 @@ public class ChainDriveScenes {
 		scene.markAsFinished();
 	}
 
-	public static void adjustableChainGearshift(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void adjustableChainGearshift(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("chain_gearshift", "Controlling rotational speed with Chain Gearshifts");
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);
@@ -255,14 +259,14 @@ public class ChainDriveScenes {
 
 		for (BlockPos gauge : new BlockPos[] { eastGauge, middleGauge, westGauge }) {
 			scene.idle(5);
-			Builder builder = scene.overlay.showText(180)
+			Builder textBuilder = scene.overlay.showText(180)
 				.colored(gauge == westGauge ? PonderPalette.SLOW : PonderPalette.MEDIUM)
 				.placeNearTarget()
 				.pointAt(util.vector.blockSurface(gauge, Direction.NORTH));
 			if (gauge == westGauge)
-				builder.text("12 RPM");
+				textBuilder.text("12 RPM");
 			else
-				builder.sharedText(gauge == eastGauge ? "rpm16_source" : "rpm16");
+				textBuilder.sharedText(gauge == eastGauge ? "rpm16_source" : "rpm16");
 		}
 	}
 

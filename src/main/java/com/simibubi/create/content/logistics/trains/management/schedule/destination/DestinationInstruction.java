@@ -7,9 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -44,7 +44,7 @@ public class DestinationInstruction extends TextScheduleInstruction {
 	public String getFilter() {
 		return getLabelText();
 	}
-	
+
 	public String getFilterForRegex() {
 		String filter = getFilter();
 		if (filter.isBlank())
@@ -54,12 +54,12 @@ public class DestinationInstruction extends TextScheduleInstruction {
 
 	@Override
 	public List<Component> getSecondLineTooltip(int slot) {
-		return ImmutableList.of(Lang.translateDirect("schedule.instruction.filter_edit_box"),
-			Lang.translateDirect("schedule.instruction.filter_edit_box_1")
+		return ImmutableList.of(CreateLang.translateDirect("schedule.instruction.filter_edit_box"),
+			CreateLang.translateDirect("schedule.instruction.filter_edit_box_1")
 				.withStyle(ChatFormatting.GRAY),
-			Lang.translateDirect("schedule.instruction.filter_edit_box_2")
+			CreateLang.translateDirect("schedule.instruction.filter_edit_box_2")
 				.withStyle(ChatFormatting.DARK_GRAY),
-			Lang.translateDirect("schedule.instruction.filter_edit_box_3")
+			CreateLang.translateDirect("schedule.instruction.filter_edit_box_3")
 				.withStyle(ChatFormatting.DARK_GRAY));
 	}
 

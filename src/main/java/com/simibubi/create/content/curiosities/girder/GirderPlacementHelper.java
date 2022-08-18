@@ -7,9 +7,9 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementOffset;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

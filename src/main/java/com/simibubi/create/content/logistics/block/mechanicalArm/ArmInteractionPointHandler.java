@@ -7,11 +7,11 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -64,8 +64,8 @@ public class ArmInteractionPointHandler {
 		selected.cycleMode();
 		if (player != null) {
 			Mode mode = selected.getMode();
-			Lang.builder()
-				.translate(mode.getTranslationKey(), Lang.blockName(state)
+			CreateLang.builder()
+				.translate(mode.getTranslationKey(), CreateLang.blockName(state)
 					.style(ChatFormatting.WHITE))
 				.color(mode.getColor())
 				.sendStatus(player);
@@ -104,7 +104,7 @@ public class ArmInteractionPointHandler {
 
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (removed > 0) {
-			Lang.builder()
+			CreateLang.builder()
 				.translate("mechanical_arm.points_outside_range", removed)
 				.style(ChatFormatting.RED)
 				.sendStatus(player);
@@ -118,7 +118,7 @@ public class ArmInteractionPointHandler {
 					inputs++;
 			}
 			if (inputs + outputs > 0)
-				Lang.builder()
+				CreateLang.builder()
 					.translate("mechanical_arm.summary", inputs, outputs)
 					.style(ChatFormatting.WHITE)
 					.sendStatus(player);
@@ -201,7 +201,7 @@ public class ArmInteractionPointHandler {
 
 			int color = point.getMode()
 				.getColor();
-			CreateClient.OUTLINER.showAABB(point, shape.bounds()
+			CatnipClient.OUTLINER.showAABB(point, shape.bounds()
 				.move(pos))
 				.colored(color)
 				.lineWidth(1 / 16f);

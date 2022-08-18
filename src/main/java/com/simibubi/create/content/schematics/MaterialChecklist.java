@@ -7,7 +7,7 @@ import java.util.Locale;
 
 import com.google.common.collect.Sets;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -81,7 +81,7 @@ public class MaterialChecklist {
 
 		if (blocksNotLoaded) {
 			textComponent = new TextComponent("\n" + ChatFormatting.RED);
-			textComponent = textComponent.append(Lang.translateDirect("materialChecklist.blocksNotLoaded"));
+			textComponent = textComponent.append(CreateLang.translateDirect("materialChecklist.blocksNotLoaded"));
 			pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
 		}
 
@@ -135,7 +135,7 @@ public class MaterialChecklist {
 		tag.put("pages", pages);
 		tag.putString("author", "Schematicannon");
 		tag.putString("title", ChatFormatting.BLUE + "Material Checklist");
-		textComponent = Lang.translateDirect("materialChecklist")
+		textComponent = CreateLang.translateDirect("materialChecklist")
 			.setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)
 				.withItalic(Boolean.FALSE));
 		book.getOrCreateTagElement("display")

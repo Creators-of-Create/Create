@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.ponder.content.fluid;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
@@ -12,17 +13,18 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.utility.Pointing;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +37,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidTankScenes {
 
-	public static void storage(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void storage(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("fluid_tank_storage", "Storing Fluids in Fluid Tanks");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -335,7 +338,7 @@ public class FluidTankScenes {
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(3, 3, 1), Direction.NORTH), Pointing.RIGHT)
 				.rightClick()
-				.withWrench(),
+				.withItem(AllItems.WRENCH.asStack()),
 			60);
 		scene.idle(7);
 		scene.world.modifyBlocks(full2, s -> s.setValue(FluidTankBlock.SHAPE, FluidTankBlock.Shape.PLAIN), false);
@@ -349,7 +352,8 @@ public class FluidTankScenes {
 		scene.idle(50);
 	}
 
-	public static void creative(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void creative(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("creative_fluid_tank", "Creative Fluid Tanks");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();

@@ -21,8 +21,8 @@ import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

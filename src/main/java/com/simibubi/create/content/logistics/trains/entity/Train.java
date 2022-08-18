@@ -47,13 +47,13 @@ import com.simibubi.create.content.logistics.trains.management.schedule.Schedule
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -125,7 +125,7 @@ public class Train {
 	public int honkPitch;
 
 	public float accumulatedSteamRelease;
-	
+
 	int tickOffset;
 	double[] stress;
 
@@ -142,7 +142,7 @@ public class Train {
 		this.carriageSpacing = carriageSpacing;
 		this.icon = TrainIconType.getDefault();
 		this.stress = new double[carriageSpacing.size()];
-		this.name = Lang.translateDirect("train.unnamed");
+		this.name = CreateLang.translateDirect("train.unnamed");
 		this.status = new TrainStatus(this);
 		this.doubleEnded = doubleEnded;
 
@@ -315,7 +315,7 @@ public class Train {
 						entries++;
 					}
 				}
-				
+
 
 				if (entries > 0)
 					actual = total / entries;
@@ -372,7 +372,7 @@ public class Train {
 				toFollowBackward == null ? navigation::control : mp -> mp.follow(toFollowBackward);
 
 			double totalStress = derailed ? 0 : leadingStress + trailingStress;
-			
+
 			boolean first = i == 0;
 			boolean last = i == carriageCount - 1;
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;

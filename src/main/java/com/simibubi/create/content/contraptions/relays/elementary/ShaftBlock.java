@@ -9,11 +9,11 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
-import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
+import com.simibubi.create.foundation.utility.placement.PoleHelper;
 
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
+import net.createmod.catnip.utility.placement.PlacementOffset;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

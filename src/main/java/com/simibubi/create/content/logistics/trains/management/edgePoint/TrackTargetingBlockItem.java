@@ -17,10 +17,10 @@ import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.Bezi
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -69,7 +69,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		if (player.isSteppingCarefully() && stack.hasTag()) {
 			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
-			player.displayClientMessage(Lang.translateDirect("track_target.clear"), true);
+			player.displayClientMessage(CreateLang.translateDirect("track_target.clear"), true);
 			stack.setTag(null);
 			AllSoundEvents.CONTROLLER_CLICK.play(level, null, pos, 1, .5f);
 			return InteractionResult.SUCCESS;
@@ -88,7 +88,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 			withGraphLocation(level, pos, front, null, type, (overlap, location) -> result.setValue(overlap));
 
 			if (result.getValue().feedback != null) {
-				player.displayClientMessage(Lang.translateDirect(result.getValue().feedback)
+				player.displayClientMessage(CreateLang.translateDirect(result.getValue().feedback)
 					.withStyle(ChatFormatting.RED), true);
 				AllSoundEvents.DENY.play(level, null, pos, .5f, 1);
 				return InteractionResult.FAIL;
@@ -98,14 +98,14 @@ public class TrackTargetingBlockItem extends BlockItem {
 			stackTag.put("SelectedPos", NbtUtils.writeBlockPos(pos));
 			stackTag.putBoolean("SelectedDirection", front);
 			stackTag.remove("Bezier");
-			player.displayClientMessage(Lang.translateDirect("track_target.set"), true);
+			player.displayClientMessage(CreateLang.translateDirect("track_target.set"), true);
 			stack.setTag(stackTag);
 			AllSoundEvents.CONTROLLER_CLICK.play(level, null, pos, 1, 1);
 			return InteractionResult.SUCCESS;
 		}
 
 		if (!stack.hasTag()) {
-			player.displayClientMessage(Lang.translateDirect("track_target.missing")
+			player.displayClientMessage(CreateLang.translateDirect("track_target.missing")
 				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.FAIL;
 		}
@@ -121,7 +121,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		boolean bezier = tag.contains("Bezier");
 
 		if (!selectedPos.closerThan(placedPos, bezier ? 64 + 16 : 16)) {
-			player.displayClientMessage(Lang.translateDirect("track_target.too_far")
+			player.displayClientMessage(CreateLang.translateDirect("track_target.too_far")
 				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.FAIL;
 		}
@@ -139,12 +139,12 @@ public class TrackTargetingBlockItem extends BlockItem {
 		ItemStack itemInHand = player.getItemInHand(pContext.getHand());
 		if (!itemInHand.isEmpty())
 			itemInHand.setTag(null);
-		player.displayClientMessage(Lang.translateDirect("track_target.success")
+		player.displayClientMessage(CreateLang.translateDirect("track_target.success")
 			.withStyle(ChatFormatting.GREEN), true);
-		
+
 		if (type == EdgePointType.SIGNAL)
 			AllAdvancements.SIGNAL.awardTo(player);
-		
+
 		return useOn;
 	}
 

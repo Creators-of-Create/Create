@@ -6,7 +6,8 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
+import net.createmod.catnip.utility.AnimationTickHolder;
 
 public class RopePulleyInstance extends AbstractPulleyInstance {
 	public RopePulleyInstance(MaterialManager dispatcher, PulleyTileEntity tile) {

@@ -4,8 +4,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.ColoredOverlayTileEntityRenderer;
-import com.simibubi.create.foundation.utility.Color;
 
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class BrassDiodeRenderer extends ColoredOverlayTileEntityRenderer<BrassDiodeTileEntity> {

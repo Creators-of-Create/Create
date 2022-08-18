@@ -20,9 +20,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 
@@ -38,7 +38,7 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 
 	@Override
 	public void update() {
-		if (blockEntity.connections.isEmpty()) 
+		if (blockEntity.connections.isEmpty())
 			return;
 
 		remove();

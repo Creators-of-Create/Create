@@ -14,11 +14,11 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingHandler;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.WorldAttached;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

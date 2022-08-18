@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import com.simibubi.create.foundation.utility.Lang;
-
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.util.StringRepresentable;
 
 public enum BeltSlope implements StringRepresentable {

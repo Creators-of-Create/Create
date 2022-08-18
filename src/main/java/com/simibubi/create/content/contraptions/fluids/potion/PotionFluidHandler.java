@@ -8,9 +8,9 @@ import com.google.common.collect.Lists;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

@@ -12,12 +12,13 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.PartialModelGuiElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,13 +45,13 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 	@Override
 	protected void init() {
-		setWindowSize(30 + BG.width, BG.height + PLAYER.height - 24);
+		setWindowSize(30 + BG.getWidth(), BG.getHeight() + PLAYER.getHeight() - 24);
 		setWindowOffset(-11, 0);
 		super.init();
 
 		color = menu.contentHolder.getColor();
 
-		confirmButton = new IconButton(leftPos + 30 + BG.width - 33, topPos + BG.height - 24, AllIcons.I_CONFIRM);
+		confirmButton = new IconButton(leftPos + 30 + BG.getWidth() - 33, topPos + BG.getHeight() - 24, AllIcons.I_CONFIRM);
 		confirmButton.withCallback(() -> {
 			minecraft.player.closeContainer();
 		});
@@ -60,11 +61,11 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		disposeButton.withCallback(() -> {
 			AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
 		});
-		disposeButton.setToolTip(Lang.translateDirect("toolbox.depositBox"));
+		disposeButton.setToolTip(CreateLang.translateDirect("toolbox.depositBox"));
 		addRenderableWidget(disposeButton);
 
 		extraAreas = ImmutableList.of(
-			new Rect2i(leftPos + 30 + BG.width, topPos + BG.height - 15 - 34 - 6, 72, 68)
+			new Rect2i(leftPos + 30 + BG.getWidth(), topPos + BG.getHeight() - 15 - 34 - 6, 72, 68)
 		);
 	}
 
@@ -77,17 +78,17 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 	@Override
 	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-		int x = leftPos + imageWidth - BG.width;
+		int x = leftPos + imageWidth - BG.getWidth();
 		int y = topPos;
 
 		BG.render(ms, x, y, this);
 		font.draw(ms, title, x + 15, y + 4, 0x442000);
 
 		int invX = leftPos;
-		int invY = topPos + imageHeight - PLAYER.height;
+		int invY = topPos + imageHeight - PLAYER.getHeight();
 		renderPlayerInventory(ms, invX, invY);
 
-		renderToolbox(ms, x + BG.width + 50, y + BG.height + 12, partialTicks);
+		renderToolbox(ms, x + BG.getWidth() + 50, y + BG.getHeight() + 12, partialTicks);
 
 		hoveredToolboxSlot = null;
 		for (int compartment = 0; compartment < 8; compartment++) {
@@ -141,7 +142,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 			.translate(0, -6 / 16f, 12 / 16f)
 			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))
 			.translate(0, 6 / 16f, -12 / 16f);
-		GuiGameElement.of(AllBlockPartials.TOOLBOX_LIDS.get(color))
+		PartialModelGuiElement.of(AllBlockPartials.TOOLBOX_LIDS.get(color))
 			.render(ms);
 		ms.popPose();
 
@@ -149,7 +150,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 			ms.pushPose();
 			ms.translate(0, -offset * 1 / 8f,
 				menu.contentHolder.drawers.getValue(partialTicks) * -.175f * (2 - offset));
-			GuiGameElement.of(AllBlockPartials.TOOLBOX_DRAWER)
+			PartialModelGuiElement.of(AllBlockPartials.TOOLBOX_DRAWER)
 				.render(ms);
 			ms.popPose();
 		}

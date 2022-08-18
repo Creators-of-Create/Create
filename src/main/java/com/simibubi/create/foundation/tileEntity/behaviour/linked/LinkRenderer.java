@@ -3,17 +3,17 @@ package com.simibubi.create.foundation.tileEntity.behaviour.linked;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -42,8 +42,8 @@ public class LinkRenderer {
 		if (behaviour == null)
 			return;
 
-		Component freq1 = Lang.translateDirect("logistics.firstFrequency");
-		Component freq2 = Lang.translateDirect("logistics.secondFrequency");
+		Component freq1 = CreateLang.translateDirect("logistics.firstFrequency");
+		Component freq2 = CreateLang.translateDirect("logistics.secondFrequency");
 
 		for (boolean first : Iterate.trueAndFalse) {
 			AABB bb = new AABB(Vec3.ZERO, Vec3.ZERO).inflate(.25f);
@@ -54,7 +54,7 @@ public class LinkRenderer {
 			ValueBox box = new ValueBox(label, bb, pos).withColors(0x601F18, 0xB73C2D)
 					.offsetLabel(behaviour.textShift)
 					.passive(!hit);
-			CreateClient.OUTLINER.showValueBox(Pair.of(Boolean.valueOf(first), pos), box.transform(transform))
+			CatnipClient.OUTLINER.showOutline(Pair.of(Boolean.valueOf(first), pos), box.transform(transform))
 					.lineWidth(1 / 64f)
 					.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
 					.highlightFace(result.getDirection());
@@ -66,7 +66,7 @@ public class LinkRenderer {
 
 		if (te == null || te.isRemoved())
 			return;
-		
+
 		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 		float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
 		if (!te.isVirtual() && cameraEntity != null && cameraEntity.position()

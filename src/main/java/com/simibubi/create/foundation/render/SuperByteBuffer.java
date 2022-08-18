@@ -19,10 +19,10 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.utility.Color;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;

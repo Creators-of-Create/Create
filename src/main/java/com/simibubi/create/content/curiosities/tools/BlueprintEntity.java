@@ -17,10 +17,10 @@ import com.simibubi.create.content.schematics.ISpecialEntityItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.networking.ISyncPersistentData;
-import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

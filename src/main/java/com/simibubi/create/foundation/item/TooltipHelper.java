@@ -1,26 +1,20 @@
 package com.simibubi.create.foundation.item;
 
-import java.text.BreakIterator;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.google.common.base.Strings;
 import com.mojang.bridge.game.Language;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.FontHelper;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.FontHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,18 +23,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.client.MinecraftForgeClient;
 
 public class TooltipHelper {
 
-	public static final int maxWidthPerLine = 200;
 	public static final Map<String, ItemDescription> cachedTooltips = new HashMap<>();
 	public static Language cachedLanguage;
 	private static boolean gogglesMode;
 	private static final Map<Item, Supplier<String>> tooltipReferrals = new HashMap<>();
 
 	public static MutableComponent holdShift(Palette color, boolean highlighted) {
-		return Lang.translateDirect("tooltip.holdForDescription", Lang.translateDirect("tooltip.keyShift")
+		return CreateLang.translateDirect("tooltip.holdForDescription", CreateLang.translateDirect("tooltip.keyShift")
 			.withStyle(ChatFormatting.GRAY))
 			.withStyle(ChatFormatting.DARK_GRAY);
 	}
@@ -48,10 +40,10 @@ public class TooltipHelper {
 	public static void addHint(List<Component> tooltip, String hintKey, Object... messageParams) {
 		Component spacing = IHaveGoggleInformation.componentSpacing;
 		tooltip.add(spacing.plainCopy()
-			.append(Lang.translateDirect(hintKey + ".title"))
+			.append(CreateLang.translateDirect(hintKey + ".title"))
 			.withStyle(ChatFormatting.GOLD));
-		Component hint = Lang.translateDirect(hintKey);
-		List<Component> cutComponent = TooltipHelper.cutTextComponent(hint, ChatFormatting.GRAY, ChatFormatting.WHITE);
+		Component hint = CreateLang.translateDirect(hintKey);
+		List<Component> cutComponent = FontHelper.cutTextComponent(hint, ChatFormatting.GRAY, ChatFormatting.WHITE);
 		for (Component component : cutComponent)
 			tooltip.add(spacing.plainCopy()
 				.append(component));
@@ -67,122 +59,7 @@ public class TooltipHelper {
 		tooltipReferrals.put(item.asItem(), () -> string);
 	}
 
-	@Deprecated
-	public static List<String> cutString(Component s, ChatFormatting defaultColor, ChatFormatting highlightColor) {
-		return cutString(s.getContents(), defaultColor, highlightColor, 0);
-	}
-
-	@Deprecated
-	public static List<String> cutString(String s, ChatFormatting defaultColor, ChatFormatting highlightColor,
-		int indent) {
-		// Apply markup
-		String markedUp = s.replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
-
-		// Split words
-		List<String> words = new LinkedList<>();
-		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
-		iterator.setText(markedUp);
-		int start = iterator.first();
-		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
-			String word = markedUp.substring(start, end);
-			words.add(word);
-		}
-
-		Font font = Minecraft.getInstance().font;
-		List<String> lines = FontHelper.cutString(font, markedUp, maxWidthPerLine);
-
-		// Format
-		String lineStart = Strings.repeat(" ", indent);
-		List<String> formattedLines = new ArrayList<>(lines.size());
-		String format = defaultColor.toString();
-		for (String line : lines) {
-			String formattedLine = format + lineStart + line;
-			formattedLines.add(formattedLine);
-//			format = TextFormatting.getFormatString(formattedLine);
-		}
-		return formattedLines;
-	}
-
-	public static List<Component> cutStringTextComponent(String c, ChatFormatting defaultColor,
-		ChatFormatting highlightColor) {
-		return cutTextComponent(new TextComponent(c), defaultColor, highlightColor, 0);
-	}
-
-	public static List<Component> cutTextComponent(Component c, ChatFormatting defaultColor,
-		ChatFormatting highlightColor) {
-		return cutTextComponent(c, defaultColor, highlightColor, 0);
-	}
-
-	public static List<Component> cutStringTextComponent(String c, ChatFormatting defaultColor,
-		ChatFormatting highlightColor, int indent) {
-		return cutTextComponent(new TextComponent(c), defaultColor, highlightColor, indent);
-	}
-
-	public static List<Component> cutTextComponent(Component c, ChatFormatting defaultColor,
-		ChatFormatting highlightColor, int indent) {
-		String s = c.getString();
-
-		// Apply markup
-		String markedUp = s;// .replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
-
-		// Split words
-		List<String> words = new LinkedList<>();
-		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
-		iterator.setText(markedUp);
-		int start = iterator.first();
-		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
-			String word = markedUp.substring(start, end);
-			words.add(word);
-		}
-
-		// Apply hard wrap
-		Font font = Minecraft.getInstance().font;
-		List<String> lines = new LinkedList<>();
-		StringBuilder currentLine = new StringBuilder();
-		int width = 0;
-		for (String word : words) {
-			int newWidth = font.width(word.replaceAll("_", ""));
-			if (width + newWidth > maxWidthPerLine) {
-				if (width > 0) {
-					String line = currentLine.toString();
-					lines.add(line);
-					currentLine = new StringBuilder();
-					width = 0;
-				} else {
-					lines.add(word);
-					continue;
-				}
-			}
-			currentLine.append(word);
-			width += newWidth;
-		}
-		if (width > 0) {
-			lines.add(currentLine.toString());
-		}
-
-		// Format
-		MutableComponent lineStart = new TextComponent(Strings.repeat(" ", indent));
-		lineStart.withStyle(defaultColor);
-		List<Component> formattedLines = new ArrayList<>(lines.size());
-		Couple<ChatFormatting> f = Couple.create(highlightColor, defaultColor);
-
-		boolean currentlyHighlighted = false;
-		for (String string : lines) {
-			MutableComponent currentComponent = lineStart.plainCopy();
-			String[] split = string.split("_");
-			for (String part : split) {
-				currentComponent.append(new TextComponent(part).withStyle(f.get(currentlyHighlighted)));
-				currentlyHighlighted = !currentlyHighlighted;
-			}
-
-			formattedLines.add(currentComponent);
-			currentlyHighlighted = !currentlyHighlighted;
-		}
-
-		return formattedLines;
-	}
-
-//	public static List<ITextComponent> cutTextComponentOld(ITextComponent c, TextFormatting defaultColor,
+	//	public static List<ITextComponent> cutTextComponentOld(ITextComponent c, TextFormatting defaultColor,
 //		TextFormatting highlightColor, int indent) {
 //		IFormattableTextComponent lineStart = StringTextComponent.EMPTY.copy();
 //		for (int i = 0; i < indent; i++)

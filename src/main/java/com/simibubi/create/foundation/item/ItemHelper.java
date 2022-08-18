@@ -10,8 +10,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;

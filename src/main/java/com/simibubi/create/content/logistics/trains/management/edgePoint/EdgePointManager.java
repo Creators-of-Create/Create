@@ -6,8 +6,9 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
+
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
 
 public class EdgePointManager {
 

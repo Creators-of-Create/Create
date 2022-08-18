@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;

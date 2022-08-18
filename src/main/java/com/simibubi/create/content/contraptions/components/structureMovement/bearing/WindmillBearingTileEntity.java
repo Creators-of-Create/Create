@@ -8,8 +8,9 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -52,7 +53,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		if (!running)
 			assembleNextTick = true;
 	}
-	
+
 	public void disassembleForMovement() {
 		if (!running)
 			return;
@@ -101,7 +102,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 		super.addBehaviours(behaviours);
 		behaviours.remove(movementMode);
 		movementDirection = new ScrollOptionBehaviour<>(RotationDirection.class,
-			Lang.translateDirect("contraptions.windmill.rotation_direction"), this, getMovementModeSlot());
+			CreateLang.translateDirect("contraptions.windmill.rotation_direction"), this, getMovementModeSlot());
 		movementDirection.requiresWrench();
 		movementDirection.withCallback($ -> onDirectionChanged());
 		behaviours.add(movementDirection);

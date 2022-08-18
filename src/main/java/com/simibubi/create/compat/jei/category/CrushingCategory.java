@@ -13,12 +13,12 @@ import com.simibubi.create.content.contraptions.components.crusher.AbstractCrush
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.ponder.ui.LayoutHelper;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.createmod.catnip.utility.layout.LayoutHelper;
 
 @ParametersAreNonnullByDefault
 public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecipe> {

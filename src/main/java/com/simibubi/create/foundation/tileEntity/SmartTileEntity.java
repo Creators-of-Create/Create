@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
+import net.createmod.ponder.foundation.VirtualTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -26,7 +27,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public abstract class SmartTileEntity extends CachedRenderBBTileEntity implements IPartialSafeNBT, IInteractionChecker, ISpecialBlockEntityItemRequirement {
+public abstract class SmartTileEntity extends CachedRenderBBTileEntity implements IPartialSafeNBT, IInteractionChecker, ISpecialBlockEntityItemRequirement, VirtualTileEntity {
 
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours = new HashMap<>();
 	private boolean initialized = false;
@@ -195,10 +196,12 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 		this.lazyTickCounter = slowTickRate;
 	}
 
+	@Override
 	public void markVirtual() {
 		virtualMode = true;
 	}
 
+	@Override
 	public boolean isVirtual() {
 		return virtualMode;
 	}

@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.itemAssembly;
 
-import com.simibubi.create.foundation.utility.Color;
-
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.CreativeModeTab;

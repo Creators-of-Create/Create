@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.signal;
 
-import com.simibubi.create.foundation.utility.Color;
+import net.createmod.catnip.utility.theme.Color;
 
 public enum EdgeGroupColor {
 
@@ -30,7 +30,7 @@ public enum EdgeGroupColor {
 			return mask;
 		return mask | this.mask;
 	}
-	
+
 	public Color get() {
 		return color;
 	}
@@ -38,7 +38,7 @@ public enum EdgeGroupColor {
 	public static EdgeGroupColor getDefault() {
 		return values()[0];
 	}
-	
+
 	public static EdgeGroupColor findNextAvailable(int mask) {
 		EdgeGroupColor[] values = values();
 		for (int i = 0; i < values.length; i++) {

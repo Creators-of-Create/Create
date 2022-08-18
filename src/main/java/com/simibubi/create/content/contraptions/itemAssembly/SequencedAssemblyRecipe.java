@@ -12,9 +12,9 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -213,7 +213,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	public boolean isSpecial() {
 		return true;
 	}
-	
+
 	@Override
 	public RecipeType<?> getType() {
 		return AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
@@ -240,9 +240,9 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 		int step = sequencedAssemblyRecipe.getStep(stack);
 		int total = length * sequencedAssemblyRecipe.loops;
 		toolTip.add(new TextComponent(""));
-		toolTip.add(Lang.translateDirect("recipe.sequenced_assembly")
+		toolTip.add(CreateLang.translateDirect("recipe.sequenced_assembly")
 			.withStyle(ChatFormatting.GRAY));
-		toolTip.add(Lang.translateDirect("recipe.assembly.progress", step, total)
+		toolTip.add(CreateLang.translateDirect("recipe.assembly.progress", step, total)
 			.withStyle(ChatFormatting.DARK_GRAY));
 
 		int remaining = total - step;
@@ -253,7 +253,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 			Component textComponent = sequencedRecipe.getAsAssemblyRecipe()
 				.getDescriptionForAssembly();
 			if (i == 0)
-				toolTip.add(Lang.translateDirect("recipe.assembly.next", textComponent)
+				toolTip.add(CreateLang.translateDirect("recipe.assembly.next", textComponent)
 					.withStyle(ChatFormatting.AQUA));
 			else
 				toolTip.add(new TextComponent("-> ").append(textComponent)

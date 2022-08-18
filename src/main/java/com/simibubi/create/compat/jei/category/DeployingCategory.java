@@ -7,7 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -47,7 +47,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 				.addTooltipCallback(addStochasticTooltip(recipe.getRollableResults().get(0)));
 
 		if (recipe.shouldKeepHeldItem()) {
-			handItemSlot.addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, Lang.translateDirect("recipe.deploying.not_consumed").withStyle(ChatFormatting.GOLD)));
+			handItemSlot.addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, CreateLang.translateDirect("recipe.deploying.not_consumed").withStyle(ChatFormatting.GOLD)));
 		}
 
 	}

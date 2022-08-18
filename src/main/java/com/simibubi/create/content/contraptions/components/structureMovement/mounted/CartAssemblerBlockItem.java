@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,7 +49,7 @@ public class CartAssemblerBlockItem extends BlockItem {
 		if (player == null)
 			return false;
 		if (!(block instanceof BaseRailBlock)) {
-			Lang.translate("block.cart_assembler.invalid")
+			CreateLang.translate("block.cart_assembler.invalid")
 				.sendStatus(player);
 			return false;
 		}

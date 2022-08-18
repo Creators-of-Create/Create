@@ -13,13 +13,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
-import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.TickableGuiEventListener;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.element.TextStencilElement;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.createmod.catnip.gui.TickableGuiEventListener;
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.gui.element.TextStencilElement;
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.theme.Color;
+import net.createmod.catnip.utility.theme.Theme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
@@ -177,7 +177,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 
 		public LabeledEntry(String label) {
 			this.label = new TextStencilElement(Minecraft.getInstance().font, label);
-			this.label.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.TEXT_ACCENT_STRONG)));
+			this.label.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.Key.TEXT_ACCENT_STRONG.p()));
 			labelTooltip = new ArrayList<>();
 		}
 
@@ -216,8 +216,8 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 				UIRenderHelper.breadcrumbArrow(ms, x - 10 - offset, y + 6, 0, -20, 24, -18, new Color(0x70_ffffff), Color.TRANSPARENT_BLACK);
 			}
 
-			UIRenderHelper.streak(ms, 0, x - 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
-			UIRenderHelper.streak(ms, 180, x + (int) (width * 1.35f) + 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
+			UIRenderHelper.streak(ms, 0, x - 10, y + height / 2, height - 6, width / 8 * 7, new Color(0xdd_000000));
+			UIRenderHelper.streak(ms, 180, x + (int) (width * 1.35f) + 10, y + height / 2, height - 6, width / 8 * 7, new Color(0xdd_000000));
 			MutableComponent component = label.getComponent();
 			Font font = Minecraft.getInstance().font;
 			if (font.width(component) > getLabelWidth(width) - 10) {
@@ -225,7 +225,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 			}
 			if (unit != null) {
 				int unitWidth = font.width(unit);
-				font.draw(ms, unit, x + getLabelWidth(width) - unitWidth - 5, y + height / 2 + 2, Theme.i(Theme.Key.TEXT_DARKER));
+				font.draw(ms, unit, x + getLabelWidth(width) - unitWidth - 5, y + height / 2 + 2, Theme.Key.TEXT_DARKER.i());
 				label.at(x + 10, y + height / 2 - 10, 0).render(ms);
 			} else {
 				label.at(x + 10, y + height / 2 - 4, 0).render(ms);

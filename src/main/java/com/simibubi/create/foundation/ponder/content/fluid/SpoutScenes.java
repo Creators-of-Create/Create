@@ -6,18 +6,19 @@ import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.utility.Pointing;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -28,7 +29,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class SpoutScenes {
 
-	public static void filling(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void filling(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("spout_filling", "Filling Items using a Spout");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();

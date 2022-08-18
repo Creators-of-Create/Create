@@ -25,11 +25,11 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -782,7 +782,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 	@Override
 	public Component getDisplayName() {
-		return Lang.translateDirect("gui.schematicannon.title");
+		return CreateLang.translateDirect("gui.schematicannon.title");
 	}
 
 	public void updateChecklist() {

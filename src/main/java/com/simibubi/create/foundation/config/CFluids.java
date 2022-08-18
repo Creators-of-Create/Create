@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.config;
 
 import com.simibubi.create.content.contraptions.fluids.actors.FluidManipulationBehaviour.BottomlessFluidMode;
 
+import net.createmod.catnip.config.ConfigBase;
+
 public class CFluids extends ConfigBase {
 
 	public final ConfigInt fluidTankCapacity = i(8, 1, "fluidTankCapacity", Comments.buckets, Comments.fluidTankCapacity);

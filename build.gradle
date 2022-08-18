@@ -25,7 +25,19 @@ apply plugin: 'org.spongepowered.mixin'
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
 // jozu: I use a gradle workspace with both projects.
 // The project is named Flywheel-Forge, but sub-projects are named by folder.
-boolean inWorkspace = findProject(':Flywheel') != null
+boolean flywheelInWorkspace = findProject(':Flywheel') != null
+
+boolean inMultiModWorkspace = rootProject.hasProperty('multiModWorkspace.enabled')
+boolean catnipInWorkspace = rootProject.hasProperty('multiModWorkspace.catnip')
+boolean ponderInWorkspace = rootProject.hasProperty('multiModWorkspace.ponder')
+
+if (catnipInWorkspace) {
+    evaluationDependsOn(":catnip")
+}
+
+if (ponderInWorkspace) {
+    evaluationDependsOn(":Ponder")
+}
 
 ext.buildNumber = System.getenv('BUILD_NUMBER')
 if (buildNumber == null) buildNumber = 'custom'
@@ -44,8 +56,18 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+            if (inMultiModWorkspace)
+                ideaModule "createmod.Create.main"
+            else
+                ideaModule "Create.main"
+
             arg '-mixin.config=create.mixins.json'
             arg '-mixin.config=flywheel.mixins.json'
+
+            if (catnipInWorkspace) {
+                arg '-mixin.config=catnip.mixins.json'
+            }
+
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
             mods {
@@ -53,9 +75,23 @@ minecraft {
                     source sourceSets.main
                 }
 
-                if (inWorkspace) {
+                if (flywheelInWorkspace) {
                     flywheel {
                         source project(":Flywheel").sourceSets.main
+                    }
+                }
+
+                if (catnipInWorkspace) {
+                    catnip {
+                        source project(":catnip:Common").sourceSets.main
+                        source project(":catnip:Forge").sourceSets.main
+                    }
+                }
+
+                if (ponderInWorkspace) {
+                    ponder {
+                        source project(":Ponder:Common").sourceSets.main
+                        source project(":Ponder:Forge").sourceSets.main
                     }
                 }
             }
@@ -68,6 +104,20 @@ minecraft {
             mods {
                 create {
                     source sourceSets.main
+                }
+
+                if (catnipInWorkspace) {
+                    catnip {
+                        source project(":catnip:Common").sourceSets.main
+                        source project(":catnip:Forge").sourceSets.main
+                    }
+                }
+
+                if (ponderInWorkspace) {
+                    ponder {
+                        source project(":Ponder:Common").sourceSets.main
+                        source project(":Ponder:Forge").sourceSets.main
+                    }
                 }
             }
         }
@@ -82,9 +132,16 @@ minecraft {
                     source sourceSets.main
                 }
 
-                if (inWorkspace) {
+                if (flywheelInWorkspace) {
                     flywheel {
                         source project(":Flywheel").sourceSets.main
+                    }
+                }
+
+                if (ponderInWorkspace) {
+                    ponder {
+                        source project(":Ponder:Common").sourceSets.main
+                        source project(":Ponder:Forge").sourceSets.main
                     }
                 }
             }
@@ -152,10 +209,26 @@ dependencies {
     implementation fg.deobf(registrate)
     shade registrate
 
-    if (inWorkspace) {
+    if (flywheelInWorkspace) {
         implementation project(':Flywheel')
     } else {
         implementation fg.deobf("com.jozufozu.flywheel:Flywheel-Forge:${flywheel_version}")
+    }
+
+    if (catnipInWorkspace) {
+        implementation project(":catnip:Common")
+        implementation project(":catnip:Forge")
+    } else {
+        //todo
+        throw new AssertionError()
+    }
+
+    if (ponderInWorkspace) {
+        implementation project(":Ponder:Common")
+        implementation project(":Ponder:Forge")
+    } else {
+        //todo
+        throw new AssertionError()
     }
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api")

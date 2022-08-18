@@ -12,7 +12,6 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Opti
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
@@ -20,6 +19,8 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.FontHelper;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -40,19 +41,19 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 	@Override
 	protected void init() {
-		setWindowSize(Math.max(background.width, PLAYER_INVENTORY.width), background.height + 4 + PLAYER_INVENTORY.height);
+		setWindowSize(Math.max(background.getWidth(), PLAYER_INVENTORY.getWidth()), background.getHeight() + 4 + PLAYER_INVENTORY.getHeight());
 		super.init();
 
 		int x = leftPos;
 		int y = topPos;
 
-		resetButton = new IconButton(x + background.width - 62, y + background.height - 24, AllIcons.I_TRASH);
+		resetButton = new IconButton(x + background.getWidth() - 62, y + background.getHeight() - 24, AllIcons.I_TRASH);
 		resetButton.withCallback(() -> {
 			menu.clearContents();
 			contentsCleared();
 			menu.sendClearPacket();
 		});
-		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+		confirmButton = new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
 		confirmButton.withCallback(() -> {
 			minecraft.player.closeContainer();
 		});
@@ -61,24 +62,24 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		addRenderableWidget(confirmButton);
 
 		extraAreas = ImmutableList.of(
-			new Rect2i(x + background.width, y + background.height - 40, 80, 48)
+			new Rect2i(x + background.getWidth(), y + background.getHeight() - 40, 80, 48)
 		);
 	}
 
 	@Override
 	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
-		int invY = topPos + background.height + 4;
+		int invX = getLeftOfCentered(PLAYER_INVENTORY.getWidth());
+		int invY = topPos + background.getHeight() + 4;
 		renderPlayerInventory(ms, invX, invY);
 
 		int x = leftPos;
 		int y = topPos;
 
 		background.render(ms, x, y, this);
-		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		drawCenteredString(ms, font, title, x + (background.getWidth() - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(menu.contentHolder)
-				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, y + background.height - 56, -200)
+				.<GuiGameElement.GuiRenderBuilder>at(x + background.getWidth(), y + background.getHeight() - 56, -200)
 				.scale(5)
 				.render(ms);
 	}
@@ -142,7 +143,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		if (!button.isHoveredOrFocused())
 			return;
 		List<Component> tip = button.getToolTip();
-		tip.addAll(TooltipHelper.cutTextComponent(tooltip, GRAY, GRAY));
+		tip.addAll(FontHelper.cutTextComponent(tooltip, GRAY, GRAY));
 	}
 
 	protected void contentsCleared() {}

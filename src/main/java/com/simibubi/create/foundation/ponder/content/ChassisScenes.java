@@ -5,15 +5,16 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class ChassisScenes {
 
-	public static void linearGroup(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void linearGroup(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("linear_chassis_group", "Moving Linear Chassis in groups");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -89,7 +91,8 @@ public class ChassisScenes {
 		scene.idle(50);
 	}
 
-	public static void linearAttachement(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void linearAttachement(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("linear_chassis_attachment", "Attaching blocks using Linear Chassis");
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);
@@ -183,7 +186,7 @@ public class ChassisScenes {
 		Vec3 blockSurface = util.vector.blockSurface(chassisPos, Direction.NORTH);
 		scene.overlay.showCenteredScrollInput(chassisPos, Direction.NORTH, 50);
 		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.UP).scroll()
-			.withWrench(), 50);
+			.withItem(AllItems.WRENCH.asStack()), 50);
 
 		scene.idle(10);
 		scene.overlay.showOutline(PonderPalette.WHITE, chassis, column3, 20);
@@ -216,7 +219,7 @@ public class ChassisScenes {
 		scene.overlay.showCenteredScrollInput(chassisPos, Direction.NORTH, 50);
 		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.UP).whileCTRL()
 			.scroll()
-			.withWrench(), 50);
+			.withItem(AllItems.WRENCH.asStack()), 50);
 
 		column1 = util.select.fromTo(1, 3, 2, 3, 3, 2);
 		column2 = util.select.fromTo(1, 3, 2, 3, 4, 2);
@@ -291,7 +294,8 @@ public class ChassisScenes {
 		scene.world.rotateSection(chain, 0, 720, 0, 160);
 	}
 
-	public static void radial(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void radial(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("radial_chassis", "Attaching blocks using Radial Chassis");
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);
@@ -442,7 +446,7 @@ public class ChassisScenes {
 		blockSurface = util.vector.topOf(chassisPos);
 		scene.overlay.showCenteredScrollInput(chassisPos, Direction.UP, 50);
 		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).scroll()
-			.withWrench(), 50);
+			.withItem(AllItems.WRENCH.asStack()), 50);
 
 		scene.idle(10);
 		scene.overlay.showOutline(PonderPalette.WHITE, chassis, r2, 20);
@@ -483,7 +487,8 @@ public class ChassisScenes {
 			.text("Blocks not reachable by any sticky face will not attach");
 	}
 
-	public static void superGlue(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void superGlue(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("super_glue", "Attaching blocks using Super Glue");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();

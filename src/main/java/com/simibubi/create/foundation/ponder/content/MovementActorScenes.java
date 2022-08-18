@@ -4,18 +4,19 @@ import com.simibubi.create.content.contraptions.components.actors.HarvesterTileE
 import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.FlappyPose;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.ParrotElement.FlappyPose;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +30,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class MovementActorScenes {
 
-	public static void psiTransfer(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void psiTransfer(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("portable_storage_interface", "Contraption Storage Exchange");
 		scene.configureBasePlate(0, 0, 6);
 		scene.scaleSceneView(0.95f);
@@ -162,7 +164,8 @@ public class MovementActorScenes {
 		scene.world.rotateSection(contraption, 0, 270, 0, 120);
 	}
 
-	public static void psiRedstone(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void psiRedstone(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("portable_storage_interface_redstone", "Redstone Control");
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);
@@ -203,7 +206,8 @@ public class MovementActorScenes {
 		scene.markAsFinished();
 	}
 
-	public static void harvester(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void harvester(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_harvester", "Using Mechanical Harvesters on Contraptions");
 		scene.configureBasePlate(0, 0, 6);
 		scene.scaleSceneView(0.9f);
@@ -334,7 +338,8 @@ public class MovementActorScenes {
 				hte -> hte.setAnimatedSpeed(0));
 	}
 
-	public static void plough(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void plough(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_plough", "Using Mechanical Ploughs on Contraptions");
 		scene.configureBasePlate(0, 0, 6);
 		scene.scaleSceneView(0.9f);
@@ -476,10 +481,10 @@ public class MovementActorScenes {
 		scene.idle(15);
 		scene.world.showSectionAndMerge(util.select.fromTo(4, 3, 3, 4, 2, 3), Direction.DOWN, contraption);
 		scene.idle(15);
-		
+
 		BlockPos bearingPos = util.grid.at(4, 3, 4);
 		scene.addKeyframe();
-		
+
 		scene.world.setKineticSpeed(util.select.position(4, 0, 6), 8);
 		scene.world.setKineticSpeed(util.select.position(5, 1, 6), -16);
 		scene.world.setKineticSpeed(util.select.position(4, 3, 5), -16);

@@ -11,8 +11,8 @@ import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.block.connected.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -32,11 +32,11 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	public static PipeAttachmentModel opaque(BakedModel template) {
 		return new PipeAttachmentModel(template, false);
 	}
-	
+
 	public static PipeAttachmentModel transparent(BakedModel template) {
 		return new PipeAttachmentModel(template, true);
 	}
-	
+
 	public PipeAttachmentModel(BakedModel template, boolean hideAttachmentConnector) {
 		super(template);
 		this.hideAttachmentConnector = hideAttachmentConnector;

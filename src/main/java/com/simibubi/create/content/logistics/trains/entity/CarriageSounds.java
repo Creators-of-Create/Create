@@ -3,9 +3,9 @@ package com.simibubi.create.content.logistics.trains.entity;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSoundEvents.SoundEntry;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundEvent;

@@ -13,8 +13,8 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.source.AccumulatedItemCountDisplaySource;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;

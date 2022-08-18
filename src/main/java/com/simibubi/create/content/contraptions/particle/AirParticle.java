@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.particle;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -48,7 +48,7 @@ public class AirParticle extends SimpleAnimatedParticle {
 		lifetime = Math.min((int) (length / data.speed), 60);
 		selectSprite(7);
 		setAlpha(.25f);
-		
+
 		if (length == 0) {
 			remove();
 			setAlpha(0);
@@ -72,11 +72,11 @@ public class AirParticle extends SimpleAnimatedParticle {
 		float progress = (float) Math.pow(((float) age) / lifetime, drag);
 		float angle = (progress * 2 * 360 + twirlAngleOffset) % 360;
 		Vec3 twirl = VecHelper.rotate(new Vec3(0, twirlRadius, 0), angle, twirlAxis);
-		
+
 		float x = (float) (Mth.lerp(progress, originX, targetX) + twirl.x);
 		float y = (float) (Mth.lerp(progress, originY, targetY) + twirl.y);
 		float z = (float) (Mth.lerp(progress, originZ, targetZ) + twirl.z);
-		
+
 		xd = x - this.x;
 		yd = y - this.y;
 		zd = z - this.z;

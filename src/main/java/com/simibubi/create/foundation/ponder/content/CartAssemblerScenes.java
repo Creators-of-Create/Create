@@ -4,18 +4,19 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.MinecartElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.MinecartElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,7 +32,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class CartAssemblerScenes {
 
-	public static void anchor(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void anchor(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("cart_assembler", "Moving Structures using Cart Assemblers");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(.9f);
@@ -148,7 +150,7 @@ public class CartAssemblerScenes {
 
 		Vec3 cartCenter = util.vector.centerOf(assemblerPos.north(2));
 		scene.overlay.showControls(new InputWindowElement(cartCenter, Pointing.LEFT).rightClick()
-			.withWrench(), 40);
+			.withItem(AllItems.WRENCH.asStack()), 40);
 		scene.idle(7);
 		scene.special.moveCart(cart, util.vector.of(0, -100, 4), 0);
 		scene.world.moveSection(anchor, util.vector.of(0, -100, 4), 0);
@@ -177,7 +179,8 @@ public class CartAssemblerScenes {
 		scene.world.moveSection(contraption, util.vector.of(0, -.5, 0), 5);
 	}
 
-	public static void modes(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void modes(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("cart_assembler_modes", "Orientation Settings for Minecart Contraptions");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -259,7 +262,7 @@ public class CartAssemblerScenes {
 			.add(0, 0, -2 / 16f);
 		scene.overlay.showScrollInput(blockSurface, Direction.NORTH, 60);
 		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).scroll()
-			.withWrench(), 60);
+			.withItem(AllItems.WRENCH.asStack()), 60);
 		scene.idle(10);
 		scene.overlay.showText(60)
 			.pointAt(util.vector.of(3, 1.5, 3))
@@ -413,7 +416,8 @@ public class CartAssemblerScenes {
 
 	}
 
-	public static void rails(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void rails(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("cart_assembler_rails", "Other types of Minecarts and Rails");
 		scene.configureBasePlate(0, 0, 6);
 		scene.scaleSceneView(.9f);

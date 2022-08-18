@@ -6,8 +6,8 @@ import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +35,7 @@ public enum PlacementPatterns {
 			!tag.contains("Pattern") ? Solid : valueOf(tag.getString("Pattern"));
 		Random r = new Random();
 		Predicate<BlockPos> filter = Predicates.alwaysFalse();
-	
+
 		switch (pattern) {
 		case Chance25:
 			filter = pos -> r.nextBoolean() || r.nextBoolean();
@@ -56,7 +56,7 @@ public enum PlacementPatterns {
 		default:
 			break;
 		}
-	
+
 		blocksIn.removeIf(filter);
 	}
 

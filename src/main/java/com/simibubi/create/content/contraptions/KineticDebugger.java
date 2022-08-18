@@ -5,9 +5,10 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -44,7 +45,7 @@ public class KineticDebugger {
 			.getBlockSupportShape(world, toOutline);
 
 		if (te.getTheoreticalSpeed() != 0 && !shape.isEmpty())
-			CreateClient.OUTLINER.chaseAABB("kineticSource", shape.bounds()
+			CatnipClient.OUTLINER.chaseAABB("kineticSource", shape.bounds()
 					.move(toOutline))
 					.lineWidth(1 / 16f)
 					.colored(te.hasSource() ? Color.generateFromLong(te.network).getRGB() : 0xffcc00);
@@ -54,7 +55,7 @@ public class KineticDebugger {
 			Vec3 vec = Vec3.atLowerCornerOf(Direction.get(AxisDirection.POSITIVE, axis)
 					.getNormal());
 			Vec3 center = VecHelper.getCenterOf(te.getBlockPos());
-			CreateClient.OUTLINER.showLine("rotationAxis", center.add(vec), center.subtract(vec))
+			CatnipClient.OUTLINER.showLine("rotationAxis", center.add(vec), center.subtract(vec))
 					.lineWidth(1 / 16f);
 		}
 

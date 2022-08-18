@@ -43,13 +43,13 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.BlockFace;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -287,11 +287,11 @@ public class TrackBlock extends Block
 		Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, Predicates.alwaysTrue());
 		if (player == null)
 			return;
-		player.displayClientMessage(new TextComponent("<!> ").append(Lang.translateDirect("portal_track.failed"))
+		player.displayClientMessage(new TextComponent("<!> ").append(CreateLang.translateDirect("portal_track.failed"))
 			.withStyle(ChatFormatting.GOLD), false);
 		MutableComponent component =
-			failPos != null ? Lang.translateDirect("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
-				: Lang.translateDirect("portal_track." + fail);
+			failPos != null ? CreateLang.translateDirect("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
+				: CreateLang.translateDirect("portal_track." + fail);
 		player.displayClientMessage(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
 			.append(component.withStyle(st -> st.withColor(0xFFD3B4))), false);
 	}

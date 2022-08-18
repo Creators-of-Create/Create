@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -40,20 +40,20 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 		super(typeIn, pos, state);
 		enchantmentTag = new ListTag();
 	}
-	
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.BACKTANK);
 	}
-	
+
 	@Override
 	public void onSpeedChanged(float previousSpeed) {
 		super.onSpeedChanged(previousSpeed);
 		if (getSpeed() != 0)
 			award(AllAdvancements.BACKTANK);
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();

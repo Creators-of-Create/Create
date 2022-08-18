@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config;
 
+import net.createmod.catnip.config.ConfigBase;
+
 public class CSchematics extends ConfigBase {
 
 	public final ConfigBool creativePrintIncludesAir = b(false, "creativePrintIncludesAir", Comments.creativePrintIncludesAir);

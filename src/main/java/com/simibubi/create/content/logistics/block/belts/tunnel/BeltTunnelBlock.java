@@ -9,9 +9,9 @@ import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import net.createmod.catnip.utility.lang.Lang;
+import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,15 +19,15 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	private static final String PREFIX = "gui.filter.";
 
-	private Component allowN = Lang.translateDirect(PREFIX + "allow_list");
-	private Component allowDESC = Lang.translateDirect(PREFIX + "allow_list.description");
-	private Component denyN = Lang.translateDirect(PREFIX + "deny_list");
-	private Component denyDESC = Lang.translateDirect(PREFIX + "deny_list.description");
+	private Component allowN = CreateLang.translateDirect(PREFIX + "allow_list");
+	private Component allowDESC = CreateLang.translateDirect(PREFIX + "allow_list.description");
+	private Component denyN = CreateLang.translateDirect(PREFIX + "deny_list");
+	private Component denyDESC = CreateLang.translateDirect(PREFIX + "deny_list.description");
 
-	private Component respectDataN = Lang.translateDirect(PREFIX + "respect_data");
-	private Component respectDataDESC = Lang.translateDirect(PREFIX + "respect_data.description");
-	private Component ignoreDataN = Lang.translateDirect(PREFIX + "ignore_data");
-	private Component ignoreDataDESC = Lang.translateDirect(PREFIX + "ignore_data.description");
+	private Component respectDataN = CreateLang.translateDirect(PREFIX + "respect_data");
+	private Component respectDataDESC = CreateLang.translateDirect(PREFIX + "respect_data.description");
+	private Component ignoreDataN = CreateLang.translateDirect(PREFIX + "ignore_data");
+	private Component ignoreDataDESC = CreateLang.translateDirect(PREFIX + "ignore_data.description");
 
 	private IconButton whitelist, blacklist;
 	private IconButton respectNBT, ignoreNBT;

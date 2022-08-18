@@ -36,9 +36,9 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -95,7 +95,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	/*
 	 * staleTicks are a band-aid to prevent a frame or two of missing blocks between
 	 * contraption discard and off-thread block placement on disassembly
-	 * 
+	 *
 	 * FIXME this timeout should be longer but then also cancelled early based on a
 	 * chunk rebuild listener
 	 */
@@ -115,7 +115,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		contraption.onEntityCreated(this);
 	}
-	
+
 	@Override
 	public void move(MoverType pType, Vec3 pPos) {
 		if (pType == MoverType.SHULKER)

@@ -10,8 +10,8 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -77,7 +77,7 @@ public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWren
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
 		return FluidTankBlock.isTank(pLevel.getBlockState(pPos.relative(getAttachedDirection(pState))));

@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.fluids.particle;
 
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
-import com.simibubi.create.foundation.utility.Color;
 
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;

@@ -27,19 +27,19 @@ import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.config.ui.entries.SubMenuEntry;
 import com.simibubi.create.foundation.config.ui.entries.ValueEntry;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.ConfirmationScreen;
-import com.simibubi.create.foundation.gui.ConfirmationScreen.Response;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
-import com.simibubi.create.foundation.gui.widget.BoxWidget;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.gui.ConfirmationScreen;
+import net.createmod.catnip.gui.ConfirmationScreen.Response;
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.gui.element.DelegatedStencilElement;
+import net.createmod.catnip.gui.widget.BoxWidget;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.FontHelper;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.theme.Color;
+import net.createmod.catnip.utility.theme.Theme;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -193,7 +193,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 		resetAll.showingElement(AllIcons.I_CONFIG_RESET.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(resetAll)));
 		resetAll.getToolTip().add(new TextComponent("Reset All"));
-		resetAll.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to reset all settings to their default value.", ChatFormatting.GRAY, ChatFormatting.GRAY));
+		resetAll.getToolTip().addAll(FontHelper.cutStringTextComponent("Click here to reset all settings to their default value.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		saveChanges = new BoxWidget(listL - 30, yCenter - 25, 20, 20)
 				.withPadding(2, 2)
@@ -213,7 +213,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				});
 		saveChanges.showingElement(AllIcons.I_CONFIG_SAVE.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(saveChanges)));
 		saveChanges.getToolTip().add(new TextComponent("Save Changes"));
-		saveChanges.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to save your current changes.", ChatFormatting.GRAY, ChatFormatting.GRAY));
+		saveChanges.getToolTip().addAll(FontHelper.cutStringTextComponent("Click here to save your current changes.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		discardChanges = new BoxWidget(listL - 30, yCenter + 5, 20, 20)
 				.withPadding(2, 2)
@@ -232,7 +232,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				});
 		discardChanges.showingElement(AllIcons.I_CONFIG_DISCARD.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(discardChanges)));
 		discardChanges.getToolTip().add(new TextComponent("Discard Changes"));
-		discardChanges.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to discard all the changes you made.", ChatFormatting.GRAY, ChatFormatting.GRAY));
+		discardChanges.getToolTip().addAll(FontHelper.cutStringTextComponent("Click here to discard all the changes you made.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		goBack = new BoxWidget(listL - 30, yCenter + 65, 20, 20)
 				.withPadding(2, 2)
@@ -316,8 +316,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 		boolean canEdit = minecraft != null && minecraft.player != null && minecraft.player.hasPermissions(2);
 
-		Couple<Color> red = Theme.p(Theme.Key.BUTTON_FAIL);
-		Couple<Color> green = Theme.p(Theme.Key.BUTTON_SUCCESS);
+		Couple<Color> red = Theme.Key.BUTTON_FAIL.p();
+		Couple<Color> green = Theme.Key.BUTTON_SUCCESS.p();
 
 		DelegatedStencilElement stencil = new DelegatedStencilElement();
 
@@ -332,13 +332,13 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, red));
 			serverLocked.withBorderColors(red);
 			serverLocked.getToolTip().add(new TextComponent("Locked").withStyle(ChatFormatting.BOLD));
-			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You do not have enough permissions to edit the server config. You can still look at the current values here though.", ChatFormatting.GRAY, ChatFormatting.GRAY));
+			serverLocked.getToolTip().addAll(FontHelper.cutStringTextComponent("You do not have enough permissions to edit the server config. You can still look at the current values here though.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 		} else {
 			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_UNLOCKED.render(ms, 0, 0));
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, green));
 			serverLocked.withBorderColors(green);
 			serverLocked.getToolTip().add(new TextComponent("Unlocked").withStyle(ChatFormatting.BOLD));
-			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You have enough permissions to edit the server config. Changes you make here will be synced with the server when you save them.", ChatFormatting.GRAY, ChatFormatting.GRAY));
+			serverLocked.getToolTip().addAll(FontHelper.cutStringTextComponent("You have enough permissions to edit the server config. Changes you make here will be synced with the server when you save them.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 		}
 
 		addRenderableWidget(serverLocked);
@@ -349,7 +349,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		super.renderWindow(ms, mouseX, mouseY, partialTicks);
 
 		int x = width / 2;
-		drawCenteredString(ms, minecraft.font, ConfigScreen.modID + " > " + type.toString().toLowerCase(Locale.ROOT) + " > " + title, x, 15, Theme.i(Theme.Key.TEXT));
+		drawCenteredString(ms, minecraft.font, ConfigScreen.modID + " > " + type.toString().toLowerCase(Locale.ROOT) + " > " + title, x, 15, Theme.Key.TEXT.i());
 	}
 
 	@Override
@@ -393,9 +393,9 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 	private void updateFilter(String search) {
 		if (list.search(search)) {
-			this.search.setTextColor(Theme.i(Theme.Key.TEXT));
+			this.search.setTextColor(Theme.Key.TEXT.i());
 		} else {
-			this.search.setTextColor(Theme.i(Theme.Key.BUTTON_FAIL));
+			this.search.setTextColor(Theme.Key.BUTTON_FAIL.i());
 		}
 	}
 

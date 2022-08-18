@@ -8,9 +8,9 @@ import java.util.function.Function;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;

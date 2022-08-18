@@ -12,7 +12,7 @@ import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemb
 import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -53,14 +53,14 @@ public class CuttingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public Component getDescriptionForAssembly() {
-		return Lang.translateDirect("recipe.assembly.cutting");
+		return CreateLang.translateDirect("recipe.assembly.cutting");
 	}
-	
+
 	@Override
 	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.MECHANICAL_SAW.get());
 	}
-	
+
 	@Override
 	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
 		return () -> SequencedAssemblySubCategory.AssemblyCutting::new;

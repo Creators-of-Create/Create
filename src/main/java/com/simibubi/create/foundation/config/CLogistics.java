@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config;
 
+import net.createmod.catnip.config.ConfigBase;
+
 public class CLogistics extends ConfigBase {
 
 	public final ConfigInt defaultExtractionLimit =

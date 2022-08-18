@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -16,14 +16,14 @@ public class KillTPSCommand {
 			.executes(ctx -> {
 				// killtps no arguments
 				ctx.getSource()
-					.sendSuccess(Lang.translateDirect("command.killTPSCommand.status.slowed_by.0",
+					.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.0",
 						Create.LAGGER.isLagging() ? Create.LAGGER.getTickTime() : 0), true);
 				if (Create.LAGGER.isLagging())
 					ctx.getSource()
-						.sendSuccess(Lang.translateDirect("command.killTPSCommand.status.usage.0"), true);
+						.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
 				else
 					ctx.getSource()
-						.sendSuccess(Lang.translateDirect("command.killTPSCommand.status.usage.1"), true);
+						.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.1"), true);
 
 				return 1;
 			})
@@ -34,31 +34,31 @@ public class KillTPSCommand {
 					if (tickTime > 0) {
 						Create.LAGGER.setLagging(true);
 						ctx.getSource()
-							.sendSuccess((Lang.translateDirect("command.killTPSCommand.status.slowed_by.1", tickTime)),
+							.sendSuccess((CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.1", tickTime)),
 								true);
 						ctx.getSource()
-							.sendSuccess(Lang.translateDirect("command.killTPSCommand.status.usage.0"), true);
+							.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
 					} else {
 						ctx.getSource()
-							.sendSuccess(Lang.translateDirect("command.killTPSCommand.status.usage.1"), true);
+							.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.1"), true);
 					}
 
 					return 1;
 				})
-				.then(Commands.argument(Lang.translateDirect("command.killTPSCommand.argument.tickTime")
+				.then(Commands.argument(CreateLang.translateDirect("command.killTPSCommand.argument.tickTime")
 					.getContents(), IntegerArgumentType.integer(1))
 					.executes(ctx -> {
 						// killtps start tickTime
 						int tickTime = IntegerArgumentType.getInteger(ctx,
-							Lang.translateDirect("command.killTPSCommand.argument.tickTime")
+							CreateLang.translateDirect("command.killTPSCommand.argument.tickTime")
 								.getContents());
 						Create.LAGGER.setTickTime(tickTime);
 						Create.LAGGER.setLagging(true);
 						ctx.getSource()
-							.sendSuccess((Lang.translateDirect("command.killTPSCommand.status.slowed_by.1", tickTime)),
+							.sendSuccess((CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.1", tickTime)),
 								true);
 						ctx.getSource()
-							.sendSuccess(Lang.translateDirect("command.killTPSCommand.status.usage.0"), true);
+							.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
 
 						return 1;
 					})))
@@ -67,7 +67,7 @@ public class KillTPSCommand {
 					// killtps stop
 					Create.LAGGER.setLagging(false);
 					ctx.getSource()
-						.sendSuccess(Lang.translateDirect("command.killTPSCommand.status.slowed_by.2"), false);
+						.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.2"), false);
 
 					return 1;
 				}));

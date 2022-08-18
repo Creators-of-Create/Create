@@ -1,16 +1,17 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -28,7 +29,8 @@ public class GantryScenes {
 		intro(scene, util, false);
 	}
 
-	private static void intro(SceneBuilder scene, SceneBuildingUtil util, boolean pinion) {
+	private static void intro(SceneBuilder builder, SceneBuildingUtil util, boolean pinion) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		String id = "gantry_" + (pinion ? "carriage" : "shaft");
 		String title = "Using Gantry " + (pinion ? "Carriages" : "Shafts");
 		scene.title(id, title);
@@ -99,7 +101,8 @@ public class GantryScenes {
 		scene.markAsFinished();
 	}
 
-	public static void redstone(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void redstone(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("gantry_redstone", "Gantry Power Propagation");
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);
 
@@ -153,7 +156,8 @@ public class GantryScenes {
 		scene.markAsFinished();
 	}
 
-	public static void direction(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void direction(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("gantry_direction", "Gantry Movement Direction");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);
@@ -256,7 +260,8 @@ public class GantryScenes {
 
 	}
 
-	public static void subgantry(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void subgantry(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("gantry_cascaded", "Cascaded Gantries");
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);

@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block.display.source;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySource {
-	
+
 	@Override
 	protected String getTranslationKey() {
 		return "redstone_power";
@@ -22,7 +22,7 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 	protected MutableComponent formatNumeric(DisplayLinkContext context, Float currentLevel) {
 		return new TextComponent(String.valueOf((int) (currentLevel * 15)));
 	}
-	
+
 	@Override
 	protected boolean allowsLabeling(DisplayLinkContext context) {
 		return true;
@@ -52,9 +52,9 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 		if (isFirstLine)
 			return;
 		builder.addSelectionScrollInput(0, 120,
-			(si, l) -> si.forOptions(Lang.translatedOptions("display_source.redstone_power", "number", "progress_bar"))
-				.titled(Lang.translateDirect("display_source.redstone_power.display")),
+			(si, l) -> si.forOptions(CreateLang.translatedOptions("display_source.redstone_power", "number", "progress_bar"))
+				.titled(CreateLang.translateDirect("display_source.redstone_power.display")),
 			"Mode");
 	}
-	
+
 }

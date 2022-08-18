@@ -6,11 +6,11 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.content.curiosities.zapper.PlacementPatterns;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
-import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -51,7 +51,7 @@ public class WorldshaperItem extends ZapperItem {
 	public Component validateUsage(ItemStack item) {
 		if (!item.getOrCreateTag()
 			.contains("BrushParams"))
-			return Lang.translateDirect("terrainzapper.shiftRightClickToSet");
+			return CreateLang.translateDirect("terrainzapper.shiftRightClickToSet");
 		return super.validateUsage(item);
 	}
 

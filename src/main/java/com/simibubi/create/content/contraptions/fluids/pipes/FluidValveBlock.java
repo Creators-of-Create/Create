@@ -9,8 +9,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -125,7 +125,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

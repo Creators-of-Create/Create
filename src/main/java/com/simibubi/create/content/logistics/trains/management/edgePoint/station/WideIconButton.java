@@ -2,8 +2,9 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint.statio
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.element.ScreenElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+
+import net.createmod.catnip.gui.element.ScreenElement;
 
 public class WideIconButton extends IconButton {
 
@@ -14,7 +15,7 @@ public class WideIconButton extends IconButton {
 	@Override
 	protected void drawBg(PoseStack matrixStack, AllGuiTextures button) {
 		super.drawBg(matrixStack, button);
-		blit(matrixStack, x + 9, y, button.startX + 1, button.startY, button.width - 1, button.height);
+		blit(matrixStack, x + 9, y, button.getStartX() + 1, button.getStartY(), button.getWidth() - 1, button.getHeight());
 	}
 
 }

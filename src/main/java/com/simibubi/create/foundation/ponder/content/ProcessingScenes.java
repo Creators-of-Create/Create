@@ -13,21 +13,22 @@ import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction.Emitter;
-import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pointing;
 
+import net.createmod.catnip.utility.IntAttached;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -43,7 +44,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class ProcessingScenes {
 
-	public static void millstone(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void millstone(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("millstone", "Processing Items in the Millstone");
 		scene.configureBasePlate(0, 0, 5);
 
@@ -142,7 +144,8 @@ public class ProcessingScenes {
 		scene.idle(60);
 	}
 
-	public static void crushingWheels(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void crushingWheels(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("crushing_wheels", "Processing Items with Crushing Wheels");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(.9f);
@@ -268,7 +271,8 @@ public class ProcessingScenes {
 		}
 	}
 
-	public static void pressing(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void pressing(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_press", "Processing Items with the Mechanical Press");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -377,7 +381,8 @@ public class ProcessingScenes {
 
 	}
 
-	public static void mixing(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void mixing(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_mixer", "Processing Items with the Mechanical Mixer");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.setBlock(util.grid.at(1, 1, 2), AllBlocks.ANDESITE_CASING.getDefaultState(), false);
@@ -459,7 +464,8 @@ public class ProcessingScenes {
 		scene.idle(80);
 	}
 
-	public static void compacting(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void compacting(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_press_compacting", "Compacting items with the Mechanical Press");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.setBlock(util.grid.at(1, 1, 2), AllBlocks.ANDESITE_CASING.getDefaultState(), false);
@@ -728,7 +734,8 @@ public class ProcessingScenes {
 		scene.idle(90);
 	}
 
-	public static void basin(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void basin(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("basin", "Processing Items in the Basin");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);

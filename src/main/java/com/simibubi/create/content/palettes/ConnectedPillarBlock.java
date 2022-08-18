@@ -2,8 +2,7 @@ package com.simibubi.create.content.palettes;
 
 import java.util.Random;
 
-import com.simibubi.create.foundation.utility.Iterate;
-
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;

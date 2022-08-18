@@ -8,8 +8,8 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.utility.Couple;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.AxolotlModel;
 import net.minecraft.client.model.EntityModel;

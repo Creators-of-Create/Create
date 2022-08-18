@@ -19,10 +19,10 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackShape;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

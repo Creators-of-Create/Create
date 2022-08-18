@@ -5,7 +5,7 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -64,9 +64,9 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 		if (Mth.equal(stressBase, 0))
 			return added;
 
-		Lang.translate("gui.goggles.generator_stats")
+		CreateLang.translate("gui.goggles.generator_stats")
 			.forGoggles(tooltip);
-		Lang.translate("tooltip.capacityProvided")
+		CreateLang.translate("tooltip.capacityProvided")
 			.style(ChatFormatting.GRAY)
 			.forGoggles(tooltip);
 
@@ -77,11 +77,11 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
 		float stressTotal = stressBase * speed;
 
-		Lang.number(stressTotal)
+		CreateLang.number(stressTotal)
 			.translate("generic.unit.stress")
 			.style(ChatFormatting.AQUA)
 			.space()
-			.add(Lang.translate("gui.goggles.at_current_speed")
+			.add(CreateLang.translate("gui.goggles.at_current_speed")
 				.style(ChatFormatting.DARK_GRAY))
 			.forGoggles(tooltip, 1);
 

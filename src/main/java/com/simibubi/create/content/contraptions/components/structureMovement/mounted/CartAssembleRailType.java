@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -13,13 +13,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public enum CartAssembleRailType implements StringRepresentable {
-	
+
 	REGULAR(Blocks.RAIL),
 	POWERED_RAIL(Blocks.POWERED_RAIL),
 	DETECTOR_RAIL(Blocks.DETECTOR_RAIL),
 	ACTIVATOR_RAIL(Blocks.ACTIVATOR_RAIL),
 	CONTROLLER_RAIL(AllBlocks.CONTROLLER_RAIL)
-	
+
 	;
 
 	private final Supplier<Block> railBlockSupplier;
@@ -42,11 +42,11 @@ public enum CartAssembleRailType implements StringRepresentable {
 	public Item getItem() {
 		return railItemSupplier.get();
 	}
-	
+
 	public boolean matches(BlockState rail) {
 		return rail.getBlock() == railBlockSupplier.get();
 	}
-	
+
 	@Override
 	public String getSerializedName() {
 		return Lang.asId(name());

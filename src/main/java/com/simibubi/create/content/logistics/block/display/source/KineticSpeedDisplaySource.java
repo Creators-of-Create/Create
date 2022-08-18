@@ -4,7 +4,7 @@ import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntit
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,7 +20,7 @@ public class KineticSpeedDisplaySource extends NumericSingleLineDisplaySource {
 		boolean absoluteValue = context.sourceConfig()
 			.getInt("Directional") == 0;
 		float speed = absoluteValue ? Math.abs(gaugeTile.getSpeed()) : gaugeTile.getSpeed();
-		return Lang.number(speed)
+		return CreateLang.number(speed)
 			.space()
 			.translate("generic.unit.rpm")
 			.component();
@@ -41,7 +41,7 @@ public class KineticSpeedDisplaySource extends NumericSingleLineDisplaySource {
 
 		builder.addSelectionScrollInput(0, 95, (selectionScrollInput, label) -> {
 			selectionScrollInput
-				.forOptions(Lang.translatedOptions("display_source.kinetic_speed", "absolute", "directional"));
+				.forOptions(CreateLang.translatedOptions("display_source.kinetic_speed", "absolute", "directional"));
 		}, "Directional");
 	}
 

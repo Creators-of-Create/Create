@@ -1,7 +1,8 @@
 package com.simibubi.create.content.logistics.trains;
 
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
+import net.createmod.catnip.utility.animation.LerpedFloat;
 
 public class CameraDistanceModifier {
 

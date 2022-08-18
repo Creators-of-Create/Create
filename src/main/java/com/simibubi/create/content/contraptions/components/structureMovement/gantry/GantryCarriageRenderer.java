@@ -7,10 +7,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.math.AngleHelper;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -70,7 +70,7 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
-		float time = AnimationTickHolder.getRenderTime(te.getLevel());
+		float time = WorldTickHolder.getRenderTime(te.getLevel());
 		float offset = getRotationOffsetForPosition(te, pos, axis);
 		return (time * te.getSpeed() * 3f / 20 + offset) % 360;
 	}

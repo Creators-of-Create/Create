@@ -10,10 +10,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -124,7 +124,7 @@ public class TrackPaver {
 		float[] lut = bc.getStepLUT();
 
 		for (int i = 0; i < segCount; i++) {
-			float t = i == segCount ? 1 : i * lut[i] / segCount;
+			float t = i * lut[i] / segCount;
 			t += 0.5f / segCount;
 
 			Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);

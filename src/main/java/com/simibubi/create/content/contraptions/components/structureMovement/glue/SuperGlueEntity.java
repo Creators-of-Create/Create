@@ -15,9 +15,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.schematics.ISpecialEntityItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -294,7 +294,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public PushReaction getPistonPushReaction() {
 		return PushReaction.IGNORE;
 	}
-	
+
 	@Override
 	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
 		portalEntrancePos = blockPosition();

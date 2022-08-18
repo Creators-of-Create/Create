@@ -8,7 +8,7 @@ import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.ChatFormatting;
@@ -73,7 +73,7 @@ public class FilteringHandler {
 			return;
 		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
 			return;
-		
+
 		if (event.getSide() != LogicalSide.CLIENT) {
 			if (!player.isCreative()) {
 				if (toApply.getItem() instanceof FilterItem)
@@ -97,7 +97,7 @@ public class FilteringHandler {
 			Component formattedText = world.getBlockState(pos)
 				.getBlock()
 				.getName();
-			player.displayClientMessage(Lang.translateDirect("logistics.filter." + feedback, formattedText)
+			player.displayClientMessage(CreateLang.translateDirect("logistics.filter." + feedback, formattedText)
 				.withStyle(ChatFormatting.WHITE), true);
 		}
 
@@ -132,14 +132,14 @@ public class FilteringHandler {
 			((Sided) filtering.slotPositioning).fromSide(result.getDirection());
 		if (!filtering.testHit(objectMouseOver.getLocation()))
 			return false;
-		
+
 		ItemStack filterItem = filtering.getFilter();
 		filtering.ticksUntilScrollPacket = 10;
 		int maxAmount = (filterItem.getItem() instanceof FilterItem) ? 64 : filterItem.getMaxStackSize();
 		int prev = filtering.scrollableValue;
 		filtering.scrollableValue =
 			(int) Mth.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, maxAmount);
-		
+
 		if (prev != filtering.scrollableValue) {
 			float pitch = (filtering.scrollableValue) / (float) (maxAmount);
 			pitch = Mth.lerp(pitch, 1.5f, 2f);

@@ -16,7 +16,7 @@ import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.utility.Iterate;
+import net.createmod.catnip.utility.Iterate;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.minecraft.world.item.ItemStack;

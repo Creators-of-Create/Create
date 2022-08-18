@@ -8,8 +8,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -43,7 +43,7 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
 		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);
 		float speed = mixer.getRenderedHeadRotationSpeed(partialTicks);
-		float time = AnimationTickHolder.getRenderTime(te.getLevel());
+		float time = WorldTickHolder.getRenderTime(te.getLevel());
 		float angle = ((time * speed * 6 / 10f) % 360) / 180 * (float) Math.PI;
 
 		SuperByteBuffer poleRender = CachedBufferer.partial(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState);

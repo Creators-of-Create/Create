@@ -7,8 +7,8 @@ import java.util.Random;
 
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.block.render.QuadHelper;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;

@@ -21,9 +21,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBe
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -77,12 +77,12 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	public void enableMerging() {
 		allowMerge = true;
 	}
-	
+
 	public DepotBehaviour withCallback(Consumer<ItemStack> changeListener) {
 		onHeldInserted = changeListener;
 		return this;
 	}
-	
+
 	public DepotBehaviour onlyAccepts(Predicate<ItemStack> filter) {
 		acceptedItems = filter;
 		return this;

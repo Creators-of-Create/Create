@@ -13,11 +13,11 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
-import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
-import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.placement.IPlacementHelper;
+import net.createmod.catnip.utility.placement.PlacementHelpers;
+import net.createmod.catnip.utility.placement.PlacementOffset;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -66,7 +66,7 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
 		return canAttach(pLevel, pPos, getConnectedDirection(pState).getOpposite());
@@ -193,7 +193,7 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 				if (isShaftValid(state, shaft))
 					break;
 			}
-			
+
 			BlockState newState = world.getBlockState(shaftPos);
 			if (!newState.getMaterial().isReplaceable())
 				return PlacementOffset.fail();
@@ -204,7 +204,7 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 					.setValue(PoweredShaftBlock.AXIS, axis));
 		}
 	}
-	
+
 	public static Couple<Integer> getSpeedRange() {
 		return Couple.create(16, 64);
 	}

@@ -26,11 +26,11 @@ import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.Steer
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -532,7 +532,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	@Override
 	public Component getDisplayName() {
 		if (carriage == null)
-			return Lang.translateDirect("train");
+			return CreateLang.translateDirect("train");
 		return carriage.train.name;
 	}
 
@@ -591,7 +591,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		boolean spaceDown = heldControls.contains(4);
 		GlobalStation currentStation = carriage.train.getCurrentStation();
 		if (currentStation != null && spaceDown) {
-			sendPrompt(player, Lang.translateDirect("train.arrived_at",
+			sendPrompt(player, CreateLang.translateDirect("train.arrived_at",
 				new TextComponent(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 			return true;
 		}
@@ -603,7 +603,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
 		if (currentStation != null && targetSpeed != 0) {
 			stationMessage = false;
-			sendPrompt(player, Lang.translateDirect("train.departing_from",
+			sendPrompt(player, CreateLang.translateDirect("train.departing_from",
 				new TextComponent(currentStation.name).withStyle(s -> s.withColor(0x704630))), false);
 		}
 
@@ -683,7 +683,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	boolean stationMessage = false;
 
 	private void displayApproachStationMessage(Player player, GlobalStation station) {
-		sendPrompt(player, Lang.translateDirect("contraption.controls.approach_station",
+		sendPrompt(player, CreateLang.translateDirect("contraption.controls.approach_station",
 			new KeybindComponent("key.jump"), station.name), false);
 		stationMessage = true;
 	}

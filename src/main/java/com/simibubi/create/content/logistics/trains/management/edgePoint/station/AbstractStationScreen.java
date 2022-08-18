@@ -10,12 +10,13 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainIconType;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.PartialModelGuiElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public abstract class AbstractStationScreen extends AbstractSimiScreen {
@@ -39,14 +40,14 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		setWindowSize(background.width, background.height);
+		setWindowSize(background.getWidth(), background.getHeight());
 		super.init();
 		clearWidgets();
 
 		int x = guiLeft;
 		int y = guiTop;
 
-		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+		confirmButton = new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
 		confirmButton.withCallback(this::onClose);
 		addRenderableWidget(confirmButton);
 	}
@@ -81,7 +82,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		ms.pushPose();
 		TransformStack msr = TransformStack.cast(ms);
 		msr.pushPose()
-			.translate(x + background.width + 4, y + background.height + 4, 100)
+			.translate(x + background.getWidth() + 4, y + background.getHeight() + 4, 100)
 			.scale(40)
 			.rotateX(-22)
 			.rotateY(63);
@@ -92,7 +93,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		if (te.resolveFlagAngle()) {
 			msr.translate(1 / 16f, -19 / 16f, -12 / 16f);
 			StationRenderer.transformFlag(msr, te, partialTicks, 180, false);
-			GuiGameElement.of(getFlag(partialTicks))
+			PartialModelGuiElement.of(getFlag(partialTicks))
 				.render(ms);
 		}
 

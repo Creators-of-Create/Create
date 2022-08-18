@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.block;
 
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.RaycastHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class BigOutlines {
 
 		result = null;
 
-		Vec3 origin = player.getEyePosition(AnimationTickHolder.getPartialTicks(mc.level));
+		Vec3 origin = player.getEyePosition(WorldTickHolder.getPartialTicks(mc.level));
 
 		double maxRange = mc.hitResult == null ? Double.MAX_VALUE
 			: mc.hitResult.getLocation()

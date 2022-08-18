@@ -2,14 +2,14 @@ package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox.IconValueBox;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox.TextValueBox;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -70,12 +70,12 @@ public class ScrollValueRenderer {
 				box.subLabel(new TextComponent("(").append(behaviour.unit.apply(behaviour.scrollableValue)).append(")"));
 		}
 
-		box.scrollTooltip(new TextComponent("[").append(Lang.translateDirect("action.scroll")).append("]"));
+		box.scrollTooltip(new TextComponent("[").append(CreateLang.translateDirect("action.scroll")).append("]"));
 		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
 				.withColors(0x5A5D5A, 0xB5B7B6)
 				.passive(!highlight);
 
-		CreateClient.OUTLINER.showValueBox(pos, box.transform(behaviour.slotPositioning))
+		CatnipClient.OUTLINER.showOutline(pos, box.transform(behaviour.slotPositioning))
 				.lineWidth(1 / 64f)
 				.highlightFace(face);
 	}

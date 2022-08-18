@@ -1,17 +1,18 @@
 package com.simibubi.create.foundation.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.gui.element.ScreenElement;
-import com.simibubi.create.foundation.utility.Color;
 
+import net.createmod.catnip.gui.TextureSheetSegment;
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.gui.element.ScreenElement;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public enum AllGuiTextures implements ScreenElement {
+public enum AllGuiTextures implements ScreenElement, TextureSheetSegment {
 
 	// Inventories
 	PLAYER_INVENTORY("player_inventory", 176, 108),
@@ -163,7 +164,7 @@ public enum AllGuiTextures implements ScreenElement {
 
 	SPEECH_TOOLTIP_BACKGROUND("widgets", 0, 24, 8, 8),
 	SPEECH_TOOLTIP_COLOR("widgets", 8, 24, 8, 8),
-	
+
 	TRAIN_HUD_SPEED_BG("widgets", 0, 190, 182, 5),
 	TRAIN_HUD_SPEED("widgets", 0, 185, 182, 5),
 	TRAIN_HUD_THROTTLE("widgets", 0, 195, 182, 5),
@@ -174,30 +175,24 @@ public enum AllGuiTextures implements ScreenElement {
 	TRAIN_PROMPT_R("widgets", 11, 209, 3, 16),
 	TRAIN_PROMPT("widgets", 0, 230, 256, 16),
 
-	// PlacementIndicator
-	PLACEMENT_INDICATOR_SHEET("placement_indicator", 0, 0, 16, 256);
-
 	;
 
 	public static final int FONT_COLOR = 0x575F7A;
 
 	public final ResourceLocation location;
-	public int width, height;
-	public int startX, startY;
+	private final int width;
+	private final int height;
+	private final int startX;
+	private final int startY;
 
-	private AllGuiTextures(String location, int width, int height) {
+	AllGuiTextures(String location, int width, int height) {
 		this(location, 0, 0, width, height);
 	}
-
-	private AllGuiTextures(int startX, int startY) {
-		this("icons", startX * 16, startY * 16, 16, 16);
-	}
-
-	private AllGuiTextures(String location, int startX, int startY, int width, int height) {
+	AllGuiTextures(String location, int startX, int startY, int width, int height) {
 		this(Create.ID, location, startX, startY, width, height);
 	}
 
-	private AllGuiTextures(String namespace, String location, int startX, int startY, int width, int height) {
+	AllGuiTextures(String namespace, String location, int startX, int startY, int width, int height) {
 		this.location = new ResourceLocation(namespace, "textures/gui/" + location + ".png");
 		this.width = width;
 		this.height = height;
@@ -205,9 +200,9 @@ public enum AllGuiTextures implements ScreenElement {
 		this.startY = startY;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void bind() {
-		RenderSystem.setShaderTexture(0, location);
+	@Override
+	public ResourceLocation getLocation() {
+		return location;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -229,4 +224,23 @@ public enum AllGuiTextures implements ScreenElement {
 		UIRenderHelper.drawColoredTexture(ms, c, x, y, startX, startY, width, height);
 	}
 
+	@Override
+	public int getStartX() {
+		return startX;
+	}
+
+	@Override
+	public int getStartY() {
+		return startY;
+	}
+
+	@Override
+	public int getWidth() {
+		return width;
+	}
+
+	@Override
+	public int getHeight() {
+		return height;
+	}
 }

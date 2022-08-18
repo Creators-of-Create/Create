@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
 public class ChuteBlock extends AbstractChuteBlock {
-	
+
 	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
 
@@ -141,12 +141,12 @@ public class ChuteBlock extends AbstractChuteBlock {
 			return state.setValue(SHAPE, Shape.NORMAL);
 		return state.setValue(SHAPE, Shape.INTERSECTION);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ChuteTileEntity> getTileEntityType() {
 		return AllTileEntities.CHUTE.get();

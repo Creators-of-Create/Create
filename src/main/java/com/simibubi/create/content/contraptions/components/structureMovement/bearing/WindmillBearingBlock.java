@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.Couple;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -46,12 +46,12 @@ public class WindmillBearingBlock extends BearingBlock implements ITE<WindmillBe
 	public Class<WindmillBearingTileEntity> getTileEntityClass() {
 		return WindmillBearingTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends WindmillBearingTileEntity> getTileEntityType() {
 		return AllTileEntities.WINDMILL_BEARING.get();
 	}
-	
+
 	public static Couple<Integer> getSpeedRange() {
 		return Couple.create(1, 16);
 	}

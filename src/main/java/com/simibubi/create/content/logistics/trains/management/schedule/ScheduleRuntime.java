@@ -17,8 +17,8 @@ import com.simibubi.create.content.logistics.trains.management.schedule.destinat
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.MutableComponent;

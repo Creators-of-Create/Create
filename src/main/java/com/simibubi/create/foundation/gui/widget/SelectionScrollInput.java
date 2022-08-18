@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.gui.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -12,7 +12,7 @@ import net.minecraft.network.chat.TextComponent;
 
 public class SelectionScrollInput extends ScrollInput {
 
-	private final MutableComponent scrollToSelect = Lang.translateDirect("gui.scrollInput.scrollToSelect");
+	private final MutableComponent scrollToSelect = CreateLang.translateDirect("gui.scrollInput.scrollToSelect");
 	protected List<? extends Component> options;
 
 	public SelectionScrollInput(int xIn, int yIn, int widthIn, int heightIn) {

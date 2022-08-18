@@ -9,7 +9,7 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
@@ -34,9 +34,9 @@ public abstract class SingleLineDisplaySource extends DisplaySource {
 	protected void addLabelingTextBox(ModularGuiLineBuilder builder) {
 		builder.addTextInput(0, 137, (e, t) -> {
 			e.setValue("");
-			t.withTooltip(ImmutableList.of(Lang.translateDirect("display_source.label")
+			t.withTooltip(ImmutableList.of(CreateLang.translateDirect("display_source.label")
 				.withStyle(s -> s.withColor(0x5391E1)),
-				Lang.translateDirect("gui.schedule.lmb_edit")
+				CreateLang.translateDirect("gui.schedule.lmb_edit")
 					.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)));
 		}, "Label");
 	}

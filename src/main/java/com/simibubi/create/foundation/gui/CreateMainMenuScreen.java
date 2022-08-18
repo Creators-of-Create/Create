@@ -7,14 +7,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
-import com.simibubi.create.foundation.gui.element.BoxElement;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.gui.element.BoxElement;
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.FontHelper;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.theme.Color;
+import net.createmod.ponder.foundation.ui.PonderTagIndexScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -143,12 +145,12 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		int bLongWidth = 200;
 
 		addRenderableWidget(
-			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translateDirect("menu.return"), $ -> linkTo(parent)));
-		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translateDirect("menu.configure"),
+			new Button(center - 100, yStart + 92, bLongWidth, bHeight, CreateLang.translateDirect("menu.return"), $ -> linkTo(parent)));
+		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, CreateLang.translateDirect("menu.configure"),
 			$ -> linkTo(BaseConfigScreen.forCreate(this))));
 
 		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
-			Lang.translateDirect("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
+			CreateLang.translateDirect("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
 		gettingStarted.active = !(parent instanceof TitleScreen);
 		addRenderableWidget(gettingStarted);
 
@@ -162,10 +164,10 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 			(b, ps, mx, my) -> renderTooltip(ps, MODRINTH_TOOLTIP, mx, my)));
 
 		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight,
-			Lang.translateDirect("menu.report_bugs"),
+			CreateLang.translateDirect("menu.report_bugs"),
 			$ -> linkTo(ISSUE_TRACKER_LINK)));
 		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight,
-			Lang.translateDirect("menu.support"),
+			CreateLang.translateDirect("menu.support"),
 			$ -> linkTo(SUPPORT_LINK)));
 	}
 
@@ -179,7 +181,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				return;
 			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)
 				return;
-			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), ChatFormatting.GRAY,
+			renderComponentTooltip(ms, FontHelper.cutTextComponent(CreateLang.translateDirect("menu.only_ingame"), ChatFormatting.GRAY,
 				ChatFormatting.GRAY), mouseX, mouseY);
 		}
 	}
@@ -217,7 +219,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		@Override
 		protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
 			pPoseStack.pushPose();
-			pPoseStack.translate(x + width / 2 - (icon.width * scale) / 2, y + height / 2 - (icon.height * scale) / 2, 0);
+			pPoseStack.translate(x + width / 2 - (icon.getWidth() * scale) / 2, y + height / 2 - (icon.getHeight() * scale) / 2, 0);
 			pPoseStack.scale(scale, scale, 1);
 			icon.render(pPoseStack, 0, 0);
 			pPoseStack.popPose();

@@ -3,8 +3,9 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
@@ -32,7 +33,7 @@ public enum InstructionSpeedModifiers {
 	static List<Component> getOptions() {
 		List<Component> options = new ArrayList<>();
 		for (InstructionSpeedModifiers entry : values())
-			options.add(Lang.translateDirect(entry.translationKey));
+			options.add(CreateLang.translateDirect(entry.translationKey));
 		return options;
 	}
 

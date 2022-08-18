@@ -5,8 +5,8 @@ import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -87,7 +87,7 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 	public Class<HosePulleyTileEntity> getTileEntityClass() {
 		return HosePulleyTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends HosePulleyTileEntity> getTileEntityType() {
 		return AllTileEntities.HOSE_PULLEY.get();

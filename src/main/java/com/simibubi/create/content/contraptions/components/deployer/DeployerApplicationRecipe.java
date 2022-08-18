@@ -12,7 +12,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -60,7 +60,7 @@ public class DeployerApplicationRecipe extends ItemApplicationRecipe implements 
 			.getItems();
 		if (matchingStacks.length == 0)
 			return new TextComponent("Invalid");
-		return Lang.translateDirect("recipe.assembly.deploying_item",
+		return CreateLang.translateDirect("recipe.assembly.deploying_item",
 			new TranslatableComponent(matchingStacks[0].getDescriptionId()).getString());
 	}
 

@@ -26,11 +26,12 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilter
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -91,7 +92,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
-			Lang.translateDirect("logistics.when_multiple_outputs_available"), this,
+			CreateLang.translateDirect("logistics.when_multiple_outputs_available"), this,
 			new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP)));
 		selectionMode.requiresWrench();
 
@@ -746,20 +747,20 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		List<ItemStack> allStacks = grabAllStacksOfGroup(true);
 		if (allStacks.isEmpty())
 			return false;
-		
+
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("tooltip.brass_tunnel.contains"))
+			.append(CreateLang.translateDirect("tooltip.brass_tunnel.contains"))
 			.withStyle(ChatFormatting.WHITE));
 		for (ItemStack item : allStacks) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getDescriptionId())
+				.append(CreateLang.translateDirect("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getDescriptionId())
 					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GRAY));
 		}
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("tooltip.brass_tunnel.retrieve"))
+			.append(CreateLang.translateDirect("tooltip.brass_tunnel.retrieve"))
 			.withStyle(ChatFormatting.DARK_GRAY));
-		
+
 		return true;
 	}
 

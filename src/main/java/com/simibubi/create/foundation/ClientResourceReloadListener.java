@@ -2,7 +2,6 @@ package com.simibubi.create.foundation;
 
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.sound.SoundScapes;
-import com.simibubi.create.foundation.utility.LangNumberFormat;
 
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -13,7 +12,6 @@ public class ClientResourceReloadListener implements ResourceManagerReloadListen
 	public void onResourceManagerReload(ResourceManager resourceManager) {
 		CreateClient.invalidateRenderers();
 		SoundScapes.invalidateAll();
-		LangNumberFormat.numberFormat.update();
 	}
 
 }

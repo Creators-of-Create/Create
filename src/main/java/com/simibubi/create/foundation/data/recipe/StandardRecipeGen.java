@@ -27,11 +27,11 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
-import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;

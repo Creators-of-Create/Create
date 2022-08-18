@@ -16,8 +16,8 @@ import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -95,7 +95,7 @@ public class FluidPipeBlock extends PipeBlock
 				.filter(pc -> pc != null && pc.hasFlow())
 				.findAny()
 				.ifPresent($ -> AllAdvancements.GLASS_PIPE.awardTo(context.getPlayer())));
-			
+
 			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockAndUpdate(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
 				.setValue(GlassFluidPipeBlock.AXIS, axis)
@@ -118,7 +118,7 @@ public class FluidPipeBlock extends PipeBlock
 			return InteractionResult.PASS;
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
-		
+
 		FluidTransportBehaviour.cacheFlows(world, pos);
 		world.setBlockAndUpdate(pos,
 			EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));

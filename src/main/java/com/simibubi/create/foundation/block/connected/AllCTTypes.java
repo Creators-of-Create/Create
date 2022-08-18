@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.block.connected;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.ContextRequirement;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.resources.ResourceLocation;
 
 public enum AllCTTypes implements CTType {

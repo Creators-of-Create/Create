@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -45,12 +46,12 @@ public class Label extends AbstractSimiWidget {
 
 	public void setTextAndTrim(Component newText, boolean trimFront, int maxWidthPx) {
 		Font fontRenderer = Minecraft.getInstance().font;
-		
+
 		if (fontRenderer.width(newText) <= maxWidthPx) {
 			text = newText;
 			return;
 		}
-		
+
 		String trim = "...";
 		int trimWidth = fontRenderer.width(trim);
 
@@ -79,7 +80,7 @@ public class Label extends AbstractSimiWidget {
 		MutableComponent copy = text.plainCopy();
 		if (suffix != null && !suffix.isEmpty())
 			copy.append(suffix);
-		
+
 		if (hasShadow)
 			font.drawShadow(matrixStack, copy, x, y, color);
 		else

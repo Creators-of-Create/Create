@@ -9,8 +9,8 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
+import net.createmod.catnip.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.ChatFormatting;
@@ -59,7 +59,7 @@ public abstract class ZapperItem extends Item {
 				.getBlock()
 				.getName();
 			ItemDescription.add(tooltip,
-				Lang.translateDirect("terrainzapper.usingBlock",
+				CreateLang.translateDirect("terrainzapper.usingBlock",
 					usedBlock.withStyle(ChatFormatting.GRAY))
 						.withStyle(ChatFormatting.DARK_GRAY));
 		}
@@ -180,7 +180,7 @@ public abstract class ZapperItem extends Item {
 	public Component validateUsage(ItemStack item) {
 		CompoundTag tag = item.getOrCreateTag();
 		if (!canActivateWithoutSelectedBlock(item) && !tag.contains("BlockUsed"))
-			return Lang.translateDirect("terrainzapper.leftClickToSet");
+			return CreateLang.translateDirect("terrainzapper.leftClickToSet");
 		return null;
 	}
 

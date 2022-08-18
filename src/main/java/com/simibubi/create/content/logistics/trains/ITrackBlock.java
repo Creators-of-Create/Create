@@ -15,9 +15,9 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTa
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackShape;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -97,7 +97,7 @@ public interface ITrackBlock {
 			firstLocation.forceNode();
 			secondLocation.forceNode();
 		}
-		
+
 		boolean skipFirst = false;
 		boolean skipSecond = false;
 

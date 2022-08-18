@@ -3,14 +3,14 @@ package com.simibubi.create.content.logistics.block.depot;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -59,7 +59,7 @@ public class EjectorTargetHandler {
 
 		String key = "weighted_ejector.target_set";
 		ChatFormatting colour = ChatFormatting.GOLD;
-		player.displayClientMessage(Lang.translateDirect(key)
+		player.displayClientMessage(CreateLang.translateDirect(key)
 			.withStyle(colour), true);
 		currentSelection = pos;
 		launcher = null;
@@ -101,7 +101,7 @@ public class EjectorTargetHandler {
 
 		Direction validTargetDirection = getValidTargetDirection(pos);
 		if (validTargetDirection == null) {
-			player.displayClientMessage(Lang.translateDirect(key)
+			player.displayClientMessage(CreateLang.translateDirect(key)
 				.withStyle(colour), true);
 			currentItem = null;
 			currentSelection = null;
@@ -112,7 +112,7 @@ public class EjectorTargetHandler {
 		colour = ChatFormatting.GREEN;
 
 		player.displayClientMessage(
-			Lang.translateDirect(key, currentSelection.getX(), currentSelection.getY(), currentSelection.getZ())
+			CreateLang.translateDirect(key, currentSelection.getX(), currentSelection.getY(), currentSelection.getZ())
 				.withStyle(colour),
 			true);
 
@@ -213,7 +213,7 @@ public class EjectorTargetHandler {
 		ClientLevel world = mc.level;
 
 		AABB bb = new AABB(0, 0, 0, 1, 0, 1).move(currentSelection.offset(-validX, -yDiff, -validZ));
-		CreateClient.OUTLINER.chaseAABB("valid", bb)
+		CatnipClient.OUTLINER.chaseAABB("valid", bb)
 			.colored(intColor)
 			.lineWidth(1 / 16f);
 
@@ -263,7 +263,7 @@ public class EjectorTargetHandler {
 		BlockState state = world.getBlockState(pos);
 		VoxelShape shape = state.getShape(world, pos);
 		AABB boundingBox = shape.isEmpty() ? new AABB(BlockPos.ZERO) : shape.bounds();
-		CreateClient.OUTLINER.showAABB("target", boundingBox.move(pos))
+		CatnipClient.OUTLINER.showAABB("target", boundingBox.move(pos))
 			.colored(0xffcb74)
 			.lineWidth(1 / 16f);
 	}

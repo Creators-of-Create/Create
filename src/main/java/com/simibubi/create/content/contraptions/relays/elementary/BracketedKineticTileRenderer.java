@@ -8,8 +8,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -48,7 +48,7 @@ public class BracketedKineticTileRenderer extends KineticTileEntityRenderer {
 			ms, buffer.getBuffer(RenderType.solid()), light);
 
 		float offset = getShaftAngleOffset(axis, pos);
-		float time = AnimationTickHolder.getRenderTime(te.getLevel());
+		float time = WorldTickHolder.getRenderTime(te.getLevel());
 		float angle = ((time * te.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
 
 		SuperByteBuffer shaft =

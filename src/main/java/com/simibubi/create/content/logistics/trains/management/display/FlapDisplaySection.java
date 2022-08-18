@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.google.common.base.Strings;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -89,11 +89,11 @@ public class FlapDisplaySection {
 		int max = Math.max(4, (int) (cyclingOptions.length * 1.75f));
 		if (spinningTicks > max)
 			return 0;
-		
+
 		spinningTicks++;
 		if (spinningTicks <= max && spinningTicks < 2)
 			return spinningTicks == 1 ? 0 : spinning.length;
-		
+
 		int spinningFlaps = 0;
 		for (int i = 0; i < spinning.length; i++) {
 			int increasingChance = Mth.clamp(8 - spinningTicks, 1, 10);
@@ -107,11 +107,11 @@ public class FlapDisplaySection {
 				spinning[i + 1] &= continueSpin;
 			if (spinningTicks > max)
 				spinning[i] = false;
-			
+
 			if (spinning[i])
 				spinningFlaps++;
 		}
-		
+
 		return spinningFlaps;
 	}
 
@@ -170,7 +170,7 @@ public class FlapDisplaySection {
 	}
 
 	public static String[] getFlapCycle(String key) {
-		return LOADED_FLAP_CYCLES.computeIfAbsent(key, k -> Lang.translateDirect("flap_display.cycles." + key)
+		return LOADED_FLAP_CYCLES.computeIfAbsent(key, k -> CreateLang.translateDirect("flap_display.cycles." + key)
 			.getString()
 			.split(";"));
 	}

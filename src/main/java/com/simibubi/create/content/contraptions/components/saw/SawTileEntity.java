@@ -27,10 +27,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 import com.simibubi.create.foundation.utility.TreeCutter;
-import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -346,8 +346,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 				ItemHelper.addToList(stack, list);
 			}
 		}
-		
-		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++) 
+
+		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
 			inventory.setStackInSlot(slot + 1, list.get(slot));
 
 		award(AllAdvancements.SAW_PROCESSING);

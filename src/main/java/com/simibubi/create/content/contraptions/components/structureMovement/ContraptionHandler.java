@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.WorldAttached;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
@@ -53,7 +53,7 @@ public class ContraptionHandler {
 				contraptionEntity.staleTicks--;
 				continue;
 			}
-			
+
 			ContraptionCollider.collideEntities(contraptionEntity);
 		}
 	}
@@ -80,8 +80,8 @@ public class ContraptionHandler {
 			return;
 		Vec3 prevPosition = VecHelper.readNBT(data.getList("ContraptionMountLocation", Tag.TAG_DOUBLE));
 		data.remove("ContraptionMountLocation");
-		
-		if (entityLiving instanceof Player player && !prevPosition.closerThan(position, 5000)) 
+
+		if (entityLiving instanceof Player player && !prevPosition.closerThan(position, 5000))
 			AllAdvancements.LONG_TRAVEL.awardTo(player);
 	}
 

@@ -12,7 +12,7 @@ import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileE
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
+import net.createmod.catnip.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -76,7 +76,7 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (world.isClientSide)

@@ -12,8 +12,8 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.Pair;
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

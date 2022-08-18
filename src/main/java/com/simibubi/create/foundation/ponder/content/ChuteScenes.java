@@ -7,16 +7,17 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -28,7 +29,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class ChuteScenes {
 
-	public static void downward(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void downward(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("chute", "Transporting Items downward via Chutes");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(.9f);
@@ -63,7 +65,7 @@ public class ChuteScenes {
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 2), Direction.NORTH), Pointing.RIGHT)
 				.rightClick()
-				.withWrench(),
+				.withItem(AllItems.WRENCH.asStack()),
 			40);
 		scene.idle(7);
 		scene.world.modifyBlock(util.grid.at(3, 3, 3), s -> s.setValue(ChuteBlock.SHAPE, ChuteBlock.Shape.WINDOW), false);
@@ -139,7 +141,8 @@ public class ChuteScenes {
 		scene.markAsFinished();
 	}
 
-	public static void upward(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void upward(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("chute_upward", "Transporting Items upward via Chutes");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(.9f);
@@ -189,7 +192,8 @@ public class ChuteScenes {
 		scene.world.createItemOnBeltLike(util.grid.at(1, 2, 2), Direction.EAST, stack);
 	}
 
-	public static void smart(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void smart(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("smart_chute", "Filtering Items using Smart Chutes");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(.9f);

@@ -4,9 +4,9 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import mezz.jei.api.gui.drawable.IDrawable;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.world.item.ItemStack;
 
 public class DoubleItemIcon implements IDrawable {

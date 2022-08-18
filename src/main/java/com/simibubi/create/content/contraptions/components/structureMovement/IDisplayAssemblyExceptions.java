@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
-import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.FontHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -22,12 +22,12 @@ public interface IDisplayAssemblyExceptions {
 			tooltip.add(TextComponent.EMPTY);
 
 		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
-			.append(Lang.translateDirect("gui.assembly.exception")
+			.append(CreateLang.translateDirect("gui.assembly.exception")
 				.withStyle(ChatFormatting.GOLD)));
 
 		String text = e.component.getString();
 		Arrays.stream(text.split("\n"))
-			.forEach(l -> TooltipHelper.cutStringTextComponent(l, ChatFormatting.GRAY, ChatFormatting.WHITE)
+			.forEach(l -> FontHelper.cutStringTextComponent(l, ChatFormatting.GRAY, ChatFormatting.WHITE)
 				.forEach(c -> tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
 					.append(c))));
 

@@ -4,17 +4,18 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.FacePointOfInterestPose;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.ParrotElement.FacePointOfInterestPose;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -257,7 +258,8 @@ public class TrackScenes {
 		scene.world.showSectionAndMerge(util.select.position(2, 8, 3), Direction.DOWN, slopeStart);
 	}
 
-	public static void portal(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void portal(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("track_portal", "Tracks and the Nether");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(.65f);
@@ -270,7 +272,7 @@ public class TrackScenes {
 			scene.world.showSection(util.select.position(4, 1, i), Direction.DOWN);
 			scene.idle(2);
 		}
-		
+
 		scene.world.toggleControls(util.grid.at(4, 3, 3));
 
 		scene.idle(15);
@@ -343,14 +345,15 @@ public class TrackScenes {
 
 	}
 
-	public static void chunks(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void chunks(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("track_chunks", "Traversing unloaded Chunks");
 		scene.configureBasePlate(0, 0, 9);
 		scene.scaleSceneView(.65f);
 		scene.setSceneOffsetY(-1);
-		
+
 		scene.world.cycleBlockProperty(util.grid.at(5, 3, 4), BlazeBurnerBlock.HEAT_LEVEL);
-		
+
 		ElementLink<WorldSectionElement> stationElement =
 			scene.world.showIndependentSection(util.select.fromTo(0, 0, 0, 8, 0, 8), Direction.UP);
 		ElementLink<WorldSectionElement> stationTrackElement =

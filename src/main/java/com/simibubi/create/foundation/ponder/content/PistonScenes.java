@@ -2,17 +2,18 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonHeadBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.FaceCursorPose;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.ParrotElement.FaceCursorPose;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,8 @@ import net.minecraft.world.level.block.state.properties.PistonType;
 
 public class PistonScenes {
 
-	public static void movement(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void movement(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_piston", "Moving Structures using Mechanical Pistons");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0)
@@ -141,7 +143,8 @@ public class PistonScenes {
 		scene.world.moveSection(chassis, util.vector.of(-2, 0, 0), 40);
 	}
 
-	public static void poles(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void poles(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("piston_pole", "Piston Extension Poles");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -207,7 +210,8 @@ public class PistonScenes {
 
 	}
 
-	public static void movementModes(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void movementModes(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_piston_modes", "Movement Modes of the Mechanical Piston");
 		scene.configureBasePlate(0, 0, 5);
 		Selection rose = util.select.fromTo(0, 2, 2, 0, 1, 2);
@@ -272,7 +276,7 @@ public class PistonScenes {
 		scene.world.showIndependentSection(rose, Direction.DOWN);
 		scene.overlay.showCenteredScrollInput(piston, Direction.UP, 60);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(piston), Pointing.DOWN).scroll()
-			.withWrench(), 60);
+			.withItem(AllItems.WRENCH.asStack()), 60);
 		scene.overlay.showText(70)
 			.pointAt(util.vector.topOf(piston))
 			.placeNearTarget()

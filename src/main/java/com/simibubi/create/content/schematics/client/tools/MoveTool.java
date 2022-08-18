@@ -1,8 +1,8 @@
 package com.simibubi.create.content.schematics.client.tools;
 
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.phys.Vec3;
 
@@ -30,7 +30,7 @@ public class MoveTool extends PlacementToolBase {
 		vec = VecHelper.rotate(vec, transformation.getRotationTarget(), Axis.Y);
 		transformation.move((float) vec.x, 0, (float) vec.z);
 		schematicHandler.markDirty();
-		
+
 		return true;
 	}
 

@@ -11,8 +11,8 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.flap.FlapData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 

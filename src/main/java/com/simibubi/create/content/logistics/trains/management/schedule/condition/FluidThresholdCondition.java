@@ -9,8 +9,9 @@ import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -96,12 +97,12 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
-			Lang.translateDirect("schedule.condition.threshold.train_holds",
-				Lang.translateDirect("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
-			Lang.translateDirect("schedule.condition.threshold.x_units_of_item", getThreshold(),
-				Lang.translateDirect("schedule.condition.threshold.buckets"),
+			CreateLang.translateDirect("schedule.condition.threshold.train_holds",
+				CreateLang.translateDirect("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
+			CreateLang.translateDirect("schedule.condition.threshold.x_units_of_item", getThreshold(),
+				CreateLang.translateDirect("schedule.condition.threshold.buckets"),
 				compareStack.getItem() instanceof FilterItem
-					? Lang.translateDirect("schedule.condition.threshold.matching_content")
+					? CreateLang.translateDirect("schedule.condition.threshold.matching_content")
 					: loadFluid().getDisplayName())
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
@@ -126,7 +127,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		super.initConfigurationWidgets(builder);
 		builder.addSelectionScrollInput(71, 50, (i, l) -> {
-			i.forOptions(ImmutableList.of(Lang.translateDirect("schedule.condition.threshold.buckets")))
+			i.forOptions(ImmutableList.of(CreateLang.translateDirect("schedule.condition.threshold.buckets")))
 				.titled(null);
 		}, "Measure");
 	}
@@ -137,8 +138,8 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 		if (lastDisplaySnapshot == -1)
 			return TextComponent.EMPTY.copy();
 		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
-		return Lang.translateDirect("schedule.condition.threshold.status", lastDisplaySnapshot,
-			Math.max(0, getThreshold() + offset), Lang.translateDirect("schedule.condition.threshold.buckets"));
+		return CreateLang.translateDirect("schedule.condition.threshold.status", lastDisplaySnapshot,
+			Math.max(0, getThreshold() + offset), CreateLang.translateDirect("schedule.condition.threshold.buckets"));
 	}
 
 }

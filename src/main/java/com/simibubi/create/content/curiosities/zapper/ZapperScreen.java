@@ -4,15 +4,15 @@ import java.util.Vector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.gui.AbstractSimiScreen;
+import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class ZapperScreen extends AbstractSimiScreen {
 
-	protected final Component patternSection = Lang.translateDirect("gui.terrainzapper.patternSection");
+	protected final Component patternSection = CreateLang.translateDirect("gui.terrainzapper.patternSection");
 
 	protected AllGuiTextures background;
 	protected ItemStack zapper;
@@ -54,7 +54,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		setWindowSize(background.width, background.height);
+		setWindowSize(background.getWidth(), background.getHeight());
 		setWindowOffset(-10, 0);
 		super.init();
 
@@ -64,7 +64,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		confirmButton =
-			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+			new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
 		confirmButton.withCallback(() -> {
 			onClose();
 		});
@@ -75,13 +75,13 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 			for (int col = 0; col <= 2; col++) {
 				int id = patternButtons.size();
 				PlacementPatterns pattern = PlacementPatterns.values()[id];
-				IconButton patternButton = new IconButton(x + background.width - 76 + col * 18, y + 21 + row * 18, pattern.icon);
+				IconButton patternButton = new IconButton(x + background.getWidth() - 76 + col * 18, y + 21 + row * 18, pattern.icon);
 				patternButton.withCallback(() -> {
 					patternButtons.forEach(b -> b.active = true);
 					patternButton.active = false;
 					currentPattern = pattern;
 				});
-				patternButton.setToolTip(Lang.translateDirect("gui.terrainzapper.pattern." + pattern.translationKey));
+				patternButton.setToolTip(CreateLang.translateDirect("gui.terrainzapper.pattern." + pattern.translationKey));
 				patternButtons.add(patternButton);
 			}
 		}
@@ -123,7 +123,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 	protected void renderZapper(PoseStack ms, int x, int y) {
 		GuiGameElement.of(zapper)
 				.scale(4)
-				.at(x + background.width, y + background.height - 48, -200)
+				.at(x + background.getWidth(), y + background.getHeight() - 48, -200)
 				.render(ms);
 	}
 

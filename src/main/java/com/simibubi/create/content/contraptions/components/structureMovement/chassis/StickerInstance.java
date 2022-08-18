@@ -5,9 +5,9 @@ import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;

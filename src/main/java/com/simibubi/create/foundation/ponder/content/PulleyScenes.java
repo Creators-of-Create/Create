@@ -1,22 +1,24 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
 
 public class PulleyScenes {
 
-	public static void movement(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void movement(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("rope_pulley", "Moving Structures using Rope Pulleys");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(0.95f);
@@ -112,7 +114,8 @@ public class PulleyScenes {
 		scene.idle(50);
 	}
 
-	public static void movementModes(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void movementModes(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("rope_pulley_modes", "Movement Modes of the Rope Pulley");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(0.95f);
@@ -165,7 +168,7 @@ public class PulleyScenes {
 		scene.world.showSection(util.select.position(flowerPos), Direction.DOWN);
 		scene.overlay.showCenteredScrollInput(pulleyPos, Direction.UP, 60);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(pulleyPos), Pointing.DOWN).scroll()
-			.withWrench(), 60);
+			.withItem(AllItems.WRENCH.asStack()), 60);
 		scene.overlay.showText(70)
 			.pointAt(util.vector.topOf(pulleyPos))
 			.placeNearTarget()
@@ -188,7 +191,8 @@ public class PulleyScenes {
 		scene.idle(90);
 	}
 
-	public static void attachment(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void attachment(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("rope_pulley_attachment", "Moving Pulleys as part of a Contraption");
 		scene.configureBasePlate(0, 0, 5);
 		scene.scaleSceneView(0.95f);

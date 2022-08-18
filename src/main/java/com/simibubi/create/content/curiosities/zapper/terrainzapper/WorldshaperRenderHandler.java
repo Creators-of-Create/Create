@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -31,7 +31,7 @@ public class WorldshaperRenderHandler {
 		if (renderedPositions == null)
 			return;
 
-		CreateClient.OUTLINER.showCluster("terrainZapper", renderedPositions.get())
+		CatnipClient.OUTLINER.showCluster("terrainZapper", renderedPositions.get())
 				.colored(0xbfbfbf)
 				.disableNormals()
 				.lineWidth(1 / 32f)

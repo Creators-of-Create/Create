@@ -25,9 +25,9 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxDyeingRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;

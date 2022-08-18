@@ -8,8 +8,8 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

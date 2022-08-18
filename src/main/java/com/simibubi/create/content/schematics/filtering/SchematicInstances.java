@@ -6,10 +6,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.item.SchematicItem;
-import com.simibubi.create.foundation.utility.WorldAttached;
 
+import net.createmod.catnip.utility.WorldAttached;
+import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;

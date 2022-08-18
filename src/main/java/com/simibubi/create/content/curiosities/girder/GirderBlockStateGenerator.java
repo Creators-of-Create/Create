@@ -1,10 +1,10 @@
 package com.simibubi.create.content.curiosities.girder;
 
 import com.simibubi.create.foundation.data.AssetLookup;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.MultiPartBlockStateBuilder;

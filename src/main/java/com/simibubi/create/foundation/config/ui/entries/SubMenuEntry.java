@@ -5,10 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
-import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.gui.element.DelegatedStencilElement;
+import net.createmod.catnip.gui.widget.BoxWidget;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SubMenuEntry extends ConfigScreenList.LabeledEntry {

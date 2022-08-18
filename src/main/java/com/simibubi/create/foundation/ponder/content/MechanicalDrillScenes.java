@@ -1,14 +1,15 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.EntityElement;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.EntityElement;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -20,7 +21,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class MechanicalDrillScenes {
 
-	public static void breaker(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void breaker(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_drill", "Breaking Blocks with the Mechanical Drill");
 		scene.configureBasePlate(0, 0, 5);
 
@@ -55,7 +57,7 @@ public class MechanicalDrillScenes {
 			util.vector.of(0, .1f, 0), new ItemStack(Items.OAK_PLANKS));
 		scene.idle(20);
 		scene.idle(15);
-		
+
 		scene.world.modifyEntity(plankEntity, Entity::discard);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> 4 * f);
 		scene.effects.rotationSpeedIndicator(breakingPos.east(3));
@@ -81,7 +83,8 @@ public class MechanicalDrillScenes {
 		scene.idle(50);
 	}
 
-	public static void contraption(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void contraption(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("mechanical_drill_contraption", "Using Mechanical Drills on Contraptions");
 		scene.configureBasePlate(0, 0, 6);
 		scene.world.showSection(util.select.layer(0), Direction.UP);

@@ -6,7 +6,7 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -33,7 +33,7 @@ public class LogStrippingFakeRecipes {
 
 		ItemStack axe = new ItemStack(Items.IRON_AXE);
 		axe.hideTooltipPart(TooltipPart.MODIFIERS);
-		axe.setHoverName(Lang.translateDirect("recipe.item_application.any_axe")
+		axe.setHoverName(CreateLang.translateDirect("recipe.item_application.any_axe")
 			.withStyle(style -> style.withItalic(false)));
 		ITagManager<Item> tags = ForgeRegistries.ITEMS.tags();
 		tags.getTag(ItemTags.LOGS)

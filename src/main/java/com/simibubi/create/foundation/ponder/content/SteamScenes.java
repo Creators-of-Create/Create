@@ -7,16 +7,17 @@ import com.simibubi.create.content.contraptions.components.steam.whistle.Whistle
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -140,7 +141,7 @@ public class SteamScenes {
 
 		rightClick =
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 1), Direction.EAST), Pointing.RIGHT)
-				.withWrench()
+				.withItem(AllItems.WRENCH.asStack())
 				.rightClick();
 
 		scene.overlay.showControls(rightClick, 50);
@@ -189,7 +190,8 @@ public class SteamScenes {
 		scene.idle(40);
 	}
 
-	public static void engine(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void engine(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("steam_engine", "Setting up Steam Engines");
 		scene.configureBasePlate(0, 0, 7);
 		scene.setSceneOffsetY(-1);

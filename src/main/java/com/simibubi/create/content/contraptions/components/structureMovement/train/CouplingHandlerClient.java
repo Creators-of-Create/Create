@@ -5,7 +5,7 @@ import java.util.Random;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

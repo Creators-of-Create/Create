@@ -7,8 +7,8 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Pair;
 
+import net.createmod.catnip.utility.Pair;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -40,7 +40,7 @@ public interface IScheduleInput {
 	}
 
 	public default void setItem(int slot, ItemStack stack) {}
-	
+
 	public default ItemStack getItem(int slot) {
 		return ItemStack.EMPTY;
 	}

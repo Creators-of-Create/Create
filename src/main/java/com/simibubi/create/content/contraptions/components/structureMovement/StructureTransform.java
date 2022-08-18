@@ -9,10 +9,10 @@ import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
-import com.simibubi.create.foundation.utility.DirectionHelper;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.DirectionHelper;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -96,7 +96,7 @@ public class StructureTransform {
 			vec = VecHelper.rotate(vec, angle, rotationAxis);
 		return vec;
 	}
-	
+
 	public Vec3 applyWithoutOffset(Vec3 localVec) {
 		Vec3 vec = localVec;
 		if (mirror != null)
@@ -136,7 +136,7 @@ public class StructureTransform {
 
 		if (rotationAxis == Axis.Y) {
 			if (block instanceof BellBlock) {
-				if (state.getValue(BlockStateProperties.BELL_ATTACHMENT) == BellAttachType.DOUBLE_WALL) 
+				if (state.getValue(BlockStateProperties.BELL_ATTACHMENT) == BellAttachType.DOUBLE_WALL)
 					state = state.setValue(BlockStateProperties.BELL_ATTACHMENT, BellAttachType.SINGLE_WALL);
 				return state.setValue(BellBlock.FACING,
 					rotation.rotate(state.getValue(BellBlock.FACING)));

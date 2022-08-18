@@ -5,8 +5,9 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.element.ScreenElement;
 
+import net.createmod.catnip.gui.element.ScreenElement;
+import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.minecraft.network.chat.Component;
 
 public class IconButton extends AbstractSimiWidget {
@@ -16,7 +17,7 @@ public class IconButton extends AbstractSimiWidget {
 	public IconButton(int x, int y, ScreenElement icon) {
 		this(x, y, 18, 18, icon);
 	}
-	
+
 	public IconButton(int x, int y, int w, int h, ScreenElement icon) {
 		super(x, y, w, h);
 		this.icon = icon;
@@ -38,7 +39,7 @@ public class IconButton extends AbstractSimiWidget {
 
 	protected void drawBg(PoseStack matrixStack, AllGuiTextures button) {
 		AllGuiTextures.BUTTON.bind();
-		blit(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
+		blit(matrixStack, x, y, button.getStartX(), button.getStartY(), button.getWidth(), button.getHeight());
 	}
 
 	public void setToolTip(Component text) {

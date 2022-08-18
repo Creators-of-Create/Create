@@ -4,8 +4,8 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.IntAttached;
 
+import net.createmod.catnip.utility.IntAttached;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;

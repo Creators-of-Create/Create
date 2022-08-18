@@ -9,7 +9,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -101,7 +101,7 @@ public class PlaneMirror extends SymmetryMirror {
 
 	@Override
 	public List<Component> getAlignToolTips() {
-		return ImmutableList.of(Lang.translateDirect("orientation.alongZ"), Lang.translateDirect("orientation.alongX"));
+		return ImmutableList.of(CreateLang.translateDirect("orientation.alongZ"), CreateLang.translateDirect("orientation.alongX"));
 	}
 
 }

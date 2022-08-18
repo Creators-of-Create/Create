@@ -6,13 +6,14 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyFluidHandler;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -25,7 +26,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class HosePulleyScenes {
 
-	public static void intro(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void intro(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("hose_pulley", "Source Filling and Draining using Hose Pulleys");
 		scene.configureBasePlate(0, 0, 3);
 		scene.setSceneOffsetY(-1);
@@ -156,7 +158,8 @@ public class HosePulleyScenes {
 
 	}
 
-	public static void level(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void level(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("hose_pulley_level", "Fill and Drain level of Hose Pulleys");
 		scene.configureBasePlate(0, 0, 3);
 		scene.setSceneOffsetY(-1.5f);
@@ -298,7 +301,8 @@ public class HosePulleyScenes {
 		scene.idle(80);
 	}
 
-	public static void infinite(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void infinite(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("hose_pulley_infinite", "Passively Filling and Draining large bodies of Fluid");
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-.5f);

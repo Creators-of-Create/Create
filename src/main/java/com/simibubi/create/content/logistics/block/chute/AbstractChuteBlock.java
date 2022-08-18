@@ -11,8 +11,8 @@ import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -40,7 +40,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public AbstractChuteBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
 		consumer.accept(new ReducedDestroyEffects());
@@ -80,7 +80,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
 		super.updateEntityAfterFallOn(worldIn, entityIn);

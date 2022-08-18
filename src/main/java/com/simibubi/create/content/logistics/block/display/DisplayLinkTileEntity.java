@@ -7,10 +7,10 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +31,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 
 	public LerpedFloat glow;
 	private boolean sendPulse;
-	
+
 	public int refreshTicks;
 
 	public DisplayLinkTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -47,7 +47,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if (isVirtual()) {
 			glow.tickChaser();
 			return;
@@ -59,7 +59,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 			glow.tickChaser();
 			return;
 		}
-		
+
 		refreshTicks++;
 		if (refreshTicks < activeSource.getPassiveRefreshTicks())
 			return;
@@ -114,7 +114,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 		activeSource.transferData(context, activeTarget, targetLine);
 		sendPulse = true;
 		sendData();
-		
+
 		award(AllAdvancements.DISPLAY_LINK);
 	}
 
@@ -133,7 +133,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
 		writeGatheredData(tag, clientPacket);
-		if (clientPacket && activeTarget != null) 
+		if (clientPacket && activeTarget != null)
 			tag.putString("TargetType", activeTarget.id.toString());
 		if (clientPacket && sendPulse) {
 			sendPulse = false;

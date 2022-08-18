@@ -5,7 +5,7 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
@@ -44,7 +44,7 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 			}
 		}
 
-		return Lang.number(rate)
+		return CreateLang.number(rate)
 			.component();
 	}
 
@@ -108,8 +108,8 @@ public class ItemThoughputDisplaySource extends AccumulatedItemCountDisplaySourc
 			return;
 
 		builder.addSelectionScrollInput(0, 80, (si, l) -> {
-			si.forOptions(Lang.translatedOptions("display_source.item_throughput.interval", "second", "minute", "hour"))
-				.titled(Lang.translateDirect("display_source.item_throughput.interval"));
+			si.forOptions(CreateLang.translatedOptions("display_source.item_throughput.interval", "second", "minute", "hour"))
+				.titled(CreateLang.translateDirect("display_source.item_throughput.interval"));
 		}, "Interval");
 	}
 

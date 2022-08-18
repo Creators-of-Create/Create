@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.foundation.utility.Iterate;
-
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;

@@ -5,12 +5,12 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.createmod.catnip.utility.BlockFace;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -203,7 +203,7 @@ public class PipeConnection {
 
 		float flowSpeed = 1 / 32f + Mth.clamp(pressure.get(flow.inbound) / 512f, 0, 1) * 31 / 32f;
 		flow.progress.setValue(Math.min(flow.progress.getValue() + flowSpeed, 1));
-		if (flow.progress.getValue() >= 1) 
+		if (flow.progress.getValue() >= 1)
 			flow.complete = true;
 	}
 

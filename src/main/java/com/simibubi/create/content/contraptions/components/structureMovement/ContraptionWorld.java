@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-
+import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;

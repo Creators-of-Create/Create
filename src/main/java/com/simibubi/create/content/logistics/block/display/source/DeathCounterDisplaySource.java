@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,7 +26,7 @@ public class DeathCounterDisplaySource extends StatTrackingDisplaySource {
 
 	@Override
 	protected Component getObjectiveDisplayName() {
-		return Lang.translateDirect("display_source.scoreboard.objective.deaths");
+		return CreateLang.translateDirect("display_source.scoreboard.objective.deaths");
 	}
 
 }

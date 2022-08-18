@@ -16,12 +16,12 @@ import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.PlaneMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

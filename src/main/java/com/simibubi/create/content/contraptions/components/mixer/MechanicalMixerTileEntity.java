@@ -18,10 +18,10 @@ import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -97,7 +97,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.MIXER);
 	}
-	
+
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -1.5, 0);

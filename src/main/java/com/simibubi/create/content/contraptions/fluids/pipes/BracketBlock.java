@@ -8,8 +8,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-import com.simibubi.create.foundation.utility.Lang;
 
+import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.StringRepresentable;

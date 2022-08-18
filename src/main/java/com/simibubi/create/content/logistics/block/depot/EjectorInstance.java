@@ -5,8 +5,8 @@ import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.util.Mth;
 
 public class EjectorInstance extends ShaftInstance implements DynamicInstance {

@@ -3,7 +3,8 @@ package com.simibubi.create.content.contraptions.processing;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.utility.Lang;
+
+import net.createmod.catnip.utility.lang.Lang;
 
 public enum HeatCondition {
 

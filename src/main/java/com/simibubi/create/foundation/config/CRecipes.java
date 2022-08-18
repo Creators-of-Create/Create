@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config;
 
+import net.createmod.catnip.config.ConfigBase;
+
 public class CRecipes extends ConfigBase {
 
 	public final ConfigBool bulkPressing = b(false, "bulkPressing", Comments.bulkPressing);

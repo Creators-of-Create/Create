@@ -7,10 +7,10 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.worldgen.LayerPattern.Layer.LayerBuilder;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -50,13 +50,13 @@ public class LayerPattern {
 	}
 
 	class Builder {
-		
+
 		private boolean netherMode;
 
 		public LayerPattern build() {
 			return LayerPattern.this;
 		}
-		
+
 		public Builder inNether() {
 			netherMode = true;
 			return this;
@@ -117,7 +117,7 @@ public class LayerPattern {
 				}
 				return blocks(block.defaultBlockState(), block.defaultBlockState());
 			}
-			
+
 			public LayerBuilder blocks(Block block, Block deepblock) {
 				return blocks(block.defaultBlockState(), deepblock.defaultBlockState());
 			}

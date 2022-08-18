@@ -10,8 +10,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.DynamicComponent;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -168,7 +168,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		colour[lineIndex] = color == DyeColor.WHITE ? null : color;
 		notifyUpdate();
 	}
-	
+
 	public void setGlowing(int lineIndex) {
 		glowingLines[lineIndex] = true;
 		notifyUpdate();
@@ -205,7 +205,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		for (int j = 0; j < manualLines.length; j++)
 			if (manualLines[j])
 				NBTHelper.putMarker(tag, "CustomLine" + j);
-		
+
 		for (int j = 0; j < glowingLines.length; j++)
 			if (glowingLines[j])
 				NBTHelper.putMarker(tag, "GlowingLine" + j);
@@ -234,7 +234,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		manualLines = new boolean[ySize * 2];
 		for (int i = 0; i < ySize * 2; i++)
 			manualLines[i] = tag.contains("CustomLine" + i);
-		
+
 		glowingLines = new boolean[ySize * 2];
 		for (int i = 0; i < ySize * 2; i++)
 			glowingLines[i] = tag.contains("GlowingLine" + i);
@@ -321,9 +321,9 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 			: DyeHelper.DYE_TABLE.get(color)
 				.getFirst() | 0xFF_000000;
 	}
-	
+
 	public boolean isLineGlowing(int line) {
 		return glowingLines[line];
 	}
-	
+
 }

@@ -3,11 +3,11 @@ package com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction;
 import java.util.List;
 
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
-import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -84,7 +84,7 @@ public class EdgeInteractionRenderer {
 				.withColors(0x7A6A2C, 0xB79D64)
 				.passive(!hit);
 
-		CreateClient.OUTLINER.showValueBox("edge", box)
+		CatnipClient.OUTLINER.showOutline("edge", box)
 				.lineWidth(1 / 64f)
 				.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
 				.highlightFace(face);

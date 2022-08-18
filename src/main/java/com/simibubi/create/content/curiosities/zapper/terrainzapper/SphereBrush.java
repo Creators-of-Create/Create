@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -51,7 +51,7 @@ public class SphereBrush extends ShapedBrush {
 
 	@Override
 	Component getParamLabel(int paramIndex) {
-		return Lang.translateDirect("generic.radius");
+		return CreateLang.translateDirect("generic.radius");
 	}
 
 	@Override

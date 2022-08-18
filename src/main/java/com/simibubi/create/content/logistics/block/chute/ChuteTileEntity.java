@@ -25,11 +25,11 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -700,26 +700,26 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean downward = getItemMotion() < 0;
 		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("tooltip.chute.header")));
+			.append(CreateLang.translateDirect("tooltip.chute.header")));
 		if (pull == 0 && push == 0)
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.no_fans_attached"))
+				.append(CreateLang.translateDirect("tooltip.chute.no_fans_attached"))
 				.withStyle(ChatFormatting.GRAY));
 		if (pull != 0)
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.fans_" + (pull > 0 ? "pull_up" : "push_down"))
+				.append(CreateLang.translateDirect("tooltip.chute.fans_" + (pull > 0 ? "pull_up" : "push_down"))
 					.withStyle(ChatFormatting.GRAY)));
 		if (push != 0)
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.fans_" + (push > 0 ? "push_up" : "pull_down"))
+				.append(CreateLang.translateDirect("tooltip.chute.fans_" + (push > 0 ? "push_up" : "pull_down"))
 					.withStyle(ChatFormatting.GRAY)));
 		tooltip.add(componentSpacing.plainCopy()
 			.append("-> ")
-			.append(Lang.translateDirect("tooltip.chute.items_move_" + (downward ? "down" : "up"))
+			.append(CreateLang.translateDirect("tooltip.chute.items_move_" + (downward ? "down" : "up"))
 				.withStyle(ChatFormatting.YELLOW)));
 		if (!item.isEmpty()) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.contains", new TranslatableComponent(item.getDescriptionId())
+				.append(CreateLang.translateDirect("tooltip.chute.contains", new TranslatableComponent(item.getDescriptionId())
 					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GREEN));
 		}

@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.display.source;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +18,7 @@ public class FillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 			return null;
 		return sste.currentLevel;
 	}
-	
+
 	@Override
 	protected boolean progressBarActive(DisplayLinkContext context) {
 		return context.sourceConfig()
@@ -37,8 +37,8 @@ public class FillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 		if (isFirstLine)
 			return;
 		builder.addSelectionScrollInput(0, 120,
-			(si, l) -> si.forOptions(Lang.translatedOptions("display_source.fill_level", "percent", "progress_bar"))
-				.titled(Lang.translateDirect("display_source.fill_level.display")),
+			(si, l) -> si.forOptions(CreateLang.translatedOptions("display_source.fill_level", "percent", "progress_bar"))
+				.titled(CreateLang.translateDirect("display_source.fill_level.display")),
 			"Mode");
 	}
 

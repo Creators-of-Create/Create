@@ -5,8 +5,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Couple;
 
+import net.createmod.catnip.utility.Couple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
@@ -74,7 +74,7 @@ public class ValveHandleBlock extends HandCrankBlock {
 	public int getRotationSpeed() {
 		return 16;
 	}
-	
+
 	public static Couple<Integer> getSpeedRange() {
 		return Couple.create(16, 16);
 	}

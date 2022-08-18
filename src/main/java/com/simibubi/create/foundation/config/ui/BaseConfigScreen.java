@@ -14,13 +14,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
-import com.simibubi.create.foundation.gui.element.TextStencilElement;
-import com.simibubi.create.foundation.gui.widget.BoxWidget;
-import com.simibubi.create.foundation.item.TooltipHelper;
+import net.createmod.catnip.gui.ScreenOpener;
+
+import net.createmod.catnip.gui.element.FadableScreenElement;
+import net.createmod.catnip.utility.FontHelper;
+import net.createmod.catnip.utility.theme.Theme;
+import net.createmod.catnip.gui.UIRenderHelper;
+import net.createmod.catnip.gui.element.TextStencilElement;
+import net.createmod.catnip.gui.widget.BoxWidget;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,7 +31,7 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public class BaseConfigScreen extends ConfigScreen {
 
-	public static final DelegatedStencilElement.ElementRenderer DISABLED_RENDERER = (ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_DISABLE));
+	public static final FadableScreenElement DISABLED_RENDERER = (ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.Key.BUTTON_DISABLE.p());
 	private static final Map<String, UnaryOperator<BaseConfigScreen>> DEFAULTS = new HashMap<>();
 
 	static {
@@ -182,7 +183,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			serverConfigWidget.getToolTip()
 					.add(new TextComponent("Stored individually per World"));
 			serverConfigWidget.getToolTip()
-					.addAll(TooltipHelper.cutTextComponent(
+					.addAll(FontHelper.cutTextComponent(
 							new TextComponent(
 									"Gameplay settings can only be accessed from the in-game menu after joining a World or Server."),
 							ChatFormatting.GRAY, ChatFormatting.GRAY));
@@ -194,15 +195,15 @@ public class BaseConfigScreen extends ConfigScreen {
 		TextStencilElement titleText = new TextStencilElement(font, modID.toUpperCase(Locale.ROOT))
 				.centered(true, true)
 				.withElementRenderer((ms, w, h, alpha) -> {
-					UIRenderHelper.angledGradient(ms, 0, 0, h / 2, h, w / 2, Theme.p(Theme.Key.CONFIG_TITLE_A));
-					UIRenderHelper.angledGradient(ms, 0, w / 2, h / 2, h, w / 2, Theme.p(Theme.Key.CONFIG_TITLE_B));
+					UIRenderHelper.angledGradient(ms, 0, 0, h / 2, h, w / 2, Theme.Key.CONFIG_TITLE_A.p());
+					UIRenderHelper.angledGradient(ms, 0, w / 2, h / 2, h, w / 2, Theme.Key.CONFIG_TITLE_B.p());
 				});
 		int boxWidth = width + 10;
 		int boxHeight = 39;
 		int boxPadding = 4;
 		title = new BoxWidget(-5, height / 2 - 110, boxWidth, boxHeight)
 				//.withCustomBackground(new Color(0x20_000000, true))
-				.withBorderColors(Theme.p(Theme.Key.BUTTON_IDLE))
+				.withBorderColors(Theme.Key.BUTTON_IDLE.p())
 				.withPadding(0, boxPadding)
 				.rescaleElement(boxWidth / 2f, (boxHeight - 2 * boxPadding) / 2f)//double the text size by telling it the element is only half as big as the available space
 				.showingElement(titleText.at(0, 7));
@@ -230,7 +231,7 @@ public class BaseConfigScreen extends ConfigScreen {
 
 	@Override
 	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		drawCenteredString(ms, font, "Access Configs for Mod:", width / 2, height / 2 - 105, Theme.i(Theme.Key.TEXT_ACCENT_STRONG));
+		drawCenteredString(ms, font, "Access Configs for Mod:", width / 2, height / 2 - 105, Theme.Key.TEXT_ACCENT_STRONG.i());
 	}
 
 	private void linkTo(Screen screen) {

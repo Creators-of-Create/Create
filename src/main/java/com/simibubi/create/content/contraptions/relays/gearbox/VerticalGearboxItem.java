@@ -4,8 +4,8 @@ import java.util.Map;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.foundation.utility.Iterate;
 
+import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -29,7 +29,7 @@ public class VerticalGearboxItem extends BlockItem {
 	@Override
 	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 	}
-	
+
 	@Override
 	public String getDescriptionId() {
 		return "item.create.vertical_gearbox";

@@ -3,17 +3,18 @@ package com.simibubi.create.foundation.ponder.content.trains;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
-import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderPalette;
-import com.simibubi.create.foundation.ponder.SceneBuilder;
-import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
-import com.simibubi.create.foundation.ponder.Selection;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement;
-import com.simibubi.create.foundation.ponder.element.ParrotElement.FacePointOfInterestPose;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderPalette;
+import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.SceneBuildingUtil;
+import net.createmod.ponder.foundation.Selection;
+import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.ParrotElement.FacePointOfInterestPose;
+import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +26,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class TrainStationScenes {
 
-	public static void assembly(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void assembly(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("train_assembly", "Assembling Trains");
 		scene.configureBasePlate(1, 0, 12);
 		scene.scaleSceneView(.65f);
@@ -311,7 +313,7 @@ public class TrainStationScenes {
 
 		Vec3 target = util.vector.topOf(util.grid.at(5, 3, 6));
 		scene.overlay.showControls(new InputWindowElement(target, Pointing.DOWN).rightClick()
-			.withWrench(), 75);
+			.withItem(AllItems.WRENCH.asStack()), 75);
 		scene.idle(15);
 
 		scene.overlay.showText(70)
@@ -324,13 +326,14 @@ public class TrainStationScenes {
 
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(util.grid.at(6, 0, 2)), Pointing.DOWN).rightClick()
-				.withWrench(), 15);
+				.withItem(AllItems.WRENCH.asStack()), 15);
 		scene.idle(15);
 		scene.world.moveSection(trainElement3, util.vector.of(0, 0, -4), 5);
 
 	}
 
-	public static void autoSchedule(SceneBuilder scene, SceneBuildingUtil util) {
+	public static void autoSchedule(SceneBuilder builder, SceneBuildingUtil util) {
+		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
 		scene.title("auto_schedule", "Stations & Scheduling");
 		scene.configureBasePlate(1, 0, 12);
 		scene.scaleSceneView(.65f);

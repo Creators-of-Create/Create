@@ -4,7 +4,7 @@ import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -63,7 +63,7 @@ public class BackTankUtil {
 			return;
 
 		boolean depleted = threshold == 1;
-		MutableComponent component = Lang.translateDirect(depleted ? "backtank.depleted" : "backtank.low");
+		MutableComponent component = CreateLang.translateDirect(depleted ? "backtank.depleted" : "backtank.low");
 
 		AllSoundEvents.DENY.play(player.level, null, player.blockPosition(), 1, 1.25f);
 		AllSoundEvents.STEAM.play(player.level, null, player.blockPosition(), .5f, .5f);

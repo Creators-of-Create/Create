@@ -8,10 +8,12 @@ import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.utility.math.AngleHelper;
+
+import net.createmod.ponder.utility.WorldTickHolder;
+
+import net.createmod.catnip.utility.IntAttached;
+import net.createmod.catnip.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -73,7 +75,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 			if (fluidLevel > 0) {
 				ms.translate(0,
 					(Mth.sin(
-						AnimationTickHolder.getRenderTime(basin.getLevel()) / 12f + anglePartition * itemCount) + 1.5f)
+						WorldTickHolder.getRenderTime(basin.getLevel()) / 12f + anglePartition * itemCount) + 1.5f)
 						* 1 / 32f,
 					0);
 			}

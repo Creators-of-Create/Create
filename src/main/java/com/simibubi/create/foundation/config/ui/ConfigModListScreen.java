@@ -8,12 +8,12 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
-import com.simibubi.create.foundation.gui.widget.BoxWidget;
-import com.simibubi.create.foundation.item.TooltipHelper;
 
+import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.gui.element.DelegatedStencilElement;
+import net.createmod.catnip.gui.widget.BoxWidget;
+import net.createmod.catnip.utility.FontHelper;
+import net.createmod.catnip.utility.theme.Theme;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
@@ -87,9 +87,9 @@ public class ConfigModListScreen extends ConfigScreen {
 
 		list.setScrollAmount(list.getScrollAmount());
 		if (list.children().size() > 0) {
-			this.search.setTextColor(Theme.i(Theme.Key.TEXT));
+			this.search.setTextColor(Theme.Key.TEXT.i());
 		} else {
-			this.search.setTextColor(Theme.i(Theme.Key.BUTTON_FAIL));
+			this.search.setTextColor(Theme.Key.BUTTON_FAIL.i());
 		}
 	}
 
@@ -113,7 +113,7 @@ public class ConfigModListScreen extends ConfigScreen {
 				button.updateColorsFromState();
 				button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BaseConfigScreen.DISABLED_RENDERER));
 				labelTooltip.add(new TextComponent(toHumanReadable(id)));
-				labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("This Mod does not have any configs registered or is not using Forge's config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
+				labelTooltip.addAll(FontHelper.cutTextComponent(new TextComponent("This Mod does not have any configs registered or is not using Forge's config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
 			}
 
 			listeners.add(button);
