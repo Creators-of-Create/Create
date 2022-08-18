@@ -4,15 +4,15 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class AccumulatedItemCountDisplaySource extends NumericSingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		return new TextComponent(String.valueOf(context.sourceConfig()
+		return Components.literal(String.valueOf(context.sourceConfig()
 			.getInt("Collected")));
 	}
 

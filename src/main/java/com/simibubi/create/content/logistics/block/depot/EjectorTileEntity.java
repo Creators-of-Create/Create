@@ -516,8 +516,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound, boolean clientPacket) {
-		super.writeSafe(compound, clientPacket);
+	public void writeSafe(CompoundTag compound) {
+		super.writeSafe(compound);
 		compound.putInt("HorizontalDistance", launcher.getHorizontalDistance());
 		compound.putInt("VerticalDistance", launcher.getVerticalDistance());
 	}

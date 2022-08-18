@@ -7,8 +7,9 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.worldgen.LayerPattern.Layer.LayerBuilder;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.data.worldgen.features.OreFeatures;
@@ -20,16 +21,13 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraftforge.common.util.NonNullConsumer;
 
 public class LayerPattern {
+	public static final Codec<LayerPattern> CODEC = Codec.list(Layer.CODEC)
+			.xmap(LayerPattern::new, pattern -> pattern.layers);
 
-	List<Layer> layers;
+	public final List<Layer> layers;
 
-	public LayerPattern() {
-		layers = new ArrayList<>();
-	}
-
-	public static Builder builder() {
-		LayerPattern ore = new LayerPattern();
-		return ore.new Builder();
+	public LayerPattern(List<Layer> layers) {
+		this.layers = layers;
 	}
 
 	public Layer rollNext(@Nullable Layer previous, Random random) {
@@ -49,42 +47,60 @@ public class LayerPattern {
 		return null;
 	}
 
-	class Builder {
-		
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+		private final List<Layer> layers = new ArrayList<>();
 		private boolean netherMode;
 
-		public LayerPattern build() {
-			return LayerPattern.this;
-		}
-		
 		public Builder inNether() {
 			netherMode = true;
 			return this;
 		}
 
-		public Builder layer(NonNullConsumer<LayerBuilder> builder) {
-			Layer layer = new Layer();
-			LayerBuilder layerBuilder = layer.new LayerBuilder();
+		public Builder layer(NonNullConsumer<Layer.Builder> builder) {
+			Layer.Builder layerBuilder = new Layer.Builder();
 			layerBuilder.netherMode = netherMode;
 			builder.accept(layerBuilder);
 			layers.add(layerBuilder.build());
 			return this;
 		}
 
+		public LayerPattern build() {
+			return new LayerPattern(layers);
+		}
 	}
 
-	static class Layer {
+	public static class Layer {
+		public static final Codec<Layer> CODEC = RecordCodecBuilder.create(instance -> {
+			return instance.group(
+				Codec.list(Codec.list(TargetBlockState.CODEC))
+					.fieldOf("targets")
+					.forGetter(layer -> layer.targets),
+				Codec.intRange(0, Integer.MAX_VALUE)
+					.fieldOf("min_size")
+					.forGetter(layer -> layer.minSize),
+				Codec.intRange(0, Integer.MAX_VALUE)
+					.fieldOf("max_size")
+					.forGetter(layer -> layer.maxSize),
+				Codec.intRange(0, Integer.MAX_VALUE)
+					.fieldOf("weight")
+					.forGetter(layer -> layer.weight)
+			).apply(instance, Layer::new);
+		});
 
-		public List<List<TargetBlockState>> targets;
-		public int minSize;
-		public int maxSize;
-		public int weight;
+		public final List<List<TargetBlockState>> targets;
+		public final int minSize;
+		public final int maxSize;
+		public final int weight;
 
-		public Layer() {
-			this.targets = new ArrayList<>();
-			this.minSize = 1;
-			this.maxSize = 1;
-			this.weight = 1;
+		public Layer(List<List<TargetBlockState>> targets, int minSize, int maxSize, int weight) {
+			this.targets = targets;
+			this.minSize = minSize;
+			this.maxSize = maxSize;
+			this.weight = weight;
 		}
 
 		public List<TargetBlockState> rollBlock(Random random) {
@@ -93,36 +109,35 @@ public class LayerPattern {
 			return targets.get(random.nextInt(targets.size()));
 		}
 
-		class LayerBuilder {
-
+		public static class Builder {
+			private final List<List<TargetBlockState>> targets = new ArrayList<>();
+			private int minSize = 1;
+			private int maxSize = 1;
+			private int weight = 1;
 			private boolean netherMode;
 
-			private Layer build() {
-				return Layer.this;
-			}
-
-			public LayerBuilder block(NonNullSupplier<? extends Block> block) {
+			public Builder block(NonNullSupplier<? extends Block> block) {
 				return block(block.get());
 			}
 
-			public LayerBuilder passiveBlock() {
+			public Builder passiveBlock() {
 				return blocks(Blocks.STONE.defaultBlockState(), Blocks.DEEPSLATE.defaultBlockState());
 			}
 
-			public LayerBuilder block(Block block) {
+			public Builder block(Block block) {
 				if (netherMode) {
-					Layer.this.targets.add(ImmutableList.of(OreConfiguration
+					this.targets.add(ImmutableList.of(OreConfiguration
 						.target(OreFeatures.NETHER_ORE_REPLACEABLES, block.defaultBlockState())));
 					return this;
 				}
 				return blocks(block.defaultBlockState(), block.defaultBlockState());
 			}
 			
-			public LayerBuilder blocks(Block block, Block deepblock) {
+			public Builder blocks(Block block, Block deepblock) {
 				return blocks(block.defaultBlockState(), deepblock.defaultBlockState());
 			}
 
-			public LayerBuilder blocks(Couple<NonNullSupplier<? extends Block>> blocksByDepth) {
+			public Builder blocks(Couple<NonNullSupplier<? extends Block>> blocksByDepth) {
 				return blocks(blocksByDepth.getFirst()
 					.get()
 					.defaultBlockState(),
@@ -131,26 +146,27 @@ public class LayerPattern {
 						.defaultBlockState());
 			}
 
-			private LayerBuilder blocks(BlockState stone, BlockState deepslate) {
-				Layer.this.targets.add(
+			private Builder blocks(BlockState stone, BlockState deepslate) {
+				this.targets.add(
 					ImmutableList.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, stone),
 						OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, deepslate)));
 				return this;
 			}
 
-			public LayerBuilder weight(int weight) {
-				Layer.this.weight = weight;
+			public Builder weight(int weight) {
+				this.weight = weight;
 				return this;
 			}
 
-			public LayerBuilder size(int min, int max) {
-				Layer.this.minSize = min;
-				Layer.this.maxSize = max;
+			public Builder size(int min, int max) {
+				this.minSize = min;
+				this.maxSize = max;
 				return this;
 			}
 
+			public Layer build() {
+				return new Layer(targets, minSize, maxSize, weight);
+			}
 		}
-
 	}
-
 }

@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes.ComponentPartials;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.block.connected.BakedModelWrapperWithData;
@@ -27,19 +28,9 @@ import net.minecraftforge.client.model.data.ModelProperty;
 public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 	private static final ModelProperty<PipeModelData> PIPE_PROPERTY = new ModelProperty<>();
-	private boolean hideAttachmentConnector;
 
-	public static PipeAttachmentModel opaque(BakedModel template) {
-		return new PipeAttachmentModel(template, false);
-	}
-	
-	public static PipeAttachmentModel transparent(BakedModel template) {
-		return new PipeAttachmentModel(template, true);
-	}
-	
-	public PipeAttachmentModel(BakedModel template, boolean hideAttachmentConnector) {
+	public PipeAttachmentModel(BakedModel template) {
 		super(template);
-		this.hideAttachmentConnector = hideAttachmentConnector;
 	}
 
 	@Override
@@ -50,7 +41,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 		if (transport != null)
 			for (Direction d : Iterate.directions)
-				data.putRim(d, transport.getRenderedRimAttachment(world, pos, state, d));
+				data.putAttachment(d, transport.getRenderedRimAttachment(world, pos, state, d));
 		if (bracket != null)
 			data.putBracket(bracket.getBracket());
 
@@ -63,7 +54,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		List<BakedQuad> quads = super.getQuads(state, side, rand, data);
 		if (data.hasProperty(PIPE_PROPERTY)) {
 			PipeModelData pipeData = data.getData(PIPE_PROPERTY);
-			quads = side != null && pipeData.hasRim(side) ? new ArrayList<>() : new ArrayList<>(quads);
+			quads = new ArrayList<>(quads);
 			addQuads(quads, state, side, rand, data, pipeData);
 		}
 		return quads;
@@ -74,27 +65,28 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		BakedModel bracket = pipeData.getBracket();
 		if (bracket != null)
 			quads.addAll(bracket.getQuads(state, side, rand, data));
-		if (hideAttachmentConnector && side == Direction.UP)
-			return;
-		for (Direction d : Iterate.directions)
-			if (pipeData.hasRim(d))
-				quads.addAll(AllBlockPartials.PIPE_ATTACHMENTS.get(pipeData.getRim(d))
+		for (Direction d : Iterate.directions) {
+			AttachmentTypes type = pipeData.getAttachment(d);
+			for (ComponentPartials partial : type.partials) {
+				quads.addAll(AllBlockPartials.PIPE_ATTACHMENTS.get(partial)
 					.get(d)
 					.get()
 					.getQuads(state, side, rand, data));
+			}
+		}
 		if (pipeData.isEncased())
 			quads.addAll(AllBlockPartials.FLUID_PIPE_CASING.get()
 				.getQuads(state, side, rand, data));
 	}
 
 	private static class PipeModelData {
-		AttachmentTypes[] rims;
-		boolean encased;
-		BakedModel bracket;
+		private AttachmentTypes[] attachments;
+		private boolean encased;
+		private BakedModel bracket;
 
 		public PipeModelData() {
-			rims = new AttachmentTypes[6];
-			Arrays.fill(rims, AttachmentTypes.NONE);
+			attachments = new AttachmentTypes[6];
+			Arrays.fill(attachments, AttachmentTypes.NONE);
 		}
 
 		public void putBracket(BlockState state) {
@@ -109,20 +101,16 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 			return bracket;
 		}
 
-		public void putRim(Direction face, AttachmentTypes rim) {
-			rims[face.get3DDataValue()] = rim;
+		public void putAttachment(Direction face, AttachmentTypes rim) {
+			attachments[face.get3DDataValue()] = rim;
+		}
+
+		public AttachmentTypes getAttachment(Direction face) {
+			return attachments[face.get3DDataValue()];
 		}
 
 		public void setEncased(boolean encased) {
 			this.encased = encased;
-		}
-
-		public boolean hasRim(Direction face) {
-			return rims[face.get3DDataValue()] != AttachmentTypes.NONE;
-		}
-
-		public AttachmentTypes getRim(Direction face) {
-			return rims[face.get3DDataValue()];
 		}
 
 		public boolean isEncased() {

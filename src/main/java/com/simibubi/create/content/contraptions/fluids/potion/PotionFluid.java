@@ -5,12 +5,13 @@ import java.util.List;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PotionFluid extends VirtualFluid {
 
@@ -42,7 +42,7 @@ public class PotionFluid extends VirtualFluid {
 	}
 
 	public static FluidStack addPotionToFluidStack(FluidStack fs, Potion potion) {
-		ResourceLocation resourcelocation = ForgeRegistries.POTIONS.getKey(potion);
+		ResourceLocation resourcelocation = RegisteredObjects.getKeyOrThrow(potion);
 		if (potion == Potions.EMPTY) {
 			fs.removeChildTag("Potion");
 			return fs;
@@ -82,7 +82,7 @@ public class PotionFluid extends VirtualFluid {
 
 		@Override
 		public Component getDisplayName(FluidStack stack) {
-			return new TranslatableComponent(getTranslationKey(stack));
+			return Components.translatable(getTranslationKey(stack));
 		}
 
 		@Override

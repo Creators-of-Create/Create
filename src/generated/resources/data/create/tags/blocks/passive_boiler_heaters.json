@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "#create:fan_heaters"
+    "create:blaze_burner",
+    "create:lit_blaze_burner",
+    "#minecraft:fire",
+    "#minecraft:campfires",
+    "minecraft:magma_block",
+    "minecraft:lava"
   ]
 }

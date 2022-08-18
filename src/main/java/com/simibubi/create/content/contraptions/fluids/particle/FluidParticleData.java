@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.particle.ICustomParticleData;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidParticleData implements ParticleOptions, ICustomParticleData<FluidParticleData> {
 
@@ -49,8 +49,7 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 
 	@Override
 	public String writeToString() {
-		return ForgeRegistries.PARTICLE_TYPES.getKey(type) + " " + fluid.getFluid()
-			.getRegistryName();
+		return RegisteredObjects.getKeyOrThrow(type) + " " + RegisteredObjects.getKeyOrThrow(fluid.getFluid());
 	}
 
 	public static final Codec<FluidParticleData> CODEC = RecordCodecBuilder.create(i -> i

@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilter
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -40,7 +41,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -752,7 +752,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			.withStyle(ChatFormatting.WHITE));
 		for (ItemStack item : allStacks) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", new TranslatableComponent(item.getDescriptionId())
+				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", Components.translatable(item.getDescriptionId())
 					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GRAY));
 		}

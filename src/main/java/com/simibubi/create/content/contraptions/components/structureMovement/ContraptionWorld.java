@@ -23,8 +23,10 @@ public class ContraptionWorld extends WrappedWorld {
 
         this.contraption = contraption;
 
-		minY = nextMultipleOf16(contraption.bounds.minY);
-		height = nextMultipleOf16(contraption.bounds.maxY) - minY;
+		// Include 1 block above/below contraption height range to avoid certain edge-case Starlight crashes with
+		// downward-facing mechanical pistons.
+		minY = nextMultipleOf16(contraption.bounds.minY - 1);
+		height = nextMultipleOf16(contraption.bounds.maxY + 1) - minY;
 	}
 
 	// https://math.stackexchange.com/questions/291468

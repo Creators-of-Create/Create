@@ -20,9 +20,8 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
-import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -36,14 +35,9 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 	private final boolean needsHeating;
 
-	public BasinCategory(boolean needsHeating, IDrawable icon, IDrawable background) {
-		super(icon, background);
+	public BasinCategory(Info<BasinRecipe> info, boolean needsHeating) {
+		super(info);
 		this.needsHeating = needsHeating;
-	}
-
-	@Override
-	public Class<? extends BasinRecipe> getRecipeClass() {
-		return BasinRecipe.class;
 	}
 
 	@Override
@@ -72,7 +66,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			builder
 					.addSlot(RecipeIngredientRole.INPUT, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19)
 					.setBackground(getRenderedSlot(), -1, -1)
-					.addIngredients(VanillaTypes.FLUID, withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()))
+					.addIngredients(ForgeTypes.FLUID_STACK, withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()))
 					.addTooltipCallback(addFluidTooltip(fluidIngredient.getRequiredAmount()));
 			i++;
 		}
@@ -99,7 +93,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			builder
 					.addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
 					.setBackground(getRenderedSlot(), -1, -1)
-					.addIngredient(VanillaTypes.FLUID, withImprovedVisibility(fluidResult))
+					.addIngredient(ForgeTypes.FLUID_STACK, withImprovedVisibility(fluidResult))
 					.addTooltipCallback(addFluidTooltip(fluidResult.getAmount()));
 			i++;
 		}

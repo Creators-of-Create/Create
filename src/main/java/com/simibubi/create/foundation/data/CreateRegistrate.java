@@ -18,6 +18,7 @@ import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
@@ -30,6 +31,8 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
@@ -77,7 +80,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@Override
 	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name,
-		Class<? super R> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
+		ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
 		NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
 		RegistryEntry<T> ret = super.accept(name, type, builder, creator, entryFactory);
 		sectionLookup.put(ret, currentSection());
@@ -103,8 +106,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public <R extends IForgeRegistryEntry<R>> Collection<RegistryEntry<R>> getAll(AllSections section,
-		Class<? super R> registryType) {
-		return this.<R>getAll(registryType)
+		ResourceKey<? extends Registry<R>> registryType) {
+		return this.getAll(registryType)
 			.stream()
 			.filter(e -> getSection(e) == section)
 			.collect(Collectors.toList());
@@ -202,11 +205,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	/* Util */
 
-	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
-		Supplier<ConnectedTextureBehaviour> behavior) {
-		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
-	}
-
 	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
 		BiConsumer<T, CasingConnectivity> consumer) {
 		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
@@ -222,15 +220,13 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
-	protected static void onClient(Supplier<Runnable> toRun) {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, toRun);
+	public static <T extends Block> NonNullConsumer<? super T> connectedTextures(
+		Supplier<ConnectedTextureBehaviour> behavior) {
+		return entry -> onClient(() -> () -> registerCTBehviour(entry, behavior));
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	private static void registerCTBehviour(Block entry, Supplier<ConnectedTextureBehaviour> behaviorSupplier) {
-		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
-		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(entry.delegate, model -> new CTModel(model, behavior));
+	protected static void onClient(Supplier<Runnable> toRun) {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, toRun);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -243,14 +239,21 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	private static void registerBlockModel(Block entry,
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(entry.delegate, func.get());
+			.register(RegisteredObjects.getKeyOrThrow(entry), func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerItemModel(Item entry,
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomItemModels()
-			.register(entry.delegate, func.get());
+			.register(RegisteredObjects.getKeyOrThrow(entry), func.get());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void registerCTBehviour(Block entry, Supplier<ConnectedTextureBehaviour> behaviorSupplier) {
+		ConnectedTextureBehaviour behavior = behaviorSupplier.get();
+		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
+			.register(RegisteredObjects.getKeyOrThrow(entry), model -> new CTModel(model, behavior));
 	}
 
 }

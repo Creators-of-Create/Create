@@ -3,24 +3,17 @@ package com.simibubi.create.compat.jei.category;
 import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.level.material.Fluids;
 
 public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookingRecipe> {
 
-	public FanBlastingCategory() {
-		super(doubleItemIcon(AllItems.PROPELLER.get(), Items.LAVA_BUCKET));
-	}
-
-	@Override
-	public Class<? extends AbstractCookingRecipe> getRecipeClass() {
-		return AbstractCookingRecipe.class;
+	public FanBlastingCategory(Info<AbstractCookingRecipe> info) {
+		super(info);
 	}
 
 	@Override

@@ -3,12 +3,12 @@ package com.simibubi.create.content.contraptions.goggles;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -27,7 +27,7 @@ public interface IHaveGoggleInformation {
 	 * Use Lang.[...].forGoggles(list)
 	 */
 	@Deprecated
-	Component componentSpacing = new TextComponent(spacing);
+	Component componentSpacing = Components.literal(spacing);
 
 	/**
 	 * this method will be called when looking at a TileEntity that implemented this

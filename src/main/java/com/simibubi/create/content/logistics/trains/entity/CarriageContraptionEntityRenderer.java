@@ -35,6 +35,9 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 	@Override
 	public void render(CarriageContraptionEntity entity, float yaw, float partialTicks, PoseStack ms,
 		MultiBufferSource buffers, int overlay) {
+		if (!entity.validForRender || entity.firstPositionUpdate)
+			return;
+		
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
 		Carriage carriage = entity.getCarriage();

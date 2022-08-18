@@ -124,6 +124,8 @@ public class Train {
 	public Boolean lowHonk;
 	public int honkPitch;
 
+	public float accumulatedSteamRelease;
+	
 	int tickOffset;
 	double[] stress;
 
@@ -296,6 +298,8 @@ public class Train {
 						ResourceKey<Level> d = b ? d1 : d2;
 						if (!b && d1.equals(d2))
 							continue;
+						if (!d1.equals(d2))
+							continue;
 
 						DimensionalCarriageEntity dimensional = carriage.getDimensionalIfPresent(d);
 						DimensionalCarriageEntity dimensional2 = previousCarriage.getDimensionalIfPresent(d);
@@ -311,6 +315,7 @@ public class Train {
 						entries++;
 					}
 				}
+				
 
 				if (entries > 0)
 					actual = total / entries;
@@ -367,6 +372,7 @@ public class Train {
 				toFollowBackward == null ? navigation::control : mp -> mp.follow(toFollowBackward);
 
 			double totalStress = derailed ? 0 : leadingStress + trailingStress;
+			
 			boolean first = i == 0;
 			boolean last = i == carriageCount - 1;
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;

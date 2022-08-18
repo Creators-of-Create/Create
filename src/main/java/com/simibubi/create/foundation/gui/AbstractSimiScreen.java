@@ -6,6 +6,7 @@ import java.util.List;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
@@ -13,7 +14,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,7 +29,7 @@ public abstract class AbstractSimiScreen extends Screen {
 	}
 
 	protected AbstractSimiScreen() {
-		this(TextComponent.EMPTY);
+		this(Components.immutableEmpty());
 	}
 
 	/**

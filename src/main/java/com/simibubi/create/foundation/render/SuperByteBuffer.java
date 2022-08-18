@@ -4,7 +4,7 @@ import java.util.function.IntPredicate;
 
 import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
 import com.jozufozu.flywheel.api.vertex.VertexList;
-import com.jozufozu.flywheel.backend.OptifineHandler;
+import com.jozufozu.flywheel.backend.ShadersModHandler;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
@@ -114,7 +114,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 
 		DiffuseLightCalculator diffuseCalculator = ForcedDiffuseState.getForcedCalculator();
 		final boolean disableDiffuseMult =
-			this.disableDiffuseMult || (OptifineHandler.isUsingShaders() && diffuseCalculator == null);
+			this.disableDiffuseMult || (ShadersModHandler.isShaderPackInUse() && diffuseCalculator == null);
 		if (diffuseCalculator == null) {
 			diffuseCalculator = this.diffuseCalculator;
 			if (diffuseCalculator == null) {

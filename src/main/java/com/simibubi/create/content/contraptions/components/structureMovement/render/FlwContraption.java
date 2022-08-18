@@ -14,7 +14,7 @@ import com.jozufozu.flywheel.backend.instancing.batching.BatchingEngine;
 import com.jozufozu.flywheel.backend.instancing.instancing.InstancingEngine;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.core.model.Model;
-import com.jozufozu.flywheel.core.model.WorldModel;
+import com.jozufozu.flywheel.core.model.WorldModelBuilder;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
@@ -141,7 +141,10 @@ public class FlwContraption extends ContraptionRenderInfo {
 		Collection<StructureBlockInfo> renderedBlocks = contraption.getRenderedBlocks();
 
 		for (RenderType layer : blockLayers) {
-			Model layerModel = new WorldModel(renderWorld, layer, renderedBlocks, layer + "_" + contraption.entity.getId());
+			Model layerModel = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
+					.withModelData(contraption.modelData)
+					.withBlocks(renderedBlocks)
+					.intoMesh(layer + "_" + contraption.entity.getId());
 			renderLayers.put(layer, new ArrayModelRenderer(layerModel));
 		}
 	}

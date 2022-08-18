@@ -37,6 +37,7 @@ import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -45,7 +46,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -192,7 +192,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				);
 
 		resetAll.showingElement(AllIcons.I_CONFIG_RESET.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(resetAll)));
-		resetAll.getToolTip().add(new TextComponent("Reset All"));
+		resetAll.getToolTip().add(Components.literal("Reset All"));
 		resetAll.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to reset all settings to their default value.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		saveChanges = new BoxWidget(listL - 30, yCenter - 25, 20, 20)
@@ -212,7 +212,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 					addAnnotationsToConfirm(confirm).open(this);
 				});
 		saveChanges.showingElement(AllIcons.I_CONFIG_SAVE.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(saveChanges)));
-		saveChanges.getToolTip().add(new TextComponent("Save Changes"));
+		saveChanges.getToolTip().add(Components.literal("Save Changes"));
 		saveChanges.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to save your current changes.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		discardChanges = new BoxWidget(listL - 30, yCenter + 5, 20, 20)
@@ -231,14 +231,14 @@ public class SubMenuConfigScreen extends ConfigScreen {
 							.open(this);
 				});
 		discardChanges.showingElement(AllIcons.I_CONFIG_DISCARD.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(discardChanges)));
-		discardChanges.getToolTip().add(new TextComponent("Discard Changes"));
+		discardChanges.getToolTip().add(Components.literal("Discard Changes"));
 		discardChanges.getToolTip().addAll(TooltipHelper.cutStringTextComponent("Click here to discard all the changes you made.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		goBack = new BoxWidget(listL - 30, yCenter + 65, 20, 20)
 				.withPadding(2, 2)
 				.withCallback(this::attemptBackstep);
 		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
-		goBack.getToolTip().add(new TextComponent("Go Back"));
+		goBack.getToolTip().add(Components.literal("Go Back"));
 
 		addRenderableWidget(resetAll);
 		addRenderableWidget(saveChanges);
@@ -331,13 +331,13 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_LOCKED.render(ms, 0, 0));
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, red));
 			serverLocked.withBorderColors(red);
-			serverLocked.getToolTip().add(new TextComponent("Locked").withStyle(ChatFormatting.BOLD));
+			serverLocked.getToolTip().add(Components.literal("Locked").withStyle(ChatFormatting.BOLD));
 			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You do not have enough permissions to edit the server config. You can still look at the current values here though.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 		} else {
 			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_UNLOCKED.render(ms, 0, 0));
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, green));
 			serverLocked.withBorderColors(green);
-			serverLocked.getToolTip().add(new TextComponent("Unlocked").withStyle(ChatFormatting.BOLD));
+			serverLocked.getToolTip().add(Components.literal("Unlocked").withStyle(ChatFormatting.BOLD));
 			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You have enough permissions to edit the server config. Changes you make here will be synced with the server when you save them.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 		}
 

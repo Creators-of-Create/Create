@@ -52,8 +52,9 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
-	public SteamEngineBlock(Properties p_53182_) {
-		super(p_53182_);
+	public SteamEngineBlock(Properties properties) {
+		super(properties);
+		registerDefaultState(stateDefinition.any().setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
 	}
 
 	@Override

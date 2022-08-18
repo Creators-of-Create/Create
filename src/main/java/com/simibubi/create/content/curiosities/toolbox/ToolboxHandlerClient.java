@@ -103,7 +103,7 @@ public class ToolboxHandlerClient {
 
 	public static void onKeyInput(int key, boolean pressed) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+		if (mc.gameMode == null || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
 		if (key != AllKeys.TOOLBELT.getBoundCode())
@@ -157,7 +157,7 @@ public class ToolboxHandlerClient {
 
 	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.hideGui)
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
 		int x = width / 2 - 90;

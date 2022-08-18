@@ -113,7 +113,7 @@ public class StationBlock extends Block implements ITE<StationTileEntity>, IWren
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
 
-		if (pPlayer == null)
+		if (pPlayer == null || pPlayer.isSteppingCarefully())
 			return InteractionResult.PASS;
 		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
 		if (AllItems.WRENCH.isIn(itemInHand))

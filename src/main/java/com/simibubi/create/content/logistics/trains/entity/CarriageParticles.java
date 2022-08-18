@@ -53,7 +53,7 @@ public class CarriageParticles {
 		if (stopped) {
 			if (!arrived) {
 				arrived = true;
-				depressurise = 20;
+				depressurise = (int) (20 * entity.getCarriage().train.accumulatedSteamRelease / 10f);
 			}
 		} else
 			depressurise = 0;

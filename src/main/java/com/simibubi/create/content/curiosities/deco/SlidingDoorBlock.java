@@ -33,6 +33,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 
 public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<SlidingDoorTileEntity> {
 
@@ -49,6 +51,24 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 	protected static final VoxelShape EN_AABB = Block.box(-13.0D, 0.0D, 13.0D, 3.0D, 16.0D, 16.0D);
 
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
+
+	@Deprecated // Remove in 1.19 - Fixes incompatibility with Quarks double door module
+	public static void stopItQuark(PlayerInteractEvent.RightClickBlock event) {
+		Player player = event.getPlayer();
+		Level world = event.getWorld();
+
+		if (!world.isClientSide || player.isDiscrete() || event.isCanceled() || event.getResult() == Result.DENY
+			|| event.getUseBlock() == Result.DENY)
+			return;
+
+		BlockPos pos = event.getPos();
+		BlockState blockState = world.getBlockState(pos);
+
+		if (blockState.getBlock()instanceof SlidingDoorBlock sdb) {
+			event.setCanceled(true);
+			event.setCancellationResult(blockState.use(world, player, event.getHand(), event.getHitVec()));
+		}
+	}
 
 	public SlidingDoorBlock(Properties p_52737_) {
 		super(p_52737_);

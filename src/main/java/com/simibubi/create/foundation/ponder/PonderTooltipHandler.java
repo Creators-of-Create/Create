@@ -8,7 +8,9 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.ponder.ui.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.ChatFormatting;
@@ -18,7 +20,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 
@@ -112,8 +113,7 @@ public class PonderTooltipHandler {
 
 		if (stack.isEmpty())
 			return;
-		if (!PonderRegistry.ALL.containsKey(stack.getItem()
-			.getRegistryName()))
+		if (!PonderRegistry.ALL.containsKey(RegisteredObjects.getKeyOrThrow(stack.getItem())))
 			return;
 
 		if (prevStack.isEmpty() || !prevStack.sameItem(stack))
@@ -165,7 +165,7 @@ public class PonderTooltipHandler {
 			bars += ChatFormatting.GRAY + Strings.repeat("|", current);
 			if (progress < 1)
 				bars += ChatFormatting.DARK_GRAY + Strings.repeat("|", total - current);
-			return new TextComponent(bars);
+			return Components.literal(bars);
 		}
 
 		return holdW;

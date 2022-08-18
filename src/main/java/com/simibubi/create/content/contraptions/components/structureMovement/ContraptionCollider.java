@@ -175,7 +175,7 @@ public class ContraptionCollider {
 					Vec3 collisionPosition = intersect.getCollisionPosition();
 
 					if (!isTemporal) {
-						Vec3 separation = intersect.asSeparationVec(entity.maxUpStep);
+						Vec3 separation = intersect.asSeparationVec(entity.getStepHeight());
 						if (separation != null && !separation.equals(Vec3.ZERO)) {
 							collisionResponse.setValue(currentResponse.add(separation));
 							timeOfImpact = 0;
@@ -474,12 +474,12 @@ public class ContraptionCollider {
 		boolean flag1 = p_20273_.y != vec3.y;
 		boolean flag2 = p_20273_.z != vec3.z;
 		boolean flag3 = e.isOnGround() || flag1 && p_20273_.y < 0.0D;
-		if (e.maxUpStep > 0.0F && flag3 && (flag || flag2)) {
+		if (e.getStepHeight() > 0.0F && flag3 && (flag || flag2)) {
 			Vec3 vec31 =
-				collideBoundingBox(e, new Vec3(p_20273_.x, (double) e.maxUpStep, p_20273_.z), aabb, e.level, list);
-			Vec3 vec32 = collideBoundingBox(e, new Vec3(0.0D, (double) e.maxUpStep, 0.0D),
+				collideBoundingBox(e, new Vec3(p_20273_.x, (double) e.getStepHeight(), p_20273_.z), aabb, e.level, list);
+			Vec3 vec32 = collideBoundingBox(e, new Vec3(0.0D, (double) e.getStepHeight(), 0.0D),
 				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level, list);
-			if (vec32.y < (double) e.maxUpStep) {
+			if (vec32.y < (double) e.getStepHeight()) {
 				Vec3 vec33 =
 					collideBoundingBox(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z), aabb.move(vec32), e.level, list)
 						.add(vec32);

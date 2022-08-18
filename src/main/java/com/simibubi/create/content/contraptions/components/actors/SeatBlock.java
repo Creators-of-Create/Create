@@ -21,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
@@ -181,7 +182,11 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 	}
 
 	public static boolean canBePickedUp(Entity passenger) {
-		return !(passenger instanceof Player) && (passenger instanceof LivingEntity);
+		if (passenger instanceof Shulker)
+			return false;
+		if (passenger instanceof Player)
+			return false;
+		return passenger instanceof LivingEntity;
 	}
 
 	public static void sitDown(Level world, BlockPos pos, Entity entity) {

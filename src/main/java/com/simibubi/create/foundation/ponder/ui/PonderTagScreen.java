@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderTag;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
@@ -83,13 +84,13 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
 					.showing(new ItemStack(i));
 
-			if (PonderRegistry.ALL.containsKey(i.getRegistryName())) {
+			if (PonderRegistry.ALL.containsKey(RegisteredObjects.getKeyOrThrow(i))) {
 				b.withCallback((mouseX, mouseY) -> {
 					centerScalingOn(mouseX, mouseY);
 					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i), tag));
 				});
 			} else {
-				if (i.getRegistryName()
+				if (RegisteredObjects.getKeyOrThrow(i)
 						.getNamespace()
 						.equals(Create.ID))
 					b.withBorderColors(Theme.p(Theme.Key.PONDER_MISSING_CREATE))
@@ -104,9 +105,8 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		}
 
 		if (!tag.getMainItem().isEmpty()) {
-			ResourceLocation registryName = tag.getMainItem()
-					.getItem()
-					.getRegistryName();
+			ResourceLocation registryName = RegisteredObjects.getKeyOrThrow(tag.getMainItem()
+					.getItem());
 
 			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 48, itemCenterY - 10)
 					.showing(tag.getMainItem());

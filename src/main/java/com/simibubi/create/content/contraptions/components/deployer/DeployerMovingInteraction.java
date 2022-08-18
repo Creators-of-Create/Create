@@ -6,6 +6,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
@@ -55,6 +56,7 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 
 			if (!(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerLevel) {
 				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world);
+				deployerFakePlayer.onMinecartContraption = ctx.contraption instanceof MountedContraption;
 				deployerFakePlayer.getInventory()
 					.load(ctx.tileData.getList("Inventory", Tag.TAG_COMPOUND));
 				ctx.temporaryData = fake = deployerFakePlayer;

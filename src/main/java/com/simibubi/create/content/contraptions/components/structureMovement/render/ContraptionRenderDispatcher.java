@@ -7,7 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.error.GlError;
 import com.jozufozu.flywheel.config.BackendType;
-import com.jozufozu.flywheel.core.model.ModelUtil;
+import com.jozufozu.flywheel.core.model.WorldModelBuilder;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.GatherContextEvent;
@@ -171,7 +171,10 @@ public class ContraptionRenderDispatcher {
 	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c,
 		RenderType layer) {
 		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
-		BufferBuilder builder = ModelUtil.getBufferBuilderFromTemplate(renderWorld, layer, values);
+		BufferBuilder builder = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
+				.withBlocks(values)
+				.withModelData(c.modelData)
+				.build();
 		return new SuperByteBuffer(builder);
 	}
 

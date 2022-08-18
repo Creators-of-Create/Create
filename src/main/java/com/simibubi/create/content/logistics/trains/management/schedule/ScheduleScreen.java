@@ -41,6 +41,7 @@ import com.simibubi.create.foundation.gui.widget.Indicator.State;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -55,7 +56,6 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -116,7 +116,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		confirmButton.withCallback(() -> minecraft.player.closeContainer());
 		addRenderableWidget(confirmButton);
 
-		cyclicIndicator = new Indicator(leftPos + 21, topPos + 196, TextComponent.EMPTY);
+		cyclicIndicator = new Indicator(leftPos + 21, topPos + 196, Components.immutableEmpty());
 		cyclicIndicator.state = schedule.cyclic ? State.ON : State.OFF;
 		addRenderableWidget(cyclicIndicator);
 
@@ -171,7 +171,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		resetProgress.visible = false;
 
 		scrollInput = new SelectionScrollInput(leftPos + 56, topPos + 65, 143, 16);
-		scrollInputLabel = new Label(leftPos + 59, topPos + 69, new TextComponent("")).withShadow();
+		scrollInputLabel = new Label(leftPos + 59, topPos + 69, Components.immutableEmpty()).withShadow();
 		editorConfirm = new IconButton(leftPos + 56 + 168, topPos + 65 + 22, AllIcons.I_CONFIRM);
 		if (allowDeletion)
 			editorDelete = new IconButton(leftPos + 56 - 45, topPos + 65 + 22, AllIcons.I_TRASH);
@@ -642,7 +642,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		if (editingCondition != null || editingDestination != null)
 			return false;
 
-		Component empty = new TextComponent("");
+		Component empty = Components.immutableEmpty();
 
 		int mx = (int) mouseX;
 		int my = (int) mouseY;

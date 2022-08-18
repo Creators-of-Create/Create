@@ -96,8 +96,8 @@ public class RemapHelper {
 		reMap.put("adjustable_pulse_repeater", PULSE_REPEATER.getId());
 		reMap.put("adjustable_repeater", PULSE_REPEATER.getId());
 
-		reMap.put("copper_block", Blocks.COPPER_BLOCK.getRegistryName());
-		reMap.put("copper_ore", Blocks.COPPER_ORE.getRegistryName());
+		reMap.put("copper_block", RegisteredObjects.getKeyOrThrow(Blocks.COPPER_BLOCK));
+		reMap.put("copper_ore", RegisteredObjects.getKeyOrThrow(Blocks.COPPER_ORE));
 
 		reMap.put("acacia_glass", ACACIA_WINDOW.getId());
 		reMap.put("acacia_glass_pane", ACACIA_WINDOW_PANE.getId());
@@ -167,6 +167,8 @@ public class RemapHelper {
 		remapPaletteBlock("dolomite", "calcite", false);
 		remapPaletteBlock("weathered_limestone", "tuff", false);
 
+		reMap.put("natural_scoria", asResource("scoria"));
+		
 		reMap.put("empty_blueprint", SCHEMATIC.getId());
 		reMap.put("gold_sheet", GOLDEN_SHEET.getId());
 		reMap.put("flour", WHEAT_FLOUR.getId());

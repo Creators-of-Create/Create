@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderTag;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -24,7 +25,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 
 public class PonderTagIndexScreen extends NavigatableSimiScreen {
@@ -214,7 +214,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		if (hoveredItem != null) {
 			List<Component> list = TooltipHelper.cutStringTextComponent(hoveredItem.getDescription(),
 				ChatFormatting.GRAY, ChatFormatting.GRAY);
-			list.add(0, new TextComponent(hoveredItem.getTitle()));
+			list.add(0, Components.literal(hoveredItem.getTitle()));
 			renderComponentTooltip(ms, list, mouseX, mouseY);
 		}
 
