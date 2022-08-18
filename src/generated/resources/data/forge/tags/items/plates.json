@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "create:sturdy_sheet",
     "create:copper_sheet",
     "create:brass_sheet",
     "create:iron_sheet",

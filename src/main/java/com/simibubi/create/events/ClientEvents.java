@@ -83,7 +83,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
@@ -172,9 +171,6 @@ public class ClientEvents {
 		CameraAngleAnimationService.tick();
 		TrainHUD.tick();
 	}
-
-	@SubscribeEvent
-	public static void onRenderSelection(DrawSelectionEvent event) {}
 
 	@SubscribeEvent
 	public static void onJoin(ClientPlayerNetworkEvent.LoggedInEvent event) {
