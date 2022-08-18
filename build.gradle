@@ -143,10 +143,9 @@ dependencies {
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.19-1.1.5,)') {
         jarJar.pin(it, project.registrate_version)
     }
-    // Uncomment once Forge fixes mixins for included jars
-    //jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.4,0.6.5)') {
-    //    jarJar.pin(it, project.flywheel_version)
-    //}
+    jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.5,0.6.6)') {
+        jarJar.pin(it, project.flywheel_version)
+    }
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
@@ -156,6 +155,7 @@ dependencies {
         implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     }
 
+    compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge:${jei_version}")
 
