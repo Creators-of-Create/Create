@@ -157,7 +157,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		if (!singleOutput && mouseX >= minX && mouseX < maxX && mouseY >= minY && mouseY < maxY) {
 			float chance = recipe.getOutputChance();
 			tooltip.add(junk);
-			tooltip.add(Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? "<1" : 100 - (int) (chance * 100))
+			tooltip.add(Lang.translateDirect("recipe.processing.chance", chance < 0.01 ? ">99" : 100 - (int) (chance * 100))
 				.withStyle(ChatFormatting.GOLD));
 			return tooltip;
 		}
