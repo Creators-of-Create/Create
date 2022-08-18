@@ -2045,7 +2045,7 @@
 	"item.create.experience_nugget.tooltip.condition1": "ПКМ с предметом",
 	"item.create.experience_nugget.tooltip.behaviour1": "_Высвобождает_ _очки опыта_, находящиеся внутри.",
 
-	"block.create.peculiar_bell.tooltip": "СТРАННЫЙ КОЛОКОЛ",
+	"block.create.peculiar_bell.tooltip": "ОСОБЕННЫЙ КОЛОКОЛ",
 	"block.create.peculiar_bell.tooltip.summary": "Декоративный _латунный колокол_. Установка его прямо над горящем _Огнем душ_ может вызвать непредвиденные последствия...",
 
 	"block.create.haunted_bell.tooltip": "ПРИЗРАЧНЫЙ КОЛОКОЛ",
