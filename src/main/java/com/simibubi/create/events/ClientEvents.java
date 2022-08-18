@@ -87,7 +87,6 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.ViewportEvent;
@@ -175,9 +174,6 @@ public class ClientEvents {
 		CameraAngleAnimationService.tick();
 		TrainHUD.tick();
 	}
-
-	@SubscribeEvent
-	public static void onRenderSelection(RenderHighlightEvent.Block event) {}
 
 	@SubscribeEvent
 	public static void onJoin(ClientPlayerNetworkEvent.LoggingIn event) {
