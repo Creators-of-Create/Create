@@ -13,6 +13,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
 
 public class ArmPlacementPacket extends SimplePacketBase {
@@ -64,6 +66,34 @@ public class ArmPlacementPacket extends SimplePacketBase {
 			});
 		context.get()
 			.setPacketHandled(true);
+
+	}
+
+	public static class ClientBoundRequest extends SimplePacketBase {
+
+		BlockPos pos;
+
+		public ClientBoundRequest(BlockPos pos) {
+			this.pos = pos;
+		}
+
+		public ClientBoundRequest(FriendlyByteBuf buffer) {
+			this.pos = buffer.readBlockPos();
+		}
+
+		@Override
+		public void write(FriendlyByteBuf buffer) {
+			buffer.writeBlockPos(pos);
+		}
+
+		@Override
+		public void handle(Supplier<Context> context) {
+			context.get()
+				.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+					() -> () -> ArmInteractionPointHandler.flushSettings(pos)));
+			context.get()
+				.setPacketHandled(true);
+		}
 
 	}
 

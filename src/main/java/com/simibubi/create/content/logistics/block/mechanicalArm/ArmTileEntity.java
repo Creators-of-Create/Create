@@ -81,7 +81,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		super(typeIn, pos, state);
 		inputs = new ArrayList<>();
 		outputs = new ArrayList<>();
-		interactionPointTag = new ListTag();
+		interactionPointTag = null;
 		heldItem = ItemStack.EMPTY;
 		phase = Phase.SEARCH_INPUTS;
 		previousTarget = ArmAngleTarget.NO_TARGET;
@@ -480,7 +480,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	public void writeInteractionPoints(CompoundTag compound) {
-		if (updateInteractionPoints) {
+		if (updateInteractionPoints && interactionPointTag != null) {
 			compound.put("InteractionPoints", interactionPointTag);
 		} else {
 			ListTag pointsNBT = new ListTag();

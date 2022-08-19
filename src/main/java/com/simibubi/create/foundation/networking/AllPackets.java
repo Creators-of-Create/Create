@@ -184,6 +184,10 @@ public enum AllPackets {
 	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_RELOCATION(ContraptionRelocationPacket.class, ContraptionRelocationPacket::new, PLAY_TO_CLIENT),
 	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket::new, PLAY_TO_CLIENT),
+	S_PLACE_EJECTOR(ArmPlacementPacket.ClientBoundRequest.class, ArmPlacementPacket.ClientBoundRequest::new,
+		PLAY_TO_CLIENT),
+	S_PLACE_ARM(EjectorPlacementPacket.ClientBoundRequest.class, EjectorPlacementPacket.ClientBoundRequest::new,
+		PLAY_TO_CLIENT),
 
 	;
 
