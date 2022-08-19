@@ -22,6 +22,7 @@ import net.minecraft.client.model.SheepModel;
 import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.SnowGolemModel;
 import net.minecraft.client.model.SpiderModel;
+import net.minecraft.client.model.WardenModel;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.world.phys.Vec3;
 
@@ -91,6 +92,9 @@ public class TrainHatOffsets {
 				y += 2f;
 			} else if (model instanceof ParrotModel) {
 				z -= 1.5f;
+			} else if (model instanceof WardenModel) {
+				y += 3.5f;
+				z += .5f;
 			}
 		}
 

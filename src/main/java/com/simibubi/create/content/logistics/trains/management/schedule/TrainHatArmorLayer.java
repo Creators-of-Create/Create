@@ -16,6 +16,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.LavaSlimeModel;
 import net.minecraft.client.model.SlimeModel;
+import net.minecraft.client.model.WardenModel;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelPart.Cube;
@@ -93,6 +94,9 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		else if (entityModel instanceof HierarchicalModel<?> model) {
 			boolean slime = model instanceof SlimeModel || model instanceof LavaSlimeModel;
 			ModelPart head = model.root().children.get(slime ? "cube" : "head");
+
+			if (model instanceof WardenModel)
+				head = model.root().children.get("bone").children.get("body").children.get("head");
 
 			if (head != null) {
 				head.translateAndRotate(ms);
