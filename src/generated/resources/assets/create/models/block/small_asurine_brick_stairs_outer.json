@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/outer_stairs",
   "textures": {
-    "side": "create:block/palettes/stone_types/small_brick/asurine_cut_small_brick",
     "bottom": "create:block/palettes/stone_types/small_brick/asurine_cut_small_brick",
+    "side": "create:block/palettes/stone_types/small_brick/asurine_cut_small_brick",
     "top": "create:block/palettes/stone_types/small_brick/asurine_cut_small_brick"
   }
 }

@@ -5,14 +5,14 @@
       "item": "minecraft:fern"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:green_dye"
     },
     {
-      "item": "minecraft:wheat_seeds",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:wheat_seeds"
     }
-  ],
-  "processingTime": 50
+  ]
 }

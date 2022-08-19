@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "BA",
-    "AB"
-  ],
   "key": {
     "A": {
       "item": "minecraft:andesite"
@@ -12,6 +8,10 @@
       "tag": "forge:nuggets/zinc"
     }
   },
+  "pattern": [
+    "BA",
+    "AB"
+  ],
   "result": {
     "item": "create:andesite_alloy"
   }

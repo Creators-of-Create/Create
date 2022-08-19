@@ -5,19 +5,19 @@
       "item": "minecraft:nether_gold_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "minecraft:gold_nugget",
-      "count": 18
+      "count": 18,
+      "item": "minecraft:gold_nugget"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:netherrack",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:netherrack"
     }
-  ],
-  "processingTime": 350
+  ]
 }

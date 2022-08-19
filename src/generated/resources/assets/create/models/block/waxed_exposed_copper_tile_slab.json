@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/slab",
   "textures": {
-    "side": "create:block/copper/exposed_copper_tiles",
     "bottom": "create:block/copper/exposed_copper_roof_top",
+    "side": "create:block/copper/exposed_copper_tiles",
     "top": "create:block/copper/exposed_copper_roof_top"
   }
 }

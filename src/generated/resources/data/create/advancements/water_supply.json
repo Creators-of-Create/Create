@@ -1,25 +1,25 @@
 {
   "parent": "create:glass_pipe",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:water_supply_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:water_bucket"
-    },
-    "title": {
-      "translate": "advancement.create.water_supply"
-    },
+    "announce_to_chat": false,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.water_supply.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:water_bucket"
+    },
     "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:water_supply_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.water_supply"
     }
   },
   "requirements": [

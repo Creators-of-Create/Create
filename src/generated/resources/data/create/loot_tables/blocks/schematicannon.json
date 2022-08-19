@@ -2,32 +2,32 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "functions": [
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "Options",
-                  "target": "BlockEntityTag.Options",
-                  "op": "replace"
+                  "target": "BlockEntityTag.Options"
                 }
-              ]
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "create:schematicannon"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "rolls": 1.0
     }
   ]
 }

@@ -1,304 +1,304 @@
 {
   "variants": {
-    "backwards=false,powered=false,rail_type=regular,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_regular"
-    },
-    "backwards=true,powered=false,rail_type=regular,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_regular",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=regular,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_regular_powered"
-    },
-    "backwards=true,powered=true,rail_type=regular,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_regular_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=powered_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_powered_rail"
-    },
-    "backwards=true,powered=false,rail_type=powered_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_powered_rail",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=powered_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_powered_rail_powered"
-    },
-    "backwards=true,powered=true,rail_type=powered_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_powered_rail_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=detector_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_detector_rail"
-    },
-    "backwards=true,powered=false,rail_type=detector_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_detector_rail",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=detector_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_detector_rail_powered"
-    },
-    "backwards=true,powered=true,rail_type=detector_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_detector_rail_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=activator_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_activator_rail"
-    },
-    "backwards=true,powered=false,rail_type=activator_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_activator_rail",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=activator_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_activator_rail_powered"
-    },
-    "backwards=true,powered=true,rail_type=activator_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_activator_rail_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=controller_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_controller_rail"
-    },
-    "backwards=true,powered=false,rail_type=controller_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_controller_rail",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=controller_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_controller_rail_powered"
-    },
-    "backwards=true,powered=true,rail_type=controller_rail,shape=north_south,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_controller_rail_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=regular,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_regular",
-      "y": 270
-    },
-    "backwards=true,powered=false,rail_type=regular,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_regular",
-      "y": 90
-    },
-    "backwards=false,powered=true,rail_type=regular,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_regular_powered",
-      "y": 270
-    },
-    "backwards=true,powered=true,rail_type=regular,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_regular_powered",
-      "y": 90
-    },
-    "backwards=false,powered=false,rail_type=powered_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_powered_rail",
-      "y": 270
-    },
-    "backwards=true,powered=false,rail_type=powered_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_powered_rail",
-      "y": 90
-    },
-    "backwards=false,powered=true,rail_type=powered_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_powered_rail_powered",
-      "y": 270
-    },
-    "backwards=true,powered=true,rail_type=powered_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_powered_rail_powered",
-      "y": 90
-    },
-    "backwards=false,powered=false,rail_type=detector_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_detector_rail",
-      "y": 270
-    },
-    "backwards=true,powered=false,rail_type=detector_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_detector_rail",
-      "y": 90
-    },
-    "backwards=false,powered=true,rail_type=detector_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_detector_rail_powered",
-      "y": 270
-    },
-    "backwards=true,powered=true,rail_type=detector_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_detector_rail_powered",
-      "y": 90
-    },
     "backwards=false,powered=false,rail_type=activator_rail,shape=east_west,waterlogged=false": {
       "model": "create:block/cart_assembler/block_activator_rail",
       "y": 270
-    },
-    "backwards=true,powered=false,rail_type=activator_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_activator_rail",
-      "y": 90
-    },
-    "backwards=false,powered=true,rail_type=activator_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_activator_rail_powered",
-      "y": 270
-    },
-    "backwards=true,powered=true,rail_type=activator_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_activator_rail_powered",
-      "y": 90
-    },
-    "backwards=false,powered=false,rail_type=controller_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_controller_rail",
-      "y": 270
-    },
-    "backwards=true,powered=false,rail_type=controller_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_controller_rail",
-      "y": 90
-    },
-    "backwards=false,powered=true,rail_type=controller_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_controller_rail_powered",
-      "y": 270
-    },
-    "backwards=true,powered=true,rail_type=controller_rail,shape=east_west,waterlogged=false": {
-      "model": "create:block/cart_assembler/block_controller_rail_powered",
-      "y": 90
-    },
-    "backwards=false,powered=false,rail_type=regular,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_regular"
-    },
-    "backwards=true,powered=false,rail_type=regular,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_regular",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=regular,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_regular_powered"
-    },
-    "backwards=true,powered=true,rail_type=regular,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_regular_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=powered_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_powered_rail"
-    },
-    "backwards=true,powered=false,rail_type=powered_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_powered_rail",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=powered_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_powered_rail_powered"
-    },
-    "backwards=true,powered=true,rail_type=powered_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_powered_rail_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=detector_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_detector_rail"
-    },
-    "backwards=true,powered=false,rail_type=detector_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_detector_rail",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=detector_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_detector_rail_powered"
-    },
-    "backwards=true,powered=true,rail_type=detector_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_detector_rail_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=activator_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_activator_rail"
-    },
-    "backwards=true,powered=false,rail_type=activator_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_activator_rail",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=activator_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_activator_rail_powered"
-    },
-    "backwards=true,powered=true,rail_type=activator_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_activator_rail_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=controller_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_controller_rail"
-    },
-    "backwards=true,powered=false,rail_type=controller_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_controller_rail",
-      "y": 180
-    },
-    "backwards=false,powered=true,rail_type=controller_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_controller_rail_powered"
-    },
-    "backwards=true,powered=true,rail_type=controller_rail,shape=north_south,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_controller_rail_powered",
-      "y": 180
-    },
-    "backwards=false,powered=false,rail_type=regular,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_regular",
-      "y": 270
-    },
-    "backwards=true,powered=false,rail_type=regular,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_regular",
-      "y": 90
-    },
-    "backwards=false,powered=true,rail_type=regular,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_regular_powered",
-      "y": 270
-    },
-    "backwards=true,powered=true,rail_type=regular,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_regular_powered",
-      "y": 90
-    },
-    "backwards=false,powered=false,rail_type=powered_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_powered_rail",
-      "y": 270
-    },
-    "backwards=true,powered=false,rail_type=powered_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_powered_rail",
-      "y": 90
-    },
-    "backwards=false,powered=true,rail_type=powered_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_powered_rail_powered",
-      "y": 270
-    },
-    "backwards=true,powered=true,rail_type=powered_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_powered_rail_powered",
-      "y": 90
-    },
-    "backwards=false,powered=false,rail_type=detector_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_detector_rail",
-      "y": 270
-    },
-    "backwards=true,powered=false,rail_type=detector_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_detector_rail",
-      "y": 90
-    },
-    "backwards=false,powered=true,rail_type=detector_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_detector_rail_powered",
-      "y": 270
-    },
-    "backwards=true,powered=true,rail_type=detector_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_detector_rail_powered",
-      "y": 90
     },
     "backwards=false,powered=false,rail_type=activator_rail,shape=east_west,waterlogged=true": {
       "model": "create:block/cart_assembler/block_activator_rail",
       "y": 270
     },
-    "backwards=true,powered=false,rail_type=activator_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_activator_rail",
-      "y": 90
+    "backwards=false,powered=false,rail_type=activator_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_activator_rail"
     },
-    "backwards=false,powered=true,rail_type=activator_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_activator_rail_powered",
+    "backwards=false,powered=false,rail_type=activator_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_activator_rail"
+    },
+    "backwards=false,powered=false,rail_type=controller_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_controller_rail",
       "y": 270
-    },
-    "backwards=true,powered=true,rail_type=activator_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_activator_rail_powered",
-      "y": 90
     },
     "backwards=false,powered=false,rail_type=controller_rail,shape=east_west,waterlogged=true": {
       "model": "create:block/cart_assembler/block_controller_rail",
       "y": 270
     },
-    "backwards=true,powered=false,rail_type=controller_rail,shape=east_west,waterlogged=true": {
-      "model": "create:block/cart_assembler/block_controller_rail",
-      "y": 90
+    "backwards=false,powered=false,rail_type=controller_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_controller_rail"
+    },
+    "backwards=false,powered=false,rail_type=controller_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_controller_rail"
+    },
+    "backwards=false,powered=false,rail_type=detector_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_detector_rail",
+      "y": 270
+    },
+    "backwards=false,powered=false,rail_type=detector_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_detector_rail",
+      "y": 270
+    },
+    "backwards=false,powered=false,rail_type=detector_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_detector_rail"
+    },
+    "backwards=false,powered=false,rail_type=detector_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_detector_rail"
+    },
+    "backwards=false,powered=false,rail_type=powered_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_powered_rail",
+      "y": 270
+    },
+    "backwards=false,powered=false,rail_type=powered_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_powered_rail",
+      "y": 270
+    },
+    "backwards=false,powered=false,rail_type=powered_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_powered_rail"
+    },
+    "backwards=false,powered=false,rail_type=powered_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_powered_rail"
+    },
+    "backwards=false,powered=false,rail_type=regular,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_regular",
+      "y": 270
+    },
+    "backwards=false,powered=false,rail_type=regular,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_regular",
+      "y": 270
+    },
+    "backwards=false,powered=false,rail_type=regular,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_regular"
+    },
+    "backwards=false,powered=false,rail_type=regular,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_regular"
+    },
+    "backwards=false,powered=true,rail_type=activator_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered",
+      "y": 270
+    },
+    "backwards=false,powered=true,rail_type=activator_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered",
+      "y": 270
+    },
+    "backwards=false,powered=true,rail_type=activator_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered"
+    },
+    "backwards=false,powered=true,rail_type=activator_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered"
+    },
+    "backwards=false,powered=true,rail_type=controller_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_controller_rail_powered",
+      "y": 270
     },
     "backwards=false,powered=true,rail_type=controller_rail,shape=east_west,waterlogged=true": {
       "model": "create:block/cart_assembler/block_controller_rail_powered",
       "y": 270
     },
+    "backwards=false,powered=true,rail_type=controller_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_controller_rail_powered"
+    },
+    "backwards=false,powered=true,rail_type=controller_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_controller_rail_powered"
+    },
+    "backwards=false,powered=true,rail_type=detector_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered",
+      "y": 270
+    },
+    "backwards=false,powered=true,rail_type=detector_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered",
+      "y": 270
+    },
+    "backwards=false,powered=true,rail_type=detector_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered"
+    },
+    "backwards=false,powered=true,rail_type=detector_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered"
+    },
+    "backwards=false,powered=true,rail_type=powered_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 270
+    },
+    "backwards=false,powered=true,rail_type=powered_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 270
+    },
+    "backwards=false,powered=true,rail_type=powered_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered"
+    },
+    "backwards=false,powered=true,rail_type=powered_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered"
+    },
+    "backwards=false,powered=true,rail_type=regular,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_regular_powered",
+      "y": 270
+    },
+    "backwards=false,powered=true,rail_type=regular,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_regular_powered",
+      "y": 270
+    },
+    "backwards=false,powered=true,rail_type=regular,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_regular_powered"
+    },
+    "backwards=false,powered=true,rail_type=regular,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_regular_powered"
+    },
+    "backwards=true,powered=false,rail_type=activator_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_activator_rail",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=activator_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_activator_rail",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=activator_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_activator_rail",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=activator_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_activator_rail",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=controller_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_controller_rail",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=controller_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_controller_rail",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=controller_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_controller_rail",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=controller_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_controller_rail",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=detector_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_detector_rail",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=detector_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_detector_rail",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=detector_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_detector_rail",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=detector_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_detector_rail",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=powered_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_powered_rail",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=powered_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_powered_rail",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=powered_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_powered_rail",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=powered_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_powered_rail",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=regular,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_regular",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=regular,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_regular",
+      "y": 90
+    },
+    "backwards=true,powered=false,rail_type=regular,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_regular",
+      "y": 180
+    },
+    "backwards=true,powered=false,rail_type=regular,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_regular",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=activator_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered",
+      "y": 90
+    },
+    "backwards=true,powered=true,rail_type=activator_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered",
+      "y": 90
+    },
+    "backwards=true,powered=true,rail_type=activator_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=activator_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=controller_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_controller_rail_powered",
+      "y": 90
+    },
     "backwards=true,powered=true,rail_type=controller_rail,shape=east_west,waterlogged=true": {
       "model": "create:block/cart_assembler/block_controller_rail_powered",
       "y": 90
+    },
+    "backwards=true,powered=true,rail_type=controller_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_controller_rail_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=controller_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_controller_rail_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=detector_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered",
+      "y": 90
+    },
+    "backwards=true,powered=true,rail_type=detector_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered",
+      "y": 90
+    },
+    "backwards=true,powered=true,rail_type=detector_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=detector_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=powered_rail,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 90
+    },
+    "backwards=true,powered=true,rail_type=powered_rail,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 90
+    },
+    "backwards=true,powered=true,rail_type=powered_rail,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=powered_rail,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=regular,shape=east_west,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_regular_powered",
+      "y": 90
+    },
+    "backwards=true,powered=true,rail_type=regular,shape=east_west,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_regular_powered",
+      "y": 90
+    },
+    "backwards=true,powered=true,rail_type=regular,shape=north_south,waterlogged=false": {
+      "model": "create:block/cart_assembler/block_regular_powered",
+      "y": 180
+    },
+    "backwards=true,powered=true,rail_type=regular,shape=north_south,waterlogged=true": {
+      "model": "create:block/cart_assembler/block_regular_powered",
+      "y": 180
     }
   }
 }

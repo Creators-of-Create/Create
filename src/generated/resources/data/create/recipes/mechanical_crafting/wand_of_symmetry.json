@@ -1,5 +1,23 @@
 {
   "type": "create:mechanical_crafting",
+  "acceptMirrored": true,
+  "key": {
+    "B": {
+      "tag": "forge:ingots/brass"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "G": {
+      "tag": "forge:glass"
+    },
+    "O": {
+      "tag": "forge:obsidian"
+    },
+    "P": {
+      "item": "create:precision_mechanism"
+    }
+  },
   "pattern": [
     " G ",
     "GEG",
@@ -7,25 +25,7 @@
     " B ",
     " O "
   ],
-  "key": {
-    "E": {
-      "tag": "forge:ender_pearls"
-    },
-    "G": {
-      "tag": "forge:glass"
-    },
-    "P": {
-      "item": "create:precision_mechanism"
-    },
-    "O": {
-      "tag": "forge:obsidian"
-    },
-    "B": {
-      "tag": "forge:ingots/brass"
-    }
-  },
   "result": {
     "item": "create:wand_of_symmetry"
-  },
-  "acceptMirrored": true
+  }
 }

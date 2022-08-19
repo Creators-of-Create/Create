@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "create:crimson_window"
     }
   },
+  "pattern": [
+    "###",
+    "###"
+  ],
   "result": {
-    "item": "create:crimson_window_pane",
-    "count": 16
+    "count": 16,
+    "item": "create:crimson_window_pane"
   }
 }

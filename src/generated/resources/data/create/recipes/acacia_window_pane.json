@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "create:acacia_window"
     }
   },
+  "pattern": [
+    "###",
+    "###"
+  ],
   "result": {
-    "item": "create:acacia_window_pane",
-    "count": 16
+    "count": 16,
+    "item": "create:acacia_window_pane"
   }
 }

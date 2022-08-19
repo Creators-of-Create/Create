@@ -3,7 +3,7 @@
     "facing=down": {
       "model": "create:block/crate/creative/single"
     },
-    "facing=up": {
+    "facing=east": {
       "model": "create:block/crate/creative/single"
     },
     "facing=north": {
@@ -12,10 +12,10 @@
     "facing=south": {
       "model": "create:block/crate/creative/single"
     },
-    "facing=west": {
+    "facing=up": {
       "model": "create:block/crate/creative/single"
     },
-    "facing=east": {
+    "facing=west": {
       "model": "create:block/crate/creative/single"
     }
   }

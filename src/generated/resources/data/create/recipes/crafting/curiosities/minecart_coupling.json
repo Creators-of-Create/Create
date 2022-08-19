@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "  E",
-    " O ",
-    "E  "
-  ],
   "key": {
     "E": {
       "item": "create:andesite_alloy"
@@ -13,6 +8,11 @@
       "tag": "forge:plates/iron"
     }
   },
+  "pattern": [
+    "  E",
+    " O ",
+    "E  "
+  ],
   "result": {
     "item": "create:minecart_coupling"
   }

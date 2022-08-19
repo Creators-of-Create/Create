@@ -1,66 +1,107 @@
 {
   "variants": {
-    "facing=down,part=start,powered=false": {
-      "model": "create:block/gantry_shaft_start_flipped",
+    "facing=down,part=end,powered=false": {
+      "model": "create:block/gantry_shaft_end_flipped",
       "x": 180
     },
-    "facing=up,part=start,powered=false": {
-      "model": "create:block/gantry_shaft/block_start"
-    },
-    "facing=north,part=start,powered=false": {
-      "model": "create:block/gantry_shaft_start_flipped",
-      "x": 90
-    },
-    "facing=south,part=start,powered=false": {
-      "model": "create:block/gantry_shaft/block_start",
-      "x": 90,
-      "y": 180
-    },
-    "facing=west,part=start,powered=false": {
-      "model": "create:block/gantry_shaft_start_flipped",
-      "x": 90,
-      "y": 270
-    },
-    "facing=east,part=start,powered=false": {
-      "model": "create:block/gantry_shaft/block_start",
-      "x": 90,
-      "y": 90
+    "facing=down,part=end,powered=true": {
+      "model": "create:block/gantry_shaft_end_powered_flipped",
+      "x": 180
     },
     "facing=down,part=middle,powered=false": {
       "model": "create:block/gantry_shaft_middle_flipped",
       "x": 180
     },
-    "facing=up,part=middle,powered=false": {
-      "model": "create:block/gantry_shaft/block_middle"
+    "facing=down,part=middle,powered=true": {
+      "model": "create:block/gantry_shaft_middle_powered_flipped",
+      "x": 180
     },
-    "facing=north,part=middle,powered=false": {
-      "model": "create:block/gantry_shaft_middle_flipped",
-      "x": 90
+    "facing=down,part=single,powered=false": {
+      "model": "create:block/gantry_shaft_single_flipped",
+      "x": 180
     },
-    "facing=south,part=middle,powered=false": {
-      "model": "create:block/gantry_shaft/block_middle",
+    "facing=down,part=single,powered=true": {
+      "model": "create:block/gantry_shaft_single_powered_flipped",
+      "x": 180
+    },
+    "facing=down,part=start,powered=false": {
+      "model": "create:block/gantry_shaft_start_flipped",
+      "x": 180
+    },
+    "facing=down,part=start,powered=true": {
+      "model": "create:block/gantry_shaft_start_powered_flipped",
+      "x": 180
+    },
+    "facing=east,part=end,powered=false": {
+      "model": "create:block/gantry_shaft/block_end",
       "x": 90,
-      "y": 180
+      "y": 90
     },
-    "facing=west,part=middle,powered=false": {
-      "model": "create:block/gantry_shaft_middle_flipped",
+    "facing=east,part=end,powered=true": {
+      "model": "create:block/gantry_shaft_end_powered",
       "x": 90,
-      "y": 270
+      "y": 90
     },
     "facing=east,part=middle,powered=false": {
       "model": "create:block/gantry_shaft/block_middle",
       "x": 90,
       "y": 90
     },
-    "facing=down,part=end,powered=false": {
-      "model": "create:block/gantry_shaft_end_flipped",
-      "x": 180
+    "facing=east,part=middle,powered=true": {
+      "model": "create:block/gantry_shaft_middle_powered",
+      "x": 90,
+      "y": 90
     },
-    "facing=up,part=end,powered=false": {
-      "model": "create:block/gantry_shaft/block_end"
+    "facing=east,part=single,powered=false": {
+      "model": "create:block/gantry_shaft/block_single",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,part=single,powered=true": {
+      "model": "create:block/gantry_shaft_single_powered",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,part=start,powered=false": {
+      "model": "create:block/gantry_shaft/block_start",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,part=start,powered=true": {
+      "model": "create:block/gantry_shaft_start_powered",
+      "x": 90,
+      "y": 90
     },
     "facing=north,part=end,powered=false": {
       "model": "create:block/gantry_shaft_end_flipped",
+      "x": 90
+    },
+    "facing=north,part=end,powered=true": {
+      "model": "create:block/gantry_shaft_end_powered_flipped",
+      "x": 90
+    },
+    "facing=north,part=middle,powered=false": {
+      "model": "create:block/gantry_shaft_middle_flipped",
+      "x": 90
+    },
+    "facing=north,part=middle,powered=true": {
+      "model": "create:block/gantry_shaft_middle_powered_flipped",
+      "x": 90
+    },
+    "facing=north,part=single,powered=false": {
+      "model": "create:block/gantry_shaft_single_flipped",
+      "x": 90
+    },
+    "facing=north,part=single,powered=true": {
+      "model": "create:block/gantry_shaft_single_powered_flipped",
+      "x": 90
+    },
+    "facing=north,part=start,powered=false": {
+      "model": "create:block/gantry_shaft_start_flipped",
+      "x": 90
+    },
+    "facing=north,part=start,powered=true": {
+      "model": "create:block/gantry_shaft_start_powered_flipped",
       "x": 90
     },
     "facing=south,part=end,powered=false": {
@@ -68,145 +109,104 @@
       "x": 90,
       "y": 180
     },
-    "facing=west,part=end,powered=false": {
-      "model": "create:block/gantry_shaft_end_flipped",
-      "x": 90,
-      "y": 270
-    },
-    "facing=east,part=end,powered=false": {
-      "model": "create:block/gantry_shaft/block_end",
-      "x": 90,
-      "y": 90
-    },
-    "facing=down,part=single,powered=false": {
-      "model": "create:block/gantry_shaft_single_flipped",
-      "x": 180
-    },
-    "facing=up,part=single,powered=false": {
-      "model": "create:block/gantry_shaft/block_single"
-    },
-    "facing=north,part=single,powered=false": {
-      "model": "create:block/gantry_shaft_single_flipped",
-      "x": 90
-    },
-    "facing=south,part=single,powered=false": {
-      "model": "create:block/gantry_shaft/block_single",
+    "facing=south,part=end,powered=true": {
+      "model": "create:block/gantry_shaft_end_powered",
       "x": 90,
       "y": 180
     },
-    "facing=west,part=single,powered=false": {
-      "model": "create:block/gantry_shaft_single_flipped",
-      "x": 90,
-      "y": 270
-    },
-    "facing=east,part=single,powered=false": {
-      "model": "create:block/gantry_shaft/block_single",
-      "x": 90,
-      "y": 90
-    },
-    "facing=down,part=start,powered=true": {
-      "model": "create:block/gantry_shaft_start_powered_flipped",
-      "x": 180
-    },
-    "facing=up,part=start,powered=true": {
-      "model": "create:block/gantry_shaft_start_powered"
-    },
-    "facing=north,part=start,powered=true": {
-      "model": "create:block/gantry_shaft_start_powered_flipped",
-      "x": 90
-    },
-    "facing=south,part=start,powered=true": {
-      "model": "create:block/gantry_shaft_start_powered",
+    "facing=south,part=middle,powered=false": {
+      "model": "create:block/gantry_shaft/block_middle",
       "x": 90,
       "y": 180
-    },
-    "facing=west,part=start,powered=true": {
-      "model": "create:block/gantry_shaft_start_powered_flipped",
-      "x": 90,
-      "y": 270
-    },
-    "facing=east,part=start,powered=true": {
-      "model": "create:block/gantry_shaft_start_powered",
-      "x": 90,
-      "y": 90
-    },
-    "facing=down,part=middle,powered=true": {
-      "model": "create:block/gantry_shaft_middle_powered_flipped",
-      "x": 180
-    },
-    "facing=up,part=middle,powered=true": {
-      "model": "create:block/gantry_shaft_middle_powered"
-    },
-    "facing=north,part=middle,powered=true": {
-      "model": "create:block/gantry_shaft_middle_powered_flipped",
-      "x": 90
     },
     "facing=south,part=middle,powered=true": {
       "model": "create:block/gantry_shaft_middle_powered",
       "x": 90,
       "y": 180
     },
-    "facing=west,part=middle,powered=true": {
-      "model": "create:block/gantry_shaft_middle_powered_flipped",
-      "x": 90,
-      "y": 270
-    },
-    "facing=east,part=middle,powered=true": {
-      "model": "create:block/gantry_shaft_middle_powered",
-      "x": 90,
-      "y": 90
-    },
-    "facing=down,part=end,powered=true": {
-      "model": "create:block/gantry_shaft_end_powered_flipped",
-      "x": 180
-    },
-    "facing=up,part=end,powered=true": {
-      "model": "create:block/gantry_shaft_end_powered"
-    },
-    "facing=north,part=end,powered=true": {
-      "model": "create:block/gantry_shaft_end_powered_flipped",
-      "x": 90
-    },
-    "facing=south,part=end,powered=true": {
-      "model": "create:block/gantry_shaft_end_powered",
+    "facing=south,part=single,powered=false": {
+      "model": "create:block/gantry_shaft/block_single",
       "x": 90,
       "y": 180
-    },
-    "facing=west,part=end,powered=true": {
-      "model": "create:block/gantry_shaft_end_powered_flipped",
-      "x": 90,
-      "y": 270
-    },
-    "facing=east,part=end,powered=true": {
-      "model": "create:block/gantry_shaft_end_powered",
-      "x": 90,
-      "y": 90
-    },
-    "facing=down,part=single,powered=true": {
-      "model": "create:block/gantry_shaft_single_powered_flipped",
-      "x": 180
-    },
-    "facing=up,part=single,powered=true": {
-      "model": "create:block/gantry_shaft_single_powered"
-    },
-    "facing=north,part=single,powered=true": {
-      "model": "create:block/gantry_shaft_single_powered_flipped",
-      "x": 90
     },
     "facing=south,part=single,powered=true": {
       "model": "create:block/gantry_shaft_single_powered",
       "x": 90,
       "y": 180
     },
+    "facing=south,part=start,powered=false": {
+      "model": "create:block/gantry_shaft/block_start",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,part=start,powered=true": {
+      "model": "create:block/gantry_shaft_start_powered",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,part=end,powered=false": {
+      "model": "create:block/gantry_shaft/block_end"
+    },
+    "facing=up,part=end,powered=true": {
+      "model": "create:block/gantry_shaft_end_powered"
+    },
+    "facing=up,part=middle,powered=false": {
+      "model": "create:block/gantry_shaft/block_middle"
+    },
+    "facing=up,part=middle,powered=true": {
+      "model": "create:block/gantry_shaft_middle_powered"
+    },
+    "facing=up,part=single,powered=false": {
+      "model": "create:block/gantry_shaft/block_single"
+    },
+    "facing=up,part=single,powered=true": {
+      "model": "create:block/gantry_shaft_single_powered"
+    },
+    "facing=up,part=start,powered=false": {
+      "model": "create:block/gantry_shaft/block_start"
+    },
+    "facing=up,part=start,powered=true": {
+      "model": "create:block/gantry_shaft_start_powered"
+    },
+    "facing=west,part=end,powered=false": {
+      "model": "create:block/gantry_shaft_end_flipped",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,part=end,powered=true": {
+      "model": "create:block/gantry_shaft_end_powered_flipped",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,part=middle,powered=false": {
+      "model": "create:block/gantry_shaft_middle_flipped",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,part=middle,powered=true": {
+      "model": "create:block/gantry_shaft_middle_powered_flipped",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,part=single,powered=false": {
+      "model": "create:block/gantry_shaft_single_flipped",
+      "x": 90,
+      "y": 270
+    },
     "facing=west,part=single,powered=true": {
       "model": "create:block/gantry_shaft_single_powered_flipped",
       "x": 90,
       "y": 270
     },
-    "facing=east,part=single,powered=true": {
-      "model": "create:block/gantry_shaft_single_powered",
+    "facing=west,part=start,powered=false": {
+      "model": "create:block/gantry_shaft_start_flipped",
       "x": 90,
-      "y": 90
+      "y": 270
+    },
+    "facing=west,part=start,powered=true": {
+      "model": "create:block/gantry_shaft_start_powered_flipped",
+      "x": 90,
+      "y": 270
     }
   }
 }

@@ -5,15 +5,15 @@
       "item": "minecraft:dandelion"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:yellow_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:yellow_dye"
     },
     {
-      "item": "minecraft:yellow_dye",
-      "chance": 0.05
+      "chance": 0.05,
+      "item": "minecraft:yellow_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

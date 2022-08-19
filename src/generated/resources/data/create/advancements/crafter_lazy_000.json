@@ -1,25 +1,25 @@
 {
   "parent": "create:mechanical_crafter",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:crafter_lazy_000_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:mechanical_crafter"
-    },
-    "title": {
-      "translate": "advancement.create.crafter_lazy_000"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.crafter_lazy_000.desc"
     },
     "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "create:mechanical_crafter"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:crafter_lazy_000_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.crafter_lazy_000"
     }
   },
   "requirements": [

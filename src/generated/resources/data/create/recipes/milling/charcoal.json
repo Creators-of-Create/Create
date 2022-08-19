@@ -5,15 +5,15 @@
       "item": "minecraft:charcoal"
     }
   ],
+  "processingTime": 100,
   "results": [
     {
       "item": "minecraft:black_dye"
     },
     {
-      "item": "minecraft:gray_dye",
+      "chance": 0.1,
       "count": 2,
-      "chance": 0.1
+      "item": "minecraft:gray_dye"
     }
-  ],
-  "processingTime": 100
+  ]
 }

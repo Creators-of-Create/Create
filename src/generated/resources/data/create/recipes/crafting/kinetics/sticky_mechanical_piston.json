@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "create:mechanical_piston"
+    },
+    "S": {
+      "tag": "forge:slimeballs"
+    }
+  },
   "pattern": [
     "S",
     "P"
   ],
-  "key": {
-    "S": {
-      "tag": "forge:slimeballs"
-    },
-    "P": {
-      "item": "create:mechanical_piston"
-    }
-  },
   "result": {
     "item": "create:sticky_mechanical_piston"
   }

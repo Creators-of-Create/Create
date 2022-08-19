@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/palettes/stone_types/slab/andesite_cut_slab",
-    "end": "create:block/palettes/stone_types/polished/andesite_cut_polished"
+    "end": "create:block/palettes/stone_types/polished/andesite_cut_polished",
+    "side": "create:block/palettes/stone_types/slab/andesite_cut_slab"
   }
 }

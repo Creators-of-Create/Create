@@ -1,20 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "P": {
+      "item": "create:andesite_alloy"
+    }
+  },
   "pattern": [
     " L ",
     "PLP",
     " L "
   ],
-  "key": {
-    "P": {
-      "item": "create:andesite_alloy"
-    },
-    "L": {
-      "tag": "minecraft:logs"
-    }
-  },
   "result": {
-    "item": "create:radial_chassis",
-    "count": 3
+    "count": 3,
+    "item": "create:radial_chassis"
   }
 }

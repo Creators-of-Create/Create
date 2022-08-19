@@ -5,11 +5,11 @@
       "item": "minecraft:grass"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:wheat_seeds",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:wheat_seeds"
     }
-  ],
-  "processingTime": 50
+  ]
 }

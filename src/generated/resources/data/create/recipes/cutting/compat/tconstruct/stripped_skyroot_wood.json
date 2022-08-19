@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "tconstruct"
+    }
+  ],
   "ingredients": [
     {
       "item": "tconstruct:stripped_skyroot_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "tconstruct:skyroot_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "tconstruct",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "tconstruct:skyroot_planks"
     }
   ]
 }

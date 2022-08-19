@@ -1,25 +1,25 @@
 {
   "parent": "create:mechanical_mixer",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:stressometer_maxed_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:stressometer"
-    },
-    "title": {
-      "translate": "advancement.create.stressometer_maxed"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.stressometer_maxed.desc"
     },
     "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "create:stressometer"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:stressometer_maxed_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.stressometer_maxed"
     }
   },
   "requirements": [

@@ -4,8 +4,10 @@
       "model": "create:block/encased_fan/block",
       "x": 180
     },
-    "facing=up": {
-      "model": "create:block/encased_fan/block"
+    "facing=east": {
+      "model": "create:block/encased_fan/block",
+      "x": 90,
+      "y": 90
     },
     "facing=north": {
       "model": "create:block/encased_fan/block",
@@ -16,15 +18,13 @@
       "x": 90,
       "y": 180
     },
+    "facing=up": {
+      "model": "create:block/encased_fan/block"
+    },
     "facing=west": {
       "model": "create:block/encased_fan/block",
       "x": 90,
       "y": 270
-    },
-    "facing=east": {
-      "model": "create:block/encased_fan/block",
-      "x": 90,
-      "y": 90
     }
   }
 }

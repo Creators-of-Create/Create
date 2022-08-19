@@ -1,25 +1,25 @@
 {
   "parent": "create:long_train",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:long_travel_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:green_seat"
-    },
-    "title": {
-      "translate": "advancement.create.long_travel"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.long_travel.desc"
     },
     "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "create:green_seat"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:long_travel_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.long_travel"
     }
   },
   "requirements": [

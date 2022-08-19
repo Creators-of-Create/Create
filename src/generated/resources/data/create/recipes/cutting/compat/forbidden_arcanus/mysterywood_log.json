@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "forbidden_arcanus"
+    }
+  ],
   "ingredients": [
     {
       "item": "forbidden_arcanus:mysterywood_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "forbidden_arcanus:stripped_mysterywood_log"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "forbidden_arcanus",
-      "type": "forge:mod_loaded"
     }
   ]
 }

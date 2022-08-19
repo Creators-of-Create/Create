@@ -2,9 +2,9 @@
   "type": "create:compacting",
   "ingredients": [
     {
+      "amount": 250,
       "fluid": "create:chocolate",
-      "nbt": {},
-      "amount": 250
+      "nbt": {}
     }
   ],
   "results": [

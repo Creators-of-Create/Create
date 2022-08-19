@@ -5,19 +5,19 @@
       "item": "minecraft:sunflower"
     }
   ],
+  "processingTime": 100,
   "results": [
     {
-      "item": "minecraft:yellow_dye",
-      "count": 3
+      "count": 3,
+      "item": "minecraft:yellow_dye"
     },
     {
-      "item": "minecraft:orange_dye",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:orange_dye"
     },
     {
-      "item": "minecraft:yellow_dye",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:yellow_dye"
     }
-  ],
-  "processingTime": 100
+  ]
 }

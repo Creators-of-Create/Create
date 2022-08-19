@@ -1,24 +1,30 @@
 package com.simibubi.create.foundation.data;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -61,7 +67,7 @@ public class LangMerger implements DataProvider {
 	private void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
-		langIgnore.add("create.gui.chromatic_projector"); 
+		langIgnore.add("create.gui.chromatic_projector");
 	}
 
 	private boolean shouldIgnore(String key) {
@@ -127,6 +133,27 @@ public class LangMerger implements DataProvider {
 
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 			JsonObject jsonobject = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+
+			/*
+			 * Erase additional sections from previous lang in case registrate did not
+			 * create a new one (this assumes advancements to be the first section after
+			 * game elements)
+			 */
+			Set<String> keysToRemove = new HashSet<>();
+			MutableBoolean startErasing = new MutableBoolean();
+			jsonobject.entrySet()
+				.stream()
+				.forEachOrdered(entry -> {
+					String key = entry.getKey();
+					if (key.startsWith("advancement"))
+						startErasing.setTrue();
+					if (startErasing.isFalse())
+						return;
+					keysToRemove.add(key);
+				});
+			jsonobject.remove("_");
+			keysToRemove.forEach(jsonobject::remove);
+			
 			addAll("Game Elements", jsonobject);
 			reader.close();
 		}
@@ -229,9 +256,15 @@ public class LangMerger implements DataProvider {
 	private void save(CachedOutput cache, List<Object> dataIn, int missingKeys, Path target, String message)
 		throws IOException {
 		Create.LOGGER.info(message);
-		byte[] data = createString(dataIn, missingKeys).getBytes(StandardCharsets.UTF_8);
-		HashCode hash = Hashing.sha1().hashBytes(data);
-		cache.writeIfNeeded(target, data, hash);
+
+		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+		HashingOutputStream hashingoutputstream = new HashingOutputStream(Hashing.sha1(), bytearrayoutputstream);
+
+		Writer writer = new OutputStreamWriter(hashingoutputstream, StandardCharsets.UTF_8);
+		writer.append(createString(dataIn, missingKeys));
+		writer.close();
+
+		cache.writeIfNeeded(target, bytearrayoutputstream.toByteArray(), hashingoutputstream.hash());
 	}
 
 	protected String createString(List<Object> data, int missingKeys) {

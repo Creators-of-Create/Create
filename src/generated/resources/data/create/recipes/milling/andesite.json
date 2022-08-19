@@ -5,10 +5,10 @@
       "item": "minecraft:andesite"
     }
   ],
+  "processingTime": 200,
   "results": [
     {
       "item": "minecraft:cobblestone"
     }
-  ],
-  "processingTime": 200
+  ]
 }

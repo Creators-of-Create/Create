@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " I ",
-    "IAI",
-    " I "
-  ],
   "key": {
     "A": {
       "tag": "forge:netherrack"
@@ -13,6 +8,11 @@
       "tag": "forge:plates/iron"
     }
   },
+  "pattern": [
+    " I ",
+    "IAI",
+    " I "
+  ],
   "result": {
     "item": "create:empty_blaze_burner"
   }

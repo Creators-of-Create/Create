@@ -1,124 +1,124 @@
 {
   "variants": {
-    "facing=north,inverted=false,powered=false,powering=false": {
-      "model": "create:block/diodes/pulse_repeater",
-      "y": 180
-    },
-    "facing=south,inverted=false,powered=false,powering=false": {
-      "model": "create:block/diodes/pulse_repeater"
-    },
-    "facing=west,inverted=false,powered=false,powering=false": {
-      "model": "create:block/diodes/pulse_repeater",
-      "y": 90
-    },
     "facing=east,inverted=false,powered=false,powering=false": {
       "model": "create:block/diodes/pulse_repeater",
       "y": 270
-    },
-    "facing=north,inverted=true,powered=false,powering=false": {
-      "model": "create:block/pulse_repeater_powering",
-      "y": 180
-    },
-    "facing=south,inverted=true,powered=false,powering=false": {
-      "model": "create:block/pulse_repeater_powering"
-    },
-    "facing=west,inverted=true,powered=false,powering=false": {
-      "model": "create:block/pulse_repeater_powering",
-      "y": 90
-    },
-    "facing=east,inverted=true,powered=false,powering=false": {
-      "model": "create:block/pulse_repeater_powering",
-      "y": 270
-    },
-    "facing=north,inverted=false,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered",
-      "y": 180
-    },
-    "facing=south,inverted=false,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered"
-    },
-    "facing=west,inverted=false,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered",
-      "y": 90
-    },
-    "facing=east,inverted=false,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered",
-      "y": 270
-    },
-    "facing=north,inverted=true,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered_powering",
-      "y": 180
-    },
-    "facing=south,inverted=true,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered_powering"
-    },
-    "facing=west,inverted=true,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered_powering",
-      "y": 90
-    },
-    "facing=east,inverted=true,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered_powering",
-      "y": 270
-    },
-    "facing=north,inverted=false,powered=false,powering=true": {
-      "model": "create:block/pulse_repeater_powering",
-      "y": 180
-    },
-    "facing=south,inverted=false,powered=false,powering=true": {
-      "model": "create:block/pulse_repeater_powering"
-    },
-    "facing=west,inverted=false,powered=false,powering=true": {
-      "model": "create:block/pulse_repeater_powering",
-      "y": 90
     },
     "facing=east,inverted=false,powered=false,powering=true": {
       "model": "create:block/pulse_repeater_powering",
       "y": 270
     },
-    "facing=north,inverted=true,powered=false,powering=true": {
-      "model": "create:block/diodes/pulse_repeater",
-      "y": 180
-    },
-    "facing=south,inverted=true,powered=false,powering=true": {
-      "model": "create:block/diodes/pulse_repeater"
-    },
-    "facing=west,inverted=true,powered=false,powering=true": {
-      "model": "create:block/diodes/pulse_repeater",
-      "y": 90
-    },
-    "facing=east,inverted=true,powered=false,powering=true": {
-      "model": "create:block/diodes/pulse_repeater",
+    "facing=east,inverted=false,powered=true,powering=false": {
+      "model": "create:block/pulse_repeater_powered",
       "y": 270
-    },
-    "facing=north,inverted=false,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered_powering",
-      "y": 180
-    },
-    "facing=south,inverted=false,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered_powering"
-    },
-    "facing=west,inverted=false,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered_powering",
-      "y": 90
     },
     "facing=east,inverted=false,powered=true,powering=true": {
       "model": "create:block/pulse_repeater_powered_powering",
       "y": 270
     },
-    "facing=north,inverted=true,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered",
-      "y": 180
+    "facing=east,inverted=true,powered=false,powering=false": {
+      "model": "create:block/pulse_repeater_powering",
+      "y": 270
     },
-    "facing=south,inverted=true,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered"
+    "facing=east,inverted=true,powered=false,powering=true": {
+      "model": "create:block/diodes/pulse_repeater",
+      "y": 270
     },
-    "facing=west,inverted=true,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered",
-      "y": 90
+    "facing=east,inverted=true,powered=true,powering=false": {
+      "model": "create:block/pulse_repeater_powered_powering",
+      "y": 270
     },
     "facing=east,inverted=true,powered=true,powering=true": {
       "model": "create:block/pulse_repeater_powered",
       "y": 270
+    },
+    "facing=north,inverted=false,powered=false,powering=false": {
+      "model": "create:block/diodes/pulse_repeater",
+      "y": 180
+    },
+    "facing=north,inverted=false,powered=false,powering=true": {
+      "model": "create:block/pulse_repeater_powering",
+      "y": 180
+    },
+    "facing=north,inverted=false,powered=true,powering=false": {
+      "model": "create:block/pulse_repeater_powered",
+      "y": 180
+    },
+    "facing=north,inverted=false,powered=true,powering=true": {
+      "model": "create:block/pulse_repeater_powered_powering",
+      "y": 180
+    },
+    "facing=north,inverted=true,powered=false,powering=false": {
+      "model": "create:block/pulse_repeater_powering",
+      "y": 180
+    },
+    "facing=north,inverted=true,powered=false,powering=true": {
+      "model": "create:block/diodes/pulse_repeater",
+      "y": 180
+    },
+    "facing=north,inverted=true,powered=true,powering=false": {
+      "model": "create:block/pulse_repeater_powered_powering",
+      "y": 180
+    },
+    "facing=north,inverted=true,powered=true,powering=true": {
+      "model": "create:block/pulse_repeater_powered",
+      "y": 180
+    },
+    "facing=south,inverted=false,powered=false,powering=false": {
+      "model": "create:block/diodes/pulse_repeater"
+    },
+    "facing=south,inverted=false,powered=false,powering=true": {
+      "model": "create:block/pulse_repeater_powering"
+    },
+    "facing=south,inverted=false,powered=true,powering=false": {
+      "model": "create:block/pulse_repeater_powered"
+    },
+    "facing=south,inverted=false,powered=true,powering=true": {
+      "model": "create:block/pulse_repeater_powered_powering"
+    },
+    "facing=south,inverted=true,powered=false,powering=false": {
+      "model": "create:block/pulse_repeater_powering"
+    },
+    "facing=south,inverted=true,powered=false,powering=true": {
+      "model": "create:block/diodes/pulse_repeater"
+    },
+    "facing=south,inverted=true,powered=true,powering=false": {
+      "model": "create:block/pulse_repeater_powered_powering"
+    },
+    "facing=south,inverted=true,powered=true,powering=true": {
+      "model": "create:block/pulse_repeater_powered"
+    },
+    "facing=west,inverted=false,powered=false,powering=false": {
+      "model": "create:block/diodes/pulse_repeater",
+      "y": 90
+    },
+    "facing=west,inverted=false,powered=false,powering=true": {
+      "model": "create:block/pulse_repeater_powering",
+      "y": 90
+    },
+    "facing=west,inverted=false,powered=true,powering=false": {
+      "model": "create:block/pulse_repeater_powered",
+      "y": 90
+    },
+    "facing=west,inverted=false,powered=true,powering=true": {
+      "model": "create:block/pulse_repeater_powered_powering",
+      "y": 90
+    },
+    "facing=west,inverted=true,powered=false,powering=false": {
+      "model": "create:block/pulse_repeater_powering",
+      "y": 90
+    },
+    "facing=west,inverted=true,powered=false,powering=true": {
+      "model": "create:block/diodes/pulse_repeater",
+      "y": 90
+    },
+    "facing=west,inverted=true,powered=true,powering=false": {
+      "model": "create:block/pulse_repeater_powered_powering",
+      "y": 90
+    },
+    "facing=west,inverted=true,powered=true,powering=true": {
+      "model": "create:block/pulse_repeater_powered",
+      "y": 90
     }
   }
 }

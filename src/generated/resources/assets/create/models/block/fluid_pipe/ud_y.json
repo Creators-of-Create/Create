@@ -2,16 +2,6 @@
   "parent": "create:block/fluid_pipe/core_y",
   "elements": [
     {
-      "from": [
-        4,
-        4,
-        4
-      ],
-      "to": [
-        12,
-        12,
-        12
-      ],
       "faces": {
         "down": {
           "texture": "#0",
@@ -31,7 +21,17 @@
             8.0
           ]
         }
-      }
+      },
+      "from": [
+        4,
+        4,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        12
+      ]
     }
   ]
 }

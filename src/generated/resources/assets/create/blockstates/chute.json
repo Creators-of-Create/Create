@@ -3,56 +3,56 @@
     "facing=down,shape=intersection": {
       "model": "create:block/chute/block_intersection"
     },
-    "facing=north,shape=intersection": {
-      "model": "create:block/chute/block_diagonal_intersection",
-      "y": 180
+    "facing=down,shape=normal": {
+      "model": "create:block/chute/block"
     },
-    "facing=south,shape=intersection": {
-      "model": "create:block/chute/block_diagonal_intersection"
-    },
-    "facing=west,shape=intersection": {
-      "model": "create:block/chute/block_diagonal_intersection",
-      "y": 90
+    "facing=down,shape=window": {
+      "model": "create:block/chute/block_windowed"
     },
     "facing=east,shape=intersection": {
       "model": "create:block/chute/block_diagonal_intersection",
       "y": 270
     },
-    "facing=down,shape=window": {
-      "model": "create:block/chute/block_windowed"
-    },
-    "facing=north,shape=window": {
+    "facing=east,shape=normal": {
       "model": "create:block/chute/block_diagonal",
-      "y": 180
-    },
-    "facing=south,shape=window": {
-      "model": "create:block/chute/block_diagonal"
-    },
-    "facing=west,shape=window": {
-      "model": "create:block/chute/block_diagonal",
-      "y": 90
+      "y": 270
     },
     "facing=east,shape=window": {
       "model": "create:block/chute/block_diagonal",
       "y": 270
     },
-    "facing=down,shape=normal": {
-      "model": "create:block/chute/block"
+    "facing=north,shape=intersection": {
+      "model": "create:block/chute/block_diagonal_intersection",
+      "y": 180
     },
     "facing=north,shape=normal": {
       "model": "create:block/chute/block_diagonal",
       "y": 180
     },
+    "facing=north,shape=window": {
+      "model": "create:block/chute/block_diagonal",
+      "y": 180
+    },
+    "facing=south,shape=intersection": {
+      "model": "create:block/chute/block_diagonal_intersection"
+    },
     "facing=south,shape=normal": {
       "model": "create:block/chute/block_diagonal"
+    },
+    "facing=south,shape=window": {
+      "model": "create:block/chute/block_diagonal"
+    },
+    "facing=west,shape=intersection": {
+      "model": "create:block/chute/block_diagonal_intersection",
+      "y": 90
     },
     "facing=west,shape=normal": {
       "model": "create:block/chute/block_diagonal",
       "y": 90
     },
-    "facing=east,shape=normal": {
+    "facing=west,shape=window": {
       "model": "create:block/chute/block_diagonal",
-      "y": 270
+      "y": 90
     }
   }
 }

@@ -5,23 +5,23 @@
       "item": "minecraft:nether_quartz_ore"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "minecraft:quartz",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:quartz"
     },
     {
-      "item": "minecraft:quartz",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:quartz"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:netherrack",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:netherrack"
     }
-  ],
-  "processingTime": 350
+  ]
 }

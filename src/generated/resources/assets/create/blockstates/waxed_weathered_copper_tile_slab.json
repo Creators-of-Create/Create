@@ -1,13 +1,13 @@
 {
   "variants": {
-    "type=top": {
-      "model": "create:block/waxed_weathered_copper_tile_slab_top"
-    },
     "type=bottom": {
       "model": "create:block/waxed_weathered_copper_tile_slab"
     },
     "type=double": {
       "model": "create:block/weathered_copper_tiles"
+    },
+    "type=top": {
+      "model": "create:block/waxed_weathered_copper_tile_slab_top"
     }
   }
 }

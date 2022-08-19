@@ -5,23 +5,23 @@
       "item": "minecraft:deepslate_diamond_ore"
     }
   ],
+  "processingTime": 450,
   "results": [
     {
-      "item": "minecraft:diamond",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:diamond"
     },
     {
-      "item": "minecraft:diamond",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:diamond"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:cobbled_deepslate",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:cobbled_deepslate"
     }
-  ],
-  "processingTime": 450
+  ]
 }

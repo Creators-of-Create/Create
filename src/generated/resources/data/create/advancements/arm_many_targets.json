@@ -1,25 +1,25 @@
 {
   "parent": "create:crusher_maxed_0000",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:arm_many_targets_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:mechanical_arm"
-    },
-    "title": {
-      "translate": "advancement.create.arm_many_targets"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.arm_many_targets.desc"
     },
     "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "create:mechanical_arm"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:arm_many_targets_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.arm_many_targets"
     }
   },
   "requirements": [

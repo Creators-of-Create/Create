@@ -1,24 +1,7 @@
 {
   "parent": "create:crushing_wheel",
-  "display": {
-    "icon": {
-      "item": "create:sturdy_sheet"
-    },
-    "title": {
-      "translate": "advancement.create.sturdy_sheet"
-    },
-    "description": {
-      "color": "#DBA213",
-      "translate": "advancement.create.sturdy_sheet.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
   "criteria": {
     "0": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -27,7 +10,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.sturdy_sheet.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:sturdy_sheet"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.sturdy_sheet"
     }
   },
   "requirements": [

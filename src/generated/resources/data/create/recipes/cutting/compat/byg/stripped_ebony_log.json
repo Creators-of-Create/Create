@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:stripped_ebony_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "byg:ebony_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "byg:ebony_planks"
     }
   ]
 }

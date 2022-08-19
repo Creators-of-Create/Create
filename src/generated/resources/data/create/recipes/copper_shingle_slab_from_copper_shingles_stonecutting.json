@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 2,
   "ingredient": {
     "item": "create:copper_shingles"
   },
-  "result": "create:copper_shingle_slab",
-  "count": 2
+  "result": "create:copper_shingle_slab"
 }

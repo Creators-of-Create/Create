@@ -5,10 +5,10 @@
       "item": "minecraft:granite"
     }
   ],
+  "processingTime": 200,
   "results": [
     {
       "item": "minecraft:red_sand"
     }
-  ],
-  "processingTime": 200
+  ]
 }

@@ -1,64 +1,64 @@
 {
   "variants": {
-    "facing=north,powered=false,powering=false": {
-      "model": "create:block/diodes/latch_off",
-      "y": 180
-    },
-    "facing=south,powered=false,powering=false": {
-      "model": "create:block/diodes/latch_off"
-    },
-    "facing=west,powered=false,powering=false": {
-      "model": "create:block/diodes/latch_off",
-      "y": 90
-    },
     "facing=east,powered=false,powering=false": {
       "model": "create:block/diodes/latch_off",
       "y": 270
-    },
-    "facing=north,powered=true,powering=false": {
-      "model": "create:block/powered_toggle_latch_off_powered",
-      "y": 180
-    },
-    "facing=south,powered=true,powering=false": {
-      "model": "create:block/powered_toggle_latch_off_powered"
-    },
-    "facing=west,powered=true,powering=false": {
-      "model": "create:block/powered_toggle_latch_off_powered",
-      "y": 90
-    },
-    "facing=east,powered=true,powering=false": {
-      "model": "create:block/powered_toggle_latch_off_powered",
-      "y": 270
-    },
-    "facing=north,powered=false,powering=true": {
-      "model": "create:block/diodes/latch_on",
-      "y": 180
-    },
-    "facing=south,powered=false,powering=true": {
-      "model": "create:block/diodes/latch_on"
-    },
-    "facing=west,powered=false,powering=true": {
-      "model": "create:block/diodes/latch_on",
-      "y": 90
     },
     "facing=east,powered=false,powering=true": {
       "model": "create:block/diodes/latch_on",
       "y": 270
     },
-    "facing=north,powered=true,powering=true": {
-      "model": "create:block/powered_toggle_latch_on_powered",
-      "y": 180
-    },
-    "facing=south,powered=true,powering=true": {
-      "model": "create:block/powered_toggle_latch_on_powered"
-    },
-    "facing=west,powered=true,powering=true": {
-      "model": "create:block/powered_toggle_latch_on_powered",
-      "y": 90
+    "facing=east,powered=true,powering=false": {
+      "model": "create:block/powered_toggle_latch_off_powered",
+      "y": 270
     },
     "facing=east,powered=true,powering=true": {
       "model": "create:block/powered_toggle_latch_on_powered",
       "y": 270
+    },
+    "facing=north,powered=false,powering=false": {
+      "model": "create:block/diodes/latch_off",
+      "y": 180
+    },
+    "facing=north,powered=false,powering=true": {
+      "model": "create:block/diodes/latch_on",
+      "y": 180
+    },
+    "facing=north,powered=true,powering=false": {
+      "model": "create:block/powered_toggle_latch_off_powered",
+      "y": 180
+    },
+    "facing=north,powered=true,powering=true": {
+      "model": "create:block/powered_toggle_latch_on_powered",
+      "y": 180
+    },
+    "facing=south,powered=false,powering=false": {
+      "model": "create:block/diodes/latch_off"
+    },
+    "facing=south,powered=false,powering=true": {
+      "model": "create:block/diodes/latch_on"
+    },
+    "facing=south,powered=true,powering=false": {
+      "model": "create:block/powered_toggle_latch_off_powered"
+    },
+    "facing=south,powered=true,powering=true": {
+      "model": "create:block/powered_toggle_latch_on_powered"
+    },
+    "facing=west,powered=false,powering=false": {
+      "model": "create:block/diodes/latch_off",
+      "y": 90
+    },
+    "facing=west,powered=false,powering=true": {
+      "model": "create:block/diodes/latch_on",
+      "y": 90
+    },
+    "facing=west,powered=true,powering=false": {
+      "model": "create:block/powered_toggle_latch_off_powered",
+      "y": 90
+    },
+    "facing=west,powered=true,powering=true": {
+      "model": "create:block/powered_toggle_latch_on_powered",
+      "y": 90
     }
   }
 }

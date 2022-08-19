@@ -5,15 +5,15 @@
       "item": "minecraft:sugar_cane"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:sugar",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:sugar"
     },
     {
-      "item": "minecraft:sugar",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:sugar"
     }
-  ],
-  "processingTime": 50
+  ]
 }

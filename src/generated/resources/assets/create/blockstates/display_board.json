@@ -1,16 +1,46 @@
 {
   "variants": {
+    "down=false,facing=east,up=false,waterlogged=false": {
+      "model": "create:block/display_board/block",
+      "y": 90
+    },
+    "down=false,facing=east,up=false,waterlogged=true": {
+      "model": "create:block/display_board/block",
+      "y": 90
+    },
+    "down=false,facing=east,up=true,waterlogged=false": {
+      "model": "create:block/display_board/block",
+      "y": 90
+    },
+    "down=false,facing=east,up=true,waterlogged=true": {
+      "model": "create:block/display_board/block",
+      "y": 90
+    },
     "down=false,facing=north,up=false,waterlogged=false": {
       "model": "create:block/display_board/block"
     },
-    "down=true,facing=north,up=false,waterlogged=false": {
+    "down=false,facing=north,up=false,waterlogged=true": {
+      "model": "create:block/display_board/block"
+    },
+    "down=false,facing=north,up=true,waterlogged=false": {
+      "model": "create:block/display_board/block"
+    },
+    "down=false,facing=north,up=true,waterlogged=true": {
       "model": "create:block/display_board/block"
     },
     "down=false,facing=south,up=false,waterlogged=false": {
       "model": "create:block/display_board/block",
       "y": 180
     },
-    "down=true,facing=south,up=false,waterlogged=false": {
+    "down=false,facing=south,up=false,waterlogged=true": {
+      "model": "create:block/display_board/block",
+      "y": 180
+    },
+    "down=false,facing=south,up=true,waterlogged=false": {
+      "model": "create:block/display_board/block",
+      "y": 180
+    },
+    "down=false,facing=south,up=true,waterlogged=true": {
       "model": "create:block/display_board/block",
       "y": 180
     },
@@ -18,71 +48,19 @@
       "model": "create:block/display_board/block",
       "y": 270
     },
-    "down=true,facing=west,up=false,waterlogged=false": {
+    "down=false,facing=west,up=false,waterlogged=true": {
       "model": "create:block/display_board/block",
       "y": 270
-    },
-    "down=false,facing=east,up=false,waterlogged=false": {
-      "model": "create:block/display_board/block",
-      "y": 90
-    },
-    "down=true,facing=east,up=false,waterlogged=false": {
-      "model": "create:block/display_board/block",
-      "y": 90
-    },
-    "down=false,facing=north,up=true,waterlogged=false": {
-      "model": "create:block/display_board/block"
-    },
-    "down=true,facing=north,up=true,waterlogged=false": {
-      "model": "create:block/display_board/block"
-    },
-    "down=false,facing=south,up=true,waterlogged=false": {
-      "model": "create:block/display_board/block",
-      "y": 180
-    },
-    "down=true,facing=south,up=true,waterlogged=false": {
-      "model": "create:block/display_board/block",
-      "y": 180
     },
     "down=false,facing=west,up=true,waterlogged=false": {
       "model": "create:block/display_board/block",
       "y": 270
     },
-    "down=true,facing=west,up=true,waterlogged=false": {
+    "down=false,facing=west,up=true,waterlogged=true": {
       "model": "create:block/display_board/block",
       "y": 270
     },
-    "down=false,facing=east,up=true,waterlogged=false": {
-      "model": "create:block/display_board/block",
-      "y": 90
-    },
-    "down=true,facing=east,up=true,waterlogged=false": {
-      "model": "create:block/display_board/block",
-      "y": 90
-    },
-    "down=false,facing=north,up=false,waterlogged=true": {
-      "model": "create:block/display_board/block"
-    },
-    "down=true,facing=north,up=false,waterlogged=true": {
-      "model": "create:block/display_board/block"
-    },
-    "down=false,facing=south,up=false,waterlogged=true": {
-      "model": "create:block/display_board/block",
-      "y": 180
-    },
-    "down=true,facing=south,up=false,waterlogged=true": {
-      "model": "create:block/display_board/block",
-      "y": 180
-    },
-    "down=false,facing=west,up=false,waterlogged=true": {
-      "model": "create:block/display_board/block",
-      "y": 270
-    },
-    "down=true,facing=west,up=false,waterlogged=true": {
-      "model": "create:block/display_board/block",
-      "y": 270
-    },
-    "down=false,facing=east,up=false,waterlogged=true": {
+    "down=true,facing=east,up=false,waterlogged=false": {
       "model": "create:block/display_board/block",
       "y": 90
     },
@@ -90,13 +68,35 @@
       "model": "create:block/display_board/block",
       "y": 90
     },
-    "down=false,facing=north,up=true,waterlogged=true": {
+    "down=true,facing=east,up=true,waterlogged=false": {
+      "model": "create:block/display_board/block",
+      "y": 90
+    },
+    "down=true,facing=east,up=true,waterlogged=true": {
+      "model": "create:block/display_board/block",
+      "y": 90
+    },
+    "down=true,facing=north,up=false,waterlogged=false": {
+      "model": "create:block/display_board/block"
+    },
+    "down=true,facing=north,up=false,waterlogged=true": {
+      "model": "create:block/display_board/block"
+    },
+    "down=true,facing=north,up=true,waterlogged=false": {
       "model": "create:block/display_board/block"
     },
     "down=true,facing=north,up=true,waterlogged=true": {
       "model": "create:block/display_board/block"
     },
-    "down=false,facing=south,up=true,waterlogged=true": {
+    "down=true,facing=south,up=false,waterlogged=false": {
+      "model": "create:block/display_board/block",
+      "y": 180
+    },
+    "down=true,facing=south,up=false,waterlogged=true": {
+      "model": "create:block/display_board/block",
+      "y": 180
+    },
+    "down=true,facing=south,up=true,waterlogged=false": {
       "model": "create:block/display_board/block",
       "y": 180
     },
@@ -104,21 +104,21 @@
       "model": "create:block/display_board/block",
       "y": 180
     },
-    "down=false,facing=west,up=true,waterlogged=true": {
+    "down=true,facing=west,up=false,waterlogged=false": {
+      "model": "create:block/display_board/block",
+      "y": 270
+    },
+    "down=true,facing=west,up=false,waterlogged=true": {
+      "model": "create:block/display_board/block",
+      "y": 270
+    },
+    "down=true,facing=west,up=true,waterlogged=false": {
       "model": "create:block/display_board/block",
       "y": 270
     },
     "down=true,facing=west,up=true,waterlogged=true": {
       "model": "create:block/display_board/block",
       "y": 270
-    },
-    "down=false,facing=east,up=true,waterlogged=true": {
-      "model": "create:block/display_board/block",
-      "y": 90
-    },
-    "down=true,facing=east,up=true,waterlogged=true": {
-      "model": "create:block/display_board/block",
-      "y": 90
     }
   }
 }

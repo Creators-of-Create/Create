@@ -6,7 +6,7 @@
     }
   ],
   "result": {
-    "item": "create:zinc_ingot",
-    "count": 9
+    "count": 9,
+    "item": "create:zinc_ingot"
   }
 }

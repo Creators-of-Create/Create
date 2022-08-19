@@ -4,25 +4,12 @@
       "model": "create:block/gauge/base",
       "x": 180
     },
-    "axis_along_first=true,facing=down": {
-      "model": "create:block/gauge/base",
-      "x": 180,
-      "y": 90
-    },
-    "axis_along_first=false,facing=up": {
-      "model": "create:block/gauge/base"
-    },
-    "axis_along_first=true,facing=up": {
-      "model": "create:block/gauge/base",
-      "y": 90
+    "axis_along_first=false,facing=east": {
+      "model": "create:block/gauge/base_wall"
     },
     "axis_along_first=false,facing=north": {
       "model": "create:block/gauge/base_wall",
       "x": 90,
-      "y": 270
-    },
-    "axis_along_first=true,facing=north": {
-      "model": "create:block/gauge/base_wall",
       "y": 270
     },
     "axis_along_first=false,facing=south": {
@@ -30,25 +17,38 @@
       "x": 90,
       "y": 90
     },
-    "axis_along_first=true,facing=south": {
-      "model": "create:block/gauge/base_wall",
-      "y": 90
+    "axis_along_first=false,facing=up": {
+      "model": "create:block/gauge/base"
     },
     "axis_along_first=false,facing=west": {
       "model": "create:block/gauge/base_wall",
       "y": 180
     },
-    "axis_along_first=true,facing=west": {
-      "model": "create:block/gauge/base_wall",
-      "x": 90,
-      "y": 180
-    },
-    "axis_along_first=false,facing=east": {
-      "model": "create:block/gauge/base_wall"
+    "axis_along_first=true,facing=down": {
+      "model": "create:block/gauge/base",
+      "x": 180,
+      "y": 90
     },
     "axis_along_first=true,facing=east": {
       "model": "create:block/gauge/base_wall",
       "x": 90
+    },
+    "axis_along_first=true,facing=north": {
+      "model": "create:block/gauge/base_wall",
+      "y": 270
+    },
+    "axis_along_first=true,facing=south": {
+      "model": "create:block/gauge/base_wall",
+      "y": 90
+    },
+    "axis_along_first=true,facing=up": {
+      "model": "create:block/gauge/base",
+      "y": 90
+    },
+    "axis_along_first=true,facing=west": {
+      "model": "create:block/gauge/base_wall",
+      "x": 90,
+      "y": 180
     }
   }
 }

@@ -5,8 +5,8 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluidTag": "forge:honey",
-      "amount": 250
+      "amount": 250,
+      "fluidTag": "forge:honey"
     }
   ],
   "results": [

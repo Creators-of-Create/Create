@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 1,
   "ingredient": {
     "tag": "create:stone_types/tuff"
   },
-  "result": "create:small_tuff_bricks",
-  "count": 1
+  "result": "create:small_tuff_bricks"
 }

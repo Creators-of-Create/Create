@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 1,
   "ingredient": {
     "tag": "create:stone_types/scoria"
   },
-  "result": "create:polished_cut_scoria_wall",
-  "count": 1
+  "result": "create:polished_cut_scoria_wall"
 }

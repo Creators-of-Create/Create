@@ -5,9 +5,9 @@
       "item": "minecraft:glass_bottle"
     },
     {
+      "amount": 250,
       "fluid": "create:tea",
-      "nbt": {},
-      "amount": 250
+      "nbt": {}
     }
   ],
   "results": [

@@ -1,24 +1,7 @@
 {
   "parent": "create:deployer",
-  "display": {
-    "icon": {
-      "item": "create:precision_mechanism"
-    },
-    "title": {
-      "translate": "advancement.create.precision_mechanism"
-    },
-    "description": {
-      "color": "#DBA213",
-      "translate": "advancement.create.precision_mechanism.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
   "criteria": {
     "0": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -27,7 +10,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.precision_mechanism.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:precision_mechanism"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.precision_mechanism"
     }
   },
   "requirements": [

@@ -5,10 +5,10 @@
       "item": "minecraft:warped_hyphae"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:stripped_warped_hyphae"
     }
-  ],
-  "processingTime": 50
+  ]
 }

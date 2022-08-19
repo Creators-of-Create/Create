@@ -5,15 +5,15 @@
       "item": "create:veridium"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
-      "item": "create:crushed_copper_ore",
-      "chance": 0.8
+      "chance": 0.8,
+      "item": "create:crushed_copper_ore"
     },
     {
-      "item": "create:copper_nugget",
-      "chance": 0.8
+      "chance": 0.8,
+      "item": "create:copper_nugget"
     }
-  ],
-  "processingTime": 250
+  ]
 }

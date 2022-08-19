@@ -5,19 +5,19 @@
       "item": "minecraft:lilac"
     }
   ],
+  "processingTime": 100,
   "results": [
     {
-      "item": "minecraft:magenta_dye",
-      "count": 3
+      "count": 3,
+      "item": "minecraft:magenta_dye"
     },
     {
-      "item": "minecraft:magenta_dye",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:magenta_dye"
     },
     {
-      "item": "minecraft:purple_dye",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:purple_dye"
     }
-  ],
-  "processingTime": 100
+  ]
 }

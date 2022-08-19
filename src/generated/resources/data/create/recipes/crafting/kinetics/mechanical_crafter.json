@@ -1,23 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "create:electron_tube"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    },
+    "R": {
+      "item": "minecraft:crafting_table"
+    }
+  },
   "pattern": [
     "B",
     "C",
     "R"
   ],
-  "key": {
-    "B": {
-      "item": "create:electron_tube"
-    },
-    "R": {
-      "item": "minecraft:crafting_table"
-    },
-    "C": {
-      "item": "create:brass_casing"
-    }
-  },
   "result": {
-    "item": "create:mechanical_crafter",
-    "count": 3
+    "count": 3,
+    "item": "create:mechanical_crafter"
   }
 }

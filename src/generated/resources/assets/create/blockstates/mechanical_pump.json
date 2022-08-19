@@ -4,8 +4,10 @@
       "model": "create:block/mechanical_pump/block",
       "x": 180
     },
-    "facing=up": {
-      "model": "create:block/mechanical_pump/block"
+    "facing=east": {
+      "model": "create:block/mechanical_pump/block",
+      "x": 90,
+      "y": 90
     },
     "facing=north": {
       "model": "create:block/mechanical_pump/block",
@@ -16,15 +18,13 @@
       "x": 90,
       "y": 180
     },
+    "facing=up": {
+      "model": "create:block/mechanical_pump/block"
+    },
     "facing=west": {
       "model": "create:block/mechanical_pump/block",
       "x": 90,
       "y": 270
-    },
-    "facing=east": {
-      "model": "create:block/mechanical_pump/block",
-      "x": 90,
-      "y": 90
     }
   }
 }

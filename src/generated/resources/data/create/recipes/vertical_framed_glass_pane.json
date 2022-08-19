@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "create:vertical_framed_glass"
     }
   },
+  "pattern": [
+    "###",
+    "###"
+  ],
   "result": {
-    "item": "create:vertical_framed_glass_pane",
-    "count": 16
+    "count": 16,
+    "item": "create:vertical_framed_glass_pane"
   }
 }

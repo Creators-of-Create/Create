@@ -4,8 +4,10 @@
       "model": "create:block/yellow_valve_handle",
       "x": 180
     },
-    "facing=up": {
-      "model": "create:block/yellow_valve_handle"
+    "facing=east": {
+      "model": "create:block/yellow_valve_handle",
+      "x": 90,
+      "y": 90
     },
     "facing=north": {
       "model": "create:block/yellow_valve_handle",
@@ -16,15 +18,13 @@
       "x": 90,
       "y": 180
     },
+    "facing=up": {
+      "model": "create:block/yellow_valve_handle"
+    },
     "facing=west": {
       "model": "create:block/yellow_valve_handle",
       "x": 90,
       "y": 270
-    },
-    "facing=east": {
-      "model": "create:block/yellow_valve_handle",
-      "x": 90,
-      "y": 90
     }
   }
 }

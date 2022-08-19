@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/palettes/stone_types/pillar/crimsite_cut_pillar",
-    "end": "create:block/palettes/stone_types/cap/crimsite_cut_cap"
+    "end": "create:block/palettes/stone_types/cap/crimsite_cut_cap",
+    "side": "create:block/palettes/stone_types/pillar/crimsite_cut_pillar"
   }
 }

@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "tconstruct"
+    }
+  ],
   "ingredients": [
     {
       "item": "tconstruct:greenheart_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "tconstruct:stripped_greenheart_log"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "tconstruct",
-      "type": "forge:mod_loaded"
     }
   ]
 }

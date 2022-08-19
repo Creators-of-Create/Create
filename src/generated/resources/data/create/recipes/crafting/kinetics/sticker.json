@@ -1,15 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ISI",
-    "CRC"
-  ],
   "key": {
-    "I": {
-      "item": "create:andesite_alloy"
-    },
     "C": {
       "tag": "forge:cobblestone"
+    },
+    "I": {
+      "item": "create:andesite_alloy"
     },
     "R": {
       "tag": "forge:dusts/redstone"
@@ -18,6 +14,10 @@
       "tag": "forge:slimeballs"
     }
   },
+  "pattern": [
+    "ISI",
+    "CRC"
+  ],
   "result": {
     "item": "create:sticker"
   }

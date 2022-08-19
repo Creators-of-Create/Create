@@ -1,25 +1,25 @@
 {
   "parent": "create:brass",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:haunted_bell_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:haunted_bell"
-    },
-    "title": {
-      "translate": "advancement.create.haunted_bell"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.haunted_bell.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:haunted_bell"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:haunted_bell_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.haunted_bell"
     }
   },
   "requirements": [

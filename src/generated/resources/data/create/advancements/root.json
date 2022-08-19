@@ -1,25 +1,25 @@
 {
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:brass_hand"
-    },
-    "title": {
-      "translate": "advancement.create.root"
-    },
+    "announce_to_chat": false,
+    "background": "create:textures/gui/advancements.png",
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.root.desc"
     },
     "frame": "task",
-    "show_toast": false,
-    "announce_to_chat": false,
     "hidden": false,
-    "background": "create:textures/gui/advancements.png"
-  },
-  "criteria": {
-    "0": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {}
+    "icon": {
+      "item": "create:brass_hand"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.create.root"
     }
   },
   "requirements": [

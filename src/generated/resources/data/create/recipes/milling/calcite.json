@@ -5,11 +5,11 @@
       "item": "minecraft:calcite"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
-      "item": "minecraft:bone_meal",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "minecraft:bone_meal"
     }
-  ],
-  "processingTime": 250
+  ]
 }

@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A",
-    "K"
-  ],
   "key": {
     "A": {
       "item": "create:andesite_alloy"
@@ -12,8 +8,12 @@
       "item": "minecraft:dried_kelp"
     }
   },
+  "pattern": [
+    "A",
+    "K"
+  ],
   "result": {
-    "item": "create:andesite_funnel",
-    "count": 2
+    "count": 2,
+    "item": "create:andesite_funnel"
   }
 }

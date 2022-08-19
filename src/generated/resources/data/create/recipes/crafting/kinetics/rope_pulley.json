@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "B",
-    "C",
-    "I"
-  ],
   "key": {
     "B": {
       "item": "create:andesite_casing"
@@ -16,6 +11,11 @@
       "tag": "forge:plates/iron"
     }
   },
+  "pattern": [
+    "B",
+    "C",
+    "I"
+  ],
   "result": {
     "item": "create:rope_pulley"
   }

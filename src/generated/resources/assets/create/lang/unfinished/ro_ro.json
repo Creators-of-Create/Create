@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 651",
+	"_": "Missing Localizations: 653",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -576,6 +576,8 @@
 	"entity.create.stationary_contraption": "Invenție Staționară",
 	"entity.create.super_glue": "Super-Glue",
 
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
 	"fluid.create.potion": "Poțiune",
 	"fluid.create.tea": "Ceaiul Constructorului",
 

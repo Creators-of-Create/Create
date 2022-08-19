@@ -1,13 +1,13 @@
 {
   "variants": {
-    "type=top": {
-      "model": "create:block/small_asurine_brick_slab_top"
-    },
     "type=bottom": {
       "model": "create:block/small_asurine_brick_slab"
     },
     "type=double": {
       "model": "create:block/small_asurine_bricks"
+    },
+    "type=top": {
+      "model": "create:block/small_asurine_brick_slab_top"
     }
   }
 }

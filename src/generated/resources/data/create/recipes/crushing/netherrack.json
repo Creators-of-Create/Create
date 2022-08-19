@@ -5,14 +5,14 @@
       "item": "minecraft:netherrack"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
       "item": "create:cinder_flour"
     },
     {
-      "item": "create:cinder_flour",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "create:cinder_flour"
     }
-  ],
-  "processingTime": 250
+  ]
 }

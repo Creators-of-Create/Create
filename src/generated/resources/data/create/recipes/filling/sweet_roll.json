@@ -5,8 +5,8 @@
       "item": "minecraft:bread"
     },
     {
-      "fluidTag": "forge:milk",
-      "amount": 250
+      "amount": 250,
+      "fluidTag": "forge:milk"
     }
   ],
   "results": [

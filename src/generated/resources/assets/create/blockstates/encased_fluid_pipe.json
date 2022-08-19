@@ -1,109 +1,109 @@
 {
   "multipart": [
     {
+      "apply": {
+        "model": "create:block/encased_fluid_pipe/block_flat",
+        "x": -90
+      },
       "when": {
         "down": "false"
-      },
-      "apply": {
-        "model": "create:block/encased_fluid_pipe/block_flat",
-        "x": -90
       }
     },
     {
+      "apply": {
+        "model": "create:block/encased_fluid_pipe/block_flat",
+        "x": 90
+      },
       "when": {
         "up": "false"
-      },
-      "apply": {
-        "model": "create:block/encased_fluid_pipe/block_flat",
-        "x": 90
       }
     },
     {
-      "when": {
-        "north": "false"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_flat",
         "y": 180
+      },
+      "when": {
+        "north": "false"
       }
     },
     {
-      "when": {
-        "south": "false"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_flat"
+      },
+      "when": {
+        "south": "false"
       }
     },
     {
-      "when": {
-        "west": "false"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_flat",
         "y": 90
+      },
+      "when": {
+        "west": "false"
       }
     },
     {
-      "when": {
-        "east": "false"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_flat",
         "y": 270
+      },
+      "when": {
+        "east": "false"
       }
     },
     {
-      "when": {
-        "down": "true"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_open",
         "x": -90
+      },
+      "when": {
+        "down": "true"
       }
     },
     {
-      "when": {
-        "up": "true"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_open",
         "x": 90
+      },
+      "when": {
+        "up": "true"
       }
     },
     {
-      "when": {
-        "north": "true"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_open",
         "y": 180
+      },
+      "when": {
+        "north": "true"
       }
     },
     {
-      "when": {
-        "south": "true"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_open"
+      },
+      "when": {
+        "south": "true"
       }
     },
     {
-      "when": {
-        "west": "true"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_open",
         "y": 90
+      },
+      "when": {
+        "west": "true"
       }
     },
     {
-      "when": {
-        "east": "true"
-      },
       "apply": {
         "model": "create:block/encased_fluid_pipe/block_open",
         "y": 270
+      },
+      "when": {
+        "east": "true"
       }
     }
   ]

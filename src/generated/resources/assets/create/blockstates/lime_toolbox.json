@@ -1,9 +1,24 @@
 {
   "variants": {
+    "facing=east,waterlogged=false": {
+      "model": "create:block/lime_toolbox",
+      "y": 90
+    },
+    "facing=east,waterlogged=true": {
+      "model": "create:block/lime_toolbox",
+      "y": 90
+    },
     "facing=north,waterlogged=false": {
       "model": "create:block/lime_toolbox"
     },
+    "facing=north,waterlogged=true": {
+      "model": "create:block/lime_toolbox"
+    },
     "facing=south,waterlogged=false": {
+      "model": "create:block/lime_toolbox",
+      "y": 180
+    },
+    "facing=south,waterlogged=true": {
       "model": "create:block/lime_toolbox",
       "y": 180
     },
@@ -11,24 +26,9 @@
       "model": "create:block/lime_toolbox",
       "y": 270
     },
-    "facing=east,waterlogged=false": {
-      "model": "create:block/lime_toolbox",
-      "y": 90
-    },
-    "facing=north,waterlogged=true": {
-      "model": "create:block/lime_toolbox"
-    },
-    "facing=south,waterlogged=true": {
-      "model": "create:block/lime_toolbox",
-      "y": 180
-    },
     "facing=west,waterlogged=true": {
       "model": "create:block/lime_toolbox",
       "y": 270
-    },
-    "facing=east,waterlogged=true": {
-      "model": "create:block/lime_toolbox",
-      "y": 90
     }
   }
 }

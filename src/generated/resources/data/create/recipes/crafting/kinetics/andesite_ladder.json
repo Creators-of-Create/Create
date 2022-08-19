@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A A",
-    "AAA",
-    "A A"
-  ],
   "key": {
     "A": {
       "item": "create:andesite_alloy"
     }
   },
+  "pattern": [
+    "A A",
+    "AAA",
+    "A A"
+  ],
   "result": {
-    "item": "create:andesite_ladder",
-    "count": 4
+    "count": 4,
+    "item": "create:andesite_ladder"
   }
 }

@@ -4,8 +4,10 @@
       "model": "create:block/windmill_bearing",
       "x": 180
     },
-    "facing=up": {
-      "model": "create:block/windmill_bearing"
+    "facing=east": {
+      "model": "create:block/windmill_bearing",
+      "x": 90,
+      "y": 90
     },
     "facing=north": {
       "model": "create:block/windmill_bearing",
@@ -16,15 +18,13 @@
       "x": 90,
       "y": 180
     },
+    "facing=up": {
+      "model": "create:block/windmill_bearing"
+    },
     "facing=west": {
       "model": "create:block/windmill_bearing",
       "x": 90,
       "y": 270
-    },
-    "facing=east": {
-      "model": "create:block/windmill_bearing",
-      "x": 90,
-      "y": 90
     }
   }
 }

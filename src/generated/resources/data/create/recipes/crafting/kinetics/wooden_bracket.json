@@ -1,22 +1,22 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "SSS",
-    "PCP"
-  ],
   "key": {
-    "S": {
-      "tag": "forge:rods/wooden"
+    "C": {
+      "item": "create:andesite_alloy"
     },
     "P": {
       "tag": "minecraft:planks"
     },
-    "C": {
-      "item": "create:andesite_alloy"
+    "S": {
+      "tag": "forge:rods/wooden"
     }
   },
+  "pattern": [
+    "SSS",
+    "PCP"
+  ],
   "result": {
-    "item": "create:wooden_bracket",
-    "count": 4
+    "count": 4,
+    "item": "create:wooden_bracket"
   }
 }

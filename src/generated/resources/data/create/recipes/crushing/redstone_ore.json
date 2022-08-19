@@ -5,23 +5,23 @@
       "item": "minecraft:redstone_ore"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
-      "item": "minecraft:redstone",
-      "count": 6
+      "count": 6,
+      "item": "minecraft:redstone"
     },
     {
-      "item": "minecraft:redstone",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:redstone"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:cobblestone",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:cobblestone"
     }
-  ],
-  "processingTime": 250
+  ]
 }

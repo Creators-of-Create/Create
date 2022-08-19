@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 4",
+	"_": "Missing Localizations: 6",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -576,6 +576,8 @@
 	"entity.create.stationary_contraption": "Macchinario stazionario",
 	"entity.create.super_glue": "Super colla",
 
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
 	"fluid.create.potion": "Pozione",
 	"fluid.create.tea": "Tè del costruttore",
 

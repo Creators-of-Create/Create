@@ -7,13 +7,13 @@
   ],
   "results": [
     {
-      "item": "minecraft:quartz",
+      "chance": 0.125,
       "count": 4,
-      "chance": 0.125
+      "item": "minecraft:quartz"
     },
     {
-      "item": "minecraft:gold_nugget",
-      "chance": 0.02
+      "chance": 0.02,
+      "item": "minecraft:gold_nugget"
     }
   ]
 }

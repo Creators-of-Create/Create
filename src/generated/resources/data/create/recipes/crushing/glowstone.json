@@ -5,15 +5,15 @@
       "item": "minecraft:glowstone"
     }
   ],
+  "processingTime": 150,
   "results": [
     {
-      "item": "minecraft:glowstone_dust",
-      "count": 3
+      "count": 3,
+      "item": "minecraft:glowstone_dust"
     },
     {
-      "item": "minecraft:glowstone_dust",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:glowstone_dust"
     }
-  ],
-  "processingTime": 150
+  ]
 }

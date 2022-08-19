@@ -1,15 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:exposed_copper_shingles"
     }
   },
+  "pattern": [
+    "XXX"
+  ],
   "result": {
-    "item": "create:exposed_copper_shingle_slab",
-    "count": 6
+    "count": 6,
+    "item": "create:exposed_copper_shingle_slab"
   }
 }

@@ -5,48 +5,48 @@
       "x": 270,
       "y": 90
     },
-    "axis_along_first=true,facing=down": {
+    "axis_along_first=false,facing=east": {
       "model": "create:block/gantry_carriage/horizontal",
-      "x": 270
+      "y": 270
+    },
+    "axis_along_first=false,facing=north": {
+      "model": "create:block/gantry_carriage/vertical",
+      "y": 180
+    },
+    "axis_along_first=false,facing=south": {
+      "model": "create:block/gantry_carriage/vertical"
     },
     "axis_along_first=false,facing=up": {
       "model": "create:block/gantry_carriage/horizontal",
       "x": 90,
       "y": 90
     },
-    "axis_along_first=true,facing=up": {
+    "axis_along_first=false,facing=west": {
       "model": "create:block/gantry_carriage/horizontal",
-      "x": 90
+      "y": 90
     },
-    "axis_along_first=false,facing=north": {
+    "axis_along_first=true,facing=down": {
+      "model": "create:block/gantry_carriage/horizontal",
+      "x": 270
+    },
+    "axis_along_first=true,facing=east": {
       "model": "create:block/gantry_carriage/vertical",
-      "y": 180
+      "y": 270
     },
     "axis_along_first=true,facing=north": {
       "model": "create:block/gantry_carriage/horizontal",
       "y": 180
     },
-    "axis_along_first=false,facing=south": {
-      "model": "create:block/gantry_carriage/vertical"
-    },
     "axis_along_first=true,facing=south": {
       "model": "create:block/gantry_carriage/horizontal"
     },
-    "axis_along_first=false,facing=west": {
+    "axis_along_first=true,facing=up": {
       "model": "create:block/gantry_carriage/horizontal",
-      "y": 90
+      "x": 90
     },
     "axis_along_first=true,facing=west": {
       "model": "create:block/gantry_carriage/vertical",
       "y": 90
-    },
-    "axis_along_first=false,facing=east": {
-      "model": "create:block/gantry_carriage/horizontal",
-      "y": 270
-    },
-    "axis_along_first=true,facing=east": {
-      "model": "create:block/gantry_carriage/vertical",
-      "y": 270
     }
   }
 }

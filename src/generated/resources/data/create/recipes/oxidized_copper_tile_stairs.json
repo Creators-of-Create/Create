@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "X  ",
-    "XX ",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:oxidized_copper_tiles"
     }
   },
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
   "result": {
-    "item": "create:oxidized_copper_tile_stairs",
-    "count": 4
+    "count": 4,
+    "item": "create:oxidized_copper_tile_stairs"
   }
 }

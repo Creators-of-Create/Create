@@ -1,13 +1,13 @@
 {
   "variants": {
-    "type=top": {
-      "model": "create:block/oxidized_copper_tile_slab_top"
-    },
     "type=bottom": {
       "model": "create:block/oxidized_copper_tile_slab"
     },
     "type=double": {
       "model": "create:block/oxidized_copper_tiles"
+    },
+    "type=top": {
+      "model": "create:block/oxidized_copper_tile_slab_top"
     }
   }
 }

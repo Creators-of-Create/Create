@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 2,
   "ingredient": {
     "item": "minecraft:dripstone_block"
   },
-  "result": "create:cut_dripstone_slab",
-  "count": 2
+  "result": "create:cut_dripstone_slab"
 }

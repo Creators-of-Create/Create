@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "B",
-    "C",
-    "I"
-  ],
   "key": {
     "B": {
       "tag": "minecraft:wooden_slabs"
@@ -16,6 +11,11 @@
       "item": "create:piston_extension_pole"
     }
   },
+  "pattern": [
+    "B",
+    "C",
+    "I"
+  ],
   "result": {
     "item": "create:mechanical_piston"
   }

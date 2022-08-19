@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/slab_top",
   "textures": {
-    "side": "create:block/palettes/stone_types/slab/crimsite_cut_slab",
     "bottom": "create:block/palettes/stone_types/polished/crimsite_cut_polished",
+    "side": "create:block/palettes/stone_types/slab/crimsite_cut_slab",
     "top": "create:block/palettes/stone_types/polished/crimsite_cut_polished"
   }
 }

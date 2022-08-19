@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 1,
   "ingredient": {
     "item": "create:ochrum"
   },
-  "result": "create:ochrum_pillar",
-  "count": 1
+  "result": "create:ochrum_pillar"
 }

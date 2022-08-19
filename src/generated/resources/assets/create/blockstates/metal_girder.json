@@ -1,77 +1,77 @@
 {
   "multipart": [
     {
-      "when": {
-        "x": "false",
-        "z": "false"
-      },
       "apply": {
         "model": "create:block/metal_girder/block_pole"
+      },
+      "when": {
+        "x": "false",
+        "z": "false"
       }
     },
     {
-      "when": {
-        "x": "true"
-      },
       "apply": {
         "model": "create:block/metal_girder/block_x"
+      },
+      "when": {
+        "x": "true"
       }
     },
     {
-      "when": {
-        "z": "true"
-      },
       "apply": {
         "model": "create:block/metal_girder/block_z"
+      },
+      "when": {
+        "z": "true"
       }
     },
     {
+      "apply": {
+        "model": "create:block/metal_girder/block_top"
+      },
       "when": {
         "top": "true",
         "x": "true",
         "z": "false"
-      },
-      "apply": {
-        "model": "create:block/metal_girder/block_top"
       }
     },
     {
+      "apply": {
+        "model": "create:block/metal_girder/block_bottom"
+      },
       "when": {
         "bottom": "true",
         "x": "true",
         "z": "false"
-      },
-      "apply": {
-        "model": "create:block/metal_girder/block_bottom"
       }
     },
     {
+      "apply": {
+        "model": "create:block/metal_girder/block_top"
+      },
       "when": {
         "top": "true",
         "x": "false",
         "z": "true"
-      },
-      "apply": {
-        "model": "create:block/metal_girder/block_top"
       }
     },
     {
+      "apply": {
+        "model": "create:block/metal_girder/block_bottom"
+      },
       "when": {
         "bottom": "true",
         "x": "false",
         "z": "true"
-      },
-      "apply": {
-        "model": "create:block/metal_girder/block_bottom"
       }
     },
     {
-      "when": {
-        "x": "true",
-        "z": "true"
-      },
       "apply": {
         "model": "create:block/metal_girder/block_cross"
+      },
+      "when": {
+        "x": "true",
+        "z": "true"
       }
     }
   ]

@@ -1,5 +1,20 @@
 {
   "type": "create:mechanical_crafting",
+  "acceptMirrored": false,
+  "key": {
+    "H": {
+      "item": "create:brass_hand"
+    },
+    "L": {
+      "tag": "forge:ingots/brass"
+    },
+    "R": {
+      "item": "create:precision_mechanism"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    }
+  },
   "pattern": [
     " L ",
     " R ",
@@ -7,22 +22,7 @@
     "SSS",
     " H "
   ],
-  "key": {
-    "L": {
-      "tag": "forge:ingots/brass"
-    },
-    "R": {
-      "item": "create:precision_mechanism"
-    },
-    "H": {
-      "item": "create:brass_hand"
-    },
-    "S": {
-      "tag": "forge:rods/wooden"
-    }
-  },
   "result": {
     "item": "create:extendo_grip"
-  },
-  "acceptMirrored": false
+  }
 }

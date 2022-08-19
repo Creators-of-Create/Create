@@ -8,10 +8,10 @@
       "item": "minecraft:honeycomb_block"
     }
   ],
+  "keepHeldItem": true,
   "results": [
     {
       "item": "create:waxed_exposed_copper_shingle_slab"
     }
-  ],
-  "keepHeldItem": true
+  ]
 }

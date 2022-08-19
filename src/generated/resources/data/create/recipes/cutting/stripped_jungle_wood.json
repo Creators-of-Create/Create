@@ -5,11 +5,11 @@
       "item": "minecraft:stripped_jungle_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:jungle_planks",
-      "count": 6
+      "count": 6,
+      "item": "minecraft:jungle_planks"
     }
-  ],
-  "processingTime": 50
+  ]
 }

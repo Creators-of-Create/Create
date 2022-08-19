@@ -1,25 +1,25 @@
 {
   "parent": "create:haunted_bell",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:clockwork_bearing_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:clockwork_bearing"
-    },
-    "title": {
-      "translate": "advancement.create.clockwork_bearing"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.clockwork_bearing.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:clockwork_bearing"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:clockwork_bearing_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.clockwork_bearing"
     }
   },
   "requirements": [

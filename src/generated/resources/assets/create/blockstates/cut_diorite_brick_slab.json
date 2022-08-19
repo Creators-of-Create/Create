@@ -1,13 +1,13 @@
 {
   "variants": {
-    "type=top": {
-      "model": "create:block/cut_diorite_brick_slab_top"
-    },
     "type=bottom": {
       "model": "create:block/cut_diorite_brick_slab"
     },
     "type=double": {
       "model": "create:block/cut_diorite_bricks"
+    },
+    "type=top": {
+      "model": "create:block/cut_diorite_brick_slab_top"
     }
   }
 }

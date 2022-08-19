@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/copper/copper_tiles",
-    "end": "create:block/copper/copper_roof_top"
+    "end": "create:block/copper/copper_roof_top",
+    "side": "create:block/copper/copper_tiles"
   }
 }

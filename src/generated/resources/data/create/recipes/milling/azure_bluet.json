@@ -5,16 +5,16 @@
       "item": "minecraft:azure_bluet"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:light_gray_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:light_gray_dye"
     },
     {
-      "item": "minecraft:white_dye",
+      "chance": 0.1,
       "count": 2,
-      "chance": 0.1
+      "item": "minecraft:white_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

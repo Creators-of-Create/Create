@@ -5,11 +5,11 @@
       "item": "minecraft:diorite"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "minecraft:quartz",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:quartz"
     }
-  ],
-  "processingTime": 350
+  ]
 }

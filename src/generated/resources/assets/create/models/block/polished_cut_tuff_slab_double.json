@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/palettes/stone_types/slab/tuff_cut_slab",
-    "end": "create:block/palettes/stone_types/polished/tuff_cut_polished"
+    "end": "create:block/palettes/stone_types/polished/tuff_cut_polished",
+    "side": "create:block/palettes/stone_types/slab/tuff_cut_slab"
   }
 }

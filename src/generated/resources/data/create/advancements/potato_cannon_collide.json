@@ -1,25 +1,25 @@
 {
   "parent": "create:arm_many_targets",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:potato_cannon_collide_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:carrot"
-    },
-    "title": {
-      "translate": "advancement.create.potato_cannon_collide"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.potato_cannon_collide.desc"
     },
     "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:carrot"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:potato_cannon_collide_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.potato_cannon_collide"
     }
   },
   "requirements": [

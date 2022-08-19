@@ -1,25 +1,25 @@
 {
   "parent": "create:train_whistle",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:train_portal_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:amethyst_block"
-    },
-    "title": {
-      "translate": "advancement.create.train_portal"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.train_portal.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:amethyst_block"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:train_portal_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.train_portal"
     }
   },
   "requirements": [

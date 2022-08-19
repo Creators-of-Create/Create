@@ -4,12 +4,12 @@
       "model": "create:block/item_vault",
       "y": 90
     },
-    "axis=z,large=false": {
-      "model": "create:block/item_vault"
-    },
     "axis=x,large=true": {
       "model": "create:block/item_vault",
       "y": 90
+    },
+    "axis=z,large=false": {
+      "model": "create:block/item_vault"
     },
     "axis=z,large=true": {
       "model": "create:block/item_vault"

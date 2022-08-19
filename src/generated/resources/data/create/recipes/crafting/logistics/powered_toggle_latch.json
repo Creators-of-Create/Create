@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " T ",
-    " C ",
-    "SSS"
-  ],
   "key": {
-    "T": {
-      "item": "minecraft:redstone_torch"
-    },
     "C": {
       "item": "minecraft:lever"
     },
     "S": {
       "tag": "forge:stone"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
     }
   },
+  "pattern": [
+    " T ",
+    " C ",
+    "SSS"
+  ],
   "result": {
     "item": "create:powered_toggle_latch"
   }

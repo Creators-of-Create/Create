@@ -1,38 +1,18 @@
 {
   "variants": {
-    "face=floor,facing=north": {
-      "model": "create:block/analog_lever/block"
-    },
-    "face=wall,facing=north": {
+    "face=ceiling,facing=east": {
       "model": "create:block/analog_lever/block",
-      "x": 90
+      "x": 180,
+      "y": 270
     },
     "face=ceiling,facing=north": {
       "model": "create:block/analog_lever/block",
       "x": 180,
       "y": 180
     },
-    "face=floor,facing=south": {
-      "model": "create:block/analog_lever/block",
-      "y": 180
-    },
-    "face=wall,facing=south": {
-      "model": "create:block/analog_lever/block",
-      "x": 90,
-      "y": 180
-    },
     "face=ceiling,facing=south": {
       "model": "create:block/analog_lever/block",
       "x": 180
-    },
-    "face=floor,facing=west": {
-      "model": "create:block/analog_lever/block",
-      "y": 270
-    },
-    "face=wall,facing=west": {
-      "model": "create:block/analog_lever/block",
-      "x": 90,
-      "y": 270
     },
     "face=ceiling,facing=west": {
       "model": "create:block/analog_lever/block",
@@ -43,14 +23,34 @@
       "model": "create:block/analog_lever/block",
       "y": 90
     },
+    "face=floor,facing=north": {
+      "model": "create:block/analog_lever/block"
+    },
+    "face=floor,facing=south": {
+      "model": "create:block/analog_lever/block",
+      "y": 180
+    },
+    "face=floor,facing=west": {
+      "model": "create:block/analog_lever/block",
+      "y": 270
+    },
     "face=wall,facing=east": {
       "model": "create:block/analog_lever/block",
       "x": 90,
       "y": 90
     },
-    "face=ceiling,facing=east": {
+    "face=wall,facing=north": {
       "model": "create:block/analog_lever/block",
-      "x": 180,
+      "x": 90
+    },
+    "face=wall,facing=south": {
+      "model": "create:block/analog_lever/block",
+      "x": 90,
+      "y": 180
+    },
+    "face=wall,facing=west": {
+      "model": "create:block/analog_lever/block",
+      "x": 90,
       "y": 270
     }
   }

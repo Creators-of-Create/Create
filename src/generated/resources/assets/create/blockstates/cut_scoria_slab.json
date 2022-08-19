@@ -1,13 +1,13 @@
 {
   "variants": {
-    "type=top": {
-      "model": "create:block/cut_scoria_slab_top"
-    },
     "type=bottom": {
       "model": "create:block/cut_scoria_slab"
     },
     "type=double": {
       "model": "create:block/cut_scoria"
+    },
+    "type=top": {
+      "model": "create:block/cut_scoria_slab_top"
     }
   }
 }

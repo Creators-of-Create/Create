@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/palettes/stone_types/slab/asurine_cut_slab",
-    "end": "create:block/palettes/stone_types/polished/asurine_cut_polished"
+    "end": "create:block/palettes/stone_types/polished/asurine_cut_polished",
+    "side": "create:block/palettes/stone_types/slab/asurine_cut_slab"
   }
 }

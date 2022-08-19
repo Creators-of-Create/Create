@@ -5,10 +5,10 @@
       "item": "minecraft:birch_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:stripped_birch_log"
     }
-  ],
-  "processingTime": 50
+  ]
 }

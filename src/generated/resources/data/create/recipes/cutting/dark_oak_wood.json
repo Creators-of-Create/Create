@@ -5,10 +5,10 @@
       "item": "minecraft:dark_oak_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:stripped_dark_oak_wood"
     }
-  ],
-  "processingTime": 50
+  ]
 }

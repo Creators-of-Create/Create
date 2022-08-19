@@ -1,20 +1,20 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:mahogany_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "byg:stripped_mahogany_wood"
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
     }
   ]
 }

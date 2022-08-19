@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " S ",
-    "GPG"
-  ],
   "key": {
     "G": {
       "tag": "forge:glass"
@@ -15,6 +11,10 @@
       "tag": "forge:string"
     }
   },
+  "pattern": [
+    " S ",
+    "GPG"
+  ],
   "result": {
     "item": "create:goggles"
   }

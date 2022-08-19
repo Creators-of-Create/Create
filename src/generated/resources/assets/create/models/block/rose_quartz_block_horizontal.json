@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column_horizontal",
   "textures": {
-    "side": "create:block/palettes/rose_quartz_side",
-    "end": "create:block/palettes/rose_quartz_top"
+    "end": "create:block/palettes/rose_quartz_top",
+    "side": "create:block/palettes/rose_quartz_side"
   }
 }

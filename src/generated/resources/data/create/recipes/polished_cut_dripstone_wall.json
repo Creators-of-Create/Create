@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XXX",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:polished_cut_dripstone"
     }
   },
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
   "result": {
-    "item": "create:polished_cut_dripstone_wall",
-    "count": 6
+    "count": 6,
+    "item": "create:polished_cut_dripstone_wall"
   }
 }

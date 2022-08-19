@@ -5,11 +5,11 @@
       "item": "minecraft:stripped_birch_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:birch_planks",
-      "count": 6
+      "count": 6,
+      "item": "minecraft:birch_planks"
     }
-  ],
-  "processingTime": 50
+  ]
 }

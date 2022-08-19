@@ -5,9 +5,9 @@
       "tag": "forge:flour/wheat"
     },
     {
+      "amount": 1000,
       "fluid": "minecraft:water",
-      "nbt": {},
-      "amount": 1000
+      "nbt": {}
     }
   ],
   "results": [

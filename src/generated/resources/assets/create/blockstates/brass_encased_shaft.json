@@ -2,9 +2,9 @@
   "variants": {
     "axis=x": {
       "model": "create:block/encased_shaft/block_brass",
+      "uvlock": true,
       "x": 90,
-      "y": 90,
-      "uvlock": true
+      "y": 90
     },
     "axis=y": {
       "model": "create:block/encased_shaft/block_brass",
@@ -12,9 +12,9 @@
     },
     "axis=z": {
       "model": "create:block/encased_shaft/block_brass",
+      "uvlock": true,
       "x": 90,
-      "y": 180,
-      "uvlock": true
+      "y": 180
     }
   }
 }

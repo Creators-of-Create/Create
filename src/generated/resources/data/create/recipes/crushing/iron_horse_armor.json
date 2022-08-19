@@ -5,29 +5,29 @@
       "item": "minecraft:iron_horse_armor"
     }
   ],
+  "processingTime": 200,
   "results": [
     {
-      "item": "minecraft:iron_ingot",
-      "count": 2
-    },
-    {
-      "item": "minecraft:leather",
-      "chance": 0.5
-    },
-    {
-      "item": "minecraft:iron_ingot",
-      "chance": 0.5
-    },
-    {
-      "item": "minecraft:string",
       "count": 2,
-      "chance": 0.25
+      "item": "minecraft:iron_ingot"
     },
     {
-      "item": "minecraft:iron_nugget",
+      "chance": 0.5,
+      "item": "minecraft:leather"
+    },
+    {
+      "chance": 0.5,
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "item": "minecraft:string"
+    },
+    {
+      "chance": 0.25,
       "count": 4,
-      "chance": 0.25
+      "item": "minecraft:iron_nugget"
     }
-  ],
-  "processingTime": 200
+  ]
 }

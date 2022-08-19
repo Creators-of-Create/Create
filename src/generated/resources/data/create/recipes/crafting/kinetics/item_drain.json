@@ -1,9 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "P",
-    "S"
-  ],
   "key": {
     "P": {
       "item": "minecraft:iron_bars"
@@ -12,6 +8,10 @@
       "item": "create:copper_casing"
     }
   },
+  "pattern": [
+    "P",
+    "S"
+  ],
   "result": {
     "item": "create:item_drain"
   }

@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "hexcasting"
+    }
+  ],
   "ingredients": [
     {
       "item": "hexcasting:akashic_wood_stripped"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "hexcasting:akashic_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "hexcasting",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "hexcasting:akashic_planks"
     }
   ]
 }

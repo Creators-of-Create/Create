@@ -5,47 +5,47 @@
       "x": 90,
       "y": 90
     },
-    "axis=y,sticky_bottom=false,sticky_top=false": {
-      "model": "create:block/secondary_linear_chassis"
-    },
-    "axis=z,sticky_bottom=false,sticky_top=false": {
-      "model": "create:block/secondary_linear_chassis",
+    "axis=x,sticky_bottom=false,sticky_top=true": {
+      "model": "create:block/secondary_linear_chassis_top",
       "x": 90,
-      "y": 180
+      "y": 90
     },
     "axis=x,sticky_bottom=true,sticky_top=false": {
       "model": "create:block/secondary_linear_chassis_bottom",
       "x": 90,
       "y": 90
     },
-    "axis=y,sticky_bottom=true,sticky_top=false": {
-      "model": "create:block/secondary_linear_chassis_bottom"
-    },
-    "axis=z,sticky_bottom=true,sticky_top=false": {
-      "model": "create:block/secondary_linear_chassis_bottom",
-      "x": 90,
-      "y": 180
-    },
-    "axis=x,sticky_bottom=false,sticky_top=true": {
-      "model": "create:block/secondary_linear_chassis_top",
+    "axis=x,sticky_bottom=true,sticky_top=true": {
+      "model": "create:block/secondary_linear_chassis_top_bottom",
       "x": 90,
       "y": 90
     },
+    "axis=y,sticky_bottom=false,sticky_top=false": {
+      "model": "create:block/secondary_linear_chassis"
+    },
     "axis=y,sticky_bottom=false,sticky_top=true": {
       "model": "create:block/secondary_linear_chassis_top"
+    },
+    "axis=y,sticky_bottom=true,sticky_top=false": {
+      "model": "create:block/secondary_linear_chassis_bottom"
+    },
+    "axis=y,sticky_bottom=true,sticky_top=true": {
+      "model": "create:block/secondary_linear_chassis_top_bottom"
+    },
+    "axis=z,sticky_bottom=false,sticky_top=false": {
+      "model": "create:block/secondary_linear_chassis",
+      "x": 90,
+      "y": 180
     },
     "axis=z,sticky_bottom=false,sticky_top=true": {
       "model": "create:block/secondary_linear_chassis_top",
       "x": 90,
       "y": 180
     },
-    "axis=x,sticky_bottom=true,sticky_top=true": {
-      "model": "create:block/secondary_linear_chassis_top_bottom",
+    "axis=z,sticky_bottom=true,sticky_top=false": {
+      "model": "create:block/secondary_linear_chassis_bottom",
       "x": 90,
-      "y": 90
-    },
-    "axis=y,sticky_bottom=true,sticky_top=true": {
-      "model": "create:block/secondary_linear_chassis_top_bottom"
+      "y": 180
     },
     "axis=z,sticky_bottom=true,sticky_top=true": {
       "model": "create:block/secondary_linear_chassis_top_bottom",

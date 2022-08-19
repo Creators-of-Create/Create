@@ -1,5 +1,6 @@
 {
   "type": "create:mixing",
+  "heatRequirement": "heated",
   "ingredients": [
     {
       "item": "minecraft:sugar"
@@ -8,15 +9,14 @@
       "item": "minecraft:cocoa_beans"
     },
     {
-      "fluidTag": "forge:milk",
-      "amount": 250
+      "amount": 250,
+      "fluidTag": "forge:milk"
     }
   ],
   "results": [
     {
-      "fluid": "create:chocolate",
-      "amount": 250
+      "amount": 250,
+      "fluid": "create:chocolate"
     }
-  ],
-  "heatRequirement": "heated"
+  ]
 }

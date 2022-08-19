@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A",
-    "A"
-  ],
   "key": {
     "A": {
       "item": "create:andesite_alloy"
     }
   },
+  "pattern": [
+    "A",
+    "A"
+  ],
   "result": {
-    "item": "create:shaft",
-    "count": 8
+    "count": 8,
+    "item": "create:shaft"
   }
 }

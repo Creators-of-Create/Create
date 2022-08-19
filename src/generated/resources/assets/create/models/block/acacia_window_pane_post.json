@@ -1,7 +1,7 @@
 {
   "parent": "create:block/connected_glass_pane/post",
   "textures": {
-    "pane": "create:block/palettes/acacia_window",
-    "edge": "minecraft:block/acacia_planks"
+    "edge": "minecraft:block/acacia_planks",
+    "pane": "create:block/palettes/acacia_window"
   }
 }

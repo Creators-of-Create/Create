@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
   "ingredients": [
     {
       "item": "twilightforest:stripped_dark_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "twilightforest:dark_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "twilightforest",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "twilightforest:dark_planks"
     }
   ]
 }

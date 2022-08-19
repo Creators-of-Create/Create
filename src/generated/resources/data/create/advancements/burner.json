@@ -1,24 +1,7 @@
 {
   "parent": "create:mechanical_mixer",
-  "display": {
-    "icon": {
-      "item": "create:blaze_burner"
-    },
-    "title": {
-      "translate": "advancement.create.burner"
-    },
-    "description": {
-      "color": "#DBA213",
-      "translate": "advancement.create.burner.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
   "criteria": {
     "0": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -27,7 +10,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.burner.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:blaze_burner"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.burner"
     }
   },
   "requirements": [

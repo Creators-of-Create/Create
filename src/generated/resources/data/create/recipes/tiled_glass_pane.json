@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "create:tiled_glass"
     }
   },
+  "pattern": [
+    "###",
+    "###"
+  ],
   "result": {
-    "item": "create:tiled_glass_pane",
-    "count": 16
+    "count": 16,
+    "item": "create:tiled_glass_pane"
   }
 }

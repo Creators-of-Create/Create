@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 1,
   "ingredient": {
     "tag": "create:stone_types/andesite"
   },
-  "result": "create:andesite_pillar",
-  "count": 1
+  "result": "create:andesite_pillar"
 }

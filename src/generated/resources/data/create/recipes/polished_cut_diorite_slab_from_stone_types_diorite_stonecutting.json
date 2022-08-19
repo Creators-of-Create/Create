@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 2,
   "ingredient": {
     "tag": "create:stone_types/diorite"
   },
-  "result": "create:polished_cut_diorite_slab",
-  "count": 2
+  "result": "create:polished_cut_diorite_slab"
 }

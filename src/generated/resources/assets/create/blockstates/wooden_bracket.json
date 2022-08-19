@@ -1,78 +1,39 @@
 {
   "variants": {
-    "axis_along_first=false,facing=down,type=pipe": {
-      "model": "create:block/bracket/pipe/ground_wooden",
-      "x": 180
-    },
-    "axis_along_first=true,facing=down,type=pipe": {
-      "model": "create:block/bracket/pipe/ground_wooden",
-      "x": 180,
-      "y": 90
-    },
-    "axis_along_first=false,facing=up,type=pipe": {
-      "model": "create:block/bracket/pipe/ground_wooden"
-    },
-    "axis_along_first=true,facing=up,type=pipe": {
-      "model": "create:block/bracket/pipe/ground_wooden",
-      "y": 90
-    },
-    "axis_along_first=false,facing=north,type=pipe": {
-      "model": "create:block/bracket/pipe/wall_wooden",
-      "x": 90,
-      "y": 270
-    },
-    "axis_along_first=true,facing=north,type=pipe": {
-      "model": "create:block/bracket/pipe/wall_wooden",
-      "y": 270
-    },
-    "axis_along_first=false,facing=south,type=pipe": {
-      "model": "create:block/bracket/pipe/wall_wooden",
-      "x": 90,
-      "y": 90
-    },
-    "axis_along_first=true,facing=south,type=pipe": {
-      "model": "create:block/bracket/pipe/wall_wooden",
-      "y": 90
-    },
-    "axis_along_first=false,facing=west,type=pipe": {
-      "model": "create:block/bracket/pipe/wall_wooden",
-      "y": 180
-    },
-    "axis_along_first=true,facing=west,type=pipe": {
-      "model": "create:block/bracket/pipe/wall_wooden",
-      "x": 90,
-      "y": 180
-    },
-    "axis_along_first=false,facing=east,type=pipe": {
-      "model": "create:block/bracket/pipe/wall_wooden"
-    },
-    "axis_along_first=true,facing=east,type=pipe": {
-      "model": "create:block/bracket/pipe/wall_wooden",
-      "x": 90
-    },
     "axis_along_first=false,facing=down,type=cog": {
       "model": "create:block/bracket/cog/ground_wooden",
       "x": 180
     },
-    "axis_along_first=true,facing=down,type=cog": {
-      "model": "create:block/bracket/cog/ground_wooden",
-      "x": 180,
-      "y": 90
+    "axis_along_first=false,facing=down,type=pipe": {
+      "model": "create:block/bracket/pipe/ground_wooden",
+      "x": 180
     },
-    "axis_along_first=false,facing=up,type=cog": {
-      "model": "create:block/bracket/cog/ground_wooden"
+    "axis_along_first=false,facing=down,type=shaft": {
+      "model": "create:block/bracket/shaft/ground_wooden",
+      "x": 180
     },
-    "axis_along_first=true,facing=up,type=cog": {
-      "model": "create:block/bracket/cog/ground_wooden",
-      "y": 90
+    "axis_along_first=false,facing=east,type=cog": {
+      "model": "create:block/bracket/cog/wall_wooden"
+    },
+    "axis_along_first=false,facing=east,type=pipe": {
+      "model": "create:block/bracket/pipe/wall_wooden"
+    },
+    "axis_along_first=false,facing=east,type=shaft": {
+      "model": "create:block/bracket/shaft/wall_wooden"
     },
     "axis_along_first=false,facing=north,type=cog": {
       "model": "create:block/bracket/cog/wall_wooden",
       "x": 90,
       "y": 270
     },
-    "axis_along_first=true,facing=north,type=cog": {
-      "model": "create:block/bracket/cog/wall_wooden",
+    "axis_along_first=false,facing=north,type=pipe": {
+      "model": "create:block/bracket/pipe/wall_wooden",
+      "x": 90,
+      "y": 270
+    },
+    "axis_along_first=false,facing=north,type=shaft": {
+      "model": "create:block/bracket/shaft/wall_wooden",
+      "x": 90,
       "y": 270
     },
     "axis_along_first=false,facing=south,type=cog": {
@@ -80,75 +41,114 @@
       "x": 90,
       "y": 90
     },
-    "axis_along_first=true,facing=south,type=cog": {
-      "model": "create:block/bracket/cog/wall_wooden",
-      "y": 90
-    },
-    "axis_along_first=false,facing=west,type=cog": {
-      "model": "create:block/bracket/cog/wall_wooden",
-      "y": 180
-    },
-    "axis_along_first=true,facing=west,type=cog": {
-      "model": "create:block/bracket/cog/wall_wooden",
+    "axis_along_first=false,facing=south,type=pipe": {
+      "model": "create:block/bracket/pipe/wall_wooden",
       "x": 90,
-      "y": 180
-    },
-    "axis_along_first=false,facing=east,type=cog": {
-      "model": "create:block/bracket/cog/wall_wooden"
-    },
-    "axis_along_first=true,facing=east,type=cog": {
-      "model": "create:block/bracket/cog/wall_wooden",
-      "x": 90
-    },
-    "axis_along_first=false,facing=down,type=shaft": {
-      "model": "create:block/bracket/shaft/ground_wooden",
-      "x": 180
-    },
-    "axis_along_first=true,facing=down,type=shaft": {
-      "model": "create:block/bracket/shaft/ground_wooden",
-      "x": 180,
       "y": 90
-    },
-    "axis_along_first=false,facing=up,type=shaft": {
-      "model": "create:block/bracket/shaft/ground_wooden"
-    },
-    "axis_along_first=true,facing=up,type=shaft": {
-      "model": "create:block/bracket/shaft/ground_wooden",
-      "y": 90
-    },
-    "axis_along_first=false,facing=north,type=shaft": {
-      "model": "create:block/bracket/shaft/wall_wooden",
-      "x": 90,
-      "y": 270
-    },
-    "axis_along_first=true,facing=north,type=shaft": {
-      "model": "create:block/bracket/shaft/wall_wooden",
-      "y": 270
     },
     "axis_along_first=false,facing=south,type=shaft": {
       "model": "create:block/bracket/shaft/wall_wooden",
       "x": 90,
       "y": 90
     },
+    "axis_along_first=false,facing=up,type=cog": {
+      "model": "create:block/bracket/cog/ground_wooden"
+    },
+    "axis_along_first=false,facing=up,type=pipe": {
+      "model": "create:block/bracket/pipe/ground_wooden"
+    },
+    "axis_along_first=false,facing=up,type=shaft": {
+      "model": "create:block/bracket/shaft/ground_wooden"
+    },
+    "axis_along_first=false,facing=west,type=cog": {
+      "model": "create:block/bracket/cog/wall_wooden",
+      "y": 180
+    },
+    "axis_along_first=false,facing=west,type=pipe": {
+      "model": "create:block/bracket/pipe/wall_wooden",
+      "y": 180
+    },
+    "axis_along_first=false,facing=west,type=shaft": {
+      "model": "create:block/bracket/shaft/wall_wooden",
+      "y": 180
+    },
+    "axis_along_first=true,facing=down,type=cog": {
+      "model": "create:block/bracket/cog/ground_wooden",
+      "x": 180,
+      "y": 90
+    },
+    "axis_along_first=true,facing=down,type=pipe": {
+      "model": "create:block/bracket/pipe/ground_wooden",
+      "x": 180,
+      "y": 90
+    },
+    "axis_along_first=true,facing=down,type=shaft": {
+      "model": "create:block/bracket/shaft/ground_wooden",
+      "x": 180,
+      "y": 90
+    },
+    "axis_along_first=true,facing=east,type=cog": {
+      "model": "create:block/bracket/cog/wall_wooden",
+      "x": 90
+    },
+    "axis_along_first=true,facing=east,type=pipe": {
+      "model": "create:block/bracket/pipe/wall_wooden",
+      "x": 90
+    },
+    "axis_along_first=true,facing=east,type=shaft": {
+      "model": "create:block/bracket/shaft/wall_wooden",
+      "x": 90
+    },
+    "axis_along_first=true,facing=north,type=cog": {
+      "model": "create:block/bracket/cog/wall_wooden",
+      "y": 270
+    },
+    "axis_along_first=true,facing=north,type=pipe": {
+      "model": "create:block/bracket/pipe/wall_wooden",
+      "y": 270
+    },
+    "axis_along_first=true,facing=north,type=shaft": {
+      "model": "create:block/bracket/shaft/wall_wooden",
+      "y": 270
+    },
+    "axis_along_first=true,facing=south,type=cog": {
+      "model": "create:block/bracket/cog/wall_wooden",
+      "y": 90
+    },
+    "axis_along_first=true,facing=south,type=pipe": {
+      "model": "create:block/bracket/pipe/wall_wooden",
+      "y": 90
+    },
     "axis_along_first=true,facing=south,type=shaft": {
       "model": "create:block/bracket/shaft/wall_wooden",
       "y": 90
     },
-    "axis_along_first=false,facing=west,type=shaft": {
-      "model": "create:block/bracket/shaft/wall_wooden",
+    "axis_along_first=true,facing=up,type=cog": {
+      "model": "create:block/bracket/cog/ground_wooden",
+      "y": 90
+    },
+    "axis_along_first=true,facing=up,type=pipe": {
+      "model": "create:block/bracket/pipe/ground_wooden",
+      "y": 90
+    },
+    "axis_along_first=true,facing=up,type=shaft": {
+      "model": "create:block/bracket/shaft/ground_wooden",
+      "y": 90
+    },
+    "axis_along_first=true,facing=west,type=cog": {
+      "model": "create:block/bracket/cog/wall_wooden",
+      "x": 90,
+      "y": 180
+    },
+    "axis_along_first=true,facing=west,type=pipe": {
+      "model": "create:block/bracket/pipe/wall_wooden",
+      "x": 90,
       "y": 180
     },
     "axis_along_first=true,facing=west,type=shaft": {
       "model": "create:block/bracket/shaft/wall_wooden",
       "x": 90,
       "y": 180
-    },
-    "axis_along_first=false,facing=east,type=shaft": {
-      "model": "create:block/bracket/shaft/wall_wooden"
-    },
-    "axis_along_first=true,facing=east,type=shaft": {
-      "model": "create:block/bracket/shaft/wall_wooden",
-      "x": 90
     }
   }
 }

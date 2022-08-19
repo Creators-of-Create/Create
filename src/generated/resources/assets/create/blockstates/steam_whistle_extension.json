@@ -1,84 +1,84 @@
 {
   "multipart": [
     {
-      "when": {
-        "size": "small",
-        "shape": "double"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/small_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "small"
       }
     },
     {
-      "when": {
-        "size": "small",
-        "shape": "single"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/small_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "small"
       }
     },
     {
-      "when": {
-        "size": "small",
-        "shape": "double|double_connected"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/small_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "small"
       }
     },
     {
-      "when": {
-        "size": "medium",
-        "shape": "double"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/medium_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "medium"
       }
     },
     {
-      "when": {
-        "size": "medium",
-        "shape": "single"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/medium_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "medium"
       }
     },
     {
-      "when": {
-        "size": "medium",
-        "shape": "double|double_connected"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/medium_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "medium"
       }
     },
     {
-      "when": {
-        "size": "large",
-        "shape": "double"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/large_top_rim"
+      },
+      "when": {
+        "shape": "double",
+        "size": "large"
       }
     },
     {
-      "when": {
-        "size": "large",
-        "shape": "single"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/large_single"
+      },
+      "when": {
+        "shape": "single",
+        "size": "large"
       }
     },
     {
-      "when": {
-        "size": "large",
-        "shape": "double|double_connected"
-      },
       "apply": {
         "model": "create:block/steam_whistle/extension/large_double"
+      },
+      "when": {
+        "shape": "double|double_connected",
+        "size": "large"
       }
     }
   ]

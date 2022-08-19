@@ -5,10 +5,10 @@
       "item": "minecraft:gravel"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
       "item": "minecraft:flint"
     }
-  ],
-  "processingTime": 250
+  ]
 }

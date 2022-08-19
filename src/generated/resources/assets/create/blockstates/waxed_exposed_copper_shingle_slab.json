@@ -1,13 +1,13 @@
 {
   "variants": {
-    "type=top": {
-      "model": "create:block/waxed_exposed_copper_shingle_slab_top"
-    },
     "type=bottom": {
       "model": "create:block/waxed_exposed_copper_shingle_slab"
     },
     "type=double": {
       "model": "create:block/exposed_copper_shingles"
+    },
+    "type=top": {
+      "model": "create:block/waxed_exposed_copper_shingle_slab_top"
     }
   }
 }

@@ -5,15 +5,15 @@
       "item": "minecraft:clay"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:clay_ball",
-      "count": 3
+      "count": 3,
+      "item": "minecraft:clay_ball"
     },
     {
-      "item": "minecraft:clay_ball",
-      "chance": 0.5
+      "chance": 0.5,
+      "item": "minecraft:clay_ball"
     }
-  ],
-  "processingTime": 50
+  ]
 }

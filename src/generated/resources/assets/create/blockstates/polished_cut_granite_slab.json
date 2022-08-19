@@ -1,13 +1,13 @@
 {
   "variants": {
-    "type=top": {
-      "model": "create:block/polished_cut_granite_slab_top"
-    },
     "type=bottom": {
       "model": "create:block/polished_cut_granite_slab"
     },
     "type=double": {
       "model": "create:block/polished_cut_granite_slab_double"
+    },
+    "type=top": {
+      "model": "create:block/polished_cut_granite_slab_top"
     }
   }
 }

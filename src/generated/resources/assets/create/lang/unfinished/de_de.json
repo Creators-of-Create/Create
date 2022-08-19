@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 838",
+	"_": "Missing Localizations: 840",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -576,6 +576,8 @@
 	"entity.create.stationary_contraption": "Stationäre Vorrichtung",
 	"entity.create.super_glue": "Sekundenkleber",
 
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
 	"fluid.create.potion": "Trank",
 	"fluid.create.tea": "Bauherrentee",
 

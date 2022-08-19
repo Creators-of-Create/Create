@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A A",
-    "ASA",
-    "AEA"
-  ],
   "key": {
     "A": {
       "tag": "forge:ingots/gold"
@@ -16,8 +11,13 @@
       "tag": "forge:rods/wooden"
     }
   },
+  "pattern": [
+    "A A",
+    "ASA",
+    "AEA"
+  ],
   "result": {
-    "item": "create:controller_rail",
-    "count": 6
+    "count": 6,
+    "item": "create:controller_rail"
   }
 }

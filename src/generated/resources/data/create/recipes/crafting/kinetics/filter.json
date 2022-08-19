@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:nuggets/iron"
+    },
+    "S": {
+      "tag": "minecraft:wool"
+    }
+  },
   "pattern": [
     "ASA"
   ],
-  "key": {
-    "S": {
-      "tag": "minecraft:wool"
-    },
-    "A": {
-      "tag": "forge:nuggets/iron"
-    }
-  },
   "result": {
     "item": "create:filter"
   }

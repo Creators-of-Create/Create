@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 2,
   "ingredient": {
     "tag": "create:stone_types/deepslate"
   },
-  "result": "create:small_deepslate_brick_slab",
-  "count": 2
+  "result": "create:small_deepslate_brick_slab"
 }

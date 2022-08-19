@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "B",
-    "C",
-    "B"
-  ],
   "key": {
     "B": {
       "tag": "forge:plates/copper"
@@ -13,6 +8,11 @@
       "tag": "forge:barrels/wooden"
     }
   },
+  "pattern": [
+    "B",
+    "C",
+    "B"
+  ],
   "result": {
     "item": "create:fluid_tank"
   }

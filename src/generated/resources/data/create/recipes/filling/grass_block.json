@@ -5,9 +5,9 @@
       "item": "minecraft:dirt"
     },
     {
+      "amount": 500,
       "fluid": "minecraft:water",
-      "nbt": {},
-      "amount": 500
+      "nbt": {}
     }
   ],
   "results": [

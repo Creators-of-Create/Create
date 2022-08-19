@@ -1,9 +1,46 @@
 {
   "variants": {
+    "facing=east,has_book=false,powered=false": {
+      "model": "minecraft:block/lectern",
+      "y": 90
+    },
+    "facing=east,has_book=false,powered=true": {
+      "model": "minecraft:block/lectern",
+      "y": 90
+    },
+    "facing=east,has_book=true,powered=false": {
+      "model": "minecraft:block/lectern",
+      "y": 90
+    },
+    "facing=east,has_book=true,powered=true": {
+      "model": "minecraft:block/lectern",
+      "y": 90
+    },
     "facing=north,has_book=false,powered=false": {
       "model": "minecraft:block/lectern"
     },
+    "facing=north,has_book=false,powered=true": {
+      "model": "minecraft:block/lectern"
+    },
+    "facing=north,has_book=true,powered=false": {
+      "model": "minecraft:block/lectern"
+    },
+    "facing=north,has_book=true,powered=true": {
+      "model": "minecraft:block/lectern"
+    },
     "facing=south,has_book=false,powered=false": {
+      "model": "minecraft:block/lectern",
+      "y": 180
+    },
+    "facing=south,has_book=false,powered=true": {
+      "model": "minecraft:block/lectern",
+      "y": 180
+    },
+    "facing=south,has_book=true,powered=false": {
+      "model": "minecraft:block/lectern",
+      "y": 180
+    },
+    "facing=south,has_book=true,powered=true": {
       "model": "minecraft:block/lectern",
       "y": 180
     },
@@ -11,54 +48,17 @@
       "model": "minecraft:block/lectern",
       "y": 270
     },
-    "facing=east,has_book=false,powered=false": {
+    "facing=west,has_book=false,powered=true": {
       "model": "minecraft:block/lectern",
-      "y": 90
-    },
-    "facing=north,has_book=true,powered=false": {
-      "model": "minecraft:block/lectern"
-    },
-    "facing=south,has_book=true,powered=false": {
-      "model": "minecraft:block/lectern",
-      "y": 180
+      "y": 270
     },
     "facing=west,has_book=true,powered=false": {
       "model": "minecraft:block/lectern",
       "y": 270
     },
-    "facing=east,has_book=true,powered=false": {
-      "model": "minecraft:block/lectern",
-      "y": 90
-    },
-    "facing=north,has_book=false,powered=true": {
-      "model": "minecraft:block/lectern"
-    },
-    "facing=south,has_book=false,powered=true": {
-      "model": "minecraft:block/lectern",
-      "y": 180
-    },
-    "facing=west,has_book=false,powered=true": {
-      "model": "minecraft:block/lectern",
-      "y": 270
-    },
-    "facing=east,has_book=false,powered=true": {
-      "model": "minecraft:block/lectern",
-      "y": 90
-    },
-    "facing=north,has_book=true,powered=true": {
-      "model": "minecraft:block/lectern"
-    },
-    "facing=south,has_book=true,powered=true": {
-      "model": "minecraft:block/lectern",
-      "y": 180
-    },
     "facing=west,has_book=true,powered=true": {
       "model": "minecraft:block/lectern",
       "y": 270
-    },
-    "facing=east,has_book=true,powered=true": {
-      "model": "minecraft:block/lectern",
-      "y": 90
     }
   }
 }

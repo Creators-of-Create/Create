@@ -5,11 +5,11 @@
       "item": "minecraft:stripped_oak_log"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:oak_planks",
-      "count": 6
+      "count": 6,
+      "item": "minecraft:oak_planks"
     }
-  ],
-  "processingTime": 50
+  ]
 }

@@ -5,15 +5,15 @@
       "item": "minecraft:wither_rose"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:black_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:black_dye"
     },
     {
-      "item": "minecraft:black_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:black_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

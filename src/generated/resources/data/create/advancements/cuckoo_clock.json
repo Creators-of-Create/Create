@@ -1,25 +1,25 @@
 {
   "parent": "create:stressometer",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:cuckoo_clock_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:cuckoo_clock"
-    },
-    "title": {
-      "translate": "advancement.create.cuckoo_clock"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.cuckoo_clock.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:cuckoo_clock"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:cuckoo_clock_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.cuckoo_clock"
     }
   },
   "requirements": [

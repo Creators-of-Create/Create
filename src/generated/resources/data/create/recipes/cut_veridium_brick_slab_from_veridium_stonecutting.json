@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 2,
   "ingredient": {
     "item": "create:veridium"
   },
-  "result": "create:cut_veridium_brick_slab",
-  "count": 2
+  "result": "create:cut_veridium_brick_slab"
 }
