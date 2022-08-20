@@ -1104,8 +1104,8 @@
 	"create.gui.sequenced_gearshift.instruction.await.descriptive": "Ожидать нового редстоун-сигнала",
 	"create.gui.sequenced_gearshift.instruction.await": "Сигнал",
 	"create.gui.sequenced_gearshift.speed": "Скорость, направление",
-	"create.gui.sequenced_gearshift.speed.forward": "Обычная скорость, вперед",
-	"create.gui.sequenced_gearshift.speed.forward_fast": "Двойная скорость, вперед",
+	"create.gui.sequenced_gearshift.speed.forward": "Обычная скорость, вперёд",
+	"create.gui.sequenced_gearshift.speed.forward_fast": "Двойная скорость, вперёд",
 	"create.gui.sequenced_gearshift.speed.back": "Обычная скорость, реверс",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Двойная скорость, реверс",
 
@@ -1579,7 +1579,7 @@
 	"create.train_assembly.bogeys_too_close": "Вагонные тележки %1$s и %2$s слишком близко друг к другу.",
 	"create.train_assembly.single_bogey_carriage": "Эта вагонная тележка не может поддерживать вагон самостоятельно.",
 	"create.train_assembly.nothing_attached": "Структура не склеена с вагонной тележкой № %1$s.",
-	"create.train_assembly.no_controls": "В поезде должен быть установлен как минимум один контроллер, обращённый вперед.",
+	"create.train_assembly.no_controls": "В поезде должен быть установлен как минимум один контроллер, обращённый вперёд.",
 	"create.train_assembly.sideways_controls": "Контроллер поезда направлен не вперёд.",
 	"create.train_assembly.bogey_created": "Разместите ещё одну тележку, нажав на выделенные пути",
 	"create.train_assembly.requires_casing": "Используйте Ж/д корпус для создания вагонных тележек на путях",
@@ -1910,9 +1910,9 @@
 	"item.create.goggles.tooltip": "ИНЖЕНЕРНЫЕ ОЧКИ",
 	"item.create.goggles.tooltip.summary": "Очки для улучшения зрения с помощью полезной кинетической информации.",
 	"item.create.goggles.tooltip.condition1": "Когда надеты",
-	"item.create.goggles.tooltip.behaviour1": "Показывает _цветные_ _индикаторы_, соответствующие _уровню_ _скорости_ размещённого кинетического компонента, а также _создаваемой нагрузке_ и _мощности_ отдельных компонентов.",
+	"item.create.goggles.tooltip.behaviour1": "Показывает _цветные_ _индикаторы_, соответствующие _уровню_ _скорости_ размещённого кинетического компонента, а также _создаваемой нагрузки_ и _мощности_ отдельных компонентов.",
 	"item.create.goggles.tooltip.condition2": "При взгляде на датчик",
-	"item.create.goggles.tooltip.behaviour2": "Показывает подробную информацию о скорости или нагрузке сети, к которой подключён датчик.",
+	"item.create.goggles.tooltip.behaviour2": "Показывает подробную информацию о скорости или нагрузки сети, к которой подключён датчик.",
 	"item.create.goggles.tooltip.condition3": "При взгляде на жидкостные контейнеры",
 	"item.create.goggles.tooltip.behaviour3": "Показывает детализированную информацию о _Ёмкости_ блока и о хранящейся в нём хранится _Жидкости_.",
 
@@ -1956,9 +1956,9 @@
 	"block.create.content_observer.tooltip.behaviour2": "Выдаёт _редстоун-сигнал_, пока содержимое совпадает с _перемещаемым_ предметом.",
 
 	"block.create.creative_crate.tooltip": "ТВОРЧЕСКИЙ ЯЩИК",
-	"block.create.creative_crate.tooltip.summary": "Это _хранилище_ позволяет _бесконечно_ _дублировать_ любой предмет. Поместите рядом со схематичной пушкой, чтобы удалить любые требования к материалам.",
+	"block.create.creative_crate.tooltip.summary": "Это _хранилище_ позволяет _бесконечно_ _дублировать_ любой предмет. Поместите рядом со Схематичной пушкой, чтобы удалить любые требования к материалам.",
 	"block.create.creative_crate.tooltip.condition1": "Когда предмет в слоте фильтра",
-	"block.create.creative_crate.tooltip.behaviour1": "Все, что извлечено из этого контейнера, обеспечит бесконечную поставку указанного предмета. Предметы, _помещённые_ в этот ящик, будут _уничтожены_.",
+	"block.create.creative_crate.tooltip.behaviour1": "Всё, что извлечено из этого контейнера, обеспечит бесконечную поставку указанного предмета. Предметы, _помещённые_ в этот ящик, будут _уничтожены_.",
 
 	"item.create.creative_blaze_cake.tooltip": "ТВОРЧЕСКИЙ ТОРТ",
 	"item.create.creative_blaze_cake.tooltip.summary": "Особое угощение для ваших _Горелок всполоха_. После поедания этого торта у Горелки всполоха _никогда не закончится топливо_.",
@@ -2436,10 +2436,10 @@
 	"create.ponder.funnel_direction.text_5": "Воронки на конвейерах будут извлекать/вводить предметы в зависимости от направления их движения",
 
 	"create.ponder.funnel_intro.header": "Использованием Воронок",
-	"create.ponder.funnel_intro.text_1": "Воронки идеально подходят для перемещения предметов из и в хранилища",
+	"create.ponder.funnel_intro.text_1": "Воронки идеально подходят для перемещения предметов из/в хранилища",
 
 	"create.ponder.funnel_redstone.header": "Управлением Воронкой редстоун-сигналом",
-	"create.ponder.funnel_redstone.text_1": "Редстоун-сигнал не даст любой воронке работать",
+	"create.ponder.funnel_redstone.text_1": "Редстоун-сигнал не даст любой Воронке работать",
 
 	"create.ponder.funnel_transfer.header": "Передачей Воронкой напрямую",
 	"create.ponder.funnel_transfer.text_1": "Воронки не могут перемещать предметы напрямую между закрытыми инвентарями",
@@ -2451,19 +2451,19 @@
 	"create.ponder.gantry_carriage.text_2": "Крановые установки могут двигать присоединённые Блоки",
 
 	"create.ponder.gantry_cascaded.header": "Созданием Многоступенчатого портального крана",
-	"create.ponder.gantry_cascaded.text_1": "Валы портального крана прикрепляются к шасси без нужды в суперклее",
-	"create.ponder.gantry_cascaded.text_2": "То же относится и к шасси на движущихся Валах портального крана",
-	"create.ponder.gantry_cascaded.text_3": "Таким образом крановая система может покрывать несколько осей движения",
+	"create.ponder.gantry_cascaded.text_1": "Валы портального крана прикрепляются к Шасси без нужды в Суперклее",
+	"create.ponder.gantry_cascaded.text_2": "То же относится и к Шасси на движущихся Валах портального крана",
+	"create.ponder.gantry_cascaded.text_3": "Таким образом крановая установка может покрывать несколько осей движения",
 
 	"create.ponder.gantry_direction.header": "Направлением движения крана",
 	"create.ponder.gantry_direction.text_1": "Валы портального крана могут иметь два противоположных направления",
-	"create.ponder.gantry_direction.text_2": "Направление движения шасси зависит от ориентации их валов",
-	"create.ponder.gantry_direction.text_3": "...а также от направления вращения вала",
+	"create.ponder.gantry_direction.text_2": "Направление движения Шасси зависит от ориентации их Валов",
+	"create.ponder.gantry_direction.text_3": "...а также от направления вращения Вала",
 	"create.ponder.gantry_direction.text_4": "Те же правила относятся к передаваемому вращению",
 
 	"create.ponder.gantry_redstone.header": "Краном и редстоун-сигнале",
-	"create.ponder.gantry_redstone.text_1": "Активированные редстоун-сигналом валы крана перестают двигать шасси",
-	"create.ponder.gantry_redstone.text_2": "Вместо этого сила вращения передаётся выходному валу шасси",
+	"create.ponder.gantry_redstone.text_1": "Активированные редстоун-сигналом валы крана перестают двигать Шасси",
+	"create.ponder.gantry_redstone.text_2": "Вместо этого сила вращения передаётся выходному валу Шасси",
 
 	"create.ponder.gantry_shaft.header": "Использованием Валов портального крана",
 	"create.ponder.gantry_shaft.text_1": "Валы портального крана составляют основу крановой установки. По ним будут двигаться присоединённые Шасси",
@@ -2684,9 +2684,9 @@
 	"create.ponder.millstone.text_5": "Продукты также можно вывести автоматически",
 
 	"create.ponder.nixie_tube.header": "Использованием Газоразрядных индикаторов",
-	"create.ponder.nixie_tube.text_1": "При подаче редстоун-сигнала, Газоразрядные индикаторы отобразят его силу.",
-	"create.ponder.nixie_tube.text_2": "С помощью бирок, отредактированных на наковальне, вы можете отобразить любой текст.",
-	"create.ponder.nixie_tube.text_3": "Щёлкните ПКМ с красителем, чтобы изменить цвет их дисплея",
+	"create.ponder.nixie_tube.text_1": "При подаче редстоун-сигнала, Газоразрядные индикаторы отобразят его силу",
+	"create.ponder.nixie_tube.text_2": "С помощью бирок, отредактированных на наковальне, вы можете отобразить любой текст",
+	"create.ponder.nixie_tube.text_3": "Щёлкните ПКМ с красителем, чтобы изменить цвет их индикаторов",
 
 	"create.ponder.piston_pole.header": "Удлинителями Механического поршня",
 	"create.ponder.piston_pole.text_1": "Без присоединённых Удлинителей, Механический поршень не может двигаться",
@@ -2818,14 +2818,14 @@
 
 	"create.ponder.smart_pipe.header": "Управлением жидкостным потоком с помощью Умных труб",
 	"create.ponder.smart_pipe.text_1": "Умные трубы могут помочь управлять потоками по типам жидкостей",
-	"create.ponder.smart_pipe.text_2": "Размещенные непосредственно у источника, они могут указывать тип извлекаемой жидкости",
+	"create.ponder.smart_pipe.text_2": "Размещённые непосредственно у источника, они могут указывать тип извлекаемой жидкости",
 	"create.ponder.smart_pipe.text_3": "Просто щёлкните ПКМ по слоту фильтра с любым предметом, содержащим нужную жидкость",
-	"create.ponder.smart_pipe.text_4": "И при размещении глубже по сети труб умные трубы будут пропускать только подходящие жидкости.",
+	"create.ponder.smart_pipe.text_4": "И при размещении дальше по трубопроводу Умные трубы будут пропускать только подходящие жидкости",
 
 	"create.ponder.speedometer.header": "Мониторингом кинетической информации при помощи Спидометра",
 	"create.ponder.speedometer.text_1": "Спидометры отображают текущую скорость присоединённых компонентов",
 	"create.ponder.speedometer.text_2": "При ношении Инженерных очков игрок может получить более полную информацию от прибора",
-	"create.ponder.speedometer.text_3": "Компараторы могут испускать аналоговый редстоун-сигнал относительно измерений спидометра",
+	"create.ponder.speedometer.text_3": "Компараторы могут испускать аналоговый редстоун-сигнал относительно измерений Спидометра",
 
 	"create.ponder.spout_filling.header": "Наполнением предметов при помощи Дозатора",
 	"create.ponder.spout_filling.text_1": "Дозатор может заполнять подходящие предметы, расположенные под ним",
@@ -2996,7 +2996,7 @@
 	"create.ponder.weighted_ejector.text_5": "Если не было выбрано подходящей цели, она будет целиться в блок перед ней",
 	"create.ponder.weighted_ejector.text_6": "Предоставьте силу вращения, чтобы зарядить её",
 	"create.ponder.weighted_ejector.text_7": "Попадание предметов на катапульту вызывает её срабатывание",
-	"create.ponder.weighted_ejector.text_8": "Если целью был выбран инвентарь, то катапульта будет ждать, пока в нём не появится место.",
+	"create.ponder.weighted_ejector.text_8": "Если целью был выбран инвентарь, то катапульта будет ждать, пока в нём не появится место",
 	"create.ponder.weighted_ejector.text_9": "При помощи Ключа можно настроить необходимый размер стака",
 
 	"create.ponder.weighted_ejector_redstone.header": "Управлением Взвешенной катапультой редстоун-сигналом",
