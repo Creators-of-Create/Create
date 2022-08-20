@@ -858,7 +858,7 @@
 
 	"_": "->------------------------]  Интерфейс, подсказки и сообщения  [------------------------<-",
 
-	"itemGroup.create.base": "Create: Механизмы",
+	"itemGroup.create.base": "Create: Основное",
 	"itemGroup.create.palettes": "Create: Декор",
 
 	"death.attack.create.crush": "%1$s был передроблен",
@@ -902,8 +902,8 @@
 	"create.recipe.deploying": "Автономное создание",
 	"create.recipe.automatic_shapeless": "Бесформенная сборка",
 	"create.recipe.automatic_brewing": "Автоматическая варка",
-	"create.recipe.packing": "Уплотнение",
-	"create.recipe.automatic_packing": "Спрессовывание",
+	"create.recipe.packing": "Спрессовывание",
+	"create.recipe.automatic_packing": "Упаковка",
 	"create.recipe.sawing": "Распиловка",
 	"create.recipe.mechanical_crafting": "Механическое создание",
 	"create.recipe.automatic_shaped": "Форменная сборка",
@@ -2615,7 +2615,7 @@
 
 	"create.ponder.mechanical_mixer.header": "Обработкой предметов Механическим миксером",
 	"create.ponder.mechanical_mixer.text_1": "При помощи Миксера и Чаши можно автоматизировать некоторые рецепты крафта",
-	"create.ponder.mechanical_mixer.text_2": "Доступные рецепты включают любые бесформенные рецепты крафта и некоторые другие",
+	"create.ponder.mechanical_mixer.text_2": "Доступные рецепты включают бесформенную сборку и автоматическую варку зелий",
 	"create.ponder.mechanical_mixer.text_3": "Некоторым рецептам может потребоваться тепло от Горелки всполоха",
 	"create.ponder.mechanical_mixer.text_4": "Слот для фильтра можно использовать в случае конфликта двух рецептов",
 
@@ -2640,9 +2640,9 @@
 	"create.ponder.mechanical_press.text_3": "Когда предметы подаются на конвейере...",
 	"create.ponder.mechanical_press.text_4": "...Пресс будет задерживать и прессовать их автоматически",
 
-	"create.ponder.mechanical_press_compacting.header": "Спрессовыванием предметов Механическим прессом",
+	"create.ponder.mechanical_press_compacting.header": "Спрессовыванием и упаковкой предметов Механическим прессом",
 	"create.ponder.mechanical_press_compacting.text_1": "Спрессовывание предметов в Чаше скомпонует их",
-	"create.ponder.mechanical_press_compacting.text_2": "Спрессовывание включает в себя любые заполненные 2x2 или 3x3 рецепты крафта и некоторые другие",
+	"create.ponder.mechanical_press_compacting.text_2": "Спрессовывание и упаковка включают в себя любые заполненные 2x2 или 3x3 рецепты крафта и некоторые другие",
 	"create.ponder.mechanical_press_compacting.text_3": "Некоторым рецептам может потребоваться тепло от Горелки всполоха",
 	"create.ponder.mechanical_press_compacting.text_4": "Слот для фильтра можно использовать в случае конфликта двух рецептов",
 
@@ -2678,10 +2678,10 @@
 
 	"create.ponder.millstone.header": "Обработкой предметов Жерновами",
 	"create.ponder.millstone.text_1": "Жернова обрабатывают предметы перемалывая их",
-	"create.ponder.millstone.text_2": "Их можно запустить при помощи шестерней с любой стороны",
-	"create.ponder.millstone.text_3": "Бросьте или внесите предметы сверху",
+	"create.ponder.millstone.text_2": "Их можно запустить при помощи шестерней с любой стороны или валом снизу",
+	"create.ponder.millstone.text_3": "Бросьте или положите предметы сверху",
 	"create.ponder.millstone.text_4": "После некоторого времени результат можно забрать при помощи ПКМ",
-	"create.ponder.millstone.text_5": "Продукты также можно вывести автоматически",
+	"create.ponder.millstone.text_5": "Продукты помола также можно вывести автоматически",
 
 	"create.ponder.nixie_tube.header": "Использованием Газоразрядных индикаторов",
 	"create.ponder.nixie_tube.text_1": "При подаче редстоун-сигнала, Газоразрядные индикаторы отобразят его силу",
@@ -2690,7 +2690,7 @@
 
 	"create.ponder.piston_pole.header": "Удлинителями Механического поршня",
 	"create.ponder.piston_pole.text_1": "Без присоединённых Удлинителей, Механический поршень не может двигаться",
-	"create.ponder.piston_pole.text_2": "Длина стержня, добавленного к его задней части, определяет Диапазон выдвижения.",
+	"create.ponder.piston_pole.text_2": "Длина стержня, добавленного к задней части Механического поршня, определяет диапазон выдвижения",
 
 	"create.ponder.portable_fluid_interface.header": "Портативным жидкостным интерфейсом на штуковинах",
 	"create.ponder.portable_fluid_interface.text_1": "Жидкостные баки на движущихся штуковинах не могут быть доступны никаким трубам",
@@ -2952,7 +2952,7 @@
 	"create.ponder.train_signal_placement.text_4": "...если не добавлен второй Светофор, направленный в противоположную сторону",
 	"create.ponder.train_signal_placement.text_5": "К Светофорам можно прикрепить Газоразрядный индикатор, чтобы сделать сигнальные огни более заметными",
 
-	"create.ponder.train_signal_redstone.header": "Железнодорожными светофорами и редстоун-сигнале",
+	"create.ponder.train_signal_redstone.header": "Железнодорожным светофором и редстоун-сигнале",
 	"create.ponder.train_signal_redstone.text_1": "Сигнал Светофора может быть переключен вручную с помощью редстоун-сигнала",
 	"create.ponder.train_signal_redstone.text_2": "И наоборот, запрещающий сигнал Светофора, испускает редстоун-сигнал, получаемый компаратором",
 
@@ -2974,7 +2974,7 @@
 	"create.ponder.valve_handle.text_4": "Держите ПКМ крадучись для вращения по часовой стрелке",
 	"create.ponder.valve_handle.text_5": "Вентили можно окрашивать в эстетических целях",
 
-	"create.ponder.valve_pipe.header": "Управлением потоком жидкости с помощью Жидкостных клапанов",
+	"create.ponder.valve_pipe.header": "Управлением потоком с помощью Жидкостных клапанов",
 	"create.ponder.valve_pipe.text_1": "Жидкостные клапаны помогают контролировать распространение жидкостей по трубопроводу",
 	"create.ponder.valve_pipe.text_2": "Их входной вал контролирует, разрешена ли подача жидкости в данный момент",
 	"create.ponder.valve_pipe.text_3": "При вращении в нужном направлении — клапан откроется",
