@@ -2106,7 +2106,7 @@
 	"create.ponder.tag.contraption_actor": "Компоненты штуковин",
 	"create.ponder.tag.contraption_actor.description": "Компоненты, проявляющие особое поведение когда прикреплены к двигающейся штуковине",
 	"create.ponder.tag.creative": "Творческий режим",
-	"create.ponder.tag.creative.description": "Компоненты обычно недоступные в Режиме Выживания",
+	"create.ponder.tag.creative.description": "Компоненты, обычно недоступные в режиме выживания",
 	"create.ponder.tag.display_sources": "Источники информации",
 	"create.ponder.tag.display_sources.description": "Компоненты или блоки, которые предлагают данные, которые можно прочитать с помощью Передатчика информации",
 	"create.ponder.tag.logistics": "Логистика",
@@ -2127,7 +2127,7 @@
 	"create.ponder.andesite_tunnel.text_3": "...он будет отделять ровно один предмет из любых проходящих мимо стаков",
 	"create.ponder.andesite_tunnel.text_4": "Остаток продолжит свой путь",
 
-	"create.ponder.auto_schedule.header": "Станциями и автоматической выдачей расписаний",
+	"create.ponder.auto_schedule.header": "Станцией и автоматической выдачей Расписания",
 	"create.ponder.auto_schedule.text_1": "Расписания могут использоваться для предоставления машинистам пункта назначения",
 	"create.ponder.auto_schedule.text_2": "Компараторы будут получать редстоун-сигнал всегда, когда поезд прибыл на Станцию",
 	"create.ponder.auto_schedule.text_3": "Имейте в виду, что к Станции можно подойти только с указанного направления",
@@ -2479,7 +2479,7 @@
 	"create.ponder.gearshift.text_1": "Реверсивные коробки передач передают вращение по прямой",
 	"create.ponder.gearshift.text_2": "При активации редстоун-сигналом, они реверсируют передачу",
 
-	"create.ponder.hand_crank.header": "Генерацией силы вращения при помощи Рукояток",
+	"create.ponder.hand_crank.header": "Генерацией силы вращения Рукоятками",
 	"create.ponder.hand_crank.text_1": "Рукоятки могут быть использованы игроками для создания силы вращения вручную",
 	"create.ponder.hand_crank.text_2": "Держите ПКМ, чтобы повернуть их против часовой стрелки",
 	"create.ponder.hand_crank.text_3": "Их скорость вращения относительно высока",
@@ -2513,7 +2513,7 @@
 	"create.ponder.item_drain.text_4": "...они переворачиваются, выливая содержащуюся в них жидкость",
 	"create.ponder.item_drain.text_5": "Трубы могут вытягивать жидкость из внутреннего хранилища Осушителей",
 
-	"create.ponder.item_vault_sizes.header": "Размерами Хранилища предметов",
+	"create.ponder.item_vault_sizes.header": "Свойствами Хранилищ предметов",
 	"create.ponder.item_vault_sizes.text_1": "Хранилища предметов можно объединять для увеличения общей вместимости",
 	"create.ponder.item_vault_sizes.text_2": "Их базовая площадь может быть шириной до 3 блоков...",
 	"create.ponder.item_vault_sizes.text_3": "...и увеличиваться в длину до 3 диаметров",
@@ -2841,7 +2841,7 @@
 	"create.ponder.stabilized_bearings.text_3": "Опять же, подшипники присоединяют блоки перед ними",
 	"create.ponder.stabilized_bearings.text_4": "И в результате целая под-структура будет держаться ровно",
 
-	"create.ponder.steam_engine.header": "Настройкой Паровых двигателей",
+	"create.ponder.steam_engine.header": "Генерацией силы вращения Паровыми двигателями",
 	"create.ponder.steam_engine.text_1": "Паровые двигатели можно разместить на Жидкостном баке",
 	"create.ponder.steam_engine.text_10": "4 уровень",
 	"create.ponder.steam_engine.text_11": "4 двигателя",
@@ -2948,9 +2948,9 @@
 	"create.ponder.train_signal_placement.header": "Размещением Железнодорожных светофоров",
 	"create.ponder.train_signal_placement.text_1": "Выберите Железнодорожный путь, затем разместите Светофор поблизости",
 	"create.ponder.train_signal_placement.text_2": "Светофоры регулируют поток поездов, которые управляются не игроками",
-	"create.ponder.train_signal_placement.text_3": "Поезда следующие по расписанию никогда не будут пересекать Светофоры в противоположном направлении",
-	"create.ponder.train_signal_placement.text_4": "...если не добавлен второй Светофор, направленный в противоположную сторону",
-	"create.ponder.train_signal_placement.text_5": "К Светофорам можно прикрепить Газоразрядный индикатор, чтобы сделать сигнальные огни более заметными",
+	"create.ponder.train_signal_placement.text_3": "Поезда следующие по расписанию никогда не будут пересекать Светофоры в противоположном направлении...",
+	"create.ponder.train_signal_placement.text_4": "...если не был добавлен второй Светофор, направленный в противоположную сторону",
+	"create.ponder.train_signal_placement.text_5": "К Светофорам можно прикрепить Газоразрядный индикатор, чтобы сделать их сигнальные огни более заметными",
 
 	"create.ponder.train_signal_redstone.header": "Железнодорожным светофором и редстоун-сигнале",
 	"create.ponder.train_signal_redstone.text_1": "Сигнал Светофора может быть переключен вручную с помощью редстоун-сигнала",
@@ -2967,7 +2967,7 @@
 	"create.ponder.train_signal_signaling.text_8": "...не смогут сразу покинуть сегмент",
 	"create.ponder.train_signal_signaling.text_9": "Это помогает удерживать поезда, стоящие в очереди, вне загруженного сегмента",
 
-	"create.ponder.valve_handle.header": "Генерацией силы вращения при помощи Вентилей",
+	"create.ponder.valve_handle.header": "Генерацией силы вращения Вентилями",
 	"create.ponder.valve_handle.text_1": "Игроки могут использовать Вентили для применения силы вращения вручную",
 	"create.ponder.valve_handle.text_2": "Держите ПКМ для вращения против часовой стрелки",
 	"create.ponder.valve_handle.text_3": "Передаваемая ими скорость медленная и поступательная",
@@ -2980,7 +2980,7 @@
 	"create.ponder.valve_pipe.text_3": "При вращении в нужном направлении — клапан откроется",
 	"create.ponder.valve_pipe.text_4": "Его можно снова закрыть, изменив направление вращения",
 
-	"create.ponder.water_wheel.header": "Генерацией силы вращения при помощи Водяных колёс",
+	"create.ponder.water_wheel.header": "Генерацией силы вращения Водяными колёс",
 	"create.ponder.water_wheel.text_1": "Водяные колёса берут силу соседних потоков воды",
 	"create.ponder.water_wheel.text_2": "Чем больше сторон запитано, тем быстрее будет вращаться Водяное колесо",
 	"create.ponder.water_wheel.text_3": "Лопасти колеса должны быть направлены против течения",
@@ -3010,7 +3010,7 @@
 	"create.ponder.weighted_ejector_tunnel.text_4": "Пока новый стак нужного количества лежит на боковом выходе...",
 	"create.ponder.weighted_ejector_tunnel.text_5": "...остаток продолжит свой путь",
 
-	"create.ponder.windmill_source.header": "Генерацией силы вращения при помощи Подшипников ветряной мельницы",
+	"create.ponder.windmill_source.header": "Генерацией силы вращения Подшипниками ветряной мельницы",
 	"create.ponder.windmill_source.text_1": "Подшипники ветряной мельницы прикрепляются к блокам перед ними",
 	"create.ponder.windmill_source.text_2": "Если прикреплено достаточно парусоподобных блоков, он может стать мельницей",
 	"create.ponder.windmill_source.text_3": "Активированный, при помощи ПКМ, Подшипник ветряной мельницы начнёт вырабатывать силу вращения",
