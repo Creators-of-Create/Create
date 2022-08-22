@@ -1,6 +1,6 @@
 {
 	"_": "Missing Localizations: -",
-
+    "_": "Рекомендации по локализации: https://telegra.ph/Rekomendacii-po-lokalizacii-moda-Create-na-russkij-yazyk-08-22 ",
 	"_": "->------------------------]  Элементы игры  [------------------------<-",
 
 	"block.create.acacia_window": "Акациевое окно",
@@ -1808,10 +1808,10 @@
 	"item.create.example_item.tooltip.action1": "These controls are displayed.",
 
 	"block.create.wooden_bracket.tooltip": "ДЕРЕВЯННАЯ СКОБА",
-	"block.create.wooden_bracket.tooltip.summary": "_Украсьте_ ваши _валы, шестерни_ и _трубы_, используя уютное деревянное укрепление.",
+	"block.create.wooden_bracket.tooltip.summary": "_Украсьте_ ваши _Валы, Шестерни_ и _Трубы_, используя уютное деревянное укрепление.",
 
 	"block.create.metal_bracket.tooltip": "МЕТАЛЛИЧЕСКАЯ СКОБА",
-	"block.create.metal_bracket.tooltip.summary": "_Украсьте_ ваши _валы, шестерни_ и _трубы_, используя прочное индустриальное укрепление.",
+	"block.create.metal_bracket.tooltip.summary": "_Украсьте_ ваши _Валы, Шестерни_ и _Трубы_, используя прочное индустриальное укрепление.",
 
 	"block.create.seat.tooltip": "СИДЕНЬЕ",
 	"block.create.seat.tooltip.summary": "Присядьте и насладитесь поездкой! Привязывает игроков к собранным _устройствам_. Отлично выглядит как простая мебель! Можно окрасить в разные цвета.",
@@ -1826,7 +1826,7 @@
 	"item.create.wand_of_symmetry.tooltip.condition1": "На панели быстрого доступа.",
 	"item.create.wand_of_symmetry.tooltip.behaviour1": "Остаётся активным.",
 	"item.create.wand_of_symmetry.tooltip.control1": "ПКМ по блоку",
-	"item.create.wand_of_symmetry.tooltip.action1": "_Создаёт_ или _Перемещает_ зеркало.",
+	"item.create.wand_of_symmetry.tooltip.action1": "_Создаёт_ или _перемещает_ зеркало.",
 	"item.create.wand_of_symmetry.tooltip.control2": "ПКМ в воздух",
 	"item.create.wand_of_symmetry.tooltip.action2": "_Убирает_ зеркало.",
 	"item.create.wand_of_symmetry.tooltip.control3": "ПКМ крадучись",
@@ -1843,13 +1843,13 @@
 
 	"item.create.tree_fertilizer.tooltip": "УДОБРЕНИЕ ДЛЯ ДЕРЕВЬЕВ",
 	"item.create.tree_fertilizer.tooltip.summary": "Мощная комбинация минералов подходит для ускорения роста деревьев.",
-	"item.create.tree_fertilizer.tooltip.condition1": "При использовании на саженце",
+	"item.create.tree_fertilizer.tooltip.condition1": "ПКМ с предметом на саженце",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Выращивает деревья, _независимо_ от _условий_ _их_ _расположения_.",
 
 	"item.create.extendo_grip.tooltip": "УДЛИНЕННАЯ РУКА",
 	"item.create.extendo_grip.tooltip.summary": "Значительно _увеличивает_ _досягаемость_ владельца.",
 	"item.create.extendo_grip.tooltip.condition1": "Находясь в левой руке",
-	"item.create.extendo_grip.tooltip.behaviour1": "Увеличивает _расстояние_ _досягаемости_ предметов, используемых в _главной_ _руке_.",
+	"item.create.extendo_grip.tooltip.behaviour1": "Увеличивает _расстояние_ _досягаемости_ предметов, используемых в _правой_ _руке_.",
 	"item.create.extendo_grip.tooltip.condition2": "Когда надет Медный баллон",
 	"item.create.extendo_grip.tooltip.behaviour2": "_НЕ_ тратится _прочность_. Вместо этого будет тратиться _воздух_ из баллона.",
 
@@ -1858,7 +1858,7 @@
 	"item.create.potato_cannon.tooltip.condition1": "ПКМ с предметом в инвентаре",
 	"item.create.potato_cannon.tooltip.behaviour1": "_Выстреливает_ подходящим предметом из вашего _инвентаря_.",
 	"item.create.potato_cannon.tooltip.condition2": "Когда надет Медный баллон",
-	"item.create.potato_cannon.tooltip.behaviour2": "_НЕ_ тратится _прочность_. Вместо этого будет тратиться _воздух_ из баллона.",
+	"item.create.potato_cannon.tooltip.behaviour2": "_НЕ_ тратится _прочность_. Вместо этого будет тратиться _воздух_ из Баллона.",
 
 	"item.create.filter.tooltip": "ФИЛЬТР",
 	"item.create.filter.tooltip.summary": "Управляет_ _выходами_ и входами логистических устройств с _большей_ _точностью_, _сопоставляя_ их со _списком_ _предметов_ или несколькими _вложенными_ _фильтрами_.",
@@ -1878,7 +1878,7 @@
 	"item.create.empty_schematic.tooltip.summary": "Используется в качестве ингредиента рецепта и для записи в _Схематичный столе_.",
 
 	"item.create.schematic.tooltip": "СХЕМАТИКА",
-	"item.create.schematic.tooltip.summary": "Содержит структуру, которая будет позиционироваться и помещаться в мир. Расположите голограмму по своему усмотрению и используйте _схематичную пушку_ для ее построения.",
+	"item.create.schematic.tooltip.summary": "Содержит структуру, которая может позиционироваться и помещаться в мир. Расположите голограмму по своему усмотрению и используйте _Схематичную пушку_ для её построения.",
 	"item.create.schematic.tooltip.condition1": "ПКМ с предметом",
 	"item.create.schematic.tooltip.behaviour1": "Может быть позиционирован с помощью инструментов на экране.",
 	"item.create.schematic.tooltip.control1": "ПКМ крадучись",
@@ -1914,7 +1914,7 @@
 	"item.create.goggles.tooltip.condition2": "При взгляде на датчик",
 	"item.create.goggles.tooltip.behaviour2": "Показывает подробную информацию о скорости или нагрузки сети, к которой подключён датчик.",
 	"item.create.goggles.tooltip.condition3": "При взгляде на жидкостные контейнеры",
-	"item.create.goggles.tooltip.behaviour3": "Показывает детализированную информацию о _Ёмкости_ блока и о хранящейся в нём хранится _Жидкости_.",
+	"item.create.goggles.tooltip.behaviour3": "Показывает детализированную информацию о _ёмкости_ блока и о хранящейся в нём хранится _жидкости_.",
 
 	"item.create.wrench.tooltip": "ГАЕЧНЫЙ КЛЮЧ",
 	"item.create.wrench.tooltip.summary": "Полезный _инструмент_ для работы с _кинетическими_ штуковинами. Может использоваться для _поворота_, _демонтажа_ и _настройки_ компонентов.",
@@ -1924,22 +1924,22 @@
 	"item.create.wrench.tooltip.action2": "Разбирает кинетические компоненты и помещает их обратно в ваш инвентарь.",
 
 	"block.create.nozzle.tooltip": "ФОРСУНКА",
-	"block.create.nozzle.tooltip.summary": "Прикрепите к передней части _вентилятора_, чтобы распределить его влияние на сущностей _во_ _всех_ _направлениях_.",
+	"block.create.nozzle.tooltip.summary": "Прикрепите к передней части _Вентилятора_, чтобы распределить его влияние на сущностей _во_ _всех_ _направлениях_.",
 
 	"block.create.cuckoo_clock.tooltip": "ЧАСЫ С КУКУШКОЙ",
-	"block.create.cuckoo_clock.tooltip.summary": "_Прекрасное_ _мастерство_ для _украшения_ пространства и _отслеживания_ _времени_.",
+	"block.create.cuckoo_clock.tooltip.summary": "Прекрасная _вещица_ для _украшения_ пространства и _отслеживания_ _времени_.",
 	"block.create.cuckoo_clock.tooltip.condition1": "При вращении",
-	"block.create.cuckoo_clock.tooltip.behaviour1": "Показывает текущее время и напевает мелодию два раза в день. _Активируется_ _один_ _раз_ в _полдень_ и в _сумерках_, как только _игроки_ _могут_ _спать_.",
+	"block.create.cuckoo_clock.tooltip.behaviour1": "Показывают текущее время и напевает мелодию два раза в день. _Активируется_ _один_ _раз_ в _полдень_ и в _сумерках_, как только _игроки_ _могут_ _спать_.",
 
 	"block.create.turntable.tooltip": "ПОВОРОТНЫЙ СТОЛ",
 	"block.create.turntable.tooltip.summary": "Преобразует _силу_ _вращения_ прямиком в морскую болезнь.",
 
 	"block.create.toolbox.tooltip": "ЯЩИК ДЛЯ ИНСТРУМЕНТОВ",
-	"block.create.toolbox.tooltip.summary": "Самый дорогой компаньон каждого изобретателя. Удобно _вмещает_ большое количество _8 различных_ типов предметов.",
+	"block.create.toolbox.tooltip.summary": "Самый дорогой компаньон каждого изобретателя. Удобно _вмещает_ большое количество _восьми различных_ типов предметов.",
 	"block.create.toolbox.tooltip.condition1": "ЛКМ по блоку",
 	"block.create.toolbox.tooltip.behaviour1": "_Сохраняет_ _содержимое_ и складывается в инвентарь игрока.",
 	"block.create.toolbox.tooltip.condition2": "ALT в диапазоне досягаемости",
-	"block.create.toolbox.tooltip.behaviour2": "Позволяет _получить быстрый доступ_ к содержимому _ящика_ _для_ _инструментов_.",
+	"block.create.toolbox.tooltip.behaviour2": "Позволяет _получить быстрый доступ_ к содержимому _Ящика_ _для_ _инструментов_.",
 	"block.create.toolbox.tooltip.condition3": "ПКМ по блоку",
 	"block.create.toolbox.tooltip.behaviour3": "Открывает _интерфейс контейнера_.",
 
@@ -1971,7 +1971,7 @@
 	"block.create.controller_rail.tooltip.behaviour1": "_Ускоряет_ или _замедляет_ _прошедшие вагонетки_, на величину зависящую от _силы сигнала_. Распространяя редстоун-сигнал на соседние контролирующие рельсы. Питание двух контролирующих рельс с разной мощностью приведет к тому, что дорожки между ними будут интерполировать свой сигнал.",
 
 	"item.create.sand_paper.tooltip": "НАЖДАЧНАЯ БУМАГА",
-	"item.create.sand_paper.tooltip.summary": "Грубая бумага, которую можно использовать для _полировки материалов_. Может применяться автоматически с помощью автономного активатора.",
+	"item.create.sand_paper.tooltip.summary": "Грубая бумага, которую можно использовать для _полировки материалов_. Может применяться автоматически с помощью Автономного активатора.",
 	"item.create.sand_paper.tooltip.condition1": "ПКМ с предметом",
 	"item.create.sand_paper.tooltip.behaviour1": "Полирует предметы во _второй руке_, или лежащие _на полу_, если _смотреть на них_.",
 
@@ -1997,12 +1997,12 @@
 	"item.create.linked_controller.tooltip.condition3": "ПКМ по Редстоуновому беспроводному приёмнику сигнала",
 	"item.create.linked_controller.tooltip.behaviour3": "Включает _режим привязки_, нажмите одну из _шести кнопок_, чтобы привязать её к _частоте передатчика_.",
 	"item.create.linked_controller.tooltip.condition4": "ПКМ по кафедре",
-	"item.create.linked_controller.tooltip.behaviour4": "Помещает контроллер на кафедру для удобства использования (ПКМ крадучись, чтобы забрать его).",
+	"item.create.linked_controller.tooltip.behaviour4": "Помещает Контроллер на кафедру для удобства использования (ПКМ крадучись, чтобы забрать его).",
 
 	"item.create.diving_helmet.tooltip": "ШЛЕМ ДЛЯ ДАЙВИНГА",
-	"item.create.diving_helmet.tooltip.summary": "Вместе с _медным_ _баллоном_, позволяет владельцу _дышать _ _под водой_ в течение длительного времени.",
+	"item.create.diving_helmet.tooltip.summary": "Вместе с _Медным_ _баллоном_, позволяет владельцу _дышать_ _под водой_ в течение длительного времени.",
 	"item.create.diving_helmet.tooltip.condition1": "Когда надето",
-	"item.create.diving_helmet.tooltip.behaviour1": "Даёт эффект _Водного Дыхания_, медленно тратя _воздух_ из баллона.",
+	"item.create.diving_helmet.tooltip.behaviour1": "Даёт эффект _водного Дыхания_, медленно тратя _воздух_ из Баллона.",
 
 	"item.create.copper_backtank.tooltip": "МЕДНЫЙ БАЛЛОН",
 	"item.create.copper_backtank.tooltip.summary": "_Носимый_ _резервуар_ для транспортировки воздуха под давлением.",
@@ -2046,7 +2046,7 @@
 	"item.create.experience_nugget.tooltip.behaviour1": "_Высвобождает_ _очки опыта_, находящиеся внутри.",
 
 	"block.create.peculiar_bell.tooltip": "ОСОБЕННЫЙ КОЛОКОЛ",
-	"block.create.peculiar_bell.tooltip.summary": "Декоративный _латунный колокол_. Установка его прямо над горящем _Огнем душ_ может вызвать непредвиденные последствия...",
+	"block.create.peculiar_bell.tooltip.summary": "Декоративный _латунный колокол_. Установка его прямо над горящем _огнём душ_ может вызвать непредвиденные последствия...",
 
 	"block.create.haunted_bell.tooltip": "ПРИЗРАЧНЫЙ КОЛОКОЛ",
 	"block.create.haunted_bell.tooltip.summary": "_Проклятый колокол_ населённый потерянными душами Нижнего мира.",
@@ -2987,15 +2987,15 @@
 	"create.ponder.water_wheel.text_4": "Направленное в противоположную сторону, не будет так же эффективно",
 
 	"create.ponder.weighted_ejector.header": "Использованием Взвешенных катапульт",
-	"create.ponder.weighted_ejector.text_1": "Нажмите ПКМ крадучись, держа катапульту, чтобы выбрать место цели",
+	"create.ponder.weighted_ejector.text_1": "Нажмите ПКМ крадучись, держа Катапульту, чтобы выбрать место цели",
 	"create.ponder.weighted_ejector.text_10": "Теперь она ограниченна этим размера стака и будет активироваться только тогда, когда удерживаемый стак достигнет этого количества",
 	"create.ponder.weighted_ejector.text_11": "Другие сущности, встав на катапульту, будут всегда активировать её",
-	"create.ponder.weighted_ejector.text_2": "Установленная катапульта будет запускать объекты до отмеченного места",
+	"create.ponder.weighted_ejector.text_2": "Установленная Катапульта будет запускать объекты до отмеченного места",
 	"create.ponder.weighted_ejector.text_3": "Подходящая цель может быть на любой дистанции и высоте в радиусе",
 	"create.ponder.weighted_ejector.text_4": "Однако они не могут быть сбоку",
 	"create.ponder.weighted_ejector.text_5": "Если не было выбрано подходящей цели, она будет целиться в блок перед ней",
 	"create.ponder.weighted_ejector.text_6": "Предоставьте силу вращения, чтобы зарядить её",
-	"create.ponder.weighted_ejector.text_7": "Попадание предметов на катапульту вызывает её срабатывание",
+	"create.ponder.weighted_ejector.text_7": "Попадание предметов на Катапульту вызывает её срабатывание",
 	"create.ponder.weighted_ejector.text_8": "Если целью был выбран инвентарь, то катапульта будет ждать, пока в нём не появится место",
 	"create.ponder.weighted_ejector.text_9": "При помощи Гаечного ключа можно настроить необходимый размер стака",
 
