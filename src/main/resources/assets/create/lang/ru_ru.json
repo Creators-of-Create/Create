@@ -2319,7 +2319,7 @@
 
 	"create.ponder.deployer_contraption.header": "Использованием Автономного активатора на штуковинах",
 	"create.ponder.deployer_contraption.text_1": "Всегда, когда Автономные активаторы движутся как часть штуковины...",
-	"create.ponder.deployer_contraption.text_2": "Они активируются на каждом посещённом блоке, используя предметы из любых хранилищ на штуковине",
+	"create.ponder.deployer_contraption.text_2": "...они активируются на каждом посещённом блоке, используя предметы из любых хранилищ на штуковине",
 	"create.ponder.deployer_contraption.text_3": "Слот для фильтра может быть использован, чтобы уточнить, какие предметы ему использовать",
 
 	"create.ponder.deployer_modes.header": "Режимами Автономного активатора",
@@ -2330,7 +2330,7 @@
 	"create.ponder.deployer_processing.text_1": "Держа подходящий предмет/инструмент, автономные активаторы могут обрабатывать предметы под собой",
 	"create.ponder.deployer_processing.text_2": "Принимаемые предметы можно бросить или положить на депо под автономным активатором",
 	"create.ponder.deployer_processing.text_3": "Когда предметы находятся на конвейере...",
-	"create.ponder.deployer_processing.text_4": "автономный активатор будет удерживать и обрабатывать их автоматически",
+	"create.ponder.deployer_processing.text_4": "...автономный активатор будет удерживать и обрабатывать их автоматически",
 
 	"create.ponder.deployer_redstone.header": "Управлением Автономным активатором редстоун-сигналом",
 	"create.ponder.deployer_redstone.text_1": "При активации редстоун-сигналом активатор перестанет работать",
@@ -2341,7 +2341,7 @@
 	"create.ponder.depot.text_1": "Депо могут служить как «стационарный» элемент конвейера",
 	"create.ponder.depot.text_2": "ПКМ, что бы самостоятельно положить или забрать предметы с них",
 	"create.ponder.depot.text_3": "Так же, как Механические ремни, оно может предоставлять предметы для обработки",
-	"create.ponder.depot.text_4": "...а также поставлять предметы Механическим рукам",
+	"create.ponder.depot.text_4": "А также поставлять предметы Механическим рукам",
 
 	"create.ponder.display_board.header": "Использованием Механического табло",
 	"create.ponder.display_board.text_1": "Механическое табло — это масштабируемая альтернатива табличкам",
@@ -2458,7 +2458,7 @@
 	"create.ponder.gantry_direction.header": "Направлением движения крана",
 	"create.ponder.gantry_direction.text_1": "Валы портального крана могут иметь два противоположных направления",
 	"create.ponder.gantry_direction.text_2": "Направление движения Шасси зависит от ориентации их Валов",
-	"create.ponder.gantry_direction.text_3": "...а также от направления вращения Вала",
+	"create.ponder.gantry_direction.text_3": "А также от направления вращения Вала",
 	"create.ponder.gantry_direction.text_4": "Те же правила относятся к передаваемому вращению",
 
 	"create.ponder.gantry_redstone.header": "Краном и редстоун-сигнале",
@@ -2496,8 +2496,8 @@
 
 	"create.ponder.hose_pulley_infinite.header": "Пассивным заполнением и осушением больших объёмов жидкости",
 	"create.ponder.hose_pulley_infinite.text_1": "При развертывании Шкива со шлангом в достаточно большой океан...",
-	"create.ponder.hose_pulley_infinite.text_2": "Он будет предоставлять/поглощать жидкости без влияния на источник",
-	"create.ponder.hose_pulley_infinite.text_3": "Трубопроводы могут неограниченно передавать жидкости из/в такие шкивы",
+	"create.ponder.hose_pulley_infinite.text_2": "...он будет выкачивать/закачивать жидкость без влияния на источник",
+	"create.ponder.hose_pulley_infinite.text_3": "Трубопроводы могут неограниченно передавать жидкости из/в такие Шкивы",
 
 	"create.ponder.hose_pulley_level.header": "Уровнем заполнения и осушения Шкива со шлангом",
 	"create.ponder.hose_pulley_level.text_1": "При полностью убранном рукаве шланга — он не может работать",
@@ -2610,8 +2610,8 @@
 	"create.ponder.mechanical_drill_contraption.text_2": "...они будут ломать блоки, на которые они натыкаются",
 
 	"create.ponder.mechanical_harvester.header": "Использованием Механических комбайнов на штуковинах",
-	"create.ponder.mechanical_harvester.text_1": "Когда комбайны движутся как часть движимой штуковины...",
-	"create.ponder.mechanical_harvester.text_2": "Они будут убирать зрелый урожай на своём пути и высаживать его снова",
+	"create.ponder.mechanical_harvester.text_1": "Когда Комбайны движутся как часть движимой штуковины...",
+	"create.ponder.mechanical_harvester.text_2": "...они будут убирать зрелый урожай на своём пути и высаживать его снова",
 
 	"create.ponder.mechanical_mixer.header": "Обработкой предметов Механическим миксером",
 	"create.ponder.mechanical_mixer.text_1": "При помощи Миксера и Чаши можно автоматизировать некоторые рецепты крафта",
@@ -2632,15 +2632,15 @@
 	"create.ponder.mechanical_plough.text_1": "Когда Плуги движутся как часть движимой штуковины...",
 	"create.ponder.mechanical_plough.text_2": "...они будут ломать блоки без твёрдого хитбокса",
 	"create.ponder.mechanical_plough.text_3": "К тому же, плуги могут создавать пашню",
-	"create.ponder.mechanical_plough.text_4": "...они также могут толкать сущностей не причиняя им вреда",
+	"create.ponder.mechanical_plough.text_4": "Также они могут толкать сущностей не причиняя им вреда",
 
 	"create.ponder.mechanical_press.header": "Обработкой предметов Механическими прессами",
 	"create.ponder.mechanical_press.text_1": "Механический пресс может обрабатывать предметы под собой",
-	"create.ponder.mechanical_press.text_2": "Подаваемые предметы должны быть брошены или помещены на Депо под Прессом",
+	"create.ponder.mechanical_press.text_2": "Подаваемые предметы должны быть брошены или помещены на Депо под Пресс",
 	"create.ponder.mechanical_press.text_3": "Когда предметы подаются на конвейере...",
 	"create.ponder.mechanical_press.text_4": "...Пресс будет задерживать и прессовать их автоматически",
 
-	"create.ponder.mechanical_press_compacting.header": "Спрессовыванием и упаковкой предметов Механическим прессом",
+	"create.ponder.mechanical_press_compacting.header": "Спрессовыванием и сжатием предметов Механическим прессом",
 	"create.ponder.mechanical_press_compacting.text_1": "Спрессовывание предметов в Чаше скомпонует их",
 	"create.ponder.mechanical_press_compacting.text_2": "Сжатие предметов и спрессовывание включают в себя любые заполненные 2x2 или 3x3 рецепты крафта и некоторые другие",
 	"create.ponder.mechanical_press_compacting.text_3": "Некоторым рецептам может потребоваться тепло от Горелки всполоха",
@@ -2723,7 +2723,7 @@
 
 	"create.ponder.powered_toggle_latch.header": "Управлением редстоун-сигналами при помощи Питаемого рычага-переключателя",
 	"create.ponder.powered_toggle_latch.text_1": "Питаемый рычаг-переключатель — управляемый редстоуном рычаг",
-	"create.ponder.powered_toggle_latch.text_2": "Сигналы сзади переключают его состояние",
+	"create.ponder.powered_toggle_latch.text_2": "Сигналы сзади переключают его состояние...",
 	"create.ponder.powered_toggle_latch.text_3": "...включают и снова выключают",
 	"create.ponder.powered_toggle_latch.text_4": "Питаемые рычаги-переключатели также можно переключать вручную",
 
@@ -2833,7 +2833,7 @@
 	"create.ponder.spout_filling.text_3": "Вместо этого можно использовать трубы для подачи в него жидкостей",
 	"create.ponder.spout_filling.text_4": "Наполняемые предметы могут быть размещены на депо под дозатором",
 	"create.ponder.spout_filling.text_5": "Когда предметы подаются конвейером...",
-	"create.ponder.spout_filling.text_6": "Дозатор будет удерживать и обрабатывать их автоматически",
+	"create.ponder.spout_filling.text_6": "...Дозатор будет удерживать и обрабатывать их автоматически",
 
 	"create.ponder.stabilized_bearings.header": "Стабилизацией Штуковин",
 	"create.ponder.stabilized_bearings.text_1": "Когда Механические подшипники являются частью двигающейся структуры...",
