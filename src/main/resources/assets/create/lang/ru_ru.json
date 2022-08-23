@@ -1148,7 +1148,7 @@
 	"create.schematic.tool.movey.description.1": "Ctrl и прокрутка для перемещения вверх/вниз.",
 	"create.schematic.tool.movey.description.2": "",
 	"create.schematic.tool.movey.description.3": "",
-	"create.schematic.tool.rotate.description.0": "Вращает схематику вокруг ее центра.",
+	"create.schematic.tool.rotate.description.0": "Вращает схематику вокруг её центра.",
 	"create.schematic.tool.rotate.description.1": "Ctrl и прокрутка для вращения на 90 градусов.",
 	"create.schematic.tool.rotate.description.2": "",
 	"create.schematic.tool.rotate.description.3": "",
@@ -1158,7 +1158,7 @@
 	"create.schematic.tool.print.description.3": "для творческого режима.",
 	"create.schematic.tool.flip.description.0": "Переверните схему вдоль выбранной стороны.",
 	"create.schematic.tool.flip.description.1": "Наведите курсор на схему и Ctrl и прокрутка,",
-	"create.schematic.tool.flip.description.2": "чтобы перевернуть ее.",
+	"create.schematic.tool.flip.description.2": "чтобы перевернуть её.",
 	"create.schematic.tool.flip.description.3": "",
 
 	"create.schematics.synchronizing": "Синхронизация...",
@@ -1705,7 +1705,7 @@
 	"create.display_source.boiler.for_boiler_status": "для текста",
 
 	"create.display_target.line": "%1$s строка",
-	"create.display_target.page": "%1$s  страница",
+	"create.display_target.page": "%1$s страница",
 	"create.display_target.single_line": "Одна строка",
 
 	"create.flap_display.cycles.alphabet": " ;А;Б;В;Г;Д;Е;Ё;Ж;З;И;Й;К;Л;М;Н;О;П;Р;С;Т;У;Ф;Х;Ц;Ч;Ш;Щ;Ъ;Ы;Ь;Э;Ю;Я",
@@ -1742,7 +1742,7 @@
 	"create.command.killTPSCommand.status.usage.1": "[Create]: используйте /killtps start <Время тика>, чтобы искусственно замедлить тик сервера",
 	"create.command.killTPSCommand.argument.tickTime": "Время тика",
 
-	"create.contraption.minecart_contraption_too_big": "Эта вагонеточная штуковина кажется слишком большой, чтобы ее можно было поднять",
+	"create.contraption.minecart_contraption_too_big": "Эта вагонеточная штуковина кажется слишком большой, чтобы её можно было поднять",
 	"create.contraption.minecart_contraption_illegal_pickup": "Мистическая сила связывает эту вагонеточную штуковину с миром",
 
 
@@ -1751,7 +1751,7 @@
 	"create.subtitle.contraption_disassemble": "Штуковина останавливается",
 	"create.subtitle.peculiar_bell_use": "Особенный колокол звонит",
 	"create.subtitle.worldshaper_place": "Ручной редактор мира делает «Зап»",
-	"create.subtitle.whistle_train_manual": "Свист поезда",
+	"create.subtitle.whistle_train_manual": "Поезд гудит",
 	"create.subtitle.steam": "Шум пара",
 	"create.subtitle.saw_activate_stone": "Активируется механическая пила",
 	"create.subtitle.schematicannon_finish": "Схематичная пушка закончила работу",
@@ -2066,7 +2066,7 @@
 	"create.ponder.next": "Следующая сцена",
 	"create.ponder.next_up": "Размышлять дальше над:",
 	"create.ponder.previous": "Предыдущая сцена",
-	"create.ponder.replay": "Воспроизвести снова",
+	"create.ponder.replay": "Повторить сцену",
 	"create.ponder.think_back": "Назад",
 	"create.ponder.slow_text": "Удобное чтение",
 	"create.ponder.exit": "Выйти",
