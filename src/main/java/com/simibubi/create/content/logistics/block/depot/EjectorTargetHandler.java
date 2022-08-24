@@ -86,9 +86,6 @@ public class EjectorTargetHandler {
 	}
 
 	public static void flushSettings(BlockPos pos) {
-		if (currentItem == null)
-			return;
-
 		int h = 0;
 		int v = 0;
 

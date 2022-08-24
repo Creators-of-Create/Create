@@ -66,6 +66,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	LerpedFloat clawAngle;
 	float previousBaseAngle;
 	boolean updateInteractionPoints;
+	int tooltipWarmup;
 
 	//
 	protected ScrollOptionBehaviour<SelectionMode> selectionMode;
@@ -97,6 +98,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;
 		redstoneLocked = false;
+		tooltipWarmup = 15;
 	}
 
 	@Override
@@ -118,6 +120,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		initInteractionPoints();
 		boolean targetReached = tickMovementProgress();
 
+		if (tooltipWarmup > 0)
+			tooltipWarmup--;
 		if (chasedPointProgress < 1) {
 			if (phase == Phase.MOVE_TO_INPUT) {
 				ArmInteractionPoint point = getTargetedInteractionPoint();
@@ -560,6 +564,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
 			return true;
 		if (isPlayerSneaking)
+			return false;
+		if (tooltipWarmup > 0)
 			return false;
 		if (!inputs.isEmpty())
 			return false;
