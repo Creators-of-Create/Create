@@ -131,7 +131,7 @@ public class AllAdvancements implements DataProvider {
 		COGS = create("shifting_gears", b -> b.icon(AllBlocks.COGWHEEL)
 			.title("Shifting Gears")
 			.description(
-				"Connect a Large Cogwheel to a Small Cogwheel, allowing you to change the speed of your Contraption")
+				"Connect two Cogwheels of different sizes, allowing you to change the speed of your Contraption")
 			.after(WINDMILL)),
 
 		MILLSTONE = create("millstone", b -> b.icon(AllBlocks.MILLSTONE)
@@ -246,7 +246,7 @@ public class AllAdvancements implements DataProvider {
 			.special(NOISY)),
 
 		SPOUT = create("spout", b -> b.icon(AllBlocks.SPOUT)
-			.title("Sploosh")
+			.title("Sploosh!")
 			.description("Watch a fluid-containing item be filled by a Spout")
 			.after(COPPER_CASING)),
 
@@ -333,7 +333,7 @@ public class AllAdvancements implements DataProvider {
 
 		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.DIVING_HELMET)
 			.title("Swimming with the Striders")
-			.description("Attempt to take a dive in lava with your diving gear")
+			.description("Attempt to take a swim in lava with your diving gear")
 			.after(BACKTANK)
 			.special(SECRET)),
 
