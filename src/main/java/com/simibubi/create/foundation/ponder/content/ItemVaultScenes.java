@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.enums.PonderGuiTextures;
 import net.createmod.ponder.foundation.ElementLink;
 import net.createmod.ponder.foundation.PonderPalette;
 import net.createmod.ponder.foundation.SceneBuilder;
@@ -62,7 +62,7 @@ public class ItemVaultScenes {
 		ItemStack hand = AllItems.BRASS_HAND.asStack();
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.blockSurface(frontVault, Direction.NORTH), Pointing.RIGHT)
-				.showing(AllIcons.I_MTD_CLOSE)
+				.showing(PonderGuiTextures.ICON_PONDER_CLOSE)
 				.withItem(hand), 40);
 		scene.idle(7);
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
@@ -25,6 +26,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
+import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
@@ -46,7 +48,6 @@ import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -61,16 +62,18 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.createmod.catnip.config.ui.BaseConfigScreen;
+import net.createmod.catnip.config.ui.ConfigScreen;
 import net.createmod.catnip.render.DefaultSuperRenderTypeBufferImpl;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
-import net.createmod.catnip.utility.placement.PlacementHelpers;
 import net.createmod.catnip.utility.worldWrappers.WrappedClientWorld;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.BlockItem;
@@ -121,7 +124,6 @@ public class ClientEvents {
 		}
 
 		SoundScapes.tick();
-		AnimationTickHolder.tick();
 		ScrollValueHandler.tick();
 
 		CreateClient.SCHEMATIC_SENDER.tick();
@@ -137,7 +139,6 @@ public class ClientEvents {
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
 
-		// ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
 //		BeltSlicer.tickHoveringInformation();
@@ -155,8 +156,6 @@ public class ClientEvents {
 		// CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
 		EjectorTargetHandler.tick();
-		PlacementHelpers.tick();
-		//CreateClient.OUTLINER.tickOutlines();
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
@@ -188,7 +187,6 @@ public class ClientEvents {
 		LevelAccessor world = event.getWorld();
 		if (world.isClientSide() && world instanceof ClientLevel && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers();
-			AnimationTickHolder.reset();
 		}
 	}
 
@@ -199,7 +197,6 @@ public class ClientEvents {
 			return;
 		CreateClient.invalidateRenderers();
 		CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
-		AnimationTickHolder.reset();
 		ControlsHandler.levelUnloaded(event.getWorld());
 	}
 
@@ -219,7 +216,6 @@ public class ClientEvents {
 		CarriageCouplingRenderer.renderAll(ms, buffer);
 		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
 
-		//CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
 		buffer.draw();
 		RenderSystem.enableCull();
 
@@ -392,7 +388,15 @@ public class ClientEvents {
 				.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
 			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
 				() -> new ConfigGuiHandler.ConfigGuiFactory(
-					(mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
+					(mc, previousScreen) -> new BaseConfigScreen(previousScreen, Create.ID)));
+
+			BaseConfigScreen.setDefaultActionFor(Create.ID, base -> base
+					.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
+					.withSpecs(AllConfigs.CLIENT.specification, AllConfigs.COMMON.specification, AllConfigs.SERVER.specification)
+			);
+
+			ConfigScreen.shadowState = AllBlocks.LARGE_COGWHEEL.getDefaultState().setValue(CogWheelBlock.AXIS, Direction.Axis.Y);
+
 		}
 
 	}

@@ -99,6 +99,11 @@ minecraft {
 
         server {
             workingDirectory project.file('run/server')
+            if (inMultiModWorkspace)
+                ideaModule "createmod.Create.main"
+            else
+                ideaModule "Create.main"
+
             arg '-mixin.config=create.mixins.json'
             property 'forge.logging.console.level', 'info'
             mods {
@@ -124,6 +129,11 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
+            if (inMultiModWorkspace)
+                ideaModule "createmod.Create.main"
+            else
+                ideaModule "Create.main"
+
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')

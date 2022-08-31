@@ -1,9 +1,8 @@
 package com.simibubi.create.foundation.command;
 
-import com.simibubi.create.foundation.networking.AllPackets;
-
+import net.createmod.catnip.net.ClientboundSimpleActionPacket;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.PacketDistributor;
 
 public class ToggleDebugCommand extends ConfigureConfigCommand {
 
@@ -13,9 +12,9 @@ public class ToggleDebugCommand extends ConfigureConfigCommand {
 
 	@Override
 	protected void sendPacket(ServerPlayer player, String option) {
-		AllPackets.channel.send(
-				PacketDistributor.PLAYER.with(() -> player),
-				new SConfigureConfigPacket(SConfigureConfigPacket.Actions.rainbowDebug.name(), option)
+		CatnipServices.NETWORK.sendToPlayer(
+				player,
+				new ClientboundSimpleActionPacket("rainbowDebug", option)
 		);
 	}
 }

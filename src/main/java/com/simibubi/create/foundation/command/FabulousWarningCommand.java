@@ -2,12 +2,12 @@ package com.simibubi.create.foundation.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.simibubi.create.foundation.networking.AllPackets;
 
+import net.createmod.catnip.net.ClientboundSimpleActionPacket;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.PacketDistributor;
 
 public class FabulousWarningCommand {
 
@@ -18,10 +18,9 @@ public class FabulousWarningCommand {
 					ServerPlayer player = ctx.getSource()
 							.getPlayerOrException();
 
-					AllPackets.channel.send(
-							PacketDistributor.PLAYER.with(() -> player),
-							new SConfigureConfigPacket(SConfigureConfigPacket.Actions.fabulousWarning.name(), "")
-					);
+					CatnipServices.NETWORK.sendToPlayer(
+							player,
+							new ClientboundSimpleActionPacket("fabulousWarning", ""));
 
 					return Command.SINGLE_SUCCESS;
 				});

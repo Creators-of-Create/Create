@@ -7,14 +7,14 @@ import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 
+import net.createmod.catnip.net.ClientboundSimpleActionPacket;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.PacketDistributor;
 
 public class CameraAngleCommand {
 
@@ -50,13 +50,12 @@ public class CameraAngleCommand {
 		AtomicInteger targets = new AtomicInteger(0);
 
 		float angleTarget = FloatArgumentType.getFloat(ctx, "degrees");
-		String optionName = (yaw ? SConfigureConfigPacket.Actions.camAngleYawTarget : SConfigureConfigPacket.Actions.camAnglePitchTarget).name();
+		String optionName = yaw ? "camAngleYawTarget" : "camAnglePitchTarget";
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.send(
-					PacketDistributor.PLAYER.with(() -> player),
-					new SConfigureConfigPacket(optionName, String.valueOf(angleTarget))
-			);
+			CatnipServices.NETWORK.sendToPlayer(
+					player,
+					new ClientboundSimpleActionPacket(optionName, String.valueOf(angleTarget)));
 			targets.incrementAndGet();
 		});
 
@@ -67,9 +66,9 @@ public class CameraAngleCommand {
 		AtomicInteger targets = new AtomicInteger(0);
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.send(
-					PacketDistributor.PLAYER.with(() -> player),
-					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.camAngleFunction.name(), value)
+			CatnipServices.NETWORK.sendToPlayer(
+					player,
+					new ClientboundSimpleActionPacket("camAngleFunction", value)
 			);
 			targets.incrementAndGet();
 		});
@@ -81,9 +80,9 @@ public class CameraAngleCommand {
 		AtomicInteger targets = new AtomicInteger(0);
 
 		getPlayersFromContext(ctx).forEach(player -> {
-			AllPackets.channel.send(
-					PacketDistributor.PLAYER.with(() -> player),
-					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.camAngleFunction.name(), value + ":" + speed)
+			CatnipServices.NETWORK.sendToPlayer(
+					player,
+					new ClientboundSimpleActionPacket("camAngleFunction", value + ":" + speed)
 			);
 			targets.incrementAndGet();
 		});

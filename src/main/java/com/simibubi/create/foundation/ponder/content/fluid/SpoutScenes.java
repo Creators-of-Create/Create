@@ -5,12 +5,12 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 
 import net.createmod.catnip.utility.Pointing;
 import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.enums.PonderGuiTextures;
 import net.createmod.ponder.foundation.ElementLink;
 import net.createmod.ponder.foundation.PonderPalette;
 import net.createmod.ponder.foundation.SceneBuilder;
@@ -74,7 +74,7 @@ public class SpoutScenes {
 			.getBucket(honey);
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 2), Direction.NORTH), Pointing.RIGHT)
-				.showing(AllIcons.I_MTD_CLOSE)
+				.showing(PonderGuiTextures.ICON_PONDER_CLOSE)
 				.withItem(bucket),
 			40);
 		scene.idle(7);

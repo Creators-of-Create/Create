@@ -1,15 +1,16 @@
 package com.simibubi.create.foundation.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.simibubi.create.foundation.networking.AllPackets;
 
+import net.createmod.catnip.net.ClientboundSimpleActionPacket;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.PacketDistributor;
 
 public class OverlayConfigCommand {
 
@@ -18,12 +19,12 @@ public class OverlayConfigCommand {
 				.requires(cs -> cs.hasPermission(0))
 				.then(Commands.literal("reset")
 					.executes(ctx -> {
-						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayReset.performAction(""));
+						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SimpleCreateActions.overlayReset(""));
 
 						DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
-								AllPackets.channel.send(
-										PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource().getEntity()),
-										new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), "")));
+								CatnipServices.NETWORK.sendToPlayer(
+										(Player) ctx.getSource().getEntity(),
+										new ClientboundSimpleActionPacket("overlayReset", "")));
 
 					ctx.getSource()
 						.sendSuccess(new TextComponent("reset overlay offset"), true);
@@ -32,17 +33,17 @@ public class OverlayConfigCommand {
 					})
 				)
 				.executes(ctx -> {
-					DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayScreen.performAction(""));
+					DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SimpleCreateActions.overlayScreen(""));
 
 					DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
-							AllPackets.channel.send(
-									PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource().getEntity()),
-									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), "")));
+							CatnipServices.NETWORK.sendToPlayer(
+									(Player) ctx.getSource().getEntity(),
+									new ClientboundSimpleActionPacket("overlayScreen", "")));
 
 					ctx.getSource()
 							.sendSuccess(new TextComponent("window opened"), true);
 
-				return 1;
+				return Command.SINGLE_SUCCESS;
 			});
 
 	}

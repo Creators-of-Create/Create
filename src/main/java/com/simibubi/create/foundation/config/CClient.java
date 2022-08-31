@@ -2,9 +2,8 @@ package com.simibubi.create.foundation.config;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
-
 import net.createmod.catnip.config.ConfigBase;
+import net.createmod.catnip.config.ui.ConfigAnnotations;
 
 public class CClient extends ConfigBase {
 

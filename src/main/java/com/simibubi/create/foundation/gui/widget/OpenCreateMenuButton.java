@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.config.ui;
+package com.simibubi.create.foundation.gui.widget;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +10,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
-import net.createmod.catnip.gui.ScreenOpener;
 
+import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;

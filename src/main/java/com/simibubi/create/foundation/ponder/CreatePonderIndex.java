@@ -1,8 +1,12 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.ponder.content.ArmScenes;
 import com.simibubi.create.foundation.ponder.content.BearingScenes;
 import com.simibubi.create.foundation.ponder.content.BeltScenes;
@@ -45,15 +49,28 @@ import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.createmod.ponder.foundation.CustomPonderRegistrationHelper;
-import net.createmod.ponder.foundation.content.DebugScenes;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public class CreatePonderIndex {
 
 	private static final CustomPonderRegistrationHelper<ItemProviderEntry<?>> HELPER = new CustomPonderRegistrationHelper<>(Create.ID, RegistryEntry::getId);
 
-	public static final boolean REGISTER_DEBUG_SCENES = false;
+	public static final List<Predicate<ItemLike>> INDEX_SCREEN_EXCLUSIONS = List.of(
+			itemLike -> {
+				if (!(itemLike instanceof BlockItem blockItem))
+					return false;
+
+				Block block = blockItem.getBlock();
+				if (!(block instanceof ValveHandleBlock))
+					return false;
+
+				return !AllBlocks.COPPER_VALVE_HANDLE.is(block);
+			}
+	);
 
 	public static void register() {
 		// Register storyboards here
@@ -364,10 +381,6 @@ public class CreatePonderIndex {
 			.addStoryBoard("steam_whistle", SteamScenes::whistle);
 		HELPER.forComponents(AllBlocks.STEAM_ENGINE)
 			.addStoryBoard("steam_engine", SteamScenes::engine);
-
-		// Debug scenes, can be found in game via the Brass Hand
-		if (REGISTER_DEBUG_SCENES)
-			DebugScenes.registerAll();
 	}
 	public static void registerTags() {
 		// Add items to tags here

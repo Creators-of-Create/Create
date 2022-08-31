@@ -1,8 +1,7 @@
 package com.simibubi.create.foundation.config;
 
-import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
-
 import net.createmod.catnip.config.ConfigBase;
+import net.createmod.catnip.config.ui.ConfigAnnotations;
 
 public class CKinetics extends ConfigBase {
 

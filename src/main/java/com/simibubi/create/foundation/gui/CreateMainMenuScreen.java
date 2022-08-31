@@ -6,9 +6,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.gui.element.BoxElement;
@@ -147,7 +147,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		addRenderableWidget(
 			new Button(center - 100, yStart + 92, bLongWidth, bHeight, CreateLang.translateDirect("menu.return"), $ -> linkTo(parent)));
 		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, CreateLang.translateDirect("menu.configure"),
-			$ -> linkTo(BaseConfigScreen.forCreate(this))));
+				$ -> linkTo(new BaseConfigScreen(this, Create.ID))));
 
 		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
 			CreateLang.translateDirect("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));

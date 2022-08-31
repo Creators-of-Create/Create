@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.BakedModelWrapper;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -29,8 +30,9 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, IModelData tileData) {
-		if (VirtualEmptyModelData.is(tileData))
+		if (VirtualEmptyModelData.is(tileData) || tileData.equals(EmptyModelData.INSTANCE))
 			return tileData;
+
 		BracketedModelData data = new BracketedModelData();
 		BracketedTileEntityBehaviour attachmentBehaviour =
 			TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
@@ -42,16 +44,18 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
-		if (!VirtualEmptyModelData.is(data)) {
-			if (data.hasProperty(BRACKET_PROPERTY)) {
-				BracketedModelData pipeData = data.getData(BRACKET_PROPERTY);
-				BakedModel bracket = pipeData.getBracket();
-				if (bracket != null)
-					return bracket.getQuads(state, side, rand, data);
-			}
-			return Collections.emptyList();
+		if (VirtualEmptyModelData.is(data) || data.equals(EmptyModelData.INSTANCE)) {
+			return super.getQuads(state, side, rand, data);
 		}
-		return super.getQuads(state, side, rand, data);
+
+		if (data.hasProperty(BRACKET_PROPERTY)) {
+			BracketedModelData pipeData = data.getData(BRACKET_PROPERTY);
+			BakedModel bracket = pipeData.getBracket();
+			if (bracket != null)
+				return bracket.getQuads(state, side, rand, data);
+		}
+
+		return Collections.emptyList();
 	}
 
 	private static class BracketedModelData {

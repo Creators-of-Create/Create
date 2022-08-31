@@ -20,10 +20,8 @@ import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.ponder.CreatePonderIndex;
-import com.simibubi.create.foundation.ponder.CreatePonderTag;
+import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.ponder.CreateSharedPonderText;
-import com.simibubi.create.foundation.ponder.PonderWorldTileFix;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
@@ -31,7 +29,6 @@ import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 
 import net.createmod.ponder.foundation.PonderIndex;
-import net.createmod.ponder.foundation.PonderWorld;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
@@ -93,11 +90,7 @@ public class CreateClient {
 		AllBlockPartials.init();
 		AllStitchedTextures.init();
 
-		CreatePonderIndex.register();
-		CreatePonderIndex.registerTags();
-		PonderIndex.addIndex(CreatePonderIndex::register);
-		PonderIndex.addIndex(CreatePonderTag::register);
-		PonderWorld.onRestore(PonderWorldTileFix::fixControllerTiles);
+		PonderIndex.addPlugin(new CreatePonderPlugin());
 
 		registerOverlays();
 	}

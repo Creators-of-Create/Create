@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.utility.ControlsUtil;
 import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.catnip.utility.placement.PlacementHelpers;
+import net.createmod.catnip.utility.placement.PlacementClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
@@ -203,7 +203,7 @@ public class TrainHUD {
 
 		poseStack.translate(91, -9, 0);
 		poseStack.scale(0.925f, 0.925f, 1);
-		PlacementHelpers.textured(poseStack, 0, 0, 1, snappedAngle);
+		PlacementClient.textured(poseStack, 0, 0, 1, snappedAngle);
 
 		poseStack.popPose();
 	}
