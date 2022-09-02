@@ -206,6 +206,11 @@ repositories {
         //location of the maven for curios api
         url = "https://maven.theillusivec4.top/"
     }
+    maven {
+        // Location of the maven for Ponder, Catnip
+        name 'createmod maven'
+        url 'https://maven.createmod.net'
+    }
 }
 
 configurations {
@@ -229,16 +234,14 @@ dependencies {
         implementation project(":catnip:Common")
         implementation project(":catnip:Forge")
     } else {
-        //todo
-        throw new AssertionError()
+        implementation fg.deobf("net.createmod.catnip:Catnip-Forge-${minecraft_version}:${catnip_version}")
     }
 
     if (ponderInWorkspace) {
         implementation project(":Ponder:Common")
         implementation project(":Ponder:Forge")
     } else {
-        //todo
-        throw new AssertionError()
+        implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
     }
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api")
