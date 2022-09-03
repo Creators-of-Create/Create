@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -159,12 +158,16 @@ public class RecipeGridHandler {
 	}
 
 	public static boolean isRecipeAllowed(CraftingRecipe recipe, CraftingContainer inventory) {
-		if (!AllConfigs.SERVER.recipes.allowBiggerFireworksInCrafter.get() && recipe instanceof FireworkRocketRecipe) {
-			int numItems = IntStream.range(0, inventory.getContainerSize())
-				.map(i -> inventory.getItem(i).isEmpty() ? 0 : 1)
-				.sum();
-			if (numItems > 9)
+		if (recipe instanceof FireworkRocketRecipe) {
+			int numItems = 0;
+			for (int i = 0; i < inventory.getContainerSize(); i++) {
+				if (!inventory.getItem(i).isEmpty()) {
+					numItems++;
+				}
+			}
+			if (numItems > AllConfigs.SERVER.recipes.maxFireworkIngredientsInCrafter.get()) {
 				return false;
+			}
 		}
 		if (AllRecipeTypes.shouldIgnoreInAutomation(recipe))
 			return false;
