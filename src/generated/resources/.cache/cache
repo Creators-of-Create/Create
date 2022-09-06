@@ -5636,7 +5636,7 @@ d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/blocks/toolboxes.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/blocks/valve_handles.json
 eac71740fb12bdb38b5dfaa2268613d7ba82b809 data/create/tags/blocks/windmill_sails.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/blocks/windowable.json
-893a01e6004d6d8272bd1658e98da88bb572ee57 data/create/tags/blocks/wrench_pickup.json
+c71f8ee0103d0c1b0d1b0727f1ecdc4d1999f1f6 data/create/tags/blocks/wrench_pickup.json
 a8bdc387cfa6296ebcc4af14323e2ddb632234dc data/create/tags/fluids/bottomless/allow.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/fluids/bottomless/deny.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/items/blaze_burner_fuel/regular.json
