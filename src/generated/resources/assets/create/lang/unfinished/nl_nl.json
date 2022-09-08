@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2483",
+	"_": "Missing Localizations: 2485",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1258,8 +1258,10 @@
 	"create.item_attributes.smeltable.inverted": "UNLOCALIZED: cannot be Smelted",
 	"create.item_attributes.smokable": "UNLOCALIZED: can be Smoked",
 	"create.item_attributes.smokable.inverted": "UNLOCALIZED: cannot be Smoked",
-	"create.item_attributes.blastable": "UNLOCALIZED: is smeltable in Blast Furnace",
-	"create.item_attributes.blastable.inverted": "UNLOCALIZED: is not smeltable in Blast Furnace",
+	"create.item_attributes.blastable": "UNLOCALIZED: can be Smelted in a Blast Furnace",
+	"create.item_attributes.blastable.inverted": "UNLOCALIZED: cannot be Smelted in a Blast Furnace",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "UNLOCALIZED: is shulker %1$s",
 	"create.item_attributes.shulker_level.inverted": "UNLOCALIZED: is shulker not %1$s",
 	"create.item_attributes.shulker_level.full": "UNLOCALIZED: full",
