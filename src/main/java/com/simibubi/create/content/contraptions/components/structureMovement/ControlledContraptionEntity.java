@@ -226,15 +226,14 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks) {
+	public void applyLocalTransforms(PoseStack matrixStack, float partialTicks) {
 		float angle = getAngle(partialTicks);
 		Axis axis = getRotationAxis();
 
-		for (PoseStack stack : matrixStacks)
-			TransformStack.cast(stack)
-				.nudge(getId())
-				.centre()
-				.rotate(angle, axis)
-				.unCentre();
+		TransformStack.cast(matrixStack)
+			.nudge(getId())
+			.centre()
+			.rotate(angle, axis)
+			.unCentre();
 	}
 }

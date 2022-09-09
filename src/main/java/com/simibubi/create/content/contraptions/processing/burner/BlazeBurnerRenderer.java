@@ -33,52 +33,67 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 	public BlazeBurnerRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(BlazeBurnerTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(BlazeBurnerTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource bufferSource,
 		int light, int overlay) {
 		HeatLevel heatLevel = te.getHeatLevelFromBlock();
 		if (heatLevel == HeatLevel.NONE)
 			return;
 
-		float horizontalAngle = AngleHelper.rad(te.headAngle.getValue(partialTicks));
 		Level level = te.getLevel();
-		int hashCode = te.hashCode();
-		float animation = te.headAnimation.getValue(partialTicks) * .175f;
 		BlockState blockState = te.getBlockState();
+		float animation = te.headAnimation.getValue(partialTicks) * .175f;
+		float horizontalAngle = AngleHelper.rad(te.headAngle.getValue(partialTicks));
+		boolean canDrawFlame = heatLevel.isAtLeast(HeatLevel.FADING);
 		boolean drawGoggles = te.goggles;
 		boolean drawHat = te.hat;
+		int hashCode = te.hashCode();
 
-		renderShared(level, buffer, null, ms, blockState, horizontalAngle, animation, drawGoggles, drawHat, hashCode);
+		renderShared(ms, null, bufferSource,
+			level, blockState, heatLevel, animation, horizontalAngle,
+			canDrawFlame, drawGoggles, drawHat, hashCode);
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
-		ContraptionMatrices matrices, MultiBufferSource buffer, LerpedFloat headAngle, boolean conductor) {
+		ContraptionMatrices matrices, MultiBufferSource bufferSource, LerpedFloat headAngle, boolean conductor) {
 		BlockState state = context.state;
-		if (BlazeBurnerBlock.getHeatLevelOf(state) == HeatLevel.KINDLED)
-			state = state.setValue(BlazeBurnerBlock.HEAT_LEVEL, HeatLevel.FADING);
-		float value = AngleHelper.rad(headAngle.getValue(AnimationTickHolder.getPartialTicks(context.world)));
-		renderShared(context.world, buffer, matrices.getModel(), matrices.getViewProjection(), state, value, 0,
-			context.tileData.contains("Goggles"), conductor, context.hashCode());
+		HeatLevel heatLevel = BlazeBurnerBlock.getHeatLevelOf(state);
+		if (heatLevel == HeatLevel.NONE)
+			return;
+
+		if (!heatLevel.isAtLeast(HeatLevel.FADING)) {
+			heatLevel = HeatLevel.FADING;
+		}
+
+		Level level = context.world;
+		float horizontalAngle = AngleHelper.rad(headAngle.getValue(AnimationTickHolder.getPartialTicks(level)));
+		boolean drawGoggles = context.tileData.contains("Goggles");
+		boolean drawHat = conductor || context.tileData.contains("TrainHat");
+		int hashCode = context.hashCode();
+
+		renderShared(matrices.getViewProjection(), matrices.getModel(), bufferSource,
+			level, state, heatLevel, 0, horizontalAngle,
+			false, drawGoggles, drawHat, hashCode);
 	}
 
-	private static void renderShared(Level level, MultiBufferSource buffer, @Nullable PoseStack modelTransform,
-		PoseStack ms, BlockState blockState, float horizontalAngle, float animation, boolean drawGoggles,
-		boolean drawHat, int hashCode) {
+	private static void renderShared(PoseStack ms, @Nullable PoseStack modelTransform, MultiBufferSource bufferSource,
+		Level level, BlockState blockState, HeatLevel heatLevel, float animation, float horizontalAngle,
+		boolean canDrawFlame, boolean drawGoggles, boolean drawHat, int hashCode) {
 
 		boolean blockAbove = animation > 0.125f;
-		HeatLevel heatLevel = BlazeBurnerBlock.getHeatLevelOf(blockState);
 		float time = AnimationTickHolder.getRenderTime(level);
 		float renderTick = time + (hashCode % 13) * 16f;
 		float offsetMult = heatLevel.isAtLeast(HeatLevel.FADING) ? 64 : 16;
 		float offset = Mth.sin((float) ((renderTick / 16f) % (2 * Math.PI))) / offsetMult;
 		float offset1 = Mth.sin((float) ((renderTick / 16f + Math.PI) % (2 * Math.PI))) / offsetMult;
 		float offset2 = Mth.sin((float) ((renderTick / 16f + Math.PI / 2) % (2 * Math.PI))) / offsetMult;
+		float headY = offset - (animation * .75f);
 
-		VertexConsumer solid = buffer.getBuffer(RenderType.solid());
-		VertexConsumer cutout = buffer.getBuffer(RenderType.cutoutMipped());
+		VertexConsumer solid = bufferSource.getBuffer(RenderType.solid());
+		VertexConsumer cutout = bufferSource.getBuffer(RenderType.cutoutMipped());
 
 		ms.pushPose();
 
-		if (modelTransform == null && heatLevel.isAtLeast(HeatLevel.FADING) && blockAbove) {
+		if (canDrawFlame && blockAbove) {
 			SpriteShiftEntry spriteShift =
 				heatLevel == HeatLevel.SEETHING ? AllSpriteShifts.SUPER_BURNER_FLAME : AllSpriteShifts.BURNER_FLAME;
 
@@ -102,68 +117,87 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 			uScroll = uScroll - Math.floor(uScroll);
 			uScroll = uScroll * spriteWidth / 2;
 
-			draw(CachedBufferer.partial(AllBlockPartials.BLAZE_BURNER_FLAME, blockState)
-				.shiftUVScrolling(spriteShift, (float) uScroll, (float) vScroll), horizontalAngle, modelTransform, ms,
-				cutout);
+			SuperByteBuffer flameBuffer = CachedBufferer.partial(AllBlockPartials.BLAZE_BURNER_FLAME, blockState);
+			if (modelTransform != null)
+				flameBuffer.transform(modelTransform);
+			flameBuffer.shiftUVScrolling(spriteShift, (float) uScroll, (float) vScroll);
+			draw(flameBuffer, horizontalAngle, ms, cutout);
 		}
 
-		PartialModel blazeModel = modelTransform != null ? AllBlockPartials.BLAZE_IDLE : AllBlockPartials.BLAZE_INERT;
-		if (heatLevel.isAtLeast(HeatLevel.SEETHING))
+		PartialModel blazeModel;
+		if (heatLevel.isAtLeast(HeatLevel.SEETHING)) {
 			blazeModel = blockAbove ? AllBlockPartials.BLAZE_SUPER_ACTIVE : AllBlockPartials.BLAZE_SUPER;
-		else if (heatLevel.isAtLeast(HeatLevel.FADING))
+		} else if (heatLevel.isAtLeast(HeatLevel.FADING)) {
 			blazeModel = blockAbove && heatLevel.isAtLeast(HeatLevel.KINDLED) ? AllBlockPartials.BLAZE_ACTIVE
 				: AllBlockPartials.BLAZE_IDLE;
+		} else {
+			blazeModel = AllBlockPartials.BLAZE_INERT;
+		}
 
-		float headY = offset - (animation * .75f);
+		SuperByteBuffer blazeBuffer = CachedBufferer.partial(blazeModel, blockState);
+		if (modelTransform != null)
+			blazeBuffer.transform(modelTransform);
+		blazeBuffer.translate(0, headY, 0);
+		draw(blazeBuffer, horizontalAngle, ms, solid);
 
-		draw(CachedBufferer.partial(blazeModel, blockState)
-			.translate(0, headY, 0), horizontalAngle, modelTransform, ms, solid);
+		if (drawGoggles) {
+			PartialModel gogglesModel = blazeModel == AllBlockPartials.BLAZE_INERT
+					? AllBlockPartials.BLAZE_GOGGLES_SMALL : AllBlockPartials.BLAZE_GOGGLES;
 
-		if (drawGoggles)
-			draw(CachedBufferer.partial(blazeModel == AllBlockPartials.BLAZE_INERT
-				? AllBlockPartials.BLAZE_GOGGLES_SMALL : AllBlockPartials.BLAZE_GOGGLES, blockState)
-				.translate(0, headY + 8 / 16f, 0), horizontalAngle, modelTransform, ms, solid);
+			SuperByteBuffer gogglesBuffer = CachedBufferer.partial(gogglesModel, blockState);
+			if (modelTransform != null)
+				gogglesBuffer.transform(modelTransform);
+			gogglesBuffer.translate(0, headY + 8 / 16f, 0);
+			draw(gogglesBuffer, horizontalAngle, ms, solid);
+		}
 
 		if (drawHat) {
-			SuperByteBuffer partial = CachedBufferer.partial(AllBlockPartials.TRAIN_HAT, blockState)
-				.translate(0, headY, 0);
+			SuperByteBuffer hatBuffer = CachedBufferer.partial(AllBlockPartials.TRAIN_HAT, blockState);
+			if (modelTransform != null)
+				hatBuffer.transform(modelTransform);
+			hatBuffer.translate(0, headY, 0);
 			if (blazeModel == AllBlockPartials.BLAZE_INERT) {
-				partial.translateY(0.5f)
+				hatBuffer.translateY(0.5f)
 					.centre()
 					.scale(0.75f)
 					.unCentre();
 			} else {
-				partial.translateY(0.75f);
+				hatBuffer.translateY(0.75f);
 			}
-			if (modelTransform != null)
-				partial.transform(modelTransform);
-			partial
+			hatBuffer
 				.rotateCentered(Direction.UP, horizontalAngle + Mth.PI)
 				.translate(0.5f, 0, 0.5f)
 				.light(LightTexture.FULL_BRIGHT)
 				.renderInto(ms, solid);
 		}
 
-		if (heatLevel.isAtLeast(HeatLevel.FADING) || modelTransform != null) {
-			PartialModel rods = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS
+		if (heatLevel.isAtLeast(HeatLevel.FADING)) {
+			PartialModel rodsModel = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS
 				: AllBlockPartials.BLAZE_BURNER_RODS;
-			PartialModel rods2 = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS_2
+			PartialModel rodsModel2 = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS_2
 				: AllBlockPartials.BLAZE_BURNER_RODS_2;
-			draw(CachedBufferer.partial(rods, blockState)
-				.translate(0, offset1 + animation + .125f, 0), 0, modelTransform, ms, solid);
-			draw(CachedBufferer.partial(rods2, blockState)
-				.translate(0, offset2 + animation - 3 / 16f, 0), 0, modelTransform, ms, solid);
+
+			SuperByteBuffer rodsBuffer = CachedBufferer.partial(rodsModel, blockState);
+			if (modelTransform != null)
+				rodsBuffer.transform(modelTransform);
+			rodsBuffer.translate(0, offset1 + animation + .125f, 0)
+				.light(LightTexture.FULL_BRIGHT)
+				.renderInto(ms, solid);
+
+			SuperByteBuffer rodsBuffer2 = CachedBufferer.partial(rodsModel2, blockState);
+			if (modelTransform != null)
+				rodsBuffer2.transform(modelTransform);
+			rodsBuffer2.translate(0, offset2 + animation - 3 / 16f, 0)
+				.light(LightTexture.FULL_BRIGHT)
+				.renderInto(ms, solid);
 		}
 
 		ms.popPose();
 	}
 
-	private static void draw(SuperByteBuffer blazeBuffer, float horizontalAngle, @Nullable PoseStack modelTransform,
-		PoseStack ms, VertexConsumer vb) {
-		if (modelTransform != null)
-			blazeBuffer.transform(modelTransform);
-		blazeBuffer.rotateCentered(Direction.UP, horizontalAngle)
+	private static void draw(SuperByteBuffer buffer, float horizontalAngle, PoseStack ms, VertexConsumer vc) {
+		buffer.rotateCentered(Direction.UP, horizontalAngle)
 			.light(LightTexture.FULL_BRIGHT)
-			.renderInto(ms, vb);
+			.renderInto(ms, vc);
 	}
 }
