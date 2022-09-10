@@ -8,16 +8,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class SafeTileEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
-
 	@Override
-	public final void render(T te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
+	public final void render(T te, float partialTicks, PoseStack ms, MultiBufferSource bufferSource, int light,
 		int overlay) {
 		if (isInvalid(te))
 			return;
-		renderSafe(te, partialTicks, ms, buffer, light, overlay);
+		renderSafe(te, partialTicks, ms, bufferSource, light, overlay);
 	}
 
-	protected abstract void renderSafe(T te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
+	protected abstract void renderSafe(T te, float partialTicks, PoseStack ms, MultiBufferSource bufferSource, int light,
 		int overlay);
 
 	public boolean isInvalid(T te) {

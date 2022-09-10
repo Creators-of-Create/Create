@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1327",
+	"_": "Missing Localizations: 1329",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1260,6 +1260,8 @@
 	"create.item_attributes.smokable.inverted": "Não pode ser defumado",
 	"create.item_attributes.blastable": "È fundível no alto-forno",
 	"create.item_attributes.blastable.inverted": "Não é fundível no alto-forno",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "O shulker é %1$s",
 	"create.item_attributes.shulker_level.inverted": "O shulker não é %1$s",
 	"create.item_attributes.shulker_level.full": "Cheio",

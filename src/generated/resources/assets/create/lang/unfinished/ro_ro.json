@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 651",
+	"_": "Missing Localizations: 653",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1260,6 +1260,8 @@
 	"create.item_attributes.smokable.inverted": "nu poate fi Afumat",
 	"create.item_attributes.blastable": "poate fi topit în Furnal",
 	"create.item_attributes.blastable.inverted": "nu poate fi topit în Furnal",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "este shulkerul %1$s",
 	"create.item_attributes.shulker_level.inverted": "nu este shulkerul %1$s",
 	"create.item_attributes.shulker_level.full": "plin",
