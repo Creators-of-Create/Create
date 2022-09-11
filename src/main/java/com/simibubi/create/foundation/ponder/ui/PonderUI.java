@@ -35,12 +35,14 @@ import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.element.TextWindowElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
@@ -53,7 +55,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -117,13 +118,11 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	public static PonderUI of(ItemStack item) {
-		return new PonderUI(PonderRegistry.compile(item.getItem()
-			.getRegistryName()));
+		return new PonderUI(PonderRegistry.compile(RegisteredObjects.getKeyOrThrow(item.getItem())));
 	}
 
 	public static PonderUI of(ItemStack item, PonderTag tag) {
-		PonderUI ponderUI = new PonderUI(PonderRegistry.compile(item.getItem()
-			.getRegistryName()));
+		PonderUI ponderUI = new PonderUI(PonderRegistry.compile(RegisteredObjects.getKeyOrThrow(item.getItem())));
 		ponderUI.referredToByTag = tag;
 		return ponderUI;
 	}
@@ -134,7 +133,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		return ui;
 	}
 
-	PonderUI(List<PonderScene> scenes) {
+	protected PonderUI(List<PonderScene> scenes) {
 		ResourceLocation component = scenes.get(0)
 			.getComponent();
 		if (ForgeRegistries.ITEMS.containsKey(component))
@@ -453,7 +452,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		story.getTransform()
 			.updateScreenParams(width, height, slide);
 		story.getTransform()
-			.apply(ms, partialTicks, false);
+			.apply(ms, partialTicks);
 		story.getTransform()
 			.updateSceneRVE(partialTicks);
 		story.renderScene(buffer, ms, partialTicks);
@@ -568,65 +567,8 @@ public class PonderUI extends NavigatableSimiScreen {
 			noWidgetsHovered &= !child.isMouseOver(mouseX, mouseY);
 
 		int tooltipColor = Theme.i(Theme.Key.TEXT_DARKER);
-		{
-			// Chapter title
-			ms.pushPose();
-			ms.translate(0, 0, 400);
-			int x = 31 + 20 + 8;
-			int y = 31;
-
-			String title = activeScene.getTitle();
-			int wordWrappedHeight = font.wordWrapHeight(title, left.x - 51);
-
-			int streakHeight = 35 - 9 + wordWrappedHeight;
-			UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade));
-			UIRenderHelper.streak(ms, 180, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (30 * fade));
-			new BoxElement().withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
-				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
-				.at(21, 21, 100)
-				.withBounds(30, 30)
-				.render(ms);
-
-			GuiGameElement.of(stack)
-				.scale(2)
-				.at(x - 39, y - 11)
-				.render(ms);
-
-			font.draw(ms, Lang.translateDirect(PONDERING), x, y - 6, tooltipColor);
-			y += 8;
-			x += 0;
-			ms.translate(x, y, 0);
-			ms.mulPose(Vector3f.XN.rotationDegrees(indexDiff * -75));
-			ms.translate(0, 0, 5);
-			FontHelper.drawSplitString(ms, font, title, 0, 0, left.x - 51, Theme.c(Theme.Key.TEXT)
-				.scaleAlpha(1 - indexDiff)
-				.getRGB());
-			ms.popPose();
-
-			if (chapter != null) {
-				ms.pushPose();
-
-				ms.translate(chap.x - 4 - 4, chap.y, 0);
-				UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade));
-
-				drawRightAlignedString(font, ms, Lang.translateDirect(IN_CHAPTER)
-					.getString(), 0, 0, tooltipColor);
-				drawRightAlignedString(font, ms, chapter.getTitle(), 0, 12, Theme.i(Theme.Key.TEXT));
-
-				ms.popPose();
-			}
-
-			Color c1 = Theme.c(Theme.Key.PONDER_BACK_ARROW)
-				.setAlpha(0x40);
-			Color c2 = Theme.c(Theme.Key.PONDER_BACK_ARROW)
-				.setAlpha(0x20);
-			Color c3 = Theme.c(Theme.Key.PONDER_BACK_ARROW)
-				.setAlpha(0x10);
-			UIRenderHelper.breadcrumbArrow(ms, width / 2 - 20, height - 51, 0, 20, 20, 5, c1, c2);
-			UIRenderHelper.breadcrumbArrow(ms, width / 2 + 20, height - 51, 0, -20, 20, -5, c1, c2);
-			UIRenderHelper.breadcrumbArrow(ms, width / 2 - 90, height - 51, 0, 70, 20, 5, c1, c3);
-			UIRenderHelper.breadcrumbArrow(ms, width / 2 + 90, height - 51, 0, -70, 20, -5, c1, c3);
-		}
+		renderChapterTitle(ms, fade, indexDiff, activeScene, tooltipColor);
+		renderNavigationMenu(ms);
 
 		if (identifyMode) {
 			if (noWidgetsHovered && mouseY < height - 80) {
@@ -638,23 +580,14 @@ public class PonderUI extends NavigatableSimiScreen {
 							((MutableComponent) minecraft.options.keyDrop.getTranslatedKeyMessage())
 								.withStyle(ChatFormatting.WHITE))
 						.withStyle(ChatFormatting.GRAY);
-
-					// renderOrderedTooltip(ms, textRenderer.wrapLines(text, width / 3), 0, 0);
 					renderComponentTooltip(ms, font.getSplitter()
 						.splitLines(text, width / 3, Style.EMPTY), 0, 0, font);
-					/*
-					 * String tooltip = Lang .createTranslationTextComponent(IDENTIFY_MODE,
-					 * client.gameSettings.keyBindDrop.getBoundKeyLocalizedText().applyTextStyle(
-					 * TextFormatting.WHITE)) .applyTextStyle(TextFormatting.GRAY)
-					 * .getFormattedText(); renderTooltip(font.listFormattedStringToWidth(tooltip,
-					 * width / 3), 0, 0);
-					 */
 				} else
 					renderTooltip(ms, hoveredTooltipItem, 0, 0);
 				if (hoveredBlockPos != null && PonderIndex.editingModeActive() && !userViewMode) {
 					ms.translate(0, -15, 0);
 					boolean copied = copiedBlockPos != null && hoveredBlockPos.equals(copiedBlockPos);
-					MutableComponent coords = new TextComponent(
+					MutableComponent coords = Components.literal(
 						hoveredBlockPos.getX() + ", " + hoveredBlockPos.getY() + ", " + hoveredBlockPos.getZ())
 							.withStyle(copied ? ChatFormatting.GREEN : ChatFormatting.GOLD);
 					renderTooltip(ms, coords, 0, 0);
@@ -678,30 +611,12 @@ public class PonderUI extends NavigatableSimiScreen {
 		else
 			slowMode.dim();
 
-		{
-			// Scene overlay
-			float scenePT = skipCooling > 0 ? 0 : partialTicks;
-			ms.pushPose();
-			ms.translate(0, 0, 100);
-			renderOverlay(ms, index, scenePT);
-			if (indexDiff > 1 / 512f)
-				renderOverlay(ms, lazyIndexValue < index ? index - 1 : index + 1, scenePT);
-			ms.popPose();
-		}
+		renderSceneOverlay(ms, partialTicks, lazyIndexValue, indexDiff);
 
 		boolean finished = activeScene.isFinished();
 
-		// Next up:
-		if (finished && nextScene != null && nextUp.getValue() > 1 / 16f && !nextScene.getId()
-			.equals(Create.asResource("creative_motor_mojang"))) {
-			ms.pushPose();
-			ms.translate(right.x + 10, right.y - 6 + nextUp.getValue(partialTicks) * 5, 400);
-			int boxWidth = (Math.max(font.width(nextScene.getTitle()), font.width(Lang.translateDirect(NEXT_UP))) + 5);
-			renderSpeechBox(ms, 0, 0, boxWidth, 20, right.isHoveredOrFocused(), Pointing.DOWN, false);
-			ms.translate(0, -29, 100);
-			drawCenteredString(ms, font, Lang.translateDirect(NEXT_UP), 0, 0, Theme.i(Theme.Key.TEXT_DARKER));
-			drawCenteredString(ms, font, nextScene.getTitle(), 0, 10, Theme.i(Theme.Key.TEXT));
-			ms.popPose();
+		if (finished) {
+			jumpToNextScene(ms, partialTicks, nextScene);
 		}
 
 		// Widgets
@@ -726,6 +641,13 @@ public class PonderUI extends NavigatableSimiScreen {
 			nextUp.updateChaseTarget(0);
 		}
 
+		renderPonderTags(ms, mouseX, mouseY, partialTicks, fade, activeScene);
+
+		renderHoverTooltips(ms, tooltipColor);
+		RenderSystem.enableDepthTest();
+	}
+
+	protected void renderPonderTags(PoseStack ms, int mouseX, int mouseY, float partialTicks, float fade, PonderScene activeScene) {
 		// Tags
 		List<PonderTag> sceneTags = activeScene.getTags();
 		boolean highlightAll = sceneTags.contains(PonderTag.Highlight.ALL);
@@ -766,7 +688,34 @@ public class PonderUI extends NavigatableSimiScreen {
 
 				ms.popPose();
 			});
+	}
 
+	protected void renderSceneOverlay(PoseStack ms, float partialTicks, float lazyIndexValue, float indexDiff) {
+		// Scene overlay
+		float scenePT = skipCooling > 0 ? 0 : partialTicks;
+		ms.pushPose();
+		ms.translate(0, 0, 100);
+		renderOverlay(ms, index, scenePT);
+		if (indexDiff > 1 / 512f)
+			renderOverlay(ms, lazyIndexValue < index ? index - 1 : index + 1, scenePT);
+		ms.popPose();
+	}
+
+	protected void jumpToNextScene(PoseStack ms, float partialTicks, PonderScene nextScene) {
+		if (nextScene != null && nextUp.getValue() > 1 / 16f && !nextScene.getId()
+				.equals(Create.asResource("creative_motor_mojang"))) {
+			ms.pushPose();
+			ms.translate(right.x + 10, right.y - 6 + nextUp.getValue(partialTicks) * 5, 400);
+			int boxWidth = (Math.max(font.width(nextScene.getTitle()), font.width(Lang.translateDirect(NEXT_UP))) + 5);
+			renderSpeechBox(ms, 0, 0, boxWidth, 20, right.isHoveredOrFocused(), Pointing.DOWN, false);
+			ms.translate(0, -29, 100);
+			drawCenteredString(ms, font, Lang.translateDirect(NEXT_UP), 0, 0, Theme.i(Theme.Key.TEXT_DARKER));
+			drawCenteredString(ms, font, nextScene.getTitle(), 0, 10, Theme.i(Theme.Key.TEXT));
+			ms.popPose();
+		}
+	}
+
+	protected void renderHoverTooltips(PoseStack ms, int tooltipColor) {
 		ms.pushPose();
 		ms.translate(0, 0, 500);
 		int tooltipY = height - 16;
@@ -785,8 +734,67 @@ public class PonderUI extends NavigatableSimiScreen {
 		if (PonderIndex.editingModeActive() && userMode.isHoveredOrFocused())
 			drawCenteredString(ms, font, "Editor View", userMode.x + 10, tooltipY, tooltipColor);
 		ms.popPose();
+	}
 
-		RenderSystem.enableDepthTest();
+	protected void renderChapterTitle(PoseStack ms, float fade, float indexDiff, PonderScene activeScene, int tooltipColor) {
+		// Chapter title
+		ms.pushPose();
+		ms.translate(0, 0, 400);
+		int x = 31 + 20 + 8;
+		int y = 31;
+
+		String title = activeScene.getTitle();
+		int wordWrappedHeight = font.wordWrapHeight(title, left.x - 51);
+
+		int streakHeight = 35 - 9 + wordWrappedHeight;
+		UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade));
+		UIRenderHelper.streak(ms, 180, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (30 * fade));
+		new BoxElement().withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
+				.at(21, 21, 100)
+				.withBounds(30, 30)
+				.render(ms);
+
+		GuiGameElement.of(stack)
+				.scale(2)
+				.at(x - 39f, y - 11f)
+				.render(ms);
+
+		font.draw(ms, Lang.translateDirect(PONDERING), x, y - 6, tooltipColor);
+		y += 8;
+		x += 0;
+		ms.translate(x, y, 0);
+		ms.mulPose(Vector3f.XN.rotationDegrees(indexDiff * -75));
+		ms.translate(0, 0, 5);
+		FontHelper.drawSplitString(ms, font, title, 0, 0, left.x - 51, Theme.c(Theme.Key.TEXT)
+				.scaleAlpha(1 - indexDiff)
+				.getRGB());
+		ms.popPose();
+		if (chapter != null) {
+			ms.pushPose();
+
+			ms.translate(chap.x - 8, chap.y, 0);
+			UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade));
+
+			drawRightAlignedString(font, ms, Lang.translateDirect(IN_CHAPTER)
+					.getString(), 0, 0, tooltipColor);
+			drawRightAlignedString(font, ms, chapter.getTitle(), 0, 12, Theme.i(Theme.Key.TEXT));
+
+			ms.popPose();
+		}
+	}
+
+	protected void renderNavigationMenu(PoseStack ms) {
+		Color c1 = Theme.c(Theme.Key.PONDER_BACK_ARROW)
+			.setAlpha(0x40);
+		Color c2 = Theme.c(Theme.Key.PONDER_BACK_ARROW)
+			.setAlpha(0x20);
+		Color c3 = Theme.c(Theme.Key.PONDER_BACK_ARROW)
+			.setAlpha(0x10);
+		UIRenderHelper.breadcrumbArrow(ms, width / 2 - 20, height - 51, 0, 20, 20, 5, c1, c2);
+		UIRenderHelper.breadcrumbArrow(ms, width / 2 + 20, height - 51, 0, -20, 20, -5, c1, c2);
+		UIRenderHelper.breadcrumbArrow(ms, width / 2 - 90, height - 51, 0, 70, 20, 5, c1, c3);
+		UIRenderHelper.breadcrumbArrow(ms, width / 2 + 90, height - 51, 0, -70, 20, -5, c1, c3);
 	}
 
 	private void renderOverlay(PoseStack ms, int i, float partialTicks) {

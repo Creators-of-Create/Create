@@ -21,13 +21,14 @@ import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CSchematics;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
@@ -165,9 +166,9 @@ public class ServerSchematicLoader {
 		if (size > maxFileSize * 1000) {
 			
 			player.sendMessage(Lang.translateDirect("schematics.uploadTooLarge")
-				.append(new TextComponent(" (" + size / 1000 + " KB).")), player.getUUID());
+				.append(Components.literal(" (" + size / 1000 + " KB).")), Util.NIL_UUID);
 			player.sendMessage(Lang.translateDirect("schematics.maxAllowedSize")
-				.append(new TextComponent(" " + maxFileSize + " KB")), player.getUUID());
+				.append(Components.literal(" " + maxFileSize + " KB")), Util.NIL_UUID);
 			return false;
 		}
 		return true;

@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.components.deployer.ManualApplic
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -57,7 +58,7 @@ public class LogStrippingFakeRecipes {
 	}
 
 	private static ManualApplicationRecipe create(Item fromItem, Item toItem, ItemStack axe) {
-		ResourceLocation rn = toItem.getRegistryName();
+		ResourceLocation rn = RegisteredObjects.getKeyOrThrow(toItem);
 		return new ProcessingRecipeBuilder<>(ManualApplicationRecipe::new,
 			new ResourceLocation(rn.getNamespace(), rn.getPath() + "_via_vanilla_stripping")).require(fromItem)
 				.require(Ingredient.of(axe))

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -26,9 +27,9 @@ public class SchematicAndQuillItem extends Item {
 	}
 
 	public static void replaceStructureVoidWithAir(CompoundTag nbt) {
-		String air = Blocks.AIR.getRegistryName()
+		String air = RegisteredObjects.getKeyOrThrow(Blocks.AIR)
 			.toString();
-		String structureVoid = Blocks.STRUCTURE_VOID.getRegistryName()
+		String structureVoid = RegisteredObjects.getKeyOrThrow(Blocks.STRUCTURE_VOID)
 			.toString();
 
 		NBTHelper.iterateCompoundList(nbt.getList("palette", 10), c -> {

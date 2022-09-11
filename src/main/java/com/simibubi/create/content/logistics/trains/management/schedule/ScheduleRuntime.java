@@ -17,12 +17,12 @@ import com.simibubi.create.content.logistics.trains.management.schedule.destinat
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -371,7 +371,7 @@ public class ScheduleRuntime {
 		int size = schedule.entries.size();
 		if (index >= size) {
 			if (!schedule.cyclic)
-				return new TrainDeparturePrediction(train, time, new TextComponent(" "), destination);
+				return new TrainDeparturePrediction(train, time, Components.literal(" "), destination);
 			index %= size;
 		}
 
@@ -389,7 +389,7 @@ public class ScheduleRuntime {
 			}
 		}
 
-		return new TrainDeparturePrediction(train, time, new TextComponent(text), destination);
+		return new TrainDeparturePrediction(train, time, Components.literal(text), destination);
 	}
 
 	public CompoundTag write() {
@@ -448,12 +448,12 @@ public class ScheduleRuntime {
 	public MutableComponent getWaitingStatus(Level level) {
 		List<List<ScheduleWaitCondition>> conditions = schedule.entries.get(currentEntry).conditions;
 		if (conditions.isEmpty() || conditionProgress.isEmpty() || conditionContext.isEmpty())
-			return TextComponent.EMPTY.copy();
+			return Components.empty();
 
 		List<ScheduleWaitCondition> list = conditions.get(0);
 		int progress = conditionProgress.get(0);
 		if (progress >= list.size())
-			return TextComponent.EMPTY.copy();
+			return Components.empty();
 
 		CompoundTag tag = conditionContext.get(0);
 		ScheduleWaitCondition condition = list.get(progress);

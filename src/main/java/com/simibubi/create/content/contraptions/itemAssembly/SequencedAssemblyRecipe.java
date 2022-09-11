@@ -12,6 +12,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -19,7 +20,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -239,7 +239,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 		int length = sequencedAssemblyRecipe.sequence.size();
 		int step = sequencedAssemblyRecipe.getStep(stack);
 		int total = length * sequencedAssemblyRecipe.loops;
-		toolTip.add(new TextComponent(""));
+		toolTip.add(Components.immutableEmpty());
 		toolTip.add(Lang.translateDirect("recipe.sequenced_assembly")
 			.withStyle(ChatFormatting.GRAY));
 		toolTip.add(Lang.translateDirect("recipe.assembly.progress", step, total)
@@ -256,7 +256,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 				toolTip.add(Lang.translateDirect("recipe.assembly.next", textComponent)
 					.withStyle(ChatFormatting.AQUA));
 			else
-				toolTip.add(new TextComponent("-> ").append(textComponent)
+				toolTip.add(Components.literal("-> ").append(textComponent)
 					.withStyle(ChatFormatting.DARK_AQUA));
 		}
 

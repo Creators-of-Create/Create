@@ -49,8 +49,8 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound, boolean clientPacket) {
-		super.writeSafe(compound, clientPacket);
+	public void writeSafe(CompoundTag compound) {
+		super.writeSafe(compound);
 		compound.put("Controller", controller.save(new CompoundTag()));
 	}
 

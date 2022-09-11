@@ -5,14 +5,13 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -60,14 +59,14 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 
 	protected Component formatTime(boolean compact) {
 		if (compact)
-			return new TextComponent(getValue() + getUnit().suffix);
-		return new TextComponent(getValue() + " ").append(Lang.translateDirect(getUnit().key));
+			return Components.literal(getValue() + getUnit().suffix);
+		return Components.literal(getValue() + " ").append(Lang.translateDirect(getUnit().key));
 	}
 
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
-			new TranslatableComponent(getId().getNamespace() + ".schedule." + type + "." + getId().getPath()),
+			Components.translatable(getId().getNamespace() + ".schedule." + type + "." + getId().getPath()),
 			Lang.translateDirect("schedule.condition.for_x_time", formatTime(false))
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
@@ -117,7 +116,7 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 		String key = "generic." + (showInMinutes ? num == 1 ? "daytime.minute" : "unit.minutes"
 			: num == 1 ? "daytime.second" : "unit.seconds");
 		return Lang.translateDirect("schedule.condition." + getId().getPath() + ".status",
-			new TextComponent(num + " ").append(Lang.translateDirect(key)));
+			Components.literal(num + " ").append(Lang.translateDirect(key)));
 	}
 
 }

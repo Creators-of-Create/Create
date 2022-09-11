@@ -68,11 +68,13 @@ public class FluidPipeTileEntity extends SmartTileEntity implements ITransformab
 					TileEntityBehaviour.get(world, offsetPos, FluidTransportBehaviour.TYPE);
 				if (pipeBehaviour != null)
 					if (pipeBehaviour.canHaveFlowToward(otherState, direction.getOpposite()))
-						return AttachmentTypes.NONE;
+						return AttachmentTypes.CONNECTION;
 			}
 
 			if (attachment == AttachmentTypes.RIM && !FluidPipeBlock.shouldDrawRim(world, pos, state, direction))
-				return AttachmentTypes.NONE;
+				return AttachmentTypes.CONNECTION;
+			if (attachment == AttachmentTypes.NONE && state.getValue(FluidPipeBlock.PROPERTY_BY_DIRECTION.get(direction)))
+				return AttachmentTypes.CONNECTION;
 			return attachment;
 		}
 

@@ -508,8 +508,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	public void writeSafe(CompoundTag compound, boolean clientPacket) {
-		super.writeSafe(compound, clientPacket);
+	public void writeSafe(CompoundTag compound) {
+		super.writeSafe(compound);
 
 		writeInteractionPoints(compound);
 	}

@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public interface IDisplayAssemblyExceptions {
 
@@ -19,7 +19,7 @@ public interface IDisplayAssemblyExceptions {
 			return false;
 
 		if (!tooltip.isEmpty())
-			tooltip.add(TextComponent.EMPTY);
+			tooltip.add(Components.immutableEmpty());
 
 		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
 			.append(Lang.translateDirect("gui.assembly.exception")

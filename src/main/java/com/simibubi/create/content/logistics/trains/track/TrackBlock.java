@@ -45,6 +45,7 @@ import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandl
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -58,7 +59,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -287,12 +287,12 @@ public class TrackBlock extends Block
 		Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, Predicates.alwaysTrue());
 		if (player == null)
 			return;
-		player.displayClientMessage(new TextComponent("<!> ").append(Lang.translateDirect("portal_track.failed"))
+		player.displayClientMessage(Components.literal("<!> ").append(Lang.translateDirect("portal_track.failed"))
 			.withStyle(ChatFormatting.GOLD), false);
 		MutableComponent component =
 			failPos != null ? Lang.translateDirect("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
 				: Lang.translateDirect("portal_track." + fail);
-		player.displayClientMessage(new TextComponent(" - ").withStyle(ChatFormatting.GRAY)
+		player.displayClientMessage(Components.literal(" - ").withStyle(ChatFormatting.GRAY)
 			.append(component.withStyle(st -> st.withColor(0xFFD3B4))), false);
 	}
 

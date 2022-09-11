@@ -172,7 +172,7 @@ import com.simibubi.create.content.logistics.block.display.source.FluidListDispl
 import com.simibubi.create.content.logistics.block.display.source.ItemCountDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemListDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ItemNameDisplaySource;
-import com.simibubi.create.content.logistics.block.display.source.ItemThoughputDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.ItemThroughputDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.KineticSpeedDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.KineticStressDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.ObservedTrainNameSource;
@@ -652,7 +652,7 @@ public class AllBlocks {
 			.properties(p -> p.lightLevel(BlazeBurnerBlock::getLight))
 			.transform(pickaxeOnly())
 			.addLayer(() -> RenderType::cutoutMipped)
-			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
+			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
 			.loot((lt, block) -> lt.add(block, BlazeBurnerBlock.buildLootTable()))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(movementBehaviour(new BlazeBurnerMovementBehaviour()))
@@ -669,7 +669,7 @@ public class AllBlocks {
 			.properties(p -> p.lightLevel(LitBlazeBurnerBlock::getLight))
 			.transform(pickaxeOnly())
 			.addLayer(() -> RenderType::cutoutMipped)
-			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
+			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
 			.loot((lt, block) -> lt.dropOther(block, AllItems.EMPTY_BLAZE_BURNER.get()))
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStates(state -> ConfiguredModel.builder()
@@ -812,7 +812,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.pipe())
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -827,7 +827,7 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
 				(s, f) -> !s.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
@@ -849,7 +849,7 @@ public class AllBlocks {
 							.build();
 					}, BlockStateProperties.WATERLOGGED);
 			})
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::transparent))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
@@ -858,7 +858,7 @@ public class AllBlocks {
 		.properties(p -> p.color(MaterialColor.STONE))
 		.transform(pickaxeOnly())
 		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(true))
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 		.transform(BlockStressDefaults.setImpact(4.0))
 		.item()
 		.transform(customItemModel())
@@ -870,7 +870,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
 			.blockstate(new SmartFluidPipeGenerator()::generate)
-			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::transparent))
+			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -881,7 +881,7 @@ public class AllBlocks {
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
 			(state, vertical) -> AssetLookup.partialBaseModel(c, p, vertical ? "vertical" : "horizontal",
 				state.getValue(FluidValveBlock.ENABLED) ? "open" : "closed")))
-		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::opaque))
+		.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -1696,7 +1696,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.STONE))
 			.transform(BuilderTransformers.beltTunnel("andesite", new ResourceLocation("block/polished_andesite")))
 			.onRegister(assignDataBehaviour(new AccumulatedItemCountDisplaySource(), "accumulate_items"))
-			.onRegister(assignDataBehaviour(new ItemThoughputDisplaySource(), "item_throughput"))
+			.onRegister(assignDataBehaviour(new ItemThroughputDisplaySource(), "item_throughput"))
 			.register();
 
 	public static final BlockEntry<BrassTunnelBlock> BRASS_TUNNEL =
@@ -1704,7 +1704,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(BuilderTransformers.beltTunnel("brass", Create.asResource("block/brass_block")))
 			.onRegister(assignDataBehaviour(new AccumulatedItemCountDisplaySource(), "accumulate_items"))
-			.onRegister(assignDataBehaviour(new ItemThoughputDisplaySource(), "item_throughput"))
+			.onRegister(assignDataBehaviour(new ItemThroughputDisplaySource(), "item_throughput"))
 			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
 			.register();
 

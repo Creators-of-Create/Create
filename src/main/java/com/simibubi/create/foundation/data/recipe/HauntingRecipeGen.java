@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -52,9 +52,8 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 	}
 
 	public GeneratedRecipe convert(Supplier<Ingredient> input, Supplier<ItemLike> result) {
-		return create(new ResourceLocation(Create.ID, result.get()
-			.asItem()
-			.getRegistryName()
+		return create(Create.asResource(RegisteredObjects.getKeyOrThrow(result.get()
+			.asItem())
 			.getPath()),
 			p -> p.withItemIngredients(input.get())
 				.output(result.get()));

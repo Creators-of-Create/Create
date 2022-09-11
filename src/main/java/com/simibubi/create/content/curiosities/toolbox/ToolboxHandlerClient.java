@@ -157,7 +157,7 @@ public class ToolboxHandlerClient {
 
 	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.hideGui)
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
 
 		int x = width / 2 - 90;

@@ -5,14 +5,18 @@ import java.util.Random;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -32,7 +36,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
-public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterloggedBlock, ICogWheel, ITE<PumpTileEntity> {
+public class PumpBlock extends DirectionalKineticBlock
+	implements SimpleWaterloggedBlock, ICogWheel, ITE<PumpTileEntity> {
 
 	public PumpBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
@@ -96,10 +101,26 @@ public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterlog
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		FluidState FluidState = context.getLevel()
-			.getFluidState(context.getClickedPos());
-		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
-			Boolean.valueOf(FluidState.getType() == Fluids.WATER));
+		BlockState toPlace = super.getStateForPlacement(context);
+		Level level = context.getLevel();
+		BlockPos pos = context.getClickedPos();
+		Player player = context.getPlayer();
+		toPlace = ProperWaterloggedBlock.withWater(level, toPlace, pos);
+
+		if (player != null && player.isSteppingCarefully())
+			return toPlace;
+
+		for (Direction d : Iterate.directions) {
+			BlockPos adjPos = pos.relative(d);
+			BlockState adjState = level.getBlockState(adjPos);
+			if (!FluidPipeBlock.canConnectTo(level, adjPos, adjState, d))
+				continue;
+			toPlace = toPlace.setValue(FACING, d);
+			if (context.getClickedFace() == d.getOpposite())
+				break;
+		}
+
+		return toPlace;
 	}
 
 	public static boolean isPump(BlockState state) {
@@ -113,7 +134,7 @@ public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterlog
 			return;
 		if (state != oldState)
 			world.scheduleTick(pos, this, 1, TickPriority.HIGH);
-		
+
 		if (isPump(state) && isPump(oldState) && state.getValue(FACING) == oldState.getValue(FACING)
 			.getOpposite()) {
 			BlockEntity tileEntity = world.getBlockEntity(pos);

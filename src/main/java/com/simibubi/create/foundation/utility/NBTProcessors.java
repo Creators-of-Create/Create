@@ -6,14 +6,10 @@ import java.util.function.UnaryOperator;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.logistics.item.filter.FilterItem;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
@@ -55,14 +51,6 @@ public final class NBTProcessors {
 			for (Tag inbt : pages) {
 				if (textComponentHasClickEvent(inbt.getAsString()))
 					return null;
-			}
-			return data;
-		});
-		addSurvivalProcessor(AllTileEntities.FUNNEL.get(), data -> {
-			if (data.contains("Filter")) {
-				ItemStack filter = ItemStack.of(data.getCompound("Filter"));
-				if (filter.getItem() instanceof FilterItem)
-					data.remove("Filter");
 			}
 			return data;
 		});

@@ -46,7 +46,7 @@ public abstract class BlockSpoutingBehaviour {
 	public abstract int fillBlock(Level world, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
 		boolean simulate);
 
-	public static void register() {
+	public static void registerDefaults() {
 		addCustomSpoutInteraction(Create.asResource("ticon_casting"), new SpoutCasting());
 	}
 

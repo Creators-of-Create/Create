@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -14,7 +15,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +50,7 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 		int target = getTarget();
 		return ImmutableList.of(Lang.translateDirect("schedule.condition.player_count.seated",
 			Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
-				new TextComponent("" + target).withStyle(ChatFormatting.DARK_AQUA))));
+				Components.literal("" + target).withStyle(ChatFormatting.DARK_AQUA))));
 	}
 
 	@Override

@@ -90,11 +90,11 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	}
 
 	@Override
-	public void writeSafe(CompoundTag tag, boolean clientPacket) {
+	public void writeSafe(CompoundTag tag) {
 		super.saveAdditional(tag);
 		forEachBehaviour(tb -> {
 			if (tb.isSafeNBT())
-				tb.write(tag, clientPacket);
+				tb.write(tag, false);
 		});
 	}
 

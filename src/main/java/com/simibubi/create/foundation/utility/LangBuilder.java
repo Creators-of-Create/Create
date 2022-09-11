@@ -6,8 +6,6 @@ import joptsimple.internal.Strings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 
 public class LangBuilder {
@@ -37,7 +35,7 @@ public class LangBuilder {
 	 * @return
 	 */
 	public LangBuilder translate(String langKey, Object... args) {
-		return add(new TranslatableComponent(namespace + "." + langKey, Lang.resolveBuilders(args)));
+		return add(Components.translatable(namespace + "." + langKey, Lang.resolveBuilders(args)));
 	}
 
 	/**
@@ -47,7 +45,7 @@ public class LangBuilder {
 	 * @return
 	 */
 	public LangBuilder text(String literalText) {
-		return add(new TextComponent(literalText));
+		return add(Components.literal(literalText));
 	}
 
 	/**
@@ -58,7 +56,7 @@ public class LangBuilder {
 	 * @return
 	 */
 	public LangBuilder text(ChatFormatting format, String literalText) {
-		return add(new TextComponent(literalText).withStyle(format));
+		return add(Components.literal(literalText).withStyle(format));
 	}
 
 	/**
@@ -69,7 +67,7 @@ public class LangBuilder {
 	 * @return
 	 */
 	public LangBuilder text(int color, String literalText) {
-		return add(new TextComponent(literalText).withStyle(s -> s.withColor(color)));
+		return add(Components.literal(literalText).withStyle(s -> s.withColor(color)));
 	}
 
 	/**

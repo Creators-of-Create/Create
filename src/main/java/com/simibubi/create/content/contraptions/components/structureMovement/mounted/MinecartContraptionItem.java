@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
@@ -207,6 +208,8 @@ public class MinecartContraptionItem extends Item {
 		if (!(entity instanceof AbstractMinecart))
 			return;
 		if (!entity.isAlive())
+			return;
+		if (player instanceof DeployerFakePlayer dfp && dfp.onMinecartContraption)
 			return;
 		AbstractMinecart cart = (AbstractMinecart) entity;
 		Type type = cart.getMinecartType();

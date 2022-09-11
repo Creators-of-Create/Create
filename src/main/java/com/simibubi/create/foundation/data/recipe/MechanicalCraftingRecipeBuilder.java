@@ -15,6 +15,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -27,7 +28,6 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class MechanicalCraftingRecipeBuilder {
 
@@ -112,7 +112,7 @@ public class MechanicalCraftingRecipeBuilder {
 	 * Builds this recipe into a {@link FinishedRecipe}.
 	 */
 	public void build(Consumer<FinishedRecipe> p_200464_1_) {
-		this.build(p_200464_1_, ForgeRegistries.ITEMS.getKey(this.result));
+		this.build(p_200464_1_, RegisteredObjects.getKeyOrThrow(this.result));
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class MechanicalCraftingRecipeBuilder {
 	 * {@link #build(Consumer)} if save is the same as the ID for the result.
 	 */
 	public void build(Consumer<FinishedRecipe> p_200466_1_, String p_200466_2_) {
-		ResourceLocation resourcelocation = ForgeRegistries.ITEMS.getKey(this.result);
+		ResourceLocation resourcelocation = RegisteredObjects.getKeyOrThrow(this.result);
 		if ((new ResourceLocation(p_200466_2_)).equals(resourcelocation)) {
 			throw new IllegalStateException("Shaped Recipe " + p_200466_2_ + " should remove its 'save' argument");
 		} else {
@@ -209,7 +209,7 @@ public class MechanicalCraftingRecipeBuilder {
 
 			p_218610_1_.add("key", jsonobject);
 			JsonObject jsonobject1 = new JsonObject();
-			jsonobject1.addProperty("item", ForgeRegistries.ITEMS.getKey(this.result)
+			jsonobject1.addProperty("item", RegisteredObjects.getKeyOrThrow(this.result)
 				.toString());
 			if (this.count > 1)
 				jsonobject1.addProperty("count", this.count);

@@ -21,6 +21,7 @@ import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrac
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -39,6 +40,7 @@ public class CarriageSyncData {
 	private TravellingPoint[] pointsToApproach;
 	private float[] pointDistanceSnapshot;
 	private float destinationDistanceSnapshot;
+	private int ticksSince;
 
 	public CarriageSyncData() {
 		wheelLocations = new Vector<>(4);
@@ -48,6 +50,7 @@ public class CarriageSyncData {
 		fallbackPointSnapshot = null;
 		destinationDistanceSnapshot = 0;
 		leadingCarriage = false;
+		ticksSince = 0;
 		for (int i = 0; i < 4; i++) {
 			wheelLocations.add(null);
 			pointsToApproach[i] = new TravellingPoint();
@@ -92,6 +95,7 @@ public class CarriageSyncData {
 	public void read(FriendlyByteBuf buffer) {
 		leadingCarriage = buffer.readBoolean();
 		boolean fallback = buffer.readBoolean();
+		ticksSince = 0;
 
 		if (fallback) {
 			fallbackLocations =
@@ -212,8 +216,17 @@ public class CarriageSyncData {
 		destinationDistanceSnapshot = (float) (distanceToDestination - carriage.train.navigation.distanceToDestination);
 	}
 
-	public void approach(CarriageContraptionEntity entity, Carriage carriage, float partial) {
+	public void approach(CarriageContraptionEntity entity, Carriage carriage, float partialIn) {
 		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level);
+		
+		int updateInterval = entity.getType()
+			.updateInterval();
+		if (ticksSince >= updateInterval * 2)
+			partialIn /= ticksSince - updateInterval * 2 + 1;
+		partialIn *= ServerSpeedProvider.get();
+		final float partial = partialIn;
+		
+		ticksSince++;
 
 		if (fallbackLocations != null && fallbackPointSnapshot != null) {
 			dce.positionAnchor = approachVector(partial, dce.positionAnchor, fallbackLocations.getFirst(),

@@ -11,12 +11,12 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTargetS
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import joptsimple.internal.Strings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 
@@ -50,7 +50,7 @@ public class BoilerDisplaySource extends DisplaySource {
 				return reduce.orElse(EMPTY_LINE);
 			});
 
-			return List.of(componentList.reduce((comp1, comp2) -> comp1.append(new TextComponent("\n"))
+			return List.of(componentList.reduce((comp1, comp2) -> comp1.append(Components.literal("\n"))
 				.append(comp2))
 				.orElse(EMPTY_LINE));
 		}
@@ -128,9 +128,9 @@ public class BoilerDisplaySource extends DisplaySource {
 
 		int lw = labelWidth();
 		if (forFlapDisplay) {
-			size = new TextComponent(Strings.repeat(' ', lw - labelWidthOf("size"))).append(size);
-			water = new TextComponent(Strings.repeat(' ', lw - labelWidthOf("water"))).append(water);
-			heat = new TextComponent(Strings.repeat(' ', lw - labelWidthOf("heat"))).append(heat);
+			size = Components.literal(Strings.repeat(' ', lw - labelWidthOf("size"))).append(size);
+			water = Components.literal(Strings.repeat(' ', lw - labelWidthOf("water"))).append(water);
+			heat = Components.literal(Strings.repeat(' ', lw - labelWidthOf("heat"))).append(heat);
 		}
 
 		return Stream.of(List.of(Lang.translateDirect(label, boiler.getHeatLevelTextComponent())),
@@ -150,7 +150,7 @@ public class BoilerDisplaySource extends DisplaySource {
 
 	private MutableComponent labelOf(String label) {
 		if (label.isBlank())
-			return TextComponent.EMPTY.copy();
+			return Components.empty();
 		return Lang.translateDirect("boiler." + label);
 	}
 

@@ -13,7 +13,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public enum AllArmorMaterials implements ArmorMaterial {
 
-	COPPER("copper", 7, new int[] { 1, 3, 4, 2 }, 25, AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
+	COPPER("copper", 7, new int[] { 1, 3, 4, 2 }, 25, () -> AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
 		() -> Ingredient.of(Items.COPPER_INGOT))
 
 	;
@@ -23,13 +23,13 @@ public enum AllArmorMaterials implements ArmorMaterial {
 	private final int maxDamageFactor;
 	private final int[] damageReductionAmountArray;
 	private final int enchantability;
-	private final SoundEvent soundEvent;
+	private final Supplier<SoundEvent> soundEvent;
 	private final float toughness;
 	private final float knockbackResistance;
 	private final Supplier<Ingredient> repairMaterial;
 
 	private AllArmorMaterials(String name, int maxDamageFactor, int[] damageReductionAmountArray, int enchantability,
-		SoundEvent soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
+		Supplier<SoundEvent> soundEvent, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial) {
 		this.name = name;
 		this.maxDamageFactor = maxDamageFactor;
 		this.damageReductionAmountArray = damageReductionAmountArray;
@@ -57,7 +57,7 @@ public enum AllArmorMaterials implements ArmorMaterial {
 
 	@Override
 	public SoundEvent getEquipSound() {
-		return this.soundEvent;
+		return this.soundEvent.get();
 	}
 
 	@Override

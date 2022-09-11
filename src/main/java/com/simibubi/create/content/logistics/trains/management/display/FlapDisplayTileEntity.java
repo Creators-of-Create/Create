@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.DynamicComponent;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -18,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -145,7 +145,7 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		FlapDisplaySection flapDisplaySection = sections.get(0);
 		if (rawComponentText == null) {
 			manualLines[lineIndex] = false;
-			flapDisplaySection.setText(new TextComponent(""));
+			flapDisplaySection.setText(Components.immutableEmpty());
 			notifyUpdate();
 			return;
 		}
