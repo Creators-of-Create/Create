@@ -16,6 +16,7 @@
     "minecraft:tripwire",
     "minecraft:tripwire_hook",
     "minecraft:daylight_detector",
-    "minecraft:target"
+    "minecraft:target",
+    "minecraft:hopper"
   ]
 }

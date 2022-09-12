@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -43,7 +43,7 @@ public class EnchantAttribute implements ItemAttribute {
     public Object[] getTranslationParameters() {
         String parameter = "";
         if(enchantment != null)
-            parameter = new TranslatableComponent(enchantment.getDescriptionId()).getString();
+            parameter = Components.translatable(enchantment.getDescriptionId()).getString();
         return new Object[] { parameter };
     }
 
@@ -51,7 +51,7 @@ public class EnchantAttribute implements ItemAttribute {
     public void writeNBT(CompoundTag nbt) {
         if (enchantment == null)
             return;
-        ResourceLocation id = ForgeRegistries.ENCHANTMENTS.getKey(enchantment);
+        ResourceLocation id = enchantment.getRegistryName();
         if (id == null)
             return;
         nbt.putString("id", id.toString());

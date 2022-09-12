@@ -95,6 +95,7 @@ public class SchematicRenderer {
 		Random random = objects.random;
 		BlockPos.MutableBlockPos mutableBlockPos = objects.mutableBlockPos;
 		SchematicWorld renderWorld = schematic;
+		renderWorld.renderMode = true;
 		BoundingBox bounds = renderWorld.getBounds();
 
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
@@ -111,16 +112,16 @@ public class SchematicRenderer {
 			BlockPos pos = mutableBlockPos.setWithOffset(localPos, anchor);
 			BlockState state = renderWorld.getBlockState(pos);
 
-			poseStack.pushPose();
-			poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
-
 			if (state.getRenderShape() == RenderShape.MODEL && ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
+				poseStack.pushPose();
+				poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
+
 				BlockEntity tileEntity = renderWorld.getBlockEntity(localPos);
 				dispatcher.renderBatched(state, pos, renderWorld, poseStack, shadeSeparatingWrapper, true, random,
 					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
-			}
 
-			poseStack.popPose();
+				poseStack.popPose();
+			}
 		}
 		ModelBlockRenderer.clearCache();
 		ForgeHooksClient.setRenderType(null);
@@ -129,6 +130,8 @@ public class SchematicRenderer {
 		unshadedBuilder.end();
 		builder.appendUnshadedVertices(unshadedBuilder);
 		builder.end();
+
+		renderWorld.renderMode = false;
 
 		return new SuperByteBuffer(builder);
 	}

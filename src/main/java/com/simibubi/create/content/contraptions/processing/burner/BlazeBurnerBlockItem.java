@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -71,7 +72,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 	@Override
 	public String getDescriptionId() {
-		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + getRegistryName().getPath();
+		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + RegisteredObjects.getKeyOrThrow(this).getPath();
 	}
 
 	@Override
@@ -99,7 +100,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			possibleSpawns.add(spawner.nextSpawnData);
 		}
 
-		ResourceLocation blazeId = EntityType.BLAZE.getRegistryName();
+		ResourceLocation blazeId = RegisteredObjects.getKeyOrThrow(EntityType.BLAZE);
 		for (SpawnData e : possibleSpawns) {
 			ResourceLocation spawnerEntityId = new ResourceLocation(e.entityToSpawn()
 				.getString("id"));

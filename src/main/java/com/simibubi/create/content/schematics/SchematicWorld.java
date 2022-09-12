@@ -109,7 +109,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 				}
 				return tileEntity;
 			} catch (Exception e) {
-				Create.LOGGER.debug("Could not create TE of block " + blockState + ": " + e);
+				Create.LOGGER.debug("Could not create TE of block " + blockState, e);
 			}
 		}
 		return null;

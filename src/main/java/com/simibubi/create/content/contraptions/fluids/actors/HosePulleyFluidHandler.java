@@ -25,12 +25,14 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 		int diff = resource.getAmount();
 		int totalAmountAfterFill = diff + internalTank.getFluidAmount();
 		FluidStack remaining = resource.copy();
+		boolean deposited = false;
 
 		if (predicate.get() && totalAmountAfterFill >= 1000) {
 			if (filler.tryDeposit(resource.getFluid(), rootPosGetter.get(), action.simulate())) {
 				drainer.counterpartActed();
 				remaining.shrink(1000);
 				diff -= 1000;
+				deposited = true;
 			}
 		}
 
@@ -41,7 +43,7 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 			return resource.getAmount();
 		}
 
-		return internalTank.fill(remaining, action);
+		return internalTank.fill(remaining, action) + (deposited ? 1000 : 0);
 	}
 
 	@Override

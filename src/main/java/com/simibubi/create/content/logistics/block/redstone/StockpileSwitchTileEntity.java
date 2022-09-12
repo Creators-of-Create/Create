@@ -59,15 +59,25 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		super.read(compound, clientPacket);
 	}
 
-	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	protected void writeCommon(CompoundTag compound) {
 		compound.putFloat("OnAbove", onWhenAbove);
 		compound.putFloat("OffBelow", offWhenBelow);
+		compound.putBoolean("Inverted", inverted);
+	}
+
+	@Override
+	public void write(CompoundTag compound, boolean clientPacket) {
+		writeCommon(compound);
 		compound.putFloat("Current", currentLevel);
 		compound.putBoolean("Powered", redstoneState);
-		compound.putBoolean("Inverted", inverted);
 		compound.putBoolean("PoweredAfterDelay", poweredAfterDelay);
 		super.write(compound, clientPacket);
+	}
+
+	@Override
+	public void writeSafe(CompoundTag compound) {
+		writeCommon(compound);
+		super.writeSafe(compound);
 	}
 
 	public float getStockLevel() {

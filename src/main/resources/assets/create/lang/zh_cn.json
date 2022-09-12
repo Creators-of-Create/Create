@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 644",
+	"_": "Missing Localizations: 0",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1366,6 +1366,10 @@
 	"create.tooltip.chute.fans_pull_up": "鼓风机从上方进行吸引",
 	"create.tooltip.chute.fans_pull_down": "鼓风机从下方进行吸引",
 	"create.tooltip.chute.contains": "内含物品：%1$s x%2$s",
+	"create.tooltip.deployer.header": "机械手信息",
+	"create.tooltip.deployer.using": "模式：使用",
+	"create.tooltip.deployer.punching": "模式：攻击",
+	"create.tooltip.deployer.contains": "物品：%1$s x%2$s",
 	"create.tooltip.brass_tunnel.contains": "目前分配：",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "右击取出",
@@ -1693,7 +1697,7 @@
 	"create.display_source.kinetic_stress.current": "应力（SU）",
 	"create.display_source.kinetic_stress.max": "总应力",
 	"create.display_source.kinetic_stress.remaining": "剩余应力",
-	"create.display_source.redstone_power":"红石信号",
+	"create.display_source.redstone_power": "红石信号",
 	"create.display_source.redstone_power.display": "显示格式",
 	"create.display_source.redstone_power.number": "数字",
 	"create.display_source.redstone_power.progress_bar": "进度条",

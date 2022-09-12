@@ -5,6 +5,7 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,8 +41,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 		if (handler.getTanks() != 1)
 			return 0;
 
-		ResourceLocation registryName = te.getType()
-			.getRegistryName();
+		ResourceLocation registryName = RegisteredObjects.getKeyOrThrow(te.getType());
 		if (!registryName.equals(TABLE) && !registryName.equals(BASIN))
 			return 0;
 		if (!handler.isFluidValid(0, availableFluid))

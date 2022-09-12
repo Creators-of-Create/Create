@@ -6,10 +6,10 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.network.PacketDistributor;
@@ -55,7 +55,7 @@ public class ConfigCommand {
 											try {
 												configPath = ConfigHelper.ConfigPath.parse(path);
 											} catch (IllegalArgumentException e) {
-												ctx.getSource().sendFailure(new TextComponent(e.getMessage()));
+												ctx.getSource().sendFailure(Components.literal(e.getMessage()));
 												return 0;
 											}
 
@@ -71,13 +71,13 @@ public class ConfigCommand {
 
 											try {
 												ConfigHelper.setConfigValue(configPath, value);
-												ctx.getSource().sendSuccess(new TextComponent("Great Success!"), false);
+												ctx.getSource().sendSuccess(Components.literal("Great Success!"), false);
 												return Command.SINGLE_SUCCESS;
 											} catch (ConfigHelper.InvalidValueException e) {
-												ctx.getSource().sendFailure(new TextComponent("Config could not be set the the specified value!"));
+												ctx.getSource().sendFailure(Components.literal("Config could not be set the the specified value!"));
 												return 0;
 											} catch (Exception e) {
-												ctx.getSource().sendFailure(new TextComponent("Something went wrong while trying to set config value. Check the server logs for more information"));
+												ctx.getSource().sendFailure(Components.literal("Something went wrong while trying to set config value. Check the server logs for more information"));
 												Create.LOGGER.warn("Exception during server-side config value set:", e);
 												return 0;
 											}

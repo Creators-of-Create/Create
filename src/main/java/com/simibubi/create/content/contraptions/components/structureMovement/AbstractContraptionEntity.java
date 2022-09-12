@@ -831,7 +831,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks);
+	public abstract void applyLocalTransforms(PoseStack matrixStack, float partialTicks);
 
 	public static class ContraptionRotationState {
 		public static final ContraptionRotationState NONE = new ContraptionRotationState();

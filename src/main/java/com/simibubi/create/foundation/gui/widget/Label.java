@@ -4,12 +4,12 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class Label extends AbstractSimiWidget {
 
@@ -22,7 +22,7 @@ public class Label extends AbstractSimiWidget {
 	public Label(int x, int y, Component text) {
 		super(x, y, Minecraft.getInstance().font.width(text), 10);
 		font = Minecraft.getInstance().font;
-		this.text = new TextComponent("Label");
+		this.text = Components.literal("Label");
 		color = 0xFFFFFF;
 		hasShadow = false;
 		suffix = "";
@@ -62,8 +62,8 @@ public class Label extends AbstractSimiWidget {
 
 		for (int i = startIndex; i != endIndex; i += step) {
 			String sub = builder.substring(trimFront ? i : startIndex, trimFront ? endIndex + 1 : i + 1);
-			if (fontRenderer.width(new TextComponent(sub).setStyle(newText.getStyle())) + trimWidth <= maxWidthPx) {
-				text = new TextComponent(trimFront ? trim + sub : sub + trim).setStyle(newText.getStyle());
+			if (fontRenderer.width(Components.literal(sub).setStyle(newText.getStyle())) + trimWidth <= maxWidthPx) {
+				text = Components.literal(trimFront ? trim + sub : sub + trim).setStyle(newText.getStyle());
 				return;
 			}
 		}

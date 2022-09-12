@@ -16,24 +16,24 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StationSummaryDisplaySource extends DisplaySource {
 
-	protected static final MutableComponent UNPREDICTABLE = new TextComponent(" ~ ");
+	protected static final MutableComponent UNPREDICTABLE = Components.literal(" ~ ");
 
 	protected static final List<MutableComponent> EMPTY_ENTRY_4 =
-		ImmutableList.of(WHITESPACE, new TextComponent(" . "), WHITESPACE, WHITESPACE);
+		ImmutableList.of(WHITESPACE, Components.literal(" . "), WHITESPACE, WHITESPACE);
 	protected static final List<MutableComponent> EMPTY_ENTRY_5 =
-		ImmutableList.of(WHITESPACE, new TextComponent(" . "), WHITESPACE, WHITESPACE, WHITESPACE);
+		ImmutableList.of(WHITESPACE, Components.literal(" . "), WHITESPACE, WHITESPACE, WHITESPACE);
 
 	@Override
 	public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
@@ -67,7 +67,7 @@ public class StationSummaryDisplaySource extends DisplaySource {
 						min++;
 						sec = 0;
 					}
-					lines.add(min > 0 ? new TextComponent(String.valueOf(min)) : WHITESPACE);
+					lines.add(min > 0 ? Components.literal(String.valueOf(min)) : WHITESPACE);
 					lines.add(min > 0 ? Lang.translateDirect("display_source.station_summary.minutes")
 						: Lang.translateDirect("display_source.station_summary.seconds", sec));
 				}
@@ -86,7 +86,7 @@ public class StationSummaryDisplaySource extends DisplaySource {
 						platform = platform.replace(string, "");
 				platform = platform.replace("*", "?");
 
-				lines.add(new TextComponent(platform.trim()));
+				lines.add(Components.literal(platform.trim()));
 				list.add(lines);
 			});
 

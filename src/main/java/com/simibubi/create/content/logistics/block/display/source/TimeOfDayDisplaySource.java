@@ -6,17 +6,17 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 
-	public static final MutableComponent EMPTY_TIME = new TextComponent("--:--");
+	public static final MutableComponent EMPTY_TIME = Components.literal("--:--");
 	
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
@@ -49,7 +49,7 @@ public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 			minutes = Create.RANDOM.nextInt(40) + 60;
 		}
 
-		MutableComponent component = new TextComponent(
+		MutableComponent component = Components.literal(
 			(hours < 10 ? " " : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + (c12 ? " " : ""));
 
 		return c12 ? component.append(suffix) : component;

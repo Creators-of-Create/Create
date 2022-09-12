@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 8",
+	"_": "Missing Localizations: 10",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1260,6 +1260,8 @@
 	"create.item_attributes.smokable.inverted": "nie może być wędzony",
 	"create.item_attributes.blastable": "może być stopiony w piecu hutniczym",
 	"create.item_attributes.blastable.inverted": "nie może być stopiony w piecu hutniczym",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "jest %1$s",
 	"create.item_attributes.shulker_level.inverted": "nie jest %1$s",
 	"create.item_attributes.shulker_level.full": "pełna",
@@ -1367,9 +1369,9 @@
 	"create.tooltip.chute.fans_pull_down": "Wiatraki ciągną od dołu",
 	"create.tooltip.chute.contains": "Zawiera: %1$s x%2$s",
 	"create.tooltip.deployer.header": "UNLOCALIZED: Deployer Information",
-	"create.tooltip.deployer.using": "UNLOCALIZED: Deployer is Using",
-	"create.tooltip.deployer.punching": "UNLOCALIZED: Deployer is Punching",
-	"create.tooltip.deployer.contains": "UNLOCALIZED: Holding: %1$s x%2$s",
+	"create.tooltip.deployer.using": "UNLOCALIZED: Mode: Use",
+	"create.tooltip.deployer.punching": "UNLOCALIZED: Mode: Attack",
+	"create.tooltip.deployer.contains": "UNLOCALIZED: Item: %1$s x%2$s",
 	"create.tooltip.brass_tunnel.contains": "Aktualnie przenosi:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %2$sx %1$s",
 	"create.tooltip.brass_tunnel.retrieve": "Kliknij prawym przyciskiem, aby zabrać",

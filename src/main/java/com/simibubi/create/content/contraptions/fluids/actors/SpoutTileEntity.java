@@ -76,6 +76,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	protected ProcessingResult onItemReceived(TransportedItemStack transported,
 		TransportedItemStackHandlerBehaviour handler) {
+		if (handler.tileEntity.isVirtual())
+			return PASS;
 		if (!FillingBySpout.canItemBeFilled(level, transported.stack))
 			return PASS;
 		if (tank.isEmpty())

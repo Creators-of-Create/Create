@@ -4,12 +4,12 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BaseCommandBlock;
 import net.minecraft.world.level.block.CommandBlock;
@@ -59,10 +59,10 @@ public class ReplaceInCommandBlocksCommand {
 			});
 		int intValue = blocks.intValue();
 		if (intValue == 0) {
-			source.sendSuccess(new TextComponent("Couldn't find \"" + toReplace + "\" anywhere."), true);
+			source.sendSuccess(Components.literal("Couldn't find \"" + toReplace + "\" anywhere."), true);
 			return;
 		}
-		source.sendSuccess(new TextComponent("Replaced occurrences in " + intValue + " blocks."), true);
+		source.sendSuccess(Components.literal("Replaced occurrences in " + intValue + " blocks."), true);
 	}
 
 }

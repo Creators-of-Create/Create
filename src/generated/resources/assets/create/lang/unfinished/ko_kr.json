@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 4",
+	"_": "Missing Localizations: 6",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1260,6 +1260,8 @@
 	"create.item_attributes.smokable.inverted": "훈연될 수 없음",
 	"create.item_attributes.blastable": "용광로에 녹일 수 있음",
 	"create.item_attributes.blastable.inverted": "용광로에 녹일 수 없음",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "셜커가 %1$s있음",
 	"create.item_attributes.shulker_level.inverted": "셜커가 %1$s있지 않음",
 	"create.item_attributes.shulker_level.full": "가득 차",
@@ -1367,9 +1369,9 @@
 	"create.tooltip.chute.fans_pull_down": "선풍기가 아래에서 당김",
 	"create.tooltip.chute.contains": "들어있는 아이템: %1$s x%2$s",
 	"create.tooltip.deployer.header": "UNLOCALIZED: Deployer Information",
-	"create.tooltip.deployer.using": "UNLOCALIZED: Deployer is Using",
-	"create.tooltip.deployer.punching": "UNLOCALIZED: Deployer is Punching",
-	"create.tooltip.deployer.contains": "UNLOCALIZED: Holding: %1$s x%2$s",
+	"create.tooltip.deployer.using": "UNLOCALIZED: Mode: Use",
+	"create.tooltip.deployer.punching": "UNLOCALIZED: Mode: Attack",
+	"create.tooltip.deployer.contains": "UNLOCALIZED: Item: %1$s x%2$s",
 	"create.tooltip.brass_tunnel.contains": "분배 중인 아이템:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "우클릭하여 회수",
