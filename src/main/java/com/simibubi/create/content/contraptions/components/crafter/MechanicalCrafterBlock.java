@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.crafter;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler.ConnectedInput;
@@ -95,12 +96,15 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 			}
 		}
 
+		Create.LOGGER.info("onRemove:" + (isMoving ? "moving" : "not moving"));
+
 		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
 			MechanicalCrafterTileEntity crafter = CrafterHelper.getCrafter(worldIn, pos);
 			if (crafter != null) {
 				if (crafter.covered)
 					Block.popResource(worldIn, pos, AllItems.CRAFTER_SLOT_COVER.asStack());
-				crafter.ejectWholeGrid();
+				if (!isMoving)
+					crafter.ejectWholeGrid();
 			}
 
 			for (Direction direction : Iterate.directions) {
