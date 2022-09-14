@@ -1675,7 +1675,7 @@
 	"create.display_source.station_summary.platform_column": "Spalte 'Gleis' Größe",
 	"create.display_source.station_summary.now": "jetzt",
 	"create.display_source.station_summary.minutes": "min",
-	"create.display_source.station_summary.seconds": "%1$ssek",
+	"create.display_source.station_summary.seconds": "%1$ss",
 	"create.display_source.observed_train_name": "Zugnamen ermitteln",
 	"create.display_source.max_enchant_level": "Max. Verzauberungskosten",
 	"create.display_source.boiler_status": "Kesselstatus",
