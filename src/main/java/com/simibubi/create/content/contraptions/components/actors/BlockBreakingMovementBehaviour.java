@@ -68,7 +68,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 				float damage = (float) Mth.clamp(6 * Math.pow(context.relativeMotion.length(), 0.4) + 1, 2, 10);
 				entity.hurt(damageSource, damage);
 			}
-			if (throwsEntities() && (world.isClientSide == (entity instanceof Player))) 
+			if (throwsEntities() && (world.isClientSide == (entity instanceof Player)))
 				throwEntity(context, entity);
 		}
 	}
@@ -166,7 +166,10 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		BlockState stateToBreak = world.getBlockState(breakingPos);
 		float blockHardness = stateToBreak.getDestroySpeed(world, breakingPos);
 
-		if (!canBreak(world, breakingPos, stateToBreak)) {
+		Vec3 currentPosition = context.position;
+		double distance = breakingPos.distToCenterSqr(currentPosition);
+
+		if (!canBreak(world, breakingPos, stateToBreak) || distance > 1) {
 			if (destroyProgress != 0) {
 				destroyProgress = 0;
 				data.remove("Progress");
