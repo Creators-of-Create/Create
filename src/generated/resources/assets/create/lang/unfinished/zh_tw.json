@@ -1262,6 +1262,8 @@
 	"create.item_attributes.smokable.inverted": "不可被煙熏",
 	"create.item_attributes.blastable": "可被高爐融煉",
 	"create.item_attributes.blastable.inverted": "不可被高爐融煉",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "界伏盒是 %1$s",
 	"create.item_attributes.shulker_level.inverted": "界伏盒不是 %1$s",
 	"create.item_attributes.shulker_level.full": "滿的",

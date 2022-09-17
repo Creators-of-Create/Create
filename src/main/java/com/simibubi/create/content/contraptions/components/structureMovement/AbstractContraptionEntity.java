@@ -304,13 +304,13 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		localVec = localVec.subtract(rotationOffset);
 		localVec = applyRotation(localVec, partialTicks);
 		localVec = localVec.add(rotationOffset)
-			.add(getAnchorVec());
+			.add(getPrevAnchorVec());
 		return localVec;
 	}
 
 	public Vec3 toLocalVector(Vec3 globalVec, float partialTicks) {
 		Vec3 rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
-		globalVec = globalVec.subtract(getAnchorVec())
+		globalVec = globalVec.subtract(getPrevAnchorVec())
 			.subtract(rotationOffset);
 		globalVec = reverseRotation(globalVec, partialTicks);
 		globalVec = globalVec.add(rotationOffset);
@@ -518,6 +518,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	public Vec3 getAnchorVec() {
 		return position();
+	}
+	
+	public Vec3 getPrevAnchorVec() {
+		return getPrevPositionVec();
 	}
 
 	public float getYawOffset() {
@@ -792,9 +796,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public Vec3 getContactPointMotion(Vec3 globalContactPoint) {
 		if (prevPosInvalid)
 			return Vec3.ZERO;
+		
 		Vec3 contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0), 1);
-		return contactPoint.subtract(globalContactPoint)
-			.add(position().subtract(getPrevPositionVec()));
+		Vec3 contraptionLocalMovement = contactPoint.subtract(globalContactPoint);
+		Vec3 contraptionAnchorMovement = position().subtract(getPrevPositionVec());
+		return contraptionLocalMovement.add(contraptionAnchorMovement);
 	}
 
 	public boolean canCollideWith(Entity e) {
@@ -831,7 +837,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks);
+	public abstract void applyLocalTransforms(PoseStack matrixStack, float partialTicks);
 
 	public static class ContraptionRotationState {
 		public static final ContraptionRotationState NONE = new ContraptionRotationState();

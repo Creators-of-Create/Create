@@ -42,6 +42,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -148,7 +149,8 @@ public interface ItemAttribute {
 			|| testRecipe(s, w, AllRecipeTypes.MILLING.getType())),
 		SMELTABLE((s, w) -> testRecipe(s, w, RecipeType.SMELTING)),
 		SMOKABLE((s, w) -> testRecipe(s, w, RecipeType.SMOKING)),
-		BLASTABLE((s, w) -> testRecipe(s, w, RecipeType.BLASTING));
+		BLASTABLE((s, w) -> testRecipe(s, w, RecipeType.BLASTING)),
+		COMPOSTABLE(s -> ComposterBlock.COMPOSTABLES.containsKey(s.getItem()));
 
 		private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 		private Predicate<ItemStack> test;

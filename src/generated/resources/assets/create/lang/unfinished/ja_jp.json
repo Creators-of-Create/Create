@@ -1262,6 +1262,8 @@
 	"create.item_attributes.smokable.inverted": "燻製器で調理できないか",
 	"create.item_attributes.blastable": "溶鉱炉で精錬できるかか",
 	"create.item_attributes.blastable.inverted": "溶鉱炉で精錬できないか",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "%1$sシュルカーか",
 	"create.item_attributes.shulker_level.inverted": "%1$sシュルカーでないか",
 	"create.item_attributes.shulker_level.full": "満杯の",

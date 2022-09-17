@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.List;
+import java.lang.ref.WeakReference;
+import java.util.Collection;
 
 import javax.annotation.Nullable;
 
@@ -86,10 +87,19 @@ public class ContraptionHandlerClient {
 		Vec3 origin = rayInputs.getFirst();
 		Vec3 target = rayInputs.getSecond();
 		AABB aabb = new AABB(origin, target).inflate(16);
-		List<AbstractContraptionEntity> intersectingContraptions =
-			mc.level.getEntitiesOfClass(AbstractContraptionEntity.class, aabb);
 
-		for (AbstractContraptionEntity contraptionEntity : intersectingContraptions) {
+		Collection<WeakReference<AbstractContraptionEntity>> contraptions =
+			ContraptionHandler.loadedContraptions.get(mc.level)
+				.values();
+		
+		for (WeakReference<AbstractContraptionEntity> ref : contraptions) {
+			AbstractContraptionEntity contraptionEntity = ref.get();
+			if (contraptionEntity == null)
+				continue;
+			if (!contraptionEntity.getBoundingBox()
+				.intersects(aabb))
+				continue;
+
 			BlockHitResult rayTraceResult = rayTraceContraption(origin, target, contraptionEntity);
 			if (rayTraceResult == null)
 				continue;

@@ -1262,6 +1262,8 @@
 	"create.item_attributes.smokable.inverted": "nie może być wędzony",
 	"create.item_attributes.blastable": "może być stopiony w piecu hutniczym",
 	"create.item_attributes.blastable.inverted": "nie może być stopiony w piecu hutniczym",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "jest %1$s",
 	"create.item_attributes.shulker_level.inverted": "nie jest %1$s",
 	"create.item_attributes.shulker_level.full": "pełna",

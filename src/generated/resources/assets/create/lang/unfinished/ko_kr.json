@@ -1262,6 +1262,8 @@
 	"create.item_attributes.smokable.inverted": "훈연될 수 없음",
 	"create.item_attributes.blastable": "용광로에 녹일 수 있음",
 	"create.item_attributes.blastable.inverted": "용광로에 녹일 수 없음",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "셜커가 %1$s있음",
 	"create.item_attributes.shulker_level.inverted": "셜커가 %1$s있지 않음",
 	"create.item_attributes.shulker_level.full": "가득 차",
