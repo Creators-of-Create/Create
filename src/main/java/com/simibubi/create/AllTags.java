@@ -399,6 +399,7 @@ public class AllTags {
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.CAMPFIRES);
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
+		AllBlockTags.FAN_TRANSPARENT.add(Blocks.MANGROVE_ROOTS);
 
 		AllBlockTags.PASSIVE_BOILER_HEATERS.includeAll(BlockTags.FIRE);
 		AllBlockTags.PASSIVE_BOILER_HEATERS.includeAll(BlockTags.CAMPFIRES);

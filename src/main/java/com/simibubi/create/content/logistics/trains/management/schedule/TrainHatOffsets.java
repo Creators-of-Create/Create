@@ -8,6 +8,7 @@ import net.minecraft.client.model.ChickenModel;
 import net.minecraft.client.model.CowModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.FoxModel;
+import net.minecraft.client.model.FrogModel;
 import net.minecraft.client.model.GuardianModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.HoglinModel;
@@ -95,6 +96,9 @@ public class TrainHatOffsets {
 			} else if (model instanceof WardenModel) {
 				y += 3.5f;
 				z += .5f;
+			} else if (model instanceof FrogModel) {
+				y += 16.75f;
+				z -= .25f;
 			}
 		}
 
