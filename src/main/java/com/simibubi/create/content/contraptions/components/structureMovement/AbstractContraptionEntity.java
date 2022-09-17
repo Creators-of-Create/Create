@@ -300,17 +300,27 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public Vec3 toGlobalVector(Vec3 localVec, float partialTicks) {
+		return toGlobalVector(localVec, partialTicks, false);
+	}
+	
+	public Vec3 toGlobalVector(Vec3 localVec, float partialTicks, boolean prevAnchor) {
+		Vec3 anchor = prevAnchor ? getPrevAnchorVec() : getAnchorVec();
 		Vec3 rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
 		localVec = localVec.subtract(rotationOffset);
 		localVec = applyRotation(localVec, partialTicks);
 		localVec = localVec.add(rotationOffset)
-			.add(getPrevAnchorVec());
+			.add(anchor);
 		return localVec;
 	}
+	
+	public Vec3 toLocalVector(Vec3 localVec, float partialTicks) {
+		return toLocalVector(localVec, partialTicks, false);
+	}
 
-	public Vec3 toLocalVector(Vec3 globalVec, float partialTicks) {
+	public Vec3 toLocalVector(Vec3 globalVec, float partialTicks, boolean prevAnchor) {
+		Vec3 anchor = prevAnchor ? getPrevAnchorVec() : getAnchorVec();
 		Vec3 rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
-		globalVec = globalVec.subtract(getPrevAnchorVec())
+		globalVec = globalVec.subtract(anchor)
 			.subtract(rotationOffset);
 		globalVec = reverseRotation(globalVec, partialTicks);
 		globalVec = globalVec.add(rotationOffset);
@@ -797,7 +807,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (prevPosInvalid)
 			return Vec3.ZERO;
 		
-		Vec3 contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0), 1);
+		Vec3 contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0, true), 1, true);
 		Vec3 contraptionLocalMovement = contactPoint.subtract(globalContactPoint);
 		Vec3 contraptionAnchorMovement = position().subtract(getPrevPositionVec());
 		return contraptionLocalMovement.add(contraptionAnchorMovement);
