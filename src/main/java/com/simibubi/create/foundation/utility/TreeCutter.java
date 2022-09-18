@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.dynamictrees.DynamicTree;
 
@@ -42,12 +44,13 @@ public class TreeCutter {
 	public static final Tree NO_TREE = new Tree(Collections.emptyList(), Collections.emptyList());
 
 	public static boolean canDynamicTreeCutFrom(Block startBlock) {
-		return Mods.DYNAMICTREES.runIfInstalled(() -> () -> DynamicTree.isDynamicBranch(startBlock)).orElse(false);
+		return Mods.DYNAMICTREES.runIfInstalled(() -> () -> DynamicTree.isDynamicBranch(startBlock))
+			.orElse(false);
 	}
 
 	@Nonnull
 	public static Optional<AbstractBlockBreakQueue> findDynamicTree(Block startBlock, BlockPos pos) {
-		if (canDynamicTreeCutFrom(startBlock)) 
+		if (canDynamicTreeCutFrom(startBlock))
 			return Mods.DYNAMICTREES.runIfInstalled(() -> () -> new DynamicTree(pos));
 		return Optional.empty();
 	}
@@ -121,57 +124,61 @@ public class TreeCutter {
 			if (!isLog(reader.getBlockState(currentPos)))
 				continue;
 			logs.add(currentPos);
-			addNeighbours(currentPos, frontier, visited);
+			forNeighbours(currentPos, visited, true, p -> frontier.add(new BlockPos(p)));
 		}
 
 		// Find all leaves
 		visited.clear();
 		visited.addAll(logs);
 		frontier.addAll(logs);
+
 		while (!frontier.isEmpty()) {
-			BlockPos currentPos = frontier.remove(0);
-			if (!logs.contains(currentPos) && visited.contains(currentPos))
+			BlockPos prevPos = frontier.remove(0);
+			if (!logs.contains(prevPos) && visited.contains(prevPos))
 				continue;
-			visited.add(currentPos);
 
-			BlockState blockState = reader.getBlockState(currentPos);
-			boolean isLog = isLog(blockState);
-			boolean isLeaf = isLeaf(blockState);
-			boolean isGenericLeaf = isLeaf || isNonDecayingLeaf(blockState);
+			visited.add(prevPos);
+			BlockState prevState = reader.getBlockState(prevPos);
+			int prevLeafDistance = isLeaf(prevState) ? getLeafDistance(prevState) : 0;
 
-			if (!isLog && !isGenericLeaf)
-				continue;
-			if (isGenericLeaf)
-				leaves.add(currentPos);
+			forNeighbours(prevPos, visited, false, currentPos -> {
+				BlockState state = reader.getBlockState(currentPos);
+				BlockPos subtract = currentPos.subtract(pos);
+				BlockPos currentPosImmutable = currentPos.immutable();
 
-			IntegerProperty distanceProperty = LeavesBlock.DISTANCE;
-			for (Property<?> property : blockState.getValues()
-				.keySet())
-				if (property instanceof IntegerProperty ip && property.getName()
-					.equals("distance"))
-					distanceProperty = ip;
-			
-			int distance = !isLeaf ? 0 : blockState.getValue(distanceProperty);
-			for (Direction direction : Iterate.directions) {
-				BlockPos offset = currentPos.relative(direction);
-				if (visited.contains(offset))
-					continue;
-				BlockState state = reader.getBlockState(offset);
-				BlockPos subtract = offset.subtract(pos);
-				
-				for (Property<?> property : state.getValues().keySet()) 
-					if (property instanceof IntegerProperty ip && property.getName().equals("distance"))
-						distanceProperty = ip;
-				
+				if (AllBlockTags.TREE_ATTACHMENTS.matches(state)) {
+					leaves.add(currentPosImmutable);
+					visited.add(currentPosImmutable);
+					return;
+				}
+
 				int horizontalDistance = Math.max(Math.abs(subtract.getX()), Math.abs(subtract.getZ()));
-				if (isLeaf(state) && state.getValue(distanceProperty) > distance
-					|| isNonDecayingLeaf(state) && horizontalDistance < 4)
-					frontier.add(offset);
-			}
+				if (horizontalDistance <= nonDecayingLeafDistance(state)) {
+					leaves.add(currentPosImmutable);
+					frontier.add(currentPosImmutable);
+					return;
+				}
 
+				if (isLeaf(state) && getLeafDistance(state) > prevLeafDistance) {
+					leaves.add(currentPosImmutable);
+					frontier.add(currentPosImmutable);
+					return;
+				}
+
+			});
 		}
 
 		return new Tree(logs, leaves);
+	}
+
+	private static int getLeafDistance(BlockState state) {
+		IntegerProperty distanceProperty = LeavesBlock.DISTANCE;
+		for (Property<?> property : state.getValues()
+			.keySet())
+			if (property instanceof IntegerProperty ip && property.getName()
+				.equals("distance"))
+				distanceProperty = ip;
+		return state.getValue(distanceProperty);
 	}
 
 	public static boolean isChorus(BlockState stateAbove) {
@@ -232,23 +239,32 @@ public class TreeCutter {
 		return true;
 	}
 
-	private static void addNeighbours(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited) {
-		BlockPos.betweenClosedStream(pos.offset(-1, -1, -1), pos.offset(1, 1, 1))
+	private static void forNeighbours(BlockPos pos, Set<BlockPos> visited, boolean up, Consumer<BlockPos> acceptor) {
+		BlockPos.betweenClosedStream(pos.offset(-1, up ? 0 : -1, -1), pos.offset(1, 1, 1))
 			.filter(((Predicate<BlockPos>) visited::contains).negate())
-			.forEach(p -> frontier.add(new BlockPos(p)));
+			.forEach(acceptor);
 	}
 
-	private static boolean isLog(BlockState state) {
-		return state.is(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(state);
+	public static boolean isLog(BlockState state) {
+		return state.is(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(state)
+			|| state.is(Blocks.MUSHROOM_STEM);
 	}
 
-	private static boolean isNonDecayingLeaf(BlockState state) {
-		return state.is(BlockTags.WART_BLOCKS) || state.getBlock() == Blocks.SHROOMLIGHT;
+	private static int nonDecayingLeafDistance(BlockState state) {
+		if (state.is(Blocks.RED_MUSHROOM_BLOCK))
+			return 2;
+		if (state.is(Blocks.BROWN_MUSHROOM_BLOCK))
+			return 3;
+		if (state.is(BlockTags.WART_BLOCKS) || state.is(Blocks.WEEPING_VINES) || state.is(Blocks.WEEPING_VINES_PLANT))
+			return 3;
+		return -1;
 	}
 
 	private static boolean isLeaf(BlockState state) {
-		for (Property<?> property : state.getValues().keySet()) 
-			if (property instanceof IntegerProperty && property.getName().equals("distance"))
+		for (Property<?> property : state.getValues()
+			.keySet())
+			if (property instanceof IntegerProperty && property.getName()
+				.equals("distance"))
 				return true;
 		return false;
 	}

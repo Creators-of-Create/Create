@@ -5633,6 +5633,7 @@ d99d5c67bdffff60789a19bd51a5c5267c75e0a4 data/create/tags/blocks/casing.json
 74f4ba5f6f61c30e27947c6fb4557e888d018285 data/create/tags/blocks/safe_nbt.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/blocks/seats.json
 d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/blocks/toolboxes.json
+8861f982c335a1f17796df4af53a7d5dc91fc85a data/create/tags/blocks/tree_attachments.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/blocks/valve_handles.json
 eac71740fb12bdb38b5dfaa2268613d7ba82b809 data/create/tags/blocks/windmill_sails.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/blocks/windowable.json
