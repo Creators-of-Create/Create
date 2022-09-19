@@ -3,10 +3,11 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.Minecraft;
@@ -28,19 +29,23 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 		if (Backend.canUseInstancing(te.getLevel())) return;
 
 		BlockState state = te.getBlockState();
-		SuperByteBuffer head = CachedBufferer.partial(AllBlockPartials.STICKER_HEAD, state);
-		float offset = te.piston.getValue(WorldTickHolder.getPartialTicks(te.getLevel()));
+		SuperByteBuffer head = CachedPartialBuffers.partial(AllBlockPartials.STICKER_HEAD, state);
+		float offset;
 
 		if (te.getLevel() != Minecraft.getInstance().level && !te.isVirtual())
 			offset = state.getValue(StickerBlock.EXTENDED) ? 1 : 0;
+		else
+			offset = te.piston.getValue(WorldTickHolder.getPartialTicks(te.getLevel()));
 
 		Direction facing = state.getValue(StickerBlock.FACING);
-		head.nudge(te.hashCode())
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing) + 90)
-			.unCentre()
-			.translate(0, (offset * offset) * 4 / 16f, 0);
+		FlwSuperByteBuffer.cast(head).ifPresent(flwBuffer -> flwBuffer
+				.nudge(te.hashCode())
+				.centre()
+				.rotateY(AngleHelper.horizontalAngle(facing))
+				.rotateX(AngleHelper.verticalAngle(facing) + 90)
+				.unCentre()
+				.translate(0, (offset * offset) * 4 / 16f, 0));
+
 
 		head.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

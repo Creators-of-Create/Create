@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -74,9 +75,9 @@ public class CarriageCouplingRenderer {
 				ms.pushPose();
 				ms.pushPose();
 				ms.translate(anchor.x, anchor.y, anchor.z);
-				CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
-					.rotateY(-yRot)
-					.rotateX(xRot)
+				CachedPartialBuffers.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
+					.rotate(Direction.Axis.Y, Mth.DEG_TO_RAD * -yRot)
+					.rotate(Direction.Axis.X, Mth.DEG_TO_RAD * xRot)
 					.light(lightCoords)
 					.renderInto(ms, vb);
 
@@ -86,9 +87,9 @@ public class CarriageCouplingRenderer {
 				int couplingSegments = (int) Math.round(couplingDistance * 4);
 				double stretch = ((anchor2.distanceTo(anchor) - 2 * margin) * 4) / couplingSegments;
 				for (int j = 0; j < couplingSegments; j++) {
-					CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_CABLE, air)
-						.rotateY(-yRot + 180)
-						.rotateX(-xRot)
+					CachedPartialBuffers.partial(AllBlockPartials.TRAIN_COUPLING_CABLE, air)
+						.rotate(Direction.Axis.Y, Mth.DEG_TO_RAD * (-yRot + 180))
+						.rotate(Direction.Axis.X, Mth.DEG_TO_RAD * -xRot)
 						.translate(0, 0, margin + 2 / 16f)
 						.scale(1, 1, (float) stretch)
 						.translate(0, 0, j / 4f)
@@ -102,9 +103,9 @@ public class CarriageCouplingRenderer {
 				ms.translate(-position.x, -position.y, -position.z);
 				ms.translate(position2.x, position2.y, position2.z);
 				ms.translate(anchor2.x, anchor2.y, anchor2.z);
-				CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
-					.rotateY(-yRot + 180)
-					.rotateX(-xRot)
+				CachedPartialBuffers.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
+					.rotate(Direction.Axis.Y, Mth.DEG_TO_RAD * (-yRot + 180))
+					.rotate(Direction.Axis.X, Mth.DEG_TO_RAD * -xRot)
 					.light(lightCoords2)
 					.renderInto(ms, vb);
 				ms.popPose();

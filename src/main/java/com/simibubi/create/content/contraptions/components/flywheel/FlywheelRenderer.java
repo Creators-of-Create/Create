@@ -5,9 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 
+import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -40,7 +40,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 
 	private void renderFlywheel(KineticTileEntity te, PoseStack ms, int light, BlockState blockState, float angle,
 		VertexConsumer vb) {
-		SuperByteBuffer wheel = CachedBufferer.block(blockState);
+		SuperByteBuffer wheel = CachedBlockBuffers.block(blockState);
 		kineticRotationTransform(wheel, te, getRotationAxisOf(te), AngleHelper.rad(angle), light);
 		wheel.renderInto(ms, vb);
 	}

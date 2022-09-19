@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.createmod.catnip.utility.Iterate;
@@ -90,18 +90,18 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 
 		for (Direction d : Iterate.horizontalDirections) {
 			ms.pushPose();
-			CachedBufferer.partial(AllBlockPartials.BOILER_GAUGE, blockState)
-				.rotateY(d.toYRot())
-				.unCentre()
+			CachedPartialBuffers.partial(AllBlockPartials.BOILER_GAUGE, blockState)
+				.rotate(Direction.Axis.Y, Mth.DEG_TO_RAD * d.toYRot())
+				.translate(-.5, -.5, -.5)
 				.translate(te.width / 2f - 6 / 16f, 0, 0)
 				.light(light)
 				.renderInto(ms, vb);
-			CachedBufferer.partial(AllBlockPartials.BOILER_GAUGE_DIAL, blockState)
-				.rotateY(d.toYRot())
-				.unCentre()
+			CachedPartialBuffers.partial(AllBlockPartials.BOILER_GAUGE_DIAL, blockState)
+				.rotate(Direction.Axis.Y, Mth.DEG_TO_RAD * d.toYRot())
+				.translate(-.5, -.5, -.5)
 				.translate(te.width / 2f - 6 / 16f, 0, 0)
 				.translate(0, dialPivot, dialPivot)
-				.rotateX(-90 * progress)
+				.rotate(Direction.Axis.X, Mth.DEG_TO_RAD * -90 * progress)
 				.translate(0, -dialPivot, -dialPivot)
 				.light(light)
 				.renderInto(ms, vb);

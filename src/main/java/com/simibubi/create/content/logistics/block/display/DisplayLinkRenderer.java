@@ -3,10 +3,12 @@ package com.simibubi.create.content.logistics.block.display;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -49,15 +51,17 @@ public class DisplayLinkRenderer extends SafeTileEntityRenderer<DisplayLinkTileE
 			.rotateX(-AngleHelper.verticalAngle(face) - 90)
 			.unCentre();
 
-		CachedBufferer.partial(AllBlockPartials.DISPLAY_LINK_TUBE, blockState)
+		CachedPartialBuffers.partial(AllBlockPartials.DISPLAY_LINK_TUBE, blockState)
 			.light(LightTexture.FULL_BRIGHT)
 			.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
-		CachedBufferer.partial(AllBlockPartials.DISPLAY_LINK_GLOW, blockState)
-			.light(LightTexture.FULL_BRIGHT)
-			.color(color, color, color, 255)
-			.disableDiffuse()
-			.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
+		SuperByteBuffer partial = CachedPartialBuffers.partial(AllBlockPartials.DISPLAY_LINK_GLOW, blockState);
+		FlwSuperByteBuffer.cast(partial).ifPresent(flwBuffer -> flwBuffer
+				.light(LightTexture.FULL_BRIGHT)
+				.color(color, color, color, 255)
+				.disableDiffuse()
+				.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()))
+		);
 
 		ms.popPose();
 	}

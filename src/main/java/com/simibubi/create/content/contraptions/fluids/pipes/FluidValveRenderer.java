@@ -5,10 +5,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import net.createmod.catnip.utility.math.AngleHelper;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -31,7 +32,7 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		BlockState blockState = te.getBlockState();
-		SuperByteBuffer pointer = CachedBufferer.partial(AllBlockPartials.FLUID_VALVE_POINTER, blockState);
+		SuperByteBuffer pointer = CachedPartialBuffers.partial(AllBlockPartials.FLUID_VALVE_POINTER, blockState);
 		Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
 		if (!(te instanceof FluidValveTileEntity valve))
@@ -41,15 +42,21 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 		Axis pipeAxis = FluidValveBlock.getPipeAxis(blockState);
 		Axis shaftAxis = KineticTileEntityRenderer.getRotationAxisOf(te);
 
-		int pointerRotationOffset = 0;
+		int pointerRotationOffset;
 		if (pipeAxis.isHorizontal() && shaftAxis == Axis.X || pipeAxis.isVertical())
 			pointerRotationOffset = 90;
+		else
+			pointerRotationOffset = 0;
 
-		pointer.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.rotateY(pointerRotationOffset + pointerRotation)
-			.unCentre()
+		FlwSuperByteBuffer.cast(pointer).ifPresent(flwBuffer -> flwBuffer
+				.centre()
+				.rotateY(AngleHelper.horizontalAngle(facing))
+				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+				.rotateY(pointerRotationOffset + pointerRotation)
+				.unCentre()
+		);
+
+		pointer
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}

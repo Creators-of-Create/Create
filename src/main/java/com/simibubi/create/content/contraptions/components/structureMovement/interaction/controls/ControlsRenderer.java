@@ -7,9 +7,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,13 +25,11 @@ public class ControlsRenderer {
 		BlockState state = context.state;
 		Direction facing = state.getValue(ControlsBlock.FACING);
 
-		SuperByteBuffer cover = CachedBufferer.partial(AllBlockPartials.TRAIN_CONTROLS_COVER, state);
+		SuperByteBuffer cover = CachedPartialBuffers.partial(AllBlockPartials.TRAIN_CONTROLS_COVER, state);
 		float hAngle = 180 + AngleHelper.horizontalAngle(facing);
 		PoseStack ms = matrices.getModel();
 		cover.transform(ms)
-			.centre()
-			.rotateY(hAngle)
-			.unCentre()
+			.rotateCentered(Direction.Axis.Y, Mth.DEG_TO_RAD * hAngle)
 			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
 
@@ -39,7 +37,7 @@ public class ControlsRenderer {
 
 		for (boolean first : Iterate.trueAndFalse) {
 			float vAngle = (float) Mth.clamp(first ? firstLever * 70 - 25 : secondLever * 15, -45, 45);
-			SuperByteBuffer lever = CachedBufferer.partial(AllBlockPartials.TRAIN_CONTROLS_LEVER, state);
+			SuperByteBuffer lever = CachedPartialBuffers.partial(AllBlockPartials.TRAIN_CONTROLS_LEVER, state);
 			ms.pushPose();
 			TransformStack.cast(ms)
 				.centre()

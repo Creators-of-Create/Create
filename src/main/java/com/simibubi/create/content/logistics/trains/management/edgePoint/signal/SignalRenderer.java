@@ -7,10 +7,10 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTa
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.OverlayState;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import net.createmod.ponder.utility.WorldTickHolder;
 
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -32,10 +32,10 @@ public class SignalRenderer extends SafeTileEntityRenderer<SignalTileEntity> {
 
 		float renderTime = WorldTickHolder.getRenderTime(te.getLevel());
 		if (signalState.isRedLight(renderTime))
-			CachedBufferer.partial(AllBlockPartials.SIGNAL_ON, blockState)
+			CachedPartialBuffers.partial(AllBlockPartials.SIGNAL_ON, blockState)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		else
-			CachedBufferer.partial(AllBlockPartials.SIGNAL_OFF, blockState)
+			CachedPartialBuffers.partial(AllBlockPartials.SIGNAL_OFF, blockState)
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 

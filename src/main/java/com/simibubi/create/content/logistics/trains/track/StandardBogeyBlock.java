@@ -18,8 +18,9 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBlockBuffers;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,6 +28,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -132,12 +134,10 @@ public class StandardBogeyBlock extends Block
 		BlockState air = Blocks.AIR.defaultBlockState();
 
 		for (int i : Iterate.zeroAndOne)
-			CachedBufferer.block(AllBlocks.SHAFT.getDefaultState()
+			CachedBlockBuffers.block(AllBlocks.SHAFT.getDefaultState()
 				.setValue(ShaftBlock.AXIS, Axis.Z))
 				.translate(-.5f, .25f, i * -1)
-				.centre()
-				.rotateZ(wheelAngle)
-				.unCentre()
+				.rotateCentered(Axis.Z, Mth.DEG_TO_RAD * wheelAngle)
 				.light(light)
 				.renderInto(ms, vb);
 
@@ -149,16 +149,16 @@ public class StandardBogeyBlock extends Block
 	}
 
 	private void renderBogey(float wheelAngle, PoseStack ms, int light, VertexConsumer vb, BlockState air) {
-		CachedBufferer.partial(AllBlockPartials.BOGEY_FRAME, air)
+		CachedPartialBuffers.partial(AllBlockPartials.BOGEY_FRAME, air)
 			.scale(1 - 1 / 512f)
 			.light(light)
 			.renderInto(ms, vb);
 
 		for (int side : Iterate.positiveAndNegative) {
 			ms.pushPose();
-			CachedBufferer.partial(AllBlockPartials.SMALL_BOGEY_WHEELS, air)
+			CachedPartialBuffers.partial(AllBlockPartials.SMALL_BOGEY_WHEELS, air)
 				.translate(0, 12 / 16f, side)
-				.rotateX(wheelAngle)
+				.rotate(Axis.X, Mth.DEG_TO_RAD * wheelAngle)
 				.light(light)
 				.renderInto(ms, vb);
 			ms.popPose();
@@ -167,35 +167,33 @@ public class StandardBogeyBlock extends Block
 
 	private void renderLargeBogey(float wheelAngle, PoseStack ms, int light, VertexConsumer vb, BlockState air) {
 		for (int i : Iterate.zeroAndOne)
-			CachedBufferer.block(AllBlocks.SHAFT.getDefaultState()
+			CachedBlockBuffers.block(AllBlocks.SHAFT.getDefaultState()
 				.setValue(ShaftBlock.AXIS, Axis.X))
 				.translate(-.5f, .25f, .5f + i * -2)
-				.centre()
-				.rotateX(wheelAngle)
-				.unCentre()
+				.rotateCentered(Axis.X, Mth.DEG_TO_RAD * wheelAngle)
 				.light(light)
 				.renderInto(ms, vb);
 
-		CachedBufferer.partial(AllBlockPartials.BOGEY_DRIVE, air)
+		CachedPartialBuffers.partial(AllBlockPartials.BOGEY_DRIVE, air)
 			.scale(1 - 1 / 512f)
 			.light(light)
 			.renderInto(ms, vb);
-		CachedBufferer.partial(AllBlockPartials.BOGEY_PISTON, air)
+		CachedPartialBuffers.partial(AllBlockPartials.BOGEY_PISTON, air)
 			.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)))
 			.light(light)
 			.renderInto(ms, vb);
 
 		ms.pushPose();
-		CachedBufferer.partial(AllBlockPartials.LARGE_BOGEY_WHEELS, air)
+		CachedPartialBuffers.partial(AllBlockPartials.LARGE_BOGEY_WHEELS, air)
 			.translate(0, 1, 0)
-			.rotateX(wheelAngle)
+			.rotate(Axis.X, Mth.DEG_TO_RAD * wheelAngle)
 			.light(light)
 			.renderInto(ms, vb);
-		CachedBufferer.partial(AllBlockPartials.BOGEY_PIN, air)
+		CachedPartialBuffers.partial(AllBlockPartials.BOGEY_PIN, air)
 			.translate(0, 1, 0)
-			.rotateX(wheelAngle)
+			.rotate(Axis.X, Mth.DEG_TO_RAD * wheelAngle)
 			.translate(0, 1 / 4f, 0)
-			.rotateX(-wheelAngle)
+			.rotate(Axis.X, Mth.DEG_TO_RAD * -wheelAngle)
 			.light(light)
 			.renderInto(ms, vb);
 		ms.popPose();

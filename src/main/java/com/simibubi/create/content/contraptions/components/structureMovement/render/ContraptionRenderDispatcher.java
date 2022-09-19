@@ -23,9 +23,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
@@ -175,7 +176,7 @@ public class ContraptionRenderDispatcher {
 				.withBlocks(values)
 				.withModelData(c.modelData)
 				.build();
-		return new SuperByteBuffer(builder);
+		return new FlwSuperByteBuffer(builder);
 	}
 
 	public static int getLight(Level world, float lx, float ly, float lz) {

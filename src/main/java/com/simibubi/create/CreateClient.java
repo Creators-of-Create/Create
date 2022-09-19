@@ -22,12 +22,14 @@ import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.ponder.CreateSharedPonderText;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.render.CreateContexts;
-import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.render.FlwSuperBufferFactory;
 import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 
+import net.createmod.catnip.render.SuperBufferFactory;
+import net.createmod.catnip.render.SuperByteBufferCache;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
@@ -45,8 +47,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CreateClient {
 
-	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
-	//public static final Outliner OUTLINER = new Outliner();
 	public static final ModelSwapper MODEL_SWAPPER = new ModelSwapper();
 	public static final CasingConnectivity CASING_CONNECTIVITY = new CasingConnectivity();
 
@@ -77,11 +77,12 @@ public class CreateClient {
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
-		BUFFER_CACHE.registerCompartment(CachedBufferer.GENERIC_TILE);
-		BUFFER_CACHE.registerCompartment(CachedBufferer.PARTIAL);
-		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
-		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
-		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
+		SuperBufferFactory.setInstance(new FlwSuperBufferFactory());
+
+		SuperByteBufferCache.getInstance().registerCompartment(CachedPartialBuffers.PARTIAL);
+		SuperByteBufferCache.getInstance().registerCompartment(CachedPartialBuffers.DIRECTIONAL_PARTIAL);
+		SuperByteBufferCache.getInstance().registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+		SuperByteBufferCache.getInstance().registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 
 		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
 
@@ -107,8 +108,6 @@ public class CreateClient {
 	}
 
 	public static void invalidateRenderers() {
-		BUFFER_CACHE.invalidate();
-
 		SCHEMATIC_HANDLER.updateRenderers();
 		ContraptionRenderDispatcher.reset();
 	}

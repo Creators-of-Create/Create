@@ -11,11 +11,11 @@ import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.SpriteShiftEntry;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.ponder.utility.WorldTickHolder;
@@ -102,7 +102,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 			uScroll = uScroll - Math.floor(uScroll);
 			uScroll = uScroll * spriteWidth / 2;
 
-			draw(CachedBufferer.partial(AllBlockPartials.BLAZE_BURNER_FLAME, blockState)
+			draw(CachedPartialBuffers.partial(AllBlockPartials.BLAZE_BURNER_FLAME, blockState)
 				.shiftUVScrolling(spriteShift, (float) uScroll, (float) vScroll), horizontalAngle, modelTransform, ms,
 				cutout);
 		}
@@ -116,24 +116,24 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 
 		float headY = offset - (animation * .75f);
 
-		draw(CachedBufferer.partial(blazeModel, blockState)
+		draw(CachedPartialBuffers.partial(blazeModel, blockState)
 			.translate(0, headY, 0), horizontalAngle, modelTransform, ms, solid);
 
 		if (drawGoggles)
-			draw(CachedBufferer.partial(blazeModel == AllBlockPartials.BLAZE_INERT
+			draw(CachedPartialBuffers.partial(blazeModel == AllBlockPartials.BLAZE_INERT
 				? AllBlockPartials.BLAZE_GOGGLES_SMALL : AllBlockPartials.BLAZE_GOGGLES, blockState)
 				.translate(0, headY + 8 / 16f, 0), horizontalAngle, modelTransform, ms, solid);
 
 		if (drawHat) {
-			SuperByteBuffer partial = CachedBufferer.partial(AllBlockPartials.TRAIN_HAT, blockState)
+			SuperByteBuffer partial = CachedPartialBuffers.partial(AllBlockPartials.TRAIN_HAT, blockState)
 				.translate(0, headY, 0);
 			if (blazeModel == AllBlockPartials.BLAZE_INERT) {
-				partial.translateY(0.5f)
-					.centre()
+				partial.translate(0, 0.5f, 0)
+					.translate(.5, .5, .5)
 					.scale(0.75f)
-					.unCentre();
+					.translate(-.5, -.5, -.5);
 			} else {
-				partial.translateY(0.75f);
+				partial.translate(0, 0.75f, 0);
 			}
 			if (modelTransform != null)
 				partial.transform(modelTransform);
@@ -149,9 +149,9 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 				: AllBlockPartials.BLAZE_BURNER_RODS;
 			PartialModel rods2 = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS_2
 				: AllBlockPartials.BLAZE_BURNER_RODS_2;
-			draw(CachedBufferer.partial(rods, blockState)
+			draw(CachedPartialBuffers.partial(rods, blockState)
 				.translate(0, offset1 + animation + .125f, 0), 0, modelTransform, ms, solid);
-			draw(CachedBufferer.partial(rods2, blockState)
+			draw(CachedPartialBuffers.partial(rods2, blockState)
 				.translate(0, offset2 + animation - 3 / 16f, 0), 0, modelTransform, ms, solid);
 		}
 

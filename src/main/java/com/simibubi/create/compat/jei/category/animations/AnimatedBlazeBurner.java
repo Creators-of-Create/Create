@@ -8,9 +8,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.SpriteShiftEntry;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.Minecraft;
@@ -87,7 +87,7 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 		MultiBufferSource.BufferSource buffer = mc.renderBuffers()
 			.bufferSource();
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
-		CachedBufferer.partial(AllBlockPartials.BLAZE_BURNER_FLAME, Blocks.AIR.defaultBlockState())
+		CachedPartialBuffers.partial(AllBlockPartials.BLAZE_BURNER_FLAME, Blocks.AIR.defaultBlockState())
 			.shiftUVScrolling(spriteShift, (float) uScroll, (float) vScroll)
 			.light(LightTexture.FULL_BRIGHT)
 			.renderInto(matrixStack, vb);

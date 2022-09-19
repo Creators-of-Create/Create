@@ -8,11 +8,11 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.render.SuperByteBufferCache;
 import net.createmod.catnip.utility.theme.Color;
 import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -62,12 +62,12 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
-		return CachedBufferer.block(KINETIC_TILE, state);
+		return CachedBlockBuffers.block(KINETIC_TILE, state);
 	}
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, PoseStack ms,
 		VertexConsumer buffer, int light) {
-		SuperByteBuffer superByteBuffer = CachedBufferer.block(KINETIC_TILE, renderedState);
+		SuperByteBuffer superByteBuffer = CachedBlockBuffers.block(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(te, superByteBuffer, ms, buffer, light);
 	}
 

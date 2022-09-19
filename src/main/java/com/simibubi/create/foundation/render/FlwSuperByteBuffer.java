@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.render;
 
+import java.util.Optional;
 import java.util.function.IntPredicate;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
 import com.jozufozu.flywheel.api.vertex.VertexList;
@@ -18,11 +21,12 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
-import net.createmod.catnip.utility.theme.Color;
+import net.createmod.catnip.render.SpriteShiftEntry;
+import net.createmod.catnip.render.SuperByteBuffer;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
@@ -32,7 +36,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<SuperByteBuffer> {
+@SuppressWarnings("unchecked")
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class FlwSuperByteBuffer implements Transform<FlwSuperByteBuffer>, TStack<FlwSuperByteBuffer>, SuperByteBuffer {
 
 	private final VertexList template;
 	private final IntPredicate shadedPredicate;
@@ -66,7 +73,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
-	public SuperByteBuffer(BufferBuilder buf) {
+	public FlwSuperByteBuffer(BufferBuilder buf) {
 		if (buf instanceof ShadeSeparatedBufferBuilder separated) {
 			ShadedVertexList template = new BlockVertexList.Shaded(separated);
 			shadedPredicate = template::isShaded;
@@ -208,7 +215,8 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		reset();
 	}
 
-	public SuperByteBuffer reset() {
+	@Override
+	public FlwSuperByteBuffer reset() {
 		while (!transforms.clear())
 			transforms.popPose();
 		transforms.pushPose();
@@ -241,37 +249,53 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	@Override
-	public SuperByteBuffer translate(double x, double y, double z) {
+	public FlwSuperByteBuffer translate(double x, double y, double z) {
 		transforms.translate(x, y, z);
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer multiply(Quaternion quaternion) {
+	public FlwSuperByteBuffer translate(float x, float y, float z) {
+		transforms.translate(x, y, z);
+		return this;
+	}
+
+	@Override
+	public FlwSuperByteBuffer multiply(Quaternion quaternion) {
 		transforms.mulPose(quaternion);
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer scale(float factorX, float factorY, float factorZ) {
+	public FlwSuperByteBuffer rotate(Direction axis, float radians) {
+		return Transform.super.rotate(axis, radians);
+	}
+
+	@Override
+	public FlwSuperByteBuffer scale(float factorX, float factorY, float factorZ) {
 		transforms.scale(factorX, factorY, factorZ);
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer pushPose() {
+	public FlwSuperByteBuffer scale(float factor) {
+		return Transform.super.scale(factor);
+	}
+
+	@Override
+	public FlwSuperByteBuffer pushPose() {
 		transforms.pushPose();
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer popPose() {
+	public FlwSuperByteBuffer popPose() {
 		transforms.popPose();
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer mulPose(Matrix4f pose) {
+	public FlwSuperByteBuffer mulPose(Matrix4f pose) {
 		transforms.last()
 			.pose()
 			.multiply(pose);
@@ -279,14 +303,14 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	@Override
-	public SuperByteBuffer mulNormal(Matrix3f normal) {
+	public FlwSuperByteBuffer mulNormal(Matrix3f normal) {
 		transforms.last()
 			.normal()
 			.mul(normal);
 		return this;
 	}
 
-	public SuperByteBuffer transform(PoseStack stack) {
+	public FlwSuperByteBuffer transform(PoseStack stack) {
 		transforms.last()
 			.pose()
 			.multiply(stack.last()
@@ -298,19 +322,19 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		return this;
 	}
 
-	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
+	public FlwSuperByteBuffer rotateCentered(Direction axis, float radians) {
 		translate(.5f, .5f, .5f).rotate(axis, radians)
 			.translate(-.5f, -.5f, -.5f);
 		return this;
 	}
 
-	public SuperByteBuffer rotateCentered(Quaternion q) {
+	public FlwSuperByteBuffer rotateCentered(Quaternion q) {
 		translate(.5f, .5f, .5f).multiply(q)
 			.translate(-.5f, -.5f, -.5f);
 		return this;
 	}
 
-	public SuperByteBuffer color(int r, int g, int b, int a) {
+	public FlwSuperByteBuffer color(int r, int g, int b, int a) {
 		shouldColor = true;
 		this.r = r;
 		this.g = g;
@@ -319,7 +343,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		return this;
 	}
 
-	public SuperByteBuffer color(int color) {
+	public FlwSuperByteBuffer color(int color) {
 		shouldColor = true;
 		r = ((color >> 16) & 0xFF);
 		g = ((color >> 8) & 0xFF);
@@ -328,37 +352,27 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		return this;
 	}
 
-	public SuperByteBuffer color(Color c) {
-		return color(c.getRGB());
-	}
-
 	/**
 	 * Prevents vertex colors from being multiplied by the diffuse value calculated
 	 * from the final transformed normal vector. Useful for entity rendering, when
 	 * diffuse is applied automatically later.
 	 */
-	public SuperByteBuffer disableDiffuse() {
+	public FlwSuperByteBuffer disableDiffuse() {
 		disableDiffuseMult = true;
 		return this;
 	}
 
-	public SuperByteBuffer diffuseCalculator(DiffuseLightCalculator diffuseCalculator) {
+	public FlwSuperByteBuffer diffuseCalculator(DiffuseLightCalculator diffuseCalculator) {
 		this.diffuseCalculator = diffuseCalculator;
 		return this;
 	}
 
-	public SuperByteBuffer shiftUV(SpriteShiftEntry entry) {
-		this.spriteShiftFunc = (builder, u, v) -> {
-			builder.uv(entry.getTargetU(u), entry.getTargetV(v));
-		};
+	public FlwSuperByteBuffer shiftUV(SpriteShiftEntry entry) {
+		this.spriteShiftFunc = (builder, u, v) -> builder.uv(entry.getTargetU(u), entry.getTargetV(v));
 		return this;
 	}
 
-	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollV) {
-		return this.shiftUVScrolling(entry, 0, scrollV);
-	}
-
-	public SuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollU, float scrollV) {
+	public FlwSuperByteBuffer shiftUVScrolling(SpriteShiftEntry entry, float scrollU, float scrollV) {
 		this.spriteShiftFunc = (builder, u, v) -> {
 			float targetU = u - entry.getOriginal()
 				.getU0() + entry.getTarget()
@@ -373,7 +387,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		return this;
 	}
 
-	public SuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
+	public FlwSuperByteBuffer shiftUVtoSheet(SpriteShiftEntry entry, float uTarget, float vTarget, int sheetSize) {
 		this.spriteShiftFunc = (builder, u, v) -> {
 			float targetU = entry.getTarget()
 				.getU((SpriteShiftEntry.getUnInterpolatedU(entry.getOriginal(), u) / sheetSize) + uTarget * 16);
@@ -384,37 +398,31 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		return this;
 	}
 
-	public SuperByteBuffer overlay() {
+	public FlwSuperByteBuffer overlay() {
 		hasOverlay = true;
 		return this;
 	}
 
-	public SuperByteBuffer overlay(int overlay) {
+	public FlwSuperByteBuffer overlay(int overlay) {
 		hasOverlay = true;
 		this.overlay = overlay;
 		return this;
 	}
 
-	public SuperByteBuffer light() {
+	public FlwSuperByteBuffer light() {
 		useWorldLight = true;
 		return this;
 	}
 
-	public SuperByteBuffer light(Matrix4f lightTransform) {
+	public FlwSuperByteBuffer light(Matrix4f lightTransform) {
 		useWorldLight = true;
 		this.lightTransform = lightTransform;
 		return this;
 	}
 
-	public SuperByteBuffer light(int packedLightCoords) {
+	public FlwSuperByteBuffer light(int packedLightCoords) {
 		hasCustomLight = true;
 		this.packedLightCoords = packedLightCoords;
-		return this;
-	}
-
-	public SuperByteBuffer light(Matrix4f lightTransform, int packedLightCoords) {
-		light(lightTransform);
-		light(packedLightCoords);
 		return this;
 	}
 
@@ -423,7 +431,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	 * light for the final light value. Ineffective if any other light method was
 	 * not called.
 	 */
-	public SuperByteBuffer hybridLight() {
+	public FlwSuperByteBuffer hybridLight() {
 		hybridLight = true;
 		return this;
 	}
@@ -432,16 +440,23 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	 * Transforms normals not only by the local matrix stack, but also by the passed
 	 * matrix stack.
 	 */
-	public SuperByteBuffer fullNormalTransform() {
+	public FlwSuperByteBuffer fullNormalTransform() {
 		fullNormalTransform = true;
 		return this;
 	}
 
-	public SuperByteBuffer forEntityRender() {
+	public FlwSuperByteBuffer forEntityRender() {
 		disableDiffuse();
 		overlay();
 		fullNormalTransform();
 		return this;
+	}
+
+	public static Optional<FlwSuperByteBuffer> cast(SuperByteBuffer buffer) {
+		if (!(buffer instanceof FlwSuperByteBuffer flwBuffer))
+			return Optional.empty();
+
+		return Optional.of(flwBuffer);
 	}
 
 	public static int transformColor(byte component, float scale) {
@@ -463,16 +478,6 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	private static int getLight(Level world, Vector4f lightPos) {
 		BlockPos pos = new BlockPos(lightPos.x(), lightPos.y(), lightPos.z());
 		return WORLD_LIGHT_CACHE.computeIfAbsent(pos.asLong(), $ -> LevelRenderer.getLightColor(world, pos));
-	}
-
-	@FunctionalInterface
-	public interface SpriteShiftFunc {
-		void shift(VertexConsumer builder, float u, float v);
-	}
-
-	@FunctionalInterface
-	public interface VertexLighter {
-		int getPackedLight(float x, float y, float z);
 	}
 
 }

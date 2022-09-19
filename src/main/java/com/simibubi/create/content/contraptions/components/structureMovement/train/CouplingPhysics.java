@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
+
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;

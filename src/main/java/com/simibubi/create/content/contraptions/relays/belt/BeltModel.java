@@ -9,8 +9,8 @@ import java.util.Random;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.foundation.block.render.QuadHelper;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
+import net.createmod.catnip.render.SpriteShiftEntry;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;

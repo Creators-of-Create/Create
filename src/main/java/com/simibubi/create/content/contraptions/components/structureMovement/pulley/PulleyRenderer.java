@@ -5,9 +5,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 
+import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
@@ -31,12 +31,12 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 	@Override
 	protected SuperByteBuffer renderRope(KineticTileEntity te) {
-		return CachedBufferer.block(AllBlocks.ROPE.getDefaultState());
+		return CachedBlockBuffers.block(AllBlocks.ROPE.getDefaultState());
 	}
 
 	@Override
 	protected SuperByteBuffer renderMagnet(KineticTileEntity te) {
-		return CachedBufferer.block(AllBlocks.PULLEY_MAGNET.getDefaultState());
+		return CachedBlockBuffers.block(AllBlocks.PULLEY_MAGNET.getDefaultState());
 	}
 
 	@Override
@@ -63,10 +63,10 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 		return offset;
 	}
-	
+
 	@Override
 	public int getViewDistance() {
 		return 128;
 	}
-	
+
 }

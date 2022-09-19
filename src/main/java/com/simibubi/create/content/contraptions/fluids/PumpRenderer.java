@@ -5,9 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -33,10 +34,11 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 		Vec3 rotationOffset = new Vec3(.5, 14 / 16f, .5);
 		BlockState blockState = te.getBlockState();
 		float angle = Mth.lerp(pump.arrowDirection.getValue(partialTicks), 0, 90) - 90;
-		SuperByteBuffer arrow = CachedBufferer.partial(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
+		SuperByteBuffer arrow = CachedPartialBuffers.partial(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
 		for (float yRot : new float[] { 0, 90 }) {
 			Direction direction = blockState.getValue(PumpBlock.FACING);
-            arrow.centre()
+			FlwSuperByteBuffer.cast(arrow).ifPresent(flwBuffer -> flwBuffer
+					.centre()
 					.rotateY(AngleHelper.horizontalAngle(direction) + 180)
 					.rotateX(-AngleHelper.verticalAngle(direction) - 90)
 					.unCentre()
@@ -44,14 +46,15 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 					.rotateY(yRot)
 					.rotateZ(angle)
 					.translateBack(rotationOffset)
-					.light(light)
-					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			);
+
+			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}
 	}
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
-		return CachedBufferer.partialFacing(AllBlockPartials.MECHANICAL_PUMP_COG, state);
+		return CachedPartialBuffers.partialFacing(AllBlockPartials.MECHANICAL_PUMP_COG, state);
 	}
 
 }

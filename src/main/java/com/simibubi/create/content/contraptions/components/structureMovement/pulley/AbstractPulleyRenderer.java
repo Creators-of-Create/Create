@@ -7,9 +7,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -60,8 +60,8 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 		BlockState blockState = te.getBlockState();
 		BlockPos pos = te.getBlockPos();
 
-		SuperByteBuffer halfMagnet = CachedBufferer.partial(this.halfMagnet, blockState);
-		SuperByteBuffer halfRope = CachedBufferer.partial(this.halfRope, blockState);
+		SuperByteBuffer halfMagnet = CachedPartialBuffers.partial(this.halfMagnet, blockState);
+		SuperByteBuffer halfRope = CachedPartialBuffers.partial(this.halfRope, blockState);
 		SuperByteBuffer magnet = renderMagnet(te);
 		SuperByteBuffer rope = renderRope(te);
 
@@ -108,7 +108,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 
 	protected SuperByteBuffer getRotatedCoil(KineticTileEntity te) {
 		BlockState blockState = te.getBlockState();
-		return CachedBufferer.partialFacing(getCoil(), blockState,
+		return CachedPartialBuffers.partialFacing(getCoil(), blockState,
 			Direction.get(AxisDirection.POSITIVE, getShaftAxis(te)));
 	}
 

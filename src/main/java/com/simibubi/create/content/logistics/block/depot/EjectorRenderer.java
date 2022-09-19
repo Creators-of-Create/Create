@@ -9,9 +9,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.IntAttached;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -48,10 +49,9 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		float angle = lidProgress * 70;
 
 		if (!Backend.canUseInstancing(te.getLevel())) {
-			SuperByteBuffer model = CachedBufferer.partial(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
-			applyLidAngle(te, angle, model);
-			model.light(light)
-					.renderInto(ms, vertexBuilder);
+			SuperByteBuffer model = CachedPartialBuffers.partial(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
+			FlwSuperByteBuffer.cast(model).ifPresent(flwBuffer -> applyLidAngle(te, angle, flwBuffer));
+			model.light(light).renderInto(ms, vertexBuilder);
 		}
 
 		TransformStack msr = TransformStack.cast(ms);

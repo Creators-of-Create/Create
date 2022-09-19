@@ -7,9 +7,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -27,13 +28,13 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
-		return CachedBufferer.partialFacing(AllBlockPartials.DRILL_HEAD, state);
+		return CachedPartialBuffers.partialFacing(AllBlockPartials.DRILL_HEAD, state);
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		BlockState state = context.state;
-		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.DRILL_HEAD, state);
+		SuperByteBuffer superBuffer = CachedPartialBuffers.partial(AllBlockPartials.DRILL_HEAD, state);
 		Direction facing = state.getValue(DrillBlock.FACING);
 
 		float speed = (float) (context.contraption.stalled
@@ -42,16 +43,19 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));
 
-		superBuffer
-			.transform(matrices.getModel())
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing))
-			.rotateZ(angle)
-			.unCentre()
-			.light(matrices.getWorld(),
-					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
+		FlwSuperByteBuffer.cast(superBuffer).ifPresent(superByteBuffer -> {
+			superByteBuffer
+					.transform(matrices.getModel())
+					.centre()
+					.rotateY(AngleHelper.horizontalAngle(facing))
+					.rotateX(AngleHelper.verticalAngle(facing))
+					.rotateZ(angle)
+					.unCentre()
+					.light(matrices.getWorld(),
+							ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+					.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
+		});
+
 	}
 
 }

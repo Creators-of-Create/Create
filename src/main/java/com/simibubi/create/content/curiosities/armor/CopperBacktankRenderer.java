@@ -4,16 +4,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
-
 import net.createmod.ponder.utility.WorldTickHolder;
-
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CopperBacktankRenderer extends KineticTileEntityRenderer {
@@ -28,10 +28,8 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		BlockState blockState = te.getBlockState();
-		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_COGS, blockState);
-		cogs.centre()
-			.rotateY(180 + AngleHelper.horizontalAngle(blockState.getValue(CopperBacktankBlock.HORIZONTAL_FACING)))
-			.unCentre()
+		SuperByteBuffer cogs = CachedPartialBuffers.partial(AllBlockPartials.COPPER_BACKTANK_COGS, blockState);
+		cogs.rotateCentered(Direction.Axis.Y, Mth.DEG_TO_RAD * (180 + AngleHelper.horizontalAngle(blockState.getValue(CopperBacktankBlock.HORIZONTAL_FACING))))
 			.translate(0, 6.5f / 16, 11f / 16)
 			.rotate(Direction.EAST,
 				AngleHelper.rad(te.getSpeed() / 4f * WorldTickHolder.getRenderTime(te.getLevel()) % 360))
@@ -42,7 +40,7 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
-		return CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_SHAFT, state);
+		return CachedPartialBuffers.partial(AllBlockPartials.COPPER_BACKTANK_SHAFT, state);
 	}
 
 }

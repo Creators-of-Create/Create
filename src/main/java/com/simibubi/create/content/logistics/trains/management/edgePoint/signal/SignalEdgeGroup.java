@@ -13,8 +13,8 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import com.google.common.base.Predicates;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import net.createmod.catnip.utility.NBTHelper;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 

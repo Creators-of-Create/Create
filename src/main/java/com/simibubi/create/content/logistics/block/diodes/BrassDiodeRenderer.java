@@ -1,10 +1,10 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.tileEntity.renderer.ColoredOverlayTileEntityRenderer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
@@ -21,7 +21,7 @@ public class BrassDiodeRenderer extends ColoredOverlayTileEntityRenderer<BrassDi
 
 	@Override
 	protected SuperByteBuffer getOverlayBuffer(BrassDiodeTileEntity te) {
-		return CachedBufferer.partial(AllBlockPartials.FLEXPEATER_INDICATOR, te.getBlockState());
+		return CachedPartialBuffers.partial(AllBlockPartials.FLEXPEATER_INDICATOR, te.getBlockState());
 	}
 
 }

@@ -15,9 +15,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -38,7 +39,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
 		Direction facing = context.state.getValue(BlockStateProperties.FACING);
 		PartialModel top = AllBlockPartials.BEARING_TOP;
-		SuperByteBuffer superBuffer = CachedBufferer.partial(top, context.state);
+		SuperByteBuffer superBuffer = CachedPartialBuffers.partial(top, context.state);
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		// rotate to match blockstate
@@ -53,10 +54,8 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
 		rotation.mul(orientation);
 
-		orientation = rotation;
-
 		superBuffer.transform(matrices.getModel());
-		superBuffer.rotateCentered(orientation);
+		FlwSuperByteBuffer.cast(superBuffer).ifPresent(flwBuffer -> flwBuffer.rotateCentered(rotation));
 
 		// render
 		superBuffer

@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.components.saw;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
+import java.util.Optional;
+
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
@@ -13,11 +15,13 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
@@ -79,7 +83,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				rotate = true;
 		}
 
-		SuperByteBuffer superBuffer = CachedBufferer.partialFacing(partial, blockState);
+		SuperByteBuffer superBuffer = CachedPartialBuffers.partialFacing(partial, blockState);
 		if (rotate) {
 			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
 		}
@@ -147,9 +151,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		if (state.getValue(FACING)
 			.getAxis()
 			.isHorizontal())
-			return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF,
+			return CachedPartialBuffers.partialFacing(AllBlockPartials.SHAFT_HALF,
 				state.rotate(te.getLevel(), te.getBlockPos(), Rotation.CLOCKWISE_180));
-		return CachedBufferer.block(KineticTileEntityRenderer.KINETIC_TILE,
+		return CachedBlockBuffers.block(KineticTileEntityRenderer.KINETIC_TILE,
 			getRenderedBlockState(te));
 	}
 
@@ -175,18 +179,24 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		boolean shouldAnimate =
 			(context.contraption.stalled && horizontal) || (!context.contraption.stalled && !backwards && moving);
 
-		SuperByteBuffer superBuffer;
+		SuperByteBuffer sBuffer;
 		if (SawBlock.isHorizontal(state)) {
 			if (shouldAnimate)
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE, state);
+				sBuffer = CachedPartialBuffers.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE, state);
 			else
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE, state);
+				sBuffer = CachedPartialBuffers.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE, state);
 		} else {
 			if (shouldAnimate)
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE, state);
+				sBuffer = CachedPartialBuffers.partial(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE, state);
 			else
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
+				sBuffer = CachedPartialBuffers.partial(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
+
+		Optional<FlwSuperByteBuffer> optional = FlwSuperByteBuffer.cast(sBuffer);
+		if (optional.isEmpty())
+			return;
+
+		FlwSuperByteBuffer superBuffer = optional.get();
 
 		superBuffer.transform(matrices.getModel())
 			.centre()

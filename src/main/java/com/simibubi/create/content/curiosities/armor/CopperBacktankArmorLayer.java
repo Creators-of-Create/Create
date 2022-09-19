@@ -4,15 +4,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
+
 import net.createmod.catnip.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
-
-import net.createmod.ponder.utility.WorldTickHolder;
-
 import net.createmod.catnip.utility.theme.Color;
-
+import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -63,8 +63,8 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		RenderType renderType = Sheets.cutoutBlockSheet();
 		BlockState renderedState = AllBlocks.COPPER_BACKTANK.getDefaultState()
 				.setValue(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
-		SuperByteBuffer backtank = CachedBufferer.block(renderedState);
-		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
+		SuperByteBuffer backtank = CachedBlockBuffers.block(renderedState);
+		SuperByteBuffer cogs = CachedPartialBuffers.partial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
 
 		ms.pushPose();
 
@@ -72,20 +72,23 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		ms.translate(-1 / 2f, 10 / 16f, 1f);
 		ms.scale(1, -1, -1);
 
-		backtank.forEntityRender()
-			.light(light)
-			.renderInto(ms, buffer.getBuffer(renderType));
+		FlwSuperByteBuffer.cast(backtank).ifPresent(flwBuffer -> flwBuffer
+				.forEntityRender()
+				.light(light)
+				.renderInto(ms, buffer.getBuffer(renderType))
+		);
 
-		cogs.centre()
-			.rotateY(180)
-			.unCentre()
-			.translate(0, 6.5f / 16, 11f / 16)
-			.rotate(Direction.EAST, AngleHelper.rad(2 * WorldTickHolder.getRenderTime(entity.level) % 360))
-			.translate(0, -6.5f / 16, -11f / 16);
+		FlwSuperByteBuffer.cast(cogs).ifPresent(flwBuffer -> flwBuffer
+				.centre()
+				.rotateY(180)
+				.unCentre()
+				.translate(0, 6.5f / 16, 11f / 16)
+				.rotate(Direction.EAST, AngleHelper.rad(2 * WorldTickHolder.getRenderTime(entity.level) % 360))
+				.translate(0, -6.5f / 16, -11f / 16)
+				.forEntityRender()
+		);
 
-		cogs.forEntityRender()
-			.light(light)
-			.renderInto(ms, buffer.getBuffer(renderType));
+		cogs.light(light).renderInto(ms, buffer.getBuffer(renderType));
 
 		ms.popPose();
 	}

@@ -6,9 +6,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Couple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -33,16 +34,21 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		int light) {
 		PartialModel partialModel = entity.size == 3 ? AllBlockPartials.CRAFTING_BLUEPRINT_3x3
 			: entity.size == 2 ? AllBlockPartials.CRAFTING_BLUEPRINT_2x2 : AllBlockPartials.CRAFTING_BLUEPRINT_1x1;
-		SuperByteBuffer sbb = CachedBufferer.partial(partialModel, Blocks.AIR.defaultBlockState());
-		sbb.rotateY(-yaw)
-			.rotateX(90.0F + entity.getXRot())
-			.translate(-.5, -1 / 32f, -.5);
-		if (entity.size == 2)
-			sbb.translate(.5, 0, -.5);
+		SuperByteBuffer sbb = CachedPartialBuffers.partial(partialModel, Blocks.AIR.defaultBlockState());
+		FlwSuperByteBuffer.cast(sbb).ifPresent(flwBuffer -> {
+			flwBuffer
+					.rotateY(-yaw)
+					.rotateX(90.0F + entity.getXRot())
+					.translate(-.5, -1 / 32f, -.5);
 
-		sbb.forEntityRender()
-			.light(light)
-			.renderInto(ms, buffer.getBuffer(Sheets.solidBlockSheet()));
+			if (entity.size == 2)
+				flwBuffer.translate(.5, 0, -.5);
+
+			flwBuffer.forEntityRender()
+					.light(light)
+					.renderInto(ms, buffer.getBuffer(Sheets.solidBlockSheet()));
+		});
+
 		super.render(entity, yaw, pt, ms, buffer, light);
 
 		ms.pushPose();

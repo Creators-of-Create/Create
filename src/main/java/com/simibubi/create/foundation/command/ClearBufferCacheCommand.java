@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.CreateClient;
 
+import net.createmod.catnip.CatnipClient;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
@@ -25,6 +26,7 @@ public class ClearBufferCacheCommand {
 
 	@OnlyIn(Dist.CLIENT)
 	private static void execute() {
+		CatnipClient.invalidateRenderers();
 		CreateClient.invalidateRenderers();
 	}
 }

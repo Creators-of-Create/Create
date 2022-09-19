@@ -19,11 +19,12 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerTile
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.VecHelper;
@@ -121,8 +122,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		BlockState blockState = te.getBlockState();
 		Vec3 offset = getHandOffset(te, partialTicks, blockState);
 
-		SuperByteBuffer pole = CachedBufferer.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
-		SuperByteBuffer hand = CachedBufferer.partial(te.getHandPose(), blockState);
+		SuperByteBuffer pole = CachedPartialBuffers.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
+		SuperByteBuffer hand = CachedPartialBuffers.partial(te.getHandPose(), blockState);
 
 		transform(pole.translate(offset.x, offset.y, offset.z), blockState, true)
 			.light(light)
@@ -167,9 +168,9 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		if (context.contraption.stalled)
 			speed = 0;
 
-		SuperByteBuffer shaft = CachedBufferer.block(AllBlocks.SHAFT.getDefaultState());
-		SuperByteBuffer pole = CachedBufferer.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
-		SuperByteBuffer hand = CachedBufferer.partial(handPose, blockState);
+		SuperByteBuffer shaft = CachedBlockBuffers.block(AllBlocks.SHAFT.getDefaultState());
+		SuperByteBuffer pole = CachedPartialBuffers.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
+		SuperByteBuffer hand = CachedPartialBuffers.partial(handPose, blockState);
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {

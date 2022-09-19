@@ -9,10 +9,11 @@ import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -48,7 +49,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		GlobalStation station = te.getStation();
 		boolean isAssembling = te.getBlockState()
 			.getValue(StationBlock.ASSEMBLING);
-		
+
 		if (!isAssembling || (station == null || station.getPresentTrain() != null) && !te.isVirtual()) {
 			renderFlag(
 				te.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF, te,
@@ -68,7 +69,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 
 		if (te.isVirtual() && te.bogeyLocations == null)
 			te.refreshAssemblyInfo();
-		
+
 		if (direction == null || te.assemblyLength == 0 || te.bogeyLocations == null)
 			return;
 
@@ -97,7 +98,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 
 			if (valid != -1) {
 				int lightColor = LevelRenderer.getLightColor(level, currentPos);
-				SuperByteBuffer sbb = CachedBufferer.partial(assemblyOverlay, trackState);
+				SuperByteBuffer sbb = CachedPartialBuffers.partial(assemblyOverlay, trackState);
 				sbb.color(valid);
 				sbb.light(lightColor);
 				sbb.renderInto(ms, vb);
@@ -113,13 +114,15 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		MultiBufferSource buffer, int light, int overlay) {
 		if (!te.resolveFlagAngle())
 			return;
-		SuperByteBuffer flagBB = CachedBufferer.partial(flag, te.getBlockState());
-		transformFlag(flagBB, te, partialTicks, te.flagYRot, te.flagFlipped);
-		flagBB.translate(0.5f / 16, 0, 0)
-			.rotateY(te.flagFlipped ? 0 : 180)
-			.translate(-0.5f / 16, 0, 0)
-			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+		SuperByteBuffer flagBB = CachedPartialBuffers.partial(flag, te.getBlockState());
+		FlwSuperByteBuffer.cast(flagBB).ifPresent(flwBuffer -> {
+			transformFlag(flwBuffer, te, partialTicks, te.flagYRot, te.flagFlipped);
+			flwBuffer.translate(0.5f / 16, 0, 0)
+					.rotateY(te.flagFlipped ? 0 : 180)
+					.translate(-0.5f / 16, 0, 0);
+		});
+
+		flagBB.light(light).renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
 	public static void transformFlag(Transform<?> flag, StationTileEntity te, float partialTicks, int yRot,

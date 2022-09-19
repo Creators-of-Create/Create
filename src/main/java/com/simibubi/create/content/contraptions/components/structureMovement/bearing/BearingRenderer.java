@@ -6,10 +6,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import net.createmod.catnip.utility.math.AngleHelper;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -36,7 +36,7 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 				.getValue(BlockStateProperties.FACING);
 		PartialModel top =
 				bearingTe.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
-		SuperByteBuffer superBuffer = CachedBufferer.partial(top, te.getBlockState());
+		SuperByteBuffer superBuffer = CachedPartialBuffers.partial(top, te.getBlockState());
 
 		float interpolatedAngle = bearingTe.getInterpolatedAngle(partialTicks - 1);
 		kineticRotationTransform(superBuffer, te, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI), light);
@@ -51,7 +51,7 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
-		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, state, state
+		return CachedPartialBuffers.partialFacing(AllBlockPartials.SHAFT_HALF, state, state
 				.getValue(BearingBlock.FACING)
 				.getOpposite());
 	}

@@ -11,9 +11,10 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
+import net.createmod.catnip.render.SuperBufferFactory;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
 import net.minecraft.client.Minecraft;
@@ -130,7 +131,7 @@ public class SchematicRenderer {
 		builder.appendUnshadedVertices(unshadedBuilder);
 		builder.end();
 
-		return new SuperByteBuffer(builder);
+		return SuperBufferFactory.getInstance().create(builder);
 	}
 
 	private static int getLayerCount() {

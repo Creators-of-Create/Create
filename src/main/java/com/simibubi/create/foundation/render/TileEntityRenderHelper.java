@@ -107,7 +107,7 @@ public class TileEntityRenderHelper {
 
 		if (renderWorld != null) {
 			int renderWorldLight = LevelRenderer.getLightColor(renderWorld, renderWorldPos);
-			return SuperByteBuffer.maxLight(worldLight, renderWorldLight);
+			return FlwSuperByteBuffer.maxLight(worldLight, renderWorldLight);
 		}
 
 		return worldLight;

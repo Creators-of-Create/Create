@@ -10,9 +10,9 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
+import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

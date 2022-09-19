@@ -5,9 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.ponder.utility.WorldTickHolder;
@@ -54,15 +55,18 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 			if (facing == Direction.NORTH || facing == Direction.EAST)
 				angleForTe *= -1;
 
-		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.GANTRY_COGS, state);
-		cogs.centre()
+		SuperByteBuffer cogs = CachedPartialBuffers.partial(AllBlockPartials.GANTRY_COGS, state);
+		float finalAngleForTe = angleForTe;
+		FlwSuperByteBuffer.cast(cogs).ifPresent(flwBuffer -> flwBuffer
+				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 				.rotateY(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
-				.rotateX(-angleForTe)
+				.rotateX(-finalAngleForTe)
 				.translate(0, 9 / 16f, 0)
-				.unCentre();
+				.unCentre()
+		);
 
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

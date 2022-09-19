@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -72,7 +72,7 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 
 		ms.pushPose();
 		for (PartialModel bit : BITS) {
-			CachedBufferer.partial(bit, te.getBlockState())
+			CachedPartialBuffers.partial(bit, te.getBlockState())
 					.light(light)
 					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 			ms.translate(0, -3 * squeeze / 32f, 0);

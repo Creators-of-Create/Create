@@ -2,9 +2,9 @@ package com.simibubi.create.content.curiosities.deco;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.CachedBlockBuffers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -43,10 +43,10 @@ public class SlidingDoorRenderer extends SafeTileEntityRenderer<SlidingDoorTileE
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
 		for (DoubleBlockHalf half : DoubleBlockHalf.values()) {
-			CachedBufferer.block(blockState.setValue(DoorBlock.OPEN, false)
+			CachedBlockBuffers.block(blockState.setValue(DoorBlock.OPEN, false)
 				.setValue(DoorBlock.HALF, half))
 				.translate(0, half == DoubleBlockHalf.UPPER ? 1 - 1 / 512f : 0, 0)
-				.translate(offset)
+				.translate(offset.x, offset.y, offset.z)
 				.light(light)
 				.renderInto(ms, vb);
 		}

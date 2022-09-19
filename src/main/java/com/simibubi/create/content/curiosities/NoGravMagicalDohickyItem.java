@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities;
 
 import net.createmod.catnip.utility.VecHelper;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;

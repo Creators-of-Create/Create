@@ -15,9 +15,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.BeltData;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
+import net.createmod.catnip.render.SpriteShiftEntry;
 import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;

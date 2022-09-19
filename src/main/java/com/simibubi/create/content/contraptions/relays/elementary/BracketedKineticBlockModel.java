@@ -7,6 +7,7 @@ import java.util.Random;
 import com.jozufozu.flywheel.core.virtual.VirtualEmptyModelData;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import net.createmod.catnip.ForgeCatnipClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -15,7 +16,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -30,7 +30,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, IModelData tileData) {
-		if (VirtualEmptyModelData.is(tileData) || tileData.equals(EmptyModelData.INSTANCE))
+		if (VirtualEmptyModelData.is(tileData))
 			return tileData;
 
 		BracketedModelData data = new BracketedModelData();
@@ -44,7 +44,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
-		if (VirtualEmptyModelData.is(data) || data.equals(EmptyModelData.INSTANCE)) {
+		if (VirtualEmptyModelData.is(data) || data.equals(ForgeCatnipClient.NoModelData)) {
 			return super.getQuads(state, side, rand, data);
 		}
 

@@ -12,10 +12,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -62,8 +62,8 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 
 	private static void render(BlockState blockState, boolean lit, float progress, PoseStack local,
 		Consumer<SuperByteBuffer> drawCallback) {
-		SuperByteBuffer middle = CachedBufferer.partial(getMiddleForState(blockState, lit), blockState);
-		SuperByteBuffer top = CachedBufferer.partial(getTopForState(blockState), blockState);
+		SuperByteBuffer middle = CachedPartialBuffers.partial(getMiddleForState(blockState, lit), blockState);
+		SuperByteBuffer top = CachedPartialBuffers.partial(getTopForState(blockState), blockState);
 
 		if (local != null) {
 			middle.transform(local);
@@ -80,10 +80,10 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 	}
 
 	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
-		buffer.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.unCentre();
+		buffer.translate(.5f, .5f, .5f)
+			.rotate(Direction.Axis.Y, AngleHelper.horizontalAngle(facing))
+			.rotate(Direction.Axis.X, facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+			.translate(-.5f, -.5f, -.5f);
 	}
 
 	static PortableStorageInterfaceTileEntity getTargetPSI(MovementContext context) {

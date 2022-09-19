@@ -6,9 +6,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -51,14 +51,14 @@ public class EncasedCogRenderer extends KineticTileEntityRenderer {
 		for (Direction d : Iterate.directionsInAxis(getRotationAxisOf(te))) {
 			if (!def.hasShaftTowards(te.getLevel(), te.getBlockPos(), blockState, d))
 				continue;
-			renderRotatingBuffer(te, CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), d),
+			renderRotatingBuffer(te, CachedPartialBuffers.partialFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), d),
 				ms, buffer.getBuffer(RenderType.solid()), light);
 		}
 	}
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
-		return CachedBufferer.partialFacingVertical(
+		return CachedPartialBuffers.partialFacingVertical(
 			large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL, state,
 			Direction.fromAxisAndDirection(state.getValue(EncasedCogwheelBlock.AXIS), AxisDirection.POSITIVE));
 	}

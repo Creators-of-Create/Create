@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.base.flwdata;
 
 import com.mojang.math.Quaternion;
-import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
+import net.createmod.catnip.render.SpriteShiftEntry;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class BeltData extends KineticData {

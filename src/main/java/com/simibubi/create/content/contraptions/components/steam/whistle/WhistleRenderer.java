@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
-import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -39,10 +39,8 @@ public class WhistleRenderer extends SafeTileEntityRenderer<WhistleTileEntity> {
 			offset -= Math.sin(wiggleProgress * (2 * Mth.PI) * (4 - size.ordinal())) / 16f;
 		}
 
-		CachedBufferer.partial(mouth, blockState)
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(direction))
-			.unCentre()
+		CachedPartialBuffers.partial(mouth, blockState)
+			.rotateCentered(Direction.Axis.Y, Mth.DEG_TO_RAD * AngleHelper.horizontalAngle(direction))
 			.translate(0, offset * 4 / 16f, 0)
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

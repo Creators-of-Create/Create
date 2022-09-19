@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions;
 
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.render.SuperByteBufferCache;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
@@ -29,7 +29,7 @@ public class KineticDebugger {
 		if (!isActive()) {
 			if (KineticTileEntityRenderer.rainbowMode) {
 				KineticTileEntityRenderer.rainbowMode = false;
-				CreateClient.BUFFER_CACHE.invalidate();
+				SuperByteBufferCache.getInstance().invalidate();
 			}
 			return;
 		}
