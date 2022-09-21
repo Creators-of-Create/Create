@@ -14,7 +14,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
@@ -479,6 +478,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		if (stateToBreak.is(BlockTags.SAPLINGS))
 			return false;
 		if (TreeCutter.isLog(stateToBreak) || (stateToBreak.is(BlockTags.LEAVES)))
+			return true;
+		if (TreeCutter.isRoot(stateToBreak))
 			return true;
 		Block block = stateToBreak.getBlock();
 		if (block instanceof BambooBlock)

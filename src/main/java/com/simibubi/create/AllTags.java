@@ -417,7 +417,7 @@ public class AllTags {
 			Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET, Blocks.HOPPER);
 
 		AllBlockTags.TREE_ATTACHMENTS.add(Blocks.BEE_NEST, Blocks.VINE, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT,
-			Blocks.COCOA);
+			Blocks.COCOA, Blocks.MANGROVE_PROPAGULE);
 
 		AllBlockTags.ORE_OVERRIDE_STONE.includeAll(BlockTags.STONE_ORE_REPLACEABLES);
 

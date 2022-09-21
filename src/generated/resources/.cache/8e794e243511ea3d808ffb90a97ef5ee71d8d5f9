@@ -1,4 +1,4 @@
-// 1.19.2	2022-09-17T21:51:07.3812115	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2022-09-21T09:09:19.8483732	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4489,6 +4489,7 @@ e3510f08cc217e52b58692dcc7f3eda0289ff751 data/create/tags/blocks/passive_boiler_
 5ac75e77c57ab675e5d36a1e2bd7d37804b7de05 data/create/tags/blocks/safe_nbt.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/blocks/seats.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/blocks/toolboxes.json
+a8271a2fcefafde4a6589193c50c41edcba1dad7 data/create/tags/blocks/tree_attachments.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/blocks/valve_handles.json
 72143286fb5cb372a0696550e2eac76ca50e6fbc data/create/tags/blocks/windmill_sails.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/blocks/windowable.json
