@@ -107,29 +107,38 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		if (stepped.get())
 			this.nextStep = this.nextStep();
 	}
+
 	@Inject(at = @At(value = "TAIL"), method = "move")
 	private void movementMixin(MoverType mover, Vec3 movement, CallbackInfo ci) {
-		if (self.level.isClientSide && !self.isOnGround()) { // involves client-side view bobbing animation on contraptions
-			Vec3 worldPos = self.position()
-				.add(0, -0.2, 0);
+		// involves client-side view bobbing animation on contraptions
+		if (!self.level.isClientSide)
+			return;
+		if (self.isOnGround())
+			return;
 
-			boolean staysOnAtLeastOneContraption = getIntersectionContraptionsStream().anyMatch(cEntity -> {
-				Vec3 localPos = ContraptionCollider.getWorldToLocalTranslation(worldPos, cEntity);
+		Vec3 worldPos = self.position()
+			.add(0, -0.2, 0);
+		boolean onAtLeastOneContraption = getIntersectionContraptionsStream().anyMatch(cEntity -> {
+			Vec3 localPos = ContraptionCollider.getWorldToLocalTranslation(worldPos, cEntity);
 
-				localPos = worldPos.add(localPos);
+			localPos = worldPos.add(localPos);
 
-				BlockPos blockPos = new BlockPos(localPos);
-				Contraption contraption = cEntity.getContraption();
-				StructureTemplate.StructureBlockInfo info = contraption.getBlocks()
-						.get(blockPos);
+			BlockPos blockPos = new BlockPos(localPos);
+			Contraption contraption = cEntity.getContraption();
+			StructureTemplate.StructureBlockInfo info = contraption.getBlocks()
+				.get(blockPos);
 
-				return info != null;
-			});
+			if (info == null)
+				return false;
+			
+			cEntity.registerColliding(self);
+			return true;
+		});
 
-			if (staysOnAtLeastOneContraption) {
-				self.setOnGround(true);
-			}
-		}
+		if (!onAtLeastOneContraption)
+			return;
+
+		self.setOnGround(true);
 	}
 
 	@Inject(method = { "spawnSprintParticle" }, at = @At(value = "TAIL"))

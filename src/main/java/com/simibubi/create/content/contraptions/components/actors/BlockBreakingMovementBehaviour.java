@@ -58,6 +58,8 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 				continue;
 			if (entity instanceof AbstractContraptionEntity)
 				continue;
+			if (entity.isPassengerOfSameVehicle(context.contraption.entity))
+				continue;
 			if (entity instanceof AbstractMinecart)
 				for (Entity passenger : entity.getIndirectPassengers())
 					if (passenger instanceof AbstractContraptionEntity
