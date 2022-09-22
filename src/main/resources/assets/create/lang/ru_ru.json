@@ -1073,7 +1073,7 @@
 	"create.gui.assembly.exception.structureTooLarge": "Штуковина состоит из слишком большого количества блоков.\nТекущий максимум: %1$s",
 	"create.gui.assembly.exception.tooManyPistonPoles": "Слишком много удлинителей прикреплено к этому поршню.\nТекущий максимум: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "Поршню не хватает удлинителей",
-	"create.gui.assembly.exception.not_enough_sails": "Присоединённая структура содержит недостаточно парусоподобных блоков; %1$s\ из минимум %2$s необходимых",
+	"create.gui.assembly.exception.not_enough_sails": "Присоединённая структура содержит недостаточно парусоподобных блоков; %1$s из минимум %2$s необходимых",
 	"create.gui.gauge.info_header": "Калибровочная информация:",
 	"create.gui.speedometer.title": "Скорость вращения",
 	"create.gui.stressometer.title": "Нагрузка на сеть",

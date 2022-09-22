@@ -1,27 +1,53 @@
 {
   "variants": {
-    "facing=down": {
+    "facing=down,waterlogged=false": {
       "model": "create:block/blue_valve_handle",
       "x": 180
     },
-    "facing=up": {
+    "facing=up,waterlogged=false": {
       "model": "create:block/blue_valve_handle"
     },
-    "facing=north": {
+    "facing=north,waterlogged=false": {
       "model": "create:block/blue_valve_handle",
       "x": 90
     },
-    "facing=south": {
+    "facing=south,waterlogged=false": {
       "model": "create:block/blue_valve_handle",
       "x": 90,
       "y": 180
     },
-    "facing=west": {
+    "facing=west,waterlogged=false": {
       "model": "create:block/blue_valve_handle",
       "x": 90,
       "y": 270
     },
-    "facing=east": {
+    "facing=east,waterlogged=false": {
+      "model": "create:block/blue_valve_handle",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down,waterlogged=true": {
+      "model": "create:block/blue_valve_handle",
+      "x": 180
+    },
+    "facing=up,waterlogged=true": {
+      "model": "create:block/blue_valve_handle"
+    },
+    "facing=north,waterlogged=true": {
+      "model": "create:block/blue_valve_handle",
+      "x": 90
+    },
+    "facing=south,waterlogged=true": {
+      "model": "create:block/blue_valve_handle",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,waterlogged=true": {
+      "model": "create:block/blue_valve_handle",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,waterlogged=true": {
       "model": "create:block/blue_valve_handle",
       "x": 90,
       "y": 90

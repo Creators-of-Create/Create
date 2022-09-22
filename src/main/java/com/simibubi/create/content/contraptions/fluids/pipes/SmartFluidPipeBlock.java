@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
@@ -28,22 +30,23 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
-	implements ITE<SmartFluidPipeTileEntity>, IAxisPipe, IWrenchable {
+	implements ITE<SmartFluidPipeTileEntity>, IAxisPipe, IWrenchable, ProperWaterloggedBlock {
 
 	public SmartFluidPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(FACE)
-			.add(FACING);
+		builder.add(FACE, FACING, WATERLOGGED);
 	}
 
 	@Override
@@ -76,7 +79,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 			}
 		}
 
-		return stateForPlacement;
+		return withWater(stateForPlacement, ctx);
 	}
 
 	protected boolean prefersConnectionTo(LevelReader reader, BlockPos pos, Direction facing) {
@@ -157,6 +160,18 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+	
+	@Override
+	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel,
+		BlockPos pCurrentPos, BlockPos pFacingPos) {
+		updateWater(pLevel, pState, pCurrentPos);
+		return pState;
+	}
+	
+	@Override
+	public FluidState getFluidState(BlockState pState) {
+		return fluidState(pState);
 	}
 
 	@Override

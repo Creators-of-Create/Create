@@ -26,24 +26,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class FluidValveBlock extends DirectionalAxisKineticBlock
-		implements IAxisPipe, ITE<FluidValveTileEntity>, ProperWaterloggedBlock {
+	implements IAxisPipe, ITE<FluidValveTileEntity>, ProperWaterloggedBlock {
 
 	public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
 	public FluidValveBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(ENABLED, false));
-		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+		registerDefaultState(defaultBlockState().setValue(ENABLED, false)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -156,15 +154,14 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
-								  BlockPos pos, BlockPos neighbourPos) {
+		BlockPos pos, BlockPos neighbourPos) {
 		updateWater(world, state, pos);
 		return state;
 	}
+
 	@Override
 	public FluidState getFluidState(BlockState state) {
-		return state.getValue(BlockStateProperties.WATERLOGGED)
-				? Fluids.WATER.getSource(false)
-				: Fluids.EMPTY.defaultFluidState();
+		return fluidState(state);
 	}
 
 }
