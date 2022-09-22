@@ -252,6 +252,8 @@ public class BlockHelper {
 			state = Blocks.COMPOSTER.defaultBlockState();
 		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
 			state = ((IPlantable) state.getBlock()).getPlant(world, target);
+		else if (state.is(BlockTags.CAULDRONS))
+			state = Blocks.CAULDRON.defaultBlockState();
 
 		if (world.dimensionType()
 			.ultraWarm() && state.getFluidState().is(FluidTags.WATER)) {
