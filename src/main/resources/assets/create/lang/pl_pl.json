@@ -563,14 +563,14 @@
 	"block.create.zinc_block": "Blok cynku",
 	"block.create.zinc_ore": "Złoże cynku",
 
-	"enchantment.create.capacity": "Pojameność",
+	"enchantment.create.capacity": "Pojemność",
 	"enchantment.create.potato_recovery": "Odzyskiwanie",
 
 	"entity.create.carriage_contraption": "Maszyna wagonowa",
 	"entity.create.contraption": "Maszyna",
 	"entity.create.crafting_blueprint": "Szablon konstruowania",
 	"entity.create.gantry_contraption": "Maszyna suwnicowa",
-	"entity.create.potato_projectile": "Zimniaczany pocisk",
+	"entity.create.potato_projectile": "Ziemniaczany pocisk",
 	"entity.create.seat": "Siedzenie",
 	"entity.create.stationary_contraption": "Maszyna stacjonarna",
 	"entity.create.super_glue": "Super Glue",
