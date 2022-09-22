@@ -218,6 +218,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected List<Recipe<?>> getMatchingRecipes() {
 		List<Recipe<?>> matchingRecipes = super.getMatchingRecipes();
 
+		if (!AllConfigs.SERVER.recipes.allowBrewingInMixer.get()) {
+			return matchingRecipes;
+		}
+
 		Optional<BasinTileEntity> basin = getBasin();
 		if (!basin.isPresent())
 			return matchingRecipes;
