@@ -56,6 +56,11 @@ public class BookCopyAttribute implements ItemAttribute {
         return new BookCopyAttribute(nbt.getInt("generation"));
     }
 
+	@Override
+	public String getNBTKey() {
+		return "book_copy";
+	}
+
     private int extractGeneration(ItemStack stack) {
         CompoundTag nbt = stack.getTag();
         if (nbt != null && stack.getItem() instanceof WrittenBookItem) {
