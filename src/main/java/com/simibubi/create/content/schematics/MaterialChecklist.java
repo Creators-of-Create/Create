@@ -17,11 +17,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.spongepowered.asm.mixin.Mutable;
 
 public class MaterialChecklist {
 
@@ -154,7 +158,10 @@ public class MaterialChecklist {
 	private Component entry(ItemStack item, int amount, boolean unfinished) {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
-		MutableComponent tc = Components.translatable(item.getDescriptionId());
+		MutableComponent tc = Components.empty();
+		tc.append(Components.translatable(item.getDescriptionId())
+				.setStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(item)))));
+
 		if (!unfinished)
 			tc.append(" \u2714");
 		tc.withStyle(unfinished ? ChatFormatting.BLUE : ChatFormatting.DARK_GREEN);
