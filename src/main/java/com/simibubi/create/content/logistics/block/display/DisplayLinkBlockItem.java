@@ -16,6 +16,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,7 +59,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 		if (player == null)
 			return InteractionResult.FAIL;
 
-		if (player.isSteppingCarefully() && stack.hasTag()) {
+		if (player.isSteppingCarefully() && stack.hasTag() && pContext.getHitResult().getType() == HitResult.Type.MISS) {
 			if (level.isClientSide)
 				return InteractionResult.SUCCESS;
 			player.displayClientMessage(Lang.translateDirect("display_link.clear"), true);
