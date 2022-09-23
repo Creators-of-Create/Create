@@ -240,7 +240,7 @@ public class MinecartContraptionItem extends Item {
 			return;
 		}
 
-		contraption.stop(event.getWorld());
+		contraption.stop(event.getLevel());
 
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors())
 			if (AllMovementBehaviours.getBehaviour(pair.left.state)instanceof PortableStorageInterfaceMovement psim)

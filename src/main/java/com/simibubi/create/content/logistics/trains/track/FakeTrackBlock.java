@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
@@ -44,9 +46,10 @@ public class FakeTrackBlock extends Block implements EntityBlock, ProperWaterlog
 	public RenderShape getRenderShape(BlockState pState) {
 		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
-	
+
 	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public @Nullable BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos,
+		@Nullable Mob mob) {
 		return BlockPathTypes.DAMAGE_OTHER;
 	}
 
