@@ -110,6 +110,8 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 	public List<Component> getSecondLineTooltip(int slot) {
 		return ImmutableList.of(Lang.translateDirect("schedule.condition.threshold.place_item"),
 			Lang.translateDirect("schedule.condition.threshold.place_item_2")
+				.withStyle(ChatFormatting.GRAY),
+			Lang.translateDirect("schedule.condition.threshold.place_item_3")
 				.withStyle(ChatFormatting.GRAY));
 	}
 

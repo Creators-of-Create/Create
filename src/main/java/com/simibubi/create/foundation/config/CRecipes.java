@@ -4,6 +4,7 @@ public class CRecipes extends ConfigBase {
 
 	public final ConfigBool bulkPressing = b(false, "bulkPressing", Comments.bulkPressing);
 	public final ConfigBool bulkCutting = b(false, "bulkCutting", Comments.bulkCutting);
+	public final ConfigBool allowBrewingInMixer = b(true, "allowBrewingInMixer", Comments.allowBrewingInMixer);
 	public final ConfigBool allowShapelessInMixer = b(true, "allowShapelessInMixer", Comments.allowShapelessInMixer);
 	public final ConfigBool allowShapedSquareInPress = b(true, "allowShapedSquareInPress", Comments.allowShapedSquareInPress);
 	public final ConfigBool allowRegularCraftingInCrafter =
@@ -28,8 +29,9 @@ public class CRecipes extends ConfigBase {
 	private static class Comments {
 		static String bulkPressing = "Allow the Mechanical Press to process entire stacks at a time.";
 		static String bulkCutting = "Allow the Mechanical Saw to process entire stacks at a time.";
+		static String allowBrewingInMixer = "Allow supported potions to be brewed by a Mechanical Mixer + Basin.";
 		static String allowShapelessInMixer =
-			"Allow allows any shapeless crafting recipes to be processed by a Mechanical Mixer + Basin.";
+			"Allow any shapeless crafting recipes to be processed by a Mechanical Mixer + Basin.";
 		static String allowShapedSquareInPress =
 			"Allow any single-ingredient 2x2 or 3x3 crafting recipes to be processed by a Mechanical Press + Basin.";
 		static String allowRegularCraftingInCrafter =

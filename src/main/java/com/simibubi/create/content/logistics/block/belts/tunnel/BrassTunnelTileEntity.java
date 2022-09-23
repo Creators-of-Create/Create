@@ -17,6 +17,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
@@ -61,6 +64,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	boolean connectedRight;
 
 	ItemStack stackToDistribute;
+	Direction stackEnteredFrom;
+	
 	float distributionProgress;
 	int distributionDistanceLeft;
 	int distributionDistanceRight;
@@ -81,6 +86,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		distributionTargets = Couple.create(ArrayList::new);
 		syncSet = new HashSet<>();
 		stackToDistribute = ItemStack.EMPTY;
+		stackEnteredFrom = null;
 		beltCapability = LazyOptional.empty();
 		tunnelCapability = LazyOptional.of(() -> new BrassTunnelItemHandler(this));
 		previousOutputIndex = 0;
@@ -183,6 +189,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			for (Pair<BlockPos, Direction> pair : list) {
 				BlockPos tunnelPos = pair.getKey();
 				Direction output = pair.getValue();
+				if (tunnelPos.equals(worldPosition) && output == stackEnteredFrom)
+					continue;
 				BlockEntity te = level.getBlockEntity(tunnelPos);
 				if (!(te instanceof BrassTunnelTileEntity))
 					continue;
@@ -306,13 +314,16 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 
 		toDistribute.grow(failedTransferrals);
 		stackToDistribute = ItemHandlerHelper.copyStackWithSize(stackToDistribute, toDistribute.getCount());
+		if (stackToDistribute.isEmpty())
+			stackEnteredFrom = null;
 		previousOutputIndex++;
 		previousOutputIndex %= amountTargets;
 		notifyUpdate();
 	}
 
-	public void setStackToDistribute(ItemStack stack) {
+	public void setStackToDistribute(ItemStack stack, @Nullable Direction enteredFrom) {
 		stackToDistribute = stack;
+		stackEnteredFrom = enteredFrom;
 		distributionProgress = -1;
 		sendData();
 		setChanged();
@@ -329,7 +340,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		if (!own.isEmpty()) {
 			list.add(own);
 			if (!simulate)
-				setStackToDistribute(ItemStack.EMPTY);
+				setStackToDistribute(ItemStack.EMPTY, null);
 		}
 
 		for (boolean left : Iterate.trueAndFalse) {
@@ -345,7 +356,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 					continue;
 				list.add(other);
 				if (!simulate)
-					adjacent.setStackToDistribute(ItemStack.EMPTY);
+					adjacent.setStackToDistribute(ItemStack.EMPTY, null);
 			}
 		}
 
@@ -514,22 +525,30 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 					continue;
 				if (direction == movementFacing.getOpposite())
 					continue;
-				if (tunnelTE.sides.contains(direction)) {
-					BlockPos offset = tunnelTE.worldPosition.below()
-						.relative(direction);
-					DirectBeltInputBehaviour inputBehaviour =
-						TileEntityBehaviour.get(level, offset, DirectBeltInputBehaviour.TYPE);
-					if (inputBehaviour == null) {
-						if (direction == movementFacing)
-							if (!BlockHelper.hasBlockSolidSide(level.getBlockState(offset), level, offset,
-								direction.getOpposite()))
-								validOutputs.add(Pair.of(tunnelTE, direction));
-						continue;
-					}
-					if (inputBehaviour.canInsertFromSide(direction))
-						validOutputs.add(Pair.of(tunnelTE, direction));
+				if (!tunnelTE.sides.contains(direction))
+					continue;
+				
+				BlockPos offset = tunnelTE.worldPosition.below()
+					.relative(direction);
+
+				BlockState potentialFunnel = level.getBlockState(offset.above());
+				if (potentialFunnel.getBlock() instanceof BeltFunnelBlock
+					&& potentialFunnel.getValue(BeltFunnelBlock.SHAPE) == Shape.PULLING
+					&& FunnelBlock.getFunnelFacing(potentialFunnel) == direction)
+					continue;
+
+				DirectBeltInputBehaviour inputBehaviour =
+					TileEntityBehaviour.get(level, offset, DirectBeltInputBehaviour.TYPE);
+				if (inputBehaviour == null) {
+					if (direction == movementFacing)
+						if (!BlockHelper.hasBlockSolidSide(level.getBlockState(offset), level, offset,
+							direction.getOpposite()))
+							validOutputs.add(Pair.of(tunnelTE, direction));
 					continue;
 				}
+				if (inputBehaviour.canInsertFromSide(direction))
+					validOutputs.add(Pair.of(tunnelTE, direction));
+				continue;
 			}
 		}
 	}
@@ -559,7 +578,11 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		compound.putBoolean("SyncedOutput", syncedOutputActive);
 		compound.putBoolean("ConnectedLeft", connectedLeft);
 		compound.putBoolean("ConnectedRight", connectedRight);
+		
 		compound.put("StackToDistribute", stackToDistribute.serializeNBT());
+		if (stackEnteredFrom != null)
+			NBTHelper.writeEnum(compound, "StackEnteredFrom", stackEnteredFrom);
+		
 		compound.putFloat("DistributionProgress", distributionProgress);
 		compound.putInt("PreviousIndex", previousOutputIndex);
 		compound.putInt("DistanceLeft", distributionDistanceLeft);
@@ -587,7 +610,12 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		syncedOutputActive = compound.getBoolean("SyncedOutput");
 		connectedLeft = compound.getBoolean("ConnectedLeft");
 		connectedRight = compound.getBoolean("ConnectedRight");
+		
 		stackToDistribute = ItemStack.of(compound.getCompound("StackToDistribute"));
+		stackEnteredFrom =
+			compound.contains("StackEnteredFrom") ? NBTHelper.readEnum(compound, "StackEnteredFrom", Direction.class)
+				: null;
+
 		distributionProgress = compound.getFloat("DistributionProgress");
 		previousOutputIndex = compound.getInt("PreviousIndex");
 		distributionDistanceLeft = compound.getInt("DistanceLeft");

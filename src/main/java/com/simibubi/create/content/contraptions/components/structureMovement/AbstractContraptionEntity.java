@@ -139,6 +139,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public boolean collisionEnabled() {
 		return true;
 	}
+	
+	public void registerColliding(Entity collidingEntity) {
+		collidingEntities.put(collidingEntity, new MutableInt());
+	}
 
 	public void addSittingPassenger(Entity passenger, int seatIndex) {
 		for (Entity entity : getPassengers()) {
