@@ -115,6 +115,8 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 			return;
 		if (self.isOnGround())
 			return;
+		if (self.isPassenger())
+			return;
 
 		Vec3 worldPos = self.position()
 			.add(0, -0.2, 0);

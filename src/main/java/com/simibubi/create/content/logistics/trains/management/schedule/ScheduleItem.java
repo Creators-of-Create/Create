@@ -66,8 +66,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 		return InteractionResultHolder.pass(heldItem);
 	}
 
-	@Override
-	public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget,
+	public InteractionResult handScheduleTo(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget,
 		InteractionHand pUsedHand) {
 		InteractionResult pass = InteractionResult.PASS;
 
@@ -123,6 +122,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 			pStack.shrink(1);
 			pPlayer.setItemInHand(pUsedHand, pStack.isEmpty() ? ItemStack.EMPTY : pStack);
 		}
+
 		return InteractionResult.SUCCESS;
 	}
 
