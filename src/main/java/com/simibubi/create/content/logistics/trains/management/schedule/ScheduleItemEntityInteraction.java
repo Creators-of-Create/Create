@@ -77,7 +77,7 @@ public class ScheduleItemEntityInteraction {
 		if (directions == null)
 			return;
 
-		boolean onServer = !event.getWorld().isClientSide;
+		boolean onServer = !event.getLevel().isClientSide;
 
 		if (train.runtime.paused && !train.runtime.completed) {
 			if (onServer) {
