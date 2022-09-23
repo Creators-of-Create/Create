@@ -41,9 +41,6 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 		int target = getThreshold();
 		boolean stacks = inStacks();
 
-		if (stack.isEmpty())
-			return true;
-
 		int foundItems = 0;
 		for (Carriage carriage : train.carriages) {
 			IItemHandlerModifiable items = carriage.storage.getItems();
@@ -97,8 +94,10 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 				Lang.translateDirect("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
 			Lang.translateDirect("schedule.condition.threshold.x_units_of_item", getThreshold(),
 				Lang.translateDirect("schedule.condition.threshold." + (inStacks() ? "stacks" : "items")),
-				stack.getItem() instanceof FilterItem ? Lang.translateDirect("schedule.condition.threshold.matching_content")
-					: stack.getHoverName())
+				stack.isEmpty() ? Lang.translateDirect("schedule.condition.threshold.anything")
+					: stack.getItem() instanceof FilterItem
+						? Lang.translateDirect("schedule.condition.threshold.matching_content")
+						: stack.getHoverName())
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
 

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 840",
+	"_": "Missing Localizations: 842",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1485,6 +1485,7 @@
 	"create.schedule.condition.threshold.equal": "genau",
 	"create.schedule.condition.threshold.x_units_of_item": "%1$s %2$s %3$s",
 	"create.schedule.condition.threshold.matching_content": "passender Inhalt",
+	"create.schedule.condition.threshold.anything": "UNLOCALIZED: Anything",
 	"create.schedule.condition.threshold.item_measure": "Maßeinheit",
 	"create.schedule.condition.threshold.items": "Items",
 	"create.schedule.condition.threshold.stacks": "Stacks",
@@ -1492,6 +1493,7 @@
 	"create.schedule.condition.threshold.status": "Zugladestand: %1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "Referenz-Item",
 	"create.schedule.condition.threshold.place_item_2": "Filter können verwendet werden",
+	"create.schedule.condition.threshold.place_item_3": "UNLOCALIZED: Leave empty to match any",
 	"create.schedule.condition.fluid_threshold": "Flüssigkeitsladestand",
 	"create.schedule.condition.item_threshold": "Item-Ladestand",
 	"create.schedule.condition.redstone_link": "Redstone-Link",

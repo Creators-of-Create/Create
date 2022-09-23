@@ -44,9 +44,6 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 		Ops operator = getOperator();
 		int target = getThreshold();
 
-		if (compareStack.isEmpty())
-			return true;
-
 		int foundFluid = 0;
 		for (Carriage carriage : train.carriages) {
 			IFluidHandler fluids = carriage.storage.getFluids();
@@ -100,9 +97,10 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 				Lang.translateDirect("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
 			Lang.translateDirect("schedule.condition.threshold.x_units_of_item", getThreshold(),
 				Lang.translateDirect("schedule.condition.threshold.buckets"),
-				compareStack.getItem() instanceof FilterItem
-					? Lang.translateDirect("schedule.condition.threshold.matching_content")
-					: loadFluid().getDisplayName())
+				compareStack.isEmpty() ? Lang.translateDirect("schedule.condition.threshold.anything")
+					: compareStack.getItem() instanceof FilterItem
+						? Lang.translateDirect("schedule.condition.threshold.matching_content")
+						: loadFluid().getDisplayName())
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
 

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,7 +65,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			return true;
 		if (level == null || level.isClientSide)
 			return true;
-		if (!getBasin().filter(BasinTileEntity::canContinueProcessing)
+		Optional<BasinTileEntity> basin = getBasin();
+		if (!basin.filter(BasinTileEntity::canContinueProcessing)
 			.isPresent())
 			return true;
 
@@ -118,6 +120,10 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	}
 
 	protected List<Recipe<?>> getMatchingRecipes() {
+		if (getBasin().map(BasinTileEntity::isEmpty)
+			.orElse(true))
+			return new ArrayList<>();
+		
 		List<Recipe<?>> list = RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters);
 		return list.stream()
 			.filter(this::matchBasinRecipe)

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 2",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1485,6 +1485,7 @@
 	"create.schedule.condition.threshold.equal": "точно",
 	"create.schedule.condition.threshold.x_units_of_item": "%1$s %2$s (%3$s)",
 	"create.schedule.condition.threshold.matching_content": "Определённое содержимое",
+	"create.schedule.condition.threshold.anything": "UNLOCALIZED: Anything",
 	"create.schedule.condition.threshold.item_measure": "Количество предметов",
 	"create.schedule.condition.threshold.items": "штук",
 	"create.schedule.condition.threshold.stacks": "стаков",
@@ -1492,6 +1493,7 @@
 	"create.schedule.condition.threshold.status": "Груз: %1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "Основной предмет",
 	"create.schedule.condition.threshold.place_item_2": "Можно использовать фильтры",
+	"create.schedule.condition.threshold.place_item_3": "UNLOCALIZED: Leave empty to match any",
 	"create.schedule.condition.fluid_threshold": "Состояние жидкого груза",
 	"create.schedule.condition.item_threshold": "Состояние груза",
 	"create.schedule.condition.redstone_link": "Беспроводной сигнал",
