@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 4",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1260,6 +1260,8 @@
 	"create.item_attributes.smokable.inverted": "不可被烟熏",
 	"create.item_attributes.blastable": "可被高炉冶炼",
 	"create.item_attributes.blastable.inverted": "不可被高炉冶炼",
+	"create.item_attributes.compostable": "UNLOCALIZED: can be composted",
+	"create.item_attributes.compostable.inverted": "UNLOCALIZED: cannot be composted",
 	"create.item_attributes.shulker_level": "潜影盒是%1$s的",
 	"create.item_attributes.shulker_level.inverted": "潜影盒不是%1$s的",
 	"create.item_attributes.shulker_level.full": "满",
@@ -1483,6 +1485,7 @@
 	"create.schedule.condition.threshold.equal": "恰好",
 	"create.schedule.condition.threshold.x_units_of_item": "%1$s%2$s%3$s",
 	"create.schedule.condition.threshold.matching_content": "匹配内容",
+	"create.schedule.condition.threshold.anything": "UNLOCALIZED: Anything",
 	"create.schedule.condition.threshold.item_measure": "物品度量",
 	"create.schedule.condition.threshold.items": "个",
 	"create.schedule.condition.threshold.stacks": "组",
@@ -1490,6 +1493,7 @@
 	"create.schedule.condition.threshold.status": "货物：%1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "参考物品",
 	"create.schedule.condition.threshold.place_item_2": "可以使用过滤器",
+	"create.schedule.condition.threshold.place_item_3": "UNLOCALIZED: Leave empty to match any",
 	"create.schedule.condition.fluid_threshold": "流体货物条件",
 	"create.schedule.condition.item_threshold": "物品货物条件",
 	"create.schedule.condition.redstone_link": "无线红石",
