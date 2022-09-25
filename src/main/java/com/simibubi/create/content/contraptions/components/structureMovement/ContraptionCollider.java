@@ -32,6 +32,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -373,6 +374,13 @@ public class ContraptionCollider {
 			return entityMotion;
 		if (!entity.isOnGround())
 			return entityMotion;
+		
+		CompoundTag persistentData = entity.getPersistentData();
+		if (persistentData.contains("ContraptionGrounded")) {
+			persistentData.remove("ContraptionGrounded");
+			return entityMotion;
+		}
+		
 		if (cce.collidingEntities.containsKey(entity))
 			return entityMotion;
 		if (entity instanceof ItemEntity)
@@ -413,7 +421,7 @@ public class ContraptionCollider {
 			.add(0, .25, 0)
 			.scale(damage * 4))
 			.add(diffMotion);
-		
+
 		return VecHelper.clamp(added, 3);
 	}
 
