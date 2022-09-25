@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 840",
+	"_": "Missing Localizations: 842",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1485,6 +1485,7 @@
 	"create.schedule.condition.threshold.equal": "genau",
 	"create.schedule.condition.threshold.x_units_of_item": "%1$s %2$s %3$s",
 	"create.schedule.condition.threshold.matching_content": "passender Inhalt",
+	"create.schedule.condition.threshold.anything": "UNLOCALIZED: Anything",
 	"create.schedule.condition.threshold.item_measure": "Maßeinheit",
 	"create.schedule.condition.threshold.items": "Items",
 	"create.schedule.condition.threshold.stacks": "Stacks",
@@ -1492,6 +1493,7 @@
 	"create.schedule.condition.threshold.status": "Zugladestand: %1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "Referenz-Item",
 	"create.schedule.condition.threshold.place_item_2": "Filter können verwendet werden",
+	"create.schedule.condition.threshold.place_item_3": "UNLOCALIZED: Leave empty to match any",
 	"create.schedule.condition.fluid_threshold": "Flüssigkeitsladestand",
 	"create.schedule.condition.item_threshold": "Item-Ladestand",
 	"create.schedule.condition.redstone_link": "Redstone-Link",
@@ -1611,7 +1613,7 @@
 	"create.train.status.end_of_track": "Ein Waggon hat das Ende seines Gleises erreicht",
 	"create.train.status.double_portal": "Ein Waggon kann kein Portal während des Verlassens eines anderen betreten",
 	"create.train.status.coupling_stress": "Zwangsbremsung aufgrund von Spannung an einer Kopplung",
-	"create.train.status.track_missing": "Gleisen fehlen unter dem Zug",
+	"create.train.status.track_missing": "Gleise fehlen unter dem Zug",
 	"create.train.status.paused_for_manual": "Fahrplan für manuelle Fahrt pausiert",
 	"create.train.status.opposite_driver": "Pfad erfordert einen in die andere Richtung zeigenden Fahrer",
 	"create.train.status.missing_driver": "Fahrer ist verschwunden",
@@ -1684,7 +1686,7 @@
 	"create.display_source.station_summary.platform_column": "Spalte 'Gleis' Größe",
 	"create.display_source.station_summary.now": "jetzt",
 	"create.display_source.station_summary.minutes": "min",
-	"create.display_source.station_summary.seconds": "%1$sen",
+	"create.display_source.station_summary.seconds": "%1$ss",
 	"create.display_source.observed_train_name": "Zugnamen ermitteln",
 	"create.display_source.max_enchant_level": "Max. Verzauberungskosten",
 	"create.display_source.boiler_status": "Kesselstatus",

@@ -34,7 +34,7 @@ public class BrassTunnelItemHandler implements IItemHandler {
 		if (!te.canTakeItems())
 			return stack;
 		if (!simulate) 
-			te.setStackToDistribute(stack);
+			te.setStackToDistribute(stack, null);
 		return ItemStack.EMPTY;
 	}
 

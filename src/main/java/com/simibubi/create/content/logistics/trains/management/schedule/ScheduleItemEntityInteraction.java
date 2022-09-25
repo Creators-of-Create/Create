@@ -11,19 +11,20 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
-public class ScheduleItemRetrieval {
+public class ScheduleItemEntityInteraction {
 
 	@SubscribeEvent
-	public static void removeScheduleFromConductor(EntityInteract event) {
+	public static void interactWithConductor(EntityInteractSpecific event) {
 		Entity entity = event.getTarget();
 		Player player = event.getPlayer();
 		if (player == null || entity == null)
@@ -34,16 +35,24 @@ public class ScheduleItemRetrieval {
 		Entity rootVehicle = entity.getRootVehicle();
 		if (!(rootVehicle instanceof CarriageContraptionEntity))
 			return;
+		if (!(entity instanceof LivingEntity living))
+			return;
+		if (player.getCooldowns()
+			.isOnCooldown(AllItems.SCHEDULE.get()))
+			return;
 
 		ItemStack itemStack = event.getItemStack();
-		if (AllItems.SCHEDULE.isIn(itemStack) && entity instanceof Wolf wolf) {
-			itemStack.getItem()
-				.interactLivingEntity(itemStack, player, wolf, event.getHand());
-			return;
+		if (itemStack.getItem()instanceof ScheduleItem si) {
+			InteractionResult result = si.handScheduleTo(itemStack, player, living, event.getHand());
+			if (result.consumesAction()) {
+				player.getCooldowns()
+					.addCooldown(AllItems.SCHEDULE.get(), 5);
+				event.setCancellationResult(result);
+				event.setCanceled(true);
+				return;
+			}
 		}
 
-		if (player.level.isClientSide)
-			return;
 		if (event.getHand() == InteractionHand.OFF_HAND)
 			return;
 
@@ -68,31 +77,47 @@ public class ScheduleItemRetrieval {
 		if (directions == null)
 			return;
 
+		boolean onServer = !event.getWorld().isClientSide;
+
 		if (train.runtime.paused && !train.runtime.completed) {
-			train.runtime.paused = false;
-			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
-			player.displayClientMessage(Lang.translateDirect("schedule.continued"), true);
+			if (onServer) {
+				train.runtime.paused = false;
+				AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
+				player.displayClientMessage(Lang.translateDirect("schedule.continued"), true);
+			}
+
+			player.getCooldowns()
+				.addCooldown(AllItems.SCHEDULE.get(), 5);
+			event.setCancellationResult(InteractionResult.SUCCESS);
 			event.setCanceled(true);
 			return;
 		}
 
 		ItemStack itemInHand = player.getItemInHand(event.getHand());
 		if (!itemInHand.isEmpty()) {
-			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
-			player.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
+			if (onServer) {
+				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+				player.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
+			}
+			event.setCancellationResult(InteractionResult.SUCCESS);
 			event.setCanceled(true);
 			return;
 		}
 
-		AllSoundEvents.playItemPickup(player);
-		player.displayClientMessage(
-			Lang.translateDirect(
-				train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
-			true);
+		if (onServer) {
+			AllSoundEvents.playItemPickup(player);
+			player.displayClientMessage(
+				Lang.translateDirect(
+					train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
+				true);
 
-		player.getInventory()
-			.placeItemBackInInventory(train.runtime.returnSchedule());
-//		player.setItemInHand(event.getHand(), train.runtime.returnSchedule());
+			player.getInventory()
+				.placeItemBackInInventory(train.runtime.returnSchedule());
+		}
+
+		player.getCooldowns()
+			.addCooldown(AllItems.SCHEDULE.get(), 5);
+		event.setCancellationResult(InteractionResult.SUCCESS);
 		event.setCanceled(true);
 		return;
 	}

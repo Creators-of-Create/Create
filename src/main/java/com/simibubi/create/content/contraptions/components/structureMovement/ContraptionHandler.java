@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
@@ -17,7 +16,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -65,24 +63,18 @@ public class ContraptionHandler {
 	}
 
 	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingEntity entityLiving, Level world) {
-		if (world.isClientSide)
+		if (!world.isClientSide)
 			return;
+
 		CompoundTag data = entityLiving.getPersistentData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
+
 		Vec3 position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", Tag.TAG_DOUBLE));
 		if (entityLiving.getVehicle() == null)
-			entityLiving.teleportTo(position.x, position.y, position.z);
+			entityLiving.absMoveTo(position.x, position.y, position.z, entityLiving.getYRot(), entityLiving.getXRot());
 		data.remove("ContraptionDismountLocation");
 		entityLiving.setOnGround(false);
-
-		if (!data.contains("ContraptionMountLocation"))
-			return;
-		Vec3 prevPosition = VecHelper.readNBT(data.getList("ContraptionMountLocation", Tag.TAG_DOUBLE));
-		data.remove("ContraptionMountLocation");
-		
-		if (entityLiving instanceof Player player && !prevPosition.closerThan(position, 5000)) 
-			AllAdvancements.LONG_TRAVEL.awardTo(player);
 	}
 
 }

@@ -9,6 +9,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -16,26 +17,31 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
-public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe, ITE<FluidValveTileEntity> {
+public class FluidValveBlock extends DirectionalAxisKineticBlock
+	implements IAxisPipe, ITE<FluidValveTileEntity>, ProperWaterloggedBlock {
 
 	public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
 	public FluidValveBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(ENABLED, false));
+		registerDefaultState(defaultBlockState().setValue(ENABLED, false)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -46,7 +52,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder.add(ENABLED));
+		super.createBlockStateDefinition(builder.add(ENABLED, WATERLOGGED));
 	}
 
 	@Override
@@ -125,7 +131,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
@@ -139,6 +145,23 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	@Override
 	public BlockEntityType<? extends FluidValveTileEntity> getTileEntityType() {
 		return AllTileEntities.FLUID_VALVE.get();
+	}
+
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return withWater(super.getStateForPlacement(context), context);
+	}
+
+	@Override
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
+		BlockPos pos, BlockPos neighbourPos) {
+		updateWater(world, state, pos);
+		return state;
+	}
+
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return fluidState(state);
 	}
 
 }

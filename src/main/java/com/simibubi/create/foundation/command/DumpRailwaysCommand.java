@@ -31,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 public class DumpRailwaysCommand {
 
 	static ArgumentBuilder<CommandSourceStack, ?> register() {
-		return Commands.literal("dumpRailways")
+		return Commands.literal("trains")
 			.requires(cs -> cs.hasPermission(2))
 			.executes(ctx -> {
 				CommandSourceStack source = ctx.getSource();
@@ -52,7 +52,7 @@ public class DumpRailwaysCommand {
 		int orange = 0xFFAD60;
 
 		chat.accept("", white);
-		chat.accept("-+------<< Railways Summary: >>------+-", white);
+		chat.accept("-+------<< Train Summary: >>------+-", white);
 		int graphCount = railways.trackNetworks.size();
 		chat.accept("Track Networks: " + graphCount, blue);
 		chat.accept("Signal Groups: " + railways.signalEdgeGroups.size(), blue);

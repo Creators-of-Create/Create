@@ -29,6 +29,9 @@ import net.minecraft.world.level.Level;
 
 public class ScheduleRuntime {
 
+	private static final int TBD = -1;
+	private static final int INVALID = -2;
+
 	public enum State {
 		PRE_TRANSIT, IN_TRANSIT, POST_TRANSIT
 	}
@@ -129,7 +132,7 @@ public class ScheduleRuntime {
 			destinationReached();
 			return;
 		}
-		if (train.navigation.startNavigation(nextStation, Double.MAX_VALUE, false) != -1) {
+		if (train.navigation.startNavigation(nextStation, Double.MAX_VALUE, false) != TBD) {
 			state = State.IN_TRANSIT;
 			ticksInTransit = 0;
 		}
@@ -231,7 +234,7 @@ public class ScheduleRuntime {
 		isAutoSchedule = auto;
 		train.status.newSchedule();
 		predictionTicks = new ArrayList<>();
-		schedule.entries.forEach($ -> predictionTicks.add(-1));
+		schedule.entries.forEach($ -> predictionTicks.add(TBD));
 		displayLinkUpdateRequested = true;
 	}
 
@@ -269,8 +272,10 @@ public class ScheduleRuntime {
 			if (currentStation != null)
 				predictions.add(createPrediction(current, currentStation.name, currentTitle, 0));
 			int departureTime = estimateStayDuration(current);
-			if (departureTime == -1)
-				accumulatedTime = -1;
+			if (departureTime == INVALID)
+				accumulatedTime = INVALID;
+			else
+				accumulatedTime += departureTime;
 
 		} else {
 			GlobalStation destination = train.navigation.destination;
@@ -292,10 +297,10 @@ public class ScheduleRuntime {
 				predictions.add(createPrediction(current, destination.name, currentTitle, accumulatedTime));
 
 				int departureTime = estimateStayDuration(current);
-				if (departureTime != -1)
+				if (departureTime != INVALID)
 					accumulatedTime += departureTime;
-				if (departureTime == -1)
-					accumulatedTime = -1;
+				else
+					accumulatedTime = INVALID;
 
 			} else
 				predictForEntry(current, currentTitle, accumulatedTime, predictions);
@@ -327,47 +332,56 @@ public class ScheduleRuntime {
 			return accumulatedTime;
 		if (predictionTicks.size() <= currentEntry)
 			return accumulatedTime;
-		if (accumulatedTime == -1) {
+		
+		int departureTime = estimateStayDuration(index);
+		
+		if (accumulatedTime < 0) {
 			predictions.add(createPrediction(index, filter.getFilter(), currentTitle, accumulatedTime));
-			return -1;
+			return Math.min(accumulatedTime, departureTime);
 		}
 
 		int predictedTime = predictionTicks.get(index);
-		int departureTime = estimateStayDuration(index);
+		accumulatedTime += predictedTime;
 
-		if (predictedTime == -1)
-			accumulatedTime = -1;
-		else {
-			accumulatedTime += predictedTime;
-			if (departureTime != -1)
-				accumulatedTime += departureTime;
-		}
+		if (predictedTime == TBD)
+			accumulatedTime = TBD;
 
 		predictions.add(createPrediction(index, filter.getFilter(), currentTitle, accumulatedTime));
 
-		if (departureTime == -1)
-			return -1;
-
+		if (accumulatedTime != TBD) 
+			accumulatedTime += departureTime;
+		
+		if (departureTime == INVALID)
+			accumulatedTime = INVALID;
+		
 		return accumulatedTime;
 	}
 
 	private int estimateStayDuration(int index) {
 		if (index >= schedule.entries.size()) {
 			if (!schedule.cyclic)
-				return 100000;
+				return INVALID;
 			index = 0;
 		}
 
 		ScheduleEntry scheduleEntry = schedule.entries.get(index);
-		for (List<ScheduleWaitCondition> list : scheduleEntry.conditions)
-			for (ScheduleWaitCondition condition : list)
-				if (condition instanceof ScheduledDelay wait)
-					return wait.totalWaitTicks();
+		Columns: for (List<ScheduleWaitCondition> list : scheduleEntry.conditions) {
+			int total = 0;
+			for (ScheduleWaitCondition condition : list) {
+				if (!(condition instanceof ScheduledDelay wait))
+					continue Columns;
+				total += wait.totalWaitTicks();
+			}
+			return total;
+		}
 
-		return 5; // TODO properly ask conditions for time prediction
+		return INVALID;
 	}
 
 	private TrainDeparturePrediction createPrediction(int index, String destination, String currentTitle, int time) {
+		if (time == INVALID)
+			return null;
+		
 		int size = schedule.entries.size();
 		if (index >= size) {
 			if (!schedule.cyclic)
@@ -422,7 +436,7 @@ public class ScheduleRuntime {
 
 		int[] readTransits = tag.getIntArray("TransitTimes");
 		if (schedule != null) {
-			schedule.entries.forEach($ -> predictionTicks.add(-1));
+			schedule.entries.forEach($ -> predictionTicks.add(TBD));
 			if (readTransits.length == schedule.entries.size())
 				for (int i = 0; i < readTransits.length; i++)
 					predictionTicks.set(i, readTransits[i]);
