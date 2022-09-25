@@ -141,6 +141,8 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 			return;
 
 		self.setOnGround(true);
+		self.getPersistentData()
+			.putBoolean("ContraptionGrounded", true);
 	}
 
 	@Inject(method = { "spawnSprintParticle" }, at = @At(value = "TAIL"))
