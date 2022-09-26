@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.StreamSupport;
 
+import com.simibubi.create.AllEnchantments;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -191,8 +196,13 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return;
 		}
 
+		boolean wearingBeltWalkerEnchant = StreamSupport.stream(entityIn.getArmorSlots()
+			.spliterator(), false)
+			.anyMatch(s -> s.getItem() instanceof ArmorItem
+				&& ((ArmorItem) s.getItem()).getSlot() == EquipmentSlot.FEET
+				&& EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.BELT_WALKER.get(), s) > 0);
 		if (AllItems.DIVING_BOOTS.get()
-			.isWornBy(entityIn))
+			.isWornBy(entityIn) || wearingBeltWalkerEnchant)
 			return;
 
 		BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos);
