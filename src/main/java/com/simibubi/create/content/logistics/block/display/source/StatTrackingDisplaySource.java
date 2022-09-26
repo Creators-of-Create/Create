@@ -1,13 +1,19 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.IntAttached;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -17,6 +23,7 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource {
 
@@ -33,8 +40,11 @@ public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource 
 			scoreboard.addObjective(name, ObjectiveCriteria.DUMMY, getObjectiveDisplayName(), RenderType.INTEGER);
 		Objective objective = scoreboard.getObjective(name);
 
-		sLevel.players()
-			.forEach(s -> scoreboard.getOrCreatePlayerScore(s.getScoreboardName(), objective)
+		Iterator<ServerLevel> serverLevelIterator = ServerLifecycleHooks.getCurrentServer().getAllLevels().iterator();
+		Spliterator<ServerLevel> spliterator = Spliterators.spliteratorUnknownSize(serverLevelIterator, 0);
+		StreamSupport.stream(spliterator, false)
+				.flatMap(l -> l.players().stream())
+				.forEach(s -> scoreboard.getOrCreatePlayerScore(s.getScoreboardName(), objective)
 				.setScore(updatedScoreOf(s)));
 
 		return showScoreboard(sLevel, name, maxRows);
