@@ -45,15 +45,17 @@ public class InputEvents {
 	}
 
 	@SubscribeEvent
-	public static void onMouseInput(InputEvent.MouseButton event) {
+	public static void onMouseInput(InputEvent.MouseButton.Pre event) {
 		if (Minecraft.getInstance().screen != null)
 			return;
 
 		int button = event.getButton();
 		boolean pressed = !(event.getAction() == 0);
 
-		CreateClient.SCHEMATIC_HANDLER.onMouseInput(button, pressed);
-		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.onMouseInput(button, pressed);
+		if (CreateClient.SCHEMATIC_HANDLER.onMouseInput(button, pressed))
+			event.setCanceled(true);
+		else if (CreateClient.SCHEMATIC_AND_QUILL_HANDLER.onMouseInput(button, pressed))
+			event.setCanceled(true);
 	}
 
 	@SubscribeEvent

@@ -243,23 +243,23 @@ public class SchematicHandler {
 		selectionScreen.renderPassive(poseStack, partialTicks);
 	}
 
-	public void onMouseInput(int button, boolean pressed) {
+	public boolean onMouseInput(int button, boolean pressed) {
 		if (!active)
-			return;
+			return false;
 		if (!pressed || button != 1)
-			return;
+			return false;
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player.isShiftKeyDown())
-			return;
+			return false;
 		if (mc.hitResult instanceof BlockHitResult) {
 			BlockHitResult blockRayTraceResult = (BlockHitResult) mc.hitResult;
 			BlockState clickedBlock = mc.level.getBlockState(blockRayTraceResult.getBlockPos());
 			if (AllBlocks.SCHEMATICANNON.has(clickedBlock))
-				return;
+				return false;
 			if (AllBlocks.DEPLOYER.has(clickedBlock))
-				return;
+				return false;
 		}
-		currentTool.getTool()
+		return currentTool.getTool()
 			.handleRightClick();
 	}
 
