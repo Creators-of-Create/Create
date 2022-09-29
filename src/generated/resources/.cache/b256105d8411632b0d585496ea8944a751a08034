@@ -1,4 +1,4 @@
-// 1.19.2	2022-09-23T20:53:24.8287802	Create's Processing Recipes
+// 1.19.2	2022-09-28T21:49:27.0879193	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -564,6 +564,7 @@ e7b86d4ca5de2df474794424d93b447e5f9dcdc3 data/create/recipes/mixing/chocolate_me
 4cf9a0979fb6401c51c763d71f0bb53ea2c8c32b data/create/recipes/mixing/dough_by_mixing.json
 ac2a2456e2f0ccd74db6dc5ad029eb4e6781a25d data/create/recipes/mixing/honey.json
 251c09ac25bb73e092fac483ceb5a9196a479919 data/create/recipes/mixing/lava_from_cobble.json
+939c55202f06b50cec3c16e66e85f915f2272db2 data/create/recipes/mixing/mud_by_mixing.json
 4454cb7a73571d90e19826ee394b0c9e52ac8620 data/create/recipes/mixing/tea.json
 8bd950c78b4db3b7f5a9a1f42c116677049b77fc data/create/recipes/pressing/brass_ingot.json
 8dee39f86784636639790b0ed1bbd5c845522952 data/create/recipes/pressing/copper_ingot.json
