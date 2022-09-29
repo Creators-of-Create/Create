@@ -1572,7 +1572,7 @@
 	"create.station.no_bogeys": "無轉向架",
 	"create.station.one_bogey": "一座轉向架",
 	"create.station.more_bogeys": "%1$s 座轉向架",
-	"create.station.how_to": "在加亮軌道上放置火車機殼以建立轉向架",
+	"create.station.how_to": "在醒目提示的軌道上放置火車機殼以建立轉向架",
 	"create.station.how_to_1": "破壞轉向架上方的方塊以移除轉向架",
 	"create.station.how_to_2": "搭建車廂時每個車廂都須與一或二座轉向架連接",
 
