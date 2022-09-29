@@ -801,7 +801,7 @@
 	"advancement.create.extendo_grip": "Дальше — больше",
 	"advancement.create.extendo_grip.desc": "Возьмите Удлинённую руку",
 	"advancement.create.linked_controller": "Восстановление связей",
-	"advancement.create.linked_controller.desc": "Используйте Контроллер связей для удалённой активации Беспроводного приёмника редстоун-сигнала",
+	"advancement.create.linked_controller.desc": "Используйте Контроллер связей для удалённой активации Редстоуного беспроводного приёмника сигнала",
 	"advancement.create.arm_blaze_burner": "Поджигателе-трон",
 	"advancement.create.arm_blaze_burner.desc": "Запрограммируйте Механическую руку на кормление Горелки всполоха",
 	"advancement.create.crusher_maxed_0000": "Раздроби это!",
@@ -1948,9 +1948,9 @@
 	"block.create.toolbox.tooltip.behaviour3": "Открывает _интерфейс контейнера_.",
 
 	"block.create.stockpile_switch.tooltip": "НАБЛЮДАТЕЛЬ ЗАПОЛНЕННОСТИ",
-	"block.create.stockpile_switch.tooltip.summary": "Подаёт редстоун-сигнал в зависимости от _заполненности_ _прикреплённого_ _ящика_.",
+	"block.create.stockpile_switch.tooltip.summary": "Выдаёт редстоун-сигнал в зависимости от _заполненности_ _прикреплённого_ _ящика_.",
 	"block.create.stockpile_switch.tooltip.condition1": "Когда достигнут нижний предел",
-	"block.create.stockpile_switch.tooltip.behaviour1": "Не подаёт _редстоун-сигнал_.",
+	"block.create.stockpile_switch.tooltip.behaviour1": "Не выдаёт _редстоун-сигнал_.",
 
 	"block.create.content_observer.tooltip": "НАБЛЮДАТЕЛЬ ЗА СОДЕРЖИМЫМ",
 	"block.create.content_observer.tooltip.summary": "_Обнаруживает предметы внутри _контейнеров_ и на _конвейерах_, соответствующие настроенному _фильтру_. Если наблюдаемый блок-хранилище, ремень или шланг содержит совпадающий предмет, этот компонент излучает редстоун-сигнал. Когда наблюдаемая _воронка передает_ соответствующий предмет, этот компонент испускает _редстоун-импульс_.",
