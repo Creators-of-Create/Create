@@ -589,7 +589,7 @@
 	"block.create.mechanical_mixer.tooltip.behaviour2": "_Configureert_ de minimale hoeveelheid _totale_ _ingredienten_ voor toegepaste recepten. Gebruik deze optie om _ongewenste_ _recepten_ met vergelijkbare maar minder ingrediënten _te_ _vermijden._",
 
 	"block.create.mechanical_piston.tooltip": "MECHANISCHE ZUIGER",
-	"block.create.mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Zuiger,_ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpalen_ aan de achterzijde definiëren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Linair_ _Chassis_ om meer dan een enkele rij blokken te verplaatsen.",
+	"block.create.mechanical_piston.tooltip.summary": "Een meer geavanceerde versie van de _Zuiger,_ die _Rotatiekracht_ gebruikt om gekoppelde constructies nauwkeurig te verplaatsen. _Zuiger_ _Verlgenpalen_ aan de achterzijde definiëren het _Bereik_ van dit apparaat. Zonder verlengingen zal de zuiger niet bewegen. Gebruik _Lineair_ _Chassis_ om meer dan een enkele rij blokken te verplaatsen.",
 	"block.create.mechanical_piston.tooltip.condition1": "Wanneer gedraaid",
 	"block.create.mechanical_piston.tooltip.behaviour1": "Begint de bijgevoegde structuur te verplaatsen. Snelheid en richting correleren met de inkomende rotatiesnelheid.",
 
