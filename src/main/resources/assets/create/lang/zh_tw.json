@@ -2509,13 +2509,13 @@
 	"create.ponder.item_drain.text_4": "…他會從上方滑過，並清空裡面的流體",
 	"create.ponder.item_drain.text_5": "現在流體網路可以抽取分液池中的流體了",
 
-	"create.ponder.item_vault_sizes.header": "物品倉的尺寸",
-	"create.ponder.item_vault_sizes.text_1": "物品倉可以合併，以增加容量",
+	"create.ponder.item_vault_sizes.header": "儲物倉的尺寸",
+	"create.ponder.item_vault_sizes.text_1": "儲物倉可以合併，以增加容量",
 	"create.ponder.item_vault_sizes.text_2": "它們的直徑可達 3 個方塊寬…",
 	"create.ponder.item_vault_sizes.text_3": "…而長度可以增長到直徑的 3 倍",
 
-	"create.ponder.item_vault_storage.header": "儲存物品至物品倉",
-	"create.ponder.item_vault_storage.text_1": "物品倉可用於儲存大量物品",
+	"create.ponder.item_vault_storage.header": "儲存物品至儲物倉",
+	"create.ponder.item_vault_storage.text_1": "儲物倉可用於儲存大量物品",
 	"create.ponder.item_vault_storage.text_2": "但是，不能手動存放或提取內容物",
 	"create.ponder.item_vault_storage.text_3": "任何用於物品傳輸的部件都可以嵌入…",
 	"create.ponder.item_vault_storage.text_4": "…並從該容器中提取內容物",
