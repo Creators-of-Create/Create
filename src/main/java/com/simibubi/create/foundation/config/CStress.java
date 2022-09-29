@@ -22,7 +22,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 
 	@Override
 	protected void registerAll(Builder builder) {
-		builder.comment("", Comments.su, Comments.impact)
+		builder.comment(".", Comments.su, Comments.impact)
 			.push("impact");
 		BlockStressDefaults.DEFAULT_IMPACTS.forEach((r, i) -> {
 			if (r.getNamespace()
@@ -31,7 +31,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 		});
 		builder.pop();
 
-		builder.comment("", Comments.su, Comments.capacity)
+		builder.comment(".", Comments.su, Comments.capacity)
 			.push("capacity");
 		BlockStressDefaults.DEFAULT_CAPACITIES.forEach((r, i) -> {
 			if (r.getNamespace()
