@@ -106,8 +106,6 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 						continue Ingredients;
 					if (!simulate)
 						availableItems.extractItem(slot, 1, false);
-//					else if (extracted.hasContainerItem())
-//						recipeOutputItems.add(extracted.getContainerItem().copy());
 					extractedItemsFromSlot[slot]++;
 					continue Ingredients;
 				}
@@ -159,7 +157,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					recipeOutputItems.add(recipe.getResultItem());
 
 					if (recipe instanceof CraftingRecipe craftingRecipe) {
-						recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(basin.getInputInventory(), extractedItemsFromSlot)));
+						recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)));
 					}
 				}
 			}
