@@ -133,6 +133,7 @@ public abstract class Contraption {
 	public BlockPos anchor;
 	public boolean stalled;
 	public boolean hasUniversalCreativeCrate;
+	public boolean disassembled;
 
 	protected Map<BlockPos, StructureBlockInfo> blocks;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
@@ -1001,6 +1002,10 @@ public abstract class Contraption {
 	}
 
 	public void addBlocksToWorld(Level world, StructureTransform transform) {
+		if (disassembled)
+			return;
+		disassembled = true;
+		
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (StructureBlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
