@@ -148,6 +148,13 @@ minecraft {
                     }
                 }
 
+                if (catnipInWorkspace) {
+                    catnip {
+                        source project(":catnip:Common").sourceSets.main
+                        source project(":catnip:Forge").sourceSets.main
+                    }
+                }
+
                 if (ponderInWorkspace) {
                     ponder {
                         source project(":Ponder:Common").sourceSets.main

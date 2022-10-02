@@ -1,11 +1,14 @@
 package com.simibubi.create;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
+import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
@@ -20,20 +23,24 @@ import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
-import com.simibubi.create.foundation.ponder.CreateSharedPonderText;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.FlwSuperBufferFactory;
 import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 
+import net.createmod.catnip.config.ui.BaseConfigScreen;
+import net.createmod.catnip.config.ui.ConfigScreen;
 import net.createmod.catnip.render.SuperBufferFactory;
 import net.createmod.catnip.render.SuperByteBufferCache;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ComponentUtils;
@@ -72,8 +79,6 @@ public class CreateClient {
 
 		ZAPPER_RENDER_HANDLER.registerListeners(forgeEventBus);
 		POTATO_CANNON_RENDER_HANDLER.registerListeners(forgeEventBus);
-
-		CreateSharedPonderText.loadClass();
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
@@ -93,6 +98,8 @@ public class CreateClient {
 
 		PonderIndex.addPlugin(new CreatePonderPlugin());
 
+		setupConfigUIBackground();
+
 		registerOverlays();
 	}
 
@@ -105,6 +112,26 @@ public class CreateClient {
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Linked Controller", LinkedControllerClientHandler.OVERLAY);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Schematics", SCHEMATIC_HANDLER.getOverlayRenderer());
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Toolboxes", ToolboxHandlerClient.OVERLAY);
+	}
+
+	private static void setupConfigUIBackground() {
+		ConfigScreen.backgrounds.put(Create.ID, (screen, ms, partialTicks) -> {
+			CreateMainMenuScreen.PANORAMA.render(screen.getMinecraft().getDeltaFrameTime(), 1);
+
+			RenderSystem.setShaderTexture(0, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			Screen.blit(ms, 0, 0, screen.width, screen.height, 0.0F, 0.0F, 16, 128, 16, 128);
+
+			Screen.fill(ms, 0, 0, screen.width, screen.height, 0x90_282c34);
+		});
+
+		ConfigScreen.shadowState = AllBlocks.LARGE_COGWHEEL.getDefaultState().setValue(CogWheelBlock.AXIS, Direction.Axis.Y);
+
+		BaseConfigScreen.setDefaultActionFor(Create.ID, base -> base
+				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
+				.withSpecs(AllConfigs.CLIENT.specification, AllConfigs.COMMON.specification, AllConfigs.SERVER.specification)
+		);
 	}
 
 	public static void invalidateRenderers() {

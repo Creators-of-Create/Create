@@ -20,7 +20,6 @@ import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
-import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
@@ -36,9 +35,11 @@ import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -126,7 +127,7 @@ public class Create {
 		modEventBus.addGenericListener(DataSerializerEntry.class, AllEntityDataSerializers::register);
 
 		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
-		
+
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
 		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
@@ -148,6 +149,8 @@ public class Create {
 	}
 
 	public static void gatherData(GatherDataEvent event) {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PonderIndex.addPlugin(new CreatePonderPlugin()));
+
 		DataGenerator gen = event.getGenerator();
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new LangMerger(gen));

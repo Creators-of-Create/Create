@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1330",
+	"_": "Missing Localizations: 1311",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -886,6 +886,8 @@
 	"create.menu.only_ingame": "Im Pause-Menü verfügbar",
 	"create.menu.report_bugs": "Fehler melden",
 	"create.menu.support": "Unterstütze uns",
+
+	"create.ponder.mod_name": "UNLOCALIZED: Create",
 
 	"create.recipe.crushing": "Mahlen (Mahlwerk)",
 	"create.recipe.milling": "Mahlen (Mahlstein)",
@@ -2052,30 +2054,10 @@
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
 
-	"create.ponder.hold_to_ponder": "UNLOCALIZED: Hold [%1$s] to Ponder",
-	"create.ponder.subject": "UNLOCALIZED: Subject of this scene",
-	"create.ponder.pondering": "UNLOCALIZED: Pondering about...",
-	"create.ponder.identify_mode": "UNLOCALIZED: Identify mode active.\nUnpause with [%1$s]",
-	"create.ponder.associated": "UNLOCALIZED: Associated Entries",
-	"create.ponder.close": "UNLOCALIZED: Close",
-	"create.ponder.identify": "UNLOCALIZED: Identify",
-	"create.ponder.next": "UNLOCALIZED: Next Scene",
-	"create.ponder.next_up": "UNLOCALIZED: Up Next:",
-	"create.ponder.previous": "UNLOCALIZED: Previous Scene",
-	"create.ponder.replay": "UNLOCALIZED: Replay",
-	"create.ponder.think_back": "UNLOCALIZED: Think Back",
-	"create.ponder.slow_text": "UNLOCALIZED: Comfy Reading",
-	"create.ponder.exit": "UNLOCALIZED: Exit",
-	"create.ponder.welcome": "UNLOCALIZED: Welcome to Ponder",
-	"create.ponder.categories": "UNLOCALIZED: Available Categories in Create",
-	"create.ponder.index_description": "UNLOCALIZED: Click one of the icons to learn about its associated Items and Blocks",
-	"create.ponder.index_title": "UNLOCALIZED: Ponder Index",
 	"create.ponder.shared.rpm16": "UNLOCALIZED: 16 RPM",
 	"create.ponder.shared.behaviour_modify_wrench": "UNLOCALIZED: This behaviour can be modified using a Wrench",
 	"create.ponder.shared.storage_on_contraption": "UNLOCALIZED: Inventories attached to the Contraption will pick up their drops automatically",
-	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",
 	"create.ponder.shared.rpm8": "UNLOCALIZED: 8 RPM",
-	"create.ponder.shared.ctrl_and": "UNLOCALIZED: Ctrl +",
 	"create.ponder.shared.rpm32": "UNLOCALIZED: 32 RPM",
 	"create.ponder.shared.rpm16_source": "UNLOCALIZED: Source: 16 RPM",
 	"create.ponder.shared.movement_anchors": "UNLOCALIZED: With the help of Super Glue, larger structures can be moved.",
