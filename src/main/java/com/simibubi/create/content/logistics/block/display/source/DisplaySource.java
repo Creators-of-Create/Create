@@ -49,6 +49,10 @@ public abstract class DisplaySource extends DisplayBehaviour {
 		return 100;
 	};
 
+	public boolean shouldPassiveReset() {
+		return true;
+	}
+
 	protected String getTranslationKey() {
 		return id.getPath();
 	}

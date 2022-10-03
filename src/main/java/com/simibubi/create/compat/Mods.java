@@ -13,7 +13,9 @@ import net.minecraftforge.fml.ModList;
 public enum Mods {
 	DYNAMICTREES,
 	TCONSTRUCT,
-	CURIOS;
+	CURIOS,
+
+	COMPUTERCRAFT;
 
 	/**
 	 * @return a boolean of whether the mod is loaded or not based on mod id

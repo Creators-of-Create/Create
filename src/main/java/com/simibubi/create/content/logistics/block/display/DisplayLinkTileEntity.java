@@ -2,6 +2,11 @@ package com.simibubi.create.content.logistics.block.display;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.ComputerControllable;
+import com.simibubi.create.compat.computercraft.DisplayLinkPeripheral;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -11,6 +16,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,8 +24,10 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
-public class DisplayLinkTileEntity extends SmartTileEntity {
+public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerControllable {
 
 	protected BlockPos targetOffset;
 
@@ -31,8 +39,10 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 
 	public LerpedFloat glow;
 	private boolean sendPulse;
-	
+
 	public int refreshTicks;
+
+	private LazyOptional<IPeripheral> peripheralHandler;
 
 	public DisplayLinkTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -47,7 +57,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if (isVirtual()) {
 			glow.tickChaser();
 			return;
@@ -59,9 +69,9 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 			glow.tickChaser();
 			return;
 		}
-		
+
 		refreshTicks++;
-		if (refreshTicks < activeSource.getPassiveRefreshTicks())
+		if (refreshTicks < activeSource.getPassiveRefreshTicks() || !activeSource.shouldPassiveReset())
 			return;
 		tickSource();
 	}
@@ -114,7 +124,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 		activeSource.transferData(context, activeTarget, targetLine);
 		sendPulse = true;
 		sendData();
-		
+
 		award(AllAdvancements.DISPLAY_LINK);
 	}
 
@@ -133,7 +143,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
 		writeGatheredData(tag);
-		if (clientPacket && activeTarget != null) 
+		if (clientPacket && activeTarget != null)
 			tag.putString("TargetType", activeTarget.id.toString());
 		if (clientPacket && sendPulse) {
 			sendPulse = false;
@@ -171,6 +181,35 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 		sourceConfig = new CompoundTag();
 		if (activeSource != null)
 			sourceConfig = data.copy();
+	}
+
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		LazyOptional<T> peripheralCap = getPeripheralCapability(cap);
+
+		return peripheralCap.isPresent() ? peripheralCap : super.getCapability(cap, side);
+	}
+
+	@Override
+	public void setRemoved() {
+		super.setRemoved();
+		removePeripheral();
+	}
+
+	@Override
+	public IPeripheral createPeripheral() {
+		return new DisplayLinkPeripheral(this);
+	}
+
+	@Override
+	public void setPeripheralHandler(LazyOptional<IPeripheral> peripheralHandler) {
+		this.peripheralHandler = peripheralHandler;
+	}
+
+	@Override
+	public LazyOptional<IPeripheral> getPeripheralHandler() {
+		return this.peripheralHandler;
 	}
 
 	public void target(BlockPos targetPosition) {

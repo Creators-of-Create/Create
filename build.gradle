@@ -135,6 +135,14 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven {
+        // Location of maven for CC: Tweaked
+        name = "squiddev"
+        url = "https://squiddev.cc/maven/"
+        content {
+            includeGroup "org.squiddev"
+        }
+    }
 }
 
 dependencies {
@@ -161,6 +169,9 @@ dependencies {
 
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}")
+
+    compileOnly fg.deobf("org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}:api")
+    runtimeOnly fg.deobf("org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}")
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
     // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
