@@ -2,11 +2,13 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
+import com.simibubi.create.compat.computercraft.SpeedGaugePeripheral;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -62,4 +64,10 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 			.forGoggles(tooltip);
 		return true;
 	}
+
+	@Override
+	public IPeripheral createPeripheral() {
+		return new SpeedGaugePeripheral(this);
+	}
+
 }

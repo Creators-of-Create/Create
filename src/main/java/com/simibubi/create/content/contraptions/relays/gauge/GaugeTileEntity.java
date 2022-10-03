@@ -2,22 +2,32 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.ComputerControllable;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
-public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInformation {
+public abstract class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInformation, ComputerControllable {
 
 	public float dialTarget;
 	public float dialState;
 	public float prevDialState;
 	public int color;
+
+	private LazyOptional<IPeripheral> peripheral;
 
 	public GaugeTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
@@ -52,4 +62,29 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 
 		return true;
 	}
+
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		LazyOptional<T> peripheralCap = getPeripheralCapability(cap);
+
+		return peripheralCap.isPresent() ? peripheralCap : super.getCapability(cap, side);
+	}
+
+	@Override
+	public void setRemoved() {
+		super.setRemoved();
+		removePeripheral();
+	}
+
+	@Override
+	public void setPeripheral(LazyOptional<IPeripheral> peripheral) {
+		this.peripheral = peripheral;
+	}
+
+	@Override
+	public LazyOptional<IPeripheral> getPeripheral() {
+		return this.peripheral;
+	}
+
 }

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
+import com.simibubi.create.compat.computercraft.StressGaugePeripheral;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -11,6 +12,7 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -139,6 +141,11 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		award(AllAdvancements.STRESSOMETER);
 		if (Mth.equal(dialTarget, 1))
 			award(AllAdvancements.STRESSOMETER_MAXED);
+	}
+
+	@Override
+	public IPeripheral createPeripheral() {
+		return new StressGaugePeripheral(this);
 	}
 
 }
