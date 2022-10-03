@@ -2114,11 +2114,11 @@
 	"create.ponder.tag.display_sources": "Источники информации",
 	"create.ponder.tag.display_sources.description": "Компоненты или блоки, которые предлагают данные, которые можно прочитать с помощью Передатчика информации",
 	"create.ponder.tag.logistics": "Логистика",
-	"create.ponder.tag.logistics.description": "Компоненты, помогающие перемещать предметы",
+	"create.ponder.tag.logistics.description": "Компоненты, помогающие перемещать, хранить и сортировать предметы",
 	"create.ponder.tag.display_targets": "Визуализаторы информации",
 	"create.ponder.tag.display_targets.description": "Компоненты или блоки, которые могут обрабатывать и отображать данные, полученные от Передатчика информации",
 	"create.ponder.tag.train_related": "Железнодорожное оборудование",
-	"create.ponder.tag.train_related.description": "Компоненты, используемые при строительстве или управлении железнодорожных штуковин",
+	"create.ponder.tag.train_related.description": "Компоненты, используемые при строительстве и управлении железнодорожных штуковин",
 
 	"create.ponder.analog_lever.header": "Управлением редстоун-сигналом используя Аналоговые рычаги",
 	"create.ponder.analog_lever.text_1": "Аналоговый рычаг создан как компактный и точный источник редстоун-сигнала",
@@ -2131,7 +2131,7 @@
 	"create.ponder.andesite_tunnel.text_3": "...он будет отделять ровно один предмет из любых проходящих мимо стаков",
 	"create.ponder.andesite_tunnel.text_4": "Остаток продолжит свой путь",
 
-	"create.ponder.auto_schedule.header": "Станцией и автоматической выдачей Расписаний",
+	"create.ponder.auto_schedule.header": "Автоматической выдачей Расписаний на Железнодорожной Станции",
 	"create.ponder.auto_schedule.text_1": "Расписания могут использоваться для предоставления машинистам пункта назначения",
 	"create.ponder.auto_schedule.text_2": "Компараторы будут получать редстоун-сигнал всегда, когда поезд прибыл на Станцию",
 	"create.ponder.auto_schedule.text_3": "Имейте в виду, что к Станции можно подойти только с указанного направления",
@@ -2978,16 +2978,16 @@
 	"create.ponder.valve_handle.text_5": "Вентили можно окрашивать в эстетических целях",
 
 	"create.ponder.valve_pipe.header": "Управлением потоком с помощью Жидкостных клапанов",
-	"create.ponder.valve_pipe.text_1": "Жидкостные клапаны помогают контролировать распространение жидкостей по трубопроводу",
+	"create.ponder.valve_pipe.text_1": "Жидкостные клапаны помогают контролировать распространение жидкостей по трубопроводам",
 	"create.ponder.valve_pipe.text_2": "Их входной вал контролирует, разрешена ли подача жидкости в данный момент",
 	"create.ponder.valve_pipe.text_3": "При вращении в нужном направлении — клапан откроется",
 	"create.ponder.valve_pipe.text_4": "Его можно снова закрыть, изменив направление вращения",
 
 	"create.ponder.water_wheel.header": "Генерацией силы вращения Водяными колёсами",
-	"create.ponder.water_wheel.text_1": "Водяные колёса берут силу соседних потоков воды",
+	"create.ponder.water_wheel.text_1": "Водяные колёса берут силу от протекающих потоков воды",
 	"create.ponder.water_wheel.text_2": "Чем больше сторон запитано, тем быстрее будет вращаться Водяное колесо",
 	"create.ponder.water_wheel.text_3": "Лопасти колеса должны быть направлены против течения",
-	"create.ponder.water_wheel.text_4": "Направленное в противоположную сторону, не будет так же эффективно",
+	"create.ponder.water_wheel.text_4": "Направленные в противоположную сторону, не будут так же эффективно вырабатывать силу вращения",
 
 	"create.ponder.weighted_ejector.header": "Использованием Взвешенных катапульт",
 	"create.ponder.weighted_ejector.text_1": "Нажмите ПКМ крадучись, держа Катапульту, чтобы выбрать место цели",
