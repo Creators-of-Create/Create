@@ -42,7 +42,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerCo
 
 	public int refreshTicks;
 
-	private LazyOptional<IPeripheral> peripheralHandler;
+	private LazyOptional<IPeripheral> peripheral;
 
 	public DisplayLinkTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -203,13 +203,13 @@ public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerCo
 	}
 
 	@Override
-	public void setPeripheralHandler(LazyOptional<IPeripheral> peripheralHandler) {
-		this.peripheralHandler = peripheralHandler;
+	public void setPeripheral(LazyOptional<IPeripheral> peripheral) {
+		this.peripheral = peripheral;
 	}
 
 	@Override
-	public LazyOptional<IPeripheral> getPeripheralHandler() {
-		return this.peripheralHandler;
+	public LazyOptional<IPeripheral> getPeripheral() {
+		return this.peripheral;
 	}
 
 	public void target(BlockPos targetPosition) {

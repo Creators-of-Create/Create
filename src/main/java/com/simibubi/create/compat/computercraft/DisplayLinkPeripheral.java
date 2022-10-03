@@ -124,12 +124,12 @@ public class DisplayLinkPeripheral implements IPeripheral {
 	@NotNull
 	@Override
 	public String getType() {
-		return "cdl";
+		return "Create_DisplayLink";
 	}
 
 	@Override
 	public boolean equals(@Nullable IPeripheral other) {
-		return false;
+		return this == other;
 	}
 
 }

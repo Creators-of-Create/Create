@@ -14,24 +14,24 @@ public interface ComputerControllable {
 
 	IPeripheral createPeripheral();
 
-	void setPeripheralHandler(LazyOptional<IPeripheral> peripheralHandler);
+	void setPeripheral(LazyOptional<IPeripheral> peripheral);
 
-	LazyOptional<IPeripheral> getPeripheralHandler();
+	LazyOptional<IPeripheral> getPeripheral();
 
 	default <T> LazyOptional<T> getPeripheralCapability(@NotNull Capability<T> cap) {
 		if (cap == PERIPHERAL_CAPABILITY) {
-			if (getPeripheralHandler() == null || !getPeripheralHandler().isPresent())
-				setPeripheralHandler(LazyOptional.of(this::createPeripheral));
+			if (getPeripheral() == null || !getPeripheral().isPresent())
+				setPeripheral(LazyOptional.of(this::createPeripheral));
 
-			return getPeripheralHandler().cast();
+			return getPeripheral().cast();
 		}
 
 		return LazyOptional.empty();
 	}
 
 	default void removePeripheral() {
-		if (getPeripheralHandler() != null)
-			getPeripheralHandler().invalidate();
+		if (getPeripheral() != null)
+			getPeripheral().invalidate();
 	}
 
 }
