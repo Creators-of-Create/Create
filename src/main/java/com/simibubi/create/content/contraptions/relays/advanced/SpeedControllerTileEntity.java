@@ -146,8 +146,8 @@ public class SpeedControllerTileEntity extends KineticTileEntity implements Comp
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidateCaps() {
+		super.invalidateCaps();
 		removePeripheral();
 	}
 

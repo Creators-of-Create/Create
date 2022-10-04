@@ -72,8 +72,8 @@ public abstract class GaugeTileEntity extends KineticTileEntity implements IHave
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidateCaps() {
+		super.invalidateCaps();
 		removePeripheral();
 	}
 

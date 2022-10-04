@@ -192,8 +192,8 @@ public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerCo
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidateCaps() {
+		super.invalidateCaps();
 		removePeripheral();
 	}
 

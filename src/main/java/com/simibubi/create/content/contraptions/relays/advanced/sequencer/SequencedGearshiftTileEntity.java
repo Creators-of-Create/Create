@@ -175,8 +175,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidateCaps() {
+		super.invalidateCaps();
 		removePeripheral();
 	}
 
