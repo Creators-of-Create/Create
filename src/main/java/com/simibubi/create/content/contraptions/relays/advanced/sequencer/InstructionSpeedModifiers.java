@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.simibubi.create.foundation.utility.Components;
@@ -34,6 +35,13 @@ public enum InstructionSpeedModifiers {
 		for (InstructionSpeedModifiers entry : values())
 			options.add(Lang.translateDirect(entry.translationKey));
 		return options;
+	}
+
+	public static InstructionSpeedModifiers getByModifier(int modifier) {
+		return Arrays.stream(InstructionSpeedModifiers.values())
+				.filter(speedModifier -> speedModifier.value == modifier)
+				.findAny()
+				.orElse(InstructionSpeedModifiers.FORWARD);
 	}
 
 }

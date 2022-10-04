@@ -2,16 +2,24 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import java.util.Vector;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.ComputerControllable;
+import com.simibubi.create.compat.computercraft.SequencedGearshiftPeripheral;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
-public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
+public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implements ComputerControllable {
 
 	Vector<Instruction> instructions;
 	int currentInstruction;
@@ -19,6 +27,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	float currentInstructionProgress;
 	int timer;
 	boolean poweredPreviously;
+
+	LazyOptional<IPeripheral> peripheral;
 
 	public SequencedGearshiftTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -105,7 +115,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		}
 	}
 
-	protected void run(int instructionIndex) {
+	public void run(int instructionIndex) {
 		Instruction instruction = getInstruction(instructionIndex);
 		if (instruction == null || instruction.instruction == SequencerInstructions.END) {
 			if (getModifier() != 0)
@@ -156,6 +166,35 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		super.read(compound, clientPacket);
 	}
 
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		LazyOptional<T> peripheralCap = getPeripheralCapability(cap);
+
+		return peripheralCap.isPresent() ? peripheralCap : super.getCapability(cap, side);
+	}
+
+	@Override
+	public void setRemoved() {
+		super.setRemoved();
+		removePeripheral();
+	}
+
+	@Override
+	public IPeripheral createPeripheral() {
+		return new SequencedGearshiftPeripheral(this);
+	}
+
+	@Override
+	public void setPeripheral(LazyOptional<IPeripheral> peripheral) {
+		this.peripheral = peripheral;
+	}
+
+	@Override
+	public LazyOptional<IPeripheral> getPeripheral() {
+		return this.peripheral;
+	}
+
 	@Override
 	public float getRotationSpeedModifier(Direction face) {
 		if (isVirtual())
@@ -169,6 +208,10 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		return isIdle() ? 0
 			: instructions.get(currentInstruction)
 				.getSpeedModifier();
+	}
+
+	public Vector<Instruction> getInstructions() {
+		return this.instructions;
 	}
 
 }
