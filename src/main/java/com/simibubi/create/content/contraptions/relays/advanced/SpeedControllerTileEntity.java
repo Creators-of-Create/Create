@@ -153,7 +153,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity implements Comp
 
 	@Override
 	public IPeripheral createPeripheral() {
-		return new SpeedControllerPeripheral(targetSpeed);
+		return new SpeedControllerPeripheral(this, targetSpeed);
 	}
 
 	@Override

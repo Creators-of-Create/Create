@@ -1,7 +1,6 @@
 package com.simibubi.create.compat.computercraft;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Instruction;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.InstructionSpeedModifiers;
@@ -11,14 +10,11 @@ import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Sequen
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
-import dan200.computercraft.api.peripheral.IPeripheral;
 
-public class SequencedGearshiftPeripheral implements IPeripheral {
-
-	private final SequencedGearshiftTileEntity tile;
+public class SequencedGearshiftPeripheral extends PeripheralBase<SequencedGearshiftTileEntity> {
 
 	public SequencedGearshiftPeripheral(SequencedGearshiftTileEntity tile) {
-		this.tile = tile;
+		super(tile);
 	}
 
 	@LuaFunction(mainThread = true)
@@ -53,11 +49,6 @@ public class SequencedGearshiftPeripheral implements IPeripheral {
 	@Override
 	public String getType() {
 		return "Create_SequencedGearshift";
-	}
-
-	@Override
-	public boolean equals(@Nullable IPeripheral other) {
-		return this == other;
 	}
 
 }

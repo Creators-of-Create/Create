@@ -1,19 +1,15 @@
 package com.simibubi.create.compat.computercraft;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
 
 import dan200.computercraft.api.lua.LuaFunction;
-import dan200.computercraft.api.peripheral.IPeripheral;
 
-public class StressGaugePeripheral implements IPeripheral {
-
-	private final StressGaugeTileEntity tile;
+public class StressGaugePeripheral extends PeripheralBase<StressGaugeTileEntity> {
 
 	public StressGaugePeripheral(StressGaugeTileEntity tile) {
-		this.tile = tile;
+		super(tile);
 	}
 
 	@LuaFunction
@@ -30,11 +26,6 @@ public class StressGaugePeripheral implements IPeripheral {
 	@Override
 	public String getType() {
 		return "Create_Stressometer";
-	}
-
-	@Override
-	public boolean equals(@Nullable IPeripheral other) {
-		return this == other;
 	}
 
 }

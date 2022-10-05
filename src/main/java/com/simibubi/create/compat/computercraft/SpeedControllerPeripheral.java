@@ -1,18 +1,18 @@
 package com.simibubi.create.compat.computercraft;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 
 import dan200.computercraft.api.lua.LuaFunction;
-import dan200.computercraft.api.peripheral.IPeripheral;
 
-public class SpeedControllerPeripheral implements IPeripheral {
+public class SpeedControllerPeripheral extends PeripheralBase<SpeedControllerTileEntity> {
 
 	private final ScrollValueBehaviour targetSpeed;
 
-	public SpeedControllerPeripheral(ScrollValueBehaviour targetSpeed) {
+	public SpeedControllerPeripheral(SpeedControllerTileEntity tile, ScrollValueBehaviour targetSpeed) {
+		super(tile);
 		this.targetSpeed = targetSpeed;
 	}
 
@@ -30,11 +30,6 @@ public class SpeedControllerPeripheral implements IPeripheral {
 	@Override
 	public String getType() {
 		return "Create_RotationSpeedController";
-	}
-
-	@Override
-	public boolean equals(@Nullable IPeripheral other) {
-		return this == other;
 	}
 
 }

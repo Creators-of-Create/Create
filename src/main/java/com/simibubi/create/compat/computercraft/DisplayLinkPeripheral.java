@@ -5,26 +5,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 
-public class DisplayLinkPeripheral implements IPeripheral {
+public class DisplayLinkPeripheral extends PeripheralBase<DisplayLinkTileEntity> {
 
 	public static final String TAG_KEY = "ComputerSourceList";
 
-	private final DisplayLinkTileEntity tile;
-
 	public DisplayLinkPeripheral(DisplayLinkTileEntity tile) {
-		this.tile = tile;
+		super(tile);
 	}
 
 	@LuaFunction
@@ -125,11 +121,6 @@ public class DisplayLinkPeripheral implements IPeripheral {
 	@Override
 	public String getType() {
 		return "Create_DisplayLink";
-	}
-
-	@Override
-	public boolean equals(@Nullable IPeripheral other) {
-		return this == other;
 	}
 
 }
