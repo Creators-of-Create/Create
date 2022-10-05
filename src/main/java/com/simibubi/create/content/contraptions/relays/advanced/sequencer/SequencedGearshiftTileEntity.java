@@ -82,6 +82,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 	}
 
 	public void onRedstoneUpdate(boolean isPowered, boolean isRunning) {
+		if (isComputerControlled(this))
+			return;
 		if (!poweredPreviously && isPowered)
 			risingFlank();
 		poweredPreviously = isPowered;
