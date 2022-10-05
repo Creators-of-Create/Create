@@ -40,11 +40,8 @@ public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource 
 			scoreboard.addObjective(name, ObjectiveCriteria.DUMMY, getObjectiveDisplayName(), RenderType.INTEGER);
 		Objective objective = scoreboard.getObjective(name);
 
-		Iterator<ServerLevel> serverLevelIterator = ServerLifecycleHooks.getCurrentServer().getAllLevels().iterator();
-		Spliterator<ServerLevel> spliterator = Spliterators.spliteratorUnknownSize(serverLevelIterator, 0);
-		StreamSupport.stream(spliterator, false)
-				.flatMap(l -> l.players().stream())
-				.forEach(s -> scoreboard.getOrCreatePlayerScore(s.getScoreboardName(), objective)
+		sLevel.getServer().getPlayerList().getPlayers()
+			.forEach(s -> scoreboard.getOrCreatePlayerScore(s.getScoreboardName(), objective)
 				.setScore(updatedScoreOf(s)));
 
 		return showScoreboard(sLevel, name, maxRows);
