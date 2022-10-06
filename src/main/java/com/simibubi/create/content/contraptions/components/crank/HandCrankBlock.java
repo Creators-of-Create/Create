@@ -71,7 +71,7 @@ public class HandCrankBlock extends DirectionalKineticBlock
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
 		if (player.isSpectator())
-			return InteractionResult.SUCCESS;
+			return InteractionResult.PASS;
 
 		withTileEntityDo(worldIn, pos, te -> te.turn(player.isShiftKeyDown()));
 		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
