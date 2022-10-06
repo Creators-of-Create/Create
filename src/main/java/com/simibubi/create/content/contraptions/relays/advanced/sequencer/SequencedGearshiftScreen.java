@@ -29,7 +29,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private ListTag compareTag;
 	private Vector<Instruction> instructions;
 	private BlockPos pos;
-	private final boolean isComputerControlled;
+	private final boolean hasAttachedComputer;
 
 	private Vector<Vector<ScrollInput>> inputs;
 
@@ -37,7 +37,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		super(Lang.translateDirect("gui.sequenced_gearshift.title"));
 		this.instructions = te.instructions;
 		this.pos = te.getBlockPos();
-		this.isComputerControlled = te.isComputerControlled(te);
+		this.hasAttachedComputer = te.hasAttachedComputer;
 		compareTag = Instruction.serializeAll(instructions);
 	}
 
@@ -51,7 +51,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		inputs = new Vector<>(5);
-		if (!isComputerControlled) {
+		if (!hasAttachedComputer) {
 			for (int row = 0; row < inputs.capacity(); row++)
 				inputs.add(new Vector<>(3));
 
@@ -138,7 +138,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 		background.render(ms, x, y, this);
 
-		if (isComputerControlled) {
+		if (hasAttachedComputer) {
 			for (int row = 0; row < instructions.capacity(); row++) {
 				AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 				int yOffset = toDraw.height * row;
@@ -183,7 +183,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	public void sendPacket() {
-		if (isComputerControlled)
+		if (hasAttachedComputer)
 			return;
 
 		ListTag serialized = Instruction.serializeAll(instructions);

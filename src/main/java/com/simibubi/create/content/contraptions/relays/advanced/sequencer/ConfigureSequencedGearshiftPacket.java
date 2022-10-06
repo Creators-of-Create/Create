@@ -35,7 +35,7 @@ public class ConfigureSequencedGearshiftPacket extends TileEntityConfigurationPa
 
 	@Override
 	protected void applySettings(SequencedGearshiftTileEntity te) {
-		if (te.isComputerControlled(te))
+		if (te.hasAttachedComputer)
 			return;
 
 		te.run(-1);

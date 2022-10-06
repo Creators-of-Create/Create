@@ -5,8 +5,8 @@ import java.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.compat.computercraft.ComputerControllable;
 import com.simibubi.create.compat.computercraft.SequencedGearshiftPeripheral;
+import com.simibubi.create.compat.computercraft.SyncedComputerControllable;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implements ComputerControllable {
+public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implements SyncedComputerControllable {
 
 	Vector<Instruction> instructions;
 	int currentInstruction;
@@ -29,6 +29,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 	boolean poweredPreviously;
 
 	LazyOptional<IPeripheral> peripheral;
+	boolean hasAttachedComputer;
 
 	public SequencedGearshiftTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -38,6 +39,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 		currentInstructionProgress = 0;
 		timer = 0;
 		poweredPreviously = false;
+		hasAttachedComputer = false;
 	}
 
 	@Override
@@ -82,7 +84,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 	}
 
 	public void onRedstoneUpdate(boolean isPowered, boolean isRunning) {
-		if (isComputerControlled(this))
+		if (hasAttachedComputer)
 			return;
 		if (!poweredPreviously && isPowered)
 			risingFlank();
@@ -195,6 +197,11 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 	@Override
 	public LazyOptional<IPeripheral> getPeripheral() {
 		return this.peripheral;
+	}
+
+	@Override
+	public void setHasAttachedComputer(boolean hasAttachedComputer) {
+		this.hasAttachedComputer = hasAttachedComputer;
 	}
 
 	@Override
