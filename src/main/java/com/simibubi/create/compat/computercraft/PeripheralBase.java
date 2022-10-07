@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class PeripheralBase<T extends BlockEntity & ComputerControllable> implements IPeripheral {
 
-	protected T tile;
+	protected final T tile;
 
 	public PeripheralBase(T tile) {
 		this.tile = tile;

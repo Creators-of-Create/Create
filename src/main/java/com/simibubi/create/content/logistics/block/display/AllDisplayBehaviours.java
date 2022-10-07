@@ -244,6 +244,9 @@ public class AllDisplayBehaviours {
 			DisplayBehaviour computerDisplaySource = register(Create.asResource("computer_display_source"), new ComputerDisplaySource());
 
 			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "wired_modem_full"));
+			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_normal"));
+			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
+			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_command"));
 		});
 	}
 }

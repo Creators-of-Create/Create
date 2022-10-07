@@ -1,15 +1,13 @@
 package com.simibubi.create.compat.computercraft;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
+import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 
-import dan200.computercraft.api.lua.IArguments;
-import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -18,103 +16,85 @@ import net.minecraft.nbt.Tag;
 public class DisplayLinkPeripheral extends PeripheralBase<DisplayLinkTileEntity> {
 
 	public static final String TAG_KEY = "ComputerSourceList";
+	private final AtomicInteger cursorX = new AtomicInteger();
+	private final AtomicInteger cursorY = new AtomicInteger();
 
 	public DisplayLinkPeripheral(DisplayLinkTileEntity tile) {
 		super(tile);
 	}
 
 	@LuaFunction
-	public void writeLine(String line) {
-		ListTag tag = this.tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
-		tag.add(StringTag.valueOf(line));
-
-		this.tile.getSourceConfig().put(TAG_KEY, tag);
+	public void setCursorPos(int x, int y) {
+		cursorX.set(x - 1);
+		cursorY.set(y - 1);
 	}
 
 	@LuaFunction
-	public void setLine(int lineNumber, String line) {
-		ListTag tag = this.tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
-		int size = tag.size();
+	public Object[] getCursorPos() {
+		return new Object[] {cursorX.get() + 1, cursorY.get() + 1};
+	}
 
-		if (lineNumber < size) {
-			tag.set(lineNumber, StringTag.valueOf(line));
-
-		} else {
-			for (int i = 0; i < lineNumber - size; i++) {
-				tag.add(StringTag.valueOf(""));
-			}
-
-			tag.add(StringTag.valueOf(line));
-		}
-
-		this.tile.getSourceConfig().put(TAG_KEY, tag);
+	@LuaFunction(mainThread = true)
+	public Object[] getSize() {
+		DisplayTargetStats stats = tile.activeTarget.provideStats(new DisplayLinkContext(tile.getLevel(), tile));
+		return new Object[]{stats.maxRows(), stats.maxColumns()};
 	}
 
 	@LuaFunction
-	public void writeLines(IArguments arguments) throws LuaException {
-		ListTag tag = this.tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
-		List<String> lines = getLinesFromArguments(arguments, 0);
-
-		for (String line : lines) {
-			tag.add(StringTag.valueOf(line));
-		}
-
-		this.tile.getSourceConfig().put(TAG_KEY, tag);
+	public boolean isColor() {
+		return false;
 	}
 
 	@LuaFunction
-	public void setLines(IArguments arguments) throws LuaException {
-		ListTag tag = this.tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
-		List<String> lines = getLinesFromArguments(arguments, 1);
+	public boolean isColour() {
+		return false;
+	}
 
-		int size = tag.size();
-		int lineNumber = arguments.getInt(0);
-		int i = 0;
+	@LuaFunction
+	public void write(String text) {
+		ListTag tag = tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
 
-		for (int j = lineNumber; j < Math.min(size, lines.size()); j++) {
-			tag.set(j, StringTag.valueOf(lines.get(i)));
-			i++;
-		}
+		int x = cursorX.get();
+		int y = cursorY.get();
 
-		for (int j = 0; j < lineNumber - size; j++) {
+		for (int i = tag.size(); i <= y; i++) {
 			tag.add(StringTag.valueOf(""));
 		}
 
-		for (int j = i; j < lines.size(); j++) {
-			tag.add(StringTag.valueOf(lines.get(i)));
-			i++;
-		}
+		StringBuilder builder = new StringBuilder(tag.getString(y));
 
-		this.tile.getSourceConfig().put(TAG_KEY, tag);
+		builder.append(" ".repeat(Math.max(0, x - builder.length())));
+		builder.replace(x, x + text.length(), text);
+
+		tag.set(y, StringTag.valueOf(builder.toString()));
+
+		synchronized (tile) {
+			tile.getSourceConfig().put(TAG_KEY, tag);
+		}
+	}
+
+	@LuaFunction
+	public void clearLine() {
+		ListTag tag = tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
+
+		if (tag.size() > cursorY.get())
+			tag.set(cursorY.get(), StringTag.valueOf(""));
+
+		synchronized (tile) {
+			tile.getSourceConfig().put(TAG_KEY, tag);
+		}
 	}
 
 	@LuaFunction
 	public void clear() {
-		this.tile.getSourceConfig().put(TAG_KEY, new ListTag());
+		synchronized (tile) {
+			tile.getSourceConfig().put(TAG_KEY, new ListTag());
+		}
 	}
 
 	@LuaFunction(mainThread = true)
 	public void update() {
-		this.tile.tickSource();
-	}
-
-	private List<String> getLinesFromArguments(IArguments arguments, int offset) throws LuaException {
-		List<String> lines = new ArrayList<>();
-
-		if (arguments.count() > offset + 1) {
-			for (int i = offset; i < arguments.count(); i++) {
-				lines.add(arguments.getString(i));
-			}
-
-		} else {
-			Map<?, ?> map = arguments.getTable(offset);
-
-			for (Object line : map.values()) {
-				lines.add(line.toString());
-			}
-		}
-
-		return lines;
+		tile.tickSource();
 	}
 
 	@NotNull
