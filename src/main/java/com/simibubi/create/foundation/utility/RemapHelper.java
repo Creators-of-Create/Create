@@ -25,6 +25,8 @@ import static com.simibubi.create.AllBlocks.STOCKPILE_SWITCH;
 import static com.simibubi.create.AllBlocks.STRESSOMETER;
 import static com.simibubi.create.AllItems.ATTRIBUTE_FILTER;
 import static com.simibubi.create.AllItems.CRAFTER_SLOT_COVER;
+import static com.simibubi.create.AllItems.COPPER_DIVING_BOOTS;
+import static com.simibubi.create.AllItems.COPPER_DIVING_HELMET;
 import static com.simibubi.create.AllItems.GOLDEN_SHEET;
 import static com.simibubi.create.AllItems.POWDERED_OBSIDIAN;
 import static com.simibubi.create.AllItems.SCHEMATIC;
@@ -51,12 +53,14 @@ import static com.simibubi.create.content.palettes.AllPaletteBlocks.SPRUCE_WINDO
 import java.util.HashMap;
 import java.util.Map;
 
+import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.Create;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.RegistryEvent;
@@ -179,6 +183,8 @@ public class RemapHelper {
 		reMap.put("terrain_zapper", WORLDSHAPER.getId());
 		reMap.put("property_filter", ATTRIBUTE_FILTER.getId());
 		reMap.put("obsidian_dust", POWDERED_OBSIDIAN.getId());
+		reMap.put("diving_helmet", COPPER_DIVING_HELMET.getId());
+		reMap.put("diving_boots", COPPER_DIVING_BOOTS.getId());
 	}
 
 	private static void remapPaletteBlock(String type, String newType, boolean vanilla) {
@@ -271,6 +277,18 @@ public class RemapHelper {
 				mapping.remap(ForgeMod.MILK.get());
 			else if (path.equals("flowing_milk"))
 				mapping.remap(ForgeMod.FLOWING_MILK.get());
+		}
+	}
+
+	@SubscribeEvent
+	public static void remapBlockEntities(RegistryEvent.MissingMappings<BlockEntityType<?>> event) {
+		for (Mapping<BlockEntityType<?>> mapping : event.getMappings(Create.ID)) {
+			ResourceLocation key = mapping.key;
+			String path = key.getPath();
+
+			if (path.equals("copper_backtank")) {
+				mapping.remap(AllTileEntities.BACKTANK.get());
+			}
 		}
 	}
 

@@ -1,19 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "P P",
-    "P P",
-    "G G"
+    "PPP",
+    "PGP"
   ],
   "key": {
     "G": {
-      "item": "create:andesite_alloy"
+      "tag": "forge:glass"
     },
     "P": {
       "item": "minecraft:copper_ingot"
     }
   },
   "result": {
-    "item": "create:diving_boots"
+    "item": "create:copper_diving_helmet"
   }
 }

@@ -988,7 +988,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		.viaShapeless(b -> b.requires(I.wheatFlour())
 			.requires(Items.WATER_BUCKET)),
 
-		DIVING_HELMET = create(AllItems.DIVING_HELMET).unlockedBy(I::copper)
+		DIVING_HELMET = create(AllItems.COPPER_DIVING_HELMET).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
 				.define('P', I.copper())
 				.pattern("PPP")
@@ -1003,7 +1003,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("PBP")
 				.pattern(" P ")),
 
-		DIVING_BOOTS = create(AllItems.DIVING_BOOTS).unlockedBy(I::copper)
+		DIVING_BOOTS = create(AllItems.COPPER_DIVING_BOOTS).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('G', I.andesite())
 				.define('P', I.copper())
 				.pattern("P P")

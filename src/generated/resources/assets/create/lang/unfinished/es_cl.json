@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 988",
+	"_": "Missing Localizations: 995",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -307,6 +307,7 @@
 	"block.create.millstone": "Piedra de Molino",
 	"block.create.minecart_anchor": "Ancla de Vagoneta",
 	"block.create.mysterious_cuckoo_clock": "Reloj Cu-Cú",
+	"block.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
 	"block.create.nixie_tube": "Tubo Nixie",
 	"block.create.nozzle": "Boquilla",
 	"block.create.oak_window": "Ventana de Roble",
@@ -597,6 +598,8 @@
 	"item.create.cinder_flour": "Harina de Cenizas",
 	"item.create.copper_backtank": "Mochila-Tanque de Cobre",
 	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
+	"item.create.copper_diving_boots": "UNLOCALIZED: Copper Diving Boots",
+	"item.create.copper_diving_helmet": "UNLOCALIZED: Copper Diving Helmet",
 	"item.create.copper_nugget": "Nugget de Cobre",
 	"item.create.copper_sheet": "Plancha de Cobre",
 	"item.create.crafter_slot_cover": "Cubre Ranuras",
@@ -615,8 +618,6 @@
 	"item.create.crushed_tin_ore": "Mineral de Estaño Triturado",
 	"item.create.crushed_uranium_ore": "Mineral de Uranio Triturado",
 	"item.create.crushed_zinc_ore": "Mineral de Zinc Triturado",
-	"item.create.diving_boots": "Botas de Buceo",
-	"item.create.diving_helmet": "Casco de Buceo",
 	"item.create.dough": "Masa",
 	"item.create.electron_tube": "Tubo de Electrones",
 	"item.create.empty_blaze_burner": "Quemador Blaze Vacío",
@@ -636,6 +637,10 @@
 	"item.create.linked_controller": "Controlador Vinculable",
 	"item.create.minecart_contraption": "Contrapción de Vagoneta",
 	"item.create.minecart_coupling": "Acoplamiento de Vagonetas",
+	"item.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
+	"item.create.netherite_backtank_placeable": "UNLOCALIZED: Netherite Backtank Placeable",
+	"item.create.netherite_diving_boots": "UNLOCALIZED: Netherite Diving Boots",
+	"item.create.netherite_diving_helmet": "UNLOCALIZED: Netherite Diving Helmet",
 	"item.create.polished_rose_quartz": "Cuarzo Rosa Pulido",
 	"item.create.potato_cannon": "Cañón de Papas",
 	"item.create.powdered_obsidian": "Obsidiana Pulverizada",

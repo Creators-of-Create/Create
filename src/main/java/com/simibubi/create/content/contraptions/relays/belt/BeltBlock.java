@@ -20,6 +20,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltSlicer.Feedback;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
+import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -191,8 +192,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return;
 		}
 
-		if (AllItems.DIVING_BOOTS.get()
-			.isWornBy(entityIn))
+		if (DivingBootsItem.isWornBy(entityIn))
 			return;
 
 		BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos);

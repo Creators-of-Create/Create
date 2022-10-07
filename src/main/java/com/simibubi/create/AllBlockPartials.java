@@ -102,6 +102,9 @@ public class AllBlockPartials {
 		COPPER_BACKTANK_SHAFT = block("copper_backtank/block_shaft_input"),
 		COPPER_BACKTANK_COGS = block("copper_backtank/block_cogs"),
 
+		NETHERITE_BACKTANK_SHAFT = block("netherite_backtank/block_shaft_input"),
+		NETHERITE_BACKTANK_COGS = block("netherite_backtank/block_cogs"),
+
 		TRACK_SEGMENT_LEFT = block("track/segment_left"), TRACK_SEGMENT_RIGHT = block("track/segment_right"),
 		TRACK_TIE = block("track/tie"), GIRDER_SEGMENT_TOP = block("metal_girder/segment_top"),
 		GIRDER_SEGMENT_MIDDLE = block("metal_girder/segment_middle"),

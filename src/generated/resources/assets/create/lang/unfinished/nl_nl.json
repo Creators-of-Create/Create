@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2487",
+	"_": "Missing Localizations: 2492",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -307,6 +307,7 @@
 	"block.create.millstone": "UNLOCALIZED: Millstone",
 	"block.create.minecart_anchor": "UNLOCALIZED: Minecart Anchor",
 	"block.create.mysterious_cuckoo_clock": "UNLOCALIZED: Cuckoo Clock",
+	"block.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
 	"block.create.nixie_tube": "UNLOCALIZED: Nixie Tube",
 	"block.create.nozzle": "UNLOCALIZED: Nozzle",
 	"block.create.oak_window": "UNLOCALIZED: Oak Window",
@@ -597,6 +598,8 @@
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_backtank_placeable": "UNLOCALIZED: Copper Backtank Placeable",
+	"item.create.copper_diving_boots": "UNLOCALIZED: Copper Diving Boots",
+	"item.create.copper_diving_helmet": "UNLOCALIZED: Copper Diving Helmet",
 	"item.create.copper_nugget": "Koper klompje",
 	"item.create.copper_sheet": "UNLOCALIZED: Copper Sheet",
 	"item.create.crafter_slot_cover": "UNLOCALIZED: Crafter Slot Cover",
@@ -615,8 +618,6 @@
 	"item.create.crushed_tin_ore": "UNLOCALIZED: Crushed Tin Ore",
 	"item.create.crushed_uranium_ore": "UNLOCALIZED: Crushed Uranium Ore",
 	"item.create.crushed_zinc_ore": "UNLOCALIZED: Crushed Zinc Ore",
-	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
-	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
 	"item.create.dough": "Deeg",
 	"item.create.electron_tube": "UNLOCALIZED: Electron Tube",
 	"item.create.empty_blaze_burner": "UNLOCALIZED: Empty Blaze Burner",
@@ -636,6 +637,10 @@
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "UNLOCALIZED: Minecart Contraption",
 	"item.create.minecart_coupling": "UNLOCALIZED: Minecart Coupling",
+	"item.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
+	"item.create.netherite_backtank_placeable": "UNLOCALIZED: Netherite Backtank Placeable",
+	"item.create.netherite_diving_boots": "UNLOCALIZED: Netherite Diving Boots",
+	"item.create.netherite_diving_helmet": "UNLOCALIZED: Netherite Diving Helmet",
 	"item.create.polished_rose_quartz": "UNLOCALIZED: Polished Rose Quartz",
 	"item.create.potato_cannon": "UNLOCALIZED: Potato Cannon",
 	"item.create.powdered_obsidian": "UNLOCALIZED: Powdered Obsidian",

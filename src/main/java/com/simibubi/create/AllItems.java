@@ -38,9 +38,9 @@ import com.simibubi.create.content.curiosities.ExperienceNuggetItem;
 import com.simibubi.create.content.curiosities.RefinedRadianceItem;
 import com.simibubi.create.content.curiosities.ShadowSteelItem;
 import com.simibubi.create.content.curiosities.TreeFertilizerItem;
-import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankItem;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankItem.CopperBacktankBlockItem;
+import com.simibubi.create.content.curiosities.armor.AllArmorMaterials;
+import com.simibubi.create.content.curiosities.armor.BacktankItem;
+import com.simibubi.create.content.curiosities.armor.BacktankItem.BacktankBlockItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
@@ -65,6 +65,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.Tags;
@@ -239,22 +240,44 @@ public class AllItems {
 
 	// wrapped by COPPER_BACKTANK for block placement uses.
 	// must be registered as of 1.18.2
-	public static final ItemEntry<CopperBacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
-		.item("copper_backtank_placeable", p -> new CopperBacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), p))
+	public static final ItemEntry<BacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
+		.item("copper_backtank_placeable", p -> new BacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), p))
 		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
 		.register();
 
-	public static final ItemEntry<? extends CopperArmorItem>
+	// wrapped by NETHERITE_BACKTANK for block placement uses.
+	// must be registered as of 1.18.2
+	public static final ItemEntry<BacktankBlockItem> NETHERITE_BACKTANK_PLACEABLE = REGISTRATE
+		.item("netherite_backtank_placeable", p -> new BacktankBlockItem(AllBlocks.NETHERITE_BACKTANK.get(), p))
+		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
+		.register();
 
-	COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new CopperBacktankItem(p, COPPER_BACKTANK_PLACEABLE))
-		.model(AssetLookup.customGenericItemModel("_", "item"))
-		.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
-		.register(),
+	public static final ItemEntry<BacktankItem>
 
-		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
+		COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new BacktankItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving"), COPPER_BACKTANK_PLACEABLE))
+			.model(AssetLookup.customGenericItemModel("_", "item"))
+			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
 			.register(),
 
-		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
+		NETHERITE_BACKTANK = REGISTRATE.item("netherite_backtank", p -> new BacktankItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving"), NETHERITE_BACKTANK_PLACEABLE))
+			.model(AssetLookup.customGenericItemModel("_", "item"))
+			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
+			.register();
+
+	public static final ItemEntry<DivingHelmetItem>
+
+		COPPER_DIVING_HELMET = REGISTRATE.item("copper_diving_helmet", p -> new DivingHelmetItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
+			.register(),
+
+		NETHERITE_DIVING_HELMET = REGISTRATE.item("netherite_diving_helmet", p -> new DivingHelmetItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+			.register();
+
+	public static final ItemEntry<DivingBootsItem>
+
+		COPPER_DIVING_BOOTS = REGISTRATE.item("copper_diving_boots", p -> new DivingBootsItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
+			.register(),
+
+		NETHERITE_DIVING_BOOTS = REGISTRATE.item("netherite_diving_boots", p -> new DivingBootsItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)

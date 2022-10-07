@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2",
+	"_": "Missing Localizations: 9",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -307,6 +307,7 @@
 	"block.create.millstone": "Macina",
 	"block.create.minecart_anchor": "Ancora per carrello da miniera",
 	"block.create.mysterious_cuckoo_clock": "Orologio a cucù misterioso",
+	"block.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
 	"block.create.nixie_tube": "Tubo Nixie",
 	"block.create.nozzle": "Dispersore",
 	"block.create.oak_window": "Finestra di quercia",
@@ -597,6 +598,8 @@
 	"item.create.cinder_flour": "Cenere farinosa",
 	"item.create.copper_backtank": "Zaino serbatoio",
 	"item.create.copper_backtank_placeable": "Zaino serbatoio posizionabile",
+	"item.create.copper_diving_boots": "UNLOCALIZED: Copper Diving Boots",
+	"item.create.copper_diving_helmet": "UNLOCALIZED: Copper Diving Helmet",
 	"item.create.copper_nugget": "Pepita di rame",
 	"item.create.copper_sheet": "Lamiera di rame",
 	"item.create.crafter_slot_cover": "Copertura per slot di fabbricazione",
@@ -615,8 +618,6 @@
 	"item.create.crushed_tin_ore": "Stagno grezzo frantumato",
 	"item.create.crushed_uranium_ore": "Uranio grezzo frantumato",
 	"item.create.crushed_zinc_ore": "Zinco grezzo frantumato",
-	"item.create.diving_boots": "Stivali da immersione",
-	"item.create.diving_helmet": "Elmo da immersione",
 	"item.create.dough": "Impasto",
 	"item.create.electron_tube": "Tubo a vuoto",
 	"item.create.empty_blaze_burner": "Inceneritore vuoto",
@@ -636,6 +637,10 @@
 	"item.create.linked_controller": "Pulsantiera di comando",
 	"item.create.minecart_contraption": "Macchinario con carrello da miniera",
 	"item.create.minecart_coupling": "Aggancio per carrelli da miniera",
+	"item.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
+	"item.create.netherite_backtank_placeable": "UNLOCALIZED: Netherite Backtank Placeable",
+	"item.create.netherite_diving_boots": "UNLOCALIZED: Netherite Diving Boots",
+	"item.create.netherite_diving_helmet": "UNLOCALIZED: Netherite Diving Helmet",
 	"item.create.polished_rose_quartz": "Quarzo rosa levigato",
 	"item.create.potato_cannon": "Cannone a patate",
 	"item.create.powdered_obsidian": "Ossidiana in polvere",

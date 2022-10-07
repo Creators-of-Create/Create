@@ -6,7 +6,6 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -25,7 +24,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.armor.BacktankArmorLayer;
+import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
 import com.simibubi.create.content.curiosities.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
@@ -334,7 +334,7 @@ public class ClientEvents {
 			return;
 		}
 
-		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
+		if (FluidHelper.isWater(fluid) && DivingHelmetItem
 			.isWornBy(Minecraft.getInstance().cameraEntity)) {
 			event.scaleFarPlaneDistance(6.25f);
 			event.setCanceled(true);
@@ -390,7 +390,7 @@ public class ClientEvents {
 		public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
 			EntityRenderDispatcher dispatcher = Minecraft.getInstance()
 				.getEntityRenderDispatcher();
-			CopperBacktankArmorLayer.registerOnAll(dispatcher);
+			BacktankArmorLayer.registerOnAll(dispatcher);
 			TrainHatArmorLayer.registerOnAll(dispatcher);
 		}
 

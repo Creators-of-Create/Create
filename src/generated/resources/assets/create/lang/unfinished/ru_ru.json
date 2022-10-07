@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 7",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -307,6 +307,7 @@
 	"block.create.millstone": "Жёрнов",
 	"block.create.minecart_anchor": "Вагонеточная опора",
 	"block.create.mysterious_cuckoo_clock": "Странные часы с кукушкой",
+	"block.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
 	"block.create.nixie_tube": "Газоразрядный индикатор",
 	"block.create.nozzle": "Форсунка",
 	"block.create.oak_window": "Дубовое окно",
@@ -597,6 +598,8 @@
 	"item.create.cinder_flour": "Незераковая пыль",
 	"item.create.copper_backtank": "Медный баллон",
 	"item.create.copper_backtank_placeable": "Размещаемый медный баллон",
+	"item.create.copper_diving_boots": "UNLOCALIZED: Copper Diving Boots",
+	"item.create.copper_diving_helmet": "UNLOCALIZED: Copper Diving Helmet",
 	"item.create.copper_nugget": "Кусочек меди",
 	"item.create.copper_sheet": "Медный лист",
 	"item.create.crafter_slot_cover": "Заглушка на слот крафтера",
@@ -615,8 +618,6 @@
 	"item.create.crushed_tin_ore": "Дроблёная оловянная руда",
 	"item.create.crushed_uranium_ore": "Дроблёная урановая руда",
 	"item.create.crushed_zinc_ore": "Дроблёная цинковая руда",
-	"item.create.diving_boots": "Ботинки для дайвинга",
-	"item.create.diving_helmet": "Шлем для дайвинга",
 	"item.create.dough": "Тесто",
 	"item.create.electron_tube": "Электронная лампа",
 	"item.create.empty_blaze_burner": "Пустая горелка всполоха",
@@ -636,6 +637,10 @@
 	"item.create.linked_controller": "Контроллер связей",
 	"item.create.minecart_contraption": "Вагонеточная штуковина",
 	"item.create.minecart_coupling": "Соединитель вагонеток",
+	"item.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
+	"item.create.netherite_backtank_placeable": "UNLOCALIZED: Netherite Backtank Placeable",
+	"item.create.netherite_diving_boots": "UNLOCALIZED: Netherite Diving Boots",
+	"item.create.netherite_diving_helmet": "UNLOCALIZED: Netherite Diving Helmet",
 	"item.create.polished_rose_quartz": "Полированный розовый кварц",
 	"item.create.potato_cannon": "Картофельная пушка",
 	"item.create.powdered_obsidian": "Порошкообразный обсидиан",

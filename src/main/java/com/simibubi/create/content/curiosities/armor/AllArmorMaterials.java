@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Suppliers;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.Create;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -13,7 +14,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public enum AllArmorMaterials implements ArmorMaterial {
 
-	COPPER("copper", 7, new int[] { 1, 3, 4, 2 }, 25, () -> AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
+	COPPER(Create.asResource("copper").toString(), 7, new int[] { 1, 3, 4, 2 }, 25, () -> AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
 		() -> Ingredient.of(Items.COPPER_INGOT))
 
 	;
