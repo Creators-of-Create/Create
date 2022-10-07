@@ -35,7 +35,6 @@ import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.render.ForcedDiffuseState;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -135,14 +134,14 @@ public class PonderScene {
 	}
 
 	public Pair<ItemStack, BlockPos> rayTraceScene(Vec3 from, Vec3 to) {
-		MutableObject<Pair<WorldSectionElement, Pair<Vec3, BlockFace>>> nearestHit = new MutableObject<>();
+		MutableObject<Pair<WorldSectionElement, Pair<Vec3, BlockHitResult>>> nearestHit = new MutableObject<>();
 		MutableDouble bestDistance = new MutableDouble(0);
 
 		forEach(WorldSectionElement.class, wse -> {
 			wse.resetSelectedBlock();
 			if (!wse.isVisible())
 				return;
-			Pair<Vec3, BlockFace> rayTrace = wse.rayTrace(world, from, to);
+			Pair<Vec3, BlockHitResult> rayTrace = wse.rayTrace(world, from, to);
 			if (rayTrace == null)
 				return;
 			double distanceTo = rayTrace.getFirst()
@@ -157,13 +156,10 @@ public class PonderScene {
 		if (nearestHit.getValue() == null)
 			return Pair.of(ItemStack.EMPTY, null);
 
-		Pair<Vec3, BlockFace> selectedHit = nearestHit.getValue()
+		Pair<Vec3, BlockHitResult> selectedHit = nearestHit.getValue()
 			.getSecond();
 		BlockPos selectedPos = selectedHit.getSecond()
-			.getPos();
-		Direction selectedFace = selectedHit.getSecond()
-			.getFace();
-		Vec3 selectedVec = selectedHit.getFirst();
+			.getBlockPos();
 
 		BlockPos origin = new BlockPos(basePlateOffsetX, 0, basePlateOffsetZ);
 		if (!world.getBounds()
@@ -182,9 +178,14 @@ public class PonderScene {
 			.getFirst()
 			.selectBlock(selectedPos);
 		BlockState blockState = world.getBlockState(selectedPos);
-		ItemStack pickBlock =
-			blockState.getCloneItemStack(new BlockHitResult(selectedVec, selectedFace, selectedPos, true), world,
-				selectedPos, Minecraft.getInstance().player);
+
+		Direction direction = selectedHit.getSecond()
+			.getDirection();
+		Vec3 location = selectedHit.getSecond()
+			.getLocation();
+		
+		ItemStack pickBlock = blockState.getCloneItemStack(new BlockHitResult(location, direction, selectedPos, true),
+			world, selectedPos, Minecraft.getInstance().player);
 
 		return Pair.of(pickBlock, selectedPos);
 	}
