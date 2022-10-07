@@ -5,23 +5,24 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
+    "ContraptionDriverInteractMixin",
     "CustomItemUseEffectsMixin",
     "MapItemSavedDataMixin",
-    "ContraptionDriverInteractMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.LivingEntityAccessor",
-    "accessor.ServerLevelAccessor"
+    "accessor.ServerLevelAccessor",
+    "PiglinZombification"
   ],
   "client": [
-    "MapItemSavedDataMixinClient",
     "CameraMixin",
     "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
+    "MapItemSavedDataMixinClient",
     "MapRendererMixin",
     "ModelDataRefreshMixin",
     "WindowResizeMixin",
