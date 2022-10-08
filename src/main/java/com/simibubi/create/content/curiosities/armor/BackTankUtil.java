@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -22,7 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public class BackTankUtil {
 
@@ -105,11 +104,10 @@ public class BackTankUtil {
 
 	// For Air-using tools
 
-	@OnlyIn(Dist.CLIENT)
 	public static boolean isBarVisible(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return false;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return false;
 		ItemStack backtank = get(player);
@@ -118,11 +116,10 @@ public class BackTankUtil {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static int getBarWidth(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 13;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 13;
 		ItemStack backtank = get(player);
@@ -132,11 +129,10 @@ public class BackTankUtil {
 			.getBarWidth(backtank);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static int getBarColor(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 0;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 0;
 		ItemStack backtank = get(player);
