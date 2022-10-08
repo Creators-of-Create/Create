@@ -1,6 +1,9 @@
 package com.simibubi.create.content.curiosities.armor;
 
+import java.util.Locale;
+
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.item.MultiLayeredArmorItem;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -81,5 +84,16 @@ public class DivingHelmetItem extends BaseArmorItem {
 		entity.setAirSupply(Math.min(entity.getMaxAirSupply(), entity.getAirSupply() + 10));
 		entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 30, 0, true, false, true));
 		BacktankUtil.consumeAir(entity, backtank, 1);
+	}
+
+	public static class MultiLayered extends DivingHelmetItem implements MultiLayeredArmorItem {
+		public MultiLayered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+			super(material, properties, textureLoc);
+		}
+
+		@Override
+		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
+			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%s.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
+		}
 	}
 }
