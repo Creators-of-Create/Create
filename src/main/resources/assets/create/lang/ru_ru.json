@@ -821,7 +821,7 @@
 	"advancement.create.musical_arm": "Сбацай что-нибудь!",
 	"advancement.create.musical_arm.desc": "Посмотрите как Механическая рука меняет пластинки",
 	"advancement.create.sturdy_sheet": "Ещё более твёрдые камни",
-	"advancement.create.sturdy_sheet.desc": "Соберите Прочный лист из Порошкообразного обсидиана",
+	"advancement.create.sturdy_sheet.desc": "Соберите Прочный лист из Порошкообразного обсидиана и лавы",
 	"advancement.create.train_casing_00": "Железнодорожная эра",
 	"advancement.create.train_casing_00.desc": "Используйте Прочные листы и Латунный корпус для создания Железнодорожного корпуса",
 	"advancement.create.train": "Все на борт!",
@@ -833,7 +833,7 @@
 	"advancement.create.display_board_0": "Эстетика вокзала",
 	"advancement.create.display_board_0.desc": "Прогнозируйте прибытие поезда на Табло с помощью Передатчика информации",
 	"advancement.create.track_0": "Новая колея",
-	"advancement.create.track_0.desc": "Создайте Железнодорожный путь",
+	"advancement.create.track_0.desc": "Соберите Железнодорожный путь",
 	"advancement.create.train_whistle": "Чу-Чу!",
 	"advancement.create.train_whistle.desc": "Прикрепите Паровой свисток к вашему поезду и погудите в него!",
 	"advancement.create.train_portal": "Сквозь измерения",
@@ -1682,8 +1682,8 @@
 	"create.display_source.train_status": "Статус расписания",
 	"create.display_source.station_summary": "Сводка станции",
 	"create.display_source.station_summary.filter": "Фильтр названия станции",
-	"create.display_source.station_summary.train_name_column": "Размер столбца Поезд",
-	"create.display_source.station_summary.platform_column": "Размер столбца Платформа",
+	"create.display_source.station_summary.train_name_column": "Ширина столбца «Поезд»",
+	"create.display_source.station_summary.platform_column": "Ширина столбца «Платформа»",
 	"create.display_source.station_summary.now": "отп.",
 	"create.display_source.station_summary.minutes": " мин",
 	"create.display_source.station_summary.seconds": "%1$sс",
@@ -1909,7 +1909,7 @@
 	"block.create.schematic_table.tooltip": "СХЕМАТИЧНЫЙ СТОЛ",
 	"block.create.schematic_table.tooltip.summary": "Записывает сохраненные схематики в _пустые_ _схематики_.",
 	"block.create.schematic_table.tooltip.condition1": "Когда дана пустая схема",
-	"block.create.schematic_table.tooltip.behaviour1": "Загружает выбранный файл из вашей папки Schematics.",
+	"block.create.schematic_table.tooltip.behaviour1": "Загружает выбранный файл из вашей папки «Schematics».",
 
 	"item.create.goggles.tooltip": "ИНЖЕНЕРНЫЕ ОЧКИ",
 	"item.create.goggles.tooltip.summary": "Очки для улучшения зрения с помощью полезной кинетической информации.",
@@ -2131,7 +2131,7 @@
 	"create.ponder.andesite_tunnel.text_3": "...он будет отделять ровно один предмет из любых проходящих мимо стаков",
 	"create.ponder.andesite_tunnel.text_4": "Остаток продолжит свой путь",
 
-	"create.ponder.auto_schedule.header": "Автоматической выдачей Расписаний на Железнодорожной Станции",
+	"create.ponder.auto_schedule.header": "Автоматической выдачей Расписаний на Железнодорожной станции",
 	"create.ponder.auto_schedule.text_1": "Расписания могут использоваться для предоставления машинистам пункта назначения",
 	"create.ponder.auto_schedule.text_2": "Компараторы будут получать редстоун-сигнал всегда, когда поезд прибыл на Станцию",
 	"create.ponder.auto_schedule.text_3": "Имейте в виду, что к Станции можно подойти только с указанного направления",
@@ -2293,7 +2293,7 @@
 	"create.ponder.creative_fluid_tank.text_4": "Любые жидкости, закачанные обратно в творческий жидкостный бак, будут уничтожены",
 
 	"create.ponder.creative_motor.header": "Генерацией силы вращения Творческими моторами",
-	"create.ponder.creative_motor.text_1": "Творческие моторы — это компактные и настраиваемые источники Силы Вращения",
+	"create.ponder.creative_motor.text_1": "Творческие моторы — это компактные и настраиваемые источники силы вращения",
 	"create.ponder.creative_motor.text_2": "Прокрутка по задней панели изменяет кол-во об./мин. у вращающегося вала мотора",
 
 	"create.ponder.creative_motor_mojang.header": "Загадкой от Mojang",
@@ -2324,7 +2324,7 @@
 	"create.ponder.deployer_contraption.header": "Использованием Автономных активаторов на штуковинах",
 	"create.ponder.deployer_contraption.text_1": "Всегда, когда Автономные активаторы движутся как часть штуковины...",
 	"create.ponder.deployer_contraption.text_2": "...они активируются на каждом посещённом блоке, используя предметы из любых хранилищ на штуковине",
-	"create.ponder.deployer_contraption.text_3": "Слот для фильтра может быть использован, чтобы уточнить, какие предметы ему использовать",
+	"create.ponder.deployer_contraption.text_3": "Может быть использован слот для фильтра, чтобы уточнить, какие предметы ему использовать",
 
 	"create.ponder.deployer_modes.header": "Режимами Автономного активатора",
 	"create.ponder.deployer_modes.text_1": "По умолчанию, Активатор имитирует ПКМ-взаимодействие",
@@ -2368,7 +2368,7 @@
 	"create.ponder.display_link_redstone.header": "Управлением Передатчиком информации редстоун-сигналом",
 	"create.ponder.display_link_redstone.text_1": "При питании от редстоун-сигнала Передатчик информации перестаёт отправлять обновления",
 	"create.ponder.display_link_redstone.text_2": "После отключения питания таймер сбрасывается, и новая информация отправляется немедленно",
-	"create.ponder.display_link_redstone.text_3": "Редстоун-сигналы, отправляемые Источниками информации, не оказывают эффекта на Передатчик",
+	"create.ponder.display_link_redstone.text_3": "Редстоун-сигналы, отправляемые источниками информации, не оказывают эффекта на Передатчик",
 
 	"create.ponder.empty_blaze_burner.header": "Поимкой всполохов в Горелку",
 	"create.ponder.empty_blaze_burner.text_1": "ПКМ по всполоху с пустой горелкой, чтобы захватить его",
@@ -2465,7 +2465,7 @@
 	"create.ponder.gantry_direction.text_3": "А также от направления вращения Вала",
 	"create.ponder.gantry_direction.text_4": "Те же правила относятся к передаваемому вращению",
 
-	"create.ponder.gantry_redstone.header": "Краном и редстоун-сигнале",
+	"create.ponder.gantry_redstone.header": "Управлением Краном редстоун-сигналом",
 	"create.ponder.gantry_redstone.text_1": "Активированные редстоун-сигналом валы крана перестают двигать Шасси",
 	"create.ponder.gantry_redstone.text_2": "Вместо этого сила вращения передаётся выходному валу Шасси",
 
@@ -2620,7 +2620,7 @@
 	"create.ponder.mechanical_mixer.text_1": "При помощи Миксера и Чаши можно автоматизировать некоторые рецепты крафта",
 	"create.ponder.mechanical_mixer.text_2": "Доступные рецепты включают бесформенную сборку и автоматическую варку зелий",
 	"create.ponder.mechanical_mixer.text_3": "Некоторым рецептам может потребоваться тепло от Горелки всполоха",
-	"create.ponder.mechanical_mixer.text_4": "Слот для фильтра можно использовать в случае конфликта двух рецептов",
+	"create.ponder.mechanical_mixer.text_4": "Можно использовать слот для фильтра в случае конфликта двух рецептов",
 
 	"create.ponder.mechanical_piston.header": "Перемещением структур при помощи Механических поршней",
 	"create.ponder.mechanical_piston.text_1": "Механические поршни могут двигать блоки перед ними",
@@ -2647,7 +2647,7 @@
 	"create.ponder.mechanical_press_compacting.text_1": "Спрессовывание предметов в Чаше скомпонует их",
 	"create.ponder.mechanical_press_compacting.text_2": "Сжатие предметов и спрессовывание включают в себя любые заполненные 2x2 или 3x3 рецепты крафта и некоторые другие",
 	"create.ponder.mechanical_press_compacting.text_3": "Некоторым рецептам может потребоваться тепло от Горелки всполоха",
-	"create.ponder.mechanical_press_compacting.text_4": "Слот для фильтра можно использовать в случае конфликта двух рецептов",
+	"create.ponder.mechanical_press_compacting.text_4": "Можно использовать слот для фильтра в случае конфликта двух рецептов",
 
 	"create.ponder.mechanical_pump_flow.header": "Транспортировкой жидкостей при помощи Механических помп",
 	"create.ponder.mechanical_pump_flow.text_1": "Механические помпы направляют поток в присоединённые трубопровод",
