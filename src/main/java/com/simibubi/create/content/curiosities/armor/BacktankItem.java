@@ -19,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
@@ -98,8 +99,11 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 	}
 
 	public static class BacktankBlockItem extends BlockItem {
-		public BacktankBlockItem(Block block, Properties properties) {
+		private final Supplier<Item> actualItem;
+
+		public BacktankBlockItem(Block block, Supplier<Item> actualItem, Properties properties) {
 			super(block, properties);
+			this.actualItem = actualItem;
 		}
 
 		@Override
@@ -108,6 +112,10 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 		@Override
 		public String getDescriptionId() {
 			return this.getOrCreateDescriptionId();
+		}
+
+		public Item getActualItem() {
+			return actualItem.get();
 		}
 	}
 

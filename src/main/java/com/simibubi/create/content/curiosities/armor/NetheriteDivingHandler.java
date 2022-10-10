@@ -57,7 +57,7 @@ public final class NetheriteDivingHandler {
 				clearBit(entity, 2);
 			}
 		} else if (slot == EquipmentSlot.FEET) {
-			if (AllItems.NETHERITE_DIVING_BOOTS.isIn(to)) {
+			if (to.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ArmorMaterials.NETHERITE) {
 				setBit(entity, 3);
 			} else {
 				clearBit(entity, 3);

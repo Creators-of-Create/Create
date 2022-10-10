@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2144",
+	"_": "Missing Localizations: 2150",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1856,17 +1856,17 @@
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Fait pousser des rotors _indépendamment_ de leurs _conditions_ _d'emplacement_",
 
 	"item.create.extendo_grip.tooltip": "UNLOCALIZED: EXTENDO GRIP",
-	"item.create.extendo_grip.tooltip.summary": "UNLOCALIZED: Boioioing! Greatly _increases reach distance_ of the wielder. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.extendo_grip.tooltip.summary": "UNLOCALIZED: Boioioing! Greatly _increases reach distance_ of the wielder. Can be powered with Air Pressure from a _Backtank_",
 	"item.create.extendo_grip.tooltip.condition1": "UNLOCALIZED: When in Off-Hand",
 	"item.create.extendo_grip.tooltip.behaviour1": "UNLOCALIZED: Increases _reach distance_ of items used in the _Main-Hand_.",
-	"item.create.extendo_grip.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.condition2": "UNLOCALIZED: While wearing Backtank",
 	"item.create.extendo_grip.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.potato_cannon.tooltip": "UNLOCALIZED: POTATO CANNON",
-	"item.create.potato_cannon.tooltip.summary": "UNLOCALIZED: Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.summary": "UNLOCALIZED: Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Backtank_",
 	"item.create.potato_cannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
 	"item.create.potato_cannon.tooltip.behaviour1": "UNLOCALIZED: _Shoots_ a suitable item from your _Inventory_.",
-	"item.create.potato_cannon.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.condition2": "UNLOCALIZED: While wearing Backtank",
 	"item.create.potato_cannon.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "FILTRE",
@@ -2009,7 +2009,7 @@
 	"item.create.linked_controller.tooltip.behaviour4": "UNLOCALIZED: Places the Controller into the Lectern for easy activation. (R-Click while Sneaking to retrieve it)",
 
 	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
-	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
 	"item.create.diving_helmet.tooltip.condition1": "UNLOCALIZED: When Worn",
 	"item.create.diving_helmet.tooltip.behaviour1": "UNLOCALIZED: Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
 
@@ -2019,6 +2019,13 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
 	"item.create.copper_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
 	"item.create.copper_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.netherite_backtank.tooltip": "UNLOCALIZED: NETHERITE BACKTANK",
+	"item.create.netherite_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.netherite_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.netherite_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.netherite_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.netherite_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
 	"block.create.placard.tooltip": "UNLOCALIZED: PLACARD",
 	"block.create.placard.tooltip.summary": "UNLOCALIZED: _Frame_ your _items_ in brass using this fancy wall panel. Safe for contraptions!",

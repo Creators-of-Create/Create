@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 995",
+	"_": "Missing Localizations: 1001",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2019,6 +2019,13 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "Proporciona _Aire_ _Comprimido_ al Equipamiento que lo requiere.",
 	"item.create.copper_backtank.tooltip.condition2": "Al colocarlo, y darle Cinética",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Recolecta_ _Aire_ _Comprimido_ a una velocidad dependiente de la velocidad de rotación.",
+
+	"item.create.netherite_backtank.tooltip": "UNLOCALIZED: NETHERITE BACKTANK",
+	"item.create.netherite_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.netherite_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.netherite_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.netherite_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.netherite_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
 	"block.create.placard.tooltip": "UNLOCALIZED: PLACARD",
 	"block.create.placard.tooltip.summary": "UNLOCALIZED: _Frame_ your _items_ in brass using this fancy wall panel. Safe for contraptions!",

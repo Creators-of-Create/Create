@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 9",
+	"_": "Missing Localizations: 15",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2019,6 +2019,13 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "Fornisce aria_ _compressa_ a tutto ciò che lo richiede.",
 	"item.create.copper_backtank.tooltip.condition2": "Quando posizionato e collegato a un sistema cinetico",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Assorbe_ _aria_ _compressa_ ad una velocità dipendente dalla velocità di rotazione.",
+
+	"item.create.netherite_backtank.tooltip": "UNLOCALIZED: NETHERITE BACKTANK",
+	"item.create.netherite_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.netherite_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.netherite_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.netherite_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.netherite_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
 	"block.create.placard.tooltip": "CORNICE DI OTTONE",
 	"block.create.placard.tooltip.summary": "_Incornicia_ i tuoi _oggetti_ in ottone usando questo elegante pannello da muro. Sicuro per i macchinari!",

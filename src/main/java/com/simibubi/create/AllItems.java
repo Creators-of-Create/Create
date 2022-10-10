@@ -241,14 +241,14 @@ public class AllItems {
 	// wrapped by COPPER_BACKTANK for block placement uses.
 	// must be registered as of 1.18.2
 	public static final ItemEntry<BacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
-		.item("copper_backtank_placeable", p -> new BacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), p))
+		.item("copper_backtank_placeable", p -> new BacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), AllItems.COPPER_BACKTANK::get, p))
 		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
 		.register();
 
 	// wrapped by NETHERITE_BACKTANK for block placement uses.
 	// must be registered as of 1.18.2
 	public static final ItemEntry<BacktankBlockItem> NETHERITE_BACKTANK_PLACEABLE = REGISTRATE
-		.item("netherite_backtank_placeable", p -> new BacktankBlockItem(AllBlocks.NETHERITE_BACKTANK.get(), p))
+		.item("netherite_backtank_placeable", p -> new BacktankBlockItem(AllBlocks.NETHERITE_BACKTANK.get(), AllItems.NETHERITE_BACKTANK::get, p))
 		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
 		.register();
 

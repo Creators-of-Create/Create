@@ -49,17 +49,17 @@
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees _regardless_ of their _spacing conditions_",
 
 	"item.create.extendo_grip.tooltip": "EXTENDO GRIP",
-	"item.create.extendo_grip.tooltip.summary": "Boioioing! Greatly _increases reach distance_ of the wielder. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.extendo_grip.tooltip.summary": "Boioioing! Greatly _increases reach distance_ of the wielder. Can be powered with Air Pressure from a _Backtank_",
 	"item.create.extendo_grip.tooltip.condition1": "When in Off-Hand",
 	"item.create.extendo_grip.tooltip.behaviour1": "Increases _reach distance_ of items used in the _Main-Hand_.",
-	"item.create.extendo_grip.tooltip.condition2": "While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.condition2": "While wearing Backtank",
 	"item.create.extendo_grip.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.potato_cannon.tooltip": "POTATO CANNON",
-	"item.create.potato_cannon.tooltip.summary": "Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.summary": "Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Backtank_",
 	"item.create.potato_cannon.tooltip.condition1": "When R-Clicked",
 	"item.create.potato_cannon.tooltip.behaviour1": "_Shoots_ a suitable item from your _Inventory_.",
-	"item.create.potato_cannon.tooltip.condition2": "While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.condition2": "While wearing Backtank",
 	"item.create.potato_cannon.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "FILTER",
@@ -202,7 +202,7 @@
 	"item.create.linked_controller.tooltip.behaviour4": "Places the Controller into the Lectern for easy activation. (R-Click while Sneaking to retrieve it)",
 
 	"item.create.diving_helmet.tooltip": "DIVING HELMET",
-	"item.create.diving_helmet.tooltip.summary": "Together with a _Copper_ _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.summary": "Together with a _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
 	"item.create.diving_helmet.tooltip.condition1": "When Worn",
 	"item.create.diving_helmet.tooltip.behaviour1": "Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
 
@@ -212,6 +212,13 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
 	"item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.netherite_backtank.tooltip": "NETHERITE BACKTANK",
+	"item.create.netherite_backtank.tooltip.summary": "A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.netherite_backtank.tooltip.condition1": "When Worn",
+	"item.create.netherite_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.netherite_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
+	"item.create.netherite_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
 	"block.create.placard.tooltip": "PLACARD",
 	"block.create.placard.tooltip.summary": "_Frame_ your _items_ in brass using this fancy wall panel. Safe for contraptions!",

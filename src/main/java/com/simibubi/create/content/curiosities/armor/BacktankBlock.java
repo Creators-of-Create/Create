@@ -24,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -148,18 +149,23 @@ public class BacktankBlock extends HorizontalKineticBlock
 
 	@Override
 	public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos pos, BlockState state) {
-		ItemStack item = super.getCloneItemStack(blockGetter, pos, state);
+		Item item = asItem();
+		if (item instanceof BacktankItem.BacktankBlockItem placeable) {
+			item = placeable.getActualItem();
+		}
+
+		ItemStack stack = new ItemStack(item);
 		Optional<BacktankTileEntity> tileEntityOptional = getTileEntityOptional(blockGetter, pos);
 
 		int air = tileEntityOptional.map(BacktankTileEntity::getAirLevel)
 			.orElse(0);
-		CompoundTag tag = item.getOrCreateTag();
+		CompoundTag tag = stack.getOrCreateTag();
 		tag.putInt("Air", air);
 
 		ListTag enchants = tileEntityOptional.map(BacktankTileEntity::getEnchantmentTag)
 			.orElse(new ListTag());
 		if (!enchants.isEmpty()) {
-			ListTag enchantmentTagList = item.getEnchantmentTags();
+			ListTag enchantmentTagList = stack.getEnchantmentTags();
 			enchantmentTagList.addAll(enchants);
 			tag.put("Enchantments", enchantmentTagList);
 		}
@@ -167,8 +173,8 @@ public class BacktankBlock extends HorizontalKineticBlock
 		Component customName = tileEntityOptional.map(BacktankTileEntity::getCustomName)
 			.orElse(null);
 		if (customName != null)
-			item.setHoverName(customName);
-		return item;
+			stack.setHoverName(customName);
+		return stack;
 	}
 
 	@Override
