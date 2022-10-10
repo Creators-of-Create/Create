@@ -40,9 +40,10 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 		return sLevel.getScoreboard()
 			.getPlayerScores(objective)
 			.stream()
-			.limit(maxRows)
-			.map(score -> IntAttached.with(score.getScore(), Components.literal(score.getOwner()).copy()))
-			.sorted(IntAttached.comparator());
+			.map(score -> IntAttached.with(score.getScore(), Components.literal(score.getOwner())
+				.copy()))
+			.sorted(IntAttached.comparator())
+			.limit(maxRows);
 	}
 
 	private ImmutableList<IntAttached<MutableComponent>> notFound(String objective) {

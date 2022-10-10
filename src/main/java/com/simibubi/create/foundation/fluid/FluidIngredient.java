@@ -204,11 +204,13 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@SuppressWarnings("deprecation")
 		@Override
 		protected boolean testInternal(FluidStack t) {
-			if (tag == null)
+			if (tag == null) {
 				for (FluidStack accepted : getMatchingFluidStacks())
 					if (accepted.getFluid()
 						.isSame(t.getFluid()))
 						return true;
+				return false;
+			}
 			return t.getFluid().is(tag);
 		}
 

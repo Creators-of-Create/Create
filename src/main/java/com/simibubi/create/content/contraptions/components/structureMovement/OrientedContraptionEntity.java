@@ -493,7 +493,14 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	public Vec3 getAnchorVec() {
-		return new Vec3(getX() - .5, getY(), getZ() - .5);
+		Vec3 anchorVec = super.getAnchorVec();
+		return anchorVec.subtract(.5, 0, .5);
+	}
+	
+	@Override
+	public Vec3 getPrevAnchorVec() {
+		Vec3 prevAnchorVec = super.getPrevAnchorVec();
+		return prevAnchorVec.subtract(.5, 0, .5);
 	}
 
 	@Override

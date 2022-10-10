@@ -186,6 +186,7 @@ public class CreateJEI implements IModPlugin {
 				.build("automatic_shapeless", MixingCategory::autoShapeless),
 
 		brewing = builder(BasinRecipe.class)
+				.enableWhen(c -> c.allowBrewingInMixer)
 				.addRecipes(() -> PotionMixingRecipes.ALL)
 				.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 				.catalyst(AllBlocks.BASIN::get)

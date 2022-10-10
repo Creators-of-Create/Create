@@ -3,23 +3,19 @@ package com.simibubi.create.content.contraptions.components.actors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.AirBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
@@ -40,7 +36,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		if (destroyProgress == -1)
 			destroyNextTick();
 	}
-	
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -93,9 +89,9 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 			return;
 		if (getSpeed() == 0)
 			return;
-		
+
 		breakingPos = getBreakingPos();
-		
+
 		if (ticksUntilNextProgress < 0)
 			return;
 		if (ticksUntilNextProgress-- > 0)
@@ -114,7 +110,8 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 
 		float breakSpeed = getBreakSpeed();
 		destroyProgress += Mth.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
-		level.playSound(null, worldPosition, stateToBreak.getSoundType().getHitSound(), SoundSource.NEUTRAL, .25f, 1);
+		level.playSound(null, worldPosition, stateToBreak.getSoundType()
+			.getHitSound(), SoundSource.NEUTRAL, .25f, 1);
 
 		if (destroyProgress >= 10) {
 			onBlockBroken(stateToBreak);
@@ -133,28 +130,26 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	public static boolean isBreakable(BlockState stateToBreak, float blockHardness) {
-		return !(stateToBreak.getMaterial().isLiquid() || stateToBreak.getBlock() instanceof AirBlock
-				|| blockHardness == -1);
+		return !(stateToBreak.getMaterial()
+			.isLiquid() || stateToBreak.getBlock() instanceof AirBlock || blockHardness == -1);
 	}
 
 	public void onBlockBroken(BlockState stateToBreak) {
-		FluidState FluidState = level.getFluidState(breakingPos);
-		level.levelEvent(2001, breakingPos, Block.getId(stateToBreak));
-		BlockEntity tileentity = stateToBreak.hasBlockEntity() ? level.getBlockEntity(breakingPos) : null;
 		Vec3 vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.random, .125f);
-
-		Block.getDrops(stateToBreak, (ServerLevel) level, breakingPos, tileentity).forEach((stack) -> {
-			if (!stack.isEmpty() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)
-					&& !level.restoringBlockSnapshots) {
-				ItemEntity itementity = new ItemEntity(level, vec.x, vec.y, vec.z, stack);
-				itementity.setDefaultPickUpDelay();
-				itementity.setDeltaMovement(Vec3.ZERO);
-				level.addFreshEntity(itementity);
-			}
+		BlockHelper.destroyBlock(level, breakingPos, 1f, (stack) -> {
+			if (stack.isEmpty())
+				return;
+			if (!level.getGameRules()
+				.getBoolean(GameRules.RULE_DOBLOCKDROPS))
+				return;
+			if (level.restoringBlockSnapshots)
+				return;
+			
+			ItemEntity itementity = new ItemEntity(level, vec.x, vec.y, vec.z, stack);
+			itementity.setDefaultPickUpDelay();
+			itementity.setDeltaMovement(Vec3.ZERO);
+			level.addFreshEntity(itementity);
 		});
-		if (level instanceof ServerLevel)
-			stateToBreak.spawnAfterBreak((ServerLevel) level, breakingPos, ItemStack.EMPTY);
-		level.setBlock(breakingPos, FluidState.createLegacyBlock(), 3);
 	}
 
 	protected float getBreakSpeed() {

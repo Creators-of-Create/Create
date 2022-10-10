@@ -11,6 +11,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.NetworkEvent.Context;
 
@@ -54,7 +55,9 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			if (!(entityByID instanceof AbstractContraptionEntity))
 				return;
 			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-			double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 10;
+			AABB bb = contraptionEntity.getBoundingBox();
+			double boundsExtra = Math.max(bb.getXsize(), bb.getYsize());
+			double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 10 + boundsExtra;
 			if (!sender.hasLineOfSight(entityByID))
 				d -= 3;
 			d *= d;

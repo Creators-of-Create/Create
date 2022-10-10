@@ -84,12 +84,12 @@ public class TrainRelocationPacket extends SimplePacketBase {
 				return;
 
 			if (!sender.position()
-				.closerThan(Vec3.atCenterOf(pos), 26)) {
+				.closerThan(Vec3.atCenterOf(pos), 64)) {
 				Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from clicked pos");
 				return;
 			}
 			if (!sender.position()
-				.closerThan(cce.position(), 26 + cce.getBoundingBox()
+				.closerThan(cce.position(), 64 + cce.getBoundingBox()
 					.getXsize() / 2)) {
 				Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from carriage entity");
 				return;

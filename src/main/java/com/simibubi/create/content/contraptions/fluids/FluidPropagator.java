@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
@@ -173,7 +174,8 @@ public class FluidPropagator {
 			return false;
 		if (VanillaFluidTargets.shouldPipesConnectTo(connectedState))
 			return true;
-		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite()))
+		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite())
+			&& !AllBlockTags.FAN_TRANSPARENT.matches(connectedState))
 			return false;
 		if (hasFluidCapability(reader, connectedPos, side.getOpposite()))
 			return false;

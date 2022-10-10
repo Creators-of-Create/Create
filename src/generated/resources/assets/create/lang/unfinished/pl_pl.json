@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 10",
+	"_": "Missing Localizations: 12",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -564,14 +564,14 @@
 	"block.create.zinc_block": "Blok cynku",
 	"block.create.zinc_ore": "Złoże cynku",
 
-	"enchantment.create.capacity": "Pojameność",
+	"enchantment.create.capacity": "Pojemność",
 	"enchantment.create.potato_recovery": "Odzyskiwanie",
 
 	"entity.create.carriage_contraption": "Maszyna wagonowa",
 	"entity.create.contraption": "Maszyna",
 	"entity.create.crafting_blueprint": "Szablon konstruowania",
 	"entity.create.gantry_contraption": "Maszyna suwnicowa",
-	"entity.create.potato_projectile": "Zimniaczany pocisk",
+	"entity.create.potato_projectile": "Ziemniaczany pocisk",
 	"entity.create.seat": "Siedzenie",
 	"entity.create.stationary_contraption": "Maszyna stacjonarna",
 	"entity.create.super_glue": "Super Glue",
@@ -1485,6 +1485,7 @@
 	"create.schedule.condition.threshold.equal": "dokładnie",
 	"create.schedule.condition.threshold.x_units_of_item": "%1$s %2$s: %3$s",
 	"create.schedule.condition.threshold.matching_content": "Pasująca zawartość",
+	"create.schedule.condition.threshold.anything": "UNLOCALIZED: Anything",
 	"create.schedule.condition.threshold.item_measure": "Jednostka przedmiotów",
 	"create.schedule.condition.threshold.items": "Przemioty",
 	"create.schedule.condition.threshold.stacks": "Stosy",
@@ -1492,6 +1493,7 @@
 	"create.schedule.condition.threshold.status": "Ładunek: %1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "Przedmiot odniesienia",
 	"create.schedule.condition.threshold.place_item_2": "Filtry mogą zostać użyte",
+	"create.schedule.condition.threshold.place_item_3": "UNLOCALIZED: Leave empty to match any",
 	"create.schedule.condition.fluid_threshold": "Warunek ładunku płynów",
 	"create.schedule.condition.item_threshold": "Warunek ładunku przedmiotów",
 	"create.schedule.condition.redstone_link": "Emiter sygnału",
