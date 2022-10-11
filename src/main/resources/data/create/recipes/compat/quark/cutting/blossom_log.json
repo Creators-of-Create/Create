@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "quark"
+    }
+  ],
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "quark:blossom_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "quark:stripped_blossom_log",
+      "count": 1
+    }
+  ],
+  "processingTime": 50
+}
