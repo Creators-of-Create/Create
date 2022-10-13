@@ -1997,7 +1997,7 @@
 	"item.create.linked_controller.tooltip.condition2": "R-Klick beim Schleichen",
 	"item.create.linked_controller.tooltip.behaviour2": "Öffnet die manuelle _Konfigurationsoberfläche_.",
 	"item.create.linked_controller.tooltip.condition3": "R-Klick auf einen Redstone-Verbindungs-Empfänger",
-	"item.create.linked_controller.tooltip.behaviour3": "Aktiviert den _Bindungsmodus_. Drücke einen der _sechs Tasten_, um sie auf die _Verbindungsfrequenz_ zu binden.",
+	"item.create.linked_controller.tooltip.behaviour3": "Aktiviert den _Bindungsmodus_. Drücke eine der _sechs Tasten_, um sie auf die _Verbindungsfrequenz_ zu binden.",
 	"item.create.linked_controller.tooltip.condition4": "R-Klick auf ein Lesepult",
 	"item.create.linked_controller.tooltip.behaviour4": "Platziert einen Kontroller in das Lesepult, um es einfacher zu aktivieren. (R-Klick beim Schleichen, um es zurück zu nehmen)",
 
