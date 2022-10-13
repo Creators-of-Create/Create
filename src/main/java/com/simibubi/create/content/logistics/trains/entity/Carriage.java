@@ -129,7 +129,7 @@ public class Carriage {
 		boolean onTwoBogeys = isOnTwoBogeys();
 		double stress = train.derailed ? 0 : onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
 		blocked = false;
-		
+
 		MutableDouble distanceMoved = new MutableDouble(distance);
 		boolean iterateFromBack = distance < 0;
 
@@ -141,7 +141,7 @@ public class Carriage {
 			CarriageBogey bogey = bogeys.get(actuallyFirstBogey);
 			double bogeyCorrection = stress * (actuallyFirstBogey ? 0.5d : -0.5d);
 			double bogeyStress = bogey.getStress();
-			
+
 			for (boolean firstWheel : Iterate.trueAndFalse) {
 				boolean actuallyFirstWheel = firstWheel ^ iterateFromBack;
 				TravellingPoint point = bogey.points.get(actuallyFirstWheel);
@@ -709,7 +709,7 @@ public class Carriage {
 
 				Integer seat = mapping.get(passenger.getUUID());
 				if ((passenger instanceof ServerPlayer sp)) {
-					dismountPlayer(sLevel, sp, seat, true);
+					dismountAndSavePlayer(sLevel, sp, seat, true);
 					continue;
 				}
 
@@ -719,18 +719,17 @@ public class Carriage {
 
 		}
 
-		private void dismountPlayer(ServerLevel sLevel, ServerPlayer sp, Integer seat, boolean portal) {
-			if (!portal) {
-				sp.stopRiding();
-				return;
-			}
-
+		private void dismountAndSavePlayer(ServerLevel sLevel, ServerPlayer sp, Integer seat, boolean portal) {
 			CompoundTag tag = new CompoundTag();
 			tag.putUUID("PlayerPassenger", sp.getUUID());
 			serialisedPassengers.put(seat, tag);
 			sp.stopRiding();
 			sp.getPersistentData()
 				.remove("ContraptionDismountLocation");
+
+			if (!portal) {
+				return;
+			}
 
 			for (Entry<ResourceKey<Level>, DimensionalCarriageEntity> other : entities.entrySet()) {
 				DimensionalCarriageEntity otherDce = other.getValue();
@@ -802,7 +801,7 @@ public class Carriage {
 					Integer seat = mapping.get(passenger.getUUID());
 
 					if (passenger instanceof ServerPlayer sp) {
-						dismountPlayer(sp.getLevel(), sp, seat, portal);
+						dismountAndSavePlayer(sp.getLevel(), sp, seat, portal);
 						continue;
 					}
 
@@ -848,7 +847,7 @@ public class Carriage {
 					train.carriageWaitingForChunks = id;
 					return;
 				}
-				
+
 				if (entity.getPassengers()
 					.stream()
 					.anyMatch(p -> p instanceof Player)
