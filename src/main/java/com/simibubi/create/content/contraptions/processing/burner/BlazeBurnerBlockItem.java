@@ -8,6 +8,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -71,7 +72,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 	@Override
 	public String getDescriptionId() {
-		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + getRegistryName().getPath();
+		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + CatnipServices.REGISTRIES.getKeyOrThrow(this).getPath();
 	}
 
 	@Override
@@ -99,7 +100,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			possibleSpawns.add(spawner.nextSpawnData);
 		}
 
-		ResourceLocation blazeId = EntityType.BLAZE.getRegistryName();
+		ResourceLocation blazeId = CatnipServices.REGISTRIES.getKeyOrThrow(EntityType.BLAZE);
 		for (SpawnData e : possibleSpawns) {
 			ResourceLocation spawnerEntityId = new ResourceLocation(e.entityToSpawn()
 				.getString("id"));

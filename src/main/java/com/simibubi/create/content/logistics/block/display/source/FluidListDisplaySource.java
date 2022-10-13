@@ -19,8 +19,8 @@ import com.simibubi.create.foundation.utility.FluidFormatter;
 
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.IntAttached;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -59,11 +59,11 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 
 		return fluids.entrySet()
 				.stream()
-				.sorted((Comparator.comparingInt(value -> ((Map.Entry<Fluid, Integer>) value).getValue()).reversed()))
+				.sorted(Comparator.<Map.Entry<Fluid, Integer>>comparingInt(value -> value.getValue()).reversed())
 				.limit(maxRows)
 				.map(entry -> IntAttached.with(
 						entry.getValue(),
-						new TranslatableComponent(fluidNames.get(entry.getKey()).getTranslationKey()))
+						Components.translatable(fluidNames.get(entry.getKey()).getTranslationKey()))
 				);
 	}
 

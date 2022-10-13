@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.ponder.foundation.ElementLink;
 import net.createmod.ponder.foundation.PonderPalette;
 import net.createmod.ponder.foundation.SceneBuilder;
@@ -15,7 +16,6 @@ import net.createmod.ponder.foundation.element.InputWindowElement;
 import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -137,7 +137,7 @@ public class DisplayScenes {
 
 		scene.world.hideSection(depot, Direction.SOUTH);
 		scene.idle(5);
-		scene.world.setDisplayBoardText(board, 1, TextComponent.EMPTY);
+		scene.world.setDisplayBoardText(board, 1, Components.immutableEmpty());
 		scene.world.flashDisplayLink(linkPos);
 		scene.idle(5);
 		ElementLink<WorldSectionElement> dirtElement = scene.world.showIndependentSection(dirt, Direction.SOUTH);
@@ -158,7 +158,7 @@ public class DisplayScenes {
 		scene.world.moveSection(stressElement, util.vector.of(0, -2, 0), 0);
 		scene.idle(10);
 		scene.world.setDisplayBoardText(board, 1,
-			new TextComponent(1024 + " ").append(CreateLang.translateDirect("generic.unit.stress")));
+			Components.literal(1024 + " ").append(CreateLang.translateDirect("generic.unit.stress")));
 		scene.world.flashDisplayLink(linkPos);
 		scene.idle(40);
 		scene.world.hideIndependentSection(stressElement, Direction.SOUTH);
@@ -168,8 +168,8 @@ public class DisplayScenes {
 		scene.world.moveSection(chestElement, util.vector.of(0, -3, 0), 0);
 		scene.idle(10);
 		scene.world.setDisplayBoardText(board, 1,
-			new TextComponent(418 + " ").append(new ItemStack(Items.DEEPSLATE).getHoverName()));
-		scene.world.setDisplayBoardText(board, 2, new TextComponent(14 + " ").append(AllBlocks.COGWHEEL.asStack()
+			Components.literal(418 + " ").append(new ItemStack(Items.DEEPSLATE).getHoverName()));
+		scene.world.setDisplayBoardText(board, 2, Components.literal(14 + " ").append(AllBlocks.COGWHEEL.asStack()
 			.getHoverName()));
 		scene.world.flashDisplayLink(linkPos);
 		scene.idle(40);
@@ -187,8 +187,8 @@ public class DisplayScenes {
 		scene.world.moveSection(cuckooElement, util.vector.of(0, -1, 0), 0);
 		scene.idle(10);
 		scene.world.setDisplayBoardText(board, 1,
-			new TextComponent("6:00 ").append(CreateLang.translateDirect("generic.daytime.pm")));
-		scene.world.setDisplayBoardText(board, 2, TextComponent.EMPTY);
+			Components.literal("6:00 ").append(CreateLang.translateDirect("generic.daytime.pm")));
+		scene.world.setDisplayBoardText(board, 2, Components.immutableEmpty());
 		scene.world.flashDisplayLink(linkPos);
 		scene.idle(90);
 
@@ -289,7 +289,7 @@ public class DisplayScenes {
 			.showControls(new InputWindowElement(target, Pointing.RIGHT).withItem(new ItemStack(Items.NAME_TAG))
 				.rightClick(), 40);
 		scene.idle(6);
-		scene.world.setDisplayBoardText(board, 0, new TextComponent("Create"));
+		scene.world.setDisplayBoardText(board, 0, Components.literal("Create"));
 		scene.idle(25);
 
 		scene.overlay.showText(50)
@@ -363,7 +363,7 @@ public class DisplayScenes {
 
 		scene.overlay.showControls(new InputWindowElement(target, Pointing.RIGHT).rightClick(), 40);
 		scene.idle(6);
-		scene.world.setDisplayBoardText(board, 0, new TextComponent(""));
+		scene.world.setDisplayBoardText(board, 0, Components.immutableEmpty());
 		scene.idle(25);
 
 		scene.overlay.showText(70)
@@ -456,7 +456,7 @@ public class DisplayScenes {
 		scene.world.moveSection(redstoneBlock, util.vector.of(-1, 0, 1), 0);
 		scene.idle(10);
 		scene.world.flashDisplayLink(linkPos);
-		scene.world.setDisplayBoardText(board, 1, TextComponent.EMPTY);
+		scene.world.setDisplayBoardText(board, 1, Components.immutableEmpty());
 		scene.idle(25);
 
 		scene.overlay.showSelectionWithText(depot, 80)

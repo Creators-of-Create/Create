@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -25,7 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -110,7 +111,7 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		String[] pitches = CreateLang.translateDirect("generic.notes")
 			.getString()
 			.split(";");
-		TextComponent textComponent = new TextComponent(spacing);
+		MutableComponent textComponent = Components.literal(spacing);
 		tooltip.add(textComponent.append(CreateLang.translateDirect("generic.pitch", pitches[pitch % pitches.length])));
 		return true;
 	}

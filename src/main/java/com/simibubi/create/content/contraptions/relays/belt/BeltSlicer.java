@@ -16,13 +16,13 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.CatnipClient;
 import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -473,7 +473,7 @@ public class BeltSlicer {
 			mc.player.displayClientMessage(CreateLang.translateDirect(feedback.langKey)
 				.withStyle(feedback.formatting), true);
 		else
-			mc.player.displayClientMessage(new TextComponent(""), true);
+			mc.player.displayClientMessage(Components.immutableEmpty(), true);
 
 		if (feedback.bb != null)
 			CatnipClient.OUTLINER.chaseAABB("BeltSlicer", feedback.bb)

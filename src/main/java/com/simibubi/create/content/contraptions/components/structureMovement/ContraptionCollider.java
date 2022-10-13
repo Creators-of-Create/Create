@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
-import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.google.common.base.Predicates;
@@ -33,6 +32,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -88,10 +88,11 @@ public class ContraptionCollider {
 			if (playerType == PlayerType.REMOTE)
 				continue;
 
-			entity.getSelfAndPassengers().forEach(e -> {
-				if (e instanceof ServerPlayer)
-					((ServerPlayer) e).connection.aboveGroundTickCount = 0;
-			});
+			entity.getSelfAndPassengers()
+				.forEach(e -> {
+					if (e instanceof ServerPlayer)
+						((ServerPlayer) e).connection.aboveGroundTickCount = 0;
+				});
 
 			if (playerType == PlayerType.SERVER)
 				continue;
@@ -175,7 +176,7 @@ public class ContraptionCollider {
 					Vec3 collisionPosition = intersect.getCollisionPosition();
 
 					if (!isTemporal) {
-						Vec3 separation = intersect.asSeparationVec(entity.maxUpStep);
+						Vec3 separation = intersect.asSeparationVec(entity.getStepHeight());
 						if (separation != null && !separation.equals(Vec3.ZERO)) {
 							collisionResponse.setValue(currentResponse.add(separation));
 							timeOfImpact = 0;
@@ -329,50 +330,15 @@ public class ContraptionCollider {
 				entityPosition.z + allowedMovement.z);
 			entityPosition = entity.position();
 
-			if (contraptionEntity instanceof CarriageContraptionEntity cce && entity.isOnGround()
-				&& !(entity instanceof ItemEntity) && cce.nonDamageTicks == 0
-				&& AllConfigs.SERVER.trains.trainsCauseDamage.get()) {
-
-				Vec3 diffMotion = contraptionMotion.subtract(entity.getDeltaMovement());
-				if (diffMotion.length() > 0.35f && contraptionMotion.length() > 0.35f) {
-
-					EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
-					double damage = diffMotion.length();
-					if (entity.getClassification(false) == MobCategory.MONSTER)
-						damage *= 2;
-
-					if (!(entity instanceof Player p) || !p.isCreative() && !p.isSpectator()) {
-						if (playerType == PlayerType.CLIENT) {
-							AllPackets.channel
-								.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
-							world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
-								SoundSource.NEUTRAL, 1, .75f);
-						} else {
-							entity.hurt(pSource, (int) (damage * 16));
-							world.playSound(null, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
-								SoundSource.NEUTRAL, 1, .75f);
-							if (!entity.isAlive())
-								contraptionEntity.getControllingPlayer()
-									.map(world::getPlayerByUUID)
-									.ifPresent(AllAdvancements.TRAIN_ROADKILL::awardTo);
-						}
-
-						Vec3 added = entityMotion.add(contraptionMotion.multiply(1, 0, 1)
-							.normalize()
-							.add(0, .25, 0)
-							.scale(damage * 4))
-							.add(diffMotion);
-						entityMotion = VecHelper.clamp(added, 3);
-					}
-				}
-			}
+			entityMotion =
+				handleDamageFromTrain(world, contraptionEntity, contraptionMotion, entity, entityMotion, playerType);
 
 			entity.hurtMarked = true;
 			Vec3 contactPointMotion = Vec3.ZERO;
 
 			if (surfaceCollision.isTrue()) {
+				contraptionEntity.registerColliding(entity);
 				entity.fallDistance = 0;
-				contraptionEntity.collidingEntities.put(entity, new MutableInt(0));
 				boolean canWalk = bounce != 0 || slide == 0;
 				if (canWalk || !rotation.hasVerticalRotation()) {
 					if (canWalk)
@@ -399,6 +365,64 @@ public class ContraptionCollider {
 			AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 		}
 
+	}
+
+	private static Vec3 handleDamageFromTrain(Level world, AbstractContraptionEntity contraptionEntity,
+		Vec3 contraptionMotion, Entity entity, Vec3 entityMotion, PlayerType playerType) {
+
+		if (!(contraptionEntity instanceof CarriageContraptionEntity cce))
+			return entityMotion;
+		if (!entity.isOnGround())
+			return entityMotion;
+
+		CompoundTag persistentData = entity.getPersistentData();
+		if (persistentData.contains("ContraptionGrounded")) {
+			persistentData.remove("ContraptionGrounded");
+			return entityMotion;
+		}
+
+		if (cce.collidingEntities.containsKey(entity))
+			return entityMotion;
+		if (entity instanceof ItemEntity)
+			return entityMotion;
+		if (cce.nonDamageTicks != 0)
+			return entityMotion;
+		if (!AllConfigs.SERVER.trains.trainsCauseDamage.get())
+			return entityMotion;
+
+		Vec3 diffMotion = contraptionMotion.subtract(entity.getDeltaMovement());
+
+		if (diffMotion.length() <= 0.35f || contraptionMotion.length() <= 0.35f)
+			return entityMotion;
+
+		EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
+		double damage = diffMotion.length();
+		if (entity.getClassification(false) == MobCategory.MONSTER)
+			damage *= 2;
+
+		if (entity instanceof Player p && (p.isCreative() || p.isSpectator()))
+			return entityMotion;
+
+		if (playerType == PlayerType.CLIENT) {
+			AllPackets.channel.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
+			world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
+				SoundSource.NEUTRAL, 1, .75f);
+		} else {
+			entity.hurt(pSource, (int) (damage * 16));
+			world.playSound(null, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL, 1, .75f);
+			if (!entity.isAlive())
+				contraptionEntity.getControllingPlayer()
+					.map(world::getPlayerByUUID)
+					.ifPresent(AllAdvancements.TRAIN_ROADKILL::awardTo);
+		}
+
+		Vec3 added = entityMotion.add(contraptionMotion.multiply(1, 0, 1)
+			.normalize()
+			.add(0, .25, 0)
+			.scale(damage * 4))
+			.add(diffMotion);
+
+		return VecHelper.clamp(added, 3);
 	}
 
 	static boolean bounceEntity(Entity entity, Vec3 normal, AbstractContraptionEntity contraption, double factor) {
@@ -473,13 +497,13 @@ public class ContraptionCollider {
 		boolean flag = p_20273_.x != vec3.x;
 		boolean flag1 = p_20273_.y != vec3.y;
 		boolean flag2 = p_20273_.z != vec3.z;
-		boolean flag3 = e.isOnGround() || flag1 && p_20273_.y < 0.0D;
-		if (e.maxUpStep > 0.0F && flag3 && (flag || flag2)) {
-			Vec3 vec31 =
-				collideBoundingBox(e, new Vec3(p_20273_.x, (double) e.maxUpStep, p_20273_.z), aabb, e.level, list);
-			Vec3 vec32 = collideBoundingBox(e, new Vec3(0.0D, (double) e.maxUpStep, 0.0D),
+		boolean flag3 = flag1 && p_20273_.y < 0.0D;
+		if (e.getStepHeight() > 0.0F && flag3 && (flag || flag2)) {
+			Vec3 vec31 = collideBoundingBox(e, new Vec3(p_20273_.x, (double) e.getStepHeight(), p_20273_.z), aabb,
+				e.level, list);
+			Vec3 vec32 = collideBoundingBox(e, new Vec3(0.0D, (double) e.getStepHeight(), 0.0D),
 				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level, list);
-			if (vec32.y < (double) e.maxUpStep) {
+			if (vec32.y < (double) e.getStepHeight()) {
 				Vec3 vec33 =
 					collideBoundingBox(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z), aabb.move(vec32), e.level, list)
 						.add(vec32);

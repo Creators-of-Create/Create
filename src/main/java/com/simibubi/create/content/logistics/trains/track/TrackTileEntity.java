@@ -159,8 +159,8 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	}
 
 	@Override
-	public void writeSafe(CompoundTag tag, boolean clientPacket) {
-		super.writeSafe(tag, clientPacket);
+	public void writeSafe(CompoundTag tag) {
+		super.writeSafe(tag);
 		writeTurns(tag);
 	}
 

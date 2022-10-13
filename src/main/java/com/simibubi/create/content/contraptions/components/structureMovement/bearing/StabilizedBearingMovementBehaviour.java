@@ -16,7 +16,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
@@ -55,7 +54,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 		rotation.mul(orientation);
 
 		superBuffer.transform(matrices.getModel());
-		FlwSuperByteBuffer.cast(superBuffer).ifPresent(flwBuffer -> flwBuffer.rotateCentered(rotation));
+		superBuffer.rotateCentered(rotation);
 
 		// render
 		superBuffer

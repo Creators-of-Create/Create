@@ -18,11 +18,11 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -30,19 +30,19 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	private static final String PREFIX = "gui.attribute_filter.";
 
-	private Component addDESC = CreateLang.translateDirect(PREFIX + "add_attribute");
-	private Component addInvertedDESC = CreateLang.translateDirect(PREFIX + "add_inverted_attribute");
+	private final Component addDESC = CreateLang.translateDirect(PREFIX + "add_attribute");
+	private final Component addInvertedDESC = CreateLang.translateDirect(PREFIX + "add_inverted_attribute");
 
-	private Component allowDisN = CreateLang.translateDirect(PREFIX + "allow_list_disjunctive");
-	private Component allowDisDESC = CreateLang.translateDirect(PREFIX + "allow_list_disjunctive.description");
-	private Component allowConN = CreateLang.translateDirect(PREFIX + "allow_list_conjunctive");
-	private Component allowConDESC = CreateLang.translateDirect(PREFIX + "allow_list_conjunctive.description");
-	private Component denyN = CreateLang.translateDirect(PREFIX + "deny_list");
-	private Component denyDESC = CreateLang.translateDirect(PREFIX + "deny_list.description");
+	private final Component allowDisN = CreateLang.translateDirect(PREFIX + "allow_list_disjunctive");
+	private final Component allowDisDESC = CreateLang.translateDirect(PREFIX + "allow_list_disjunctive.description");
+	private final Component allowConN = CreateLang.translateDirect(PREFIX + "allow_list_conjunctive");
+	private final Component allowConDESC = CreateLang.translateDirect(PREFIX + "allow_list_conjunctive.description");
+	private final Component denyN = CreateLang.translateDirect(PREFIX + "deny_list");
+	private final Component denyDESC = CreateLang.translateDirect(PREFIX + "deny_list.description");
 
-	private Component referenceH = CreateLang.translateDirect(PREFIX + "add_reference_item");
-	private Component noSelectedT = CreateLang.translateDirect(PREFIX + "no_selected_attributes");
-	private Component selectedT = CreateLang.translateDirect(PREFIX + "selected_attributes");
+	private final Component referenceH = CreateLang.translateDirect(PREFIX + "add_reference_item");
+	private final Component noSelectedT = CreateLang.translateDirect(PREFIX + "no_selected_attributes");
+	private final Component selectedT = CreateLang.translateDirect(PREFIX + "selected_attributes");
 
 	private IconButton whitelistDis, whitelistCon, blacklist;
 	private Indicator whitelistDisIndicator, whitelistConIndicator, blacklistIndicator;
@@ -86,9 +86,9 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		});
 		blacklist.setToolTip(denyN);
 
-		whitelistDisIndicator = new Indicator(x + 47, y + 53, TextComponent.EMPTY);
-		whitelistConIndicator = new Indicator(x + 65, y + 53, TextComponent.EMPTY);
-		blacklistIndicator = new Indicator(x + 83, y + 53, TextComponent.EMPTY);
+		whitelistDisIndicator = new Indicator(x + 47, y + 53, Components.immutableEmpty());
+		whitelistConIndicator = new Indicator(x + 65, y + 53, Components.immutableEmpty());
+		blacklistIndicator = new Indicator(x + 83, y + 53, Components.immutableEmpty());
 
 		addRenderableWidgets(blacklist, whitelistCon, whitelistDis, blacklistIndicator, whitelistConIndicator,
 			whitelistDisIndicator);
@@ -106,10 +106,10 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 		handleIndicators();
 
-		attributeSelectorLabel = new Label(x + 43, y + 26, TextComponent.EMPTY).colored(0xF3EBDE)
+		attributeSelectorLabel = new Label(x + 43, y + 26, Components.immutableEmpty()).colored(0xF3EBDE)
 			.withShadow();
 		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
-		attributeSelector.forOptions(Arrays.asList(TextComponent.EMPTY));
+		attributeSelector.forOptions(Arrays.asList(Components.immutableEmpty()));
 		attributeSelector.removeCallback();
 		referenceItemChanged(menu.ghostInventory.getStackInSlot(0));
 
@@ -119,7 +119,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		selectedAttributes.clear();
 		selectedAttributes.add((menu.selectedAttributes.isEmpty() ? noSelectedT : selectedT).plainCopy()
 			.withStyle(ChatFormatting.YELLOW));
-		menu.selectedAttributes.forEach(at -> selectedAttributes.add(new TextComponent("- ")
+		menu.selectedAttributes.forEach(at -> selectedAttributes.add(Components.literal("- ")
 			.append(at.getFirst()
 				.format(at.getSecond()))
 			.withStyle(ChatFormatting.GRAY)));
@@ -243,7 +243,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		if (menu.selectedAttributes.size() == 1)
 			selectedAttributes.set(0, selectedT.plainCopy()
 				.withStyle(ChatFormatting.YELLOW));
-		selectedAttributes.add(new TextComponent("- ").append(itemAttribute.format(inverted))
+		selectedAttributes.add(Components.literal("- ").append(itemAttribute.format(inverted))
 			.withStyle(ChatFormatting.GRAY));
 		return true;
 	}

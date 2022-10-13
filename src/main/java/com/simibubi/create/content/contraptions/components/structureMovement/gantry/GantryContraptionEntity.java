@@ -176,7 +176,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks) { }
+	public void applyLocalTransforms(PoseStack matrixStack, float partialTicks) { }
 
 	public void updateClientMotion() {
 		float modifier = movementAxis.getAxisDirection()

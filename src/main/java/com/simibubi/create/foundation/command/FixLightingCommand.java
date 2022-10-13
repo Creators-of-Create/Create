@@ -4,9 +4,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 
 import net.createmod.catnip.net.ClientboundSimpleActionPacket;
 import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
 
 public class FixLightingCommand {
 
@@ -20,7 +20,7 @@ public class FixLightingCommand {
 
 				ctx.getSource()
 					.sendSuccess(
-						new TextComponent("Forge's experimental block rendering pipeline is now enabled."), true);
+						Components.literal("Forge's experimental block rendering pipeline is now enabled."), true);
 
 				return 1;
 			});

@@ -234,7 +234,10 @@ public class RotationPropagator {
 			boolean incompatible =
 				Math.signum(newSpeed) != Math.signum(speedOfNeighbour) && (newSpeed != 0 && speedOfNeighbour != 0);
 
-			boolean tooFast = Math.abs(newSpeed) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
+			boolean tooFast = Math.abs(newSpeed) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get()
+					|| Math.abs(oppositeSpeed) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
+			// Check for both the new speed and the opposite speed, just in case
+
 			boolean speedChangedTooOften = currentTE.getFlickerScore() > MAX_FLICKER_SCORE;
 			if (tooFast || speedChangedTooOften) {
 				world.destroyBlock(pos, true);

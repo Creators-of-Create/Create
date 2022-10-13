@@ -29,24 +29,22 @@ import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.FlwSuperBufferFactory;
 import com.simibubi.create.foundation.utility.ModelSwapper;
-import com.simibubi.create.foundation.utility.ShippedResourcePacks;
 
 import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.createmod.catnip.config.ui.ConfigScreen;
 import net.createmod.catnip.render.SuperBufferFactory;
 import net.createmod.catnip.render.SuperByteBufferCache;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -89,10 +87,7 @@ public class CreateClient {
 		SuperByteBufferCache.getInstance().registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		SuperByteBufferCache.getInstance().registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 
-		ShippedResourcePacks.extractFiles("Copper Legacy Pack");
-
 		AllKeys.register();
-		// AllFluids.assignRenderLayers();
 		AllBlockPartials.init();
 		AllStitchedTextures.init();
 
@@ -150,16 +145,16 @@ public class CreateClient {
 		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
 			return;
 
-		MutableComponent text = ComponentUtils.wrapInSquareBrackets(new TextComponent("WARN"))
+		MutableComponent text = ComponentUtils.wrapInSquareBrackets(Components.literal("WARN"))
 			.withStyle(ChatFormatting.GOLD)
-			.append(new TextComponent(
+			.append(Components.literal(
 				" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
 			.withStyle(style -> style
 				.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
 				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-					new TextComponent("Click here to disable this warning"))));
+					Components.literal("Click here to disable this warning"))));
 
-		mc.gui.handleChat(ChatType.CHAT, text, mc.player.getUUID());
+		mc.player.displayClientMessage(text, false);
 	}
 
 }

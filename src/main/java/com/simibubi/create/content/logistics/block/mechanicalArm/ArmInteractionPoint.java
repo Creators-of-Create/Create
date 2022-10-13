@@ -151,7 +151,10 @@ public class ArmInteractionPoint {
 		if (type == null)
 			return null;
 		BlockPos pos = NbtUtils.readBlockPos(nbt.getCompound("Pos")).offset(anchor);
-		ArmInteractionPoint point = type.createPoint(level, pos, level.getBlockState(pos));
+		BlockState state = level.getBlockState(pos);
+		if (!type.canCreatePoint(level, pos, state))
+			return null;
+		ArmInteractionPoint point = type.createPoint(level, pos, state);
 		if (point == null)
 			return null;
 		point.deserialize(nbt, anchor);

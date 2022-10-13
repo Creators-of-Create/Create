@@ -51,6 +51,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
 	public boolean placedTracks;
+	public boolean onMinecartContraption;
 
 	public DeployerFakePlayer(ServerLevel world) {
 		super(world, DEPLOYER_PROFILE);

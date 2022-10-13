@@ -24,6 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -31,6 +33,7 @@ import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.IceBlock;
 import net.minecraft.world.level.block.SlimeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,6 +43,7 @@ import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
@@ -68,8 +72,7 @@ public class BlockHelper {
 		if (blockState.hasProperty(BlockStateProperties.STAGE))
 			return blockState.setValue(BlockStateProperties.STAGE, 0);
 		if (blockState.is(BlockTags.CAULDRONS))
-			return Blocks.CAULDRON.delegate.get()
-				.defaultBlockState();
+			return Blocks.CAULDRON.defaultBlockState();
 		if (blockState.hasProperty(BlockStateProperties.LEVEL_COMPOSTER))
 			return blockState.setValue(BlockStateProperties.LEVEL_COMPOSTER, 0);
 		if (blockState.hasProperty(BlockStateProperties.EXTENDED))
@@ -156,9 +159,11 @@ public class BlockHelper {
 		float effectChance, Consumer<ItemStack> droppedItemCallback) {
 		FluidState fluidState = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
+		
 		if (world.random.nextFloat() < effectChance)
 			world.levelEvent(2001, pos, Block.getId(state));
 		BlockEntity tileentity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+		
 		if (player != null) {
 			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
 			MinecraftForge.EVENT_BUS.post(event);
@@ -178,9 +183,25 @@ public class BlockHelper {
 			&& (player == null || !player.isCreative())) {
 			for (ItemStack itemStack : Block.getDrops(state, (ServerLevel) world, pos, tileentity, player, usedTool))
 				droppedItemCallback.accept(itemStack);
+
+			// Simulating IceBlock#playerDestroy. Not calling method directly as it would drop item
+			// entities as a side-effect
+			if (state.getBlock() instanceof IceBlock
+				&& EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, usedTool) == 0) {
+				if (world.dimensionType()
+					.ultraWarm())
+					return;
+
+				Material material = world.getBlockState(pos.below())
+					.getMaterial();
+				if (material.blocksMotion() || material.isLiquid())
+					world.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
+				return;
+			}
+
 			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
 		}
-
+		
 		world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());
 	}
 
@@ -231,6 +252,8 @@ public class BlockHelper {
 			state = Blocks.COMPOSTER.defaultBlockState();
 		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
 			state = ((IPlantable) state.getBlock()).getPlant(world, target);
+		else if (state.is(BlockTags.CAULDRONS))
+			state = Blocks.CAULDRON.defaultBlockState();
 
 		if (world.dimensionType()
 			.ultraWarm() && state.getFluidState().is(FluidTags.WATER)) {

@@ -8,7 +8,6 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
 import net.createmod.catnip.utility.Couple;
 import net.minecraft.client.model.AgeableListModel;
@@ -114,11 +113,10 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			ms.translate(0, -2.25f / 16f, 0);
 			msr.rotateX(-8.5f);
 			BlockState air = Blocks.AIR.defaultBlockState();
-			FlwSuperByteBuffer.cast(CachedPartialBuffers.partial(AllBlockPartials.TRAIN_HAT, air)).ifPresent(sbb -> sbb
+			CachedPartialBuffers.partial(AllBlockPartials.TRAIN_HAT, air)
 				.forEntityRender()
 				.light(light)
-				.renderInto(ms, buffer.getBuffer(renderType))
-			);
+				.renderInto(ms, buffer.getBuffer(renderType));
 		}
 
 		ms.popPose();

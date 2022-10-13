@@ -8,10 +8,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 
 public class ScrollInput extends AbstractSimiWidget {
 
@@ -35,7 +35,7 @@ public class ScrollInput extends AbstractSimiWidget {
 		max = 1;
 		shiftStep = 5;
 		step = standardStep();
-		formatter = i -> new TextComponent(String.valueOf(i));
+		formatter = i -> Components.literal(String.valueOf(i));
 	}
 
 	public Function<StepContext, Integer> standardStep() {

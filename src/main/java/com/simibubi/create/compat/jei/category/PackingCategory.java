@@ -3,7 +3,6 @@ package com.simibubi.create.compat.jei.category;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
@@ -16,8 +15,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 
 @ParametersAreNonnullByDefault
 public class PackingCategory extends BasinCategory {
@@ -27,20 +24,19 @@ public class PackingCategory extends BasinCategory {
 	private final PackingType type;
 
 	enum PackingType {
-		AUTO_SQUARE, COMPACTING
+		COMPACTING, AUTO_SQUARE
 	}
 
-	public static PackingCategory standard() {
-		return new PackingCategory(PackingType.COMPACTING, AllBlocks.BASIN.get(), 103);
+	public static PackingCategory standard(Info<BasinRecipe> info) {
+		return new PackingCategory(info, PackingType.COMPACTING);
 	}
 
-	public static PackingCategory autoSquare() {
-		return new PackingCategory(PackingType.AUTO_SQUARE, Blocks.CRAFTING_TABLE, 85);
+	public static PackingCategory autoSquare(Info<BasinRecipe> info) {
+		return new PackingCategory(info, PackingType.AUTO_SQUARE);
 	}
 
-	protected PackingCategory(PackingType type, ItemLike icon, int height) {
-		super(type != PackingType.AUTO_SQUARE, doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), icon),
-			emptyBackground(177, height));
+	protected PackingCategory(Info<BasinRecipe> info, PackingType type) {
+		super(info, type != PackingType.AUTO_SQUARE);
 		this.type = type;
 	}
 

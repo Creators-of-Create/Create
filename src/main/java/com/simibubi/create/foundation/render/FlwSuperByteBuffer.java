@@ -11,8 +11,6 @@ import com.jozufozu.flywheel.backend.ShadersModHandler;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
-import com.jozufozu.flywheel.util.transform.TStack;
-import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -39,7 +37,7 @@ import net.minecraft.world.level.Level;
 @SuppressWarnings("unchecked")
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class FlwSuperByteBuffer implements Transform<FlwSuperByteBuffer>, TStack<FlwSuperByteBuffer>, SuperByteBuffer {
+public class FlwSuperByteBuffer implements SuperByteBuffer {
 
 	private final VertexList template;
 	private final IntPredicate shadedPredicate;
@@ -255,31 +253,14 @@ public class FlwSuperByteBuffer implements Transform<FlwSuperByteBuffer>, TStack
 	}
 
 	@Override
-	public FlwSuperByteBuffer translate(float x, float y, float z) {
-		transforms.translate(x, y, z);
-		return this;
-	}
-
-	@Override
 	public FlwSuperByteBuffer multiply(Quaternion quaternion) {
 		transforms.mulPose(quaternion);
 		return this;
 	}
-
-	@Override
-	public FlwSuperByteBuffer rotate(Direction axis, float radians) {
-		return Transform.super.rotate(axis, radians);
-	}
-
 	@Override
 	public FlwSuperByteBuffer scale(float factorX, float factorY, float factorZ) {
 		transforms.scale(factorX, factorY, factorZ);
 		return this;
-	}
-
-	@Override
-	public FlwSuperByteBuffer scale(float factor) {
-		return Transform.super.scale(factor);
 	}
 
 	@Override
@@ -445,13 +426,7 @@ public class FlwSuperByteBuffer implements Transform<FlwSuperByteBuffer>, TStack
 		return this;
 	}
 
-	public FlwSuperByteBuffer forEntityRender() {
-		disableDiffuse();
-		overlay();
-		fullNormalTransform();
-		return this;
-	}
-
+	@Deprecated
 	public static Optional<FlwSuperByteBuffer> cast(SuperByteBuffer buffer) {
 		if (!(buffer instanceof FlwSuperByteBuffer flwBuffer))
 			return Optional.empty();

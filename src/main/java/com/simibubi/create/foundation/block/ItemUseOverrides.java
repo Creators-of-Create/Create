@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.simibubi.create.AllItems;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -21,7 +22,7 @@ public class ItemUseOverrides {
 	private static final Set<ResourceLocation> OVERRIDES = new HashSet<>();
 
 	public static void addBlock(Block block) {
-		OVERRIDES.add(block.getRegistryName());
+		OVERRIDES.add(CatnipServices.REGISTRIES.getKeyOrThrow(block));
 	}
 
 	@SubscribeEvent
@@ -31,8 +32,7 @@ public class ItemUseOverrides {
 
 		BlockState state = event.getWorld()
 				.getBlockState(event.getPos());
-		ResourceLocation id = state.getBlock()
-				.getRegistryName();
+		ResourceLocation id = CatnipServices.REGISTRIES.getKeyOrThrow(state.getBlock());
 
 		if (!OVERRIDES.contains(id))
 			return;

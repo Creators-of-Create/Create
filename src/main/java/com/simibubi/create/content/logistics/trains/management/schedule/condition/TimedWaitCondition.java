@@ -7,12 +7,11 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -60,15 +59,15 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 
 	protected Component formatTime(boolean compact) {
 		if (compact)
-			return new TextComponent(getValue() + getUnit().suffix);
-		return new TextComponent(getValue() + " ").append(CreateLang.translateDirect(getUnit().key));
+			return Components.literal(getValue() + getUnit().suffix);
+		return Components.literal(getValue() + " ").append(CreateLang.translateDirect(getUnit().key));
 	}
 
 	@Override
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
-			new TranslatableComponent(getId().getNamespace() + ".schedule." + type + "." + getId().getPath()),
-			CreateLang.translateDirect("schedule.condition.for_x_time", formatTime(false))
+			Components.translatable(getId().getNamespace() + ".schedule." + type + "." + getId().getPath()),
+				CreateLang.translateDirect("schedule.condition.for_x_time", formatTime(false))
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
 
@@ -117,7 +116,7 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 		String key = "generic." + (showInMinutes ? num == 1 ? "daytime.minute" : "unit.minutes"
 			: num == 1 ? "daytime.second" : "unit.seconds");
 		return CreateLang.translateDirect("schedule.condition." + getId().getPath() + ".status",
-			new TextComponent(num + " ").append(CreateLang.translateDirect(key)));
+			Components.literal(num + " ").append(CreateLang.translateDirect(key)));
 	}
 
 }

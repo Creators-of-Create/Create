@@ -15,12 +15,12 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -82,7 +82,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(CreateLang.translateDirect("schedule.condition.time_of_day.scheduled"),
 			getDigitalDisplay(intData("Hour"), intData("Minute"), false).withStyle(ChatFormatting.DARK_AQUA)
-				.append(new TextComponent(" -> ").withStyle(ChatFormatting.DARK_GRAY))
+				.append(Components.literal(" -> ").withStyle(ChatFormatting.DARK_GRAY))
 				.append(CreateLang
 					.translatedOptions("schedule.condition.time_of_day.rotation", "every_24", "every_12", "every_6",
 						"every_4", "every_3", "every_2", "every_1", "every_0_45", "every_0_30", "every_0_15")

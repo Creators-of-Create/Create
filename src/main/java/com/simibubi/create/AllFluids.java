@@ -10,15 +10,11 @@ import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
@@ -28,17 +24,17 @@ public class AllFluids {
 
 	public static final FluidEntry<PotionFluid> POTION =
 			REGISTRATE.virtualFluid("potion", PotionFluidAttributes::new, PotionFluid::new)
-					.lang(f -> "fluid.create.potion", "Potion")
+					.lang("Potion")
 					.register();
 
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
-			.lang(f -> "fluid.create.tea", "Builder's Tea")
+			.lang("Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
 			.register();
 
 	public static final FluidEntry<ForgeFlowingFluid.Flowing> HONEY =
 			REGISTRATE.standardFluid("honey", NoColorFluidAttributes::new)
-					.lang(f -> "fluid.create.honey", "Honey")
+					.lang("Honey")
 					.attributes(b -> b.viscosity(2000)
 							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)
@@ -54,7 +50,7 @@ public class AllFluids {
 
 	public static final FluidEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
 			REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
-					.lang(f -> "fluid.create.chocolate", "Chocolate")
+					.lang("Chocolate")
 					.tag(AllTags.forgeFluidTag("chocolate"))
 					.attributes(b -> b.viscosity(1500)
 							.density(1400))
@@ -67,16 +63,6 @@ public class AllFluids {
 	// Load this class
 
 	public static void register() {}
-
-	@OnlyIn(Dist.CLIENT)
-	public static void assignRenderLayers() {}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void makeTranslucent(FluidEntry<?> entry) {
-		ForgeFlowingFluid fluid = entry.get();
-		ItemBlockRenderTypes.setRenderLayer(fluid, RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(fluid.getSource(), RenderType.translucent());
-	}
 
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {

@@ -100,7 +100,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 			if (crafter != null) {
 				if (crafter.covered)
 					Block.popResource(worldIn, pos, AllItems.CRAFTER_SLOT_COVER.asStack());
-				crafter.ejectWholeGrid();
+				if (!isMoving)
+					crafter.ejectWholeGrid();
 			}
 
 			for (Direction direction : Iterate.directions) {

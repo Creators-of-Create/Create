@@ -8,7 +8,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
@@ -43,18 +42,17 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));
 
-		FlwSuperByteBuffer.cast(superBuffer).ifPresent(superByteBuffer -> {
-			superByteBuffer
-					.transform(matrices.getModel())
-					.centre()
-					.rotateY(AngleHelper.horizontalAngle(facing))
-					.rotateX(AngleHelper.verticalAngle(facing))
-					.rotateZ(angle)
-					.unCentre()
-					.light(matrices.getWorld(),
-							ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-					.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
-		});
+		superBuffer
+				.transform(matrices.getModel())
+				.centre()
+				.rotateY(AngleHelper.horizontalAngle(facing))
+				.rotateX(AngleHelper.verticalAngle(facing))
+				.rotateZ(angle)
+				.unCentre()
+				.light(matrices.getWorld(),
+						ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+				.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
+
 
 	}
 

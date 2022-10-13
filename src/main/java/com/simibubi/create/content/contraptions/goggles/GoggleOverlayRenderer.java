@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.CatnipClient;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.outliner.Outline;
 import net.createmod.catnip.utility.outliner.Outliner.OutlineEntry;
 import net.createmod.catnip.utility.theme.Color;
@@ -30,7 +31,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -100,7 +100,7 @@ public class GoggleOverlayRenderer {
 
 		if (hasHoveringInformation) {
 			if (!tooltip.isEmpty())
-				tooltip.add(TextComponent.EMPTY);
+				tooltip.add(Components.immutableEmpty());
 			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
 			hoverAddedInformation = hte.addToTooltip(tooltip, mc.player.isShiftKeyDown());
 
@@ -143,11 +143,11 @@ public class GoggleOverlayRenderer {
 			if (!pistonFound)
 				return;
 			if (!tooltip.isEmpty())
-				tooltip.add(TextComponent.EMPTY);
+				tooltip.add(Components.immutableEmpty());
 
 			tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
 				.append(CreateLang.translateDirect("gui.goggles.pole_length"))
-				.append(new TextComponent(" " + poles)));
+				.append(Components.literal(" " + poles)));
 		}
 
 		if (tooltip.isEmpty())

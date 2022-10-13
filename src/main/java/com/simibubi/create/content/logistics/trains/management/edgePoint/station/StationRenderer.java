@@ -10,7 +10,6 @@ import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.createmod.catnip.render.SuperByteBuffer;
@@ -115,18 +114,29 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		if (!te.resolveFlagAngle())
 			return;
 		SuperByteBuffer flagBB = CachedPartialBuffers.partial(flag, te.getBlockState());
-		FlwSuperByteBuffer.cast(flagBB).ifPresent(flwBuffer -> {
-			transformFlag(flwBuffer, te, partialTicks, te.flagYRot, te.flagFlipped);
-			flwBuffer.translate(0.5f / 16, 0, 0)
-					.rotateY(te.flagFlipped ? 0 : 180)
-					.translate(-0.5f / 16, 0, 0);
-		});
+
+		float value = te.flag.getValue(partialTicks);
+		float progress = (float) (Math.pow(Math.min(value * 5, 1), 2));
+		if (te.flag.getChaseTarget() > 0 && !te.flag.settled() && progress == 1) {
+			float wiggleProgress = (value - .2f) / .8f;
+			progress += (Math.sin(wiggleProgress * (2 * Mth.PI) * 4) / 8f) / Math.max(1, 8f * wiggleProgress);
+		}
+
+		float nudge = 1 / 512f;
+		flagBB.centre() // inlined #transformFlag
+				.rotateY(te.flagYRot)
+				.translate(nudge, 9.5f / 16f, te.flagFlipped ? 14f / 16f - nudge : 2f / 16f + nudge)
+				.unCentre()
+				.rotateX((te.flagFlipped ? 1 : -1) * (progress * 90 + 270))
+				.translate(0.5f / 16, 0, 0)
+				.rotateY(te.flagFlipped ? 0 : 180)
+				.translate(-0.5f / 16, 0, 0);
+
 
 		flagBB.light(light).renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
-	public static void transformFlag(Transform<?> flag, StationTileEntity te, float partialTicks, int yRot,
-		boolean flipped) {
+	public static void transformFlag(Transform<?> flag, StationTileEntity te, float partialTicks, int yRot) {
 		float value = te.flag.getValue(partialTicks);
 		float progress = (float) (Math.pow(Math.min(value * 5, 1), 2));
 		if (te.flag.getChaseTarget() > 0 && !te.flag.settled() && progress == 1) {
@@ -137,9 +147,9 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		float nudge = 1 / 512f;
 		flag.centre()
 			.rotateY(yRot)
-			.translate(nudge, 9.5f / 16f, flipped ? 14f / 16f - nudge : 2f / 16f + nudge)
+			.translate(nudge, 9.5f / 16f, 2f / 16f + nudge)
 			.unCentre()
-			.rotateX((flipped ? 1 : -1) * (progress * 90 + 270));
+			.rotateX(-1 * (progress * 90 + 270));
 	}
 
 	@Override

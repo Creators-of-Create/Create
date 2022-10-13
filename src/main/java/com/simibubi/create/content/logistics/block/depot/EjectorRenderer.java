@@ -1,20 +1,19 @@
 package com.simibubi.create.content.logistics.block.depot;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.jozufozu.flywheel.util.transform.Translate;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.IntAttached;
 import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.flw.Rotate;
+import net.createmod.catnip.utility.flw.Translate;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -50,7 +49,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 
 		if (!Backend.canUseInstancing(te.getLevel())) {
 			SuperByteBuffer model = CachedPartialBuffers.partial(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
-			FlwSuperByteBuffer.cast(model).ifPresent(flwBuffer -> applyLidAngle(te, angle, flwBuffer));
+			applyLidAngle(te, angle, model);
 			model.light(light).renderInto(ms, vertexBuilder);
 		}
 
@@ -82,7 +81,16 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 			return;
 
 		ms.pushPose();
-		applyLidAngle(te, angle, msr);
+
+		//inlined #applyLidAngle
+		msr.centre()
+			.rotateY(180 + AngleHelper.horizontalAngle(te.getBlockState()
+				.getValue(EjectorBlock.HORIZONTAL_FACING)))
+			.unCentre()
+			.translate(pivot)
+			.rotateX(-angle)
+			.translateBack(pivot);
+
 		msr.centre()
 			.rotateY(-180 - AngleHelper.horizontalAngle(te.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))

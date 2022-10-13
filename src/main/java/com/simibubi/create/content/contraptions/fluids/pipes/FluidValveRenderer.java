@@ -6,7 +6,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -48,13 +47,11 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 		else
 			pointerRotationOffset = 0;
 
-		FlwSuperByteBuffer.cast(pointer).ifPresent(flwBuffer -> flwBuffer
-				.centre()
+		pointer.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 				.rotateY(pointerRotationOffset + pointerRotation)
-				.unCentre()
-		);
+				.unCentre();
 
 		pointer
 			.light(light)

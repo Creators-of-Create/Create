@@ -5,11 +5,11 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.render.CachedBlockBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.catnip.utility.theme.Color;
 import net.createmod.ponder.utility.WorldTickHolder;
@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.LivingEntity;
@@ -72,21 +71,19 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		ms.translate(-1 / 2f, 10 / 16f, 1f);
 		ms.scale(1, -1, -1);
 
-		FlwSuperByteBuffer.cast(backtank).ifPresent(flwBuffer -> flwBuffer
+		backtank
 				.forEntityRender()
 				.light(light)
-				.renderInto(ms, buffer.getBuffer(renderType))
-		);
+				.renderInto(ms, buffer.getBuffer(renderType));
 
-		FlwSuperByteBuffer.cast(cogs).ifPresent(flwBuffer -> flwBuffer
+		cogs
+				.forEntityRender()
 				.centre()
 				.rotateY(180)
 				.unCentre()
 				.translate(0, 6.5f / 16, 11f / 16)
 				.rotate(Direction.EAST, AngleHelper.rad(2 * WorldTickHolder.getRenderTime(entity.level) % 360))
-				.translate(0, -6.5f / 16, -11f / 16)
-				.forEntityRender()
-		);
+				.translate(0, -6.5f / 16, -11f / 16);
 
 		cogs.light(light).renderInto(ms, buffer.getBuffer(renderType));
 
@@ -134,7 +131,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 
 		poseStack.translate(width / 2 + 90, height - 53, 0);
 
-		Component text = new TextComponent(StringUtil.formatTickDuration(timeLeft * 20));
+		Component text = Components.literal(StringUtil.formatTickDuration(timeLeft * 20));
 		GuiGameElement.of(AllItems.COPPER_BACKTANK.asStack())
 			.at(0, 0)
 			.render(poseStack);

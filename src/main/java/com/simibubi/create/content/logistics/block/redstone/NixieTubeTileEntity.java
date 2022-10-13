@@ -12,11 +12,11 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.DynamicComponent;
 
 import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -82,7 +82,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 
 	public MutableComponent getFullText() {
 		return customText.map(DynamicComponent::get)
-			.orElse(new TextComponent("" + redstoneStrength));
+			.orElse(Components.literal("" + redstoneStrength));
 	}
 
 	public void updateRedstoneStrength(int signalStrength) {

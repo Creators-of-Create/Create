@@ -141,7 +141,7 @@ public class BeltMovementHandler {
 		if (!(entityIn instanceof LivingEntity)
 			|| ((LivingEntity) entityIn).zza == 0 && ((LivingEntity) entityIn).xxa == 0)
 			movement = movement.add(centering);
-		
+
 		float step = entityIn.maxUpStep;
 		if (!isPlayer) 
 			entityIn.maxUpStep = 1;

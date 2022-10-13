@@ -61,8 +61,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		cap.invalidate();
 	}
 
-	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
+	protected void writeFlapsAndSides(CompoundTag compound) {
 		ListTag flapsNBT = new ListTag();
 		for (Direction direction : flaps.keySet())
 			flapsNBT.add(IntTag.valueOf(direction.get3DDataValue()));
@@ -72,7 +71,17 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 		for (Direction direction : sides)
 			sidesNBT.add(IntTag.valueOf(direction.get3DDataValue()));
 		compound.put("Sides", sidesNBT);
+	}
 
+	@Override
+	public void writeSafe(CompoundTag tag) {
+		writeFlapsAndSides(tag);
+		super.writeSafe(tag);
+	}
+
+	@Override
+	public void write(CompoundTag compound, boolean clientPacket) {
+		writeFlapsAndSides(compound);
 		super.write(compound, clientPacket);
 	}
 

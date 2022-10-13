@@ -16,7 +16,6 @@ import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.createmod.catnip.utility.Iterate;
@@ -67,20 +66,19 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 			SegmentAngles segment = segments[i];
 			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(tePosition));
 
-			FlwSuperByteBuffer.cast(CachedPartialBuffers.partial(TRACK_TIE, air)).ifPresent(sbb -> sbb
+			CachedPartialBuffers.partial(TRACK_TIE, air)
 				.mulPose(segment.tieTransform.pose())
 				.mulNormal(segment.tieTransform.normal())
 				.light(light)
-				.renderInto(ms, vb)
-			);
+				.renderInto(ms, vb);
 
 			for (boolean first : Iterate.trueAndFalse) {
 				Pose transform = segment.railTransforms.get(first);
-				FlwSuperByteBuffer.cast(CachedPartialBuffers.partial(first ? TRACK_SEGMENT_LEFT : TRACK_SEGMENT_RIGHT, air)).ifPresent(sbb -> sbb					.mulPose(transform.pose())
-					.mulNormal(transform.normal())
-					.light(light)
-					.renderInto(ms, vb)
-				);
+				CachedPartialBuffers.partial(first ? TRACK_SEGMENT_LEFT : TRACK_SEGMENT_RIGHT, air)
+						.mulPose(transform.pose())
+						.mulNormal(transform.normal())
+						.light(light)
+						.renderInto(ms, vb);
 			}
 		}
 
@@ -101,22 +99,20 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 
 			for (boolean first : Iterate.trueAndFalse) {
 				Pose beamTransform = segment.beams.get(first);
-				FlwSuperByteBuffer.cast(CachedPartialBuffers.partial(GIRDER_SEGMENT_MIDDLE, air)).ifPresent(sbb -> sbb
+				CachedPartialBuffers.partial(GIRDER_SEGMENT_MIDDLE, air)
 					.mulPose(beamTransform.pose())
 					.mulNormal(beamTransform.normal())
 					.light(light)
-					.renderInto(ms, vb)
-				);
+					.renderInto(ms, vb);
 
 				for (boolean top : Iterate.trueAndFalse) {
 					Pose beamCapTransform = segment.beamCaps.get(top)
 						.get(first);
-					FlwSuperByteBuffer.cast(CachedPartialBuffers.partial(top ? GIRDER_SEGMENT_TOP : GIRDER_SEGMENT_BOTTOM, air)).ifPresent(sbb -> sbb
+					CachedPartialBuffers.partial(top ? GIRDER_SEGMENT_TOP : GIRDER_SEGMENT_BOTTOM, air)
 						.mulPose(beamCapTransform.pose())
 						.mulNormal(beamCapTransform.normal())
 						.light(light)
-						.renderInto(ms, vb)
-					);
+						.renderInto(ms, vb);
 				}
 			}
 		}

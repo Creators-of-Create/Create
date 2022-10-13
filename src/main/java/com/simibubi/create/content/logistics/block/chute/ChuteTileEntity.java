@@ -30,6 +30,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -38,7 +39,6 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -719,7 +719,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				.withStyle(ChatFormatting.YELLOW)));
 		if (!item.isEmpty()) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(CreateLang.translateDirect("tooltip.chute.contains", new TranslatableComponent(item.getDescriptionId())
+				.append(CreateLang.translateDirect("tooltip.chute.contains", Components.translatable(item.getDescriptionId())
 					.getString(), item.getCount()))
 				.withStyle(ChatFormatting.GREEN));
 		}

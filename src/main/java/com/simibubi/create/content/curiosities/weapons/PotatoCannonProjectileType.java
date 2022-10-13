@@ -1,15 +1,17 @@
 package com.simibubi.create.content.curiosities.weapons;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -19,11 +21,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class PotatoCannonProjectileType {
 
-	private Set<IRegistryDelegate<Item>> items = new HashSet<>();
+	private List<Supplier<Item>> items = new ArrayList<>();
 
 	private int reloadTicks = 10;
 	private int damage = 1;
@@ -43,7 +44,7 @@ public class PotatoCannonProjectileType {
 	protected PotatoCannonProjectileType() {
 	}
 
-	public Set<IRegistryDelegate<Item>> getItems() {
+	public List<Supplier<Item>> getItems() {
 		return items;
 	}
 
@@ -90,7 +91,7 @@ public class PotatoCannonProjectileType {
 	public boolean preEntityHit(EntityHitResult ray) {
 		return preEntityHit.test(ray);
 	}
-	
+
 	public boolean onEntityHit(EntityHitResult ray) {
 		return onEntityHit.test(ray);
 	}
@@ -148,8 +149,8 @@ public class PotatoCannonProjectileType {
 
 	public static void toBuffer(PotatoCannonProjectileType type, FriendlyByteBuf buffer) {
 		buffer.writeVarInt(type.items.size());
-		for (IRegistryDelegate<Item> delegate : type.items) {
-			buffer.writeResourceLocation(delegate.name());
+		for (Supplier<Item> delegate : type.items) {
+			buffer.writeResourceLocation(CatnipServices.REGISTRIES.getKeyOrThrow(delegate.get()));
 		}
 		buffer.writeInt(type.reloadTicks);
 		buffer.writeInt(type.damage);

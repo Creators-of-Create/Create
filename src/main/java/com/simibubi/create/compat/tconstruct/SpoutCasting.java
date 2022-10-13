@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -40,8 +41,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 		if (handler.getTanks() != 1)
 			return 0;
 
-		ResourceLocation registryName = te.getType()
-			.getRegistryName();
+		ResourceLocation registryName = CatnipServices.REGISTRIES.getKeyOrThrow(te.getType());
 		if (!registryName.equals(TABLE) && !registryName.equals(BASIN))
 			return 0;
 		if (!handler.isFluidValid(0, availableFluid))

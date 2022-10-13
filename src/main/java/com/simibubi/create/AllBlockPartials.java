@@ -161,16 +161,14 @@ public class AllBlockPartials {
 
 	;
 
-	public static final Map<FluidTransportBehaviour.AttachmentTypes, Map<Direction, PartialModel>> PIPE_ATTACHMENTS =
-		new EnumMap<>(FluidTransportBehaviour.AttachmentTypes.class);
+	public static final Map<FluidTransportBehaviour.AttachmentTypes.ComponentPartials, Map<Direction, PartialModel>> PIPE_ATTACHMENTS =
+		new EnumMap<>(FluidTransportBehaviour.AttachmentTypes.ComponentPartials.class);
 
 	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
 
 	static {
-		for (FluidTransportBehaviour.AttachmentTypes type : FluidTransportBehaviour.AttachmentTypes.values()) {
-			if (!type.hasModel())
-				continue;
+		for (FluidTransportBehaviour.AttachmentTypes.ComponentPartials type : FluidTransportBehaviour.AttachmentTypes.ComponentPartials.values()) {
 			Map<Direction, PartialModel> map = new HashMap<>();
 			for (Direction d : Iterate.directions) {
 				String asId = Lang.asId(type.name());

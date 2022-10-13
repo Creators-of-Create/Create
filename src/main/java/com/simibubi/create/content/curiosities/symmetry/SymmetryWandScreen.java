@@ -19,8 +19,8 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -62,9 +62,9 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		labelType = new Label(x + 49, y + 28, TextComponent.EMPTY).colored(0xFFFFFFFF)
+		labelType = new Label(x + 49, y + 28, Components.immutableEmpty()).colored(0xFFFFFFFF)
 			.withShadow();
-		labelAlign = new Label(x + 49, y + 50, TextComponent.EMPTY).colored(0xFFFFFFFF)
+		labelAlign = new Label(x + 49, y + 50, Components.immutableEmpty()).colored(0xFFFFFFFF)
 			.withShadow();
 
 		int state =
@@ -139,7 +139,6 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		ms.scale(16, 16, 16);
 		ms.mulPose(new Vector3f(.3f, 1f, 0f).rotationDegrees(-22.5f));
 		currentElement.applyModelTransform(ms);
-		// RenderSystem.multMatrix(ms.peek().getModel());
 		PartialModelGuiElement.of(currentElement.getModel())
 			.render(ms);
 

@@ -46,7 +46,7 @@ public class AllAdvancements implements DataProvider {
 
 		ROOT = create("root", b -> b.icon(AllItems.BRASS_HAND)
 			.title("Welcome to Create")
-			.description("Here be Contraptions")
+			.description("Here Be Contraptions")
 			.awardedForFree()
 			.special(SILENT)),
 
@@ -60,19 +60,19 @@ public class AllAdvancements implements DataProvider {
 
 		ANDESITE_CASING = create("andesite_casing", b -> b.icon(AllBlocks.ANDESITE_CASING)
 			.title("The Andesite Age")
-			.description("Apply Andesite Alloy to wood creating a basic casing for your machines")
+			.description("Apply Andesite Alloy to stripped wood, creating a basic casing for your machines")
 			.after(ANDESITE)
 			.special(NOISY)),
 
 		PRESS = create("mechanical_press", b -> b.icon(AllBlocks.MECHANICAL_PRESS)
-			.title("Bonk")
+			.title("Bonk!")
 			.description("Create some sheets in a Mechanical Press")
 			.after(ANDESITE_CASING)
 			.special(NOISY)),
 
 		ENCASED_FAN = create("encased_fan", b -> b.icon(AllBlocks.ENCASED_FAN)
-			.title("Wind maker")
-			.description("Place and activate an Encased Fan")
+			.title("Wind Maker")
+			.description("Place and power an Encased Fan")
 			.after(PRESS)),
 
 		FAN_PROCESSING = create("fan_processing", b -> b.icon(AllItems.PROPELLER)
@@ -81,13 +81,13 @@ public class AllAdvancements implements DataProvider {
 			.after(ENCASED_FAN)),
 
 		SAW_PROCESSING = create("saw_processing", b -> b.icon(AllBlocks.MECHANICAL_SAW)
-			.title("Workshop's most feared")
+			.title("Workshop's Most Feared")
 			.description("Use an upright Mechanical Saw to process materials")
 			.after(FAN_PROCESSING)),
 
 		COMPACTING = create("compacting", b -> b.icon(Blocks.IRON_BLOCK)
 			.title("Compactification")
-			.description("Use a Press and a Basin to create less items from more items")
+			.description("Use a Mechanical Press and a Basin to create fewer items from more")
 			.after(SAW_PROCESSING)),
 
 		BELT = create("belt", b -> b.icon(AllItems.BELT_CONNECTOR)
@@ -106,7 +106,7 @@ public class AllAdvancements implements DataProvider {
 			.after(FUNNEL)),
 
 		MIXER = create("mechanical_mixer", b -> b.icon(AllBlocks.MECHANICAL_MIXER)
-			.title("Mixing it up")
+			.title("Mixing It Up")
 			.description("Combine ingredients in a Mechanical Mixer")
 			.after(CHUTE)),
 
@@ -146,28 +146,28 @@ public class AllAdvancements implements DataProvider {
 
 		CONTRAPTION_ACTORS = create("contraption_actors", b -> b.icon(AllBlocks.MECHANICAL_HARVESTER)
 			.title("Moving with Purpose")
-			.description("Create a contraption with drills, saws or harvesters on board")
+			.description("Create a Contraption with drills, saws, or harvesters on board")
 			.after(SUPER_GLUE)),
 
 		PSI = create("portable_storage_interface", b -> b.icon(AllBlocks.PORTABLE_STORAGE_INTERFACE)
-			.title("Drive-by exchange")
-			.description("Use a Portable Storage Interface to take or insert items into a contraption")
+			.title("Drive-By Exchange")
+			.description("Use a Portable Storage Interface to take or insert items into a Contraption")
 			.after(CONTRAPTION_ACTORS)),
 
 		WRENCH_GOGGLES = create("wrench_goggles", b -> b.icon(AllItems.WRENCH)
-			.title("Kitted out")
-			.description("Equip Engineer's goggles and a Wrench")
+			.title("Kitted Out")
+			.description("Equip Engineer's Goggles and a Wrench")
 			.whenIconCollected()
 			.whenItemCollected(AllItems.GOGGLES)
 			.after(PSI)),
 
 		STRESSOMETER = create("stressometer", b -> b.icon(AllBlocks.STRESSOMETER)
 			.title("Stress for Nerds")
-			.description("Get an exact readout with the help of Goggles and a Stressometer")
+			.description("Get an exact readout with the help of Engineer's Goggles and a Stressometer")
 			.after(WRENCH_GOGGLES)),
 
 		CUCKOO_CLOCK = create("cuckoo_clock", b -> b.icon(AllBlocks.CUCKOO_CLOCK)
-			.title("Is it Time?")
+			.title("Is It Time?")
 			.description("Witness your Cuckoo Clock announce bedtime")
 			.after(STRESSOMETER)
 			.special(NOISY)),
@@ -182,7 +182,7 @@ public class AllAdvancements implements DataProvider {
 
 		EJECTOR_MAXED = create("ejector_maxed", b -> b.icon(AllBlocks.WEIGHTED_EJECTOR)
 			.title("Springboard Champion")
-			.description("Get launched for more than 30 blocks by a Weighted Ejector")
+			.description("Get launched more than 30 blocks by a Weighted Ejector")
 			.after(WINDMILL_MAXED)
 			.special(EXPERT)),
 
@@ -200,7 +200,7 @@ public class AllAdvancements implements DataProvider {
 
 		ANVIL_PLOUGH = create("anvil_plough", b -> b.icon(Blocks.CHIPPED_ANVIL)
 			.title("Blacksmith Artillery")
-			.description("Launch an Anvil with Mechanical ploughs")
+			.description("Launch an Anvil with Mechanical Ploughs")
 			.after(CART_PICKUP)
 			.special(EXPERT)),
 
@@ -233,31 +233,31 @@ public class AllAdvancements implements DataProvider {
 		// Copper - Central Branch
 
 		COPPER = create("copper", b -> b.icon(Items.COPPER_INGOT)
-			.title("More Sturdier Rocks")
-			.description("Amass some Copper for your exploits in Fluid Manipulation")
+			.title("Cuprum Bokum")
+			.description("Amass some Copper Ingots for your exploits in fluid manipulation")
 			.whenIconCollected()
 			.after(BLAZE_BURNER)
 			.special(SILENT)),
 
 		COPPER_CASING = create("copper_casing", b -> b.icon(AllBlocks.COPPER_CASING)
 			.title("The Copper Age")
-			.description("Apply Copper Ingots to wood creating a waterproof casing for your machines")
+			.description("Apply Copper Ingots to stripped wood, creating a waterproof casing for your machines")
 			.after(COPPER)
 			.special(NOISY)),
 
 		SPOUT = create("spout", b -> b.icon(AllBlocks.SPOUT)
 			.title("Sploosh")
-			.description("Watch a fluid containing item be filled using a Spout")
+			.description("Watch a fluid-containing item be filled by a Spout")
 			.after(COPPER_CASING)),
 
 		DRAIN = create("drain", b -> b.icon(AllBlocks.ITEM_DRAIN)
 			.title("Tumble Draining")
-			.description("Watch a fluid containing item be emptied by an Item Drain")
+			.description("Watch a fluid-containing item be emptied by an Item Drain")
 			.after(SPOUT)),
 
 		STEAM_ENGINE = create("steam_engine", b -> b.icon(AllBlocks.STEAM_ENGINE)
 			.title("The Powerhouse")
-			.description("Use a Steam engine to generate torque")
+			.description("Use a Steam Engine to generate torque")
 			.after(DRAIN)),
 
 		STEAM_WHISTLE = create("steam_whistle", b -> b.icon(AllBlocks.STEAM_WHISTLE)
@@ -267,12 +267,12 @@ public class AllAdvancements implements DataProvider {
 
 		BACKTANK = create("backtank", b -> b.icon(AllItems.COPPER_BACKTANK)
 			.title("Pressure to Go")
-			.description("Create a copper backtank and make it accumulate Air Pressure")
+			.description("Create a Copper Backtank and make it accumulate air pressure")
 			.after(STEAM_WHISTLE)),
 
 		DIVING_SUIT = create("diving_suit", b -> b.icon(AllItems.DIVING_HELMET)
 			.title("Ready for the Depths")
-			.description("Equip a diving helmet together with your backtank and jump into water")
+			.description("Equip a Diving Helmet and a Copper Backtank, then jump into water")
 			.after(BACKTANK)),
 
 		// Copper - Top Branch
@@ -289,7 +289,7 @@ public class AllAdvancements implements DataProvider {
 
 		WATER_SUPPLY = create("water_supply", b -> b.icon(Items.WATER_BUCKET)
 			.title("Puddle Collector")
-			.description("Use the pulling end of a pipe or pump to collect a water block")
+			.description("Use the pulling end of a Fluid Pipe or Mechanical Pump to collect water")
 			.after(GLASS_PIPE)),
 
 		HOSE_PULLEY = create("hose_pulley", b -> b.icon(AllBlocks.HOSE_PULLEY)
@@ -300,20 +300,20 @@ public class AllAdvancements implements DataProvider {
 		CHOCOLATE_BUCKET = create("chocolate_bucket", b -> b.icon(AllFluids.CHOCOLATE.get()
 			.getBucket())
 			.title("A World of Imagination")
-			.description("Obtain a Bucket of Molten Chocolate")
+			.description("Obtain a bucket of molten chocolate")
 			.whenIconCollected()
 			.after(HOSE_PULLEY)),
 
 		HONEY_DRAIN = create("honey_drain", b -> b.icon(Items.BEEHIVE)
 			.title("Autonomous Bee-Keeping")
-			.description("Use pipes to pull honey from a Bee Nest or Bee House")
+			.description("Use pipes to pull honey from a Bee Nest or Beehive")
 			.after(CHOCOLATE_BUCKET)),
 
 		// Copper - Expert Branch
 
 		HOSE_PULLEY_LAVA = create("hose_pulley_lava", b -> b.icon(AllBlocks.HOSE_PULLEY)
 			.title("Tapping the Mantle")
-			.description("Pump from a body of Lava large enough to be considered infinite")
+			.description("Pump from a body of lava large enough to be considered infinite")
 			.after(COPPER)
 			.special(EXPERT)),
 
@@ -325,7 +325,7 @@ public class AllAdvancements implements DataProvider {
 
 		FOODS = create("foods", b -> b.icon(AllItems.CHOCOLATE_BERRIES)
 			.title("Balanced Diet")
-			.description("Create Chocolate Berries, a Honeyed Apple and a Sweet Roll; all from the same Spout")
+			.description("Create Chocolate Glazed Berries, a Honeyed Apple, and a Sweet Roll all from the same Spout")
 			.after(STEAM_ENGINE_MAXED)
 			.special(EXPERT)),
 
@@ -333,25 +333,25 @@ public class AllAdvancements implements DataProvider {
 
 		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.DIVING_HELMET)
 			.title("Swimming with the Striders")
-			.description("Attempt to take a dive in lava with your Copper Diving Gear")
+			.description("Attempt to take a dive in lava with your diving gear")
 			.after(BACKTANK)
 			.special(SECRET)),
 
 		CHAINED_DRAIN = create("chained_drain", b -> b.icon(AllBlocks.ITEM_DRAIN)
 			.title("On a Roll")
-			.description("Watch an Item move across a row of Item Drains")
+			.description("Watch an item move across a row of Item Drains")
 			.after(BACKTANK)
 			.special(SECRET)),
 
 		CROSS_STREAMS = create("cross_streams", b -> b.icon(Blocks.COBBLESTONE)
-			.title("Don't cross the Streams!")
+			.title("Don't Cross the Streams!")
 			.description("Watch two fluids meet in your pipe network")
 			.after(BACKTANK)
 			.special(SECRET)),
 
 		PIPE_ORGAN = create("pipe_organ", b -> b.icon(AllBlocks.STEAM_WHISTLE)
 			.title("The Pipe Organ")
-			.description("Attach 12 uniquely pitched Steam Whistles to a single fluid tank")
+			.description("Attach 12 uniquely pitched Steam Whistles to a single Fluid Tank")
 			.after(BACKTANK)
 			.special(SECRET)),
 
@@ -359,13 +359,13 @@ public class AllAdvancements implements DataProvider {
 
 		BRASS = create("brass", b -> b.icon(AllItems.BRASS_INGOT)
 			.title("Real Alloys")
-			.description("Create some Brass from Copper and Zinc ingots in your Blaze-powered Mixer")
+			.description("Create Brass Ingots by alloying Copper and Zinc Ingots in your Blaze-heated Mechanical Mixer")
 			.whenIconCollected()
 			.after(DIVING_SUIT)),
 
 		BRASS_CASING = create("brass_casing", b -> b.icon(AllBlocks.BRASS_CASING)
 			.title("The Brass Age")
-			.description("Apply Brass Ingots to wood creating a casing for more sophisticated machines")
+			.description("Apply Brass Ingots to stripped wood, creating a casing for more sophisticated machines")
 			.after(BRASS)
 			.special(NOISY)),
 
@@ -377,7 +377,7 @@ public class AllAdvancements implements DataProvider {
 
 		DEPLOYER = create("deployer", b -> b.icon(AllBlocks.DEPLOYER)
 			.title("Artificial Intelligence")
-			.description("Place and activate a Deployer, the perfect reflection of yourself")
+			.description("Place and power a Deployer, the perfect reflection of yourself")
 			.after(ROSE_QUARTZ)),
 
 		MECHANISM = create("precision_mechanism", b -> b.icon(AllItems.PRECISION_MECHANISM)
@@ -389,12 +389,12 @@ public class AllAdvancements implements DataProvider {
 
 		SPEED_CONTROLLER = create("speed_controller", b -> b.icon(AllBlocks.ROTATION_SPEED_CONTROLLER)
 			.title("Engineers Hate Him!")
-			.description("Fine tune your contraption with a Rotation Speed Controller")
+			.description("Fine-tune your Contraption with a Rotation Speed Controller")
 			.after(MECHANISM)),
 
 		MECHANICAL_ARM = create("mechanical_arm", b -> b.icon(AllBlocks.MECHANICAL_ARM)
 			.title("Busy Hands")
-			.description("Watch your Mechanical Arm transport its first Item")
+			.description("Watch your Mechanical Arm transport its first item")
 			.after(SPEED_CONTROLLER)
 			.special(NOISY)),
 
@@ -425,7 +425,7 @@ public class AllAdvancements implements DataProvider {
 
 		DISPLAY_LINK = create("display_link", b -> b.icon(AllBlocks.DISPLAY_LINK)
 			.title("Big Data")
-			.description("Use a Display link to visualise information")
+			.description("Use a Display Link to visualise information")
 			.after(CLOCKWORK_BEARING)
 			.special(NOISY)),
 
@@ -453,20 +453,20 @@ public class AllAdvancements implements DataProvider {
 		// Brass - Expert Branch
 
 		CRUSHER_MAXED = create("crusher_maxed_0000", b -> b.icon(AllBlocks.CRUSHING_WHEEL)
-			.title("Crushing it")
-			.description("Operate a Pair of Crushing wheels at max speed")
+			.title("Crushing It")
+			.description("Operate a pair of Crushing Wheels at maximum speed")
 			.after(BRASS)
 			.special(EXPERT)),
 
 		ARM_MANY_TARGETS = create("arm_many_targets", b -> b.icon(AllBlocks.MECHANICAL_ARM)
 			.title("Organize-o-Tron")
-			.description("Program a Mechanical Arm with ten or more output locations")
+			.description("Program a Mechanical Arm with 10 or more output locations")
 			.after(CRUSHER_MAXED)
 			.special(EXPERT)),
 
 		POTATO_CANNON_COLLIDE = create("potato_cannon_collide", b -> b.icon(Items.CARROT)
 			.title("Veggie Fireworks")
-			.description("Cause potato cannon projectiles of different types to collide with each other")
+			.description("Cause Potato Cannon projectiles of different types to collide with each other")
 			.after(ARM_MANY_TARGETS)
 			.special(EXPERT)),
 
@@ -491,8 +491,8 @@ public class AllAdvancements implements DataProvider {
 			.special(SECRET)),
 
 		EXTENDO_GRIP_DUAL = create("extendo_grip_dual", b -> b.icon(AllItems.EXTENDO_GRIP)
-			.title("To full Extent")
-			.description("Dual wield Extendo Grips for super-human reach")
+			.title("To Full Extent")
+			.description("Dual-wield Extendo Grips for superhuman reach")
 			.after(CRAFTER)
 			.special(SECRET)),
 
@@ -506,13 +506,13 @@ public class AllAdvancements implements DataProvider {
 
 		STURDY_SHEET = create("sturdy_sheet", b -> b.icon(AllItems.STURDY_SHEET)
 			.title("The Sturdiest Rocks")
-			.description("Assemble a Sturdy Sheet from refining crushed Obsidian")
+			.description("Assemble a Sturdy Sheet by refining Powdered Obsidian")
 			.whenIconCollected()
 			.after(CRUSHING_WHEEL)),
 
 		TRAIN_CASING = create("train_casing_00", b -> b.icon(AllBlocks.RAILWAY_CASING)
 			.title("The Logistical Age")
-			.description("Use Sturdy Sheets to create a Casing for Railway Components")
+			.description("Use Sturdy Sheets to create a casing for railway components")
 			.after(STURDY_SHEET)
 			.special(NOISY)),
 
@@ -524,7 +524,7 @@ public class AllAdvancements implements DataProvider {
 
 		CONDUCTOR = create("conductor", b -> b.icon(AllItems.SCHEDULE)
 			.title("Conductor Instructor")
-			.description("Instruct a Train driver with a Schedule")
+			.description("Instruct a Train driver with a Train Schedule")
 			.after(TRAIN)),
 
 		SIGNAL = create("track_signal", b -> b.icon(AllBlocks.TRACK_SIGNAL)
@@ -541,19 +541,19 @@ public class AllAdvancements implements DataProvider {
 		// Trains - Top Branch
 
 		TRAIN_TRACK = create("track_0", b -> b.icon(AllBlocks.TRACK)
-			.title("A new Gauge")
+			.title("A New Gauge")
 			.description("Obtain some Train Tracks")
 			.whenIconCollected()
 			.after(STURDY_SHEET)),
 
 		TRAIN_WHISTLE = create("train_whistle", b -> b.icon(AllBlocks.STEAM_WHISTLE)
-			.title("Choo choo!")
+			.title("Choo Choo!")
 			.description("Assemble a Steam Whistle to your Train and activate it while driving")
 			.after(TRAIN_TRACK)),
 
 		TRAIN_PORTAL = create("train_portal", b -> b.icon(Blocks.AMETHYST_BLOCK)
 			.title("Dimensional Commuter")
-			.description("Ride a train through a Nether Portal")
+			.description("Ride a Train through a Nether portal")
 			.after(TRAIN_WHISTLE)
 			.special(NOISY)),
 
@@ -561,19 +561,19 @@ public class AllAdvancements implements DataProvider {
 
 		TRACK_CRAFTING = create("track_crafting_factory", b -> b.icon(AllBlocks.MECHANICAL_PRESS)
 			.title("Track Factory")
-			.description("Produce more than 1000 train tracks in the same Mechanical Press")
+			.description("Produce more than 1000 Train Tracks with the same Mechanical Press")
 			.after(STURDY_SHEET)
 			.special(EXPERT)),
 
 		LONG_BEND = create("long_bend", b -> b.icon(AllBlocks.TRACK)
 			.title("The Longest Bend")
-			.description("Create a Curved track section that spans more than 30 blocks in length")
+			.description("Create a curved track section that spans more than 30 blocks in length")
 			.after(TRACK_CRAFTING)
 			.special(EXPERT)),
 
 		LONG_TRAIN = create("long_train", b -> b.icon(Items.MINECART)
 			.title("Ambitious Endeavours")
-			.description("Create a Train with at least six Carriages")
+			.description("Create a Train with at least 6 carriages")
 			.after(LONG_BEND)
 			.special(EXPERT)),
 
@@ -587,19 +587,19 @@ public class AllAdvancements implements DataProvider {
 
 		TRAIN_ROADKILL = create("train_roadkill", b -> b.icon(Items.DIAMOND_SWORD)
 			.title("Road Kill")
-			.description("Run over an Enemy with your Train")
+			.description("Run over an enemy with your Train")
 			.after(SIGNAL)
 			.special(SECRET)),
 
 		RED_SIGNAL = create("red_signal", b -> b.icon(AllBlocks.TRACK_SIGNAL)
 			.title("Expert Driver")
-			.description("Run a Red Signal with your Train")
+			.description("Run a red Train Signal")
 			.after(SIGNAL)
 			.special(SECRET)),
 
 		TRAIN_CRASH = create("train_crash", b -> b.icon(AllItems.INCOMPLETE_TRACK)
 			.title("Terrible Service")
-			.description("Witness a Train Crash as a Passenger")
+			.description("Witness a Train crash as a passenger")
 			.after(SIGNAL)
 			.special(SECRET)),
 

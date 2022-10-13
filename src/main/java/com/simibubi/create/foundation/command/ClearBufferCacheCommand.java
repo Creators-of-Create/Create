@@ -4,9 +4,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.CreateClient;
 
 import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -19,7 +19,7 @@ public class ClearBufferCacheCommand {
 			.executes(ctx -> {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClearBufferCacheCommand::execute);
 				ctx.getSource()
-					.sendSuccess(new TextComponent("Cleared rendering buffers."), true);
+					.sendSuccess(Components.literal("Cleared rendering buffers."), true);
 				return 1;
 			});
 	}

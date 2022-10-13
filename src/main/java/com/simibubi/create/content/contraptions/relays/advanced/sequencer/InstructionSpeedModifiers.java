@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public enum InstructionSpeedModifiers {
 
@@ -25,7 +25,7 @@ public enum InstructionSpeedModifiers {
 		value = modifier;
 	}
 	private InstructionSpeedModifiers(int modifier, String label) {
-		this.label = new TextComponent(label);
+		this.label = Components.literal(label);
 		translationKey = "gui.sequenced_gearshift.speed." + Lang.asId(name());
 		value = modifier;
 	}

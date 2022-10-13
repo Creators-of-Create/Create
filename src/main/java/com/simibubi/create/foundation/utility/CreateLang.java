@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.simibubi.create.Create;
 
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.lang.Lang;
 import net.createmod.catnip.utility.lang.LangBuilder;
 import net.createmod.catnip.utility.lang.LangNumberFormat;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,8 +21,8 @@ public class CreateLang extends Lang {
 	 * legacy-ish. Use CreateLang.translate and other builder methods where possible
 	 *
 	 */
-	public static TranslatableComponent translateDirect(String key, Object... args) {
-		return new TranslatableComponent(Create.ID + "." + key, LangBuilder.resolveBuilders(args));
+	public static MutableComponent translateDirect(String key, Object... args) {
+		return Components.translatable(Create.ID + "." + key, LangBuilder.resolveBuilders(args));
 	}
 
 	public static List<Component> translatedOptions(String prefix, String... keys) {
@@ -30,6 +31,8 @@ public class CreateLang extends Lang {
 			result.add(translate((prefix != null ? prefix + "." : "") + key).component());
 		return result;
 	}
+
+	//
 
 	public static LangBuilder builder() {
 		return new LangBuilder(Create.ID);

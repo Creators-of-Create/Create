@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.components.saw;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import java.util.Optional;
-
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
@@ -16,7 +14,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
@@ -192,22 +189,16 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				sBuffer = CachedPartialBuffers.partial(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
-		Optional<FlwSuperByteBuffer> optional = FlwSuperByteBuffer.cast(sBuffer);
-		if (optional.isEmpty())
-			return;
-
-		FlwSuperByteBuffer superBuffer = optional.get();
-
-		superBuffer.transform(matrices.getModel())
+		sBuffer.transform(matrices.getModel())
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing));
 
 		if (!SawBlock.isHorizontal(state)) {
-			superBuffer.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
+			sBuffer.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
 		}
 
-		superBuffer.unCentre()
+		sBuffer.unCentre()
 			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
 	}

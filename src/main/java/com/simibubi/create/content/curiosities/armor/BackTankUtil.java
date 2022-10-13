@@ -1,17 +1,17 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllEnchantments;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
@@ -28,7 +28,7 @@ public class BackTankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
 		for (ItemStack itemStack : entity.getArmorSlots())
-			if (AllItems.COPPER_BACKTANK.isIn(itemStack))
+			if (AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
 				return itemStack;
 		return ItemStack.EMPTY;
 	}
@@ -70,9 +70,9 @@ public class BackTankUtil {
 
 		player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 40, 10));
 		player.connection.send(new ClientboundSetSubtitleTextPacket(
-			new TextComponent("\u26A0 ").withStyle(depleted ? ChatFormatting.RED : ChatFormatting.GOLD)
+			Components.literal("\u26A0 ").withStyle(depleted ? ChatFormatting.RED : ChatFormatting.GOLD)
 				.append(component.withStyle(ChatFormatting.GRAY))));
-		player.connection.send(new ClientboundSetTitleTextPacket(new TextComponent("")));
+		player.connection.send(new ClientboundSetTitleTextPacket(Components.immutableEmpty()));
 	}
 
 	public static int maxAir(ItemStack backtank) {

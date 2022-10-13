@@ -425,9 +425,7 @@ public class BlockStateGen {
 			String L = "l";
 			String R = "r";
 
-			String NONE = "none";
-
-			List<String> orientations = ImmutableList.of(LU, RU, LD, RD, LR, UD, U, D, L, R, NONE);
+			List<String> orientations = ImmutableList.of(LU, RU, LD, RD, LR, UD, U, D, L, R);
 			Map<String, Pair<Integer, Integer>> uvs = ImmutableMap.<String, Pair<Integer, Integer>>builder()
 				.put(LU, Pair.of(12, 4))
 				.put(RU, Pair.of(8, 4))
@@ -439,7 +437,6 @@ public class BlockStateGen {
 				.put(D, Pair.of(0, 0))
 				.put(L, Pair.of(4, 0))
 				.put(R, Pair.of(0, 4))
-				.put(NONE, Pair.of(12, 8))
 				.build();
 
 			Map<Axis, ResourceLocation> coreTemplates = new IdentityHashMap<>();
@@ -485,16 +482,6 @@ public class BlockStateGen {
 			}
 
 			MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());
-			for (Direction d : Iterate.directions) {
-				ModelFile end = p.models()
-					.getExistingFile(p.modLoc(path + "/connection/" + d.getSerializedName()));
-				builder.part()
-					.modelFile(end)
-					.addModel()
-					.condition(FluidPipeBlock.PROPERTY_BY_DIRECTION.get(d), true)
-					.end();
-			}
-
 			for (Axis axis : Iterate.axes) {
 				putPart(coreModels, builder, axis, LU, true, false, true, false);
 				putPart(coreModels, builder, axis, RU, true, false, false, true);
@@ -506,7 +493,6 @@ public class BlockStateGen {
 				putPart(coreModels, builder, axis, LR, false, false, true, true);
 				putPart(coreModels, builder, axis, L, false, false, true, false);
 				putPart(coreModels, builder, axis, R, false, false, false, true);
-				putPart(coreModels, builder, axis, NONE, false, false, false, false);
 			}
 		};
 	}

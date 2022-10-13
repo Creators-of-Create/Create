@@ -2,7 +2,7 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "appliedenergistics2"
+			"modid": "ae2"
 		}
 	],
 	"type": "create:milling",
@@ -13,7 +13,7 @@
     ], 
 	"results": [
 		{
-			"item": "appliedenergistics2:certus_quartz_dust",
+			"item": "ae2:certus_quartz_dust",
 			"count": 1
 		}
 	],

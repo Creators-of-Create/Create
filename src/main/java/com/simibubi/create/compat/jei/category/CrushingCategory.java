@@ -6,8 +6,6 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrushingWheels;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -25,13 +23,8 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 
 	private final AnimatedCrushingWheels crushingWheels = new AnimatedCrushingWheels();
 
-	public CrushingCategory() {
-		super(doubleItemIcon(AllBlocks.CRUSHING_WHEEL.get(), AllItems.CRUSHED_GOLD.get()), emptyBackground(177, 100));
-	}
-
-	@Override
-	public Class<? extends AbstractCrushingRecipe> getRecipeClass() {
-		return AbstractCrushingRecipe.class;
+	public CrushingCategory(Info<AbstractCrushingRecipe> info) {
+		super(info);
 	}
 
 	@Override

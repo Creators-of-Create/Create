@@ -10,11 +10,11 @@ import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -49,8 +49,8 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 	public List<Component> getTitleAs(String type) {
 		int target = getTarget();
 		return ImmutableList.of(CreateLang.translateDirect("schedule.condition.player_count.seated",
-			CreateLang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
-				new TextComponent("" + target).withStyle(ChatFormatting.DARK_AQUA))));
+				CreateLang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
+				Components.literal("" + target).withStyle(ChatFormatting.DARK_AQUA))));
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -40,7 +41,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.patternLine(" P ")
 				.patternLine(" B ")
 				.patternLine(" O ")),
-		
+
 		EXTENDO_GRIP = create(AllItems.EXTENDO_GRIP::get).returns(1)
 			.recipe(b -> b.key('L', Ingredient.of(I.brass()))
 				.key('R', I.precisionMechanism())
@@ -97,9 +98,8 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 			return register(consumer -> {
 				MechanicalCraftingRecipeBuilder b =
 					builder.apply(MechanicalCraftingRecipeBuilder.shapedRecipe(result.get(), amount));
-				ResourceLocation location = Create.asResource("mechanical_crafting/" + result.get()
-					.asItem()
-					.getRegistryName()
+				ResourceLocation location = Create.asResource("mechanical_crafting/" + CatnipServices.REGISTRIES.getKeyOrThrow(result.get()
+								.asItem())
 					.getPath() + suffix);
 				b.build(consumer, location);
 			});

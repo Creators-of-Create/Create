@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.AxeItem;
@@ -57,7 +58,7 @@ public class LogStrippingFakeRecipes {
 	}
 
 	private static ManualApplicationRecipe create(Item fromItem, Item toItem, ItemStack axe) {
-		ResourceLocation rn = toItem.getRegistryName();
+		ResourceLocation rn = CatnipServices.REGISTRIES.getKeyOrThrow(toItem);
 		return new ProcessingRecipeBuilder<>(ManualApplicationRecipe::new,
 			new ResourceLocation(rn.getNamespace(), rn.getPath() + "_via_vanilla_stripping")).require(fromItem)
 				.require(Ingredient.of(axe))

@@ -6,7 +6,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -27,13 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;
 @ParametersAreNonnullByDefault
 public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicationRecipe> {
 
-	public ItemApplicationCategory() {
-		super(itemIcon(AllItems.BRASS_HAND.get()), emptyBackground(177, 60));
-	}
-
-	@Override
-	public Class<ItemApplicationRecipe> getRecipeClass() {
-		return ItemApplicationRecipe.class;
+	public ItemApplicationCategory(Info<ItemApplicationRecipe> info) {
+		super(info);
 	}
 
 	@Override
@@ -65,7 +59,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 
 		Optional<ItemStack> displayedIngredient = recipeSlotsView.getSlotViews()
 			.get(0)
-			.getDisplayedIngredient(VanillaTypes.ITEM);
+			.getDisplayedIngredient(VanillaTypes.ITEM_STACK);
 		if (displayedIngredient.isEmpty())
 			return;
 

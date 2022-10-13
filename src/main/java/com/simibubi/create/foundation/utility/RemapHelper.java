@@ -53,6 +53,7 @@ import java.util.Map;
 
 import com.simibubi.create.Create;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -96,8 +97,8 @@ public class RemapHelper {
 		reMap.put("adjustable_pulse_repeater", PULSE_REPEATER.getId());
 		reMap.put("adjustable_repeater", PULSE_REPEATER.getId());
 
-		reMap.put("copper_block", Blocks.COPPER_BLOCK.getRegistryName());
-		reMap.put("copper_ore", Blocks.COPPER_ORE.getRegistryName());
+		reMap.put("copper_block", CatnipServices.REGISTRIES.getKeyOrThrow(Blocks.COPPER_BLOCK));
+		reMap.put("copper_ore", CatnipServices.REGISTRIES.getKeyOrThrow(Blocks.COPPER_ORE));
 
 		reMap.put("acacia_glass", ACACIA_WINDOW.getId());
 		reMap.put("acacia_glass_pane", ACACIA_WINDOW_PANE.getId());
@@ -146,7 +147,7 @@ public class RemapHelper {
 		reMap.put("weathered_limestone_slab", asResource("polished_cut_tuff_slab"));
 		reMap.put("gabbro_stairs", asResource("polished_cut_dripstone_stairs"));
 		reMap.put("limestone_layers", asResource("layered_limestone"));
-		
+
 		reMap.put("gabbro", new ResourceLocation("minecraft:dripstone_block"));
 		reMap.put("dolomite", new ResourceLocation("minecraft:calcite"));
 		reMap.put("weathered_limestone", new ResourceLocation("minecraft:tuff"));
@@ -166,6 +167,8 @@ public class RemapHelper {
 		remapPaletteBlock("dark_scoria", "scorchia", false);
 		remapPaletteBlock("dolomite", "calcite", false);
 		remapPaletteBlock("weathered_limestone", "tuff", false);
+
+		reMap.put("natural_scoria", asResource("scoria"));
 
 		reMap.put("empty_blueprint", SCHEMATIC.getId());
 		reMap.put("gold_sheet", GOLDEN_SHEET.getId());

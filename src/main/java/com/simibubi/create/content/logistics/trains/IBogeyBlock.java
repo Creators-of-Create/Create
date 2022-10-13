@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -63,7 +64,7 @@ public interface IBogeyBlock extends IWrenchable {
 	@Override
 	default BlockState getRotatedBlockState(BlockState state, Direction targetedFace) {
 		Block block = state.getBlock();
-		int indexOf = BOGEYS.indexOf(block.getRegistryName());
+		int indexOf = BOGEYS.indexOf(CatnipServices.REGISTRIES.getKeyOrThrow(block));
 		if (indexOf == -1)
 			return state;
 

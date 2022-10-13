@@ -7,13 +7,13 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 
 import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.ForgeConfig;
 
 public class SimpleCreateActions {
@@ -24,7 +24,7 @@ public class SimpleCreateActions {
 			return;
 
 		if (value.equals("info")) {
-			Component text = new TextComponent("Rainbow Debug Utility is currently: ")
+			Component text = Components.literal("Rainbow Debug Utility is currently: ")
 					.append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
 			player.displayClientMessage(text, false);
 			return;
@@ -32,7 +32,7 @@ public class SimpleCreateActions {
 
 		AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
 		Component text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
-				.append(new TextComponent(" Rainbow Debug Utility").withStyle(ChatFormatting.WHITE));
+				.append(Components.literal(" Rainbow Debug Utility").withStyle(ChatFormatting.WHITE));
 		player.displayClientMessage(text, false);
 	}
 
@@ -53,7 +53,7 @@ public class SimpleCreateActions {
 	public static void fabulousWarning(String value) {
 		AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
 		Minecraft.getInstance().gui.handleChat(ChatType.CHAT,
-				new TextComponent("Disabled Fabulous graphics warning"),
+				Components.literal("Disabled Fabulous graphics warning"),
 				Minecraft.getInstance().player.getUUID());
 	}
 
@@ -104,8 +104,8 @@ public class SimpleCreateActions {
 	}
 
 	private static MutableComponent boolToText(boolean b) {
-		return b ? new TextComponent("enabled").withStyle(ChatFormatting.DARK_GREEN)
-				: new TextComponent("disabled").withStyle(ChatFormatting.RED);
+		return b ? Components.literal("enabled").withStyle(ChatFormatting.DARK_GREEN)
+				: Components.literal("disabled").withStyle(ChatFormatting.RED);
 	}
 
 }

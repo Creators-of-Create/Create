@@ -5,7 +5,8 @@ license="MIT"
 
 [[mods]]
 modId="create"
-version="0.5.0c"
+# The Implementation-Version property in the jar's MANIFEST.MF file will be used as the mod version at runtime 
+version="${file.jarVersion}"
 displayName="Create"
 #updateJSONURL=""
 displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
@@ -18,7 +19,7 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="forge"
     mandatory=true
-    versionRange="[40.1.0,)"
+    versionRange="[40.1.60,)"
     ordering="NONE"
     side="BOTH"
 
@@ -32,6 +33,6 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="flywheel"
     mandatory=true
-    versionRange="[1.18-0.6.4,1.18-0.6.5)"
+    versionRange="[0.6.5,0.6.7)"
     ordering="AFTER"
     side="CLIENT"

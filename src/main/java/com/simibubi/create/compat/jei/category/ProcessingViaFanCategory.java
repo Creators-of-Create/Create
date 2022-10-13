@@ -16,7 +16,6 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -28,12 +27,8 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	protected static final int SCALE = 24;
 
-	public ProcessingViaFanCategory(IDrawable icon) {
-		this(178, icon);
-	}
-
-	public ProcessingViaFanCategory(int width, IDrawable icon) {
-		super(icon, emptyBackground(width, 72));
+	public ProcessingViaFanCategory(Info<T> info) {
+		super(info);
 	}
 
 	public static Supplier<ItemStack> getFan(String name) {
@@ -95,8 +90,8 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 
 	public static abstract class MultiOutput<T extends ProcessingRecipe<?>> extends ProcessingViaFanCategory<T> {
 
-		public MultiOutput(IDrawable icon) {
-			super(icon);
+		public MultiOutput(Info<T> info) {
+			super(info);
 		}
 
 		@Override

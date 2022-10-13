@@ -27,6 +27,7 @@ import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.createmod.catnip.gui.widget.ElementWidget;
 import net.createmod.catnip.utility.Couple;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.ponder.foundation.ui.PonderTagScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -35,7 +36,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -137,7 +137,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 			int rows = stats.maxRows();
 			int startIndex = Math.min(te.targetLine, rows);
 
-			targetLineLabel = new Label(x + 65, y + 109, TextComponent.EMPTY).withShadow();
+			targetLineLabel = new Label(x + 65, y + 109, Components.immutableEmpty()).withShadow();
 			targetLineLabel.text = target.getLineOptionText(startIndex);
 
 			if (rows > 1) {
@@ -189,7 +189,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		if (!sources.isEmpty()) {
 			int startIndex = Math.max(sources.indexOf(te.activeSource), 0);
 
-			sourceTypeLabel = new Label(x + 65, y + 30, TextComponent.EMPTY).withShadow();
+			sourceTypeLabel = new Label(x + 65, y + 30, Components.immutableEmpty()).withShadow();
 			sourceTypeLabel.text = sources.get(startIndex)
 					.getName();
 

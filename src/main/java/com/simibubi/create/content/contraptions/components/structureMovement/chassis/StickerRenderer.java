@@ -4,7 +4,6 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.createmod.catnip.render.SuperByteBuffer;
@@ -38,17 +37,14 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 			offset = te.piston.getValue(WorldTickHolder.getPartialTicks(te.getLevel()));
 
 		Direction facing = state.getValue(StickerBlock.FACING);
-		FlwSuperByteBuffer.cast(head).ifPresent(flwBuffer -> flwBuffer
-				.nudge(te.hashCode())
+		head.nudge(te.hashCode())
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing) + 90)
 				.unCentre()
-				.translate(0, (offset * offset) * 4 / 16f, 0));
-
-
-		head.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+				.translate(0, (offset * offset) * 4 / 16f, 0)
+				.light(light)
+				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 }

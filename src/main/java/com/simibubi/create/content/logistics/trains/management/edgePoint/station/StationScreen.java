@@ -19,11 +19,11 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.gui.UIRenderHelper;
 import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 
 public class StationScreen extends AbstractStationScreen {
@@ -58,7 +58,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		onTextChanged = s -> nameBox.x = nameBoxX(s, nameBox);
 		nameBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y + 4, background.getWidth() - 20, 10,
-			new TextComponent(station.name));
+			Components.literal(station.name));
 		nameBox.setBordered(false);
 		nameBox.setMaxLength(25);
 		nameBox.setTextColor(0x442000);
@@ -92,7 +92,7 @@ public class StationScreen extends AbstractStationScreen {
 		addRenderableWidget(dropScheduleButton);
 
 		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
-		trainNameBox = new EditBox(font, x + 23, y + 47, background.getWidth() - 75, 10, new TextComponent(""));
+		trainNameBox = new EditBox(font, x + 23, y + 47, background.getWidth() - 75, 10, Components.immutableEmpty());
 		trainNameBox.setBordered(false);
 		trainNameBox.setMaxLength(35);
 		trainNameBox.setTextColor(0xC6C6C6);

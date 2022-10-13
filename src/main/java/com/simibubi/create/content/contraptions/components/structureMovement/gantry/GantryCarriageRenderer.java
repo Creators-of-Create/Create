@@ -6,7 +6,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
@@ -57,16 +56,14 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 
 		SuperByteBuffer cogs = CachedPartialBuffers.partial(AllBlockPartials.GANTRY_COGS, state);
 		float finalAngleForTe = angleForTe;
-		FlwSuperByteBuffer.cast(cogs).ifPresent(flwBuffer -> flwBuffer
-				.centre()
+		cogs.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 				.rotateY(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
 				.rotateX(-finalAngleForTe)
 				.translate(0, 9 / 16f, 0)
-				.unCentre()
-		);
+				.unCentre();
 
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

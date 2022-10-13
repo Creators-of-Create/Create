@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 
 public enum Tools {
 
@@ -32,7 +32,7 @@ public enum Tools {
 		return tool;
 	}
 
-	public TranslatableComponent getDisplayName() {
+	public MutableComponent getDisplayName() {
 		return CreateLang.translateDirect("schematic.tool." + Lang.asId(name()));
 	}
 

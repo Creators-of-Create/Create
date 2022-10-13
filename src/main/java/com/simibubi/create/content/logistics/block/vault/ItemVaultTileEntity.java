@@ -112,6 +112,8 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		lastKnownPos = worldPosition;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
 	public ItemVaultTileEntity getControllerTE() {
 		if (isController())
 			return this;

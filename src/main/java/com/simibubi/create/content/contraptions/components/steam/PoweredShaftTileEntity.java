@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.block.BlockStressValues;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
@@ -81,7 +82,7 @@ public class PoweredShaftTileEntity extends GeneratingKineticTileEntity {
 		if (enginePos != null && capacityKey != null) {
 			compound.put("EnginePos", NbtUtils.writeBlockPos(enginePos));
 			compound.putFloat("EnginePower", engineEfficiency);
-			compound.putString("EngineType", capacityKey.getRegistryName()
+			compound.putString("EngineType", CatnipServices.REGISTRIES.getKeyOrThrow(capacityKey)
 				.toString());
 		}
 		super.write(compound, clientPacket);

@@ -64,6 +64,7 @@ import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.createmod.catnip.render.DefaultSuperRenderTypeBufferImpl;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.worldWrappers.WrappedClientWorld;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -71,7 +72,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -82,7 +82,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
@@ -164,9 +163,6 @@ public class ClientEvents {
 		CameraAngleAnimationService.tick();
 		TrainHUD.tick();
 	}
-
-	@SubscribeEvent
-	public static void onRenderSelection(DrawSelectionEvent event) {}
 
 	@SubscribeEvent
 	public static void onJoin(ClientPlayerNetworkEvent.LoggedInEvent event) {
@@ -256,7 +252,7 @@ public class ClientEvents {
 				List<Component> kineticStats = ItemDescription.getKineticStats(item.getBlock());
 				if (!kineticStats.isEmpty()) {
 					event.getToolTip()
-						.add(new TextComponent(""));
+						.add(Components.immutableEmpty());
 					event.getToolTip()
 						.addAll(kineticStats);
 				}
@@ -295,33 +291,33 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
+	public static void getFogDensity(EntityViewRenderEvent.RenderFogEvent event) {
 		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
-		FluidState fluidstate = level.getFluidState(blockPos);
-		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+		FluidState fluidState = level.getFluidState(blockPos);
+		if (info.getPosition().y > blockPos.getY() + fluidState.getHeight(level, blockPos))
 			return;
 
-		Fluid fluid = fluidstate.getType();
+		Fluid fluid = fluidState.getType();
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-			event.setDensity(5f);
+			event.scaleFarPlaneDistance(1f/32f);
 			event.setCanceled(true);
 			return;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-			event.setDensity(1.5f);
+			event.scaleFarPlaneDistance(1f/8f);
 			event.setCanceled(true);
 			return;
 		}
 
 		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
 			.isWornBy(Minecraft.getInstance().cameraEntity)) {
-			event.setDensity(300f);
+			event.scaleFarPlaneDistance(6.25f);
 			event.setCanceled(true);
 			return;
 		}
@@ -332,24 +328,26 @@ public class ClientEvents {
 		Camera info = event.getCamera();
 		Level level = Minecraft.getInstance().level;
 		BlockPos blockPos = info.getBlockPosition();
-		FluidState fluidstate = level.getFluidState(blockPos);
-		if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
+		FluidState fluidState = level.getFluidState(blockPos);
+		if (info.getPosition().y > blockPos.getY() + fluidState.getHeight(level, blockPos))
 			return;
 
-		Fluid fluid = fluidstate.getType();
+		Fluid fluid = fluidState.getType();
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-			event.setRed(98 / 256f);
-			event.setGreen(32 / 256f);
-			event.setBlue(32 / 256f);
+			event.setRed(98 / 255f);
+			event.setGreen(32 / 255f);
+			event.setBlue(32 / 255f);
+			return;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-			event.setRed(234 / 256f);
-			event.setGreen(174 / 256f);
-			event.setBlue(47 / 256f);
+			event.setRed(234 / 255f);
+			event.setGreen(174 / 255f);
+			event.setBlue(47 / 255f);
+			return;
 		}
 	}
 
@@ -378,10 +376,10 @@ public class ClientEvents {
 		}
 
 		@SubscribeEvent
-		public static void loadCompleted(FMLLoadCompleteEvent event) {
+		public static void onLoadComplete(FMLLoadCompleteEvent event) {
 			ModContainer createContainer = ModList.get()
 				.getModContainerById(Create.ID)
-				.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
+				.orElseThrow(() -> new IllegalStateException("Create mod container missing on LoadComplete"));
 			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
 				() -> new ConfigGuiHandler.ConfigGuiFactory(
 					(mc, previousScreen) -> new BaseConfigScreen(previousScreen, Create.ID)));

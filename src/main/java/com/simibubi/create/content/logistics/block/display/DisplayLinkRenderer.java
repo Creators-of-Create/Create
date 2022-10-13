@@ -4,7 +4,6 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
@@ -56,12 +55,11 @@ public class DisplayLinkRenderer extends SafeTileEntityRenderer<DisplayLinkTileE
 			.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
 		SuperByteBuffer partial = CachedPartialBuffers.partial(AllBlockPartials.DISPLAY_LINK_GLOW, blockState);
-		FlwSuperByteBuffer.cast(partial).ifPresent(flwBuffer -> flwBuffer
+		partial
 				.light(LightTexture.FULL_BRIGHT)
 				.color(color, color, color, 255)
 				.disableDiffuse()
-				.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()))
-		);
+				.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
 
 		ms.popPose();
 	}

@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.item.render.CustomItemModels;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItems;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -78,7 +79,7 @@ public class ModelSwapper {
 
 	public static List<ModelResourceLocation> getAllBlockStateModelLocations(Block block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
-		ResourceLocation blockRl = block.getRegistryName();
+		ResourceLocation blockRl = CatnipServices.REGISTRIES.getKeyOrThrow(block);
 		block.getStateDefinition()
 			.getPossibleStates()
 			.forEach(state -> {
@@ -88,7 +89,7 @@ public class ModelSwapper {
 	}
 
 	public static ModelResourceLocation getItemModelLocation(Item item) {
-		return new ModelResourceLocation(item.getRegistryName(), "inventory");
+		return new ModelResourceLocation(CatnipServices.REGISTRIES.getKeyOrThrow(item), "inventory");
 	}
 
 }

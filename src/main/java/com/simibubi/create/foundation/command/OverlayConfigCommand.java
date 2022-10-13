@@ -5,9 +5,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 
 import net.createmod.catnip.net.ClientboundSimpleActionPacket;
 import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -27,9 +27,9 @@ public class OverlayConfigCommand {
 										new ClientboundSimpleActionPacket("overlayReset", "")));
 
 					ctx.getSource()
-						.sendSuccess(new TextComponent("reset overlay offset"), true);
+						.sendSuccess(Components.literal("reset overlay offset"), true);
 
-						return 1;
+						return Command.SINGLE_SUCCESS;
 					})
 				)
 				.executes(ctx -> {
@@ -41,7 +41,7 @@ public class OverlayConfigCommand {
 									new ClientboundSimpleActionPacket("overlayScreen", "")));
 
 					ctx.getSource()
-							.sendSuccess(new TextComponent("window opened"), true);
+							.sendSuccess(Components.literal("window opened"), true);
 
 				return Command.SINGLE_SUCCESS;
 			});

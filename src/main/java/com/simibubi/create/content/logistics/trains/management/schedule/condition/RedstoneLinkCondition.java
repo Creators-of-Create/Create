@@ -12,12 +12,12 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Pair;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -54,13 +54,13 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 	public List<Component> getTitleAs(String type) {
 		return ImmutableList.of(
 			CreateLang.translateDirect("schedule.condition.redstone_link.frequency_" + (lowActivation() ? "unpowered" : "powered")),
-			new TextComponent(" #1 ").withStyle(ChatFormatting.GRAY)
+			Components.literal(" #1 ").withStyle(ChatFormatting.GRAY)
 				.append(freq.getFirst()
 					.getStack()
 					.getHoverName()
 					.copy()
 					.withStyle(ChatFormatting.DARK_AQUA)),
-			new TextComponent(" #2 ").withStyle(ChatFormatting.GRAY)
+			Components.literal(" #2 ").withStyle(ChatFormatting.GRAY)
 				.append(freq.getSecond()
 					.getStack()
 					.getHoverName()

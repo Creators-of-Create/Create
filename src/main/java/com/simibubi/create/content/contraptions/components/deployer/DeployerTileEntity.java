@@ -12,6 +12,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
@@ -22,10 +23,13 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.animation.LerpedFloat;
+import net.createmod.catnip.utility.lang.Components;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -120,8 +124,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 	private void initHandler() {
 		if (invHandler != null)
 			return;
-		if (!level.isClientSide) {
-			player = new DeployerFakePlayer((ServerLevel) level);
+		if (level instanceof ServerLevel sLevel) {
+			player = new DeployerFakePlayer(sLevel);
 			if (deferredInventoryList != null) {
 				player.getInventory()
 					.load(deferredInventoryList);
@@ -399,6 +403,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 		}
 	}
 
+	@Override
+	public void writeSafe(CompoundTag tag) {
+		NBTHelper.writeEnum(tag, "Mode", mode);
+		super.writeSafe(tag);
+	}
+
 	private IItemHandlerModifiable createHandler() {
 		return new DeployerItemHandler(this);
 	}
@@ -456,6 +466,30 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (overflowItems.isEmpty())
 			return false;
 		TooltipHelper.addHint(tooltip, "hint.full_deployer");
+		return true;
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		CreateLang.translate("tooltip.deployer.header")
+			.forGoggles(tooltip);
+
+		CreateLang.translate("tooltip.deployer." + (mode == Mode.USE ? "using" : "punching"))
+			.style(ChatFormatting.YELLOW)
+			.forGoggles(tooltip);
+
+		if (!heldItem.isEmpty())
+			CreateLang.translate("tooltip.deployer.contains",
+				Components.translatable(heldItem.getDescriptionId()).getString(), heldItem.getCount())
+				.style(ChatFormatting.GREEN)
+				.forGoggles(tooltip);
+
+		float stressAtBase = calculateStressApplied();
+		if (StressImpact.isEnabled() && !Mth.equal(stressAtBase, 0)) {
+			tooltip.add(Components.immutableEmpty());
+			addStressImpactStats(tooltip, stressAtBase);
+		}
+
 		return true;
 	}
 

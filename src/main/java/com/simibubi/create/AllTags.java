@@ -112,9 +112,11 @@ public class AllTags {
 	public enum AllBlockTags {
 
 		BRITTLE,
-		FAN_HEATERS,
+		CASING,
 		FAN_TRANSPARENT,
+		NON_MOVABLE,
 		ORE_OVERRIDE_STONE,
+		PASSIVE_BOILER_HEATERS,
 		SAFE_NBT,
 		SEATS,
 		TOOLBOXES,
@@ -122,10 +124,7 @@ public class AllTags {
 		WINDMILL_SAILS,
 		WINDOWABLE,
 		WRENCH_PICKUP,
-		CASING,
-		NON_MOVABLE,
-
-		PASSIVE_BOILER_HEATERS,
+		TREE_ATTACHMENTS,
 
 		RELOCATION_NOT_SUPPORTED(FORGE),
 		WG_STONE(FORGE),
@@ -208,10 +207,13 @@ public class AllTags {
 
 		BLAZE_BURNER_FUEL_REGULAR(MOD, "blaze_burner_fuel/regular"),
 		BLAZE_BURNER_FUEL_SPECIAL(MOD, "blaze_burner_fuel/special"),
+		CASING,
 		CREATE_INGOTS,
 		CRUSHED_ORES,
+		PRESSURIZED_AIR_SOURCES,
 		SANDPAPER,
 		SEATS,
+		SLEEPERS,
 		TOOLBOXES,
 		UPRIGHT_ON_BELT,
 		VALVE_HANDLES,
@@ -219,8 +221,6 @@ public class AllTags {
 		VANILLA_STRIPPED_WOOD,
 		MODDED_STRIPPED_LOGS,
 		MODDED_STRIPPED_WOOD,
-		CASING,
-		SLEEPERS,
 
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),
@@ -401,10 +401,9 @@ public class AllTags {
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.CAMPFIRES);
 		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
 
-		AllBlockTags.FAN_HEATERS.includeAll(BlockTags.FIRE);
-		AllBlockTags.FAN_HEATERS.includeAll(BlockTags.CAMPFIRES);
-		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.LAVA);
-		AllBlockTags.FAN_HEATERS.includeIn(AllBlockTags.PASSIVE_BOILER_HEATERS);
+		AllBlockTags.PASSIVE_BOILER_HEATERS.includeAll(BlockTags.FIRE);
+		AllBlockTags.PASSIVE_BOILER_HEATERS.includeAll(BlockTags.CAMPFIRES);
+		AllBlockTags.PASSIVE_BOILER_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.LAVA);
 
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.BANNERS);
@@ -414,7 +413,10 @@ public class AllTags {
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.PRESSURE_PLATES);
 		AllBlockTags.WRENCH_PICKUP.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
 			Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
-			Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
+			Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET, Blocks.HOPPER);
+
+		AllBlockTags.TREE_ATTACHMENTS.add(Blocks.BEE_NEST, Blocks.VINE, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT,
+			Blocks.COCOA);
 
 		AllBlockTags.ORE_OVERRIDE_STONE.includeAll(BlockTags.STONE_ORE_REPLACEABLES);
 

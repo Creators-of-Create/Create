@@ -34,7 +34,7 @@ public class ContraptionMatrices {
 		this.viewProjection.pushPose();
 		transform(this.viewProjection, viewProjection);
 		model.pushPose();
-		entity.doLocalTransforms(partialTicks, new PoseStack[] { model });
+		entity.applyLocalTransforms(model, partialTicks);
 
 		modelViewProjection.pushPose();
 		transform(modelViewProjection, viewProjection);

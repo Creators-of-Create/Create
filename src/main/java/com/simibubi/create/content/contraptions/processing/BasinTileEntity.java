@@ -88,6 +88,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	Direction preferredSpoutput;
 	protected List<ItemStack> spoutputBuffer;
 	protected List<FluidStack> spoutputFluidBuffer;
+	int recipeBackupCheck;
 
 	public static final int OUTPUT_ANIMATION_TIME = 10;
 	List<IntAttached<ItemStack>> visualizedOutputItems;
@@ -115,6 +116,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		preferredSpoutput = null;
 		spoutputBuffer = new ArrayList<>();
 		spoutputFluidBuffer = new ArrayList<>();
+		recipeBackupCheck = 20;
 	}
 
 	@Override
@@ -227,17 +229,30 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		updateSpoutput();
-		if (!level.isClientSide)
+
+		if (!level.isClientSide) {
+			updateSpoutput();
+			if (recipeBackupCheck-- > 0)
+				return;
+			recipeBackupCheck = 20;
+			if (isEmpty())
+				return;
+			notifyChangeOfContents();
 			return;
+		}
 
 		BlockEntity tileEntity = level.getBlockEntity(worldPosition.above(2));
 		if (!(tileEntity instanceof MechanicalMixerTileEntity)) {
 			setAreFluidsMoving(false);
 			return;
 		}
+
 		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) tileEntity;
 		setAreFluidsMoving(mixer.running && mixer.runningTicks <= 20);
+	}
+
+	public boolean isEmpty() {
+		return inputInventory.isEmpty() && outputInventory.isEmpty() && inputTank.isEmpty() && outputTank.isEmpty();
 	}
 
 	public void onWrenched(Direction face) {
@@ -256,15 +271,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	private void updateSpoutput() {
-		if (level.isClientSide)
-			return;
-
 		BlockState blockState = getBlockState();
 		Direction currentFacing = blockState.getValue(BasinBlock.FACING);
-
-		if (currentFacing != Direction.DOWN)
-			notifyChangeOfContents();
-
 		Direction newFacing = Direction.DOWN;
 		for (Direction test : Iterate.horizontalDirections) {
 			boolean canOutputTo = BasinBlock.canOutputTo(level, worldPosition, test);
@@ -588,7 +596,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	public static HeatLevel getHeatLevelOf(BlockState state) {
 		if (state.hasProperty(BlazeBurnerBlock.HEAT_LEVEL))
 			return state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
-		return AllTags.AllBlockTags.FAN_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
+		return AllTags.AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
 	}
 
 	public Couple<SmartFluidTankBehaviour> getTanks() {

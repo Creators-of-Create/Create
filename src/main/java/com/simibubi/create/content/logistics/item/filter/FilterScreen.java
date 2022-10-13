@@ -10,24 +10,24 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	private static final String PREFIX = "gui.filter.";
 
-	private Component allowN = CreateLang.translateDirect(PREFIX + "allow_list");
-	private Component allowDESC = CreateLang.translateDirect(PREFIX + "allow_list.description");
-	private Component denyN = CreateLang.translateDirect(PREFIX + "deny_list");
-	private Component denyDESC = CreateLang.translateDirect(PREFIX + "deny_list.description");
+	private final Component allowN = CreateLang.translateDirect(PREFIX + "allow_list");
+	private final Component allowDESC = CreateLang.translateDirect(PREFIX + "allow_list.description");
+	private final Component denyN = CreateLang.translateDirect(PREFIX + "deny_list");
+	private final Component denyDESC = CreateLang.translateDirect(PREFIX + "deny_list.description");
 
-	private Component respectDataN = CreateLang.translateDirect(PREFIX + "respect_data");
-	private Component respectDataDESC = CreateLang.translateDirect(PREFIX + "respect_data.description");
-	private Component ignoreDataN = CreateLang.translateDirect(PREFIX + "ignore_data");
-	private Component ignoreDataDESC = CreateLang.translateDirect(PREFIX + "ignore_data.description");
+	private final Component respectDataN = CreateLang.translateDirect(PREFIX + "respect_data");
+	private final Component respectDataDESC = CreateLang.translateDirect(PREFIX + "respect_data.description");
+	private final Component ignoreDataN = CreateLang.translateDirect(PREFIX + "ignore_data");
+	private final Component ignoreDataDESC = CreateLang.translateDirect(PREFIX + "ignore_data.description");
 
 	private IconButton whitelist, blacklist;
 	private IconButton respectNBT, ignoreNBT;
@@ -58,8 +58,8 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 			sendOptionUpdate(Option.WHITELIST);
 		});
 		whitelist.setToolTip(allowN);
-		blacklistIndicator = new Indicator(x + 18, y + 67, TextComponent.EMPTY);
-		whitelistIndicator = new Indicator(x + 36, y + 67, TextComponent.EMPTY);
+		blacklistIndicator = new Indicator(x + 18, y + 67, Components.immutableEmpty());
+		whitelistIndicator = new Indicator(x + 36, y + 67, Components.immutableEmpty());
 		addRenderableWidgets(blacklist, whitelist, blacklistIndicator, whitelistIndicator);
 
 		respectNBT = new IconButton(x + 60, y + 73, AllIcons.I_RESPECT_NBT);
@@ -74,8 +74,8 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 			sendOptionUpdate(Option.IGNORE_DATA);
 		});
 		ignoreNBT.setToolTip(ignoreDataN);
-		respectNBTIndicator = new Indicator(x + 60, y + 67, TextComponent.EMPTY);
-		ignoreNBTIndicator = new Indicator(x + 78, y + 67, TextComponent.EMPTY);
+		respectNBTIndicator = new Indicator(x + 60, y + 67, Components.immutableEmpty());
+		ignoreNBTIndicator = new Indicator(x + 78, y + 67, Components.immutableEmpty());
 		addRenderableWidgets(respectNBT, ignoreNBT, respectNBTIndicator, ignoreNBTIndicator);
 
 		handleIndicators();

@@ -256,11 +256,30 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		return AttachmentTypes.RIM;
 	}
 
-	public static enum AttachmentTypes {
-		NONE, RIM, DRAIN;
+	public enum AttachmentTypes {
+		NONE,
+		CONNECTION(ComponentPartials.CONNECTION),
+		RIM(ComponentPartials.RIM_CONNECTOR, ComponentPartials.RIM),
+		PARTIAL_RIM(ComponentPartials.RIM),
+		DRAIN(ComponentPartials.RIM_CONNECTOR, ComponentPartials.DRAIN),
+		PARTIAL_DRAIN(ComponentPartials.DRAIN);
 
-		public boolean hasModel() {
-			return this != NONE;
+		public final ComponentPartials[] partials;
+
+		AttachmentTypes(ComponentPartials... partials) {
+			this.partials = partials;
+		}
+
+		public AttachmentTypes withoutConnector() {
+			if (this == AttachmentTypes.RIM)
+				return AttachmentTypes.PARTIAL_RIM;
+			if (this == AttachmentTypes.DRAIN)
+				return AttachmentTypes.PARTIAL_DRAIN;
+			return this;
+		}
+
+		public enum ComponentPartials {
+			CONNECTION, RIM_CONNECTOR, RIM, DRAIN;
 		}
 	}
 

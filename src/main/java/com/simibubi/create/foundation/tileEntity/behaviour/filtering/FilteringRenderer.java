@@ -17,13 +17,13 @@ import net.createmod.catnip.CatnipClient;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.Pair;
 import net.createmod.catnip.utility.VecHelper;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -66,7 +66,7 @@ public class FilteringRenderer {
 		boolean isFilterSlotted = filter.getItem() instanceof FilterItem;
 		boolean showCount = behaviour.isCountVisible();
 		boolean fluids = behaviour.fluidFilter;
-		Component label = isFilterSlotted ? TextComponent.EMPTY
+		Component label = isFilterSlotted ? Components.immutableEmpty()
 			: CreateLang.translateDirect(behaviour.recipeFilter ? "logistics.recipe_filter"
 				: fluids ? "logistics.fluid_filter" : "logistics.filter");
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getLocation()
@@ -80,7 +80,7 @@ public class FilteringRenderer {
 
 		box.offsetLabel(behaviour.textShift)
 				.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
-				.scrollTooltip(showCount && !isFilterSlotted ? new TextComponent("[").append(CreateLang.translateDirect("action.scroll")).append("]") : TextComponent.EMPTY)
+				.scrollTooltip(showCount && !isFilterSlotted ? Components.literal("[").append(CreateLang.translateDirect("action.scroll")).append("]") : Components.immutableEmpty())
 				.passive(!hit);
 
 		CatnipClient.OUTLINER.showOutline(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
@@ -95,11 +95,15 @@ public class FilteringRenderer {
 		if (te == null || te.isRemoved())
 			return;
 
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
-		if (!te.isVirtual() && cameraEntity != null && cameraEntity.position()
-			.distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max))
-			return;
+		if (!te.isVirtual()) {
+			Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+			if (cameraEntity != null && te.getLevel() == cameraEntity.getLevel()) {
+				float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
+				if (cameraEntity.position().distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max)) {
+					return;
+				}
+			}
+		}
 
 		FilteringBehaviour behaviour = te.getBehaviour(FilteringBehaviour.TYPE);
 		if (behaviour == null)

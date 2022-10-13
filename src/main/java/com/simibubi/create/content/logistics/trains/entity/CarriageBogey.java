@@ -8,6 +8,7 @@ import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
@@ -146,7 +147,7 @@ public class CarriageBogey {
 
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
-		tag.putString("Type", ((Block) type).getRegistryName()
+		tag.putString("Type", CatnipServices.REGISTRIES.getKeyOrThrow((Block) type)
 			.toString());
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
 		return tag;

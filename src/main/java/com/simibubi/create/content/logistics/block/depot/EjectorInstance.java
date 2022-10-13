@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
 import net.createmod.catnip.utility.AnimationTickHolder;
+import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.util.Mth;
 
 public class EjectorInstance extends ShaftInstance implements DynamicInstance {
@@ -59,6 +60,14 @@ public class EjectorInstance extends ShaftInstance implements DynamicInstance {
 	private void pivotPlate(float lidProgress) {
 		float angle = lidProgress * 70;
 
-		EjectorRenderer.applyLidAngle(tile, angle, plate.loadIdentity().translate(getInstancePosition()));
+		plate.loadIdentity()
+			.translate(getInstancePosition())
+			.centre()
+			.rotateY(180 + AngleHelper.horizontalAngle(tile.getBlockState()
+				.getValue(EjectorBlock.HORIZONTAL_FACING)))
+			.unCentre()
+			.translate(EjectorRenderer.pivot)
+			.rotateX(-angle)
+			.translateBack(EjectorRenderer.pivot);
 	}
 }

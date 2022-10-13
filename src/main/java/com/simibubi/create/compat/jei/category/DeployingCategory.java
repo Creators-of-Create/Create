@@ -3,7 +3,6 @@ package com.simibubi.create.compat.jei.category;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -21,13 +20,8 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 
 	private final AnimatedDeployer deployer = new AnimatedDeployer();
 
-	public DeployingCategory() {
-		super(itemIcon(AllBlocks.DEPLOYER.get()), emptyBackground(177, 70));
-	}
-
-	@Override
-	public Class<DeployerApplicationRecipe> getRecipeClass() {
-		return DeployerApplicationRecipe.class;
+	public DeployingCategory(Info<DeployerApplicationRecipe> info) {
+		super(info);
 	}
 
 	@Override

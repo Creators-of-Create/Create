@@ -92,7 +92,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 
 		if (te.resolveFlagAngle()) {
 			msr.translate(1 / 16f, -19 / 16f, -12 / 16f);
-			StationRenderer.transformFlag(msr, te, partialTicks, 180, false);
+			StationRenderer.transformFlag(msr, te, partialTicks, 180);
 			PartialModelGuiElement.of(getFlag(partialTicks))
 				.render(ms);
 		}

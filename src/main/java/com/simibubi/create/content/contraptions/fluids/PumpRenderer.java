@@ -6,7 +6,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -37,16 +36,14 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer arrow = CachedPartialBuffers.partial(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
 		for (float yRot : new float[] { 0, 90 }) {
 			Direction direction = blockState.getValue(PumpBlock.FACING);
-			FlwSuperByteBuffer.cast(arrow).ifPresent(flwBuffer -> flwBuffer
-					.centre()
+			arrow.centre()
 					.rotateY(AngleHelper.horizontalAngle(direction) + 180)
 					.rotateX(-AngleHelper.verticalAngle(direction) - 90)
 					.unCentre()
 					.translate(rotationOffset)
 					.rotateY(yRot)
 					.rotateZ(angle)
-					.translateBack(rotationOffset)
-			);
+					.translateBack(rotationOffset);
 
 			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}

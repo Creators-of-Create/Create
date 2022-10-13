@@ -8,9 +8,9 @@ import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.IntAttached;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Objective;
@@ -40,9 +40,10 @@ public class ScoreboardDisplaySource extends ValueListDisplaySource {
 		return sLevel.getScoreboard()
 			.getPlayerScores(objective)
 			.stream()
-			.limit(maxRows)
-			.map(score -> IntAttached.with(score.getScore(), new TextComponent(score.getOwner()).copy()))
-			.sorted(IntAttached.comparator());
+			.map(score -> IntAttached.with(score.getScore(), Components.literal(score.getOwner())
+				.copy()))
+			.sorted(IntAttached.comparator())
+			.limit(maxRows);
 	}
 
 	private ImmutableList<IntAttached<MutableComponent>> notFound(String objective) {

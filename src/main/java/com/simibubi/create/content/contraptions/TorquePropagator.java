@@ -26,7 +26,7 @@ public class TorquePropagator {
 	public KineticNetwork getOrCreateNetworkFor(KineticTileEntity te) {
 		Long id = te.network;
 		KineticNetwork network;
-		Map<Long, KineticNetwork> map = networks.get(te.getLevel());
+		Map<Long, KineticNetwork> map = networks.computeIfAbsent(te.getLevel(), $ -> new HashMap<>());
 		if (id == null)
 			return null;
 

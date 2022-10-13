@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -76,8 +77,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 			ItemLike iItemProvider = singleIngredient.get();
 			transform
 				.apply(new ProcessingRecipeBuilder<>(serializer.getFactory(),
-					new ResourceLocation(namespace, iItemProvider.asItem()
-						.getRegistryName()
+					new ResourceLocation(namespace, CatnipServices.REGISTRIES.getKeyOrThrow(iItemProvider.asItem())
 						.getPath())).withItemIngredients(Ingredient.of(iItemProvider)))
 				.build(c);
 		};
@@ -130,9 +130,8 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
 	protected Supplier<ResourceLocation> idWithSuffix(Supplier<ItemLike> item, String suffix) {
 		return () -> {
-			ResourceLocation registryName = item.get()
-				.asItem()
-				.getRegistryName();
+			ResourceLocation registryName = CatnipServices.REGISTRIES.getKeyOrThrow(item.get()
+					.asItem());
 			return Create.asResource(registryName.getPath() + suffix);
 		};
 	}

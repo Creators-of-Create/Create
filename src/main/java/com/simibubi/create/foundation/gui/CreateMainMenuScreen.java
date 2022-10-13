@@ -15,6 +15,7 @@ import net.createmod.catnip.gui.element.BoxElement;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.FontHelper;
 import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.theme.Color;
 import net.createmod.ponder.foundation.ui.PonderTagIndexScreen;
 import net.minecraft.ChatFormatting;
@@ -27,7 +28,6 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
@@ -39,8 +39,8 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
 	public static final PanoramaRenderer PANORAMA = new PanoramaRenderer(PANORAMA_RESOURCES);
 
-	private static final Component CURSEFORGE_TOOLTIP = new TextComponent("CurseForge").withStyle(s -> s.withColor(0xFC785C).withBold(true));
-	private static final Component MODRINTH_TOOLTIP = new TextComponent("Modrinth").withStyle(s -> s.withColor(0x3FD32B).withBold(true));
+	private static final Component CURSEFORGE_TOOLTIP = Components.literal("CurseForge").withStyle(s -> s.withColor(0xFC785C).withBold(true));
+	private static final Component MODRINTH_TOOLTIP = Components.literal("Modrinth").withStyle(s -> s.withColor(0x3FD32B).withBold(true));
 
 	public static final String CURSEFORGE_LINK = "https://www.curseforge.com/minecraft/mc-mods/create";
 	public static final String MODRINTH_LINK = "https://modrinth.com/mod/create";
@@ -122,9 +122,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 		ms.pushPose();
 		ms.translate(0, 0, 200);
-		drawCenteredString(ms, font, new TextComponent(Create.NAME).withStyle(ChatFormatting.BOLD)
+		drawCenteredString(ms, font, Components.literal(Create.NAME).withStyle(ChatFormatting.BOLD)
 			.append(
-				new TextComponent(" v" + Create.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
+				Components.literal(" v" + Create.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
 			width / 2, 89, 0xFF_E4BB67);
 		ms.popPose();
 
@@ -211,7 +211,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		protected final float scale;
 
 		public PlatformIconButton(int pX, int pY, int pWidth, int pHeight, AllGuiTextures icon, float scale, OnPress pOnPress, OnTooltip pOnTooltip) {
-			super(pX, pY, pWidth, pHeight, TextComponent.EMPTY, pOnPress, pOnTooltip);
+			super(pX, pY, pWidth, pHeight, Components.immutableEmpty(), pOnPress, pOnTooltip);
 			this.icon = icon;
 			this.scale = scale;
 		}

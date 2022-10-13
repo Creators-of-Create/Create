@@ -4,8 +4,8 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperByteBufferCache;
 import net.createmod.catnip.utility.Pair;
 import net.minecraft.client.renderer.RenderType;
@@ -46,18 +46,16 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 	private void renderContraptionLayerSBB(ContraptionRenderInfo renderInfo, RenderType layer, VertexConsumer consumer) {
 		if (!renderInfo.isVisible()) return;
 
-		FlwSuperByteBuffer.cast(
-				SuperByteBufferCache.getInstance().get(CONTRAPTION, Pair.of(renderInfo.contraption, layer), () -> ContraptionRenderDispatcher.buildStructureBuffer(renderInfo.renderWorld, renderInfo.contraption, layer))
-		).ifPresent(superBuffer -> {
-			if (superBuffer.isEmpty())
+		SuperByteBuffer superBuffer = SuperByteBufferCache.getInstance().get(CONTRAPTION, Pair.of(renderInfo.contraption, layer), () -> ContraptionRenderDispatcher.buildStructureBuffer(renderInfo.renderWorld, renderInfo.contraption, layer));
+
+		if (superBuffer.isEmpty())
 				return;
 
-			ContraptionMatrices matrices = renderInfo.getMatrices();
+		ContraptionMatrices matrices = renderInfo.getMatrices();
 
-			superBuffer.transform(matrices.getModel())
-					.light(matrices.getWorld())
-					.hybridLight()
-					.renderInto(matrices.getViewProjection(), consumer);
-		});
+		superBuffer.transform(matrices.getModel())
+				.light(matrices.getWorld())
+				.hybridLight()
+				.renderInto(matrices.getViewProjection(), consumer);
 	}
 }

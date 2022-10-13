@@ -12,9 +12,9 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class SchematicPromptScreen extends AbstractSimiScreen {
 
@@ -42,7 +42,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		nameField = new EditBox(font, x + 49, y + 26, 131, 10, TextComponent.EMPTY);
+		nameField = new EditBox(font, x + 49, y + 26, 131, 10, Components.immutableEmpty());
 		nameField.setTextColor(-1);
 		nameField.setTextColorUneditable(-1);
 		nameField.setBordered(false);

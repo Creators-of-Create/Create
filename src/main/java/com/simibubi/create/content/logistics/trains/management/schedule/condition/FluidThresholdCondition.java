@@ -11,13 +11,13 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -32,7 +32,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 
 	@Override
 	protected Component getUnit() {
-		return new TextComponent("b");
+		return Components.literal("b");
 	}
 
 	@Override
@@ -44,9 +44,6 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	protected boolean test(Level level, Train train, CompoundTag context) {
 		Ops operator = getOperator();
 		int target = getThreshold();
-
-		if (compareStack.isEmpty())
-			return true;
 
 		int foundFluid = 0;
 		for (Carriage carriage : train.carriages) {
@@ -100,10 +97,11 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 			CreateLang.translateDirect("schedule.condition.threshold.train_holds",
 				CreateLang.translateDirect("schedule.condition.threshold." + Lang.asId(getOperator().name()))),
 			CreateLang.translateDirect("schedule.condition.threshold.x_units_of_item", getThreshold(),
-				CreateLang.translateDirect("schedule.condition.threshold.buckets"),
-				compareStack.getItem() instanceof FilterItem
-					? CreateLang.translateDirect("schedule.condition.threshold.matching_content")
-					: loadFluid().getDisplayName())
+					CreateLang.translateDirect("schedule.condition.threshold.buckets"),
+				compareStack.isEmpty() ? CreateLang.translateDirect("schedule.condition.threshold.anything")
+					: compareStack.getItem() instanceof FilterItem
+						? CreateLang.translateDirect("schedule.condition.threshold.matching_content")
+						: loadFluid().getDisplayName())
 				.withStyle(ChatFormatting.DARK_AQUA));
 	}
 
@@ -136,7 +134,7 @@ public class FluidThresholdCondition extends CargoThresholdCondition {
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
 		int lastDisplaySnapshot = getLastDisplaySnapshot(tag);
 		if (lastDisplaySnapshot == -1)
-			return TextComponent.EMPTY.copy();
+			return Components.empty();
 		int offset = getOperator() == Ops.LESS ? -1 : getOperator() == Ops.GREATER ? 1 : 0;
 		return CreateLang.translateDirect("schedule.condition.threshold.status", lastDisplaySnapshot,
 			Math.max(0, getThreshold() + offset), CreateLang.translateDirect("schedule.condition.threshold.buckets"));

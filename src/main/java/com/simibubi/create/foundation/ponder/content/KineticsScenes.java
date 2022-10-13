@@ -1153,6 +1153,7 @@ public class KineticsScenes {
 
 	public static void creativeMotorMojang(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("creative_motor_mojang", "Mojang's Enigma");
+		scene.setNextUpEnabled(false);
 		scene.configureBasePlate(0, 0, 15);
 		scene.scaleSceneView(.55f);
 		scene.showBasePlate();

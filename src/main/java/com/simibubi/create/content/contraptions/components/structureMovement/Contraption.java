@@ -93,6 +93,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -131,6 +132,7 @@ public abstract class Contraption {
 	public BlockPos anchor;
 	public boolean stalled;
 	public boolean hasUniversalCreativeCrate;
+	public boolean disassembled;
 
 	protected Map<BlockPos, StructureBlockInfo> blocks;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
@@ -999,6 +1001,10 @@ public abstract class Contraption {
 	}
 
 	public void addBlocksToWorld(Level world, StructureTransform transform) {
+		if (disassembled)
+			return;
+		disassembled = true;
+
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (StructureBlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
@@ -1020,7 +1026,7 @@ public abstract class Contraption {
 					.isEmpty()
 					&& !blockState.getCollisionShape(world, targetPos)
 						.isEmpty())) {
-					if (targetPos.getY() == 0)
+					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
 					world.levelEvent(2001, targetPos, Block.getId(state));
 					Block.dropResources(state, world, targetPos, null);
@@ -1045,7 +1051,7 @@ public abstract class Contraption {
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
 				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
 				if (verticalRotation) {
-					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock)
+					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock || state.getBlock() instanceof DoorBlock)
 						world.destroyBlock(targetPos, true);
 				}
 

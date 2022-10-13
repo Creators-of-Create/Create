@@ -6,6 +6,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.content.contraptions.particle.ICustomParticleDataWithSprite;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -16,7 +17,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -61,7 +61,7 @@ public abstract class BasicParticleData<T extends Particle> implements ParticleO
 
 	@Override
 	public String writeToString() {
-		return ForgeRegistries.PARTICLE_TYPES.getKey(getType()).toString();
+		return CatnipServices.REGISTRIES.getKeyOrThrow(getType()).toString();
 	}
 
 	@Override

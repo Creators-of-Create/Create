@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.weapons;
 import java.util.UUID;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
@@ -43,7 +44,6 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class BuiltinPotatoProjectileTypes {
 
@@ -62,7 +62,7 @@ public class BuiltinPotatoProjectileTypes {
 			.velocity(1.25f)
 			.knockback(1.5f)
 			.renderTumbling()
-			.onBlockHit(plantCrop(Blocks.POTATOES.delegate))
+			.onBlockHit(plantCrop(Blocks.POTATOES))
 			.registerAndAssign(Items.POTATO),
 
 		BAKED_POTATO = create("baked_potato").damage(5)
@@ -79,7 +79,7 @@ public class BuiltinPotatoProjectileTypes {
 			.knockback(0.3f)
 			.renderTowardMotion(140, 1)
 			.soundPitch(1.5f)
-			.onBlockHit(plantCrop(Blocks.CARROTS.delegate))
+			.onBlockHit(plantCrop(Blocks.CARROTS))
 			.registerAndAssign(Items.CARROT),
 
 		GOLDEN_CARROT = create("golden_carrot").damage(12)
@@ -213,7 +213,7 @@ public class BuiltinPotatoProjectileTypes {
 			.velocity(0.95f)
 			.renderTumbling()
 			.soundPitch(0.9f)
-			.onBlockHit(placeBlockOnGround(Blocks.MELON.delegate))
+			.onBlockHit(placeBlockOnGround(Blocks.MELON))
 			.registerAndAssign(Blocks.MELON),
 
 		PUMPKIN_BLOCK = create("pumpkin_block").damage(6)
@@ -222,7 +222,7 @@ public class BuiltinPotatoProjectileTypes {
 			.velocity(0.95f)
 			.renderTumbling()
 			.soundPitch(0.9f)
-			.onBlockHit(placeBlockOnGround(Blocks.PUMPKIN.delegate))
+			.onBlockHit(placeBlockOnGround(Blocks.PUMPKIN))
 			.registerAndAssign(Blocks.PUMPKIN),
 
 		PUMPKIN_PIE = create("pumpkin_pie").damage(7)
@@ -303,7 +303,7 @@ public class BuiltinPotatoProjectileTypes {
 			entity.addEffect(effect);
 	}
 
-	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(IRegistryDelegate<? extends Block> cropBlock) {
+	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(Supplier<? extends Block> cropBlock) {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
@@ -328,8 +328,12 @@ public class BuiltinPotatoProjectileTypes {
 		};
 	}
 
+	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(Block cropBlock) {
+		return plantCrop(cropBlock.delegate);
+	}
+
 	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(
-		IRegistryDelegate<? extends Block> block) {
+		Supplier<? extends Block> block) {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
@@ -362,6 +366,10 @@ public class BuiltinPotatoProjectileTypes {
 
 			return true;
 		};
+	}
+
+	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(Block block) {
+		return placeBlockOnGround(block.delegate);
 	}
 
 	private static Predicate<EntityHitResult> chorusTeleport(double teleportDiameter) {

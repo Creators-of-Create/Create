@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.redstone.DoubleFaceAttachedBlock.DoubleAttachFace;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.DyeHelper;
@@ -167,35 +166,30 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 				float longSide = yellow ? 1 : 4;
 				float longSideGlow = yellow ? 2 : 5.125f;
 
-				FlwSuperByteBuffer.cast(CachedPartialBuffers.partial(AllBlockPartials.SIGNAL_WHITE_CUBE, blockState))
-						.ifPresent(flwBuffer -> flwBuffer
-								.light(0xf000f0)
-								.disableDiffuse()
-								.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
-								.renderInto(ms, buffer.getBuffer(RenderType.translucent()))
-						);
+				CachedPartialBuffers.partial(AllBlockPartials.SIGNAL_WHITE_CUBE, blockState)
+						.light(0xf000f0)
+						.disableDiffuse()
+						.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
+						.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
-				FlwSuperByteBuffer.cast(CachedPartialBuffers
-					.partial(
+				CachedPartialBuffers.partial(
 						first ? AllBlockPartials.SIGNAL_RED_GLOW
-							: yellow ? AllBlockPartials.SIGNAL_YELLOW_GLOW : AllBlockPartials.SIGNAL_WHITE_GLOW,
-						blockState)).ifPresent(flwBuffer -> flwBuffer
-								.light(0xf000f0)
+						: yellow ? AllBlockPartials.SIGNAL_YELLOW_GLOW : AllBlockPartials.SIGNAL_WHITE_GLOW,
+						blockState)
+								.light(0xF000F0)
 								.disableDiffuse()
 								.scale(vert ? longSideGlow : 2, vert ? 2 : longSideGlow, 2)
-								.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()))
-						);
+								.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
 			}
 
-			FlwSuperByteBuffer.cast(CachedPartialBuffers
-				.partial(first ? AllBlockPartials.SIGNAL_RED
-					: yellow ? AllBlockPartials.SIGNAL_YELLOW : AllBlockPartials.SIGNAL_WHITE, blockState))
-					.ifPresent(flwBuffer -> flwBuffer
+			CachedPartialBuffers.partial(
+					first ? AllBlockPartials.SIGNAL_RED
+					: yellow ? AllBlockPartials.SIGNAL_YELLOW : AllBlockPartials.SIGNAL_WHITE,
+					blockState)
 							.light(0xF000F0)
 							.disableDiffuse()
 							.scale(1 + 1 / 16f)
-							.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()))
-					);
+							.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
 
 			ms.popPose();
 		}

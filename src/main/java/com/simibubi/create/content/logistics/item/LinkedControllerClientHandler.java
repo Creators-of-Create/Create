@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.CatnipClient;
 import net.createmod.catnip.utility.FontHelper;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -28,7 +29,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.gui.ForgeIngameGui;
@@ -220,7 +220,7 @@ public class LinkedControllerClientHandler {
 			return;
 
 		poseStack.pushPose();
-		Screen tooltipScreen = new Screen(TextComponent.EMPTY) {
+		Screen tooltipScreen = new Screen(Components.immutableEmpty()) {
 		};
 		tooltipScreen.init(mc, width1, height1);
 

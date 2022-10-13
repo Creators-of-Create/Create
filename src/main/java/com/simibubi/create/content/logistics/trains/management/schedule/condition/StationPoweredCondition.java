@@ -10,7 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -26,9 +29,14 @@ public class StationPoweredCondition extends ScheduleWaitCondition {
 		if (currentStation == null)
 			return false;
 		BlockPos stationPos = currentStation.getTilePos();
-		if (!level.isLoaded(stationPos))
+		ResourceKey<Level> stationDim = currentStation.getTileDimension();
+		MinecraftServer server = level.getServer();
+		if (server == null)
 			return false;
-		return level.hasNeighborSignal(stationPos);
+		ServerLevel stationLevel = server.getLevel(stationDim);
+		if (stationLevel == null || !stationLevel.isLoaded(stationPos))
+			return false;
+		return stationLevel.hasNeighborSignal(stationPos);
 	}
 
 	@Override

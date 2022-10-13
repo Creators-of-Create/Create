@@ -738,7 +738,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 					data = NBTProcessors.process(tile, data, true);
 				} else if (tile instanceof IPartialSafeNBT) {
 					data = new CompoundTag();
-					((IPartialSafeNBT) tile).writeSafe(data, false);
+					((IPartialSafeNBT) tile).writeSafe(data);
 					data = NBTProcessors.process(tile, data, true);
 				}
 			}

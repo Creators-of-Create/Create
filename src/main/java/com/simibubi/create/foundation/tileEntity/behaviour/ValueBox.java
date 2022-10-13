@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIco
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.createmod.catnip.utility.lang.Components;
 import net.createmod.catnip.utility.outliner.ChasingAABBOutline;
 import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -27,8 +27,8 @@ import net.minecraft.world.phys.Vec3;
 public class ValueBox extends ChasingAABBOutline {
 
 	protected Component label;
-	protected Component sublabel = TextComponent.EMPTY;
-	protected Component scrollTooltip = TextComponent.EMPTY;
+	protected Component sublabel = Components.immutableEmpty();
+	protected Component scrollTooltip = Components.immutableEmpty();
 	protected Vec3 labelOffset = Vec3.ZERO;
 
 	protected int passiveColor;
@@ -105,11 +105,11 @@ public class ValueBox extends ChasingAABBOutline {
 			ms.translate(labelOffset.x, labelOffset.y, labelOffset.z);
 
 			renderHoveringText(ms, buffer, label);
-			if (!sublabel.toString().isEmpty()) {
+			if (!sublabel.getString().isEmpty()) {
 				ms.translate(0, 10, 0);
 				renderHoveringText(ms, buffer, sublabel);
 			}
-			if (!scrollTooltip.getContents().isEmpty()) {
+			if (!scrollTooltip.getString().isEmpty()) {
 				ms.translate(0, 10, 0);
 				renderHoveringText(ms, buffer, scrollTooltip, 0x998899, 0x111111);
 			}
@@ -136,7 +136,7 @@ public class ValueBox extends ChasingAABBOutline {
 		public void renderContents(PoseStack ms, MultiBufferSource buffer) {
 			super.renderContents(ms, buffer);
 			Font font = Minecraft.getInstance().font;
-			Component countString = new TextComponent(count == 0 ? "*" : count + "");
+			Component countString = Components.literal(count == 0 ? "*" : count + "");
 			ms.translate(17.5f, -5f, 7f);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;

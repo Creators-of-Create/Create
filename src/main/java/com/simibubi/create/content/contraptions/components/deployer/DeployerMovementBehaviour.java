@@ -275,6 +275,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	private DeployerFakePlayer getPlayer(MovementContext context) {
 		if (!(context.temporaryData instanceof DeployerFakePlayer) && context.world instanceof ServerLevel) {
 			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) context.world);
+			deployerFakePlayer.onMinecartContraption = context.contraption instanceof MountedContraption;
 			deployerFakePlayer.getInventory()
 				.load(context.tileData.getList("Inventory", Tag.TAG_COMPOUND));
 			if (context.data.contains("HeldItem"))

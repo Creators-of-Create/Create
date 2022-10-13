@@ -1,6 +1,7 @@
 package com.simibubi.create.content.curiosities.deco;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
@@ -201,9 +202,15 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		ItemStack placardStack = AllBlocks.PLACARD.asStack();
-		if (te instanceof PlacardTileEntity pte && !pte.getHeldItem()
-			.isEmpty())
-			return new ItemRequirement(ItemUseType.CONSUME, ImmutableList.of(placardStack, pte.getHeldItem()));
+		if (te instanceof PlacardTileEntity pte) {
+			ItemStack heldItem = pte.getHeldItem();
+			if (!heldItem.isEmpty()) {
+				return new ItemRequirement(List.of(
+					new ItemRequirement.StackRequirement(placardStack, ItemUseType.CONSUME),
+					new ItemRequirement.StrictNbtStackRequirement(heldItem, ItemUseType.CONSUME)
+				));
+			}
+		}
 		return new ItemRequirement(ItemUseType.CONSUME, placardStack);
 	}
 

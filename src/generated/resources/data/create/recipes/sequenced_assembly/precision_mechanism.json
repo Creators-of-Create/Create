@@ -74,15 +74,15 @@
       "chance": 5.0
     },
     {
+      "item": "minecraft:gold_nugget",
+      "chance": 3.0
+    },
+    {
       "item": "create:shaft",
       "chance": 2.0
     },
     {
       "item": "create:crushed_gold_ore",
-      "chance": 2.0
-    },
-    {
-      "item": "minecraft:gold_nugget",
       "chance": 2.0
     },
     {

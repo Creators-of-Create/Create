@@ -188,7 +188,7 @@ public enum AllPackets {
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
-	public static final int NETWORK_VERSION = 1;
+	public static final int NETWORK_VERSION = 2;
 	public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
 	public static SimpleChannel channel;
 

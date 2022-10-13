@@ -6,9 +6,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -71,9 +71,8 @@ public class SteamEngineRenderer extends SafeTileEntityRenderer<SteamEngineTileE
 			.renderInto(ms, vb);
 	}
 
-	private FlwSuperByteBuffer transformed(PartialModel model, BlockState blockState, Direction facing) {
-		return FlwSuperByteBuffer.cast(CachedPartialBuffers.partial(model, blockState))
-				.orElseThrow()
+	private SuperByteBuffer transformed(PartialModel model, BlockState blockState, Direction facing) {
+		return CachedPartialBuffers.partial(model, blockState)
 				.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing) + 90);

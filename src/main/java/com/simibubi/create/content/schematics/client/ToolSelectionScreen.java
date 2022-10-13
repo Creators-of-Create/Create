@@ -11,10 +11,10 @@ import com.simibubi.create.content.schematics.client.tools.Tools;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 public class ToolSelectionScreen extends Screen {
 
@@ -33,7 +33,7 @@ public class ToolSelectionScreen extends Screen {
 	protected int h;
 
 	public ToolSelectionScreen(List<Tools> tools, Consumer<Tools> callback) {
-		super(new TextComponent("Tool Selection"));
+		super(Components.literal("Tool Selection"));
 		this.minecraft = Minecraft.getInstance();
 		this.tools = tools;
 		this.callback = callback;

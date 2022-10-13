@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.utility.NBTHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -26,9 +27,9 @@ public class SchematicAndQuillItem extends Item {
 	}
 
 	public static void replaceStructureVoidWithAir(CompoundTag nbt) {
-		String air = Blocks.AIR.getRegistryName()
+		String air = CatnipServices.REGISTRIES.getKeyOrThrow(Blocks.AIR)
 			.toString();
-		String structureVoid = Blocks.STRUCTURE_VOID.getRegistryName()
+		String structureVoid = CatnipServices.REGISTRIES.getKeyOrThrow(Blocks.STRUCTURE_VOID)
 			.toString();
 
 		NBTHelper.iterateCompoundList(nbt.getList("palette", 10), c -> {

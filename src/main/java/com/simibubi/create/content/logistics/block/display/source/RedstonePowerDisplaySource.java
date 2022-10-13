@@ -4,8 +4,8 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,7 +20,7 @@ public class RedstonePowerDisplaySource extends PercentOrProgressBarDisplaySourc
 
 	@Override
 	protected MutableComponent formatNumeric(DisplayLinkContext context, Float currentLevel) {
-		return new TextComponent(String.valueOf((int) (currentLevel * 15)));
+		return Components.literal(String.valueOf((int) (currentLevel * 15)));
 	}
 
 	@Override

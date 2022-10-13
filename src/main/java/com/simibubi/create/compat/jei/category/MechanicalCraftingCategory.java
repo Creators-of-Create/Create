@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
@@ -19,12 +18,13 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -37,8 +37,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 	private final AnimatedCrafter crafter = new AnimatedCrafter();
 
-	public MechanicalCraftingCategory() {
-		super(itemIcon(AllBlocks.MECHANICAL_CRAFTER.get()), emptyBackground(177, 107));
+	public MechanicalCraftingCategory(Info<CraftingRecipe> info) {
+		super(info);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			int yPosition = (int) (y + 1 + (i / getWidth(recipe)) * f);
 
 			builder.addSlot(RecipeIngredientRole.INPUT, xPosition, yPosition)
-				.setCustomRenderer(VanillaTypes.ITEM, renderer)
+				.setCustomRenderer(VanillaTypes.ITEM_STACK, renderer)
 				.addIngredients(ingredient);
 
 			i++;
@@ -130,11 +130,6 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		matrixStack.popPose();
 	}
 
-	@Override
-	public Class<? extends CraftingRecipe> getRecipeClass() {
-		return CraftingRecipe.class;
-	}
-
 	private static final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
 
 		private final CraftingRecipe recipe;
@@ -189,7 +184,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 				return ingredient.getTooltipLines(player, tooltipFlag);
 			} catch (RuntimeException | LinkageError e) {
 				List<Component> list = new ArrayList<>();
-				TranslatableComponent crash = new TranslatableComponent("jei.tooltip.error.crash");
+				MutableComponent crash = Components.translatable("jei.tooltip.error.crash");
 				list.add(crash.withStyle(ChatFormatting.RED));
 				return list;
 			}

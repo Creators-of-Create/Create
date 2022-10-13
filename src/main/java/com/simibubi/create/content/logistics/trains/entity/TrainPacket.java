@@ -10,6 +10,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Iterate;
 import net.minecraft.network.FriendlyByteBuf;
@@ -84,7 +85,7 @@ public class TrainPacket extends SimplePacketBase {
 						continue;
 				}
 				CarriageBogey bogey = carriage.bogeys.get(first);
-				buffer.writeResourceLocation(((Block) bogey.type).getRegistryName());
+				buffer.writeResourceLocation(CatnipServices.REGISTRIES.getKeyOrThrow((Block) bogey.type));
 			}
 			buffer.writeVarInt(carriage.bogeySpacing);
 		}
