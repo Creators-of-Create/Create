@@ -45,30 +45,31 @@ public class HarvesterActorInstance extends ActorInstance {
 
         horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
-        harvester.setBlockLight(localBlockLight());
-    }
+		harvester.setBlockLight(localBlockLight());
+	}
 
-    @Override
-    public void tick() {
-        super.tick();
+	@Override
+	public void tick() {
+		super.tick();
 
-        previousRotation = rotation;
+		previousRotation = rotation;
 
-        if (context.contraption.stalled || VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite()))
-            return;
+		if (context.contraption.stalled || context.disabled
+			|| VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite()))
+			return;
 
-        double arcLength = context.motion.length();
+		double arcLength = context.motion.length();
 
-        double radians = arcLength * oneOverRadius;
+		double radians = arcLength * oneOverRadius;
 
-        float deg = AngleHelper.deg(radians);
+		float deg = AngleHelper.deg(radians);
 
-        deg = (float) (((int) (deg * 3000)) / 3000);
+		deg = (float) (((int) (deg * 3000)) / 3000);
 
-        rotation += deg * 1.25;
+		rotation += deg * 1.25;
 
-        rotation %= 360;
-    }
+		rotation %= 360;
+	}
 
     @Override
     public void beginFrame() {

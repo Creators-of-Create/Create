@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 842",
+	"_": "Missing Localizations: 853",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -55,6 +55,7 @@
 	"block.create.clutch": "Kupplung",
 	"block.create.cogwheel": "Zahnrad",
 	"block.create.content_observer": "Inhaltsbeobachter",
+	"block.create.contraption_controls": "UNLOCALIZED: Contraption Controls",
 	"block.create.controller_rail": "Steuerungsschiene",
 	"block.create.controls": "Zugsteuerung",
 	"block.create.copper_backtank": "Kupferne Druckluftflasche",
@@ -204,6 +205,8 @@
 	"block.create.display_board": "Anzeigetafel",
 	"block.create.display_link": "Anzeige-Link",
 	"block.create.dripstone_pillar": "Tropfstein-Säule",
+	"block.create.elevator_contact": "UNLOCALIZED: Elevator Contact",
+	"block.create.elevator_pulley": "UNLOCALIZED: Elevator Pulley",
 	"block.create.encased_chain_drive": "Ummantelter Kettenriemen",
 	"block.create.encased_fan": "Ummantelter Lüfter",
 	"block.create.encased_fluid_pipe": "Ummanteltes Rohr",
@@ -1424,6 +1427,10 @@
 	"create.boiler.via_one_engine": "mit einer Dampfmaschine",
 	"create.boiler.via_engines": "mit %1$s Dampfmaschinen",
 
+	"create.elevator_contact.title": "UNLOCALIZED: Elevator Contact",
+	"create.elevator_contact.floor_identifier": "UNLOCALIZED: Floor Identifier",
+	"create.elevator_contact.floor_description": "UNLOCALIZED: Floor Description",
+
 	"create.gui.schedule.lmb_edit": "Links-Klick zum Bearbeiten",
 	"create.gui.schedule.rmb_remove": "Rechts-Klick zum Entfernen",
 	"create.gui.schedule.duplicate": "Duplizieren",
@@ -1629,6 +1636,10 @@
 	"create.contraption.controls.start_controlling": "Du steuerst jetzt: %1$s",
 	"create.contraption.controls.stop_controlling": "Du steuerst den Zug nicht mehr",
 	"create.contraption.controls.approach_station": "Halte %1$s gedrückt, um bei %2$s zu halten",
+	"create.contraption.controls.specific_actor_toggle": "UNLOCALIZED: %1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
+	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
 
 	"create.display_link.set": "Anvisierte Position ausgewählt",
 	"create.display_link.success": "Erfolgreich mit ausgewählter Position gebunden",
@@ -1691,6 +1702,7 @@
 	"create.display_source.max_enchant_level": "Max. Verzauberungskosten",
 	"create.display_source.boiler_status": "Kesselstatus",
 	"create.display_source.entity_name": "Entitätenname",
+	"create.display_source.current_floor": "UNLOCALIZED: Elevator Location",
 	"create.display_source.kinetic_speed": "Drehgeschwindigkeit (RPM)",
 	"create.display_source.kinetic_speed.absolute": "Ignoriere Richtung",
 	"create.display_source.kinetic_speed.directional": "Beachte Richtung",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 8",
+	"_": "Missing Localizations: 19",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -55,6 +55,7 @@
 	"block.create.clutch": "클러치",
 	"block.create.cogwheel": "톱니바퀴",
 	"block.create.content_observer": "정보 감지기",
+	"block.create.contraption_controls": "UNLOCALIZED: Contraption Controls",
 	"block.create.controller_rail": "방향 레일",
 	"block.create.controls": "기차 조종기",
 	"block.create.copper_backtank": "구리 산소통",
@@ -204,6 +205,8 @@
 	"block.create.display_board": "디스플레이 화면",
 	"block.create.display_link": "디스플레이 링크",
 	"block.create.dripstone_pillar": "점적석 기둥",
+	"block.create.elevator_contact": "UNLOCALIZED: Elevator Contact",
+	"block.create.elevator_pulley": "UNLOCALIZED: Elevator Pulley",
 	"block.create.encased_chain_drive": "체인 드라이브",
 	"block.create.encased_fan": "선풍기",
 	"block.create.encased_fluid_pipe": "구리 케이스를 씌운 파이프",
@@ -1424,6 +1427,10 @@
 	"create.boiler.via_one_engine": "엔진 1개",
 	"create.boiler.via_engines": "엔진 %1$s개",
 
+	"create.elevator_contact.title": "UNLOCALIZED: Elevator Contact",
+	"create.elevator_contact.floor_identifier": "UNLOCALIZED: Floor Identifier",
+	"create.elevator_contact.floor_description": "UNLOCALIZED: Floor Description",
+
 	"create.gui.schedule.lmb_edit": "좌클릭으로 수정",
 	"create.gui.schedule.rmb_remove": "우클릭으로 삭제",
 	"create.gui.schedule.duplicate": "복제",
@@ -1629,6 +1636,10 @@
 	"create.contraption.controls.start_controlling": "%1$s를 조종합니다",
 	"create.contraption.controls.stop_controlling": "구조물 조종을 멈췄습니다",
 	"create.contraption.controls.approach_station": "%1$s을(를) 눌러 %2$s에 접근합니다",
+	"create.contraption.controls.specific_actor_toggle": "UNLOCALIZED: %1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
+	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
 
 	"create.display_link.set": "표시할 대상을 선택했습니다",
 	"create.display_link.success": "성공적으로 대상과 연결되었습니다",
@@ -1691,6 +1702,7 @@
 	"create.display_source.max_enchant_level": "최대 마법부여 수치",
 	"create.display_source.boiler_status": "보일러 상태",
 	"create.display_source.entity_name": "엔티티 이름",
+	"create.display_source.current_floor": "UNLOCALIZED: Elevator Location",
 	"create.display_source.kinetic_speed": "회전 속도 (RPM)",
 	"create.display_source.kinetic_speed.absolute": "방향 무시",
 	"create.display_source.kinetic_speed.directional": "방향 포함",

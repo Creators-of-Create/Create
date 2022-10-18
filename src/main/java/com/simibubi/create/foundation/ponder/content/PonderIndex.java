@@ -320,7 +320,7 @@ public class PonderIndex {
 		HELPER.forComponents(AllItems.SCHEDULE)
 			.addStoryBoard("train_schedule", TrainScenes::schedule);
 
-		HELPER.forComponents(AllBlocks.CONTROLS)
+		HELPER.forComponents(AllBlocks.TRAIN_CONTROLS)
 			.addStoryBoard("train_controls", TrainScenes::controls);
 
 		HELPER.forComponents(AllBlocks.TRACK_OBSERVER)
@@ -377,7 +377,7 @@ public class PonderIndex {
 			.add(AllBlocks.TRACK_STATION)
 			.add(AllBlocks.TRACK_SIGNAL)
 			.add(AllBlocks.TRACK_OBSERVER)
-			.add(AllBlocks.CONTROLS)
+			.add(AllBlocks.TRAIN_CONTROLS)
 			.add(AllItems.SCHEDULE)
 			.add(AllBlocks.TRAIN_DOOR)
 			.add(AllBlocks.TRAIN_TRAPDOOR)
@@ -522,7 +522,7 @@ public class PonderIndex {
 			.add(AllBlocks.ANDESITE_FUNNEL)
 			.add(AllBlocks.BRASS_FUNNEL)
 			.add(AllBlocks.SEATS.get(DyeColor.WHITE))
-			.add(AllBlocks.CONTROLS)
+			.add(AllBlocks.TRAIN_CONTROLS)
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)

@@ -47,18 +47,22 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 	@Override
 	protected boolean isRunning(KineticTileEntity te) {
-		return ((PulleyTileEntity) te).running || te.isVirtual();
+		return isPulleyRunning(te);
+	}
+	
+	public static boolean isPulleyRunning(KineticTileEntity te) {
+		PulleyTileEntity pte = (PulleyTileEntity) te;
+		return pte.running || pte.mirrorParent != null || te.isVirtual();
 	}
 
-
-	static float getTileOffset(float partialTicks, PulleyTileEntity tile) {
+	public static float getTileOffset(float partialTicks, PulleyTileEntity tile) {
 		float offset = tile.getInterpolatedOffset(partialTicks);
 
-		if (tile.movedContraption != null) {
-			AbstractContraptionEntity e = tile.movedContraption;
-			PulleyContraption c = (PulleyContraption) tile.movedContraption.getContraption();
-			double entityPos = Mth.lerp(partialTicks, e.yOld, e.getY());
-			offset = (float) -(entityPos - c.anchor.getY() - c.initialOffset);
+		AbstractContraptionEntity attachedContraption = tile.getAttachedContraption();
+		if (attachedContraption != null) {
+			PulleyContraption c = (PulleyContraption) attachedContraption.getContraption();
+			double entityPos = Mth.lerp(partialTicks, attachedContraption.yOld, attachedContraption.getY());
+			offset = (float) -(entityPos - c.anchor.getY() - c.getInitialOffset());
 		}
 
 		return offset;

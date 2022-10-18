@@ -41,6 +41,9 @@ public class AllShapes {
 			.add(2, 13, 2, 14, 16, 14)
 			.add(0, 0, 14, 16, 16, 16)
 			.forHorizontalAxis(),
+		ELEVATOR_PULLEY = shape(0, 0, 0, 16, 16, 2).add(0, 0, 14, 16, 16, 16)
+			.add(2, 0, 2, 14, 14, 14)
+			.forHorizontal(EAST),
 		SAIL_FRAME_COLLISION = shape(0, 5, 0, 16, 9, 16).erase(2, 0, 2, 14, 16, 14)
 			.forDirectional(),
 		SAIL_FRAME = shape(0, 5, 0, 16, 9, 16).forDirectional(), SAIL = shape(0, 5, 0, 16, 10, 16).forDirectional(),
@@ -122,6 +125,10 @@ public class AllShapes {
 			.forHorizontalAxis(),
 
 		CONTROLS = shape(0, 0, 6, 16, 14, 16).forHorizontal(NORTH),
+		CONTRAPTION_CONTROLS = shape(0, 0, 6, 2, 14, 16).add(14, 0, 6, 16, 14, 16)
+			.add(0, 0, 14, 16, 14, 16)
+			.add(0, 0, 7, 16, 10, 16)
+			.forHorizontal(NORTH),
 
 		NIXIE_TUBE = shape(9, 0, 5, 15, 12, 11).add(1, 0, 5, 7, 12, 11)
 			.forHorizontalAxis(),
@@ -181,8 +188,8 @@ public class AllShapes {
 	// Static Block Shapes
 	public static final VoxelShape
 
-	TRACK_CROSS = shape(TRACK_ORTHO.get(SOUTH)).add(TRACK_ORTHO.get(EAST))
-		.build(),
+		TRACK_CROSS = shape(TRACK_ORTHO.get(SOUTH)).add(TRACK_ORTHO.get(EAST))
+			.build(),
 
 		TRACK_CROSS_DIAG = shape(TRACK_DIAG.get(SOUTH)).add(TRACK_DIAG.get(EAST))
 			.build(),
@@ -211,6 +218,7 @@ public class AllShapes {
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 16, 16), SEAT = cuboid(0, 0, 0, 16, 8, 16),
 		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16),
+		SEAT_COLLISION_PLAYERS = cuboid(0, 0, 0, 16, 3, 16),
 		MECHANICAL_PROCESSOR_SHAPE = shape(Shapes.block()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
 		TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11)

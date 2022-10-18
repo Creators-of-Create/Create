@@ -593,7 +593,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShapeless(b -> b.requires(I.railwayCasing())
 				.requires(Items.COMPASS)),
 
-		TRAIN_CONTROLS = create(AllBlocks.CONTROLS).unlockedBy(I::railwayCasing)
+		TRAIN_CONTROLS = create(AllBlocks.TRAIN_CONTROLS).unlockedBy(I::railwayCasing)
 			.viaShaped(b -> b.define('I', I.precisionMechanism())
 				.define('B', Items.LEVER)
 				.define('C', I.railwayCasing())

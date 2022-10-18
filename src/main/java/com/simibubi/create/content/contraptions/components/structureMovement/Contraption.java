@@ -21,8 +21,6 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.DoorBlock;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -36,6 +34,7 @@ import com.simibubi.create.content.contraptions.components.actors.BlockBreakingM
 import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsMovement;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
@@ -89,12 +88,14 @@ import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -138,6 +139,8 @@ public abstract class Contraption {
 	protected Map<BlockPos, StructureBlockInfo> blocks;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
 	protected Map<BlockPos, MovingInteractionBehaviour> interactors;
+	protected List<ItemStack> disabledActors;
+
 	protected List<AABB> superglue;
 	protected List<BlockPos> seats;
 	protected Map<UUID, Integer> seatMapping;
@@ -163,6 +166,7 @@ public abstract class Contraption {
 		blocks = new HashMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
+		disabledActors = new ArrayList<>();
 		modelData = new HashMap<>();
 		interactors = new HashMap<>();
 		superglue = new ArrayList<>();
@@ -604,7 +608,7 @@ public abstract class Contraption {
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
 		if (AllBlocks.POWERED_SHAFT.has(blockstate))
 			blockstate = BlockHelper.copyProperties(blockstate, AllBlocks.SHAFT.getDefaultState());
-		if (AllBlocks.CONTROLS.has(blockstate))
+		if (blockstate.getBlock() instanceof ControlsBlock)
 			blockstate = blockstate.setValue(ControlsBlock.OPEN, true);
 		if (blockstate.hasProperty(SlidingDoorBlock.VISIBLE))
 			blockstate = blockstate.setValue(SlidingDoorBlock.VISIBLE, false);
@@ -701,6 +705,10 @@ public abstract class Contraption {
 				getActors().add(MutablePair.of(info, context));
 			});
 
+		disabledActors = NBTHelper.readItemList(nbt.getList("DisabledActors", Tag.TAG_COMPOUND));
+		for (ItemStack stack : disabledActors)
+			setActorsActive(stack, false);
+
 		superglue.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Superglue", Tag.TAG_COMPOUND),
 			c -> superglue.add(SuperGlueEntity.readBoundingBox(c)));
@@ -753,6 +761,8 @@ public abstract class Contraption {
 			actorsNBT.add(compound);
 		}
 
+		ListTag disabledActorsNBT = NBTHelper.writeItemList(disabledActors);
+
 		ListTag superglueNBT = new ListTag();
 		if (!spawnPacket) {
 			for (AABB glueEntry : superglue) {
@@ -789,6 +799,7 @@ public abstract class Contraption {
 
 		nbt.put("Blocks", blocksNBT);
 		nbt.put("Actors", actorsNBT);
+		nbt.put("DisabledActors", disabledActorsNBT);
 		nbt.put("Interactors", interactorNBT);
 		nbt.put("Superglue", superglueNBT);
 		nbt.put("Anchor", NbtUtils.writeBlockPos(anchor));
@@ -1005,7 +1016,7 @@ public abstract class Contraption {
 		if (disassembled)
 			return;
 		disassembled = true;
-		
+
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (StructureBlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
@@ -1052,7 +1063,8 @@ public abstract class Contraption {
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
 				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
 				if (verticalRotation) {
-					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock || state.getBlock() instanceof DoorBlock)
+					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock
+						|| state.getBlock() instanceof DoorBlock)
 						world.destroyBlock(targetPos, true);
 				}
 
@@ -1119,12 +1131,55 @@ public abstract class Contraption {
 	}
 
 	public void startMoving(Level world) {
+		disabledActors.clear();
+
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : actors) {
 			MovementContext context = new MovementContext(world, pair.left, this);
-			AllMovementBehaviours.getBehaviour(pair.left.state)
-				.startMoving(context);
+			MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.left.state);
+			behaviour.startMoving(context);
 			pair.setRight(context);
+			if (behaviour instanceof ContraptionControlsMovement) 
+				disableActorOnStart(context);
 		}
+
+		for (ItemStack stack : disabledActors)
+			setActorsActive(stack, false);
+	}
+	
+	protected void disableActorOnStart(MovementContext context) {
+		if (!ContraptionControlsMovement.isDisabledInitially(context))
+			return;
+		ItemStack filter = ContraptionControlsMovement.getFilter(context);
+		if (filter == null)
+			return;
+		if (isActorTypeDisabled(filter))
+			return;
+		disabledActors.add(filter);
+	}
+
+	public boolean isActorTypeDisabled(ItemStack filter) {
+		return disabledActors.stream()
+			.anyMatch(i -> ContraptionControlsMovement.isSameFilter(i, filter));
+	}
+
+	public void setActorsActive(ItemStack referenceStack, boolean enable) {
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : actors) {
+			MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.left.state);
+			if (behaviour == null)
+				continue;
+			ItemStack behaviourStack = behaviour.canBeDisabledVia(pair.right);
+			if (behaviourStack == null)
+				continue;
+			if (!referenceStack.isEmpty() && !ContraptionControlsMovement.isSameFilter(referenceStack, behaviourStack))
+				continue;
+			pair.right.disabled = !enable;
+			if (!enable)
+				behaviour.onDisabledByControls(pair.right);
+		}
+	}
+
+	public List<ItemStack> getDisabledActors() {
+		return disabledActors;
 	}
 
 	public void stop(Level world) {
@@ -1211,6 +1266,14 @@ public abstract class Contraption {
 
 	public List<MutablePair<StructureBlockInfo, MovementContext>> getActors() {
 		return actors;
+	}
+
+	@Nullable
+	public MutablePair<StructureBlockInfo, MovementContext> getActorAt(BlockPos localPos) {
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : actors)
+			if (localPos.equals(pair.left.pos))
+				return pair;
+		return null;
 	}
 
 	public Map<BlockPos, MovingInteractionBehaviour> getInteractors() {

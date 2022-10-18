@@ -8,11 +8,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionDisableActorPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.TrainCollisionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContactEditPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorFloorListPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorTargetFloorPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRemovalPacket;
@@ -148,6 +152,10 @@ public enum AllPackets {
 	OBSERVER_STRESSOMETER(GaugeObservedPacket.class, GaugeObservedPacket::new, PLAY_TO_SERVER),
 	EJECTOR_AWARD(EjectorAwardPacket.class, EjectorAwardPacket::new, PLAY_TO_SERVER),
 	TRACK_GRAPH_REQUEST(TrackGraphRequestPacket.class, TrackGraphRequestPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_ELEVATOR_CONTACT(ElevatorContactEditPacket.class, ElevatorContactEditPacket::new, PLAY_TO_SERVER),
+	REQUEST_FLOOR_LIST(ElevatorFloorListPacket.RequestFloorList.class, ElevatorFloorListPacket.RequestFloorList::new,
+		PLAY_TO_SERVER),
+	ELEVATOR_SET_FLOOR(ElevatorTargetFloorPacket.class, ElevatorTargetFloorPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
@@ -184,6 +192,8 @@ public enum AllPackets {
 	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_RELOCATION(ContraptionRelocationPacket.class, ContraptionRelocationPacket::new, PLAY_TO_CLIENT),
 	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket::new, PLAY_TO_CLIENT),
+	UPDATE_ELEVATOR_FLOORS(ElevatorFloorListPacket.class, ElevatorFloorListPacket::new, PLAY_TO_CLIENT),
+	CONTRAPTION_ACTOR_TOGGLE(ContraptionDisableActorPacket.class, ContraptionDisableActorPacket::new, PLAY_TO_CLIENT),
 
 	;
 

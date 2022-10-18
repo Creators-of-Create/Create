@@ -73,7 +73,7 @@ public class ChangeThrottleInstruction extends ScheduleInstruction {
 	}
 
 	private ItemStack icon() {
-		return AllBlocks.CONTROLS.asStack();
+		return AllBlocks.TRAIN_CONTROLS.asStack();
 	}
 
 	@Override

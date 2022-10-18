@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.tileEntity.behaviour.filtering;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
@@ -131,7 +132,10 @@ public class FilteringRenderer {
 
 				ms.pushPose();
 				slotPositioning.transform(blockState, ms);
-				ValueBoxRenderer.renderItemIntoValueBox(filter, ms, buffer, light, overlay);
+				if (AllBlocks.CONTRAPTION_CONTROLS.has(blockState))
+					ValueBoxRenderer.renderFlatItemIntoValueBox(filter, ms, buffer, light, overlay);
+				else
+					ValueBoxRenderer.renderItemIntoValueBox(filter, ms, buffer, light, overlay);
 				ms.popPose();
 			}
 			sided.fromSide(side);

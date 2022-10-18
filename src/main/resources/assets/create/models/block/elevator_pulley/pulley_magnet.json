@@ -1,0 +1,41 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/elevator_pulley",
+		"particle": "create:block/brass_gearbox"
+	},
+	"elements": [
+		{
+			"from": [3, -3, 3],
+			"to": [13, 2, 13],
+			"faces": {
+				"north": {"uv": [11, 10.5, 16, 13], "texture": "#0"},
+				"east": {"uv": [11, 10.5, 16, 13], "texture": "#0"},
+				"south": {"uv": [11, 10.5, 16, 13], "texture": "#0"},
+				"west": {"uv": [11, 10.5, 16, 13], "texture": "#0"},
+				"up": {"uv": [6, 8, 11, 13], "texture": "#0"},
+				"down": {"uv": [6, 8, 11, 13], "texture": "#0"}
+			}
+		},
+		{
+			"from": [5, 2, 4],
+			"to": [11, 5, 12],
+			"faces": {
+				"north": {"uv": [12, 9, 15, 10.5], "texture": "#0"},
+				"east": {"uv": [10, 13, 14, 14.5], "texture": "#0"},
+				"south": {"uv": [12, 9, 15, 10.5], "texture": "#0"},
+				"west": {"uv": [10, 13, 14, 14.5], "texture": "#0"},
+				"up": {"uv": [6, 13, 10, 16], "rotation": 90, "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Anchor",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

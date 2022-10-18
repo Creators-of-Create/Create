@@ -17,6 +17,8 @@ import com.simibubi.create.content.contraptions.components.actors.PSIInstance;
 import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceRenderer;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsRenderer;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsTileEntity;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterInstance;
@@ -65,6 +67,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContactTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorPulleyRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorPulleyTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageTileEntity;
@@ -476,6 +481,18 @@ public class AllTileEntities {
 		.renderer(() -> PulleyRenderer::new)
 		.register();
 
+	public static final BlockEntityEntry<ElevatorPulleyTileEntity> ELEVATOR_PULLEY = Create.registrate()
+		.tileEntity("elevator_pulley", ElevatorPulleyTileEntity::new)
+//		.instance(() -> ElevatorPulleyInstance::new, false)
+		.validBlocks(AllBlocks.ELEVATOR_PULLEY)
+		.renderer(() -> ElevatorPulleyRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<ElevatorContactTileEntity> ELEVATOR_CONTACT = Create.registrate()
+		.tileEntity("elevator_contact", ElevatorContactTileEntity::new)
+		.validBlocks(AllBlocks.ELEVATOR_CONTACT)
+		.register();
+
 	public static final BlockEntityEntry<ChassisTileEntity> CHASSIS = Create.registrate()
 		.tileEntity("chassis", ChassisTileEntity::new)
 		.validBlocks(AllBlocks.RADIAL_CHASSIS, AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
@@ -487,6 +504,12 @@ public class AllTileEntities {
 		.instance(() -> StickerInstance::new, false)
 		.validBlocks(AllBlocks.STICKER)
 		.renderer(() -> StickerRenderer::new)
+		.register();
+	
+	public static final BlockEntityEntry<ContraptionControlsTileEntity> CONTRAPTION_CONTROLS = Create.registrate()
+		.tileEntity("contraption_controls", ContraptionControlsTileEntity::new)
+		.validBlocks(AllBlocks.CONTRAPTION_CONTROLS)
+		.renderer(() -> ContraptionControlsRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<DrillTileEntity> DRILL = Create.registrate()
@@ -653,7 +676,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<PlacardTileEntity> PLACARD = Create.registrate()
 		.tileEntity("placard", PlacardTileEntity::new)
 		.validBlocks(AllBlocks.PLACARD)
@@ -780,7 +803,7 @@ public class AllTileEntities {
 		.renderer(() -> TrackRenderer::new)
 		.validBlocks(AllBlocks.TRACK)
 		.register();
-	
+
 	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = Create.registrate()
 		.tileEntity("fake_track", FakeTrackTileEntity::new)
 		.validBlocks(AllBlocks.FAKE_TRACK)
@@ -797,7 +820,7 @@ public class AllTileEntities {
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
-	
+
 	public static final BlockEntityEntry<SlidingDoorTileEntity> SLIDING_DOOR = Create.registrate()
 		.tileEntity("sliding_door", SlidingDoorTileEntity::new)
 		.renderer(() -> SlidingDoorRenderer::new)
@@ -816,7 +839,7 @@ public class AllTileEntities {
 		.renderer(() -> SignalRenderer::new)
 		.validBlocks(AllBlocks.TRACK_SIGNAL)
 		.register();
-	
+
 	public static final BlockEntityEntry<TrackObserverTileEntity> TRACK_OBSERVER = Create.registrate()
 		.tileEntity("track_observer", TrackObserverTileEntity::new)
 		.renderer(() -> TrackObserverRenderer::new)

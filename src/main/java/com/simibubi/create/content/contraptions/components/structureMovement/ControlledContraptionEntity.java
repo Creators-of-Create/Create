@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -48,6 +49,15 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		entity.setContraption(contraption);
 		return entity;
 	}
+	
+	@Override
+	public void setPos(double x, double y, double z) {
+		super.setPos(x, y, z);
+		if (!level.isClientSide())
+			return;
+		for (Entity entity : getPassengers())
+			positionRider(entity);
+	}
 
 	@Override
 	public Vec3 getContactPointMotion(Vec3 globalContactPoint) {
@@ -62,7 +72,6 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		if (contraption instanceof BearingContraption)
 			rotationAxis = ((BearingContraption) contraption).getFacing()
 				.getAxis();
-
 	}
 
 	@Override
@@ -113,6 +122,11 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 
 	public void setAngle(float angle) {
 		this.angle = angle;
+
+		if (!level.isClientSide())
+			return;
+		for (Entity entity : getPassengers())
+			positionRider(entity);
 	}
 
 	public float getAngle(float partialTicks) {

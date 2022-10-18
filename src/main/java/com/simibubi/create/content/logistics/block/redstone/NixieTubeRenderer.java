@@ -93,25 +93,25 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 		ms.pushPose();
 		ms.translate((charWidth - shadowOffset) / -2f, -height, 0);
-		drawChar(ms, buffer, c, flickeringBrightColor);
+		drawInWorldString(ms, buffer, c, flickeringBrightColor);
 		ms.pushPose();
 		ms.translate(shadowOffset, shadowOffset, -1 / 16f);
-		drawChar(ms, buffer, c, darkColor);
+		drawInWorldString(ms, buffer, c, darkColor);
 		ms.popPose();
 		ms.popPose();
 
 		ms.pushPose();
 		ms.scale(-1, 1, 1);
 		ms.translate((charWidth - shadowOffset) / -2f, -height, 0);
-		drawChar(ms, buffer, c, darkColor);
+		drawInWorldString(ms, buffer, c, darkColor);
 		ms.pushPose();
 		ms.translate(-shadowOffset, shadowOffset, -1 / 16f);
-		drawChar(ms, buffer, c, Color.mixColors(darkColor, 0, .35f));
+		drawInWorldString(ms, buffer, c, Color.mixColors(darkColor, 0, .35f));
 		ms.popPose();
 		ms.popPose();
 	}
 
-	private static void drawChar(PoseStack ms, MultiBufferSource buffer, String c, int color) {
+	public static void drawInWorldString(PoseStack ms, MultiBufferSource buffer, String c, int color) {
 		Font fontRenderer = Minecraft.getInstance().font;
 		fontRenderer.drawInBatch(c, 0, 0, color, false, ms.last()
 			.pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);

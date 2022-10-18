@@ -209,16 +209,24 @@
 			}
 		}
 	],
-	"display": {},
+	"display": {
+		"fixed": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 0, -1.75],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
 	"groups": [
 		{
 			"name": "head",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 		},
 		{
 			"name": "casing",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [10, 11, 12, 13, 14]
 		}
 	]

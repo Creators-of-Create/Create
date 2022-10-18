@@ -38,10 +38,14 @@ public class ValueBox extends ChasingAABBOutline {
 	protected BlockState blockState;
 
 	public ValueBox(Component label, AABB bb, BlockPos pos) {
+		this(label, bb, pos, Minecraft.getInstance().level.getBlockState(pos));
+	}
+	
+	public ValueBox(Component label, AABB bb, BlockPos pos, BlockState state) {
 		super(bb);
 		this.label = label;
 		this.pos = pos;
-		this.blockState = Minecraft.getInstance().level.getBlockState(pos);
+		this.blockState = state;
 	}
 
 	public ValueBox transform(ValueBoxTransform transform) {
@@ -167,6 +171,11 @@ public class ValueBox extends ChasingAABBOutline {
 
 		public TextValueBox(Component label, AABB bb, BlockPos pos, Component text) {
 			super(label, bb, pos);
+			this.text = text;
+		}
+		
+		public TextValueBox(Component label, AABB bb, BlockPos pos, BlockState state, Component text) {
+			super(label, bb, pos, state);
 			this.text = text;
 		}
 

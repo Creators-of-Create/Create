@@ -54,12 +54,17 @@ public class AllSpriteShifts {
 		CHASSIS_STICKY = omni("linear_chassis_end_sticky");
 
 	public static final CTSpriteShiftEntry BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
-		FLUID_TANK = getCT(AllCTTypes.RECTANGLE, "fluid_tank"), FLUID_TANK_TOP = getCT(AllCTTypes.RECTANGLE, "fluid_tank_top"),
+		FLUID_TANK = getCT(AllCTTypes.RECTANGLE, "fluid_tank"),
+		FLUID_TANK_TOP = getCT(AllCTTypes.RECTANGLE, "fluid_tank_top"),
 		FLUID_TANK_INNER = getCT(AllCTTypes.RECTANGLE, "fluid_tank_inner"),
 		CREATIVE_FLUID_TANK = getCT(AllCTTypes.CROSS, "creative_fluid_tank");
 
 	public static final Couple<CTSpriteShiftEntry> VAULT_TOP = vault("top"), VAULT_FRONT = vault("front"),
 		VAULT_SIDE = vault("side"), VAULT_BOTTOM = vault("bottom");
+
+	public static final SpriteShiftEntry ELEVATOR_BELT =
+		get("block/elevator_pulley_belt", "block/elevator_pulley_belt_scroll"),
+		ELEVATOR_COIL = get("block/elevator_pulley_coil", "block/elevator_pulley_coil_scroll");
 
 	public static final SpriteShiftEntry BELT = get("block/belt", "block/belt_scroll"),
 		BELT_OFFSET = get("block/belt_offset", "block/belt_scroll"),

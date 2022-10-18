@@ -3,6 +3,8 @@
   "values": [
     "create:andesite_ladder",
     "create:brass_ladder",
-    "create:copper_ladder"
+    "create:copper_ladder",
+    "create:rope",
+    "create:pulley_magnet"
   ]
 }

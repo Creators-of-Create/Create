@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 11",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -55,6 +55,7 @@
 	"block.create.clutch": "离合器",
 	"block.create.cogwheel": "齿轮",
 	"block.create.content_observer": "物品侦测器",
+	"block.create.contraption_controls": "UNLOCALIZED: Contraption Controls",
 	"block.create.controller_rail": "控制铁轨",
 	"block.create.controls": "列车驾驶台",
 	"block.create.copper_backtank": "铜背罐",
@@ -204,6 +205,8 @@
 	"block.create.display_board": "翻牌显示器",
 	"block.create.display_link": "显示链接器",
 	"block.create.dripstone_pillar": "滴水石柱",
+	"block.create.elevator_contact": "UNLOCALIZED: Elevator Contact",
+	"block.create.elevator_pulley": "UNLOCALIZED: Elevator Pulley",
 	"block.create.encased_chain_drive": "链式传动箱",
 	"block.create.encased_fan": "鼓风机",
 	"block.create.encased_fluid_pipe": "流体管道箱",
@@ -1424,6 +1427,10 @@
 	"create.boiler.via_one_engine": "通过1个引擎",
 	"create.boiler.via_engines": "通过%1$s个引擎",
 
+	"create.elevator_contact.title": "UNLOCALIZED: Elevator Contact",
+	"create.elevator_contact.floor_identifier": "UNLOCALIZED: Floor Identifier",
+	"create.elevator_contact.floor_description": "UNLOCALIZED: Floor Description",
+
 	"create.gui.schedule.lmb_edit": "左键点击编辑",
 	"create.gui.schedule.rmb_remove": "右键点击移除",
 	"create.gui.schedule.duplicate": "复制",
@@ -1629,6 +1636,10 @@
 	"create.contraption.controls.start_controlling": "现在控制：%1$s",
 	"create.contraption.controls.stop_controlling": "停止控制装置",
 	"create.contraption.controls.approach_station": "按住%1$s以接近%2$s",
+	"create.contraption.controls.specific_actor_toggle": "UNLOCALIZED: %1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
+	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
 
 	"create.display_link.set": "已选择目标位置",
 	"create.display_link.success": "成功绑定到目标位置",
@@ -1691,6 +1702,7 @@
 	"create.display_source.max_enchant_level": "最大附魔花费",
 	"create.display_source.boiler_status": "锅炉状态",
 	"create.display_source.entity_name": "实体名称",
+	"create.display_source.current_floor": "UNLOCALIZED: Elevator Location",
 	"create.display_source.kinetic_speed": "转速（RPM）",
 	"create.display_source.kinetic_speed.absolute": "无视转向",
 	"create.display_source.kinetic_speed.directional": "包含转向",

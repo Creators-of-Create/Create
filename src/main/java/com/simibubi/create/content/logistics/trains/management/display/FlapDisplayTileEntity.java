@@ -111,9 +111,10 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 		if ((!level.isClientSide || !isRunning) && !isVirtual())
 			return;
 		int activeFlaps = 0;
+		boolean instant = getSpeed() > 128;
 		for (FlapDisplayLayout line : lines)
 			for (FlapDisplaySection section : line.getSections())
-				activeFlaps += section.tick();
+				activeFlaps += section.tick(instant);
 		if (activeFlaps == 0)
 			return;
 

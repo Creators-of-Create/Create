@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 8",
+	"_": "Missing Localizations: 19",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -55,6 +55,7 @@
 	"block.create.clutch": "離合器",
 	"block.create.cogwheel": "齒輪",
 	"block.create.content_observer": "物品偵測器",
+	"block.create.contraption_controls": "UNLOCALIZED: Contraption Controls",
 	"block.create.controller_rail": "控制軌道",
 	"block.create.controls": "火車控制台",
 	"block.create.copper_backtank": "銅製後背包",
@@ -204,6 +205,8 @@
 	"block.create.display_board": "顯示板",
 	"block.create.display_link": "顯示鏈路",
 	"block.create.dripstone_pillar": "鐘乳石柱",
+	"block.create.elevator_contact": "UNLOCALIZED: Elevator Contact",
+	"block.create.elevator_pulley": "UNLOCALIZED: Elevator Pulley",
 	"block.create.encased_chain_drive": "鏈式傳動箱",
 	"block.create.encased_fan": "鼓風機",
 	"block.create.encased_fluid_pipe": "流體管道箱",
@@ -1424,6 +1427,10 @@
 	"create.boiler.via_one_engine": "透過 1 個引擎",
 	"create.boiler.via_engines": "透過 %1$s 個引擎",
 
+	"create.elevator_contact.title": "UNLOCALIZED: Elevator Contact",
+	"create.elevator_contact.floor_identifier": "UNLOCALIZED: Floor Identifier",
+	"create.elevator_contact.floor_description": "UNLOCALIZED: Floor Description",
+
 	"create.gui.schedule.lmb_edit": "左鍵點擊編輯",
 	"create.gui.schedule.rmb_remove": "右鍵點擊移除",
 	"create.gui.schedule.duplicate": "複製",
@@ -1629,6 +1636,10 @@
 	"create.contraption.controls.start_controlling": "正在控制：%1$s",
 	"create.contraption.controls.stop_controlling": "停止控制裝置",
 	"create.contraption.controls.approach_station": "按住 %1$s 以接近 %2$s",
+	"create.contraption.controls.specific_actor_toggle": "UNLOCALIZED: %1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
+	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
 
 	"create.display_link.set": "已選定目標位置",
 	"create.display_link.success": "成功綁定到目標位置",
@@ -1691,6 +1702,7 @@
 	"create.display_source.max_enchant_level": "最大附魔費用",
 	"create.display_source.boiler_status": "鍋爐狀態",
 	"create.display_source.entity_name": "實體名稱",
+	"create.display_source.current_floor": "UNLOCALIZED: Elevator Location",
 	"create.display_source.kinetic_speed": "轉速 (RPM)",
 	"create.display_source.kinetic_speed.absolute": "無視轉向",
 	"create.display_source.kinetic_speed.directional": "顯示轉向",

@@ -1,8 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
@@ -14,13 +19,14 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -34,13 +40,23 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 	protected int initialOffset;
 	private float prevAnimatedOffset;
 
+	protected BlockPos mirrorParent;
+	protected List<BlockPos> mirrorChildren;
+	public WeakReference<AbstractContraptionEntity> sharedMirrorContraption;
+
 	public PulleyTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
 	@Override
 	protected AABB createRenderBoundingBox() {
-		return super.createRenderBoundingBox().expandTowards(0, -offset, 0);
+		double expandY = -offset;
+		if (sharedMirrorContraption != null) {
+			AbstractContraptionEntity ace = sharedMirrorContraption.get();
+			if (ace != null)
+				expandY = ace.getY() - worldPosition.getY();
+		}
+		return super.createRenderBoundingBox().expandTowards(0, expandY, 0);
 	}
 
 	@Override
@@ -48,17 +64,38 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.PULLEY_MAXED);
 	}
-	
+
 	@Override
 	public void tick() {
 		float prevOffset = offset;
 		super.tick();
+
+		if (level.isClientSide() && mirrorParent != null)
+			if (sharedMirrorContraption == null || sharedMirrorContraption.get() == null
+				|| !sharedMirrorContraption.get()
+					.isAlive()) {
+				sharedMirrorContraption = null;
+				if (level.getBlockEntity(mirrorParent)instanceof PulleyTileEntity pte && pte.movedContraption != null)
+					sharedMirrorContraption = new WeakReference<>(pte.movedContraption);
+			}
+
 		if (isVirtual())
 			prevAnimatedOffset = offset;
 		invalidateRenderBoundingBox();
-		
+
 		if (prevOffset < 200 && offset >= 200)
 			award(AllAdvancements.PULLEY_MAXED);
+	}
+
+	@Override
+	protected boolean isPassive() {
+		return mirrorParent != null;
+	}
+
+	@Nullable
+	public AbstractContraptionEntity getAttachedContraption() {
+		return mirrorParent != null && sharedMirrorContraption != null ? sharedMirrorContraption.get()
+			: movedContraption;
 	}
 
 	@Override
@@ -66,7 +103,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 		if (!(level.getBlockState(worldPosition)
 			.getBlock() instanceof PulleyBlock))
 			return;
-		if (speed == 0)
+		if (speed == 0 && mirrorParent == null)
 			return;
 		int maxLength = AllConfigs.SERVER.kinetics.maxRopeLength.get();
 		int i = 1;
@@ -85,7 +122,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 			return;
 
 		// Collect Construct
-		if (!level.isClientSide) {
+		if (!level.isClientSide && mirrorParent == null) {
 			needsContraption = false;
 			BlockPos anchor = worldPosition.below(Mth.floor(offset + 1));
 			initialOffset = Mth.floor(offset);
@@ -102,17 +139,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 			if (!canAssembleStructure && getSpeed() > 0)
 				return;
 
-			for (i = ((int) offset); i > 0; i--) {
-				BlockPos offset = worldPosition.below(i);
-				BlockState oldState = level.getBlockState(offset);
-				if (oldState.getBlock() instanceof SimpleWaterloggedBlock
-					&& oldState.hasProperty(BlockStateProperties.WATERLOGGED)
-					&& oldState.getValue(BlockStateProperties.WATERLOGGED)) {
-					level.setBlock(offset, Blocks.WATER.defaultBlockState(), 66);
-					continue;
-				}
-				level.setBlock(offset, Blocks.AIR.defaultBlockState(), 66);
-			}
+			removeRopes();
 
 			if (!contraption.getBlocks()
 				.isEmpty()) {
@@ -122,27 +149,48 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 				level.addFreshEntity(movedContraption);
 				forceMove = true;
 				needsContraption = true;
-				
+
 				if (contraption.containsBlockBreakers())
 					award(AllAdvancements.CONTRAPTION_ACTORS);
+
+				for (BlockPos pos : contraption.createColliders(level, Direction.UP)) {
+					if (pos.getY() != 0)
+						continue;
+					pos = pos.offset(anchor);
+					if (level.getBlockEntity(
+						new BlockPos(pos.getX(), worldPosition.getY(), pos.getZ()))instanceof PulleyTileEntity pte)
+						pte.startMirroringOther(worldPosition);
+				}
 			}
 		}
+		
+		if (mirrorParent != null)
+			removeRopes();
 
 		clientOffsetDiff = 0;
 		running = true;
 		sendData();
 	}
 
+	private void removeRopes() {
+		for (int i = ((int) offset); i > 0; i--) {
+			BlockPos offset = worldPosition.below(i);
+			BlockState oldState = level.getBlockState(offset);
+			level.setBlock(offset, oldState.getFluidState()
+				.createLegacyBlock(), 66);
+		}
+	}
+
 	@Override
 	public void disassemble() {
-		if (!running && movedContraption == null)
+		if (!running && movedContraption == null && mirrorParent == null)
 			return;
 		offset = getGridOffset(offset);
 		if (movedContraption != null)
 			resetContraptionToOffset();
 
 		if (!level.isClientSide) {
-			if (!remove) {
+			if (shouldCreateRopes()) {
 				if (offset > 0) {
 					BlockPos magnetPos = worldPosition.below((int) offset);
 					FluidState ifluidstate = level.getFluidState(magnetPos);
@@ -170,16 +218,22 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 						.setValue(BlockStateProperties.WATERLOGGED, waterlog[i]), 66);
 			}
 
-			if (movedContraption != null)
+			if (movedContraption != null && mirrorParent == null)
 				movedContraption.disassemble();
+			notifyMirrorsOfDisassembly();
 		}
 
 		if (movedContraption != null)
 			movedContraption.discard();
+
 		movedContraption = null;
 		initialOffset = 0;
 		running = false;
 		sendData();
+	}
+
+	protected boolean shouldCreateRopes() {
+		return !remove;
 	}
 
 	@Override
@@ -187,7 +241,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 		if (movedContraption.getContraption() instanceof PulleyContraption) {
 			PulleyContraption contraption = (PulleyContraption) movedContraption.getContraption();
 			return Vec3.atLowerCornerOf(contraption.anchor)
-				.add(0, contraption.initialOffset - offset, 0);
+				.add(0, contraption.getInitialOffset() - offset, 0);
 
 		}
 		return Vec3.ZERO;
@@ -219,12 +273,70 @@ public class PulleyTileEntity extends LinearActuatorTileEntity implements Stockp
 		initialOffset = compound.getInt("InitialOffset");
 		needsContraption = compound.getBoolean("NeedsContraption");
 		super.read(compound, clientPacket);
+
+		BlockPos prevMirrorParent = mirrorParent;
+		mirrorParent = null;
+		mirrorChildren = null;
+
+		if (compound.contains("MirrorParent")) {
+			mirrorParent = NbtUtils.readBlockPos(compound.getCompound("MirrorParent"));
+			offset = 0;
+			if (prevMirrorParent == null || !prevMirrorParent.equals(mirrorParent))
+				sharedMirrorContraption = null;
+		}
+		
+		if (compound.contains("MirrorChildren"))
+			mirrorChildren = NBTHelper.readCompoundList(compound.getList("MirrorChildren", Tag.TAG_COMPOUND),
+				NbtUtils::readBlockPos);
+
+		if (mirrorParent == null)
+			sharedMirrorContraption = null;
 	}
 
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("InitialOffset", initialOffset);
 		super.write(compound, clientPacket);
+
+		if (mirrorParent != null)
+			compound.put("MirrorParent", NbtUtils.writeBlockPos(mirrorParent));
+		if (mirrorChildren != null)
+			compound.put("MirrorChildren", NBTHelper.writeCompoundList(mirrorChildren, NbtUtils::writeBlockPos));
+	}
+
+	public void startMirroringOther(BlockPos parent) {
+		if (parent.equals(worldPosition))
+			return;
+		if (!(level.getBlockEntity(parent)instanceof PulleyTileEntity pte))
+			return;
+		if (pte.getType() != getType())
+			return;
+		if (pte.mirrorChildren == null)
+			pte.mirrorChildren = new ArrayList<>();
+		pte.mirrorChildren.add(worldPosition);
+		pte.notifyUpdate();
+
+		mirrorParent = parent;
+		try {
+			assemble();
+		} catch (AssemblyException e) {
+		}
+		notifyUpdate();
+	}
+
+	public void notifyMirrorsOfDisassembly() {
+		if (mirrorChildren == null)
+			return;
+		for (BlockPos blockPos : mirrorChildren) {
+			if (!(level.getBlockEntity(blockPos)instanceof PulleyTileEntity pte))
+				continue;
+			pte.offset = offset;
+			pte.disassemble();
+			pte.mirrorParent = null;
+			pte.notifyUpdate();
+		}
+		mirrorChildren.clear();
+		notifyUpdate();
 	}
 
 	@Override

@@ -22,26 +22,12 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 	@Override
 	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
-		StructureBlockInfo info = contraptionEntity.getContraption()
-			.getBlocks()
-			.get(localPos);
-		if (info == null)
+		MutablePair<StructureBlockInfo, MovementContext> actor = contraptionEntity.getContraption()
+			.getActorAt(localPos);
+		if (actor == null || actor.right == null)
 			return false;
-		MovementContext ctx = null;
-		int index = -1;
-		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraptionEntity.getContraption()
-			.getActors()) {
-			if (info.equals(pair.left)) {
-				ctx = pair.right;
-				index = contraptionEntity.getContraption()
-					.getActors()
-					.indexOf(pair);
-				break;
-			}
-		}
-		if (ctx == null)
-			return false;
-
+		
+		MovementContext ctx = actor.right;
 		ItemStack heldStack = player.getItemInHand(activeHand);
 		if (heldStack.getItem()
 			.equals(AllItems.WRENCH.get())) {
@@ -73,8 +59,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			ctx.tileData.put("HeldItem", heldStack.serializeNBT());
 			ctx.data.put("HeldItem", heldStack.serializeNBT());
 		}
-		if (index >= 0)
-			setContraptionActorData(contraptionEntity, index, info, ctx);
+//		if (index >= 0)
+//			setContraptionActorData(contraptionEntity, index, info, ctx);
 		return true;
 	}
 }

@@ -80,8 +80,8 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 			renderAt(world, rope, offset - i - 1, pos, ms, vb);
 	}
 
-	private void renderAt(LevelAccessor world, SuperByteBuffer partial, float offset, BlockPos pulleyPos, PoseStack ms,
-		VertexConsumer buffer) {
+	public static void renderAt(LevelAccessor world, SuperByteBuffer partial, float offset, BlockPos pulleyPos,
+		PoseStack ms, VertexConsumer buffer) {
 		BlockPos actualPos = pulleyPos.below((int) offset);
 		int light = LevelRenderer.getLightColor(world, world.getBlockState(actualPos), actualPos);
 		partial.translate(0, -offset, 0)

@@ -5,6 +5,7 @@ import java.util.Map;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.logistics.trains.entity.CarriageSyncData;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -24,7 +25,12 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 	public boolean renderAsNormalTileEntity() {
 		return true;
 	}
-
+	
+	@Override
+	public boolean mustTickWhileDisabled() {
+		return true;
+	}
+	
 	@Override
 	public void tick(MovementContext context) {
 		StructureBlockInfo structureBlockInfo = context.contraption.getBlocks()
@@ -97,6 +103,10 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 	}
 
 	protected boolean shouldOpen(MovementContext context) {
+		if (context.disabled)
+			return false;
+		if (context.contraption instanceof ElevatorContraption ec && ec.arrived)
+			return true;
 		if (context.contraption.entity instanceof CarriageContraptionEntity cce) {
 			CarriageSyncData carriageData = cce.getCarriageData();
 			if (Math.abs(carriageData.distanceToDestination) > 1)

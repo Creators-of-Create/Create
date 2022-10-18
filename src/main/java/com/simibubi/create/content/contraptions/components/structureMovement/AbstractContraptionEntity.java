@@ -448,7 +448,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 			context.rotation = v -> applyRotation(v, 1);
 			context.position = actorPosition;
-			if (!isActorActive(context, actor))
+			if (!isActorActive(context, actor) && !actor.mustTickWhileDisabled())
 				continue;
 			if (newPosVisited && !context.stall) {
 				actor.visitNewPosition(context, gridPosition);

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2",
+	"_": "Missing Localizations: 13",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -55,6 +55,7 @@
 	"block.create.clutch": "Frizione",
 	"block.create.cogwheel": "Ingranaggio",
 	"block.create.content_observer": "Osservatore di contenuti",
+	"block.create.contraption_controls": "UNLOCALIZED: Contraption Controls",
 	"block.create.controller_rail": "Binario di controllo",
 	"block.create.controls": "Comandi del treno",
 	"block.create.copper_backtank": "Zaino serbatoio",
@@ -204,6 +205,8 @@
 	"block.create.display_board": "Tabellone",
 	"block.create.display_link": "Lettore di dati",
 	"block.create.dripstone_pillar": "Pilastro di speleotema",
+	"block.create.elevator_contact": "UNLOCALIZED: Elevator Contact",
+	"block.create.elevator_pulley": "UNLOCALIZED: Elevator Pulley",
 	"block.create.encased_chain_drive": "Trasmissione a catena",
 	"block.create.encased_fan": "Ventilatore",
 	"block.create.encased_fluid_pipe": "Tubo per fluidi rivestito",
@@ -1424,6 +1427,10 @@
 	"create.boiler.via_one_engine": "tramite 1 motore",
 	"create.boiler.via_engines": "tramite %1$s motori",
 
+	"create.elevator_contact.title": "UNLOCALIZED: Elevator Contact",
+	"create.elevator_contact.floor_identifier": "UNLOCALIZED: Floor Identifier",
+	"create.elevator_contact.floor_description": "UNLOCALIZED: Floor Description",
+
 	"create.gui.schedule.lmb_edit": "Click sinistro per modificare",
 	"create.gui.schedule.rmb_remove": "Click destro per rimuovere",
 	"create.gui.schedule.duplicate": "Duplica",
@@ -1629,6 +1636,10 @@
 	"create.contraption.controls.start_controlling": "Al comando di: %1$s",
 	"create.contraption.controls.stop_controlling": "Hai smesso di guidare il macchinario",
 	"create.contraption.controls.approach_station": "Tieni premuto %1$s per fermarti a %2$s",
+	"create.contraption.controls.specific_actor_toggle": "UNLOCALIZED: %1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
+	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
 
 	"create.display_link.set": "Bersaglio selezionato",
 	"create.display_link.success": "Connesso con successo alla posizione selezionata",
@@ -1691,6 +1702,7 @@
 	"create.display_source.max_enchant_level": "Livello massimo",
 	"create.display_source.boiler_status": "Stato della Caldaia",
 	"create.display_source.entity_name": "Nome entità",
+	"create.display_source.current_floor": "UNLOCALIZED: Elevator Location",
 	"create.display_source.kinetic_speed": "Velocità di rotazione",
 	"create.display_source.kinetic_speed.absolute": "Ignora direzione",
 	"create.display_source.kinetic_speed.directional": "Includi direzione",

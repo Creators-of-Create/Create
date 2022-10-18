@@ -83,7 +83,9 @@ public class DeployerActorInstance extends ActorInstance {
     @Override
     public void beginFrame() {
         double factor;
-        if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
+        if (context.disabled) {
+        	factor = 0;
+        } else if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
             factor = Mth.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
         } else {
         	Vec3 center = VecHelper.getCenterOf(new BlockPos(context.position));

@@ -39,8 +39,9 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(HarvesterBlock.FACING)
-			.getOpposite());
+		return MovementBehaviour.super.isActive(context)
+			&& !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(HarvesterBlock.FACING)
+				.getOpposite());
 	}
 
 	@Override

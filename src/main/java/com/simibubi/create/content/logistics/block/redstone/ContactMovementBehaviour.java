@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContraption;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +17,9 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
-		return Vec3.atLowerCornerOf(context.state.getValue(RedstoneContactBlock.FACING).getNormal()).scale(.65f);
+		return Vec3.atLowerCornerOf(context.state.getValue(RedstoneContactBlock.FACING)
+			.getNormal())
+			.scale(.65f);
 	}
 
 	@Override
@@ -31,16 +34,22 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 
 		deactivateLastVisitedContact(context);
 		BlockState visitedState = world.getBlockState(pos);
-		if (!AllBlocks.REDSTONE_CONTACT.has(visitedState))
+		if (!AllBlocks.REDSTONE_CONTACT.has(visitedState) && !AllBlocks.ELEVATOR_CONTACT.has(visitedState))
 			return;
 
-		Vec3 contact = Vec3.atLowerCornerOf(block.getValue(RedstoneContactBlock.FACING).getNormal());
+		Vec3 contact = Vec3.atLowerCornerOf(block.getValue(RedstoneContactBlock.FACING)
+			.getNormal());
 		contact = context.rotation.apply(contact);
 		Direction direction = Direction.getNearest(contact.x, contact.y, contact.z);
 
-		if (!RedstoneContactBlock.hasValidContact(world, pos.relative(direction.getOpposite()), direction))
+		if (visitedState.getValue(RedstoneContactBlock.FACING) != direction.getOpposite())
 			return;
-		world.setBlockAndUpdate(pos, visitedState.setValue(RedstoneContactBlock.POWERED, true));
+
+		if (AllBlocks.REDSTONE_CONTACT.has(visitedState))
+			world.setBlockAndUpdate(pos, visitedState.setValue(RedstoneContactBlock.POWERED, true));
+		if (AllBlocks.ELEVATOR_CONTACT.has(visitedState) && context.contraption instanceof ElevatorContraption ec) 
+			ec.broadcastFloorData(world, pos);
+
 		context.data.put("lastContact", NbtUtils.writeBlockPos(pos));
 		return;
 	}
@@ -49,7 +58,7 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 	public void stopMoving(MovementContext context) {
 		deactivateLastVisitedContact(context);
 	}
-	
+
 	@Override
 	public void cancelStall(MovementContext context) {
 		MovementBehaviour.super.cancelStall(context);
@@ -57,11 +66,15 @@ public class ContactMovementBehaviour implements MovementBehaviour {
 	}
 
 	public void deactivateLastVisitedContact(MovementContext context) {
-		if (context.data.contains("lastContact")) {
-			BlockPos last = NbtUtils.readBlockPos(context.data.getCompound("lastContact"));
+		if (!context.data.contains("lastContact"))
+			return;
+
+		BlockPos last = NbtUtils.readBlockPos(context.data.getCompound("lastContact"));
+		context.data.remove("lastContact");
+		BlockState blockState = context.world.getBlockState(last);
+
+		if (AllBlocks.REDSTONE_CONTACT.has(blockState))
 			context.world.scheduleTick(last, AllBlocks.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
-			context.data.remove("lastContact");
-		}
 	}
 
 }

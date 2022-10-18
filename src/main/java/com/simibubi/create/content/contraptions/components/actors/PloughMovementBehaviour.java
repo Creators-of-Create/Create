@@ -38,8 +38,9 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(PloughBlock.FACING)
-			.getOpposite());
+		return super.isActive(context)
+			&& !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(PloughBlock.FACING)
+				.getOpposite());
 	}
 
 	@Override

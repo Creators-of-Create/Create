@@ -206,7 +206,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		shaft.rotateCentered(Direction.get(AxisDirection.POSITIVE, Axis.Y), angle);
 		m.popPose();
 
-		m.translate(offset.x, offset.y, offset.z);
+		if (!context.disabled)
+			m.translate(offset.x, offset.y, offset.z);
 		pole.transform(m);
 		hand.transform(m);
 

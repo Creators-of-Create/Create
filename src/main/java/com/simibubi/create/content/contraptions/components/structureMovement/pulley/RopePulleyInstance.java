@@ -39,6 +39,6 @@ public class RopePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected boolean isRunning() {
-		return ((PulleyTileEntity) blockEntity).running || blockEntity.isVirtual();
+		return PulleyRenderer.isPulleyRunning(blockEntity);
 	}
 }

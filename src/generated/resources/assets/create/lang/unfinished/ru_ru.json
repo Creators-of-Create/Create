@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 11",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -55,6 +55,7 @@
 	"block.create.clutch": "Сцепление",
 	"block.create.cogwheel": "Шестерня",
 	"block.create.content_observer": "Наблюдатель за содержимым",
+	"block.create.contraption_controls": "UNLOCALIZED: Contraption Controls",
 	"block.create.controller_rail": "Контролирующие рельсы",
 	"block.create.controls": "Контроллер поезда",
 	"block.create.copper_backtank": "Медный баллон",
@@ -204,6 +205,8 @@
 	"block.create.display_board": "Механическое табло",
 	"block.create.display_link": "Передатчик информации",
 	"block.create.dripstone_pillar": "Колонна из натёчного камня",
+	"block.create.elevator_contact": "UNLOCALIZED: Elevator Contact",
+	"block.create.elevator_pulley": "UNLOCALIZED: Elevator Pulley",
 	"block.create.encased_chain_drive": "Цепной привод в корпусе",
 	"block.create.encased_fan": "Вентилятор в корпусе",
 	"block.create.encased_fluid_pipe": "Жидкостная труба в корпусе",
@@ -1424,6 +1427,10 @@
 	"create.boiler.via_one_engine": "с помощью 1 двигателя",
 	"create.boiler.via_engines": "с помощью %1$s двигателей",
 
+	"create.elevator_contact.title": "UNLOCALIZED: Elevator Contact",
+	"create.elevator_contact.floor_identifier": "UNLOCALIZED: Floor Identifier",
+	"create.elevator_contact.floor_description": "UNLOCALIZED: Floor Description",
+
 	"create.gui.schedule.lmb_edit": "ЛКМ для редактирования",
 	"create.gui.schedule.rmb_remove": "ПКМ для удаления",
 	"create.gui.schedule.duplicate": "Дублировать",
@@ -1629,6 +1636,10 @@
 	"create.contraption.controls.start_controlling": "Под управлением: %1$s",
 	"create.contraption.controls.stop_controlling": "Выход из режима управления",
 	"create.contraption.controls.approach_station": "Зажмите %1$s для прибытия на %2$s",
+	"create.contraption.controls.specific_actor_toggle": "UNLOCALIZED: %1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
+	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
 
 	"create.display_link.set": "Выбрана целевая позиция",
 	"create.display_link.success": "Успешно привязан к целевой позиции",
@@ -1691,6 +1702,7 @@
 	"create.display_source.max_enchant_level": "Уровень чар",
 	"create.display_source.boiler_status": "Статус котла",
 	"create.display_source.entity_name": "Имя существа",
+	"create.display_source.current_floor": "UNLOCALIZED: Elevator Location",
 	"create.display_source.kinetic_speed": "Обороты в минуту",
 	"create.display_source.kinetic_speed.absolute": "Без направления",
 	"create.display_source.kinetic_speed.directional": "С направлением",

@@ -1,0 +1,42 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"1": "create:block/elevator_pulley_coil",
+		"particle": "create:block/brass_gearbox"
+	},
+	"elements": [
+		{
+			"from": [3, 10, 2],
+			"to": [13, 14, 14],
+			"faces": {
+				"south": {"uv": [3, 12, 13, 16], "texture": "#1"},
+				"up": {"uv": [3, 0, 13, 12], "texture": "#1"}
+			}
+		},
+		{
+			"from": [3, 2, 2],
+			"to": [13, 14, 6],
+			"faces": {
+				"north": {"uv": [3, 4, 13, 16], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [3, 0, 13, 4], "texture": "#1"}
+			}
+		},
+		{
+			"from": [3, 2, 6],
+			"to": [13, 10, 14],
+			"faces": {
+				"south": {"uv": [3, 0, 13, 8], "texture": "#1"},
+				"down": {"uv": [3, 8, 13, 16], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Spool",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1, 2]
+		}
+	]
+}

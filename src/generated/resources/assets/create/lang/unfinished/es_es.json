@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 8",
+	"_": "Missing Localizations: 19",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -55,6 +55,7 @@
 	"block.create.clutch": "Embrague",
 	"block.create.cogwheel": "Engranaje",
 	"block.create.content_observer": "Observador de contenidos",
+	"block.create.contraption_controls": "UNLOCALIZED: Contraption Controls",
 	"block.create.controller_rail": "Raíl de control",
 	"block.create.controls": "Controles de tren",
 	"block.create.copper_backtank": "Depósito trasero de cobre",
@@ -204,6 +205,8 @@
 	"block.create.display_board": "Pantalla de visualización",
 	"block.create.display_link": "Enlace de pantalla",
 	"block.create.dripstone_pillar": "Pilar de espeleotema",
+	"block.create.elevator_contact": "UNLOCALIZED: Elevator Contact",
+	"block.create.elevator_pulley": "UNLOCALIZED: Elevator Pulley",
 	"block.create.encased_chain_drive": "Cadena de transmisión revestida",
 	"block.create.encased_fan": "Ventilador revestido",
 	"block.create.encased_fluid_pipe": "Tubería de fluidos de cobre reforzada",
@@ -1424,6 +1427,10 @@
 	"create.boiler.via_one_engine": "a través de 1 motor",
 	"create.boiler.via_engines": "a través de %1$s motores",
 
+	"create.elevator_contact.title": "UNLOCALIZED: Elevator Contact",
+	"create.elevator_contact.floor_identifier": "UNLOCALIZED: Floor Identifier",
+	"create.elevator_contact.floor_description": "UNLOCALIZED: Floor Description",
+
 	"create.gui.schedule.lmb_edit": "Clic izquierdo para editar",
 	"create.gui.schedule.rmb_remove": "Clic derecho para eliminar",
 	"create.gui.schedule.duplicate": "Duplicar",
@@ -1629,6 +1636,10 @@
 	"create.contraption.controls.start_controlling": "Controlando actualmente: %1$s",
 	"create.contraption.controls.stop_controlling": "Se ha parado de controlar el artefacto móvil",
 	"create.contraption.controls.approach_station": "Mantén %1$s para acercarte a %2$s",
+	"create.contraption.controls.specific_actor_toggle": "UNLOCALIZED: %1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
+	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
 
 	"create.display_link.set": "Posición objetivo seleccionada",
 	"create.display_link.success": "Posición objetivo vinculada con éxito",
@@ -1691,6 +1702,7 @@
 	"create.display_source.max_enchant_level": "Coste máximo de encantamiento",
 	"create.display_source.boiler_status": "Estado de la caldera",
 	"create.display_source.entity_name": "Nombre de la entidad",
+	"create.display_source.current_floor": "UNLOCALIZED: Elevator Location",
 	"create.display_source.kinetic_speed": "Velocidad de rotación (RPM)",
 	"create.display_source.kinetic_speed.absolute": "Ignorar dirección",
 	"create.display_source.kinetic_speed.directional": "Incluir dirección",

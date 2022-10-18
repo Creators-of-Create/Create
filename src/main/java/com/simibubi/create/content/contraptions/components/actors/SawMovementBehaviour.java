@@ -30,8 +30,9 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(SawBlock.FACING)
-			.getOpposite());
+		return super.isActive(context)
+			&& !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(SawBlock.FACING)
+				.getOpposite());
 	}
 
 	@Override

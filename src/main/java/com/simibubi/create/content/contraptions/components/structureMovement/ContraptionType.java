@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonContraption;
@@ -25,7 +26,8 @@ public class ContraptionType {
 		MOUNTED = register("mounted", MountedContraption::new),
 		STABILIZED = register("stabilized", StabilizedContraption::new),
 		GANTRY = register("gantry", GantryContraption::new),
-		CARRIAGE = register("carriage", CarriageContraption::new);
+		CARRIAGE = register("carriage", CarriageContraption::new),
+		ELEVATOR = register("elevator", ElevatorContraption::new);
 
 	Supplier<? extends Contraption> factory;
 	String id;

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 4",
+	"_": "Missing Localizations: 15",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -55,6 +55,7 @@
 	"block.create.clutch": "クラッチ",
 	"block.create.cogwheel": "歯車",
 	"block.create.content_observer": "コンテンツオブザーバー",
+	"block.create.contraption_controls": "UNLOCALIZED: Contraption Controls",
 	"block.create.controller_rail": "コントローラーレール",
 	"block.create.controls": "列車運転台",
 	"block.create.copper_backtank": "銅のバックタンク",
@@ -204,6 +205,8 @@
 	"block.create.display_board": "ディスプレイボード",
 	"block.create.display_link": "ディスプレイリンク",
 	"block.create.dripstone_pillar": "鍾乳石の柱",
+	"block.create.elevator_contact": "UNLOCALIZED: Elevator Contact",
+	"block.create.elevator_pulley": "UNLOCALIZED: Elevator Pulley",
 	"block.create.encased_chain_drive": "ケース入りチェーンドライブ",
 	"block.create.encased_fan": "ケース入りファン",
 	"block.create.encased_fluid_pipe": "ケース入り液体パイプ",
@@ -1424,6 +1427,10 @@
 	"create.boiler.via_one_engine": "1基のエンジン経由",
 	"create.boiler.via_engines": "%1$s基のエンジン経由",
 
+	"create.elevator_contact.title": "UNLOCALIZED: Elevator Contact",
+	"create.elevator_contact.floor_identifier": "UNLOCALIZED: Floor Identifier",
+	"create.elevator_contact.floor_description": "UNLOCALIZED: Floor Description",
+
 	"create.gui.schedule.lmb_edit": "左クリックで編集",
 	"create.gui.schedule.rmb_remove": "右クリックで削除",
 	"create.gui.schedule.duplicate": "複製",
@@ -1629,6 +1636,10 @@
 	"create.contraption.controls.start_controlling": "運転中: %1$s",
 	"create.contraption.controls.stop_controlling": "運転終了",
 	"create.contraption.controls.approach_station": "%1$sキーを長押しで%2$sに停車",
+	"create.contraption.controls.specific_actor_toggle": "UNLOCALIZED: %1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
+	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
 
 	"create.display_link.set": "対象の位置を選択しました",
 	"create.display_link.success": "対象の位置と結び付けられました",
@@ -1691,6 +1702,7 @@
 	"create.display_source.max_enchant_level": "最大エンチャントコスト",
 	"create.display_source.boiler_status": "ボイラー状態",
 	"create.display_source.entity_name": "エンティティ名",
+	"create.display_source.current_floor": "UNLOCALIZED: Elevator Location",
 	"create.display_source.kinetic_speed": "回転速度(RPM)",
 	"create.display_source.kinetic_speed.absolute": "回転方向を無視",
 	"create.display_source.kinetic_speed.directional": "回転方向を含める",

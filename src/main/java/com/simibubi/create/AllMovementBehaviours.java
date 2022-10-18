@@ -3,7 +3,7 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.CampfireMovementBehaviour;

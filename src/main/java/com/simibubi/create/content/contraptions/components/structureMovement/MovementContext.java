@@ -25,6 +25,7 @@ public class MovementContext {
 	public CompoundTag tileData;
 
 	public boolean stall;
+	public boolean disabled;
 	public boolean firstMovement;
 	public CompoundTag data;
 	public Contraption contraption;
@@ -37,6 +38,7 @@ public class MovementContext {
 		this.contraption = contraption;
 		localPos = info.pos;
 
+		disabled = false;
 		firstMovement = true;
 		motion = Vec3.ZERO;
 		relativeMotion = Vec3.ZERO;
@@ -49,6 +51,8 @@ public class MovementContext {
 	public float getAnimationSpeed() {
 		int modifier = 1000;
 		double length = -motion.length();
+		if (disabled)
+			return 0;
 		if (world.isClientSide && contraption.stalled)
 			return 700;
 		if (Math.abs(length) < 1 / 512f)

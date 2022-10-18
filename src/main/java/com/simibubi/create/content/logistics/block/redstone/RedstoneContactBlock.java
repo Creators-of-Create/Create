@@ -16,6 +16,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -62,19 +63,17 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 		if (facing != stateIn.getValue(FACING))
 			return stateIn;
 		boolean hasValidContact = hasValidContact(worldIn, currentPos, facing);
-		if (stateIn.getValue(POWERED) != hasValidContact) {
+		if (stateIn.getValue(POWERED) != hasValidContact)
 			return stateIn.setValue(POWERED, hasValidContact);
-		}
 		return stateIn;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() == this && newState.getBlock() == this) {
+		if (state.getBlock() == this && newState.getBlock() == this)
 			if (state == newState.cycle(POWERED))
 				worldIn.updateNeighborsAt(pos, this);
-		}
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
@@ -87,7 +86,13 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 
 	public static boolean hasValidContact(LevelAccessor world, BlockPos pos, Direction direction) {
 		BlockState blockState = world.getBlockState(pos.relative(direction));
-		return AllBlocks.REDSTONE_CONTACT.has(blockState) && blockState.getValue(FACING) == direction.getOpposite();
+		return (AllBlocks.REDSTONE_CONTACT.has(blockState) || AllBlocks.ELEVATOR_CONTACT.has(blockState))
+			&& blockState.getValue(FACING) == direction.getOpposite();
+	}
+
+	@Override
+	public boolean shouldCheckWeakPower(BlockState state, LevelReader level, BlockPos pos, Direction side) {
+		return false;
 	}
 
 	@Override
@@ -104,7 +109,8 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 
 	@Override
 	public int getSignal(BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		return state.getValue(POWERED) ? 15 : 0;
+		return state.getValue(POWERED) && side != state.getValue(FACING)
+			.getOpposite() ? 15 : 0;
 	}
 
 }

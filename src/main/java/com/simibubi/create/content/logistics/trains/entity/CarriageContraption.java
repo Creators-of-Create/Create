@@ -126,7 +126,7 @@ public class CarriageContraption extends Contraption {
 		if (!blocks.containsKey(controlsPos))
 			return false;
 		StructureBlockInfo info = blocks.get(controlsPos);
-		if (!AllBlocks.CONTROLS.has(info.state))
+		if (!AllBlocks.TRAIN_CONTROLS.has(info.state))
 			return false;
 		return info.state.getValue(ControlsBlock.FACING) == direction.getOpposite();
 	}
@@ -173,7 +173,7 @@ public class CarriageContraption extends Contraption {
 			&& blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL) != HeatLevel.NONE)
 			assembledBlazeBurners.add(toLocalPos(pos));
 
-		if (AllBlocks.CONTROLS.has(blockState)) {
+		if (AllBlocks.TRAIN_CONTROLS.has(blockState)) {
 			Direction facing = blockState.getValue(ControlsBlock.FACING);
 			if (facing.getAxis() != assemblyDirection.getAxis())
 				sidewaysControls = true;

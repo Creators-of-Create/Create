@@ -61,14 +61,17 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	public void tick() {
 		super.tick();
 
-		if (movedContraption != null) {
+		if (movedContraption != null)
 			if (!movedContraption.isAlive())
 				movedContraption = null;
-		}
 
+		if (isPassive())
+			return;
+		
 		if (level.isClientSide)
 			clientOffsetDiff *= .75f;
 
+		waitingForSpeedChange = false;//TODO
 		if (waitingForSpeedChange) {
 			if (movedContraption != null) {
 				if (level.isClientSide) {
@@ -144,6 +147,10 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 		}
 	}
 
+	protected boolean isPassive() {
+		return false;
+	}
+	
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -164,6 +171,10 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
+		
+		if (isPassive())
+			return;
+		
 		assembleNextTick = true;
 		waitingForSpeedChange = false;
 
@@ -249,16 +260,20 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 			disassemble();
 			return;
 		}
-		if (movementMode.get() == MovementMode.MOVE_NEVER_PLACE) {
+		if (getMovementMode() == MovementMode.MOVE_NEVER_PLACE) {
 			waitingForSpeedChange = true;
 			return;
 		}
 		int initial = getInitialOffset();
-		if ((int) (offset + .5f) != initial && movementMode.get() == MovementMode.MOVE_PLACE_RETURNED) {
+		if ((int) (offset + .5f) != initial && getMovementMode() == MovementMode.MOVE_PLACE_RETURNED) {
 			waitingForSpeedChange = true;
 			return;
 		}
 		disassemble();
+	}
+
+	protected MovementMode getMovementMode() {
+		return movementMode.get();
 	}
 
 	protected boolean moveAndCollideContraption() {
@@ -287,6 +302,8 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 
 	protected void resetContraptionToOffset() {
 		if (movedContraption == null)
+			return;
+		if (!movedContraption.isAlive())
 			return;
 		Vec3 vec = toPosition(offset);
 		movedContraption.setPos(vec.x, vec.y, vec.z);

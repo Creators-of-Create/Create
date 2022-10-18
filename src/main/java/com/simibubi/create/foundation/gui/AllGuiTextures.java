@@ -131,6 +131,8 @@ public enum AllGuiTextures implements ScreenElement {
 	I_NEW_TRAIN("schedule_2", 14, 239, 24, 16),
 	I_DISASSEMBLE_TRAIN("schedule_2", 39, 239, 24, 16),
 	I_ASSEMBLE_TRAIN("schedule_2", 64, 239, 24, 16),
+	
+	ELEVATOR_CONTACT("display_link", 20, 172, 233, 82),
 
 	// JEI
 	JEI_SLOT("jei/widgets", 18, 18),

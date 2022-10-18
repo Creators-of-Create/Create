@@ -1,7 +1,9 @@
 package com.simibubi.create;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.jozufozu.flywheel.core.PartialModel;
@@ -64,6 +66,9 @@ public class AllBlockPartials {
 		HOSE_MAGNET = block("hose_pulley/pulley_magnet"), HOSE_HALF = block("hose_pulley/rope_half"),
 		HOSE_HALF_MAGNET = block("hose_pulley/rope_half_magnet"),
 
+		ELEVATOR_COIL = block("elevator_pulley/rope_coil"), ELEVATOR_MAGNET = block("elevator_pulley/pulley_magnet"),
+		ELEVATOR_BELT = block("elevator_pulley/rope"), ELEVATOR_BELT_HALF = block("elevator_pulley/rope_half"),
+
 		MILLSTONE_COG = block("millstone/inner"),
 
 		SYMMETRY_PLANE = block("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = block("symmetry_effect/crossplane"),
@@ -120,6 +125,7 @@ public class AllBlockPartials {
 		TRAIN_COUPLING_CABLE = block("track/bogey/coupling_cable"),
 
 		TRAIN_CONTROLS_COVER = block("controls/train/cover"), TRAIN_CONTROLS_LEVER = block("controls/train/lever"),
+		CONTRAPTION_CONTROLS_BUTTON = block("contraption_controls/button"),
 
 		ENGINE_PISTON = block("steam_engine/piston"), ENGINE_LINKAGE = block("steam_engine/linkage"),
 		ENGINE_CONNECTOR = block("steam_engine/shaft_connector"), BOILER_GAUGE = block("steam_engine/gauge"),
@@ -166,6 +172,7 @@ public class AllBlockPartials {
 
 	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
+	public static final List<PartialModel> CONTRAPTION_CONTROLS_INDICATOR = new ArrayList<>();
 
 	static {
 		for (FluidTransportBehaviour.AttachmentTypes.ComponentPartials type : FluidTransportBehaviour.AttachmentTypes.ComponentPartials.values()) {
@@ -180,6 +187,8 @@ public class AllBlockPartials {
 			TOOLBOX_LIDS.put(color, block("toolbox/lid/" + Lang.asId(color.name())));
 		for (Direction d : Iterate.horizontalDirections)
 			METAL_GIRDER_BRACKETS.put(d, block("metal_girder/bracket_" + Lang.asId(d.name())));
+		for (int i = 0; i < 8; i++)
+			CONTRAPTION_CONTROLS_INDICATOR.add(block("contraption_controls/indicator_" + i));
 	}
 
 	private static PartialModel block(String path) {

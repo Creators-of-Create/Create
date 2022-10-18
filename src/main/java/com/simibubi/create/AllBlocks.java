@@ -31,6 +31,9 @@ import com.simibubi.create.content.contraptions.components.actors.SawMovementBeh
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatInteractionBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatMovementBehaviour;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsBlock;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsMovement;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsMovingInteraction;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlock;
 import com.simibubi.create.content.contraptions.components.crafter.CrafterCTBehaviour;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
@@ -66,6 +69,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock.ChassisCTBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContactBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorPulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsInteractionBehaviour;
@@ -165,6 +170,7 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockItem;
 import com.simibubi.create.content.logistics.block.display.source.AccumulatedItemCountDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.BoilerDisplaySource;
+import com.simibubi.create.content.logistics.block.display.source.CurrentFloorDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.EntityNameDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.FillLevelDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.FluidAmountDisplaySource;
@@ -197,6 +203,7 @@ import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlock
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
+import com.simibubi.create.content.logistics.block.redstone.RedstoneContactItem;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RoseQuartzLampBlock;
@@ -1135,6 +1142,7 @@ public class AllBlocks {
 	public static final BlockEntry<PulleyBlock.RopeBlock> ROPE = REGISTRATE.block("rope", PulleyBlock.RopeBlock::new)
 		.initialProperties(SharedProperties.BELT_MATERIAL, MaterialColor.COLOR_BROWN)
 		.tag(AllBlockTags.BRITTLE.tag)
+		.tag(BlockTags.CLIMBABLE)
 		.properties(p -> p.sound(SoundType.WOOL))
 		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 			.getExistingFile(p.modLoc("block/rope_pulley/" + c.getName()))))
@@ -1144,10 +1152,22 @@ public class AllBlocks {
 		REGISTRATE.block("pulley_magnet", PulleyBlock.MagnetBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.tag(AllBlockTags.BRITTLE.tag)
+			.tag(BlockTags.CLIMBABLE)
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.getExistingFile(p.modLoc("block/rope_pulley/" + c.getName()))))
 			.register();
 
+	public static final BlockEntry<ElevatorPulleyBlock> ELEVATOR_PULLEY =
+		REGISTRATE.block("elevator_pulley", ElevatorPulleyBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
+			.transform(axeOrPickaxe())
+			.blockstate(BlockStateGen.horizontalBlockProvider(true))
+			.transform(BlockStressDefaults.setImpact(4.0))
+			.item()
+			.transform(customItemModel())
+			.register();
+	
 	public static final BlockEntry<CartAssemblerBlock> CART_ASSEMBLER =
 		REGISTRATE.block("cart_assembler", CartAssemblerBlock::new)
 			.initialProperties(SharedProperties::stone)
@@ -1229,6 +1249,19 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
+	public static final BlockEntry<ContraptionControlsBlock> CONTRAPTION_CONTROLS =
+		REGISTRATE.block("contraption_controls", ContraptionControlsBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.color(MaterialColor.PODZOL))
+			.addLayer(() -> RenderType::cutoutMipped)
+			.transform(axeOrPickaxe())
+			.blockstate((c, p) -> p.horizontalBlock(c.get(), s -> AssetLookup.partialBaseModel(c, p)))
+			.onRegister(movementBehaviour(new ContraptionControlsMovement()))
+			.onRegister(interactionBehaviour(new ContraptionControlsMovingInteraction()))
+			.item()
+			.transform(customItemModel())
+			.register();
+
 	public static final BlockEntry<DrillBlock> MECHANICAL_DRILL = REGISTRATE.block("mechanical_drill", DrillBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.properties(p -> p.color(MaterialColor.PODZOL))
@@ -1282,7 +1315,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.onRegister(movementBehaviour(new ContactMovementBehaviour()))
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
-			.item()
+			.item(RedstoneContactItem::new)
 			.transform(customItemModel("_", "block"))
 			.register();
 
@@ -1579,7 +1612,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.bogey())
 			.register();
 
-	public static final BlockEntry<ControlsBlock> CONTROLS = REGISTRATE.block("controls", ControlsBlock::new)
+	public static final BlockEntry<ControlsBlock> TRAIN_CONTROLS = REGISTRATE.block("controls", ControlsBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
@@ -1629,9 +1662,28 @@ public class AllBlocks {
 			.addLayer(() -> RenderType::cutoutMipped)
 			.register();
 
+	public static final BlockEntry<ElevatorContactBlock> ELEVATOR_CONTACT =
+		REGISTRATE.block("elevator_contact", ElevatorContactBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
+			.properties(p -> p.lightLevel(ElevatorContactBlock::getLight))
+			.transform(axeOrPickaxe())
+			.blockstate((c, p) -> p.directionalBlock(c.get(), state -> {
+				Boolean calling = state.getValue(ElevatorContactBlock.CALLING);
+				Boolean powering = state.getValue(ElevatorContactBlock.POWERING);
+				return powering ? AssetLookup.partialBaseModel(c, p, "powered")
+					: calling ? AssetLookup.partialBaseModel(c, p, "dim") : AssetLookup.partialBaseModel(c, p);
+			}))
+			.loot((p, b) -> p.dropOther(b, REDSTONE_CONTACT.get()))
+			.onRegister(assignDataBehaviour(new CurrentFloorDisplaySource(), "current_floor"))
+			.item()
+			.transform(customItemModel("_", "block"))
+			.register();
+
 	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.color(MaterialColor.TERRACOTTA_BLUE))
+		.properties(p -> p.color(
+			MaterialColor.TERRACOTTA_BLUE))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK)
 			.explosionResistance(1200))
 		.transform(pickaxeOnly())
