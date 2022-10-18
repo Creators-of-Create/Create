@@ -76,7 +76,7 @@ public class HumanoidArmorLayerMixin {
 		}
 	}
 
-	@ModifyVariable(method = "getArmorResource", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/ForgeHooksClient;getArmorTexture(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Ljava/lang/String;Lnet/minecraft/world/entity/EquipmentSlot;Ljava/lang/String;)Ljava/lang/String;", shift = Shift.BEFORE), ordinal = 0)
+	@ModifyVariable(method = "getArmorResource", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/ForgeHooksClient;getArmorTexture(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Ljava/lang/String;Lnet/minecraft/world/entity/EquipmentSlot;Ljava/lang/String;)Ljava/lang/String;", shift = Shift.BEFORE), ordinal = 0, remap = false)
 	private String modifyType(@Nullable String type, Entity entity, ItemStack stack, EquipmentSlot slot, @Nullable String typeArg) {
 		if (stack.getItem() instanceof MultiLayeredArmorItem) {
 			return usesInnerModel(slot) ? "2" : "1";
