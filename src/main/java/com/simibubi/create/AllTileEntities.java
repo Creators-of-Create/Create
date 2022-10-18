@@ -132,9 +132,9 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearboxInstance;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxRenderer;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEntity;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankInstance;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankRenderer;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
+import com.simibubi.create.content.curiosities.armor.BacktankInstance;
+import com.simibubi.create.content.curiosities.armor.BacktankRenderer;
+import com.simibubi.create.content.curiosities.armor.BacktankTileEntity;
 import com.simibubi.create.content.curiosities.bell.BellRenderer;
 import com.simibubi.create.content.curiosities.bell.HauntedBellTileEntity;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
@@ -771,11 +771,11 @@ public class AllTileEntities {
 		.register();
 
 	// Curiosities
-	public static final BlockEntityEntry<CopperBacktankTileEntity> COPPER_BACKTANK = Create.registrate()
-		.tileEntity("copper_backtank", CopperBacktankTileEntity::new)
-		.instance(() -> CopperBacktankInstance::new)
-		.validBlocks(AllBlocks.COPPER_BACKTANK)
-		.renderer(() -> CopperBacktankRenderer::new)
+	public static final BlockEntityEntry<BacktankTileEntity> BACKTANK = Create.registrate()
+		.tileEntity("backtank", BacktankTileEntity::new)
+		.instance(() -> BacktankInstance::new)
+		.validBlocks(AllBlocks.COPPER_BACKTANK, AllBlocks.NETHERITE_BACKTANK)
+		.renderer(() -> BacktankRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<PeculiarBellTileEntity> PECULIAR_BELL = Create.registrate()

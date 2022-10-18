@@ -135,7 +135,7 @@ import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
+import com.simibubi.create.content.curiosities.armor.BacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
@@ -1944,26 +1944,16 @@ public class AllBlocks {
 		REGISTRATE.startSection(AllSections.CURIOSITIES);
 	}
 
-	public static final BlockEntry<CopperBacktankBlock> COPPER_BACKTANK =
-		REGISTRATE.block("copper_backtank", CopperBacktankBlock::new)
+	public static final BlockEntry<BacktankBlock> COPPER_BACKTANK =
+		REGISTRATE.block("copper_backtank", BacktankBlock::new)
 			.initialProperties(SharedProperties::copperMetal)
-			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-			.transform(pickaxeOnly())
-			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(BlockStressDefaults.setImpact(4.0))
-			.loot((lt, block) -> {
-				Builder builder = LootTable.lootTable();
-				LootItemCondition.Builder survivesExplosion = ExplosionCondition.survivesExplosion();
-				lt.add(block, builder.withPool(LootPool.lootPool()
-					.when(survivesExplosion)
-					.setRolls(ConstantValue.exactly(1))
-					.add(LootItem.lootTableItem(AllItems.COPPER_BACKTANK.get())
-						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-							.copy("Air", "Air"))
-						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-							.copy("Enchantments", "Enchantments")))));
-			})
+			.transform(BuilderTransformers.backtank(AllItems.COPPER_BACKTANK::get))
+			.register();
+
+	public static final BlockEntry<BacktankBlock> NETHERITE_BACKTANK =
+		REGISTRATE.block("netherite_backtank", BacktankBlock::new)
+			.initialProperties(SharedProperties::netheriteMetal)
+			.transform(BuilderTransformers.backtank(AllItems.NETHERITE_BACKTANK::get))
 			.register();
 
 	public static final BlockEntry<PeculiarBellBlock> PECULIAR_BELL =

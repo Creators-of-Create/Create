@@ -1,15 +1,20 @@
 package com.simibubi.create.content.curiosities.armor;
 
-import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.advancement.AllAdvancements;
+import java.util.Locale;
 
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.item.MultiLayeredArmorItem;
+
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -17,10 +22,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
-public class DivingHelmetItem extends CopperArmorItem {
+public class DivingHelmetItem extends BaseArmorItem {
+	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
 
-	public DivingHelmetItem(Properties p_i48534_3_) {
-		super(EquipmentSlot.HEAD, p_i48534_3_);
+	public DivingHelmetItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+		super(material, SLOT, properties, textureLoc);
+	}
+
+	public static boolean isWornBy(Entity entity) {
+		if (!(entity instanceof LivingEntity livingEntity)) {
+			return false;
+		}
+		return livingEntity.getItemBySlot(SLOT).getItem() instanceof DivingHelmetItem;
 	}
 
 	@SubscribeEvent
@@ -34,8 +47,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 			entity.getPersistentData()
 				.remove("VisualBacktankAir");
 
-		if (!AllItems.DIVING_HELMET.get()
-			.isWornBy(entity))
+		if (!isWornBy(entity))
 			return;
 
 		boolean lavaDiving = entity.isEyeInFluid(FluidTags.LAVA);
@@ -44,10 +56,10 @@ public class DivingHelmetItem extends CopperArmorItem {
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;
 
-		ItemStack backtank = BackTankUtil.get(entity);
+		ItemStack backtank = BacktankUtil.get(entity);
 		if (backtank.isEmpty())
 			return;
-		if (!BackTankUtil.hasAirRemaining(backtank))
+		if (!BacktankUtil.hasAirRemaining(backtank))
 			return;
 
 		if (lavaDiving) {
@@ -61,7 +73,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 
 		if (world.isClientSide)
 			entity.getPersistentData()
-				.putInt("VisualBacktankAir", (int) BackTankUtil.getAir(backtank));
+				.putInt("VisualBacktankAir", (int) BacktankUtil.getAir(backtank));
 
 		if (!second)
 			return;
@@ -71,7 +83,17 @@ public class DivingHelmetItem extends CopperArmorItem {
 
 		entity.setAirSupply(Math.min(entity.getMaxAirSupply(), entity.getAirSupply() + 10));
 		entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 30, 0, true, false, true));
-		BackTankUtil.consumeAir(entity, backtank, 1);
+		BacktankUtil.consumeAir(entity, backtank, 1);
 	}
 
+	public static class MultiLayered extends DivingHelmetItem implements MultiLayeredArmorItem {
+		public MultiLayered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+			super(material, properties, textureLoc);
+		}
+
+		@Override
+		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
+			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%s.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
+		}
+	}
 }

@@ -2,9 +2,9 @@ package com.simibubi.create.content.curiosities.armor;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -27,33 +27,43 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
 
-public class CopperBacktankTileEntity extends KineticTileEntity implements Nameable {
+public class BacktankTileEntity extends KineticTileEntity implements Nameable {
 
 	public int airLevel;
 	public int airLevelTimer;
+	private Component defaultName;
 	private Component customName;
 
 	private int capacityEnchantLevel;
 	private ListTag enchantmentTag;
 
-	public CopperBacktankTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
-		super(typeIn, pos, state);
+	public BacktankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
+		defaultName = getDefaultName(state);
 		enchantmentTag = new ListTag();
 	}
-	
+
+	public static Component getDefaultName(BlockState state) {
+		if (AllBlocks.NETHERITE_BACKTANK.has(state)) {
+			AllItems.NETHERITE_BACKTANK.get().getDescription();
+		}
+
+		return AllItems.COPPER_BACKTANK.get().getDescription();
+	}
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.BACKTANK);
 	}
-	
+
 	@Override
 	public void onSpeedChanged(float previousSpeed) {
 		super.onSpeedChanged(previousSpeed);
 		if (getSpeed() != 0)
 			award(AllAdvancements.BACKTANK);
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
@@ -70,10 +80,10 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 			return;
 		}
 
-		int max = BackTankUtil.maxAir(capacityEnchantLevel);
+		int max = BacktankUtil.maxAir(capacityEnchantLevel);
 		if (level.isClientSide) {
 			Vec3 centerOf = VecHelper.getCenterOf(worldPosition);
-			Vec3 v = VecHelper.offsetRandomly(centerOf, Create.RANDOM, .65f);
+			Vec3 v = VecHelper.offsetRandomly(centerOf, level.random, .65f);
 			Vec3 m = centerOf.subtract(v);
 			if (airLevel != max)
 				level.addParticle(new AirParticleData(1, .05f), v.x, v.y, v.z, m.x, m.y, m.z);
@@ -95,7 +105,7 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 	}
 
 	public int getComparatorOutput() {
-		int max = BackTankUtil.maxAir(capacityEnchantLevel);
+		int max = BacktankUtil.maxAir(capacityEnchantLevel);
 		return ComparatorUtil.fractionToRedstoneLevel(airLevel / (float) max);
 	}
 
@@ -120,7 +130,7 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 		enchantmentTag = compound.getList("Enchantments", Tag.TAG_COMPOUND);
 		if (compound.contains("CustomName", 8))
 			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
-		if (prev != 0 && prev != airLevel && airLevel == BackTankUtil.maxAir(capacityEnchantLevel) && clientPacket)
+		if (prev != 0 && prev != airLevel && airLevel == BacktankUtil.maxAir(capacityEnchantLevel) && clientPacket)
 			playFilledEffect();
 	}
 
@@ -140,8 +150,7 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 	@Override
 	public Component getName() {
 		return this.customName != null ? this.customName
-			: AllItems.COPPER_BACKTANK.get()
-				.getDescription();
+			: defaultName;
 	}
 
 	public int getAirLevel() {

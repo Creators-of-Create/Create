@@ -23,7 +23,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
-public class BackTankUtil {
+public class BacktankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
 		for (ItemStack itemStack : entity.getArmorSlots())

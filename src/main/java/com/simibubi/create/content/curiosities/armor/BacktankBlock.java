@@ -3,7 +3,6 @@ package com.simibubi.create.content.curiosities.armor;
 import java.util.Optional;
 
 import com.simibubi.create.AllEnchantments;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
@@ -25,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -46,12 +46,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayer;
 
-public class CopperBacktankBlock extends HorizontalKineticBlock
-	implements ITE<CopperBacktankTileEntity>, SimpleWaterloggedBlock {
+public class BacktankBlock extends HorizontalKineticBlock
+	implements ITE<BacktankTileEntity>, SimpleWaterloggedBlock {
 
-	public CopperBacktankBlock(Properties properties) {
+	public BacktankBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
+		registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
 	}
 
 	@Override
@@ -73,10 +73,10 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
 		return true;
 	}
-	
+
 	@Override
-	public int getAnalogOutputSignal(BlockState p_180641_1_, Level world, BlockPos pos) {
-		return getTileEntityOptional(world, pos).map(CopperBacktankTileEntity::getComparatorOutput)
+	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+		return getTileEntityOptional(world, pos).map(BacktankTileEntity::getComparatorOutput)
 			.orElse(0);
 	}
 
@@ -90,10 +90,10 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		FluidState ifluidstate = context.getLevel()
+		FluidState fluidState = context.getLevel()
 			.getFluidState(context.getClickedPos());
 		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
-			Boolean.valueOf(ifluidstate.getType() == Fluids.WATER));
+			fluidState.getType() == Fluids.WATER);
 	}
 
 	@Override
@@ -125,8 +125,8 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand p_225533_5_,
-		BlockHitResult p_225533_6_) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult hit) {
 		if (player == null)
 			return InteractionResult.PASS;
 		if (player instanceof FakePlayer)
@@ -148,28 +148,33 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockGetter p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
-		ItemStack item = AllItems.COPPER_BACKTANK.asStack();
-		Optional<CopperBacktankTileEntity> tileEntityOptional = getTileEntityOptional(p_185473_1_, p_185473_2_);
+	public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos pos, BlockState state) {
+		Item item = asItem();
+		if (item instanceof BacktankItem.BacktankBlockItem placeable) {
+			item = placeable.getActualItem();
+		}
 
-		int air = tileEntityOptional.map(CopperBacktankTileEntity::getAirLevel)
+		ItemStack stack = new ItemStack(item);
+		Optional<BacktankTileEntity> tileEntityOptional = getTileEntityOptional(blockGetter, pos);
+
+		int air = tileEntityOptional.map(BacktankTileEntity::getAirLevel)
 			.orElse(0);
-		CompoundTag tag = item.getOrCreateTag();
+		CompoundTag tag = stack.getOrCreateTag();
 		tag.putInt("Air", air);
 
-		ListTag enchants = tileEntityOptional.map(CopperBacktankTileEntity::getEnchantmentTag)
+		ListTag enchants = tileEntityOptional.map(BacktankTileEntity::getEnchantmentTag)
 			.orElse(new ListTag());
 		if (!enchants.isEmpty()) {
-			ListTag enchantmentTagList = item.getEnchantmentTags();
+			ListTag enchantmentTagList = stack.getEnchantmentTags();
 			enchantmentTagList.addAll(enchants);
 			tag.put("Enchantments", enchantmentTagList);
 		}
 
-		Component customName = tileEntityOptional.map(CopperBacktankTileEntity::getCustomName)
+		Component customName = tileEntityOptional.map(BacktankTileEntity::getCustomName)
 			.orElse(null);
 		if (customName != null)
-			item.setHoverName(customName);
-		return item;
+			stack.setHoverName(customName);
+		return stack;
 	}
 
 	@Override
@@ -179,13 +184,13 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public Class<CopperBacktankTileEntity> getTileEntityClass() {
-		return CopperBacktankTileEntity.class;
+	public Class<BacktankTileEntity> getTileEntityClass() {
+		return BacktankTileEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends CopperBacktankTileEntity> getTileEntityType() {
-		return AllTileEntities.COPPER_BACKTANK.get();
+	public BlockEntityType<? extends BacktankTileEntity> getTileEntityType() {
+		return AllTileEntities.BACKTANK.get();
 	}
 
 	@Override

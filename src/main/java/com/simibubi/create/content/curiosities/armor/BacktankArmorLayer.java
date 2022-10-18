@@ -1,21 +1,13 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Color;
-import com.simibubi.create.foundation.utility.Components;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
@@ -25,22 +17,13 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
 
-public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-
-	public static final IIngameOverlay REMAINING_AIR_OVERLAY = CopperBacktankArmorLayer::renderRemainingAirOverlay;
-
-	public CopperBacktankArmorLayer(RenderLayerParent<T, M> renderer) {
+public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+	public BacktankArmorLayer(RenderLayerParent<T, M> renderer) {
 		super(renderer);
 	}
 
@@ -49,8 +32,9 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		float pt, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
 		if (entity.getPose() == Pose.SLEEPING)
 			return;
-		if (!AllItems.COPPER_BACKTANK.get()
-			.isWornBy(entity))
+
+		BacktankItem item = BacktankItem.getWornBy(entity);
+		if (item == null)
 			return;
 
 		M entityModel = getParentModel();
@@ -59,10 +43,10 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 
 		HumanoidModel<?> model = (HumanoidModel<?>) entityModel;
 		RenderType renderType = Sheets.cutoutBlockSheet();
-		BlockState renderedState = AllBlocks.COPPER_BACKTANK.getDefaultState()
-				.setValue(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
+		BlockState renderedState = item.getBlock().defaultBlockState()
+				.setValue(BacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
 		SuperByteBuffer backtank = CachedBufferer.block(renderedState);
-		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
+		SuperByteBuffer cogs = CachedBufferer.partial(BacktankRenderer.getCogsModel(renderedState), renderedState);
 
 		ms.pushPose();
 
@@ -102,44 +86,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		LivingEntityRenderer<?, ?> livingRenderer = (LivingEntityRenderer<?, ?>) entityRenderer;
 		if (!(livingRenderer.getModel() instanceof HumanoidModel))
 			return;
-		CopperBacktankArmorLayer<?, ?> layer = new CopperBacktankArmorLayer<>(livingRenderer);
-		livingRenderer.addLayer((CopperBacktankArmorLayer) layer);
+		BacktankArmorLayer<?, ?> layer = new BacktankArmorLayer<>(livingRenderer);
+		livingRenderer.addLayer((BacktankArmorLayer) layer);
 	}
-
-	public static void renderRemainingAirOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
-			return;
-
-		LocalPlayer player = mc.player;
-		if (player == null)
-			return;
-		if (player.isCreative())
-			return;
-		if (!player.getPersistentData()
-			.contains("VisualBacktankAir"))
-			return;
-		if (!player.isEyeInFluid(FluidTags.WATER))
-			return;
-
-		int timeLeft = player.getPersistentData()
-			.getInt("VisualBacktankAir");
-
-		poseStack.pushPose();
-
-		poseStack.translate(width / 2 + 90, height - 53, 0);
-
-		Component text = Components.literal(StringUtil.formatTickDuration(timeLeft * 20));
-		GuiGameElement.of(AllItems.COPPER_BACKTANK.asStack())
-			.at(0, 0)
-			.render(poseStack);
-		int color = 0xFF_FFFFFF;
-		if (timeLeft < 60 && timeLeft % 2 == 0) {
-			color = Color.mixColors(0xFF_FF0000, color, Math.max(timeLeft / 60f, .25f));
-		}
-		Minecraft.getInstance().font.drawShadow(poseStack, text, 16, 5, color);
-
-		poseStack.popPose();
-	}
-
 }

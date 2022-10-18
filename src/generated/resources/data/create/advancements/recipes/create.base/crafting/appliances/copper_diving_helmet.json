@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/appliances/diving_helmet"
+      "create:crafting/appliances/copper_diving_helmet"
     ]
   },
   "criteria": {
@@ -21,7 +21,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/appliances/diving_helmet"
+        "recipe": "create:crafting/appliances/copper_diving_helmet"
       }
     }
   },

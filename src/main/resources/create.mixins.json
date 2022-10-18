@@ -6,6 +6,8 @@
   "refmap": "create.refmap.json",
   "mixins": [
     "CustomItemUseEffectsMixin",
+    "EntityMixin",
+    "HumanoidArmorLayerMixin",
     "MapItemSavedDataMixin",
     "ContraptionDriverInteractMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",

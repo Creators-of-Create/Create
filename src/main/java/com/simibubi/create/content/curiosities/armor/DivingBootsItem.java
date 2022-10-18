@@ -1,22 +1,36 @@
 package com.simibubi.create.content.curiosities.armor;
 
-import com.simibubi.create.AllItems;
+import java.util.Locale;
+
+import com.simibubi.create.foundation.item.MultiLayeredArmorItem;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
-public class DivingBootsItem extends CopperArmorItem {
+public class DivingBootsItem extends BaseArmorItem {
+	public static final EquipmentSlot SLOT = EquipmentSlot.FEET;
 
-	public DivingBootsItem(Properties p_i48534_3_) {
-		super(EquipmentSlot.FEET, p_i48534_3_);
+	public DivingBootsItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+		super(material, SLOT, properties, textureLoc);
+	}
+
+	public static boolean isWornBy(Entity entity) {
+		if (!(entity instanceof LivingEntity livingEntity)) {
+			return false;
+		}
+		return livingEntity.getItemBySlot(SLOT).getItem() instanceof DivingBootsItem;
 	}
 
 	@SubscribeEvent
@@ -44,8 +58,7 @@ public class DivingBootsItem extends CopperArmorItem {
 	}
 
 	protected static boolean affects(LivingEntity entity) {
-		if (!AllItems.DIVING_BOOTS.get()
-			.isWornBy(entity)) {
+		if (!isWornBy(entity)) {
 			entity.getPersistentData()
 				.remove("HeavyBoots");
 			return false;
@@ -64,4 +77,14 @@ public class DivingBootsItem extends CopperArmorItem {
 		return true;
 	}
 
+	public static class MultiLayered extends DivingBootsItem implements MultiLayeredArmorItem {
+		public MultiLayered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+			super(material, properties, textureLoc);
+		}
+
+		@Override
+		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
+			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%s.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
+		}
+	}
 }

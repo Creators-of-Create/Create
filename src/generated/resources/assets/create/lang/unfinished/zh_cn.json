@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 11",
+	"_": "Missing Localizations: 24",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -310,6 +310,7 @@
 	"block.create.millstone": "石磨",
 	"block.create.minecart_anchor": "矿车锚",
 	"block.create.mysterious_cuckoo_clock": "布谷鸟闹钟",
+	"block.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
 	"block.create.nixie_tube": "辉光管",
 	"block.create.nozzle": "分散网",
 	"block.create.oak_window": "橡木窗户",
@@ -600,6 +601,8 @@
 	"item.create.cinder_flour": "余烬面粉",
 	"item.create.copper_backtank": "铜背罐",
 	"item.create.copper_backtank_placeable": "可放置的铜背罐",
+	"item.create.copper_diving_boots": "UNLOCALIZED: Copper Diving Boots",
+	"item.create.copper_diving_helmet": "UNLOCALIZED: Copper Diving Helmet",
 	"item.create.copper_nugget": "铜粒",
 	"item.create.copper_sheet": "铜板",
 	"item.create.crafter_slot_cover": "合成槽盖板",
@@ -618,8 +621,6 @@
 	"item.create.crushed_tin_ore": "粉碎锡矿石",
 	"item.create.crushed_uranium_ore": "粉碎铀矿石",
 	"item.create.crushed_zinc_ore": "粉碎锌矿石",
-	"item.create.diving_boots": "潜水靴",
-	"item.create.diving_helmet": "潜水头盔",
 	"item.create.dough": "面团",
 	"item.create.electron_tube": "电子管",
 	"item.create.empty_blaze_burner": "空的烈焰人燃烧室",
@@ -639,6 +640,10 @@
 	"item.create.linked_controller": "无线红石遥控器",
 	"item.create.minecart_contraption": "装配过的矿车",
 	"item.create.minecart_coupling": "矿车连轴器",
+	"item.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
+	"item.create.netherite_backtank_placeable": "UNLOCALIZED: Netherite Backtank Placeable",
+	"item.create.netherite_diving_boots": "UNLOCALIZED: Netherite Diving Boots",
+	"item.create.netherite_diving_helmet": "UNLOCALIZED: Netherite Diving Helmet",
 	"item.create.polished_rose_quartz": "磨制玫瑰石英",
 	"item.create.potato_cannon": "土豆加农炮",
 	"item.create.powdered_obsidian": "黑曜石粉末",
@@ -2026,6 +2031,13 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "为其他需要_压缩空气_的装备提供所需的空气",
 	"item.create.copper_backtank.tooltip.condition2": "放下并接入动力时",
 	"item.create.copper_backtank.tooltip.behaviour2": "基于转速从周围环境中_收集_并_加压空气_",
+
+	"item.create.netherite_backtank.tooltip": "UNLOCALIZED: NETHERITE BACKTANK",
+	"item.create.netherite_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.netherite_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.netherite_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.netherite_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.netherite_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
 	"block.create.placard.tooltip": "置物板",
 	"block.create.placard.tooltip.summary": "用这个漂亮的墙板把你的物品用黄铜框起来，支持移动装置！",

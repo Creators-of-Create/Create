@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.armor.RemainingAirOverlay;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
@@ -97,7 +97,7 @@ public class CreateClient {
 
 	private static void registerOverlays() {
 		// Register overlays in reverse order
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT, "Create's Remaining Air", CopperBacktankArmorLayer.REMAINING_AIR_OVERLAY);
+		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT, "Create's Remaining Air", RemainingAirOverlay.INSTANCE);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, "Create's Train Driver HUD", TrainHUD.OVERLAY);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Goggle Information", GoggleOverlayRenderer.OVERLAY);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Blueprints", BlueprintOverlayRenderer.OVERLAY);

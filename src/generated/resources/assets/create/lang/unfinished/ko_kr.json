@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 19",
+	"_": "Missing Localizations: 32",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -310,6 +310,7 @@
 	"block.create.millstone": "맷돌",
 	"block.create.minecart_anchor": "광산 수레 정박기",
 	"block.create.mysterious_cuckoo_clock": "뻐꾸기 시계",
+	"block.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
 	"block.create.nixie_tube": "닉시관",
 	"block.create.nozzle": "노즐",
 	"block.create.oak_window": "참나무 유리창",
@@ -600,6 +601,8 @@
 	"item.create.cinder_flour": "잿가루",
 	"item.create.copper_backtank": "구리 산소통",
 	"item.create.copper_backtank_placeable": "구리 산소통",
+	"item.create.copper_diving_boots": "UNLOCALIZED: Copper Diving Boots",
+	"item.create.copper_diving_helmet": "UNLOCALIZED: Copper Diving Helmet",
 	"item.create.copper_nugget": "구리 조각",
 	"item.create.copper_sheet": "구리 판",
 	"item.create.crafter_slot_cover": "조합기 슬롯 덮개",
@@ -618,8 +621,6 @@
 	"item.create.crushed_tin_ore": "분쇄된 주석 광석",
 	"item.create.crushed_uranium_ore": "분쇄된 우라늄 광석",
 	"item.create.crushed_zinc_ore": "분쇄된 아연 광석",
-	"item.create.diving_boots": "다이빙 부츠",
-	"item.create.diving_helmet": "다이빙 헬멧",
 	"item.create.dough": "반죽",
 	"item.create.electron_tube": "전지 튜브",
 	"item.create.empty_blaze_burner": "빈 블레이즈 버너",
@@ -639,6 +640,10 @@
 	"item.create.linked_controller": "레드스톤 링크 조작기",
 	"item.create.minecart_contraption": "광산 수레 구조물",
 	"item.create.minecart_coupling": "광산 수레 커플링",
+	"item.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
+	"item.create.netherite_backtank_placeable": "UNLOCALIZED: Netherite Backtank Placeable",
+	"item.create.netherite_diving_boots": "UNLOCALIZED: Netherite Diving Boots",
+	"item.create.netherite_diving_helmet": "UNLOCALIZED: Netherite Diving Helmet",
 	"item.create.polished_rose_quartz": "윤나는 장밋빛 석영",
 	"item.create.potato_cannon": "감자포",
 	"item.create.powdered_obsidian": "흑요석 가루",
@@ -2026,6 +2031,13 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "필요한 장비에 _공기_를 제공합니다.",
 	"item.create.copper_backtank.tooltip.condition2": "설치되고 동력으로 회전될 때",
 	"item.create.copper_backtank.tooltip.behaviour2": "동력 속도에 따라 _공기_를 _모읍니다_.",
+
+	"item.create.netherite_backtank.tooltip": "UNLOCALIZED: NETHERITE BACKTANK",
+	"item.create.netherite_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.netherite_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.netherite_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.netherite_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.netherite_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
 	"block.create.placard.tooltip": "PLACARD",
 	"block.create.placard.tooltip.summary": "_아이템_을 황동안에 _장식_하세요. 구조물에도 사용할 수 있습니다!",

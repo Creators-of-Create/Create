@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 23",
+	"_": "Missing Localizations: 36",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -310,6 +310,7 @@
 	"block.create.millstone": "Młynek",
 	"block.create.minecart_anchor": "Kotwica wagonikowa",
 	"block.create.mysterious_cuckoo_clock": "Zegar z kukułką",
+	"block.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
 	"block.create.nixie_tube": "Lampa cyfrowa",
 	"block.create.nozzle": "Dysza",
 	"block.create.oak_window": "Dębowe okno",
@@ -600,6 +601,8 @@
 	"item.create.cinder_flour": "Rozżarzona mąka",
 	"item.create.copper_backtank": "Miedziany zbiornik w plecaku",
 	"item.create.copper_backtank_placeable": "Stacjonarny miedziany zbiornik w plecaku",
+	"item.create.copper_diving_boots": "UNLOCALIZED: Copper Diving Boots",
+	"item.create.copper_diving_helmet": "UNLOCALIZED: Copper Diving Helmet",
 	"item.create.copper_nugget": "Bryłka miedzi",
 	"item.create.copper_sheet": "Arkusz miedzi",
 	"item.create.crafter_slot_cover": "Przykrywka na slot stołu rzemieślniczego",
@@ -618,8 +621,6 @@
 	"item.create.crushed_tin_ore": "Rozkruszona ruda cyny",
 	"item.create.crushed_uranium_ore": "Rozkruszona ruda uranu",
 	"item.create.crushed_zinc_ore": "Rozkruszona ruda cynku",
-	"item.create.diving_boots": "Buty do nurkowania",
-	"item.create.diving_helmet": "Hełm do nurkowania",
 	"item.create.dough": "Ciasto",
 	"item.create.electron_tube": "Lampa elektronowa",
 	"item.create.empty_blaze_burner": "Pusty płomienny palnik",
@@ -639,6 +640,10 @@
 	"item.create.linked_controller": "Zdalny sterownik",
 	"item.create.minecart_contraption": "Maszyna w wagoniku",
 	"item.create.minecart_coupling": "Łącznik wagoników",
+	"item.create.netherite_backtank": "UNLOCALIZED: Netherite Backtank",
+	"item.create.netherite_backtank_placeable": "UNLOCALIZED: Netherite Backtank Placeable",
+	"item.create.netherite_diving_boots": "UNLOCALIZED: Netherite Diving Boots",
+	"item.create.netherite_diving_helmet": "UNLOCALIZED: Netherite Diving Helmet",
 	"item.create.polished_rose_quartz": "Wypolerowany różowy kwarc",
 	"item.create.potato_cannon": "Armata na ziemniaki",
 	"item.create.powdered_obsidian": "Sproszkowany obsydian",
@@ -2026,6 +2031,13 @@
 	"item.create.copper_backtank.tooltip.behaviour1": "Dostarcza _sprężonego_ _powietrza_ przedmiotom, które go potrzebują.",
 	"item.create.copper_backtank.tooltip.condition2": "Po postawieniu i zasileniu siłą obrotową",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Zbiera_ _sprężone_ _powietrze_, w tempie zależnym od prędkości obrotu.",
+
+	"item.create.netherite_backtank.tooltip": "UNLOCALIZED: NETHERITE BACKTANK",
+	"item.create.netherite_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.netherite_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.netherite_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.netherite_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.netherite_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
 	"block.create.placard.tooltip": "Plakietka",
 	"block.create.placard.tooltip.summary": "_Opraw_ swoje przedmioty w mosiądzu używając tego eleganckiego panelu ściennego. Dozwolone na maszynach!",
