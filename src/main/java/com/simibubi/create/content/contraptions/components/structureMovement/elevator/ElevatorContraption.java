@@ -39,6 +39,9 @@ public class ElevatorContraption extends PulleyContraption {
 	private int namesListVersion = -1;
 	public List<IntAttached<Couple<String>>> namesList = ImmutableList.of();
 	public int clientYTarget;
+	
+	public int maxContactY;
+	public int minContactY;
 
 	// during assembly only
 	private int contacts;
@@ -84,7 +87,14 @@ public class ElevatorContraption extends PulleyContraption {
 		ElevatorColumn column = ElevatorColumn.get(level, coords);
 		if (column == null)
 			return null;
-		return column.targetedYLevel;
+		int targetedYLevel = column.targetedYLevel;
+		if (isTargetUnreachable(targetedYLevel))
+			return null;
+		return targetedYLevel;
+	}
+	
+	public boolean isTargetUnreachable(int contactY) {
+		return contactY < minContactY || contactY > maxContactY;
 	}
 
 	@Override
@@ -94,9 +104,14 @@ public class ElevatorContraption extends PulleyContraption {
 		if (blocks.size() <= 0)
 			return false;
 		if (contacts == 0)
-			throw new AssemblyException(Lang.translateDirect("elevator_assembly.no_contacts"));
+			throw new AssemblyException(Lang.translateDirect("gui.assembly.exception.no_contacts"));
 		if (contacts > 1)
-			throw new AssemblyException(Lang.translateDirect("train_assembly.too_many_contacts"));
+			throw new AssemblyException(Lang.translateDirect("gui.assembly.exception.too_many_contacts"));
+		
+		ElevatorColumn column = ElevatorColumn.get(world, getGlobalColumn());
+		if (column != null && column.isActive())
+			throw new AssemblyException(Lang.translateDirect("gui.assembly.exception.column_conflict"));
+		
 		startMoving(world);
 		return true;
 	}
@@ -138,6 +153,8 @@ public class ElevatorContraption extends PulleyContraption {
 		tag.putBoolean("Arrived", arrived);
 		tag.put("Column", column.write());
 		tag.putInt("ContactY", contactYOffset);
+		tag.putInt("MaxContactY", maxContactY);
+		tag.putInt("MinContactY", minContactY);
 		return tag;
 	}
 
@@ -146,6 +163,8 @@ public class ElevatorContraption extends PulleyContraption {
 		arrived = nbt.getBoolean("Arrived");
 		column = ColumnCoords.read(nbt.getCompound("Column"));
 		contactYOffset = nbt.getInt("ContactY");
+		maxContactY = nbt.getInt("MaxContactY");
+		minContactY = nbt.getInt("MinContactY");
 		super.readNBT(world, nbt, spawnData);
 	}
 

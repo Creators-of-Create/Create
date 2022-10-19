@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 32",
+	"_": "Missing Localizations: 36",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1082,6 +1082,9 @@
 	"create.gui.assembly.exception.tooManyPistonPoles": "活塞的活塞桿數量過多\n可放置的數量最大為：%1$s",
 	"create.gui.assembly.exception.noPistonPoles": "這個活塞遺失了一些活塞桿",
 	"create.gui.assembly.exception.not_enough_sails": "結構中所需的風帆類方塊數量不足：%1$s\n最少需要的數量為：%2$s",
+	"create.gui.assembly.exception.no_contacts": "UNLOCALIZED: Elevators require a horizontal _Redstone_ _Contact_ attached to the structure",
+	"create.gui.assembly.exception.too_many_contacts": "UNLOCALIZED: Cannot attach more than one _Redstone_ _Contact_ to Elevators",
+	"create.gui.assembly.exception.column_conflict": "UNLOCALIZED: Another Elevator is already targeting this column of contacts",
 	"create.gui.gauge.info_header": "儀表訊息：",
 	"create.gui.speedometer.title": "旋轉速度",
 	"create.gui.stressometer.title": "網路負荷",
@@ -1645,6 +1648,7 @@
 	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
 	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
 	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
+	"create.contraption.controls.floor_unreachable": "UNLOCALIZED: Unreachable",
 
 	"create.display_link.set": "已選定目標位置",
 	"create.display_link.success": "成功綁定到目標位置",

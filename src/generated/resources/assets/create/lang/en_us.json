@@ -1081,6 +1081,9 @@
 	"create.gui.assembly.exception.tooManyPistonPoles": "There are too many extension Poles attached to this Piston.\nThe configured maximum is: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "The Piston is missing some extension Poles",
 	"create.gui.assembly.exception.not_enough_sails": "Attached structure does not include enough sail-like blocks: %1$s\nA minimum of %2$s are required",
+	"create.gui.assembly.exception.no_contacts": "Elevators require a horizontal _Redstone_ _Contact_ attached to the structure",
+	"create.gui.assembly.exception.too_many_contacts": "Cannot attach more than one _Redstone_ _Contact_ to Elevators",
+	"create.gui.assembly.exception.column_conflict": "Another Elevator is already targeting this column of contacts",
 	"create.gui.gauge.info_header": "Gauge Information:",
 	"create.gui.speedometer.title": "Rotation Speed",
 	"create.gui.stressometer.title": "Network Stress",
@@ -1644,6 +1647,7 @@
 	"create.contraption.controls.all_actor_toggle": "All Actors: %1$s",
 	"create.contraption.controls.actor_toggle.on": "On",
 	"create.contraption.controls.actor_toggle.off": "Off",
+	"create.contraption.controls.floor_unreachable": "Unreachable",
 
 	"create.display_link.set": "Targeted position selected",
 	"create.display_link.success": "Successfully bound to targeted position",

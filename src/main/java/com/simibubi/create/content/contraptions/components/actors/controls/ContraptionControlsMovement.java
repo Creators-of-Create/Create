@@ -1,34 +1,20 @@
 package com.simibubi.create.content.contraptions.components.actors.controls;
 
-import java.util.Random;
-
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -60,8 +46,6 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 			return true;
 		return ItemHandlerHelper.canItemStacksStack(stack1, stack2);
 	}
-
-	private static Random r = new Random();
 
 	public static ItemStack getFilter(MovementContext ctx) {
 		CompoundTag tileData = ctx.tileData;
@@ -148,6 +132,10 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 		efs.currentLongName = entry.getSecond()
 			.getSecond();
 		efs.targetYEqualsSelection = efs.currentTargetY == ec.clientYTarget;
+
+		if (ec.isTargetUnreachable(efs.currentTargetY))
+			efs.currentLongName = Lang.translate("contraption.controls.floor_unreachable")
+				.string();
 	}
 
 	@Override
@@ -159,73 +147,7 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext ctx, VirtualRenderWorld renderWorld, ContraptionMatrices matrices,
 		MultiBufferSource buffer) {
-
-		if (!(ctx.temporaryData instanceof ElevatorFloorSelection efs))
-			return;
-		if (!AllBlocks.CONTRAPTION_CONTROLS.has(ctx.state))
-			return;
-
-		Entity cameraEntity = Minecraft.getInstance()
-			.getCameraEntity();
-		float playerDistance = (float) (ctx.position == null || cameraEntity == null ? 0
-			: ctx.position.distanceToSqr(cameraEntity.getEyePosition()));
-
-		float flicker = r.nextFloat();
-		Couple<Integer> couple = DyeHelper.DYE_TABLE.get(efs.targetYEqualsSelection ? DyeColor.WHITE : DyeColor.ORANGE);
-		int brightColor = couple.getFirst();
-		int darkColor = couple.getSecond();
-		int flickeringBrightColor = Color.mixColors(brightColor, darkColor, flicker / 4);
-		Font fontRenderer = Minecraft.getInstance().font;
-		float shadowOffset = .5f;
-
-		String text = efs.currentShortName;
-		String description = efs.currentLongName;
-		PoseStack ms = matrices.getViewProjection();
-		TransformStack msr = TransformStack.cast(ms);
-
-		ms.pushPose();
-		msr.translate(ctx.localPos);
-		msr.rotateCentered(Direction.UP,
-			AngleHelper.rad(AngleHelper.horizontalAngle(ctx.state.getValue(ContraptionControlsBlock.FACING))));
-		ms.translate(0.275f + 0.125f, 1, 0.5f);
-		msr.rotate(Direction.WEST, AngleHelper.rad(67.5f));
-
-		float buttondepth = -.25f;
-		if (ctx.contraption.presentTileEntities.get(ctx.localPos)instanceof ContraptionControlsTileEntity cte)
-			buttondepth += -1 / 24f * cte.button.getValue(AnimationTickHolder.getPartialTicks(renderWorld));
-
-		if (!text.isBlank() && playerDistance < 100) {
-			int actualWidth = fontRenderer.width(text);
-			int width = Math.max(actualWidth, 12);
-			float scale = 1 / (5f * (width - .5f));
-			float heightCentering = (width - 8f) / 2;
-
-			ms.pushPose();
-			ms.translate(0, .15f, buttondepth);
-			ms.scale(scale, -scale, scale);
-			ms.translate(Math.max(0, width - actualWidth) / 2, heightCentering, 0);
-			NixieTubeRenderer.drawInWorldString(ms, buffer, text, flickeringBrightColor);
-			ms.translate(shadowOffset, shadowOffset, -1 / 16f);
-			NixieTubeRenderer.drawInWorldString(ms, buffer, text, Color.mixColors(darkColor, 0, .35f));
-			ms.popPose();
-		}
-
-		if (!description.isBlank() && playerDistance < 20) {
-			int actualWidth = fontRenderer.width(description);
-			int width = Math.max(actualWidth, 55);
-			float scale = 1 / (3f * (width - .5f));
-			float heightCentering = (width - 8f) / 2;
-
-			ms.pushPose();
-			ms.translate(-.0635f, 0.06f, buttondepth);
-			ms.scale(scale, -scale, scale);
-			ms.translate(Math.max(0, width - actualWidth) / 2, heightCentering, 0);
-			NixieTubeRenderer.drawInWorldString(ms, buffer, description, flickeringBrightColor);
-			ms.popPose();
-		}
-
-		ms.popPose();
-
+		ContraptionControlsRenderer.renderInContraption(ctx, renderWorld, matrices, buffer);
 	}
 
 	public static class ElevatorFloorSelection {

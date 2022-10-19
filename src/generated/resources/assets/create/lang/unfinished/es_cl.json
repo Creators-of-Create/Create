@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1012",
+	"_": "Missing Localizations: 1016",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1082,6 +1082,9 @@
 	"create.gui.assembly.exception.tooManyPistonPoles": "Hay muchos postes de extensión en este pistón.\nEl máximo configurado es: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "Al pistón le faltan algunos postes de extensión",
 	"create.gui.assembly.exception.not_enough_sails": "La estructura adjunta no incluye suficientes bloques de vela: %1$s\nUn mínimo de %2$s son requeridos",
+	"create.gui.assembly.exception.no_contacts": "UNLOCALIZED: Elevators require a horizontal _Redstone_ _Contact_ attached to the structure",
+	"create.gui.assembly.exception.too_many_contacts": "UNLOCALIZED: Cannot attach more than one _Redstone_ _Contact_ to Elevators",
+	"create.gui.assembly.exception.column_conflict": "UNLOCALIZED: Another Elevator is already targeting this column of contacts",
 	"create.gui.gauge.info_header": "Información del medidor:",
 	"create.gui.speedometer.title": "Velocidad de Rotación",
 	"create.gui.stressometer.title": "Estrés de la Red",
@@ -1645,6 +1648,7 @@
 	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
 	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
 	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
+	"create.contraption.controls.floor_unreachable": "UNLOCALIZED: Unreachable",
 
 	"create.display_link.set": "UNLOCALIZED: Targeted position selected",
 	"create.display_link.success": "UNLOCALIZED: Successfully bound to targeted position",

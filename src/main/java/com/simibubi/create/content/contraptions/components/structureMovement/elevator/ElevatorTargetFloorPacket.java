@@ -53,6 +53,8 @@ public class ElevatorTargetFloorPacket extends SimplePacketBase {
 			ElevatorColumn elevatorColumn = ElevatorColumn.get(level, ec.getGlobalColumn());
 			if (!elevatorColumn.contacts.contains(targetY))
 				return;
+			if (ec.isTargetUnreachable(targetY))
+				return;
 
 			for (BlockPos otherPos : elevatorColumn.getContacts()) {
 				BlockState otherState = level.getBlockState(otherPos);

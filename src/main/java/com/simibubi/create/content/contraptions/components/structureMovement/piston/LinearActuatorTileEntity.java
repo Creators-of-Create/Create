@@ -71,7 +71,6 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 		if (level.isClientSide)
 			clientOffsetDiff *= .75f;
 
-		waitingForSpeedChange = false;//TODO
 		if (waitingForSpeedChange) {
 			if (movedContraption != null) {
 				if (level.isClientSide) {

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 866",
+	"_": "Missing Localizations: 870",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1082,6 +1082,9 @@
 	"create.gui.assembly.exception.tooManyPistonPoles": "Es sind zu viele Pleuelverlängerungen an diesen Kolben angebracht.\nDas konfigurierte Maximum ist: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "Dem Kolben fehlen ein paar Pleuelverlängerungen",
 	"create.gui.assembly.exception.not_enough_sails": "Angebrachte Struktur enthält nicht genug segelähnliche Blöcke: %1$s\nEin Minimum von %2$s ist erforderlich",
+	"create.gui.assembly.exception.no_contacts": "UNLOCALIZED: Elevators require a horizontal _Redstone_ _Contact_ attached to the structure",
+	"create.gui.assembly.exception.too_many_contacts": "UNLOCALIZED: Cannot attach more than one _Redstone_ _Contact_ to Elevators",
+	"create.gui.assembly.exception.column_conflict": "UNLOCALIZED: Another Elevator is already targeting this column of contacts",
 	"create.gui.gauge.info_header": "Messgerät Information:",
 	"create.gui.speedometer.title": "Rotationsgeschwindigkeit",
 	"create.gui.stressometer.title": "Netzwerkbelastung",
@@ -1645,6 +1648,7 @@
 	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
 	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
 	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
+	"create.contraption.controls.floor_unreachable": "UNLOCALIZED: Unreachable",
 
 	"create.display_link.set": "Anvisierte Position ausgewählt",
 	"create.display_link.success": "Erfolgreich mit ausgewählter Position gebunden",

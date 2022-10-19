@@ -173,6 +173,11 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 
 	@Override
 	public int getSignal(BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {
+		if (side == null)
+			return 0;
+		BlockState toState = blockAccess.getBlockState(pos.relative(side.getOpposite()));
+		if (toState.is(this))
+			return 0;
 		return state.getValue(POWERING) ? 15 : 0;
 	}
 
@@ -209,7 +214,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 		if (player instanceof LocalPlayer)
 			ScreenOpener.open(new ElevatorContactScreen(te.getBlockPos(), te.shortName, te.longName));
 	}
-	
+
 	public static int getLight(BlockState state) {
 		return state.getValue(POWERING) ? 10 : state.getValue(CALLING) ? 5 : 0;
 	}

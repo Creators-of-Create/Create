@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 32",
+	"_": "Missing Localizations: 36",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1082,6 +1082,9 @@
 	"create.gui.assembly.exception.tooManyPistonPoles": "이 피스톤에 너무 많은 연장 축이 부착되어 있습니다.\n설정된 최댓값: %1$s개",
 	"create.gui.assembly.exception.noPistonPoles": "이 피스톤은 연장 축이 없습니다.",
 	"create.gui.assembly.exception.not_enough_sails": "부착된 구조물에 날개 블록이 부족합니다. 현재: %1$s개 \n최소 %2$s개가 필요합니다.",
+	"create.gui.assembly.exception.no_contacts": "UNLOCALIZED: Elevators require a horizontal _Redstone_ _Contact_ attached to the structure",
+	"create.gui.assembly.exception.too_many_contacts": "UNLOCALIZED: Cannot attach more than one _Redstone_ _Contact_ to Elevators",
+	"create.gui.assembly.exception.column_conflict": "UNLOCALIZED: Another Elevator is already targeting this column of contacts",
 	"create.gui.gauge.info_header": "계측기 정보:",
 	"create.gui.speedometer.title": "회전 속도",
 	"create.gui.stressometer.title": "네트워크 부하",
@@ -1645,6 +1648,7 @@
 	"create.contraption.controls.all_actor_toggle": "UNLOCALIZED: All Actors: %1$s",
 	"create.contraption.controls.actor_toggle.on": "UNLOCALIZED: On",
 	"create.contraption.controls.actor_toggle.off": "UNLOCALIZED: Off",
+	"create.contraption.controls.floor_unreachable": "UNLOCALIZED: Unreachable",
 
 	"create.display_link.set": "표시할 대상을 선택했습니다",
 	"create.display_link.success": "성공적으로 대상과 연결되었습니다",

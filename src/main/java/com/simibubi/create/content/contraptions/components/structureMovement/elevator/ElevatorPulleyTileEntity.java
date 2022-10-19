@@ -74,6 +74,7 @@ public class ElevatorPulleyTileEntity extends PulleyTileEntity {
 		if (level.isClientSide())
 			ec.setClientYTarget(worldPosition.getY() - clientOffsetTarget + ec.contactYOffset - 1);
 
+		waitingForSpeedChange = false;
 		ec.arrived = wasArrived;
 
 		if (!arrived)
@@ -269,6 +270,8 @@ public class ElevatorPulleyTileEntity extends PulleyTileEntity {
 				contraption.removeBlocksFromWorld(level, BlockPos.ZERO);
 				movedContraption = ControlledContraptionEntity.create(level, this, contraption);
 				movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
+				contraption.maxContactY = worldPosition.getY() + contraption.contactYOffset - 1;
+				contraption.minContactY = contraption.maxContactY - maxLength;
 				level.addFreshEntity(movedContraption);
 				forceMove = true;
 				needsContraption = true;

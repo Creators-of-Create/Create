@@ -24,6 +24,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsStopControllingPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
@@ -129,7 +130,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public boolean supportsTerrainCollision() {
-		return contraption instanceof TranslatingContraption;
+		return contraption instanceof TranslatingContraption && !(contraption instanceof ElevatorContraption);
 	}
 
 	protected void contraptionInitialize() {
