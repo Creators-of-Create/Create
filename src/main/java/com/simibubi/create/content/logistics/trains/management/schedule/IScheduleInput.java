@@ -25,6 +25,8 @@ public interface IScheduleInput {
 
 	public abstract CompoundTag getData();
 
+	public abstract void setData(CompoundTag data);
+
 	public default int slotsTargeted() {
 		return 0;
 	}
@@ -40,7 +42,7 @@ public interface IScheduleInput {
 	}
 
 	public default void setItem(int slot, ItemStack stack) {}
-	
+
 	public default ItemStack getItem(int slot) {
 		return ItemStack.EMPTY;
 	}

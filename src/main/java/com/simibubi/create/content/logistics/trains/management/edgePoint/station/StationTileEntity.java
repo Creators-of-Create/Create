@@ -12,10 +12,14 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.computercraft.ComputerControllable;
+import com.simibubi.create.compat.computercraft.StationPeripheral;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
@@ -51,6 +55,7 @@ import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -77,7 +82,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
-public class StationTileEntity extends SmartTileEntity implements ITransformableTE {
+public class StationTileEntity extends SmartTileEntity implements ITransformableTE, ComputerControllable {
 
 	public TrackTargetingBehaviour<GlobalStation> edgePoint;
 	public LerpedFloat flag;
@@ -98,6 +103,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	boolean flagFlipped;
 
 	public Component lastDisassembledTrainName;
+	private LazyOptional<IPeripheral> peripheral;
 
 	public StationTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -699,10 +705,19 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	}
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+		LazyOptional<T> peripheralCap = getPeripheralCapability(cap);
+
 		if (isItemHandlerCap(cap))
 			return depotBehaviour.getItemCapability(cap, side);
-		return super.getCapability(cap, side);
+
+		return peripheralCap.isPresent() ? peripheralCap : super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		removePeripheral();
 	}
 
 	private void applyAutoSchedule() {
@@ -764,6 +779,21 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	@Override
 	public void transform(StructureTransform transform) {
 		edgePoint.transform(transform);
+	}
+
+	@Override
+	public IPeripheral createPeripheral() {
+		return new StationPeripheral(this);
+	}
+
+	@Override
+	public void setPeripheral(LazyOptional<IPeripheral> peripheral) {
+		this.peripheral = peripheral;
+	}
+
+	@Override
+	public LazyOptional<IPeripheral> getPeripheral() {
+		return peripheral;
 	}
 
 }
