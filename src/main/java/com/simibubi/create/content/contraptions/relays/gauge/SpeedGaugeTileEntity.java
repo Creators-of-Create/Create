@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
-import com.simibubi.create.compat.computercraft.SpeedGaugePeripheral;
+import com.simibubi.create.compat.computercraft.peripherals.SpeedGaugePeripheral;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Color;

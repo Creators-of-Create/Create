@@ -1,5 +1,6 @@
-package com.simibubi.create.compat.computercraft;
+package com.simibubi.create.compat.computercraft.peripherals;
 
+import com.simibubi.create.compat.computercraft.peripherals.SyncedPeripheralBase;
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Instruction;

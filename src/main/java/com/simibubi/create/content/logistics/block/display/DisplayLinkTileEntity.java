@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.compat.computercraft.ComputerControllable;
-import com.simibubi.create.compat.computercraft.DisplayLinkPeripheral;
+import com.simibubi.create.compat.computercraft.peripherals.DisplayLinkPeripheral;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.foundation.advancement.AllAdvancements;

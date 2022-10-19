@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
-import com.simibubi.create.compat.computercraft.StressGaugePeripheral;
+import com.simibubi.create.compat.computercraft.peripherals.StressGaugePeripheral;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.ItemDescription;

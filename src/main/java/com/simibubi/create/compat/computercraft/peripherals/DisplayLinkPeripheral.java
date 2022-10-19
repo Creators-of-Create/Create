@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.computercraft;
+package com.simibubi.create.compat.computercraft.peripherals;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

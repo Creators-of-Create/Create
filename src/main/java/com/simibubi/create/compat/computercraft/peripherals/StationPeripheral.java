@@ -1,8 +1,11 @@
-package com.simibubi.create.compat.computercraft;
+package com.simibubi.create.compat.computercraft.peripherals;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+
+import com.simibubi.create.compat.computercraft.CreateLuaTable;
+import com.simibubi.create.compat.computercraft.peripherals.PeripheralBase;
 
 import org.jetbrains.annotations.NotNull;
 

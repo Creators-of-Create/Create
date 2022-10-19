@@ -1,7 +1,10 @@
-package com.simibubi.create.compat.computercraft;
+package com.simibubi.create.compat.computercraft.peripherals;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
+import com.simibubi.create.compat.computercraft.SyncedComputerControllable;
+import com.simibubi.create.compat.computercraft.peripherals.PeripheralBase;
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.foundation.networking.AllPackets;

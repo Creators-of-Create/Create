@@ -5,7 +5,7 @@ import java.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.compat.computercraft.SequencedGearshiftPeripheral;
+import com.simibubi.create.compat.computercraft.peripherals.SequencedGearshiftPeripheral;
 import com.simibubi.create.compat.computercraft.SyncedComputerControllable;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 

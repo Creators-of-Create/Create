@@ -19,7 +19,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.computercraft.ComputerControllable;
-import com.simibubi.create.compat.computercraft.StationPeripheral;
+import com.simibubi.create.compat.computercraft.peripherals.StationPeripheral;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;

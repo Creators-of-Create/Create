@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.compat.computercraft.ComputerControllable;
-import com.simibubi.create.compat.computercraft.SpeedControllerPeripheral;
+import com.simibubi.create.compat.computercraft.peripherals.SpeedControllerPeripheral;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;

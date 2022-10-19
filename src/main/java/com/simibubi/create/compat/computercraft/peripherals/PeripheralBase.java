@@ -1,5 +1,6 @@
-package com.simibubi.create.compat.computercraft;
+package com.simibubi.create.compat.computercraft.peripherals;
 
+import com.simibubi.create.compat.computercraft.ComputerControllable;
 import org.jetbrains.annotations.Nullable;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
