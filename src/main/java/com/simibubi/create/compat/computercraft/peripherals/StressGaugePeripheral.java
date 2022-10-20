@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEnti
 
 import dan200.computercraft.api.lua.LuaFunction;
 
-public class StressGaugePeripheral extends PeripheralBase<StressGaugeTileEntity> {
+public class StressGaugePeripheral extends SyncedPeripheral<StressGaugeTileEntity> {
 
 	public StressGaugePeripheral(StressGaugeTileEntity tile) {
 		super(tile);

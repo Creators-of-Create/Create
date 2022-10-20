@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntit
 
 import dan200.computercraft.api.lua.LuaFunction;
 
-public class SpeedGaugePeripheral extends PeripheralBase<SpeedGaugeTileEntity> {
+public class SpeedGaugePeripheral extends SyncedPeripheral<SpeedGaugeTileEntity> {
 
 	public SpeedGaugePeripheral(SpeedGaugeTileEntity tile) {
 		super(tile);

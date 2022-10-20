@@ -11,7 +11,7 @@ import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 
-public class SequencedGearshiftPeripheral extends PeripheralBase<SequencedGearshiftTileEntity> {
+public class SequencedGearshiftPeripheral extends SyncedPeripheral<SequencedGearshiftTileEntity> {
 
 	public SequencedGearshiftPeripheral(SequencedGearshiftTileEntity tile) {
 		super(tile);

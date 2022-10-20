@@ -14,12 +14,12 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraftforge.network.PacketDistributor;
 
-public abstract class PeripheralBase<T extends SmartTileEntity> implements IPeripheral {
+public abstract class SyncedPeripheral<T extends SmartTileEntity> implements IPeripheral {
 
 	protected final T tile;
 	private final AtomicInteger computers = new AtomicInteger();
 
-	public PeripheralBase(T tile) {
+	public SyncedPeripheral(T tile) {
 		this.tile = tile;
 	}
 

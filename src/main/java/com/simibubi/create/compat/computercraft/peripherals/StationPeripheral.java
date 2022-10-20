@@ -23,7 +23,7 @@ import dan200.computercraft.api.lua.LuaFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
-public class StationPeripheral extends PeripheralBase<StationTileEntity> {
+public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 
 	public StationPeripheral(StationTileEntity tile) {
 		super(tile);

@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 
 import dan200.computercraft.api.lua.LuaFunction;
 
-public class SpeedControllerPeripheral extends PeripheralBase<SpeedControllerTileEntity> {
+public class SpeedControllerPeripheral extends SyncedPeripheral<SpeedControllerTileEntity> {
 
 	private final ScrollValueBehaviour targetSpeed;
 

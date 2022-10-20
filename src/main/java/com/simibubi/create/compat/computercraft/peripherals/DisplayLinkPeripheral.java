@@ -13,7 +13,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 
-public class DisplayLinkPeripheral extends PeripheralBase<DisplayLinkTileEntity> {
+public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkTileEntity> {
 
 	public static final String TAG_KEY = "ComputerSourceList";
 	private final AtomicInteger cursorX = new AtomicInteger();
