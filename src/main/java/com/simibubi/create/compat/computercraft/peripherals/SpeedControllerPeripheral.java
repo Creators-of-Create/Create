@@ -17,12 +17,12 @@ public class SpeedControllerPeripheral extends PeripheralBase<SpeedControllerTil
 	}
 
 	@LuaFunction(mainThread = true)
-	public void setTargetSpeed(int speed) {
+	public final void setTargetSpeed(int speed) {
 		this.targetSpeed.setValue(speed);
 	}
 
 	@LuaFunction
-	public float getTargetSpeed() {
+	public final float getTargetSpeed() {
 		return this.targetSpeed.getValue();
 	}
 

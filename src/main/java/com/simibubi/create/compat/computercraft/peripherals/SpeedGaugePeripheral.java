@@ -13,7 +13,7 @@ public class SpeedGaugePeripheral extends PeripheralBase<SpeedGaugeTileEntity> {
 	}
 
 	@LuaFunction
-	public float getSpeed() {
+	public final float getSpeed() {
 		return this.tile.getSpeed();
 	}
 

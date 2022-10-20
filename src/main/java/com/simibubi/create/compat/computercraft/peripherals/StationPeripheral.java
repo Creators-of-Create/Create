@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.simibubi.create.compat.computercraft.CreateLuaTable;
-import com.simibubi.create.compat.computercraft.peripherals.PeripheralBase;
-
 import org.jetbrains.annotations.NotNull;
 
+import com.simibubi.create.compat.computercraft.CreateLuaTable;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
@@ -32,7 +30,7 @@ public class StationPeripheral extends PeripheralBase<StationTileEntity> {
 	}
 
 	@LuaFunction(mainThread = true)
-	public void setSchedule(IArguments arguments) throws LuaException {
+	public final void setSchedule(IArguments arguments) throws LuaException {
 		GlobalStation station = tile.getStation();
 		if (station == null)
 			throw new LuaException("train station does not exist");

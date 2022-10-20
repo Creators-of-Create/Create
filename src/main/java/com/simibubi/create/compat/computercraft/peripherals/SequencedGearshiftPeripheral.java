@@ -18,17 +18,17 @@ public class SequencedGearshiftPeripheral extends PeripheralBase<SequencedGearsh
 	}
 
 	@LuaFunction(mainThread = true)
-	public void rotate(IArguments arguments) throws LuaException {
+	public final void rotate(IArguments arguments) throws LuaException {
 		runInstruction(arguments, SequencerInstructions.TURN_ANGLE);
 	}
 
 	@LuaFunction(mainThread = true)
-	public void move(IArguments arguments) throws LuaException {
+	public final void move(IArguments arguments) throws LuaException {
 		runInstruction(arguments, SequencerInstructions.TURN_DISTANCE);
 	}
 
 	@LuaFunction
-	public boolean isRunning() {
+	public final boolean isRunning() {
 		return !this.tile.isIdle();
 	}
 

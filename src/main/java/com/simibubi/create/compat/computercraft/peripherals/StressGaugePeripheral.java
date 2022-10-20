@@ -1,7 +1,5 @@
 package com.simibubi.create.compat.computercraft.peripherals;
 
-import com.simibubi.create.compat.computercraft.peripherals.PeripheralBase;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
@@ -15,12 +13,12 @@ public class StressGaugePeripheral extends PeripheralBase<StressGaugeTileEntity>
 	}
 
 	@LuaFunction
-	public float getStress() {
+	public final float getStress() {
 		return this.tile.getNetworkStress();
 	}
 
 	@LuaFunction
-	public float getStressCapacity() {
+	public final float getStressCapacity() {
 		return this.tile.getNetworkCapacity();
 	}
 

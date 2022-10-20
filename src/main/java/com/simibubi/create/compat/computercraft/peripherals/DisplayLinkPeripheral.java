@@ -24,34 +24,34 @@ public class DisplayLinkPeripheral extends PeripheralBase<DisplayLinkTileEntity>
 	}
 
 	@LuaFunction
-	public void setCursorPos(int x, int y) {
+	public final void setCursorPos(int x, int y) {
 		cursorX.set(x - 1);
 		cursorY.set(y - 1);
 	}
 
 	@LuaFunction
-	public Object[] getCursorPos() {
+	public final Object[] getCursorPos() {
 		return new Object[] {cursorX.get() + 1, cursorY.get() + 1};
 	}
 
 	@LuaFunction(mainThread = true)
-	public Object[] getSize() {
+	public final Object[] getSize() {
 		DisplayTargetStats stats = tile.activeTarget.provideStats(new DisplayLinkContext(tile.getLevel(), tile));
 		return new Object[]{stats.maxRows(), stats.maxColumns()};
 	}
 
 	@LuaFunction
-	public boolean isColor() {
+	public final boolean isColor() {
 		return false;
 	}
 
 	@LuaFunction
-	public boolean isColour() {
+	public final boolean isColour() {
 		return false;
 	}
 
 	@LuaFunction
-	public void write(String text) {
+	public final void write(String text) {
 		ListTag tag = tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
 
 		int x = cursorX.get();
@@ -74,7 +74,7 @@ public class DisplayLinkPeripheral extends PeripheralBase<DisplayLinkTileEntity>
 	}
 
 	@LuaFunction
-	public void clearLine() {
+	public final void clearLine() {
 		ListTag tag = tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
 
 		if (tag.size() > cursorY.get())
@@ -86,14 +86,14 @@ public class DisplayLinkPeripheral extends PeripheralBase<DisplayLinkTileEntity>
 	}
 
 	@LuaFunction
-	public void clear() {
+	public final void clear() {
 		synchronized (tile) {
 			tile.getSourceConfig().put(TAG_KEY, new ListTag());
 		}
 	}
 
 	@LuaFunction(mainThread = true)
-	public void update() {
+	public final void update() {
 		tile.tickSource();
 	}
 
