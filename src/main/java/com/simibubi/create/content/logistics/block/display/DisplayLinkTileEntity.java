@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.compat.computercraft.ComputerControllable;
+import com.simibubi.create.compat.computercraft.ComputerBehaviour;
 import com.simibubi.create.compat.computercraft.peripherals.DisplayLinkPeripheral;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
@@ -16,7 +16,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -27,7 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerControllable {
+public class DisplayLinkTileEntity extends SmartTileEntity {
 
 	protected BlockPos targetOffset;
 
@@ -42,7 +41,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerCo
 
 	public int refreshTicks;
 
-	private LazyOptional<IPeripheral> peripheral;
+	ComputerBehaviour computerBehaviour;
 
 	public DisplayLinkTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -52,6 +51,13 @@ public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerCo
 		glow = LerpedFloat.linear()
 			.startWithValue(0);
 		glow.chase(0, 0.5f, Chaser.EXP);
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new DisplayLinkPeripheral(this)));
+
+		registerAwardables(behaviours, AllAdvancements.DISPLAY_LINK, AllAdvancements.DISPLAY_BOARD);
 	}
 
 	@Override
@@ -129,11 +135,6 @@ public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerCo
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		registerAwardables(behaviours, AllAdvancements.DISPLAY_LINK, AllAdvancements.DISPLAY_BOARD);
-	}
-
-	@Override
 	public void writeSafe(CompoundTag tag) {
 		super.writeSafe(tag);
 		writeGatheredData(tag);
@@ -186,30 +187,16 @@ public class DisplayLinkTileEntity extends SmartTileEntity implements ComputerCo
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		LazyOptional<T> peripheralCap = getPeripheralCapability(cap);
+		if (ComputerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
 
-		return peripheralCap.isPresent() ? peripheralCap : super.getCapability(cap, side);
+		return super.getCapability(cap, side);
 	}
 
 	@Override
 	public void invalidateCaps() {
 		super.invalidateCaps();
-		removePeripheral();
-	}
-
-	@Override
-	public IPeripheral createPeripheral() {
-		return new DisplayLinkPeripheral(this);
-	}
-
-	@Override
-	public void setPeripheral(LazyOptional<IPeripheral> peripheral) {
-		this.peripheral = peripheral;
-	}
-
-	@Override
-	public LazyOptional<IPeripheral> getPeripheral() {
-		return this.peripheral;
+		computerBehaviour.removePeripheral();
 	}
 
 	public void target(BlockPos targetPosition) {

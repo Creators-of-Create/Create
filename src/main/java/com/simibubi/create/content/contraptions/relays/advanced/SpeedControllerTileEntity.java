@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.compat.computercraft.ComputerControllable;
+import com.simibubi.create.compat.computercraft.ComputerBehaviour;
 import com.simibubi.create.compat.computercraft.peripherals.SpeedControllerPeripheral;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -20,7 +20,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,14 +28,13 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class SpeedControllerTileEntity extends KineticTileEntity implements ComputerControllable {
+public class SpeedControllerTileEntity extends KineticTileEntity {
 
 	public static final int DEFAULT_SPEED = 16;
 	protected ScrollValueBehaviour targetSpeed;
+	ComputerBehaviour computerBehaviour;
 
 	boolean hasBracket;
-
-	private LazyOptional<IPeripheral> peripheral;
 
 	public SpeedControllerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -63,6 +61,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity implements Comp
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(targetSpeed);
+		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new SpeedControllerPeripheral(this, targetSpeed)));
 
 		registerAwardables(behaviours, AllAdvancements.SPEED_CONTROLLER);
 	}
@@ -140,32 +139,17 @@ public class SpeedControllerTileEntity extends KineticTileEntity implements Comp
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		LazyOptional<T> peripheralCap = getPeripheralCapability(cap);
+		if (ComputerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
 
-		return peripheralCap.isPresent() ? peripheralCap : super.getCapability(cap, side);
+		return super.getCapability(cap, side);
 	}
 
 	@Override
 	public void invalidateCaps() {
 		super.invalidateCaps();
-		removePeripheral();
+		computerBehaviour.removePeripheral();
 	}
-
-	@Override
-	public IPeripheral createPeripheral() {
-		return new SpeedControllerPeripheral(this, targetSpeed);
-	}
-
-	@Override
-	public void setPeripheral(LazyOptional<IPeripheral> peripheral) {
-		this.peripheral = peripheral;
-	}
-
-	@Override
-	public LazyOptional<IPeripheral> getPeripheral() {
-		return this.peripheral;
-	}
-
 
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 

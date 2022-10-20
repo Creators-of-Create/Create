@@ -37,7 +37,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		super(Lang.translateDirect("gui.sequenced_gearshift.title"));
 		this.instructions = te.instructions;
 		this.pos = te.getBlockPos();
-		this.hasAttachedComputer = te.hasAttachedComputer;
+		this.hasAttachedComputer = te.computerBehaviour.hasAttachedComputer();
 		compareTag = Instruction.serializeAll(instructions);
 	}
 

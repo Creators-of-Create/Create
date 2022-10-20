@@ -2,24 +2,39 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.ComputerBehaviour;
 import com.simibubi.create.compat.computercraft.peripherals.SpeedGaugePeripheral;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity {
 
+	ComputerBehaviour computerBehaviour;
+
 	public SpeedGaugeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new SpeedGaugePeripheral(this)));
 	}
 
 	@Override
@@ -65,9 +80,19 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 		return true;
 	}
 
+	@NotNull
 	@Override
-	public IPeripheral createPeripheral() {
-		return new SpeedGaugePeripheral(this);
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (ComputerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 }

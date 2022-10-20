@@ -2,6 +2,10 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.ComputerBehaviour;
 import com.simibubi.create.compat.computercraft.peripherals.StressGaugePeripheral;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -12,17 +16,20 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class StressGaugeTileEntity extends GaugeTileEntity {
 
+	ComputerBehaviour computerBehaviour;
 	static BlockPos lastSent;
 
 	public StressGaugeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -32,6 +39,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new StressGaugePeripheral(this)));
 		registerAwardables(behaviours, AllAdvancements.STRESSOMETER, AllAdvancements.STRESSOMETER_MAXED);
 	}
 
@@ -143,9 +151,19 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 			award(AllAdvancements.STRESSOMETER_MAXED);
 	}
 
+	@NotNull
 	@Override
-	public IPeripheral createPeripheral() {
-		return new StressGaugePeripheral(this);
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (ComputerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 }

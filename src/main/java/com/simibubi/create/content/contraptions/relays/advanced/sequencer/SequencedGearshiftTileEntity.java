@@ -1,15 +1,16 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.compat.computercraft.ComputerBehaviour;
 import com.simibubi.create.compat.computercraft.peripherals.SequencedGearshiftPeripheral;
-import com.simibubi.create.compat.computercraft.SyncedComputerControllable;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implements SyncedComputerControllable {
+public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 
 	Vector<Instruction> instructions;
 	int currentInstruction;
@@ -28,8 +29,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 	int timer;
 	boolean poweredPreviously;
 
-	LazyOptional<IPeripheral> peripheral;
-	boolean hasAttachedComputer;
+	ComputerBehaviour computerBehaviour;
 
 	public SequencedGearshiftTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -39,7 +39,12 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 		currentInstructionProgress = 0;
 		timer = 0;
 		poweredPreviously = false;
-		hasAttachedComputer = false;
+	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new SequencedGearshiftPeripheral(this)));
 	}
 
 	@Override
@@ -84,7 +89,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 	}
 
 	public void onRedstoneUpdate(boolean isPowered, boolean isRunning) {
-		if (hasAttachedComputer)
+		if (computerBehaviour.hasAttachedComputer())
 			return;
 		if (!poweredPreviously && isPowered)
 			risingFlank();
@@ -173,35 +178,16 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity implement
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		LazyOptional<T> peripheralCap = getPeripheralCapability(cap);
+		if (ComputerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
 
-		return peripheralCap.isPresent() ? peripheralCap : super.getCapability(cap, side);
+		return super.getCapability(cap, side);
 	}
 
 	@Override
 	public void invalidateCaps() {
 		super.invalidateCaps();
-		removePeripheral();
-	}
-
-	@Override
-	public IPeripheral createPeripheral() {
-		return new SequencedGearshiftPeripheral(this);
-	}
-
-	@Override
-	public void setPeripheral(LazyOptional<IPeripheral> peripheral) {
-		this.peripheral = peripheral;
-	}
-
-	@Override
-	public LazyOptional<IPeripheral> getPeripheral() {
-		return this.peripheral;
-	}
-
-	@Override
-	public void setHasAttachedComputer(boolean hasAttachedComputer) {
-		this.hasAttachedComputer = hasAttachedComputer;
+		computerBehaviour.removePeripheral();
 	}
 
 	@Override

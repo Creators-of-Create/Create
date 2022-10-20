@@ -1,17 +1,45 @@
 package com.simibubi.create.compat.computercraft.peripherals;
 
-import com.simibubi.create.compat.computercraft.ComputerControllable;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
+import com.simibubi.create.compat.computercraft.ComputerBehaviour;
+import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
-public abstract class PeripheralBase<T extends BlockEntity & ComputerControllable> implements IPeripheral {
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
+import net.minecraftforge.network.PacketDistributor;
+
+public abstract class PeripheralBase<T extends SmartTileEntity> implements IPeripheral {
 
 	protected final T tile;
+	private final AtomicInteger computers = new AtomicInteger();
 
 	public PeripheralBase(T tile) {
 		this.tile = tile;
+	}
+
+	@Override
+	public void attach(@NotNull IComputerAccess computer) {
+		computers.incrementAndGet();
+		updateTile();
+	}
+
+	@Override
+	public void detach(@NotNull IComputerAccess computer) {
+		computers.decrementAndGet();
+		updateTile();
+	}
+
+	private void updateTile() {
+		boolean hasAttachedComputer = computers.get() > 0;
+
+		tile.getBehaviour(ComputerBehaviour.TYPE).setHasAttachedComputer(hasAttachedComputer);
+		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new AttachedComputerPacket(tile.getBlockPos(), hasAttachedComputer));
 	}
 
 	@Override
