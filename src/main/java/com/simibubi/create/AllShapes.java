@@ -30,6 +30,7 @@ public class AllShapes {
 		CASING_13PX = shape(0, 0, 0, 16, 13, 16).forDirectional(),
 		CASING_12PX = shape(0, 0, 0, 16, 12, 16).forDirectional(),
 		CASING_11PX = shape(0, 0, 0, 16, 11, 16).forDirectional(),
+		CASING_3PX = shape(0, 0, 0, 16, 3, 16).forDirectional(),
 		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(),
 
 		FOUR_VOXEL_POLE = shape(6, 0, 6, 10, 16, 10).forAxis(), SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
@@ -121,6 +122,9 @@ public class AllShapes {
 		GIRDER_BEAM_SHAFT = shape(GIRDER_BEAM.get(Axis.X)).add(SIX_VOXEL_POLE.get(Axis.Z))
 			.forHorizontalAxis(),
 
+		STEP_BOTTOM = shape(0, 0, 8, 16, 8, 16).forHorizontal(SOUTH),
+		STEP_TOP = shape(0, 8, 8, 16, 16, 16).forHorizontal(SOUTH),
+			
 		CONTROLS = shape(0, 0, 6, 16, 14, 16).forHorizontal(NORTH),
 
 		NIXIE_TUBE = shape(9, 0, 5, 15, 12, 11).add(1, 0, 5, 7, 12, 11)

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.world.phys.Vec3;
 
 public final class QuadHelper {
 
@@ -28,12 +29,25 @@ public final class QuadHelper {
 			quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade());
 	}
 
+	public static Vec3 getXYZ(int[] vertexData, int vertex) {
+		float x = Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + X_OFFSET]);
+        float y = Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + Y_OFFSET]);
+        float z = Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + Z_OFFSET]);
+        return new Vec3(x, y, z);
+	}
+	
 	public static float getU(int[] vertexData, int vertex) {
 		return Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + U_OFFSET]);
 	}
 
 	public static float getV(int[] vertexData, int vertex) {
 		return Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + V_OFFSET]);
+	}
+	
+	public static void setXYZ(int[] vertexData, int vertex, Vec3 xyz) {
+		vertexData[vertex * VERTEX_STRIDE + X_OFFSET] = Float.floatToRawIntBits((float) xyz.x);
+		vertexData[vertex * VERTEX_STRIDE + Y_OFFSET] = Float.floatToRawIntBits((float) xyz.y);
+		vertexData[vertex * VERTEX_STRIDE + Z_OFFSET] = Float.floatToRawIntBits((float) xyz.z);
 	}
 
 	public static void setU(int[] vertexData, int vertex, float u) {

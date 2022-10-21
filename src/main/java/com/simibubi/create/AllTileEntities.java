@@ -137,6 +137,7 @@ import com.simibubi.create.content.curiosities.deco.PlacardRenderer;
 import com.simibubi.create.content.curiosities.deco.PlacardTileEntity;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorRenderer;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorTileEntity;
+import com.simibubi.create.content.curiosities.frames.CopycatTileEntity;
 import com.simibubi.create.content.curiosities.toolbox.ToolBoxInstance;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxRenderer;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxTileEntity;
@@ -802,6 +803,11 @@ public class AllTileEntities {
 		.tileEntity("sliding_door", SlidingDoorTileEntity::new)
 		.renderer(() -> SlidingDoorRenderer::new)
 		.validBlocks(AllBlocks.TRAIN_DOOR, AllBlocks.FRAMED_GLASS_DOOR)
+		.register();
+
+	public static final BlockEntityEntry<CopycatTileEntity> UNIVERSAL_FRAME = Create.registrate()
+		.tileEntity("universal_frame", CopycatTileEntity::new)
+		.validBlocks(AllBlocks.COPYCAT_PANEL, AllBlocks.COPYCAT_STEP)
 		.register();
 
 	public static final BlockEntityEntry<FlapDisplayTileEntity> FLAP_DISPLAY = Create.registrate()

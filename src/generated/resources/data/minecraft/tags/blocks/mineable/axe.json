@@ -97,6 +97,8 @@
     "create:rotation_speed_controller",
     "create:mechanical_arm",
     "create:railway_casing",
+    "create:copycat_step",
+    "create:copycat_panel",
     "create:content_observer",
     "create:stockpile_switch",
     "create:creative_crate",

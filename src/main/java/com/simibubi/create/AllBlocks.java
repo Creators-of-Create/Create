@@ -139,6 +139,10 @@ import com.simibubi.create.content.curiosities.deco.PlacardBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.deco.TrainTrapdoorBlock;
 import com.simibubi.create.content.curiosities.deco.TrapdoorCTBehaviour;
+import com.simibubi.create.content.curiosities.frames.CopycatPanelBlock;
+import com.simibubi.create.content.curiosities.frames.CopycatPanelModel;
+import com.simibubi.create.content.curiosities.frames.CopycatStepBlock;
+import com.simibubi.create.content.curiosities.frames.CopycatStepModel;
 import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
@@ -1627,6 +1631,30 @@ public class AllBlocks {
 				.noOcclusion())
 			.onRegister(connectedTextures(TrapdoorCTBehaviour::new))
 			.addLayer(() -> RenderType::cutoutMipped)
+			.register();
+
+	public static final BlockEntry<Block> COPYCAT_BASE = REGISTRATE.block("copycat_base", Block::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.color(MaterialColor.GLOW_LICHEN))
+		.addLayer(() -> RenderType::cutoutMipped)
+		.transform(pickaxeOnly())
+		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+		.register();
+
+	public static final BlockEntry<CopycatStepBlock> COPYCAT_STEP =
+		REGISTRATE.block("copycat_step", CopycatStepBlock::new)
+			.transform(BuilderTransformers.copycat())
+			.onRegister(CreateRegistrate.blockModel(() -> CopycatStepModel::new))
+			.item()
+			.transform(customItemModel("copycat_base", "step"))
+			.register();
+
+	public static final BlockEntry<CopycatPanelBlock> COPYCAT_PANEL =
+		REGISTRATE.block("copycat_panel", CopycatPanelBlock::new)
+			.transform(BuilderTransformers.copycat())
+			.onRegister(CreateRegistrate.blockModel(() -> CopycatPanelModel::new))
+			.item()
+			.transform(customItemModel("copycat_base", "panel"))
 			.register();
 
 	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)
