@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 28",
+	"_": "Missing Localizations: 31",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -68,6 +68,9 @@
 	"block.create.copper_tile_stairs": "Ступеньки из медной плитки",
 	"block.create.copper_tiles": "Медная плитка",
 	"block.create.copper_valve_handle": "Медный ручной вентиль",
+	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
+	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
+	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",
 	"block.create.creative_crate": "Творческий ящик",
 	"block.create.creative_fluid_tank": "Творческий жидкостный бак",
 	"block.create.creative_motor": "Творческий мотор",

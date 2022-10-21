@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2224",
+	"_": "Missing Localizations: 2227",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -68,6 +68,9 @@
 	"block.create.copper_tile_stairs": "UNLOCALIZED: Copper Tile Stairs",
 	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.copper_valve_handle": "Manopla de válvula de Cobre",
+	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
+	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
+	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",
 	"block.create.creative_crate": "Caixa Criativa",
 	"block.create.creative_fluid_tank": "Tanque de Fluidos Criativo",
 	"block.create.creative_motor": "Motor Criativo",

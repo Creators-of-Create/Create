@@ -37,8 +37,10 @@ public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
 	}
 
 	public static boolean isConnected(BlockState state, BlockState other, Direction pDirection) {
-		state = state.setValue(WATERLOGGED, false);
-		other = other.setValue(WATERLOGGED, false);
+		state = state.setValue(WATERLOGGED, false)
+			.setValue(POWERED, false);
+		other = other.setValue(WATERLOGGED, false)
+			.setValue(POWERED, false);
 
 		boolean open = state.getValue(OPEN);
 		Half half = state.getValue(HALF);

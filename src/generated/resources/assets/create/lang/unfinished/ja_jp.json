@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 32",
+	"_": "Missing Localizations: 35",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -68,6 +68,9 @@
 	"block.create.copper_tile_stairs": "銅タイルの階段",
 	"block.create.copper_tiles": "銅タイル",
 	"block.create.copper_valve_handle": "銅のバルブハンドル",
+	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
+	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
+	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",
 	"block.create.creative_crate": "クリエティブクレート",
 	"block.create.creative_fluid_tank": "クリエイティブ液体タンク",
 	"block.create.creative_motor": "クリエイティブモーター",

@@ -28,11 +28,13 @@ public class ConnectedGirderModel extends CTModel {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
+	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+		IModelData tileData) {
 		ConnectionData connectionData = new ConnectionData();
 		for (Direction d : Iterate.horizontalDirections)
 			connectionData.setConnected(d, GirderBlock.isConnected(world, pos, state, d));
-		return super.gatherModelData(builder, world, pos, state).withInitial(CONNECTION_PROPERTY, connectionData);
+		return super.gatherModelData(builder, world, pos, state, tileData).withInitial(CONNECTION_PROPERTY,
+			connectionData);
 	}
 
 	@Override
