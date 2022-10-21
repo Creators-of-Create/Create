@@ -15,6 +15,8 @@
     "create:radial_chassis",
     "create:sequenced_gearshift",
     "create:rotation_speed_controller",
+    "create:copycat_step",
+    "create:copycat_panel",
     "create:andesite_funnel",
     "create:andesite_belt_funnel",
     "create:brass_funnel",

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.content.curiosities.frames.CopycatBlock;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.block.render.QuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -33,7 +34,8 @@ public class CTModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
+	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+		IModelData tileData) {
 		return builder.withInitial(CT_PROPERTY, createCTData(world, pos, state));
 	}
 
@@ -41,8 +43,11 @@ public class CTModel extends BakedModelWrapperWithData {
 		CTData data = new CTData();
 		MutableBlockPos mutablePos = new MutableBlockPos();
 		for (Direction face : Iterate.directions) {
+			BlockState actualState = world.getBlockState(pos);
 			if (!behaviour.buildContextForOccludedDirections()
-				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face)))
+				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face))
+				&& !(actualState.getBlock()instanceof CopycatBlock ufb
+					&& !ufb.canFaceBeOccluded(actualState, face)))
 				continue;
 			CTType dataType = behaviour.getDataType(state, face);
 			if (dataType == null)

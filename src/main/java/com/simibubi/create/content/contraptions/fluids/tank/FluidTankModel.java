@@ -42,11 +42,12 @@ public class FluidTankModel extends CTModel {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
+	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+		IModelData tileData) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
 			cullData.setCulled(d, ConnectivityHandler.isConnected(world, pos, pos.relative(d)));
-		return super.gatherModelData(builder, world, pos, state).withInitial(CULL_PROPERTY, cullData);
+		return super.gatherModelData(builder, world, pos, state, tileData).withInitial(CULL_PROPERTY, cullData);
 	}
 
 	@Override

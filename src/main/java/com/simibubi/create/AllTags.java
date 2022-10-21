@@ -125,6 +125,8 @@ public class AllTags {
 		WINDOWABLE,
 		WRENCH_PICKUP,
 		TREE_ATTACHMENTS,
+		COPYCAT_ALLOW,
+		COPYCAT_DENY,
 
 		RELOCATION_NOT_SUPPORTED(FORGE),
 		WG_STONE(FORGE),
@@ -407,6 +409,11 @@ public class AllTags {
 
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.BANNERS);
+		
+		AllBlockTags.COPYCAT_ALLOW.add(Blocks.BARREL);
+		AllBlockTags.COPYCAT_DENY.includeAll(BlockTags.CAULDRONS);
+		AllBlockTags.COPYCAT_DENY.includeAll(BlockTags.SAPLINGS);
+		AllBlockTags.COPYCAT_DENY.includeAll(BlockTags.CLIMBABLE);
 
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.RAILS);
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.BUTTONS);

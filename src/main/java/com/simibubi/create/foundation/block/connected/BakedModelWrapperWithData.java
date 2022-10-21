@@ -16,14 +16,15 @@ public abstract class BakedModelWrapperWithData extends BakedModelWrapper<BakedM
 	}
 
 	@Override
-	public final IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, IModelData tileData) {
+	public final IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state,
+		IModelData tileData) {
 		Builder builder = new ModelDataMap.Builder();
 		if (originalModel instanceof BakedModelWrapperWithData)
-			((BakedModelWrapperWithData) originalModel).gatherModelData(builder, world, pos, state);
-		return gatherModelData(builder, world, pos, state).build();
+			((BakedModelWrapperWithData) originalModel).gatherModelData(builder, world, pos, state, tileData);
+		return gatherModelData(builder, world, pos, state, tileData).build();
 	}
 
 	protected abstract ModelDataMap.Builder gatherModelData(ModelDataMap.Builder builder, BlockAndTintGetter world,
-		BlockPos pos, BlockState state);
+		BlockPos pos, BlockState state, IModelData tileData);
 
 }

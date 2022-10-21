@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
@@ -30,6 +31,7 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBl
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorMovementBehaviour;
+import com.simibubi.create.content.curiosities.frames.CopycatBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
@@ -62,6 +64,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTable.Builder;
@@ -99,6 +102,22 @@ public class BuilderTransformers {
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
 			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))
 			.onRegister(block -> IBogeyBlock.register(RegisteredObjects.getKeyOrThrow(block)));
+	}
+
+	public static <B extends CopycatBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> copycat() {
+		return b -> b.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+				.getExistingFile(p.mcLoc("air"))))
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.noOcclusion()
+				.color(MaterialColor.NONE))
+			.addLayer(() -> RenderType::solid)
+			.addLayer(() -> RenderType::cutout)
+			.addLayer(() -> RenderType::cutoutMipped)
+			.addLayer(() -> RenderType::translucent)
+			.color(() -> CopycatBlock::wrappedColor)
+			.tag(AllBlockTags.SAFE_NBT.tag)
+			.transform(AllTags.axeOrPickaxe());
 	}
 
 	public static <B extends TrapDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> trapdoor(boolean orientable) {
