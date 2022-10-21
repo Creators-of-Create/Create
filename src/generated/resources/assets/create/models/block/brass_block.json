@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "create:block/brass_storage_block"
+    "all": "create:block/brass_block"
   }
 }

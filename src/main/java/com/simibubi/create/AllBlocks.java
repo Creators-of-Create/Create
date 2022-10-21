@@ -1699,6 +1699,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<AndesiteFunnelBlock> ANDESITE_FUNNEL =
 		REGISTRATE.block("andesite_funnel", AndesiteFunnelBlock::new)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.color(MaterialColor.STONE))
 			.transform(pickaxeOnly())
@@ -1712,6 +1713,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<BeltFunnelBlock> ANDESITE_BELT_FUNNEL =
 		REGISTRATE.block("andesite_belt_funnel", p -> new BeltFunnelBlock(AllBlocks.ANDESITE_FUNNEL, p))
+			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.color(MaterialColor.STONE))
 			.transform(pickaxeOnly())
@@ -1722,6 +1724,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<BrassFunnelBlock> BRASS_FUNNEL =
 		REGISTRATE.block("brass_funnel", BrassFunnelBlock::new)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
@@ -1735,6 +1738,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<BeltFunnelBlock> BRASS_BELT_FUNNEL =
 		REGISTRATE.block("brass_belt_funnel", p -> new BeltFunnelBlock(AllBlocks.BRASS_FUNNEL, p))
+			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
@@ -2077,7 +2081,7 @@ public class AllBlocks {
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 		.properties(p -> p.requiresCorrectToolForDrops())
 		.transform(pickaxeOnly())
-		.blockstate(simpleCubeAll("brass_storage_block"))
+		.blockstate(simpleCubeAll("brass_block"))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.STORAGE_BLOCKS)
 		.tag(BlockTags.BEACON_BASE_BLOCKS)
