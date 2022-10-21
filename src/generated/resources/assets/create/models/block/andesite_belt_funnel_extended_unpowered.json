@@ -1,0 +1,10 @@
+{
+  "parent": "create:block/belt_funnel/block_extended",
+  "textures": {
+    "particle": "create:block/andesite_block",
+    "block": "create:block/andesite_block",
+    "direction": "create:block/funnel/andesite_funnel_neutral",
+    "redstone": "create:block/funnel/andesite_funnel_unpowered",
+    "base": "create:block/funnel/andesite_funnel"
+  }
+}

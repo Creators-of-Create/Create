@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 686",
+	"_": "Missing Localizations: 687",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,6 +7,7 @@
 	"block.create.acacia_window_pane": "Geam De Salcâm",
 	"block.create.adjustable_chain_gearshift": "Schimbător De Viteze Reglabil Înlănțuit",
 	"block.create.analog_lever": "Manetă Analogică",
+	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
 	"block.create.andesite_belt_funnel": "Pâlnie De Andezit Pentru Benzi",
 	"block.create.andesite_casing": "Carcasă De Andezit",
 	"block.create.andesite_encased_cogwheel": "Roată Dințată Încapsulată În Andezit",

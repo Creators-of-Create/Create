@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 43",
+	"_": "Missing Localizations: 44",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,6 +7,7 @@
 	"block.create.acacia_window_pane": "Akacjowa szyba okienna",
 	"block.create.adjustable_chain_gearshift": "Regulowany przekładnik łańcuchowy",
 	"block.create.analog_lever": "Dźwignia analogowa",
+	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
 	"block.create.andesite_belt_funnel": "Andezytowy lejek taśmowy",
 	"block.create.andesite_casing": "Andezytowa obudowa",
 	"block.create.andesite_encased_cogwheel": "Andezytowe izolowane koło zębate",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2227",
+	"_": "Missing Localizations: 2228",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,6 +7,7 @@
 	"block.create.acacia_window_pane": "UNLOCALIZED: Acacia Window Pane",
 	"block.create.adjustable_chain_gearshift": "Mudança de engrenagem de corrente ajustável",
 	"block.create.analog_lever": "Alavanca Analógica",
+	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
 	"block.create.andesite_belt_funnel": "Funil de correia de andesito",
 	"block.create.andesite_casing": "Revestimento de Andesito",
 	"block.create.andesite_encased_cogwheel": "Roda dentada revestida com andesito",

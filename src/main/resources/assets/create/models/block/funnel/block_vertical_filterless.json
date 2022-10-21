@@ -5,8 +5,8 @@
 		"base": "create:block/funnel/brass_funnel",
 		"direction": "create:block/funnel/brass_funnel_pull",
 		"redstone": "create:block/funnel/brass_funnel_unpowered",
-		"open": "create:block/funnel_closed",
-		"particle": "create:block/funnel/brass_funnel_frame",
+		"open": "create:block/funnel/funnel_closed",
+		"particle": "create:block/brass_block",
 		"frame": "create:block/funnel/brass_funnel_frame"
 	},
 	"elements": [

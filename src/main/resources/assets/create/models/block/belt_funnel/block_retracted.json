@@ -1,13 +1,12 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
-	"texture_size": [32, 32],
 	"textures": {
 		"back": "create:block/funnel/funnel_back",
+		"particle": "create:block/brass_block",
 		"base": "create:block/funnel/brass_funnel",
 		"direction": "create:block/funnel/brass_funnel_neutral",
 		"redstone": "create:block/funnel/brass_funnel_unpowered",
-		"particle": "create:block/brass_block",
 		"block": "create:block/brass_block"
 	},
 	"elements": [

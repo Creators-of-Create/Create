@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 35",
+	"_": "Missing Localizations: 36",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,6 +7,7 @@
 	"block.create.acacia_window_pane": "アカシアの板窓",
 	"block.create.adjustable_chain_gearshift": "可変チェーンギアシフト",
 	"block.create.analog_lever": "アナログレバー",
+	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
 	"block.create.andesite_belt_funnel": "安山岩ベルトファンネル",
 	"block.create.andesite_casing": "安山岩ケーシング",
 	"block.create.andesite_encased_cogwheel": "安山岩ケース入り歯車",

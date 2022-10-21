@@ -4,9 +4,9 @@
 	"textures": {
 		"back": "create:block/funnel/funnel_back",
 		"base": "create:block/funnel/brass_funnel",
-		"particle": "create:block/funnel/brass_funnel_pull",
 		"direction": "create:block/funnel/brass_funnel_pull",
 		"redstone": "create:block/funnel/brass_funnel_unpowered",
+		"particle": "create:block/brass_block",
 		"block": "create:block/brass_block"
 	},
 	"elements": [

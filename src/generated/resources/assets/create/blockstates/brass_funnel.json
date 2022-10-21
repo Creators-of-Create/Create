@@ -1,51 +1,51 @@
 {
   "variants": {
     "extracting=false,facing=down,powered=false": {
-      "model": "create:block/brass_funnel_vertical_pull",
+      "model": "create:block/brass_funnel_vertical_pull_unpowered",
       "x": 180,
       "y": 180
     },
     "extracting=true,facing=down,powered=false": {
-      "model": "create:block/brass_funnel_vertical_push",
+      "model": "create:block/brass_funnel_vertical_push_unpowered",
       "x": 180,
       "y": 180
     },
     "extracting=false,facing=up,powered=false": {
-      "model": "create:block/brass_funnel_vertical_pull",
+      "model": "create:block/brass_funnel_vertical_pull_unpowered",
       "y": 180
     },
     "extracting=true,facing=up,powered=false": {
-      "model": "create:block/brass_funnel_vertical_push",
+      "model": "create:block/brass_funnel_vertical_push_unpowered",
       "y": 180
     },
     "extracting=false,facing=north,powered=false": {
-      "model": "create:block/brass_funnel_horizontal_pull"
+      "model": "create:block/brass_funnel_horizontal_pull_unpowered"
     },
     "extracting=true,facing=north,powered=false": {
-      "model": "create:block/brass_funnel_horizontal_push"
+      "model": "create:block/brass_funnel_horizontal_push_unpowered"
     },
     "extracting=false,facing=south,powered=false": {
-      "model": "create:block/brass_funnel_horizontal_pull",
+      "model": "create:block/brass_funnel_horizontal_pull_unpowered",
       "y": 180
     },
     "extracting=true,facing=south,powered=false": {
-      "model": "create:block/brass_funnel_horizontal_push",
+      "model": "create:block/brass_funnel_horizontal_push_unpowered",
       "y": 180
     },
     "extracting=false,facing=west,powered=false": {
-      "model": "create:block/brass_funnel_horizontal_pull",
+      "model": "create:block/brass_funnel_horizontal_pull_unpowered",
       "y": 270
     },
     "extracting=true,facing=west,powered=false": {
-      "model": "create:block/brass_funnel_horizontal_push",
+      "model": "create:block/brass_funnel_horizontal_push_unpowered",
       "y": 270
     },
     "extracting=false,facing=east,powered=false": {
-      "model": "create:block/brass_funnel_horizontal_pull",
+      "model": "create:block/brass_funnel_horizontal_pull_unpowered",
       "y": 90
     },
     "extracting=true,facing=east,powered=false": {
-      "model": "create:block/brass_funnel_horizontal_push",
+      "model": "create:block/brass_funnel_horizontal_push_unpowered",
       "y": 90
     },
     "extracting=false,facing=down,powered=true": {

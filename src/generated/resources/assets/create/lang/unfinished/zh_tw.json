@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 39",
+	"_": "Missing Localizations: 40",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,6 +7,7 @@
 	"block.create.acacia_window_pane": "相思木窗戶片",
 	"block.create.adjustable_chain_gearshift": "可調式鏈式變速箱",
 	"block.create.analog_lever": "可調式拉桿",
+	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
 	"block.create.andesite_belt_funnel": "安山岩輸送帶漏斗",
 	"block.create.andesite_casing": "安山岩機殼",
 	"block.create.andesite_encased_cogwheel": "安山齒輪箱",

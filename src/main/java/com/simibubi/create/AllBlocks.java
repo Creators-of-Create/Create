@@ -1746,7 +1746,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.STONE))
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.blockstate(new BeltFunnelGenerator("andesite", new ResourceLocation("block/polished_andesite"))::generate)
+			.blockstate(new BeltFunnelGenerator("andesite")::generate)
 			.loot((p, b) -> p.dropOther(b, ANDESITE_FUNNEL.get()))
 			.register();
 
@@ -1771,7 +1771,7 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 			.transform(pickaxeOnly())
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.blockstate(new BeltFunnelGenerator("brass", Create.asResource("block/brass_block"))::generate)
+			.blockstate(new BeltFunnelGenerator("brass")::generate)
 			.loot((p, b) -> p.dropOther(b, BRASS_FUNNEL.get()))
 			.register();
 
@@ -2102,6 +2102,19 @@ public class AllBlocks {
 		.tag(Tags.Items.STORAGE_BLOCKS)
 		.build()
 		.lang("Block of Zinc")
+		.register();
+	
+	public static final BlockEntry<Block> ANDESITE_ALLOY_BLOCK = REGISTRATE.block("andesite_alloy_block", Block::new)
+		.initialProperties(() -> Blocks.ANDESITE)
+		.properties(p -> p.color(MaterialColor.STONE))
+		.properties(p -> p.requiresCorrectToolForDrops())
+		.transform(pickaxeOnly())
+		.blockstate(simpleCubeAll("andesite_block"))
+		.tag(Tags.Blocks.STORAGE_BLOCKS)
+		.transform(tagBlockAndItem("storage_blocks/andesite_alloy"))
+		.tag(Tags.Items.STORAGE_BLOCKS)
+		.build()
+		.lang("Block of Andesite Alloy")
 		.register();
 
 	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 31",
+	"_": "Missing Localizations: 32",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,6 +7,7 @@
 	"block.create.acacia_window_pane": "Панель из акациевого окна",
 	"block.create.adjustable_chain_gearshift": "Регулируемая цепная коробка передач",
 	"block.create.analog_lever": "Аналоговый рычаг",
+	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
 	"block.create.andesite_belt_funnel": "Андезитовая конвейерная воронка",
 	"block.create.andesite_casing": "Андезитовый корпус",
 	"block.create.andesite_encased_cogwheel": "Шестерня в андезитовом корпусе",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 39",
+	"_": "Missing Localizations: 40",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,6 +7,7 @@
 	"block.create.acacia_window_pane": "아카시아나무 유리판 ",
 	"block.create.adjustable_chain_gearshift": "벨트 변속기",
 	"block.create.analog_lever": "아날로그 레버",
+	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
 	"block.create.andesite_belt_funnel": "안산암 퍼널",
 	"block.create.andesite_casing": "안산암 케이스",
 	"block.create.andesite_encased_cogwheel": "안산암 케이스를 씌운 톱니바퀴",
