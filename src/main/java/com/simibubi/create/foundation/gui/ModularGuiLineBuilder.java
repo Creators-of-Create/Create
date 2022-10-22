@@ -6,12 +6,12 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.gui.widget.TooltipArea;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.network.chat.TextComponent;
 
 public class ModularGuiLineBuilder {
 
@@ -52,7 +52,7 @@ public class ModularGuiLineBuilder {
 	}
 
 	private <T extends ScrollInput> void addScrollInput(T input, BiConsumer<T, Label> inputTransform, String dataKey) {
-		Label label = new Label(input.x + 5, y, TextComponent.EMPTY);
+		Label label = new Label(input.x + 5, y, Components.immutableEmpty());
 		label.withShadow();
 		inputTransform.accept(input, label);
 		input.writingTo(label);
@@ -76,7 +76,7 @@ public class ModularGuiLineBuilder {
 
 	public ModularGuiLineBuilder addTextInput(int x, int width, BiConsumer<EditBox, TooltipArea> inputTransform,
 		String dataKey) {
-		EditBox input = new EditBox(font, x + this.x + 5, y, width - 9, 8, TextComponent.EMPTY);
+		EditBox input = new EditBox(font, x + this.x + 5, y, width - 9, 8, Components.immutableEmpty());
 		input.setBordered(false);
 		input.setTextColor(0xffffff);
 		input.changeFocus(false);

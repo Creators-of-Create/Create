@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.foundation.utility.DirectionHelper;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -15,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBlock {
+public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBlock implements ITransformableBlock {
 
 	public static final BooleanProperty AXIS_ALONG_FIRST_COORDINATE = BooleanProperty.create("axis_along_first");
 
@@ -53,7 +54,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 
 		if (faceAxis.isHorizontal()) {
 			alongFirst = faceAxis == Axis.Z;
-			Direction positivePerpendicular = DirectionHelper.getPositivePerpendicular(faceAxis);
+			Direction positivePerpendicular = faceAxis == Axis.X ? Direction.SOUTH : Direction.EAST;
 
 			boolean shaftAbove = prefersConnectionTo(world, pos, Direction.UP, true);
 			boolean shaftBelow = prefersConnectionTo(world, pos, Direction.DOWN, true);
@@ -119,6 +120,23 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 		if (rot.ordinal() % 2 == 1)
 			state = state.cycle(AXIS_ALONG_FIRST_COORDINATE);
 		return super.rotate(state, rot);
+	}
+
+	@Override
+	public BlockState transform(BlockState state, StructureTransform transform) {
+		if (transform.mirror != null) {
+			state = mirror(state, transform.mirror);
+		}
+
+		if (transform.rotationAxis == Direction.Axis.Y) {
+			return rotate(state, transform.rotation);
+		}
+
+		Direction newFacing = transform.rotateFacing(state.getValue(FACING));
+		if (transform.rotationAxis == newFacing.getAxis() && transform.rotation.ordinal() % 2 == 1) {
+			state = state.cycle(AXIS_ALONG_FIRST_COORDINATE);
+		}
+		return state.setValue(FACING, newFacing);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -15,20 +14,14 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.world.item.Items;
 
 @ParametersAreNonnullByDefault
 public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 
 	private final AnimatedSaw saw = new AnimatedSaw();
 
-	public SawingCategory() {
-		super(doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_LOG), emptyBackground(177, 70));
-	}
-
-	@Override
-	public Class<? extends CuttingRecipe> getRecipeClass() {
-		return CuttingRecipe.class;
+	public SawingCategory(Info<CuttingRecipe> info) {
+		super(info);
 	}
 
 	@Override

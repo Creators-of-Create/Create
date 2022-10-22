@@ -1,17 +1,16 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllEnchantments;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
@@ -22,13 +21,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public class BackTankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
 		for (ItemStack itemStack : entity.getArmorSlots())
-			if (AllItems.COPPER_BACKTANK.isIn(itemStack))
+			if (AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
 				return itemStack;
 		return ItemStack.EMPTY;
 	}
@@ -70,9 +69,9 @@ public class BackTankUtil {
 
 		player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 40, 10));
 		player.connection.send(new ClientboundSetSubtitleTextPacket(
-			new TextComponent("\u26A0 ").withStyle(depleted ? ChatFormatting.RED : ChatFormatting.GOLD)
+			Components.literal("\u26A0 ").withStyle(depleted ? ChatFormatting.RED : ChatFormatting.GOLD)
 				.append(component.withStyle(ChatFormatting.GRAY))));
-		player.connection.send(new ClientboundSetTitleTextPacket(new TextComponent("")));
+		player.connection.send(new ClientboundSetTitleTextPacket(Components.immutableEmpty()));
 	}
 
 	public static int maxAir(ItemStack backtank) {
@@ -105,11 +104,10 @@ public class BackTankUtil {
 
 	// For Air-using tools
 
-	@OnlyIn(Dist.CLIENT)
 	public static boolean isBarVisible(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return false;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return false;
 		ItemStack backtank = get(player);
@@ -118,11 +116,10 @@ public class BackTankUtil {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static int getBarWidth(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 13;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 13;
 		ItemStack backtank = get(player);
@@ -132,11 +129,10 @@ public class BackTankUtil {
 			.getBarWidth(backtank);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static int getBarColor(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 0;
-		LocalPlayer player = Minecraft.getInstance().player;
+		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 0;
 		ItemStack backtank = get(player);

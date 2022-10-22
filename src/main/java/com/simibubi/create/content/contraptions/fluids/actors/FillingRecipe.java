@@ -11,10 +11,10 @@ import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -70,7 +70,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 		List<FluidStack> matchingFluidStacks = fluidIngredients.get(0)
 			.getMatchingFluidStacks();
 		if (matchingFluidStacks.size() == 0)
-			return new TextComponent("Invalid");
+			return Components.literal("Invalid");
 		return Lang.translateDirect("recipe.assembly.spout_filling_fluid",
 			matchingFluidStacks.get(0).getDisplayName().getString());
 	}

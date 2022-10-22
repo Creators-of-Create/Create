@@ -134,14 +134,14 @@ public class PonderScene {
 	}
 
 	public Pair<ItemStack, BlockPos> rayTraceScene(Vec3 from, Vec3 to) {
-		MutableObject<Pair<WorldSectionElement, BlockPos>> nearestHit = new MutableObject<>();
+		MutableObject<Pair<WorldSectionElement, Pair<Vec3, BlockHitResult>>> nearestHit = new MutableObject<>();
 		MutableDouble bestDistance = new MutableDouble(0);
 
 		forEach(WorldSectionElement.class, wse -> {
 			wse.resetSelectedBlock();
 			if (!wse.isVisible())
 				return;
-			Pair<Vec3, BlockPos> rayTrace = wse.rayTrace(world, from, to);
+			Pair<Vec3, BlockHitResult> rayTrace = wse.rayTrace(world, from, to);
 			if (rayTrace == null)
 				return;
 			double distanceTo = rayTrace.getFirst()
@@ -149,15 +149,17 @@ public class PonderScene {
 			if (nearestHit.getValue() != null && distanceTo >= bestDistance.getValue())
 				return;
 
-			nearestHit.setValue(Pair.of(wse, rayTrace.getSecond()));
+			nearestHit.setValue(Pair.of(wse, rayTrace));
 			bestDistance.setValue(distanceTo);
 		});
 
 		if (nearestHit.getValue() == null)
 			return Pair.of(ItemStack.EMPTY, null);
 
-		BlockPos selectedPos = nearestHit.getValue()
+		Pair<Vec3, BlockHitResult> selectedHit = nearestHit.getValue()
 			.getSecond();
+		BlockPos selectedPos = selectedHit.getSecond()
+			.getBlockPos();
 
 		BlockPos origin = new BlockPos(basePlateOffsetX, 0, basePlateOffsetZ);
 		if (!world.getBounds()
@@ -176,9 +178,14 @@ public class PonderScene {
 			.getFirst()
 			.selectBlock(selectedPos);
 		BlockState blockState = world.getBlockState(selectedPos);
-		ItemStack pickBlock = blockState.getCloneItemStack(
-			new BlockHitResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world, selectedPos,
-			Minecraft.getInstance().player);
+
+		Direction direction = selectedHit.getSecond()
+			.getDirection();
+		Vec3 location = selectedHit.getSecond()
+			.getLocation();
+		
+		ItemStack pickBlock = blockState.getCloneItemStack(new BlockHitResult(location, direction, selectedPos, true),
+			world, selectedPos, Minecraft.getInstance().player);
 
 		return Pair.of(pickBlock, selectedPos);
 	}
@@ -455,6 +462,10 @@ public class PonderScene {
 		return basePlateSize;
 	}
 
+	public float getScaleFactor() {
+		return scaleFactor;
+	}
+
 	public float getYOffset() {
 		return yOffset;
 	}
@@ -498,10 +509,10 @@ public class PonderScene {
 		}
 
 		public PoseStack apply(PoseStack ms) {
-			return apply(ms, AnimationTickHolder.getPartialTicks(world), false);
+			return apply(ms, AnimationTickHolder.getPartialTicks(world));
 		}
 
-		public PoseStack apply(PoseStack ms, float pt, boolean overlayCompatible) {
+		public PoseStack apply(PoseStack ms, float pt) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
 			TransformStack.cast(ms)
@@ -513,23 +524,11 @@ public class PonderScene {
 				.rotateX(xRotation.getValue(pt))
 				.rotateY(yRotation.getValue(pt));
 
+			UIRenderHelper.flipForGuiRender(ms);
 			float f = 30 * scaleFactor;
-
-			if (!overlayCompatible) {
-				UIRenderHelper.flipForGuiRender(ms);
-				ms.scale(f, f, f);
-				ms.translate((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
-					(basePlateSize + basePlateOffsetZ) / -2f);
-			} else {
-				// For block breaking overlay; Don't ask
-				ms.scale(f, f, f);
-				if (f == 30)
-					ms.translate(0.525, .2975, .9);
-				ms.translate((basePlateSize + basePlateOffsetX) / -2f, -yOffset,
-					(basePlateSize + basePlateOffsetZ) / -2f);
-				float y = (float) (0.5065 * Math.pow(2.2975, Math.log(1 / scaleFactor) / Math.log(2))) / 30;
-				ms.scale(y, -y, -y);
-			}
+			ms.scale(f, f, f);
+			ms.translate((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
+				(basePlateSize + basePlateOffsetZ) / -2f);
 
 			return ms;
 		}
@@ -572,7 +571,7 @@ public class PonderScene {
 		protected void refreshMatrix(float pt) {
 			if (cachedMat != null)
 				return;
-			cachedMat = apply(new PoseStack(), pt, false).last()
+			cachedMat = apply(new PoseStack(), pt).last()
 				.pose();
 		}
 

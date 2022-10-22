@@ -104,7 +104,8 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 			dropItem(context, stack);
 		});
 
-		world.setBlockAndUpdate(pos, cutCrop(world, pos, stateVisited));
+		BlockState cutCrop = cutCrop(world, pos, stateVisited);
+		world.setBlockAndUpdate(pos, cutCrop.canSurvive(world, pos) ? cutCrop : Blocks.AIR.defaultBlockState());
 	}
 
 	public boolean isValidCrop(Level world, BlockPos pos, BlockState state) {

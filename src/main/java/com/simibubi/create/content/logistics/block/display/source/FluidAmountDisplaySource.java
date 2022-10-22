@@ -5,10 +5,10 @@ import com.simibubi.create.content.logistics.block.display.target.DisplayTargetS
 import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.FluidFormatter;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -38,7 +38,7 @@ public class FluidAmountDisplaySource extends SingleLineDisplaySource {
 			collected += stack.getAmount();
 		}
 
-		return new TextComponent(FluidFormatter.asString(collected, false));
+		return Components.literal(FluidFormatter.asString(collected, false));
 	}
 
 	@Override

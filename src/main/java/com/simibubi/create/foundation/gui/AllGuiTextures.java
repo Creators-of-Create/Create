@@ -21,6 +21,8 @@ public enum AllGuiTextures implements ScreenElement {
 	TERRAINZAPPER_INACTIVE_PARAM("curiosities", 238, 0, 18, 18),
 
 	LOGO("logo", 256, 256),
+	CURSEFORGE_LOGO("platform_icons/curseforge", 256, 256),
+	MODRINTH_LOGO("platform_icons/modrinth", 256, 256),
 
 	SCHEMATIC("schematics", 192, 121),
 	SCHEMATIC_SLOT("widgets", 54, 0, 16, 16),

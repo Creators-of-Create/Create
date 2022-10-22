@@ -19,7 +19,7 @@
       "chance": 0.75
     },
     {
-      "item": "minecraft:cobblestone",
+      "item": "minecraft:cobbled_deepslate",
       "chance": 0.125
     }
   ],

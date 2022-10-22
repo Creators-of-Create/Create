@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -183,7 +184,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void writeInternal(JsonObject json) {
-			json.addProperty("fluid", fluid.getRegistryName()
+			json.addProperty("fluid", RegisteredObjects.getKeyOrThrow(fluid)
 				.toString());
 			json.add("nbt", JsonParser.parseString(tagToMatch.toString()));
 		}
@@ -203,11 +204,13 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@SuppressWarnings("deprecation")
 		@Override
 		protected boolean testInternal(FluidStack t) {
-			if (tag == null)
+			if (tag == null) {
 				for (FluidStack accepted : getMatchingFluidStacks())
 					if (accepted.getFluid()
 						.isSame(t.getFluid()))
 						return true;
+				return false;
+			}
 			return t.getFluid().is(tag);
 		}
 

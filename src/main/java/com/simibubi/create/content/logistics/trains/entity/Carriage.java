@@ -118,13 +118,18 @@ public class Carriage {
 		return entities.get(dimension);
 	}
 
-	public double travel(Level level, TrackGraph graph, double distance,
-		Function<TravellingPoint, ITrackSelector> forwardControl,
-		Function<TravellingPoint, ITrackSelector> backwardControl, int type) {
+	public double travel(Level level, TrackGraph graph, double distance, TravellingPoint toFollowForward,
+		TravellingPoint toFollowBackward, int type) {
+
+		Function<TravellingPoint, ITrackSelector> forwardControl =
+			toFollowForward == null ? train.navigation::control : mp -> mp.follow(toFollowForward);
+		Function<TravellingPoint, ITrackSelector> backwardControl =
+			toFollowBackward == null ? train.navigation::control : mp -> mp.follow(toFollowBackward);
+
 		boolean onTwoBogeys = isOnTwoBogeys();
 		double stress = train.derailed ? 0 : onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
 		blocked = false;
-
+		
 		MutableDouble distanceMoved = new MutableDouble(distance);
 		boolean iterateFromBack = distance < 0;
 
@@ -136,7 +141,7 @@ public class Carriage {
 			CarriageBogey bogey = bogeys.get(actuallyFirstBogey);
 			double bogeyCorrection = stress * (actuallyFirstBogey ? 0.5d : -0.5d);
 			double bogeyStress = bogey.getStress();
-
+			
 			for (boolean firstWheel : Iterate.trueAndFalse) {
 				boolean actuallyFirstWheel = firstWheel ^ iterateFromBack;
 				TravellingPoint point = bogey.points.get(actuallyFirstWheel);
@@ -734,9 +739,9 @@ public class Carriage {
 				if (sp.level.dimension()
 					.equals(other.getKey()))
 					continue;
-				if (otherDce.pivot == null)
+				Vec3 loc = otherDce.pivot == null ? otherDce.positionAnchor : otherDce.pivot.getLocation();
+				if (loc == null)
 					continue;
-				Vec3 loc = otherDce.pivot.getLocation();
 				ServerLevel level = sLevel.getServer()
 					.getLevel(other.getKey());
 				sp.teleportTo(level, loc.x, loc.y, loc.z, sp.getYRot(), sp.getXRot());
@@ -825,13 +830,38 @@ public class Carriage {
 			double diffY = positionVec.y - coupledVec.y;
 			double diffZ = positionVec.z - coupledVec.z;
 
-			if (!entity.level.isClientSide())
-				entity.setServerSidePrevPosition();
-			
-			entity.setPos(positionAnchor);
 			entity.prevYaw = entity.yaw;
 			entity.prevPitch = entity.pitch;
 
+			if (!entity.level.isClientSide()) {
+				Vec3 lookahead = positionAnchor.add(positionAnchor.subtract(entity.position())
+					.normalize()
+					.scale(16));
+
+				for (Entity e : entity.getPassengers()) {
+					if (!(e instanceof Player))
+						continue;
+					if (e.distanceToSqr(entity) > 32 * 32)
+						continue;
+					if (CarriageEntityHandler.isActiveChunk(entity.level, new BlockPos(lookahead)))
+						break;
+					train.carriageWaitingForChunks = id;
+					return;
+				}
+				
+				if (entity.getPassengers()
+					.stream()
+					.anyMatch(p -> p instanceof Player)
+					) {
+				}
+
+				if (train.carriageWaitingForChunks == id)
+					train.carriageWaitingForChunks = -1;
+
+				entity.setServerSidePrevPosition();
+			}
+
+			entity.setPos(positionAnchor);
 			entity.yaw = (float) (Mth.atan2(diffZ, diffX) * 180 / Math.PI) + 180;
 			entity.pitch = (float) (Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ)) * 180 / Math.PI) * -1;
 

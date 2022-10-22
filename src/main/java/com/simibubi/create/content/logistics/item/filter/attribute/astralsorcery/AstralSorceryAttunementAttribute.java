@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,7 +24,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
 
         // Special handling for shifting stars
         ResourceLocation itemResource = itemStack.getItem().getRegistryName();
-        if(itemResource != null && itemResource.toString().contains("shifting_star_")) {
+        if (itemResource != null && itemResource.toString().contains("shifting_star_")) {
             constellation = itemResource.toString().replace("shifting_star_", "");
         }
 
@@ -38,7 +38,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
 
         // Special handling for shifting stars
         ResourceLocation itemResource = itemStack.getItem().getRegistryName();
-        if(itemResource != null && itemResource.toString().contains("shifting_star_")) {
+        if (itemResource != null && itemResource.toString().contains("shifting_star_")) {
             constellation = itemResource.toString().replace("shifting_star_", "");
         }
 
@@ -57,7 +57,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
     @Override
     public Object[] getTranslationParameters() {
         ResourceLocation constResource = new ResourceLocation(constellationName);
-        String something = new TranslatableComponent(String.format("%s.constellation.%s", constResource.getNamespace(), constResource.getPath())).getString();
+        String something = Components.translatable(String.format("%s.constellation.%s", constResource.getNamespace(), constResource.getPath())).getString();
         return new Object[] { something };
     }
 

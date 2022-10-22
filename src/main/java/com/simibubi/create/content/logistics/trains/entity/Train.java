@@ -14,7 +14,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -32,7 +31,6 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.IEdgePointListener;
-import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
@@ -82,6 +80,7 @@ public class Train {
 	public double speed = 0;
 	public double targetSpeed = 0;
 	public Double speedBeforeStall = null;
+	public int carriageWaitingForChunks = -1;
 
 	public double throttle = 1;
 	public boolean honk = false;
@@ -124,6 +123,8 @@ public class Train {
 	public Boolean lowHonk;
 	public int honkPitch;
 
+	public float accumulatedSteamRelease;
+	
 	int tickOffset;
 	double[] stress;
 
@@ -276,6 +277,9 @@ public class Train {
 		int carriageCount = carriages.size();
 		boolean stalled = false;
 		double maxStress = 0;
+		
+		if (carriageWaitingForChunks != -1)
+			distance = 0;
 
 		for (int i = 0; i < carriageCount; i++) {
 			Carriage carriage = carriages.get(i);
@@ -296,6 +300,8 @@ public class Train {
 						ResourceKey<Level> d = b ? d1 : d2;
 						if (!b && d1.equals(d2))
 							continue;
+						if (!d1.equals(d2))
+							continue;
 
 						DimensionalCarriageEntity dimensional = carriage.getDimensionalIfPresent(d);
 						DimensionalCarriageEntity dimensional2 = previousCarriage.getDimensionalIfPresent(d);
@@ -311,6 +317,7 @@ public class Train {
 						entries++;
 					}
 				}
+				
 
 				if (entries > 0)
 					actual = total / entries;
@@ -361,17 +368,13 @@ public class Train {
 				: carriages.get(i + 1)
 					.getLeadingPoint();
 
-			Function<TravellingPoint, ITrackSelector> forwardControl =
-				toFollowForward == null ? navigation::control : mp -> mp.follow(toFollowForward);
-			Function<TravellingPoint, ITrackSelector> backwardControl =
-				toFollowBackward == null ? navigation::control : mp -> mp.follow(toFollowBackward);
-
 			double totalStress = derailed ? 0 : leadingStress + trailingStress;
+			
 			boolean first = i == 0;
 			boolean last = i == carriageCount - 1;
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
 			double actualDistance =
-				carriage.travel(level, graph, distance + totalStress, forwardControl, backwardControl, carriageType);
+				carriage.travel(level, graph, distance + totalStress, toFollowForward, toFollowBackward, carriageType);
 			blocked |= carriage.blocked;
 
 			boolean onTwoBogeys = carriage.isOnTwoBogeys();

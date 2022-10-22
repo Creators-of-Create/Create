@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Final;
@@ -56,16 +57,19 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 	protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_);
 
 	private Set<AbstractContraptionEntity> getIntersectingContraptions() {
-		Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(self.level)
-			.values()
-			.stream()
-			.map(Reference::get)
-			.filter(cEntity -> cEntity != null && cEntity.collidingEntities.containsKey(self))
-			.collect(Collectors.toSet());
+		Set<AbstractContraptionEntity> contraptions = getIntersectionContraptionsStream().collect(Collectors.toSet());
 
 		contraptions.addAll(self.level.getEntitiesOfClass(AbstractContraptionEntity.class, self.getBoundingBox()
 			.inflate(1f)));
 		return contraptions;
+	}
+
+	private Stream<AbstractContraptionEntity> getIntersectionContraptionsStream() {
+		return ContraptionHandler.loadedContraptions.get(self.level)
+				.values()
+				.stream()
+				.map(Reference::get)
+				.filter(cEntity -> cEntity != null && cEntity.collidingEntities.containsKey(self));
 	}
 
 	private void forCollision(Vec3 anchorPos, TriConsumer<Contraption, BlockState, BlockPos> action) {
@@ -88,7 +92,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 	@Inject(at = @At(value = "JUMP", opcode = 154, // IFNE line 661 injecting before `!blockstate.isAir(this.world, blockpos)`
 		ordinal = 7), method = "move")
-	private void movementMixin(MoverType mover, Vec3 movement, CallbackInfo ci) {
+	private void movementStepMixin(MoverType mover, Vec3 movement, CallbackInfo ci) { // involves block step sounds on contraptions
 		Vec3 worldPos = self.position()
 			.add(0, -0.2, 0);
 		AtomicBoolean stepped = new AtomicBoolean(false);
@@ -102,6 +106,43 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 		if (stepped.get())
 			this.nextStep = this.nextStep();
+	}
+
+	@Inject(at = @At(value = "TAIL"), method = "move")
+	private void movementMixin(MoverType mover, Vec3 movement, CallbackInfo ci) {
+		// involves client-side view bobbing animation on contraptions
+		if (!self.level.isClientSide)
+			return;
+		if (self.isOnGround())
+			return;
+		if (self.isPassenger())
+			return;
+
+		Vec3 worldPos = self.position()
+			.add(0, -0.2, 0);
+		boolean onAtLeastOneContraption = getIntersectionContraptionsStream().anyMatch(cEntity -> {
+			Vec3 localPos = ContraptionCollider.getWorldToLocalTranslation(worldPos, cEntity);
+
+			localPos = worldPos.add(localPos);
+
+			BlockPos blockPos = new BlockPos(localPos);
+			Contraption contraption = cEntity.getContraption();
+			StructureTemplate.StructureBlockInfo info = contraption.getBlocks()
+				.get(blockPos);
+
+			if (info == null)
+				return false;
+			
+			cEntity.registerColliding(self);
+			return true;
+		});
+
+		if (!onAtLeastOneContraption)
+			return;
+
+		self.setOnGround(true);
+		self.getPersistentData()
+			.putBoolean("ContraptionGrounded", true);
 	}
 
 	@Inject(method = { "spawnSprintParticle" }, at = @At(value = "TAIL"))

@@ -8,6 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.BlockStressValues.IStressValueProvider;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -21,7 +22,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 
 	@Override
 	protected void registerAll(Builder builder) {
-		builder.comment("", Comments.su, Comments.impact)
+		builder.comment(".", Comments.su, Comments.impact)
 			.push("impact");
 		BlockStressDefaults.DEFAULT_IMPACTS.forEach((r, i) -> {
 			if (r.getNamespace()
@@ -30,7 +31,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 		});
 		builder.pop();
 
-		builder.comment("", Comments.su, Comments.capacity)
+		builder.comment(".", Comments.su, Comments.capacity)
 			.push("capacity");
 		BlockStressDefaults.DEFAULT_CAPACITIES.forEach((r, i) -> {
 			if (r.getNamespace()
@@ -43,7 +44,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	@Override
 	public double getImpact(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = RegisteredObjects.getKeyOrThrow(block);
 		ConfigValue<Double> value = getImpacts().get(key);
 		if (value != null)
 			return value.get();
@@ -53,7 +54,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	@Override
 	public double getCapacity(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = RegisteredObjects.getKeyOrThrow(block);
 		ConfigValue<Double> value = getCapacities().get(key);
 		if (value != null)
 			return value.get();
@@ -63,7 +64,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	@Override
 	public Couple<Integer> getGeneratedRPM(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = RegisteredObjects.getKeyOrThrow(block);
 		Supplier<Couple<Integer>> supplier = BlockStressDefaults.GENERATOR_SPEEDS.get(key);
 		if (supplier == null)
 			return null;
@@ -73,14 +74,14 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	@Override
 	public boolean hasImpact(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = RegisteredObjects.getKeyOrThrow(block);
 		return getImpacts().containsKey(key);
 	}
 
 	@Override
 	public boolean hasCapacity(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = RegisteredObjects.getKeyOrThrow(block);
 		return getCapacities().containsKey(key);
 	}
 

@@ -7,13 +7,13 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -81,7 +81,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
-		return Pair.of(getIcon(), new TextComponent(getOperator().formatted + " " + getThreshold()).append(getUnit()));
+		return Pair.of(getIcon(), Components.literal(getOperator().formatted + " " + getThreshold()).append(getUnit()));
 	}
 
 	@Override
@@ -110,6 +110,8 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 	public List<Component> getSecondLineTooltip(int slot) {
 		return ImmutableList.of(Lang.translateDirect("schedule.condition.threshold.place_item"),
 			Lang.translateDirect("schedule.condition.threshold.place_item_2")
+				.withStyle(ChatFormatting.GRAY),
+			Lang.translateDirect("schedule.condition.threshold.place_item_3")
 				.withStyle(ChatFormatting.GRAY));
 	}
 
@@ -119,7 +121,7 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 		builder.addSelectionScrollInput(0, 24, (i, l) -> {
 			i.forOptions(Ops.translatedOptions())
 				.titled(Lang.translateDirect("schedule.condition.threshold.train_holds"))
-				.format(state -> new TextComponent(" " + Ops.values()[state].formatted));
+				.format(state -> Components.literal(" " + Ops.values()[state].formatted));
 		}, "Operator");
 		builder.addIntegerTextInput(29, 41, (e, t) -> {
 		}, "Threshold");

@@ -10,6 +10,7 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEn
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -18,7 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -66,8 +66,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 		return InteractionResultHolder.pass(heldItem);
 	}
 
-	@Override
-	public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget,
+	public InteractionResult handScheduleTo(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget,
 		InteractionHand pUsedHand) {
 		InteractionResult pass = InteractionResult.PASS;
 
@@ -123,6 +122,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 			pStack.shrink(1);
 			pPlayer.setItemInHand(pUsedHand, pStack.isEmpty() ? ItemStack.EMPTY : pStack);
 		}
+
 		return InteractionResult.SUCCESS;
 	}
 
@@ -133,8 +133,8 @@ public class ScheduleItem extends Item implements MenuProvider {
 		if (schedule == null || schedule.entries.isEmpty())
 			return;
 
-		MutableComponent caret = new TextComponent("> ").withStyle(ChatFormatting.GRAY);
-		MutableComponent arrow = new TextComponent("-> ").withStyle(ChatFormatting.GRAY);
+		MutableComponent caret = Components.literal("> ").withStyle(ChatFormatting.GRAY);
+		MutableComponent arrow = Components.literal("-> ").withStyle(ChatFormatting.GRAY);
 
 		List<ScheduleEntry> entries = schedule.entries;
 		for (int i = 0; i < entries.size(); i++) {
@@ -145,7 +145,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 			ChatFormatting format = current ? ChatFormatting.YELLOW : ChatFormatting.GOLD;
 			MutableComponent prefix = current ? arrow : caret;
 			tooltip.add(prefix.copy()
-				.append(new TextComponent(destination.getFilter()).withStyle(format)));
+				.append(Components.literal(destination.getFilter()).withStyle(format)));
 		}
 	}
 

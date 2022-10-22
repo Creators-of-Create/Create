@@ -39,6 +39,7 @@ import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
@@ -87,7 +88,7 @@ public class BuilderTransformers {
 			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
 			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))
-			.onRegister(block -> IBogeyBlock.register(block.getRegistryName()));
+			.onRegister(block -> IBogeyBlock.register(RegisteredObjects.getKeyOrThrow(block)));
 	}
 
 	public static <B extends TrapDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> trapdoor(boolean orientable) {
@@ -124,6 +125,7 @@ public class BuilderTransformers {
 			.onRegister(movementBehaviour(new SlidingDoorMovementBehaviour()))
 			.tag(BlockTags.DOORS)
 			.tag(BlockTags.WOODEN_DOORS) // for villager AI
+			.tag(AllBlockTags.NON_DOUBLE_DOOR.tag)
 			.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
 			.item()
 			.tag(ItemTags.DOORS)

@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 import java.util.List;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
@@ -44,7 +43,7 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 			for (ItemStack itemStack : stacksOfGroup) 
 				player.getInventory().placeItemBackInInventory(itemStack.copy());
 			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-				1f + Create.RANDOM.nextFloat());
+				1f + world.random.nextFloat());
 			return InteractionResult.SUCCESS;
 		});
 	}
@@ -61,16 +60,16 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState p_196243_1_, Level p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
-		boolean p_196243_5_) {
-		if (p_196243_1_.hasBlockEntity()
-			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasBlockEntity())) {
-			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
-			withTileEntityDo(p_196243_2_, p_196243_3_, te -> {
-				if (te instanceof BrassTunnelTileEntity)
-					Block.popResource(p_196243_2_, p_196243_3_, ((BrassTunnelTileEntity) te).stackToDistribute);
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.hasBlockEntity() && (state.getBlock() != newState.getBlock() || !newState.hasBlockEntity())) {
+			TileEntityBehaviour.destroy(level, pos, FilteringBehaviour.TYPE);
+			withTileEntityDo(level, pos, te -> {
+				if (!(te instanceof BrassTunnelTileEntity btte))
+					return;
+				Block.popResource(level, pos, btte.stackToDistribute);
+				btte.stackEnteredFrom = null;
 			});
-			p_196243_2_.removeBlockEntity(p_196243_3_);
+			level.removeBlockEntity(pos);
 		}
 	}
 

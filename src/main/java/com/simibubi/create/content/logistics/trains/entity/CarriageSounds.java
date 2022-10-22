@@ -61,9 +61,18 @@ public class CarriageSounds {
 			.subtract(entity.getPrevPositionVec());
 		Vec3 combinedMotion = contraptionMotion.subtract(camEntity.getDeltaMovement());
 
+		Train train = entity.getCarriage().train;
+
 		if (arrived && contraptionMotion.length() > 0.01f)
 			arrived = false;
+		if (arrived && entity.carriageIndex == 0)
+			train.accumulatedSteamRelease /= 2;
+
 		arrived |= entity.isStalled();
+
+		if (entity.carriageIndex == 0)
+			train.accumulatedSteamRelease = (float) Math
+				.min(train.accumulatedSteamRelease + Math.min(0.5f, Math.abs(contraptionMotion.length() / 10f)), 10);
 
 		Vec3 toBogey1 = leadingAnchor.subtract(cam);
 		Vec3 toBogey2 = trailingAnchor.subtract(cam);
@@ -103,13 +112,14 @@ public class CarriageSounds {
 				AllSoundEvents.STEAM.playAt(entity.level, soundLocation, v * 1.5f, .8f, false);
 		}
 
-		if (!arrived && speedFactor.getValue() < .002f) {
+		if (!arrived && speedFactor.getValue() < .002f && train.accumulatedSteamRelease > 1) {
 			arrived = true;
+			float releaseVolume = train.accumulatedSteamRelease / 10f;
 			entity.level.playLocalSound(soundLocation.x, soundLocation.y, soundLocation.z, SoundEvents.LAVA_EXTINGUISH,
-				SoundSource.NEUTRAL, .25f, .78f, false);
+				SoundSource.NEUTRAL, .25f * releaseVolume, .78f, false);
 			entity.level.playLocalSound(soundLocation.x, soundLocation.y, soundLocation.z,
-				SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundSource.NEUTRAL, .2f, 1.5f, false);
-			AllSoundEvents.STEAM.playAt(entity.level, soundLocation, .75f, .5f, false);
+				SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundSource.NEUTRAL, .2f * releaseVolume, 1.5f, false);
+			AllSoundEvents.STEAM.playAt(entity.level, soundLocation, .75f * releaseVolume, .5f, false);
 		}
 
 		float pitchModifier = ((entity.getId() * 10) % 13) / 36f;
@@ -123,7 +133,6 @@ public class CarriageSounds {
 
 		volume = Math.min(volume, distanceFactor.getValue() / 1000);
 
-		Train train = entity.getCarriage().train;
 		for (Carriage carriage : train.carriages) {
 			DimensionalCarriageEntity mainDCE = carriage.getDimensionalIfPresent(entity.level.dimension());
 			if (mainDCE == null)
@@ -252,7 +261,7 @@ public class CarriageSounds {
 		public void setVolume(float volume) {
 			this.volume = volume;
 		}
-		
+
 		@Override
 		public float getVolume() {
 			return volume;
@@ -261,7 +270,7 @@ public class CarriageSounds {
 		public void setPitch(float pitch) {
 			this.pitch = pitch;
 		}
-		
+
 		@Override
 		public float getPitch() {
 			return pitch;

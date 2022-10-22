@@ -644,9 +644,13 @@ public class Navigation {
 
 			List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
 			Map<TrackNode, TrackEdge> connectionsFrom = graph.getConnectionsFrom(node2);
-			for (Entry<TrackNode, TrackEdge> connection : connectionsFrom.entrySet())
+			for (Entry<TrackNode, TrackEdge> connection : connectionsFrom.entrySet()) {
+				TrackNode newNode = connection.getKey();
+				if (newNode == node1)
+					continue;
 				if (edge.canTravelTo(connection.getValue()))
 					validTargets.add(connection);
+			}
 
 			if (validTargets.isEmpty())
 				continue;

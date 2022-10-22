@@ -5,8 +5,6 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -22,13 +20,8 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 
 	private final AnimatedPress press = new AnimatedPress(false);
 
-	public PressingCategory() {
-		super(doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), AllItems.IRON_SHEET.get()), emptyBackground(177, 70));
-	}
-
-	@Override
-	public Class<? extends PressingRecipe> getRecipeClass() {
-		return PressingRecipe.class;
+	public PressingCategory(Info<PressingRecipe> info) {
+		super(info);
 	}
 
 	@Override

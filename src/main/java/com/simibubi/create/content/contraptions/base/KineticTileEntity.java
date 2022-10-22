@@ -35,6 +35,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -396,28 +397,32 @@ public class KineticTileEntity extends SmartTileEntity implements IHaveGoggleInf
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("gui.stressometer.overstressed")
-					.withStyle(GOLD)));
+			Lang.translate("gui.stressometer.overstressed")
+				.style(GOLD)
+				.forGoggles(tooltip);
 			Component hint = Lang.translateDirect("gui.contraptions.network_overstressed");
 			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add(componentSpacing.plainCopy()
-					.append(cutString.get(i)));
+				Lang.builder()
+					.add(cutString.get(i)
+						.copy())
+					.forGoggles(tooltip);
 			return true;
 		}
 
 		if (notFastEnough) {
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.speedRequirement")
-					.withStyle(GOLD)));
-			Component hint =
+			Lang.translate("tooltip.speedRequirement")
+				.style(GOLD)
+				.forGoggles(tooltip);
+			MutableComponent hint =
 				Lang.translateDirect("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
 					.getDescriptionId()));
 			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add(componentSpacing.plainCopy()
-					.append(cutString.get(i)));
+				Lang.builder()
+					.add(cutString.get(i)
+						.copy())
+					.forGoggles(tooltip);
 			return true;
 		}
 
@@ -436,6 +441,14 @@ public class KineticTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 		Lang.translate("gui.goggles.kinetic_stats")
 			.forGoggles(tooltip);
+
+		addStressImpactStats(tooltip, stressAtBase);
+
+		return true;
+
+	}
+
+	protected void addStressImpactStats(List<Component> tooltip, float stressAtBase) {
 		Lang.translate("tooltip.stressImpact")
 			.style(GRAY)
 			.forGoggles(tooltip);
@@ -449,9 +462,6 @@ public class KineticTileEntity extends SmartTileEntity implements IHaveGoggleInf
 			.add(Lang.translate("gui.goggles.at_current_speed")
 				.style(ChatFormatting.DARK_GRAY))
 			.forGoggles(tooltip, 1);
-
-		return true;
-
 	}
 
 	public void clearKineticInformation() {

@@ -7,11 +7,11 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,7 +32,7 @@ public interface IScheduleInput {
 	public default List<Component> getTitleAs(String type) {
 		ResourceLocation id = getId();
 		return ImmutableList
-			.of(new TranslatableComponent(id.getNamespace() + ".schedule." + type + "." + id.getPath()));
+			.of(Components.translatable(id.getNamespace() + ".schedule." + type + "." + id.getPath()));
 	}
 
 	public default ItemStack getSecondLineIcon() {

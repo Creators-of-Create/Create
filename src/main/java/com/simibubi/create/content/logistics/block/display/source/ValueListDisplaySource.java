@@ -15,12 +15,12 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -63,7 +63,7 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 				current = atIndex;
 				continue;
 			}
-			current.append(new TextComponent("\n"))
+			current.append(Components.literal("\n"))
 				.append(atIndex);
 			if ((i + 1) % ENTRIES_PER_PAGE == 0) {
 				condensed.add(current);
@@ -99,7 +99,7 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 				: Arrays.asList(name, shortened.getFirst(), shortened.getSecond());
 		}
 
-		MutableComponent formattedNumber = new TextComponent(String.valueOf(number)).append(WHITESPACE);
+		MutableComponent formattedNumber = Components.literal(String.valueOf(number)).append(WHITESPACE);
 		return valueFirst() ? Arrays.asList(formattedNumber, name) : Arrays.asList(name, formattedNumber);
 	}
 
@@ -137,14 +137,14 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 
 	private Couple<MutableComponent> shorten(int number) {
 		if (number >= 1000000)
-			return Couple.create(new TextComponent(String.valueOf(number / 1000000)),
+			return Couple.create(Components.literal(String.valueOf(number / 1000000)),
 				Lang.translateDirect("display_source.value_list.million")
 					.append(WHITESPACE));
 		if (number >= 1000)
-			return Couple.create(new TextComponent(String.valueOf(number / 1000)),
+			return Couple.create(Components.literal(String.valueOf(number / 1000)),
 				Lang.translateDirect("display_source.value_list.thousand")
 					.append(WHITESPACE));
-		return Couple.create(new TextComponent(String.valueOf(number)), WHITESPACE);
+		return Couple.create(Components.literal(String.valueOf(number)), WHITESPACE);
 	}
 
 	protected boolean shortenNumbers(DisplayLinkContext context) {

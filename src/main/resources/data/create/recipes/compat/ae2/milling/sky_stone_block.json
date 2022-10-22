@@ -2,18 +2,18 @@
 	"conditions": [
 		{
 			"type": "forge:mod_loaded",
-			"modid": "appliedenergistics2"
+			"modid": "ae2"
 		}
 	],
 	"type": "create:milling",
     "ingredients": [
     	{
-    		"item": "appliedenergistics2:sky_stone_block"
+    		"item": "ae2:sky_stone_block"
     	}
     ], 
 	"results": [
 		{
-			"item": "appliedenergistics2:sky_dust",
+			"item": "ae2:sky_dust",
 			"count": 1
 		}
 	],

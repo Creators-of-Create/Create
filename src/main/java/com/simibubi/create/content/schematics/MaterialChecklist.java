@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import com.google.common.collect.Sets;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -16,10 +17,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -80,7 +80,7 @@ public class MaterialChecklist {
 		MutableComponent textComponent;
 
 		if (blocksNotLoaded) {
-			textComponent = new TextComponent("\n" + ChatFormatting.RED);
+			textComponent = Components.literal("\n" + ChatFormatting.RED);
 			textComponent = textComponent.append(Lang.translateDirect("materialChecklist.blocksNotLoaded"));
 			pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
 		}
@@ -95,7 +95,7 @@ public class MaterialChecklist {
 			return name1.compareTo(name2);
 		});
 
-		textComponent = new TextComponent("");
+		textComponent = Components.empty();
 		List<Item> completed = new ArrayList<>();
 		for (Item item : keys) {
 			int amount = getRequiredAmount(item);
@@ -109,9 +109,9 @@ public class MaterialChecklist {
 
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				textComponent.append(new TextComponent("\n >>>").withStyle(ChatFormatting.BLUE));
+				textComponent.append(Components.literal("\n >>>").withStyle(ChatFormatting.BLUE));
 				pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
-				textComponent = new TextComponent("");
+				textComponent = Components.empty();
 			}
 
 			itemsWritten++;
@@ -121,9 +121,9 @@ public class MaterialChecklist {
 		for (Item item : completed) {
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				textComponent.append(new TextComponent("\n >>>").withStyle(ChatFormatting.DARK_GREEN));
+				textComponent.append(Components.literal("\n >>>").withStyle(ChatFormatting.DARK_GREEN));
 				pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
-				textComponent = new TextComponent("");
+				textComponent = Components.empty();
 			}
 
 			itemsWritten++;
@@ -155,12 +155,16 @@ public class MaterialChecklist {
 	private Component entry(ItemStack item, int amount, boolean unfinished) {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
-		MutableComponent tc = new TranslatableComponent(item.getDescriptionId());
+		MutableComponent tc = Components.empty();
+		tc.append(Components.translatable(item.getDescriptionId())
+			.setStyle(Style.EMPTY
+				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackInfo(item)))));
+
 		if (!unfinished)
 			tc.append(" \u2714");
 		tc.withStyle(unfinished ? ChatFormatting.BLUE : ChatFormatting.DARK_GREEN);
-		return tc.append(new TextComponent("\n" + " x" + amount).withStyle(ChatFormatting.BLACK))
-			.append(new TextComponent(" | " + stacks + "\u25A4 +" + remainder + "\n").withStyle(ChatFormatting.GRAY));
+		return tc.append(Components.literal("\n" + " x" + amount).withStyle(ChatFormatting.BLACK))
+			.append(Components.literal(" | " + stacks + "\u25A4 +" + remainder + "\n").withStyle(ChatFormatting.GRAY));
 	}
 
 }

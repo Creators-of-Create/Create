@@ -2,7 +2,7 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "appliedenergistics2"
+      "modid": "ae2"
     }
   ],
   "type": "create:mixing",
@@ -16,7 +16,7 @@
       "amount": 250
     },
     {
-      "item": "appliedenergistics2:charged_certus_quartz_crystal"
+      "item": "ae2:charged_certus_quartz_crystal"
     },
     {
       "tag": "forge:gems/quartz"
@@ -24,7 +24,7 @@
   ],
   "results": [
     {
-      "item": "appliedenergistics2:fluix_crystal",
+      "item": "ae2:fluix_crystal",
       "count": 2
     }
   ],

@@ -2,54 +2,6 @@
   "multipart": [
     {
       "when": {
-        "down": "true"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/connection/down"
-      }
-    },
-    {
-      "when": {
-        "up": "true"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/connection/up"
-      }
-    },
-    {
-      "when": {
-        "north": "true"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/connection/north"
-      }
-    },
-    {
-      "when": {
-        "south": "true"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/connection/south"
-      }
-    },
-    {
-      "when": {
-        "west": "true"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/connection/west"
-      }
-    },
-    {
-      "when": {
-        "east": "true"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/connection/east"
-      }
-    },
-    {
-      "when": {
         "up": "true",
         "south": "true",
         "north": "false",
@@ -156,17 +108,6 @@
       },
       "apply": {
         "model": "create:block/fluid_pipe/r_x"
-      }
-    },
-    {
-      "when": {
-        "up": "false",
-        "south": "false",
-        "north": "false",
-        "down": "false"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/none_x"
       }
     },
     {
@@ -281,17 +222,6 @@
     },
     {
       "when": {
-        "south": "false",
-        "east": "false",
-        "west": "false",
-        "north": "false"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/none_y"
-      }
-    },
-    {
-      "when": {
         "up": "true",
         "east": "true",
         "west": "false",
@@ -398,17 +328,6 @@
       },
       "apply": {
         "model": "create:block/fluid_pipe/r_z"
-      }
-    },
-    {
-      "when": {
-        "up": "false",
-        "east": "false",
-        "west": "false",
-        "down": "false"
-      },
-      "apply": {
-        "model": "create:block/fluid_pipe/none_z"
       }
     }
   ]

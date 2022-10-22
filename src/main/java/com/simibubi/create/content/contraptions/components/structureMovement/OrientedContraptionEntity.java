@@ -493,7 +493,14 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	public Vec3 getAnchorVec() {
-		return new Vec3(getX() - .5, getY(), getZ() - .5);
+		Vec3 anchorVec = super.getAnchorVec();
+		return anchorVec.subtract(.5, 0, .5);
+	}
+	
+	@Override
+	public Vec3 getPrevAnchorVec() {
+		Vec3 prevAnchorVec = super.getPrevAnchorVec();
+		return prevAnchorVec.subtract(.5, 0, .5);
 	}
 
 	@Override
@@ -514,52 +521,48 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks) {
+	public void applyLocalTransforms(PoseStack matrixStack, float partialTicks) {
 		float angleInitialYaw = getInitialYaw();
 		float angleYaw = getViewYRot(partialTicks);
 		float anglePitch = getViewXRot(partialTicks);
 
-		for (PoseStack stack : matrixStacks)
-			stack.translate(-.5f, 0, -.5f);
+		matrixStack.translate(-.5f, 0, -.5f);
 
 		Entity ridingEntity = getVehicle();
 		if (ridingEntity instanceof AbstractMinecart)
-			repositionOnCart(partialTicks, matrixStacks, ridingEntity);
+			repositionOnCart(matrixStack, partialTicks, ridingEntity);
 		else if (ridingEntity instanceof AbstractContraptionEntity) {
 			if (ridingEntity.getVehicle() instanceof AbstractMinecart)
-				repositionOnCart(partialTicks, matrixStacks, ridingEntity.getVehicle());
+				repositionOnCart(matrixStack, partialTicks, ridingEntity.getVehicle());
 			else
-				repositionOnContraption(partialTicks, matrixStacks, ridingEntity);
+				repositionOnContraption(matrixStack, partialTicks, ridingEntity);
 		}
 
-		for (PoseStack stack : matrixStacks)
-			TransformStack.cast(stack)
-				.nudge(getId())
-				.centre()
-				.rotateY(angleYaw)
-				.rotateZ(anglePitch)
-				.rotateY(angleInitialYaw)
-				.unCentre();
+		TransformStack.cast(matrixStack)
+			.nudge(getId())
+			.centre()
+			.rotateY(angleYaw)
+			.rotateZ(anglePitch)
+			.rotateY(angleInitialYaw)
+			.unCentre();
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private void repositionOnContraption(float partialTicks, PoseStack[] matrixStacks, Entity ridingEntity) {
+	private void repositionOnContraption(PoseStack matrixStack, float partialTicks, Entity ridingEntity) {
 		Vec3 pos = getContraptionOffset(partialTicks, ridingEntity);
-		for (PoseStack stack : matrixStacks)
-			stack.translate(pos.x, pos.y, pos.z);
+		matrixStack.translate(pos.x, pos.y, pos.z);
 	}
 
 	// Minecarts do not always render at their exact location, so the contraption
 	// has to adjust aswell
 	@OnlyIn(Dist.CLIENT)
-	private void repositionOnCart(float partialTicks, PoseStack[] matrixStacks, Entity ridingEntity) {
+	private void repositionOnCart(PoseStack matrixStack, float partialTicks, Entity ridingEntity) {
 		Vec3 cartPos = getCartOffset(partialTicks, ridingEntity);
 
 		if (cartPos == Vec3.ZERO)
 			return;
 
-		for (PoseStack stack : matrixStacks)
-			stack.translate(cartPos.x, cartPos.y, cartPos.z);
+		matrixStack.translate(cartPos.x, cartPos.y, cartPos.z);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -5,8 +5,6 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMillstone;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -22,13 +20,8 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 
 	private final AnimatedMillstone millstone = new AnimatedMillstone();
 
-	public MillingCategory() {
-		super(doubleItemIcon(AllBlocks.MILLSTONE.get(), AllItems.WHEAT_FLOUR.get()), emptyBackground(177, 53));
-	}
-
-	@Override
-	public Class<? extends AbstractCrushingRecipe> getRecipeClass() {
-		return AbstractCrushingRecipe.class;
+	public MillingCategory(Info<AbstractCrushingRecipe> info) {
+		super(info);
 	}
 
 	@Override

@@ -13,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
@@ -47,7 +46,7 @@ public class DynamicComponent {
 	}
 
 	public MutableComponent get() {
-		return parsedCustomText == null ? TextComponent.EMPTY.copy() : parsedCustomText.copy();
+		return parsedCustomText == null ? Components.empty() : parsedCustomText.copy();
 	}
 
 	public void read(Level level, BlockPos pos, CompoundTag nbt) {
@@ -90,7 +89,7 @@ public class DynamicComponent {
 
 	public static CommandSourceStack getCommandSource(ServerLevel level, BlockPos pos) {
 		return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(pos), Vec2.ZERO, level, 2, Create.ID,
-			new TextComponent(Create.ID), level.getServer(), null);
+			Components.literal(Create.ID), level.getServer(), null);
 	}
 
 }

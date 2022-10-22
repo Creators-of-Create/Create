@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +36,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 		@SuppressWarnings("unchecked")
 		ProcessingRecipeSerializer<T> serializer = (ProcessingRecipeSerializer<T>) wrapped.getSerializer();
 		JsonObject json = new JsonObject();
-		json.addProperty("type", ForgeRegistries.RECIPE_SERIALIZERS.getKey(serializer)
+		json.addProperty("type", RegisteredObjects.getKeyOrThrow(serializer)
 			.toString());
 		serializer.write(json, wrapped);
 		return json;
@@ -62,7 +63,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 	public void writeToBuffer(FriendlyByteBuf buffer) {
 		@SuppressWarnings("unchecked")
 		ProcessingRecipeSerializer<T> serializer = (ProcessingRecipeSerializer<T>) wrapped.getSerializer();
-		buffer.writeResourceLocation(ForgeRegistries.RECIPE_SERIALIZERS.getKey(serializer));
+		buffer.writeResourceLocation(RegisteredObjects.getKeyOrThrow(serializer));
 		buffer.writeResourceLocation(wrapped.getId());
 		serializer.toNetwork(buffer, wrapped);
 	}

@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 import com.mojang.serialization.Codec;
+import com.simibubi.create.AllStructureProcessorTypes;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.core.BlockPos;
@@ -21,18 +22,12 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class SchematicProcessor extends StructureProcessor {
-	
+
 	public static final SchematicProcessor INSTANCE = new SchematicProcessor();
 	public static final Codec<SchematicProcessor> CODEC = Codec.unit(() -> {
 		return INSTANCE;
 	});
-	
-	public static StructureProcessorType<SchematicProcessor> TYPE;
-	
-	public static void register() {
-		TYPE = StructureProcessorType.register("schematic", CODEC);
-	}
-	
+
 	@Nullable
 	@Override
 	public StructureTemplate.StructureBlockInfo process(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
@@ -65,7 +60,7 @@ public class SchematicProcessor extends StructureProcessor {
 
 	@Override
 	protected StructureProcessorType<?> getType() {
-		return TYPE;
+		return AllStructureProcessorTypes.SCHEMATIC.get();
 	}
 
 }

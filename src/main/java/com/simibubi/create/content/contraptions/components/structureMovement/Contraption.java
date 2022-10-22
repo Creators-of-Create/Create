@@ -21,6 +21,8 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.DoorBlock;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -115,6 +117,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -130,6 +133,7 @@ public abstract class Contraption {
 	public BlockPos anchor;
 	public boolean stalled;
 	public boolean hasUniversalCreativeCrate;
+	public boolean disassembled;
 
 	protected Map<BlockPos, StructureBlockInfo> blocks;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
@@ -147,6 +151,7 @@ public abstract class Contraption {
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
 	// Client
+	public Map<BlockPos, IModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentTileEntities;
 	public List<BlockEntity> maybeInstancedTileEntities;
 	public List<BlockEntity> specialRenderedTileEntities;
@@ -158,6 +163,7 @@ public abstract class Contraption {
 		blocks = new HashMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
+		modelData = new HashMap<>();
 		interactors = new HashMap<>();
 		superglue = new ArrayList<>();
 		seatMapping = new HashMap<>();
@@ -871,8 +877,9 @@ public abstract class Contraption {
 			if (te == null)
 				return;
 			te.setLevel(world);
-			if (te instanceof KineticTileEntity)
-				((KineticTileEntity) te).setSpeed(0);
+			modelData.put(info.pos, te.getModelData());
+			if (te instanceof KineticTileEntity kte)
+				kte.setSpeed(0);
 			te.getBlockState();
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state);
@@ -995,6 +1002,10 @@ public abstract class Contraption {
 	}
 
 	public void addBlocksToWorld(Level world, StructureTransform transform) {
+		if (disassembled)
+			return;
+		disassembled = true;
+		
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (StructureBlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
@@ -1016,7 +1027,7 @@ public abstract class Contraption {
 					.isEmpty()
 					&& !blockState.getCollisionShape(world, targetPos)
 						.isEmpty())) {
-					if (targetPos.getY() == 0)
+					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
 					world.levelEvent(2001, targetPos, Block.getId(state));
 					Block.dropResources(state, world, targetPos, null);
@@ -1041,7 +1052,7 @@ public abstract class Contraption {
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
 				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
 				if (verticalRotation) {
-					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock)
+					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock || state.getBlock() instanceof DoorBlock)
 						world.destroyBlock(targetPos, true);
 				}
 
