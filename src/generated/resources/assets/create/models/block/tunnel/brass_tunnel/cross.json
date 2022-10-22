@@ -1,5 +1,5 @@
 {
-  "parent": "create:block/belt_tunnel/item",
+  "parent": "create:block/belt_tunnel/cross",
   "textures": {
     "top": "create:block/tunnel/brass_tunnel_top",
     "tunnel": "create:block/tunnel/brass_tunnel",

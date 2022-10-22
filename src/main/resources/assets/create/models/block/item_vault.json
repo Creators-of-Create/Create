@@ -2,11 +2,11 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "create:block/vault_bottom",
-		"1": "create:block/vault_front",
-		"2": "create:block/vault_side",
-		"3": "create:block/vault_top",
-		"particle": "create:block/vault_bottom"
+		"0": "create:block/vault/vault_bottom_small",
+		"1": "create:block/vault/vault_front_small",
+		"2": "create:block/vault/vault_side_small",
+		"3": "create:block/vault/vault_top_small",
+		"particle": "create:block/vault/vault_top_small"
 	},
 	"elements": [
 		{

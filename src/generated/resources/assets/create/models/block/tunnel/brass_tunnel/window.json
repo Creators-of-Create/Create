@@ -1,7 +1,7 @@
 {
-  "parent": "create:block/belt_tunnel/item",
+  "parent": "create:block/belt_tunnel/window",
   "textures": {
-    "top": "create:block/tunnel/brass_tunnel_top",
+    "top": "create:block/tunnel/brass_tunnel_top_window",
     "tunnel": "create:block/tunnel/brass_tunnel",
     "direction": "create:block/funnel/brass_funnel_neutral",
     "frame": "create:block/funnel/brass_funnel_frame",

@@ -1,9 +1,0 @@
-{
-  "parent": "create:block/belt_tunnel/t_left",
-  "textures": {
-    "1": "create:block/brass_tunnel_top",
-    "2": "create:block/brass_tunnel",
-    "3": "create:block/brass_tunnel_top_window",
-    "particle": "create:block/brass_block"
-  }
-}

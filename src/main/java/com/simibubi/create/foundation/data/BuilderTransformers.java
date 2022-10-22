@@ -292,33 +292,37 @@ public class BuilderTransformers {
 
 	public static <B extends BeltTunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> beltTunnel(
 		String type, ResourceLocation particleTexture) {
+		String prefix = "block/tunnel/" + type + "_tunnel";
+		String funnel_prefix = "block/funnel/" + type + "_funnel";
 		return b -> b.initialProperties(SharedProperties::stone)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(pickaxeOnly())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStates(state -> {
-					String id = "block/" + type + "_tunnel";
 					Shape shape = state.getValue(BeltTunnelBlock.SHAPE);
+					String window = shape == Shape.WINDOW ? "_window" : "";
 					if (shape == BeltTunnelBlock.Shape.CLOSED)
 						shape = BeltTunnelBlock.Shape.STRAIGHT;
 					String shapeName = shape.getSerializedName();
 					return ConfiguredModel.builder()
 						.modelFile(p.models()
-							.withExistingParent(id + "/" + shapeName, p.modLoc("block/belt_tunnel/" + shapeName))
-							.texture("1", p.modLoc(id + "_top"))
-							.texture("2", p.modLoc(id))
-							.texture("3", p.modLoc(id + "_top_window"))
+							.withExistingParent(prefix + "/" + shapeName, p.modLoc("block/belt_tunnel/" + shapeName))
+							.texture("top", p.modLoc(prefix + "_top" + window))
+							.texture("tunnel", p.modLoc(prefix))
+							.texture("direction", p.modLoc(funnel_prefix + "_neutral"))
+							.texture("frame", p.modLoc(funnel_prefix + "_frame"))
 							.texture("particle", particleTexture))
 						.rotationY(state.getValue(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
 						.build();
 				}))
 			.item(BeltTunnelItem::new)
 			.model((c, p) -> {
-				String id = type + "_tunnel";
-				p.withExistingParent("item/" + id, p.modLoc("block/belt_tunnel/item"))
-					.texture("1", p.modLoc("block/" + id + "_top"))
-					.texture("2", p.modLoc("block/" + id))
+				p.withExistingParent("item/" + type + "_tunnel", p.modLoc("block/belt_tunnel/item"))
+					.texture("top", p.modLoc(prefix + "_top"))
+					.texture("tunnel", p.modLoc(prefix))
+					.texture("direction", p.modLoc(funnel_prefix + "_neutral"))
+					.texture("frame", p.modLoc(funnel_prefix + "_frame"))
 					.texture("particle", particleTexture);
 			})
 			.build();
@@ -390,8 +394,7 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> backtank(Supplier<ItemLike> drop) {
-		return b -> b
-			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+		return b -> b.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.transform(pickaxeOnly())
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(BlockStressDefaults.setImpact(4.0))

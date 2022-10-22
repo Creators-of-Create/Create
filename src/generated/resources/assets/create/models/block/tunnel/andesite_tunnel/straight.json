@@ -1,5 +1,5 @@
 {
-  "parent": "create:block/belt_tunnel/item",
+  "parent": "create:block/belt_tunnel/straight",
   "textures": {
     "top": "create:block/tunnel/andesite_tunnel_top",
     "tunnel": "create:block/tunnel/andesite_tunnel",
