@@ -1,6 +1,7 @@
 {
+	"credit": "Made with Blockbench",
 	"parent": "create:block/smart_chute/block",
 	"textures": {
-		"5": "create:block/brass_funnel_tall_powered"
+		"redstone": "create:block/funnel/brass_funnel_powered"
 	}
 }

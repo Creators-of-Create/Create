@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"4": "create:block/brass_funnel_back"
+		"4": "create:block/funnel/funnel_back"
 	},
 	"elements": [
 		{

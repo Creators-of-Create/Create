@@ -716,6 +716,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
@@ -727,6 +728,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<SmartChuteBlock> SMART_CHUTE = REGISTRATE.block("smart_chute", SmartChuteBlock::new)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
