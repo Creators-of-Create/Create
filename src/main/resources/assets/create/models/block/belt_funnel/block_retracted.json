@@ -3,10 +3,10 @@
 	"parent": "block/block",
 	"textures": {
 		"back": "create:block/funnel/funnel_back",
-		"particle": "create:block/brass_block",
 		"base": "create:block/funnel/brass_funnel",
 		"direction": "create:block/funnel/brass_funnel_neutral",
 		"redstone": "create:block/funnel/brass_funnel_unpowered",
+		"particle": "create:block/brass_block",
 		"block": "create:block/brass_block"
 	},
 	"elements": [
@@ -39,11 +39,11 @@
 			"to": [16, 16, 14],
 			"faces": {
 				"north": {"uv": [0, 0, 8, 9.5], "texture": "#direction"},
-				"east": {"uv": [8, 0, 11, 9.5], "texture": "#direction"},
+				"east": {"uv": [8, 9.5, 11, 0], "rotation": 180, "texture": "#direction"},
 				"south": {"uv": [0, 6.5, 8, 16], "rotation": 180, "texture": "#direction"},
 				"west": {"uv": [8, 0, 11, 9.5], "texture": "#direction"},
 				"up": {"uv": [11, 0, 14, 8], "rotation": 90, "texture": "#direction"},
-				"down": {"uv": [0, 8, 8, 11], "texture": "#direction"}
+				"down": {"uv": [0, 7, 8, 10], "texture": "#direction"}
 			}
 		},
 		{
@@ -51,7 +51,7 @@
 			"to": [14, 10, 8],
 			"faces": {
 				"east": {"uv": [11, 9.5, 14, 16], "texture": "#base"},
-				"west": {"uv": [13, 9.5, 16, 16], "texture": "#base"},
+				"west": {"uv": [13, 12.5, 16, 6], "texture": "#base"},
 				"up": {"uv": [14, 9, 11, 15], "rotation": 90, "texture": "#base"}
 			}
 		},
@@ -100,7 +100,7 @@
 				"east": {"uv": [7.5, 0, 16, 0.5], "rotation": 90, "texture": "#back"},
 				"south": {"uv": [7.5, 0, 16, 6], "rotation": 90, "texture": "#back"},
 				"west": {"uv": [7.5, 5.5, 16, 6], "rotation": 90, "texture": "#back"},
-				"up": {"uv": [7.5, 0, 8, 6], "rotation": 270, "texture": "#back"}
+				"up": {"uv": [7.5, 0, 8, 6], "rotation": 90, "texture": "#back"}
 			}
 		}
 	],

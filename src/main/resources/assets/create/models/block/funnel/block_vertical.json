@@ -6,8 +6,8 @@
 		"direction": "create:block/funnel/brass_funnel_pull",
 		"redstone": "create:block/funnel/brass_funnel_unpowered",
 		"open": "create:block/funnel/funnel_closed",
-		"particle": "create:block/brass_block",
-		"frame": "create:block/funnel/brass_funnel_frame"
+		"frame": "create:block/funnel/brass_funnel_frame",
+		"particle": "create:block/brass_block"
 	},
 	"elements": [
 		{
@@ -88,39 +88,27 @@
 			}
 		},
 		{
-			"from": [5.05, -0.95, 0.05],
-			"to": [10.95, 4, 2],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
-			"color": 5,
-			"faces": {
-				"north": {"uv": [2.5, 0.5, 5.5, 3], "texture": "#missing"},
-				"east": {"uv": [4.5, 0.5, 5.5, 3], "texture": "#missing"},
-				"west": {"uv": [2.5, 0.5, 3.5, 3], "texture": "#missing"},
-				"down": {"uv": [2.5, 11.5, 5.5, 12.5], "texture": "#missing"}
-			}
-		},
-		{
-			"from": [0, -1, 5],
-			"to": [16, 4, 11],
+			"from": [0.05, -1, 5],
+			"to": [15.95, 4, 11],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 3, 8, 5.5], "texture": "#direction"},
 				"east": {"uv": [2.5, 0.5, 5.5, 3], "texture": "#direction"},
 				"south": {"uv": [0, 3, 8, 5.5], "texture": "#direction"},
 				"west": {"uv": [2.5, 0.5, 5.5, 3], "texture": "#direction"},
-				"down": {"uv": [8, 3, 0, 6], "texture": "#direction"}
+				"down": {"uv": [8, 6.5, 0, 9.5], "texture": "#direction"}
 			}
 		},
 		{
-			"from": [5, -1, 0],
-			"to": [11, 4, 16],
+			"from": [5, -1, 0.05],
+			"to": [11, 4, 15.95],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [2.5, 0.5, 5.5, 3], "texture": "#direction"},
 				"east": {"uv": [0, 3, 8, 5.5], "texture": "#direction"},
 				"south": {"uv": [2.5, 0.5, 5.5, 3], "texture": "#direction"},
 				"west": {"uv": [0, 3, 8, 5.5], "texture": "#direction"},
-				"down": {"uv": [8, 3, 0, 6], "rotation": 90, "texture": "#direction"}
+				"down": {"uv": [8, 6.5, 0, 9.5], "rotation": 90, "texture": "#direction"}
 			}
 		}
 	],
@@ -155,7 +143,7 @@
 			"name": "Item Filter",
 			"origin": [8, 0, 8],
 			"color": 0,
-			"children": [8, 9, 10]
+			"children": [8, 9]
 		}
 	]
 }
