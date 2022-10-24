@@ -759,7 +759,7 @@
 	"advancement.create.honey_drain": "자동 양봉장",
 	"advancement.create.honey_drain.desc": "파이프를 이용해 벌집이나 벌통에서 꿀을 빼내세요",
 	"advancement.create.hose_pulley_lava": "맨틀 두드리기",
-	"advancement.create.hose_pulley_lava.desc": "무한으로 인식되는 용암 웅덩이에서 용암을 끌어올리세요",
+	"advancement.create.hose_pulley_lava.desc": "끝이 보이지 않는 용암 웅덩이에서 용암을 끌어올리세요",
 	"advancement.create.steam_engine_maxed": "엔진 풀가동",
 	"advancement.create.steam_engine_maxed.desc": "보일러를 최고 레벨로 작동시키세요",
 	"advancement.create.foods": "달콤한 식단",
