@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 36",
+	"_": "Missing Localizations: 37",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -251,6 +251,7 @@
 	"block.create.horizontal_framed_glass": "横型ガラス窓",
 	"block.create.horizontal_framed_glass_pane": "横型ガラス板窓",
 	"block.create.hose_pulley": "ホースプーリー",
+	"block.create.industrial_iron_block": "UNLOCALIZED: Block of Industrial Iron",
 	"block.create.item_drain": "アイテム排液口",
 	"block.create.item_vault": "アイテム保管庫",
 	"block.create.jungle_window": "ジャングルの窓",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 874",
+	"_": "Missing Localizations: 875",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -251,6 +251,7 @@
 	"block.create.horizontal_framed_glass": "Horizontal Gerahmtes Glas",
 	"block.create.horizontal_framed_glass_pane": "Horizontal Gerahmte Glasscheibe",
 	"block.create.hose_pulley": "Umlenkrolle",
+	"block.create.industrial_iron_block": "UNLOCALIZED: Block of Industrial Iron",
 	"block.create.item_drain": "Abfluss",
 	"block.create.item_vault": "Gegenstandstresor",
 	"block.create.jungle_window": "Tropenholzfenster",

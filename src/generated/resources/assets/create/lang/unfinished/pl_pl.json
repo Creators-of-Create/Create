@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 44",
+	"_": "Missing Localizations: 45",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -251,6 +251,7 @@
 	"block.create.horizontal_framed_glass": "Poziome oprawione szkło",
 	"block.create.horizontal_framed_glass_pane": "Pozioma oprawiona szyba",
 	"block.create.hose_pulley": "Krążek z wężem",
+	"block.create.industrial_iron_block": "UNLOCALIZED: Block of Industrial Iron",
 	"block.create.item_drain": "Odpływ",
 	"block.create.item_vault": "Kontener na przedmioty",
 	"block.create.jungle_window": "Dżunglowe okno",

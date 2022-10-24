@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 32",
+	"_": "Missing Localizations: 33",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -251,6 +251,7 @@
 	"block.create.horizontal_framed_glass": "水平边框玻璃",
 	"block.create.horizontal_framed_glass_pane": "水平边框玻璃板",
 	"block.create.hose_pulley": "软管滑轮",
+	"block.create.industrial_iron_block": "UNLOCALIZED: Block of Industrial Iron",
 	"block.create.item_drain": "分液池",
 	"block.create.item_vault": "物品保险库",
 	"block.create.jungle_window": "丛林木窗户",

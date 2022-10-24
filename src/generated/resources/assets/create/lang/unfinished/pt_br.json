@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1363",
+	"_": "Missing Localizations: 1364",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -251,6 +251,7 @@
 	"block.create.horizontal_framed_glass": "Vidro emoldurado horizontal",
 	"block.create.horizontal_framed_glass_pane": "Vidraça emoldurada horizontal",
 	"block.create.hose_pulley": "Polia de Mangueira",
+	"block.create.industrial_iron_block": "UNLOCALIZED: Block of Industrial Iron",
 	"block.create.item_drain": "Dreno de Item",
 	"block.create.item_vault": "Cofre de itens",
 	"block.create.jungle_window": "Janela da selva",

@@ -2118,6 +2118,17 @@ public class AllBlocks {
 		.build()
 		.lang("Block of Andesite Alloy")
 		.register();
+	
+	public static final BlockEntry<Block> INDUSTRIAL_IRON_BLOCK = REGISTRATE.block("industrial_iron_block", Block::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.color(MaterialColor.COLOR_GRAY))
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.properties(p -> p.requiresCorrectToolForDrops())
+		.transform(pickaxeOnly())
+		.blockstate(simpleCubeAll("industrial_iron_block"))
+		.lang("Block of Industrial Iron")
+		.simpleItem()
+		.register();
 
 	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
 		.initialProperties(() -> Blocks.IRON_BLOCK)

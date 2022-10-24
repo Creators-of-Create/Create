@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1018",
+	"_": "Missing Localizations: 1019",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -251,6 +251,7 @@
 	"block.create.horizontal_framed_glass": "Скло в горизонтальній рамці",
 	"block.create.horizontal_framed_glass_pane": "Склянна панель в горизонтальній рамі",
 	"block.create.hose_pulley": "Шків шланга",
+	"block.create.industrial_iron_block": "UNLOCALIZED: Block of Industrial Iron",
 	"block.create.item_drain": "Осушувач предметів",
 	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "Скло з тропічним деревом",

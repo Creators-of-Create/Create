@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2517",
+	"_": "Missing Localizations: 2518",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -251,6 +251,7 @@
 	"block.create.horizontal_framed_glass": "UNLOCALIZED: Horizontal Framed Glass",
 	"block.create.horizontal_framed_glass_pane": "UNLOCALIZED: Horizontal Framed Glass Pane",
 	"block.create.hose_pulley": "UNLOCALIZED: Hose Pulley",
+	"block.create.industrial_iron_block": "UNLOCALIZED: Block of Industrial Iron",
 	"block.create.item_drain": "UNLOCALIZED: Item Drain",
 	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "UNLOCALIZED: Jungle Window",
