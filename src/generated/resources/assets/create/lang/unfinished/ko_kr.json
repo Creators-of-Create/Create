@@ -1268,7 +1268,7 @@
 	"create.item_attributes.shulker_level.empty": "비어",
 	"create.item_attributes.shulker_level.partial": "조금 차",
 	"create.item_attributes.in_tag": "%1$s(으)로 등록됨",
-	"create.item_attributes.in_tag.inverted": "%1$s로 등록되지 않음",
+	"create.item_attributes.in_tag.inverted": "%1$s(으)로 등록되지 않음",
 	"create.item_attributes.in_item_group": "%1$s탭에 속함",
 	"create.item_attributes.in_item_group.inverted": "%1$s탭에 속함",
 	"create.item_attributes.added_by": "%1$s모드가 추가함",
