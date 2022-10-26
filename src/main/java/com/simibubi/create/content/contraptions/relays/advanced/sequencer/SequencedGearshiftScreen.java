@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.compat.computercraft.ComputerScreen;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -15,7 +16,6 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -25,24 +25,26 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private final ItemStack renderedItem = AllBlocks.SEQUENCED_GEARSHIFT.asStack();
 	private final AllGuiTextures background = AllGuiTextures.SEQUENCER;
 	private IconButton confirmButton;
+	private SequencedGearshiftTileEntity te;
 
 	private ListTag compareTag;
 	private Vector<Instruction> instructions;
-	private BlockPos pos;
-	private final boolean hasAttachedComputer;
 
 	private Vector<Vector<ScrollInput>> inputs;
 
 	public SequencedGearshiftScreen(SequencedGearshiftTileEntity te) {
 		super(Lang.translateDirect("gui.sequenced_gearshift.title"));
 		this.instructions = te.instructions;
-		this.pos = te.getBlockPos();
-		this.hasAttachedComputer = te.computerBehaviour.hasAttachedComputer();
+		this.te = te;
 		compareTag = Instruction.serializeAll(instructions);
 	}
 
 	@Override
 	protected void init() {
+		if (te.computerBehaviour.hasAttachedComputer())
+			minecraft.setScreen(new ComputerScreen(title, this::renderAdditional,
+					this, te.computerBehaviour::hasAttachedComputer));
+
 		setWindowSize(background.width, background.height);
 		setWindowOffset(-20, 0);
 		super.init();
@@ -51,13 +53,11 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		inputs = new Vector<>(5);
-		if (!hasAttachedComputer) {
-			for (int row = 0; row < inputs.capacity(); row++)
-				inputs.add(new Vector<>(3));
+		for (int row = 0; row < inputs.capacity(); row++)
+			inputs.add(new Vector<>(3));
 
-			for (int row = 0; row < instructions.size(); row++)
-				initInputsOfRow(row, x, y);
-		}
+		for (int row = 0; row < instructions.size(); row++)
+			initInputsOfRow(row, x, y);
 
 		confirmButton =
 			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
@@ -132,48 +132,57 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+
+		if (te.computerBehaviour.hasAttachedComputer())
+			minecraft.setScreen(new ComputerScreen(title, this::renderAdditional,
+					this, te.computerBehaviour::hasAttachedComputer));
+	}
+
+	@Override
 	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
 		background.render(ms, x, y, this);
 
-		if (hasAttachedComputer) {
-			for (int row = 0; row < instructions.capacity(); row++) {
-				AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
-				int yOffset = toDraw.height * row;
+		for (int row = 0; row < instructions.capacity(); row++) {
+			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
+			int yOffset = toDraw.height * row;
 
-				toDraw.render(ms, x, y + 14 + yOffset, this);
-			}
-
-		} else {
-			for (int row = 0; row < instructions.capacity(); row++) {
-				AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
-				int yOffset = toDraw.height * row;
-				if (row >= instructions.size()) {
-					toDraw.render(ms, x, y + 14 + yOffset, this);
-					continue;
-				}
-
-				Instruction instruction = instructions.get(row);
-				SequencerInstructions def = instruction.instruction;
-				def.background.render(ms, x, y + 14 + yOffset, this);
-
-				label(ms, 36, yOffset - 3, Lang.translateDirect(def.translationKey));
-				if (def.hasValueParameter) {
-					String text = def.formatValue(instruction.value);
-					int stringWidth = font.width(text);
-					label(ms, 90 + (12 - stringWidth / 2), yOffset - 3, Components.literal(text));
-				}
-				if (def.hasSpeedParameter)
-					label(ms, 127, yOffset - 3, instruction.speedModifier.label);
-			}
+			toDraw.render(ms, x, y + 14 + yOffset, this);
 		}
 
-		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		for (int row = 0; row < instructions.capacity(); row++) {
+			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
+			int yOffset = toDraw.height * row;
+			if (row >= instructions.size()) {
+				toDraw.render(ms, x, y + 14 + yOffset, this);
+				continue;
+			}
 
+			Instruction instruction = instructions.get(row);
+			SequencerInstructions def = instruction.instruction;
+			def.background.render(ms, x, y + 14 + yOffset, this);
+
+			label(ms, 36, yOffset - 3, Lang.translateDirect(def.translationKey));
+			if (def.hasValueParameter) {
+				String text = def.formatValue(instruction.value);
+				int stringWidth = font.width(text);
+				label(ms, 90 + (12 - stringWidth / 2), yOffset - 3, Components.literal(text));
+			}
+			if (def.hasSpeedParameter)
+				label(ms, 127, yOffset - 3, instruction.speedModifier.label);
+		}
+
+		renderAdditional(ms, mouseX, mouseY, partialTicks, x, y, background);
+		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+	}
+
+	private void renderAdditional(PoseStack ms, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
 		GuiGameElement.of(renderedItem)
-			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 56, -200)
+			.<GuiGameElement.GuiRenderBuilder>at(guiLeft + background.width + 6, guiTop + background.height - 56, 100)
 			.scale(5)
 			.render(ms);
 	}
@@ -183,13 +192,10 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	public void sendPacket() {
-		if (hasAttachedComputer)
-			return;
-
 		ListTag serialized = Instruction.serializeAll(instructions);
 		if (serialized.equals(compareTag))
 			return;
-		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));
+		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(te.getBlockPos(), serialized));
 	}
 
 	@Override

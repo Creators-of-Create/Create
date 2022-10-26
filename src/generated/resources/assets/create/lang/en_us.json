@@ -1748,6 +1748,9 @@
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
 	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
 
+  "create.gui.attached_computer.controlled": "This device is being controlled by a computer",
+  "create.gui.attached_computer.hint": "To use device manually, disconnect all computers and modems",
+
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
