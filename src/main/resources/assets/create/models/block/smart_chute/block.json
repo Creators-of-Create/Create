@@ -7,7 +7,7 @@
 		"redstone": "create:block/funnel/brass_funnel_unpowered",
 		"particle": "create:block/funnel/brass_funnel_frame",
 		"frame": "create:block/funnel/brass_funnel_frame",
-		"direction": "create:block/funnel/brass_funnel_pull"
+		"direction": "create:block/funnel/brass_funnel_neutral"
 	},
 	"elements": [
 		{
@@ -135,10 +135,10 @@
 			"from": [0, 9, 0],
 			"to": [16, 15, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 8, 3], "texture": "#direction"},
-				"east": {"uv": [0, 0, 8, 3], "texture": "#direction"},
-				"south": {"uv": [0, 0, 8, 3], "texture": "#direction"},
-				"west": {"uv": [0, 0, 8, 3], "texture": "#direction"},
+				"north": {"uv": [8, 13, 16, 16], "texture": "#direction"},
+				"east": {"uv": [8, 13, 16, 16], "texture": "#direction"},
+				"south": {"uv": [8, 13, 16, 16], "texture": "#direction"},
+				"west": {"uv": [8, 13, 16, 16], "texture": "#direction"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#frame"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#frame"}
 			}

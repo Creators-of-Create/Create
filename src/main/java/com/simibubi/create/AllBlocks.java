@@ -453,6 +453,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<EncasedBeltBlock> ENCASED_CHAIN_DRIVE =
 		REGISTRATE.block("encased_chain_drive", EncasedBeltBlock::new)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(SharedProperties::stone)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.properties(p -> p.color(MaterialColor.PODZOL))
@@ -460,6 +461,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> p.models()
 				.getExistingFile(p.modLoc("block/" + c.getName() + "/" + suffix))).generate(c, p))
+				.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -486,6 +488,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<BeltBlock> BELT = REGISTRATE.block("belt", BeltBlock::new)
 		.initialProperties(SharedProperties.BELT_MATERIAL, MaterialColor.COLOR_GRAY)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.properties(p -> p.sound(SoundType.WOOL))
 		.properties(p -> p.strength(0.8F))
 		.properties(p -> p.color(MaterialColor.COLOR_GRAY))

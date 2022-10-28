@@ -6,8 +6,8 @@
 		"direction": "create:block/funnel/brass_funnel_pull",
 		"redstone": "create:block/funnel/brass_funnel_unpowered",
 		"open": "create:block/funnel/funnel_closed",
-		"particle": "create:block/brass_block",
-		"frame": "create:block/funnel/brass_funnel_frame"
+		"frame": "create:block/funnel/brass_funnel_frame",
+		"particle": "create:block/brass_block"
 	},
 	"elements": [
 		{
@@ -66,10 +66,10 @@
 			"from": [0, 4, 0],
 			"to": [16, 10, 16],
 			"faces": {
-				"north": {"uv": [11, 0, 14, 8], "rotation": 90, "texture": "#direction"},
-				"east": {"uv": [11, 0, 14, 8], "rotation": 90, "texture": "#direction"},
-				"south": {"uv": [11, 0, 14, 8], "rotation": 90, "texture": "#direction"},
-				"west": {"uv": [11, 0, 14, 8], "rotation": 90, "texture": "#direction"},
+				"north": {"uv": [11, 8, 14, 16], "rotation": 90, "texture": "#direction"},
+				"east": {"uv": [11, 8, 14, 16], "rotation": 90, "texture": "#direction"},
+				"south": {"uv": [11, 8, 14, 16], "rotation": 90, "texture": "#direction"},
+				"west": {"uv": [11, 8, 14, 16], "rotation": 90, "texture": "#direction"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#frame"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#frame"}
 			}
