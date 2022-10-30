@@ -46,10 +46,24 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 						: (view, tooltip) -> {}
 				);
 
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 132, 38)
-				.setBackground(getRenderedSlot(recipe.getRollableResults().get(0)), -1, -1)
-				.addItemStack(recipe.getResultItem())
-				.addTooltipCallback(addStochasticTooltip(recipe.getRollableResults().get(0)));
+		/*
+		* Adds support to show multi output recipes in JEI
+		*/
+		List<ProcessingOutput> results = recipe.getRollableResults();
+		boolean single = results.size() == 1;
+		int i = 0;
+		for (ProcessingOutput output : results) {
+			int xOffset = i % 2 == 0 ? 0 : 19;
+			int yOffset = (i / 2) * -19;
+
+			builder
+			.addSlot(RecipeIngredientRole.OUTPUT, single ? 132 : 132 + xOffset, 38 + yOffset)
+			.setBackground(getRenderedSlot(output), -1, -1)
+			.addItemStack(output.getStack())
+			.addTooltipCallback(addStochasticTooltip(output));
+
+			i++;
+		}
 	}
 
 	@Override
