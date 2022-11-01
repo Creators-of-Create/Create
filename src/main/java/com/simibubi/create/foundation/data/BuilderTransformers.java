@@ -29,6 +29,9 @@ import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviou
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.curiosities.deco.MetalScaffoldingBlock;
+import com.simibubi.create.content.curiosities.deco.MetalScaffoldingBlockItem;
+import com.simibubi.create.content.curiosities.deco.MetalScaffoldingCTBehaviour;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorMovementBehaviour;
 import com.simibubi.create.content.curiosities.frames.CopycatBlock;
@@ -233,11 +236,38 @@ public class BuilderTransformers {
 			.tag(BlockTags.CLIMBABLE)
 			.item()
 			.recipe((c, p) -> {
-				if (name.equals("andesite"))
-					return;
-				p.stonecutting(ingredient.get(), c::get, 2);
+				if (!name.equals("andesite"))
+					p.stonecutting(ingredient.get(), c::get, 2);
 			})
 			.model((c, p) -> p.blockSprite(c::get, p.modLoc("block/ladder_" + name)))
+			.build();
+	}
+
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> scaffold(String name,
+		Supplier<DataIngredient> ingredient, CTSpriteShiftEntry scaffoldShift, CTSpriteShiftEntry casingShift) {
+		return b -> b.initialProperties(() -> Blocks.SCAFFOLDING)
+			.properties(p -> p.sound(SoundType.COPPER))
+			.addLayer(() -> RenderType::cutout)
+			.blockstate((c, p) -> p.getVariantBuilder(c.get())
+				.forAllStatesExcept(s -> {
+					String suffix = s.getValue(MetalScaffoldingBlock.BOTTOM) ? "_horizontal" : "";
+					return ConfiguredModel.builder()
+						.modelFile(p.models()
+							.withExistingParent(c.getName() + suffix, p.modLoc("block/scaffold/block" + suffix))
+							.texture("top", p.modLoc("block/funnel/" + name + "_funnel_frame"))
+							.texture("side", p.modLoc("block/scaffold/" + name + "_scaffold"))
+							.texture("particle", p.modLoc("block/" + name + "_casing")))
+						.build();
+				}, MetalScaffoldingBlock.WATERLOGGED, MetalScaffoldingBlock.DISTANCE))
+			.onRegister(connectedTextures(() -> new MetalScaffoldingCTBehaviour(scaffoldShift, casingShift)))
+			.transform(pickaxeOnly())
+			.tag(BlockTags.CLIMBABLE)
+			.item(MetalScaffoldingBlockItem::new)
+			.recipe((c, p) -> {
+				if (!name.equals("andesite"))
+					p.stonecutting(ingredient.get(), c::get, 2);
+			})
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + c.getName())))
 			.build();
 	}
 

@@ -127,7 +127,7 @@ public class AllShapes {
 
 		STEP_BOTTOM = shape(0, 0, 8, 16, 8, 16).forHorizontal(SOUTH),
 		STEP_TOP = shape(0, 8, 8, 16, 16, 16).forHorizontal(SOUTH),
-			
+
 		CONTROLS = shape(0, 0, 6, 16, 14, 16).forHorizontal(NORTH),
 		CONTRAPTION_CONTROLS = shape(0, 0, 6, 2, 14, 16).add(14, 0, 6, 16, 14, 16)
 			.add(0, 0, 14, 16, 14, 16)
@@ -192,6 +192,12 @@ public class AllShapes {
 	// Static Block Shapes
 	public static final VoxelShape
 
+	SCAFFOLD_HALF = shape(0, 8, 0, 16, 16, 16).build(), SCAFFOLD_FULL = shape(SCAFFOLD_HALF).add(0, 0, 0, 2, 16, 2)
+		.add(0, 0, 14, 2, 16, 16)
+		.add(14, 0, 0, 16, 16, 2)
+		.add(14, 0, 14, 16, 16, 16)
+		.build(),
+
 		TRACK_CROSS = shape(TRACK_ORTHO.get(SOUTH)).add(TRACK_ORTHO.get(EAST))
 			.build(),
 
@@ -221,8 +227,7 @@ public class AllShapes {
 		HEATER_BLOCK_SHAPE = shape(1, 0, 1, 15, 14, 15).build(),
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 16, 16), SEAT = cuboid(0, 0, 0, 16, 8, 16),
-		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16),
-		SEAT_COLLISION_PLAYERS = cuboid(0, 0, 0, 16, 3, 16),
+		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16), SEAT_COLLISION_PLAYERS = cuboid(0, 0, 0, 16, 3, 16),
 		MECHANICAL_PROCESSOR_SHAPE = shape(Shapes.block()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
 		TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11)

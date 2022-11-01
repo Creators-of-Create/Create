@@ -27,6 +27,10 @@ public class AllSpriteShifts {
 		get("block/blaze_burner_flame", "block/blaze_burner_flame_scroll"),
 		SUPER_BURNER_FLAME = get("block/blaze_burner_flame", "block/blaze_burner_flame_superheated_scroll");
 
+	public static final CTSpriteShiftEntry ANDESITE_SCAFFOLD = horizontal("scaffold/andesite_scaffold"),
+		BRASS_SCAFFOLD = horizontal("scaffold/brass_scaffold"),
+		COPPER_SCAFFOLD = horizontal("scaffold/copper_scaffold");
+
 	public static final CTSpriteShiftEntry FRAMED_GLASS =
 		getCT(AllCTTypes.OMNIDIRECTIONAL, "palettes/framed_glass", "palettes/framed_glass"),
 		HORIZONTAL_FRAMED_GLASS =

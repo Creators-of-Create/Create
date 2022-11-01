@@ -140,6 +140,7 @@ import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.curiosities.deco.MetalLadderBlock;
+import com.simibubi.create.content.curiosities.deco.MetalScaffoldingBlock;
 import com.simibubi.create.content.curiosities.deco.PlacardBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.deco.TrainTrapdoorBlock;
@@ -820,6 +821,25 @@ public class AllBlocks {
 		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
 			.transform(
 				BuilderTransformers.ladder("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper"))))
+			.register();
+
+	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD = REGISTRATE
+		.block("andesite_scaffolding", MetalScaffoldingBlock::new)
+		.transform(BuilderTransformers.scaffold("andesite", () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()),
+			AllSpriteShifts.ANDESITE_SCAFFOLD, AllSpriteShifts.ANDESITE_CASING))
+		.register();
+
+	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD = REGISTRATE
+		.block("brass_scaffolding", MetalScaffoldingBlock::new)
+		.transform(BuilderTransformers.scaffold("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/brass")),
+			AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_CASING))
+		.register();
+
+	public static final BlockEntry<MetalScaffoldingBlock> COPPER_SCAFFOLD =
+		REGISTRATE.block("copper_scaffolding", MetalScaffoldingBlock::new)
+			.transform(
+				BuilderTransformers.scaffold("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper")),
+					AllSpriteShifts.COPPER_SCAFFOLD, AllSpriteShifts.COPPER_CASING))
 			.register();
 
 	// Fluids

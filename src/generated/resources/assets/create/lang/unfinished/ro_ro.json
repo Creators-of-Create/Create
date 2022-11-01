@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 688",
+	"_": "Missing Localizations: 691",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -16,6 +16,7 @@
 	"block.create.andesite_funnel": "Pâlnie De Andezit",
 	"block.create.andesite_ladder": "UNLOCALIZED: Andesite Ladder",
 	"block.create.andesite_pillar": "Coloană De Andezit",
+	"block.create.andesite_scaffolding": "UNLOCALIZED: Andesite Scaffolding",
 	"block.create.andesite_tunnel": "Tunel De Andezit",
 	"block.create.asurine": "Asurină",
 	"block.create.asurine_pillar": "Coloană De Asurină",
@@ -42,6 +43,7 @@
 	"block.create.brass_encased_shaft": "Rotor Încapsulat În Alamă",
 	"block.create.brass_funnel": "Pâlnie De Alamă",
 	"block.create.brass_ladder": "UNLOCALIZED: Brass Ladder",
+	"block.create.brass_scaffolding": "UNLOCALIZED: Brass Scaffolding",
 	"block.create.brass_tunnel": "Tunel De Alamă",
 	"block.create.brown_nixie_tube": "Tub Nixie Maro",
 	"block.create.brown_sail": "Velă Maro",
@@ -62,6 +64,7 @@
 	"block.create.copper_backtank": "Backtank De Cupru",
 	"block.create.copper_casing": "Carcasă De Cupru",
 	"block.create.copper_ladder": "UNLOCALIZED: Copper Ladder",
+	"block.create.copper_scaffolding": "UNLOCALIZED: Copper Scaffolding",
 	"block.create.copper_shingle_slab": "Lespede De Șindrilă De Cupru",
 	"block.create.copper_shingle_stairs": "Scări De Șindrilă De Cupru",
 	"block.create.copper_shingles": "Șindrile De Cupru",

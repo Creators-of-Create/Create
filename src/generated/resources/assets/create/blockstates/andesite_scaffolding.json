@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "bottom=false": {
+      "model": "create:block/andesite_scaffolding"
+    },
+    "bottom=true": {
+      "model": "create:block/andesite_scaffolding_horizontal"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "create:block/scaffold/block_horizontal",
+  "textures": {
+    "top": "create:block/funnel/brass_funnel_frame",
+    "side": "create:block/scaffold/brass_scaffold",
+    "particle": "create:block/brass_casing"
+  }
+}
