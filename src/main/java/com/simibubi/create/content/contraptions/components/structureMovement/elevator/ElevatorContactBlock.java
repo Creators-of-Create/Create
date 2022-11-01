@@ -99,7 +99,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 			BlockState otherState = pLevel.getBlockState(otherPos);
 			if (!AllBlocks.ELEVATOR_CONTACT.has(otherState))
 				continue;
-			pLevel.setBlock(otherPos, otherState.setValue(CALLING, false), 2);
+			pLevel.setBlock(otherPos, otherState.setValue(CALLING, false), 2 | 16);
 			scheduleActivation(pLevel, otherPos);
 		}
 
@@ -133,7 +133,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 		shouldBePowering |= RedstoneContactBlock.hasValidContact(pLevel, pPos, pState.getValue(FACING));
 
 		if (wasPowering || shouldBePowering)
-			pLevel.setBlock(pPos, pState.setValue(POWERING, shouldBePowering), 2);
+			pLevel.setBlock(pPos, pState.setValue(POWERING, shouldBePowering), 2 | 16);
 
 		pLevel.updateNeighborsAt(pPos, this);
 	}
