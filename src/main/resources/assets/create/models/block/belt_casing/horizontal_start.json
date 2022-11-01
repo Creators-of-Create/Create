@@ -2,57 +2,42 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"3": "create:block/belt/belt_casing",
-		"4": "create:block/belt/belt_casing_3",
 		"5": "create:block/brass_casing_connected",
+		"6": "create:block/belt/brass_belt_casing_horizontal",
 		"8": "create:block/gearbox",
 		"particle": "create:block/brass_casing"
 	},
 	"elements": [
 		{
+			"name": "1",
 			"from": [0, 0, 0],
 			"to": [16, 11, 16],
 			"faces": {
-				"north": {"uv": [8, 0, 16, 5.5], "texture": "#4"},
-				"east": {"uv": [0, 0, 8, 5.5], "texture": "#3"},
-				"south": {"uv": [8, 0, 16, 5.5], "texture": "#4"},
-				"west": {"uv": [0, 0, 8, 5.5], "texture": "#3"},
-				"up": {"uv": [0, 8, 8, 16], "texture": "#3"},
-				"down": {"uv": [2, 0, 4, 2], "rotation": 180, "texture": "#5"}
+				"north": {"uv": [8, 10.5, 16, 16], "texture": "#6"},
+				"east": {"uv": [0, 0, 8, 5.5], "texture": "#6"},
+				"south": {"uv": [8, 10.5, 16, 16], "texture": "#6"},
+				"west": {"uv": [0, 0, 8, 5.5], "texture": "#6"},
+				"up": {"uv": [0, 8, 8, 16], "texture": "#6"},
+				"down": {"uv": [4, 0, 6, 2], "rotation": 180, "texture": "#5"}
 			}
 		},
 		{
+			"name": "2",
 			"from": [0, 5, 12],
 			"to": [16, 11, 4],
 			"faces": {
-				"north": {"uv": [8, 6, 16, 9], "rotation": 180, "texture": "#3"},
-				"south": {"uv": [8, 6, 16, 9], "rotation": 180, "texture": "#3"},
-				"down": {"uv": [8, 6, 16, 10], "texture": "#3"}
+				"north": {"uv": [8, 6.5, 16, 9.5], "texture": "#6"},
+				"south": {"uv": [8, 6.5, 16, 9.5], "texture": "#6"},
+				"down": {"uv": [0, 5.5, 8, 9.5], "texture": "#6"}
 			}
 		},
 		{
+			"name": "3",
 			"from": [1, 5, 4],
 			"to": [15, 11, 12],
 			"faces": {
 				"east": {"uv": [4, 5, 12, 11], "texture": "#8"},
 				"west": {"uv": [4, 5, 12, 11], "texture": "#8"}
-			}
-		},
-		{
-			"from": [3, 5, 15.99],
-			"to": [13, 11, -0.03],
-			"faces": {
-				"east": {"uv": [8, 1.5, 16, 4.5], "texture": "#3"},
-				"west": {"uv": [8, 1.5, 16, 4.5], "texture": "#3"}
-			}
-		},
-		{
-			"from": [1, 11, -0.01],
-			"to": [15, 3, 16.01],
-			"faces": {
-				"east": {"uv": [8, 0, 16, 4], "rotation": 180, "texture": "#3"},
-				"west": {"uv": [8, 0, 16, 4], "rotation": 180, "texture": "#3"},
-				"up": {"uv": [12.125, 12, 13.875, 14], "texture": "#5"}
 			}
 		}
 	]

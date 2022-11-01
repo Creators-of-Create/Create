@@ -1,0 +1,28 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"side": "create:block/scaffold/brass_scaffold",
+		"top": "create:block/brass_casing_connected",
+		"particle": "create:block/brass_casing"
+	},
+	"elements": [
+		{
+			"from": [0, 8, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"east": {"uv": [8, 8, 0, 12], "texture": "#side"},
+				"west": {"uv": [0, 8, 8, 12], "texture": "#side"},
+				"up": {"uv": [6, 0, 8, 2], "texture": "#top"}
+			}
+		},
+		{
+			"from": [16, 8, 0],
+			"to": [0, 16, 16],
+			"faces": {
+				"east": {"uv": [8, 8, 0, 12], "texture": "#side"},
+				"west": {"uv": [0, 8, 8, 12], "texture": "#side"},
+				"up": {"uv": [6, 0, 8, 2], "texture": "#top"}
+			}
+		}
+	]
+}
