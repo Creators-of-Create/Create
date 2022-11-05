@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.armor;
 
 import java.util.Locale;
 
-import com.simibubi.create.foundation.item.MultiLayeredArmorItem;
+import com.simibubi.create.foundation.item.LayeredArmorItem;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.resources.ResourceLocation;
@@ -77,14 +77,14 @@ public class DivingBootsItem extends BaseArmorItem {
 		return true;
 	}
 
-	public static class MultiLayered extends DivingBootsItem implements MultiLayeredArmorItem {
-		public MultiLayered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+	public static class Layered extends DivingBootsItem implements LayeredArmorItem {
+		public Layered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
 			super(material, properties, textureLoc);
 		}
 
 		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
-			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%s.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
+		public String getArmorTextureLocation(LivingEntity entity, EquipmentSlot slot, ItemStack stack, int layer) {
+			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%d.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
 		}
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Locale;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.item.MultiLayeredArmorItem;
+import com.simibubi.create.foundation.item.LayeredArmorItem;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -97,14 +97,14 @@ public class DivingHelmetItem extends BaseArmorItem {
 		BacktankUtil.consumeAir(entity, backtank, 1);
 	}
 
-	public static class MultiLayered extends DivingHelmetItem implements MultiLayeredArmorItem {
-		public MultiLayered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
+	public static class Layered extends DivingHelmetItem implements LayeredArmorItem {
+		public Layered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
 			super(material, properties, textureLoc);
 		}
 
 		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
-			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%s.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
+		public String getArmorTextureLocation(LivingEntity entity, EquipmentSlot slot, ItemStack stack, int layer) {
+			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%d.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
 		}
 	}
 }
