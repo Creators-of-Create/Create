@@ -2,6 +2,8 @@ package com.simibubi.create.content.curiosities.armor;
 
 import java.util.Locale;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.MultiLayeredArmorItem;
 
@@ -30,10 +32,19 @@ public class DivingHelmetItem extends BaseArmorItem {
 	}
 
 	public static boolean isWornBy(Entity entity) {
-		if (!(entity instanceof LivingEntity livingEntity)) {
+		ItemStack stack = getWornItem(entity);
+		if (stack == null) {
 			return false;
 		}
-		return livingEntity.getItemBySlot(SLOT).getItem() instanceof DivingHelmetItem;
+		return stack.getItem() instanceof DivingHelmetItem;
+	}
+
+	@Nullable
+	public static ItemStack getWornItem(Entity entity) {
+		if (!(entity instanceof LivingEntity livingEntity)) {
+			return null;
+		}
+		return livingEntity.getItemBySlot(SLOT);
 	}
 
 	@SubscribeEvent

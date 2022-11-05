@@ -6,6 +6,7 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -334,11 +335,13 @@ public class ClientEvents {
 			return;
 		}
 
-		if (FluidHelper.isWater(fluid) && DivingHelmetItem
-			.isWornBy(Minecraft.getInstance().cameraEntity)) {
-			event.scaleFarPlaneDistance(6.25f);
-			event.setCanceled(true);
-			return;
+		ItemStack divingHelmet = DivingHelmetItem.getWornItem(Minecraft.getInstance().cameraEntity);
+		if (divingHelmet != null) {
+			if (FluidHelper.isWater(fluid) || FluidHelper.isLava(fluid) && AllItems.NETHERITE_DIVING_HELMET.isIn(divingHelmet)) {
+				event.scaleFarPlaneDistance(6.25f);
+				event.setCanceled(true);
+				return;
+			}
 		}
 	}
 

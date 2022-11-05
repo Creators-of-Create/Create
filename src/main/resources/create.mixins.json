@@ -6,6 +6,8 @@
   "refmap": "create.refmap.json",
   "mixins": [
     "CustomItemUseEffectsMixin",
+    "EnchantmentHelperMixin",
+    "EnchantmentMixin",
     "EntityMixin",
     "HumanoidArmorLayerMixin",
     "MapItemSavedDataMixin",
