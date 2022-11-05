@@ -135,6 +135,7 @@ public class AllTags {
 		;
 
 		public final TagKey<Block> tag;
+		private boolean shouldGenerateBlankTag;
 
 		AllBlockTags() {
 			this(MOD);
@@ -159,9 +160,11 @@ public class AllTags {
 			} else {
 				tag = BlockTags.create(id);
 			}
-			if (alwaysDatagen) {
-				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag));
-			}
+			shouldGenerateBlankTag = alwaysDatagen;
+		}
+
+		private static void generateAllBlankTags() {
+			for (AllBlockTags tag : AllBlockTags.values()) tag.possiblyGenerateBlankTag();
 		}
 
 		@SuppressWarnings("deprecation")
@@ -177,6 +180,7 @@ public class AllTags {
 		public void add(Block... values) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
 				.add(values));
+			shouldGenerateBlankTag = false;
 		}
 
 		public void addOptional(Mods mod, String... ids) {
@@ -185,11 +189,13 @@ public class AllTags {
 				for (String id : ids)
 					builder.addOptional(mod.asResource(id));
 			});
+			shouldGenerateBlankTag = false;
 		}
 
 		public void includeIn(TagKey<Block> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(parent)
 				.addTag(tag));
+			shouldGenerateBlankTag = false;
 		}
 
 		public void includeIn(AllBlockTags parent) {
@@ -199,6 +205,12 @@ public class AllTags {
 		public void includeAll(TagKey<Block> child) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
 				.addTag(child));
+			shouldGenerateBlankTag = false;
+		}
+
+		public void possiblyGenerateBlankTag() {
+			if (shouldGenerateBlankTag)
+				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag));
 		}
 
 	}
@@ -231,6 +243,7 @@ public class AllTags {
 		;
 
 		public final TagKey<Item> tag;
+		private boolean shouldGenerateBlankTag;
 
 		AllItemTags() {
 			this(MOD);
@@ -255,9 +268,11 @@ public class AllTags {
 			} else {
 				tag = ItemTags.create(id);
 			}
-			if (alwaysDatagen) {
-				REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
-			}
+			shouldGenerateBlankTag = alwaysDatagen;
+		}
+
+		private static void generateAllBlankTags() {
+			for (AllItemTags tag : AllItemTags.values()) tag.possiblyGenerateBlankTag();
 		}
 
 		@SuppressWarnings("deprecation")
@@ -273,6 +288,7 @@ public class AllTags {
 		public void add(Item... values) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
 				.add(values));
+			shouldGenerateBlankTag = false;
 		}
 
 		public void addOptional(Mods mod, String... ids) {
@@ -281,11 +297,13 @@ public class AllTags {
 				for (String id : ids)
 					builder.addOptional(mod.asResource(id));
 			});
+			shouldGenerateBlankTag = false;
 		}
 
 		public void includeIn(TagKey<Item> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(parent)
 				.addTag(tag));
+			shouldGenerateBlankTag = false;
 		}
 
 		public void includeIn(AllItemTags parent) {
@@ -295,6 +313,12 @@ public class AllTags {
 		public void includeAll(TagKey<Item> child) {
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
 				.addTag(child));
+			shouldGenerateBlankTag = false;
+		}
+
+		public void possiblyGenerateBlankTag() {
+			if (shouldGenerateBlankTag)
+				REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
 		}
 
 	}
@@ -309,6 +333,7 @@ public class AllTags {
 		;
 
 		public final TagKey<Fluid> tag;
+		private boolean shouldGenerateBlankTag;
 
 		AllFluidTags() {
 			this(MOD);
@@ -333,9 +358,11 @@ public class AllTags {
 			} else {
 				tag = FluidTags.create(id);
 			}
-			if (alwaysDatagen) {
-				REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag));
-			}
+			shouldGenerateBlankTag = alwaysDatagen;
+		}
+
+		private static void generateAllBlankTags() {
+			for (AllFluidTags tag : AllFluidTags.values()) tag.possiblyGenerateBlankTag();
 		}
 
 		@SuppressWarnings("deprecation")
@@ -350,11 +377,13 @@ public class AllTags {
 		public void add(Fluid... values) {
 			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag)
 				.add(values));
+			shouldGenerateBlankTag = false;
 		}
 
 		public void includeIn(TagKey<Fluid> parent) {
 			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(parent)
 				.addTag(tag));
+			shouldGenerateBlankTag = false;
 		}
 
 		public void includeIn(AllFluidTags parent) {
@@ -364,6 +393,12 @@ public class AllTags {
 		public void includeAll(TagKey<Fluid> child) {
 			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag)
 				.addTag(child));
+			shouldGenerateBlankTag = false;
+		}
+
+		public void possiblyGenerateBlankTag() {
+			if (shouldGenerateBlankTag)
+				REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag));
 		}
 
 	}
@@ -421,6 +456,10 @@ public class AllTags {
 		AllBlockTags.ORE_OVERRIDE_STONE.includeAll(BlockTags.STONE_ORE_REPLACEABLES);
 
 		registerCompat();
+
+		AllItemTags.generateAllBlankTags();
+		AllBlockTags.generateAllBlankTags();
+		AllFluidTags.generateAllBlankTags();
 	}
 
 	private static void registerCompat() {
