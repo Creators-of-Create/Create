@@ -1,0 +1,23 @@
+{
+  "parent":"create:andesite/cogwheel",
+  "display":{
+    "icon":{"item":"create:belt_connector"},
+    "title":{"translate":"advancement.create.belt"},
+    "description":{
+      "color":"#DBA213",
+      "translate":
+      "advancement.create.belt.desc"
+    },
+    "frame":"task",
+    "show_toast":true,
+    "announce_to_chat":true,
+    "hidden":false
+  },
+  "criteria":{
+    "0":{
+      "trigger":"create:belt_builtin",
+      "conditions":{}
+    }
+  },
+  "requirements":[["0"]]
+}

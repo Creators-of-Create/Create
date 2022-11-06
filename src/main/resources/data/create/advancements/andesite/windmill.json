@@ -1,0 +1,22 @@
+{
+    "parent":"create:andesite/andesite_alloy",
+    "display":{
+        "icon":{"item":"create:sail_frame"},
+        "title":{"translate":"advancement.create.windmill"},
+        "description":{
+            "color":"#DBA213",
+            "translate":"advancement.create.windmill.desc"
+        },
+        "frame":"task",
+        "show_toast":true,
+        "announce_to_chat":false,
+        "hidden":false
+    },
+    "criteria":{
+        "0":{
+            "trigger":"create:windmill_builtin",
+            "conditions":{}
+        }
+    },
+    "requirements":[["0"]]
+}

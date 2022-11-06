@@ -1,0 +1,25 @@
+{
+  "parent":"create:andesite/stressometer",
+  "display":{
+    "icon":{"item":"create:stressometer"},
+    "title":{
+      "translate":"advancement.create.stressometer_maxed"
+    },
+    "description":{
+      "color":"#DBA213",
+      "translate":
+      "advancement.create.stressometer_maxed.desc"
+    },
+    "frame":"goal",
+    "show_toast":true,
+    "announce_to_chat":true,
+    "hidden":false
+  },
+  "criteria":{
+    "0":{
+      "trigger":"create:stressometer_maxed_builtin",
+      "conditions":{}
+    }
+  },
+  "requirements":[["0"]]
+}

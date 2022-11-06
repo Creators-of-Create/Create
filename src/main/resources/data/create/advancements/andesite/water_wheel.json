@@ -1,0 +1,23 @@
+{
+  "parent":"create:andesite/andesite_alloy",
+  "display":{
+    "icon":{"item":"create:water_wheel"},
+    "title":{"translate":"advancement.create.water_wheel"},
+    "description":{
+      "color":"#DBA213",
+      "translate":
+      "advancement.create.water_wheel.desc"
+    },
+    "frame":"task",
+    "show_toast":true,
+    "announce_to_chat":false,
+    "hidden":false
+  },
+  "criteria":{
+    "0":{
+      "trigger":"create:water_wheel_builtin",
+      "conditions":{}
+    }
+  },
+  "requirements":[["0"]]
+}

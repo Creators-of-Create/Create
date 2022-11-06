@@ -1,0 +1,25 @@
+{
+  "parent":"create:andesite/andesite_alloy",
+  "display":{
+    "icon":{"item":"create:cogwheel"},
+    "title":{"translate":"It's Alive"},
+    "description":{
+      "color":"#DBA213",
+      "translate":
+      "advancement.create.shifting_gears.desc"
+    },
+    "frame":"task",
+    "show_toast":true,
+    "announce_to_chat":true,
+    "hidden":false
+  },
+  "criteria":{
+    "cogwheel":{
+      "trigger":"minecraft:inventory_changed",
+      "conditions":{
+        "items":[{"items":["create:cogwheel"]}]
+      }
+    }
+  },
+  "requirements":[["cogwheel"]]
+}

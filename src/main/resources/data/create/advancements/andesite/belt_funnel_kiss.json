@@ -1,0 +1,23 @@
+{
+  "parent":"create:andesite/funnel",
+  "display":{
+    "icon":{"item":"create:brass_funnel"},
+    "title":{"translate":"advancement.create.belt_funnel_kiss"},
+    "description":{
+      "color":"#DBA213",
+      "translate":
+      "advancement.create.belt_funnel_kiss.desc"
+    },
+    "frame":"goal",
+    "show_toast":true,
+    "announce_to_chat":true,
+    "hidden":true
+  },
+  "criteria":{
+    "0":{
+      "trigger":"create:belt_funnel_kiss_builtin",
+      "conditions":{}
+    }
+  },
+  "requirements":[["0"]]
+}

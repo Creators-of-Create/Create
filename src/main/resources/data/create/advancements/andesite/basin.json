@@ -1,0 +1,22 @@
+{
+    "parent":"create:andesite/mechanical_press",
+    "display":{
+        "icon":{"item":"create:basin"}, 
+        "title":{"translate":"Basin"},
+        "description":{
+            "color":"#DBA213",
+            "translate":"WRITE LATER"
+        },
+        "frame":"task",
+        "show_toast":true,
+        "announce_to_chat":false,
+        "hidden":false
+    },
+    "criteria":{
+        "0":{
+            "trigger":"minecraft:inventory_changed",
+            "conditions":{"items":[{"items":["create:basin"]}]}
+        }
+    },
+    "requirements":[["0"]]
+}

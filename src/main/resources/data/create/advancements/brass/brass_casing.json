@@ -1,0 +1,22 @@
+{
+    "parent":"create:andesite/burner",
+    "display":{
+        "icon":{"item":"create:brass_casing"},
+        "title":{"translate":"advancement.create.brass_casing"},
+        "description":{
+            "color":"#DBA213",
+            "translate":"advancement.create.brass_casing.desc"
+        },
+        "frame":"goal",
+        "show_toast":true,
+        "announce_to_chat":true,
+        "hidden":false
+    },
+    "criteria":{
+        "0":{
+            "trigger":"create:brass_casing_builtin",
+            "conditions":{}
+        }
+    },
+    "requirements":[["0"]]
+}
