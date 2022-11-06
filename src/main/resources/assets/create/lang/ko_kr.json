@@ -2213,7 +2213,7 @@
 
 	"create.ponder.cart_assembler.header": "수레 조립기로 구조물 움직이기",
 	"create.ponder.cart_assembler.text_1": "활성화된 수레 조립기는 지나가는 수레에 구조물을 부착합니다.",
-	"create.ponder.cart_assembler.text_2": "신호가 없다면, 구조물을  냅니다.",
+	"create.ponder.cart_assembler.text_2": "신호가 없다면, 구조물을 떼어 냅니다.",
 	"create.ponder.cart_assembler.text_3": "수레에 렌치로 우클릭하면 구조물을 들고 다닐 수 있습니다.",
 
 	"create.ponder.cart_assembler_dual.header": "한 구조물에 여러 수레 결합하기",
@@ -2278,7 +2278,7 @@
 	"create.ponder.cogwheel.text_1": "톱니바퀴는 인접한 톱니바퀴에 동력을 전달합니다.",
 	"create.ponder.cogwheel.text_2": "이렇게 연결된 톱니바퀴 축은 반대방향으로 돌아갑니다.",
 
-	"create.ponder.cogwheel_casing.header": "톱니바에 케이스 씌우기",
+	"create.ponder.cogwheel_casing.header": "톱니바퀴에 케이스 씌우기",
 	"create.ponder.cogwheel_casing.text_1": "황동, 안산암 케이스는 톱니바퀴를 꾸밀 때 사용할 수 있습니다.",
 	"create.ponder.cogwheel_casing.text_2": "기본적으로 케이스를 씌운 톱니바퀴는 축과 연결되지 않습니다.",
 	"create.ponder.cogwheel_casing.text_3": "렌치를 사용하여 축과 연결하거나 차단할 수 있습니다.",
@@ -2437,7 +2437,7 @@
 	"create.ponder.funnel_direction.text_5": "벨트 위의 퍼널는 벨트의 움직임에 따라 아이템을 빼내거나 가져갑니다.",
 
 	"create.ponder.funnel_intro.header": "퍼널 사용하기",
-	"create.ponder.funnel_intro.text_1": "퍼널 보관함에서 아이템을 옮기거나 빼낼 때 유용합니다.",
+	"create.ponder.funnel_intro.text_1": "퍼널은 보관함에서 아이템을 옮기거나 빼낼 때 유용합니다.",
 
 	"create.ponder.funnel_redstone.header": "레드스톤 신호",
 	"create.ponder.funnel_redstone.text_1": "레드스톤 신호를 받으면 동작을 멈춥니다.",
