@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
+    "ClientboundMapItemDataPacketMixin",
+    "ContraptionDriverInteractMixin",
     "CustomItemUseEffectsMixin",
     "MapItemSavedDataMixin",
     "ContraptionDriverInteractMixin",
@@ -15,14 +17,13 @@
     "accessor.ServerLevelAccessor"
   ],
   "client": [
-    "MapItemSavedDataMixinClient",
     "CameraMixin",
     "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
-    "MapRendererMixin",
+    "MapRendererMapInstanceMixin",
     "ModelDataRefreshMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
