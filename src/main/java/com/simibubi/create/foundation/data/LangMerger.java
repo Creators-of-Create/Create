@@ -41,6 +41,7 @@ public class LangMerger implements DataProvider {
 	private DataGenerator gen;
 	private final String modid;
 	private final String displayName;
+	private final ILangPartial[] langPartials;
 
 	private List<Object> mergedLangData;
 	private Map<String, List<Object>> populatedLangData;
@@ -49,12 +50,15 @@ public class LangMerger implements DataProvider {
 
 	private List<String> langIgnore;
 
-	public LangMerger(DataGenerator gen) { this(gen, Create.ID, "Create"); }
+	public LangMerger(DataGenerator gen) {
+		this(gen, Create.ID, "Create", AllLangPartials.values());
+	}
 
-	public LangMerger(DataGenerator gen, String modid, String displayName) {
+	public <T extends ILangPartial> LangMerger(DataGenerator gen, String modid, String displayName, T[] langPartials) {
 		this.gen = gen;
 		this.modid = modid;
 		this.displayName = displayName;
+		this.langPartials = langPartials;
 		this.mergedLangData = new ArrayList<>();
 		this.langIgnore = new ArrayList<>();
 		this.allLocalizedEntries = new HashMap<>();
@@ -66,7 +70,7 @@ public class LangMerger implements DataProvider {
 	private void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
-		langIgnore.add("create.gui.chromatic_projector"); 
+		langIgnore.add("create.gui.chromatic_projector");
 	}
 
 	private boolean shouldIgnore(String key) {
@@ -225,7 +229,7 @@ public class LangMerger implements DataProvider {
 	}
 
 	private void collectEntries() {
-		for (AllLangPartials partial : AllLangPartials.values())
+		for (ILangPartial partial : langPartials)
 			addAll(partial.getDisplay(), partial.provide()
 				.getAsJsonObject());
 	}
