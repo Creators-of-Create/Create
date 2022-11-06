@@ -269,7 +269,7 @@ public class AllItems {
 		COPPER_DIVING_HELMET = REGISTRATE.item("copper_diving_helmet", p -> new DivingHelmetItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
 			.register(),
 
-		NETHERITE_DIVING_HELMET = REGISTRATE.item("netherite_diving_helmet", p -> new DivingHelmetItem.Layered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+		NETHERITE_DIVING_HELMET = REGISTRATE.item("netherite_diving_helmet", p -> new DivingHelmetItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.register();
 
 	public static final ItemEntry<? extends DivingBootsItem>
@@ -277,7 +277,7 @@ public class AllItems {
 		COPPER_DIVING_BOOTS = REGISTRATE.item("copper_diving_boots", p -> new DivingBootsItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
 			.register(),
 
-		NETHERITE_DIVING_BOOTS = REGISTRATE.item("netherite_diving_boots", p -> new DivingBootsItem.Layered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+		NETHERITE_DIVING_BOOTS = REGISTRATE.item("netherite_diving_boots", p -> new DivingBootsItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
