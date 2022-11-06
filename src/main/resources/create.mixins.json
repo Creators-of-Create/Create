@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
+    "ClientboundMapItemDataPacketMixin",
     "ContraptionDriverInteractMixin",
     "CustomItemUseEffectsMixin",
     "EnchantmentHelperMixin",
@@ -25,8 +26,7 @@
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
     "HumanoidArmorLayerMixin",
-    "MapItemSavedDataMixinClient",
-    "MapRendererMixin",
+    "MapRendererMapInstanceMixin",
     "ModelDataRefreshMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
