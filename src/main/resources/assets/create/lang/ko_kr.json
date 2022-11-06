@@ -1368,7 +1368,7 @@
 	"create.tooltip.chute.fans_pull_down": "선풍기가 아래에서 당김",
 	"create.tooltip.chute.contains": "들어있는 아이템: %1$s x%2$s",
 	"create.tooltip.brass_tunnel.contains": "분배 중인 아이템:",
-  	"create.tooltip.deployer.header": "기계손 정보",
+	"create.tooltip.deployer.header": "기계손 정보",
 	"create.tooltip.deployer.using": "모드: 사용",
 	"create.tooltip.deployer.punching": "모드: 공격",
 	"create.tooltip.deployer.contains": "아이템: %1$s x%2$s",
