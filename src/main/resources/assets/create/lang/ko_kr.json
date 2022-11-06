@@ -1092,7 +1092,7 @@
 	"create.gui.sequenced_gearshift.instruction.turn_angle.descriptive": "축 회전",
 	"create.gui.sequenced_gearshift.instruction.turn_angle": "축 회전",
 	"create.gui.sequenced_gearshift.instruction.turn_angle.angle": "각도",
-	"create.gui.sequenced_gearshift.instruction.turn_distance.descriptive": "피스톤/도르래/트리 회전",
+	"create.gui.sequenced_gearshift.instruction.turn_distance.descriptive": "피스톤/도르래/갠트리 회전",
 	"create.gui.sequenced_gearshift.instruction.turn_distance": "장치 회전",
 	"create.gui.sequenced_gearshift.instruction.turn_distance.distance": "거리",
 	"create.gui.sequenced_gearshift.instruction.delay.descriptive": "지연 시간",
@@ -1543,7 +1543,7 @@
 	"create.track.not_enough_tracks": "선로이 부족합니다",
 	"create.track.not_enough_pavement": "기반 블록이 부족합니다",
 
-	"create.portal_track.failed": "차원간 선로 설치할 수 없습니다:",
+	"create.portal_track.failed": "차원간 선로를 설치할 수 없습니다:",
 	"create.portal_track.missing": "대상 차원문이 아직 생성되지 않았습니다",
 	"create.portal_track.blocked": "대상 좌표가 가로막혔습니다 (%1$s,%2$s,%3$s)",
 
