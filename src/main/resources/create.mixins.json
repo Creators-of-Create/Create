@@ -17,12 +17,13 @@
     "accessor.ServerLevelAccessor"
   ],
   "client": [
+    "BlockDestructionProgressMixin",
     "CameraMixin",
-    "DestroyProgressMixin",
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
+    "LevelRendererMixin",
     "MapRendererMapInstanceMixin",
     "ModelDataRefreshMixin",
     "WindowResizeMixin",

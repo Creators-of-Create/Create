@@ -32,7 +32,7 @@ public class TrackPropagator {
 	}
 
 	public static void onRailRemoved(LevelAccessor reader, BlockPos pos, BlockState state) {
-		if (!(state.getBlock()instanceof ITrackBlock track))
+		if (!(state.getBlock() instanceof ITrackBlock track))
 			return;
 
 		Collection<DiscoveredLocation> ends = track.getConnected(reader, pos, state, false, null);
