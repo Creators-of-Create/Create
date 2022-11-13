@@ -2155,7 +2155,7 @@
 	"create.ponder.bearing_modes.text_2": "Он может быть настроен никогда не превращать структуру в блоки, или только на начальной позиции",
 
 	"create.ponder.belt_casing.header": "Обрамлением конвейеров",
-	"create.ponder.belt_casing.text_1": "Латунный или Андезитовый корпус может быть использован для декорации конвейеров",
+	"create.ponder.belt_casing.text_1": "Латунный или Андезитовый корпус может быть использован для декорирования конвейеров",
 	"create.ponder.belt_casing.text_2": "Используйте Гаечный ключ, чтобы убрать обрамление",
 
 	"create.ponder.belt_connector.header": "Использованием Механических ремней",
@@ -2520,7 +2520,7 @@
 	"create.ponder.item_vault_sizes.header": "Свойствами Хранилищ предметов",
 	"create.ponder.item_vault_sizes.text_1": "Хранилища предметов можно объединять для увеличения общей вместимости",
 	"create.ponder.item_vault_sizes.text_2": "Их базовая площадь может быть шириной до 3 блоков...",
-	"create.ponder.item_vault_sizes.text_3": "...и увеличиваться в длину до 3 диаметров",
+	"create.ponder.item_vault_sizes.text_3": "...и увеличиваться в длину в 3 раза от базовой площади",
 
 	"create.ponder.item_vault_storage.header": "Использованием Хранилищ предметов",
 	"create.ponder.item_vault_storage.text_1": "Хранилища предметов можно использовать для хранения большого количества предметов",
@@ -2538,7 +2538,7 @@
 	"create.ponder.linear_chassis_attachment.text_3": "Кликните ПКМ крадучись, пустой рукой, чтобы убрать слизь",
 	"create.ponder.linear_chassis_attachment.text_4": "Липкие грани Линейных шасси будут прикреплять ряд блоков перед ним",
 	"create.ponder.linear_chassis_attachment.text_5": "Используйте Гаечный ключ, чтобы настроить радиус прикрепления для этого шасси",
-	"create.ponder.linear_chassis_attachment.text_6": "Прокрутка при удерживании Ctrl настраивает радиус всех присоединённых шасси",
+	"create.ponder.linear_chassis_attachment.text_6": "Прокрутка при удержании Ctrl настраивает радиус всех присоединённых шасси",
 	"create.ponder.linear_chassis_attachment.text_7": "Прикрепление блоков на другие стороны требует использования Суперклея",
 	"create.ponder.linear_chassis_attachment.text_8": "При помощи этих механик, структуры любой формы могут двигаться как штуковина",
 
