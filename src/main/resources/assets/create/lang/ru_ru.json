@@ -884,7 +884,7 @@
 	"create.menu.configure": "Настроить...",
 	"create.menu.ponder_index": "Все размышления",
 	"create.menu.only_ingame": "Доступны только во время игры",
-	"create.menu.report_bugs": "Ошибка в моде?",
+	"create.menu.report_bugs": "Нашли ошибку?",
 	"create.menu.support": "Поддержите нас",
 
 	"create.recipe.crushing": "Дробление",
@@ -910,7 +910,7 @@
 	"create.recipe.block_cutting": "Резка блоков",
 	"create.recipe.wood_cutting": "Резка древесины",
 	"create.recipe.sandpaper_polishing": "Полирование",
-	"create.recipe.mystery_conversion": "Загадочное преобразование",
+	"create.recipe.mystery_conversion": "Таинственное преобразование",
 	"create.recipe.spout_filling": "Наполнение дозатором",
 	"create.recipe.draining": "Осушение предметов",
 	"create.recipe.item_application": "Ручное создание",
