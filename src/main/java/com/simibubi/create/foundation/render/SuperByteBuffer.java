@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.render;
 
+import java.nio.ByteBuffer;
 import java.util.function.IntPredicate;
 
 import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
@@ -11,8 +12,10 @@ import com.jozufozu.flywheel.util.DiffuseLightCalculator;
 import com.jozufozu.flywheel.util.transform.TStack;
 import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder.DrawState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
@@ -67,14 +70,21 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
 	public SuperByteBuffer(BufferBuilder buf) {
+		Pair<DrawState, ByteBuffer> pair = buf.popNextBuffer();
+		DrawState drawState = pair.getFirst();
+		ByteBuffer buffer = pair.getSecond();
+		int vertexCount = drawState.vertexCount();
+		int stride = drawState.format().getVertexSize();
+
 		if (buf instanceof ShadeSeparatedBufferBuilder separated) {
-			ShadedVertexList template = new BlockVertexList.Shaded(separated);
+			ShadedVertexList template = new BlockVertexList.Shaded(buffer, vertexCount, stride, separated.getUnshadedStartVertex());
 			shadedPredicate = template::isShaded;
 			this.template = template;
 		} else {
-			template = new BlockVertexList(buf);
+			template = new BlockVertexList(buffer, vertexCount, stride);
 			shadedPredicate = index -> true;
 		}
+
 		transforms = new PoseStack();
 		transforms.pushPose();
 	}

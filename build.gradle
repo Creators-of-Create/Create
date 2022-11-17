@@ -144,7 +144,7 @@ dependencies {
         jarJar.pin(it, project.registrate_version)
     }
     // Uncomment once Forge fixes mixins for included jars
-    //jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.4,0.6.5)') {
+    //jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.8,0.6.9)') {
     //    jarJar.pin(it, project.flywheel_version)
     //}
 

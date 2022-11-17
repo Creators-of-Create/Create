@@ -2,16 +2,17 @@ package com.simibubi.create;
 
 import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
 import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
-import static com.simibubi.create.AllTags.axeOnly;
-import static com.simibubi.create.AllTags.axeOrPickaxe;
-import static com.simibubi.create.AllTags.pickaxeOnly;
-import static com.simibubi.create.AllTags.tagBlockAndItem;
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.BlockStateGen.simpleCubeAll;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
+import static com.simibubi.create.foundation.data.TagGen.axeOnly;
+import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
+import static com.simibubi.create.foundation.data.TagGen.tagBlockAndItem;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -275,8 +276,9 @@ import net.minecraftforge.common.Tags;
 
 public class AllBlocks {
 
-	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
+	static {
+		REGISTRATE.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
+	}
 
 	// Schematics
 
