@@ -1739,9 +1739,9 @@
 	"create.gui.config.overlay8": "чтобы сбросить позицию до стандартной",
 
 	"create.command.killTPSCommand": "killtps",
-	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: TPS сервера в настоящее время замедлены на %s мс :o",
+	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: TPS сервера в настоящее время замедлено на %s мс :o",
 	"create.command.killTPSCommand.status.slowed_by.1": "[Create]: TPS сервера теперь замедлены на %s мс >:)",
-	"create.command.killTPSCommand.status.slowed_by.2": "[Create]: TPS сервера вернулись в норму :D",
+	"create.command.killTPSCommand.status.slowed_by.2": "[Create]: TPS сервера вернулось в норму :D",
 	"create.command.killTPSCommand.status.usage.0": "[Create]: используйте /killtps stop , чтобы вернуть TPS сервера на обычную скорость",
 	"create.command.killTPSCommand.status.usage.1": "[Create]: используйте /killtps start <Время тика>, чтобы искусственно замедлить TPS сервера",
 	"create.command.killTPSCommand.argument.tickTime": "Время тика",
