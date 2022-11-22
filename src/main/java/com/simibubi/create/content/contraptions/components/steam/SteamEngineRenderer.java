@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.steam;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -25,7 +26,12 @@ public class SteamEngineRenderer extends SafeTileEntityRenderer<SteamEngineTileE
 	@Override
 	protected void renderSafe(SteamEngineTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+		if (Backend.canUseInstancing(te.getLevel()))
+			return;
+
+		Float angle = te.getTargetAngle();
+		if (angle == null)
+			return;
 
 		BlockState blockState = te.getBlockState();
 		Direction facing = SteamEngineBlock.getFacing(blockState);
@@ -36,22 +42,20 @@ public class SteamEngineRenderer extends SafeTileEntityRenderer<SteamEngineTileE
 		if (shaft != null)
 			axis = KineticTileEntityRenderer.getRotationAxisOf(shaft);
 
-		Float angle = te.getTargetAngle();
-		if (angle == null)
-			return;
-
+		boolean roll90 = facingAxis.isHorizontal() && axis == Axis.Y || facingAxis.isVertical() && axis == Axis.Z;
 		float sine = Mth.sin(angle);
 		float sine2 = Mth.sin(angle - Mth.HALF_PI);
 		float piston = ((1 - sine) / 4) * 24 / 16f;
-		boolean roll90 = facingAxis.isHorizontal() && axis == Axis.Y || facingAxis.isVertical() && axis == Axis.Z;
 
-		transformed(AllBlockPartials.ENGINE_PISTON, blockState, facing).rotateY(roll90 ? -90 : 0)
-			.unCentre()
-			.light(light)
+		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+
+		transformed(AllBlockPartials.ENGINE_PISTON, blockState, facing, roll90)
 			.translate(0, piston, 0)
+			.light(light)
 			.renderInto(ms, vb);
 
-		transformed(AllBlockPartials.ENGINE_LINKAGE, blockState, facing).rotateY(roll90 ? -90 : 0)
+		transformed(AllBlockPartials.ENGINE_LINKAGE, blockState, facing, roll90)
+			.centre()
 			.translate(0, 1, 0)
 			.unCentre()
 			.translate(0, piston, 0)
@@ -61,21 +65,22 @@ public class SteamEngineRenderer extends SafeTileEntityRenderer<SteamEngineTileE
 			.light(light)
 			.renderInto(ms, vb);
 
-		transformed(AllBlockPartials.ENGINE_CONNECTOR, blockState, facing).rotateY(roll90 ? -90 : 0)
-			.unCentre()
-			.light(light)
+		transformed(AllBlockPartials.ENGINE_CONNECTOR, blockState, facing, roll90)
 			.translate(0, 2, 0)
 			.centre()
 			.rotateXRadians(-angle + Mth.HALF_PI)
 			.unCentre()
+			.light(light)
 			.renderInto(ms, vb);
 	}
 
-	private SuperByteBuffer transformed(PartialModel model, BlockState blockState, Direction facing) {
+	private SuperByteBuffer transformed(PartialModel model, BlockState blockState, Direction facing, boolean roll90) {
 		return CachedBufferer.partial(model, blockState)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing) + 90);
+			.rotateX(AngleHelper.verticalAngle(facing) + 90)
+			.rotateY(roll90 ? -90 : 0)
+			.unCentre();
 	}
 	
 	@Override

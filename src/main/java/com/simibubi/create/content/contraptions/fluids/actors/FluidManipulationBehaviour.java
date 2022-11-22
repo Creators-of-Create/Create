@@ -243,30 +243,21 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	public enum BottomlessFluidMode implements Predicate<Fluid> {
-		ALLOW_ALL {
-			@Override
-			public boolean test(Fluid fluid) {
-				return true;
-			}
-		},
-		DENY_ALL {
-			@Override
-			public boolean test(Fluid fluid) {
-				return false;
-			}
-		},
-		ALLOW_BY_TAG {
-			@Override
-			public boolean test(Fluid fluid) {
-				return AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid);
-			}
-		},
-		DENY_BY_TAG {
-			@Override
-			public boolean test(Fluid fluid) {
-				return !AllFluidTags.BOTTOMLESS_DENY.matches(fluid);
-			}
-		};
+		ALLOW_ALL(fluid -> true),
+		DENY_ALL(fluid -> false),
+		ALLOW_BY_TAG(fluid -> AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid)),
+		DENY_BY_TAG(fluid -> !AllFluidTags.BOTTOMLESS_DENY.matches(fluid));
+
+		private final Predicate<Fluid> predicate;
+
+		BottomlessFluidMode(Predicate<Fluid> predicate) {
+			this.predicate = predicate;
+		}
+
+		@Override
+		public boolean test(Fluid fluid) {
+			return predicate.test(fluid);
+		}
 	}
 
 }
