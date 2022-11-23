@@ -11,10 +11,12 @@ import static com.simibubi.create.AllShapes.TRACK_ORTHO_LONG;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +45,7 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
-import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
+import com.simibubi.create.foundation.block.render.MultiPosDestructionHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
@@ -55,7 +57,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -777,15 +778,16 @@ public class TrackBlock extends Block
 		return new ItemRequirement(ItemUseType.CONSUME, stacks);
 	}
 
-	public static class RenderProperties extends ReducedDestroyEffects implements DestroyProgressRenderingHandler {
+	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {
 		@Override
-		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId, BlockPos pos,
-			int progress, BlockState blockState) {
+		@Nullable
+		public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState,
+				int progress) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
-			if (blockEntity instanceof TrackTileEntity track)
-				for (BlockPos trackPos : track.connections.keySet())
-					renderer.destroyBlockProgress(pos.hashCode(), trackPos, progress);
-			return false;
+			if (blockEntity instanceof TrackTileEntity track) {
+				return new HashSet<>(track.connections.keySet());
+			}
+			return null;
 		}
 	}
 

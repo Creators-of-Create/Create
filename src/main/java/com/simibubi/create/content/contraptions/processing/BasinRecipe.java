@@ -16,9 +16,11 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
@@ -150,11 +152,17 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			}
 
 			if (simulate) {
-				if (recipe instanceof BasinRecipe) {
-					recipeOutputItems.addAll(((BasinRecipe) recipe).rollResults());
-					recipeOutputFluids.addAll(((BasinRecipe) recipe).getFluidResults());
-				} else
+				if (recipe instanceof BasinRecipe basinRecipe) {
+					recipeOutputItems.addAll(basinRecipe.rollResults());
+					recipeOutputFluids.addAll(basinRecipe.getFluidResults());
+					recipeOutputItems.addAll(basinRecipe.getRemainingItems(basin.getInputInventory()));
+				} else {
 					recipeOutputItems.add(recipe.getResultItem());
+
+					if (recipe instanceof CraftingRecipe craftingRecipe) {
+						recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)));
+					}
+				}
 			}
 
 			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, simulate))

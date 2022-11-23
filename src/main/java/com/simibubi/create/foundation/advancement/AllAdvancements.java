@@ -13,11 +13,11 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
@@ -616,7 +616,7 @@ public class AllAdvancements implements DataProvider {
 
 	// Datagen
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogUtils.getLogger();
 	private final DataGenerator generator;
 
 	public AllAdvancements(DataGenerator generatorIn) {

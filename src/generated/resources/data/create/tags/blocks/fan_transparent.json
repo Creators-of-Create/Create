@@ -3,9 +3,9 @@
     "create:blaze_burner",
     "create:lit_blaze_burner",
     "create:sail_frame",
-    "#minecraft:fences",
-    "#minecraft:campfires",
     "minecraft:iron_bars",
-    "minecraft:mangrove_roots"
+    "minecraft:mangrove_roots",
+    "#minecraft:campfires",
+    "#minecraft:fences"
   ]
 }

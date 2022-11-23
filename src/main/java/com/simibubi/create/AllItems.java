@@ -4,6 +4,7 @@ import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.content.AllSections.CURIOSITIES;
 import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
@@ -71,8 +72,9 @@ import net.minecraftforge.common.Tags;
 
 public class AllItems {
 
-	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
+	static {
+		REGISTRATE.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
+	}
 
 	// Schematics
 

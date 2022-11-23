@@ -1,4 +1,4 @@
-// 1.19.2	2022-09-23T20:53:24.8357617	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2022-11-22T16:16:47.7397787	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4480,20 +4480,19 @@ d17cb8ef2ef82e1c264fb2c8d5314c3b42cf2e28 data/create/recipes/warped_window_pane.
 93c61ebeda451ebeb37c3047459f95f14fa9f1f9 data/create/recipes/weathered_copper_tile_slab_from_weathered_copper_tiles_stonecutting.json
 fd2aaa5ab155c675e7ef4c143106428f181056af data/create/recipes/weathered_copper_tile_stairs.json
 f1a03ac86925e26cbec6aeeada2eafb40008fc8e data/create/recipes/weathered_copper_tile_stairs_from_weathered_copper_tiles_stonecutting.json
-9987e9a451ed98d1879639e0604a040c46c3055a data/create/tags/blocks/brittle.json
+8b98a671e80724e815a3af0c3764d760e4170e02 data/create/tags/blocks/brittle.json
 8b6c0b444b15f7fb2d55b9cbcb68537c1269f877 data/create/tags/blocks/casing.json
-6cdcc024d7bc2c631f17958f99fcf4f767dc15db data/create/tags/blocks/fan_transparent.json
+6be9cc8768e2e76e2dc09ac77d18b28741a580a8 data/create/tags/blocks/fan_transparent.json
 4970078b49ddac1b1d500ed0469cedf42bdc3d35 data/create/tags/blocks/non_movable.json
 06e13efbb7b0d09ff7ecd1a7dc45a0760b91ad67 data/create/tags/blocks/ore_override_stone.json
-e3510f08cc217e52b58692dcc7f3eda0289ff751 data/create/tags/blocks/passive_boiler_heaters.json
-5ac75e77c57ab675e5d36a1e2bd7d37804b7de05 data/create/tags/blocks/safe_nbt.json
+a5874f73c7dc0a3ae12999e6ae8abf45bc7fb9be data/create/tags/blocks/passive_boiler_heaters.json
+2cfb1f2270ad1616ccd12b1f3871fa6b779be66c data/create/tags/blocks/safe_nbt.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/blocks/seats.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/blocks/toolboxes.json
-a8271a2fcefafde4a6589193c50c41edcba1dad7 data/create/tags/blocks/tree_attachments.json
+1b6977d9a399cf6ee042e3f8f5e64e4d3cda5489 data/create/tags/blocks/tree_attachments.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/blocks/valve_handles.json
 72143286fb5cb372a0696550e2eac76ca50e6fbc data/create/tags/blocks/windmill_sails.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/blocks/windowable.json
-a6bf5ef4c5b84dfa0371fcce8444d8ac9651bac4 data/create/tags/blocks/wrench_pickup.json
+5ce401742b78906ba4a39c8d717283da9aa1c61c data/create/tags/blocks/wrench_pickup.json
 894e1e4fd1e32712abdda18ec64ab13750d3c039 data/create/tags/fluids/bottomless/allow.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/fluids/bottomless/deny.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/items/blaze_burner_fuel/regular.json
@@ -4524,8 +4523,8 @@ d5f544bfab05d4590a77d70c01df3d417bfae766 data/create/tags/items/stone_types/scor
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/items/toolboxes.json
 22c744a157399a21492bcd8b211578f8f504e653 data/create/tags/items/upright_on_belt.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/items/valve_handles.json
-c069fb85e27982aa9b5dd36b8454cd32a1426790 data/create/tags/items/vanilla_stripped_logs.json
-aed37b54e9aae2d9276d3066b20b69d07bc09ef6 data/create/tags/items/vanilla_stripped_wood.json
+03989b943d729293db75c8f681c490c55f594d53 data/create/tags/items/vanilla_stripped_logs.json
+a82f75a9af4c0b28f08de8dfcaea2dce2accda28 data/create/tags/items/vanilla_stripped_wood.json
 10d5f0c1763f80860a39398ecc33dbbe43099471 data/forge/tags/blocks/glass/colorless.json
 3101d4cdeb57fae0e777ed7a773eccbd7d757b76 data/forge/tags/blocks/glass_panes.json
 81b107ada9c6ac5679a21f8c6a006bf230f69c39 data/forge/tags/blocks/ores.json
@@ -4540,7 +4539,6 @@ bcd593714f43bc6a0aefbd714c24db3cf9e71250 data/forge/tags/blocks/storage_blocks/r
 8140415f1c16f09167f41eeee25c09706a944be0 data/forge/tags/fluids/chocolate.json
 0ccc9ff76001cdd7db1b79c1371f59d3283abe64 data/forge/tags/fluids/honey.json
 cca816b34ac2e9b7933df680aa9778ff2cfe9605 data/forge/tags/fluids/tea.json
-01d32d3b7b033aff44c047bf289d696de0b0c715 data/forge/tags/items/beacon_payment.json
 06ebf72e8f6c081862236d4b068b5dfb275a8385 data/forge/tags/items/buckets/honey.json
 801d097b0af7153e0c5c72a924d61f8afb4cf264 data/forge/tags/items/dough.json
 801d097b0af7153e0c5c72a924d61f8afb4cf264 data/forge/tags/items/dough/wheat.json
@@ -4592,6 +4590,7 @@ dafa3bdb72fef5e6c0201c05846db3f2b214e587 data/minecraft/tags/blocks/stairs.json
 11427a72e181857e22ec37a22462bc652e127cc5 data/minecraft/tags/blocks/trapdoors.json
 2bcba05954ff7bc4cf9cc520478083da9973ec76 data/minecraft/tags/blocks/walls.json
 b53d2d87aa0c3f62874f418180b0f1ff00d8cae7 data/minecraft/tags/blocks/wooden_doors.json
+01d32d3b7b033aff44c047bf289d696de0b0c715 data/minecraft/tags/items/beacon_payment_items.json
 b53d2d87aa0c3f62874f418180b0f1ff00d8cae7 data/minecraft/tags/items/doors.json
 a4b539d506b2273020e043c895d7ecc8a2e1064e data/minecraft/tags/items/piglin_loved.json
 1ac7c46815461cbec0d4d97f25c085fdc8375dab data/minecraft/tags/items/slabs.json

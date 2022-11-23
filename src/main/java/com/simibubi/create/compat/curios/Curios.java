@@ -1,36 +1,33 @@
 package com.simibubi.create.compat.curios;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 public class Curios {
-	public static void init() {
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(Curios::onInterModEnqueue);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(Curios::onClientSetup);
+	public static void init(IEventBus modEventBus, IEventBus forgeEventBus) {
+		modEventBus.addListener(Curios::onInterModEnqueue);
+		modEventBus.addListener(Curios::onClientSetup);
 
-		GogglesItem.addIsWearingPredicate(player -> {
-			AtomicBoolean hasGoggles = new AtomicBoolean(false);
-			player.getCapability(CuriosCapability.INVENTORY).ifPresent(handler -> {
-				ICurioStacksHandler stacksHandler = handler.getCurios().get("head");
-				if(stacksHandler != null) hasGoggles.set(stacksHandler.getStacks().getStackInSlot(0).getItem() == AllItems.GOGGLES.get());
-			});
-			return hasGoggles.get();
-		});
+		GogglesItem.addIsWearingPredicate(player -> player.getCapability(CuriosCapability.INVENTORY).map(handler -> {
+			ICurioStacksHandler stacksHandler = handler.getCurios().get("head");
+			if (stacksHandler != null) {
+				return AllItems.GOGGLES.isIn(stacksHandler.getStacks().getStackInSlot(0));
+			}
+			return false;
+		}).orElse(false));
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(CuriosRenderers::onLayerRegister));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(CuriosRenderers::onLayerRegister));
 	}
 
 	private static void onInterModEnqueue(final InterModEnqueueEvent event) {

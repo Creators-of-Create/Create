@@ -16,12 +16,12 @@ public enum AllSections {
 	/** Item transport and other Utility */
 	LOGISTICS(Palette.Yellow),
 
-	/** Tools for strucuture movement and replication */
+	/** Tools for structure movement and replication */
 	SCHEMATICS(Palette.Blue),
 
 	/** Decorative blocks */
 	PALETTES(Palette.Green),
-	
+
 	/** Helpful gadgets and other shenanigans */
 	CURIOSITIES(Palette.Purple),
 
@@ -33,7 +33,7 @@ public enum AllSections {
 
 	;
 
-	private Palette tooltipPalette;
+	private final Palette tooltipPalette;
 
 	private AllSections(Palette tooltipPalette) {
 		this.tooltipPalette = tooltipPalette;
@@ -51,12 +51,12 @@ public enum AllSections {
 	}
 
 	static AllSections ofItem(Item item) {
-		return Create.registrate()
+		return Create.REGISTRATE
 			.getSection(item);
 	}
 
 	static AllSections ofBlock(Block block) {
-		return Create.registrate()
+		return Create.REGISTRATE
 			.getSection(block);
 	}
 

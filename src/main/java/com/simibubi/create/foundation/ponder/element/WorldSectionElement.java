@@ -182,7 +182,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		BlockPos worldPos;
 	}
 
-	public Pair<Vec3, BlockPos> rayTrace(PonderWorld world, Vec3 source, Vec3 target) {
+	public Pair<Vec3, BlockHitResult> rayTrace(PonderWorld world, Vec3 source, Vec3 target) {
 		world.setMask(this.section);
 		Vec3 transformedTarget = reverseTransformVec(target);
 		BlockHitResult rayTraceBlocks = world.clip(new ClipContext(reverseTransformVec(source), transformedTarget,
@@ -200,7 +200,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			/ source.subtract(target)
 				.lengthSqr();
 		Vec3 actualHit = VecHelper.lerp((float) t, target, source);
-		return Pair.of(actualHit, rayTraceBlocks.getBlockPos());
+		return Pair.of(actualHit, rayTraceBlocks);
 	}
 
 	private Vec3 reverseTransformVec(Vec3 in) {

@@ -1,10 +1,10 @@
 {
   "values": [
     "minecraft:bee_nest",
-    "minecraft:vine",
+    "minecraft:cocoa",
+    "minecraft:mangrove_propagule",
     "minecraft:moss_carpet",
     "minecraft:shroomlight",
-    "minecraft:cocoa",
-    "minecraft:mangrove_propagule"
+    "minecraft:vine"
   ]
 }

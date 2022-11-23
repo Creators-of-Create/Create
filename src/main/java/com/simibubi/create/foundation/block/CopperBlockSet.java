@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.simibubi.create.AllTags;
+import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
@@ -126,7 +126,7 @@ public class CopperBlockSet {
 			.loot((lt, block) -> variant.generateLootTable(lt, block, this, state, waxed))
 			.blockstate((ctx, prov) -> variant.generateBlockState(ctx, prov, this, state, waxed))
 			.recipe((c, p) -> variant.generateRecipes(entries.get(BlockVariant.INSTANCE)[state.ordinal()], c, p))
-			.transform(AllTags.pickaxeOnly())
+			.transform(TagGen.pickaxeOnly())
 			.tag(BlockTags.NEEDS_STONE_TOOL)
 			.simpleItem();
 

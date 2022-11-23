@@ -143,7 +143,7 @@ dependencies {
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.19-1.1.5,)') {
         jarJar.pin(it, project.registrate_version)
     }
-    jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.7,0.6.8)') {
+    jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.8,0.6.9)') {
         jarJar.pin(it, project.flywheel_version)
     }
 

@@ -1,8 +1,5 @@
 {
   "values": [
-    "#minecraft:rails",
-    "#minecraft:buttons",
-    "#minecraft:pressure_plates",
     "minecraft:redstone_wire",
     "minecraft:redstone_torch",
     "minecraft:repeater",
@@ -16,6 +13,9 @@
     "minecraft:tripwire_hook",
     "minecraft:daylight_detector",
     "minecraft:target",
-    "minecraft:hopper"
+    "minecraft:hopper",
+    "#minecraft:buttons",
+    "#minecraft:pressure_plates",
+    "#minecraft:rails"
   ]
 }

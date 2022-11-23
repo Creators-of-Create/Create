@@ -3,8 +3,9 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
 
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
@@ -35,6 +36,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.network.NetworkEvent;
 
 public class SConfigureConfigPacket extends SimplePacketBase {
+
+	private static final Logger LOGGER = LogUtils.getLogger();
 
 	private final String option;
 	private final String value;
@@ -68,8 +71,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 					Actions.valueOf(option)
 						.performAction(value);
 				} catch (IllegalArgumentException e) {
-					LogManager.getLogger()
-						.warn("Received ConfigureConfigPacket with invalid Option: " + option);
+					LOGGER.warn("Received ConfigureConfigPacket with invalid Option: " + option);
 				}
 			}));
 

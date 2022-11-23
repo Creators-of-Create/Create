@@ -9,6 +9,7 @@ import com.mojang.math.Matrix4f;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
+import com.simibubi.create.foundation.map.CustomRenderedMapDecoration;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 
@@ -25,15 +26,19 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 public class StationMarker {
+	// Not MANSION or MONUMENT to allow map extending
+	public static final MapDecoration.Type TYPE = MapDecoration.Type.RED_MARKER;
 
 	private final BlockPos source;
 	private final BlockPos target;
 	private final Component name;
+	private final String id;
 
 	public StationMarker(BlockPos source, BlockPos target, Component name) {
 		this.source = source;
 		this.target = target;
 		this.name = name;
+		id = "create:station-" + target.getX() + "," + target.getY() + "," + target.getZ();
 	}
 
 	public static StationMarker load(CompoundTag tag) {
@@ -59,11 +64,27 @@ public class StationMarker {
 
 	public CompoundTag save() {
 		CompoundTag tag = new CompoundTag();
-		tag.put("source", NbtUtils.writeBlockPos(this.source));
-		tag.put("target", NbtUtils.writeBlockPos(this.target));
-		tag.putString("name", Component.Serializer.toJson(this.name));
+		tag.put("source", NbtUtils.writeBlockPos(source));
+		tag.put("target", NbtUtils.writeBlockPos(target));
+		tag.putString("name", Component.Serializer.toJson(name));
 
 		return tag;
+	}
+
+	public BlockPos getSource() {
+		return source;
+	}
+
+	public BlockPos getTarget() {
+		return target;
+	}
+
+	public Component getName() {
+		return name;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	@Override
@@ -79,33 +100,18 @@ public class StationMarker {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.target, this.name);
+		return Objects.hash(target, name);
 	}
 
-	public BlockPos getTarget() {
-		return this.target;
-	}
+	public static class Decoration extends MapDecoration implements CustomRenderedMapDecoration {
+		private static final RenderType RENDER_TYPE = RenderType.text(Create.asResource("textures/gui/station_map_icon.png"));
 
-	public BlockPos getSource() {
-		return this.source;
-	}
+		public Decoration(byte x, byte y, Component name) {
+			super(TYPE, x, y, (byte) 0, name);
+		}
 
-	public Component getName() {
-		return name;
-	}
-
-	public MapDecoration.Type getType() {
-		return MapDecoration.Type.MANSION;
-	}
-
-	public String getId() {
-		return "create:station-" + this.target.getX() + "," + this.target.getY() + "," + this.target.getZ();
-	}
-
-	public static class Decoration extends MapDecoration {
-
-		public Decoration(byte pX, byte pY, Component pName) {
-			super(Type.MANSION, pX, pY, (byte) 0, pName);
+		public static Decoration from(MapDecoration decoration) {
+			return new StationMarker.Decoration(decoration.getX(), decoration.getY(), decoration.getName());
 		}
 
 		@Override
@@ -114,52 +120,48 @@ public class StationMarker {
 		}
 
 		@Override
-		public boolean render(int index) {
-			return true;
-		}
+		public void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean active, int packedLight, MapItemSavedData mapData, int index) {
+			poseStack.pushPose();
 
-		public boolean render(PoseStack ms, MultiBufferSource bufferSource, int mapId, MapItemSavedData mapData, boolean active, int packedLight, int index) {
-			ms.pushPose();
+			poseStack.translate(getX() / 2D + 64.0, getY() / 2D + 64.0, -0.02D);
 
-			ms.translate(getX() / 2D + 64.0, getY() / 2D + 64.0, -0.02D);
+			poseStack.pushPose();
 
-			ms.pushPose();
+			poseStack.translate(0.5f, 0f, 0);
+			poseStack.scale(4.5F, 4.5F, 3.0F);
 
-			ms.translate(0.5f, 0f, 0);
-			ms.scale(4.5F, 4.5F, 3.0F);
-
-			VertexConsumer buffer = bufferSource.getBuffer(RenderType.text(Create.asResource("textures/gui/station_map_icon.png")));
-
+			VertexConsumer buffer = bufferSource.getBuffer(RENDER_TYPE);
+			Matrix4f mat = poseStack.last().pose();
 			float zOffset = -0.001f;
-			float alpha = 1f;
+			buffer.vertex(mat, -1, -1, zOffset * index).color(255, 255, 255, 255).uv(0.0f		, 0.0f		 ).uv2(packedLight).endVertex();
+			buffer.vertex(mat, -1,  1, zOffset * index).color(255, 255, 255, 255).uv(0.0f		, 0.0f + 1.0f).uv2(packedLight).endVertex();
+			buffer.vertex(mat,  1,  1, zOffset * index).color(255, 255, 255, 255).uv(0.0f + 1.0f, 0.0f + 1.0f).uv2(packedLight).endVertex();
+			buffer.vertex(mat,  1, -1, zOffset * index).color(255, 255, 255, 255).uv(0.0f + 1.0f, 0.0f		 ).uv2(packedLight).endVertex();
 
-			Matrix4f mat = ms.last().pose();
-			buffer.vertex(mat, -1, -1, zOffset * index).color(1f, 1f, 1f, alpha).uv(0.0f       , 0.0f       ).uv2(packedLight).endVertex();
-			buffer.vertex(mat, -1,  1, zOffset * index).color(1f, 1f, 1f, alpha).uv(0.0f       , 0.0f + 1.0f).uv2(packedLight).endVertex();
-			buffer.vertex(mat,  1,  1, zOffset * index).color(1f, 1f, 1f, alpha).uv(0.0f + 1.0f, 0.0f + 1.0f).uv2(packedLight).endVertex();
-			buffer.vertex(mat,  1, -1, zOffset * index).color(1f, 1f, 1f, alpha).uv(0.0f + 1.0f, 0.0f       ).uv2(packedLight).endVertex();
-
-			ms.popPose();
+			poseStack.popPose();
 
 			if (getName() != null) {
 				Font font = Minecraft.getInstance().font;
 				Component component = getName();
 				float f6 = (float)font.width(component);
 //				float f7 = Mth.clamp(25.0F / f6, 0.0F, 6.0F / 9.0F);
-				ms.pushPose();
-				//ms.translate((double)(0.0F + (float)getX() / 2.0F + 64.0F / 2.0F), (double)(0.0F + (float)getY() / 2.0F + 64.0F + 4.0F), (double)-0.025F);
-				ms.translate(0, 6.0D, -0.005F);
+				poseStack.pushPose();
+//				poseStack.translate((double)(0.0F + (float)getX() / 2.0F + 64.0F / 2.0F), (double)(0.0F + (float)getY() / 2.0F + 64.0F + 4.0F), (double)-0.025F);
+				poseStack.translate(0, 6.0D, -0.005F);
 
-				ms.scale(0.8f, 0.8f, 1.0F);
-				ms.translate(-f6 / 2f + .5f, 0, 0);
-				//ms.scale(f7, f7, 1.0F);
-				font.drawInBatch(component, 0.0F, 0.0F, -1, false, ms.last().pose(), bufferSource, false, Integer.MIN_VALUE, 15728880);
-				ms.popPose();
+				poseStack.scale(0.8f, 0.8f, 1.0F);
+				poseStack.translate(-f6 / 2f + .5f, 0, 0);
+//				poseStack.scale(f7, f7, 1.0F);
+				font.drawInBatch(component, 0.0F, 0.0F, -1, false, poseStack.last().pose(), bufferSource, false, Integer.MIN_VALUE, 15728880);
+				poseStack.popPose();
 			}
 
-			ms.popPose();
+			poseStack.popPose();
+		}
 
-			return false;
+		@Override
+		public boolean render(int index) {
+			return true;
 		}
 	}
 }

@@ -5,7 +5,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Camera;
 
@@ -17,6 +16,6 @@ public abstract class CameraMixin {
 			index = 0
 	)
 	public double modifyCameraOffset(double originalValue) {
-		return originalValue * CameraDistanceModifier.getMultiplier(AnimationTickHolder.getPartialTicks());
+		return originalValue * CameraDistanceModifier.getMultiplier();
 	}
 }
