@@ -1,6 +1,5 @@
 package com.simibubi.create.events;
 
-import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
@@ -15,27 +14,20 @@ import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
 import com.simibubi.create.content.logistics.trains.entity.CarriageEntityHandler;
 import com.simibubi.create.foundation.ModFilePackResources;
 import com.simibubi.create.foundation.command.AllCommands;
-import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -52,7 +44,6 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.event.level.BlockEvent.FluidPlaceBlockEvent;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -91,29 +82,6 @@ public class CommonEvents {
 	public static void playerLoggedOut(PlayerLoggedOutEvent event) {
 		Player player = event.getEntity();
 		Create.RAILWAYS.playerLogout(player);
-	}
-
-	@SubscribeEvent
-	public static void whenFluidsMeet(FluidPlaceBlockEvent event) {
-		BlockState blockState = event.getOriginalState();
-		FluidState fluidState = blockState.getFluidState();
-		BlockPos pos = event.getPos();
-		LevelAccessor world = event.getLevel();
-
-		if (fluidState.isSource() && FluidHelper.isLava(fluidState.getType()))
-			return;
-
-		for (Direction direction : Iterate.directions) {
-			FluidState metFluidState =
-				fluidState.isSource() ? fluidState : world.getFluidState(pos.relative(direction));
-			if (!metFluidState.is(FluidTags.WATER))
-				continue;
-			BlockState lavaInteraction = AllFluids.getLavaInteraction(metFluidState);
-			if (lavaInteraction == null)
-				continue;
-			event.setNewState(lavaInteraction);
-			break;
-		}
 	}
 
 	@SubscribeEvent

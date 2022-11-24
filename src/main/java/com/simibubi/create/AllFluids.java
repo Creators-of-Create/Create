@@ -16,10 +16,14 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.fluids.FluidInteractionRegistry;
+import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -67,6 +71,34 @@ public class AllFluids {
 	// Load this class
 
 	public static void register() {}
+
+	public static void registerFluidInteractions() {
+		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
+				HONEY.get().getFluidType(),
+				fluidState -> {
+					if (fluidState.isSource()) {
+						return Blocks.OBSIDIAN.defaultBlockState();
+					} else {
+						return AllPaletteStoneTypes.LIMESTONE.getBaseBlock()
+								.get()
+								.defaultBlockState();
+					}
+				}
+		));
+
+		FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
+				CHOCOLATE.get().getFluidType(),
+				fluidState -> {
+					if (fluidState.isSource()) {
+						return Blocks.OBSIDIAN.defaultBlockState();
+					} else {
+						return AllPaletteStoneTypes.SCORIA.getBaseBlock()
+								.get()
+								.defaultBlockState();
+					}
+				}
+		));
+	}
 
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {

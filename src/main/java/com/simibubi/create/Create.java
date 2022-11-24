@@ -44,7 +44,6 @@ import com.simibubi.create.foundation.worldgen.BuiltinRegistration;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
@@ -151,6 +150,7 @@ public class Create {
 			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
+			AllFluids.registerFluidInteractions();
 		});
 	}
 
