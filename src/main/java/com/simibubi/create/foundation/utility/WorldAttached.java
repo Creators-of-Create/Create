@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.utility;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -22,7 +22,9 @@ public class WorldAttached<T> {
 
 	public WorldAttached(Function<LevelAccessor, T> factory) {
 		this.factory = factory;
-		attached = new HashMap<>();
+		// Weak key hashmaps prevent worlds not existing anywhere else from leaking memory.
+		// This is only a fallback in the event that unload events fail to fire for any reason.
+		attached = new WeakHashMap<>();
 		allMaps.add(new WeakReference<>(attached));
 	}
 
