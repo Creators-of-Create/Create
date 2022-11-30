@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -44,6 +45,18 @@ public class ComputerBehaviour extends TileEntityBehaviour {
 		if (peripheral != null) {
 			peripheral.invalidate();
 		}
+	}
+
+	@Override
+	public void read(CompoundTag nbt, boolean clientPacket) {
+		hasAttachedComputer = nbt.getBoolean("HasAttachedComputer");
+		super.read(nbt, clientPacket);
+	}
+
+	@Override
+	public void write(CompoundTag nbt, boolean clientPacket) {
+		nbt.putBoolean("HasAttachedComputer", hasAttachedComputer);
+		super.write(nbt, clientPacket);
 	}
 
 	public void setHasAttachedComputer(boolean hasAttachedComputer) {
