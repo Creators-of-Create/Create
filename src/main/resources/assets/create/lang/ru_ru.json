@@ -1390,18 +1390,18 @@
 	"create.crafting_blueprint.secondary_display_slot": "Дополнительная отображаемая ячейка",
 	"create.crafting_blueprint.optional": "Опционально",
 
-	"create.potato_cannon.ammo.attack_damage": "%1$s урона от попадания",
-	"create.potato_cannon.ammo.reload_ticks": "%1$s тиков перезарядки",
-	"create.potato_cannon.ammo.knockback": "%1$s силы отбрасывания",
+	"create.potato_cannon.ammo.attack_damage": "%1$s Урон от попадания",
+	"create.potato_cannon.ammo.reload_ticks": "%1$s Тиков перезарядки",
+	"create.potato_cannon.ammo.knockback": "%1$s Сила отбрасывания",
 
 	"create.hint.hose_pulley.title": "Бесконечное снабжение",
-	"create.hint.hose_pulley": "Целевой водный резервуар считается бесконечным.",
+	"create.hint.hose_pulley": "Целевой жидкостный резервуар считается бесконечным.",
 	"create.hint.mechanical_arm_no_targets.title": "Нет целей",
-	"create.hint.mechanical_arm_no_targets": "Кажется, эта _механическая рука_ не имеет никаких целей. Выберите _ремни_, _депо_, _воронки_, или другие блоки, с помощью _правого клика_, удерживая _механическую руку_.",
+	"create.hint.mechanical_arm_no_targets": "Кажется, эта _механическая рука_ не имеет никаких целей. Выберите _ремни_, _депо_, _воронки_, или другие блоки, с помощью _ПКМ_, держа _механическую руку_.",
 	"create.hint.empty_bearing.title": "Обновить подшипник",
 	"create.hint.empty_bearing": "Кликните _ПКМ_ по подшипнику _пустой рукой_, чтобы _присоединить_ к нему структуру, которую вы построили перед ним.",
 	"create.hint.full_deployer.title": "Переполнение автономного активатора",
-	"create.hint.full_deployer": "Похоже, что этот _автономный активатор_ содержит _лишние_ _предметы_, которые необходимо _извлечь_. Используйте _воронку_ или _другие способы_, чтобы освободить его от переполнения.",
+	"create.hint.full_deployer": "Похоже, что этот _автономный активатор_ содержит _лишние предметы_, которые необходимо _извлечь_. Используйте _воронку_ или _другие способы_, чтобы освободить его от переполнения.",
 
 	"create.backtank.low": "Низкое давление в баллоне!",
 	"create.backtank.depleted": "Давление в баллоне исчерпано!",
@@ -1589,10 +1589,10 @@
 	"create.train_assembly.requires_casing": "Используйте ж/д корпус для создания вагонных тележек на путях",
 
 	"create.track_target.set": "Пути выбраны",
-	"create.track_target.success": "Успешно привязана к выбранным путям",
+	"create.track_target.success": "Компонент привязан к выбранным путям",
 	"create.track_target.clear": "Выбор путей отменён",
-	"create.track_target.missing": "Сначала выберите пути, нажав ПКМ по ним",
-	"create.track_target.too_far": "Установите станцию ближе к путям...",
+	"create.track_target.missing": "Сначала выберите пути, кликнув ПКМ по ним",
+	"create.track_target.too_far": "Установите компонент ближе к путям...",
 	"create.track_target.no_junctions": "Невозможно установить маркер станции на перекрёстке",
 	"create.track_target.occupied": "Выбранные пути заняты",
 	"create.track_target.invalid": "Невозможно выбрать эти пути",
@@ -1636,8 +1636,8 @@
 	"create.display_link.too_far": "Целевая позиция слишком далеко...",
 	"create.display_link.invalid": "Передатчик не имеет выбранной цели, привяжите его и попробуйте ещё раз",
 	"create.display_link.title": "Передатчик информации",
-	"create.display_link.no_source": "Не источник информации",
-	"create.display_link.no_target": "Не цель для отображения",
+	"create.display_link.no_source": "Нет информации",
+	"create.display_link.no_target": "Нельзя визуализировать",
 	"create.display_link.reading_from": "Считывать из:",
 	"create.display_link.writing_to": "Записывать в:",
 	"create.display_link.attached_side": "Блок, к которому прикреплён",
@@ -2023,7 +2023,7 @@
 	"block.create.placard.tooltip.behaviour2": "_Убирает_ текущий _предмет_ из рамки.",
 
 	"block.create.flywheel.tooltip": "МАХОВИК",
-	"block.create.flywheel.tooltip.summary": "_Украсьте_ свои _штуковины_ этим внушительным латунным колесом.",
+	"lock.create.flywheel.tooltip.summary": "_Украсьте_ свои _штуковины_ этим внушительным латунным колесом.",
 	"block.create.flywheel.tooltip.condition1": "При вращении",
 	"block.create.flywheel.tooltip.behaviour1": "Начинает вращаться. Удивительно!",
 
@@ -2040,9 +2040,9 @@
 	"item.create.crafting_blueprint.behaviour2": "_Применяет заданный рецепт_ с подходящими ингредиентами, из вашего _инвентаря_. Зажмите _Shift_, чтобы создать до _стака_ предметов.",
 
 	"item.create.minecart_coupling.tooltip": "СОЕДИНИТЕЛЬ ВАГОНЕТОК",
-	"item.create.minecart_coupling.tooltip.summary": "_Соединяет_ ваши _вагонетки_ или _вагонеточные штуковины_ вместе, чтобы создать великолепный мини-поезд.",
+	"item.create.minecart_coupling.tooltip.summary": "_Сцепляет_ ваши _вагонетки_ или _Вагонеточные штуковины_ вместе, чтобы создать великолепный мини-поезд.",
 	"item.create.minecart_coupling.tooltip.condition1": "ПКМ по вагонеткам",
-	"item.create.minecart_coupling.tooltip.behaviour1": "_Соединяет_ две вагонетки вместе, пытаясь держать их на _определённой дистанции_ при движении.",
+	"item.create.minecart_coupling.tooltip.behaviour1": "_Сцепляет_ две вагонетки вместе, пытаясь держать их на _определённой дистанции_ при движении.",
 
 	"item.create.experience_nugget.tooltip": "КУСОЧЕК ОПЫТА",
 	"item.create.experience_nugget.tooltip.summary": "_Дзинь!_ Частичка _вдохновения_ от ваших фантастических изобретений.",
@@ -2131,13 +2131,13 @@
 	"create.ponder.andesite_tunnel.text_3": "...он будет отделять ровно один предмет из любых проходящих мимо стаков",
 	"create.ponder.andesite_tunnel.text_4": "Остаток продолжит свой путь",
 
-	"create.ponder.auto_schedule.header": "Автоматической выдачей Расписаний на Железнодорожных станциях",
+	"create.ponder.auto_schedule.header": "Автоматической назначения Расписаний на Железнодорожных станциях",
 	"create.ponder.auto_schedule.text_1": "Расписания могут использоваться для предоставления машинистам пункта назначения",
 	"create.ponder.auto_schedule.text_2": "Компараторы будут получать редстоун-сигнал всегда, когда поезд прибыл на Станцию",
 	"create.ponder.auto_schedule.text_3": "Имейте в виду, что к Станции можно подойти только с указанного направления",
 	"create.ponder.auto_schedule.text_4": "Станции также можно использовать для автоматического назначения новых Расписаний",
 	"create.ponder.auto_schedule.text_5": "Расписание, положенное на Станцию, будет автоматически скопировано для машиниста поезда",
-	"create.ponder.auto_schedule.text_6": "В отличии от ручной выдачи, машинисты не заберут его с собой",
+	"create.ponder.auto_schedule.text_6": "В отличии от ручного назначения, машинисты не заберут его с собой",
 
 	"create.ponder.basin.header": "Обработкой предметов в Чашах",
 	"create.ponder.basin.text_1": "Чаша может хранить предметы и жидкости для обработки",
@@ -2214,7 +2214,7 @@
 	"create.ponder.brass_tunnel_modes.text_8": "«Предпочтительно ближайший» приоритизирует ближайшие выходы от места подачи предметов",
 	"create.ponder.brass_tunnel_modes.text_9": "«Случайно» будет отдавать целые стаки случайно выбранным выходам",
 
-	"create.ponder.cart_assembler.header": "Движением структур при помощи Сборщиков вагонеток",
+	"create.ponder.cart_assembler.header": "Перемещением структур при помощи Сборщиков вагонеток",
 	"create.ponder.cart_assembler.text_1": "Активированные Сборщики вагонеток устанавливают прикреплённые сверху структуры к проезжающим через них вагонетки",
 	"create.ponder.cart_assembler.text_2": "Без редстоун-сигнала они разбирают штуковины обратно в блоки",
 	"create.ponder.cart_assembler.text_3": "Использование Гаечного ключа на вагонетке позволит вам унести вагонеточную штуковину куда-то ещё",
@@ -2353,7 +2353,7 @@
 	"create.ponder.display_board.text_3": "Текст может отображаться с помощью бирок...",
 	"create.ponder.display_board.text_4": "...или с помощью Передатчика информации",
 	"create.ponder.display_board.text_5": "Красители можно наносить на отдельные строки Табло",
-	"create.ponder.display_board.text_6": "Цвет строки можно убрать, нажав на них пустой рукой",
+	"create.ponder.display_board.text_6": "Цвет строки можно убрать, кликнув на них пустой рукой",
 
 	"create.ponder.display_link.header": "Настройкой Передатчиков информации",
 	"create.ponder.display_link.text_1": "Передатчик информации может использоваться для визуализации динамической информации",
@@ -2952,7 +2952,7 @@
 	"create.ponder.train_signal_placement.header": "Размещением Железнодорожных светофоров",
 	"create.ponder.train_signal_placement.text_1": "Выберите Железнодорожный путь, затем установите Светофор поблизости",
 	"create.ponder.train_signal_placement.text_2": "Светофоры регулируют движение поездов, которые управляются не игроками",
-	"create.ponder.train_signal_placement.text_3": "Поезда следующие по расписанию никогда не будут пересекать Светофоры в противоположном направлении...",
+	"create.ponder.train_signal_placement.text_3": "Поезда следующие по Расписанию никогда не будут пересекать Светофоры в противоположном направлении...",
 	"create.ponder.train_signal_placement.text_4": "...если не был добавлен второй Светофор, направленный в противоположную сторону",
 	"create.ponder.train_signal_placement.text_5": "К Светофорам можно прикрепить Газоразрядный индикатор, чтобы сделать их сигнальные огни более заметными",
 
