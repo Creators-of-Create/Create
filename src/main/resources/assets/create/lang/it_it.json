@@ -1,5 +1,5 @@
 {
-    "_": "->------------------------]  Game Elements  [------------------------<-",
+	"_": "->------------------------]  Game Elements  [------------------------<-",
 
 	"block.create.acacia_window": "Finestra di acacia",
 	"block.create.acacia_window_pane": "Pannello di finestra di acacia",
@@ -1483,6 +1483,7 @@
 	"create.schedule.condition.threshold.equal": "esattamente",
 	"create.schedule.condition.threshold.x_units_of_item": "%1$s %2$s di %3$s",
 	"create.schedule.condition.threshold.matching_content": "Contenuto corrispondente",
+	"create.schedule.condition.threshold.anything": "qualsiasi cosa",
 	"create.schedule.condition.threshold.item_measure": "Misura",
 	"create.schedule.condition.threshold.items": "Oggetti",
 	"create.schedule.condition.threshold.stacks": "Stack",
@@ -1490,6 +1491,7 @@
 	"create.schedule.condition.threshold.status": "Carico: %1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "Oggetto di riferimento",
 	"create.schedule.condition.threshold.place_item_2": "È permesso usare Filtri",
+	"create.schedule.condition.threshold.place_item_3": "Lascia vuoto per confrontare qualsiasi cosa",
 	"create.schedule.condition.fluid_threshold": "Carico di fluidi",
 	"create.schedule.condition.item_threshold": "Carico di oggetti",
 	"create.schedule.condition.redstone_link": "Connessione redstone",
