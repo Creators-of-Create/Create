@@ -13,6 +13,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 
 public class StationUnloadedCondition extends ScheduleWaitCondition {
 	@Override
@@ -25,9 +28,15 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 		GlobalStation currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
-		if (level instanceof ServerLevel serverLevel) 
-			return !serverLevel.isPositionEntityTicking(currentStation.getTilePos());
-		return false;
+		ResourceKey<Level> stationDim = currentStation.getTileDimension();
+		MinecraftServer server = level.getServer();
+		if (server == null)
+			return false;
+		ServerLevel stationLevel = server.getLevel(stationDim);
+		if (stationLevel == null) {
+			return false;
+		}
+		return !stationLevel.isPositionEntityTicking(currentStation.getTilePos());
 	}
 
 	@Override
