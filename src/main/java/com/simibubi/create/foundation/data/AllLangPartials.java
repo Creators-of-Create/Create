@@ -9,7 +9,9 @@ import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
-public enum AllLangPartials {
+import java.util.List;
+
+public enum AllLangPartials implements ILangPartial {
 
 	ADVANCEMENTS("Advancements", AllAdvancements::provideLangEntries),
 	INTERFACE("UI & Messages"),
@@ -24,7 +26,7 @@ public enum AllLangPartials {
 
 	private AllLangPartials(String display) {
 		this.display = display;
-		this.provider = this::fromResource;
+		this.provider = getDefault();
 	}
 
 	private AllLangPartials(String display, Supplier<JsonElement> customProvider) {
@@ -32,21 +34,19 @@ public enum AllLangPartials {
 		this.provider = customProvider;
 	}
 
+	@Override
 	public String getDisplay() {
 		return display;
 	}
 
-	public JsonElement provide() {
-		return provider.get();
+	@Override
+	public String getFileName() {
+		return Lang.asId(name());
 	}
 
-	private JsonElement fromResource() {
-		String fileName = Lang.asId(name());
-		String filepath = "assets/" + Create.ID + "/lang/default/" + fileName + ".json";
-		JsonElement element = FilesHelper.loadJsonResource(filepath);
-		if (element == null)
-			throw new IllegalStateException(String.format("Could not find default lang file: %s", filepath));
-		return element;
+	@Override
+	public JsonElement provide() {
+		return provider.get();
 	}
 
 }
