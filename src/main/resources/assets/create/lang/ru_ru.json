@@ -2023,7 +2023,7 @@
 	"block.create.placard.tooltip.behaviour2": "_Убирает_ текущий _предмет_ из рамки.",
 
 	"block.create.flywheel.tooltip": "МАХОВИК",
-	"lock.create.flywheel.tooltip.summary": "_Украсьте_ свои _штуковины_ этим внушительным латунным колесом.",
+	"block.create.flywheel.tooltip.summary": "_Украсьте_ свои _штуковины_ этим внушительным латунным колесом.",
 	"block.create.flywheel.tooltip.condition1": "При вращении",
 	"block.create.flywheel.tooltip.behaviour1": "Начинает вращаться. Удивительно!",
 
