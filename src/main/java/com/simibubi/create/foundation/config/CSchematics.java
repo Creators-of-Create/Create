@@ -11,7 +11,6 @@ public class CSchematics extends ConfigBase {
 
 	public final ConfigGroup schematicannon = group(0, "schematicannon", "Schematicannon");
 	public final ConfigInt schematicannonDelay = i(10, 1, "schematicannonDelay", Comments.delay);
-	public final ConfigInt schematicannonSkips = i(10, 1, "schematicannonSkips", Comments.skips);
 	public final ConfigFloat schematicannonGunpowderWorth =
 		f(20, 0, 100, "schematicannonGunpowderWorth", Comments.gunpowderWorth);
 	public final ConfigFloat schematicannonFuelUsage = f(0.05f, 0, 100, "schematicannonFuelUsage", Comments.fuelUsage);
@@ -31,7 +30,6 @@ public class CSchematics extends ConfigBase {
 		static String idleTimeout =
 			"Amount of game ticks without new packets arriving until an active schematic upload process is discarded.";
 		static String delay = "Amount of game ticks between shots of the cannon. Higher => Slower";
-		static String skips = "Amount of block positions per tick scanned by a running cannon. Higher => Faster";
 		static String gunpowderWorth = "% of Schematicannon's Fuel filled by 1 Gunpowder.";
 		static String fuelUsage = "% of Schematicannon's Fuel used for each fired block.";
 		static String creativePrintIncludesAir =
