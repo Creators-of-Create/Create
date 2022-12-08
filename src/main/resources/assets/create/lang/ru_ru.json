@@ -715,7 +715,7 @@
 	"advancement.create.windmill_maxed": "Ветер крепчает",
 	"advancement.create.windmill_maxed.desc": "Соберите Ветряную мельницу максимальной силы",
 	"advancement.create.ejector_maxed": "Чемпион катапульты",
-	"advancement.create.ejector_maxed.desc": "Отлетите более чем на 30 блоков с помощью Взвешенной катапульты",
+	"advancement.create.ejector_maxed.desc": "Отлетите на более чем 30 блоков с помощью Взвешенной катапульты",
 	"advancement.create.pulley_maxed": "Верёвка в никуда",
 	"advancement.create.pulley_maxed.desc": "Растяните Лебёдку на глубину более 200 блоков",
 	"advancement.create.cart_pickup": "Сильные руки",
@@ -1123,9 +1123,9 @@
 	"create.schematic.position": "Позиция",
 	"create.schematic.rotation": "Вращение",
 	"create.schematic.rotation.none": "Нет",
-	"create.schematic.rotation.cw90": "По часовой стрелке 90",
-	"create.schematic.rotation.cw180": "По часовой стрелке 180",
-	"create.schematic.rotation.cw270": "По часовой стрелке 270",
+	"create.schematic.rotation.cw90": "По час. стрелке 90°",
+	"create.schematic.rotation.cw180": "По час. стрелке 180°",
+	"create.schematic.rotation.cw270": "По час. стрелке 270°",
 	"create.schematic.mirror": "Отразить",
 	"create.schematic.mirror.none": "Нет",
 	"create.schematic.mirror.frontBack": "Спереди-сзади",
@@ -1644,8 +1644,8 @@
 	"create.display_link.targeted_location": "Блок, куда присылает информацию",
 	"create.display_link.view_compatible": "Кликните, чтобы увидеть все совместимые блоки",
 	"create.display_link.information_type": "Тип информации",
-	"create.display_link.display_on": "Записывать информацию в:",
-	"create.display_link.display_on_multiline": "Начать записывать в:",
+	"create.display_link.display_on": "Местоположение визуализации",
+	"create.display_link.display_on_multiline": "Местоположение визуализации",
 
 	"create.display_source.label": "Добавочная надпись",
 	"create.display_source.combine_item_names": "Названия предметов",
@@ -1761,7 +1761,7 @@
 	"create.subtitle.schematicannon_finish": "Схематичная пушка закончила работу",
 	"create.subtitle.crafter_craft": "Крафтер создал предмет",
 	"create.subtitle.wrench_remove": "Разобран компонент",
-	"create.subtitle.train3": "Приглушенный грохот колёс",
+	"create.subtitle.train3": "Приглушённый грохот колёс",
 	"create.subtitle.whistle": "Свист",
 	"create.subtitle.cogs": "Шестерни грохочут",
 	"create.subtitle.slime_added": "Намазывание слизи",
@@ -2131,7 +2131,7 @@
 	"create.ponder.andesite_tunnel.text_3": "...он будет отделять ровно один предмет из любых проходящих мимо стаков",
 	"create.ponder.andesite_tunnel.text_4": "Остаток продолжит свой путь",
 
-	"create.ponder.auto_schedule.header": "Автоматической назначения Расписаний на Железнодорожных станциях",
+	"create.ponder.auto_schedule.header": "Автоматическим назначением Расписаний на Железнодорожных станциях",
 	"create.ponder.auto_schedule.text_1": "Расписания могут использоваться для предоставления машинистам пункта назначения",
 	"create.ponder.auto_schedule.text_2": "Компараторы будут получать редстоун-сигнал всегда, когда поезд прибыл на Станцию",
 	"create.ponder.auto_schedule.text_3": "Имейте в виду, что к Станции можно подойти только с указанного направления",
@@ -2159,8 +2159,8 @@
 	"create.ponder.belt_casing.text_2": "Используйте Гаечный ключ, чтобы убрать обрамление",
 
 	"create.ponder.belt_connector.header": "Использованием Механических ремней",
-	"create.ponder.belt_connector.text_1": "Кликнув ПКМ по двум Валам Ремнём, соединит их вместе в конвейер",
-	"create.ponder.belt_connector.text_2": "Ошибочные выделения могут быть отменены ПКМ крадучись",
+	"create.ponder.belt_connector.text_1": "Кликнув ПКМ по двум Валам Механическим ремнём, вы соедините их вместе и создадите конвейер",
+	"create.ponder.belt_connector.text_2": "Ошибочный выбор может быть отменён кликнув ПКМ крадучись",
 	"create.ponder.belt_connector.text_3": "Дополнительные Валы могут быть добавлены в любую часть конвейера",
 	"create.ponder.belt_connector.text_4": "Валы, соединённые Ремнями, будут вращаться с той же скоростью и направлением",
 	"create.ponder.belt_connector.text_5": "Добавленные Валы могут быть убраны Гаечным ключом",
@@ -2188,7 +2188,7 @@
 	"create.ponder.brass_funnel.text_1": "Андезитовая Воронка может извлекать только один предмет за раз",
 	"create.ponder.brass_funnel.text_2": "Латунная Воронка может извлекать их до целого стака",
 	"create.ponder.brass_funnel.text_3": "Прокрутка на слоте фильтра позволяет точно регулировать размер извлекаемого стака",
-	"create.ponder.brass_funnel.text_4": "Использование предмет на слоте фильтра, ограничит Воронку до передачи только совпадающих предметов",
+	"create.ponder.brass_funnel.text_4": "Использование предмета на слоте фильтра, ограничит Воронку до передачи только совпадающих предметов",
 
 	"create.ponder.brass_tunnel.header": "Использованием Латунных туннелей",
 	"create.ponder.brass_tunnel.text_1": "Латунные туннели могут быть использованы, чтобы накрывать конвейеры",
@@ -2274,8 +2274,8 @@
 
 	"create.ponder.cog_speedup.header": "Переключением передач Шестернями",
 	"create.ponder.cog_speedup.text_1": "Большие и Маленькие шестерни могут соединяться по диагонали",
-	"create.ponder.cog_speedup.text_2": "Кинетическая энергия, переходя с Больших на Маленькие шестерни, удвоит свою скорость",
-	"create.ponder.cog_speedup.text_3": "Переходя в обратном направлении, сократит скорость вдвое",
+	"create.ponder.cog_speedup.text_2": "Кинетическая энергия, переходя с Большой шестерни на маленькую — удвоит свою скорость",
+	"create.ponder.cog_speedup.text_3": "Переходя в обратном направлении — сократит скорость вдвое",
 
 	"create.ponder.cogwheel.header": "Передачей силы вращения Шестернями",
 	"create.ponder.cogwheel.text_1": "Шестерни передают вращение другим соседним Шестерням",
@@ -2344,7 +2344,7 @@
 	"create.ponder.depot.header": "Использованием Депо",
 	"create.ponder.depot.text_1": "Депо могут служить как «стационарный» элемент конвейера",
 	"create.ponder.depot.text_2": "Кликните ПКМ, чтобы самостоятельно положить или забрать предметы с Депо",
-	"create.ponder.depot.text_3": "Также как и конвейер, оно может предоставлять предметы для обработки",
+	"create.ponder.depot.text_3": "Также как и конвейер, Депо может предоставлять предметы для обработки",
 	"create.ponder.depot.text_4": "А также поставлять предметы Механическим рукам",
 
 	"create.ponder.display_board.header": "Использованием Механических табло",
@@ -2379,7 +2379,7 @@
 	"create.ponder.empty_blaze_burner.text_6": "Однако, они не будут подходить для промышленного нагрева",
 
 	"create.ponder.encased_fluid_pipe.header": "Обрамлением Жидкостных труб",
-	"create.ponder.encased_fluid_pipe.text_1": "Медный корпус можно использовать для украшения Труб",
+	"create.ponder.encased_fluid_pipe.text_1": "Медный корпус можно использовать для обрамления Труб",
 	"create.ponder.encased_fluid_pipe.text_2": "Помимо того, что они будут скрыты в Корпусе, обрамлённые Трубы блокируются в текущем состоянии",
 	"create.ponder.encased_fluid_pipe.text_3": "Также они больше не будут реагировать на добавление или удаление каких-либо соседних блоков",
 
@@ -2394,7 +2394,7 @@
 	"create.ponder.fan_processing.text_4": "Вместо этого, для них должна быть использована установка для копчения дымом от огня",
 	"create.ponder.fan_processing.text_5": "Поток, проходящий через воду, создаёт промывающую установку",
 	"create.ponder.fan_processing.text_6": "Несколько новых вариантов обработки делаются с её помощью",
-	"create.ponder.fan_processing.text_7": "Скорость вентилятора не влияет на скорость обработки, а только на дальность установки",
+	"create.ponder.fan_processing.text_7": "Скорость Вентилятора не влияет на скорость обработки, а только на дальность установки",
 	"create.ponder.fan_processing.text_8": "Обработка Вентиляторами может быть применена к предметам на конвейерах или Депо",
 
 	"create.ponder.fluid_pipe_flow.header": "Перемещением жидкостей при помощи Жидкостных труб",
