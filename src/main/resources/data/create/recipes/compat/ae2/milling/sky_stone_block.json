@@ -1,10 +1,8 @@
 {
 	"conditions": [
 		{
-			"condition": "fabric:all_mods_loaded",
-      "values": [
-        "ae2"
-      ]
+			"condition": "forge:mod_loaded",
+      "modid": "ae2"
 		}
 	],
 	"type": "create:milling",
