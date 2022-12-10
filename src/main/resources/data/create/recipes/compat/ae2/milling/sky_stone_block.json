@@ -1,7 +1,7 @@
 {
 	"conditions": [
 		{
-			"condition": "forge:mod_loaded",
+			"type": "forge:mod_loaded",
       "modid": "ae2"
 		}
 	],
