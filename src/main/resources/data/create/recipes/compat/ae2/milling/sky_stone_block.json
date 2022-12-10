@@ -1,8 +1,10 @@
 {
-	"conditions": [
+	"fabric:load_conditions": [
 		{
-			"type": "forge:mod_loaded",
-			"modid": "ae2"
+			"condition": "fabric:all_mods_loaded",
+      "values": [
+        "ae2"
+      ]
 		}
 	],
 	"type": "create:milling",
@@ -10,7 +12,7 @@
     	{
     		"item": "ae2:sky_stone_block"
     	}
-    ], 
+    ],
 	"results": [
 		{
 			"item": "ae2:sky_dust",

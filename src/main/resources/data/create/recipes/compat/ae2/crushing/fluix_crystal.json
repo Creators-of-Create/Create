@@ -7,17 +7,17 @@
       ]
 		}
 	],
-	"type": "create:milling",
+    "type": "create:crushing",
     "ingredients": [
     	{
-    		"item": "ae2:certus_quartz_crystal"
+    		"item": "ae2:fluix_crystal"
     	}
     ],
 	"results": [
 		{
-			"item": "ae2:certus_quartz_dust",
-			"count": 1
+			"item": "ae2:fluix_dust",
+			"count": 4
 		}
 	],
-	"processingTime": 200
+	"processingTime": 300
 }

@@ -7,7 +7,7 @@
       ]
 		}
 	],
-	"type": "create:milling",
+    "type": "create:crushing",
     "ingredients": [
     	{
     		"item": "ae2:certus_quartz_crystal"
@@ -17,7 +17,12 @@
 		{
 			"item": "ae2:certus_quartz_dust",
 			"count": 1
+		},
+		{
+			"item": "ae2:certus_quartz_dust",
+			"count": 1,
+			"chance": 0.1
 		}
 	],
-	"processingTime": 200
+	"processingTime": 300
 }

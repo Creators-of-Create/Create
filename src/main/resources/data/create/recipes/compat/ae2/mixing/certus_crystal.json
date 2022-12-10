@@ -1,0 +1,32 @@
+{
+  "fabric:load_conditions": [
+
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "ae2"
+      ]
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "fluid": "minecraft:water",
+      "nbt": {},
+      "amount": 27000
+    },
+    {
+      "item": "ae2:charged_certus_quartz_crystal"
+    },
+    {
+      "item": "ae2:certus_quartz_dust"
+    }
+  ],
+  "results": [
+    {
+      "item": "ae2:certus_quartz_crystal",
+      "count": 2
+    }
+  ],
+  "heatRequirement": "none"
+}
