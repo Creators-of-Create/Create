@@ -11,7 +11,7 @@
     {
       "fluid": "minecraft:water",
       "nbt": {},
-      "amount": 27000
+      "amount": 250
     },
     {
       "item": "ae2:charged_certus_quartz_crystal"
