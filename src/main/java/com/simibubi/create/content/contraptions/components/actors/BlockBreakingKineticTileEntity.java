@@ -73,10 +73,10 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void setRemoved() {
+	public void invalidate() {
+		super.invalidate();
 		if (!level.isClientSide && destroyProgress != 0)
 			level.destroyBlockProgress(breakerId, breakingPos, -1);
-		super.setRemoved();
 	}
 
 	@Override

@@ -8,8 +8,6 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.AssemblyOperatorUseContext;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -61,20 +59,9 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
-			withTileEntityDo(worldIn, pos, te -> {
-				if (te.player != null && !isMoving) {
-					te.player.getInventory()
-						.dropAll();
-					te.overflowItems.forEach(itemstack -> te.player.drop(itemstack, true, false));
-					te.player.discard();
-					te.player = null;
-				}
-			});
-
-			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-			worldIn.removeBlockEntity(pos);
-		}
+		if (!isMoving && !state.is(newState.getBlock()))
+			withTileEntityDo(worldIn, pos, DeployerTileEntity::discardPlayer);
+		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override

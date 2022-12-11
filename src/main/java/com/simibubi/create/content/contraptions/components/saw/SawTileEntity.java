@@ -255,9 +255,15 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	@Override
-	public void setRemoved() {
+	public void invalidate() {
+		super.invalidate();
 		invProvider.invalidate();
-		super.setRemoved();
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		ItemHelper.dropContents(level, worldPosition, inventory);
 	}
 
 	@Override

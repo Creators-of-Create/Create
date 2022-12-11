@@ -34,6 +34,21 @@ public interface ITE<T extends BlockEntity> extends EntityBlock {
 			.orElse(InteractionResult.PASS);
 	}
 
+	/**
+	 * if the ITE is bound to a SmartTileEntity, which implements destroy(),<br>
+	 * call this method in BlockBehaviour::onRemove (replace super call)
+	 */
+	public static void onRemove(BlockState blockState, Level level, BlockPos pos, BlockState newBlockState) {
+		if (!blockState.hasBlockEntity())
+			return;
+		if (blockState.is(newBlockState.getBlock()) && newBlockState.hasBlockEntity())
+			return;
+		BlockEntity blockEntity = level.getBlockEntity(pos);
+		if (blockEntity instanceof SmartTileEntity ste)
+			ste.destroy();
+		level.removeBlockEntity(pos);
+	}
+
 	default Optional<T> getTileEntityOptional(BlockGetter world, BlockPos pos) {
 		return Optional.ofNullable(getTileEntity(world, pos));
 	}

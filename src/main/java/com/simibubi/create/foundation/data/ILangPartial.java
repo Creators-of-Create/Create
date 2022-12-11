@@ -5,8 +5,6 @@ import com.google.gson.JsonElement;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.FilesHelper;
 
-import java.util.List;
-
 public interface ILangPartial {
 
 	String getDisplay();

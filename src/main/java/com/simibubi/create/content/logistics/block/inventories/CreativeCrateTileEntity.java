@@ -36,8 +36,8 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
 		if (itemHandler != null)
 			itemHandler.invalidate();
 	}

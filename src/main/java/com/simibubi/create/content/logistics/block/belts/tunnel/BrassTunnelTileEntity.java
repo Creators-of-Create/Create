@@ -46,6 +46,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -714,9 +715,16 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	}
 
 	@Override
-	public void setRemoved() {
+	public void invalidate() {
+		super.invalidate();
 		tunnelCapability.invalidate();
-		super.setRemoved();
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		Block.popResource(level, worldPosition, stackToDistribute);
+		stackEnteredFrom = null;
 	}
 
 	@Override

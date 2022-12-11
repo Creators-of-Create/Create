@@ -234,10 +234,10 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends TileEntit
 	}
 
 	@Override
-	public void remove() {
+	public void destroy() {
+		super.destroy();
 		if (edgePoint != null && !getWorld().isClientSide)
 			edgePoint.tileRemoved(getPos(), getTargetDirection() == AxisDirection.POSITIVE);
-		super.remove();
 	}
 
 	@Override

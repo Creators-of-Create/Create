@@ -4,7 +4,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 
@@ -13,7 +12,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -74,22 +72,6 @@ public class SharedDepotBlockMethods {
 
 		behaviour.tileEntity.notifyUpdate();
 		return InteractionResult.SUCCESS;
-	}
-
-	public static void onReplaced(BlockState state, Level worldIn, BlockPos pos, BlockState newState,
-		boolean isMoving) {
-		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
-			return;
-		DepotBehaviour behaviour = get(worldIn, pos);
-		if (behaviour == null)
-			return;
-		ItemHelper.dropContents(worldIn, pos, behaviour.processingOutputBuffer);
-		for (TransportedItemStack transportedItemStack : behaviour.incoming)
-			Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), transportedItemStack.stack);
-		if (!behaviour.getHeldItemStack()
-			.isEmpty())
-			Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), behaviour.getHeldItemStack());
-		worldIn.removeBlockEntity(pos);
 	}
 
 	public static void onLanded(BlockGetter worldIn, Entity entityIn) {

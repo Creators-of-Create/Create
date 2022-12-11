@@ -134,11 +134,11 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	@Override
-	protected void setRemovedNotDueToChunkUnload() {
+	public void remove() {
 		PoweredShaftTileEntity shaft = getShaft();
 		if (shaft != null)
 			shaft.remove(worldPosition);
-		super.setRemovedNotDueToChunkUnload();
+		super.remove();
 	}
 
 	@Override

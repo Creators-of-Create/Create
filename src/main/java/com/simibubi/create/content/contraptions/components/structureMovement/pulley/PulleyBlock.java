@@ -47,18 +47,17 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 		}
 	}
 
-    @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            if (!worldIn.isClientSide) {
-                BlockState below = worldIn.getBlockState(pos.below());
-                if (below.getBlock() instanceof RopeBlockBase)
-                    worldIn.destroyBlock(pos.below(), true);
-            }
-            if (state.hasBlockEntity())
-                worldIn.removeBlockEntity(pos);
-        }
-    }
+	@Override
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		super.onRemove(state, worldIn, pos, newState, isMoving);
+		if (state.is(newState.getBlock()))
+			return;
+		if (worldIn.isClientSide)
+			return;
+		BlockState below = worldIn.getBlockState(pos.below());
+		if (below.getBlock() instanceof RopeBlockBase)
+			worldIn.destroyBlock(pos.below(), true);
+	}
 
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                   BlockHitResult hit) {

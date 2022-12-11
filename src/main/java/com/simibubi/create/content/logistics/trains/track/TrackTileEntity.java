@@ -269,15 +269,15 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
 		if (level.isClientSide)
 			removeFromCurveInteraction();
 	}
 
 	@Override
-	protected void setRemovedNotDueToChunkUnload() {
-		super.setRemovedNotDueToChunkUnload();
+	public void remove() {
+		super.remove();
 
 		for (BezierConnection connection : connections.values())
 			manageFakeTracksAlong(connection, true);

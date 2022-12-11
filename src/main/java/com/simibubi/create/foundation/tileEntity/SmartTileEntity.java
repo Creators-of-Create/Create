@@ -33,6 +33,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	private boolean firstNbtRead = true;
 	protected int lazyTickRate;
 	protected int lazyTickCounter;
+	private boolean chunkUnloaded;
 
 	// Used for simulating this TE in a client-only setting
 	private boolean virtualMode;
@@ -118,32 +119,37 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 		read(tag, false);
 	}
 
-	/*
-	 * TODO: Remove this hack once this issue is resolved:
-	 * https://github.com/MinecraftForge/MinecraftForge/issues/8302 Once the PR
-	 * linked in the issue is accepted, we should use the new method for determining
-	 * whether setRemoved was called due to a chunk unload or not, and remove this
-	 * volatile workaround
-	 */
-	private boolean unloaded;
-
 	@Override
 	public void onChunkUnloaded() {
 		super.onChunkUnloaded();
-		unloaded = true;
-	}
-
-	protected void setRemovedNotDueToChunkUnload() {
-		forEachBehaviour(TileEntityBehaviour::remove);
+		chunkUnloaded = true;
 	}
 
 	@Override
-	public void setRemoved() {
+	public final void setRemoved() {
 		super.setRemoved();
+		if (!chunkUnloaded)
+			remove();
+		invalidate();
+	}
 
-		if (!unloaded) {
-			setRemovedNotDueToChunkUnload();
-		}
+	/**
+	 * Block destroyed or Chunk unloaded. Usually invalidates capabilities
+	 */
+	public void invalidate() {
+		forEachBehaviour(TileEntityBehaviour::unload);
+	}
+
+	/**
+	 * Block destroyed or picked up by a contraption. Usually detaches kinetics
+	 */
+	public void remove() {}
+
+	/**
+	 * Block destroyed or replaced. Requires Block to call ITE::onRemove
+	 */
+	public void destroy() {
+		forEachBehaviour(TileEntityBehaviour::destroy);
 	}
 
 	@Override
@@ -186,7 +192,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	protected void removeBehaviour(BehaviourType<?> type) {
 		TileEntityBehaviour remove = behaviours.remove(type);
 		if (remove != null) {
-			remove.remove();
+			remove.unload();
 		}
 	}
 
@@ -201,6 +207,10 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 
 	public boolean isVirtual() {
 		return virtualMode;
+	}
+	
+	public boolean isChunkUnloaded() {
+		return chunkUnloaded;
 	}
 
 	@Override

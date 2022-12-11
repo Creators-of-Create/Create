@@ -126,12 +126,6 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		withTileEntityDo(worldIn, pos, EjectorTileEntity::dropFlyingItems);
-		SharedDepotBlockMethods.onReplaced(state, worldIn, pos, newState, isMoving);
-	}
-
-	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(HORIZONTAL_FACING)
 			.getClockWise()

@@ -95,7 +95,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 			}
 		}
 
-		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
+		if (state.hasBlockEntity() && !state.is(newState.getBlock())) {
 			MechanicalCrafterTileEntity crafter = CrafterHelper.getCrafter(worldIn, pos);
 			if (crafter != null) {
 				if (crafter.covered)
@@ -121,9 +121,9 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 
 				ConnectedInputHandler.toggleConnection(worldIn, pos, otherPos);
 			}
-
-			worldIn.removeBlockEntity(pos);
 		}
+		
+		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	public static Pointing pointingFromFacing(Direction pointingFace, Direction blockFacing) {

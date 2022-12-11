@@ -7,9 +7,6 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -100,16 +97,6 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return isHorizontal(state) ? face == state.getValue(FACING).getOpposite()
 				: super.hasShaftTowards(world, pos, state, face);
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
-			return;
-
-		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
-		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-      		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override

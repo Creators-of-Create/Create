@@ -3,8 +3,7 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 import java.util.List;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -61,16 +59,7 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasBlockEntity() && (state.getBlock() != newState.getBlock() || !newState.hasBlockEntity())) {
-			TileEntityBehaviour.destroy(level, pos, FilteringBehaviour.TYPE);
-			withTileEntityDo(level, pos, te -> {
-				if (!(te instanceof BrassTunnelTileEntity btte))
-					return;
-				Block.popResource(level, pos, btte.stackToDistribute);
-				btte.stackEnteredFrom = null;
-			});
-			level.removeBlockEntity(pos);
-		}
+		ITE.onRemove(state, level, pos, newState);
 	}
 
 }
