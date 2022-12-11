@@ -33,15 +33,15 @@ import net.minecraft.util.GsonHelper;
 
 public class LangMerger implements DataProvider {
 
-	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting()
+	private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
-	static final String CATEGORY_HEADER = "\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
+	private static final String CATEGORY_HEADER = "\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
 
 	private DataGenerator gen;
 	private final String modid;
 	private final String displayName;
-	private final ILangPartial[] langPartials;
+	private final LangPartial[] langPartials;
 
 	private List<Object> mergedLangData;
 	private Map<String, List<Object>> populatedLangData;
@@ -50,11 +50,7 @@ public class LangMerger implements DataProvider {
 
 	private List<String> langIgnore;
 
-	public LangMerger(DataGenerator gen) {
-		this(gen, Create.ID, "Create", AllLangPartials.values());
-	}
-
-	public <T extends ILangPartial> LangMerger(DataGenerator gen, String modid, String displayName, T[] langPartials) {
+	public <T extends LangPartial> LangMerger(DataGenerator gen, String modid, String displayName, T[] langPartials) {
 		this.gen = gen;
 		this.modid = modid;
 		this.displayName = displayName;
@@ -67,7 +63,7 @@ public class LangMerger implements DataProvider {
 		populateLangIgnore();
 	}
 
-	private void populateLangIgnore() {
+	protected void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
 		langIgnore.add("create.gui.chromatic_projector");
@@ -82,7 +78,7 @@ public class LangMerger implements DataProvider {
 
 	@Override
 	public String getName() {
-		return "Lang merger";
+		return displayName + "'s lang merger";
 	}
 
 	@Override
@@ -229,8 +225,8 @@ public class LangMerger implements DataProvider {
 	}
 
 	private void collectEntries() {
-		for (ILangPartial partial : langPartials)
-			addAll(partial.getDisplay(), partial.provide()
+		for (LangPartial partial : langPartials)
+			addAll(partial.getDisplayName(), partial.provide()
 				.getAsJsonObject());
 	}
 
@@ -247,7 +243,6 @@ public class LangMerger implements DataProvider {
 			try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
 				Create.LOGGER.info(message);
 				bufferedwriter.write(data);
-				bufferedwriter.close();
 			}
 		}
 

@@ -1,8 +1,11 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
+import java.util.stream.Stream;
+
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.IntAttached;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -14,8 +17,6 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.stream.Stream;
 
 public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource {
 
