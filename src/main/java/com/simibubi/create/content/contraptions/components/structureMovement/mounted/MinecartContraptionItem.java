@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.config.AllConfigs;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.google.common.io.ByteArrayDataOutput;
@@ -203,6 +205,9 @@ public class MinecartContraptionItem extends Item {
 	public static void wrenchCanBeUsedToPickUpMinecartContraptions(PlayerInteractEvent.EntityInteract event) {
 		Entity entity = event.getTarget();
 		Player player = event.getPlayer();
+		if (!AllConfigs.SERVER.kinetics.survivalContraptionPickup.get() && !player.isCreative()) {
+			return;
+		}
 		if (player == null || entity == null)
 			return;
 
