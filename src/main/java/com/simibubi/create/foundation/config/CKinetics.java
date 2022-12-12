@@ -106,7 +106,7 @@ public class CKinetics extends ConfigBase {
 		static String maxEjectorDistance = "Max Distance in blocks a Weighted Ejector can throw";
 		static String ejectorScanInterval =
 			"Time in ticks until the next item launched by an ejector scans blocks for potential collisions";
-		static String survivalContraptionPickup = "Allow for minecart contartaption pickup in survival mode.";
+		static String survivalContraptionPickup = "Whether minecart contraptions can be picked up in survival mode.";
 		static String spawnerMovement = "Configure how Spawner blocks can be moved by contraptions.";
 		static String amethystMovement = "Configure how Budding Amethyst can be moved by contraptions.";
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
