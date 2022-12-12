@@ -73,11 +73,16 @@ public class TagGen {
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
 			.addTag(BlockTags.BEDS)
 			.addTag(BlockTags.DOORS);
+		
+		prov.tag(AllBlockTags.MOVABLE_EMPTY_COLLIDER.tag)
+			.add(Blocks.COBWEB, Blocks.POWDER_SNOW)
+			.addTag(BlockTags.FENCE_GATES);
 
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.add(Blocks.IRON_BARS)
 			.addTag(BlockTags.CAMPFIRES)
-			.addTag(BlockTags.FENCES);
+			.addTag(BlockTags.FENCES)
+			.addTag(BlockTags.LEAVES);
 
 		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
 			.addTag(BlockTags.STONE_ORE_REPLACEABLES);

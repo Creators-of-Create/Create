@@ -6,6 +6,7 @@
     "create:sail_frame",
     "minecraft:iron_bars",
     "#minecraft:campfires",
-    "#minecraft:fences"
+    "#minecraft:fences",
+    "#minecraft:leaves"
   ]
 }

@@ -46,7 +46,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
-import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.GrindstoneBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -175,15 +174,13 @@ public class BlockMovementChecks {
 	private static boolean isMovementNecessaryFallback(BlockState state, Level world, BlockPos pos) {
 		if (isBrittle(state))
 			return true;
-		if (state.getBlock() instanceof FenceGateBlock)
-			return true;
-		if (state.getMaterial()
+		if (!state.getMaterial()
 			.isReplaceable())
-			return false;
-		if (state.getCollisionShape(world, pos)
+			return true;
+		if (!state.getCollisionShape(world, pos)
 			.isEmpty())
-			return false;
-		return true;
+			return true;
+		return AllBlockTags.MOVABLE_EMPTY_COLLIDER.matches(state);
 	}
 
 	private static boolean isMovementAllowedFallback(BlockState state, Level world, BlockPos pos) {
