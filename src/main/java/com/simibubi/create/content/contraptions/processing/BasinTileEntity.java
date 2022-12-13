@@ -18,6 +18,7 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -193,22 +194,30 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		visualizedOutputItems.clear();
 		visualizedOutputFluids.clear();
 	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		ItemHelper.dropContents(level, worldPosition, inputInventory);
+		ItemHelper.dropContents(level, worldPosition, outputInventory);
+		spoutputBuffer.forEach(is -> Block.popResource(level, worldPosition, is));
+	}
+	
+	@Override
+	public void remove() {
+		super.remove();
+		onEmptied();
+	}
 
 	public void onEmptied() {
 		getOperator().ifPresent(te -> te.basinRemoved = true);
 	}
-
+	
 	@Override
-	public void setRemoved() {
+	public void invalidate() {
+		super.invalidate();
 		itemCapability.invalidate();
 		fluidCapability.invalidate();
-		super.setRemoved();
-	}
-
-	@Override
-	protected void setRemovedNotDueToChunkUnload() {
-		onEmptied();
-		super.setRemovedNotDueToChunkUnload();
 	}
 
 	@Nonnull

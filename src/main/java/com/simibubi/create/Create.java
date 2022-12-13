@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
+import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.TagGen;
@@ -158,7 +159,7 @@ public class Create {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
 		if (event.includeClient()) {
-			gen.addProvider(true, new LangMerger(gen));
+			gen.addProvider(true, new LangMerger(gen, ID, "Create", AllLangPartials.values()));
 			gen.addProvider(true, AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {

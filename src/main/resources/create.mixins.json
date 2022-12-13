@@ -24,6 +24,7 @@
     "HeavyBootsOnPlayerMixin",
     "LevelRendererMixin",
     "MapRendererMapInstanceMixin",
+    "PlayerRendererMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",

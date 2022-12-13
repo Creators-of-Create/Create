@@ -192,7 +192,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
-			newBurnTime = ForgeHooks.getBurnTime(itemStack, null);
+			newBurnTime = (int) Math.min(ForgeHooks.getBurnTime(itemStack, null), MAX_HEAT_CAPACITY * 0.95f);
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
 			else if (AllItemTags.BLAZE_BURNER_FUEL_REGULAR.matches(itemStack)) {
@@ -296,15 +296,16 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		Vec3 c = VecHelper.getCenterOf(worldPosition);
 		Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f)
 			.multiply(1, 0, 1));
-
-		if (r.nextInt(3) == 0)
-			level.addParticle(ParticleTypes.LARGE_SMOKE, v.x, v.y, v.z, 0, 0, 0);
-		if (r.nextInt(2) != 0)
+		
+		if (r.nextInt(4) != 0)
 			return;
 
 		boolean empty = level.getBlockState(worldPosition.above())
 			.getCollisionShape(level, worldPosition.above())
 			.isEmpty();
+		
+		if (empty || r.nextInt(8) == 0)
+			level.addParticle(ParticleTypes.LARGE_SMOKE, v.x, v.y, v.z, 0, 0, 0);
 
 		double yMotion = empty ? .0625f : r.nextDouble() * .0125f;
 		Vec3 v2 = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .5f)

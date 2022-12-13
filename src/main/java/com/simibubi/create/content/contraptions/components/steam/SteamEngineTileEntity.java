@@ -134,11 +134,11 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	@Override
-	protected void setRemovedNotDueToChunkUnload() {
+	public void remove() {
 		PoweredShaftTileEntity shaft = getShaft();
 		if (shaft != null)
 			shaft.remove(worldPosition);
-		super.setRemovedNotDueToChunkUnload();
+		super.remove();
 	}
 
 	@Override
@@ -219,18 +219,16 @@ public class SteamEngineTileEntity extends SmartTileEntity implements IHaveGoggl
 
 		Direction facing = SteamEngineBlock.getFacing(getBlockState());
 
-		for (int i = 0; i < 2; i++) {
-			Vec3 offset = VecHelper.rotate(new Vec3(0, 0, 1).add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
-				.multiply(1, 1, 0)
-				.normalize()
-				.scale(.5f)), AngleHelper.verticalAngle(facing), Axis.X);
-			offset = VecHelper.rotate(offset, AngleHelper.horizontalAngle(facing), Axis.Y);
-			Vec3 v = offset.scale(.5f)
-				.add(Vec3.atCenterOf(worldPosition));
-			Vec3 m = offset.subtract(Vec3.atLowerCornerOf(facing.getNormal())
-				.scale(.75f));
-			level.addParticle(new SteamJetParticleData(1), v.x, v.y, v.z, m.x, m.y, m.z);
-		}
+		Vec3 offset = VecHelper.rotate(new Vec3(0, 0, 1).add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+			.multiply(1, 1, 0)
+			.normalize()
+			.scale(.5f)), AngleHelper.verticalAngle(facing), Axis.X);
+		offset = VecHelper.rotate(offset, AngleHelper.horizontalAngle(facing), Axis.Y);
+		Vec3 v = offset.scale(.5f)
+			.add(Vec3.atCenterOf(worldPosition));
+		Vec3 m = offset.subtract(Vec3.atLowerCornerOf(facing.getNormal())
+			.scale(.75f));
+		level.addParticle(new SteamJetParticleData(1), v.x, v.y, v.z, m.x, m.y, m.z);
 
 		prevAngle = angle;
 	}

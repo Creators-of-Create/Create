@@ -455,21 +455,14 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+		super.onRemove(state, world, pos, newState, isMoving);
+		
 		if (world.isClientSide)
 			return;
 		if (state.getBlock() == newState.getBlock())
 			return;
 		if (isMoving)
 			return;
-
-		BlockEntity te = world.getBlockEntity(pos);
-		if (te instanceof BeltTileEntity) {
-			BeltTileEntity beltTileEntity = (BeltTileEntity) te;
-			if (beltTileEntity.isController())
-				beltTileEntity.getInventory()
-					.ejectAll();
-			world.removeBlockEntity(pos);
-		}
 
 		// Destroy chain
 		for (boolean forward : Iterate.trueAndFalse) {

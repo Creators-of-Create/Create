@@ -37,6 +37,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -218,6 +219,13 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		BlockState state = getBlockState();
 		return hasLevel() && state.getOptionalValue(ArmBlock.CEILING)
 			.orElse(false);
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		if (!heldItem.isEmpty())
+			Block.popResource(level, worldPosition, heldItem);
 	}
 
 	@Nullable

@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.block.ITE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -81,19 +80,6 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 		return AllTileEntities.MECHANICAL_ARM.get();
 	}
 	
-	@Override
-	public void onRemove(BlockState p_196243_1_, Level world, BlockPos pos, BlockState p_196243_4_,
-		boolean p_196243_5_) {
-		if (p_196243_1_.hasBlockEntity()
-			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasBlockEntity())) {
-			withTileEntityDo(world, pos, te -> {
-				if (!te.heldItem.isEmpty())
-					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), te.heldItem);
-			});
-			world.removeBlockEntity(pos);
-		}
-	}
-
 	@Override
 	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player,
 		InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {

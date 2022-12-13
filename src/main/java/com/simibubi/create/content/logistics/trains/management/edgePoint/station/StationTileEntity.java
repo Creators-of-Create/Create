@@ -438,11 +438,10 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	}
 
 	@Override
-	protected void setRemovedNotDueToChunkUnload() {
+	public void remove() {
 		assemblyAreas.get(level)
 			.remove(worldPosition);
-
-		super.setRemovedNotDueToChunkUnload();
+		super.remove();
 	}
 
 	public void assemble(UUID playerUUID) {

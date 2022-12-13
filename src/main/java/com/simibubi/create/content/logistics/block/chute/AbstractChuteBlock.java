@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -132,14 +131,10 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
-		boolean differentBlock = state.getBlock() != p_196243_4_.getBlock();
-		if (state.hasBlockEntity() && (differentBlock || !p_196243_4_.hasBlockEntity())) {
-			TileEntityBehaviour.destroy(world, pos, FilteringBehaviour.TYPE);
-			withTileEntityDo(world, pos, c -> c.onRemoved(state));
-			world.removeBlockEntity(pos);
-		}
-		if (p_196243_5_ || !differentBlock)
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+		ITE.onRemove(state, world, pos, newState);
+		
+		if (isMoving || state.is(newState.getBlock()))
 			return;
 
 		updateDiagonalNeighbour(state, world, pos);

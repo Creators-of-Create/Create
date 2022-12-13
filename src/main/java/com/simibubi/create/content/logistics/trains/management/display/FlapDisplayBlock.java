@@ -308,8 +308,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 
 	@Override
 	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		if (pState.hasBlockEntity() && (!pState.is(pNewState.getBlock()) || !pNewState.hasBlockEntity()))
-			pLevel.removeBlockEntity(pPos);
+		super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
 		if (pIsMoving || pNewState.getBlock() == this)
 			return;
 		for (Direction d : Iterate.directionsInAxis(getConnectionAxis(pState))) {

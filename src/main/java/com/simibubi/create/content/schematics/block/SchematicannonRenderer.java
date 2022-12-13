@@ -132,29 +132,29 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				continue;
 
 			// Calculate position of flying block
-			Vec3 start = Vec3.atLowerCornerOf(tileEntityIn.getBlockPos()
-				.offset(.5f, 1, .5f));
-			Vec3 target = Vec3.atLowerCornerOf(launched.target)
-				.add(-.5, 0, 1);
+			Vec3 start = Vec3.atCenterOf(tileEntityIn.getBlockPos()
+				.above());
+			Vec3 target = Vec3.atCenterOf(launched.target);
 			Vec3 distance = target.subtract(start);
 
-			double targetY = target.y - start.y;
-			double throwHeight = Math.sqrt(distance.lengthSqr()) * .6f + targetY;
+			double yDifference = target.y - start.y;
+			double throwHeight = Math.sqrt(distance.lengthSqr()) * .6f + yDifference;
 			Vec3 cannonOffset = distance.add(0, throwHeight, 0)
 				.normalize()
 				.scale(2);
 			start = start.add(cannonOffset);
+			yDifference = target.y - start.y;
 
 			float progress =
 				((float) launched.totalTicks - (launched.ticksRemaining + 1 - partialTicks)) / launched.totalTicks;
-			Vec3 blockLocationXZ = new Vec3(.5, .5, .5).add(target.subtract(start)
+			Vec3 blockLocationXZ = target.subtract(start)
 				.scale(progress)
-				.multiply(1, 0, 1));
+				.multiply(1, 0, 1);
 
 			// Height is determined through a bezier curve
 			float t = progress;
-			double yOffset = 2 * (1 - t) * t * throwHeight + t * t * targetY;
-			Vec3 blockLocation = blockLocationXZ.add(0, yOffset + 1, 0)
+			double yOffset = 2 * (1 - t) * t * throwHeight + t * t * yDifference;
+			Vec3 blockLocation = blockLocationXZ.add(0.5, yOffset + 1.5, 0.5)
 				.add(cannonOffset);
 
 			// Offset to position
@@ -194,6 +194,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 
 			// Render particles for launch
 			if (launched.ticksRemaining == launched.totalTicks && tileEntityIn.firstRenderTick) {
+				start = start.subtract(.5, .5, .5);
 				tileEntityIn.firstRenderTick = false;
 				for (int i = 0; i < 10; i++) {
 					RandomSource r = tileEntityIn.getLevel()

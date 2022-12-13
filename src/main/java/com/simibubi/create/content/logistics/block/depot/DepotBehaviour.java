@@ -32,6 +32,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
@@ -199,7 +200,19 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public void remove() {
+	public void destroy() {
+		super.destroy();
+		Level level = getWorld();
+		BlockPos pos = getPos();
+		ItemHelper.dropContents(level, pos, processingOutputBuffer);
+		for (TransportedItemStack transportedItemStack : incoming)
+			Block.popResource(level, pos, transportedItemStack.stack);
+		if (!getHeldItemStack().isEmpty())
+			Block.popResource(level, pos, getHeldItemStack());
+	}
+
+	@Override
+	public void unload() {
 		if (lazyItemHandler != null)
 			lazyItemHandler.invalidate();
 	}

@@ -509,10 +509,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
 		if (lazyHandler != null)
 			lazyHandler.invalidate();
+		super.invalidate();
 	}
 
 	@Override
@@ -557,8 +557,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		return (Mth.clamp(motion, -maxItemSpeed, maxItemSpeed) + (motion <= 0 ? -gravity : 0)) / 20f;
 	}
 
-	public void onRemoved(BlockState chuteState) {
-		ChuteTileEntity targetChute = getTargetChute(chuteState);
+	@Override
+	public void destroy() {
+		super.destroy();
+		ChuteTileEntity targetChute = getTargetChute(getBlockState());
 		List<ChuteTileEntity> inputChutes = getInputChutes();
 		if (!item.isEmpty() && level != null)
 			Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), item);

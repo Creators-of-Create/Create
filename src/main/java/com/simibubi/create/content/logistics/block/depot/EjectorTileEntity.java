@@ -470,6 +470,12 @@ public class EjectorTileEntity extends KineticTileEntity {
 		return launcher.getGlobalVelocity(time, getFacing().getOpposite(), worldPosition)
 			.scale(.5f);
 	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		dropFlyingItems();
+	}
 
 	public void dropFlyingItems() {
 		for (IntAttached<ItemStack> intAttached : launchedItems) {

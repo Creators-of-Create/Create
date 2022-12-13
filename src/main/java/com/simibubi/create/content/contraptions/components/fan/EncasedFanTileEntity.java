@@ -85,6 +85,12 @@ public class EncasedFanTileEntity extends KineticTileEntity implements IAirCurre
 	}
 
 	@Override
+	public void remove() {
+		super.remove();
+		updateChute();
+	}
+	
+	@Override
 	public boolean isSourceRemoved() {
 		return remove;
 	}

@@ -174,16 +174,11 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
-	}
-
-	@Override
-	protected void setRemovedNotDueToChunkUnload() {
+	public void remove() {
 		this.remove = true;
 		if (!level.isClientSide)
 			disassemble();
-		super.setRemovedNotDueToChunkUnload();
+		super.remove();
 	}
 
 	@Override
