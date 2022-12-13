@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1308",
+	"_": "Missing Localizations: 1310",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -576,6 +576,8 @@
 	"entity.create.stationary_contraption": "Stationær mekanisme",
 	"entity.create.super_glue": "Superlim",
 
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
 	"fluid.create.potion": "Eliksir",
 	"fluid.create.tea": "Håndværkerens te",
 

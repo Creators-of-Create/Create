@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 2",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -576,6 +576,8 @@
 	"entity.create.stationary_contraption": "固定結構",
 	"entity.create.super_glue": "強力膠",
 
+	"fluid.create.chocolate": "UNLOCALIZED: Chocolate",
+	"fluid.create.honey": "UNLOCALIZED: Honey",
 	"fluid.create.potion": "藥水",
 	"fluid.create.tea": "茶",
 
