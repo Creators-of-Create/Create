@@ -255,7 +255,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected <C extends Container> boolean matchStaticFilters(Recipe<C> r) {
 		return ((r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
 				 && AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
-				.size() > 1
+				.size() >= 1
 				 && !MechanicalPressTileEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(r)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
