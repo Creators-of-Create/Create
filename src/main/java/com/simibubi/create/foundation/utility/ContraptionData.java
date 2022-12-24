@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.utility;
 
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.mixin.accessor.NbtAccounterAccessor;
 
@@ -24,7 +25,7 @@ public class ContraptionData {
 	 * {@link ContraptionData#DEFAULT_MAX} is used as the default.
 	 * XL Packets expands the size limit to ~2 GB. If the mod is loaded, we take advantage of it and use the higher limit.
 	 */
-	public static final int PICKUP_MAX = ModList.get().isLoaded("xlpackets") ? EXPANDED_MAX : DEFAULT_MAX;
+	public static final int PICKUP_MAX = Mods.XLPACKETS.isLoaded() ? EXPANDED_MAX : DEFAULT_MAX;
 
 	/**
 	 * @return true if the given NBT is too large for a contraption to be synced to clients.
