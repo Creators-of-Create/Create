@@ -15,6 +15,7 @@ import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -143,7 +144,9 @@ public class TrackPlacement {
 
 		if (pos1.equals(pos2))
 			return info.withMessage("second_point");
-		if (pos1.distSqr(pos2) > 32 * 32)
+		int maxTrackPlacementDistance = AllConfigs.SERVER.trains.maxTrackPlacementDistance.get();
+		if(!player.isCreative()) maxTrackPlacementDistance = 32;
+		if (pos1.distSqr(pos2) > maxTrackPlacementDistance * maxTrackPlacementDistance)
 			return info.withMessage("too_far")
 				.tooJumbly();
 		if (!state1.hasProperty(TrackBlock.HAS_TE))
@@ -279,10 +282,10 @@ public class TrackPlacement {
 		if (skipCurve && !Mth.equal(ascend, 0)) {
 			int hDistance = info.end1Extent;
 			if (axis1.y == 0 || !Mth.equal(absAscend + 1, dist / axis1.length())) {
-				
+
 				if (axis1.y != 0 && axis1.y == -axis2.y)
 					return info.withMessage("ascending_s_curve");
-				
+
 				info.end1Extent = 0;
 				double minHDistance = Math.max(absAscend < 4 ? absAscend * 4 : absAscend * 3, 6) / axis1.length();
 				if (hDistance < minHDistance)
@@ -443,10 +446,10 @@ public class TrackPlacement {
 			BlockItem paveItem = (BlockItem) offhandItem.getItem();
 			paveTracks(level, info, paveItem, false);
 		}
-		
+
 		if (info.curve != null && info.curve.getLength() > 29)
 			AllAdvancements.LONG_BEND.awardTo(player);
-		
+
 		return placeTracks(level, info, state1, state2, targetPos1, targetPos2, false);
 	}
 
@@ -619,7 +622,7 @@ public class TrackPlacement {
 		if (bhr.getDirection() == Direction.UP) {
 			Vec3 lookVec = player.getLookAngle();
 			int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
-			
+
 			if (!pos.equals(hintPos) || lookAngle != hintAngle) {
 				hints = Couple.create(ArrayList::new);
 				hintAngle = lookAngle;
