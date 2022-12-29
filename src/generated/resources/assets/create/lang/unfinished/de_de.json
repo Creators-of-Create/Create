@@ -2520,7 +2520,7 @@
 	"create.ponder.item_drain.text_5": "Rohrnetzwerke können nun Flüssigkeiten von dem internen Puffer des Abflusses ziehen",
 
 	"create.ponder.item_vault_sizes.header": "Dimensionen eines Gegenstandstresores",
-	"create.ponder.item_vault_sizes.text_1": "Gegenstandstresore können kombiniert werden um deren totala Kapazität zu erhöhen",
+	"create.ponder.item_vault_sizes.text_1": "Gegenstandstresore können kombiniert werden um deren totale Kapazität zu erhöhen",
 	"create.ponder.item_vault_sizes.text_2": "Ihr Standardwürfel kann bis zu 3 Blöcke breit sein...",
 	"create.ponder.item_vault_sizes.text_3": "...und bis zu 3x länger als ihr Durchschnitt sein",
 
