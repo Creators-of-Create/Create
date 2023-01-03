@@ -2,9 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"3": "create:block/brass_casing_belt",
+		"4": "create:block/belt/brass_belt_casing_sideways",
 		"5": "create:block/mechanical_arm",
-		"6": "create:block/crafter_top",
 		"7": "create:block/brass_block",
 		"particle": "create:block/crafter_top"
 	},
@@ -111,12 +110,12 @@
 			"to": [16, -10, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, -8, 8]},
 			"faces": {
-				"north": {"uv": [8, 12.5, 16, 15.5], "texture": "#3"},
-				"east": {"uv": [8, 12.5, 16, 15.5], "texture": "#3"},
-				"south": {"uv": [8, 12.5, 16, 15.5], "texture": "#3"},
-				"west": {"uv": [8, 12.5, 16, 15.5], "texture": "#3"},
+				"north": {"uv": [0, 6.5, 8, 9.5], "texture": "#4"},
+				"east": {"uv": [0, 6.5, 8, 9.5], "texture": "#4"},
+				"south": {"uv": [0, 6.5, 8, 9.5], "texture": "#4"},
+				"west": {"uv": [0, 6.5, 8, 9.5], "texture": "#4"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#7"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#6"}
+				"down": {"uv": [0, 0, 16, 16], "texture": "#7"}
 			}
 		},
 		{
@@ -300,10 +299,24 @@
 		{
 			"name": "inserter",
 			"origin": [8, 8, 8],
-			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+			"color": 0,
+			"children": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
 				{
 					"name": "cogwheel",
 					"origin": [8, 8, 8],
+					"color": 0,
 					"children": [12, 13, 14, 15, 16, 17]
 				}
 			]
