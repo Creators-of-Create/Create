@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 9",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -957,7 +957,7 @@
 	"create.generic.counter_clockwise": "Senso anti-orario",
 	"create.generic.in_quotes": "\"%1$s\"",
 	"create.generic.pitch": "Intonazione: %1$s",
-	"create.generic.notes": "F#;F;E;D#;D;C#;C;B;A#;A;G#;G",
+	"create.generic.notes": "Fa#;Fa;Mi;Re#;Re;Do#;Do;Si;La#;La;Sol#;Sol",
 
 	"create.action.scroll": "Scorri",
 	"create.action.confirm": "Conferma",
@@ -1142,24 +1142,24 @@
 	"create.schematic.tool.deploy.description.3": "[Ctrl] e scorri per cambiare la distanza.",
 	"create.schematic.tool.move.description.0": "Sposta il progetto in orizzontale.",
 	"create.schematic.tool.move.description.1": "Indica il progetto e premi [Ctrl] mentre scorri per spingerlo.",
-	"create.schematic.tool.move.description.2": "",
-	"create.schematic.tool.move.description.3": "",
+	"create.schematic.tool.move.description.2": "UNLOCALIZED: ",
+	"create.schematic.tool.move.description.3": "UNLOCALIZED: ",
 	"create.schematic.tool.movey.description.0": "Sposta il progetto verticalmente.",
 	"create.schematic.tool.movey.description.1": "[Ctrl] e scorri per spostarlo su/giù.",
-	"create.schematic.tool.movey.description.2": "",
-	"create.schematic.tool.movey.description.3": "",
+	"create.schematic.tool.movey.description.2": "UNLOCALIZED: ",
+	"create.schematic.tool.movey.description.3": "UNLOCALIZED: ",
 	"create.schematic.tool.rotate.description.0": "Ruota il progetto attorno al suo centro.",
 	"create.schematic.tool.rotate.description.1": "[Ctrl] e scorri per ruotarlo di 90 gradi.",
-	"create.schematic.tool.rotate.description.2": "",
-	"create.schematic.tool.rotate.description.3": "",
+	"create.schematic.tool.rotate.description.2": "UNLOCALIZED: ",
+	"create.schematic.tool.rotate.description.3": "UNLOCALIZED: ",
 	"create.schematic.tool.print.description.0": "Posiziona istantaneamente la struttura nel mondo.",
 	"create.schematic.tool.print.description.1": "Click destro per confermare la posizione corrente.",
 	"create.schematic.tool.print.description.2": "Questo strumento è solo per la modalità creativa.",
-	"create.schematic.tool.print.description.3": "",
+	"create.schematic.tool.print.description.3": "UNLOCALIZED: ",
 	"create.schematic.tool.flip.description.0": "Capovolge il progetto lungo la faccia selezionata.",
 	"create.schematic.tool.flip.description.1": "Indica il progetto e premi [Ctrl] mentre scorri per capovolgerla.",
-	"create.schematic.tool.flip.description.2": "",
-	"create.schematic.tool.flip.description.3": "",
+	"create.schematic.tool.flip.description.2": "UNLOCALIZED: ",
+	"create.schematic.tool.flip.description.3": "UNLOCALIZED: ",
 
 	"create.schematics.synchronizing": "Sincronizzazione...",
 	"create.schematics.uploadTooLarge": "Il progetto è troppo grande.",
@@ -1314,7 +1314,7 @@
 
 	"create.tooltip.holdForDescription": "Tieni premuto [%1$s] per un riepilogo",
 	"create.tooltip.holdForControls": "Tieni premuto [%1$s] per i comandi",
-	"create.tooltip.keyShift": "Shift",
+	"create.tooltip.keyShift": "Maiusc",
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "Velocità richiesta: %1$s",
 	"create.tooltip.speedRequirement.none": "Nessuna",
@@ -1984,12 +1984,12 @@
 
 	"item.create.refined_radiance.tooltip": "SPLENDORE RAFFINATO",
 	"item.create.refined_radiance.tooltip.summary": "Un materiale cromatico forgiato dalla _luce_ _assorbita_.",
-	"item.create.refined_radiance.tooltip.condition1": "Work In Progress",
+	"item.create.refined_radiance.tooltip.condition1": "Lavori in corso",
 	"item.create.refined_radiance.tooltip.behaviour1": "Saranno implementati utilizzi per questo materiale in versioni future.",
 
 	"item.create.shadow_steel.tooltip": "ACCIAIO OSCURO",
 	"item.create.shadow_steel.tooltip.summary": "Un materiale cromatico forgiato _nel_ _vuoto_.",
-	"item.create.shadow_steel.tooltip.condition1": "Work In Progress",
+	"item.create.shadow_steel.tooltip.condition1": "Lavori in corso",
 	"item.create.shadow_steel.tooltip.behaviour1": "Saranno implementati utilizzi per questo materiale in versioni future.",
 
 	"item.create.linked_controller.tooltip": "PULSANTIERA DI COMANDO",
