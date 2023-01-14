@@ -36,7 +36,6 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	public static final int MAX_HEAT_CAPACITY = 10000;
 	public static final int INSERTION_THRESHOLD = 500;
-	public static final int SPECIAL_INSERTION_THRESHOLD = 500;
 
 	protected FuelType activeFuel;
 	protected int remainingBurnTime;
@@ -209,7 +208,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			return false;
 
 		if (newFuel == activeFuel) {
-			if (remainingBurnTime <= (activeFuel == FuelType.NORMAL ? INSERTION_THRESHOLD : SPECIAL_INSERTION_THRESHOLD)) {
+			if (remainingBurnTime <= INSERTION_THRESHOLD) {
 				newBurnTime += remainingBurnTime;
 			} else if (forceOverflow && newFuel == FuelType.NORMAL) {
 				if (remainingBurnTime < MAX_HEAT_CAPACITY) {

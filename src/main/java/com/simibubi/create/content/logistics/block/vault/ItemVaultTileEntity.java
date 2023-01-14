@@ -71,6 +71,8 @@ public class ItemVaultTileEntity extends SmartTileEntity implements IMultiTileCo
 		if (controllerTE == null)
 			return;
 
+		level.blockEntityChanged(controllerTE.worldPosition);
+		
 		BlockPos pos = controllerTE.getBlockPos();
 		for (int y = 0; y < controllerTE.radius; y++) {
 			for (int z = 0; z < (controllerTE.axis == Axis.X ? controllerTE.radius : controllerTE.length); z++) {
