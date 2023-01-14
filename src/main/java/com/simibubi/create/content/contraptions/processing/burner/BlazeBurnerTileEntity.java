@@ -36,7 +36,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	public static final int MAX_HEAT_CAPACITY = 10000;
 	public static final int INSERTION_THRESHOLD = 500;
-	public static final int SPECIAL_INSERTION_THRESHOLD = 100;
+	public static final int SPECIAL_INSERTION_THRESHOLD = 500;
 
 	protected FuelType activeFuel;
 	protected int remainingBurnTime;
@@ -191,7 +191,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		int newBurnTime;
 
 		if (AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.matches(itemStack)) {
-			newBurnTime = 1000;
+			newBurnTime = 3200;
 			newFuel = FuelType.SPECIAL;
 		} else {
 			newBurnTime = ForgeHooks.getBurnTime(itemStack, null);
