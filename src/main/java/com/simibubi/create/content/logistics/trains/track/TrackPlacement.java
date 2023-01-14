@@ -15,6 +15,7 @@ import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -101,6 +102,7 @@ public class TrackPlacement {
 		ItemStack stack, boolean girder, boolean maximiseTurn) {
 		Vec3 lookVec = player.getLookAngle();
 		int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
+		int maxLength = AllConfigs.SERVER.trains.maxTrackPlacementLength.get();
 
 		if (level.isClientSide && cached != null && pos2.equals(hoveringPos) && stack.equals(lastItem)
 			&& hoveringMaxed == maximiseTurn && lookAngle == hoveringAngle)
@@ -143,7 +145,7 @@ public class TrackPlacement {
 
 		if (pos1.equals(pos2))
 			return info.withMessage("second_point");
-		if (pos1.distSqr(pos2) > 32 * 32)
+		if (pos1.distSqr(pos2) > maxLength * maxLength)
 			return info.withMessage("too_far")
 				.tooJumbly();
 		if (!state1.hasProperty(TrackBlock.HAS_TE))

@@ -165,7 +165,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	public void lerpTo(double x, double y, double z, float yw, float pt, int inc, boolean t) {}
 
 	@Override
-	protected void handleStallInformation(float x, float y, float z, float angle) {
+	protected void handleStallInformation(double x, double y, double z, float angle) {
 		setPosRaw(x, y, z);
 		clientOffsetDiff = 0;
 	}

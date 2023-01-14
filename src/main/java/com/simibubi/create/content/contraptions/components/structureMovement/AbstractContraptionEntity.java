@@ -745,7 +745,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	protected abstract float getStalledAngle();
 
-	protected abstract void handleStallInformation(float x, float y, float z, float angle);
+	protected abstract void handleStallInformation(double x, double y, double z, float angle);
 
 	@OnlyIn(Dist.CLIENT)
 	protected void handleBlockChange(BlockPos localPos, BlockState newState) {

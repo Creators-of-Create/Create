@@ -387,7 +387,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	@Override
-	protected void handleStallInformation(float x, float y, float z, float angle) {}
+	protected void handleStallInformation(double x, double y, double z, float angle) {}
 
 	Vec3 derailParticleOffset = VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, 1.5f)
 		.multiply(1, .25f, 1);
