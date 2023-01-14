@@ -26,16 +26,16 @@ public class LimbSwingUpdatePacket extends SimplePacketBase {
 
 	public LimbSwingUpdatePacket(FriendlyByteBuf buffer) {
 		entityId = buffer.readInt();
-		position = new Vec3(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+		position = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 		limbSwing = buffer.readFloat();
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);
-		buffer.writeFloat((float) position.x);
-		buffer.writeFloat((float) position.y);
-		buffer.writeFloat((float) position.z);
+		buffer.writeDouble(position.x);
+		buffer.writeDouble(position.y);
+		buffer.writeDouble(position.z);
 		buffer.writeFloat(limbSwing);
 	}
 
