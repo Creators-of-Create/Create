@@ -14,7 +14,8 @@ public enum Mods {
 	DYNAMICTREES,
 	TCONSTRUCT,
 	CURIOS,
-	STORAGEDRAWERS;
+	STORAGEDRAWERS,
+	XLPACKETS;
 
 	/**
 	 * @return a boolean of whether the mod is loaded or not based on mod id

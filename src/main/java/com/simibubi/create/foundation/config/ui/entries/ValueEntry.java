@@ -68,6 +68,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		// add comment to tooltip
 		labelTooltip.addAll(commentLines.stream()
 				.filter(Predicates.not(s -> s.startsWith("Range")))
+				.filter(s -> !s.equals("."))
 				.map(Components::literal)
 				.flatMap(stc -> TooltipHelper.cutTextComponent(stc, ChatFormatting.GRAY, ChatFormatting.GRAY)
 						.stream())

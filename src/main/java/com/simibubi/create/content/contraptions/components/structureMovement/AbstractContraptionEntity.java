@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -11,11 +10,11 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.ContraptionData;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllMovementBehaviours;
@@ -44,7 +43,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -96,7 +94,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	/*
 	 * staleTicks are a band-aid to prevent a frame or two of missing blocks between
 	 * contraption discard and off-thread block placement on disassembly
-	 * 
+	 *
 	 * FIXME this timeout should be longer but then also cancelled early based on a
 	 * chunk rebuild listener
 	 */
@@ -116,7 +114,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		contraption.onEntityCreated(this);
 	}
-	
+
 	@Override
 	public void move(MoverType pType, Vec3 pPos) {
 		if (pType == MoverType.SHULKER)
@@ -140,7 +138,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public boolean collisionEnabled() {
 		return true;
 	}
-	
+
 	public void registerColliding(Entity collidingEntity) {
 		collidingEntities.put(collidingEntity, new MutableInt());
 	}
@@ -319,7 +317,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public Vec3 toGlobalVector(Vec3 localVec, float partialTicks) {
 		return toGlobalVector(localVec, partialTicks, false);
 	}
-	
+
 	public Vec3 toGlobalVector(Vec3 localVec, float partialTicks, boolean prevAnchor) {
 		Vec3 anchor = prevAnchor ? getPrevAnchorVec() : getAnchorVec();
 		Vec3 rotationOffset = VecHelper.getCenterOf(BlockPos.ZERO);
@@ -329,7 +327,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			.add(anchor);
 		return localVec;
 	}
-	
+
 	public Vec3 toLocalVector(Vec3 localVec, float partialTicks) {
 		return toLocalVector(localVec, partialTicks, false);
 	}
@@ -546,7 +544,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public Vec3 getAnchorVec() {
 		return position();
 	}
-	
+
 	public Vec3 getPrevAnchorVec() {
 		return getPrevPositionVec();
 	}
@@ -598,22 +596,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		CompoundTag compound = new CompoundTag();
 		writeAdditional(compound, true);
 
-		try {
-			ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
-			NbtIo.write(compound, dataOutput);
-			byte[] byteArray = dataOutput.toByteArray();
-			int estimatedPacketSize = byteArray.length;
-			if (estimatedPacketSize > 2_000_000) {
-				Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): "
-					+ getContraption().getType().id + " @" + position() + " (" + getUUID().toString() + ")");
-				buffer.writeNbt(new CompoundTag());
-				return;
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			buffer.writeNbt(new CompoundTag());
-			return;
+		if (ContraptionData.isTooLargeForSync(compound)) {
+			String info = getContraption().getType().id + " @" + position() + " (" + getStringUUID() + ")";
+			Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): " + info);
+			compound = null;
 		}
 
 		buffer.writeNbt(compound);
@@ -633,7 +619,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@Override
 	public void readSpawnData(FriendlyByteBuf additionalData) {
-		readAdditional(additionalData.readNbt(), true);
+		CompoundTag nbt = additionalData.readAnySizeNbt();
+		if (nbt != null) {
+			readAdditional(nbt, true);
+		}
 	}
 
 	@Override
@@ -756,7 +745,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	protected abstract float getStalledAngle();
 
-	protected abstract void handleStallInformation(float x, float y, float z, float angle);
+	protected abstract void handleStallInformation(double x, double y, double z, float angle);
 
 	@OnlyIn(Dist.CLIENT)
 	protected void handleBlockChange(BlockPos localPos, BlockState newState) {
@@ -823,7 +812,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public Vec3 getContactPointMotion(Vec3 globalContactPoint) {
 		if (prevPosInvalid)
 			return Vec3.ZERO;
-		
+
 		Vec3 contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0, true), 1, true);
 		Vec3 contraptionLocalMovement = contactPoint.subtract(globalContactPoint);
 		Vec3 contraptionAnchorMovement = position().subtract(getPrevPositionVec());

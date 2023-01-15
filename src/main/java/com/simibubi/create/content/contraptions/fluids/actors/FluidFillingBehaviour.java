@@ -76,6 +76,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				(p, d) -> infinityCheckFrontier.add(new BlockPosEntry(p, d)), true);
 		} catch (ChunkNotLoadedException e) {
 			infinityCheckFrontier.clear();
+			infinityCheckVisited.clear();
 			setLongValidationTimer();
 			return;
 		}

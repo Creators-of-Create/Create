@@ -120,6 +120,7 @@ public class ElementWidget extends AbstractSimiWidget {
 	@Override
 	protected void beforeRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.beforeRender(ms, mouseX, mouseY, partialTicks);
+		isHovered = isMouseOver(mouseX, mouseY);
 
 		float fadeValue = fade.getValue(partialTicks);
 		element.withAlpha(fadeValue);

@@ -269,12 +269,13 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			}, false);
 		} catch (ChunkNotLoadedException e) {
 			tileEntity.sendData();
+			frontier.clear();
 			visited.clear();
 		}
 
 		Level world = getWorld();
 		int maxBlocks = maxBlocks();
-		if (visited.size() > maxBlocks && canDrainInfinitely(fluid)) {
+		if (visited.size() > maxBlocks && canDrainInfinitely(fluid) && !queue.isEmpty()) {
 			infinite = true;
 			// Find first block with valid fluid
 			while (true) {
@@ -306,6 +307,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			search(fluid, validationFrontier, validationVisited, (e, d) -> newValidationSet.add(e), false);
 		} catch (ChunkNotLoadedException e) {
 			validationFrontier.clear();
+			validationVisited.clear();
 			setLongValidationTimer();
 			return;
 		}
