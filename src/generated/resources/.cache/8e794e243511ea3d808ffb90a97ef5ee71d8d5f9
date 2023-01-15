@@ -1,4 +1,4 @@
-// 1.19.2	2022-12-13T12:20:23.5246022	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2023-01-15T13:27:03.1332694	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4501,6 +4501,7 @@ da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/blocks/valve_handles.j
 8b6c0b444b15f7fb2d55b9cbcb68537c1269f877 data/create/tags/items/casing.json
 d371dfd35e49a7bef19f59c03e7f4ae20992f03d data/create/tags/items/create_ingots.json
 878b7281fa78d0ef5f873322281da8f5ebbb782c data/create/tags/items/crushed_ores.json
+0fa526e7e742573b603ad26b09526cf724efa1dc data/create/tags/items/deployable_drink.json
 29ca12609f7c419c5c06338a86c7f4ba1fc7390e data/create/tags/items/modded_stripped_logs.json
 ae63f7dc5d9221890ee593ff03cd2aff8cd6a356 data/create/tags/items/modded_stripped_wood.json
 7424e0342059943fab84b7103569d9bed7e871c5 data/create/tags/items/pressurized_air_sources.json
