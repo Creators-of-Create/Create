@@ -1,8 +1,5 @@
 {
-	"_": "Missing Localizations: -",
-	"_": "Рекомендации по локализации: https://telegra.ph/Rekomendacii-po-lokalizacii-moda-Create-na-russkij-yazyk-08-22 ",
-	"_": "->------------------------]  Элементы игры  [------------------------<-",
-
+	"_": "Спасибо, что переводите Create!",
 	"block.create.acacia_window": "Акациевое окно",
 	"block.create.acacia_window_pane": "Панель из акациевого окна",
 	"block.create.adjustable_chain_gearshift": "Регулируемая цепная коробка передач",
@@ -126,13 +123,13 @@
 	"block.create.cut_diorite_stairs": "Резные диоритовые ступеньки",
 	"block.create.cut_diorite_wall": "Резная диоритовая ограда",
 	"block.create.cut_dripstone": "Резной натёчный камень",
-	"block.create.cut_dripstone_brick_slab": "Плита из натёчнокаменного кирпича",
-	"block.create.cut_dripstone_brick_stairs": "Ступеньки из натёчнокаменного кирпича",
-	"block.create.cut_dripstone_brick_wall": "Ограда из натёчнокаменного кирпича",
+	"block.create.cut_dripstone_brick_slab": "Плита из резного натёчнокаменного кирпича",
+	"block.create.cut_dripstone_brick_stairs": "Ступеньки из резного натёчнокаменного кирпича",
+	"block.create.cut_dripstone_brick_wall": "Ограда из резного натёчнокаменного кирпича",
 	"block.create.cut_dripstone_bricks": "Резные натёчнокаменные кирпичи",
-	"block.create.cut_dripstone_slab": "Плита из резного натёчного камня",
-	"block.create.cut_dripstone_stairs": "Ступеньки из резного натёчного камня",
-	"block.create.cut_dripstone_wall": "Ограда из резного натёчного камня",
+	"block.create.cut_dripstone_slab": "Резная натёчнокаменная плита",
+	"block.create.cut_dripstone_stairs": "Резные натёчнокаменные ступеньки",
+	"block.create.cut_dripstone_wall": "Резная натёчнокаменная ограда",
 	"block.create.cut_granite": "Резной гранит",
 	"block.create.cut_granite_brick_slab": "Плита из резного гранитного кирпича",
 	"block.create.cut_granite_brick_stairs": "Ступеньки из резного гранитного кирпича",
@@ -170,7 +167,7 @@
 	"block.create.cut_scoria_brick_stairs": "Ступеньки из резного пеплового кирпича",
 	"block.create.cut_scoria_brick_wall": "Ограда из резного пеплового кирпича",
 	"block.create.cut_scoria_bricks": "Резные пепловые кирпичи",
-	"block.create.cut_scoria_slab": "Плита из резного пепла",
+	"block.create.cut_scoria_slab": "Резная пепловая плита",
 	"block.create.cut_scoria_stairs": "Ступеньки из резного пепла",
 	"block.create.cut_scoria_wall": "Ограда из резного пепла",
 	"block.create.cut_tuff": "Резной туф",
@@ -195,7 +192,7 @@
 	"block.create.cyan_toolbox": "Бирюзовый ящик для инструментов",
 	"block.create.cyan_valve_handle": "Бирюзовый ручной вентиль",
 	"block.create.dark_oak_window": "Окно из тёмного дуба",
-	"block.create.dark_oak_window_pane": "Панель из окна из тёмного дуб",
+	"block.create.dark_oak_window_pane": "Панель из окна из тёмного дуба",
 	"block.create.deepslate_pillar": "Глубинносланцевая колонна",
 	"block.create.deepslate_zinc_ore": "Цинконосный глубинный сланец",
 	"block.create.deployer": "Автономный активатор",
@@ -264,7 +261,7 @@
 	"block.create.layered_scoria": "Слоистый пепел",
 	"block.create.layered_tuff": "Слоистый туф",
 	"block.create.layered_veridium": "Слоистый веридиум",
-	"block.create.lectern_controller": "Контроллер связей на кафедре",
+	"block.create.lectern_controller": "Управляющая кафедра",
 	"block.create.light_blue_nixie_tube": "Голубой газоразрядный индикатор",
 	"block.create.light_blue_sail": "Голубой парус",
 	"block.create.light_blue_seat": "Голубое сиденье",
@@ -563,10 +560,8 @@
 	"block.create.yellow_valve_handle": "Жёлтый ручной вентиль",
 	"block.create.zinc_block": "Цинковый блок",
 	"block.create.zinc_ore": "Цинковая руда",
-
 	"enchantment.create.capacity": "Вместимость",
 	"enchantment.create.potato_recovery": "Возобновление картофеля",
-
 	"entity.create.carriage_contraption": "Вагонная штуковина",
 	"entity.create.contraption": "Штуковина",
 	"entity.create.crafting_blueprint": "Чертёж",
@@ -575,10 +570,8 @@
 	"entity.create.seat": "Сиденье",
 	"entity.create.stationary_contraption": "Стационарная штуковина",
 	"entity.create.super_glue": "Суперклей",
-
 	"fluid.create.potion": "Зелье",
 	"fluid.create.tea": "Чай строителя",
-
 	"item.create.andesite_alloy": "Андезитовый сплав",
 	"item.create.attribute_filter": "Фильтр атрибутов",
 	"item.create.bar_of_chocolate": "Плитка шоколада",
@@ -662,10 +655,6 @@
 	"item.create.wrench": "Гаечный ключ",
 	"item.create.zinc_ingot": "Цинковый слиток",
 	"item.create.zinc_nugget": "Кусочек цинка",
-
-
-	"_": "->------------------------]  Достижения  [------------------------<-",
-
 	"advancement.create.root": "Добро пожаловать в Create!",
 	"advancement.create.root.desc": "Пришло время начать строить удивительные штуковины!",
 	"advancement.create.andesite_alloy": "Повторение — мать учения",
@@ -703,7 +692,7 @@
 	"advancement.create.super_glue": "Площадь соединена",
 	"advancement.create.super_glue.desc": "Объедините несколько блоков в группу с помощью Суперклея",
 	"advancement.create.contraption_actors": "Движение с целью",
-	"advancement.create.contraption_actors.desc": "Создайте штуковину с Дрелью, Пилой или Комбайном на борту",
+	"advancement.create.contraption_actors.desc": "Создайте штуковину с Дрелью, Пилой или с Комбайном на борту",
 	"advancement.create.portable_storage_interface": "Обмен на ходу",
 	"advancement.create.portable_storage_interface.desc": "Используйте Портативный интерфейс хранения, чтобы извлекать или добавлять предметы во время работы штуковины",
 	"advancement.create.wrench_goggles": "Дресс-код механика",
@@ -745,7 +734,7 @@
 	"advancement.create.backtank": "Повышение давления",
 	"advancement.create.backtank.desc": "Создайте Медный баллон и заставьте его закачивать воздух в себя",
 	"advancement.create.diving_suit": "Кто проживает на дне океана?",
-	"advancement.create.diving_suit.desc": "Наденьте Водолазный шлем вместе с Баллоном и прыгнете в воду",
+	"advancement.create.diving_suit.desc": "Наденьте Водолазный шлем вместе с Баллоном и прыгните в воду",
 	"advancement.create.mechanical_pump_0": "Закачаешься",
 	"advancement.create.mechanical_pump_0.desc": "Разместите и включите Механическую помпу",
 	"advancement.create.glass_pipe": "Шпион за потоками",
@@ -781,7 +770,7 @@
 	"advancement.create.deployer": "Тыкайте, ставьте и атакуйте",
 	"advancement.create.deployer.desc": "Приведите в действие Автономный активатор, идеальное отражение себя",
 	"advancement.create.precision_mechanism": "Сложные любопытства",
-	"advancement.create.precision_mechanism.desc": "Создайте Механизм точности",
+	"advancement.create.precision_mechanism.desc": "Соберите Механизм точности",
 	"advancement.create.speed_controller": "Его ненавидят инженеры!",
 	"advancement.create.speed_controller.desc": "Установите Регулятор скорости вращения, идеальное устройство для переключения передач",
 	"advancement.create.mechanical_arm": "Золотые руки!",
@@ -830,7 +819,7 @@
 	"advancement.create.conductor.desc": "Проинструктируйте машиниста следовать по Расписанию",
 	"advancement.create.track_signal": "Управление движением",
 	"advancement.create.track_signal.desc": "Разместите Железнодорожный светофор",
-	"advancement.create.display_board_0": "Эстетика вокзала",
+	"advancement.create.display_board_0": "Динамическое расписание",
 	"advancement.create.display_board_0.desc": "Прогнозируйте прибытие поезда на Табло с помощью Передатчика информации",
 	"advancement.create.track_0": "Новая колея",
 	"advancement.create.track_0.desc": "Соберите Железнодорожный путь",
@@ -854,13 +843,8 @@
 	"advancement.create.train_crash.desc": "Станьте свидетелем железнодорожной аварии в качестве пассажира§7\n(Секретное достижение)",
 	"advancement.create.train_crash_backwards": "Слепая зона",
 	"advancement.create.train_crash_backwards.desc": "Врежьтесь в другой поезд, двигаясь задним ходом§7\n(Секретное достижение)",
-
-
-	"_": "->------------------------]  Интерфейс, подсказки и сообщения  [------------------------<-",
-
 	"itemGroup.create.base": "Create",
 	"itemGroup.create.palettes": "Create: Декор",
-
 	"death.attack.create.crush": "%1$s был передроблен",
 	"death.attack.create.crush.player": "%1$s был передроблен благодаря %2$s",
 	"death.attack.create.fan_fire": "%1$s был высушен до смерти горячим воздухом",
@@ -876,17 +860,14 @@
 	"death.attack.create.cuckoo_clock_explosion": "%1$s был взорван фальшивыми часами с кукушкой",
 	"death.attack.create.cuckoo_clock_explosion.player": "%1$s был взорван фальшивыми часами с кукушкой благодаря %2$s",
 	"death.attack.create.run_over": "%1$s был размазан по путям %2$s",
-
 	"create.block.deployer.damage_source_name": "автономным активатором",
 	"create.block.cart_assembler.invalid": "Установите сборщик вагонеток на рельсы",
-
 	"create.menu.return": "Вернуться в меню",
 	"create.menu.configure": "Настроить...",
 	"create.menu.ponder_index": "Все размышления",
 	"create.menu.only_ingame": "Доступны только во время игры",
 	"create.menu.report_bugs": "Нашли ошибку?",
 	"create.menu.support": "Поддержите нас",
-
 	"create.recipe.crushing": "Дробление",
 	"create.recipe.milling": "Помол",
 	"create.recipe.fan_washing": "Массовая промывка",
@@ -923,14 +904,13 @@
 	"create.recipe.assembly.spout_filling_fluid": "Добавьте жидкость: %1$s",
 	"create.recipe.assembly.deploying_item": "Добавьте предмет: %1$s",
 	"create.recipe.assembly.cutting": "Разрежьте пилой",
-	"create.recipe.assembly.repeat": "Повторите последовательность %1$s раз",
+	"create.recipe.assembly.repeat": "Повторите последовательность %1$s раз(а)",
 	"create.recipe.assembly.junk": "Случайный мусор",
 	"create.recipe.processing.chance": "%1$s%% шанса",
 	"create.recipe.deploying.not_consumed": "Не тратится",
 	"create.recipe.heat_requirement.none": "Не требует нагрева",
 	"create.recipe.heat_requirement.heated": "Нагрев",
 	"create.recipe.heat_requirement.superheated": "Перегрев",
-
 	"create.generic.range": "Диапазон",
 	"create.generic.radius": "Радиус",
 	"create.generic.width": "Ширина",
@@ -952,24 +932,21 @@
 	"create.generic.unit.stress": "ЕН",
 	"create.generic.unit.degrees": "°",
 	"create.generic.unit.millibuckets": "%1$s мВ",
-	"create.generic.unit.buckets": "B",
+	"create.generic.unit.buckets": "В",
 	"create.generic.clockwise": "По часовой стрелке",
 	"create.generic.counter_clockwise": "Против часовой стрелки",
 	"create.generic.in_quotes": "\"%1$s\"",
 	"create.generic.pitch": "♪: %1$s",
 	"create.generic.notes": "фа♯;фа;ми;ре♯;ре;до♯;до;си;ля♯;ля;соль♯;соль",
-
 	"create.action.scroll": "Прокрутка",
 	"create.action.confirm": "Подтвердить",
 	"create.action.abort": "Прервать",
 	"create.action.saveToFile": "Сохранить",
 	"create.action.discard": "Отменить",
-
 	"create.keyinfo.toolmenu": "Меню инструмента фокусировки",
 	"create.keyinfo.toolbelt": "Доступ к ближайшим ящикам с инструментами",
 	"create.keyinfo.scrollup": "Имитация Прокрутки вверх (в мире)",
 	"create.keyinfo.scrolldown": "Имитация Прокрутки вниз (в мире)",
-
 	"create.gui.scrollInput.defaultTitle": "Выберите опцию",
 	"create.gui.scrollInput.scrollToModify": "Прокрутка, чтобы изменить",
 	"create.gui.scrollInput.scrollToAdjustAmount": "Прокрутка, чтобы настроить количество",
@@ -977,26 +954,21 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "Зажмите Shift для быстрой прокрутки",
 	"create.gui.toolmenu.focusKey": "Удерживайте [%1$s] для смены действия",
 	"create.gui.toolmenu.cycle": "[Прокрутка] для переключения",
-
 	"create.toolbox.unequip": "Убрать: %1$s",
 	"create.toolbox.outOfRange": "Ящик для инструментов выбранного предмета слишком далеко...",
 	"create.toolbox.detach": "Убрать выбранный предмет в ящик для инструментов",
 	"create.toolbox.depositAll": "Вернуть все предметы в ближайшие ящики для инструментов",
 	"create.toolbox.depositBox": "Вернуть все предметы в ящик для инструментов",
-
 	"create.gui.symmetryWand.mirrorType": "Зеркало",
 	"create.gui.symmetryWand.orientation": "Ориентация",
-
 	"create.symmetry.mirror.plane": "Одинарное",
 	"create.symmetry.mirror.doublePlane": "Двойное",
 	"create.symmetry.mirror.triplePlane": "Тройное",
-
 	"create.orientation.orthogonal": "Перпендикулярная",
 	"create.orientation.diagonal": "Диагональная",
 	"create.orientation.horizontal": "Горизонтальная",
 	"create.orientation.alongZ": "Вдоль Z",
 	"create.orientation.alongX": "Вдоль X",
-
 	"create.gui.terrainzapper.title": "Ручной редактор мира",
 	"create.gui.terrainzapper.searchDiagonal": "Следовать диагоналям",
 	"create.gui.terrainzapper.searchFuzzy": "Игнорировать границы материала",
@@ -1024,17 +996,14 @@
 	"create.gui.terrainzapper.tool.clear": "Очистить",
 	"create.gui.terrainzapper.tool.overlay": "Наложение",
 	"create.gui.terrainzapper.tool.flatten": "Сглаживание",
-
 	"create.terrainzapper.shiftRightClickToSet": "Кликните ПКМ крадучись, чтобы выбрать кисть",
 	"create.terrainzapper.usingBlock": "Используется: %1$s",
 	"create.terrainzapper.leftClickToSet": "Кликните ЛКМ по блоку, что бы использовать материал",
-
 	"create.minecart_coupling.two_couplings_max": "Вагонетки могут иметь только два соединения",
 	"create.minecart_coupling.unloaded": "Кажется, в данный момент часть вашей вагонеточной штуковины в незагруженных чанках",
 	"create.minecart_coupling.no_loops": "Соединители не могут образовывать петлю",
 	"create.minecart_coupling.removed": "Убраны все соединения между вагонетками",
 	"create.minecart_coupling.too_far": "Вагонетки слишком далеко друг от друга...",
-
 	"create.contraptions.movement_mode": "Режим движения",
 	"create.contraptions.movement_mode.move_place": "Превращать в блоки при остановке",
 	"create.contraptions.movement_mode.move_place_returned": "Превращать в блоки только в исх. положении",
@@ -1051,7 +1020,6 @@
 	"create.contraptions.clockwork.hour_first": "Сначала часовая стрелка",
 	"create.contraptions.clockwork.minute_first": "Сначала минутная стрелка",
 	"create.contraptions.clockwork.hour_first_24": "Сначала 24-часовая стрелка",
-
 	"create.logistics.filter": "Фильтр",
 	"create.logistics.recipe_filter": "Фильтр рецепта",
 	"create.logistics.fluid_filter": "Фильтр жидкости",
@@ -1060,7 +1028,6 @@
 	"create.logistics.filter.apply": "Фильтр применён (%1$s)",
 	"create.logistics.filter.apply_click_again": "Фильтр применён (%1$s); кликните ещё раз, чтобы скопировать количество",
 	"create.logistics.filter.apply_count": "Применено извлекаемое количество к фильтру",
-
 	"create.gui.goggles.generator_stats": "Статистика генератора:",
 	"create.gui.goggles.kinetic_stats": "Кинетическая статистика:",
 	"create.gui.goggles.at_current_speed": "При текущей скорости",
@@ -1080,8 +1047,8 @@
 	"create.gui.stressometer.capacity": "Оставшаяся ёмкость",
 	"create.gui.stressometer.overstressed": "Перегрузка",
 	"create.gui.stressometer.no_rotation": "Нет вращения",
-	"create.gui.contraptions.not_fast_enough": "Похоже, что компонент (%1$s) вращается с _недостаточной_ _скоростью_.",
-	"create.gui.contraptions.network_overstressed": "Похоже, что эта сеть _перегружена_. Добавьте больше источников силы вращения или _понизьте скорость_ компонентов, _создающих высокую нагрузку_.",
+	"create.gui.contraptions.not_fast_enough": "Похоже, что этот компонент (%1$s) вращается с _недостаточной скоростью_.",
+	"create.gui.contraptions.network_overstressed": "Похоже, что эта _сеть перегружена_. Добавьте _больше источников_ силы вращения или _понизьте скорость_ компонентов, _создающих высокую нагрузку_.",
 	"create.gui.adjustable_crate.title": "Регулируемый ящик",
 	"create.gui.adjustable_crate.storageSpace": "Ёмкость",
 	"create.gui.stockpile_switch.title": "Наблюдатель заполненности",
@@ -1108,7 +1075,6 @@
 	"create.gui.sequenced_gearshift.speed.forward_fast": "Двойная скорость, вперёд",
 	"create.gui.sequenced_gearshift.speed.back": "Обычная скорость, реверс",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Двойная скорость, реверс",
-
 	"create.schematicAndQuill.dimensions": "Размер схематики: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "Первая позиция установлена",
 	"create.schematicAndQuill.secondPos": "Вторая позиция установлена",
@@ -1118,7 +1084,6 @@
 	"create.schematicAndQuill.convert": "Сохранить и развернуть немедленно",
 	"create.schematicAndQuill.fallbackName": "Моя схематика",
 	"create.schematicAndQuill.saved": "Сохранено как %1$s",
-
 	"create.schematic.invalid": "[!] Недопустимый предмет — вместо этого используйте схематичный стол",
 	"create.schematic.position": "Позиция",
 	"create.schematic.rotation": "Вращение",
@@ -1143,15 +1108,10 @@
 	"create.schematic.tool.move.description.0": "Сдвинуть схематику по горизонтали.",
 	"create.schematic.tool.move.description.1": "Наведите курсор на схему и Ctrl и Прокрутка,",
 	"create.schematic.tool.move.description.2": "для перемещения по горизонтали.",
-	"create.schematic.tool.move.description.3": "",
 	"create.schematic.tool.movey.description.0": "Сдвигает схематику по вертикали.",
 	"create.schematic.tool.movey.description.1": "Ctrl и Прокрутка для перемещения вверх/вниз.",
-	"create.schematic.tool.movey.description.2": "",
-	"create.schematic.tool.movey.description.3": "",
 	"create.schematic.tool.rotate.description.0": "Вращает схематику вокруг её центра.",
 	"create.schematic.tool.rotate.description.1": "Ctrl и Прокрутка для вращения на 90 градусов.",
-	"create.schematic.tool.rotate.description.2": "",
-	"create.schematic.tool.rotate.description.3": "",
 	"create.schematic.tool.print.description.0": "Мгновенно размещает структуру в мире.",
 	"create.schematic.tool.print.description.1": "ПКМ, чтобы подтвердить размещение в текущем месте.",
 	"create.schematic.tool.print.description.2": "Этот инструмент предназначен только",
@@ -1159,12 +1119,9 @@
 	"create.schematic.tool.flip.description.0": "Переверните схему вдоль выбранной стороны.",
 	"create.schematic.tool.flip.description.1": "Наведите курсор на схему и Ctrl и Прокрутка,",
 	"create.schematic.tool.flip.description.2": "чтобы перевернуть её.",
-	"create.schematic.tool.flip.description.3": "",
-
 	"create.schematics.synchronizing": "Синхронизация...",
 	"create.schematics.uploadTooLarge": "Файл схематики слишком большой!",
 	"create.schematics.maxAllowedSize": "Максимально допустимый размер файла:",
-
 	"create.gui.schematicTable.refresh": "Обновить файлы",
 	"create.gui.schematicTable.open_folder": "Открыть папку со схематиками",
 	"create.gui.schematicTable.title": "Схематичный стол",
@@ -1180,10 +1137,10 @@
 	"create.gui.schematicannon.optionEnabled": "Включено",
 	"create.gui.schematicannon.optionDisabled": "Отключено",
 	"create.gui.schematicannon.showOptions": "Показать настройки строительства",
-	"create.gui.schematicannon.option.dontReplaceSolid": "Не заменять целые блоки",
-	"create.gui.schematicannon.option.replaceWithSolid": "Заменять целые блоки целыми блоками",
-	"create.gui.schematicannon.option.replaceWithAny": "Заменять целые блоки чем угодно",
-	"create.gui.schematicannon.option.replaceWithEmpty": "Заменять целые блоки пустотой",
+	"create.gui.schematicannon.option.dontReplaceSolid": "Не заменять твёрдые блоки",
+	"create.gui.schematicannon.option.replaceWithSolid": "Заменять твёрдые блоки только твёрдыми блоками",
+	"create.gui.schematicannon.option.replaceWithAny": "Заменять твёрдые блоки любыми блоками",
+	"create.gui.schematicannon.option.replaceWithEmpty": "Заменять твёрдые блоки воздухом",
 	"create.gui.schematicannon.option.skipMissing": "Пропускать отсутствующие блоки",
 	"create.gui.schematicannon.option.skipTileEntities": "Защитить имущество",
 	"create.gui.schematicannon.slot.gunpowder": "Добавьте порох, чтобы заправить пушку",
@@ -1191,11 +1148,10 @@
 	"create.gui.schematicannon.slot.schematic": "Положите свою схематику здесь. Убедитесь что она размещена в правильном месте",
 	"create.gui.schematicannon.option.skipMissing.description": "Если пушка не сможет найти требуемый блок, то она перейдёт к следующему.",
 	"create.gui.schematicannon.option.skipTileEntities.description": "Пушка не будет заменять блоки-хранилища, такие как сундуки.",
-	"create.gui.schematicannon.option.dontReplaceSolid.description": "Пушка никогда не заменит целые блоки, только не целые и воздух.",
-	"create.gui.schematicannon.option.replaceWithSolid.description": "Пушка будет заменять целый блок только в случае, если в схеме в этом месте расположен целый блок.",
-	"create.gui.schematicannon.option.replaceWithAny.description": "Пушка будет заменять целые блоки, если в схеме в этом месте есть что-либо.",
-	"create.gui.schematicannon.option.replaceWithEmpty.description": "Пушка уберёт все блоки, включая замену на воздух.",
-
+	"create.gui.schematicannon.option.dontReplaceSolid.description": "Пушка не будет заменять твёрдые блоки, только нетвёрдые и воздух.",
+	"create.gui.schematicannon.option.replaceWithSolid.description": "Пушка будет заменять твёрдые блоки только в случае, если в схеме в этом месте расположен другой твёрдый блок.",
+	"create.gui.schematicannon.option.replaceWithAny.description": "Пушка будет заменять любые твёрдые блоки, кроме замены на воздух.",
+	"create.gui.schematicannon.option.replaceWithEmpty.description": "Пушка будет заменять любые твёрдые блоки, включая замену на воздух.",
 	"create.schematicannon.status.idle": "Бездействует",
 	"create.schematicannon.status.ready": "Готова",
 	"create.schematicannon.status.running": "Работает",
@@ -1213,10 +1169,8 @@
 	"create.schematicannon.status.schematicInvalid": "Неверная схема",
 	"create.schematicannon.status.schematicNotPlaced": "Схема не развёрнута",
 	"create.schematicannon.status.schematicExpired": "Файл схемы устарел",
-
 	"create.materialChecklist": "Список материалов",
 	"create.materialChecklist.blocksNotLoaded": "* Внимание! *\n\nСписок материалов может быть неточным из-за незагруженных чанков.",
-
 	"create.gui.filter.deny_list": "Чёрный список",
 	"create.gui.filter.deny_list.description": "Предметы проходят, если они не соответствуют ни одному из вышеперечисленных. Пустой чёрный список принимает всё.",
 	"create.gui.filter.allow_list": "Белый список",
@@ -1225,7 +1179,6 @@
 	"create.gui.filter.respect_data.description": "Предметы проходят только в том случае, если их прочность, чары и другие атрибуты совпадают.",
 	"create.gui.filter.ignore_data": "Игнорировать данные",
 	"create.gui.filter.ignore_data.description": "Предметы проходят независимо от их атрибутов.",
-
 	"create.item_attributes.placeable": "можно разместить",
 	"create.item_attributes.placeable.inverted": "нельзя разместить",
 	"create.item_attributes.consumable": "можно съесть",
@@ -1299,7 +1252,6 @@
 	"create.item_attributes.astralsorcery_crystal.inverted": "не имеет характеристик кристалла %1$s",
 	"create.item_attributes.astralsorcery_perk_gem": "имеет характеристики перка %1$s",
 	"create.item_attributes.astralsorcery_perk_gem.inverted": "не имеет характеристик перка %1$s",
-
 	"create.gui.attribute_filter.no_selected_attributes": "Атрибуты не выбраны",
 	"create.gui.attribute_filter.selected_attributes": "Выбранные атрибуты:",
 	"create.gui.attribute_filter.add_attribute": "Добавить атрибут в фильтр",
@@ -1311,7 +1263,6 @@
 	"create.gui.attribute_filter.deny_list": "Чёрный список",
 	"create.gui.attribute_filter.deny_list.description": "Предметы проходят, если они не имеют ни одного из выбранных атрибутов.",
 	"create.gui.attribute_filter.add_reference_item": "Положите предмет",
-
 	"create.tooltip.holdForDescription": "Удерживайте [%1$s] для сводки",
 	"create.tooltip.holdForControls": "Удерживайте [%1$s] для управления",
 	"create.tooltip.keyShift": "Shift",
@@ -1333,24 +1284,19 @@
 	"create.tooltip.capacityProvided.high": "Высокая",
 	"create.tooltip.generationSpeed": "Создаёт %1$s %2$s",
 	"create.tooltip.analogStrength": "Аналоговая сила: %1$s/15",
-
 	"create.mechanical_arm.extract_from": "Берёт предметы из %1$s",
 	"create.mechanical_arm.deposit_to": "Складывает предметы в %1$s",
 	"create.mechanical_arm.summary": "Механическая рука имеет %1$s вход(ов) и %2$s выход(ов)",
 	"create.mechanical_arm.points_outside_range": "Выбранные цели (%1$s) удалены из-за ограничений диапазона",
-
 	"create.weighted_ejector.target_set": "Цель выбрана",
 	"create.weighted_ejector.target_not_valid": "Бросает до ближайшего блока (Неподходящая цель)",
 	"create.weighted_ejector.no_target": "Бросает до ближайшего блока (Цель не была выбрана)",
 	"create.weighted_ejector.targeting": "Бросает до [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "Размер бросаемого стака",
-
 	"create.logistics.when_multiple_outputs_available": "Режим распределения",
-
 	"create.mechanical_arm.selection_mode.round_robin": "По кругу",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "Строго по кругу",
 	"create.mechanical_arm.selection_mode.prefer_first": "Предпочитать первичную цель",
-
 	"create.tunnel.selection_mode.split": "Разделение",
 	"create.tunnel.selection_mode.forced_split": "Строгое разделение",
 	"create.tunnel.selection_mode.round_robin": "По кругу",
@@ -1358,7 +1304,6 @@
 	"create.tunnel.selection_mode.prefer_nearest": "Предпочтительно ближайший",
 	"create.tunnel.selection_mode.randomize": "Случайно",
 	"create.tunnel.selection_mode.synchronize": "Синхронизировать входы",
-
 	"create.tooltip.chute.header": "Информация о жёлобе:",
 	"create.tooltip.chute.items_move_down": "Предметы двигаются вниз",
 	"create.tooltip.chute.items_move_up": "Предметы двигаются вверх",
@@ -1375,13 +1320,11 @@
 	"create.tooltip.brass_tunnel.contains": "В данный момент распределяют:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "ПКМ, чтобы забрать",
-
 	"create.linked_controller.bind_mode": "Режим привязки активирован",
 	"create.linked_controller.press_keybind": "Нажмите %1$s, %2$s, %3$s, %4$s, %5$s или %6$s, чтобы привязать эту частоту к соответствующей клавише.",
 	"create.linked_controller.key_bound": "Частота привязана к %1$s",
 	"create.linked_controller.frequency_slot_1": "Клавиша: %1$s, Частота #1",
 	"create.linked_controller.frequency_slot_2": "Клавиша: %1$s, Частота #2",
-
 	"create.crafting_blueprint.crafting_slot": "Слот для ингредиентов",
 	"create.crafting_blueprint.filter_items_viable": "Применимы продвинутые фильтры предметов",
 	"create.crafting_blueprint.display_slot": "Отображаемая ячейка",
@@ -1389,11 +1332,9 @@
 	"create.crafting_blueprint.manually_assigned": "Назначен вручную",
 	"create.crafting_blueprint.secondary_display_slot": "Дополнительная отображаемая ячейка",
 	"create.crafting_blueprint.optional": "Опционально",
-
 	"create.potato_cannon.ammo.attack_damage": "%1$s Урон от попадания",
 	"create.potato_cannon.ammo.reload_ticks": "%1$s Тиков перезарядки",
 	"create.potato_cannon.ammo.knockback": "%1$s Сила отбрасывания",
-
 	"create.hint.hose_pulley.title": "Бесконечное снабжение",
 	"create.hint.hose_pulley": "Целевой жидкостный резервуар считается бесконечным.",
 	"create.hint.mechanical_arm_no_targets.title": "Нет целей",
@@ -1402,13 +1343,10 @@
 	"create.hint.empty_bearing": "Кликните _ПКМ_ по подшипнику _пустой рукой_, чтобы _присоединить_ к нему структуру, которую вы построили перед ним.",
 	"create.hint.full_deployer.title": "Переполнение автономного активатора",
 	"create.hint.full_deployer": "Похоже, что этот _автономный активатор_ содержит _лишние предметы_, которые необходимо _извлечь_. Используйте _воронку_ или _другие способы_, чтобы освободить его от переполнения.",
-
 	"create.backtank.low": "Низкое давление в баллоне!",
 	"create.backtank.depleted": "Давление в баллоне исчерпано!",
-
 	"create.hint.derailed_train.title": "Железнодорожная авария",
 	"create.hint.derailed_train": "Похоже, что этот _поезд_ сошёл с путей. Кликните _ПКМ_ _гаечным ключом_, чтобы заново установить его на ближайшие пути.",
-
 	"create.boiler.status": "Статус котла: %1$s",
 	"create.boiler.status_short": "Котёл: %1$s",
 	"create.boiler.passive": "Нач.",
@@ -1418,12 +1356,11 @@
 	"create.boiler.size": "Объём",
 	"create.boiler.size_dots": "....... ",
 	"create.boiler.water": "Вода",
-	"create.boiler.water_dots": "......... ",
+	"create.boiler.water_dots": ".......... ",
 	"create.boiler.heat": "Нагрев",
 	"create.boiler.heat_dots": "..... ",
 	"create.boiler.via_one_engine": "с помощью 1 двигателя",
 	"create.boiler.via_engines": "с помощью %1$s двигателей",
-
 	"create.gui.schedule.lmb_edit": "ЛКМ для редактирования",
 	"create.gui.schedule.rmb_remove": "ПКМ для удаления",
 	"create.gui.schedule.duplicate": "Дублировать",
@@ -1433,7 +1370,6 @@
 	"create.gui.schedule.move_down": "Переместить ниже",
 	"create.gui.schedule.add_condition": "Добавить условие",
 	"create.gui.schedule.alternative_condition": "Альтернативное условие",
-
 	"create.schedule.instruction_type": "Следующая инструкция:",
 	"create.schedule.instruction.editor": "Редактор инструкций",
 	"create.schedule.instruction.destination": "Следовать до станции",
@@ -1526,7 +1462,6 @@
 	"create.schedule.removed_from_train": "Расписание отозвано от машиниста",
 	"create.schedule.no_stops": "В этом расписании нет остановок",
 	"create.schedule.continued": "Расписание возобновлено",
-
 	"create.track.selection_cleared": "Выбор отменён",
 	"create.track.valid_connection": "Можно соединить ✔",
 	"create.track.second_point": "Разместите пути на горизонтальной поверхности или выберите другие",
@@ -1545,11 +1480,9 @@
 	"create.track.turn_start": "Нельзя начинать соединение с поворота",
 	"create.track.not_enough_tracks": "Не хватает путей",
 	"create.track.not_enough_pavement": "Не хватает поддерживающих блоков",
-
 	"create.portal_track.failed": "Невозможно разместить портальные пути:",
 	"create.portal_track.missing": "Целевой портал ещё не сгенерирован",
 	"create.portal_track.blocked": "Целевое местоположение заблокировано (%1$s,%2$s,%3$s)",
-
 	"create.station.idle": "Станция в ожидании",
 	"create.station.assembly_title": "Сборка поезда",
 	"create.station.close": "Закрыть окно",
@@ -1575,7 +1508,6 @@
 	"create.station.how_to": "Кликните ж/д корпусом по выделенным путям, чтобы создать тележку.",
 	"create.station.how_to_1": "Тележку можно убрать, сломав блок над ней.",
 	"create.station.how_to_2": "Один вагон может иметь до двух тележек.",
-
 	"create.train_assembly.too_many_bogeys": "Слишком много вагонных тележек прицеплено: %1$s шт.",
 	"create.train_assembly.frontmost_bogey_at_station": "Первая вагонная тележка должна быть на указателе станции.",
 	"create.train_assembly.no_bogeys": "Вагонные тележки не найдены.",
@@ -1587,7 +1519,6 @@
 	"create.train_assembly.sideways_controls": "Контроллер поезда направлен не вперёд.",
 	"create.train_assembly.bogey_created": "Разместите ещё одну тележку, нажав на выделенные пути",
 	"create.train_assembly.requires_casing": "Используйте ж/д корпус для создания вагонных тележек на путях",
-
 	"create.track_target.set": "Пути выбраны",
 	"create.track_target.success": "Компонент привязан к выбранным путям",
 	"create.track_target.clear": "Выбор путей отменён",
@@ -1596,7 +1527,6 @@
 	"create.track_target.no_junctions": "Невозможно установить маркер станции на перекрёстке",
 	"create.track_target.occupied": "Выбранные пути заняты",
 	"create.track_target.invalid": "Невозможно выбрать эти пути",
-
 	"create.train.unnamed": "Безымянный поезд",
 	"create.train.cannot_relocate_moving": "Невозможно переместить движущийся поезд",
 	"create.train.relocate": "Кликните по путям, чтобы переместить %1$s. ПКМ крадучись для отмены",
@@ -1621,15 +1551,12 @@
 	"create.train.status.navigation_success": "Движение успешно восстановлено",
 	"create.train.status.no_match": "Станция «%1$s» не найдена",
 	"create.train.status.no_path": "Не удалось найти подходящий путь к следующему запланированному пункту назначения",
-
 	"create.track_signal.cannot_change_mode": "Невозможно переключить режим этого светофора",
 	"create.track_signal.mode_change.entry_signal": "-> Разрешить проезд, если сегмент не занят",
 	"create.track_signal.mode_change.cross_signal": "-> Разрешить проезд, если сегмент полностью проходим и не занят",
-
 	"create.contraption.controls.start_controlling": "Под управлением: %1$s",
 	"create.contraption.controls.stop_controlling": "Выход из режима управления",
 	"create.contraption.controls.approach_station": "Зажмите %1$s для прибытия на %2$s",
-
 	"create.display_link.set": "Выбрана целевая позиция",
 	"create.display_link.success": "Успешно привязан к целевой позиции",
 	"create.display_link.clear": "Выбор целевой позиции отменён",
@@ -1639,14 +1566,13 @@
 	"create.display_link.no_source": "Нет информации",
 	"create.display_link.no_target": "Нельзя визуализировать",
 	"create.display_link.reading_from": "Считывать из:",
-	"create.display_link.writing_to": "Записывать в:",
+	"create.display_link.writing_to": "Отправлять в:",
 	"create.display_link.attached_side": "Блок, к которому прикреплён",
 	"create.display_link.targeted_location": "Блок, куда присылает информацию",
 	"create.display_link.view_compatible": "Кликните, чтобы увидеть все совместимые блоки",
 	"create.display_link.information_type": "Тип информации",
 	"create.display_link.display_on": "Местоположение визуализации",
 	"create.display_link.display_on_multiline": "Местоположение визуализации",
-
 	"create.display_source.label": "Добавочная надпись",
 	"create.display_source.combine_item_names": "Названия предметов",
 	"create.display_source.count_items": "Количество предметов",
@@ -1707,11 +1633,9 @@
 	"create.display_source.redstone_power.progress_bar": "Полоса прогресса",
 	"create.display_source.boiler.not_enough_space": "нет места",
 	"create.display_source.boiler.for_boiler_status": "для текста",
-
 	"create.display_target.line": "%1$s строка",
 	"create.display_target.page": "%1$s страница",
 	"create.display_target.single_line": "Одна строка",
-
 	"create.flap_display.cycles.alphabet": " ;А;Б;В;Г;Д;Е;Ё;Ж;З;И;Й;К;Л;М;Н;О;П;Р;С;Т;У;Ф;Х;Ц;Ч;Ш;Щ;Ъ;Ы;Ь;Э;Ю;Я",
 	"create.flap_display.cycles.numeric": " ;0;1;2;3;4;5;6;7;8;9",
 	"create.flap_display.cycles.arrival_time": "   ; мин;отп;15с;30с;45с",
@@ -1719,7 +1643,6 @@
 	"create.flap_display.cycles.fluid_units": "мВ;В ",
 	"create.flap_display.cycles.instant": " ; ",
 	"create.flap_display.cycles.pixel": "█;▓;▒",
-
 	"create.super_glue.too_far": "Выбранная область слишком большая",
 	"create.super_glue.cannot_reach": "Выбранные блоки должны быть соединены",
 	"create.super_glue.click_to_confirm": "Кликните ещё раз, чтобы подтвердить",
@@ -1728,7 +1651,6 @@
 	"create.super_glue.abort": "Выбор отменён",
 	"create.super_glue.not_enough": "Мало клея...",
 	"create.super_glue.success": "Нанесение клея...",
-
 	"create.gui.config.overlay1": "Здравствуй! :)",
 	"create.gui.config.overlay2": "Это образец оверлея",
 	"create.gui.config.overlay3": "Кликните и тащите с помощью мыши,",
@@ -1737,21 +1659,15 @@
 	"create.gui.config.overlay6": "и сохранить новую позицию",
 	"create.gui.config.overlay7": "Введите /create overlay reset ,",
 	"create.gui.config.overlay8": "чтобы сбросить позицию до стандартной",
-
 	"create.command.killTPSCommand": "killtps",
-	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: TPS сервера в настоящее время замедлено на %s мс :o",
-	"create.command.killTPSCommand.status.slowed_by.1": "[Create]: TPS сервера теперь замедлены на %s мс >:)",
-	"create.command.killTPSCommand.status.slowed_by.2": "[Create]: TPS сервера вернулось в норму :D",
+	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: TPS сервера в настоящее время замедлен на %s мс :o",
+	"create.command.killTPSCommand.status.slowed_by.1": "[Create]: TPS сервера теперь замедлен на %s мс >:)",
+	"create.command.killTPSCommand.status.slowed_by.2": "[Create]: TPS сервера вернулся в норму :D",
 	"create.command.killTPSCommand.status.usage.0": "[Create]: используйте /killtps stop , чтобы вернуть TPS сервера на обычную скорость",
 	"create.command.killTPSCommand.status.usage.1": "[Create]: используйте /killtps start <Время тика>, чтобы искусственно замедлить TPS сервера",
 	"create.command.killTPSCommand.argument.tickTime": "Время тика",
-
 	"create.contraption.minecart_contraption_too_big": "Эта вагонеточная штуковина кажется слишком большой, чтобы её можно было поднять",
 	"create.contraption.minecart_contraption_illegal_pickup": "Мистическая сила связывает эту вагонеточную штуковину с этим миром",
-
-
-	"_": "->------------------------]  Субтитры  [------------------------<-",
-
 	"create.subtitle.contraption_disassemble": "Штуковина разбирается",
 	"create.subtitle.peculiar_bell_use": "Особенный колокол звонит",
 	"create.subtitle.worldshaper_place": "Ручной редактор мира работает",
@@ -1798,33 +1714,16 @@
 	"create.subtitle.copper_armor_equip": "Позвякивание снаряжения для дайвинга",
 	"create.subtitle.mechanical_press_activation": "Механический пресс работает",
 	"create.subtitle.contraption_assemble": "Штуковина собирается",
-
-
-	"_": "->------------------------]  Описания предметов  [------------------------<-",
-
-	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",
-	"item.create.example_item.tooltip.summary": "A brief description of the item. _Underscores_ highlight a term.",
-	"item.create.example_item.tooltip.condition1": "When this",
-	"item.create.example_item.tooltip.behaviour1": "Then this item does this. (behaviours show on shift)",
-	"item.create.example_item.tooltip.condition2": "And When this",
-	"item.create.example_item.tooltip.behaviour2": "You can add as many behaviours as you like",
-	"item.create.example_item.tooltip.control1": "When Ctrl pressed",
-	"item.create.example_item.tooltip.action1": "These controls are displayed.",
-
-	"block.create.wooden_bracket.tooltip": "ДЕРЕВЯННАЯ СКОБА",
-	"block.create.wooden_bracket.tooltip.summary": "_Украсьте_ ваши _Валы, Шестерни_ и _Трубы_, используя уютное деревянное укрепление.",
-
-	"block.create.metal_bracket.tooltip": "МЕТАЛЛИЧЕСКАЯ СКОБА",
+	"block.create.wooden_bracket.tooltip": "Деревянная скоба",
+	"block.create.wooden_bracket.tooltip.summary": "_Украсьте_ ваши _Валы_ , _Шестерни_ и _Трубы_, используя уютное деревянное укрепление.",
+	"block.create.metal_bracket.tooltip": "Металлическая скоба",
 	"block.create.metal_bracket.tooltip.summary": "_Украсьте_ ваши _Валы, Шестерни_ и _Трубы_, используя прочное индустриальное укрепление.",
-
 	"block.create.seat.tooltip": "СИДЕНЬЕ",
 	"block.create.seat.tooltip.summary": "Присядьте и насладитесь поездкой! Привязывает игроков к собранным _устройствам_. Выглядит как отличная простая мебель! Можно окрасить в разные цвета.",
 	"block.create.seat.tooltip.condition1": "ПКМ по сиденью",
 	"block.create.seat.tooltip.behaviour1": "Сажает игрока на _Сиденье_. Нажмите _кнопку_ _приседания_, чтобы слезть (Shift по умолчанию).",
-
 	"item.create.blaze_cake.tooltip": "ТОРТ ВСПОЛОХА",
 	"item.create.blaze_cake.tooltip.summary": "Вкусное угощения для вашей трудяги — _Горелки всполоха_. Зажигает их всех!",
-
 	"item.create.wand_of_symmetry.tooltip": "ЖЕЗЛ СИММЕТРИИ",
 	"item.create.wand_of_symmetry.tooltip.summary": "Идеально отражает размещаемые блоки по настроенным плоскостям.",
 	"item.create.wand_of_symmetry.tooltip.condition1": "Пока на панели быстрого доступа",
@@ -1835,7 +1734,6 @@
 	"item.create.wand_of_symmetry.tooltip.action2": "_Убирает_ зеркало.",
 	"item.create.wand_of_symmetry.tooltip.control3": "ПКМ крадучись",
 	"item.create.wand_of_symmetry.tooltip.action3": "Открывает _интерфейс_ _конфигурации_.",
-
 	"item.create.handheld_worldshaper.tooltip": "РУЧНОЙ РЕДАКТОР МИРА",
 	"item.create.handheld_worldshaper.tooltip.summary": "Удобный инструмент для создания _ландшафтов_ и _рельефа_ _местности_.",
 	"item.create.handheld_worldshaper.tooltip.control1": "ЛКМ на блок",
@@ -1844,50 +1742,42 @@
 	"item.create.handheld_worldshaper.tooltip.action2": "Редактирует блоки, _создаёт или убирает_ блоки _согласно эталонному блоку_, _кисти и инструменту_.",
 	"item.create.handheld_worldshaper.tooltip.control3": "ПКМ крадучись",
 	"item.create.handheld_worldshaper.tooltip.action3": "Открывает _интерфейс конфигурации_.",
-
 	"item.create.tree_fertilizer.tooltip": "УДОБРЕНИЕ ДЛЯ ДЕРЕВЬЕВ",
 	"item.create.tree_fertilizer.tooltip.summary": "Мощная комбинация минералов подходит для ускорения роста деревьев.",
 	"item.create.tree_fertilizer.tooltip.condition1": "ПКМ с предметом на саженце",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Выращивает деревья, _независимо_ от _условий_ _их_ _расположения_.",
-
 	"item.create.extendo_grip.tooltip": "УДЛИНЕННАЯ РУКА",
 	"item.create.extendo_grip.tooltip.summary": "Значительно _увеличивает_ _досягаемость_ владельца.",
 	"item.create.extendo_grip.tooltip.condition1": "Находясь в левой руке",
 	"item.create.extendo_grip.tooltip.behaviour1": "Увеличивает _расстояние_ _досягаемости_ предметов, используемых в _правой_ _руке_.",
 	"item.create.extendo_grip.tooltip.condition2": "Когда надет Медный баллон",
 	"item.create.extendo_grip.tooltip.behaviour2": "_НЕ_ тратится _прочность_. Вместо этого будет тратиться _воздух_ из Баллона.",
-
 	"item.create.potato_cannon.tooltip": "КАРТОФЕЛЬНАЯ ПУШКА",
 	"item.create.potato_cannon.tooltip.summary": "Свомп! Запускайте выращенные вами овощи в своих врагов. Может работать от давления воздуха из _Медного_ _баллона_.",
 	"item.create.potato_cannon.tooltip.condition1": "ПКМ с предметом в инвентаре",
 	"item.create.potato_cannon.tooltip.behaviour1": "_Выстреливает_ подходящим предметом из вашего _инвентаря_.",
 	"item.create.potato_cannon.tooltip.condition2": "Когда надет Медный баллон",
 	"item.create.potato_cannon.tooltip.behaviour2": "_НЕ_ тратится _прочность_. Вместо этого будет тратиться _воздух_ из Баллона.",
-
 	"item.create.filter.tooltip": "ФИЛЬТР",
 	"item.create.filter.tooltip.summary": "Управляет_ _выходами_ и входами логистических устройств с _большей_ _точностью_, _сопоставляя_ их со _списком_ _предметов_ или несколькими _вложенными_ _фильтрами_.",
 	"item.create.filter.tooltip.condition1": "Когда в слоте фильтра",
 	"item.create.filter.tooltip.behaviour1": "_Управляет_ потоком предметов в соответствии с его _конфигурацией_.",
 	"item.create.filter.tooltip.condition2": "ПКМ с предметом",
 	"item.create.filter.tooltip.behaviour2": "Открывает _интерфейс_ _конфигурации_.",
-
 	"item.create.attribute_filter.tooltip": "ФИЛЬТР АТРИБУТОВ",
 	"item.create.attribute_filter.tooltip.summary": "_Управляет_ _выходами_ и _входами_ логистических устройств с _большей_ _точностью_, сопоставляя их с набором _атрибутов_ и _категорий предметов_.",
 	"item.create.attribute_filter.tooltip.condition1": "Когда в слоте фильтра",
 	"item.create.attribute_filter.tooltip.behaviour1": "_Управляет_ потоком предметов в соответствии с его _конфигурацией_.",
 	"item.create.attribute_filter.tooltip.condition2": "ПКМ с предметом",
 	"item.create.attribute_filter.tooltip.behaviour2": "Открывает _интерфейс_ _конфигурации_.",
-
 	"item.create.empty_schematic.tooltip": "ПУСТАЯ СХЕМАТИКА",
 	"item.create.empty_schematic.tooltip.summary": "Используется в качестве ингредиента рецепта и для записи в _Схематичный столе_.",
-
 	"item.create.schematic.tooltip": "СХЕМАТИКА",
 	"item.create.schematic.tooltip.summary": "Содержит структуру, которая может позиционироваться и помещаться в мир. Расположите голограмму по своему усмотрению и используйте _Схематичную пушку_ для её построения.",
 	"item.create.schematic.tooltip.condition1": "ПКМ с предметом",
 	"item.create.schematic.tooltip.behaviour1": "Может быть позиционирован с помощью инструментов на экране.",
 	"item.create.schematic.tooltip.control1": "ПКМ крадучись",
 	"item.create.schematic.tooltip.action1": "Открывает _интерфейс_ для ввода _точных координат_.",
-
 	"item.create.schematic_and_quill.tooltip": "СХЕМАТИКА И ПЕРО",
 	"item.create.schematic_and_quill.tooltip.summary": "Используется для сохранения структуры в вашем мире в файл формата .nbt.",
 	"item.create.schematic_and_quill.tooltip.condition1": "Шаг 1",
@@ -1900,17 +1790,14 @@
 	"item.create.schematic_and_quill.tooltip.action2": "Позволяет выбрать угловые точки в воздухе. Прокрутка для настройки расстояния.",
 	"item.create.schematic_and_quill.tooltip.control3": "ПКМ крадучись",
 	"item.create.schematic_and_quill.tooltip.action3": "_Сбрасывает_ и _удаляет_ выделение.",
-
 	"block.create.schematicannon.tooltip": "СХЕМАТИЧНАЯ ПУШКА",
 	"block.create.schematicannon.tooltip.summary": "_Ставит блоки_ для воссоздания _схематики_ в мире. Использует предметы из _соседнего инвентаря_ и _порох_ в качестве _топлива_.",
 	"block.create.schematicannon.tooltip.condition1": "ПКМ по блоку",
 	"block.create.schematicannon.tooltip.behaviour1": "Открывает _интерфейс_.",
-
 	"block.create.schematic_table.tooltip": "СХЕМАТИЧНЫЙ СТОЛ",
 	"block.create.schematic_table.tooltip.summary": "Записывает сохраненные схематики в _Пустые_ _схематики_.",
 	"block.create.schematic_table.tooltip.condition1": "Когда дана Пустая схематика",
 	"block.create.schematic_table.tooltip.behaviour1": "Загружает выбранный файл из вашей папки «Schematics».",
-
 	"item.create.goggles.tooltip": "ИНЖЕНЕРНЫЕ ОЧКИ",
 	"item.create.goggles.tooltip.summary": "Очки для улучшения зрения с помощью полезной кинетической информации.",
 	"item.create.goggles.tooltip.condition1": "Когда надеты",
@@ -1919,25 +1806,20 @@
 	"item.create.goggles.tooltip.behaviour2": "Показывает подробную информацию о скорости или нагрузки сети, к которой подключён датчик.",
 	"item.create.goggles.tooltip.condition3": "При взгляде на жидкостные контейнеры",
 	"item.create.goggles.tooltip.behaviour3": "Показывает детализированную информацию о _ёмкости_ блока и о хранящейся в нём хранится _жидкости_.",
-
 	"item.create.wrench.tooltip": "ГАЕЧНЫЙ КЛЮЧ",
 	"item.create.wrench.tooltip.summary": "Полезный _инструмент_ для работы с _кинетическими_ штуковинами. Может использоваться для _поворота_, _демонтажа_ и _настройки_ компонентов.",
 	"item.create.wrench.tooltip.control1": "ПКМ по кинетическому блоку",
 	"item.create.wrench.tooltip.action1": "_Поворачивает компонент_, с которым вы взаимодействуете _к лицу_ или _от лица_.",
 	"item.create.wrench.tooltip.control2": "ПКМ крадучись",
 	"item.create.wrench.tooltip.action2": "Разбирает кинетические компоненты и помещает их обратно в ваш инвентарь.",
-
 	"block.create.nozzle.tooltip": "ФОРСУНКА",
 	"block.create.nozzle.tooltip.summary": "Прикрепите к передней части _Вентилятора_, чтобы распределить его влияние на существ _во всех направлениях_.",
-
 	"block.create.cuckoo_clock.tooltip": "ЧАСЫ С КУКУШКОЙ",
 	"block.create.cuckoo_clock.tooltip.summary": "Прекрасная _вещица_ для _украшения_ пространства и _отслеживания времени_.",
 	"block.create.cuckoo_clock.tooltip.condition1": "При вращении",
 	"block.create.cuckoo_clock.tooltip.behaviour1": "Показывают текущее время и напевает мелодию два раза в день. _Активируется_ _один_ _раз_ в _полдень_ и в _сумерках_, как только _игроки_ _могут_ _спать_.",
-
 	"block.create.turntable.tooltip": "ПОВОРОТНЫЙ СТОЛ",
 	"block.create.turntable.tooltip.summary": "Преобразует _силу_ _вращения_ прямиком в морскую болезнь.",
-
 	"block.create.toolbox.tooltip": "ЯЩИК ДЛЯ ИНСТРУМЕНТОВ",
 	"block.create.toolbox.tooltip.summary": "Самый дорогой компаньон каждого изобретателя. Удобно _вмещает_ большое количество _восьми различных_ типов предметов.",
 	"block.create.toolbox.tooltip.condition1": "ЛКМ по блоку",
@@ -1946,52 +1828,42 @@
 	"block.create.toolbox.tooltip.behaviour2": "Позволяет _получить быстрый доступ_ к содержимому _Ящика для инструментов_.",
 	"block.create.toolbox.tooltip.condition3": "ПКМ по блоку",
 	"block.create.toolbox.tooltip.behaviour3": "Открывает _интерфейс контейнера_.",
-
 	"block.create.stockpile_switch.tooltip": "НАБЛЮДАТЕЛЬ ЗАПОЛНЕННОСТИ",
 	"block.create.stockpile_switch.tooltip.summary": "Выдаёт редстоун-сигнал в зависимости от _заполненности прикреплённого_ _ящика_.",
 	"block.create.stockpile_switch.tooltip.condition1": "Когда достигнут нижний предел",
 	"block.create.stockpile_switch.tooltip.behaviour1": "Не выдаёт _редстоун-сигнал_.",
-
 	"block.create.content_observer.tooltip": "НАБЛЮДАТЕЛЬ СОДЕРЖИМОГО",
 	"block.create.content_observer.tooltip.summary": "_Обнаруживает предметы внутри _контейнеров_ и на _конвейерах_, соответствующие настроенному _фильтру_. Если наблюдаемый блок-хранилище, ремень или шланг содержит совпадающий предмет, этот компонент излучает редстоун-сигнал. Когда наблюдаемая _воронка передает_ соответствующий предмет, этот компонент испускает _редстоун-импульс_.",
 	"block.create.content_observer.tooltip.condition1": "Когда наблюдает за контейнером",
 	"block.create.content_observer.tooltip.behaviour1": "Выдаёт _редстоун-сигнал_, пока наблюдаемое содержимое совпадает с _фильтром_.",
 	"block.create.content_observer.tooltip.condition2": "Когда наблюдает за воронкой",
 	"block.create.content_observer.tooltip.behaviour2": "Выдаёт _редстоун-сигнал_, пока содержимое совпадает с _перемещаемым_ предметом.",
-
 	"block.create.creative_crate.tooltip": "ТВОРЧЕСКИЙ ЯЩИК",
 	"block.create.creative_crate.tooltip.summary": "Это _хранилище_ позволяет _бесконечно дублировать любой предмет_. Установите рядом со Схематичной пушкой, чтобы удалить любые требования к материалам.",
 	"block.create.creative_crate.tooltip.condition1": "Когда предмет в слоте фильтра",
 	"block.create.creative_crate.tooltip.behaviour1": "Всё, что извлечено из этого контейнера, обеспечит бесконечную поставку указанного предмета. Предметы, _помещённые_ в этот ящик, будут _уничтожены_.",
-
 	"item.create.creative_blaze_cake.tooltip": "ТВОРЧЕСКИЙ ТОРТ",
 	"item.create.creative_blaze_cake.tooltip.summary": "Особое угощение для ваших _Горелок всполоха_. После поедания этого торта у Горелки _никогда не закончится топливо_.",
 	"item.create.creative_blaze_cake.tooltip.condition1": "ПКМ по Горелке всполоха",
 	"item.create.creative_blaze_cake.tooltip.behaviour1": "_Циклически_ изменяет уровень нагрева.",
-
 	"block.create.controller_rail.tooltip": "КОНТРОЛИРУЮЩИЕ РЕЛЬСЫ",
 	"block.create.controller_rail.tooltip.summary": "_Всенаправленные запитанные рельсы_, позволяющие провести _точную настройку_ _скорости_ вагонеток.",
 	"block.create.controller_rail.tooltip.condition1": "Когда подан редстоун-сигнал",
 	"block.create.controller_rail.tooltip.behaviour1": "_Ускоряет_ или _замедляет прошедшие вагонетки_, на величину зависящую от _силы сигнала_. Распространяя редстоун-сигнал на соседние контролирующие рельсы. Питание двух контролирующих рельс с разной мощностью приведет к тому, что дорожки между ними будут интерполировать свой сигнал.",
-
 	"item.create.sand_paper.tooltip": "НАЖДАЧНАЯ БУМАГА",
 	"item.create.sand_paper.tooltip.summary": "Грубая бумага, которую можно использовать для _полировки материалов_. Может применяться автоматически с помощью Автономного активатора.",
 	"item.create.sand_paper.tooltip.condition1": "ПКМ с предметом",
 	"item.create.sand_paper.tooltip.behaviour1": "Полирует предметы во _второй руке_, или лежащие _на полу_, если _смотреть на них_.",
-
 	"item.create.builders_tea.tooltip": "ЧАЙ СТРОИТЕЛЯ",
 	"item.create.builders_tea.tooltip.summary": "Идеальный напиток для начала дня. _Мотивирует и насыщает_.",
-
 	"item.create.refined_radiance.tooltip": "ИЗЫСКАННОЕ СИЯНИЕ",
 	"item.create.refined_radiance.tooltip.summary": "Хроматический материал, _добытый из поглощенного света_.",
 	"item.create.refined_radiance.tooltip.condition1": "Работа в процессе",
 	"item.create.refined_radiance.tooltip.behaviour1": "Использование этого материала будет доступно в следующем обновлении.",
-
 	"item.create.shadow_steel.tooltip": "ТЕНЕВАЯ СТАЛЬ",
 	"item.create.shadow_steel.tooltip.summary": "Хроматический материал, _добытый_ _в_ _пустоте_.",
 	"item.create.shadow_steel.tooltip.condition1": "Работа в процессе",
 	"item.create.shadow_steel.tooltip.behaviour1": "Использование этого материала будет доступно в следующем обновлении.",
-
 	"item.create.linked_controller.tooltip": "КОНТРОЛЛЕР СВЯЗЕЙ",
 	"item.create.linked_controller.tooltip.summary": "Предоставляет _ручной контроль_ над частотами _Редстоунового беспроводного передатчика сигнала_, присвоенные его _шести_ кнопкам.",
 	"item.create.linked_controller.tooltip.condition1": "ПКМ с предметом",
@@ -2002,64 +1874,50 @@
 	"item.create.linked_controller.tooltip.behaviour3": "Включает _режим привязки_, нажмите на одну из _шести кнопок_, чтобы привязать её к _частоте передатчика_.",
 	"item.create.linked_controller.tooltip.condition4": "ПКМ по кафедре",
 	"item.create.linked_controller.tooltip.behaviour4": "Помещает Контроллер на кафедру для удобства использования (ПКМ крадучись, чтобы забрать его).",
-
 	"item.create.diving_helmet.tooltip": "ШЛЕМ ДЛЯ ДАЙВИНГА",
 	"item.create.diving_helmet.tooltip.summary": "Вместе с _Медным баллоном_, позволяет владельцу _дышать под водой_ в течение длительного времени.",
 	"item.create.diving_helmet.tooltip.condition1": "Когда надето",
 	"item.create.diving_helmet.tooltip.behaviour1": "Даёт эффект _водного дыхания_, медленно тратя _воздух_ из Баллона.",
-
 	"item.create.copper_backtank.tooltip": "МЕДНЫЙ БАЛЛОН",
 	"item.create.copper_backtank.tooltip.summary": "_Носимый резервуар_ для транспортировки воздуха под давлением.",
 	"item.create.copper_backtank.tooltip.condition1": "Когда надето",
 	"item.create.copper_backtank.tooltip.behaviour1": "Обеспечивает подачу _воздуха_ под _давлением_ к оборудованию, которое в этом нуждается.",
 	"item.create.copper_backtank.tooltip.condition2": "При вращении",
 	"item.create.copper_backtank.tooltip.behaviour2": "Собирает и сжимает воздух со скоростью, зависящей от скорости вращения.",
-
 	"block.create.placard.tooltip": "УМНАЯ РАМКА",
 	"block.create.placard.tooltip.summary": "_Обрамите_ свои предметы латунью с помощью этой красивой рамки. Безопасна для штуковин!",
 	"block.create.placard.tooltip.condition1": "ПКМ по рамке с предметом в руках",
 	"block.create.placard.tooltip.behaviour1": "_Добавляет_ удерживаемый _предмет_ в рамку. _Издаёт_ короткий _редстоун-сигнал_, если соответствующий предмет уже присутствует.",
 	"block.create.placard.tooltip.condition2": "ЛКМ по рамке с предметом",
 	"block.create.placard.tooltip.behaviour2": "_Убирает_ текущий _предмет_ из рамки.",
-
 	"block.create.flywheel.tooltip": "МАХОВИК",
 	"block.create.flywheel.tooltip.summary": "_Украсьте_ свои _штуковины_ этим внушительным латунным колесом.",
 	"block.create.flywheel.tooltip.condition1": "При вращении",
 	"block.create.flywheel.tooltip.behaviour1": "Начинает вращаться. Удивительно!",
-
 	"item.create.diving_boots.tooltip": "БОТИНКИ ДЛЯ ДАЙВИНГА",
 	"item.create.diving_boots.tooltip.summary": "Пара _тяжелых ботинок_, позволяющая лучше передвигаться по океанскому дну.",
 	"item.create.diving_boots.tooltip.condition1": "Когда надеты",
 	"item.create.diving_boots.tooltip.behaviour1": "Владелец _тонет быстрее_ и _не_ может _плавать_. Ботинки дают возможность _ходить_ и _прыгать_ под водой. Носящий может беспрепятственно ходить по работающим конвейерам.",
-
 	"item.create.crafting_blueprint.tooltip": "ЧЕРТЁЖ",
 	"item.create.crafting_blueprint.tooltip.summary": "_Разместив_ на стене, его можно использовать для _определения расположения предметов_ для более простого ручного создания. Каждый слот показывает отдельный рецепт крафта.",
 	"item.create.crafting_blueprint.condition1": "ПКМ по пустому слоту",
 	"item.create.crafting_blueprint.behaviour1": "Открывает меню _крафта_, позволяющее _настроить рецепт_ и отображаемые предметы.",
 	"item.create.crafting_blueprint.condition2": "ПКМ по настроенному слоту",
 	"item.create.crafting_blueprint.behaviour2": "_Применяет заданный рецепт_ с подходящими ингредиентами, из вашего _инвентаря_. Зажмите _Shift_, чтобы создать до _стака_ предметов.",
-
 	"item.create.minecart_coupling.tooltip": "СОЕДИНИТЕЛЬ ВАГОНЕТОК",
 	"item.create.minecart_coupling.tooltip.summary": "_Сцепляет_ ваши _вагонетки_ или _Вагонеточные штуковины_ вместе, чтобы создать великолепный мини-поезд.",
 	"item.create.minecart_coupling.tooltip.condition1": "ПКМ по вагонеткам",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Сцепляет_ две вагонетки вместе, пытаясь держать их на _определённой дистанции_ при движении.",
-
 	"item.create.experience_nugget.tooltip": "КУСОЧЕК ОПЫТА",
 	"item.create.experience_nugget.tooltip.summary": "_Дзинь!_ Частичка _вдохновения_ от ваших фантастических изобретений.",
 	"item.create.experience_nugget.tooltip.condition1": "ПКМ с предметом",
 	"item.create.experience_nugget.tooltip.behaviour1": "_Высвобождает_ _очки опыта_, находящиеся внутри.",
-
 	"block.create.peculiar_bell.tooltip": "ОСОБЕННЫЙ КОЛОКОЛ",
 	"block.create.peculiar_bell.tooltip.summary": "Декоративный _латунный колокол_. Установка его прямо над горящем _огнём душ_ может вызвать непредвиденные последствия...",
-
 	"block.create.haunted_bell.tooltip": "ПРИЗРАЧНЫЙ КОЛОКОЛ",
 	"block.create.haunted_bell.tooltip.summary": "_Проклятый колокол_ населённый потерянными душами Нижнего мира.",
 	"block.create.haunted_bell.tooltip.condition1": "При ношении в руке или ПКМ по блоку",
 	"block.create.haunted_bell.tooltip.behaviour1": "Подсвечивает ближайшие _места без света_ на которых могут появляться _враждебные существа_.",
-
-
-	"_": "->------------------------]  Раздел размышлений  [------------------------<-",
-
 	"create.ponder.hold_to_ponder": "Удерживайте [%1$s] для размышления",
 	"create.ponder.subject": "Субъект этой сцены",
 	"create.ponder.pondering": "Размышляем над...",
@@ -2119,18 +1977,15 @@
 	"create.ponder.tag.display_targets.description": "Компоненты или блоки, которые могут обрабатывать и отображать данные, полученные от Передатчика информации",
 	"create.ponder.tag.train_related": "Железнодорожное оборудование",
 	"create.ponder.tag.train_related.description": "Компоненты, используемые при строительстве и управлении железнодорожных штуковин",
-
 	"create.ponder.analog_lever.header": "Управлением редстоун-сигналами с помощью Аналоговых рычагов",
 	"create.ponder.analog_lever.text_1": "Аналоговый рычаг создан как компактный и точный источник редстоун-сигнала",
 	"create.ponder.analog_lever.text_2": "Кликните ПКМ, чтобы увеличить силу выходного сигнала",
 	"create.ponder.analog_lever.text_3": "Кликните ПКМ крадучись, чтобы уменьшить силу выходного сигнала",
-
 	"create.ponder.andesite_tunnel.header": "Использованием Андезитовых туннелей",
 	"create.ponder.andesite_tunnel.text_1": "Андезитовые туннели могут быть использованы, чтобы накрывать конвейеры",
 	"create.ponder.andesite_tunnel.text_2": "Всегда, когда у Андезитового туннеля есть доступный выход сбоку...",
 	"create.ponder.andesite_tunnel.text_3": "...он будет отделять ровно один предмет из любых проходящих мимо стаков",
 	"create.ponder.andesite_tunnel.text_4": "Остаток продолжит свой путь",
-
 	"create.ponder.auto_schedule.header": "Автоматическим назначением Расписаний на Железнодорожных станциях",
 	"create.ponder.auto_schedule.text_1": "Расписания могут использоваться для предоставления машинистам пункта назначения",
 	"create.ponder.auto_schedule.text_2": "Компараторы будут получать редстоун-сигнал всегда, когда поезд прибыл на Станцию",
@@ -2138,7 +1993,6 @@
 	"create.ponder.auto_schedule.text_4": "Станции также можно использовать для автоматического назначения новых Расписаний",
 	"create.ponder.auto_schedule.text_5": "Расписание, положенное на Станцию, будет автоматически скопировано для машиниста поезда",
 	"create.ponder.auto_schedule.text_6": "В отличии от ручного назначения, машинисты не заберут его с собой",
-
 	"create.ponder.basin.header": "Обработкой предметов в Чашах",
 	"create.ponder.basin.text_1": "Чаша может хранить предметы и жидкости для обработки",
 	"create.ponder.basin.text_2": "После обработки, Чаши пытаются вывести результат под любую доступную сторону",
@@ -2149,15 +2003,12 @@
 	"create.ponder.basin.text_7": "Это может быть полезно, если продукт должен быть использован повторно как ингредиент",
 	"create.ponder.basin.text_8": "В таком случае, желаемые продукты, должны быть извлечены из Чаши",
 	"create.ponder.basin.text_9": "Фильтр может быть необходим для избежания извлечения необработанных предметов",
-
 	"create.ponder.bearing_modes.header": "Режимами движения Механического вращателя",
 	"create.ponder.bearing_modes.text_1": "Когда Вращатель остановлен, он установит структуру на ближайшем выровненным по сетке блоков углу",
 	"create.ponder.bearing_modes.text_2": "Он может быть настроен никогда не превращать структуру в блоки, или только в исходном положении",
-
 	"create.ponder.belt_casing.header": "Обрамлением конвейеров",
 	"create.ponder.belt_casing.text_1": "Латунный или Андезитовый корпус можно использовать для украшения конвейеров",
 	"create.ponder.belt_casing.text_2": "Используйте Гаечный ключ, чтобы убрать обрамление",
-
 	"create.ponder.belt_connector.header": "Использованием Механических ремней",
 	"create.ponder.belt_connector.text_1": "Кликнув ПКМ по двум Валам Механическим ремнём, вы соедините их вместе и создадите конвейер",
 	"create.ponder.belt_connector.text_2": "Ошибочный выбор может быть отменён кликнув ПКМ крадучись",
@@ -2165,7 +2016,6 @@
 	"create.ponder.belt_connector.text_4": "Валы, соединённые Ремнями, будут вращаться с той же скоростью и направлением",
 	"create.ponder.belt_connector.text_5": "Добавленные Валы могут быть убраны Гаечным ключом",
 	"create.ponder.belt_connector.text_6": "Механические ремни могут быть окрашены в эстетических целях",
-
 	"create.ponder.belt_directions.header": "Возможными расположениями Механических ремней",
 	"create.ponder.belt_directions.text_1": "Ремни не могут соединяться в произвольных направлениях",
 	"create.ponder.belt_directions.text_2": "1. Они могут соединяться горизонтально;",
@@ -2173,23 +2023,19 @@
 	"create.ponder.belt_directions.text_4": "3. и вертикально;",
 	"create.ponder.belt_directions.text_5": "4. И также они могут соединять вертикальные Валы горизонтально",
 	"create.ponder.belt_directions.text_6": "Это все возможные направления. Ремни могут достигать длины от 2 до 20 блоков",
-
 	"create.ponder.belt_transport.header": "Использованием Механических ремней для логистики",
 	"create.ponder.belt_transport.text_1": "Двигающиеся ремни будут перемещать предметы и других существ",
 	"create.ponder.belt_transport.text_2": "Кликните ПКМ пустой рукой, чтобы забрать предметы с конвейера",
-
 	"create.ponder.blaze_burner.header": "Кормлением Горелок всполоха",
 	"create.ponder.blaze_burner.text_1": "Горелки всполохов нагревают предметы, обрабатывающиеся в Чаше",
 	"create.ponder.blaze_burner.text_2": "Для этого, всполох должен быть накормлен воспламеняемыми предметами",
 	"create.ponder.blaze_burner.text_3": "С Тортом всполоха, Горелка может достигать ещё большего уровня нагрева",
 	"create.ponder.blaze_burner.text_4": "Процесс кормления может быть автоматизирован, с помощью Автономного активатора или Механической руки",
-
 	"create.ponder.brass_funnel.header": "Использованием Латунных воронок",
 	"create.ponder.brass_funnel.text_1": "Андезитовая Воронка может извлекать только один предмет за раз",
 	"create.ponder.brass_funnel.text_2": "Латунная Воронка может извлекать их до целого стака",
 	"create.ponder.brass_funnel.text_3": "Прокрутка на слоте фильтра позволяет точно регулировать размер извлекаемого стака",
 	"create.ponder.brass_funnel.text_4": "Использование предмета на слоте фильтра, ограничит Воронку до передачи только совпадающих предметов",
-
 	"create.ponder.brass_tunnel.header": "Использованием Латунных туннелей",
 	"create.ponder.brass_tunnel.text_1": "Латунные туннели могут быть использованы, чтобы накрывать конвейеры",
 	"create.ponder.brass_tunnel.text_2": "Латунные туннели имеют слот для фильтра на каждой открытой стороне",
@@ -2199,7 +2045,6 @@
 	"create.ponder.brass_tunnel.text_6": "Латунные туннели на параллельных конвейерах формируют группы",
 	"create.ponder.brass_tunnel.text_7": "Входящие предметы будут распределены между всеми соединёнными выходами",
 	"create.ponder.brass_tunnel.text_8": "Для этого предметы также могут быть вложены в блок Туннеля напрямую",
-
 	"create.ponder.brass_tunnel_modes.header": "Режимами распределения Латунного туннеля",
 	"create.ponder.brass_tunnel_modes.text_1": "Используя Гаечный ключ, вы можете настроить режим распределения Латунного туннеля",
 	"create.ponder.brass_tunnel_modes.text_10": "«Синхронизировать входы» — уникальный режим для Латунных туннелей",
@@ -2213,33 +2058,27 @@
 	"create.ponder.brass_tunnel_modes.text_7": "«Строго по кругу» никогда не пропускает выходы",
 	"create.ponder.brass_tunnel_modes.text_8": "«Предпочтительно ближайший» приоритизирует ближайшие выходы от места подачи предметов",
 	"create.ponder.brass_tunnel_modes.text_9": "«Случайно» будет отдавать целые стаки случайно выбранным выходам",
-
 	"create.ponder.cart_assembler.header": "Перемещением структур при помощи Сборщиков вагонеток",
 	"create.ponder.cart_assembler.text_1": "Активированные Сборщики вагонеток устанавливают прикреплённые сверху структуры к проезжающим через них вагонетки",
 	"create.ponder.cart_assembler.text_2": "Без редстоун-сигнала они разбирают штуковины обратно в блоки",
 	"create.ponder.cart_assembler.text_3": "Использование Гаечного ключа на вагонетке позволит вам унести вагонеточную штуковину куда-то ещё",
-
 	"create.ponder.cart_assembler_dual.header": "Сборкой штуковин-экипажей",
 	"create.ponder.cart_assembler_dual.text_1": "Всегда, когда два Сборщика вагонеток имеют общую прикреплённую структуру...",
 	"create.ponder.cart_assembler_dual.text_2": "...активация любого из них создаст штуковину-экипаж",
 	"create.ponder.cart_assembler_dual.text_3": "Эти вагонетки будут вести себя так, будто они соединены Соединителем вагонеток",
-
 	"create.ponder.cart_assembler_modes.header": "Настройкой ориентации вагонеточных штуковин",
 	"create.ponder.cart_assembler_modes.text_1": "Вагонеточные штуковины будут поворачиваться в сторону движения их вагонеток",
 	"create.ponder.cart_assembler_modes.text_2": "Стрелкой показано, какая сторона штуковины будет считаться передней",
 	"create.ponder.cart_assembler_modes.text_3": "Если Сборщик настроен на блокирование вращения, то ориентация штуковин никогда не изменится",
-
 	"create.ponder.cart_assembler_rails.header": "Другими типами вагонеток и рельс",
 	"create.ponder.cart_assembler_rails.text_1": "Сборщики вагонеток на обычных рельсах не будут влиять на движение проходящих вагонеток",
 	"create.ponder.cart_assembler_rails.text_2": "На активных Контролирующих рельсах или энергорельсах вагонетки будут стоять на месте до тех, пока Сборщик не будет активирован",
 	"create.ponder.cart_assembler_rails.text_3": "Другие типы вагонеток могут быть использованы как основания для вагонеточных штуковин",
 	"create.ponder.cart_assembler_rails.text_4": "Самоходные вагонетки будут ехать самостоятельно, используя топливо из присоединённых инвентарей",
-
 	"create.ponder.chain_drive.header": "Передачей силы вращения Цепными приводами в корпусе",
 	"create.ponder.chain_drive.text_1": "Цепные приводы передают силу вращения друг другу",
 	"create.ponder.chain_drive.text_2": "Таким образом, все соединённые Валы будут вращаться в одном направлении",
 	"create.ponder.chain_drive.text_3": "Любая часть в ряду может быть повёрнута на 90 градусов",
-
 	"create.ponder.chain_gearshift.header": "Управлением скоростью вращения Регулируемыми цепными коробками передач",
 	"create.ponder.chain_gearshift.text_1": "Неактивные Цепные коробки передач ведут себя точно так же, как Цепные приводы",
 	"create.ponder.chain_gearshift.text_2": "При активации, скорость, передаваемая другим Цепным коробкам передач в ряду удваивается",
@@ -2247,17 +2086,14 @@
 	"create.ponder.chain_gearshift.text_4": "В обоих случаях, Цепные приводы в ряду всегда вращаются с удвоенной скоростью активированной Цепной коробки передач",
 	"create.ponder.chain_gearshift.text_5": "Используя аналоговые редстоун-сигналы, изменение скорости может быть настроено более точно, нежели в 1 или в 2 раза",
 	"create.ponder.chain_gearshift.text_6": "12 об/мин",
-
 	"create.ponder.chute.header": "Транспортировкой предметов вниз через Желоба",
 	"create.ponder.chute.text_1": "Желоба могут транспортировать предметы вертикально вниз",
 	"create.ponder.chute.text_2": "Используя Гаечный ключ, вы можете создать окно",
 	"create.ponder.chute.text_3": "Установка Желобов на стороны других желобов сделает их диагональными",
-
 	"create.ponder.chute_upward.header": "Транспортировкой предметов вверх через Желоба",
 	"create.ponder.chute_upward.text_1": "С помощью Вентилятора в корпусе внизу или наверху, Жёлоб может перемещать предметы вверх",
 	"create.ponder.chute_upward.text_2": "Осмотр Желобов в Инженерных очках показывает информацию о направлении движения",
 	"create.ponder.chute_upward.text_3": "На «заблокированном» конце предметы должны быть введены/выведены сбоку",
-
 	"create.ponder.clockwork_bearing.header": "Оживлением структур Часовыми механизмами",
 	"create.ponder.clockwork_bearing.text_1": "Часовые механизмы прикрепляются к блокам спереди",
 	"create.ponder.clockwork_bearing.text_2": "При получении силы вращения, структура повернётся в зависимости от текущего часа",
@@ -2267,43 +2103,34 @@
 	"create.ponder.clockwork_bearing.text_6": "Вторая структура может быть добавлена спереди часовой стрелки",
 	"create.ponder.clockwork_bearing.text_7": "Убедитесь, что две структуры не соединены между собой Суперклеем или чем-то схожим",
 	"create.ponder.clockwork_bearing.text_8": "Вторая структура станет вращаться как минутная стрелка",
-
 	"create.ponder.clutch.header": "Управлением силой вращения с помощью Сцеплений",
 	"create.ponder.clutch.text_1": "Сцепление передаёт вращение по прямой",
 	"create.ponder.clutch.text_2": "При активации редстоун-сигналом оно разрывает соединение",
-
 	"create.ponder.cog_speedup.header": "Переключением передач Шестернями",
 	"create.ponder.cog_speedup.text_1": "Большие и Маленькие шестерни могут соединяться по диагонали",
 	"create.ponder.cog_speedup.text_2": "Кинетическая энергия, переходя с Большой шестерни на маленькую — удвоит свою скорость",
 	"create.ponder.cog_speedup.text_3": "Переходя в обратном направлении — сократит скорость вдвое",
-
 	"create.ponder.cogwheel.header": "Передачей силы вращения Шестернями",
 	"create.ponder.cogwheel.text_1": "Шестерни передают вращение другим соседним Шестерням",
 	"create.ponder.cogwheel.text_2": "Таким образом, соседние соединённые Валы будут вращаться в противоположных направлениях",
-
 	"create.ponder.cogwheel_casing.header": "Обрамлением Шестерней",
 	"create.ponder.cogwheel_casing.text_1": "Латунный или Андезитовый корпус можно использовать для украшения Шестерней",
 	"create.ponder.cogwheel_casing.text_2": "Компоненты, обрамлённые в корпус, не будут иметь выхода Вала",
 	"create.ponder.cogwheel_casing.text_3": "Гаечный ключ можно использовать для переключения соединений",
-
 	"create.ponder.creative_fluid_tank.header": "Использованием Творческих жидкостных баков",
 	"create.ponder.creative_fluid_tank.text_1": "Творческий жидкостный бак может использоваться для обеспечения бесконечного запаса жидкости",
 	"create.ponder.creative_fluid_tank.text_2": "Кликните ПКМ предметом, содержащим жидкость, чтобы настроить его",
 	"create.ponder.creative_fluid_tank.text_3": "Трубопроводы могут бесконечно вытягивать заданную жидкость из резервуара",
 	"create.ponder.creative_fluid_tank.text_4": "Любые жидкости, закачанные обратно в Творческий жидкостный бак, будут уничтожены",
-
 	"create.ponder.creative_motor.header": "Генерацией силы вращения Творческими моторами",
 	"create.ponder.creative_motor.text_1": "Творческие моторы — это компактные и настраиваемые источники силы вращения",
 	"create.ponder.creative_motor.text_2": "Прокрутка по задней панели изменяет количество оборотов в минуту у вращающегося вала Мотора",
-
 	"create.ponder.creative_motor_mojang.header": "Загадкой от Mojang",
-
 	"create.ponder.crushing_wheels.header": "Обработкой предметов Колёсами дробления",
 	"create.ponder.crushing_wheels.text_1": "Пара Колёс дробления может очень эффективно дробить предметы",
 	"create.ponder.crushing_wheels.text_2": "Кинетическая энергия должна вращать их друг в друга",
 	"create.ponder.crushing_wheels.text_3": "Предметы брошенные или введённые в них сверху будут обработаны",
 	"create.ponder.crushing_wheels.text_4": "Предметы также могут быть введены и подобраны автоматически",
-
 	"create.ponder.deployer.header": "Использованием Автономных активаторов",
 	"create.ponder.deployer.text_1": "При наличии силы вращения Автономный активатор может имитировать действия игрока",
 	"create.ponder.deployer.text_10": "Кликните ПКМ спереди, чтобы дать ему предмет для использования",
@@ -2320,33 +2147,27 @@
 	"create.ponder.deployer.text_7": "Активировать блоки;",
 	"create.ponder.deployer.text_8": "Собирать блоки;",
 	"create.ponder.deployer.text_9": "и атаковать существ",
-
 	"create.ponder.deployer_contraption.header": "Использованием Автономных активаторов на штуковинах",
 	"create.ponder.deployer_contraption.text_1": "Всегда, когда Автономные активаторы движутся как часть штуковины...",
 	"create.ponder.deployer_contraption.text_2": "...они активируются на каждом посещённом блоке, используя предметы из любых хранилищ на штуковине",
 	"create.ponder.deployer_contraption.text_3": "Можно использовать слот фильтра, чтобы уточнить, какие предметы ему использовать",
-
 	"create.ponder.deployer_modes.header": "Режимами Автономного активатора",
 	"create.ponder.deployer_modes.text_1": "По умолчанию, Активатор имитирует ПКМ-взаимодействие",
 	"create.ponder.deployer_modes.text_2": "Используя Гаечный ключ, вы можете установить его режим на имитацию ЛКМ",
-
 	"create.ponder.deployer_processing.header": "Обработкой предметов с помощью Автономного активатора",
 	"create.ponder.deployer_processing.text_1": "Держа подходящий предмет/инструмент, Автономные активаторы могут обрабатывать предметы под собой",
 	"create.ponder.deployer_processing.text_2": "Принимаемые предметы можно бросить или положить на Депо под Автономным активатором",
 	"create.ponder.deployer_processing.text_3": "Когда предметы находятся на конвейере...",
 	"create.ponder.deployer_processing.text_4": "...Автономный активатор будет удерживать и обрабатывать их автоматически",
-
 	"create.ponder.deployer_redstone.header": "Управлением Автономным активатором редстоун-сигналом",
 	"create.ponder.deployer_redstone.text_1": "При активации редстоун-сигналом Автономный активатор перестанет работать",
 	"create.ponder.deployer_redstone.text_2": "Перед остановкой, Активатор завершит все начатые действия",
 	"create.ponder.deployer_redstone.text_3": "Таким образом, инвертированный редстоун-импульс может быть использован для вызова ровно одного срабатывания",
-
 	"create.ponder.depot.header": "Использованием Депо",
 	"create.ponder.depot.text_1": "Депо могут служить как «стационарный» элемент конвейера",
 	"create.ponder.depot.text_2": "Кликните ПКМ, чтобы самостоятельно положить или забрать предметы с Депо",
 	"create.ponder.depot.text_3": "Также как и конвейер, Депо может предоставлять предметы для обработки",
 	"create.ponder.depot.text_4": "А также поставлять предметы Механическим рукам",
-
 	"create.ponder.display_board.header": "Использованием Механических табло",
 	"create.ponder.display_board.text_1": "Механическое табло — это масштабируемая альтернатива табличкам",
 	"create.ponder.display_board.text_2": "Для работы ему требуется вращательная сила",
@@ -2354,7 +2175,6 @@
 	"create.ponder.display_board.text_4": "...или с помощью Передатчика информации",
 	"create.ponder.display_board.text_5": "Красители можно наносить на отдельные строки Табло",
 	"create.ponder.display_board.text_6": "Цвет строки можно убрать, кликнув на них пустой рукой",
-
 	"create.ponder.display_link.header": "Настройкой Передатчиков информации",
 	"create.ponder.display_link.text_1": "Передатчик информации может использоваться для визуализации динамической информации",
 	"create.ponder.display_link.text_2": "Кликните ПКМ по выбранному Табло (или другому совместимому визуализатору)...",
@@ -2364,12 +2184,10 @@
 	"create.ponder.display_link.text_6": "Не каждый блок может выступать в качестве источника информации",
 	"create.ponder.display_link.text_7": "Каждый совместимый блок предоставляет уникальную информацию",
 	"create.ponder.display_link.text_8": "Передатчик информации может отправлять информацию некоторым другим блокам",
-
 	"create.ponder.display_link_redstone.header": "Управлением Передатчиком информации редстоун-сигналом",
 	"create.ponder.display_link_redstone.text_1": "При получении редстоун-сигнала, Передатчик информации перестаёт отправлять обновления",
 	"create.ponder.display_link_redstone.text_2": "После отключения сигнала таймер сбрасывается, и новая информация отправляется немедленно",
 	"create.ponder.display_link_redstone.text_3": "Редстоун-сигналы, отправляемые источниками информации, не оказывают эффекта на Передатчик",
-
 	"create.ponder.empty_blaze_burner.header": "Поимкой всполохов в Горелки",
 	"create.ponder.empty_blaze_burner.text_1": "Кликните ПКМ по всполоху с пустой Горелкой, чтобы захватить его",
 	"create.ponder.empty_blaze_burner.text_2": "Также всполохи могут быть захвачены из рассадника напрямую",
@@ -2377,16 +2195,13 @@
 	"create.ponder.empty_blaze_burner.text_4": "В эстетических целях, пустые Горелки могут быть зажжены огнивом",
 	"create.ponder.empty_blaze_burner.text_5": "Пламя можно трансформировать, используя наполненный душами предмет",
 	"create.ponder.empty_blaze_burner.text_6": "Однако, они не будут подходить для промышленного нагрева",
-
 	"create.ponder.encased_fluid_pipe.header": "Обрамлением Жидкостных труб",
 	"create.ponder.encased_fluid_pipe.text_1": "Медный корпус можно использовать для обрамления Труб",
 	"create.ponder.encased_fluid_pipe.text_2": "Помимо того, что они будут скрыты в Корпусе, обрамлённые Трубы блокируются в текущем состоянии",
 	"create.ponder.encased_fluid_pipe.text_3": "Также они больше не будут реагировать на добавление или удаление каких-либо соседних блоков",
-
 	"create.ponder.fan_direction.header": "Управлением воздушными потоками Вентиляторов в корпусе",
 	"create.ponder.fan_direction.text_1": "Вентиляторы в корпусе используют силу вращения для создания воздушного потока",
 	"create.ponder.fan_direction.text_2": "Сила и направление потока зависят от подаваемого вращения",
-
 	"create.ponder.fan_processing.header": "Обработкой предметов с помощью Вентилятора в корпусе",
 	"create.ponder.fan_processing.text_1": "Проходя через лаву, воздушный поток становится горячим",
 	"create.ponder.fan_processing.text_2": "Предметы в его области действия будут переплавлены",
@@ -2396,7 +2211,6 @@
 	"create.ponder.fan_processing.text_6": "Несколько новых вариантов обработки делаются с её помощью",
 	"create.ponder.fan_processing.text_7": "Скорость Вентилятора не влияет на скорость обработки, а только на дальность установки",
 	"create.ponder.fan_processing.text_8": "Обработка Вентиляторами может быть применена к предметам на конвейерах или Депо",
-
 	"create.ponder.fluid_pipe_flow.header": "Перемещением жидкостей при помощи Жидкостных труб",
 	"create.ponder.fluid_pipe_flow.text_1": "Жидкостные трубы могут соединять два или более источников и потребителей жидкости",
 	"create.ponder.fluid_pipe_flow.text_2": "При помощи Гаечного ключа можно создать окно на прямом отрезке Трубы",
@@ -2405,90 +2219,73 @@
 	"create.ponder.fluid_pipe_flow.text_5": "Сначала жидкость не выкачивается",
 	"create.ponder.fluid_pipe_flow.text_6": "Как только поток дойдёт до другого хранилища, они постепенно перекачают своё содержимое",
 	"create.ponder.fluid_pipe_flow.text_7": "Таким образом, сами блоки Труб никогда «физически» не содержат никакой жидкости",
-
 	"create.ponder.fluid_pipe_interaction.header": "Опустошением и наполнением жидкостных контейнеров",
 	"create.ponder.fluid_pipe_interaction.text_1": "Концы трубопровода могут взаимодействовать с различными блоками",
 	"create.ponder.fluid_pipe_interaction.text_2": "Любой блок с возможностью хранения жидкости может быть наполнен или откачен",
 	"create.ponder.fluid_pipe_interaction.text_3": "Источники жидкости прямо перед открытым концом можно откачать...",
 	"create.ponder.fluid_pipe_interaction.text_4": "...в то время как выливание в незаполненное пространство может создать источники",
 	"create.ponder.fluid_pipe_interaction.text_5": "Трубы также могут извлекать жидкости непосредственно из нескольких других блоков",
-
 	"create.ponder.fluid_tank_sizes.header": "Размерами Жидкостных баков",
 	"create.ponder.fluid_tank_sizes.text_1": "Жидкостные баки можно объединить для увеличения общей вместимости",
 	"create.ponder.fluid_tank_sizes.text_2": "Их площадь основания может составлять до 3 блоков в ширину...",
 	"create.ponder.fluid_tank_sizes.text_3": "...и иметь высоту более чем 30 дополнительных уровней",
 	"create.ponder.fluid_tank_sizes.text_4": "При помощи Гаечного ключа можно создать окно в резервуаре",
-
 	"create.ponder.fluid_tank_storage.header": "Хранением жидкостей в Жидкостных баках",
 	"create.ponder.fluid_tank_storage.text_1": "Жидкостные баки можно использовать для хранения большого количества жидкости",
 	"create.ponder.fluid_tank_storage.text_2": "Трубы могут закачивать и выкачивать жидкости с любой стороны",
 	"create.ponder.fluid_tank_storage.text_3": "Содержащаяся жидкость может быть измерена с помощью компаратора",
 	"create.ponder.fluid_tank_storage.text_4": "Однако, в режиме выживания жидкость нельзя добавлять или извлекать вручную",
 	"create.ponder.fluid_tank_storage.text_5": "Вы можете использовать Чаши, Осушители предметов и Дозаторы для опустошения или наполнения содержащих жидкость предметы",
-
 	"create.ponder.funnel_compat.header": "Совместимостью Воронок",
 	"create.ponder.funnel_compat.text_1": "Воронки должны хорошо взаимодействовать со многими компонентами:",
 	"create.ponder.funnel_compat.text_2": "Вертикальными пилами;",
 	"create.ponder.funnel_compat.text_3": "Депо;",
 	"create.ponder.funnel_compat.text_4": "и Осушителями предметов",
-
 	"create.ponder.funnel_direction.header": "Направлением передачи Воронок",
 	"create.ponder.funnel_direction.text_1": "Поставленная обычным образом, Воронка забирает предметы из хранилища",
 	"create.ponder.funnel_direction.text_2": "Поставленная крадучись, она добавляет предметы в хранилище",
 	"create.ponder.funnel_direction.text_3": "Используя Гаечный ключ, вы можете изменить направление Воронки",
 	"create.ponder.funnel_direction.text_4": "Те же правила применяются для большинства направлений",
 	"create.ponder.funnel_direction.text_5": "Воронки на конвейерах будут извлекать/вводить предметы в зависимости от направления их движения",
-
 	"create.ponder.funnel_intro.header": "Использованием Воронок",
 	"create.ponder.funnel_intro.text_1": "Воронки идеально подходят для перемещения предметов из/в хранилища",
-
 	"create.ponder.funnel_redstone.header": "Управлением Воронками редстоун-сигналом",
 	"create.ponder.funnel_redstone.text_1": "Редстоун-сигнал не даст любой Воронке работать",
-
 	"create.ponder.funnel_transfer.header": "Передачей предметов Воронками напрямую",
 	"create.ponder.funnel_transfer.text_1": "Воронки не могут перемещать предметы напрямую между закрытыми инвентарями",
 	"create.ponder.funnel_transfer.text_2": "Желоба или Умные желоба могут лучше подходить для этих целей",
 	"create.ponder.funnel_transfer.text_3": "То же касается и горизонтального перемещения. Механический ремень должен здесь помочь",
-
 	"create.ponder.gantry_carriage.header": "Использованием Шасси портальных кранов",
 	"create.ponder.gantry_carriage.text_1": "Шасси портального крана могут прикрепляться и двигаться вдоль Вала портального крана",
 	"create.ponder.gantry_carriage.text_2": "Крановые установки могут двигать присоединённые блоки",
-
 	"create.ponder.gantry_cascaded.header": "Созданием многоступенчатого портального крана",
 	"create.ponder.gantry_cascaded.text_1": "Валы портального крана прикрепляются к Шасси без нужды в Суперклее",
 	"create.ponder.gantry_cascaded.text_2": "То же относится и к Шасси на движущихся Валах портального крана",
 	"create.ponder.gantry_cascaded.text_3": "Таким образом, крановая установка может покрывать несколько осей движения",
-
 	"create.ponder.gantry_direction.header": "Направлением движения крана",
 	"create.ponder.gantry_direction.text_1": "Валы портального крана могут иметь два противоположных направления",
 	"create.ponder.gantry_direction.text_2": "Направление движения Шасси зависит от ориентации их Валов",
 	"create.ponder.gantry_direction.text_3": "А также от направления вращения Вала",
 	"create.ponder.gantry_direction.text_4": "Те же правила относятся к передаваемому вращению",
-
 	"create.ponder.gantry_redstone.header": "Управлением Краном редстоун-сигналом",
 	"create.ponder.gantry_redstone.text_1": "Активированные редстоун-сигналом Валы крана перестают двигать Шасси",
 	"create.ponder.gantry_redstone.text_2": "Вместо этого сила вращения передаётся выходному валу Шасси",
-
 	"create.ponder.gantry_shaft.header": "Использованием Валов портального крана",
 	"create.ponder.gantry_shaft.text_1": "Валы портального крана составляют основу крановой установки. По ним будут двигаться присоединённые Шасси",
 	"create.ponder.gantry_shaft.text_2": "Крановые установки могут двигать присоединённые блоки",
-
 	"create.ponder.gearbox.header": "Передачей силы вращения с помощью Коробок передач",
 	"create.ponder.gearbox.text_1": "Переходы между осями вращения могут быстро стать очень громоздкими",
 	"create.ponder.gearbox.text_2": "Коробка Передач — это более компактный эквивалент этой установки",
 	"create.ponder.gearbox.text_3": "Валы по углам поворачиваются в зеркальных направлениях",
 	"create.ponder.gearbox.text_4": "Прямые соединения будут реверсированны",
-
 	"create.ponder.gearshift.header": "Управлением силы вращения при помощи Реверсивных коробок передач",
 	"create.ponder.gearshift.text_1": "Реверсивные коробки передач передают вращение по прямой",
 	"create.ponder.gearshift.text_2": "При активации редстоун-сигналом, они реверсируют передачу",
-
 	"create.ponder.hand_crank.header": "Генерацией силы вращения Рукоятками",
 	"create.ponder.hand_crank.text_1": "Рукоятки могут быть использованы игроками для создания силы вращения вручную",
 	"create.ponder.hand_crank.text_2": "Зажмите ПКМ для вращения против часовой стрелки",
 	"create.ponder.hand_crank.text_3": "Их скорость вращения относительно высока",
 	"create.ponder.hand_crank.text_4": "Зажмите ПКМ крадучись для вращения по часовой стрелке",
-
 	"create.ponder.hose_pulley.header": "Наполнением и откачкой источников при помощи Шкивов со шлангом",
 	"create.ponder.hose_pulley.text_1": "Шкивы со шлангом можно использовать для наполнения или откачки больших объёмов жидкости",
 	"create.ponder.hose_pulley.text_2": "С помощью кинетической энергии можно регулировать длину шланга",
@@ -2497,41 +2294,34 @@
 	"create.ponder.hose_pulley.text_5": "Присоединённый водопровод может либо подавать жидкость в шланг...",
 	"create.ponder.hose_pulley.text_6": "...либо вытягивать её, осушая водоём",
 	"create.ponder.hose_pulley.text_7": "Скорость заполнения и откачки Шкивом полностью зависит от пропускной способности трубопровода",
-
 	"create.ponder.hose_pulley_infinite.header": "Бесконечным наполнением и откачиванием больших объёмов жидкости",
 	"create.ponder.hose_pulley_infinite.text_1": "При развертывании Шкива со шлангом в достаточно большой океан...",
 	"create.ponder.hose_pulley_infinite.text_2": "...он будет откачивать/закачивать жидкость без влияния на источник",
 	"create.ponder.hose_pulley_infinite.text_3": "Трубопроводы могут неограниченно передавать жидкости из/в такие Шкивы",
-
 	"create.ponder.hose_pulley_level.header": "Уровнем наполнения и откачки Шкива со шлангом",
 	"create.ponder.hose_pulley_level.text_1": "При полностью убранном рукаве — Шкив не сможет работать",
 	"create.ponder.hose_pulley_level.text_2": "Откачка происходит сверху вниз",
 	"create.ponder.hose_pulley_level.text_3": "Уровень поверхности окажется чуть ниже того места, где заканчивается шланг",
 	"create.ponder.hose_pulley_level.text_4": "Заполнение происходит снизу вверх",
 	"create.ponder.hose_pulley_level.text_5": "Заполняемый бассейн не будет наполняться выше уровня конца шланга",
-
 	"create.ponder.item_drain.header": "Опустошением жидкостных резервуаров с помощью Осушителей предметов",
 	"create.ponder.item_drain.text_1": "Осушители предметов могут извлекать жидкости из предметов",
 	"create.ponder.item_drain.text_2": "Кликните ПКМ по нему, чтобы перелить в него жидкость из предмета в ваших руках",
 	"create.ponder.item_drain.text_3": "Когда предметы подаются со стороны...",
 	"create.ponder.item_drain.text_4": "...они переворачиваются, выливая содержащуюся в них жидкость",
 	"create.ponder.item_drain.text_5": "Трубы могут вытягивать жидкость из внутреннего хранилища Осушителей",
-
 	"create.ponder.item_vault_sizes.header": "Свойствами Хранилищ предметов",
 	"create.ponder.item_vault_sizes.text_1": "Хранилища предметов можно объединять для увеличения общей вместимости",
 	"create.ponder.item_vault_sizes.text_2": "Их базовая площадь может быть шириной до 3 блоков...",
 	"create.ponder.item_vault_sizes.text_3": "...и увеличиваться в длину в 3 раза от базовой площади",
-
 	"create.ponder.item_vault_storage.header": "Использованием Хранилищ предметов",
 	"create.ponder.item_vault_storage.text_1": "Хранилища предметов можно использовать для хранения большого количества предметов",
 	"create.ponder.item_vault_storage.text_2": "Однако, содержимое не может быть добавлено или взято вручную",
 	"create.ponder.item_vault_storage.text_3": "Любые компоненты для передачи предметов могут как добавлять...",
 	"create.ponder.item_vault_storage.text_4": "...так и забирать содержимое из этого контейнера",
-
 	"create.ponder.large_cogwheel.header": "Передачей силы вращения при помощи Больших шестерней",
 	"create.ponder.large_cogwheel.text_1": "Большие шестерни могут соединяться между собой под прямым углом",
 	"create.ponder.large_cogwheel.text_2": "Это поможет передавать вращение на другие оси",
-
 	"create.ponder.linear_chassis_attachment.header": "Прикреплением блоков при помощи Линейных шасси",
 	"create.ponder.linear_chassis_attachment.text_1": "Открытые грани Линейных шасси можно сделать липкими",
 	"create.ponder.linear_chassis_attachment.text_2": "Кликните ещё раз, чтобы сделать противоположную сторону липкой",
@@ -2541,12 +2331,10 @@
 	"create.ponder.linear_chassis_attachment.text_6": "Прокрутка при удержании Ctrl настраивает радиус всех присоединённых Шасси",
 	"create.ponder.linear_chassis_attachment.text_7": "Прикрепление блоков на другие стороны требует использования Суперклея",
 	"create.ponder.linear_chassis_attachment.text_8": "При помощи этих механик, структуры любой формы могут двигаться как штуковина",
-
 	"create.ponder.linear_chassis_group.header": "Движением Линейных шасси группами",
 	"create.ponder.linear_chassis_group.text_1": "Линейные шасси соединяются с такими же блоками Шасси рядом с ними",
 	"create.ponder.linear_chassis_group.text_2": "Когда один блок перемещается как часть штуковины, другие двигаются с ним",
 	"create.ponder.linear_chassis_group.text_3": "Шасси других типов или направленные в другом направлении не будут прикрепляться",
-
 	"create.ponder.mechanical_arm.header": "Настройкой Механических рук",
 	"create.ponder.mechanical_arm.text_1": "Входы и выходы для Механических рук должны быть назначены перед их установкой",
 	"create.ponder.mechanical_arm.text_2": "Кликните ПКМ по компонентам, держа Механическую руку, чтобы назначить их целями",
@@ -2556,7 +2344,6 @@
 	"create.ponder.mechanical_arm.text_6": "У них может быть неограниченное количество входов и выходов в зоне их досягаемости",
 	"create.ponder.mechanical_arm.text_7": "Однако, не каждый компонент может взаимодействовать с ними напрямую",
 	"create.ponder.mechanical_arm.text_8": "Воронки и Депо могут помочь заполнить этот пробел",
-
 	"create.ponder.mechanical_arm_filtering.header": "Фильтрацией выходов Механической руки",
 	"create.ponder.mechanical_arm_filtering.text_1": "Входы",
 	"create.ponder.mechanical_arm_filtering.text_2": "Выходы",
@@ -2564,7 +2351,6 @@
 	"create.ponder.mechanical_arm_filtering.text_4": "Сами Механические руки не имеют возможности фильтрации",
 	"create.ponder.mechanical_arm_filtering.text_5": "Однако, Латунные воронки как цели сообщают свой фильтр руке",
 	"create.ponder.mechanical_arm_filtering.text_6": "Рука достаточно умна, чтобы не подбирать предметы, которые она не сможет распределить",
-
 	"create.ponder.mechanical_arm_modes.header": "Режимами распределения Механической руки",
 	"create.ponder.mechanical_arm_modes.text_1": "Входы",
 	"create.ponder.mechanical_arm_modes.text_2": "Выходы",
@@ -2575,16 +2361,13 @@
 	"create.ponder.mechanical_arm_modes.text_7": "Если выход не может принять больше предметов, он будет пропущен",
 	"create.ponder.mechanical_arm_modes.text_8": "«Строго по кругу» никогда не пропускает выходы, а ждёт пока они не освободятся",
 	"create.ponder.mechanical_arm_modes.text_9": "«Предпочитать первичную цель» приоритизирует выходы, выбранные ранее при настройке этой Руки",
-
 	"create.ponder.mechanical_arm_redstone.header": "Управлением Механической рукой редстоун-сигналом",
 	"create.ponder.mechanical_arm_redstone.text_1": "При активации редстоун-сигналом, Механические руки перестают работать",
 	"create.ponder.mechanical_arm_redstone.text_2": "Перед остановкой, они завершат все начатые действия",
 	"create.ponder.mechanical_arm_redstone.text_3": "Таким образом, инвертированный импульс может использоваться для вызова ровно одного срабатывания",
-	
 	"create.ponder.mechanical_bearing.header": "Передвижением структур при помощи Механических вращателей",
 	"create.ponder.mechanical_bearing.text_1": "Механические вращатели прикрепляют блоки перед ними",
 	"create.ponder.mechanical_bearing.text_2": "При получении силы вращения, они соберутся во вращающуюся штуковину",
-
 	"create.ponder.mechanical_crafter.header": "Настройкой Механических крафтеров",
 	"create.ponder.mechanical_crafter.text_1": "Массив из Механических крафтеров можно использовать для автоматизации создания любого рецепта",
 	"create.ponder.mechanical_crafter.text_2": "Можно настроить пути Крафтеров при помощи Гаечного ключа",
@@ -2594,62 +2377,50 @@
 	"create.ponder.mechanical_crafter.text_6": "Кликните ПКМ спереди, чтобы вставить предметы вручную",
 	"create.ponder.mechanical_crafter.text_7": "Когда каждый слот на пути содержит предмет, процесс создания начнётся",
 	"create.ponder.mechanical_crafter.text_8": "Для рецептов, не полностью занимающих кластер Крафтеров, старт можно спровоцировать редстоун-импульсом",
-
 	"create.ponder.mechanical_crafter_connect.header": "Объединением инвентарей Механических крафтеров",
 	"create.ponder.mechanical_crafter_connect.text_1": "Предметы можно поместить в Крафтеры автоматически",
 	"create.ponder.mechanical_crafter_connect.text_2": "При помощи Гаечного ключа сзади Крафтеров, их инвентари можно объединить",
 	"create.ponder.mechanical_crafter_connect.text_3": "Все соединённые Крафтеры теперь будут доступны из одного места ввода",
-
 	"create.ponder.mechanical_crafter_covers.header": "Закрытием слотов Механических крафтеров",
 	"create.ponder.mechanical_crafter_covers.text_1": "Некоторые рецепты требуют дополнительных Крафтеров, чтобы закрыть пробелы на пути",
 	"create.ponder.mechanical_crafter_covers.text_2": "При помощи Заглушек на слоты, Крафтеры могут играть роль пустых слотов в схеме",
 	"create.ponder.mechanical_crafter_covers.text_3": "Общие входы, созданные Гаечным ключом сзади, также могут быть доступны через закрытые Крафтеры",
-
 	"create.ponder.mechanical_drill.header": "Разрушением блоков Механическими дрелями",
 	"create.ponder.mechanical_drill.text_1": "При подаче вращения, Механическая дрель будет ломать блоки перед ней",
 	"create.ponder.mechanical_drill.text_2": "Скорость добычи зависит от подаваемой скорости вращения",
-
 	"create.ponder.mechanical_drill_contraption.header": "Использованием Механической дрели на штуковинах",
 	"create.ponder.mechanical_drill_contraption.text_1": "Когда Дрели движутся как часть штуковины...",
 	"create.ponder.mechanical_drill_contraption.text_2": "...они будут ломать блоки, на которые они натыкаются",
-
 	"create.ponder.mechanical_harvester.header": "Использованием Механических комбайнов на штуковинах",
 	"create.ponder.mechanical_harvester.text_1": "Когда Комбайны движутся как часть штуковины...",
 	"create.ponder.mechanical_harvester.text_2": "...они будут убирать зрелый урожай на своём пути и высаживать его снова",
-
 	"create.ponder.mechanical_mixer.header": "Обработкой предметов Механическими смешивателями",
 	"create.ponder.mechanical_mixer.text_1": "При помощи Смешивателя и Чаши можно автоматизировать некоторые рецепты крафта",
 	"create.ponder.mechanical_mixer.text_2": "Доступные рецепты включают бесформенную сборку и автоматическую варку зелий",
 	"create.ponder.mechanical_mixer.text_3": "Некоторым рецептам может потребоваться тепло от Горелки всполоха",
 	"create.ponder.mechanical_mixer.text_4": "Можно использовать слот для фильтра рецепта в случае конфликта двух рецептов",
-
 	"create.ponder.mechanical_piston.header": "Перемещением структур при помощи Механических поршней",
 	"create.ponder.mechanical_piston.text_1": "Механические поршни могут двигать блоки перед ними",
 	"create.ponder.mechanical_piston.text_2": "Скорость и направление движения зависят от исходного вращения",
 	"create.ponder.mechanical_piston.text_3": "Липкие механические поршни могут тянуть назад присоединённые блоки",
-
 	"create.ponder.mechanical_piston_modes.header": "Режимами движения Механического поршня",
 	"create.ponder.mechanical_piston_modes.text_1": "Когда поршень останавливается, сдвинутая структура обратно становится блоками",
 	"create.ponder.mechanical_piston_modes.text_2": "Можно настроить его так, чтобы структура никогда не становилась блоками или только в исходном положении",
-
 	"create.ponder.mechanical_plough.header": "Использованием Механических плугов на штуковинах",
 	"create.ponder.mechanical_plough.text_1": "Когда Плуги движутся как часть штуковины...",
 	"create.ponder.mechanical_plough.text_2": "...они будут ломать блоки без твёрдого хитбокса",
 	"create.ponder.mechanical_plough.text_3": "К тому же, Плуги могут создавать пашню",
 	"create.ponder.mechanical_plough.text_4": "Ещё они могут толкать существ не причиняя им вреда",
-
 	"create.ponder.mechanical_press.header": "Обработкой предметов Механическими прессами",
 	"create.ponder.mechanical_press.text_1": "Механический пресс может обрабатывать предметы под собой",
 	"create.ponder.mechanical_press.text_2": "Подаваемые предметы должны быть брошены или помещены на Депо под Пресс",
 	"create.ponder.mechanical_press.text_3": "Когда предметы подаются на конвейере...",
 	"create.ponder.mechanical_press.text_4": "...Пресс будет задерживать и прессовать их автоматически",
-
 	"create.ponder.mechanical_press_compacting.header": "Спрессовыванием и сжатием предметов Механическим прессом",
 	"create.ponder.mechanical_press_compacting.text_1": "Спрессовывание предметов в Чаше скомпонует их",
 	"create.ponder.mechanical_press_compacting.text_2": "Сжатие предметов и спрессовывание включают в себя любые заполненные 2x2 или 3x3 рецепты крафта и некоторые другие",
 	"create.ponder.mechanical_press_compacting.text_3": "Некоторым рецептам может потребоваться тепло от Горелки всполоха",
 	"create.ponder.mechanical_press_compacting.text_4": "Можно использовать слот для фильтра рецепта в случае конфликта двух рецептов",
-
 	"create.ponder.mechanical_pump_flow.header": "Транспортировкой жидкостей при помощи Механических помп",
 	"create.ponder.mechanical_pump_flow.text_1": "Механические помпы направляют поток в присоединённый трубопровод",
 	"create.ponder.mechanical_pump_flow.text_2": "Когда она работает, стрелка указывает направление потока",
@@ -2657,45 +2428,37 @@
 	"create.ponder.mechanical_pump_flow.text_4": "...в то время как часть трубопровода спереди передаёт их наружу",
 	"create.ponder.mechanical_pump_flow.text_5": "Смена направления вращения изменяет направление потока",
 	"create.ponder.mechanical_pump_flow.text_6": "Используйте Гаечный ключ, чтобы изменить направление Помпы вручную",
-
 	"create.ponder.mechanical_pump_speed.header": "Производительностью Механической помпы",
 	"create.ponder.mechanical_pump_speed.text_1": "Независимо от скорости, Механические помпы оказывают влияние на Трубы в радиусе 16 блоков",
 	"create.ponder.mechanical_pump_speed.text_2": "Ускорение подаваемого вращения увеличивает скорость распространения потоков по трубопроводу...",
 	"create.ponder.mechanical_pump_speed.text_3": "...также, как и скорость перекачки жидкостей",
 	"create.ponder.mechanical_pump_speed.text_4": "Помпы могут объединять свою производительность в одних трубопроводах",
 	"create.ponder.mechanical_pump_speed.text_5": "Изменение их направления может помочь сонаправить направление их потоков",
-
 	"create.ponder.mechanical_saw_breaker.header": "Спиливанием деревьев Механическими пилами",
 	"create.ponder.mechanical_saw_breaker.text_1": "При подаче вращения, Механическая пила будет пилить деревья прямо перед ней",
 	"create.ponder.mechanical_saw_breaker.text_2": "Для спиливания дерева полностью Пила должна ломать самый нижний блок дерева, соединённый с землёй",
-
 	"create.ponder.mechanical_saw_contraption.header": "Использованием Механических пил на штуковинах",
 	"create.ponder.mechanical_saw_contraption.text_1": "Когда Пилы движутся как часть штуковины...",
 	"create.ponder.mechanical_saw_contraption.text_2": "...они будут ломать блоки, на которые они натыкаются",
-
 	"create.ponder.mechanical_saw_processing.header": "Обработкой предметов на Механических пилах",
 	"create.ponder.mechanical_saw_processing.text_1": "Направленные вверх Механические пилы могут обрабатывать множество предметов",
 	"create.ponder.mechanical_saw_processing.text_2": "Обработанные предметы всегда движутся против подаваемого на Пилу вращения",
 	"create.ponder.mechanical_saw_processing.text_3": "Пилы могут работать с конвейером",
 	"create.ponder.mechanical_saw_processing.text_4": "Когда из ингредиента можно получить несколько результатов, фильтр рецепта может уточнить его",
 	"create.ponder.mechanical_saw_processing.text_5": "Без фильтра Пила будет выбирать все возможные результаты по очереди",
-
 	"create.ponder.millstone.header": "Помолом предметов Жерновами",
 	"create.ponder.millstone.text_1": "Жернова обрабатывают предметы перемалывая их",
 	"create.ponder.millstone.text_2": "Их можно запустить при помощи Шестерни с любой стороны или Валом снизу",
 	"create.ponder.millstone.text_3": "Бросьте или положите предметы сверху",
 	"create.ponder.millstone.text_4": "После некоторого времени результат можно забрать кликнув ПКМ",
 	"create.ponder.millstone.text_5": "Продукты помола также можно вывести автоматически",
-
 	"create.ponder.nixie_tube.header": "Использованием Газоразрядных индикаторов",
 	"create.ponder.nixie_tube.text_1": "При подаче редстоун-сигнала, Газоразрядные индикаторы отобразят его силу",
 	"create.ponder.nixie_tube.text_2": "С помощью бирок, переименованных на наковальне, вы можете отобразить любой текст",
 	"create.ponder.nixie_tube.text_3": "Кликните ПКМ с красителем, чтобы изменить цвет их индикаторов",
-
 	"create.ponder.piston_pole.header": "Удлинителями Механического поршня",
 	"create.ponder.piston_pole.text_1": "Без присоединённых Удлинителей, Механический поршень не сможет выдвигаться",
 	"create.ponder.piston_pole.text_2": "Длина стержня, добавленного к задней части Механического поршня, определяет диапазон выдвижения",
-
 	"create.ponder.portable_fluid_interface.header": "Портативным жидкостным интерфейсом на штуковинах",
 	"create.ponder.portable_fluid_interface.text_1": "Жидкостные баки на движущихся штуковинах не могут быть доступны никаким трубам",
 	"create.ponder.portable_fluid_interface.text_2": "Этот компонент может взаимодействовать с Жидкостными баками без необходимости останавливать штуковину",
@@ -2705,7 +2468,6 @@
 	"create.ponder.portable_fluid_interface.text_6": "Теперь можно закачать жидкости в...",
 	"create.ponder.portable_fluid_interface.text_7": "...или выкачать их из штуковины",
 	"create.ponder.portable_fluid_interface.text_8": "Если на какое-то время обмен содержимым прекратится — штуковина продолжит свой путь",
-
 	"create.ponder.portable_storage_interface.header": "Портативным интерфейсом хранения на штуковинах",
 	"create.ponder.portable_storage_interface.text_1": "Инвентари на двигающихся штуковинах не могут быть открыты игроками",
 	"create.ponder.portable_storage_interface.text_2": "Этот компонент может взаимодействовать с хранилищем без необходимости останавливать штуковину",
@@ -2715,34 +2477,28 @@
 	"create.ponder.portable_storage_interface.text_6": "Теперь можно положить предметы в...",
 	"create.ponder.portable_storage_interface.text_7": "...или вывести их из штуковины",
 	"create.ponder.portable_storage_interface.text_8": "Если на какое-то время обмен предметами прекратится — штуковина продолжит свой путь",
-
 	"create.ponder.portable_storage_interface_redstone.header": "Управлением Портативным интерфейсом хранения редстоун-сигналом",
 	"create.ponder.portable_storage_interface_redstone.text_1": "Редстоун-сигнал предотвратит включение Портативного интерфейса",
-
 	"create.ponder.powered_latch.header": "Управлением редстоун-сигналом при помощи Питаемых рычагов",
 	"create.ponder.powered_latch.text_1": "Питаемый рычаг — управляемый редстоуном рычаг",
 	"create.ponder.powered_latch.text_2": "Сигнал сзади включает его",
 	"create.ponder.powered_latch.text_3": "Сигналы сбоку, обратно, выключают его",
 	"create.ponder.powered_latch.text_4": "Питаемые рычаги также можно переключать вручную",
-
 	"create.ponder.powered_toggle_latch.header": "Управлением редстоун-сигналом при помощи Питаемых рычагов-переключателей",
 	"create.ponder.powered_toggle_latch.text_1": "Питаемый рычаг-переключатель — управляемый редстоуном рычаг",
 	"create.ponder.powered_toggle_latch.text_2": "Сигналы сзади переключают его состояние...",
 	"create.ponder.powered_toggle_latch.text_3": "...включают и снова выключают",
 	"create.ponder.powered_toggle_latch.text_4": "Питаемые рычаги-переключатели также можно переключать вручную",
-
 	"create.ponder.pulse_extender.header": "Использованием Редстоуновых удлинителей импульса",
 	"create.ponder.pulse_extender.text_1": "Редстоуновый удлинитель импульса может увеличить продолжительность редстоун-сигнала, проходящего через него",
 	"create.ponder.pulse_extender.text_2": "Он активируется после небольшой задержки...",
 	"create.ponder.pulse_extender.text_3": "...и выключается через настраиваемое время",
 	"create.ponder.pulse_extender.text_4": "С помощь Прокрутки можно настроить время Удлинителя импульса",
 	"create.ponder.pulse_extender.text_5": "Можно настроить задержку вплоть до 30 минут",
-
 	"create.ponder.pulse_repeater.header": "Использованием Редстоуновых повторителей импульса",
 	"create.ponder.pulse_repeater.text_1": "Повторители импульса укоротят любой поступающий редстоун-сигнал до одного импульса",
 	"create.ponder.pulse_repeater.text_2": "С помощь Прокрутки можно настроить время Повторителя импульса",
 	"create.ponder.pulse_repeater.text_3": "Можно настроить задержку вплоть до 30 минут",
-
 	"create.ponder.radial_chassis.header": "Присоединением блоков при помощи Радиальных шасси",
 	"create.ponder.radial_chassis.text_1": "Радиальное шасси соединяется с идентичными блоками Шасси в ряд",
 	"create.ponder.radial_chassis.text_2": "Когда один блок перемещается штуковиной, остальные двигаются с ним",
@@ -2753,11 +2509,9 @@
 	"create.ponder.radial_chassis.text_7": "...он присоединит все достижимые блоки в пределах радиуса на этом слое",
 	"create.ponder.radial_chassis.text_8": "При помощи Гаечного ключа можно указать точный радиус для этого Шасси",
 	"create.ponder.radial_chassis.text_9": "Блоки, не достижимые ни одной липкой гранью, не прикрепятся",
-
 	"create.ponder.redstone_contact.header": "Использованием Редстоуновых контактов",
 	"create.ponder.redstone_contact.text_1": "Редстоуновые контакты, направленные друг на друга, будут выдавать редстоун-сигнал",
 	"create.ponder.redstone_contact.text_2": "Также работает, когда один из них — часть двигающейся штуковины",
-
 	"create.ponder.redstone_link.header": "Использованием Редстоуновых беспроводных передатчиков сигнала",
 	"create.ponder.redstone_link.text_1": "Редстоуновые передатчики сигнала могут передавать редстоун-сигнал без редстоуновой пыли",
 	"create.ponder.redstone_link.text_2": "Кликните ПКМ крадучись, чтобы переключиться на режим приёмника",
@@ -2765,20 +2519,16 @@
 	"create.ponder.redstone_link.text_4": "Приёмники улавливают редстоун-сигнал Передатчиков в радиусе 128 блоков",
 	"create.ponder.redstone_link.text_5": "Положите предметы в два слота, чтобы указать частоту",
 	"create.ponder.redstone_link.text_6": "Передатчики только одной частоты могут сообщаться",
-
 	"create.ponder.rope_pulley.header": "Перемещением структур при помощи Лебёдок",
 	"create.ponder.rope_pulley.text_1": "Лебёдки могут двигать блоки вертикально при подаче вращения",
 	"create.ponder.rope_pulley.text_2": "Направление и скорость движения зависят от исходного вращения",
-
 	"create.ponder.rope_pulley_attachment.header": "Перемещением Лебёдки как частей штуковин",
 	"create.ponder.rope_pulley_attachment.text_1": "Когда Лебёдки перемещаются штуковиной...",
 	"create.ponder.rope_pulley_attachment.text_2": "...их присоединённая структура движется с ними",
 	"create.ponder.rope_pulley_attachment.text_3": "Учитывайте, что Лебёдки можно выдвигать только пока они не работают",
-
 	"create.ponder.rope_pulley_modes.header": "Режимами движения Лебёдки",
 	"create.ponder.rope_pulley_modes.text_1": "Когда Лебёдка останавливается, сдвинутая структура обратно становится блоками",
 	"create.ponder.rope_pulley_modes.text_2": "Можно настроить её так, чтобы структура никогда не становилась блоками или только в исходном положении",
-
 	"create.ponder.rose_quartz_lamp.header": "Особенностями Редстоуновых фонарей из розового кварца",
 	"create.ponder.rose_quartz_lamp.text_1": "Фонарь из розового кварца активируются по редстоун-сигналу",
 	"create.ponder.rose_quartz_lamp.text_2": "После этого он сам станет источником сигнала",
@@ -2786,51 +2536,41 @@
 	"create.ponder.rose_quartz_lamp.text_4": "...активация одного из Фонарей, сфокусирует сигнал на нём, деактивируя все остальные",
 	"create.ponder.rose_quartz_lamp.text_5": "Компараторы выводят сигнал исходя из дистанции до ближайшего включённого Фонаря",
 	"create.ponder.rose_quartz_lamp.text_6": "Фонари также можно переключать вручную с помощью Гаечного ключа",
-
 	"create.ponder.rotation_speed_controller.header": "Использованием Регуляторов скорости вращения",
 	"create.ponder.rotation_speed_controller.text_1": "Регуляторы скорости вращения передают вращение от своих осей на Большую шестерню выше них",
 	"create.ponder.rotation_speed_controller.text_2": "Можно настроить передаваемую скорость при помощи Прокрутки по соответствующему месту сбоку",
-
 	"create.ponder.sail.header": "Сборкой мельниц при помощи Парусов",
 	"create.ponder.sail.text_1": "Паруса — удобные блоки для создания мельниц",
 	"create.ponder.sail.text_2": "Они будут прикрепляться к блокам и друг к другу без использования Суперклея или блоков Шасси",
 	"create.ponder.sail.text_3": "Кликните ПКМ с красителем, чтобы покрасить их",
 	"create.ponder.sail.text_4": "Кликните ПКМ с ножницами, чтобы превратить их в пустую Раму",
-
 	"create.ponder.sail_frame.header": "Сборкой мельниц при помощи Рам парусов",
 	"create.ponder.sail_frame.text_1": "Рамы парусов — удобные блоки для создания мельниц",
 	"create.ponder.sail_frame.text_2": "Они будут прикрепляться к блокам и друг к другу без использования Суперклея или блоков Шасси",
-
 	"create.ponder.sequenced_gearshift.header": "Использованием Последовательных коробок передач",
 	"create.ponder.sequenced_gearshift.text_1": "Последовательная коробка передач передает вращение по списку заданных инструкций",
 	"create.ponder.sequenced_gearshift.text_2": "Кликните ПКМ, чтобы открыть интерфейс для настройки",
 	"create.ponder.sequenced_gearshift.text_3": "При получении редстоун-сигнал, она начнёт выполнять заданные инструкции по порядку",
 	"create.ponder.sequenced_gearshift.text_4": "По завершению она будет дожидаться следующего сигнала и начнёт сначала",
 	"create.ponder.sequenced_gearshift.text_5": "Можно использовать компаратор для считывания текущего прогресса выполнения инструкций",
-
 	"create.ponder.shaft.header": "Передачей силы вращения при помощи Валов",
 	"create.ponder.shaft.text_1": "Валы передают вращение по прямой",
-
 	"create.ponder.shaft_casing.header": "Обрамлением Валов",
 	"create.ponder.shaft_casing.text_1": "Латунный или Андезитовый корпус можно использовать для украшения Валов",
-
 	"create.ponder.smart_chute.header": "Фильтрацией предметов при помощи Умных желобов",
 	"create.ponder.smart_chute.text_1": "Умные желоба — вертикальные желоба с дополнительным контролем",
 	"create.ponder.smart_chute.text_2": "Предметы в слоте фильтра уточняют, что они могут забирать и передавать",
 	"create.ponder.smart_chute.text_3": "Используйте Прокрутку для уточнения размера забираемого стака",
 	"create.ponder.smart_chute.text_4": "Редстоун-сигнал выключает их",
-
 	"create.ponder.smart_pipe.header": "Управлением жидкостным потоком с помощью Умных труб",
 	"create.ponder.smart_pipe.text_1": "Умные трубы могут помочь управлять потоками по типам жидкостей",
 	"create.ponder.smart_pipe.text_2": "Размещённые непосредственно у источника, они могут указывать на тип извлекаемой жидкости",
 	"create.ponder.smart_pipe.text_3": "Просто кликните ПКМ по слоту фильтра с любым предметом, содержащим нужную жидкость",
 	"create.ponder.smart_pipe.text_4": "И при размещении дальше по трубопроводу Умные трубы будут пропускать только подходящие жидкости",
-
 	"create.ponder.speedometer.header": "Мониторингом состояния кинетической сети при помощи Спидометра",
 	"create.ponder.speedometer.text_1": "Спидометры отображают текущую скорость присоединённых к кинетической сети компонентов",
 	"create.ponder.speedometer.text_2": "При ношении Инженерных очков, игрок сможет получить более полную информацию от прибора",
 	"create.ponder.speedometer.text_3": "Компараторы могут испускать аналоговый редстоун-сигнал относительно измерений Спидометра",
-
 	"create.ponder.spout_filling.header": "Наполнением предметов при помощи Дозатора",
 	"create.ponder.spout_filling.text_1": "Дозатор может наполнять подходящие предметы, расположенные под ним",
 	"create.ponder.spout_filling.text_2": "К содержимому Дозатора невозможно получить доступ вручную",
@@ -2838,13 +2578,11 @@
 	"create.ponder.spout_filling.text_4": "Наполняемые предметы могут быть размещены на Депо под Дозатором",
 	"create.ponder.spout_filling.text_5": "Когда предметы подаются конвейером...",
 	"create.ponder.spout_filling.text_6": "...Дозатор будет удерживать и обрабатывать их автоматически",
-
 	"create.ponder.stabilized_bearings.header": "Стабилизацией штуковин",
 	"create.ponder.stabilized_bearings.text_1": "Когда Механические вращатели являются частью двигающейся штуковины...",
 	"create.ponder.stabilized_bearings.text_2": "...они будут пытаться держаться ровно",
 	"create.ponder.stabilized_bearings.text_3": "Опять же, Вращатели присоединяют блоки перед ними",
 	"create.ponder.stabilized_bearings.text_4": "И в результате целая под-структура будет держаться ровно",
-
 	"create.ponder.steam_engine.header": "Генерацией силы вращения Паровыми двигателями",
 	"create.ponder.steam_engine.text_1": "Паровые двигатели можно разместить на Жидкостном баке",
 	"create.ponder.steam_engine.text_10": "4 уровень",
@@ -2859,26 +2597,22 @@
 	"create.ponder.steam_engine.text_7": "Более высокие уровни мощности требуют больше воды, размера котла и уровня нагрева",
 	"create.ponder.steam_engine.text_8": "Текущий уровень мощности котла можно проверить с помощью Инженерных очков",
 	"create.ponder.steam_engine.text_9": "С каждым добавленным уровнем мощности, каждый дополнительный Двигатель сможет работать на полную мощность",
-
 	"create.ponder.steam_whistle.header": "Использованием Паровых свистков",
 	"create.ponder.steam_whistle.text_1": "Паровые свистки можно разместить на Жидкостном баке",
-	"create.ponder.steam_whistle.text_2": "Если Бак получает достаточно тепла...",
+	"create.ponder.steam_whistle.text_2": "Если Бак получает достаточный нагрев...",
 	"create.ponder.steam_whistle.text_3": "...Свисток будет играть определённую ноту при активации",
 	"create.ponder.steam_whistle.text_4": "Используйте дополнительный Свисток на блоке, чтобы понизить высоту его звука",
 	"create.ponder.steam_whistle.text_5": "Переключайтесь между тремя разными октавами с помощью Гаечного ключа",
 	"create.ponder.steam_whistle.text_6": "Инженерные очки помогут узнать текущую тональность звука",
-
 	"create.ponder.sticker.header": "Прикреплением блоков при помощи Блоков-липучек",
 	"create.ponder.sticker.text_1": "Блоки-липучки идеально подходят для редстоун-управляемого присоединения блоков",
 	"create.ponder.sticker.text_2": "При получении редстоун-сигнала они переключают своё состояние",
 	"create.ponder.sticker.text_3": "Если он движется в штуковине, то блок будет двигаться с ним",
 	"create.ponder.sticker.text_4": "При повторном сигнале блок больше не будет прикреплён",
-
 	"create.ponder.stressometer.header": "Мониторингом состояния кинетической сети при помощи Стрессометра",
 	"create.ponder.stressometer.text_1": "Стрессометр отображает текущую допустимую нагрузку присоединённой кинетической сети",
 	"create.ponder.stressometer.text_2": "При ношении Инженерных очков, игрок сможет получить более полную информацию от прибора",
 	"create.ponder.stressometer.text_3": "Компараторы могут испускать аналоговый редстоун-сигнал относительно измерений Стрессометра",
-
 	"create.ponder.super_glue.header": "Присоединением блоков при помощи Суперклея",
 	"create.ponder.super_glue.text_1": "Суперклей можно использовать между двумя любыми блоками",
 	"create.ponder.super_glue.text_2": "Скреплённые блоки, будут двигаться вместе, при сборке в штуковину",
@@ -2886,19 +2620,16 @@
 	"create.ponder.super_glue.text_4": "...добавленные блоки будут сразу приклеены к грани, на которую они были поставлены",
 	"create.ponder.super_glue.text_5": "Суперклей можно удалить кликнув ЛКМ по склеенной области",
 	"create.ponder.super_glue.text_6": "Блоки, висящие на других, обычно не требуют Суперклея",
-
 	"create.ponder.track_chunks.header": "Пересечением поездом незагруженных чанков",
 	"create.ponder.track_chunks.text_1": "Железнодорожные пути остаются функциональными вне загруженных чанков",
 	"create.ponder.track_chunks.text_2": "Поезда будут путешествовать по неактивным участкам мира без каких либо проблем",
 	"create.ponder.track_chunks.text_3": "Они по-прежнему будут останавливаться на Станциях или запрещающих сигналах Светофора",
 	"create.ponder.track_chunks.text_4": "Однако, Дрели и другие компоненты на борту работать не будут",
 	"create.ponder.track_chunks.text_5": "Оказавшись рядом с игроком, поезд снова появится",
-
 	"create.ponder.track_observer.header": "Обнаружением проходящих поездов с помощью Железнодорожных наблюдателей",
 	"create.ponder.track_observer.text_1": "Выберите Путь, затем установите Железнодорожный наблюдатель рядом",
 	"create.ponder.track_observer.text_2": "Наблюдатель обнаружит любые поезда, проходящие через маркер на рельсах",
 	"create.ponder.track_observer.text_3": "Наблюдатели могут быть настроены для обнаружения определённого груза",
-
 	"create.ponder.track_placement.header": "Размещением Железнодорожных путей",
 	"create.ponder.track_placement.text_1": "Встречайте новый тип рельсов, разработанный для железнодорожных штуковин!",
 	"create.ponder.track_placement.text_2": "Чтобы разместить несколько Путей сразу, кликните на существующие Пути",
@@ -2908,12 +2639,10 @@
 	"create.ponder.track_placement.text_6": "Удержание Ctrl при размещении...",
 	"create.ponder.track_placement.text_7": "...создаст самый длинный возможный изгиб",
 	"create.ponder.track_placement.text_8": "Материалы во второй руке будут подкладываться под Пути автоматически",
-
 	"create.ponder.track_portal.header": "Железнодорожными путями и портале Незера",
 	"create.ponder.track_portal.text_1": "Пути, размещённые напротив портала Незера...",
 	"create.ponder.track_portal.text_2": "...попытаются создать Пути на другой стороне",
 	"create.ponder.track_portal.text_3": "Теперь поезда на данном направлении могут путешествовать по измерениям",
-
 	"create.ponder.train_assembly.header": "Сборкой поездов на Железнодорожных станциях",
 	"create.ponder.train_assembly.text_1": "Выберите участок Железнодорожных путей, затем разместите рядом Станцию",
 	"create.ponder.train_assembly.text_10": "Каждый поезд требует Контроллер поезда на борту",
@@ -2925,12 +2654,11 @@
 	"create.ponder.train_assembly.text_2": "Станции — это путевые точки вашей железнодорожной сети",
 	"create.ponder.train_assembly.text_3": "Чтобы создать новый поезд, откройте интерфейс Станции и переключитесь в режим сборки",
 	"create.ponder.train_assembly.text_4": "Во время сборки к этой Станции не будут подъезжать поезда, следующие по Расписанию",
-	"create.ponder.train_assembly.text_5": "Создавайте новые вагонные тележки, используя Железнодорожный корпус на путях",
+	"create.ponder.train_assembly.text_5": "Создавайте новые вагонные тележки, используя Железнодорожный корпус на Путях",
 	"create.ponder.train_assembly.text_6": "Кликните на тележку ещё раз, чтобы переключаться между их вариациями внешнего вида",
 	"create.ponder.train_assembly.text_7": "Приклейте блоки с помощью Суперклея",
 	"create.ponder.train_assembly.text_8": "Собранные поезда будут двигаться быстрее, если они смогут найти топливо в прикреплённых сундуках или бочках",
-	"create.ponder.train_assembly.text_9": "Топливо, находящееся в Хранилищах, не будет потребляться поездом",
-
+	"create.ponder.train_assembly.text_9": "Топливо, находящееся в Хранилищах — не будет потребляться поездом",
 	"create.ponder.train_controls.header": "Управлением поездами с помощью Контроллеров поезда",
 	"create.ponder.train_controls.text_1": "Контроллер поезда требуются на каждой железнодорожной штуковине",
 	"create.ponder.train_controls.text_2": "После сборки кликните ПКМ по блоку, чтобы начать движение",
@@ -2940,7 +2668,6 @@
 	"create.ponder.train_controls.text_6": "Поезда можно разобрать обратно на блоки только на Станциях",
 	"create.ponder.train_controls.text_7": "Прикреплённые Свистки можно активировать, нажав Ctrl",
 	"create.ponder.train_controls.text_8": "Нажмите Shift слева или кликните ПКМ по Контроллеру, чтобы перестать управлять поездом",
-
 	"create.ponder.train_schedule.header": "Использованием Расписаний поездов",
 	"create.ponder.train_schedule.text_1": "Расписания позволяют другим машинистам управлять поездами",
 	"create.ponder.train_schedule.text_2": "Кликните ПКМ с предметом в руке, чтобы открыть его интерфейс",
@@ -2948,20 +2675,17 @@
 	"create.ponder.train_schedule.text_4": "Горелка всполоха или любое существо, сидящее перед Контроллером поезда, является подходящим кандидатом в машинисты",
 	"create.ponder.train_schedule.text_5": "С помощью поводка можно легче усадить потенциального машиниста на его место",
 	"create.ponder.train_schedule.text_6": "Расписания можно отзывать от машинистов в любой момент времени",
-
 	"create.ponder.train_signal_placement.header": "Размещением Железнодорожных светофоров",
 	"create.ponder.train_signal_placement.text_1": "Выберите Железнодорожный путь, затем установите Светофор поблизости",
 	"create.ponder.train_signal_placement.text_2": "Светофоры регулируют движение поездов, которые управляются не игроками",
 	"create.ponder.train_signal_placement.text_3": "Поезда следующие по Расписанию никогда не будут пересекать Светофоры в противоположном направлении...",
 	"create.ponder.train_signal_placement.text_4": "...если не был добавлен второй Светофор, направленный в противоположную сторону",
 	"create.ponder.train_signal_placement.text_5": "К Светофорам можно прикрепить Газоразрядный индикатор, чтобы сделать их сигнальные огни более заметными",
-
 	"create.ponder.train_signal_redstone.header": "Железнодорожным светофором и редстоун-сигнале",
 	"create.ponder.train_signal_redstone.text_1": "Сигнал Светофора может быть переключен вручную с помощью редстоун-сигнала",
 	"create.ponder.train_signal_redstone.text_2": "И наоборот, запрещающий сигнал Светофора, испускает редстоун-сигнал, получаемый компаратором",
-
 	"create.ponder.train_signal_signaling.header": "Предотвращением аварий с помощью Железнодорожных светофоров",
-	"create.ponder.train_signal_signaling.text_1": "Светофоры делят пути на сегменты",
+	"create.ponder.train_signal_signaling.text_1": "Светофоры делят Пути на сегменты",
 	"create.ponder.train_signal_signaling.text_2": "Если сегмент занят — проезд другим поездам запрещён",
 	"create.ponder.train_signal_signaling.text_3": "Таким образом, каждый сегмент будет содержать только один поезд одновременно",
 	"create.ponder.train_signal_signaling.text_4": "Второй режим Светофора доступен через переключение Гаечным ключом",
@@ -2969,27 +2693,23 @@
 	"create.ponder.train_signal_signaling.text_6": "Этот особый сигнал может останавливать поезда при втором условии",
 	"create.ponder.train_signal_signaling.text_7": "Он остановит поезда, которые при подъезде...",
 	"create.ponder.train_signal_signaling.text_8": "...не смогут сразу покинуть сегмент",
-	"create.ponder.train_signal_signaling.text_9": "Это помогает удерживать поезда, стоящие в очереди, вне загруженного сегмента",
-
+	"create.ponder.train_signal_signaling.text_9": "Это помогает удерживать поезда, стоящие в очереди — вне загруженного сегмента",
 	"create.ponder.valve_handle.header": "Генерацией силы вращения Вентилями",
 	"create.ponder.valve_handle.text_1": "Игроки могут использовать Вентили для применения силы вращения вручную",
 	"create.ponder.valve_handle.text_2": "Зажмите ПКМ для вращения против часовой стрелки",
 	"create.ponder.valve_handle.text_3": "Передаваемая ими скорость медленная и поступательная",
 	"create.ponder.valve_handle.text_4": "Зажмите ПКМ крадучись для вращения по часовой стрелке",
 	"create.ponder.valve_handle.text_5": "Вентили можно окрашивать в эстетических целях",
-
 	"create.ponder.valve_pipe.header": "Управлением потоком с помощью Жидкостных клапанов",
 	"create.ponder.valve_pipe.text_1": "Жидкостные клапаны помогают контролировать распространение жидкостей по трубопроводам",
 	"create.ponder.valve_pipe.text_2": "Их входной вал контролирует, разрешена ли подача жидкости в данный момент",
 	"create.ponder.valve_pipe.text_3": "При вращении в нужном направлении — клапан откроется",
 	"create.ponder.valve_pipe.text_4": "Его можно снова закрыть, изменив направление вращения",
-
 	"create.ponder.water_wheel.header": "Генерацией силы вращения Водяными колёсами",
 	"create.ponder.water_wheel.text_1": "Водяные колёса берут силу от потоков воды",
 	"create.ponder.water_wheel.text_2": "Чем больше сторон задействовано, тем быстрее будет вращаться Водяное колесо",
 	"create.ponder.water_wheel.text_3": "Лопасти колеса должны быть направлены против течения",
 	"create.ponder.water_wheel.text_4": "Лопасти направленные в противоположную сторону, будут не так эффективно вырабатывать силу вращения",
-
 	"create.ponder.weighted_ejector.header": "Использованием Взвешенных катапульт",
 	"create.ponder.weighted_ejector.text_1": "Кликните ПКМ крадучись, держа Катапульту, чтобы выбрать место цели",
 	"create.ponder.weighted_ejector.text_10": "Теперь она ограниченна этим размера стака и будет активироваться только тогда, когда удерживаемый стак достигнет этого количества",
@@ -3002,18 +2722,15 @@
 	"create.ponder.weighted_ejector.text_7": "Попадание предметов на Катапульту вызывает её срабатывание",
 	"create.ponder.weighted_ejector.text_8": "Если целью был выбран инвентарь, то катапульта будет ждать, пока в нём не появится место",
 	"create.ponder.weighted_ejector.text_9": "При помощи Гаечного ключа можно настроить необходимый размер стака",
-
 	"create.ponder.weighted_ejector_redstone.header": "Управлением Взвешенной катапультой редстоун-сигналом",
 	"create.ponder.weighted_ejector_redstone.text_1": "При подаче редстоун-сигнала Катапульты не будут активироваться",
 	"create.ponder.weighted_ejector_redstone.text_2": "Кроме того, наблюдатели могут определить, когда Катапульты срабатывают",
-
 	"create.ponder.weighted_ejector_tunnel.header": "Разделением стаков предметов при помощи Взвешенной катапульты",
 	"create.ponder.weighted_ejector_tunnel.text_1": "Объединённые с Латунными туннелями, Катапульты могут делить стаки предметов по нужному количеству",
 	"create.ponder.weighted_ejector_tunnel.text_2": "Сперва, настройте Латунный туннель на режим «Предпочтительно ближайший», чтобы приоритизировать выход сбоку",
 	"create.ponder.weighted_ejector_tunnel.text_3": "Размер стака, установленный на Катапульте, теперь определяет отделяемое количество",
 	"create.ponder.weighted_ejector_tunnel.text_4": "Пока новый стак нужного количества лежит на боковом выходе...",
 	"create.ponder.weighted_ejector_tunnel.text_5": "...остаток продолжит свой путь",
-
 	"create.ponder.windmill_source.header": "Генерацией силы вращения Подшипниками ветряной мельницы",
 	"create.ponder.windmill_source.text_1": "Подшипники ветряной мельницы прикрепляются к блокам перед ними",
 	"create.ponder.windmill_source.text_2": "Если прикреплено достаточно парусоподобных блоков, он может стать мельницей",
@@ -3022,10 +2739,6 @@
 	"create.ponder.windmill_source.text_5": "Используйте Гаечный ключ, чтобы настроить направление вращения",
 	"create.ponder.windmill_source.text_6": "Кликните ПКМ по Подшипнику в любое время, чтобы остановить его и изменить структуру",
 	"create.ponder.windmill_source.text_7": "Кликните ПКМ по Подшипнику в любое время, чтобы остановить и снова изменить структуру",
-
 	"create.ponder.windmill_structure.header": "Установкой Ветряной мельницы",
-	"create.ponder.windmill_structure.text_1": "Любая структура может считаться мельницей, пока она содержит как минимум 8 парусоподобных блоков",
-
-	"_": "Thank you for translating Create!"
-
+	"create.ponder.windmill_structure.text_1": "Любая структура может считаться мельницей, пока она содержит как минимум 8 парусоподобных блоков"
 }
