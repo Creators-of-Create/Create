@@ -340,8 +340,8 @@ public class ContraptionCollider {
 				contraptionEntity.registerColliding(entity);
 				entity.fallDistance = 0;
 				for (Entity rider : entity.getIndirectPassengers())
-					if (rider instanceof ServerPlayer playerRider)
-						playerRider.connection.aboveGroundTickCount = 0;
+					if (getPlayerType(rider) == PlayerType.CLIENT)
+						AllPackets.channel.sendToServer(new ClientMotionPacket(rider.getDeltaMovement(), true, 0));
 				boolean canWalk = bounce != 0 || slide == 0;
 				if (canWalk || !rotation.hasVerticalRotation()) {
 					if (canWalk)
