@@ -2,11 +2,11 @@ package com.simibubi.create.foundation.data;
 
 import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
 import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
-import static com.simibubi.create.AllTags.axeOrPickaxe;
-import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
+import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 import java.util.HashMap;
 import java.util.Map;

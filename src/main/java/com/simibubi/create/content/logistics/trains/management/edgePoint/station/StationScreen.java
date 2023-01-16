@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.core.PartialModel;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
@@ -310,7 +311,8 @@ public class StationScreen extends AbstractStationScreen {
 
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-		boolean hitEnter = getFocused() instanceof EditBox && (pKeyCode == 257 || pKeyCode == 335);
+		boolean hitEnter = getFocused() instanceof EditBox
+			&& (pKeyCode == InputConstants.KEY_RETURN || pKeyCode == InputConstants.KEY_NUMPADENTER);
 
 		if (hitEnter && nameBox.isFocused()) {
 			nameBox.setFocus(false);

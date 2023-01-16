@@ -20,7 +20,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -252,8 +251,12 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements ITE<
 	}
 
 	public static int getLight(BlockState state) {
-		return Mth.clamp(state.getValue(HEAT_LEVEL)
-			.ordinal() * 4 - 1, 0, 15);
+		HeatLevel level = state.getValue(HEAT_LEVEL);
+		return switch (level) {
+		case NONE -> 0;
+		case SMOULDERING -> 8;
+		default -> 15;
+		};
 	}
 
 	public static LootTable.Builder buildLootTable() {

@@ -66,7 +66,8 @@ public class TrackGraphVisualizer {
 
 				if (!edge.node1.location.dimension.equals(edge.node2.location.dimension))
 					continue;
-				if (other.hashCode() > hashCode && !ctrl)
+				if (other.hashCode() > hashCode && other.location.getLocation()
+					.distanceTo(camera) <= 50)
 					continue;
 
 				Vec3 yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 5) / 64f, 0);

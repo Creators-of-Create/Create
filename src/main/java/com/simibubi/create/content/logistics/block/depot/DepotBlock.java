@@ -55,7 +55,7 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchab
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		SharedDepotBlockMethods.onReplaced(state, worldIn, pos, newState, isMoving);
+		ITE.onRemove(state, worldIn, pos, newState);
 	}
 
 	@Override

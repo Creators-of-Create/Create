@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data;
 
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 import java.util.function.Function;
@@ -42,8 +43,6 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 
 public class WindowGen {
-
-	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	private static Properties glassProperties(Properties p) {
 		return p.isValidSpawn(WindowGen::never)

@@ -33,12 +33,15 @@ import net.minecraft.util.GsonHelper;
 
 public class LangMerger implements DataProvider {
 
-	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting()
+	private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
-	static final String CATEGORY_HEADER = "\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
+	private static final String CATEGORY_HEADER = "\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
 
 	private DataGenerator gen;
+	private final String modid;
+	private final String displayName;
+	private final LangPartial[] langPartials;
 
 	private List<Object> mergedLangData;
 	private Map<String, List<Object>> populatedLangData;
@@ -47,8 +50,11 @@ public class LangMerger implements DataProvider {
 
 	private List<String> langIgnore;
 
-	public LangMerger(DataGenerator gen) {
+	public <T extends LangPartial> LangMerger(DataGenerator gen, String modid, String displayName, T[] langPartials) {
 		this.gen = gen;
+		this.modid = modid;
+		this.displayName = displayName;
+		this.langPartials = langPartials;
 		this.mergedLangData = new ArrayList<>();
 		this.langIgnore = new ArrayList<>();
 		this.allLocalizedEntries = new HashMap<>();
@@ -57,10 +63,10 @@ public class LangMerger implements DataProvider {
 		populateLangIgnore();
 	}
 
-	private void populateLangIgnore() {
+	protected void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
-		langIgnore.add("create.gui.chromatic_projector"); 
+		langIgnore.add("create.gui.chromatic_projector");
 	}
 
 	private boolean shouldIgnore(String key) {
@@ -72,13 +78,13 @@ public class LangMerger implements DataProvider {
 
 	@Override
 	public String getName() {
-		return "Lang merger";
+		return displayName + "'s lang merger";
 	}
 
 	@Override
 	public void run(HashCache cache) throws IOException {
 		Path path = this.gen.getOutputFolder()
-			.resolve("assets/" + Create.ID + "/lang/" + "en_us.json");
+			.resolve("assets/" + modid + "/lang/" + "en_us.json");
 
 		for (Pair<String, JsonElement> pair : getAllLocalizationFiles()) {
 			if (!pair.getRight()
@@ -112,7 +118,7 @@ public class LangMerger implements DataProvider {
 		for (Entry<String, List<Object>> localization : populatedLangData.entrySet()) {
 			String key = localization.getKey();
 			Path populatedLangPath = this.gen.getOutputFolder()
-				.resolve("assets/" + Create.ID + "/lang/unfinished/" + key);
+				.resolve("assets/" + modid + "/lang/unfinished/" + key);
 			save(cache, localization.getValue(), missingTranslationTally.get(key)
 				.intValue(), populatedLangPath, "Populating " + key + " with missing entries...");
 		}
@@ -180,7 +186,7 @@ public class LangMerger implements DataProvider {
 		// Always put tooltips and ponder scenes in their own paragraphs
 		if (key.endsWith(".tooltip"))
 			return true;
-		if (key.startsWith("create.ponder") && key.endsWith(PonderScene.TITLE_KEY))
+		if (key.startsWith(modid + ".ponder") && key.endsWith(PonderScene.TITLE_KEY))
 			return true;
 
 		key = key.replaceFirst("\\.", "");
@@ -198,7 +204,7 @@ public class LangMerger implements DataProvider {
 	private List<Pair<String, JsonElement>> getAllLocalizationFiles() {
 		ArrayList<Pair<String, JsonElement>> list = new ArrayList<>();
 
-		String filepath = "assets/" + Create.ID + "/lang/";
+		String filepath = "assets/" + modid + "/lang/";
 		try (InputStream resourceStream = ClassLoader.getSystemResourceAsStream(filepath)) {
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resourceStream));
 			while (true) {
@@ -219,8 +225,8 @@ public class LangMerger implements DataProvider {
 	}
 
 	private void collectEntries() {
-		for (AllLangPartials partial : AllLangPartials.values())
-			addAll(partial.getDisplay(), partial.provide()
+		for (LangPartial partial : langPartials)
+			addAll(partial.getDisplayName(), partial.provide()
 				.getAsJsonObject());
 	}
 
@@ -237,7 +243,6 @@ public class LangMerger implements DataProvider {
 			try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
 				Create.LOGGER.info(message);
 				bufferedwriter.write(data);
-				bufferedwriter.close();
 			}
 		}
 
@@ -250,7 +255,7 @@ public class LangMerger implements DataProvider {
 		if (missingKeys != -1)
 			builder.append("\t\"_\": \"Missing Localizations: " + missingKeys + "\",\n");
 		data.forEach(builder::append);
-		builder.append("\t\"_\": \"Thank you for translating Create!\"\n\n");
+		builder.append("\t\"_\": \"Thank you for translating ").append(displayName).append("!\"\n\n");
 		builder.append("}");
 		return builder.toString();
 	}

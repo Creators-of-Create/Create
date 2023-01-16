@@ -184,18 +184,13 @@ public class KineticTileEntity extends SmartTileEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
-	}
-
-	@Override
-	protected void setRemovedNotDueToChunkUnload() {
+	public void remove() {
 		if (!level.isClientSide) {
 			if (hasNetwork())
 				getOrCreateNetwork().remove(this);
 			detachKinetics();
 		}
-		super.setRemovedNotDueToChunkUnload();
+		super.remove();
 	}
 
 	@Override

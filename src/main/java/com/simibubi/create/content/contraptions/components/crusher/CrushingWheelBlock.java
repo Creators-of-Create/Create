@@ -47,17 +47,14 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-
 		for (Direction d : Iterate.directions) {
 			if (d.getAxis() == state.getValue(AXIS))
 				continue;
 			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(worldIn.getBlockState(pos.relative(d))))
-				worldIn.setBlockAndUpdate(pos.relative(d), Blocks.AIR.defaultBlockState());
+				worldIn.removeBlock(pos.relative(d), isMoving);
 		}
 
-		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
-			worldIn.removeBlockEntity(pos);
-		}
+		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	public void updateControllers(BlockState state, Level world, BlockPos pos, Direction side) {

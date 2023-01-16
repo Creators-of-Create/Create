@@ -1,10 +1,10 @@
 package com.simibubi.create.content.palettes;
 
-import static com.simibubi.create.AllTags.pickaxeOnly;
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -26,12 +26,11 @@ public class PalettesVariantEntry {
 	public PalettesVariantEntry(String name, AllPaletteStoneTypes paletteStoneVariants) {
 		ImmutableList.Builder<BlockEntry<? extends Block>> registeredBlocks = ImmutableList.builder();
 		ImmutableList.Builder<BlockEntry<? extends Block>> registeredPartials = ImmutableList.builder();
-		CreateRegistrate registrate = Create.registrate();
 		NonNullSupplier<Block> baseBlock = paletteStoneVariants.baseBlock;
 
 		for (PaletteBlockPattern pattern : paletteStoneVariants.variantTypes) {
 			BlockBuilder<? extends Block, CreateRegistrate> builder =
-				registrate.block(pattern.createName(name), pattern.getBlockFactory())
+				REGISTRATE.block(pattern.createName(name), pattern.getBlockFactory())
 					.initialProperties(baseBlock)
 					.transform(pickaxeOnly())
 					.blockstate(pattern.getBlockStateGenerator()

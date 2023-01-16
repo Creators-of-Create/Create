@@ -2,9 +2,9 @@
   "replace": false,
   "values": [
     "minecraft:bee_nest",
-    "minecraft:vine",
+    "minecraft:cocoa",
     "minecraft:moss_carpet",
     "minecraft:shroomlight",
-    "minecraft:cocoa"
+    "minecraft:vine"
   ]
 }

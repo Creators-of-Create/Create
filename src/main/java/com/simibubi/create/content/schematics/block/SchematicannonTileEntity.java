@@ -279,7 +279,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		refillFuelIfPossible();
 
 		// Update Printer
-		skipsLeft = config().schematicannonSkips.get();
+		skipsLeft = 1000;
 		blockSkipped = true;
 
 		while (blockSkipped && skipsLeft-- > 0)
@@ -303,18 +303,18 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	protected void tickPrinter() {
 		ItemStack blueprint = inventory.getStackInSlot(0);
 		blockSkipped = false;
+		
+		if (blueprint.isEmpty() && !statusMsg.equals("idle")) {
+			state = State.STOPPED;
+			statusMsg = "idle";
+			sendUpdate = true;
+			return;
+		}
 
 		// Skip if not Active
 		if (state == State.STOPPED) {
 			if (printer.isLoaded())
 				resetPrinter();
-			return;
-		}
-
-		if (blueprint.isEmpty()) {
-			state = State.STOPPED;
-			statusMsg = "idle";
-			sendUpdate = true;
 			return;
 		}
 
@@ -374,6 +374,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		// Get item requirement
 		ItemRequirement requirement = printer.getCurrentRequirement();
 		if (requirement.isInvalid() || !printer.shouldPlaceCurrent(level, this::shouldPlace)) {
+			sendUpdate = !statusMsg.equals("searching");
 			statusMsg = "searching";
 			blockSkipped = true;
 			return;
@@ -641,6 +642,11 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		inventory.getStackInSlot(4)
 			.shrink(1);
 		fuelLevel += getFuelAddedByGunPowder();
+		if (statusMsg.equals("noGunpowder")) {
+			if (blocksPlaced > 0)
+				state = State.RUNNING;
+			statusMsg = "ready";
+		}
 		sendUpdate = true;
 	}
 
@@ -656,18 +662,18 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		ItemStack paper = inventory.extractItem(BookInput, 1, true);
 		boolean outputFull = inventory.getStackInSlot(BookOutput)
 			.getCount() == inventory.getSlotLimit(BookOutput);
+		
+		if (!printer.isLoaded()) {
+			if (!blueprint.isEmpty())
+				initializePrinter(blueprint);
+			return;
+		}
 
 		if (paper.isEmpty() || outputFull) {
 			if (bookPrintingProgress != 0)
 				sendUpdate = true;
 			bookPrintingProgress = 0;
 			dontUpdateChecklist = false;
-			return;
-		}
-
-		if (!printer.isLoaded()) {
-			if (!blueprint.isEmpty())
-				initializePrinter(blueprint);
 			return;
 		}
 

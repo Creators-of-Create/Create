@@ -35,6 +35,7 @@ import net.minecraftforge.common.ForgeHooks;
 public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	public static final int MAX_HEAT_CAPACITY = 10000;
+	public static final int INSERTION_THRESHOLD = 500;
 
 	protected FuelType activeFuel;
 	protected int remainingBurnTime;
@@ -166,7 +167,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	public void updateBlockState() {
-		setBlockHeat(getHeatLevelFromFuelType(activeFuel));
+		setBlockHeat(getHeatLevel());
 	}
 
 	protected void setBlockHeat(HeatLevel heat) {
@@ -189,13 +190,13 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		int newBurnTime;
 
 		if (AllItemTags.BLAZE_BURNER_FUEL_SPECIAL.matches(itemStack)) {
-			newBurnTime = 1000;
+			newBurnTime = 3200;
 			newFuel = FuelType.SPECIAL;
 		} else {
 			newBurnTime = ForgeHooks.getBurnTime(itemStack, null);
-			if (newBurnTime > 0)
+			if (newBurnTime > 0) {
 				newFuel = FuelType.NORMAL;
-			else if (AllItemTags.BLAZE_BURNER_FUEL_REGULAR.matches(itemStack)) {
+			} else if (AllItemTags.BLAZE_BURNER_FUEL_REGULAR.matches(itemStack)) {
 				newBurnTime = 1600; // Same as coal
 				newFuel = FuelType.NORMAL;
 			}
@@ -205,13 +206,19 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			return false;
 		if (newFuel.ordinal() < activeFuel.ordinal())
 			return false;
-		if (activeFuel == FuelType.SPECIAL && remainingBurnTime > 20)
-			return false;
 
 		if (newFuel == activeFuel) {
-			if (remainingBurnTime + newBurnTime > MAX_HEAT_CAPACITY && !forceOverflow)
+			if (remainingBurnTime <= INSERTION_THRESHOLD) {
+				newBurnTime += remainingBurnTime;
+			} else if (forceOverflow && newFuel == FuelType.NORMAL) {
+				if (remainingBurnTime < MAX_HEAT_CAPACITY) {
+					newBurnTime = Math.min(remainingBurnTime + newBurnTime, MAX_HEAT_CAPACITY);
+				} else {
+					newBurnTime = remainingBurnTime;
+				}
+			} else {
 				return false;
-			newBurnTime = Mth.clamp(remainingBurnTime + newBurnTime, 0, MAX_HEAT_CAPACITY);
+			}
 		}
 
 		if (simulate)
@@ -268,7 +275,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			.125f + level.random.nextFloat() * .125f, .75f - level.random.nextFloat() * .25f);
 	}
 
-	protected HeatLevel getHeatLevelFromFuelType(FuelType fuel) {
+	protected HeatLevel getHeatLevel() {
 		HeatLevel level = HeatLevel.SMOULDERING;
 		switch (activeFuel) {
 		case SPECIAL:
@@ -296,15 +303,16 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		Vec3 c = VecHelper.getCenterOf(worldPosition);
 		Vec3 v = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .125f)
 			.multiply(1, 0, 1));
-
-		if (r.nextInt(3) == 0)
-			level.addParticle(ParticleTypes.LARGE_SMOKE, v.x, v.y, v.z, 0, 0, 0);
-		if (r.nextInt(2) != 0)
+		
+		if (r.nextInt(4) != 0)
 			return;
 
 		boolean empty = level.getBlockState(worldPosition.above())
 			.getCollisionShape(level, worldPosition.above())
 			.isEmpty();
+		
+		if (empty || r.nextInt(8) == 0)
+			level.addParticle(ParticleTypes.LARGE_SMOKE, v.x, v.y, v.z, 0, 0, 0);
 
 		double yMotion = empty ? .0625f : r.nextDouble() * .0125f;
 		Vec3 v2 = c.add(VecHelper.offsetRandomly(Vec3.ZERO, r, .5f)

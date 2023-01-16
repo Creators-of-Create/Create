@@ -55,19 +55,20 @@ public class WhistleTileEntity extends SmartTileEntity implements IHaveGoggleInf
 
 	public void updatePitch() {
 		BlockPos currentPos = worldPosition.above();
-		int prevPitch = pitch;
-		for (pitch = 0; pitch <= 24; pitch += 2) {
+		int newPitch;
+		for (newPitch = 0; newPitch <= 24; newPitch += 2) {
 			BlockState blockState = level.getBlockState(currentPos);
 			if (!AllBlocks.STEAM_WHISTLE_EXTENSION.has(blockState))
 				break;
 			if (blockState.getValue(WhistleExtenderBlock.SHAPE) == WhistleExtenderShape.SINGLE) {
-				pitch++;
+				newPitch++;
 				break;
 			}
 			currentPos = currentPos.above();
 		}
-		if (prevPitch == pitch)
+		if (pitch == newPitch)
 			return;
+		pitch = newPitch;
 
 		notifyUpdate();
 

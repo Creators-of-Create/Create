@@ -1,6 +1,6 @@
 package com.simibubi.create.content.palettes;
 
-import static com.simibubi.create.AllTags.pickaxeOnly;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
@@ -54,7 +54,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		String patternName = Lang.nonPluralId(pattern.createName(variantName));
 		String blockName = patternName + "_" + this.name;
 
-		BlockBuilder<B, CreateRegistrate> blockBuilder = Create.registrate()
+		BlockBuilder<B, CreateRegistrate> blockBuilder = Create.REGISTRATE
 			.block(blockName, p -> createBlock(block))
 			.blockstate((c, p) -> generateBlockState(c, p, variantName, pattern, block))
 			.recipe((c, p) -> createRecipes(variant, block, c, p))

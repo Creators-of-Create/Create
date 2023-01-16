@@ -53,7 +53,7 @@ public class AllContainerTypes {
 
 	private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(
 		String name, ForgeMenuFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
-		return Create.registrate()
+		return Create.REGISTRATE
 			.menu(name, factory, screenFactory)
 			.register();
 	}

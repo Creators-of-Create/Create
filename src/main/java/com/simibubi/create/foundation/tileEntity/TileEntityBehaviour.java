@@ -61,13 +61,15 @@ public abstract class TileEntityBehaviour {
 
 	}
 
-	public void remove() {
+	/**
+	 * Block destroyed or Chunk unloaded. Usually invalidates capabilities
+	 */
+	public void unload() {}
 
-	}
-
-	public void destroy() {
-
-	}
+	/**
+	 * Block destroyed or removed. Requires block to call ITE::onRemove
+	 */
+	public void destroy() {}
 
 	public void setLazyTickRate(int slowTickRate) {
 		this.lazyTickRate = slowTickRate;
@@ -94,13 +96,6 @@ public abstract class TileEntityBehaviour {
 			te = null;
 		}
 		return get(te, type);
-	}
-
-	public static <T extends TileEntityBehaviour> void destroy(BlockGetter reader, BlockPos pos,
-		BehaviourType<T> type) {
-		T behaviour = get(reader.getBlockEntity(pos), type);
-		if (behaviour != null)
-			behaviour.destroy();
 	}
 
 	public static <T extends TileEntityBehaviour> T get(BlockEntity te, BehaviourType<T> type) {
