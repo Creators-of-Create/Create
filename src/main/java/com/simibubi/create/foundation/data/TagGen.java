@@ -110,6 +110,13 @@ public class TagGen {
 			.addTag(BlockTags.PRESSURE_PLATES)
 			.addTag(BlockTags.RAILS);
 
+		prov.tag(AllBlockTags.COPYCAT_ALLOW.tag)
+			.add(Blocks.BARREL);
+		prov.tag(AllBlockTags.COPYCAT_DENY.tag)
+			.addTag(BlockTags.CAULDRONS)
+			.addTag(BlockTags.SAPLINGS)
+			.addTag(BlockTags.CLIMBABLE);
+
 		// COMPAT
 
 		addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE,

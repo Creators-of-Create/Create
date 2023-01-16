@@ -127,13 +127,13 @@ public class ElevatorContactTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void setRemoved() {
+	public void invalidate() {
 		if (columnCoords != null) {
 			ElevatorColumn column = ElevatorColumn.get(level, columnCoords);
 			if (column != null)
 				column.remove(worldPosition);
 		}
-		super.setRemoved();
+		super.invalidate();
 	}
 
 	public void updateName(String shortName, String longName) {
