@@ -10,7 +10,6 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
-import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -63,10 +62,9 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 				.getCompound("BlockUsed"))
 				.getBlock()
 				.getName();
-			ItemDescription.add(tooltip,
-				Lang.translateDirect("terrainzapper.usingBlock",
-					usedBlock.withStyle(ChatFormatting.GRAY))
-						.withStyle(ChatFormatting.DARK_GRAY));
+			tooltip.add(Lang.translateDirect("terrainzapper.usingBlock",
+				usedBlock.withStyle(ChatFormatting.GRAY))
+					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 

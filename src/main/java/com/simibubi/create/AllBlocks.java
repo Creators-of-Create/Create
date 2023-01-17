@@ -3,7 +3,6 @@ package com.simibubi.create;
 import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
 import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
 import static com.simibubi.create.Create.REGISTRATE;
-import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.BlockStateGen.simpleCubeAll;
@@ -16,7 +15,6 @@ import static com.simibubi.create.foundation.data.TagGen.tagBlockAndItem;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
@@ -229,7 +227,7 @@ import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
-import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.ItemTooltipHandler;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
@@ -282,10 +280,6 @@ public class AllBlocks {
 
 	// Schematics
 
-	static {
-		REGISTRATE.startSection(SCHEMATICS);
-	}
-
 	public static final BlockEntry<SchematicannonBlock> SCHEMATICANNON =
 		REGISTRATE.block("schematicannon", SchematicannonBlock::new)
 			.initialProperties(() -> Blocks.DISPENSER)
@@ -318,10 +312,6 @@ public class AllBlocks {
 			.register();
 
 	// Kinetics
-
-	static {
-		REGISTRATE.startSection(AllSections.KINETICS);
-	}
 
 	public static final BlockEntry<ShaftBlock> SHAFT = REGISTRATE.block("shaft", ShaftBlock::new)
 		.initialProperties(SharedProperties::stone)
@@ -572,7 +562,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.transform(BuilderTransformers.cuckooClock())
 			.lang("Cuckoo Clock")
-			.onRegisterAfter(Registry.ITEM_REGISTRY, c -> TooltipHelper.referTo(c, CUCKOO_CLOCK))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, c -> ItemTooltipHandler.referTo(c, CUCKOO_CLOCK))
 			.register();
 
 	public static final BlockEntry<MillstoneBlock> MILLSTONE = REGISTRATE.block("millstone", MillstoneBlock::new)
@@ -1339,7 +1329,7 @@ public class AllBlocks {
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 			})
-			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemTooltipHandler.referTo(v, "block.create.brown_seat"))
 			.tag(AllBlockTags.SEATS.tag)
 			.item()
 			.tag(AllItemTags.SEATS.tag)
@@ -1473,10 +1463,6 @@ public class AllBlocks {
 			.register();
 
 	// Logistics
-
-	static {
-		REGISTRATE.startSection(AllSections.LOGISTICS);
-	}
 
 	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
 		.initialProperties(SharedProperties::softMetal)
@@ -1890,10 +1876,6 @@ public class AllBlocks {
 
 	// Curiosities
 
-	static {
-		REGISTRATE.startSection(AllSections.CURIOSITIES);
-	}
-
 	public static final BlockEntry<CopperBacktankBlock> COPPER_BACKTANK =
 		REGISTRATE.block("copper_backtank", CopperBacktankBlock::new)
 			.initialProperties(SharedProperties::copperMetal)
@@ -1955,7 +1937,7 @@ public class AllBlocks {
 					.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/block"))
 					.texture("0", p.modLoc("block/toolbox/" + colourName)));
 			})
-			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> TooltipHelper.referTo(v, "block.create.toolbox"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemTooltipHandler.referTo(v, "block.create.toolbox"))
 			.tag(AllBlockTags.TOOLBOXES.tag)
 			.item(UncontainableBlockItem::new)
 			.model((c, p) -> p.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/item"))
@@ -1966,10 +1948,6 @@ public class AllBlocks {
 	});
 
 	// Materials
-
-	static {
-		REGISTRATE.startSection(AllSections.PALETTES);
-	}
 
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_ORE)

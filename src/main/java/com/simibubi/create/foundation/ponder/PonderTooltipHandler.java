@@ -22,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class PonderTooltipHandler {
 
@@ -73,9 +74,11 @@ public class PonderTooltipHandler {
 		hoveredStack = ItemStack.EMPTY;
 	}
 
-	public static void addToTooltip(List<Component> toolTip, ItemStack stack) {
+	public static void addToTooltip(ItemTooltipEvent event) {
 		if (!enable)
 			return;
+
+		ItemStack stack = event.getItemStack();
 
 		updateHovered(stack);
 
@@ -90,10 +93,11 @@ public class PonderTooltipHandler {
 		Component component = subject ? Lang.translateDirect(SUBJECT)
 			.withStyle(ChatFormatting.GREEN)
 			: makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f));
-		if (toolTip.size() < 2)
-			toolTip.add(component);
+		List<Component> tooltip = event.getToolTip();
+		if (tooltip.size() < 2)
+			tooltip.add(component);
 		else
-			toolTip.add(1, component);
+			tooltip.add(1, component);
 	}
 
 	protected static void updateHovered(ItemStack stack) {

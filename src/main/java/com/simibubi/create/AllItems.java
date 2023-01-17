@@ -5,11 +5,6 @@ import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
 import static com.simibubi.create.Create.REGISTRATE;
-import static com.simibubi.create.content.AllSections.CURIOSITIES;
-import static com.simibubi.create.content.AllSections.KINETICS;
-import static com.simibubi.create.content.AllSections.LOGISTICS;
-import static com.simibubi.create.content.AllSections.MATERIALS;
-import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
@@ -59,8 +54,8 @@ import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.recipe.CompatMetals;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
+import com.simibubi.create.foundation.item.ItemTooltipHandler;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.tags.ItemTags;
@@ -76,11 +71,7 @@ public class AllItems {
 		REGISTRATE.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
 	}
 
-	// Schematics
-
-	static {
-		REGISTRATE.startSection(MATERIALS);
-	}
+	// Materials
 
 	public static final ItemEntry<Item> WHEAT_FLOUR =
 		taggedIngredient("wheat_flour", forgeItemTag("flour/wheat"), forgeItemTag("flour")),
@@ -201,10 +192,6 @@ public class AllItems {
 
 	// Kinetics
 
-	static {
-		REGISTRATE.startSection(KINETICS);
-	}
-
 	public static final ItemEntry<BeltConnectorItem> BELT_CONNECTOR =
 		REGISTRATE.item("belt_connector", BeltConnectorItem::new)
 			.lang("Mechanical Belt")
@@ -265,7 +252,7 @@ public class AllItems {
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
-		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
+		.onRegister(s -> ItemTooltipHandler.referTo(s, SAND_PAPER))
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
@@ -287,10 +274,6 @@ public class AllItems {
 			.register();
 
 	// Curiosities
-
-	static {
-		REGISTRATE.startSection(CURIOSITIES);
-	}
 
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
@@ -328,10 +311,6 @@ public class AllItems {
 
 	// Logistics
 
-	static {
-		REGISTRATE.startSection(LOGISTICS);
-	}
-
 	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
 		.model(AssetLookup.existingItemModel())
 		.register();
@@ -346,10 +325,6 @@ public class AllItems {
 		.register();
 
 	// Schematics
-
-	static {
-		REGISTRATE.startSection(SCHEMATICS);
-	}
 
 	public static final ItemEntry<Item> EMPTY_SCHEMATIC = REGISTRATE.item("empty_schematic", Item::new)
 		.properties(p -> p.stacksTo(1))

@@ -10,7 +10,7 @@ import com.simibubi.create.content.contraptions.components.actors.CampfireMoveme
 import com.simibubi.create.content.contraptions.components.actors.dispenser.DispenserMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.dispenser.DropperMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.foundation.utility.CreateRegistry;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.resources.ResourceLocation;
@@ -18,10 +18,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllMovementBehaviours {
-	private static final CreateRegistry<Block, MovementBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
+	private static final AttachedRegistry<Block, MovementBehaviour> BLOCK_BEHAVIOURS = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
 	public static void registerBehaviour(ResourceLocation block, MovementBehaviour behaviour) {
@@ -30,11 +29,6 @@ public class AllMovementBehaviours {
 
 	public static void registerBehaviour(Block block, MovementBehaviour behaviour) {
 		BLOCK_BEHAVIOURS.register(block, behaviour);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static void registerBehaviour(IRegistryDelegate<Block> block, MovementBehaviour behaviour) {
-		registerBehaviour(block.name(), behaviour);
 	}
 
 	public static void registerBehaviourProvider(BehaviourProvider provider) {
