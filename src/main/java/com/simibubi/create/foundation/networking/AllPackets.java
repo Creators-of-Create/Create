@@ -82,8 +82,8 @@ import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.foundation.command.HighlightPacket;
 import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
-import com.simibubi.create.foundation.gui.container.ClearContainerPacket;
-import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
+import com.simibubi.create.foundation.gui.menu.ClearMenuPacket;
+import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
@@ -109,7 +109,7 @@ public enum AllPackets {
 		PLAY_TO_SERVER),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new, PLAY_TO_SERVER),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new, PLAY_TO_SERVER),
-	CLEAR_CONTAINER(ClearContainerPacket.class, ClearContainerPacket::new, PLAY_TO_SERVER),
+	CLEAR_CONTAINER(ClearMenuPacket.class, ClearMenuPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new, PLAY_TO_SERVER),
 	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new, PLAY_TO_SERVER),

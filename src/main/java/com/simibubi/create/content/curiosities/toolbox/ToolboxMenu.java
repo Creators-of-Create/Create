@@ -2,8 +2,8 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import static com.simibubi.create.content.curiosities.toolbox.ToolboxInventory.STACKS_PER_COMPARTMENT;
 
-import com.simibubi.create.AllContainerTypes;
-import com.simibubi.create.foundation.gui.container.ContainerBase;
+import com.simibubi.create.AllMenuTypes;
+import com.simibubi.create.foundation.gui.menu.MenuBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,19 +19,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
+public class ToolboxMenu extends MenuBase<ToolboxTileEntity> {
 
-	public ToolboxContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public ToolboxMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public ToolboxContainer(MenuType<?> type, int id, Inventory inv, ToolboxTileEntity te) {
+	public ToolboxMenu(MenuType<?> type, int id, Inventory inv, ToolboxTileEntity te) {
 		super(type, id, inv, te);
 		te.startOpen(player);
 	}
 
-	public static ToolboxContainer create(int id, Inventory inv, ToolboxTileEntity te) {
-		return new ToolboxContainer(AllContainerTypes.TOOLBOX.get(), id, inv, te);
+	public static ToolboxMenu create(int id, Inventory inv, ToolboxTileEntity te) {
+		return new ToolboxMenu(AllMenuTypes.TOOLBOX.get(), id, inv, te);
 	}
 
 	@Override

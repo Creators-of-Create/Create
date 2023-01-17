@@ -141,16 +141,16 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		ItemStack contextStack = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).stack;
 
 		if (!context.contraption.hasUniversalCreativeCrate) {
-			IItemHandler iItemHandler = context.contraption.getSharedInventory();
+			IItemHandler itemHandler = context.contraption.getSharedInventory();
 			for (ItemRequirement.StackRequirement required : requiredItems) {
 				ItemStack stack= ItemHelper
-					.extract(iItemHandler, required::matches, ExtractionCountMode.EXACTLY,
+					.extract(itemHandler, required::matches, ExtractionCountMode.EXACTLY,
 						required.stack.getCount(), true);
 				if (stack.isEmpty())
 					return;
 			}
 			for (ItemRequirement.StackRequirement required : requiredItems)
-				contextStack = ItemHelper.extract(iItemHandler, required::matches,
+				contextStack = ItemHelper.extract(itemHandler, required::matches,
 					ExtractionCountMode.EXACTLY, required.stack.getCount(), false);
 		}
 

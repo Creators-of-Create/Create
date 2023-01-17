@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.item.filter;
 
-import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.AllMenuTypes;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,21 +10,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class FilterContainer extends AbstractFilterContainer {
+public class FilterMenu extends AbstractFilterMenu {
 
 	boolean respectNBT;
 	boolean blacklist;
 
-	public FilterContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public FilterMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public FilterContainer(MenuType<?> type, int id, Inventory inv, ItemStack stack) {
+	public FilterMenu(MenuType<?> type, int id, Inventory inv, ItemStack stack) {
 		super(type, id, inv, stack);
 	}
 
-	public static FilterContainer create(int id, Inventory inv, ItemStack stack) {
-		return new FilterContainer(AllContainerTypes.FILTER.get(), id, inv, stack);
+	public static FilterMenu create(int id, Inventory inv, ItemStack stack) {
+		return new FilterMenu(AllMenuTypes.FILTER.get(), id, inv, stack);
 	}
 
 	@Override

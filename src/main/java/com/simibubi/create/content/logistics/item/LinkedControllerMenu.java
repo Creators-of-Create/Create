@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.item;
 
-import com.simibubi.create.AllContainerTypes;
-import com.simibubi.create.foundation.gui.container.GhostItemContainer;
+import com.simibubi.create.AllMenuTypes;
+import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,18 +12,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class LinkedControllerContainer extends GhostItemContainer<ItemStack> {
+public class LinkedControllerMenu extends GhostItemMenu<ItemStack> {
 
-	public LinkedControllerContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public LinkedControllerMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public LinkedControllerContainer(MenuType<?> type, int id, Inventory inv, ItemStack filterItem) {
+	public LinkedControllerMenu(MenuType<?> type, int id, Inventory inv, ItemStack filterItem) {
 		super(type, id, inv, filterItem);
 	}
 
-	public static LinkedControllerContainer create(int id, Inventory inv, ItemStack filterItem) {
-		return new LinkedControllerContainer(AllContainerTypes.LINKED_CONTROLLER.get(), id, inv, filterItem);
+	public static LinkedControllerMenu create(int id, Inventory inv, ItemStack filterItem) {
+		return new LinkedControllerMenu(AllMenuTypes.LINKED_CONTROLLER.get(), id, inv, filterItem);
 	}
 
 	@Override

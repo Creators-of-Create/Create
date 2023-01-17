@@ -1,8 +1,8 @@
 package com.simibubi.create.content.schematics.block;
 
-import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.gui.container.ContainerBase;
+import com.simibubi.create.AllMenuTypes;
+import com.simibubi.create.foundation.gui.menu.MenuBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -15,21 +15,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SchematicTableContainer extends ContainerBase<SchematicTableTileEntity> {
+public class SchematicTableMenu extends MenuBase<SchematicTableTileEntity> {
 
 	private Slot inputSlot;
 	private Slot outputSlot;
 
-	public SchematicTableContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public SchematicTableMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public SchematicTableContainer(MenuType<?> type, int id, Inventory inv, SchematicTableTileEntity te) {
+	public SchematicTableMenu(MenuType<?> type, int id, Inventory inv, SchematicTableTileEntity te) {
 		super(type, id, inv, te);
 	}
 
-	public static SchematicTableContainer create(int id, Inventory inv, SchematicTableTileEntity te) {
-		return new SchematicTableContainer(AllContainerTypes.SCHEMATIC_TABLE.get(), id, inv, te);
+	public static SchematicTableMenu create(int id, Inventory inv, SchematicTableTileEntity te) {
+		return new SchematicTableMenu(AllMenuTypes.SCHEMATIC_TABLE.get(), id, inv, te);
 	}
 
 	public boolean canWrite() {

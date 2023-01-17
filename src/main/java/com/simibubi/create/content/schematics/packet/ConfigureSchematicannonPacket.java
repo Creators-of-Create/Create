@@ -2,7 +2,7 @@ package com.simibubi.create.content.schematics.packet;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.schematics.block.SchematicannonContainer;
+import com.simibubi.create.content.schematics.block.SchematicannonMenu;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity.State;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -37,10 +37,10 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayer player = context.get().getSender();
-			if (player == null || !(player.containerMenu instanceof SchematicannonContainer))
+			if (player == null || !(player.containerMenu instanceof SchematicannonMenu))
 				return;
 
-			SchematicannonTileEntity te = ((SchematicannonContainer) player.containerMenu).contentHolder;
+			SchematicannonTileEntity te = ((SchematicannonMenu) player.containerMenu).contentHolder;
 			switch (option) {
 			case DONT_REPLACE:
 			case REPLACE_ANY:

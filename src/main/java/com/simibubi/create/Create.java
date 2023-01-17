@@ -109,7 +109,7 @@ public class Create {
 		AllItems.register();
 		AllFluids.register();
 		AllPaletteBlocks.register();
-		AllContainerTypes.register();
+		AllMenuTypes.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
 		AllEnchantments.register();

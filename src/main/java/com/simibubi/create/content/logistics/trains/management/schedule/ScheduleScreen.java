@@ -32,9 +32,9 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ModularGuiLine;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
@@ -64,7 +64,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.GuiUtils;
 
-public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContainer> {
+public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 
 	private static final int CARD_HEADER = 22;
 	private static final int CARD_WIDTH = 195;
@@ -94,14 +94,14 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 
 	private DestinationSuggestions destinationSuggestions;
 
-	public ScheduleScreen(ScheduleContainer container, Inventory inv, Component title) {
-		super(container, inv, title);
+	public ScheduleScreen(ScheduleMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title);
 		schedule = new Schedule();
-		CompoundTag tag = container.contentHolder.getOrCreateTag()
+		CompoundTag tag = menu.contentHolder.getOrCreateTag()
 			.getCompound("Schedule");
 		if (!tag.isEmpty())
 			schedule = Schedule.fromTag(tag);
-		container.slotsActive = false;
+		menu.slotsActive = false;
 		editorSubWidgets = new ModularGuiLine();
 	}
 

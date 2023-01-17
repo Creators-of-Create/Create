@@ -66,7 +66,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
 import com.simibubi.create.foundation.data.recipe.LogStrippingFakeRecipes;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 

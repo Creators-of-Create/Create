@@ -488,23 +488,23 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		// Find and apply damage
 		if (usage == ItemUseType.DAMAGE) {
 			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
-				for (int slot = 0; slot < iItemHandler.getSlots(); slot++) {
-					ItemStack extractItem = iItemHandler.extractItem(slot, 1, true);
+				IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
+				for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+					ItemStack extractItem = itemHandler.extractItem(slot, 1, true);
 					if (!required.matches(extractItem))
 						continue;
 					if (!extractItem.isDamageableItem())
 						continue;
 
 					if (!simulate) {
-						ItemStack stack = iItemHandler.extractItem(slot, 1, false);
+						ItemStack stack = itemHandler.extractItem(slot, 1, false);
 						stack.setDamageValue(stack.getDamageValue() + 1);
 						if (stack.getDamageValue() <= stack.getMaxDamage()) {
-							if (iItemHandler.getStackInSlot(slot)
+							if (itemHandler.getStackInSlot(slot)
 								.isEmpty())
-								iItemHandler.insertItem(slot, stack, false);
+								itemHandler.insertItem(slot, stack, false);
 							else
-								ItemHandlerHelper.insertItem(iItemHandler, stack, false);
+								ItemHandlerHelper.insertItem(itemHandler, stack, false);
 						}
 					}
 
@@ -519,9 +519,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		boolean success = false;
 		int amountFound = 0;
 		for (LazyOptional<IItemHandler> cap : attachedInventories) {
-			IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
+			IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
 			amountFound += ItemHelper
-				.extract(iItemHandler, required::matches, ExtractionCountMode.UPTO,
+				.extract(itemHandler, required::matches, ExtractionCountMode.UPTO,
 					required.stack.getCount(), true)
 				.getCount();
 
@@ -535,9 +535,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (!simulate && success) {
 			amountFound = 0;
 			for (LazyOptional<IItemHandler> cap : attachedInventories) {
-				IItemHandler iItemHandler = cap.orElse(EmptyHandler.INSTANCE);
+				IItemHandler itemHandler = cap.orElse(EmptyHandler.INSTANCE);
 				amountFound += ItemHelper
-					.extract(iItemHandler, required::matches, ExtractionCountMode.UPTO,
+					.extract(itemHandler, required::matches, ExtractionCountMode.UPTO,
 						required.stack.getCount(), false)
 					.getCount();
 				if (amountFound < required.stack.getCount())
@@ -776,14 +776,14 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.playOnServer(level, worldPosition);
 	}
 
-	public void sendToContainer(FriendlyByteBuf buffer) {
+	public void sendToMenu(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(getBlockPos());
 		buffer.writeNbt(getUpdateTag());
 	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-		return SchematicannonContainer.create(id, inv, this);
+		return SchematicannonMenu.create(id, inv, this);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.item.filter;
 
-import com.simibubi.create.foundation.gui.container.GhostItemContainer;
+import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,13 +11,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class AbstractFilterContainer extends GhostItemContainer<ItemStack> {
+public abstract class AbstractFilterMenu extends GhostItemMenu<ItemStack> {
 
-	protected AbstractFilterContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	protected AbstractFilterMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	protected AbstractFilterContainer(MenuType<?> type, int id, Inventory inv, ItemStack contentHolder) {
+	protected AbstractFilterMenu(MenuType<?> type, int id, Inventory inv, ItemStack contentHolder) {
 		super(type, id, inv, contentHolder);
 	}
 

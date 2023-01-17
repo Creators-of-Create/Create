@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.container;
+package com.simibubi.create.foundation.gui.menu;
 
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 
@@ -11,18 +11,18 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class ContainerBase<T> extends AbstractContainerMenu {
+public abstract class MenuBase<T> extends AbstractContainerMenu {
 
 	public Player player;
 	public Inventory playerInventory;
 	public T contentHolder;
 
-	protected ContainerBase(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	protected MenuBase(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id);
 		init(inv, createOnClient(extraData));
 	}
 
-	protected ContainerBase(MenuType<?> type, int id, Inventory inv, T contentHolder) {
+	protected MenuBase(MenuType<?> type, int id, Inventory inv, T contentHolder) {
 		super(type, id);
 		init(inv, contentHolder);
 	}

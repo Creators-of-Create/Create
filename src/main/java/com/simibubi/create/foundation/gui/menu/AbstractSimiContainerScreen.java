@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.container;
+package com.simibubi.create.foundation.gui.menu;
 
 import java.util.Collection;
 import java.util.Collections;

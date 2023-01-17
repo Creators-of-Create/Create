@@ -203,8 +203,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 	}
 
 	private boolean isOpenInContainer(Player player) {
-		return player.containerMenu instanceof ToolboxContainer
-			&& ((ToolboxContainer) player.containerMenu).contentHolder == this;
+		return player.containerMenu instanceof ToolboxMenu
+			&& ((ToolboxMenu) player.containerMenu).contentHolder == this;
 	}
 
 	public void unequipTracked() {
@@ -309,7 +309,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-		return ToolboxContainer.create(id, inv, this);
+		return ToolboxMenu.create(id, inv, this);
 	}
 
 	@Override
@@ -330,8 +330,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		openCount = 0;
 
 		for (Player playerentity : level.getEntitiesOfClass(Player.class, new AABB(worldPosition).inflate(8)))
-			if (playerentity.containerMenu instanceof ToolboxContainer
-				&& ((ToolboxContainer) playerentity.containerMenu).contentHolder == this)
+			if (playerentity.containerMenu instanceof ToolboxMenu
+				&& ((ToolboxMenu) playerentity.containerMenu).contentHolder == this)
 				openCount++;
 
 		if (prevOpenCount != openCount)

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.schematics.block;
 
-import com.simibubi.create.AllContainerTypes;
-import com.simibubi.create.foundation.gui.container.ContainerBase;
+import com.simibubi.create.AllMenuTypes;
+import com.simibubi.create.foundation.gui.menu.MenuBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -14,18 +14,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SchematicannonContainer extends ContainerBase<SchematicannonTileEntity> {
+public class SchematicannonMenu extends MenuBase<SchematicannonTileEntity> {
 
-	public SchematicannonContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf buffer) {
+	public SchematicannonMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf buffer) {
 		super(type, id, inv, buffer);
 	}
 
-	public SchematicannonContainer(MenuType<?> type, int id, Inventory inv, SchematicannonTileEntity te) {
+	public SchematicannonMenu(MenuType<?> type, int id, Inventory inv, SchematicannonTileEntity te) {
 		super(type, id, inv, te);
 	}
 
-	public static SchematicannonContainer create(int id, Inventory inv, SchematicannonTileEntity te) {
-		return new SchematicannonContainer(AllContainerTypes.SCHEMATICANNON.get(), id, inv, te);
+	public static SchematicannonMenu create(int id, Inventory inv, SchematicannonTileEntity te) {
+		return new SchematicannonMenu(AllMenuTypes.SCHEMATICANNON.get(), id, inv, te);
 	}
 
 	@Override

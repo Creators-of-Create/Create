@@ -2,9 +2,9 @@ package com.simibubi.create.content.curiosities.tools;
 
 import java.util.Optional;
 
-import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
-import com.simibubi.create.foundation.gui.container.GhostItemContainer;
+import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -25,18 +25,18 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
+public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 
-	public BlueprintContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public BlueprintMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public BlueprintContainer(MenuType<?> type, int id, Inventory inv, BlueprintSection section) {
+	public BlueprintMenu(MenuType<?> type, int id, Inventory inv, BlueprintSection section) {
 		super(type, id, inv, section);
 	}
 
-	public static BlueprintContainer create(int id, Inventory inv, BlueprintSection section) {
-		return new BlueprintContainer(AllContainerTypes.CRAFTING_BLUEPRINT.get(), id, inv, section);
+	public static BlueprintMenu create(int id, Inventory inv, BlueprintSection section) {
+		return new BlueprintMenu(AllMenuTypes.CRAFTING_BLUEPRINT.get(), id, inv, section);
 	}
 
 	@Override
@@ -141,8 +141,8 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 
 	static class BlueprintCraftingInventory extends CraftingContainer {
 
-		public BlueprintCraftingInventory(AbstractContainerMenu container, ItemStackHandler items) {
-			super(container, 3, 3);
+		public BlueprintCraftingInventory(AbstractContainerMenu menu, ItemStackHandler items) {
+			super(menu, 3, 3);
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 3; x++) {
 					ItemStack stack = items.getStackInSlot(y * 3 + x);

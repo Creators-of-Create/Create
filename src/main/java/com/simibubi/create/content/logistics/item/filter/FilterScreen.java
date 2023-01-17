@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 
-public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
+public class FilterScreen extends AbstractFilterScreen<FilterMenu> {
 
 	private static final String PREFIX = "gui.filter.";
 
@@ -34,8 +34,8 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 	private Indicator whitelistIndicator, blacklistIndicator;
 	private Indicator respectNBTIndicator, ignoreNBTIndicator;
 
-	public FilterScreen(FilterContainer container, Inventory inv, Component title) {
-		super(container, inv, title, AllGuiTextures.FILTER);
+	public FilterScreen(FilterMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title, AllGuiTextures.FILTER);
 	}
 
 	@Override

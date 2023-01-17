@@ -133,7 +133,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		ItemStack heldItem = player.getMainHandItem();
-		return LinkedControllerContainer.create(id, inv, heldItem);
+		return LinkedControllerMenu.create(id, inv, heldItem);
 	}
 
 	@Override

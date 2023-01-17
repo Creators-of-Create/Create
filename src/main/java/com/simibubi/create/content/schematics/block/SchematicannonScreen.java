@@ -16,8 +16,8 @@ import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPack
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
@@ -33,7 +33,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonContainer> {
+public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonMenu> {
 
 	private static final AllGuiTextures BG_BOTTOM = AllGuiTextures.SCHEMATICANNON_BOTTOM;
 	private static final AllGuiTextures BG_TOP = AllGuiTextures.SCHEMATICANNON_TOP;
@@ -76,8 +76,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	private List<Rect2i> extraAreas = Collections.emptyList();
 
-	public SchematicannonScreen(SchematicannonContainer container, Inventory inventory, Component title) {
-		super(container, inventory, title);
+	public SchematicannonScreen(SchematicannonMenu menu, Inventory inventory, Component title) {
+		super(menu, inventory, title);
 		placementSettingWidgets = new ArrayList<>();
 	}
 

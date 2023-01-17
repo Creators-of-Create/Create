@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.container;
+package com.simibubi.create.foundation.gui.menu;
 
 import java.util.function.Supplier;
 
@@ -39,10 +39,9 @@ public class GhostItemSubmitPacket extends SimplePacketBase {
 					if (player == null)
 						return;
 
-					if (player.containerMenu instanceof GhostItemContainer) {
-						GhostItemContainer<?> c = (GhostItemContainer<?>) player.containerMenu;
-						c.ghostInventory.setStackInSlot(slot, item);
-						c.getSlot(36 + slot).setChanged();
+					if (player.containerMenu instanceof GhostItemMenu<?> menu) {
+						menu.ghostInventory.setStackInSlot(slot, item);
+						menu.getSlot(36 + slot).setChanged();
 					}
 
 				});

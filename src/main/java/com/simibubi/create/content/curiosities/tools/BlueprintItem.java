@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.tools;
 import java.util.Collection;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
+import com.simibubi.create.content.logistics.item.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 

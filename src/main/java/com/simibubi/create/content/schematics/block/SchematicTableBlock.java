@@ -65,7 +65,7 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 			return InteractionResult.SUCCESS;
 
 		withTileEntityDo(worldIn, pos,
-				te -> NetworkHooks.openGui((ServerPlayer) player, te, te::sendToContainer));
+				te -> NetworkHooks.openGui((ServerPlayer) player, te, te::sendToMenu));
 		return InteractionResult.SUCCESS;
 	}
 

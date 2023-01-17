@@ -59,7 +59,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	public OptionalInt openMenu(MenuProvider container) {
+	public OptionalInt openMenu(MenuProvider menuProvider) {
 		return OptionalInt.empty();
 	}
 

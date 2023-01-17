@@ -360,10 +360,10 @@ public class ConnectivityHandler {
 			}
 		}
 		
-		if (be instanceof IMultiTileContainer.Inventory iinv && iinv.hasInventory())
+		if (be instanceof IMultiTileContainer.Inventory inv && inv.hasInventory())
 			be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 				.invalidate();
-		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank())
+		if (be instanceof IMultiTileContainer.Fluid fluid && fluid.hasTank())
 			be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 				.invalidate();
 		

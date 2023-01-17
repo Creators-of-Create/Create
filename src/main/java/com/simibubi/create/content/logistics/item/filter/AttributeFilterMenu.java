@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.item.filter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -22,7 +22,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class AttributeFilterContainer extends AbstractFilterContainer {
+public class AttributeFilterMenu extends AbstractFilterMenu {
 
 	public enum WhitelistMode {
 		WHITELIST_DISJ, WHITELIST_CONJ, BLACKLIST;
@@ -31,16 +31,16 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	WhitelistMode whitelistMode;
 	List<Pair<ItemAttribute, Boolean>> selectedAttributes;
 
-	public AttributeFilterContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public AttributeFilterMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public AttributeFilterContainer(MenuType<?> type, int id, Inventory inv, ItemStack stack) {
+	public AttributeFilterMenu(MenuType<?> type, int id, Inventory inv, ItemStack stack) {
 		super(type, id, inv, stack);
 	}
 
-	public static AttributeFilterContainer create(int id, Inventory inv, ItemStack stack) {
-		return new AttributeFilterContainer(AllContainerTypes.ATTRIBUTE_FILTER.get(), id, inv, stack);
+	public static AttributeFilterMenu create(int id, Inventory inv, ItemStack stack) {
+		return new AttributeFilterMenu(AllMenuTypes.ATTRIBUTE_FILTER.get(), id, inv, stack);
 	}
 
 	public void appendSelectedAttribute(ItemAttribute itemAttribute, boolean inverted) {

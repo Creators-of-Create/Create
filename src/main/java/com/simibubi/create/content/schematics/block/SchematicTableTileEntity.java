@@ -47,7 +47,7 @@ public class SchematicTableTileEntity extends SmartTileEntity implements MenuPro
 		uploadingProgress = 0;
 	}
 
-	public void sendToContainer(FriendlyByteBuf buffer) {
+	public void sendToMenu(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(getBlockPos());
 		buffer.writeNbt(getUpdateTag());
 	}
@@ -108,7 +108,7 @@ public class SchematicTableTileEntity extends SmartTileEntity implements MenuPro
 
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-		return SchematicTableContainer.create(id, inv, this);
+		return SchematicTableMenu.create(id, inv, this);
 	}
 
 	@Override

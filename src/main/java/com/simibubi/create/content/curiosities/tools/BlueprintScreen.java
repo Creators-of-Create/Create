@@ -13,8 +13,8 @@ import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContainer> {
+public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintMenu> {
 
 	protected AllGuiTextures background;
 	private List<Rect2i> extraAreas = Collections.emptyList();
@@ -33,8 +33,8 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	private IconButton resetButton;
 	private IconButton confirmButton;
 
-	public BlueprintScreen(BlueprintContainer container, Inventory inv, Component title) {
-		super(container, inv, title);
+	public BlueprintScreen(BlueprintMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title);
 		this.background = AllGuiTextures.BLUEPRINT;
 	}
 

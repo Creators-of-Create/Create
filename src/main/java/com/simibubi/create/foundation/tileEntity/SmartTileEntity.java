@@ -221,7 +221,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 			worldPosition.getZ() + 0.5D) <= 64.0D;
 	}
 
-	public void sendToContainer(FriendlyByteBuf buffer) {
+	public void sendToMenu(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(getBlockPos());
 		buffer.writeNbt(getUpdateTag());
 	}

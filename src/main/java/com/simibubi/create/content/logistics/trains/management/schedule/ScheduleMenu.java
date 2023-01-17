@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.trains.management.schedule;
 
-import com.simibubi.create.foundation.gui.container.GhostItemContainer;
+import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -14,18 +14,18 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ScheduleContainer extends GhostItemContainer<ItemStack> {
+public class ScheduleMenu extends GhostItemMenu<ItemStack> {
 
 	public boolean slotsActive = true;
 	public int targetSlotsActive = 1;
 	
 	static final int slots = 2;
 
-	public ScheduleContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
+	public ScheduleMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public ScheduleContainer(MenuType<?> type, int id, Inventory inv, ItemStack contentHolder) {
+	public ScheduleMenu(MenuType<?> type, int id, Inventory inv, ItemStack contentHolder) {
 		super(type, id, inv, contentHolder);
 	}
 

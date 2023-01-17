@@ -11,8 +11,8 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -25,7 +25,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
-public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer> {
+public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 
 	protected static final AllGuiTextures BG = AllGuiTextures.TOOLBOX;
 	protected static final AllGuiTextures PLAYER = AllGuiTextures.PLAYER_INVENTORY;
@@ -37,8 +37,8 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 	private List<Rect2i> extraAreas = Collections.emptyList();
 
-	public ToolboxScreen(ToolboxContainer container, Inventory inv, Component title) {
-		super(container, inv, title);
+	public ToolboxScreen(ToolboxMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title);
 		init();
 	}
 

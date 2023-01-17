@@ -11,8 +11,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 
-public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> extends AbstractSimiContainerScreen<F> {
+public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends AbstractSimiContainerScreen<F> {
 
 	protected AllGuiTextures background;
     private List<Rect2i> extraAreas = Collections.emptyList();
@@ -33,8 +33,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 	private IconButton resetButton;
 	private IconButton confirmButton;
 
-	protected AbstractFilterScreen(F container, Inventory inv, Component title, AllGuiTextures background) {
-		super(container, inv, title);
+	protected AbstractFilterScreen(F menu, Inventory inv, Component title, AllGuiTextures background) {
+		super(menu, inv, title);
 		this.background = background;
 	}
 
