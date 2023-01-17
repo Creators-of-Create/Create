@@ -104,7 +104,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 				button.setToolTip(button.getToolTip()
 					.get(0));
 				button.getToolTip()
-					.add(TooltipHelper.holdShift(Palette.Yellow, hasShiftDown()));
+					.add(TooltipHelper.holdShift(Palette.YELLOW, hasShiftDown()));
 			}
 		}
 

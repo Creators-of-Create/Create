@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
@@ -73,7 +73,7 @@ public interface IRotate extends IWrenchable {
 
 		public static LangBuilder getFormattedSpeedText(float speed, boolean overstressed) {
 			SpeedLevel speedLevel = of(speed);
-			LangBuilder builder = Lang.text(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
+			LangBuilder builder = Lang.text(TooltipHelper.makeProgressBar(3, speedLevel.ordinal()));
 
 			builder.translate("tooltip.speedRequirement." + Lang.asId(speedLevel.name()))
 				.space()
@@ -133,7 +133,7 @@ public interface IRotate extends IWrenchable {
 
 		public static LangBuilder getFormattedStressText(double stressPercent) {
 			StressImpact stressLevel = of(stressPercent);
-			return Lang.text(ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal() + 1, 3)))
+			return Lang.text(TooltipHelper.makeProgressBar(3, Math.min(stressLevel.ordinal() + 1, 3)))
 				.translate("tooltip.stressImpact." + Lang.asId(stressLevel.name()))
 				.text(String.format(" (%s%%) ", (int) (stressPercent * 100)))
 				.style(stressLevel.getRelativeColor());

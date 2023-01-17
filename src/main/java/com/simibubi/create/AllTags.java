@@ -7,18 +7,13 @@ import static com.simibubi.create.AllTags.NameSpace.TIC;
 
 import java.util.Collections;
 
-import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.utility.Lang;
-import com.tterrag.registrate.builders.BlockBuilder;
-import com.tterrag.registrate.builders.ItemBuilder;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -50,27 +45,6 @@ public class AllTags {
 
 	public static TagKey<Fluid> forgeFluidTag(String path) {
 		return forgeTag(ForgeRegistries.FLUIDS, path);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> axeOrPickaxe() {
-		return TagGen.axeOrPickaxe();
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> axeOnly() {
-		return TagGen.axeOnly();
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> pickaxeOnly() {
-		return TagGen.pickaxeOnly();
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
-		String... path) {
-		return TagGen.tagBlockAndItem(path);
 	}
 
 	public enum NameSpace {

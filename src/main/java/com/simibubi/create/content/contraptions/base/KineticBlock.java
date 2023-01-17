@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.item.ItemDescription.Palette;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,8 +15,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class KineticBlock extends Block implements IRotate {
-
-	protected static final Palette color = Palette.Red;
 
 	public KineticBlock(Properties properties) {
 		super(properties);

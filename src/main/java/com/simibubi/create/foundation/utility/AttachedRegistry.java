@@ -14,15 +14,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
-	private static final List<CreateRegistry<?, ?>> ALL = new ArrayList<>();
+public class AttachedRegistry<K extends IForgeRegistryEntry<K>, V> {
+	private static final List<AttachedRegistry<?, ?>> ALL = new ArrayList<>();
 
 	protected final IForgeRegistry<K> objectRegistry;
 	protected final Map<ResourceLocation, V> locationMap = new HashMap<>();
 	protected final Map<K, V> objectMap = new IdentityHashMap<>();
 	protected boolean unwrapped = false;
 
-	public CreateRegistry(IForgeRegistry<K> objectRegistry) {
+	public AttachedRegistry(IForgeRegistry<K> objectRegistry) {
 		this.objectRegistry = objectRegistry;
 		ALL.add(this);
 	}
@@ -35,7 +35,7 @@ public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
 			if (object != null) {
 				objectMap.put(object, value);
 			} else {
-				Create.LOGGER.warn("Could not get object for location '" + location + "' in CreateRegistry after unwrapping!");
+				Create.LOGGER.warn("Could not get object for location '" + location + "' in AttachedRegistry after unwrapping!");
 			}
 		}
 	}
@@ -48,7 +48,7 @@ public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
 			if (location != null) {
 				locationMap.put(location, value);
 			} else {
-				Create.LOGGER.warn("Could not get location of object '" + object + "' in CreateRegistry before unwrapping!");
+				Create.LOGGER.warn("Could not get location of object '" + object + "' in AttachedRegistry before unwrapping!");
 			}
 		}
 	}
@@ -62,7 +62,7 @@ public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
 			if (object != null) {
 				return objectMap.get(object);
 			} else {
-				Create.LOGGER.warn("Could not get object for location '" + location + "' in CreateRegistry after unwrapping!");
+				Create.LOGGER.warn("Could not get object for location '" + location + "' in AttachedRegistry after unwrapping!");
 				return null;
 			}
 		}
@@ -77,7 +77,7 @@ public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
 			if (location != null) {
 				return locationMap.get(location);
 			} else {
-				Create.LOGGER.warn("Could not get location of object '" + object + "' in CreateRegistry before unwrapping!");
+				Create.LOGGER.warn("Could not get location of object '" + object + "' in AttachedRegistry before unwrapping!");
 				return null;
 			}
 		}
@@ -94,14 +94,14 @@ public class CreateRegistry<K extends IForgeRegistryEntry<K>, V> {
 			if (object != null) {
 				objectMap.put(object, entry.getValue());
 			} else {
-				Create.LOGGER.warn("Could not get object for location '" + location + "' in CreateRegistry during unwrapping!");
+				Create.LOGGER.warn("Could not get object for location '" + location + "' in AttachedRegistry during unwrapping!");
 			}
 		}
 		unwrapped = true;
 	}
 
 	public static void unwrapAll() {
-		for (CreateRegistry<?, ?> registry : ALL) {
+		for (AttachedRegistry<?, ?> registry : ALL) {
 			registry.unwrap();
 		}
 	}

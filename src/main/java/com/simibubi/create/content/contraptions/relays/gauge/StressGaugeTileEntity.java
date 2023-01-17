@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Color;
@@ -86,7 +86,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 			.forGoggles(tooltip);
 
 		if (getTheoreticalSpeed() == 0)
-			Lang.text(ItemDescription.makeProgressBar(3, 0))
+			Lang.text(TooltipHelper.makeProgressBar(3, 0))
 				.translate("gui.stressometer.no_rotation")
 				.style(ChatFormatting.DARK_GRAY)
 				.forGoggles(tooltip);

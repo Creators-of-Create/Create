@@ -10,7 +10,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
-import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -75,8 +74,8 @@ public class FilterItem extends Item implements MenuProvider {
 			List<Component> makeSummary = makeSummary(stack);
 			if (makeSummary.isEmpty())
 				return;
-			ItemDescription.add(tooltip, Components.literal(" "));
-			ItemDescription.add(tooltip, makeSummary);
+			tooltip.add(Components.literal(" "));
+			tooltip.addAll(makeSummary);
 		}
 	}
 

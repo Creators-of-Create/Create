@@ -245,7 +245,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 					button.setToolTip(button.getToolTip()
 						.get(0));
 					button.getToolTip()
-						.add(TooltipHelper.holdShift(Palette.Blue, hasShiftDown()));
+						.add(TooltipHelper.holdShift(Palette.BLUE, hasShiftDown()));
 				}
 			}
 

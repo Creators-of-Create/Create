@@ -31,6 +31,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -220,29 +221,31 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void addToTooltip(List<Component> toolTip, ItemStack stack) {
+	public static void addToTooltip(ItemTooltipEvent event) {
+		ItemStack stack = event.getItemStack();
 		if (!stack.hasTag() || !stack.getTag()
 			.contains("SequencedAssembly"))
 			return;
 		CompoundTag compound = stack.getTag()
 			.getCompound("SequencedAssembly");
 		ResourceLocation resourceLocation = new ResourceLocation(compound.getString("id"));
-		Optional<? extends Recipe<?>> recipe = Minecraft.getInstance().level.getRecipeManager()
+		Optional<? extends Recipe<?>> optionalRecipe = Minecraft.getInstance().level.getRecipeManager()
 			.byKey(resourceLocation);
-		if (!recipe.isPresent())
+		if (!optionalRecipe.isPresent())
 			return;
-		Recipe<?> iRecipe = recipe.get();
-		if (!(iRecipe instanceof SequencedAssemblyRecipe))
+		Recipe<?> recipe = optionalRecipe.get();
+		if (!(recipe instanceof SequencedAssemblyRecipe))
 			return;
 
-		SequencedAssemblyRecipe sequencedAssemblyRecipe = (SequencedAssemblyRecipe) iRecipe;
+		SequencedAssemblyRecipe sequencedAssemblyRecipe = (SequencedAssemblyRecipe) recipe;
 		int length = sequencedAssemblyRecipe.sequence.size();
 		int step = sequencedAssemblyRecipe.getStep(stack);
 		int total = length * sequencedAssemblyRecipe.loops;
-		toolTip.add(Components.immutableEmpty());
-		toolTip.add(Lang.translateDirect("recipe.sequenced_assembly")
+		List<Component> tooltip = event.getToolTip();
+		tooltip.add(Components.immutableEmpty());
+		tooltip.add(Lang.translateDirect("recipe.sequenced_assembly")
 			.withStyle(ChatFormatting.GRAY));
-		toolTip.add(Lang.translateDirect("recipe.assembly.progress", step, total)
+		tooltip.add(Lang.translateDirect("recipe.assembly.progress", step, total)
 			.withStyle(ChatFormatting.DARK_GRAY));
 
 		int remaining = total - step;
@@ -253,10 +256,10 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 			Component textComponent = sequencedRecipe.getAsAssemblyRecipe()
 				.getDescriptionForAssembly();
 			if (i == 0)
-				toolTip.add(Lang.translateDirect("recipe.assembly.next", textComponent)
+				tooltip.add(Lang.translateDirect("recipe.assembly.next", textComponent)
 					.withStyle(ChatFormatting.AQUA));
 			else
-				toolTip.add(Components.literal("-> ").append(textComponent)
+				tooltip.add(Components.literal("-> ").append(textComponent)
 					.withStyle(ChatFormatting.DARK_AQUA));
 		}
 

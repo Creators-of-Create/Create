@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.CreateRegistry;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -17,7 +17,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public enum ContraptionMovementSetting {
 	MOVABLE, NO_PICKUP, UNMOVABLE;
 
-	private static final CreateRegistry<Block, Supplier<ContraptionMovementSetting>> SETTING_SUPPLIERS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
+	private static final AttachedRegistry<Block, Supplier<ContraptionMovementSetting>> SETTING_SUPPLIERS = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
 
 	public static void register(ResourceLocation block, Supplier<ContraptionMovementSetting> settingSupplier) {
 		SETTING_SUPPLIERS.register(block, settingSupplier);

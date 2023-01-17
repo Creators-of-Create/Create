@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
@@ -117,7 +116,7 @@ public class BuilderTransformers {
 			.addLayer(() -> RenderType::translucent)
 			.color(() -> CopycatBlock::wrappedColor)
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.transform(AllTags.axeOrPickaxe());
+			.transform(TagGen.axeOrPickaxe());
 	}
 
 	public static <B extends TrapDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> trapdoor(boolean orientable) {
