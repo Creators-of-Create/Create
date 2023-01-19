@@ -9,9 +9,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes.ComponentPartials;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedBlockEntityBehaviour;
 import com.simibubi.create.foundation.block.connected.BakedModelWrapperWithData;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
@@ -35,10 +35,10 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 	@Override
 	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
-		IModelData tileData) {
+		IModelData blockEntityData) {
 		PipeModelData data = new PipeModelData();
-		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
-		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		FluidTransportBehaviour transport = BlockEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+		BracketedBlockEntityBehaviour bracket = BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 
 		if (transport != null)
 			for (Direction d : Iterate.directions)

@@ -12,9 +12,9 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -75,7 +75,7 @@ public class SchematicRenderer {
 		bufferCache.forEach((layer, buffer) -> {
 			buffer.renderInto(ms, buffers.getBuffer(layer));
 		});
-		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, buffers);
+		BlockEntityRenderHelper.renderBlockEntities(schematic, schematic.getRenderedBlockEntities(), ms, buffers);
 	}
 
 	protected void redraw() {
@@ -116,9 +116,9 @@ public class SchematicRenderer {
 				poseStack.pushPose();
 				poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
 
-				BlockEntity tileEntity = renderWorld.getBlockEntity(localPos);
+				BlockEntity blockEntity = renderWorld.getBlockEntity(localPos);
 				dispatcher.renderBatched(state, pos, renderWorld, poseStack, shadeSeparatingWrapper, true, random,
-					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
+					blockEntity != null ? blockEntity.getModelData() : EmptyModelData.INSTANCE);
 
 				poseStack.popPose();
 			}

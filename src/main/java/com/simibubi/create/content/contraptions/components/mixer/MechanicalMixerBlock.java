@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +20,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class MechanicalMixerBlock extends KineticBlock implements ITE<MechanicalMixerTileEntity>, ICogWheel {
+public class MechanicalMixerBlock extends KineticBlock implements IBE<MechanicalMixerBlockEntity>, ICogWheel {
 
 	public MechanicalMixerBlock(Properties properties) {
 		super(properties);
@@ -66,13 +66,13 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 
 	@Override
-	public Class<MechanicalMixerTileEntity> getTileEntityClass() {
-		return MechanicalMixerTileEntity.class;
+	public Class<MechanicalMixerBlockEntity> getBlockEntityClass() {
+		return MechanicalMixerBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends MechanicalMixerTileEntity> getTileEntityType() {
-		return AllTileEntities.MECHANICAL_MIXER.get();
+	public BlockEntityType<? extends MechanicalMixerBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.MECHANICAL_MIXER.get();
 	}
 
 	@Override

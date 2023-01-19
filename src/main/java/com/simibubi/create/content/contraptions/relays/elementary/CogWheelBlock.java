@@ -5,7 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -151,7 +151,7 @@ public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel
 						: EncasedCogwheelBlock.BOTTOM_SHAFT);
 			}
 
-			KineticTileEntity.switchToBlockState(world, pos, encasedState);
+			KineticBlockEntity.switchToBlockState(world, pos, encasedState);
 			return InteractionResult.SUCCESS;
 		}
 

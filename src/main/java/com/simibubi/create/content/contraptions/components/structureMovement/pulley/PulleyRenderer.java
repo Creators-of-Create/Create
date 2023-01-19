@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -19,8 +19,8 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 	}
 
 	@Override
-	protected Axis getShaftAxis(KineticTileEntity te) {
-		return te.getBlockState()
+	protected Axis getShaftAxis(KineticBlockEntity be) {
+		return be.getBlockState()
 			.getValue(PulleyBlock.HORIZONTAL_AXIS);
 	}
 
@@ -30,35 +30,35 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer renderRope(KineticTileEntity te) {
+	protected SuperByteBuffer renderRope(KineticBlockEntity be) {
 		return CachedBufferer.block(AllBlocks.ROPE.getDefaultState());
 	}
 
 	@Override
-	protected SuperByteBuffer renderMagnet(KineticTileEntity te) {
+	protected SuperByteBuffer renderMagnet(KineticBlockEntity be) {
 		return CachedBufferer.block(AllBlocks.PULLEY_MAGNET.getDefaultState());
 	}
 
 	@Override
-	protected float getOffset(KineticTileEntity te, float partialTicks) {
-		PulleyTileEntity pulley = (PulleyTileEntity) te;
-		return getTileOffset(partialTicks, pulley);
+	protected float getOffset(KineticBlockEntity be, float partialTicks) {
+		PulleyBlockEntity pulley = (PulleyBlockEntity) be;
+		return getBlockEntityOffset(partialTicks, pulley);
 	}
 
 	@Override
-	protected boolean isRunning(KineticTileEntity te) {
-		return isPulleyRunning(te);
+	protected boolean isRunning(KineticBlockEntity be) {
+		return isPulleyRunning(be);
 	}
 	
-	public static boolean isPulleyRunning(KineticTileEntity te) {
-		PulleyTileEntity pte = (PulleyTileEntity) te;
-		return pte.running || pte.mirrorParent != null || te.isVirtual();
+	public static boolean isPulleyRunning(KineticBlockEntity be) {
+		PulleyBlockEntity pte = (PulleyBlockEntity) be;
+		return pte.running || pte.mirrorParent != null || be.isVirtual();
 	}
 
-	public static float getTileOffset(float partialTicks, PulleyTileEntity tile) {
-		float offset = tile.getInterpolatedOffset(partialTicks);
+	public static float getBlockEntityOffset(float partialTicks, PulleyBlockEntity blockEntity) {
+		float offset = blockEntity.getInterpolatedOffset(partialTicks);
 
-		AbstractContraptionEntity attachedContraption = tile.getAttachedContraption();
+		AbstractContraptionEntity attachedContraption = blockEntity.getAttachedContraption();
 		if (attachedContraption != null) {
 			PulleyContraption c = (PulleyContraption) attachedContraption.getContraption();
 			double entityPos = Mth.lerp(partialTicks, attachedContraption.yOld, attachedContraption.getY());

@@ -22,7 +22,7 @@ public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource 
 
 	@Override
 	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
-		Level level = context.te()
+		Level level = context.blockEntity()
 			.getLevel();
 		if (!(level instanceof ServerLevel sLevel))
 			return Stream.empty();

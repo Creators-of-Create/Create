@@ -110,9 +110,9 @@ public class StructureTransform {
 		return applyWithoutOffset(localPos).offset(offset);
 	}
 
-	public void apply(BlockEntity te) {
-		if (te instanceof ITransformableTE)
-			((ITransformableTE) te).transform(this);
+	public void apply(BlockEntity be) {
+		if (be instanceof ITransformableTE)
+			((ITransformableTE) be).transform(this);
 	}
 
 	/**

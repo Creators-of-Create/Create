@@ -4,11 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllSpriteShifts;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.AbstractPulleyRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -21,41 +21,41 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ElevatorPulleyRenderer extends KineticTileEntityRenderer {
+public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer {
 
 	public ElevatorPulleyRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-//		if (Backend.canUseInstancing(te.getLevel()))
+//		if (Backend.canUseInstancing(be.getLevel()))
 //			return;
 
-		// from KTE. replace with super call when flw instance is implemented
-		BlockState state = getRenderedBlockState(te);
-		RenderType type = getRenderType(te, state);
+		// from KBE. replace with super call when flw instance is implemented
+		BlockState state = getRenderedBlockState(be);
+		RenderType type = getRenderType(be, state);
 		if (type != null)
-			renderRotatingBuffer(te, getRotatedModel(te, state), ms, buffer.getBuffer(type), light);
+			renderRotatingBuffer(be, getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
 		//
 		
-		float offset = PulleyRenderer.getTileOffset(partialTicks, (PulleyTileEntity) te);
-		boolean running = PulleyRenderer.isPulleyRunning(te);
+		float offset = PulleyRenderer.getBlockEntityOffset(partialTicks, (PulleyBlockEntity) be);
+		boolean running = PulleyRenderer.isPulleyRunning(be);
 
 		SpriteShiftEntry beltShift = AllSpriteShifts.ELEVATOR_BELT;
 		SpriteShiftEntry coilShift = AllSpriteShifts.ELEVATOR_COIL;
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-		Level world = te.getLevel();
-		BlockState blockState = te.getBlockState();
-		BlockPos pos = te.getBlockPos();
+		Level world = be.getLevel();
+		BlockState blockState = be.getBlockState();
+		BlockPos pos = be.getBlockPos();
 
 		SuperByteBuffer magnet = CachedBufferer.partial(AllBlockPartials.ELEVATOR_MAGNET, blockState);
 		if (running || offset == 0)
 			AbstractPulleyRenderer.renderAt(world, magnet, offset, pos, ms, vb);
 
-		SuperByteBuffer rotatedCoil = getRotatedCoil(te);
+		SuperByteBuffer rotatedCoil = getRotatedCoil(be);
 		if (offset == 0) {
 			rotatedCoil.light(light)
 				.renderInto(ms, vb);
@@ -100,12 +100,12 @@ public class ElevatorPulleyRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return shaft(getRotationAxisOf(te));
+	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
+		return shaft(getRotationAxisOf(be));
 	}
 
-	protected SuperByteBuffer getRotatedCoil(KineticTileEntity te) {
-		BlockState blockState = te.getBlockState();
+	protected SuperByteBuffer getRotatedCoil(KineticBlockEntity be) {
+		BlockState blockState = be.getBlockState();
 		return CachedBufferer.partialFacing(AllBlockPartials.ELEVATOR_COIL, blockState,
 			blockState.getValue(ElevatorPulleyBlock.HORIZONTAL_FACING));
 	}
@@ -116,7 +116,7 @@ public class ElevatorPulleyRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticTileEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(KineticBlockEntity p_188185_1_) {
 		return true;
 	}
 

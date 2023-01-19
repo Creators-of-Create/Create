@@ -2,8 +2,8 @@ package com.simibubi.create.content.curiosities.deco;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -16,15 +16,15 @@ import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.Vec3;
 
-public class SlidingDoorRenderer extends SafeTileEntityRenderer<SlidingDoorTileEntity> {
+public class SlidingDoorRenderer extends SafeBlockEntityRenderer<SlidingDoorBlockEntity> {
 
 	public SlidingDoorRenderer(Context context) {}
 
 	@Override
-	protected void renderSafe(SlidingDoorTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(SlidingDoorBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		BlockState blockState = te.getBlockState();
-		if (!te.shouldRenderSpecial(blockState))
+		BlockState blockState = be.getBlockState();
+		if (!be.shouldRenderSpecial(blockState))
 			return;
 
 		Direction facing = blockState.getValue(DoorBlock.FACING);
@@ -33,7 +33,7 @@ public class SlidingDoorRenderer extends SafeTileEntityRenderer<SlidingDoorTileE
 		if (blockState.getValue(DoorBlock.HINGE) == DoorHingeSide.LEFT)
 			movementDirection = movementDirection.getOpposite();
 
-		float value = te.animation.getValue(partialTicks);
+		float value = be.animation.getValue(partialTicks);
 		float value2 = Mth.clamp(value * 10, 0, 1);
 
 		Vec3 offset = Vec3.atLowerCornerOf(movementDirection.getNormal())

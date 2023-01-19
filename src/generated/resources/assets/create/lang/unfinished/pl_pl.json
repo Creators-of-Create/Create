@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 49",
+	"_": "Missing Localizations: 51",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Zastępuj stałe dowolnymi",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Zastępuj stałe pustymi",
 	"create.gui.schematicannon.option.skipMissing": "Pomijaj brakujące bloki",
-	"create.gui.schematicannon.option.skipTileEntities": "Chroń byty bloków",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Dodaj prochu, aby załadować armatę",
 	"create.gui.schematicannon.slot.listPrinter": "Daj tu książki, aby wydrukować listę",
 	"create.gui.schematicannon.slot.schematic": "Daj tu swój schemat. Upewnij się, że jest postawiony w odpowiednim miejscu.",
 	"create.gui.schematicannon.option.skipMissing.description": "Jeśli armata nie znajdzie wymaganego bloku, przejdzie w następne miejsce",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Armata będzie unikać zastępowania bloków przechowujących dane, takich jak skrzynie.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Armata nigdy nie będzie zastępować jakichkolwiek stałych bloków, jedynie nie-stałe i powietrze.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Armata będzie zastępować stałe bloki jedynie, jeśli schemat zawiera stały blok w tym miejscu.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Armata będzie zastępować stałe bloki jedynie, jeśli schemat zawiera dowolny blok w tym miejscu.",

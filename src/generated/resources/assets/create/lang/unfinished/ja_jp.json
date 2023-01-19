@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 69",
+	"_": "Missing Localizations: 71",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "固体ブロックを任意のブロックに置き換える",
 	"create.gui.schematicannon.option.replaceWithEmpty": "固体ブロックを空気に置き換える",
 	"create.gui.schematicannon.option.skipMissing": "不足しているブロックをスキップ",
-	"create.gui.schematicannon.option.skipTileEntities": "タイルエンティティを保護する",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "火薬を燃料として概略図砲に入れてください。",
 	"create.gui.schematicannon.slot.listPrinter": "本をここに入れると概略図の材料チェックリストを印刷します。",
 	"create.gui.schematicannon.slot.schematic": "概略図をここに入れてください。特定の場所に配置されていることを確認してください。",
 	"create.gui.schematicannon.option.skipMissing.description": "配置に必要なブロックを見つけられない場合、次の場所に進みます。",
-	"create.gui.schematicannon.option.skipTileEntities.description": "チェストなどのデータ保持ブロックの置き換えによる消滅を回避します。",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "その作業範囲の固体ブロックを置き換えることはなく、非固体ブロックと空気のみを置き換えます。",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "固体ブロックを設置する場合にのみ、その位置の固体ブロックを置き換えます。",
 	"create.gui.schematicannon.option.replaceWithAny.description": "任意のブロックを設置する場合に、その位置の固体ブロックを置き換えます。",

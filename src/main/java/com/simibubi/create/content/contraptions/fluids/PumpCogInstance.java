@@ -18,12 +18,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class PumpCogInstance extends SingleRotatingInstance implements DynamicInstance {
 
-	private final PumpTileEntity blockEntity = (PumpTileEntity) super.blockEntity;
+	private final PumpBlockEntity blockEntity = (PumpBlockEntity) super.blockEntity;
 	private final ModelData[] arrows = new ModelData[2];
 	private final Direction direction = blockState.getValue(PumpBlock.FACING);
 
-    public PumpCogInstance(MaterialManager modelManager, PumpTileEntity tile) {
-        super(modelManager, tile);
+    public PumpCogInstance(MaterialManager materialManager, PumpBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
     }
 
 	@Override

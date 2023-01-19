@@ -15,9 +15,9 @@ import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
@@ -25,7 +25,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
@@ -200,19 +200,19 @@ public class BlockMovementChecks {
 		if (block instanceof MechanicalPistonBlock && state.getValue(MechanicalPistonBlock.STATE) != PistonState.MOVING)
 			return true;
 		if (block instanceof MechanicalBearingBlock) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te instanceof MechanicalBearingTileEntity)
-				return !((MechanicalBearingTileEntity) te).isRunning();
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be instanceof MechanicalBearingBlockEntity)
+				return !((MechanicalBearingBlockEntity) be).isRunning();
 		}
 		if (block instanceof ClockworkBearingBlock) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te instanceof ClockworkBearingTileEntity)
-				return !((ClockworkBearingTileEntity) te).isRunning();
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be instanceof ClockworkBearingBlockEntity)
+				return !((ClockworkBearingBlockEntity) be).isRunning();
 		}
 		if (block instanceof PulleyBlock) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te instanceof PulleyTileEntity)
-				return !((PulleyTileEntity) te).running;
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be instanceof PulleyBlockEntity)
+				return !((PulleyBlockEntity) be).running;
 		}
 
 		if (AllBlocks.BELT.has(state))

@@ -26,11 +26,11 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 
-public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
+public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 
 	private List<BezierTrackInstance> instances;
 
-	public TrackInstance(MaterialManager materialManager, TrackTileEntity track) {
+	public TrackInstance(MaterialManager materialManager, TrackBlockEntity track) {
 		super(materialManager, track);
 
 		update();

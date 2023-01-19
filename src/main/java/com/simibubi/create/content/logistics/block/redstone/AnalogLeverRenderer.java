@@ -4,9 +4,9 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 
@@ -17,19 +17,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
-public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileEntity> {
+public class AnalogLeverRenderer extends SafeBlockEntityRenderer<AnalogLeverBlockEntity> {
 
 	public AnalogLeverRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	protected void renderSafe(AnalogLeverTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(AnalogLeverBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(be.getLevel())) return;
 
-		BlockState leverState = te.getBlockState();
-		float state = te.clientState.getValue(partialTicks);
+		BlockState leverState = be.getBlockState();
+		float state = be.clientState.getValue(partialTicks);
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 

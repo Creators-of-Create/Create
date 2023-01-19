@@ -13,14 +13,14 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ToolBoxInstance extends BlockEntityInstance<ToolboxTileEntity> implements DynamicInstance {
+public class ToolBoxInstance extends BlockEntityInstance<ToolboxBlockEntity> implements DynamicInstance {
 
 	private final Direction facing;
 	private ModelData lid;
 	private ModelData[] drawers;
 
-	public ToolBoxInstance(MaterialManager materialManager, ToolboxTileEntity tile) {
-		super(materialManager, tile);
+	public ToolBoxInstance(MaterialManager materialManager, ToolboxBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 
 		facing = blockState.getValue(ToolboxBlock.FACING)
 				.getOpposite();

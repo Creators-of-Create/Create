@@ -14,25 +14,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SchematicannonMenu extends MenuBase<SchematicannonTileEntity> {
+public class SchematicannonMenu extends MenuBase<SchematicannonBlockEntity> {
 
 	public SchematicannonMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf buffer) {
 		super(type, id, inv, buffer);
 	}
 
-	public SchematicannonMenu(MenuType<?> type, int id, Inventory inv, SchematicannonTileEntity te) {
-		super(type, id, inv, te);
+	public SchematicannonMenu(MenuType<?> type, int id, Inventory inv, SchematicannonBlockEntity be) {
+		super(type, id, inv, be);
 	}
 
-	public static SchematicannonMenu create(int id, Inventory inv, SchematicannonTileEntity te) {
-		return new SchematicannonMenu(AllMenuTypes.SCHEMATICANNON.get(), id, inv, te);
+	public static SchematicannonMenu create(int id, Inventory inv, SchematicannonBlockEntity be) {
+		return new SchematicannonMenu(AllMenuTypes.SCHEMATICANNON.get(), id, inv, be);
 	}
 
 	@Override
-	protected SchematicannonTileEntity createOnClient(FriendlyByteBuf extraData) {
+	protected SchematicannonBlockEntity createOnClient(FriendlyByteBuf extraData) {
 		ClientLevel world = Minecraft.getInstance().level;
-		BlockEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
-		if (tileEntity instanceof SchematicannonTileEntity schematicannon) {
+		BlockEntity blockEntity = world.getBlockEntity(extraData.readBlockPos());
+		if (blockEntity instanceof SchematicannonBlockEntity schematicannon) {
 			schematicannon.readClient(extraData.readNbt());
 			return schematicannon;
 		}
@@ -40,7 +40,7 @@ public class SchematicannonMenu extends MenuBase<SchematicannonTileEntity> {
 	}
 
 	@Override
-	protected void initAndReadInventory(SchematicannonTileEntity contentHolder) {
+	protected void initAndReadInventory(SchematicannonBlockEntity contentHolder) {
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class SchematicannonMenu extends MenuBase<SchematicannonTileEntity> {
 	}
 
 	@Override
-	protected void saveData(SchematicannonTileEntity contentHolder) {
+	protected void saveData(SchematicannonBlockEntity contentHolder) {
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 213",
+	"_": "Missing Localizations: 215",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Замінювати суцільні блоки будь-якими блоками",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Замінювати суцільні блоки повітрям",
 	"create.gui.schematicannon.option.skipMissing": "Пропускати відсутні блоки",
-	"create.gui.schematicannon.option.skipTileEntities": "Захищати блоки-сутності",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Додайте порох, щоб заправити гармату",
 	"create.gui.schematicannon.slot.listPrinter": "Покладіть книгу, щоб створити список предметів для схематики",
 	"create.gui.schematicannon.slot.schematic": "Покладіть вашу схему сюди. Переконайтеся, що схематика розташована у конкретному місці.",
 	"create.gui.schematicannon.option.skipMissing.description": "Якщо гармата не може знайти необхідний блок, вона будуватиме в наступному місці.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Гармата не замінюватиме блоки, які зберігають данні, такі як скрині.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Гармата ніколи не замінюватиме суцільні блоки, тільки замінюватиме несуцільні блоки та повітря.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Гармата замінюватиме суцільні блоки лише у випадку, якщо у схемі в цьому місці розташований суцільний блок.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Гармата замінюватиме суцільні блоки у випадку, якщо у схемі в цьому місці розташований будь-який блок.",

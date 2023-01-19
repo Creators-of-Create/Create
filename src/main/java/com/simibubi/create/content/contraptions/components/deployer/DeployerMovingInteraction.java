@@ -31,9 +31,9 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 		ItemStack heldStack = player.getItemInHand(activeHand);
 		if (heldStack.getItem()
 			.equals(AllItems.WRENCH.get())) {
-			DeployerTileEntity.Mode mode = NBTHelper.readEnum(ctx.tileData, "Mode", DeployerTileEntity.Mode.class);
-			NBTHelper.writeEnum(ctx.tileData, "Mode",
-				mode == DeployerTileEntity.Mode.PUNCH ? DeployerTileEntity.Mode.USE : DeployerTileEntity.Mode.PUNCH);
+			DeployerBlockEntity.Mode mode = NBTHelper.readEnum(ctx.blockEntityData, "Mode", DeployerBlockEntity.Mode.class);
+			NBTHelper.writeEnum(ctx.blockEntityData, "Mode",
+				mode == DeployerBlockEntity.Mode.PUNCH ? DeployerBlockEntity.Mode.USE : DeployerBlockEntity.Mode.PUNCH);
 
 		} else {
 			if (ctx.world.isClientSide)
@@ -44,9 +44,9 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world);
 				deployerFakePlayer.onMinecartContraption = ctx.contraption instanceof MountedContraption;
 				deployerFakePlayer.getInventory()
-					.load(ctx.tileData.getList("Inventory", Tag.TAG_COMPOUND));
+					.load(ctx.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND));
 				ctx.temporaryData = fake = deployerFakePlayer;
-				ctx.tileData.remove("Inventory");
+				ctx.blockEntityData.remove("Inventory");
 			} else
 				fake = (DeployerFakePlayer) ctx.temporaryData;
 
@@ -56,7 +56,7 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			ItemStack deployerItem = fake.getMainHandItem();
 			player.setItemInHand(activeHand, deployerItem.copy());
 			fake.setItemInHand(InteractionHand.MAIN_HAND, heldStack.copy());
-			ctx.tileData.put("HeldItem", heldStack.serializeNBT());
+			ctx.blockEntityData.put("HeldItem", heldStack.serializeNBT());
 			ctx.data.put("HeldItem", heldStack.serializeNBT());
 		}
 //		if (index >= 0)

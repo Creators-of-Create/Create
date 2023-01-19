@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;

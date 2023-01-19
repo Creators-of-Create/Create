@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities.frames;
 
-import static com.simibubi.create.content.curiosities.frames.CopycatTileEntity.MATERIAL_PROPERTY;
+import static com.simibubi.create.content.curiosities.frames.CopycatBlockEntity.MATERIAL_PROPERTY;
 import static com.simibubi.create.foundation.block.render.SpriteShiftEntry.getUnInterpolatedU;
 import static com.simibubi.create.foundation.block.render.SpriteShiftEntry.getUnInterpolatedV;
 
@@ -48,12 +48,12 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 
 	@Override
 	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
-		IModelData tileData) {
+		IModelData blockEntityData) {
 		BlockState wrappedState = getMaterial(world, pos, state);
 
 		if (wrappedState == null)
 			return builder;
-		if (tileData instanceof ModelDataMap mdm && mdm.hasProperty(MATERIAL_PROPERTY))
+		if (blockEntityData instanceof ModelDataMap mdm && mdm.hasProperty(MATERIAL_PROPERTY))
 			builder.withInitial(MATERIAL_PROPERTY, mdm.getData(MATERIAL_PROPERTY));
 
 		OcclusionData occlusionData = new OcclusionData();
@@ -190,8 +190,8 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 	public BlockState getMaterial(BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		if (!(state.getBlock()instanceof CopycatBlock ufb))
 			return null;
-		return ufb.getTileEntityOptional(world, pos)
-			.map(CopycatTileEntity::getMaterial)
+		return ufb.getBlockEntityOptional(world, pos)
+			.map(CopycatBlockEntity::getMaterial)
 			.orElse(null);
 	}
 

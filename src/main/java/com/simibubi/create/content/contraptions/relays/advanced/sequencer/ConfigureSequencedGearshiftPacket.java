@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
-import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
+import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -8,7 +8,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class ConfigureSequencedGearshiftPacket extends TileEntityConfigurationPacket<SequencedGearshiftTileEntity> {
+public class ConfigureSequencedGearshiftPacket extends BlockEntityConfigurationPacket<SequencedGearshiftBlockEntity> {
 
 	private ListTag instructions;
 
@@ -34,10 +34,10 @@ public class ConfigureSequencedGearshiftPacket extends TileEntityConfigurationPa
 	}
 
 	@Override
-	protected void applySettings(SequencedGearshiftTileEntity te) {
-		te.run(-1);
-		te.instructions = Instruction.deserializeAll(instructions);
-		te.sendData();
+	protected void applySettings(SequencedGearshiftBlockEntity be) {
+		be.run(-1);
+		be.instructions = Instruction.deserializeAll(instructions);
+		be.sendData();
 	}
 
 }

@@ -11,8 +11,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class EncasedCogInstance extends KineticTileInstance<KineticTileEntity> {
+public class EncasedCogInstance extends KineticBlockEntityInstance<KineticBlockEntity> {
 
 	private boolean large;
 
@@ -30,16 +30,16 @@ public class EncasedCogInstance extends KineticTileInstance<KineticTileEntity> {
 	protected Optional<RotatingData> rotatingTopShaft;
 	protected Optional<RotatingData> rotatingBottomShaft;
 
-	public static EncasedCogInstance small(MaterialManager modelManager, KineticTileEntity tile) {
-		return new EncasedCogInstance(modelManager, tile, false);
+	public static EncasedCogInstance small(MaterialManager modelManager, KineticBlockEntity blockEntity) {
+		return new EncasedCogInstance(modelManager, blockEntity, false);
 	}
 
-	public static EncasedCogInstance large(MaterialManager modelManager, KineticTileEntity tile) {
-		return new EncasedCogInstance(modelManager, tile, true);
+	public static EncasedCogInstance large(MaterialManager modelManager, KineticBlockEntity blockEntity) {
+		return new EncasedCogInstance(modelManager, blockEntity, true);
 	}
 
-	public EncasedCogInstance(MaterialManager modelManager, KineticTileEntity tile, boolean large) {
-		super(modelManager, tile);
+	public EncasedCogInstance(MaterialManager modelManager, KineticBlockEntity blockEntity, boolean large) {
+		super(modelManager, blockEntity);
 		this.large = large;
 	}
 

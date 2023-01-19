@@ -12,13 +12,13 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
-public class SchematicannonInstance extends BlockEntityInstance<SchematicannonTileEntity> implements DynamicInstance {
+public class SchematicannonInstance extends BlockEntityInstance<SchematicannonBlockEntity> implements DynamicInstance {
 
     private final ModelData connector;
     private final ModelData pipe;
 
-    public SchematicannonInstance(MaterialManager modelManager, SchematicannonTileEntity tile) {
-        super(modelManager, tile);
+    public SchematicannonInstance(MaterialManager materialManager, SchematicannonBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
 
         Material<ModelData> mat = getTransformMaterial();
 

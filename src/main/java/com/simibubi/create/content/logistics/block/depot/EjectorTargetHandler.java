@@ -234,15 +234,15 @@ public class EjectorTargetHandler {
 		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		BlockPos pos = result.getBlockPos();
 
-		BlockEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
-		if (!(te instanceof EjectorTileEntity)) {
+		BlockEntity be = Minecraft.getInstance().level.getBlockEntity(pos);
+		if (!(be instanceof EjectorBlockEntity)) {
 			lastHoveredBlockPos = -1;
 			currentSelection = null;
 			return;
 		}
 
 		if (lastHoveredBlockPos == -1 || lastHoveredBlockPos != pos.asLong()) {
-			EjectorTileEntity ejector = (EjectorTileEntity) te;
+			EjectorBlockEntity ejector = (EjectorBlockEntity) be;
 			if (!ejector.getTargetPosition()
 				.equals(ejector.getBlockPos()))
 				currentSelection = ejector.getTargetPosition();

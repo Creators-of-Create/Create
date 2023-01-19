@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.CampfireBlock;
 
 public class CampfireMovementBehaviour implements MovementBehaviour {
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 
@@ -20,7 +20,7 @@ public class CampfireMovementBehaviour implements MovementBehaviour {
 			|| !context.state.getValue(CampfireBlock.LIT))
 			return;
 
-		// Mostly copied from CampfireBlock and CampfireTileEntity
+		// Mostly copied from CampfireBlock and CampfireBlockEntity
 		Random random = context.world.random;
 		if (random.nextFloat() < 0.11F) {
 			for (int i = 0; i < random.nextInt(2) + 2; ++i) {

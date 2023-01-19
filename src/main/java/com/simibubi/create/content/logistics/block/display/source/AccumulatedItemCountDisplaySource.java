@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.foundation.utility.Components;
 
@@ -16,17 +16,17 @@ public class AccumulatedItemCountDisplaySource extends NumericSingleLineDisplayS
 			.getInt("Collected")));
 	}
 
-	public void itemReceived(DisplayLinkTileEntity te, int amount) {
-		if (te.getBlockState()
+	public void itemReceived(DisplayLinkBlockEntity be, int amount) {
+		if (be.getBlockState()
 			.getOptionalValue(DisplayLinkBlock.POWERED)
 			.orElse(true))
 			return;
 		
-		int collected = te.getSourceConfig()
+		int collected = be.getSourceConfig()
 			.getInt("Collected");
-		te.getSourceConfig()
+		be.getSourceConfig()
 			.putInt("Collected", collected + amount);
-		te.updateGatheredData();
+		be.updateGatheredData();
 	}
 
 	@Override

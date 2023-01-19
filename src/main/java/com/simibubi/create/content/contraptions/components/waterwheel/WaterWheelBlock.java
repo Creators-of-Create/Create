@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.components.waterwheel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Couple;
@@ -33,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<WaterWheelTileEntity> {
+public class WaterWheelBlock extends DirectionalKineticBlock implements IBE<WaterWheelBlockEntity> {
 
 	public WaterWheelBlock(Properties properties) {
 		super(properties);
@@ -107,7 +107,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 		vec = new Vec3(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
 		Vec3 flow = vec;
 
-		withTileEntityDo(world, pos, te -> {
+		withBlockEntityDo(world, pos, be -> {
 			double flowStrength = 0;
 
 			if (wf.getAxis() == Axis.Z) {
@@ -131,17 +131,17 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 					flowStrength = flow.z > 0 ^ !clockwise ? -flow.z * clockwiseMultiplier : -flow.z;
 			}
 
-			if (te.getSpeed() == 0 && flowStrength != 0 && !world.isClientSide())
-				te.award(
+			if (be.getSpeed() == 0 && flowStrength != 0 && !world.isClientSide())
+				be.award(
 					FluidHelper.isLava(fluid.getType()) ? AllAdvancements.LAVA_WHEEL : AllAdvancements.WATER_WHEEL);
 
 			Integer flowModifier = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
-			te.setFlow(side, (float) (flowStrength * flowModifier / 2f));
+			be.setFlow(side, (float) (flowStrength * flowModifier / 2f));
 		});
 	}
 
 	private void updateWheelSpeed(LevelAccessor world, BlockPos pos) {
-		withTileEntityDo(world, pos, WaterWheelTileEntity::updateGeneratedRotation);
+		withBlockEntityDo(world, pos, WaterWheelBlockEntity::updateGeneratedRotation);
 	}
 
 	@Override
@@ -207,13 +207,13 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	}
 
 	@Override
-	public Class<WaterWheelTileEntity> getTileEntityClass() {
-		return WaterWheelTileEntity.class;
+	public Class<WaterWheelBlockEntity> getBlockEntityClass() {
+		return WaterWheelBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends WaterWheelTileEntity> getTileEntityType() {
-		return AllTileEntities.WATER_WHEEL.get();
+	public BlockEntityType<? extends WaterWheelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.WATER_WHEEL.get();
 	}
 
 	public static Couple<Integer> getSpeedRange() {

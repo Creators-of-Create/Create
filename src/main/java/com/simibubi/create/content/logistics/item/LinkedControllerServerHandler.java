@@ -13,7 +13,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.IRedstoneLinkable;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.WorldAttached;

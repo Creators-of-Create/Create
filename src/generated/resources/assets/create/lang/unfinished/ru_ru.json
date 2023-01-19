@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 45",
+	"_": "Missing Localizations: 47",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Заменять твёрдые блоки любыми блоками",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Заменять твёрдые блоки воздухом",
 	"create.gui.schematicannon.option.skipMissing": "Пропускать отсутствующие блоки",
-	"create.gui.schematicannon.option.skipTileEntities": "Защитить имущество",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Добавьте порох, чтобы заправить пушку",
 	"create.gui.schematicannon.slot.listPrinter": "Положите книгу, чтобы создать список предметов для схематики",
 	"create.gui.schematicannon.slot.schematic": "Положите свою схематику здесь. Убедитесь что она размещена в правильном месте",
 	"create.gui.schematicannon.option.skipMissing.description": "Если пушка не сможет найти требуемый блок, то она перейдёт к следующему.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Пушка не будет заменять блоки-хранилища, такие как сундуки.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Пушка не будет заменять твёрдые блоки, только нетвёрдые и воздух.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Пушка будет заменять твёрдые блоки только в случае, если в схеме в этом месте расположен другой твёрдый блок.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Пушка будет заменять любые твёрдые блоки, кроме замены на воздух.",

@@ -5,13 +5,13 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlockEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class HosePulleyInstance extends AbstractPulleyInstance {
 
-	public HosePulleyInstance(MaterialManager dispatcher, HosePulleyTileEntity tile) {
-		super(dispatcher, tile);
+	public HosePulleyInstance(MaterialManager dispatcher, HosePulleyBlockEntity blockEntity) {
+		super(dispatcher, blockEntity);
 	}
 
 	protected Instancer<OrientedData> getRopeModel() {
@@ -39,7 +39,7 @@ public class HosePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected float getOffset() {
-		return ((HosePulleyTileEntity) blockEntity).getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
+		return ((HosePulleyBlockEntity) blockEntity).getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
 	}
 
 	protected boolean isRunning() {

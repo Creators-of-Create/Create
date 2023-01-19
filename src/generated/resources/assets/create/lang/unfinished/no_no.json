@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2359",
+	"_": "Missing Localizations: 2360",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "UNLOCALIZED: Replace Solid with Any",
 	"create.gui.schematicannon.option.replaceWithEmpty": "UNLOCALIZED: Replace Solid with Empty",
 	"create.gui.schematicannon.option.skipMissing": "UNLOCALIZED: Skip missing Blocks",
-	"create.gui.schematicannon.option.skipTileEntities": "UNLOCALIZED: Protect Tile Entities",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "UNLOCALIZED: Add gunpowder to fuel the cannon",
 	"create.gui.schematicannon.slot.listPrinter": "UNLOCALIZED: Place books here to print a Checklist for your Schematic",
 	"create.gui.schematicannon.slot.schematic": "UNLOCALIZED: Add your Schematic here. Make sure it is deployed at a specific location.",
 	"create.gui.schematicannon.option.skipMissing.description": "UNLOCALIZED: If the cannon cannot find a required Block for placement, it will continue at the next Location.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Kanonen vil unngå å erstatte blokker som inneholder data, slik som kister.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Kanonen vil aldri erstatte solide blokker i arbeidsområdet, bare ikke usolide blokker og luft.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Kanonen vil bare erstatte solide blokker i arbeidsområdet om byggeplanen inneholder en solid blokk på samme posisjon.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Kanonen vil erstatte solide blokker i arbeidsområdet hvis bygeplanen inneholder uansett type blokk på samme posisjon.",

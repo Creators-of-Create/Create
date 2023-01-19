@@ -9,8 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class HalfShaftInstance extends SingleRotatingInstance {
-    public HalfShaftInstance(MaterialManager modelManager, KineticTileEntity tile) {
-        super(modelManager, tile);
+    public HalfShaftInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
     }
 
     @Override

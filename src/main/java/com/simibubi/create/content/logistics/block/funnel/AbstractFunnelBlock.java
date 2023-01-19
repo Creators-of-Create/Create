@@ -5,13 +5,13 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,7 +33,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
 
-public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTileEntity>, IWrenchable {
+public abstract class AbstractFunnelBlock extends Block implements IBE<FunnelBlockEntity>, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -68,7 +68,7 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		boolean isMoving) {
 		if (worldIn.isClientSide)
 			return;
-		InvManipulationBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		InvManipulationBehaviour behaviour = BlockEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);
 		if (!worldIn.getBlockTicks()
@@ -84,8 +84,8 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	}
 
 	public static ItemStack tryInsert(Level worldIn, BlockPos pos, ItemStack toInsert, boolean simulate) {
-		FilteringBehaviour filter = TileEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
-		InvManipulationBehaviour inserter = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		FilteringBehaviour filter = BlockEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
+		InvManipulationBehaviour inserter = BlockEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (inserter == null)
 			return toInsert;
 		if (filter != null && !filter.test(toInsert))
@@ -95,12 +95,12 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		ItemStack insert = inserter.insert(toInsert);
 
 		if (!simulate && insert.getCount() != toInsert.getCount()) {
-			BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-			if (tileEntity instanceof FunnelTileEntity) {
-				FunnelTileEntity funnelTileEntity = (FunnelTileEntity) tileEntity;
-				funnelTileEntity.onTransfer(toInsert);
-				if (funnelTileEntity.hasFlap())
-					funnelTileEntity.flap(true);
+			BlockEntity blockEntity = worldIn.getBlockEntity(pos);
+			if (blockEntity instanceof FunnelBlockEntity) {
+				FunnelBlockEntity funnelBlockEntity = (FunnelBlockEntity) blockEntity;
+				funnelBlockEntity.onTransfer(toInsert);
+				if (funnelBlockEntity.hasFlap())
+					funnelBlockEntity.flap(true);
 			}
 		}
 		return insert;
@@ -129,16 +129,16 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		ITE.onRemove(state, world, pos, newState);
+		IBE.onRemove(state, world, pos, newState);
 	}
 
 	@Override
-	public Class<FunnelTileEntity> getTileEntityClass() {
-		return FunnelTileEntity.class;
+	public Class<FunnelBlockEntity> getBlockEntityClass() {
+		return FunnelBlockEntity.class;
 	}
 
-	public BlockEntityType<? extends FunnelTileEntity> getTileEntityType() {
-		return AllTileEntities.FUNNEL.get();
+	public BlockEntityType<? extends FunnelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.FUNNEL.get();
 	};
 
 }

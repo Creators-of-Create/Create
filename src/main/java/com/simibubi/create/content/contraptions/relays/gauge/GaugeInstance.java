@@ -9,7 +9,7 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
@@ -24,12 +24,12 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
 
     protected PoseStack ms;
 
-    protected GaugeInstance(MaterialManager dispatcher, KineticTileEntity tile) {
-        super(dispatcher, tile);
+    protected GaugeInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
 
         faces = new ArrayList<>(2);
 
-        GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
+        GaugeBlockEntity gaugeBlockEntity = (GaugeBlockEntity) blockEntity;
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
         Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
@@ -39,7 +39,7 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
         TransformStack msr = TransformStack.cast(ms);
         msr.translate(getInstancePosition());
 
-        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
+        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeBlockEntity.prevDialState, gaugeBlockEntity.dialState);
 
         for (Direction facing : Iterate.directions) {
             if (!gaugeBlock.shouldRenderHeadOnFace(world, pos, blockState, facing))
@@ -59,12 +59,12 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
 
     @Override
     public void beginFrame() {
-        GaugeTileEntity gaugeTile = (GaugeTileEntity) blockEntity;
+        GaugeBlockEntity gaugeBlockEntity = (GaugeBlockEntity) blockEntity;
 
-        if (Mth.equal(gaugeTile.prevDialState, gaugeTile.dialState))
+        if (Mth.equal(gaugeBlockEntity.prevDialState, gaugeBlockEntity.dialState))
             return;
 
-        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
+        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeBlockEntity.prevDialState, gaugeBlockEntity.dialState);
 
         TransformStack msr = TransformStack.cast(ms);
 
@@ -144,8 +144,8 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
     }
 
     public static class Speed extends GaugeInstance {
-        public Speed(MaterialManager dispatcher, KineticTileEntity tile) {
-            super(dispatcher, tile);
+        public Speed(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+            super(materialManager, blockEntity);
         }
 
         @Override
@@ -155,8 +155,8 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
     }
 
     public static class Stress extends GaugeInstance {
-        public Stress(MaterialManager dispatcher, KineticTileEntity tile) {
-            super(dispatcher, tile);
+        public Stress(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+            super(materialManager, blockEntity);
         }
 
         @Override

@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
-import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftTileEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlockEntity;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -81,8 +81,8 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		Vec3 currentPosition = getAnchorVec().add(.5, .5, .5);
 		BlockPos gantryShaftPos = new BlockPos(currentPosition).relative(facing.getOpposite());
 
-		BlockEntity te = level.getBlockEntity(gantryShaftPos);
-		if (!(te instanceof GantryShaftTileEntity) || !AllBlocks.GANTRY_SHAFT.has(te.getBlockState())) {
+		BlockEntity be = level.getBlockEntity(gantryShaftPos);
+		if (!(be instanceof GantryShaftBlockEntity) || !AllBlocks.GANTRY_SHAFT.has(be.getBlockState())) {
 			if (!level.isClientSide) {
 				setContraptionMotion(Vec3.ZERO);
 				disassemble();
@@ -90,11 +90,11 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 			return;
 		}
 
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		Direction direction = blockState.getValue(GantryShaftBlock.FACING);
-		GantryShaftTileEntity gantryShaftTileEntity = (GantryShaftTileEntity) te;
+		GantryShaftBlockEntity gantryShaftBlockEntity = (GantryShaftBlockEntity) be;
 
-		float pinionMovementSpeed = gantryShaftTileEntity.getPinionMovementSpeed();
+		float pinionMovementSpeed = gantryShaftBlockEntity.getPinionMovementSpeed();
 		movementVec = Vec3.atLowerCornerOf(direction.getNormal()).scale(pinionMovementSpeed);
 
 		if (blockState.getValue(GantryShaftBlock.POWERED) || pinionMovementSpeed == 0) {
@@ -112,7 +112,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 		if ((Mth.floor(currentCoord) + .5f < nextCoord != (pinionMovementSpeed * direction.getAxisDirection()
 			.getStep() < 0)))
-			if (!gantryShaftTileEntity.canAssembleOn()) {
+			if (!gantryShaftBlockEntity.canAssembleOn()) {
 				setContraptionMotion(Vec3.ZERO);
 				if (!level.isClientSide)
 					disassemble();

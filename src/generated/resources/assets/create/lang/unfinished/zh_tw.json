@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 46",
+	"_": "Missing Localizations: 48",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "用任何方塊替換工作區域內的方塊",
 	"create.gui.schematicannon.option.replaceWithEmpty": "用空氣替換工作區域內的方塊",
 	"create.gui.schematicannon.option.skipMissing": "繞過缺少的方塊",
-	"create.gui.schematicannon.option.skipTileEntities": "保護儲存方塊",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "向藍圖加農炮裝填火藥以提供動能",
 	"create.gui.schematicannon.slot.listPrinter": "在此處放置書以列印藍圖所需的材料清單",
 	"create.gui.schematicannon.slot.schematic": "在此處放置你的藍圖，務必確保其已被部署在特定位置",
 	"create.gui.schematicannon.option.skipMissing.description": "如果材料不夠，藍圖大炮將忽略目前不夠的材料並且使用其他已有材料繼續工作",
-	"create.gui.schematicannon.option.skipTileEntities.description": "藍圖將避免更換儲存方塊，如箱子",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "藍圖加農炮將不會替換工作範圍內的任何固體方塊",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "藍圖加農炮會使用所提供的固體方塊來替換工作區域內的其他固體方塊",
 	"create.gui.schematicannon.option.replaceWithAny.description": "藍圖加農炮會使用任何所提供的方塊來替換工作區域內的固體方塊",

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.processing.burner;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerTileEntity.FuelType;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockEntity.FuelType;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,9 +44,9 @@ public class BlazeBurnerHandler {
 			.getType() != HitResult.Type.BLOCK)
 			return;
 
-		BlockEntity tile = projectile.level.getBlockEntity(new BlockPos(event.getRayTraceResult()
+		BlockEntity blockEntity = projectile.level.getBlockEntity(new BlockPos(event.getRayTraceResult()
 			.getLocation()));
-		if (!(tile instanceof BlazeBurnerTileEntity)) {
+		if (!(blockEntity instanceof BlazeBurnerBlockEntity)) {
 			return;
 		}
 
@@ -58,12 +58,12 @@ public class BlazeBurnerHandler {
 		if (world.isClientSide)
 			return;
 
-		BlazeBurnerTileEntity heater = (BlazeBurnerTileEntity) tile;
+		BlazeBurnerBlockEntity heater = (BlazeBurnerBlockEntity) blockEntity;
 		if (!heater.isCreative()) {
 			if (heater.activeFuel != FuelType.SPECIAL) {
 				heater.activeFuel = FuelType.NORMAL;
 				heater.remainingBurnTime =
-					Mth.clamp(heater.remainingBurnTime + 80, 0, BlazeBurnerTileEntity.MAX_HEAT_CAPACITY);
+					Mth.clamp(heater.remainingBurnTime + 80, 0, BlazeBurnerBlockEntity.MAX_HEAT_CAPACITY);
 				heater.updateBlockState();
 				heater.notifyUpdate();
 			}

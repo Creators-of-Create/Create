@@ -22,7 +22,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 	
@@ -37,13 +37,13 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 			.get(context.localPos);
 		if (structureBlockInfo == null)
 			return;
-		boolean open = SlidingDoorTileEntity.isOpen(structureBlockInfo.state);
+		boolean open = SlidingDoorBlockEntity.isOpen(structureBlockInfo.state);
 
 		if (!context.world.isClientSide())
 			tickOpen(context, open);
 
-		Map<BlockPos, BlockEntity> tes = context.contraption.presentTileEntities;
-		if (!(tes.get(context.localPos) instanceof SlidingDoorTileEntity doorTE))
+		Map<BlockPos, BlockEntity> tes = context.contraption.presentBlockEntities;
+		if (!(tes.get(context.localPos) instanceof SlidingDoorBlockEntity doorTE))
 			return;
 		boolean wasSettled = doorTE.animation.settled();
 		doorTE.animation.chase(open ? 1 : 0, .15f, Chaser.LINEAR);

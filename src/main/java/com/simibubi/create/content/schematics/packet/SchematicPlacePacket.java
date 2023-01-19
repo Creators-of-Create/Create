@@ -48,13 +48,13 @@ public class SchematicPlacePacket extends SimplePacketBase {
 				if (!printer.shouldPlaceCurrent(world))
 					continue;
 
-				printer.handleCurrentTarget((pos, state, tile) -> {
+				printer.handleCurrentTarget((pos, state, blockEntity) -> {
 					boolean placingAir = state.isAir();
 					if (placingAir && !includeAir)
 						return;
 					
-					CompoundTag tileData = tile != null ? tile.saveWithFullMetadata() : null;
-					BlockHelper.placeSchematicBlock(world, state, pos, null, tileData);
+					CompoundTag data = blockEntity != null ? blockEntity.saveWithFullMetadata() : null;
+					BlockHelper.placeSchematicBlock(world, state, pos, null, data);
 				}, (pos, entity) -> {
 					world.addFreshEntity(entity);
 				});

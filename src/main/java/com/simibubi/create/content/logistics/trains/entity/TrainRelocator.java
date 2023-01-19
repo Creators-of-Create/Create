@@ -128,7 +128,7 @@ public class TrainRelocator {
 
 		BezierPointSelection bezierSelection = TrackBlockOutline.result;
 		if (bezierSelection != null) {
-			blockPos = bezierSelection.te()
+			blockPos = bezierSelection.blockEntity()
 				.getBlockPos();
 			hoveredBezier = bezierSelection.loc();
 		}

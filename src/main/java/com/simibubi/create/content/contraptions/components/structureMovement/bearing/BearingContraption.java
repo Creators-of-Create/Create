@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ass
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
-import com.simibubi.create.content.curiosities.frames.CopycatTileEntity;
+import com.simibubi.create.content.curiosities.frames.CopycatBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
@@ -69,7 +69,7 @@ public class BearingContraption extends Contraption {
 
 	private BlockState getSailBlock(Pair<StructureBlockInfo, BlockEntity> capture) {
 		BlockState state = capture.getKey().state;
-		if (AllBlocks.COPYCAT_PANEL.has(state) && capture.getRight()instanceof CopycatTileEntity cte)
+		if (AllBlocks.COPYCAT_PANEL.has(state) && capture.getRight()instanceof CopycatBlockEntity cte)
 			return cte.getMaterial();
 		return state;
 	}

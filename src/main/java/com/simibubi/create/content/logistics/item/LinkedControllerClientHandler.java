@@ -14,10 +14,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
@@ -128,8 +128,8 @@ public class LinkedControllerClientHandler {
 		}
 
 		if (inLectern() && AllBlocks.LECTERN_CONTROLLER.get()
-			.getTileEntityOptional(mc.level, lecternPos)
-			.map(te -> !te.isUsedBy(mc.player))
+			.getBlockEntityOptional(mc.level, lecternPos)
+			.map(be -> !be.isUsedBy(mc.player))
 			.orElse(true)) {
 			deactivateInLectern();
 			return;
@@ -193,7 +193,7 @@ public class LinkedControllerClientHandler {
 					.lineWidth(1 / 16f);
 
 			for (Integer integer : newKeys) {
-				LinkBehaviour linkBehaviour = TileEntityBehaviour.get(mc.level, selectedLocation, LinkBehaviour.TYPE);
+				LinkBehaviour linkBehaviour = BlockEntityBehaviour.get(mc.level, selectedLocation, LinkBehaviour.TYPE);
 				if (linkBehaviour != null) {
 					AllPackets.channel.sendToServer(new LinkedControllerBindPacket(integer, selectedLocation));
 					Lang.translate("linked_controller.key_bound", controls.get(integer)

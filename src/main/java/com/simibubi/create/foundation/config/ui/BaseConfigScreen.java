@@ -70,9 +70,9 @@ public class BaseConfigScreen extends ConfigScreen {
 	ForgeConfigSpec clientSpec;
 	ForgeConfigSpec commonSpec;
 	ForgeConfigSpec serverSpec;
-	String clientTile = "Client Config";
-	String commonTile = "Common Config";
-	String serverTile = "Server Config";
+	String clientTitle = "Client Config";
+	String commonTitle = "Common Config";
+	String serverTitle = "Server Config";
 	String modID;
 	protected boolean returnOnClose;
 
@@ -130,13 +130,13 @@ public class BaseConfigScreen extends ConfigScreen {
 
 	public BaseConfigScreen withTitles(@Nullable String client, @Nullable String common, @Nullable String server) {
 		if (client != null)
-			clientTile = client;
+			clientTitle = client;
 
 		if (common != null)
-			commonTile = common;
+			commonTitle = common;
 
 		if (server != null)
-			serverTile = server;
+			serverTitle = server;
 
 		return this;
 	}
@@ -146,7 +146,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		super.init();
 		returnOnClose = true;
 
-		TextStencilElement clientText = new TextStencilElement(font, Components.literal(clientTile)).centered(true, true);
+		TextStencilElement clientText = new TextStencilElement(font, Components.literal(clientTitle)).centered(true, true);
 		addRenderableWidget(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
 
 		if (clientSpec != null) {
@@ -158,7 +158,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			clientText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement commonText = new TextStencilElement(font, Components.literal(commonTile)).centered(true, true);
+		TextStencilElement commonText = new TextStencilElement(font, Components.literal(commonTitle)).centered(true, true);
 		addRenderableWidget(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
 
 		if (commonSpec != null) {
@@ -170,7 +170,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			commonText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement serverText = new TextStencilElement(font, Components.literal(serverTile)).centered(true, true);
+		TextStencilElement serverText = new TextStencilElement(font, Components.literal(serverTitle)).centered(true, true);
 		addRenderableWidget(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
 
 		if (serverSpec == null) {

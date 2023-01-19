@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SchematicTableMenu extends MenuBase<SchematicTableTileEntity> {
+public class SchematicTableMenu extends MenuBase<SchematicTableBlockEntity> {
 
 	private Slot inputSlot;
 	private Slot outputSlot;
@@ -24,12 +24,12 @@ public class SchematicTableMenu extends MenuBase<SchematicTableTileEntity> {
 		super(type, id, inv, extraData);
 	}
 
-	public SchematicTableMenu(MenuType<?> type, int id, Inventory inv, SchematicTableTileEntity te) {
-		super(type, id, inv, te);
+	public SchematicTableMenu(MenuType<?> type, int id, Inventory inv, SchematicTableBlockEntity be) {
+		super(type, id, inv, be);
 	}
 
-	public static SchematicTableMenu create(int id, Inventory inv, SchematicTableTileEntity te) {
-		return new SchematicTableMenu(AllMenuTypes.SCHEMATIC_TABLE.get(), id, inv, te);
+	public static SchematicTableMenu create(int id, Inventory inv, SchematicTableBlockEntity be) {
+		return new SchematicTableMenu(AllMenuTypes.SCHEMATIC_TABLE.get(), id, inv, be);
 	}
 
 	public boolean canWrite() {
@@ -52,10 +52,10 @@ public class SchematicTableMenu extends MenuBase<SchematicTableTileEntity> {
 	}
 
 	@Override
-	protected SchematicTableTileEntity createOnClient(FriendlyByteBuf extraData) {
+	protected SchematicTableBlockEntity createOnClient(FriendlyByteBuf extraData) {
 		ClientLevel world = Minecraft.getInstance().level;
-		BlockEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
-		if (tileEntity instanceof SchematicTableTileEntity schematicTable) {
+		BlockEntity blockEntity = world.getBlockEntity(extraData.readBlockPos());
+		if (blockEntity instanceof SchematicTableBlockEntity schematicTable) {
 			schematicTable.readClient(extraData.readNbt());
 			return schematicTable;
 		}
@@ -63,7 +63,7 @@ public class SchematicTableMenu extends MenuBase<SchematicTableTileEntity> {
 	}
 
 	@Override
-	protected void initAndReadInventory(SchematicTableTileEntity contentHolder) {
+	protected void initAndReadInventory(SchematicTableBlockEntity contentHolder) {
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class SchematicTableMenu extends MenuBase<SchematicTableTileEntity> {
 	}
 
 	@Override
-	protected void saveData(SchematicTableTileEntity contentHolder) {
+	protected void saveData(SchematicTableBlockEntity contentHolder) {
 	}
 
 }

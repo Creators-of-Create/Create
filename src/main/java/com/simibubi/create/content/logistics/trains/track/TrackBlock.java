@@ -25,10 +25,10 @@ import com.google.common.base.Predicates;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
@@ -39,11 +39,11 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.block.render.MultiPosDestructionHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
@@ -108,21 +108,21 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
 
 public class TrackBlock extends Block
-	implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
+	implements IBE<TrackBlockEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
-	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
+	public static final BooleanProperty HAS_BE = BooleanProperty.create("turn");
 
 	public TrackBlock(Properties p_49795_) {
 		super(p_49795_);
 		registerDefaultState(defaultBlockState().setValue(SHAPE, TrackShape.ZO)
-			.setValue(HAS_TE, false)
+			.setValue(HAS_BE, false)
 			.setValue(WATERLOGGED, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
-		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE, WATERLOGGED));
+		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_BE, WATERLOGGED));
 	}
 	
 	@Override
@@ -206,15 +206,15 @@ public class TrackBlock extends Block
 			return;
 		if (!pPlayer.isCreative())
 			return;
-		withTileEntityDo(pLevel, pPos, te -> {
-			te.cancelDrops = true;
-			te.removeInboundConnections();
+		withBlockEntityDo(pLevel, pPos, be -> {
+			be.cancelDrops = true;
+			be.removeInboundConnections();
 		});
 	}
 
 	@Override
 	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
-		if (pOldState.getBlock() == this && pState.setValue(HAS_TE, true) == pOldState.setValue(HAS_TE, true))
+		if (pOldState.getBlock() == this && pState.setValue(HAS_BE, true) == pOldState.setValue(HAS_BE, true))
 			return;
 		if (pLevel.isClientSide)
 			return;
@@ -227,7 +227,7 @@ public class TrackBlock extends Block
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-		withTileEntityDo(pLevel, pPos, TrackTileEntity::validateConnections);
+		withBlockEntityDo(pLevel, pPos, TrackBlockEntity::validateConnections);
 	}
 
 	@Override
@@ -273,16 +273,16 @@ public class TrackBlock extends Block
 			}
 
 			level.setBlock(pos, state.setValue(SHAPE, TrackShape.asPortal(d))
-				.setValue(HAS_TE, true), 3);
-			BlockEntity te = level.getBlockEntity(pos);
-			if (te instanceof TrackTileEntity tte)
+				.setValue(HAS_BE, true), 3);
+			BlockEntity be = level.getBlockEntity(pos);
+			if (be instanceof TrackBlockEntity tte)
 				tte.bind(otherLevel.dimension(), otherTrackPos);
 
 			otherLevel.setBlock(otherTrackPos, state.setValue(SHAPE, TrackShape.asPortal(otherTrack.getFace()))
-				.setValue(HAS_TE, true), 3);
-			BlockEntity otherTe = otherLevel.getBlockEntity(otherTrackPos);
-			if (otherTe instanceof TrackTileEntity tte)
-				tte.bind(level.dimension(), pos);
+				.setValue(HAS_BE, true), 3);
+			BlockEntity otherBE = otherLevel.getBlockEntity(otherTrackPos);
+			if (otherBE instanceof TrackBlockEntity tbe)
+				tbe.bind(level.dimension(), pos);
 
 			pop = false;
 		}
@@ -383,13 +383,13 @@ public class TrackBlock extends Block
 		} else
 			list = ITrackBlock.super.getConnected(world, pos, state, linear, connectedTo);
 
-		if (!state.getValue(HAS_TE))
+		if (!state.getValue(HAS_BE))
 			return list;
 		if (linear)
 			return list;
 
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (!(blockEntity instanceof TrackTileEntity trackTE))
+		if (!(blockEntity instanceof TrackBlockEntity trackTE))
 			return list;
 
 		Map<BlockPos, BezierConnection> connections = trackTE.getConnections();
@@ -441,17 +441,17 @@ public class TrackBlock extends Block
 
 	@Override
 	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		boolean removeTE = false;
-		if (pState.getValue(HAS_TE) && (!pState.is(pNewState.getBlock()) || !pNewState.getValue(HAS_TE))) {
+		boolean removeBE = false;
+		if (pState.getValue(HAS_BE) && (!pState.is(pNewState.getBlock()) || !pNewState.getValue(HAS_BE))) {
 			BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-			if (blockEntity instanceof TrackTileEntity && !pLevel.isClientSide)
-				((TrackTileEntity) blockEntity).removeInboundConnections();
-			removeTE = true;
+			if (blockEntity instanceof TrackBlockEntity && !pLevel.isClientSide)
+				((TrackBlockEntity) blockEntity).removeInboundConnections();
+			removeBE = true;
 		}
 
-		if (pNewState.getBlock() != this || pState.setValue(HAS_TE, true) != pNewState.setValue(HAS_TE, true))
+		if (pNewState.getBlock() != this || pState.setValue(HAS_BE, true) != pNewState.setValue(HAS_BE, true))
 			TrackPropagator.onRailRemoved(pLevel, pPos, pState);
-		if (removeTE)
+		if (removeBE)
 			pLevel.removeBlockEntity(pPos);
 		if (!pLevel.isClientSide)
 			updateGirders(pState, pLevel, pPos, pLevel.getBlockTicks());
@@ -463,12 +463,12 @@ public class TrackBlock extends Block
 
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
-		for (Entry<BlockPos, BoundingBox> entry : StationTileEntity.assemblyAreas.get(world)
+		for (Entry<BlockPos, BoundingBox> entry : StationBlockEntity.assemblyAreas.get(world)
 			.entrySet()) {
 			if (!entry.getValue()
 				.isInside(pos))
 				continue;
-			if (world.getBlockEntity(entry.getKey()) instanceof StationTileEntity station)
+			if (world.getBlockEntity(entry.getKey()) instanceof StationBlockEntity station)
 				if (station.trackClicked(player, hand, this, state, pos))
 					return InteractionResult.SUCCESS;
 		}
@@ -564,19 +564,19 @@ public class TrackBlock extends Block
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState state) {
-		if (!state.getValue(HAS_TE))
+		if (!state.getValue(HAS_BE))
 			return null;
-		return AllTileEntities.TRACK.create(p_153215_, state);
+		return AllBlockEntityTypes.TRACK.create(p_153215_, state);
 	}
 
 	@Override
-	public Class<TrackTileEntity> getTileEntityClass() {
-		return TrackTileEntity.class;
+	public Class<TrackBlockEntity> getBlockEntityClass() {
+		return TrackBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends TrackTileEntity> getTileEntityType() {
-		return AllTileEntities.TRACK.get();
+	public BlockEntityType<? extends TrackBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.TRACK.get();
 	}
 
 	@Override
@@ -608,9 +608,9 @@ public class TrackBlock extends Block
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
 		Player player = context.getPlayer();
 		Level level = context.getLevel();
-		if (!level.isClientSide && !player.isCreative() && state.getValue(HAS_TE)) {
+		if (!level.isClientSide && !player.isCreative() && state.getValue(HAS_BE)) {
 			BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
-			if (blockEntity instanceof TrackTileEntity trackTE) {
+			if (blockEntity instanceof TrackBlockEntity trackTE) {
 				trackTE.cancelDrops = true;
 				trackTE.connections.values()
 					.forEach(bc -> bc.addItemsToPlayer(player));
@@ -689,7 +689,7 @@ public class TrackBlock extends Block
 		Vec3 normal = null;
 		Vec3 offset = null;
 
-		if (bezierPoint != null && world.getBlockEntity(pos) instanceof TrackTileEntity trackTE) {
+		if (bezierPoint != null && world.getBlockEntity(pos) instanceof TrackBlockEntity trackTE) {
 			BezierConnection bc = trackTE.connections.get(bezierPoint.curveTarget());
 			if (bc != null) {
 				double length = Mth.floor(bc.getLength() * 2);
@@ -745,15 +745,15 @@ public class TrackBlock extends Block
 	@Override
 	public boolean trackEquals(BlockState state1, BlockState state2) {
 		return state1.getBlock() == this && state2.getBlock() == this
-			&& state1.setValue(HAS_TE, false) == state2.setValue(HAS_TE, false);
+			&& state1.setValue(HAS_BE, false) == state2.setValue(HAS_BE, false);
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
 		int trackAmount = 1;
 		int girderAmount = 0;
 
-		if (te instanceof TrackTileEntity track) {
+		if (be instanceof TrackBlockEntity track) {
 			for (BezierConnection bezierConnection : track.getConnections()
 				.values()) {
 				if (!bezierConnection.isPrimary())
@@ -782,7 +782,7 @@ public class TrackBlock extends Block
 		public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState,
 				int progress) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
-			if (blockEntity instanceof TrackTileEntity track) {
+			if (blockEntity instanceof TrackBlockEntity track) {
 				return new HashSet<>(track.connections.keySet());
 			}
 			return null;

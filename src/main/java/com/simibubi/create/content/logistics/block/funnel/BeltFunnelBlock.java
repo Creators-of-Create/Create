@@ -7,8 +7,8 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -150,7 +150,7 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 		if ((stateBelow.getBlock() instanceof BeltBlock))
 			return BeltBlock.canTransportObjects(stateBelow);
 		DirectBeltInputBehaviour directBeltInputBehaviour =
-			TileEntityBehaviour.get(world, pos.below(), DirectBeltInputBehaviour.TYPE);
+			BlockEntityBehaviour.get(world, pos.below(), DirectBeltInputBehaviour.TYPE);
 		if (directBeltInputBehaviour == null)
 			return false;
 		return directBeltInputBehaviour.canSupportBeltFunnels();
@@ -196,8 +196,8 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		return ItemRequirement.of(parent.getDefaultState(), te);
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
+		return ItemRequirement.of(parent.getDefaultState(), be);
 	}
 
 }

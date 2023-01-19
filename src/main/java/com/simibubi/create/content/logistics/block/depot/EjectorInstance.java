@@ -11,15 +11,15 @@ import net.minecraft.util.Mth;
 
 public class EjectorInstance extends ShaftInstance implements DynamicInstance {
 
-	protected final EjectorTileEntity tile;
+	protected final EjectorBlockEntity blockEntity;
 
 	protected final ModelData plate;
 
 	private float lastProgress = Float.NaN;
 
-	public EjectorInstance(MaterialManager dispatcher, EjectorTileEntity tile) {
-		super(dispatcher, tile);
-		this.tile = tile;
+	public EjectorInstance(MaterialManager dispatcher, EjectorBlockEntity blockEntity) {
+		super(dispatcher, blockEntity);
+		this.blockEntity = blockEntity;
 
 		plate = getTransformMaterial().getModel(AllBlockPartials.EJECTOR_TOP, blockState).createInstance();
 
@@ -53,12 +53,12 @@ public class EjectorInstance extends ShaftInstance implements DynamicInstance {
 	}
 
 	private float getLidProgress() {
-		return tile.getLidProgress(AnimationTickHolder.getPartialTicks());
+		return blockEntity.getLidProgress(AnimationTickHolder.getPartialTicks());
 	}
 
 	private void pivotPlate(float lidProgress) {
 		float angle = lidProgress * 70;
 
-		EjectorRenderer.applyLidAngle(tile, angle, plate.loadIdentity().translate(getInstancePosition()));
+		EjectorRenderer.applyLidAngle(blockEntity, angle, plate.loadIdentity().translate(getInstancePosition()));
 	}
 }

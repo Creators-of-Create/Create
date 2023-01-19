@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
-import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
-import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterBlockEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceBlockEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -87,9 +87,9 @@ public class MovementActorScenes {
 		scene.idle(35);
 
 		Selection both = util.select.fromTo(2, 2, 2, 4, 2, 2);
-		Class<PortableItemInterfaceTileEntity> psiClass = PortableItemInterfaceTileEntity.class;
+		Class<PortableItemInterfaceBlockEntity> psiClass = PortableItemInterfaceBlockEntity.class;
 
-		scene.world.modifyTileNBT(both, psiClass, nbt -> {
+		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);
 			nbt.putFloat("Timer", 40);
 		});
@@ -154,7 +154,7 @@ public class MovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(psi2))
 			.text("After no items have been exchanged for a while, the contraption will continue on its way");
-		scene.world.modifyTileNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 9));
+		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 9));
 
 		scene.idle(15);
 		scene.markAsFinished();
@@ -167,9 +167,9 @@ public class MovementActorScenes {
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);
 
-		Class<PortableStorageInterfaceTileEntity> psiClass = PortableStorageInterfaceTileEntity.class;
+		Class<PortableStorageInterfaceBlockEntity> psiClass = PortableStorageInterfaceBlockEntity.class;
 		Selection psis = util.select.fromTo(1, 1, 3, 1, 3, 3);
-		scene.world.modifyTileNBT(psis, psiClass, nbt -> {
+		scene.world.modifyBlockEntityNBT(psis, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);
 			nbt.putFloat("Timer", 40);
 		});
@@ -184,7 +184,7 @@ public class MovementActorScenes {
 		BlockPos bearing = util.grid.at(3, 1, 3);
 		scene.world.configureCenterOfRotation(contraption, util.vector.topOf(bearing));
 		scene.idle(20);
-		scene.world.modifyTileNBT(psis, psiClass, nbt -> nbt.putFloat("Timer", 9));
+		scene.world.modifyBlockEntityNBT(psis, psiClass, nbt -> nbt.putFloat("Timer", 9));
 		scene.idle(20);
 		scene.world.rotateBearing(bearing, 360 * 3 + 270, 240 + 60);
 		scene.world.rotateSection(contraption, 0, 360 * 3 + 270, 0, 240 + 60);
@@ -242,7 +242,7 @@ public class MovementActorScenes {
 		scene.idle(70);
 
 		for (int i = 0; i < 3; i++)
-			scene.world.modifyTileEntity(util.grid.at(i, 1, 4), HarvesterTileEntity.class,
+			scene.world.modifyBlockEntity(util.grid.at(i, 1, 4), HarvesterBlockEntity.class,
 				hte -> hte.setAnimatedSpeed(-150));
 		scene.world.rotateBearing(bearingPos, -360, 140);
 		scene.world.rotateSection(contraption, 0, -360, 0, 140);
@@ -288,7 +288,7 @@ public class MovementActorScenes {
 		scene.world.showSection(crops, Direction.UP);
 
 		for (int i = 0; i < 3; i++)
-			scene.world.modifyTileEntity(util.grid.at(i, 1, 4), HarvesterTileEntity.class,
+			scene.world.modifyBlockEntity(util.grid.at(i, 1, 4), HarvesterBlockEntity.class,
 				hte -> hte.setAnimatedSpeed(0));
 		scene.idle(10);
 
@@ -303,7 +303,7 @@ public class MovementActorScenes {
 		scene.idle(70);
 
 		for (int i = 0; i < 3; i++)
-			scene.world.modifyTileEntity(util.grid.at(i, 1, 4), HarvesterTileEntity.class,
+			scene.world.modifyBlockEntity(util.grid.at(i, 1, 4), HarvesterBlockEntity.class,
 				hte -> hte.setAnimatedSpeed(-150));
 		scene.world.rotateBearing(bearingPos, -360, 140);
 		scene.world.rotateSection(contraption, 0, -360, 0, 140);
@@ -330,7 +330,7 @@ public class MovementActorScenes {
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(1, 2, 5), Pointing.DOWN).withItem(wheatItem), 50);
 		for (int i = 0; i < 3; i++)
-			scene.world.modifyTileEntity(util.grid.at(i, 1, 4), HarvesterTileEntity.class,
+			scene.world.modifyBlockEntity(util.grid.at(i, 1, 4), HarvesterBlockEntity.class,
 				hte -> hte.setAnimatedSpeed(0));
 	}
 

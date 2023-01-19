@@ -5,28 +5,28 @@ import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
-public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements DynamicInstance {
+public class FlyWheelInstance extends KineticBlockEntityInstance<FlywheelBlockEntity> implements DynamicInstance {
 
 	protected final RotatingData shaft;
 	protected final ModelData wheel;
 	protected float lastAngle = Float.NaN;
 
-	public FlyWheelInstance(MaterialManager modelManager, FlywheelTileEntity tile) {
-		super(modelManager, tile);
+	public FlyWheelInstance(MaterialManager materialManager, FlywheelBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 
 		shaft = setup(getRotatingMaterial().getModel(shaft())
 			.createInstance());
 		wheel = getTransformMaterial().getModel(blockState)
 			.createInstance();
 
-		animate(tile.angle);
+		animate(blockEntity.angle);
 	}
 
 	@Override

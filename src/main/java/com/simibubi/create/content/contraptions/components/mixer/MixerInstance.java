@@ -16,11 +16,11 @@ public class MixerInstance extends EncasedCogInstance implements DynamicInstance
 
 	private final RotatingData mixerHead;
 	private final OrientedData mixerPole;
-	private final MechanicalMixerTileEntity mixer;
+	private final MechanicalMixerBlockEntity mixer;
 
-	public MixerInstance(MaterialManager dispatcher, MechanicalMixerTileEntity tile) {
-		super(dispatcher, tile, false);
-		this.mixer = tile;
+	public MixerInstance(MaterialManager materialManager, MechanicalMixerBlockEntity blockEntity) {
+		super(materialManager, blockEntity, false);
+		this.mixer = blockEntity;
 
 		mixerHead = getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState)
 				.createInstance();

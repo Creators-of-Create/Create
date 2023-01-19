@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
+import com.simibubi.create.content.schematics.block.SchematicTableBlockEntity;
 import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -124,7 +124,7 @@ public class ServerSchematicLoader {
 
 		try {
 			// Validate Referenced Block
-			SchematicTableTileEntity table = getTable(player.getCommandSenderWorld(), pos);
+			SchematicTableBlockEntity table = getTable(player.getCommandSenderWorld(), pos);
 			if (table == null)
 				return;
 
@@ -152,7 +152,7 @@ public class ServerSchematicLoader {
 			OutputStream writer = Files.newOutputStream(uploadPath);
 			activeUploads.put(playerSchematicId, new SchematicUploadEntry(writer, size, player.getLevel(), pos));
 
-			// Notify Tile Entity
+			// Notify Block Entity
 			table.startUpload(schematic);
 
 		} catch (IOException e) {
@@ -203,7 +203,7 @@ public class ServerSchematicLoader {
 				entry.stream.write(data);
 				entry.idleTime = 0;
 
-				SchematicTableTileEntity table = getTable(entry.world, entry.tablePos);
+				SchematicTableBlockEntity table = getTable(entry.world, entry.tablePos);
 				if (table == null)
 					return;
 				table.uploadingProgress = (float) ((double) entry.bytesUploaded / entry.totalBytes);
@@ -236,16 +236,16 @@ public class ServerSchematicLoader {
 		if (pos == null)
 			return;
 
-		SchematicTableTileEntity table = getTable(entry.world, pos);
+		SchematicTableBlockEntity table = getTable(entry.world, pos);
 		if (table != null)
 			table.finishUpload();
 	}
 
-	public SchematicTableTileEntity getTable(Level world, BlockPos pos) {
-		BlockEntity te = world.getBlockEntity(pos);
-		if (!(te instanceof SchematicTableTileEntity))
+	public SchematicTableBlockEntity getTable(Level world, BlockPos pos) {
+		BlockEntity be = world.getBlockEntity(pos);
+		if (!(be instanceof SchematicTableBlockEntity))
 			return null;
-		SchematicTableTileEntity table = (SchematicTableTileEntity) te;
+		SchematicTableBlockEntity table = (SchematicTableBlockEntity) be;
 		return table;
 	}
 
@@ -268,7 +268,7 @@ public class ServerSchematicLoader {
 				if (AllBlocks.SCHEMATIC_TABLE.get() != blockState.getBlock())
 					return;
 
-				SchematicTableTileEntity table = getTable(world, pos);
+				SchematicTableBlockEntity table = getTable(world, pos);
 				if (table == null)
 					return;
 				table.finishUpload();

@@ -8,14 +8,14 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.BackHalfShaftInstance;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> extends BackHalfShaftInstance implements DynamicInstance {
+public class BearingInstance<B extends KineticBlockEntity & IBearingBlockEntity> extends BackHalfShaftInstance implements DynamicInstance {
 	final B bearing;
 
 	final OrientedData topInstance;
@@ -23,9 +23,9 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 	final Vector3f rotationAxis;
 	final Quaternion blockOrientation;
 
-	public BearingInstance(MaterialManager modelManager, B tile) {
-		super(modelManager, tile);
-		this.bearing = tile;
+	public BearingInstance(MaterialManager materialManager, B blockEntity) {
+		super(materialManager, blockEntity);
+		this.bearing = blockEntity;
 
 		Direction facing = blockState.getValue(BlockStateProperties.FACING);
 		rotationAxis = Direction.get(Direction.AxisDirection.POSITIVE, axis).step();

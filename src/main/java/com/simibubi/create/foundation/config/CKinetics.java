@@ -68,7 +68,7 @@ public class CKinetics extends ConfigBase {
 		static String maxBeltLength = "Maximum length in blocks of mechanical belts.";
 		static String crushingDamage = "Damage dealt by active Crushing Wheels.";
 		static String maxMotorSpeed = "Maximum allowed speed of a configurable motor.";
-		static String maxRotationSpeed = "Maximum allowed rotation speed for any Kinetic Tile.";
+		static String maxRotationSpeed = "Maximum allowed rotation speed for any Kinetic Block.";
 		static String fanPushDistance = "Maximum distance in blocks Fans can push entities.";
 		static String fanPullDistance = "Maximum distance in blocks from where Fans can pull entities.";
 		static String fanBlockCheckRate = "Game ticks between Fans checking for anything blocking their air flow.";

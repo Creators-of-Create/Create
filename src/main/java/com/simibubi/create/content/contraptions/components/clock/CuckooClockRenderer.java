@@ -4,9 +4,9 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity.Animation;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlockEntity.Animation;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -18,21 +18,21 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CuckooClockRenderer extends KineticTileEntityRenderer {
+public class CuckooClockRenderer extends KineticBlockEntityRenderer {
 
 	public CuckooClockRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
-		if (!(te instanceof CuckooClockTileEntity))
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
+		if (!(be instanceof CuckooClockBlockEntity))
 			return;
 
-		CuckooClockTileEntity clock = (CuckooClockTileEntity) te;
-		BlockState blockState = te.getBlockState();
+		CuckooClockBlockEntity clock = (CuckooClockBlockEntity) be;
+		BlockState blockState = be.getBlockState();
 		Direction direction = blockState.getValue(CuckooClockBlock.HORIZONTAL_FACING);
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
@@ -90,7 +90,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
 		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, state, state
 				.getValue(CuckooClockBlock.HORIZONTAL_FACING)
 				.getOpposite());

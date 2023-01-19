@@ -6,11 +6,11 @@ import java.util.Optional;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.map.CustomRenderedMapDecoration;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.Minecraft;
@@ -52,14 +52,14 @@ public class StationMarker {
 	}
 
 	public static StationMarker fromWorld(BlockGetter level, BlockPos pos) {
-		Optional<StationTileEntity> stationOption = AllTileEntities.TRACK_STATION.get(level, pos);
+		Optional<StationBlockEntity> stationOption = AllBlockEntityTypes.TRACK_STATION.get(level, pos);
 
 		if (stationOption.isEmpty() || stationOption.get().getStation() == null)
 			return null;
 
 		String name = stationOption.get()
 			.getStation().name;
-		return new StationMarker(pos, TileEntityBehaviour.get(stationOption.get(), TrackTargetingBehaviour.TYPE)
+		return new StationMarker(pos, BlockEntityBehaviour.get(stationOption.get(), TrackTargetingBehaviour.TYPE)
 			.getPositionForMapMarker(), Components.literal(name));
 	}
 

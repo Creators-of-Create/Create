@@ -39,7 +39,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -734,8 +734,8 @@ public class Train {
 		GlobalStation currentStation = getCurrentStation();
 		if (currentStation != null) {
 			currentStation.cancelReservation(this);
-			BlockPos tilePos = currentStation.getTilePos();
-			if (level.getBlockEntity(tilePos)instanceof StationTileEntity ste)
+			BlockPos blockEntityPos = currentStation.getBlockEntityPos();
+			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity ste)
 				ste.lastDisassembledTrainName = name.copy();
 		}
 

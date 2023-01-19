@@ -1,19 +1,19 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
+import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticBlockEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
@@ -43,7 +43,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
-	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock {
+	implements ICogWheel, IBE<SimpleKineticBlockEntity>, ISpecialBlockItemRequirement, ITransformableBlock {
 
 	public static final BooleanProperty TOP_SHAFT = BooleanProperty.create("top_shaft");
 	public static final BooleanProperty BOTTOM_SHAFT = BooleanProperty.create("bottom_shaft");
@@ -119,7 +119,7 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 			return InteractionResult.SUCCESS;
 
 		BlockPos pos = context.getClickedPos();
-		KineticTileEntity.switchToBlockState(level, pos, state.cycle(context.getClickedFace()
+		KineticBlockEntity.switchToBlockState(level, pos, state.cycle(context.getClickedFace()
 			.getAxisDirection() == AxisDirection.POSITIVE ? TOP_SHAFT : BOTTOM_SHAFT));
 		playRotateSound(level, pos);
 		return InteractionResult.SUCCESS;
@@ -141,7 +141,7 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 			return InteractionResult.SUCCESS;
 		context.getLevel()
 			.levelEvent(2001, context.getClickedPos(), Block.getId(state));
-		KineticTileEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
+		KineticBlockEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
 			(isLarge ? AllBlocks.LARGE_COGWHEEL : AllBlocks.COGWHEEL).getDefaultState()
 				.setValue(AXIS, state.getValue(AXIS)));
 		return InteractionResult.SUCCESS;
@@ -261,19 +261,19 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
 		return ItemRequirement
-			.of(isLarge ? AllBlocks.LARGE_COGWHEEL.getDefaultState() : AllBlocks.COGWHEEL.getDefaultState(), te);
+			.of(isLarge ? AllBlocks.LARGE_COGWHEEL.getDefaultState() : AllBlocks.COGWHEEL.getDefaultState(), be);
 	}
 
 	@Override
-	public Class<SimpleKineticTileEntity> getTileEntityClass() {
-		return SimpleKineticTileEntity.class;
+	public Class<SimpleKineticBlockEntity> getBlockEntityClass() {
+		return SimpleKineticBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends SimpleKineticTileEntity> getTileEntityType() {
-		return isLarge ? AllTileEntities.ENCASED_LARGE_COGWHEEL.get() : AllTileEntities.ENCASED_COGWHEEL.get();
+	public BlockEntityType<? extends SimpleKineticBlockEntity> getBlockEntityType() {
+		return isLarge ? AllBlockEntityTypes.ENCASED_LARGE_COGWHEEL.get() : AllBlockEntityTypes.ENCASED_COGWHEEL.get();
 	}
 
 }

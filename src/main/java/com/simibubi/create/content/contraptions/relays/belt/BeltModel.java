@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import static com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CASING_PROPERTY;
+import static com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity.CASING_PROPERTY;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import com.simibubi.create.AllSpriteShifts;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity.CasingType;
 import com.simibubi.create.foundation.block.render.QuadHelper;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 

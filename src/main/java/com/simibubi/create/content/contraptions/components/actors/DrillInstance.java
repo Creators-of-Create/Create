@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class DrillInstance extends SingleRotatingInstance {
 
-    public DrillInstance(MaterialManager modelManager, KineticTileEntity tile) {
-        super(modelManager, tile);
+    public DrillInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
     }
 
     @Override

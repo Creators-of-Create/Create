@@ -15,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 public class BellMovementBehaviour implements MovementBehaviour {
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 	

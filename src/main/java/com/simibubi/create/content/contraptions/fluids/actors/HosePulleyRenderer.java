@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.AbstractPulleyRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -17,8 +17,8 @@ public class HosePulleyRenderer extends AbstractPulleyRenderer {
 	}
 
 	@Override
-	protected Axis getShaftAxis(KineticTileEntity te) {
-		return te.getBlockState()
+	protected Axis getShaftAxis(KineticBlockEntity be) {
+		return be.getBlockState()
 			.getValue(HosePulleyBlock.HORIZONTAL_FACING)
 			.getClockWise()
 			.getAxis();
@@ -30,22 +30,22 @@ public class HosePulleyRenderer extends AbstractPulleyRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer renderRope(KineticTileEntity te) {
-		return CachedBufferer.partial(AllBlockPartials.HOSE, te.getBlockState());
+	protected SuperByteBuffer renderRope(KineticBlockEntity be) {
+		return CachedBufferer.partial(AllBlockPartials.HOSE, be.getBlockState());
 	}
 
 	@Override
-	protected SuperByteBuffer renderMagnet(KineticTileEntity te) {
-		return CachedBufferer.partial(AllBlockPartials.HOSE_MAGNET, te.getBlockState());
+	protected SuperByteBuffer renderMagnet(KineticBlockEntity be) {
+		return CachedBufferer.partial(AllBlockPartials.HOSE_MAGNET, be.getBlockState());
 	}
 
 	@Override
-	protected float getOffset(KineticTileEntity te, float partialTicks) {
-		return ((HosePulleyTileEntity) te).getInterpolatedOffset(partialTicks);
+	protected float getOffset(KineticBlockEntity be, float partialTicks) {
+		return ((HosePulleyBlockEntity) be).getInterpolatedOffset(partialTicks);
 	}
 
 	@Override
-	protected boolean isRunning(KineticTileEntity te) {
+	protected boolean isRunning(KineticBlockEntity be) {
 		return true;
 	}
 

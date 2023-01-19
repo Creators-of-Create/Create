@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.network.chat.Component;
 
 /*
-* Implement this Interface in the TileEntity class that wants to add info to the screen
+* Implement this Interface in the BlockEntity class that wants to add info to the screen
 * */
 public interface IHaveHoveringInformation {
 

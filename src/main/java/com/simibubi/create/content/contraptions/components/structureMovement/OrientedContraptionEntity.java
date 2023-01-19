@@ -11,7 +11,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartSim2020;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;

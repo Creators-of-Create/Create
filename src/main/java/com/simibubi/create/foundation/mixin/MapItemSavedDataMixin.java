@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.Maps;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationMapData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationMarker;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -129,7 +129,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 	}
 
 	@Override
-	public boolean toggleStation(LevelAccessor level, BlockPos pos, StationTileEntity stationTileEntity) {
+	public boolean toggleStation(LevelAccessor level, BlockPos pos, StationBlockEntity stationBlockEntity) {
 		double xCenter = pos.getX() + 0.5D;
 		double zCenter = pos.getZ() + 0.5D;
 		int scaleMultiplier = 1 << scale;

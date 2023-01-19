@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 40",
+	"_": "Missing Localizations: 42",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Remplacer le solide par n'importe quoi",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Remplacer le solide par rien",
 	"create.gui.schematicannon.option.skipMissing": "Ignorer les blocs manquants",
-	"create.gui.schematicannon.option.skipTileEntities": "Protéger les entités de blocs",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Ajouter de la poudre à canon pour alimenter le canon",
 	"create.gui.schematicannon.slot.listPrinter": "Placez des livres ici pour imprimer une liste des matériaux de votre schéma",
 	"create.gui.schematicannon.slot.schematic": "Ajoutez votre schéma ici. Soyez sûr qu'il est déployé à un emplacement spécifique.",
 	"create.gui.schematicannon.option.skipMissing.description": "Si le canon ne peut pas trouver un bloc requis pour le placement, il continuera au prochain emplacement.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Le canon évitera de remplacer les blocs de stockage de données tels que les coffres.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Le canon ne remplacera jamais les blocs solides dans sa zone de travail, seulement non solides et air.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Le canon ne remplacera les blocs solides dans sa zone de travail que si le schéma contient un bloc solide à l'emplacement.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Le canon remplacera les blocs solides dans sa zone de travail si le schéma contient un bloc à l'emplacement.",

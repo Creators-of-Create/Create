@@ -4,12 +4,12 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
-import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlockEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity.CreativeSmartFluidTank;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -83,7 +83,7 @@ public class FluidTankScenes {
 		scene.idle(5);
 		FluidStack content = new FluidStack(AllFluids.CHOCOLATE.get()
 			.getSource(), 16000);
-		scene.world.modifyTileEntity(tankPos, FluidTankTileEntity.class, te -> te.getTankInventory()
+		scene.world.modifyBlockEntity(tankPos, FluidTankBlockEntity.class, be -> be.getTankInventory()
 			.fill(content, FluidAction.EXECUTE));
 		scene.idle(25);
 
@@ -105,12 +105,12 @@ public class FluidTankScenes {
 		scene.world.multiplyKineticSpeed(pumpCogs, -1);
 		scene.world.propagatePipeChange(pumpPos);
 		scene.effects.rotationDirectionIndicator(pumpPos);
-		scene.world.modifyTileEntity(util.grid.at(2, 0, 5), FluidTankTileEntity.class, te -> te.getTankInventory()
+		scene.world.modifyBlockEntity(util.grid.at(2, 0, 5), FluidTankBlockEntity.class, be -> be.getTankInventory()
 			.fill(content, FluidAction.EXECUTE));
 		scene.idle(20);
 
 		for (int i = 0; i < 4; i++) {
-			scene.world.modifyTileEntity(tankPos, FluidTankTileEntity.class, te -> te.getTankInventory()
+			scene.world.modifyBlockEntity(tankPos, FluidTankBlockEntity.class, be -> be.getTankInventory()
 				.drain(2000, FluidAction.EXECUTE));
 			scene.idle(5);
 		}
@@ -127,7 +127,7 @@ public class FluidTankScenes {
 		scene.world.propagatePipeChange(pumpPos);
 		scene.effects.rotationDirectionIndicator(pumpPos);
 		for (int i = 0; i < 4; i++) {
-			scene.world.modifyTileEntity(tankPos, FluidTankTileEntity.class, te -> te.getTankInventory()
+			scene.world.modifyBlockEntity(tankPos, FluidTankBlockEntity.class, be -> be.getTankInventory()
 				.fill(FluidHelper.copyStackWithAmount(content, 2000), FluidAction.EXECUTE));
 			scene.idle(5);
 		}
@@ -142,7 +142,7 @@ public class FluidTankScenes {
 		scene.world.moveSection(tankLink, util.vector.of(-1, 0, 0), 10);
 		scene.idle(10);
 		scene.world.toggleRedstonePower(comparatorStuff);
-		scene.world.modifyTileNBT(util.select.position(2, 1, 0), NixieTubeTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(2, 1, 0), NixieTubeBlockEntity.class,
 			nbt -> nbt.putInt("RedstoneStrength", 15));
 
 		scene.overlay.showText(50)
@@ -170,8 +170,8 @@ public class FluidTankScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.WEST));
 		scene.idle(80);
-		scene.world.modifyTileEntity(util.grid.at(4, 3, 0), SpoutTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		scene.world.modifyBlockEntity(util.grid.at(4, 3, 0), SpoutBlockEntity.class,
+			be -> be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 				.ifPresent(ifh -> ifh.fill(content, FluidAction.EXECUTE)));
 
 		scene.world.moveSection(tankLink, util.vector.of(0, 0, 1), 7);
@@ -201,7 +201,7 @@ public class FluidTankScenes {
 			.getBucket(new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), 1000));
 		scene.world.createItemOnBeltLike(util.grid.at(3, 1, 0), Direction.WEST, chocBucket);
 		scene.idle(40);
-		scene.world.modifyTileNBT(util.select.position(util.grid.at(4, 3, 0)), SpoutTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(util.grid.at(4, 3, 0)), SpoutBlockEntity.class,
 			nbt -> nbt.putInt("ProcessingTicks", 20));
 		scene.idle(20);
 		scene.world.removeItemsFromBelt(util.grid.at(4, 1, 0));
@@ -380,8 +380,8 @@ public class FluidTankScenes {
 				.withItem(bucket),
 			40);
 		scene.idle(7);
-		scene.world.modifyTileEntity(cTankPos, CreativeFluidTankTileEntity.class,
-			te -> ((CreativeSmartFluidTank) te.getTankInventory())
+		scene.world.modifyBlockEntity(cTankPos, CreativeFluidTankBlockEntity.class,
+			be -> ((CreativeSmartFluidTank) be.getTankInventory())
 				.setContainedFluid(new FluidStack(Fluids.FLOWING_LAVA, 1000)));
 		scene.idle(5);
 

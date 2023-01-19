@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -21,12 +21,12 @@ public class SmartInventory extends RecipeWrapper
 	protected SyncedStackHandler wrapped;
 	protected int stackSize;
 
-	public SmartInventory(int slots, SyncedTileEntity te) {
-		this(slots, te, 64, false);
+	public SmartInventory(int slots, SyncedBlockEntity be) {
+		this(slots, be, 64, false);
 	}
 
-	public SmartInventory(int slots, SyncedTileEntity te, int stackSize, boolean stackNonStackables) {
-		super(new SyncedStackHandler(slots, te, stackNonStackables, stackSize));
+	public SmartInventory(int slots, SyncedBlockEntity be, int stackSize, boolean stackNonStackables) {
+		super(new SyncedStackHandler(slots, be, stackNonStackables, stackSize));
 		this.stackNonStackables = stackNonStackables;
 		insertionAllowed = true;
 		extractionAllowed = true;
@@ -129,14 +129,14 @@ public class SmartInventory extends RecipeWrapper
 
 	private static class SyncedStackHandler extends ItemStackHandler {
 
-		private SyncedTileEntity te;
+		private SyncedBlockEntity blockEntity;
 		private boolean stackNonStackables;
 		private int stackSize;
 		private Consumer<Integer> updateCallback;
 
-		public SyncedStackHandler(int slots, SyncedTileEntity te, boolean stackNonStackables, int stackSize) {
+		public SyncedStackHandler(int slots, SyncedBlockEntity be, boolean stackNonStackables, int stackSize) {
 			super(slots);
-			this.te = te;
+			this.blockEntity = be;
 			this.stackNonStackables = stackNonStackables;
 			this.stackSize = stackSize;
 		}
@@ -146,7 +146,7 @@ public class SmartInventory extends RecipeWrapper
 			super.onContentsChanged(slot);
 			if (updateCallback != null)
 				updateCallback.accept(slot);
-			te.notifyUpdate();
+			blockEntity.notifyUpdate();
 		}
 
 		@Override

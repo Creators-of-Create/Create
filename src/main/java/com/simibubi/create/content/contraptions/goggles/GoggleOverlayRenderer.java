@@ -12,12 +12,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.IDi
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -74,7 +74,7 @@ public class GoggleOverlayRenderer {
 		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		ClientLevel world = mc.level;
 		BlockPos pos = result.getBlockPos();
-		BlockEntity te = world.getBlockEntity(pos);
+		BlockEntity be = world.getBlockEntity(pos);
 
 		int prevHoverTicks = hoverTicks;
 		hoverTicks++;
@@ -82,8 +82,8 @@ public class GoggleOverlayRenderer {
 
 		boolean wearingGoggles = GogglesItem.isWearingGoggles(mc.player);
 
-		boolean hasGoggleInformation = te instanceof IHaveGoggleInformation;
-		boolean hasHoveringInformation = te instanceof IHaveHoveringInformation;
+		boolean hasGoggleInformation = be instanceof IHaveGoggleInformation;
+		boolean hasHoveringInformation = be instanceof IHaveHoveringInformation;
 
 		boolean goggleAddedInformation = false;
 		boolean hoverAddedInformation = false;
@@ -91,22 +91,22 @@ public class GoggleOverlayRenderer {
 		List<Component> tooltip = new ArrayList<>();
 
 		if (hasGoggleInformation && wearingGoggles) {
-			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
+			IHaveGoggleInformation gte = (IHaveGoggleInformation) be;
 			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, mc.player.isShiftKeyDown());
 		}
 
 		if (hasHoveringInformation) {
 			if (!tooltip.isEmpty())
 				tooltip.add(Components.immutableEmpty());
-			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
+			IHaveHoveringInformation hte = (IHaveHoveringInformation) be;
 			hoverAddedInformation = hte.addToTooltip(tooltip, mc.player.isShiftKeyDown());
 
 			if (goggleAddedInformation && !hoverAddedInformation)
 				tooltip.remove(tooltip.size() - 1);
 		}
 
-		if (te instanceof IDisplayAssemblyExceptions) {
-			boolean exceptionAdded = ((IDisplayAssemblyExceptions) te).addExceptionToTooltip(tooltip);
+		if (be instanceof IDisplayAssemblyExceptions) {
+			boolean exceptionAdded = ((IDisplayAssemblyExceptions) be).addExceptionToTooltip(tooltip);
 			if (exceptionAdded) {
 				hasHoveringInformation = true;
 				hoverAddedInformation = true;

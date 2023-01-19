@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -19,14 +19,14 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DrillRenderer extends KineticTileEntityRenderer {
+public class DrillRenderer extends KineticBlockEntityRenderer {
 
 	public DrillRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
 		return CachedBufferer.partialFacing(AllBlockPartials.DRILL_HEAD, state);
 	}
 

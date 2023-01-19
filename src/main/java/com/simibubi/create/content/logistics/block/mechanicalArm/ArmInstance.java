@@ -34,7 +34,7 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 	private final ArrayList<ModelData> clawGrips;
 
 	private final ArrayList<ModelData> models;
-	private final ArmTileEntity arm;
+	private final ArmBlockEntity arm;
 	private final Boolean ceiling;
 
 	private boolean firstRender = true;
@@ -44,8 +44,8 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 	private float upperArmAngle = Float.NaN;
 	private float headAngle = Float.NaN;
 
-	public ArmInstance(MaterialManager modelManager, ArmTileEntity tile) {
-		super(modelManager, tile);
+	public ArmInstance(MaterialManager materialManager, ArmBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 
 		Material<ModelData> mat = getTransformMaterial();
 
@@ -66,7 +66,7 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
 		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
-		arm = tile;
+		arm = blockEntity;
 		ceiling = blockState.getValue(ArmBlock.CEILING);
 
 		animateArm(false);
@@ -74,7 +74,7 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 
 	@Override
 	public void beginFrame() {
-		if (arm.phase == ArmTileEntity.Phase.DANCING && blockEntity.getSpeed() != 0) {
+		if (arm.phase == ArmBlockEntity.Phase.DANCING && blockEntity.getSpeed() != 0) {
 			animateArm(true);
 			firstRender = true;
 			return;

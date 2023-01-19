@@ -2,12 +2,12 @@ package com.simibubi.create.content.logistics.item;
 
 import java.util.ArrayList;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class LecternControllerBlock extends LecternBlock
-	implements ITE<LecternControllerTileEntity>, ISpecialBlockItemRequirement {
+	implements IBE<LecternControllerBlockEntity>, ISpecialBlockItemRequirement {
 
 	public LecternControllerBlock(Properties properties) {
 		super(properties);
@@ -33,26 +33,26 @@ public class LecternControllerBlock extends LecternBlock
 	}
 
 	@Override
-	public Class<LecternControllerTileEntity> getTileEntityClass() {
-		return LecternControllerTileEntity.class;
+	public Class<LecternControllerBlockEntity> getBlockEntityClass() {
+		return LecternControllerBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends LecternControllerTileEntity> getTileEntityType() {
-		return AllTileEntities.LECTERN_CONTROLLER.get();
+	public BlockEntityType<? extends LecternControllerBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.LECTERN_CONTROLLER.get();
 	}
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos p_153573_, BlockState p_153574_) {
-		return ITE.super.newBlockEntity(p_153573_, p_153574_);
+		return IBE.super.newBlockEntity(p_153573_, p_153574_);
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult hit) {
-		if (!player.isShiftKeyDown() && LecternControllerTileEntity.playerInRange(player, world, pos)) {
+		if (!player.isShiftKeyDown() && LecternControllerBlockEntity.playerInRange(player, world, pos)) {
 			if (!world.isClientSide)
-				withTileEntityDo(world, pos, te -> te.tryStartUsing(player));
+				withBlockEntityDo(world, pos, be -> be.tryStartUsing(player));
 			return InteractionResult.SUCCESS;
 		}
 
@@ -69,7 +69,7 @@ public class LecternControllerBlock extends LecternBlock
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.is(newState.getBlock())) {
 			if (!world.isClientSide)
-				withTileEntityDo(world, pos, te -> te.dropController(state));
+				withBlockEntityDo(world, pos, be -> be.dropController(state));
 
 			super.onRemove(state, world, pos, newState, isMoving);
 		}
@@ -83,7 +83,7 @@ public class LecternControllerBlock extends LecternBlock
 	public void replaceLectern(BlockState lecternState, Level world, BlockPos pos, ItemStack controller) {
 		world.setBlockAndUpdate(pos, defaultBlockState().setValue(FACING, lecternState.getValue(FACING))
 			.setValue(POWERED, lecternState.getValue(POWERED)));
-		withTileEntityDo(world, pos, te -> te.setController(controller));
+		withBlockEntityDo(world, pos, be -> be.setController(controller));
 	}
 
 	public void replaceWithLectern(BlockState state, Level world, BlockPos pos) {
@@ -99,7 +99,7 @@ public class LecternControllerBlock extends LecternBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
 		ArrayList<ItemStack> requiredItems = new ArrayList<>();
 		requiredItems.add(new ItemStack(Blocks.LECTERN));
 		requiredItems.add(new ItemStack(AllItems.LINKED_CONTROLLER.get()));

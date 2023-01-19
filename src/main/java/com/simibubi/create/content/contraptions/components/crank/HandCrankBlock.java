@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
 import com.jozufozu.flywheel.core.PartialModel;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Couple;
@@ -36,7 +36,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HandCrankBlock extends DirectionalKineticBlock
-	implements ITE<HandCrankTileEntity>, ProperWaterloggedBlock {
+	implements IBE<HandCrankBlockEntity>, ProperWaterloggedBlock {
 
 	public HandCrankBlock(Properties properties) {
 		super(properties);
@@ -73,7 +73,7 @@ public class HandCrankBlock extends DirectionalKineticBlock
 		if (player.isSpectator())
 			return InteractionResult.PASS;
 
-		withTileEntityDo(worldIn, pos, te -> te.turn(player.isShiftKeyDown()));
+		withBlockEntityDo(worldIn, pos, be -> be.turn(player.isShiftKeyDown()));
 		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
 
 		if (player.getFoodData()
@@ -143,13 +143,13 @@ public class HandCrankBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public Class<HandCrankTileEntity> getTileEntityClass() {
-		return HandCrankTileEntity.class;
+	public Class<HandCrankBlockEntity> getBlockEntityClass() {
+		return HandCrankBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends HandCrankTileEntity> getTileEntityType() {
-		return AllTileEntities.HAND_CRANK.get();
+	public BlockEntityType<? extends HandCrankBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.HAND_CRANK.get();
 	}
 
 	@Override

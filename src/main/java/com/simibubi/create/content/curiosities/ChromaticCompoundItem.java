@@ -6,11 +6,11 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -139,12 +139,12 @@ public class ChromaticCompoundItem extends Item {
 			if (state.getLightBlock(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
 				break;
 			if (state.getBlock() == Blocks.BEACON) {
-				BlockEntity te = world.getBlockEntity(testPos);
+				BlockEntity be = world.getBlockEntity(testPos);
 
-				if (!(te instanceof BeaconBlockEntity))
+				if (!(be instanceof BeaconBlockEntity))
 					break;
 
-				BeaconBlockEntity bte = (BeaconBlockEntity) te;
+				BeaconBlockEntity bte = (BeaconBlockEntity) be;
 
 				if (!bte.beamSections.isEmpty())
 					isOverBeacon = true;
@@ -172,7 +172,7 @@ public class ChromaticCompoundItem extends Item {
 		BlockState state = world.getBlockState(randomOffset);
 
 		TransportedItemStackHandlerBehaviour behaviour =
-			TileEntityBehaviour.get(world, randomOffset, TransportedItemStackHandlerBehaviour.TYPE);
+			BlockEntityBehaviour.get(world, randomOffset, TransportedItemStackHandlerBehaviour.TYPE);
 
 		// Find a placed light source
 		if (behaviour == null) {

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1248",
+	"_": "Missing Localizations: 1250",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Ersätt Fast med Valfri",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Ersätt Fast med Tom",
 	"create.gui.schematicannon.option.skipMissing": "Hoppa över saknande Block",
-	"create.gui.schematicannon.option.skipTileEntities": "Skydda Block Enheter",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Tillsätt krut för att driva kanonen",
 	"create.gui.schematicannon.slot.listPrinter": "Placera böcker här för att skriva ut en Checklista för din Schematic",
 	"create.gui.schematicannon.slot.schematic": "Lägg till din Schematic här. Dubbelkolla så att den blir utplacerat på en specifik plats.",
 	"create.gui.schematicannon.option.skipMissing.description": "Om kanonen ej kan hitta ett nödvändigt block för placering, kommer den att fortsätta på nästa plats.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Kanonen kommer undvika att ersätta informationsinnehavande block såsom kistor.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Kanonen kommer aldrig att ersätta fasta block i dess arbetsområde, endast ej fasta block och luft.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Kanonen kommer bara ersätta fasta block i dess arbetsområde om Schematic innehåller ett fast block på platsen.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Kanonen kommer att ersätta fasta block i dess arbetsområde om Schematic innehåller något block på platsen.",

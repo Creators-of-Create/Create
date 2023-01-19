@@ -80,13 +80,13 @@ public class HighlightCommand {
 		}
 
 		BlockPos pos = ray.getBlockPos();
-		BlockEntity te = world.getBlockEntity(pos);
-		if (!(te instanceof IDisplayAssemblyExceptions)) {
+		BlockEntity be = world.getBlockEntity(pos);
+		if (!(be instanceof IDisplayAssemblyExceptions)) {
 			sendMissMessage(source);
 			return 0;
 		}
 
-		IDisplayAssemblyExceptions display = (IDisplayAssemblyExceptions) te;
+		IDisplayAssemblyExceptions display = (IDisplayAssemblyExceptions) be;
 		AssemblyException exception = display.getLastAssemblyException();
 		if (exception == null) {
 			sendMissMessage(source);

@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedShaftBlock extends AbstractEncasedShaftBlock
-	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement {
+	implements IBE<KineticBlockEntity>, ISpecialBlockItemRequirement {
 
 	private BlockEntry<CasingBlock> casing;
 
@@ -55,7 +55,7 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 			return InteractionResult.SUCCESS;
 		context.getLevel()
 			.levelEvent(2001, context.getClickedPos(), Block.getId(state));
-		KineticTileEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
+		KineticBlockEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
 			AllBlocks.SHAFT.getDefaultState()
 				.setValue(AXIS, state.getValue(AXIS)));
 		return InteractionResult.SUCCESS;
@@ -70,18 +70,18 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), te);
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
+		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), be);
 	}
 
 	@Override
-	public Class<KineticTileEntity> getTileEntityClass() {
-		return KineticTileEntity.class;
+	public Class<KineticBlockEntity> getBlockEntityClass() {
+		return KineticBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
-		return AllTileEntities.ENCASED_SHAFT.get();
+	public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ENCASED_SHAFT.get();
 	}
 
 }

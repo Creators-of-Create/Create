@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
+import com.simibubi.create.content.contraptions.components.saw.SawBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -36,7 +36,7 @@ public class MechanicalSawScenes {
 
 		BlockPos sawPos = util.grid.at(2, 1, 2);
 		Selection sawSelect = util.select.position(sawPos);
-		scene.world.modifyTileNBT(sawSelect, SawTileEntity.class, nbt -> nbt.putInt("RecipeIndex", 0));
+		scene.world.modifyBlockEntityNBT(sawSelect, SawBlockEntity.class, nbt -> nbt.putInt("RecipeIndex", 0));
 
 		scene.idle(5);
 		scene.world.showSection(util.select.fromTo(2, 1, 3, 2, 1, 5), Direction.DOWN);
@@ -147,7 +147,7 @@ public class MechanicalSawScenes {
 		scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).withItem(bricks), 80);
 		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(7);
-		scene.world.setFilterData(util.select.position(sawPos), SawTileEntity.class, bricks);
+		scene.world.setFilterData(util.select.position(sawPos), SawBlockEntity.class, bricks);
 		scene.idle(10);
 
 		scene.overlay.showText(80)

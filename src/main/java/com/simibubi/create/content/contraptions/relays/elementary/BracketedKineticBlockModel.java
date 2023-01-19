@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.jozufozu.flywheel.core.virtual.VirtualEmptyModelData;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -28,12 +28,12 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 	}
 
 	@Override
-	public IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, IModelData tileData) {
-		if (VirtualEmptyModelData.is(tileData))
-			return tileData;
+	public IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, IModelData blockEntityData) {
+		if (VirtualEmptyModelData.is(blockEntityData))
+			return blockEntityData;
 		BracketedModelData data = new BracketedModelData();
-		BracketedTileEntityBehaviour attachmentBehaviour =
-			TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		BracketedBlockEntityBehaviour attachmentBehaviour =
+			BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 		if (attachmentBehaviour != null)
 			data.putBracket(attachmentBehaviour.getBracket());
 		return new ModelDataMap.Builder().withInitial(BRACKET_PROPERTY, data)

@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.elevator;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ElevatorPulleyBlock extends HorizontalKineticBlock implements ITE<ElevatorPulleyTileEntity> {
+public class ElevatorPulleyBlock extends HorizontalKineticBlock implements IBE<ElevatorPulleyBlockEntity> {
 
 	public ElevatorPulleyBlock(Properties properties) {
 		super(properties);
@@ -38,15 +38,15 @@ public class ElevatorPulleyBlock extends HorizontalKineticBlock implements ITE<E
 			return InteractionResult.PASS;
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
-		return onTileEntityUse(worldIn, pos, te -> {
-			te.clicked();
+		return onBlockEntityUse(worldIn, pos, be -> {
+			be.clicked();
 			return InteractionResult.SUCCESS;
 		});
 	}
 
 	@Override
-	public BlockEntityType<? extends ElevatorPulleyTileEntity> getTileEntityType() {
-		return AllTileEntities.ELEVATOR_PULLEY.get();
+	public BlockEntityType<? extends ElevatorPulleyBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ELEVATOR_PULLEY.get();
 	}
 
 	@Override
@@ -67,8 +67,8 @@ public class ElevatorPulleyBlock extends HorizontalKineticBlock implements ITE<E
 	}
 
 	@Override
-	public Class<ElevatorPulleyTileEntity> getTileEntityClass() {
-		return ElevatorPulleyTileEntity.class;
+	public Class<ElevatorPulleyBlockEntity> getBlockEntityClass() {
+		return ElevatorPulleyBlockEntity.class;
 	}
 
 }

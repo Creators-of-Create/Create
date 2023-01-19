@@ -13,7 +13,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -50,7 +50,7 @@ public class DeployerActorInstance extends ActorInstance {
 				.material(Materials.TRANSFORMED);
 
         BlockState state = context.state;
-        DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);
+        DeployerBlockEntity.Mode mode = NBTHelper.readEnum(context.blockEntityData, "Mode", DeployerBlockEntity.Mode.class);
         PartialModel handPose = DeployerRenderer.getHandPose(mode);
 
         stationaryTimer = context.data.contains("StationaryTimer");
@@ -67,7 +67,7 @@ public class DeployerActorInstance extends ActorInstance {
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
         shaft = materialManager.defaultSolid()
                 .material(AllMaterialSpecs.ROTATING)
-				.getModel(KineticTileInstance.shaft(axis))
+				.getModel(KineticBlockEntityInstance.shaft(axis))
 				.createInstance();
 
         int blockLight = localBlockLight();

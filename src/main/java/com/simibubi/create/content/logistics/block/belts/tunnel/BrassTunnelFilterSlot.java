@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.world.phys.Vec3;

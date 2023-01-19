@@ -6,7 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
-import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
+import com.simibubi.create.content.logistics.block.chute.SmartChuteBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -219,7 +219,7 @@ public class ChuteScenes {
 		scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).rightClick()
 			.withItem(copper), 40);
 		scene.idle(7);
-		scene.world.setFilterData(util.select.position(smarty), SmartChuteTileEntity.class, copper);
+		scene.world.setFilterData(util.select.position(smarty), SmartChuteBlockEntity.class, copper);
 		scene.idle(10);
 		scene.rotateCameraY(20);
 		scene.overlay.showText(60)

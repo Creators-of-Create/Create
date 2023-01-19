@@ -79,14 +79,14 @@ import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
+import com.simibubi.create.foundation.blockEntity.RemoveBlockEntityPacket;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringCountUpdatePacket;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.command.HighlightPacket;
 import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
 import com.simibubi.create.foundation.gui.menu.ClearMenuPacket;
 import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
-import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.core.BlockPos;
@@ -185,7 +185,7 @@ public enum AllPackets {
 	SYNC_RAIL_GRAPH(TrackGraphSyncPacket.class, TrackGraphSyncPacket::new, PLAY_TO_CLIENT),
 	SYNC_EDGE_GROUP(SignalEdgeGroupPacket.class, SignalEdgeGroupPacket::new, PLAY_TO_CLIENT),
 	SYNC_TRAIN(TrainPacket.class, TrainPacket::new, PLAY_TO_CLIENT),
-	REMOVE_TE(RemoveTileEntityPacket.class, RemoveTileEntityPacket::new, PLAY_TO_CLIENT),
+	REMOVE_TE(RemoveBlockEntityPacket.class, RemoveBlockEntityPacket::new, PLAY_TO_CLIENT),
 	S_CONFIGURE_TRAIN(TrainEditReturnPacket.class, TrainEditReturnPacket::new, PLAY_TO_CLIENT),
 	CONTROLS_ABORT(ControlsStopControllingPacket.class, ControlsStopControllingPacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_HUD(TrainHUDUpdatePacket.class, TrainHUDUpdatePacket::new, PLAY_TO_CLIENT),

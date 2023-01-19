@@ -6,9 +6,9 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.redstone.DoubleFaceAttachedBlock.DoubleAttachFace;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.RenderTypes;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
@@ -30,17 +30,17 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntity> {
+public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEntity> {
 
 	private static Random r = new Random();
 
 	public NixieTubeRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(NixieTubeTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(NixieTubeBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		ms.pushPose();
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		DoubleAttachFace face = blockState.getValue(NixieTubeBlock.FACE);
 		float yRot = AngleHelper.horizontalAngle(blockState.getValue(NixieTubeBlock.FACING)) - 90
 			+ (face == DoubleAttachFace.WALL_REVERSED ? 180 : 0);
@@ -52,8 +52,8 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 			.rotateZ(xRot)
 			.unCentre();
 
-		if (te.signalState != null) {
-			renderAsSignal(te, partialTicks, ms, buffer, light, overlay);
+		if (be.signalState != null) {
+			renderAsSignal(be, partialTicks, ms, buffer, light, overlay);
 			ms.popPose();
 			return;
 		}
@@ -63,8 +63,8 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		float height = face == DoubleAttachFace.CEILING ? 5 : 3;
 		float scale = 1 / 20f;
 
-		Couple<String> s = te.getDisplayedStrings();
-		DyeColor color = NixieTubeBlock.colorOf(te.getBlockState());
+		Couple<String> s = be.getDisplayedStrings();
+		DyeColor color = NixieTubeBlock.colorOf(be.getBlockState());
 
 		ms.pushPose();
 		ms.translate(-4 / 16f, 0, 0);
@@ -122,9 +122,9 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		}
 	}
 
-	private void renderAsSignal(NixieTubeTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	private void renderAsSignal(NixieTubeBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		Direction facing = NixieTubeBlock.getFacing(blockState);
 		Vec3 observerVec = Minecraft.getInstance().cameraEntity.getEyePosition(partialTicks);
 		TransformStack msr = TransformStack.cast(ms);
@@ -143,19 +143,19 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 		ms.pushPose();
 		ms.translate(1 / 2f, 7.5f / 16f, 1 / 2f);
-		float renderTime = AnimationTickHolder.getRenderTime(te.getLevel());
+		float renderTime = AnimationTickHolder.getRenderTime(be.getLevel());
 
 		for (boolean first : Iterate.trueAndFalse) {
-			Vec3 lampVec = Vec3.atCenterOf(te.getBlockPos());
+			Vec3 lampVec = Vec3.atCenterOf(be.getBlockPos());
 			Vec3 diff = lampVec.subtract(observerVec);
 
-			if (first && !te.signalState.isRedLight(renderTime))
+			if (first && !be.signalState.isRedLight(renderTime))
 				continue;
-			if (!first && !te.signalState.isGreenLight(renderTime) && !te.signalState.isYellowLight(renderTime))
+			if (!first && !be.signalState.isGreenLight(renderTime) && !be.signalState.isYellowLight(renderTime))
 				continue;
 
 			boolean flip = first == invertTubes;
-			boolean yellow = te.signalState.isYellowLight(renderTime);
+			boolean yellow = be.signalState.isYellowLight(renderTime);
 
 			ms.pushPose();
 			ms.translate(flip ? 4 / 16f : -4 / 16f, 0, 0);

@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.outliner.LineOutline.EndChasingLineOutline;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 

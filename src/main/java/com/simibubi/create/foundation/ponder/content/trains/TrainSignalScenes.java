@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.content.trains;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlockEntity.SignalState;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;

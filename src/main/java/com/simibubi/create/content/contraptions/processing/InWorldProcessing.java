@@ -16,9 +16,9 @@ import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 

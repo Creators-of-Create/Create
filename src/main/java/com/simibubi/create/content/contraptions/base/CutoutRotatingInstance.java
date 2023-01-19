@@ -6,8 +6,8 @@ import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 public class CutoutRotatingInstance extends SingleRotatingInstance {
-	public CutoutRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
-		super(modelManager, tile);
+	public CutoutRotatingInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 	}
 
 	protected Material<RotatingData> getRotatingMaterial() {

@@ -2,15 +2,15 @@ package com.simibubi.create.content.curiosities.girder;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +37,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
-	implements ITE<KineticTileEntity>, SimpleWaterloggedBlock, IWrenchable, ISpecialBlockItemRequirement {
+	implements IBE<KineticBlockEntity>, SimpleWaterloggedBlock, IWrenchable, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty TOP = GirderBlock.TOP;
 	public static final BooleanProperty BOTTOM = GirderBlock.BOTTOM;
@@ -84,13 +84,13 @@ public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
 	}
 
 	@Override
-	public Class<KineticTileEntity> getTileEntityClass() {
-		return KineticTileEntity.class;
+	public Class<KineticBlockEntity> getBlockEntityClass() {
+		return KineticBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
-		return AllTileEntities.ENCASED_SHAFT.get();
+	public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ENCASED_SHAFT.get();
 	}
 
 	@Override
@@ -127,9 +127,9 @@ public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), te)
-			.union(ItemRequirement.of(AllBlocks.METAL_GIRDER.getDefaultState(), te));
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
+		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), be)
+			.union(ItemRequirement.of(AllBlocks.METAL_GIRDER.getDefaultState(), be));
 	}
 
 }

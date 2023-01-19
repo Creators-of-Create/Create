@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.utility.recipe;
 
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;

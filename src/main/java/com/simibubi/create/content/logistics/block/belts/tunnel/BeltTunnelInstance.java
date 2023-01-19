@@ -19,23 +19,23 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 
-public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelTileEntity> implements DynamicInstance {
+public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelBlockEntity> implements DynamicInstance {
 
     private final Map<Direction, ArrayList<FlapData>> tunnelFlaps;
 
-    public BeltTunnelInstance(MaterialManager modelManager, BeltTunnelTileEntity tile) {
-        super(modelManager, tile);
+    public BeltTunnelInstance(MaterialManager materialManager, BeltTunnelBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
 
         tunnelFlaps = new EnumMap<>(Direction.class);
 
-        Instancer<FlapData> model = modelManager.defaultSolid()
+        Instancer<FlapData> model = materialManager.defaultSolid()
                 .material(AllMaterialSpecs.FLAPS)
 				.getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
 
         int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = world.getBrightness(LightLayer.SKY, pos);
 
-        tile.flaps.forEach((direction, flapValue) -> {
+        blockEntity.flaps.forEach((direction, flapValue) -> {
 
             float flapness = flapValue.getValue(AnimationTickHolder.getPartialTicks());
 

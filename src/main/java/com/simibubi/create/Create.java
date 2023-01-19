@@ -111,7 +111,7 @@ public class Create {
 		AllPaletteBlocks.register();
 		AllMenuTypes.register();
 		AllEntityTypes.register();
-		AllTileEntities.register();
+		AllBlockEntityTypes.register();
 		AllEnchantments.register();
 		AllRecipeTypes.register(modEventBus);
 		AllParticleTypes.register(modEventBus);

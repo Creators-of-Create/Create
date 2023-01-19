@@ -22,7 +22,7 @@ public class MovementContext {
 	public Level world;
 	public BlockState state;
 	public BlockPos localPos;
-	public CompoundTag tileData;
+	public CompoundTag blockEntityData;
 
 	public boolean stall;
 	public boolean disabled;
@@ -34,7 +34,7 @@ public class MovementContext {
 	public MovementContext(Level world, StructureBlockInfo info, Contraption contraption) {
 		this.world = world;
 		this.state = info.state;
-		this.tileData = info.nbt;
+		this.blockEntityData = info.nbt;
 		this.contraption = contraption;
 		localPos = info.pos;
 

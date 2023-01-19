@@ -41,7 +41,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 		if (contraption instanceof ElevatorContraption ec)
 			return elevatorInteraction(localPos, contraptionEntity, ec, ctx);
 		if (contraptionEntity.level.isClientSide()) {
-			if (contraption.presentTileEntities.get(ctx.localPos)instanceof ContraptionControlsTileEntity cte)
+			if (contraption.presentBlockEntities.get(ctx.localPos)instanceof ContraptionControlsBlockEntity cte)
 				cte.pressButton();
 			return true;
 		}
@@ -91,7 +91,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 			disabledActors.add(filter);
 
 		contraption.setActorsActive(filter, !disable);
-		ContraptionControlsTileEntity.sendStatus(player, filter, !disable);
+		ContraptionControlsBlockEntity.sendStatus(player, filter, !disable);
 		send(contraptionEntity, filter, disable);
 
 		AllSoundEvents.CONTROLLER_CLICK.play(player.level, null,
@@ -119,7 +119,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 			return false;
 
 		AllPackets.channel.sendToServer(new ElevatorTargetFloorPacket(contraptionEntity, efs.currentTargetY));
-		if (contraption.presentTileEntities.get(ctx.localPos)instanceof ContraptionControlsTileEntity cte)
+		if (contraption.presentBlockEntities.get(ctx.localPos)instanceof ContraptionControlsBlockEntity cte)
 			cte.pressButton();
 		return true;
 	}

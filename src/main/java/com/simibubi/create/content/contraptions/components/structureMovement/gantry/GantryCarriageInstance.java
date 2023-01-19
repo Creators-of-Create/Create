@@ -4,8 +4,8 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -26,8 +26,8 @@ public class GantryCarriageInstance extends ShaftInstance implements DynamicInst
 
 	private float lastAngle = Float.NaN;
 
-	public GantryCarriageInstance(MaterialManager dispatcher, KineticTileEntity tile) {
-		super(dispatcher, tile);
+	public GantryCarriageInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 
 		gantryCogs = getTransformMaterial()
 								 .getModel(AllBlockPartials.GANTRY_COGS, blockState)
@@ -35,12 +35,12 @@ public class GantryCarriageInstance extends ShaftInstance implements DynamicInst
 
 		facing = blockState.getValue(GantryCarriageBlock.FACING);
 		alongFirst = blockState.getValue(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
-		rotationAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
+		rotationAxis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
 
 		rotationMult = getRotationMultiplier(getGantryAxis(), facing);
 
-		visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? tile.getBlockPos()
-				: tile.getBlockPos()
+		visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? blockEntity.getBlockPos()
+				: blockEntity.getBlockPos()
 					  .relative(facing.getOpposite());
 
 		animateCogs(getCogAngle());

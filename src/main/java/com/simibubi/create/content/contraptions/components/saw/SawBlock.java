@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.components.saw;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity> {
+public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBlockEntity> {
 	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").bypassArmor();
 
 	public SawBlock(Properties properties) {
@@ -56,10 +56,10 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 			return;
 		if (!new AABB(pos).deflate(.1f).intersects(entityIn.getBoundingBox()))
 			return;
-		withTileEntityDo(worldIn, pos, te -> {
-			if (te.getSpeed() == 0)
+		withBlockEntityDo(worldIn, pos, be -> {
+			if (be.getSpeed() == 0)
 				return;
-			entityIn.hurt(damageSourceSaw, (float) DrillBlock.getDamage(te.getSpeed()));
+			entityIn.hurt(damageSourceSaw, (float) DrillBlock.getDamage(be.getSpeed()));
 		});
 	}
 
@@ -72,10 +72,10 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 			return;
 
 		BlockPos pos = entityIn.blockPosition();
-		withTileEntityDo(entityIn.level, pos, te -> {
-			if (te.getSpeed() == 0)
+		withBlockEntityDo(entityIn.level, pos, be -> {
+			if (be.getSpeed() == 0)
 				return;
-			te.insertItem((ItemEntity) entityIn);
+			be.insertItem((ItemEntity) entityIn);
 		});
 	}
 
@@ -100,13 +100,13 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	}
 
 	@Override
-	public Class<SawTileEntity> getTileEntityClass() {
-		return SawTileEntity.class;
+	public Class<SawBlockEntity> getBlockEntityClass() {
+		return SawBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends SawTileEntity> getTileEntityType() {
-		return AllTileEntities.SAW.get();
+	public BlockEntityType<? extends SawBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.SAW.get();
 	}
 	
 	@Override

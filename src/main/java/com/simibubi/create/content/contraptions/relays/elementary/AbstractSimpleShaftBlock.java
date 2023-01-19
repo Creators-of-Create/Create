@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import java.util.Optional;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -43,7 +43,7 @@ public abstract class AbstractSimpleShaftBlock extends AbstractShaftBlock implem
 
 	@Override
 	public Optional<ItemStack> removeBracket(BlockGetter world, BlockPos pos, boolean inOnReplacedContext) {
-		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		BracketedBlockEntityBehaviour behaviour = BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
 		BlockState bracket = behaviour.removeBracket(inOnReplacedContext);
@@ -53,8 +53,8 @@ public abstract class AbstractSimpleShaftBlock extends AbstractShaftBlock implem
 	}
 
 	@Override
-	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
-		return AllTileEntities.BRACKETED_KINETIC.get();
+	public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.BRACKETED_KINETIC.get();
 	}
 
 }

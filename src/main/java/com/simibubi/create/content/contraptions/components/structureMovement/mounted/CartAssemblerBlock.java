@@ -6,15 +6,15 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,7 +60,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CartAssemblerBlock extends BaseRailBlock
-	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
+	implements IBE<CartAssemblerBlockEntity>, IWrenchable, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty BACKWARDS = BooleanProperty.create("backwards");
@@ -120,7 +120,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 		if (world.isClientSide)
 			return;
 
-		withTileEntityDo(world, pos, te -> te.assembleNextTick(cart));
+		withBlockEntityDo(world, pos, be -> be.assembleNextTick(cart));
 	}
 
 	public enum CartAssemblerAction {
@@ -239,13 +239,13 @@ public class CartAssemblerBlock extends BaseRailBlock
 	}
 
 	@Override
-	public Class<CartAssemblerTileEntity> getTileEntityClass() {
-		return CartAssemblerTileEntity.class;
+	public Class<CartAssemblerBlockEntity> getBlockEntityClass() {
+		return CartAssemblerBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends CartAssemblerTileEntity> getTileEntityType() {
-		return AllTileEntities.CART_ASSEMBLER.get();
+	public BlockEntityType<? extends CartAssemblerBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CART_ASSEMBLER.get();
 	}
 
 	@Override
@@ -254,7 +254,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
 		ArrayList<ItemStack> requiredItems = new ArrayList<>();
 		requiredItems.add(new ItemStack(getRailItem(state)));
 		requiredItems.add(new ItemStack(asItem()));

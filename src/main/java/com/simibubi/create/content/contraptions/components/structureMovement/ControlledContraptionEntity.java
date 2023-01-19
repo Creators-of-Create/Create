@@ -204,10 +204,10 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			return null;
 		if (!level.isLoaded(controllerPos))
 			return null;
-		BlockEntity te = level.getBlockEntity(controllerPos);
-		if (!(te instanceof IControlContraption))
+		BlockEntity be = level.getBlockEntity(controllerPos);
+		if (!(be instanceof IControlContraption))
 			return null;
-		return (IControlContraption) te;
+		return (IControlContraption) be;
 	}
 
 	@Override

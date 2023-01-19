@@ -9,8 +9,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.WorldHelper;
 

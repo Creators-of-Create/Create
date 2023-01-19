@@ -141,7 +141,7 @@ public class ElevatorContraption extends PulleyContraption {
 
 	public void broadcastFloorData(Level level, BlockPos contactPos) {
 		ElevatorColumn column = ElevatorColumn.get(level, getGlobalColumn());
-		if (!(world.getBlockEntity(contactPos)instanceof ElevatorContactTileEntity ecte))
+		if (!(world.getBlockEntity(contactPos)instanceof ElevatorContactBlockEntity ecte))
 			return;
 		if (column != null)
 			column.floorReached(level, ecte.shortName);

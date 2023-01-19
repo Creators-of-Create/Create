@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 40",
+	"_": "Missing Localizations: 42",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Feste Blöcke immer ersetzen",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Feste Blöcke mit Leere ersetzen",
 	"create.gui.schematicannon.option.skipMissing": "Fehlende Blöcke ignorieren",
-	"create.gui.schematicannon.option.skipTileEntities": "Tile Entities ignorieren",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Füge Schwarzpulver hinzu um die Kanone zu betreiben",
 	"create.gui.schematicannon.slot.listPrinter": "Platziere hier Bücher um eine Checkliste für deinen Bauplan zu drucken",
 	"create.gui.schematicannon.slot.schematic": "Füge Bauplan hier hinzu. Stelle sicher dass er an einer spezifischen Position bereitgestellt wird.",
 	"create.gui.schematicannon.option.skipMissing.description": "Wenn die Bauplankanone einen benötigten Block nicht finden kann, wird sie einfach beim nächsten weiter machen.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Die Bauplankanone wird versuchen, Blöcke mit extra Daten, beispielsweise Truhen, nicht zu ersetzen.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Die Kanone wird ausschließlich nicht feste Blöcke und Luft in ihrem Arbeitsbereich ersetzen.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Die Kanone wird feste Blöcke nur dann ersetzen, wenn an der Position vorher bereits ein fester Block war.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Die Kanone wird feste Blöcke ersetzen, wenn der Bauplan an der Position einen Block enthält.",

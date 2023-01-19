@@ -76,7 +76,7 @@ public interface MovementBehaviour {
 
 	default void writeExtraData(MovementContext context) {}
 
-	default boolean renderAsNormalTileEntity() {
+	default boolean renderAsNormalBlockEntity() {
 		return false;
 	}
 

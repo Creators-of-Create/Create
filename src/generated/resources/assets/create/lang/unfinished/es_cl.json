@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1059",
+	"_": "Missing Localizations: 1061",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Reemplazar Sólido con cualquier cosa",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Reemplazar Sólido con Vacío",
 	"create.gui.schematicannon.option.skipMissing": "Saltarse objetos faltantes",
-	"create.gui.schematicannon.option.skipTileEntities": "Proteject objetos con información",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Añade pólvora para alimentar el cañon",
 	"create.gui.schematicannon.slot.listPrinter": "Coloca libros aquí para imprimir una lista de verificación para tu esquema",
 	"create.gui.schematicannon.slot.schematic": "Pon tu Esquema aquí. Asegurate de haberlo desplegado en la ubicación deseada.",
 	"create.gui.schematicannon.option.skipMissing.description": "Si el cañón no puede encontrar un Bloque requerido para colocarlo, saltará a la siguiente Ubicación.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "El cañón evitará reemplazar bloques con almacenamiento de datos como cofres o máquinas.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "El cañón nunca reemplazará ningún bloque sólido en su área de trabajo, solo no-sólidos y aire.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "El cañón solo reemplazará los bloques sólidos en su área de trabajo si el esquema contiene un bloque sólido en esa ubicación.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "El cañón reemplazará los bloques sólidos en su área de trabajo si el esquema contiene algún bloque de cualquier tipo en la ubicación.",

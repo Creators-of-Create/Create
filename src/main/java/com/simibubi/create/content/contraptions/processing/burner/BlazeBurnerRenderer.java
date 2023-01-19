@@ -12,9 +12,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -28,25 +28,25 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileEntity> {
+public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBlockEntity> {
 
 	public BlazeBurnerRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(BlazeBurnerTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource bufferSource,
+	protected void renderSafe(BlazeBurnerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource bufferSource,
 		int light, int overlay) {
-		HeatLevel heatLevel = te.getHeatLevelFromBlock();
+		HeatLevel heatLevel = be.getHeatLevelFromBlock();
 		if (heatLevel == HeatLevel.NONE)
 			return;
 
-		Level level = te.getLevel();
-		BlockState blockState = te.getBlockState();
-		float animation = te.headAnimation.getValue(partialTicks) * .175f;
-		float horizontalAngle = AngleHelper.rad(te.headAngle.getValue(partialTicks));
+		Level level = be.getLevel();
+		BlockState blockState = be.getBlockState();
+		float animation = be.headAnimation.getValue(partialTicks) * .175f;
+		float horizontalAngle = AngleHelper.rad(be.headAngle.getValue(partialTicks));
 		boolean canDrawFlame = heatLevel.isAtLeast(HeatLevel.FADING);
-		boolean drawGoggles = te.goggles;
-		boolean drawHat = te.hat;
-		int hashCode = te.hashCode();
+		boolean drawGoggles = be.goggles;
+		boolean drawHat = be.hat;
+		int hashCode = be.hashCode();
 
 		renderShared(ms, null, bufferSource,
 			level, blockState, heatLevel, animation, horizontalAngle,
@@ -66,8 +66,8 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 
 		Level level = context.world;
 		float horizontalAngle = AngleHelper.rad(headAngle.getValue(AnimationTickHolder.getPartialTicks(level)));
-		boolean drawGoggles = context.tileData.contains("Goggles");
-		boolean drawHat = conductor || context.tileData.contains("TrainHat");
+		boolean drawGoggles = context.blockEntityData.contains("Goggles");
+		boolean drawHat = conductor || context.blockEntityData.contains("TrainHat");
 		int hashCode = context.hashCode();
 
 		renderShared(matrices.getViewProjection(), matrices.getModel(), bufferSource,

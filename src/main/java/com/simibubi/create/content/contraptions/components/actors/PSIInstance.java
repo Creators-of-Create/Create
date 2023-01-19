@@ -6,12 +6,12 @@ import com.jozufozu.flywheel.api.instance.TickableInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class PSIInstance extends BlockEntityInstance<PortableStorageInterfaceTileEntity> implements DynamicInstance, TickableInstance {
+public class PSIInstance extends BlockEntityInstance<PortableStorageInterfaceBlockEntity> implements DynamicInstance, TickableInstance {
 
 	private final PIInstance instance;
 
-	public PSIInstance(MaterialManager materialManager, PortableStorageInterfaceTileEntity tile) {
-		super(materialManager, tile);
+	public PSIInstance(MaterialManager materialManager, PortableStorageInterfaceBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 
 		instance = new PIInstance(materialManager, blockState, getInstancePosition());
 	}

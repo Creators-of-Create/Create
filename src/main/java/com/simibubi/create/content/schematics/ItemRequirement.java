@@ -53,23 +53,23 @@ public class ItemRequirement {
 		this(requiredItems.stream().map(req -> new StackRequirement(req, usage)).collect(Collectors.toList()));
 	}
 
-	public static ItemRequirement of(BlockState state, BlockEntity te) {
+	public static ItemRequirement of(BlockState state, BlockEntity be) {
 		Block block = state.getBlock();
 
 		ItemRequirement requirement;
 		if (block instanceof ISpecialBlockItemRequirement specialBlock) {
-			requirement = specialBlock.getRequiredItems(state, te);
+			requirement = specialBlock.getRequiredItems(state, be);
 		} else {
-			requirement = defaultOf(state, te);
+			requirement = defaultOf(state, be);
 		}
 
-		if (te instanceof ISpecialBlockEntityItemRequirement specialBE)
+		if (be instanceof ISpecialBlockEntityItemRequirement specialBE)
 			requirement = requirement.union(specialBE.getRequiredItems(state));
 
 		return requirement;
 	}
 
-	private static ItemRequirement defaultOf(BlockState state, BlockEntity te) {
+	private static ItemRequirement defaultOf(BlockState state, BlockEntity be) {
 		Block block = state.getBlock();
 		if (block == Blocks.AIR)
 			return NONE;
@@ -89,7 +89,7 @@ public class ItemRequirement {
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(SnowLayerBlock.LAYERS).intValue()));
 		if (block instanceof FarmBlock || block instanceof DirtPathBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Items.DIRT);
-		if (block instanceof AbstractBannerBlock && te instanceof BannerBlockEntity bannerBE)
+		if (block instanceof AbstractBannerBlock && be instanceof BannerBlockEntity bannerBE)
 			return new ItemRequirement(new StrictNbtStackRequirement(bannerBE.getItem(), ItemUseType.CONSUME));
 
 		return new ItemRequirement(ItemUseType.CONSUME, item);

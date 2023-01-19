@@ -7,10 +7,10 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsBlockEntity;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsBlockEntity.ControlsSlot;
 import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsMovement;
 import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsMovement.ElevatorFloorSelection;
-import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsTileEntity;
-import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsTileEntity.ControlsSlot;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
@@ -31,7 +31,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ElevatorControlsHandler {
 
-	private static ControlsSlot slot = new ContraptionControlsTileEntity.ControlsSlot();
+	private static ControlsSlot slot = new ContraptionControlsBlockEntity.ControlsSlot();
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {

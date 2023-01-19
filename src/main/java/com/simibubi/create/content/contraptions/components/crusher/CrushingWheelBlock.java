@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.components.crusher;
 
 import static com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock.VALID;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -24,7 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE<CrushingWheelTileEntity> {
+public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE<CrushingWheelBlockEntity> {
 
 	public CrushingWheelBlock(Properties properties) {
 		super(properties);
@@ -80,14 +80,14 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 		if (AllBlocks.CRUSHING_WHEEL.has(otherState)) {
 			controllerShouldExist = true;
 
-			CrushingWheelTileEntity te = getTileEntity(world, pos);
-			CrushingWheelTileEntity otherTe = getTileEntity(world, otherWheelPos);
+			CrushingWheelBlockEntity be = getBlockEntity(world, pos);
+			CrushingWheelBlockEntity otherBE = getBlockEntity(world, otherWheelPos);
 
-			if (te != null && otherTe != null && (te.getSpeed() > 0) != (otherTe.getSpeed() > 0)
-				&& te.getSpeed() != 0) {
+			if (be != null && otherBE != null && (be.getSpeed() > 0) != (otherBE.getSpeed() > 0)
+				&& be.getSpeed() != 0) {
 				Axis wheelAxis = state.getValue(AXIS);
 				Axis sideAxis = side.getAxis();
-				int controllerADO = Math.round(Math.signum(te.getSpeed())) * side.getAxisDirection()
+				int controllerADO = Math.round(Math.signum(be.getSpeed())) * side.getAxisDirection()
 					.getStep();
 				Vec3 controllerDirVec = new Vec3(wheelAxis == Axis.X ? 1 : 0, wheelAxis == Axis.Y ? 1 : 0,
 					wheelAxis == Axis.Z ? 1 : 0).cross(
@@ -132,7 +132,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 		if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.isOnGround())
 			return;
 
-		float speed = getTileEntityOptional(worldIn, pos).map(CrushingWheelTileEntity::getSpeed)
+		float speed = getBlockEntityOptional(worldIn, pos).map(CrushingWheelBlockEntity::getSpeed)
 			.orElse(0f);
 
 		double x = 0;
@@ -183,13 +183,13 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	}
 
 	@Override
-	public Class<CrushingWheelTileEntity> getTileEntityClass() {
-		return CrushingWheelTileEntity.class;
+	public Class<CrushingWheelBlockEntity> getBlockEntityClass() {
+		return CrushingWheelBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends CrushingWheelTileEntity> getTileEntityType() {
-		return AllTileEntities.CRUSHING_WHEEL.get();
+	public BlockEntityType<? extends CrushingWheelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CRUSHING_WHEEL.get();
 	}
 
 }

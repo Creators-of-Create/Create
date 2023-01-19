@@ -19,30 +19,30 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ToolboxMenu extends MenuBase<ToolboxTileEntity> {
+public class ToolboxMenu extends MenuBase<ToolboxBlockEntity> {
 
 	public ToolboxMenu(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public ToolboxMenu(MenuType<?> type, int id, Inventory inv, ToolboxTileEntity te) {
-		super(type, id, inv, te);
-		te.startOpen(player);
+	public ToolboxMenu(MenuType<?> type, int id, Inventory inv, ToolboxBlockEntity be) {
+		super(type, id, inv, be);
+		be.startOpen(player);
 	}
 
-	public static ToolboxMenu create(int id, Inventory inv, ToolboxTileEntity te) {
-		return new ToolboxMenu(AllMenuTypes.TOOLBOX.get(), id, inv, te);
+	public static ToolboxMenu create(int id, Inventory inv, ToolboxBlockEntity be) {
+		return new ToolboxMenu(AllMenuTypes.TOOLBOX.get(), id, inv, be);
 	}
 
 	@Override
-	protected ToolboxTileEntity createOnClient(FriendlyByteBuf extraData) {
+	protected ToolboxBlockEntity createOnClient(FriendlyByteBuf extraData) {
 		BlockPos readBlockPos = extraData.readBlockPos();
 		CompoundTag readNbt = extraData.readNbt();
 
 		ClientLevel world = Minecraft.getInstance().level;
-		BlockEntity tileEntity = world.getBlockEntity(readBlockPos);
-		if (tileEntity instanceof ToolboxTileEntity) {
-			ToolboxTileEntity toolbox = (ToolboxTileEntity) tileEntity;
+		BlockEntity blockEntity = world.getBlockEntity(readBlockPos);
+		if (blockEntity instanceof ToolboxBlockEntity) {
+			ToolboxBlockEntity toolbox = (ToolboxBlockEntity) blockEntity;
 			toolbox.readClient(readNbt);
 			return toolbox;
 		}
@@ -69,7 +69,7 @@ public class ToolboxMenu extends MenuBase<ToolboxTileEntity> {
 	}
 
 	@Override
-	protected void initAndReadInventory(ToolboxTileEntity contentHolder) {
+	protected void initAndReadInventory(ToolboxBlockEntity contentHolder) {
 
 	}
 
@@ -145,7 +145,7 @@ public class ToolboxMenu extends MenuBase<ToolboxTileEntity> {
 	}
 
 	@Override
-	protected void saveData(ToolboxTileEntity contentHolder) {
+	protected void saveData(ToolboxBlockEntity contentHolder) {
 
 	}
 

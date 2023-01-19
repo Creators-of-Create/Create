@@ -45,10 +45,10 @@ public class ReplaceInCommandBlocksCommand {
 				BlockState blockState = world.getBlockState(pos);
 				if (!(blockState.getBlock() instanceof CommandBlock))
 					return;
-				BlockEntity tileEntity = world.getBlockEntity(pos);
-				if (!(tileEntity instanceof CommandBlockEntity))
+				BlockEntity blockEntity = world.getBlockEntity(pos);
+				if (!(blockEntity instanceof CommandBlockEntity))
 					return;
-				CommandBlockEntity cb = (CommandBlockEntity) tileEntity;
+				CommandBlockEntity cb = (CommandBlockEntity) blockEntity;
 				BaseCommandBlock commandBlockLogic = cb.getCommandBlock();
 				String command = commandBlockLogic.getCommand();
 				if (command.indexOf(toReplace) != -1)

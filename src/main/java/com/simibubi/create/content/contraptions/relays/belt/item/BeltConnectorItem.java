@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
@@ -155,7 +155,7 @@ public class BeltConnectorItem extends BlockItem {
 					.isReplaceable())
 				world.destroyBlock(pos, false);
 
-			KineticTileEntity.switchToBlockState(world, pos, beltBlock.setValue(BeltBlock.SLOPE, slope)
+			KineticBlockEntity.switchToBlockState(world, pos, beltBlock.setValue(BeltBlock.SLOPE, slope)
 				.setValue(BeltBlock.PART, part)
 				.setValue(BeltBlock.HORIZONTAL_FACING, facing));
 		}
@@ -243,16 +243,16 @@ public class BeltConnectorItem extends BlockItem {
 		if (shaftAxis == Axis.Y && x != 0 && z != 0)
 			return false;
 
-		BlockEntity tileEntity = world.getBlockEntity(first);
-		BlockEntity tileEntity2 = world.getBlockEntity(second);
+		BlockEntity blockEntity = world.getBlockEntity(first);
+		BlockEntity blockEntity2 = world.getBlockEntity(second);
 
-		if (!(tileEntity instanceof KineticTileEntity))
+		if (!(blockEntity instanceof KineticBlockEntity))
 			return false;
-		if (!(tileEntity2 instanceof KineticTileEntity))
+		if (!(blockEntity2 instanceof KineticBlockEntity))
 			return false;
 
-		float speed1 = ((KineticTileEntity) tileEntity).getTheoreticalSpeed();
-		float speed2 = ((KineticTileEntity) tileEntity2).getTheoreticalSpeed();
+		float speed1 = ((KineticBlockEntity) blockEntity).getTheoreticalSpeed();
+		float speed2 = ((KineticBlockEntity) blockEntity2).getTheoreticalSpeed();
 		if (Math.signum(speed1) != Math.signum(speed2) && speed1 != 0 && speed2 != 0)
 			return false;
 

@@ -6,8 +6,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class BackHalfShaftInstance extends HalfShaftInstance {
-    public BackHalfShaftInstance(MaterialManager modelManager, KineticTileEntity tile) {
-        super(modelManager, tile);
+    public BackHalfShaftInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
     }
 
     @Override

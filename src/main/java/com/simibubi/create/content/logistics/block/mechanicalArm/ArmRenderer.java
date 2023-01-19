@@ -5,9 +5,9 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlockEntity.Phase;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -25,21 +25,21 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ArmRenderer extends KineticTileEntityRenderer {
+public class ArmRenderer extends KineticBlockEntityRenderer {
 
 	public ArmRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float pt, PoseStack ms, MultiBufferSource buffer, int light,
+	protected void renderSafe(KineticBlockEntity be, float pt, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
-		super.renderSafe(te, pt, ms, buffer, light, overlay);
+		super.renderSafe(be, pt, ms, buffer, light, overlay);
 
-		ArmTileEntity arm = (ArmTileEntity) te;
+		ArmBlockEntity arm = (ArmBlockEntity) be;
 		ItemStack item = arm.heldItem;
 		boolean hasItem = !item.isEmpty();
-		boolean usingFlywheel = Backend.canUseInstancing(te.getLevel());
+		boolean usingFlywheel = Backend.canUseInstancing(be.getLevel());
 
 		if (usingFlywheel && !hasItem)
 			return;
@@ -48,11 +48,11 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 			.getItemRenderer();
 
 		boolean isBlockItem =
-			hasItem && (item.getItem() instanceof BlockItem) && itemRenderer.getModel(item, te.getLevel(), null, 0)
+			hasItem && (item.getItem() instanceof BlockItem) && itemRenderer.getModel(item, be.getLevel(), null, 0)
 				.isGui3d();
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 
 		PoseStack msLocal = new PoseStack();
 		TransformStack msr = TransformStack.cast(msLocal);
@@ -63,9 +63,9 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		float headAngle;
 		int color;
 
-		boolean rave = arm.phase == Phase.DANCING && te.getSpeed() != 0;
+		boolean rave = arm.phase == Phase.DANCING && be.getSpeed() != 0;
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(te.getLevel()) + (te.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime(be.getLevel()) + (be.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
@@ -197,12 +197,12 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticTileEntity te) {
+	public boolean shouldRenderOffScreen(KineticBlockEntity be) {
 		return true;
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
 		return CachedBufferer.partial(AllBlockPartials.ARM_COG, state);
 	}
 

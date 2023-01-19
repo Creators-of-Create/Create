@@ -14,13 +14,13 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 public class PressInstance extends ShaftInstance implements DynamicInstance {
 
 	private final OrientedData pressHead;
-	private final MechanicalPressTileEntity press;
+	private final MechanicalPressBlockEntity press;
 
-	public PressInstance(MaterialManager dispatcher, MechanicalPressTileEntity tile) {
-		super(dispatcher, tile);
-		press = tile;
+	public PressInstance(MaterialManager materialManager, MechanicalPressBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
+		press = blockEntity;
 
-		pressHead = dispatcher.defaultSolid()
+		pressHead = materialManager.defaultSolid()
 				.material(Materials.ORIENTED)
 				.getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
 				.createInstance();
@@ -45,7 +45,7 @@ public class PressInstance extends ShaftInstance implements DynamicInstance {
 			.nudge(0, -renderedHeadOffset, 0);
 	}
 
-	private float getRenderedHeadOffset(MechanicalPressTileEntity press) {
+	private float getRenderedHeadOffset(MechanicalPressBlockEntity press) {
 		PressingBehaviour pressingBehaviour = press.getPressingBehaviour();
 		return pressingBehaviour.getRenderedHeadOffset(AnimationTickHolder.getPartialTicks())
 			* pressingBehaviour.mode.headOffset;

@@ -53,7 +53,7 @@ import static com.simibubi.create.content.palettes.AllPaletteBlocks.SPRUCE_WINDO
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.Create;
 
 import net.minecraft.resources.ResourceLocation;
@@ -287,7 +287,7 @@ public class RemapHelper {
 			String path = key.getPath();
 
 			if (path.equals("copper_backtank")) {
-				mapping.remap(AllTileEntities.BACKTANK.get());
+				mapping.remap(AllBlockEntityTypes.BACKTANK.get());
 			}
 		}
 	}

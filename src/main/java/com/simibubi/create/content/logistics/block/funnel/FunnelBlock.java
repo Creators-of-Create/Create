@@ -82,7 +82,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 
 		if (hit.getDirection() == getFunnelFacing(state) && !shouldntInsertItem) {
 			if (!worldIn.isClientSide)
-				withTileEntityDo(worldIn, pos, te -> {
+				withBlockEntityDo(worldIn, pos, be -> {
 					ItemStack toInsert = heldItem.copy();
 					ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
 					if (!ItemStack.matches(remainder, toInsert))

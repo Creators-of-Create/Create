@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1830",
+	"_": "Missing Localizations: 1832",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Vervang vast met alles",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Vervang vast met leeg",
 	"create.gui.schematicannon.option.skipMissing": "Sla missende blokken over",
-	"create.gui.schematicannon.option.skipTileEntities": "Bescherm Tile Entities",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "UNLOCALIZED: Add gunpowder to fuel the cannon",
 	"create.gui.schematicannon.slot.listPrinter": "UNLOCALIZED: Place books here to print a Checklist for your Schematic",
 	"create.gui.schematicannon.slot.schematic": "UNLOCALIZED: Add your Schematic here. Make sure it is deployed at a specific location.",
 	"create.gui.schematicannon.option.skipMissing.description": "Als het Bouwtekeningkannon niet een geschikt blok kan vinden om te plaatsen gaat hij door naar de volgende positie.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Het Bouwtekeningkannon probeert blokken met data zoals kisten te vermijden",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Het Bouwtekeningkannon zal nooit vaste blokken in zijn gebied vervangen, alleen niet-vaste blokken en lucht",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Het Bouwtekeningkannon zal alleen vaste blokken in zijn gebied veranderen als de bouwtekening een vast blok bevat op zijn positie.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Het Bouwtekeningkannon zal vaste blokken in zijn gebied vervangen als de bouwtekening een blok op bevat op zijn positie.",

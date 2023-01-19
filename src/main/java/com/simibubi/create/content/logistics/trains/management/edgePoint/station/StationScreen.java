@@ -40,8 +40,8 @@ public class StationScreen extends AbstractStationScreen {
 
 	private boolean switchingToAssemblyMode;
 
-	public StationScreen(StationTileEntity te, GlobalStation station) {
-		super(te, station);
+	public StationScreen(StationBlockEntity be, GlobalStation station) {
+		super(be, station);
 		background = AllGuiTextures.STATION;
 		leavingAnimation = 0;
 		trainPosition = LerpedFloat.linear()
@@ -72,7 +72,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		Runnable assemblyCallback = () -> {
 			switchingToAssemblyMode = true;
-			minecraft.setScreen(new AssemblyScreen(te, station));
+			minecraft.setScreen(new AssemblyScreen(blockEntity, station));
 		};
 
 		newTrainButton = new WideIconButton(x + 84, y + 65, AllGuiTextures.I_NEW_TRAIN);
@@ -89,7 +89,7 @@ public class StationScreen extends AbstractStationScreen {
 		dropScheduleButton.active = false;
 		dropScheduleButton.visible = false;
 		dropScheduleButton
-			.withCallback(() -> AllPackets.channel.sendToServer(StationEditPacket.dropSchedule(te.getBlockPos())));
+			.withCallback(() -> AllPackets.channel.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
 		addRenderableWidget(dropScheduleButton);
 
 		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
@@ -121,9 +121,9 @@ public class StationScreen extends AbstractStationScreen {
 
 		super.tick();
 
-		updateAssemblyTooltip(te.edgePoint.isOnCurve() ? "no_assembly_curve"
-			: !te.edgePoint.isOrthogonal() ? "no_assembly_diagonal"
-				: trainPresent() && !te.trainCanDisassemble ? "train_not_aligned" : null);
+		updateAssemblyTooltip(blockEntity.edgePoint.isOnCurve() ? "no_assembly_curve"
+			: !blockEntity.edgePoint.isOrthogonal() ? "no_assembly_diagonal"
+				: trainPresent() && !blockEntity.trainCanDisassemble ? "train_not_aligned" : null);
 	}
 
 	private void tickTrainDisplay() {
@@ -136,7 +136,7 @@ public class StationScreen extends AbstractStationScreen {
 			}
 
 			leavingAnimation = 0;
-			newTrainButton.active = te.edgePoint.isOrthogonal();
+			newTrainButton.active = blockEntity.edgePoint.isOrthogonal();
 			newTrainButton.visible = true;
 			Train imminentTrain = getImminent();
 
@@ -146,7 +146,7 @@ public class StationScreen extends AbstractStationScreen {
 				newTrainButton.visible = false;
 				disassembleTrainButton.active = false;
 				disassembleTrainButton.visible = true;
-				dropScheduleButton.active = te.trainHasSchedule;
+				dropScheduleButton.active = blockEntity.trainHasSchedule;
 				dropScheduleButton.visible = true;
 
 				trainNameBox.active = true;
@@ -192,12 +192,12 @@ public class StationScreen extends AbstractStationScreen {
 		}
 
 		boolean trainAtStation = trainPresent();
-		disassembleTrainButton.active = trainAtStation && te.trainCanDisassemble && te.edgePoint.isOrthogonal();
-		dropScheduleButton.active = te.trainHasSchedule;
+		disassembleTrainButton.active = trainAtStation && blockEntity.trainCanDisassemble && blockEntity.edgePoint.isOrthogonal();
+		dropScheduleButton.active = blockEntity.trainHasSchedule;
 
-		if (te.trainHasSchedule)
+		if (blockEntity.trainHasSchedule)
 			dropScheduleButton.setToolTip(
-				Lang.translateDirect(te.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
+				Lang.translateDirect(blockEntity.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
 		else
 			dropScheduleButton.getToolTip()
 				.clear();
@@ -260,7 +260,7 @@ public class StationScreen extends AbstractStationScreen {
 //				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
 //				continue;
 //			}
-			Carriage carriage = carriages.get(te.trainBackwards ? carriages.size() - i - 1 : i);
+			Carriage carriage = carriages.get(blockEntity.trainBackwards ? carriages.size() - i - 1 : i);
 			offset += icon.render(carriage.bogeySpacing, ms, x + offset, y + 20) + 1;
 		}
 
@@ -339,26 +339,26 @@ public class StationScreen extends AbstractStationScreen {
 	private void syncStationName() {
 		if (!nameBox.getValue()
 			.equals(station.name))
-			AllPackets.channel.sendToServer(StationEditPacket.configure(te.getBlockPos(), false, nameBox.getValue()));
+			AllPackets.channel.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, nameBox.getValue()));
 	}
 
 	@Override
 	public void removed() {
 		super.removed();
 		AllPackets.channel
-			.sendToServer(StationEditPacket.configure(te.getBlockPos(), switchingToAssemblyMode, nameBox.getValue()));
+			.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode, nameBox.getValue()));
 		Train train = displayedTrain.get();
 		if (train == null)
 			return;
 		if (!switchingToAssemblyMode)
 			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
 		else
-			te.imminentTrain = null;
+			blockEntity.imminentTrain = null;
 	}
 
 	@Override
 	protected PartialModel getFlag(float partialTicks) {
-		return te.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF;
+		return blockEntity.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF;
 	}
 
 }

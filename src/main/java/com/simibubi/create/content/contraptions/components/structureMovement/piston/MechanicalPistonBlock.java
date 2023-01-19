@@ -2,12 +2,12 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pi
 
 import java.util.Random;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -35,7 +35,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.Tags;
 
-public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implements ITE<MechanicalPistonTileEntity> {
+public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implements IBE<MechanicalPistonBlockEntity> {
 
 	public static final EnumProperty<PistonState> STATE = EnumProperty.create("state", PistonState.class);
 	protected boolean isSticky;
@@ -72,7 +72,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 			.is(Tags.Items.SLIMEBALLS)) {
 			if (player.getItemInHand(handIn)
 				.isEmpty()) {
-				withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
+				withBlockEntityDo(worldIn, pos, be -> be.assembleNextTick = true);
 				return InteractionResult.SUCCESS;
 			}
 			return InteractionResult.PASS;
@@ -119,11 +119,11 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		if (pole.getValue(PistonExtensionPoleBlock.FACING)
 			.getAxis() != direction.getAxis())
 			return;
-		withTileEntityDo(worldIn, pos, te -> {
-			if (te.lastException == null)
+		withBlockEntityDo(worldIn, pos, be -> {
+			if (be.lastException == null)
 				return;
-			te.lastException = null;
-			te.sendData();
+			be.lastException = null;
+			be.sendData();
 		});
 	}
 
@@ -205,13 +205,13 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public Class<MechanicalPistonTileEntity> getTileEntityClass() {
-		return MechanicalPistonTileEntity.class;
+	public Class<MechanicalPistonBlockEntity> getBlockEntityClass() {
+		return MechanicalPistonBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends MechanicalPistonTileEntity> getTileEntityType() {
-		return AllTileEntities.MECHANICAL_PISTON.get();
+	public BlockEntityType<? extends MechanicalPistonBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.MECHANICAL_PISTON.get();
 	}
 
 	public static boolean isPiston(BlockState state) {

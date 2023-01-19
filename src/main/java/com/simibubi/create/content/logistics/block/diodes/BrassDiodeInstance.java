@@ -8,16 +8,16 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Color;
 
-public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeTileEntity> implements TickableInstance {
+public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeBlockEntity> implements TickableInstance {
 
     protected final ModelData indicator;
 
     protected int previousState;
 
-    public BrassDiodeInstance(MaterialManager modelManager, BrassDiodeTileEntity tile) {
-        super(modelManager, tile);
+    public BrassDiodeInstance(MaterialManager materialManager, BrassDiodeBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
 
-        indicator = modelManager.defaultSolid()
+        indicator = materialManager.defaultSolid()
                 .material(Materials.TRANSFORMED)
                 .getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
 
@@ -25,7 +25,7 @@ public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeTileEntity
 				.translate(getInstancePosition())
 				.setColor(getColor());
 
-        previousState = tile.state;
+        previousState = blockEntity.state;
     }
 
     @Override

@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.BeltProcessingBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
@@ -33,15 +33,15 @@ import net.minecraft.world.phys.Vec3;
 
 public class BeltInventory {
 
-	final BeltTileEntity belt;
+	final BeltBlockEntity belt;
 	private final List<TransportedItemStack> items;
 	final List<TransportedItemStack> toInsert;
 	final List<TransportedItemStack> toRemove;
 	boolean beltMovementPositive;
 	final float SEGMENT_WINDOW = .75f;
 
-	public BeltInventory(BeltTileEntity te) {
-		this.belt = te;
+	public BeltInventory(BeltBlockEntity be) {
+		this.belt = be;
 		items = new LinkedList<>();
 		toInsert = new LinkedList<>();
 		toRemove = new LinkedList<>();
@@ -184,7 +184,7 @@ public class BeltInventory {
 
 			if (ending == Ending.INSERT) {
 				DirectBeltInputBehaviour inputBehaviour =
-					TileEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);
+					BlockEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);
 				if (inputBehaviour == null)
 					continue;
 				if (!inputBehaviour.canInsertFromSide(movementFacing))
@@ -284,12 +284,12 @@ public class BeltInventory {
 	}
 
 	protected BeltProcessingBehaviour getBeltProcessingAtSegment(int segment) {
-		return TileEntityBehaviour.get(belt.getLevel(), BeltHelper.getPositionForOffset(belt, segment)
+		return BlockEntityBehaviour.get(belt.getLevel(), BeltHelper.getPositionForOffset(belt, segment)
 			.above(2), BeltProcessingBehaviour.TYPE);
 	}
 
 	protected TransportedItemStackHandlerBehaviour getTransportedItemStackHandlerAtSegment(int segment) {
-		return TileEntityBehaviour.get(belt.getLevel(), BeltHelper.getPositionForOffset(belt, segment),
+		return BlockEntityBehaviour.get(belt.getLevel(), BeltHelper.getPositionForOffset(belt, segment),
 			TransportedItemStackHandlerBehaviour.TYPE);
 	}
 
@@ -311,7 +311,7 @@ public class BeltInventory {
 //			return Ending.FUNNEL;
 
 		DirectBeltInputBehaviour inputBehaviour =
-			TileEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);
+			BlockEntityBehaviour.get(world, nextPosition, DirectBeltInputBehaviour.TYPE);
 		if (inputBehaviour != null)
 			return Ending.INSERT;
 

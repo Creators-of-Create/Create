@@ -54,15 +54,17 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return super.registerEventListeners(bus);
 	}
 
-	public <T extends BlockEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
+	@Override
+	public <T extends BlockEntity> CreateBlockEntityBuilder<T, CreateRegistrate> blockEntity(String name,
 		BlockEntityFactory<T> factory) {
-		return this.tileEntity(this.self(), name, factory);
+		return blockEntity(self(), name, factory);
 	}
 
-	public <T extends BlockEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
+	@Override
+	public <T extends BlockEntity, P> CreateBlockEntityBuilder<T, P> blockEntity(P parent, String name,
 		BlockEntityFactory<T> factory) {
-		return (CreateTileEntityBuilder<T, P>) this.entry(name,
-			(callback) -> CreateTileEntityBuilder.create(this, parent, name, callback, factory));
+		return (CreateBlockEntityBuilder<T, P>) entry(name,
+			(callback) -> CreateBlockEntityBuilder.create(this, parent, name, callback, factory));
 	}
 
 	@Override

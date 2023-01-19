@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import java.util.List;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,10 +29,10 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 	@Override
 	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player,
 		InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
-		return onTileEntityUse(world, pos, te -> {
-			if (!(te instanceof BrassTunnelTileEntity))
+		return onBlockEntityUse(world, pos, be -> {
+			if (!(be instanceof BrassTunnelBlockEntity))
 				return InteractionResult.PASS;
-			BrassTunnelTileEntity bte = (BrassTunnelTileEntity) te;
+			BrassTunnelBlockEntity bte = (BrassTunnelBlockEntity) be;
 			List<ItemStack> stacksOfGroup = bte.grabAllStacksOfGroup(world.isClientSide);
 			if (stacksOfGroup.isEmpty())
 				return InteractionResult.PASS;
@@ -47,8 +47,8 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 	}
 
 	@Override
-	public BlockEntityType<? extends BeltTunnelTileEntity> getTileEntityType() {
-		return AllTileEntities.BRASS_TUNNEL.get();
+	public BlockEntityType<? extends BeltTunnelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.BRASS_TUNNEL.get();
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		ITE.onRemove(state, level, pos, newState);
+		IBE.onRemove(state, level, pos, newState);
 	}
 
 }

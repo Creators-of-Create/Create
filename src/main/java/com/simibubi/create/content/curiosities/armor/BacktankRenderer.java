@@ -4,8 +4,8 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -17,31 +17,31 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BacktankRenderer extends KineticTileEntityRenderer {
+public class BacktankRenderer extends KineticBlockEntityRenderer {
 	public BacktankRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		SuperByteBuffer cogs = CachedBufferer.partial(getCogsModel(blockState), blockState);
 		cogs.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(blockState.getValue(BacktankBlock.HORIZONTAL_FACING)))
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
 			.rotate(Direction.EAST,
-				AngleHelper.rad(te.getSpeed() / 4f * AnimationTickHolder.getRenderTime(te.getLevel()) % 360))
+				AngleHelper.rad(be.getSpeed() / 4f * AnimationTickHolder.getRenderTime(be.getLevel()) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
+	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
 		return CachedBufferer.partial(getShaftModel(state), state);
 	}
 

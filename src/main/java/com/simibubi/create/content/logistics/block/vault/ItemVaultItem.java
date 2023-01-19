@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.vault;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -65,14 +65,14 @@ public class ItemVaultItem extends BlockItem {
 
 		if (!ItemVaultBlock.isVault(placedOnState))
 			return;
-		ItemVaultTileEntity tankAt = ConnectivityHandler.partAt(AllTileEntities.ITEM_VAULT.get(), world, placedOnPos);
+		ItemVaultBlockEntity tankAt = ConnectivityHandler.partAt(AllBlockEntityTypes.ITEM_VAULT.get(), world, placedOnPos);
 		if (tankAt == null)
 			return;
-		ItemVaultTileEntity controllerTE = tankAt.getControllerTE();
-		if (controllerTE == null)
+		ItemVaultBlockEntity controllerBE = tankAt.getControllerBE();
+		if (controllerBE == null)
 			return;
 
-		int width = controllerTE.radius;
+		int width = controllerBE.radius;
 		if (width == 1)
 			return;
 
@@ -84,10 +84,10 @@ public class ItemVaultItem extends BlockItem {
 			return;
 
 		Direction vaultFacing = Direction.fromAxisAndDirection(vaultBlockAxis, AxisDirection.POSITIVE);
-		BlockPos startPos = face == vaultFacing.getOpposite() ? controllerTE.getBlockPos()
+		BlockPos startPos = face == vaultFacing.getOpposite() ? controllerBE.getBlockPos()
 			.relative(vaultFacing.getOpposite())
-			: controllerTE.getBlockPos()
-				.relative(vaultFacing, controllerTE.length);
+			: controllerBE.getBlockPos()
+				.relative(vaultFacing, controllerBE.length);
 
 		if (VecHelper.getCoordinate(startPos, vaultBlockAxis) != VecHelper.getCoordinate(pos, vaultBlockAxis))
 			return;

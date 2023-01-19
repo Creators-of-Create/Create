@@ -44,7 +44,7 @@ public class LinkedControllerInputPacket extends LinkedControllerPacketBase {
 	}
 
 	@Override
-	protected void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern) {
+	protected void handleLectern(ServerPlayer player, LecternControllerBlockEntity lectern) {
 		if (lectern.isUsedBy(player))
 			handleItem(player, lectern.getController());
 	}

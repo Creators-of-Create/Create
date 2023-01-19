@@ -164,16 +164,16 @@ public class SchematicHandler {
 		schematic.placeInWorld(wMirroredFB, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
 			placementSettings.getMirror());
-		for (BlockEntity te : wMirroredFB.getRenderedTileEntities())
-			transform.apply(te);
+		for (BlockEntity be : wMirroredFB.getRenderedBlockEntities())
+			transform.apply(be);
 
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
 		pos = BlockPos.ZERO.south(size.getZ() - 1);
 		schematic.placeInWorld(wMirroredLR, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
 			placementSettings.getMirror());
-		for (BlockEntity te : wMirroredLR.getRenderedTileEntities())
-			transform.apply(te);
+		for (BlockEntity be : wMirroredLR.getRenderedBlockEntities())
+			transform.apply(be);
 
 		renderers.get(0)
 			.display(w);

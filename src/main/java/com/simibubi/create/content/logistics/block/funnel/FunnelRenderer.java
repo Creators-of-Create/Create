@@ -6,9 +6,9 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -19,21 +19,21 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
+public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> {
 
 	public FunnelRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(FunnelTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(FunnelBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (!te.hasFlap() || Backend.canUseInstancing(te.getLevel()))
+		if (!be.hasFlap() || Backend.canUseInstancing(be.getLevel()))
 			return;
 
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		PartialModel partialModel = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
 			: AllBlockPartials.BELT_FUNNEL_FLAP);
@@ -43,13 +43,13 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 
 		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(blockState)
 			.getOpposite());
-		float f = te.flap.getValue(partialTicks);
+		float f = be.flap.getValue(partialTicks);
 
 		ms.pushPose();
 		msr.centre()
 			.rotateY(horizontalAngle)
 			.unCentre();
-		ms.translate(0, 0, -te.getFlapOffset());
+		ms.translate(0, 0, -be.getFlapOffset());
 
 		for (int segment = 0; segment <= 3; segment++) {
 			ms.pushPose();

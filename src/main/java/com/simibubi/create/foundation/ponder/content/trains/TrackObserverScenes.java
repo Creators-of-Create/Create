@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.ponder.content.trains;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -120,7 +120,7 @@ public class TrackObserverScenes {
 		ItemStack waterBucket = new ItemStack(Items.WATER_BUCKET);
 		scene.overlay.showControls(new InputWindowElement(target, Pointing.DOWN).withItem(waterBucket), 30);
 		scene.idle(6);
-		scene.world.setFilterData(observer, TrackObserverTileEntity.class, waterBucket);
+		scene.world.setFilterData(observer, TrackObserverBlockEntity.class, waterBucket);
 		scene.idle(50);
 
 		trainInstance1 = scene.world.showIndependentSection(train1, Direction.WEST);

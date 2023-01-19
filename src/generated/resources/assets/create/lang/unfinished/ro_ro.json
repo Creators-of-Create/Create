@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 739",
+	"_": "Missing Localizations: 741",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1199,12 +1199,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Înlocuiește Solid cu Orice",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Înlocuiește Solid cu Gol",
 	"create.gui.schematicannon.option.skipMissing": "Ocolește Blocuri lipsă",
-	"create.gui.schematicannon.option.skipTileEntities": "Protejează Entități",
+	"create.gui.schematicannon.option.skipBlockEntities": "UNLOCALIZED: Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Adaugă praf de pușcă pentru a alimenta tunul",
 	"create.gui.schematicannon.slot.listPrinter": "Plasează cărți aici pentru a imprima o listă de verificare pentru Schema ta",
 	"create.gui.schematicannon.slot.schematic": "Adaugă-ti Schema aici. Asigură-te că este instalată la o locație specifică.",
 	"create.gui.schematicannon.option.skipMissing.description": "Dacă tunul nu poate găsi un bloc necesar pentru plasare, va continua la locația următoare.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "Tunul va evita să înlocuiască blocuri care țin date, cum ar fi Cuferele..",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "UNLOCALIZED: The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "Tunul nu va înlocui niciodată orice bloc Solid în zona lui de locru, doar non-Solid și Aer.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Tunul va înlocui daor blocuri Solide în zona lui de lucru dacă Schema conține un Bloc solid la acea Locație.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Tunul va înlocui blocuri Solide în zona lui de lucru dacă Schema conține orice Bloc la acea Locație.",

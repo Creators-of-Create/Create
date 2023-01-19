@@ -336,9 +336,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		return viableGraphs.stream()
 			.flatMap(g -> g.getPoints(EdgePointType.STATION)
 				.stream())
-			.filter(station -> station.tilePos != null)
+			.filter(station -> station.blockEntityPos != null)
 			.filter(station -> visited.add(station.name))
-			.map(station -> IntAttached.with((int) Vec3.atBottomCenterOf(station.tilePos)
+			.map(station -> IntAttached.with((int) Vec3.atBottomCenterOf(station.blockEntityPos)
 				.distanceTo(position), station.name))
 			.toList();
 	}

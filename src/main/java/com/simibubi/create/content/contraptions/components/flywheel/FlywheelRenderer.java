@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -14,40 +14,40 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FlywheelRenderer extends KineticTileEntityRenderer {
+public class FlywheelRenderer extends KineticBlockEntityRenderer {
 
 	public FlywheelRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getLevel()))
+		if (Backend.canUseInstancing(be.getLevel()))
 			return;
 
-		BlockState blockState = te.getBlockState();
-		FlywheelTileEntity wte = (FlywheelTileEntity) te;
+		BlockState blockState = be.getBlockState();
+		FlywheelBlockEntity wte = (FlywheelBlockEntity) be;
 
 		float speed = wte.visualSpeed.getValue(partialTicks) * 3 / 10f;
 		float angle = wte.angle + speed * partialTicks;
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-		renderFlywheel(te, ms, light, blockState, angle, vb);
+		renderFlywheel(be, ms, light, blockState, angle, vb);
 	}
 
-	private void renderFlywheel(KineticTileEntity te, PoseStack ms, int light, BlockState blockState, float angle,
+	private void renderFlywheel(KineticBlockEntity be, PoseStack ms, int light, BlockState blockState, float angle,
 		VertexConsumer vb) {
 		SuperByteBuffer wheel = CachedBufferer.block(blockState);
-		kineticRotationTransform(wheel, te, getRotationAxisOf(te), AngleHelper.rad(angle), light);
+		kineticRotationTransform(wheel, be, getRotationAxisOf(be), AngleHelper.rad(angle), light);
 		wheel.renderInto(ms, vb);
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return shaft(getRotationAxisOf(te));
+	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
+		return shaft(getRotationAxisOf(be));
 	}
 
 }

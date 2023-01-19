@@ -2,12 +2,12 @@ package com.simibubi.create.content.contraptions.components.deployer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.components.AssemblyOperatorUseContext;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -31,7 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<DeployerTileEntity> {
+public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<DeployerBlockEntity> {
 
 	public DeployerBlock(Properties properties) {
 		super(properties);
@@ -51,7 +51,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (context.getClickedFace() == state.getValue(FACING)) {
 			if (!context.getLevel().isClientSide)
-				withTileEntityDo(context.getLevel(), context.getClickedPos(), DeployerTileEntity::changeMode);
+				withBlockEntityDo(context.getLevel(), context.getClickedPos(), DeployerBlockEntity::changeMode);
 			return InteractionResult.SUCCESS;
 		}
 		return super.onWrenched(state, context);
@@ -60,7 +60,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!isMoving && !state.is(newState.getBlock()))
-			withTileEntityDo(worldIn, pos, DeployerTileEntity::discardPlayer);
+			withBlockEntityDo(worldIn, pos, DeployerBlockEntity::discardPlayer);
 		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
@@ -77,40 +77,40 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
 
-		withTileEntityDo(worldIn, pos, te -> {
-			ItemStack heldByDeployer = te.player.getMainHandItem()
+		withBlockEntityDo(worldIn, pos, be -> {
+			ItemStack heldByDeployer = be.player.getMainHandItem()
 				.copy();
 			if (heldByDeployer.isEmpty() && heldByPlayer.isEmpty())
 				return;
 
 			player.setItemInHand(handIn, heldByDeployer);
-			te.player.setItemInHand(InteractionHand.MAIN_HAND, heldByPlayer);
-			te.sendData();
+			be.player.setItemInHand(InteractionHand.MAIN_HAND, heldByPlayer);
+			be.sendData();
 		});
 
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public Class<DeployerTileEntity> getTileEntityClass() {
-		return DeployerTileEntity.class;
+	public Class<DeployerBlockEntity> getBlockEntityClass() {
+		return DeployerBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends DeployerTileEntity> getTileEntityType() {
-		return AllTileEntities.DEPLOYER.get();
+	public BlockEntityType<? extends DeployerBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.DEPLOYER.get();
 	}
 
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, world, pos, oldState, isMoving);
-		withTileEntityDo(world, pos, DeployerTileEntity::redstoneUpdate);
+		withBlockEntityDo(world, pos, DeployerBlockEntity::redstoneUpdate);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
 		boolean p_220069_6_) {
-		withTileEntityDo(world, pos, DeployerTileEntity::redstoneUpdate);
+		withBlockEntityDo(world, pos, DeployerBlockEntity::redstoneUpdate);
 	}
 
 	@Override
