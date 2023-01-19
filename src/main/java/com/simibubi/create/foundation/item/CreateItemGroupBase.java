@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.api.event.FillCreateItemGroupEvent;
 import com.simibubi.create.content.AllSections;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
@@ -21,6 +22,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 
 public abstract class CreateItemGroupBase extends CreativeModeTab {
 
@@ -34,6 +36,9 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 		addItems(items, true);
 		addBlocks(items);
 		addItems(items, false);
+		var event = new FillCreateItemGroupEvent(this, items);
+		MinecraftForge.EVENT_BUS.post(event);
+		event.apply();
 	}
 
 	@OnlyIn(Dist.CLIENT)
