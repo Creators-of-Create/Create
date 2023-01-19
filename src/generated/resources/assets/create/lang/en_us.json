@@ -564,7 +564,9 @@
 	"block.create.zinc_ore": "Zinc Ore",
 
 	"enchantment.create.capacity": "Capacity",
+	"enchantment.create.capacity.desc": "Increases tank capacity when applied to a backtank.",
 	"enchantment.create.potato_recovery": "Potato Recovery",
+	"enchantment.create.potato_recovery.desc": "Ammo has a chance of dropping as an item upon hit.",
 
 	"entity.create.carriage_contraption": "Carriage Contraption",
 	"entity.create.contraption": "Contraption",
