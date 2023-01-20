@@ -84,7 +84,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 
 	}
 
-	final String[] romans = { "I", "II", "III", "IV", "V", "VI", "-" };
+	private static final String[] COMMON_ROMANS = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X" };
 
 	@Override
 	public void draw(SequencedAssemblyRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
@@ -128,7 +128,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			SequencedRecipe<?> sequencedRecipe = sequence.get(i);
 			SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
 			int subWidth = subCategory.getWidth();
-			MutableComponent component = Components.literal("" + romans[Math.min(i, 6)]);
+			MutableComponent component = Components.literal(this.makeRoman(i));
 			font.draw(matrixStack, component, font.width(component) / -2 + subWidth / 2, 2, 0x888888);
 			subCategory.draw(sequencedRecipe, matrixStack, mouseX, mouseY, i);
 			matrixStack.translate(subWidth + margin, 0, 0);
@@ -136,6 +136,22 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		matrixStack.popPose();
 
 		matrixStack.popPose();
+	}
+
+	private String makeRoman(int i) {
+		return i < 10 ? "" + COMMON_ROMANS[i] : makeRomanStatic(i + 1);
+	}
+
+	public static String makeRomanStatic(int i) {
+		if (i < 1 || i > 3999) return "-"; // How did we get here?
+		return "M".repeat(i / 1000)
+				+ arrangeRomanPlace(i % 1000 / 100, "C", "D", "M")
+				+ arrangeRomanPlace(i % 100 / 10, "X", "L", "C")
+				+ arrangeRomanPlace(i % 10, "I", "V", "X");
+	}
+
+	private static String arrangeRomanPlace(int i, String o, String f, String t) {
+		return i % 5 == 4 ? o + (i == 4 ? f : t) : (i >= 5 ? f : "") + o.repeat(i % 5);
 	}
 
 	@Override
