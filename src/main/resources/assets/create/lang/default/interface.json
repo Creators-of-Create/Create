@@ -916,6 +916,8 @@
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
-	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world"
+	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
 
+  "create.enchantment.capacity.desc": "Increases tank capacity when applied to a backtank.",
+  "create.enchantment.potato_recovery.desc": "Ammo has a chance of dropping as an item upon hit."
 }
