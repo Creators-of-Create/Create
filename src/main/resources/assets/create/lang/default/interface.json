@@ -271,6 +271,7 @@
 	"create.schematicAndQuill.saved": "Saved as %1$s",
 
 	"create.schematic.invalid": "[!] Invalid Item - Use the Schematic Table instead",
+	"create.schematic.error": "Schematic failed to Load - Check Game Logs",
 	"create.schematic.position": "Position",
 	"create.schematic.rotation": "Rotation",
 	"create.schematic.rotation.none": "None",
@@ -369,6 +370,8 @@
 	"create.schematicannon.status.schematicInvalid": "Schematic Invalid",
 	"create.schematicannon.status.schematicNotPlaced": "Schematic not Positioned",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
+	"create.schematicannon.status.schematicErrored": "Incompatible Blocks",
+	"create.schematicannon.status.schematicErroredCheckLogs": "Check Server Logs",
 
 	"create.materialChecklist": "Material Checklist",
 	"create.materialChecklist.blocksNotLoaded": "* Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
