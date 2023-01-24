@@ -168,6 +168,8 @@ public class BeltTileEntity extends KineticTileEntity {
 	protected void initializeItemHandler() {
 		if (level.isClientSide || itemHandler.isPresent())
 			return;
+		if (controller == null)
+			return;
 		if (!level.isLoaded(controller))
 			return;
 		BlockEntity te = level.getBlockEntity(controller);
