@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.event.FillCreateItemGroupEvent;
 import com.simibubi.create.content.AllSections;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+
 
 public abstract class CreateItemGroupBase extends CreativeModeTab {
 
@@ -69,7 +71,7 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 
 	protected Collection<RegistryEntry<Block>> getBlocks() {
 		return getSections().stream()
-			.flatMap(s -> Create.REGISTRATE
+			.flatMap(s -> CreateRegistrate
 				.getAll(s, Registry.BLOCK_REGISTRY)
 				.stream())
 			.collect(Collectors.toList());
@@ -77,7 +79,7 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 
 	protected Collection<RegistryEntry<Item>> getItems() {
 		return getSections().stream()
-			.flatMap(s -> Create.REGISTRATE
+			.flatMap(s -> CreateRegistrate
 				.getAll(s, Registry.ITEM_REGISTRY)
 				.stream())
 			.collect(Collectors.toList());

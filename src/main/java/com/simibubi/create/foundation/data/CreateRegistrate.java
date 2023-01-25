@@ -2,9 +2,7 @@ package com.simibubi.create.foundation.data;
 
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -54,6 +52,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	protected CreateRegistrate(String modid) {
 		super(modid);
+		ALL_CREATE_REGISTRATE.add(this);
 	}
 
 	public static CreateRegistrate create(String modid) {
@@ -75,6 +74,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Section Tracking */
 
 	protected static final Map<RegistryEntry<?>, AllSections> SECTION_LOOKUP = new IdentityHashMap<>();
+	protected static final List<CreateRegistrate> ALL_CREATE_REGISTRATE = new ArrayList<>();
 	protected AllSections currentSection;
 
 	public CreateRegistrate startSection(AllSections section) {
@@ -112,12 +112,11 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return AllSections.UNASSIGNED;
 	}
 
-	public <R> Collection<RegistryEntry<R>> getAll(AllSections section,
+	public static <R> Collection<RegistryEntry<R>> getAll(AllSections section,
 		ResourceKey<? extends Registry<R>> registryType) {
-		return this.getAll(registryType)
-			.stream()
-			.filter(e -> getSection(e) == section)
-			.collect(Collectors.toList());
+		return ALL_CREATE_REGISTRATE.stream().flatMap(r -> r.getAll(registryType).stream()
+				.filter(e -> r.getSection(e) == section))
+				.collect(Collectors.toList());
 	}
 
 	public <T extends BlockEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
