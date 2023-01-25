@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.api.event.FillCreateItemGroupEvent;
+import com.simibubi.create.api.event.CreateItemGroupArrangerEvent;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -38,24 +38,31 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 		addItems(items, true);
 		addBlocks(items);
 		addItems(items, false);
-		var event = new FillCreateItemGroupEvent(this, items);
-		MinecraftForge.EVENT_BUS.post(event);
-		event.apply();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void addBlocks(NonNullList<ItemStack> items) {
+		NonNullList<ItemStack> filtered = NonNullList.create();
+
 		for (RegistryEntry<? extends Block> entry : getBlocks()) {
 			Block def = entry.get();
 			Item item = def.asItem();
-			if (item != Items.AIR)
-				def.fillItemCategory(this, items);
+			if (item != Items.AIR){
+				NonNullList<ItemStack> toAdd = NonNullList.create();
+				def.fillItemCategory(this,toAdd);
+				filtered.addAll(toAdd);
+			}
 		}
+
+		var event = new CreateItemGroupArrangerEvent(this, items, CreateItemGroupArrangerEvent.Stage.BLOCKS);
+		MinecraftForge.EVENT_BUS.post(event);
+		items.addAll(filtered);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+		NonNullList<ItemStack> filtered = NonNullList.create();
 
 		for (RegistryEntry<? extends Item> entry : getItems()) {
 			Item item = entry.get();
@@ -65,8 +72,14 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 			BakedModel model = itemRenderer.getModel(stack, null, null, 0);
 			if (model.isGui3d() != specialItems)
 				continue;
-			item.fillItemCategory(this, items);
+			NonNullList<ItemStack> toAdd = NonNullList.create();
+			item.fillItemCategory(this,toAdd);
+			filtered.addAll(toAdd);
 		}
+
+		var event = new CreateItemGroupArrangerEvent(this, items, specialItems? CreateItemGroupArrangerEvent.Stage.SPECIAL_ITEMS: CreateItemGroupArrangerEvent.Stage.ITEMS);
+		MinecraftForge.EVENT_BUS.post(event);
+		items.addAll(filtered);
 	}
 
 	protected Collection<RegistryEntry<Block>> getBlocks() {
