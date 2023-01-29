@@ -1,25 +1,2 @@
-// 1.19.2	2023-01-15T13:27:03.1312743	Create's lang merger
-4b9ffd38401c3366dc8fba48bd867b580bd7a016 assets/create/lang/en_us.json
-fdd0c2476b20b7730b4c35de5051197ddd22f5ec assets/create/lang/unfinished/cs_cz.json
-a47fec59b6f8394020cd7c335cd17685d46cab31 assets/create/lang/unfinished/da_dk.json
-b88303d5670c9195a742cce548b78d1f516dcd1e assets/create/lang/unfinished/de_de.json
-9f2a87e4cf545a69c54d7f45bda372604f0300fc assets/create/lang/unfinished/es_cl.json
-6235812415ddd1e26c1afb80426608fa4f857c37 assets/create/lang/unfinished/es_es.json
-effc6c1cb871967e67f45f5c3fb93bf438330d84 assets/create/lang/unfinished/es_mx.json
-da842796d78d99ea333cea7febce5d617be98e05 assets/create/lang/unfinished/fr_fr.json
-2dd62bdee52e3af167701975f7ec025fbf6f2abb assets/create/lang/unfinished/hu_hu.json
-f473d5888a1baec5997bbedee05ecbf0deef1dd4 assets/create/lang/unfinished/it_it.json
-b50785cd789349a450589d17e1ff2a205a6d420f assets/create/lang/unfinished/ja_jp.json
-892826aabb836e1452aa486f4fbcb9040c9c917c assets/create/lang/unfinished/ko_kr.json
-78bc0ca6a7c072b3e6112e34b3868063bd2dd189 assets/create/lang/unfinished/nl_nl.json
-4b550367bd30bc17392dec9bd300fbc7dce1bff2 assets/create/lang/unfinished/no_no.json
-63a117434060a218bc08fa68094e80317597d4ba assets/create/lang/unfinished/pl_pl.json
-80f6418ad444977051f77d6f18678aad6d7a2ce6 assets/create/lang/unfinished/pt_br.json
-71fedcf789f5550a7150fee56115b1d0257b9461 assets/create/lang/unfinished/pt_pt.json
-335449d4632f93eec0c5e9fd7fa9ffb633fc20cc assets/create/lang/unfinished/ro_ro.json
-6902577d5d13e4052a7fcc7c5816d11747973342 assets/create/lang/unfinished/ru_ru.json
-0577bf5c61c95025a5329401fb2b1e65197f5a8f assets/create/lang/unfinished/sv_se.json
-f844c86443851ff49cd5e931b4690b8f2b58d0aa assets/create/lang/unfinished/th_th.json
-f570fe2e2eab7acadb343c68820034a6e2d083e7 assets/create/lang/unfinished/uk_ua.json
-eca2b57ab66ee545c5a9f995a060ddf487a5bb86 assets/create/lang/unfinished/zh_cn.json
-398d115a979b7e97184f493190b198efd9ddf6ef assets/create/lang/unfinished/zh_tw.json
+// 1.19.2	2023-01-30T00:12:02.3258396	Create's lang merger
+28beca6e221b45c93aa1a370b1f86a4c509ae52e assets/create/lang/en_us.json
