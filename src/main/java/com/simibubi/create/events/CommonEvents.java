@@ -48,6 +48,7 @@ import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.forgespi.language.IModFileInfo;
@@ -85,8 +86,10 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
-	public static void onWorldTick(LevelTickEvent event) {
+	public static void onServerWorldTick(LevelTickEvent event) {
 		if (event.phase == Phase.START)
+			return;
+		if (event.side == LogicalSide.CLIENT)
 			return;
 		Level world = event.level;
 		ContraptionHandler.tick(world);
