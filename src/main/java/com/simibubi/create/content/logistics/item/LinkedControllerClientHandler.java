@@ -17,6 +17,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ControlsUtil;
@@ -236,7 +237,7 @@ public class LinkedControllerClientHandler {
 		list.add(Lang.translateDirect("linked_controller.bind_mode")
 			.withStyle(ChatFormatting.GOLD));
 		list.addAll(TooltipHelper.cutTextComponent(Lang.translateDirect("linked_controller.press_keybind", keys),
-			ChatFormatting.GRAY, ChatFormatting.GRAY));
+			Palette.ALL_GRAY));
 
 		int width = 0;
 		int height = list.size() * mc.font.lineHeight;

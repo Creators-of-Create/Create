@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -27,7 +28,7 @@ public interface IDisplayAssemblyExceptions {
 
 		String text = e.component.getString();
 		Arrays.stream(text.split("\n"))
-			.forEach(l -> TooltipHelper.cutStringTextComponent(l, ChatFormatting.GRAY, ChatFormatting.WHITE)
+			.forEach(l -> TooltipHelper.cutStringTextComponent(l, Palette.GRAY_AND_WHITE)
 				.forEach(c -> tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy()
 					.append(c))));
 

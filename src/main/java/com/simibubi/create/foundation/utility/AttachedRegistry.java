@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -18,8 +19,9 @@ public class AttachedRegistry<K extends IForgeRegistryEntry<K>, V> {
 	private static final List<AttachedRegistry<?, ?>> ALL = new ArrayList<>();
 
 	protected final IForgeRegistry<K> objectRegistry;
-	protected final Map<ResourceLocation, V> locationMap = new HashMap<>();
+	protected final Map<ResourceLocation, V> idMap = new HashMap<>();
 	protected final Map<K, V> objectMap = new IdentityHashMap<>();
+	protected final Map<ResourceLocation, Function<K, V>> deferredRegistrations = new HashMap<>();
 	protected boolean unwrapped = false;
 
 	public AttachedRegistry(IForgeRegistry<K> objectRegistry) {
@@ -27,15 +29,15 @@ public class AttachedRegistry<K extends IForgeRegistryEntry<K>, V> {
 		ALL.add(this);
 	}
 
-	public void register(ResourceLocation location, V value) {
+	public void register(ResourceLocation id, V value) {
 		if (!unwrapped) {
-			locationMap.put(location, value);
+			idMap.put(id, value);
 		} else {
-			K object = objectRegistry.getValue(location);
+			K object = objectRegistry.getValue(id);
 			if (object != null) {
 				objectMap.put(object, value);
 			} else {
-				Create.LOGGER.warn("Could not get object for location '" + location + "' in AttachedRegistry after unwrapping!");
+				Create.LOGGER.warn("Could not get object for id '" + id + "' in AttachedRegistry after unwrapping!");
 			}
 		}
 	}
@@ -44,25 +46,51 @@ public class AttachedRegistry<K extends IForgeRegistryEntry<K>, V> {
 		if (unwrapped) {
 			objectMap.put(object, value);
 		} else {
-			ResourceLocation location = objectRegistry.getKey(object);
-			if (location != null) {
-				locationMap.put(location, value);
+			ResourceLocation id = objectRegistry.getKey(object);
+			if (id != null) {
+				idMap.put(id, value);
 			} else {
-				Create.LOGGER.warn("Could not get location of object '" + object + "' in AttachedRegistry before unwrapping!");
+				Create.LOGGER.warn("Could not get id of object '" + object + "' in AttachedRegistry before unwrapping!");
+			}
+		}
+	}
+
+	public void registerDeferred(ResourceLocation id, Function<K, V> func) {
+		if (!unwrapped) {
+			deferredRegistrations.put(id, func);
+		} else {
+			K object = objectRegistry.getValue(id);
+			if (object != null) {
+				objectMap.put(object, func.apply(object));
+			} else {
+				Create.LOGGER.warn("Could not get object for id '" + id + "' in AttachedRegistry after unwrapping!");
+			}
+		}
+	}
+
+	public void registerDeferred(K object, Function<K, V> func) {
+		if (unwrapped) {
+			objectMap.put(object, func.apply(object));
+		} else {
+			ResourceLocation id = objectRegistry.getKey(object);
+			if (id != null) {
+				deferredRegistrations.put(id, func);
+			} else {
+				Create.LOGGER.warn("Could not get id of object '" + object + "' in AttachedRegistry before unwrapping!");
 			}
 		}
 	}
 
 	@Nullable
-	public V get(ResourceLocation location) {
+	public V get(ResourceLocation id) {
 		if (!unwrapped) {
-			return locationMap.get(location);
+			return idMap.get(id);
 		} else {
-			K object = objectRegistry.getValue(location);
+			K object = objectRegistry.getValue(id);
 			if (object != null) {
 				return objectMap.get(object);
 			} else {
-				Create.LOGGER.warn("Could not get object for location '" + location + "' in AttachedRegistry after unwrapping!");
+				Create.LOGGER.warn("Could not get object for id '" + id + "' in AttachedRegistry after unwrapping!");
 				return null;
 			}
 		}
@@ -73,11 +101,11 @@ public class AttachedRegistry<K extends IForgeRegistryEntry<K>, V> {
 		if (unwrapped) {
 			return objectMap.get(object);
 		} else {
-			ResourceLocation location = objectRegistry.getKey(object);
-			if (location != null) {
-				return locationMap.get(location);
+			ResourceLocation id = objectRegistry.getKey(object);
+			if (id != null) {
+				return idMap.get(id);
 			} else {
-				Create.LOGGER.warn("Could not get location of object '" + object + "' in AttachedRegistry before unwrapping!");
+				Create.LOGGER.warn("Could not get id of object '" + object + "' in AttachedRegistry before unwrapping!");
 				return null;
 			}
 		}
@@ -88,15 +116,26 @@ public class AttachedRegistry<K extends IForgeRegistryEntry<K>, V> {
 	}
 
 	protected void unwrap() {
-		for (Map.Entry<ResourceLocation, V> entry : locationMap.entrySet()) {
-			ResourceLocation location = entry.getKey();
-			K object = objectRegistry.getValue(location);
+		deferredRegistrations.forEach((id, func) -> {
+			K object = objectRegistry.getValue(id);
 			if (object != null) {
-				objectMap.put(object, entry.getValue());
+				objectMap.put(object, func.apply(object));
 			} else {
-				Create.LOGGER.warn("Could not get object for location '" + location + "' in AttachedRegistry during unwrapping!");
+				Create.LOGGER.warn("Could not get object for id '" + id + "' in AttachedRegistry during unwrapping!");
 			}
-		}
+		});
+
+		idMap.forEach((id, value) -> {
+			K object = objectRegistry.getValue(id);
+			if (object != null) {
+				objectMap.put(object, value);
+			} else {
+				Create.LOGGER.warn("Could not get object for id '" + id + "' in AttachedRegistry during unwrapping!");
+			}
+		});
+
+		deferredRegistrations.clear();
+		idMap.clear();
 		unwrapped = true;
 	}
 

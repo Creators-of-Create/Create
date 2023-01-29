@@ -54,7 +54,7 @@ import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.recipe.CompatMetals;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
-import com.simibubi.create.foundation.item.ItemTooltipHandler;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
@@ -69,7 +69,7 @@ import net.minecraftforge.common.Tags;
 public class AllItems {
 
 	static {
-		REGISTRATE.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
+		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
 
 	// Materials
@@ -275,7 +275,7 @@ public class AllItems {
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
-		.onRegister(s -> ItemTooltipHandler.referTo(s, SAND_PAPER))
+		.onRegister(s -> ItemDescription.referKey(s, SAND_PAPER))
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)

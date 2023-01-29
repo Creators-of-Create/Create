@@ -238,7 +238,7 @@ import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
-import com.simibubi.create.foundation.item.ItemTooltipHandler;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
@@ -286,7 +286,7 @@ import net.minecraftforge.common.Tags;
 public class AllBlocks {
 
 	static {
-		REGISTRATE.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
+		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
 
 	// Schematics
@@ -573,7 +573,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.transform(BuilderTransformers.cuckooClock())
 			.lang("Cuckoo Clock")
-			.onRegisterAfter(Registry.ITEM_REGISTRY, c -> ItemTooltipHandler.referTo(c, CUCKOO_CLOCK))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, c -> ItemDescription.referKey(c, CUCKOO_CLOCK))
 			.register();
 
 	public static final BlockEntry<MillstoneBlock> MILLSTONE = REGISTRATE.block("millstone", MillstoneBlock::new)
@@ -1384,7 +1384,7 @@ public class AllBlocks {
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 			})
-			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemTooltipHandler.referTo(v, "block.create.brown_seat"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemDescription.useKey(v, "block.create.seat"))
 			.tag(AllBlockTags.SEATS.tag)
 			.item()
 			.tag(AllItemTags.SEATS.tag)
@@ -2007,7 +2007,7 @@ public class AllBlocks {
 					.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/block"))
 					.texture("0", p.modLoc("block/toolbox/" + colourName)));
 			})
-			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemTooltipHandler.referTo(v, "block.create.toolbox"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemDescription.useKey(v, "block.create.toolbox"))
 			.tag(AllBlockTags.TOOLBOXES.tag)
 			.item(UncontainableBlockItem::new)
 			.model((c, p) -> p.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/item"))

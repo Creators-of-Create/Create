@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
+import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
@@ -50,7 +50,7 @@ public class BeltConnectorItem extends BlockItem {
 
 	@Override
 	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (p_150895_1_ == Create.BASE_CREATIVE_TAB)
+		if (p_150895_1_ == AllCreativeModeTabs.BASE_CREATIVE_TAB)
 			return;
 		super.fillItemCategory(p_150895_1_, p_150895_2_);
 	}

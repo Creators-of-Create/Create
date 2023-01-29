@@ -19,7 +19,6 @@ import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
-import com.simibubi.create.content.palettes.PalettesCreativeModeTab;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -36,7 +35,10 @@ import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
-import com.simibubi.create.foundation.item.BaseCreativeModeTab;
+import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.KineticStats;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.foundation.worldgen.AllFeatures;
@@ -48,7 +50,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
@@ -81,8 +82,13 @@ public class Create {
 
 	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
 
-	public static final CreativeModeTab BASE_CREATIVE_TAB = new BaseCreativeModeTab();
-	public static final CreativeModeTab PALETTES_CREATIVE_TAB = new PalettesCreativeModeTab();
+	static {
+		// TODO 0.5.1: choose color palette
+		REGISTRATE.setTooltipModifierFactory(item -> {
+			return new ItemDescription.Modifier(item, Palette.BLUE)
+					.andThen(TooltipModifier.mapNull(KineticStats.create(item)));
+		});
+	}
 
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
@@ -105,6 +111,7 @@ public class Create {
 
 		AllSoundEvents.prepare();
 		AllTags.init();
+		AllCreativeModeTabs.init();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
@@ -146,12 +153,12 @@ public class Create {
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
-		AttachedRegistry.unwrapAll();
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
 
 		event.enqueueWork(() -> {
+			AttachedRegistry.unwrapAll();
 			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
@@ -162,7 +169,7 @@ public class Create {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
 		if (event.includeClient()) {
-			gen.addProvider(new LangMerger(gen, ID, "Create", AllLangPartials.values()));
+			gen.addProvider(new LangMerger(gen, ID, NAME, AllLangPartials.values()));
 			gen.addProvider(AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {

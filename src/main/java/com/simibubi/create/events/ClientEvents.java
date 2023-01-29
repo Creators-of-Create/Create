@@ -49,7 +49,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollVa
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.item.ItemTooltipHandler;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
@@ -66,6 +66,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -239,7 +240,12 @@ public class ClientEvents {
 		if (event.getPlayer() == null)
 			return;
 
-		ItemTooltipHandler.addToTooltip(event);
+		Item item = event.getItemStack().getItem();
+		TooltipModifier modifier = TooltipModifier.REGISTRY.get(item);
+		if (modifier != null && modifier != TooltipModifier.EMPTY) {
+			modifier.modify(event);
+		}
+
 		PonderTooltipHandler.addToTooltip(event);
 		SequencedAssemblyRecipe.addToTooltip(event);
 	}

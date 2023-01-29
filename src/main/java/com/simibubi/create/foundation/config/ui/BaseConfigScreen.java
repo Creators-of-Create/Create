@@ -21,9 +21,9 @@ import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.element.TextStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Components;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
@@ -185,7 +185,7 @@ public class BaseConfigScreen extends ConfigScreen {
 					.addAll(TooltipHelper.cutTextComponent(
 							Components.literal(
 									"Gameplay settings can only be accessed from the in-game menu after joining a World or Server."),
-							ChatFormatting.GRAY, ChatFormatting.GRAY));
+							Palette.ALL_GRAY));
 		} else {
 			serverConfigWidget.withCallback(() -> linkTo(new SubMenuConfigScreen(this, ModConfig.Type.SERVER, serverSpec)));
 			serverText.withElementRenderer(BoxWidget.gradientFactory.apply(serverConfigWidget));

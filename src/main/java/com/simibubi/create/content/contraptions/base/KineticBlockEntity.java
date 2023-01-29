@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.utility.Lang;
@@ -396,7 +397,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 				.style(GOLD)
 				.forGoggles(tooltip);
 			Component hint = Lang.translateDirect("gui.contraptions.network_overstressed");
-			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
+			List<Component> cutString = TooltipHelper.cutTextComponent(hint, Palette.GRAY_AND_WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				Lang.builder()
 					.add(cutString.get(i)
@@ -412,7 +413,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			MutableComponent hint =
 				Lang.translateDirect("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
 					.getDescriptionId()));
-			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
+			List<Component> cutString = TooltipHelper.cutTextComponent(hint, Palette.GRAY_AND_WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				Lang.builder()
 					.add(cutString.get(i)

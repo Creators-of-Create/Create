@@ -22,7 +22,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 public class SchematicInstances {
 
-	public static WorldAttached<Cache<Integer, SchematicWorld>> loadedSchematics;
+	public static final WorldAttached<Cache<Integer, SchematicWorld>> loadedSchematics;
 
 	static {
 		loadedSchematics = new WorldAttached<>($ -> CacheBuilder.newBuilder()

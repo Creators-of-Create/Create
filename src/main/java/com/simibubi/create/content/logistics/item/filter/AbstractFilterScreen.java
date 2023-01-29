@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.item.filter;
 
 import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
-import static net.minecraft.ChatFormatting.GRAY;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +15,8 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
-import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.client.renderer.Rect2i;
@@ -142,7 +141,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 		if (!button.isHoveredOrFocused())
 			return;
 		List<Component> tip = button.getToolTip();
-		tip.addAll(TooltipHelper.cutTextComponent(tooltip, GRAY, GRAY));
+		tip.addAll(TooltipHelper.cutTextComponent(tooltip, Palette.ALL_GRAY));
 	}
 
 	protected void contentsCleared() {}

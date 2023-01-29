@@ -4,7 +4,10 @@ import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
@@ -12,17 +15,22 @@ import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
+import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
@@ -39,8 +47,13 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.RegistryObject;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
+	@Nullable
+	protected Function<Item, TooltipModifier> currentTooltipModifierFactory;
+
 	protected CreateRegistrate(String modid) {
 		super(modid);
 	}
@@ -49,9 +62,30 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return new CreateRegistrate(modid);
 	}
 
+	public CreateRegistrate setTooltipModifierFactory(@Nullable Function<Item, TooltipModifier> factory) {
+		currentTooltipModifierFactory = factory;
+		return self();
+	}
+
+	@Nullable
+	public Function<Item, TooltipModifier> getTooltipModifierFactory() {
+		return currentTooltipModifierFactory;
+	}
+
 	@Override
 	public CreateRegistrate registerEventListeners(IEventBus bus) {
 		return super.registerEventListeners(bus);
+	}
+
+	@Override
+	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name, ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator, NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
+		RegistryEntry<T> entry = super.accept(name, type, builder, creator, entryFactory);
+		if (type.equals(Registry.ITEM_REGISTRY)) {
+			if (currentTooltipModifierFactory != null) {
+				TooltipModifier.REGISTRY.registerDeferred(entry.getId(), currentTooltipModifierFactory);
+			}
+		}
+		return entry;
 	}
 
 	@Override

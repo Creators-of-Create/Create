@@ -9,11 +9,12 @@ import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class SmartInventory extends RecipeWrapper
-	implements IItemHandlerModifiableIntermediate, INBTSerializable<CompoundTag> {
+	implements IItemHandlerModifiable, INBTSerializable<CompoundTag> {
 
 	protected boolean extractionAllowed;
 	protected boolean insertionAllowed;
@@ -100,13 +101,13 @@ public class SmartInventory extends RecipeWrapper
 	}
 
 	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
-		inv.setStackInSlot(slot, stack);
+	public ItemStack getStackInSlot(int slot) {
+		return inv.getStackInSlot(slot);
 	}
 
 	@Override
-	public ItemStack getItem(int slot) {
-		return super.getItem(slot);
+	public void setStackInSlot(int slot, ItemStack stack) {
+		inv.setStackInSlot(slot, stack);
 	}
 
 	public int getStackLimit(int slot, @Nonnull ItemStack stack) {
@@ -158,11 +159,6 @@ public class SmartInventory extends RecipeWrapper
 			this.updateCallback = updateCallback;
 		}
 
-	}
-
-	@Override
-	public ItemStack getStackInSlotIntermediate(int slot) {
-		return getItem(slot);
 	}
 
 }

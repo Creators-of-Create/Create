@@ -6,35 +6,53 @@ import static net.minecraft.ChatFormatting.WHITE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.bridge.game.Language;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Component> linesOnShift, ImmutableList<Component> linesOnCtrl) {
-	public static final ItemDescription MISSING = new ItemDescription(ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
+	private static final Map<Item, Supplier<String>> CUSTOM_TOOLTIP_KEYS = new IdentityHashMap<>();
 
-	public static Builder builder() {
-		return new Builder();
+	@Nullable
+	public static ItemDescription create(Item item, Palette palette) {
+		return create(getTooltipTranslationKey(item), palette);
 	}
 
-	public static ItemDescription create(Palette palette, String translationKey) {
-		if (!I18n.exists(translationKey)) {
-			return MISSING;
+	@Nullable
+	public static ItemDescription create(String translationKey, Palette palette) {
+		if (!canFillBuilder(translationKey)) {
+			return null;
 		}
 
-		Builder builder = builder();
-		builder.palette(palette);
+		Builder builder = new Builder(palette);
+		fillBuilder(builder, translationKey);
+		return builder.build();
+	}
 
+	public static boolean canFillBuilder(String translationKey) {
+		return I18n.exists(translationKey);
+	}
+
+	public static void fillBuilder(Builder builder, String translationKey) {
 		// Summary
 		String summaryKey = translationKey + ".summary";
 		if (I18n.exists(summaryKey)) {
@@ -58,38 +76,48 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 				break;
 			builder.addAction(I18n.get(controlKey), I18n.get(actionKey));
 		}
-
-		return builder.build();
 	}
 
-	public void addInformation(List<Component> tooltip) {
+	public static void useKey(Item item, Supplier<String> supplier) {
+		CUSTOM_TOOLTIP_KEYS.put(item, supplier);
+	}
+
+	public static void useKey(ItemLike item, String string) {
+		useKey(item.asItem(), () -> string);
+	}
+
+	public static void referKey(ItemLike item, Supplier<? extends ItemLike> otherItem) {
+		useKey(item.asItem(), () -> otherItem.get()
+			.asItem()
+			.getDescriptionId());
+	}
+
+	public static String getTooltipTranslationKey(Item item) {
+		if (CUSTOM_TOOLTIP_KEYS.containsKey(item)) {
+			return CUSTOM_TOOLTIP_KEYS.get(item).get() + ".tooltip";
+		}
+		return item.getDescriptionId() + ".tooltip";
+	}
+
+	public ImmutableList<Component> getCurrentLines() {
 		if (Screen.hasShiftDown()) {
-			tooltip.addAll(linesOnShift);
-			return;
+			return linesOnShift;
+		} else if (Screen.hasControlDown()) {
+			return linesOnCtrl;
+		} else {
+			return lines;
 		}
-
-		if (Screen.hasControlDown()) {
-			tooltip.addAll(linesOnCtrl);
-			return;
-		}
-
-		tooltip.addAll(lines);
-	}
-
-	public record Palette(ChatFormatting primary, ChatFormatting highlight) {
-		public static final Palette BLUE = new Palette(ChatFormatting.BLUE, ChatFormatting.AQUA);
-		public static final Palette GREEN = new Palette(ChatFormatting.DARK_GREEN, ChatFormatting.GREEN);
-		public static final Palette YELLOW = new Palette(ChatFormatting.GOLD, ChatFormatting.YELLOW);
-		public static final Palette RED = new Palette(ChatFormatting.DARK_RED, ChatFormatting.RED);
-		public static final Palette PURPLE = new Palette(ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE);
-		public static final Palette GRAY = new Palette(ChatFormatting.DARK_GRAY, ChatFormatting.GRAY);
 	}
 
 	public static class Builder {
+		protected final Palette palette;
 		protected final List<String> summary = new ArrayList<>();
 		protected final List<Pair<String, String>> behaviours = new ArrayList<>();
 		protected final List<Pair<String, String>> actions = new ArrayList<>();
-		protected Palette palette;
+
+		public Builder(Palette palette) {
+			this.palette = palette;
+		}
 
 		public Builder addSummary(String summaryLine) {
 			summary.add(summaryLine);
@@ -106,18 +134,13 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 			return this;
 		}
 
-		public Builder palette(Palette palette) {
-			this.palette = palette;
-			return this;
-		}
-
 		public ItemDescription build() {
 			List<Component> lines = new ArrayList<>();
 			List<Component> linesOnShift = new ArrayList<>();
 			List<Component> linesOnCtrl = new ArrayList<>();
 
 			for (String summaryLine : summary) {
-				linesOnShift.addAll(TooltipHelper.cutTextComponent(Components.literal(summaryLine), palette.primary(), palette.highlight()));
+				linesOnShift.addAll(TooltipHelper.cutStringTextComponent(summaryLine, palette));
 			}
 
 			if (!behaviours.isEmpty()) {
@@ -192,6 +215,40 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 			}
 
 			return new ItemDescription(ImmutableList.copyOf(lines), ImmutableList.copyOf(linesOnShift), ImmutableList.copyOf(linesOnCtrl));
+		}
+	}
+
+	public static class Modifier implements TooltipModifier {
+		protected final Item item;
+		protected final Palette palette;
+		protected Language cachedLanguage;
+		protected ItemDescription description;
+
+		public Modifier(Item item, Palette palette) {
+			this.item = item;
+			this.palette = palette;
+		}
+
+		@Override
+		public void modify(ItemTooltipEvent context) {
+			if (checkLocale()) {
+				description = create(item, palette);
+			}
+			if (description == null) {
+				return;
+			}
+			context.getToolTip().addAll(1, description.getCurrentLines());
+		}
+
+		protected boolean checkLocale() {
+			Language currentLanguage = Minecraft.getInstance()
+				.getLanguageManager()
+				.getSelected();
+			if (cachedLanguage != currentLanguage) {
+				cachedLanguage = currentLanguage;
+				return true;
+			}
+			return false;
 		}
 	}
 }

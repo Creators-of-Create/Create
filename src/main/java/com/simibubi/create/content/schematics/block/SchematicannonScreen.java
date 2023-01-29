@@ -21,8 +21,8 @@ import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Indicator;
 import com.simibubi.create.foundation.gui.widget.Indicator.State;
-import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -267,7 +267,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		tip.add((enabled ? optionEnabled : optionDisabled).plainCopy()
 			.withStyle(BLUE));
 		tip.addAll(TooltipHelper
-			.cutTextComponent(Lang.translateDirect("gui.schematicannon.option." + tooltipKey + ".description"), GRAY, GRAY));
+			.cutTextComponent(Lang.translateDirect("gui.schematicannon.option." + tooltipKey + ".description"), Palette.ALL_GRAY));
 	}
 
 	@Override
@@ -357,13 +357,13 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (hoveredSlot != null && !hoveredSlot.hasItem()) {
 			if (hoveredSlot.index == 0)
 				renderComponentTooltip(matrixStack,
-					TooltipHelper.cutTextComponent(Lang.translateDirect(_slotSchematic), GRAY, BLUE), mouseX, mouseY);
+					TooltipHelper.cutTextComponent(Lang.translateDirect(_slotSchematic), Palette.GRAY_AND_BLUE), mouseX, mouseY);
 			if (hoveredSlot.index == 2)
 				renderComponentTooltip(matrixStack,
-					TooltipHelper.cutTextComponent(Lang.translateDirect(_slotListPrinter), GRAY, BLUE), mouseX, mouseY);
+					TooltipHelper.cutTextComponent(Lang.translateDirect(_slotListPrinter), Palette.GRAY_AND_BLUE), mouseX, mouseY);
 			if (hoveredSlot.index == 4)
 				renderComponentTooltip(matrixStack,
-					TooltipHelper.cutTextComponent(Lang.translateDirect(_slotGunpowder), GRAY, BLUE), mouseX, mouseY);
+					TooltipHelper.cutTextComponent(Lang.translateDirect(_slotGunpowder), Palette.GRAY_AND_BLUE), mouseX, mouseY);
 		}
 
 		if (be.missingItem != null) {
