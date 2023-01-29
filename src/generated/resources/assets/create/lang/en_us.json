@@ -1751,6 +1751,9 @@
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
 	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
 
+	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
+	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused.",
+
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
