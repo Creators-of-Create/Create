@@ -76,6 +76,7 @@ public class BoilerData {
 				gauge.setValueNoUpdate(current + Math.min(-(current - 1) * Create.RANDOM.nextFloat(), 0));
 			return;
 		}
+		int prevBoilerLevel = getBoilerLevel();
 		if (needsHeatLevelUpdate && updateTemperature(controller))
 			controller.notifyUpdate();
 		ticksUntilNextSample--;
@@ -96,12 +97,24 @@ public class BoilerData {
 			for (float i : supplyOverTime)
 				waterSupply = Math.max(i, waterSupply);
 		}
-		
+
 		if (controller instanceof CreativeFluidTankTileEntity)
 			waterSupply = waterSupplyPerLevel * 20;
 
 		if (getActualHeat(controller.getTotalTankSize()) == 18)
 			controller.award(AllAdvancements.STEAM_ENGINE_MAXED);
+
+		if (prevBoilerLevel != getBoilerLevel()) {
+			for (int yOffset = 0; yOffset < controller.height; yOffset++)
+				for (int xOffset = 0; xOffset < controller.width; xOffset++)
+					for (int zOffset = 0; zOffset < controller.width; zOffset++) {
+						BlockPos pos = controller.offset(xOffset, yOffset, zOffset);
+						BlockState blockState = level.getBlockState(pos);
+						if (!FluidTankBlock.isTank(blockState))
+							continue;
+						level.updateNeighbourForOutputSignal(pos, blockState.getBlock());
+					}
+		}
 
 		controller.notifyUpdate();
 	}
@@ -136,6 +149,10 @@ public class BoilerData {
 		return attachedEngines <= actualHeat ? 1 : (float) actualHeat / attachedEngines;
 	}
 
+	public int getBoilerLevel() {
+		return Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
+	}
+
 	private int getActualHeat(int boilerSize) {
 		int forBoilerSize = getMaxHeatLevelForBoilerSize(boilerSize);
 		int forWaterSupply = getMaxHeatLevelForWaterSupply();
@@ -153,20 +170,19 @@ public class BoilerData {
 		calcMinMaxForSize(boilerSize);
 
 		tooltip.add(indent.plainCopy()
-			.append(
-				Lang.translateDirect("boiler.status", getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
+					.append(
+							Lang.translateDirect("boiler.status", getHeatLevelTextComponent().withStyle(ChatFormatting.GREEN))));
 		tooltip.add(indent2.plainCopy()
-			.append(getSizeComponent(true, false)));
+					.append(getSizeComponent(true, false)));
 		tooltip.add(indent2.plainCopy()
-			.append(getWaterComponent(true, false)));
+					.append(getWaterComponent(true, false)));
 		tooltip.add(indent2.plainCopy()
-			.append(getHeatComponent(true, false)));
+					.append(getHeatComponent(true, false)));
 
 		if (attachedEngines == 0)
 			return true;
 
-		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
-		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(boilerLevel, attachedEngines)
+		double totalSU = getEngineEfficiency(boilerSize) * 16 * Math.max(getBoilerLevel(), attachedEngines)
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 
 		tooltip.add(Components.immutableEmpty());
@@ -196,12 +212,12 @@ public class BoilerData {
 
 	@NotNull
 	public MutableComponent getHeatLevelTextComponent() {
-		int boilerLevel = Math.min(activeHeat, Math.min(maxHeatForWater, maxHeatForSize));
+		int boilerLevel = getBoilerLevel();
 
 		return isPassive() ? Lang.translateDirect("boiler.passive")
-			: (boilerLevel == 0 ? Lang.translateDirect("boiler.idle")
-				: boilerLevel == 18 ? Lang.translateDirect("boiler.max_lvl")
-					: Lang.translateDirect("boiler.lvl", String.valueOf(boilerLevel)));
+			: (boilerLevel == 0) ? Lang.translateDirect("boiler.idle")
+			: (boilerLevel == 18) ? Lang.translateDirect("boiler.max_lvl")
+			: Lang.translateDirect("boiler.lvl", String.valueOf(boilerLevel));
 	}
 
 	public MutableComponent getSizeComponent(boolean forGoggles, boolean useBlocksAsBars, ChatFormatting... styles) {
@@ -217,7 +233,7 @@ public class BoilerData {
 	}
 
 	private MutableComponent componentHelper(String label, int level, boolean forGoggles, boolean useBlocksAsBars,
-		ChatFormatting... styles) {
+											 ChatFormatting... styles) {
 		MutableComponent base = useBlocksAsBars ? blockComponent(level) : barComponent(level);
 
 		if (!forGoggles)
@@ -229,7 +245,7 @@ public class BoilerData {
 		return Lang.translateDirect("boiler." + label)
 			.withStyle(style1)
 			.append(Lang.translateDirect("boiler." + label + "_dots")
-				.withStyle(style2))
+					.withStyle(style2))
 			.append(base);
 	}
 
@@ -245,7 +261,7 @@ public class BoilerData {
 			.append(bars(Math.max(0, level - minValue), ChatFormatting.DARK_GREEN))
 			.append(bars(Math.max(0, maxValue - level), ChatFormatting.DARK_RED))
 			.append(bars(Math.max(0, Math.min(18 - maxValue, ((maxValue / 5 + 1) * 5) - maxValue)),
-				ChatFormatting.DARK_GRAY));
+						 ChatFormatting.DARK_GRAY));
 
 	}
 
@@ -276,7 +292,7 @@ public class BoilerData {
 							attachedEngines++;
 						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
 							&& WhistleBlock.getAttachedDirection(attachedState)
-								.getOpposite() == d)
+							.getOpposite() == d)
 							attachedWhistles++;
 					}
 				}
@@ -309,7 +325,7 @@ public class BoilerData {
 						BlockState attachedState = level.getBlockState(attachedPos);
 						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
 							&& WhistleBlock.getAttachedDirection(attachedState)
-								.getOpposite() == d) {
+							.getOpposite() == d) {
 							if (level.getBlockEntity(attachedPos)instanceof WhistleTileEntity wte)
 								whistlePitches.add(wte.getPitchId());
 						}
