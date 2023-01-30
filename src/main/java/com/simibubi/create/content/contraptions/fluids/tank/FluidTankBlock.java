@@ -83,8 +83,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		super(p_i48440_1_);
 		this.creative = creative;
 		registerDefaultState(defaultBlockState().setValue(TOP, true)
-			.setValue(BOTTOM, true)
-			.setValue(SHAPE, Shape.WINDOW));
+					.setValue(BOTTOM, true)
+					.setValue(SHAPE, Shape.WINDOW));
 	}
 
 	public static boolean isTank(BlockState state) {
@@ -126,7 +126,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
-		CollisionContext pContext) {
+						 CollisionContext pContext) {
 		if (pContext == CollisionContext.empty())
 			return CAMPFIRE_SMOKE_CLIP;
 		return pState.getShape(pLevel, pPos);
@@ -139,7 +139,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
-		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+					  LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		if (pDirection == Direction.DOWN && pNeighborState.getBlock() != this)
 			withTileEntityDo(pLevel, pCurrentPos, FluidTankTileEntity::updateBoilerTemperature);
 		return pState;
@@ -147,7 +147,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult ray) {
+					 BlockHitResult ray) {
 		ItemStack heldItem = player.getItemInHand(hand);
 		boolean onClient = world.isClientSide;
 
@@ -175,7 +175,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 		if (exchange == null) {
 			if (EmptyingByBasin.canItemBeEmptied(world, heldItem)
-				|| GenericItemFilling.canItemBeFilled(world, heldItem))
+			    || GenericItemFilling.canItemBeFilled(world, heldItem))
 				return InteractionResult.SUCCESS;
 			return InteractionResult.PASS;
 		}
@@ -244,7 +244,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 						Vec3 vec = ray.getLocation();
 						vec = new Vec3(vec.x, controllerTE.getBlockPos()
-							.getY() + level * (controllerTE.height - .5f) + .25f, vec.z);
+								 .getY() + level * (controllerTE.height - .5f) + .25f, vec.z);
 						Vec3 motion = player.position()
 							.subtract(vec)
 							.scale(1 / 20f);
@@ -337,13 +337,13 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	// Tanks are less noisy when placed in batch
 	public static final SoundType SILENCED_METAL =
 		new ForgeSoundType(0.1F, 1.5F, () -> SoundEvents.METAL_BREAK, () -> SoundEvents.METAL_STEP,
-			() -> SoundEvents.METAL_PLACE, () -> SoundEvents.METAL_HIT, () -> SoundEvents.METAL_FALL);
+				     () -> SoundEvents.METAL_PLACE, () -> SoundEvents.METAL_HIT, () -> SoundEvents.METAL_FALL);
 
 	@Override
 	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
 		SoundType soundType = super.getSoundType(state, world, pos, entity);
 		if (entity != null && entity.getPersistentData()
-			.contains("SilenceTankSound"))
+		    .contains("SilenceTankSound"))
 			return SILENCED_METAL;
 		return soundType;
 	}
@@ -356,7 +356,55 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	@Override
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return getTileEntityOptional(worldIn, pos).map(FluidTankTileEntity::getControllerTE)
-			.map(te -> ComparatorUtil.fractionToRedstoneLevel(te.getFillState()))
+			.map(te -> {
+					int output = 0;
+					if (te.isBoiler()) {
+						BoilerData boiler = te.getBoilerData();
+
+						if (boiler.isPassive()) {
+							output = 1;
+						} else {
+							switch (boiler.getBoilerLevel()) {
+							case 0  : break; // boiler is idle
+							case 1  : output = 2;
+								break;
+							case 2  : output = 3;
+								break;
+							case 3  : output = 4;
+								break;
+							case 4  : output = 5;
+								break;
+							case 5  :
+							case 6  : output = 6;
+								break;
+							case 7  :
+							case 8  : output = 7;
+								break;
+							case 9  : output = 8;
+								break;
+							case 10 : output = 9;
+								break;
+							case 11 :
+							case 12 : output = 10;
+								break;
+							case 13 :
+							case 14 : output = 11;
+								break;
+							case 15 : output = 12;
+								break;
+							case 16 : output = 13;
+								break;
+							case 17 : output = 14;
+								break;
+							case 18 : output = 15;
+								break;
+							}
+						}
+					} else {
+						output = ComparatorUtil.fractionToRedstoneLevel(te.getFillState());
+					}
+					return output;
+				})
 			.orElse(0);
 	}
 

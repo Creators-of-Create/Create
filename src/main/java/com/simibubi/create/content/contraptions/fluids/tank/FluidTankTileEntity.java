@@ -157,7 +157,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 					if (tankAt == null)
 						continue;
 					level.updateNeighbourForOutputSignal(pos, tankAt.getBlockState()
-						.getBlock());
+														 .getBlock());
 					if (tankAt.luminosity == actualLuminosity)
 						continue;
 					tankAt.setLuminosity(actualLuminosity);
@@ -315,7 +315,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 				for (int xOffset = 0; xOffset < width; xOffset++)
 					for (int zOffset = 0; zOffset < width; zOffset++)
 						if (level.getBlockEntity(
-							worldPosition.offset(xOffset, yOffset, zOffset))instanceof FluidTankTileEntity fte)
+												 worldPosition.offset(xOffset, yOffset, zOffset))instanceof FluidTankTileEntity fte)
 							fte.refreshCapability();
 		}
 
@@ -323,6 +323,14 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			notifyUpdate();
 			boiler.checkPipeOrganAdvancement(this);
 		}
+	}
+
+	public boolean isBoiler() {
+		return boiler.isActive();
+	}
+
+	public BoilerData getBoilerData() {
+		return boiler;
 	}
 
 	@Override
@@ -377,7 +385,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (controllerTE.boiler.addToGoggleTooltip(tooltip, isPlayerSneaking, controllerTE.getTotalTankSize()))
 			return true;
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			controllerTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+									 controllerTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}
 
 	@Override
