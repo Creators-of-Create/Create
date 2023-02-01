@@ -10,8 +10,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.ContraptionData;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -37,6 +35,7 @@ import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.mixin.accessor.ServerLevelAccessor;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.ContraptionData;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -47,6 +46,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -587,7 +587,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

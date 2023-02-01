@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.zapper;
 import java.util.Vector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -130,8 +130,8 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 	protected void renderBlock(PoseStack ms, int x, int y) {
 		ms.pushPose();
 		ms.translate(x + 32, y + 42, 120);
-		ms.mulPose(new Vector3f(1f, 0, 0).rotationDegrees(-25f));
-		ms.mulPose(new Vector3f(0, 1f, 0).rotationDegrees(-45f));
+		ms.mulPose(Axis.XP.rotationDegrees(-25f));
+		ms.mulPose(Axis.YP.rotationDegrees(-45f));
 		ms.scale(20, 20, 20);
 
 		BlockState state = Blocks.AIR.defaultBlockState();

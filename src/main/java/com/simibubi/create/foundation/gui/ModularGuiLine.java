@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.nbt.CompoundTag;
@@ -48,7 +48,7 @@ public class ModularGuiLine {
 				continue;
 
 			AbstractWidget aw = pair.getFirst();
-			int x = aw.x;
+			int x = aw.getX();
 			int width = aw.getWidth();
 
 			if (aw instanceof EditBox) {
@@ -82,7 +82,7 @@ public class ModularGuiLine {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends GuiEventListener & Widget & NarratableEntry> void loadValues(CompoundTag data,
+	public <T extends GuiEventListener & Renderable & NarratableEntry> void loadValues(CompoundTag data,
 		Consumer<T> addRenderable, Consumer<T> addRenderableOnly) {
 		for (Pair<AbstractWidget, String> pair : widgets) {
 			AbstractWidget w = pair.getFirst();

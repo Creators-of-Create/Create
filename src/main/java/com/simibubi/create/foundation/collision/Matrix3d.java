@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.collision;
 
-import com.mojang.math.Matrix4f;
+import org.joml.Matrix4f;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -142,7 +142,7 @@ public class Matrix3d {
 		conversionBuffer[9] = (float) m21;
 		conversionBuffer[10] = (float) m22;
 
-		return new Matrix4f(conversionBuffer);
+		return new Matrix4f().setTransposed(conversionBuffer);
 	}
 
 }

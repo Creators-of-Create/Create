@@ -121,7 +121,7 @@ public class WorldshaperScreen extends ZapperScreen {
 					.plainCopy())
 				.calling(state -> {
 					currentBrushParams[finalIndex] = state;
-					label.x = x + 65 + 20 * finalIndex - font.width(label.text) / 2;
+					label.setX(x + 65 + 20 * finalIndex - font.width(label.text) / 2);
 				});
 			input.setState(currentBrushParams[index]);
 			input.onChanged();

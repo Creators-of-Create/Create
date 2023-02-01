@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import net.minecraft.util.AbortableIterationConsumer;
 import net.minecraft.world.level.entity.EntityAccess;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.entity.LevelEntityGetter;
@@ -27,7 +28,7 @@ public class DummyLevelEntityGetter<T extends EntityAccess> implements LevelEnti
 	}
 
 	@Override
-	public <U extends T> void get(EntityTypeTest<T, U> p_156935_, Consumer<U> p_156936_) {
+	public <U extends T> void get(EntityTypeTest<T, U> p_156935_, AbortableIterationConsumer<U> p_156936_) {
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class DummyLevelEntityGetter<T extends EntityAccess> implements LevelEnti
 	}
 
 	@Override
-	public <U extends T> void get(EntityTypeTest<T, U> p_156932_, AABB p_156933_, Consumer<U> p_156934_) {
+	public <U extends T> void get(EntityTypeTest<T, U> p_156932_, AABB p_156933_, AbortableIterationConsumer<U> p_156934_) {
 	}
 
 }

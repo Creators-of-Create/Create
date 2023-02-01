@@ -1,13 +1,12 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 
 public class AnimatedSaw extends AnimatedKinetics {
 
@@ -17,11 +16,11 @@ public class AnimatedSaw extends AnimatedKinetics {
 		matrixStack.translate(xOffset, yOffset, 0);
 		matrixStack.translate(0, 0, 200);
 		matrixStack.translate(2, 22, 0);
-		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f + 90));
+		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
+		matrixStack.mulPose(Axis.YP.rotationDegrees(22.5f + 90));
 		int scale = 25;
 
-		blockElement(shaft(Axis.X))
+		blockElement(shaft(Direction.Axis.X))
 			.rotateBlock(-getCurrentAngle(), 0, 0)
 			.scale(scale)
 			.render(matrixStack);

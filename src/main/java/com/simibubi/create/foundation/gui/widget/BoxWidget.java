@@ -130,7 +130,7 @@ public class BoxWidget extends ElementWidget {
 		box.withAlpha(fadeValue);
 		box.withBackground(customBackground != null ? customBackground : Theme.c(Theme.Key.PONDER_BACKGROUND_TRANSPARENT))
 				.gradientBorder(gradientColor1, gradientColor2)
-				.at(x, y, z)
+				.at(getX(), getY(), z)
 				.withBounds(width, height)
 				.render(ms);
 
@@ -147,7 +147,7 @@ public class BoxWidget extends ElementWidget {
 		float padX = 2 + paddingX;
 		float padY = 2 + paddingY;
 
-		return x - padX <= mX && y - padY <= mY && mX < x + padX + width && mY < y + padY + height;
+		return getX() - padX <= mX && getY() - padY <= mY && mX < getX() + padX + width && mY < getY() + padY + height;
 	}
 	
 	@Override

@@ -26,7 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BambooBlock;
+import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CactusBlock;
@@ -210,7 +210,7 @@ public class TreeCutter {
 
 	public static boolean isVerticalPlant(BlockState stateAbove) {
 		Block block = stateAbove.getBlock();
-		if (block instanceof BambooBlock)
+		if (block instanceof BambooStalkBlock)
 			return true;
 		if (block instanceof CactusBlock)
 			return true;

@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.weapons;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -44,7 +44,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 
 		ms.pushPose();
 		ms.translate(0, offset, 0);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
+		ms.mulPose(Axis.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
 		renderer.render(model.getPartial("cog"), light);
 		ms.popPose();

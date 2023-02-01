@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
@@ -58,7 +58,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		ms.translate(vec.x, vec.y, vec.z);
 		ms.scale(1 / 2f, 1 / 2f, 1 / 2f);
 		float yRot = AngleHelper.horizontalAngle(facing);
-		ms.mulPose(Vector3f.YP.rotationDegrees(yRot));
+		ms.mulPose(Axis.YP.rotationDegrees(yRot));
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		ms.popPose();
 
@@ -73,7 +73,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 			if (!stack.isEmpty()) {
 				ms.pushPose();
 				ms.translate(0, 0, -1 / 256f);
-				ms.mulPose(Vector3f.YP.rotationDegrees(180));
+				ms.mulPose(Axis.YP.rotationDegrees(180));
 				Minecraft.getInstance()
 					.getItemRenderer()
 					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 0);
@@ -140,7 +140,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				float earlyProgress = Mth.clamp(progress * 2, 0, 1);
 				float lateProgress = Mth.clamp(progress * 2 - 1, 0, 1);
 
-				ms.mulPose(Vector3f.ZP.rotationDegrees(earlyProgress * 2 * 360));
+				ms.mulPose(Axis.ZP.rotationDegrees(earlyProgress * 2 * 360));
 				float upScaling = earlyProgress * 1.125f;
 				float downScaling = 1 + (1 - lateProgress) * .125f;
 				ms.scale(upScaling, upScaling, upScaling);
@@ -153,7 +153,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 							.intValue() != 0)
 						return;
 					ms.pushPose();
-					ms.mulPose(Vector3f.YP.rotationDegrees(180));
+					ms.mulPose(Axis.YP.rotationDegrees(180));
 					Minecraft.getInstance()
 						.getItemRenderer()
 						.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 0);

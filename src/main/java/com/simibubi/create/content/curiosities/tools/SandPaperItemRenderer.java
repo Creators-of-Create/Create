@@ -1,7 +1,9 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -42,7 +44,7 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer<SandP
 				ms.scale(.75f, .75f, .75f);
 			} else {
 				int modifier = leftHand ? -1 : 1;
-				ms.mulPose(Vector3f.YP.rotationDegrees(modifier * 40));
+				ms.mulPose(Axis.YP.rotationDegrees(modifier * 40));
 			}
 
 			// Reverse bobbing
@@ -68,9 +70,9 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer<SandP
 			if (itemInUseCount > 0) {
 				int modifier = leftHand ? -1 : 1;
 				ms.translate(modifier * .5f, 0, -.25f);
-				ms.mulPose(Vector3f.ZP.rotationDegrees(modifier * 40));
-				ms.mulPose(Vector3f.XP.rotationDegrees(modifier * 10));
-				ms.mulPose(Vector3f.YP.rotationDegrees(modifier * 90));
+				ms.mulPose(Axis.ZP.rotationDegrees(modifier * 40));
+				ms.mulPose(Axis.XP.rotationDegrees(modifier * 10));
+				ms.mulPose(Axis.YP.rotationDegrees(modifier * 90));
 			}
 		}
 

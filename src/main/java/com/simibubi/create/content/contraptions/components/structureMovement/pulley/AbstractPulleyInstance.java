@@ -12,7 +12,7 @@ import com.jozufozu.flywheel.light.LightVolume;
 import com.jozufozu.flywheel.light.TickingLightListener;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
@@ -29,7 +29,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements Dy
 
 	protected float offset;
 	protected final Direction rotatingAbout;
-	protected final Vector3f rotationAxis;
+	protected final Axis rotationAxis;
 
 	private final GridAlignedBB volume = new GridAlignedBB();
 	private final LightVolume light;
@@ -38,7 +38,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements Dy
 		super(dispatcher, tile);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);
-		rotationAxis = rotatingAbout.step();
+		rotationAxis = Axis.of(rotatingAbout.step());
 
 		coil = getCoilModel().createInstance()
 				.setPosition(getInstancePosition());

@@ -15,7 +15,7 @@ public class TooltipArea extends AbstractSimiWidget {
 	@Override
 	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (visible)
-			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+			isHovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
 	}
 
 	public TooltipArea withTooltip(List<Component> tooltip) {

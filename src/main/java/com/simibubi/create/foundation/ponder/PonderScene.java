@@ -17,12 +17,12 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector4f;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.element.PonderElement;
@@ -564,7 +564,7 @@ public class PonderScene {
 		public Vec2 sceneToScreen(Vec3 vec, float pt) {
 			refreshMatrix(pt);
 			Vector4f vec4 = new Vector4f((float) vec.x, (float) vec.y, (float) vec.z, 1);
-			vec4.transform(cachedMat);
+			vec4.mul(cachedMat);
 			return new Vec2(vec4.x(), vec4.y());
 		}
 

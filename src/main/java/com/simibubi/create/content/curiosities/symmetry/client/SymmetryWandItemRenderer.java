@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.symmetry.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -29,7 +29,7 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 		float angle = worldTime * -10 % 360;
 
 		ms.translate(0, floating, 0);
-		ms.mulPose(Vector3f.YP.rotationDegrees(angle));
+		ms.mulPose(Axis.YP.rotationDegrees(angle));
 
 		renderer.renderGlowing(model.getPartial("bits"), maxLight);
 	}

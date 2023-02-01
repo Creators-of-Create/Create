@@ -64,7 +64,7 @@ public abstract class AbstractSimiWidget extends AbstractWidget implements Ticka
 	@Override
 	public void render(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
-			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+			isHovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
 			beforeRender(ms, mouseX, mouseY, partialTicks);
 			renderButton(ms, mouseX, mouseY, partialTicks);
 			afterRender(ms, mouseX, mouseY, partialTicks);
@@ -94,7 +94,7 @@ public abstract class AbstractSimiWidget extends AbstractWidget implements Ticka
 	}
 
 	@Override
-	public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+	public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
 		defaultButtonNarrationText(pNarrationElementOutput);
 	}
 }

@@ -35,7 +35,7 @@ public class HintableTextFieldWidget extends EditBox {
 		if (!getValue().isEmpty())
 			return;
 
-		font.draw(ms, hint, x + 5, this.y + (this.height - 8) / 2, Theme.c(Theme.Key.TEXT).scaleAlpha(.75f).getRGB());
+		font.draw(ms, hint, getX() + 5, this.getY() + (this.height - 8) / 2, Theme.c(Theme.Key.TEXT).scaleAlpha(.75f).getRGB());
 	}
 
 	@Override

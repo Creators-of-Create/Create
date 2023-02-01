@@ -64,8 +64,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidStack;
@@ -601,7 +601,7 @@ public class Train {
 		double combinedSpeed = Math.abs(speed) + Math.abs(train.speed);
 		if (combinedSpeed > .2f) {
 			Vec3 v = collision.getSecond();
-			level.explode(null, v.x, v.y, v.z, (float) Math.min(3 * combinedSpeed, 5), BlockInteraction.NONE);
+			level.explode(null, v.x, v.y, v.z, (float) Math.min(3 * combinedSpeed, 5), ExplosionInteraction.NONE);
 		}
 
 		crash();

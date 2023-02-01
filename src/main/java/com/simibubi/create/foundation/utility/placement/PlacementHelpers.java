@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -11,8 +13,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -223,7 +224,7 @@ public class PlacementHelpers {
 
 		ms.pushPose();
 		ms.translate(centerX, centerY, 5);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle.getValue(0)));
+		ms.mulPose(Axis.ZP.rotationDegrees(angle.getValue(0)));
 		// RenderSystem.rotatef(snappedAngle, 0, 0, 1);
 		double scale = AllConfigs.CLIENT.indicatorScale.get();
 		ms.scale((float) scale, (float) scale, 1);

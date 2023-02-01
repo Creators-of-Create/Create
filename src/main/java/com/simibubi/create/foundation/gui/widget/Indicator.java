@@ -31,7 +31,7 @@ public class Indicator extends AbstractSimiWidget {
 			case GREEN: toDraw = AllGuiTextures.INDICATOR_GREEN; break;
 			default: toDraw = AllGuiTextures.INDICATOR; break;
 		}
-		toDraw.render(matrixStack, x, y, this);
+		toDraw.render(matrixStack, getX(), getY(), this);
 	}
 
 	public enum State {

@@ -37,8 +37,8 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	@Override
 	protected boolean clicked(double mouseX, double mouseY) {
 		return this.active && this.visible && ponder.getActiveScene().getKeyframeCount() > 0
-				&& mouseX >= (double) this.x && mouseX < (double) (this.x + this.width + 4) && mouseY >= (double) this.y - 3
-				&& mouseY < (double) (this.y + this.height + 20);
+				&& mouseX >= (double) this.getX() && mouseX < (double) (this.getX() + this.width + 4) && mouseY >= (double) this.getY() - 3
+				&& mouseY < (double) (this.getY() + this.height + 20);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 
 	public int getHoveredKeyframeIndex(PonderScene activeScene, double mouseX) {
 		int totalTime = activeScene.getTotalTime();
-		int clickedAtTime = (int) ((mouseX - x) / ((double) width + 4) * totalTime);
+		int clickedAtTime = (int) ((mouseX - getX()) / ((double) width + 4) * totalTime);
 
 		{
 			int lastKeyframeTime = activeScene.getKeyframeTime(activeScene.getKeyframeCount() - 1);
@@ -92,12 +92,12 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		new BoxElement()
 				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
-				.at(x, y, 400)
+				.at(getX(), getY(), 400)
 				.withBounds(width, height)
 				.render(ms);
 
 		ms.pushPose();
-		ms.translate(x - 2, y - 2, 100);
+		ms.translate(getX() - 2, getY() - 2, 100);
 
 		ms.pushPose();
 		ms.scale((width + 4) * progress.getValue(partialTicks), 1, 1);

@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.sounds.SoundEvent;
@@ -157,7 +157,7 @@ public class SchematicChunkSource extends ChunkSource {
 					SoundEvent p_220367_, SoundSource p_220368_, float p_220369_, float p_220370_, long p_220371_) {}
 
 			@Override
-			public void playSeededSound(Player p_220372_, Entity p_220373_, SoundEvent p_220374_, SoundSource p_220375_,
+			public void playSeededSound(Player p_220372_, Entity p_220373_, Holder<SoundEvent> p_220374_, SoundSource p_220375_,
 					float p_220376_, float p_220377_, long p_220378_) {}
 
 			@Override
@@ -213,7 +213,7 @@ public class SchematicChunkSource extends ChunkSource {
 		}
 
 		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null, RegistryAccess.BUILTIN.get()
-			.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY)
+			.registryOrThrow(Registries.DIMENSION_TYPE)
 			.getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD), null, false, false, 0, 0);
 
 		public EmptierChunk(RegistryAccess registryAccess) {

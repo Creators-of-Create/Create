@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base.flwdata;
 
-import com.mojang.math.Quaternion;
+import org.joml.Quaternionf;
+
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -18,11 +19,11 @@ public class BeltData extends KineticData {
     float maxV;
     byte scrollMult;
 
-    public BeltData setRotation(Quaternion q) {
-        this.qX = q.i();
-        this.qY = q.j();
-        this.qZ = q.k();
-        this.qW = q.r();
+    public BeltData setRotation(Quaternionf q) {
+        this.qX = q.x();
+        this.qY = q.y();
+        this.qZ = q.z();
+        this.qW = q.w();
         markDirty();
         return this;
     }

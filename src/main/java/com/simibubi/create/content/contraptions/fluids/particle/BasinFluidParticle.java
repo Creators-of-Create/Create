@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.fluids.particle;
 
+import org.joml.Quaternionf;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -83,8 +84,8 @@ public class BasinFluidParticle extends FluidStackParticle {
 
 	@Override
 	public void render(VertexConsumer vb, Camera info, float pt) {
-		Quaternion rotation = info.rotation();
-		Quaternion prevRotation = new Quaternion(rotation);
+		Quaternionf rotation = info.rotation();
+		Quaternionf prevRotation = new Quaternionf(rotation);
 		rotation.set(1, 0, 0, 1);
 		rotation.normalize();
 		super.render(vb, info, pt);

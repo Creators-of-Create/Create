@@ -7,7 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;

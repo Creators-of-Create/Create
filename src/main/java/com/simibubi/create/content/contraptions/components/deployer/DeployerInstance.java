@@ -3,12 +3,14 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
+import org.joml.Quaternionf;
+
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.api.instance.TickableInstance;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.mojang.math.Quaternion;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
@@ -123,12 +125,12 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
 
     static void updateRotation(OrientedData pole, OrientedData hand, float yRot, float xRot, float zRot) {
 
-        Quaternion q = Direction.UP.step().rotationDegrees(yRot);
-        q.mul(Direction.EAST.step().rotationDegrees(xRot));
+        Quaternionf q = Axis.YP.rotationDegrees(yRot);
+        q.mul(Axis.XP.rotationDegrees(xRot));
 
         hand.setRotation(q);
 
-        q.mul(Direction.SOUTH.step().rotationDegrees(zRot));
+        q.mul(Axis.ZP.rotationDegrees(zRot));
 
         pole.setRotation(q);
     }

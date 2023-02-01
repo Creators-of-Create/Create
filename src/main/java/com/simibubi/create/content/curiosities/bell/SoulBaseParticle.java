@@ -1,7 +1,8 @@
 package com.simibubi.create.content.curiosities.bell;
 
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import org.joml.Quaternionf;
+
+import com.mojang.math.Axis;
 import com.simibubi.create.AllParticleTypes;
 
 import net.minecraft.client.Camera;
@@ -36,8 +37,8 @@ public class SoulBaseParticle extends CustomRotationParticle {
 	}
 
 	@Override
-	public Quaternion getCustomRotation(Camera camera, float partialTicks) {
-		return Vector3f.XP.rotationDegrees(90);
+	public Quaternionf getCustomRotation(Camera camera, float partialTicks) {
+		return Axis.XP.rotationDegrees(90);
 	}
 
 	public static class Data extends BasicParticleData<SoulBaseParticle> {

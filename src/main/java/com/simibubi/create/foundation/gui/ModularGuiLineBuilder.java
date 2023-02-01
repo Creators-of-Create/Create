@@ -52,7 +52,7 @@ public class ModularGuiLineBuilder {
 	}
 
 	private <T extends ScrollInput> void addScrollInput(T input, BiConsumer<T, Label> inputTransform, String dataKey) {
-		Label label = new Label(input.x + 5, y, Components.immutableEmpty());
+		Label label = new Label(input.getX() + 5, y, Components.immutableEmpty());
 		label.withShadow();
 		inputTransform.accept(input, label);
 		input.writingTo(label);

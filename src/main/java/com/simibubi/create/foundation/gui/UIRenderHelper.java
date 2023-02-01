@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.gui;
 
 import javax.annotation.Nonnull;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
@@ -15,8 +16,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
@@ -80,7 +80,7 @@ public class UIRenderHelper {
 
 		ms.pushPose();
 		ms.translate(x, y, 0);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle - 90));
+		ms.mulPose(Axis.ZP.rotationDegrees(angle - 90));
 
 		streak(ms, breadth / 2, length, c1, c2, c3, c4);
 
@@ -96,7 +96,7 @@ public class UIRenderHelper {
 
 		ms.pushPose();
 		ms.translate(x, y, 0);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle - 90));
+		ms.mulPose(Axis.ZP.rotationDegrees(angle - 90));
 
 		streak(ms, breadth / 2, length, c1, c2, c3, c4);
 
@@ -144,7 +144,7 @@ public class UIRenderHelper {
 	public static void angledGradient(@Nonnull PoseStack ms, float angle, int x, int y, int z, int breadth, int length, Color color1, Color color2) {
 		ms.pushPose();
 		ms.translate(x, y, z);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle - 90));
+		ms.mulPose(Axis.ZP.rotationDegrees(angle - 90));
 
 		Matrix4f model = ms.last().pose();
 		int w = breadth / 2;
@@ -272,7 +272,7 @@ public class UIRenderHelper {
 	}
 
 	public static void flipForGuiRender(PoseStack poseStack) {
-		poseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(1, -1, 1));
+		poseStack.mulPoseMatrix(new Matrix4f().scaling(1, -1, 1));
 	}
 
 	public static class CustomRenderTarget extends RenderTarget {

@@ -79,6 +79,8 @@ import com.simibubi.create.foundation.utility.UniqueLinkedList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -836,6 +838,7 @@ public abstract class Contraption {
 	}
 
 	private void readBlocksCompound(Tag compound, Level world, boolean usePalettedDeserialization) {
+		HolderGetter<Block> holderGetter = world.holderLookup(Registries.BLOCK);
 		HashMapPalette<BlockState> palette = null;
 		ListTag blockList;
 		if (usePalettedDeserialization) {
@@ -847,7 +850,7 @@ public abstract class Contraption {
 			ListTag list = c.getList("Palette", 10);
 			palette.values.clear();
 			for (int i = 0; i < list.size(); ++i)
-				palette.values.add(NbtUtils.readBlockState(list.getCompound(i)));
+				palette.values.add(NbtUtils.readBlockState(holderGetter, list.getCompound(i)));
 
 			blockList = c.getList("BlockList", 10);
 		} else {
@@ -859,7 +862,7 @@ public abstract class Contraption {
 			CompoundTag c = (CompoundTag) e;
 
 			StructureBlockInfo info =
-				usePalettedDeserialization ? readStructureBlockInfo(c, finalPalette) : legacyReadStructureBlockInfo(c);
+				usePalettedDeserialization ? readStructureBlockInfo(c, finalPalette) : legacyReadStructureBlockInfo(c, holderGetter);
 
 			this.blocks.put(info.pos, info);
 
@@ -902,9 +905,9 @@ public abstract class Contraption {
 			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
-	private static StructureBlockInfo legacyReadStructureBlockInfo(CompoundTag blockListEntry) {
+	private static StructureBlockInfo legacyReadStructureBlockInfo(CompoundTag blockListEntry, HolderGetter<Block> holderGetter) {
 		return new StructureBlockInfo(NbtUtils.readBlockPos(blockListEntry.getCompound("Pos")),
-			NbtUtils.readBlockState(blockListEntry.getCompound("Block")),
+			NbtUtils.readBlockState(holderGetter, blockListEntry.getCompound("Block")),
 			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 

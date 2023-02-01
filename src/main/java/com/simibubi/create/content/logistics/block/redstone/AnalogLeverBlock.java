@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
+
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 

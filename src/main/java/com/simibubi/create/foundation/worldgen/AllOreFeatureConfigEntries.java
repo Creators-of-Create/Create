@@ -9,8 +9,8 @@ import com.simibubi.create.foundation.data.DynamicDataProvider;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.worldgen.OreFeatureConfigEntry.DatagenExtension;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
@@ -85,7 +85,7 @@ public class AllOreFeatureConfigEntries {
 			}
 		}
 
-		DynamicDataProvider<ConfiguredFeature<?, ?>> configuredFeatureProvider = DynamicDataProvider.create(generator, "Create's Configured Features", registryAccess, Registry.CONFIGURED_FEATURE_REGISTRY, configuredFeatures);
+		DynamicDataProvider<ConfiguredFeature<?, ?>> configuredFeatureProvider = DynamicDataProvider.create(generator, "Create's Configured Features", registryAccess, Registries.CONFIGURED_FEATURE, configuredFeatures);
 		if (configuredFeatureProvider != null) {
 			generator.addProvider(true, configuredFeatureProvider);
 		}
@@ -100,7 +100,7 @@ public class AllOreFeatureConfigEntries {
 			}
 		}
 
-		DynamicDataProvider<PlacedFeature> placedFeatureProvider = DynamicDataProvider.create(generator, "Create's Placed Features", registryAccess, Registry.PLACED_FEATURE_REGISTRY, placedFeatures);
+		DynamicDataProvider<PlacedFeature> placedFeatureProvider = DynamicDataProvider.create(generator, "Create's Placed Features", registryAccess, Registries.PLACED_FEATURE, placedFeatures);
 		if (placedFeatureProvider != null) {
 			generator.addProvider(true, placedFeatureProvider);
 		}

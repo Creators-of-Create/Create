@@ -50,8 +50,8 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 		boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		button.x = x + width - 80 - resetWidth;
-		button.y = y + 10;
+		button.setX(x + width - 80 - resetWidth);
+		button.setY(y + 10);
 		button.setWidth(35);
 		button.setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);

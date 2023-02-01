@@ -20,6 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -142,31 +143,34 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		int bShortWidth = 98;
 		int bLongWidth = 200;
 
-		addRenderableWidget(
-			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translateDirect("menu.return"), $ -> linkTo(parent)));
-		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translateDirect("menu.configure"),
-			$ -> linkTo(BaseConfigScreen.forCreate(this))));
+		addRenderableWidget(Button.builder(Lang.translateDirect("menu.return"), $ -> linkTo(parent))
+			.bounds(center - 100, yStart + 92, bLongWidth, bHeight)
+			.build());
+		addRenderableWidget(Button.builder(Lang.translateDirect("menu.configure"), $ -> linkTo(BaseConfigScreen.forCreate(this)))
+			.bounds(center - 100, yStart + 24 + -16, bLongWidth, bHeight)
+			.build());
 
-		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
-			Lang.translateDirect("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
+		gettingStarted = Button.builder(Lang.translateDirect("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()))
+			.bounds(center + 2, yStart + 48 + -16, bShortWidth, bHeight)
+			.build();
 		gettingStarted.active = !(parent instanceof TitleScreen);
 		addRenderableWidget(gettingStarted);
 
 		addRenderableWidget(new PlatformIconButton(center - 100, yStart + 48 + -16, bShortWidth / 2, bHeight,
 			AllGuiTextures.CURSEFORGE_LOGO, 0.085f,
 			b -> linkTo(CURSEFORGE_LINK),
-			(b, ps, mx, my) -> renderTooltip(ps, CURSEFORGE_TOOLTIP, mx, my)));
+			Tooltip.create(CURSEFORGE_TOOLTIP)));
 		addRenderableWidget(new PlatformIconButton(center - 50, yStart + 48 + -16, bShortWidth / 2, bHeight,
 			AllGuiTextures.MODRINTH_LOGO, 0.0575f,
 			b -> linkTo(MODRINTH_LINK),
-			(b, ps, mx, my) -> renderTooltip(ps, MODRINTH_TOOLTIP, mx, my)));
+			Tooltip.create(MODRINTH_TOOLTIP)));
 
-		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight,
-			Lang.translateDirect("menu.report_bugs"),
-			$ -> linkTo(ISSUE_TRACKER_LINK)));
-		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight,
-			Lang.translateDirect("menu.support"),
-			$ -> linkTo(SUPPORT_LINK)));
+		addRenderableWidget(Button.builder(Lang.translateDirect("menu.report_bugs"), $ -> linkTo(ISSUE_TRACKER_LINK))
+			.bounds(center + 2, yStart + 68, bShortWidth, bHeight)
+			.build());
+		addRenderableWidget(Button.builder(Lang.translateDirect("menu.support"), $ -> linkTo(SUPPORT_LINK))
+			.bounds(center - 100, yStart + 68, bShortWidth, bHeight)
+			.build());
 	}
 
 	@Override
@@ -175,9 +179,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		renderables.forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
 
 		if (parent instanceof TitleScreen) {
-			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)
+			if (mouseX < gettingStarted.getX() || mouseX > gettingStarted.getX() + 98)
 				return;
-			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)
+			if (mouseY < gettingStarted.getY() || mouseY > gettingStarted.getY() + 20)
 				return;
 			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), ChatFormatting.GRAY,
 				ChatFormatting.GRAY), mouseX, mouseY);
@@ -208,16 +212,17 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		protected final AllGuiTextures icon;
 		protected final float scale;
 
-		public PlatformIconButton(int pX, int pY, int pWidth, int pHeight, AllGuiTextures icon, float scale, OnPress pOnPress, OnTooltip pOnTooltip) {
-			super(pX, pY, pWidth, pHeight, Components.immutableEmpty(), pOnPress, pOnTooltip);
+		public PlatformIconButton(int pX, int pY, int pWidth, int pHeight, AllGuiTextures icon, float scale, OnPress pOnPress, Tooltip tooltip) {
+			super(pX, pY, pWidth, pHeight, Components.immutableEmpty(), pOnPress, DEFAULT_NARRATION);
 			this.icon = icon;
 			this.scale = scale;
+			setTooltip(tooltip);
 		}
 
 		@Override
 		protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
 			pPoseStack.pushPose();
-			pPoseStack.translate(x + width / 2 - (icon.width * scale) / 2, y + height / 2 - (icon.height * scale) / 2, 0);
+			pPoseStack.translate(getX() + width / 2 - (icon.width * scale) / 2, getY() + height / 2 - (icon.height * scale) / 2, 0);
 			pPoseStack.scale(scale, scale, 1);
 			icon.render(pPoseStack, 0, 0);
 			pPoseStack.popPose();

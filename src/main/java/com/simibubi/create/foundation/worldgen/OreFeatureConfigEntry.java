@@ -17,6 +17,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -117,16 +118,16 @@ public class OreFeatureConfigEntry extends ConfigBase {
 		public abstract ConfiguredFeature<?, ?> createConfiguredFeature(RegistryAccess registryAccess);
 
 		public PlacedFeature createPlacedFeature(RegistryAccess registryAccess) {
-			Registry<ConfiguredFeature<?, ?>> featureRegistry = registryAccess.registryOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY);
-			Holder<ConfiguredFeature<?, ?>> featureHolder = featureRegistry.getOrCreateHolderOrThrow(ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, id));
+			Registry<ConfiguredFeature<?, ?>> featureRegistry = registryAccess.registryOrThrow(Registries.CONFIGURED_FEATURE);
+			Holder<ConfiguredFeature<?, ?>> featureHolder = featureRegistry.getHolderOrThrow(ResourceKey.create(Registries.CONFIGURED_FEATURE, id));
 			return new PlacedFeature(featureHolder, List.of(new ConfigDrivenPlacement(OreFeatureConfigEntry.this)));
 		}
 
 		public BiomeModifier createBiomeModifier(RegistryAccess registryAccess) {
-			Registry<Biome> biomeRegistry = registryAccess.registryOrThrow(Registry.BIOME_REGISTRY);
-			Registry<PlacedFeature> featureRegistry = registryAccess.registryOrThrow(Registry.PLACED_FEATURE_REGISTRY);
-			HolderSet<Biome> biomes = new HolderSet.Named<>(biomeRegistry, biomeTag);
-			Holder<PlacedFeature> featureHolder = featureRegistry.getOrCreateHolderOrThrow(ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, id));
+			Registry<Biome> biomeRegistry = registryAccess.registryOrThrow(Registries.BIOME);
+			Registry<PlacedFeature> featureRegistry = registryAccess.registryOrThrow(Registries.PLACED_FEATURE);
+			HolderSet<Biome> biomes = biomeRegistry.getOrCreateTag(biomeTag);
+			Holder<PlacedFeature> featureHolder = featureRegistry.getHolderOrThrow(ResourceKey.create(Registries.PLACED_FEATURE, id));
 			return new AddFeaturesBiomeModifier(biomes, HolderSet.direct(featureHolder), Decoration.UNDERGROUND_ORES);
 		}
 

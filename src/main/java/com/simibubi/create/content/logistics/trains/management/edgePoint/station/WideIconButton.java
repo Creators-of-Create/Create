@@ -14,7 +14,7 @@ public class WideIconButton extends IconButton {
 	@Override
 	protected void drawBg(PoseStack matrixStack, AllGuiTextures button) {
 		super.drawBg(matrixStack, button);
-		blit(matrixStack, x + 9, y, button.startX + 1, button.startY, button.width - 1, button.height);
+		blit(matrixStack, getX() + 9, getY(), button.startX + 1, button.startY, button.width - 1, button.height);
 	}
 
 }

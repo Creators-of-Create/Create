@@ -7,12 +7,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.platform.ClipboardManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -444,7 +445,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		// has to be outside of MS transforms, important for vertex sorting
 		Matrix4f matrix4f = new Matrix4f(RenderSystem.getProjectionMatrix());
-		matrix4f.multiplyWithTranslation(0, 0, 800);
+		matrix4f.translate(0, 0, 800);
 		RenderSystem.setProjectionMatrix(matrix4f);
 
 		ms.pushPose();
@@ -493,7 +494,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				ScreenUtils.drawGradientRect(ms.last()
 					.pose(), 0, 0, 0, -story.getBasePlateSize(), 4, 0x66_000000, 0x00_000000);
 				ms.popPose();
-				ms.mulPose(Vector3f.YP.rotationDegrees(-90));
+				ms.mulPose(Axis.YP.rotationDegrees(-90));
 			}
 			ms.popPose();
 			RenderSystem.disableCull();
@@ -521,7 +522,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			ms.pushPose();
 			ms.scale(-1, 1, 1);
 			ms.translate(0, -3, -4);
-			ms.mulPose(Vector3f.YP.rotationDegrees(-90));
+			ms.mulPose(Axis.YP.rotationDegrees(-90));
 			ms.translate(-8, -2, 2 / 64f);
 			for (int z = 0; z <= bounds.getZSpan(); z++) {
 				ms.translate(16, 0, 0);
@@ -532,12 +533,12 @@ public class PonderUI extends NavigatableSimiScreen {
 			// DIRECTIONS
 			ms.pushPose();
 			ms.translate(bounds.getXSpan() * -8, 0, bounds.getZSpan() * 8);
-			ms.mulPose(Vector3f.YP.rotationDegrees(-90));
+			ms.mulPose(Axis.YP.rotationDegrees(-90));
 			for (Direction d : Iterate.horizontalDirections) {
-				ms.mulPose(Vector3f.YP.rotationDegrees(90));
+				ms.mulPose(Axis.YP.rotationDegrees(90));
 				ms.pushPose();
 				ms.translate(0, 0, bounds.getZSpan() * 16);
-				ms.mulPose(Vector3f.XP.rotationDegrees(-90));
+				ms.mulPose(Axis.XP.rotationDegrees(-90));
 				font.draw(ms, d.name()
 					.substring(0, 1), 0, 0, 0x66FFFFFF);
 				font.draw(ms, "|", 2, 10, 0x44FFFFFF);
@@ -671,8 +672,8 @@ public class PonderUI extends NavigatableSimiScreen {
 				else
 					button.dim();
 
-				int x = button.x + button.getWidth() + 4;
-				int y = button.y - 2;
+				int x = button.getX() + button.getWidth() + 4;
+				int y = button.getY() - 2;
 				ms.translate(x, y + 5 * (1 - fade), 800);
 
 				float fadedWidth = 200 * chase.getValue(partialTicks);
@@ -705,7 +706,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		if (nextScene != null && nextUp.getValue() > 1 / 16f && !nextScene.getId()
 				.equals(Create.asResource("creative_motor_mojang"))) {
 			ms.pushPose();
-			ms.translate(right.x + 10, right.y - 6 + nextUp.getValue(partialTicks) * 5, 400);
+			ms.translate(right.getX() + 10, right.getY() - 6 + nextUp.getValue(partialTicks) * 5, 400);
 			int boxWidth = (Math.max(font.width(nextScene.getTitle()), font.width(Lang.translateDirect(NEXT_UP))) + 5);
 			renderSpeechBox(ms, 0, 0, boxWidth, 20, right.isHoveredOrFocused(), Pointing.DOWN, false);
 			ms.translate(0, -29, 100);
@@ -720,19 +721,19 @@ public class PonderUI extends NavigatableSimiScreen {
 		ms.translate(0, 0, 500);
 		int tooltipY = height - 16;
 		if (scan.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translateDirect(IDENTIFY), scan.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(IDENTIFY), scan.getX() + 10, tooltipY, tooltipColor);
 		if (index != 0 && left.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translateDirect(PREVIOUS), left.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(PREVIOUS), left.getX() + 10, tooltipY, tooltipColor);
 		if (close.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translateDirect(CLOSE), close.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(CLOSE), close.getX() + 10, tooltipY, tooltipColor);
 		if (index != scenes.size() - 1 && right.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translateDirect(NEXT), right.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(NEXT), right.getX() + 10, tooltipY, tooltipColor);
 		if (replay.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translateDirect(REPLAY), replay.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(REPLAY), replay.getX() + 10, tooltipY, tooltipColor);
 		if (slowMode.isHoveredOrFocused())
-			drawCenteredString(ms, font, Lang.translateDirect(SLOW_TEXT), slowMode.x + 5, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, Lang.translateDirect(SLOW_TEXT), slowMode.getX() + 5, tooltipY, tooltipColor);
 		if (PonderIndex.editingModeActive() && userMode.isHoveredOrFocused())
-			drawCenteredString(ms, font, "Editor View", userMode.x + 10, tooltipY, tooltipColor);
+			drawCenteredString(ms, font, "Editor View", userMode.getX() + 10, tooltipY, tooltipColor);
 		ms.popPose();
 	}
 
@@ -744,7 +745,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		int y = 31;
 
 		String title = activeScene.getTitle();
-		int wordWrappedHeight = font.wordWrapHeight(title, left.x - 51);
+		int wordWrappedHeight = font.wordWrapHeight(title, left.getX() - 51);
 
 		int streakHeight = 35 - 9 + wordWrappedHeight;
 		UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, (int) (150 * fade));
@@ -764,16 +765,16 @@ public class PonderUI extends NavigatableSimiScreen {
 		y += 8;
 		x += 0;
 		ms.translate(x, y, 0);
-		ms.mulPose(Vector3f.XN.rotationDegrees(indexDiff * -75));
+		ms.mulPose(Axis.XN.rotationDegrees(indexDiff * -75));
 		ms.translate(0, 0, 5);
-		FontHelper.drawSplitString(ms, font, title, 0, 0, left.x - 51, Theme.c(Theme.Key.TEXT)
+		FontHelper.drawSplitString(ms, font, title, 0, 0, left.getX() - 51, Theme.c(Theme.Key.TEXT)
 				.scaleAlpha(1 - indexDiff)
 				.getRGB());
 		ms.popPose();
 		if (chapter != null) {
 			ms.pushPose();
 
-			ms.translate(chap.x - 8, chap.y, 0);
+			ms.translate(chap.getX() - 8, chap.getY(), 0);
 			UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade));
 
 			drawRightAlignedString(font, ms, Lang.translateDirect(IN_CHAPTER)
@@ -951,7 +952,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		ms.pushPose();
 		ms.translate(divotX + divotRadius, divotY + divotRadius, 10);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(divotRotation));
+		ms.mulPose(Axis.ZP.rotationDegrees(divotRotation));
 		ms.translate(-divotRadius, -divotRadius, 0);
 		AllGuiTextures.SPEECH_TOOLTIP_BACKGROUND.render(ms, 0, 0);
 		AllGuiTextures.SPEECH_TOOLTIP_COLOR.render(ms, 0, 0, c);

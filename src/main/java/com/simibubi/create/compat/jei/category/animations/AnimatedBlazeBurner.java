@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category.animations;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpriteShifts;
@@ -31,8 +31,8 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 200);
-		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
-		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
+		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
+		matrixStack.mulPose(Axis.YP.rotationDegrees(22.5f));
 		int scale = 23;
 
 		float offset = (Mth.sin(AnimationTickHolder.getRenderTime() / 16f) + 0.5f) / 16f;

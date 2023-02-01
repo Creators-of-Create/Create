@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -23,11 +24,6 @@ public class ContraptionMatrices {
 
 	private boolean ready;
 
-	public ContraptionMatrices() {
-		world.setIdentity();
-		light.setIdentity();
-	}
-
 	public void setup(PoseStack viewProjection, AbstractContraptionEntity entity) {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
@@ -42,8 +38,8 @@ public class ContraptionMatrices {
 
 		translateToEntity(world, entity, partialTicks);
 
-		light.load(world);
-		light.multiply(model.last()
+		light.set(world);
+		light.mul(model.last()
 			.pose());
 
 		ready = true;
@@ -53,8 +49,8 @@ public class ContraptionMatrices {
 		clearStack(modelViewProjection);
 		clearStack(viewProjection);
 		clearStack(model);
-		world.setIdentity();
-		light.setIdentity();
+		world.identity();
+		light.identity();
 		ready = false;
 	}
 
@@ -85,7 +81,7 @@ public class ContraptionMatrices {
 	public static void transform(PoseStack ms, PoseStack transform) {
 		ms.last()
 			.pose()
-			.multiply(transform.last()
+			.mul(transform.last()
 				.pose());
 		ms.last()
 			.normal()

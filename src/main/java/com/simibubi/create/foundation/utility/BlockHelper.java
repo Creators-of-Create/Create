@@ -10,9 +10,9 @@ import com.simibubi.create.foundation.tileEntity.IMergeableTE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -220,7 +220,7 @@ public class BlockHelper {
 		LevelChunkSection chunksection = chunk.getSection(idx);
 		if (chunksection == null) {
 			chunksection = new LevelChunkSection(chunk.getSectionYFromSectionIndex(idx), world.registryAccess()
-				.registryOrThrow(Registry.BIOME_REGISTRY));
+				.registryOrThrow(Registries.BIOME));
 			chunk.getSections()[idx] = chunksection;
 		}
 		BlockState old = chunksection.setBlockState(SectionPos.sectionRelative(target.getX()),

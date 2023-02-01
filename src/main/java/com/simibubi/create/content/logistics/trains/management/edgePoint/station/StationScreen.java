@@ -57,7 +57,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		Consumer<String> onTextChanged;
 
-		onTextChanged = s -> nameBox.x = nameBoxX(s, nameBox);
+		onTextChanged = s -> nameBox.setX(nameBoxX(s, nameBox));
 		nameBox = new EditBox(new NoShadowFontWrapper(font), x + 23, y + 4, background.width - 20, 10,
 			Components.literal(station.name));
 		nameBox.setBordered(false);
@@ -67,7 +67,7 @@ public class StationScreen extends AbstractStationScreen {
 		nameBox.changeFocus(false);
 		nameBox.mouseClicked(0, 0, 0);
 		nameBox.setResponder(onTextChanged);
-		nameBox.x = nameBoxX(nameBox.getValue(), nameBox);
+		nameBox.setX(nameBoxX(nameBox.getValue(), nameBox));
 		addRenderableWidget(nameBox);
 
 		Runnable assemblyCallback = () -> {
@@ -92,7 +92,7 @@ public class StationScreen extends AbstractStationScreen {
 			.withCallback(() -> AllPackets.channel.sendToServer(StationEditPacket.dropSchedule(te.getBlockPos())));
 		addRenderableWidget(dropScheduleButton);
 
-		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
+		onTextChanged = s -> trainNameBox.setX(nameBoxX(s, trainNameBox));
 		trainNameBox = new EditBox(font, x + 23, y + 47, background.width - 75, 10, Components.immutableEmpty());
 		trainNameBox.setBordered(false);
 		trainNameBox.setMaxLength(35);
@@ -151,7 +151,7 @@ public class StationScreen extends AbstractStationScreen {
 
 				trainNameBox.active = true;
 				trainNameBox.setValue(imminentTrain.name.getString());
-				trainNameBox.x = nameBoxX(trainNameBox.getValue(), trainNameBox);
+				trainNameBox.setX(nameBoxX(trainNameBox.getValue(), trainNameBox));
 				addRenderableWidget(trainNameBox);
 
 				int trainIconWidth = getTrainIconWidth(imminentTrain);

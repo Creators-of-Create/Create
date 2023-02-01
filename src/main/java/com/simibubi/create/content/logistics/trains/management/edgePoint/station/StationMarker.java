@@ -3,9 +3,10 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint.statio
 import java.util.Objects;
 import java.util.Optional;
 
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;

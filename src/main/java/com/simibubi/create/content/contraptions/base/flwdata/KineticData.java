@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.base.flwdata;
 
+import org.joml.Vector3f;
+
 import com.jozufozu.flywheel.core.materials.BasicData;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Color;
 

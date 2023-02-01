@@ -100,8 +100,8 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		resetButton.x = x + width - resetWidth + 6;
-		resetButton.y = y + 10;
+		resetButton.setX(x + width - resetWidth + 6);
+		resetButton.setY(y + 10);
 		resetButton.render(ms, mouseX, mouseY, partialTicks);
 	}
 

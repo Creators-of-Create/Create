@@ -129,7 +129,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 		extraAreas = ImmutableList.of(
 			new Rect2i(x + background.width, y + background.height - 40, 48, 48),
-			new Rect2i(refreshButton.x, refreshButton.y, refreshButton.getWidth(), refreshButton.getHeight())
+			new Rect2i(refreshButton.getX(), refreshButton.getY(), refreshButton.getWidth(), refreshButton.getHeight())
 		);
 	}
 

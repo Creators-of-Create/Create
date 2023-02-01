@@ -13,7 +13,7 @@ import com.simibubi.create.foundation.gui.TickableGuiEventListener;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -68,13 +68,13 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <W extends GuiEventListener & Widget & NarratableEntry> void addRenderableWidgets(W... widgets) {
+	protected <W extends GuiEventListener & Renderable & NarratableEntry> void addRenderableWidgets(W... widgets) {
 		for (W widget : widgets) {
 			addRenderableWidget(widget);
 		}
 	}
 
-	protected <W extends GuiEventListener & Widget & NarratableEntry> void addRenderableWidgets(Collection<W> widgets) {
+	protected <W extends GuiEventListener & Renderable & NarratableEntry> void addRenderableWidgets(Collection<W> widgets) {
 		for (W widget : widgets) {
 			addRenderableWidget(widget);
 		}
@@ -113,13 +113,13 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 	protected void renderForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		renderTooltip(ms, mouseX, mouseY);
-		for (Widget widget : renderables) {
+		for (Renderable widget : renderables) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
 				List<Component> tooltip = simiWidget.getToolTip();
 				if (tooltip.isEmpty())
 					continue;
-				int ttx = simiWidget.lockedTooltipX == -1 ? mouseX : simiWidget.lockedTooltipX + simiWidget.x;
-				int tty = simiWidget.lockedTooltipY == -1 ? mouseY : simiWidget.lockedTooltipY + simiWidget.y;
+				int ttx = simiWidget.lockedTooltipX == -1 ? mouseX : simiWidget.lockedTooltipX + simiWidget.getX();
+				int tty = simiWidget.lockedTooltipY == -1 ? mouseY : simiWidget.lockedTooltipY + simiWidget.getY();
 				renderComponentTooltip(ms, tooltip, ttx, tty);
 			}
 		}

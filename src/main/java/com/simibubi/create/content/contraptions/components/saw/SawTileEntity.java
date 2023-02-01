@@ -48,7 +48,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
-import net.minecraft.world.level.block.BambooBlock;
+import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.ChorusPlantBlock;
@@ -488,7 +488,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		if (TreeCutter.isRoot(stateToBreak))
 			return true;
 		Block block = stateToBreak.getBlock();
-		if (block instanceof BambooBlock)
+		if (block instanceof BambooStalkBlock)
 			return true;
 		if (block instanceof StemGrownBlock)
 			return true;

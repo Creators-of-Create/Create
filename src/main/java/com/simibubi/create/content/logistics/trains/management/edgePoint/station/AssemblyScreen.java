@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
@@ -40,7 +40,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 		int y = guiTop;
 		int by = y + background.height - 24;
 
-		Widget widget = renderables.get(0);
+		Renderable widget = renderables.get(0);
 		if (widget instanceof IconButton ib) {
 			ib.setIcon(AllIcons.I_PRIORITY_VERY_LOW);
 			ib.setToolTip(Lang.translateDirect("station.close"));

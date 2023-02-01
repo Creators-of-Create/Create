@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.tileEntity.behaviour;
 
+import org.joml.Matrix3f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -87,9 +89,8 @@ public class ValueBox extends ChasingAABBOutline {
 		ms.translate(pos.getX(), pos.getY(), pos.getZ());
 		if (hasTransform)
 			transform.transform(blockState, ms);
-		transformNormals = ms.last()
-			.normal()
-			.copy();
+		transformNormals = new Matrix3f(ms.last()
+			.normal());
 		params.colored(isPassive ? passiveColor : highlightColor);
 		super.render(ms, buffer, pt);
 

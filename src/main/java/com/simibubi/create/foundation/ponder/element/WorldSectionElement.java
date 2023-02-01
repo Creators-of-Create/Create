@@ -331,8 +331,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 			if (overlayMS == null) {
 				overlayMS = new PoseStack();
-				overlayMS.last().pose().load(ms.last().pose());
-				overlayMS.last().normal().load(ms.last().normal());
+				overlayMS.last().pose().set(ms.last().pose());
+				overlayMS.last().normal().set(ms.last().normal());
 
 				float scaleFactor = world.scene.getScaleFactor();
 				float f = (float) Math.pow(30 * scaleFactor, -1.2);
@@ -343,7 +343,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				buffer.getBuffer(ModelBakery.DESTROY_TYPES.get(entry.getValue())), overlayMS.last()
 					.pose(),
 				overlayMS.last()
-					.normal());
+					.normal(),
+				1);
 
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());

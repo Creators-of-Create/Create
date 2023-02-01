@@ -1,8 +1,9 @@
 package com.simibubi.create.content.contraptions.components.actors.flwdata;
 
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
 import com.jozufozu.flywheel.api.InstanceData;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
 
@@ -83,11 +84,11 @@ public class ActorData extends InstanceData {
         return this;
     }
 
-	public ActorData setLocalRotation(Quaternion q) {
-		this.qX = q.i();
-		this.qY = q.j();
-		this.qZ = q.k();
-		this.qW = q.r();
+	public ActorData setLocalRotation(Quaternionf q) {
+		this.qX = q.x();
+		this.qY = q.y();
+		this.qZ = q.z();
+		this.qW = q.w();
 		markDirty();
 		return this;
 	}

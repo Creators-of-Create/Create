@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -65,7 +65,7 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 	protected Collection<RegistryEntry<Block>> getBlocks() {
 		return getSections().stream()
 			.flatMap(s -> Create.REGISTRATE
-				.getAll(s, Registry.BLOCK_REGISTRY)
+				.getAll(s, Registries.BLOCK)
 				.stream())
 			.collect(Collectors.toList());
 	}
@@ -73,7 +73,7 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 	protected Collection<RegistryEntry<Item>> getItems() {
 		return getSections().stream()
 			.flatMap(s -> Create.REGISTRATE
-				.getAll(s, Registry.ITEM_REGISTRY)
+				.getAll(s, Registries.ITEM)
 				.stream())
 			.collect(Collectors.toList());
 	}

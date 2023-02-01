@@ -10,7 +10,7 @@ import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
@@ -127,9 +127,9 @@ public class GuiGameElement {
 			matrixStack.translate(xLocal, yLocal, zLocal);
 			UIRenderHelper.flipForGuiRender(matrixStack);
 			matrixStack.translate(rotationOffset.x, rotationOffset.y, rotationOffset.z);
-			matrixStack.mulPose(Vector3f.ZP.rotationDegrees((float) zRot));
-			matrixStack.mulPose(Vector3f.XP.rotationDegrees((float) xRot));
-			matrixStack.mulPose(Vector3f.YP.rotationDegrees((float) yRot));
+			matrixStack.mulPose(Axis.ZP.rotationDegrees((float) zRot));
+			matrixStack.mulPose(Axis.XP.rotationDegrees((float) xRot));
+			matrixStack.mulPose(Axis.YP.rotationDegrees((float) yRot));
 			matrixStack.translate(-rotationOffset.x, -rotationOffset.y, -rotationOffset.z);
 		}
 

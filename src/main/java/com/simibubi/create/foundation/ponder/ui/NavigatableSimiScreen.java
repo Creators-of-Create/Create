@@ -115,9 +115,9 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (backTrack != null) {
 			int x = (int) Mth.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
-			int maxX = backTrack.x + backTrack.getWidth();
+			int maxX = backTrack.getX() + backTrack.getWidth();
 
-			if (x + 30 < backTrack.x)
+			if (x + 30 < backTrack.getX())
 				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5,
 					Theme.p(Theme.Key.PONDER_BACK_ARROW));
 

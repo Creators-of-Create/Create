@@ -2,7 +2,8 @@ package com.simibubi.create.content.curiosities.deco;
 
 import java.util.List;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;

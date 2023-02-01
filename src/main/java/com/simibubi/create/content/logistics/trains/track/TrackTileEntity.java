@@ -25,7 +25,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -203,7 +203,7 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 
 		if (tag.contains("BoundLocation"))
 			boundLocation = Pair.of(
-				ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(tag.getString("BoundDimension"))),
+				ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("BoundDimension"))),
 				NbtUtils.readBlockPos(tag.getCompound("BoundLocation")));
 	}
 

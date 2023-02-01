@@ -1,7 +1,9 @@
 package com.simibubi.create.content.curiosities.symmetry;
 
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.curiosities.symmetry.mirror.CrossPlaneMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.PlaneMirror;
@@ -136,7 +138,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		ms.pushPose();
 		ms.translate(x + 26, y + 39, 20);
 		ms.scale(16, 16, 16);
-		ms.mulPose(new Vector3f(.3f, 1f, 0f).rotationDegrees(-22.5f));
+		ms.mulPose(Axis.of(new Vector3f(.3f, 1f, 0f)).rotationDegrees(-22.5f));
 		currentElement.applyModelTransform(ms);
 		// RenderSystem.multMatrix(ms.peek().getModel());
 		GuiGameElement.of(currentElement.getModel())

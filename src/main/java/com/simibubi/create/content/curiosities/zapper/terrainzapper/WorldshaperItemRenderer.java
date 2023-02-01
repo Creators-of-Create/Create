@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 import static java.lang.Math.max;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -56,7 +56,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		angle %= 360;
 		float offset = -.155f;
 		ms.translate(0, offset, 0);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
+		ms.mulPose(Axis.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
 		renderer.render(model.getPartial("accelerator"), light);
 	}

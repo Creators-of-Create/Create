@@ -81,9 +81,9 @@ public class Label extends AbstractSimiWidget {
 			copy.append(suffix);
 		
 		if (hasShadow)
-			font.drawShadow(matrixStack, copy, x, y, color);
+			font.drawShadow(matrixStack, copy, getX(), getY(), color);
 		else
-			font.draw(matrixStack, copy, x, y, color);
+			font.draw(matrixStack, copy, getX(), getY(), color);
 	}
 
 }

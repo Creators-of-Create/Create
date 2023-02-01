@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -59,7 +59,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 					.getNormal()).scale(.5f - offset);
 				ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 				boolean alongX = tis.insertedFrom.getClockWise()
-					.getAxis() == Axis.X;
+					.getAxis() == Direction.Axis.X;
 				if (!alongX)
 					sideOffset *= -1;
 				ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
@@ -117,7 +117,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 				Vec3 vectorForOffset = itemPosition;
 				Vec3 diff = vectorForOffset.subtract(positionVec);
 				float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
-				ms.mulPose(Vector3f.YP.rotation(yRot));
+				ms.mulPose(Axis.YP.rotation(yRot));
 			}
 			ms.translate(0, 3 / 32d, -1 / 16f);
 		}

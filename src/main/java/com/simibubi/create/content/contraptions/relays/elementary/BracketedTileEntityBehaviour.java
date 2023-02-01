@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
@@ -123,7 +124,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
 		if (nbt.contains("Bracket"))
-			bracket = NbtUtils.readBlockState(nbt.getCompound("Bracket"));
+			bracket = NbtUtils.readBlockState(getWorld().holderLookup(Registries.BLOCK), nbt.getCompound("Bracket"));
 		if (clientPacket && nbt.contains("Redraw"))
 			getWorld().sendBlockUpdated(getPos(), tileEntity.getBlockState(), tileEntity.getBlockState(), 16);
 		super.read(nbt, clientPacket);

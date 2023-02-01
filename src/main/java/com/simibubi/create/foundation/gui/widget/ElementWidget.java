@@ -132,7 +132,7 @@ public class ElementWidget extends AbstractSimiWidget {
 	@Override
 	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.pushPose();
-		ms.translate(x + paddingX, y + paddingY, z);
+		ms.translate(getX() + paddingX, getY() + paddingY, z);
 		float innerWidth = width - 2 * paddingX;
 		float innerHeight = height - 2 * paddingY;
 		float eX = element.getX(), eY = element.getY();

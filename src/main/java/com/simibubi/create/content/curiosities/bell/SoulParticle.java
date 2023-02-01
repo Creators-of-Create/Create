@@ -1,8 +1,9 @@
 package com.simibubi.create.content.curiosities.bell;
 
+import org.joml.Quaternionf;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllParticleTypes;
 
 import net.minecraft.client.Camera;
@@ -11,6 +12,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.util.Mth;
 
 public class SoulParticle extends CustomRotationParticle {
 
@@ -94,10 +96,10 @@ public class SoulParticle extends CustomRotationParticle {
 	}
 
 	@Override
-	public Quaternion getCustomRotation(Camera camera, float partialTicks) {
+	public Quaternionf getCustomRotation(Camera camera, float partialTicks) {
 		if (isPerimeter)
-			return Vector3f.XP.rotationDegrees(90);
-		return new Quaternion(0, -camera.getYRot(), 0, true);
+			return Axis.XP.rotationDegrees(90);
+		return new Quaternionf().rotationXYZ(0, -camera.getYRot() * Mth.DEG_TO_RAD, 0);
 	}
 
 	public static class Data extends BasicParticleData<SoulParticle> {

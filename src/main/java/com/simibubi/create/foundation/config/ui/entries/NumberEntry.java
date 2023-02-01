@@ -149,21 +149,21 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
-		textField.x = x + width - 82 - resetWidth;
-		textField.y = y + 8;
+		textField.setX(x + width - 82 - resetWidth);
+		textField.setY(y + 8);
 		textField.setWidth(Math.min(width - getLabelWidth(width) - resetWidth - minOffset - maxOffset, 40));
 		textField.setHeight(20);
 		textField.render(ms, mouseX, mouseY, partialTicks);
 
 		if (minText != null)
 			minText
-					.at(textField.x - minOffset, textField.y, 0)
+					.at(textField.getX() - minOffset, textField.getY(), 0)
 					.withBounds(minOffset, textField.getHeight())
 					.render(ms);
 
 		if (maxText != null)
 			maxText
-					.at(textField.x + textField.getWidth(), textField.y, 0)
+					.at(textField.getX() + textField.getWidth(), textField.getY(), 0)
 					.withBounds(maxOffset, textField.getHeight())
 					.render(ms);
 	}

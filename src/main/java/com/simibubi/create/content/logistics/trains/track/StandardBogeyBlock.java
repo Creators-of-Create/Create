@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -49,7 +48,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class StandardBogeyBlock extends Block
 	implements IBogeyBlock, ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
 
-	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	private final boolean large;
 
 	public StandardBogeyBlock(Properties p_i48440_1_, boolean large) {
@@ -69,7 +68,7 @@ public class StandardBogeyBlock extends Block
 
 	@Override
 	public EnumSet<Direction> getStickySurfaces(BlockGetter world, BlockPos pos, BlockState state) {
-		return state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Axis.X ? STICKY_X : STICKY_Z;
+		return state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Direction.Axis.X ? STICKY_X : STICKY_Z;
 	}
 
 	@Override
@@ -108,12 +107,12 @@ public class StandardBogeyBlock extends Block
 	public BlockState getMatchingBogey(Direction upDirection, boolean axisAlongFirst) {
 		if (upDirection != Direction.UP)
 			return null;
-		return defaultBlockState().setValue(AXIS, axisAlongFirst ? Axis.X : Axis.Z);
+		return defaultBlockState().setValue(AXIS, axisAlongFirst ? Direction.Axis.X : Direction.Axis.Z);
 	}
 
 	@Override
 	public boolean isTrackAxisAlongFirstCoordinate(BlockState state) {
-		return state.getValue(AXIS) == Axis.X;
+		return state.getValue(AXIS) == Direction.Axis.X;
 	}
 
 	@Override
@@ -122,8 +121,8 @@ public class StandardBogeyBlock extends Block
 		int light, int overlay) {
 		if (state != null) {
 			ms.translate(.5f, .5f, .5f);
-			if (state.getValue(AXIS) == Axis.X)
-				ms.mulPose(Vector3f.YP.rotationDegrees(90));
+			if (state.getValue(AXIS) == Direction.Axis.X)
+				ms.mulPose(Axis.YP.rotationDegrees(90));
 		}
 
 		ms.translate(0, -1.5 - 1 / 128f, 0);
@@ -133,7 +132,7 @@ public class StandardBogeyBlock extends Block
 
 		for (int i : Iterate.zeroAndOne)
 			CachedBufferer.block(AllBlocks.SHAFT.getDefaultState()
-				.setValue(ShaftBlock.AXIS, Axis.Z))
+				.setValue(ShaftBlock.AXIS, Direction.Axis.Z))
 				.translate(-.5f, .25f, i * -1)
 				.centre()
 				.rotateZ(wheelAngle)
@@ -168,7 +167,7 @@ public class StandardBogeyBlock extends Block
 	private void renderLargeBogey(float wheelAngle, PoseStack ms, int light, VertexConsumer vb, BlockState air) {
 		for (int i : Iterate.zeroAndOne)
 			CachedBufferer.block(AllBlocks.SHAFT.getDefaultState()
-				.setValue(ShaftBlock.AXIS, Axis.X))
+				.setValue(ShaftBlock.AXIS, Direction.Axis.X))
 				.translate(-.5f, .25f, .5f + i * -2)
 				.centre()
 				.rotateX(wheelAngle)

@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -132,8 +132,8 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 				ms.scale(.5f, .5f, .5f);
 				if (alongZ)
-					ms.mulPose(Vector3f.YP.rotationDegrees(90));
-				ms.mulPose(Vector3f.XP.rotationDegrees(90));
+					ms.mulPose(Axis.YP.rotationDegrees(90));
+				ms.mulPose(Axis.XP.rotationDegrees(90));
 				itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, light, overlay, ms, buffer, 0);
 				break;
 			}

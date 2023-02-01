@@ -10,9 +10,10 @@ import java.util.function.Supplier;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.simibubi.create.AllSoundEvents.SoundEntry;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -311,7 +312,7 @@ public class AllSoundEvents {
 	}
 
 	public static void register(RegisterEvent event) {
-		event.register(Registry.SOUND_EVENT_REGISTRY, helper -> {
+		event.register(Registries.SOUND_EVENT, helper -> {
 			for (SoundEntry entry : ALL.values())
 				entry.register(helper);
 		});

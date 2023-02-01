@@ -4,7 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.config.AllConfigs;

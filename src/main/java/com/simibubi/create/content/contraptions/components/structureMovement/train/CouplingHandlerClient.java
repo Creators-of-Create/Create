@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;

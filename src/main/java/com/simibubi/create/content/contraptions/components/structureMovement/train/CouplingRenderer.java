@@ -5,7 +5,7 @@ import static net.minecraft.util.Mth.lerp;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.block.Blocks;
@@ -133,8 +133,8 @@ public class CouplingRenderer {
 		roll = roll > 0 ? Mth.sin(roll) * roll * rollAmplifier / 10.0F * cart.getHurtDir() : 0;
 
 		Vec3 positionVec = new Vec3(xIn, yIn, zIn);
-		Vec3 frontVec = positionVec.add(VecHelper.rotate(new Vec3(.5, 0, 0), 180 - yaw, Axis.Y));
-		Vec3 backVec = positionVec.add(VecHelper.rotate(new Vec3(-.5, 0, 0), 180 - yaw, Axis.Y));
+		Vec3 frontVec = positionVec.add(VecHelper.rotate(new Vec3(.5, 0, 0), 180 - yaw, Direction.Axis.Y));
+		Vec3 backVec = positionVec.add(VecHelper.rotate(new Vec3(-.5, 0, 0), 180 - yaw, Direction.Axis.Y));
 
 		Vec3 railVecOfPos = cart.getPos(xIn, yIn, zIn);
 		boolean flip = false;
@@ -196,20 +196,20 @@ public class CouplingRenderer {
 
 		public Vec3 apply(Vec3 vec) {
 			vec = vec.add(offset, 0, 0);
-			vec = VecHelper.rotate(vec, roll, Axis.X);
-			vec = VecHelper.rotate(vec, pitch, Axis.Z);
-			vec = VecHelper.rotate(vec, yaw, Axis.Y);
+			vec = VecHelper.rotate(vec, roll, Direction.Axis.X);
+			vec = VecHelper.rotate(vec, pitch, Direction.Axis.Z);
+			vec = VecHelper.rotate(vec, yaw, Direction.Axis.Y);
 			return vec.add(x, y, z);
 		}
 
 		public void apply(PoseStack ms) {
 			ms.translate(x, y, z);
-			ms.mulPose(Vector3f.YP.rotationDegrees(yaw));
-			ms.mulPose(Vector3f.ZP.rotationDegrees(pitch));
-			ms.mulPose(Vector3f.XP.rotationDegrees(roll));
+			ms.mulPose(Axis.YP.rotationDegrees(yaw));
+			ms.mulPose(Axis.ZP.rotationDegrees(pitch));
+			ms.mulPose(Axis.XP.rotationDegrees(roll));
 			ms.translate(offset, 0, 0);
 			if (flip)
-				ms.mulPose(Vector3f.YP.rotationDegrees(180));
+				ms.mulPose(Axis.YP.rotationDegrees(180));
 		}
 
 	}

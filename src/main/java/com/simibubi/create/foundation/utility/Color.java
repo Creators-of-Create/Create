@@ -4,8 +4,9 @@ import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
 
+import org.joml.Vector3f;
+
 import com.google.common.hash.Hashing;
-import com.mojang.math.Vector3f;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;

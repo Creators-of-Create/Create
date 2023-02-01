@@ -140,7 +140,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.19-1.1.5,)') {
+    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.19.3-1.1.10,)') {
         jarJar.pin(it, project.registrate_version)
     }
     jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.8,0.6.9)') {

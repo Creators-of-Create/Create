@@ -2,9 +2,10 @@ package com.simibubi.create.content.curiosities.symmetry;
 
 import java.util.Random;
 
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;

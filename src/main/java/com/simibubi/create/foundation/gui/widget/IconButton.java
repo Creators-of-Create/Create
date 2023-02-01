@@ -25,20 +25,20 @@ public class IconButton extends AbstractSimiWidget {
 	@Override
 	public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
-			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+			isHovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
 
 			AllGuiTextures button = !active ? AllGuiTextures.BUTTON_DOWN
 				: isHoveredOrFocused() ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
 
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			drawBg(matrixStack, button);
-			icon.render(matrixStack, x + 1, y + 1);
+			icon.render(matrixStack, getX() + 1, getY() + 1);
 		}
 	}
 
 	protected void drawBg(PoseStack matrixStack, AllGuiTextures button) {
 		AllGuiTextures.BUTTON.bind();
-		blit(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
+		blit(matrixStack, getX(), getY(), button.startX, button.startY, button.width, button.height);
 	}
 
 	public void setToolTip(Component text) {
