@@ -28,6 +28,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -145,12 +146,13 @@ public class SchematicHandler {
 	}
 
 	private void setupRenderer() {
-		StructureTemplate schematic = SchematicItem.loadSchematic(activeSchematicItem);
+		Level clientWorld = Minecraft.getInstance().level;
+		StructureTemplate schematic =
+			SchematicItem.loadSchematic(clientWorld.holderLookup(Registries.BLOCK), activeSchematicItem);
 		Vec3i size = schematic.getSize();
 		if (size.equals(Vec3i.ZERO))
 			return;
 
-		Level clientWorld = Minecraft.getInstance().level;
 		SchematicWorld w = new SchematicWorld(clientWorld);
 		SchematicWorld wMirroredFB = new SchematicWorld(clientWorld);
 		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);

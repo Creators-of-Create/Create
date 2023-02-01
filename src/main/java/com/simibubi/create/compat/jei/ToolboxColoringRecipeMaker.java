@@ -13,6 +13,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
@@ -43,7 +44,7 @@ public final class ToolboxColoringRecipeMaker {
 					.get();
 				ItemStack output = new ItemStack(coloredShulkerBox);
 				ResourceLocation id = Create.asResource(group + "." + output.getDescriptionId());
-				return new ShapelessRecipe(id, group, output, inputs);
+				return new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
 			});
 	}
 

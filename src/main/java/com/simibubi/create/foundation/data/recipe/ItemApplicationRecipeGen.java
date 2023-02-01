@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllItemTags;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -38,8 +38,8 @@ public class ItemApplicationRecipeGen extends ProcessingRecipeGen {
 			.output(output.get()));
 	}
 
-	public ItemApplicationRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public ItemApplicationRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

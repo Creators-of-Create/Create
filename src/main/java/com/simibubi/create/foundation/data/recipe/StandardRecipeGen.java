@@ -34,8 +34,9 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
@@ -46,9 +47,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SimpleCookingSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -1255,9 +1256,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			return this;
 		}
 
+		// FIXME 5.1 refactor - recipe categories as markers instead of sections?
 		GeneratedRecipe viaShaped(UnaryOperator<ShapedRecipeBuilder> builder) {
 			return register(consumer -> {
-				ShapedRecipeBuilder b = builder.apply(ShapedRecipeBuilder.shaped(result.get(), amount));
+				ShapedRecipeBuilder b = builder.apply(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result.get(), amount));
 				if (unlockedBy != null)
 					b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
 				b.save(consumer, createLocation("crafting"));
@@ -1266,7 +1268,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		GeneratedRecipe viaShapeless(UnaryOperator<ShapelessRecipeBuilder> builder) {
 			return register(consumer -> {
-				ShapelessRecipeBuilder b = builder.apply(ShapelessRecipeBuilder.shapeless(result.get(), amount));
+				ShapelessRecipeBuilder b = builder.apply(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result.get(), amount));
 				if (unlockedBy != null)
 					b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
 				b.save(consumer, createLocation("crafting"));
@@ -1304,7 +1306,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			private float exp;
 			private int cookingTime;
 
-			private final SimpleCookingSerializer<?> FURNACE = RecipeSerializer.SMELTING_RECIPE,
+			private final RecipeSerializer<? extends AbstractCookingRecipe> FURNACE = RecipeSerializer.SMELTING_RECIPE,
 				SMOKER = RecipeSerializer.SMOKING_RECIPE, BLAST = RecipeSerializer.BLASTING_RECIPE,
 				CAMPFIRE = RecipeSerializer.CAMPFIRE_COOKING_RECIPE;
 
@@ -1351,16 +1353,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				return create(BLAST, builder, .5f);
 			}
 
-			private GeneratedRecipe create(SimpleCookingSerializer<?> serializer,
+			private GeneratedRecipe create(RecipeSerializer<? extends AbstractCookingRecipe> serializer,
 				UnaryOperator<SimpleCookingRecipeBuilder> builder, float cookingTimeModifier) {
 				return register(consumer -> {
 					boolean isOtherMod = compatDatagenOutput != null;
 
-					SimpleCookingRecipeBuilder b = builder.apply(
-						SimpleCookingRecipeBuilder.cooking(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
-							exp, (int) (cookingTime * cookingTimeModifier), serializer));
+					SimpleCookingRecipeBuilder b = builder.apply(SimpleCookingRecipeBuilder.generic(ingredient.get(),
+						RecipeCategory.MISC, isOtherMod ? Items.DIRT : result.get(), exp,
+						(int) (cookingTime * cookingTimeModifier), serializer));
+					
 					if (unlockedBy != null)
 						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
+					
 					b.save(result -> {
 						consumer.accept(
 							isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput, recipeConditions)
@@ -1373,11 +1377,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	}
 
 	@Override
-	public String getName() {
+	public String getProviderName() {
 		return "Create's Standard Recipes";
 	}
 
-	public StandardRecipeGen(DataGenerator p_i48262_1_) {
+	public StandardRecipeGen(PackOutput p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

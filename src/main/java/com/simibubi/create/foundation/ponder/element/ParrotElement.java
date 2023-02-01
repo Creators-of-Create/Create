@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.Parrot.Variant;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -163,8 +164,9 @@ public class ParrotElement extends AnimatedSceneElement {
 
 		Parrot create(PonderWorld world) {
 			Parrot entity = new Parrot(EntityType.PARROT, world);
-			int nextInt = Create.RANDOM.nextInt(5);
-			entity.setVariant(nextInt == 1 ? 0 : nextInt); // blue parrots are kinda hard to see
+			Variant[] variants = Parrot.Variant.values();
+			Parrot.Variant variant = variants[Create.RANDOM.nextInt(variants.length)];
+			entity.setVariant(variant == Variant.BLUE ? Variant.RED_BLUE : variant); // blue parrots are difficult to see
 			return entity;
 		}
 

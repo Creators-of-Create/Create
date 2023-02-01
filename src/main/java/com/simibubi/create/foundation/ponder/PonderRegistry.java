@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.ponder.content.SharedText;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
@@ -118,7 +119,7 @@ public class PonderRegistry {
 		DataInputStream stream =
 			new DataInputStream(new BufferedInputStream(new GZIPInputStream(resourceStream)));
 		CompoundTag nbt = NbtIo.read(stream, new NbtAccounter(0x20000000L));
-		t.load(nbt);
+		t.load(Minecraft.getInstance().level.holderLookup(Registries.BLOCK), nbt);
 		return t;
 	}
 

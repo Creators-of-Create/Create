@@ -9,6 +9,8 @@ import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -51,7 +53,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
 
 	public SlidingDoorBlock(Properties p_52737_) {
-		super(p_52737_);
+		super(p_52737_, SoundEvents.IRON_DOOR_CLOSE, SoundEvents.IRON_DOOR_OPEN);
 	}
 
 	@Override
@@ -136,7 +138,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 		if (isDoubleDoor(changedState, hinge, facing, otherDoor))
 			setOpen(entity, level, otherDoor, otherPos, open);
 
-		this.playSound(level, pos, open);
+		this.playSound(entity, level, pos, open);
 		level.gameEvent(entity, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
 	}
 
@@ -160,7 +162,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 			changedState = changedState.setValue(VISIBLE, false);
 
 		if (isPowered != pState.getValue(OPEN)) {
-			this.playSound(pLevel, pPos, isPowered);
+			this.playSound(null, pLevel, pPos, isPowered);
 			pLevel.gameEvent(null, isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
 
 			DoorHingeSide hinge = changedState.getValue(HINGE);
@@ -215,7 +217,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 		if (isDoubleDoor(pState, hinge, facing, otherDoor))
 			use(otherDoor, pLevel, otherPos, pPlayer, pHand, pHit);
 		else if (pState.getValue(OPEN))
-			pLevel.levelEvent(pPlayer, getOpenSound(), pPos, 0);
+			pLevel.gameEvent(pPlayer, GameEvent.BLOCK_OPEN, pPos);
 
 		return InteractionResult.sidedSuccess(pLevel.isClientSide);
 	}
@@ -235,13 +237,10 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 		return pState.getValue(VISIBLE) ? RenderShape.MODEL : RenderShape.ENTITYBLOCK_ANIMATED;
 	}
 
-	private void playSound(Level pLevel, BlockPos pPos, boolean pIsOpening) {
-		if (pIsOpening)
-			pLevel.levelEvent((Player) null, this.getOpenSound(), pPos, 0);
-	}
-
-	private int getOpenSound() {
-		return 1005;
+	private void playSound(@Nullable Entity pSource, Level pLevel, BlockPos pPos, boolean pIsOpening) {
+		pLevel.playSound(pSource, pPos, pIsOpening ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE,
+			SoundSource.BLOCKS, 1.0F, pLevel.getRandom()
+				.nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Nullable

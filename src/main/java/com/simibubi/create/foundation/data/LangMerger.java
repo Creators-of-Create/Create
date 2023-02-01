@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -24,9 +25,12 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
 
+import net.minecraft.Util;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
 public class LangMerger implements DataProvider {
@@ -73,15 +77,24 @@ public class LangMerger implements DataProvider {
 	}
 
 	@Override
-	public void run(CachedOutput cache) throws IOException {
-		Path path = this.gen.getOutputFolder()
-			.resolve("assets/" + modid + "/lang/" + "en_us.json");
+	public CompletableFuture<?> run(CachedOutput cache) {
+		Path path = this.gen.getPackOutput()
+			.createPathProvider(PackOutput.Target.RESOURCE_PACK, "lang")
+			.json(new ResourceLocation(modid, "en_us"));
 
-		collectExistingEntries(path);
-		collectEntries();
-		if (mergedLangData.isEmpty())
-			return;
-		save(cache, mergedLangData, path, "Merging en_us.json with hand-written lang entries...");
+		return CompletableFuture.runAsync(() -> {
+			try {
+				collectExistingEntries(path);
+				collectEntries();
+				if (mergedLangData.isEmpty())
+					return;
+				save(cache, mergedLangData, path, "Merging en_us.json with hand-written lang entries...");
+
+			} catch (IOException ioexception) {
+				LOGGER.error("Failed to run LangMerger", ioexception);
+			}
+
+		}, Util.backgroundExecutor());
 	}
 
 	private void collectExistingEntries(Path path) throws IOException {
@@ -180,8 +193,7 @@ public class LangMerger implements DataProvider {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void save(CachedOutput cache, List<Object> dataIn, Path target, String message)
-		throws IOException {
+	private void save(CachedOutput cache, List<Object> dataIn, Path target, String message) throws IOException {
 
 		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
 		HashingOutputStream hashingoutputstream = new HashingOutputStream(Hashing.sha1(), bytearrayoutputstream);

@@ -19,6 +19,7 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Items;
@@ -41,7 +42,8 @@ public class AllPaletteBlocks {
 	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)
 		.initialProperties(() -> Blocks.GLASS)
 		.addLayer(() -> RenderType::cutout)
-		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
+		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), RecipeCategory.BUILDING_BLOCKS,
+			c::get))
 		.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/"))
 		.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
 		.item()

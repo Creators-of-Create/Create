@@ -13,6 +13,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -55,7 +56,7 @@ public class PalettesVariantEntry {
 				.ifPresent(b -> builder.onRegister(connectedTextures(b)));
 
 			builder.recipe((c, p) -> {
-				p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), c);
+				p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), RecipeCategory.BUILDING_BLOCKS, c);
 				pattern.addRecipes(baseBlock, c, p);
 			});
 

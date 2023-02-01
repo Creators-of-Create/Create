@@ -28,6 +28,7 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -129,7 +130,7 @@ public class PaletteBlockPattern {
 
 	public void addRecipes(NonNullSupplier<Block> baseBlock, DataGenContext<Block, ? extends Block> c,
 		RegistrateRecipeProvider p) {
-		p.stonecutting(DataIngredient.items(baseBlock), c::get);
+		p.stonecutting(DataIngredient.items(baseBlock), RecipeCategory.BUILDING_BLOCKS, c::get);
 		additionalRecipes.apply(baseBlock)
 			.accept(c, p);
 	}

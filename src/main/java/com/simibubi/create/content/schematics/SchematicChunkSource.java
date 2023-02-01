@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -210,6 +211,15 @@ public class SchematicChunkSource extends ChunkSource {
 			public LevelTickAccess<Fluid> getFluidTicks() {
 				return BlackholeTickAccess.emptyLevelList();
 			}
+
+			@Override
+			public FeatureFlagSet enabledFeatures() {
+				return null;
+			}
+
+			@Override
+			public void playSeededSound(Player pPlayer, double pX, double pY, double pZ, Holder<SoundEvent> pSound,
+				SoundSource pSource, float pVolume, float pPitch, long pSeed) {}
 		}
 
 		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null, RegistryAccess.BUILTIN.get()

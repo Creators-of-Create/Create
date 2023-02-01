@@ -22,7 +22,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
@@ -261,8 +261,8 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		});
 	}
 
-	public CrushingRecipeGen(DataGenerator dataGenerator) {
-		super(dataGenerator);
+	public CrushingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

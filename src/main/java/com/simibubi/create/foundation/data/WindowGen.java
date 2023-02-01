@@ -27,6 +27,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -90,7 +91,7 @@ public class WindowGen {
 		return REGISTRATE.block(name, p -> new WindowBlock(p, translucent))
 			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get())))
 			.addLayer(renderType)
-			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 2)
+			.recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 2)
 				.pattern(" # ")
 				.pattern("#X#")
 				.define('#', ingredient.get())
@@ -116,7 +117,8 @@ public class WindowGen {
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
 			.loot((t, g) -> t.dropWhenSilkTouch(g))
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS),
+				RecipeCategory.BUILDING_BLOCKS, c::get))
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
 			.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
 			.item()
@@ -210,7 +212,7 @@ public class WindowGen {
 			.properties(p -> p.color(parent.get()
 				.defaultMaterialColor()))
 			.blockstate(stateProvider)
-			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 16)
+			.recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 16)
 				.pattern("###")
 				.pattern("###")
 				.define('#', parent.get())

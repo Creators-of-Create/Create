@@ -43,6 +43,7 @@ import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
 import com.simibubi.create.foundation.worldgen.WorldgenDataProvider;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
@@ -155,16 +156,17 @@ public class Create {
 	public static void gatherData(GatherDataEvent event) {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
+		PackOutput output = gen.getPackOutput();
 		if (event.includeClient()) {
 			gen.addProvider(true, new LangMerger(gen, ID, "Create", AllLangPartials.values()));
 			gen.addProvider(true, AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {
-			gen.addProvider(true, new AllAdvancements(gen));
-			gen.addProvider(true, new StandardRecipeGen(gen));
-			gen.addProvider(true, new MechanicalCraftingRecipeGen(gen));
-			gen.addProvider(true, new SequencedAssemblyRecipeGen(gen));
-			ProcessingRecipeGen.registerAll(gen);
+			gen.addProvider(true, new AllAdvancements(output));
+			gen.addProvider(true, new StandardRecipeGen(output));
+			gen.addProvider(true, new MechanicalCraftingRecipeGen(output));
+			gen.addProvider(true, new SequencedAssemblyRecipeGen(output));
+			ProcessingRecipeGen.registerAll(gen, output);
 			gen.addProvider(true, WorldgenDataProvider.makeFactory(event.getLookupProvider()));
 		}
 	}

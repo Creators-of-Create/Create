@@ -243,6 +243,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -783,8 +784,8 @@ public class AllBlocks {
 			.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 			.transform(pickaxeOnly())
-			.loot((p, b) -> p.add(b, RegistrateBlockLootTables.createSingleItemTable(METAL_GIRDER.get())
-				.withPool(RegistrateBlockLootTables.applyExplosionCondition(SHAFT.get(), LootPool.lootPool()
+			.loot((p, b) -> p.add(b, p.createSingleItemTable(METAL_GIRDER.get())
+				.withPool(p.applyExplosionCondition(SHAFT.get(), LootPool.lootPool()
 					.setRolls(ConstantValue.exactly(1.0F))
 					.add(LootItem.lootTableItem(SHAFT.get()))))))
 			.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
@@ -900,7 +901,7 @@ public class AllBlocks {
 			.properties(p -> p.color(colour.getMaterialColor()))
 			.transform(pickaxeOnly())
 			.transform(BuilderTransformers.valveHandle(colour))
-			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(c.get())
+			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get())
 				.requires(colour.getTag())
 				.requires(AllItemTags.VALVE_HANDLES.tag)
 				.unlockedBy("has_valve", RegistrateRecipeProvider.has(AllItemTags.VALVE_HANDLES.tag))
@@ -1328,12 +1329,12 @@ public class AllBlocks {
 					.texture("2", p.modLoc("block/seat/side_" + colourName)));
 			})
 			.recipe((c, p) -> {
-				ShapelessRecipeBuilder.shapeless(c.get())
+				ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get())
 					.requires(DyeHelper.getWoolOfDye(colour))
 					.requires(ItemTags.WOODEN_SLABS)
 					.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
-				ShapelessRecipeBuilder.shapeless(c.get())
+				ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get())
 					.requires(colour.getTag())
 					.requires(AllItemTags.SEATS.tag)
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
@@ -1979,7 +1980,7 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.loot((lt, b) -> lt.add(b,
 			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
-				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+				lt.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
 					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
@@ -1996,7 +1997,7 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.loot((lt, b) -> lt.add(b,
 			RegistrateBlockLootTables.createSilkTouchDispatchTable(b,
-				RegistrateBlockLootTables.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
+				lt.applyExplosionDecay(b, LootItem.lootTableItem(AllItems.RAW_ZINC.get())
 					.apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))))))
 		.tag(BlockTags.NEEDS_IRON_TOOL)
 		.tag(Tags.Blocks.ORES)
@@ -2056,7 +2057,8 @@ public class AllBlocks {
 			.transform(pickaxeOnly())
 			.blockstate((c, p) -> p.axisBlock(c.get(), p.modLoc("block/palettes/rose_quartz_side"),
 				p.modLoc("block/palettes/rose_quartz_top")))
-			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.ROSE_QUARTZ), c::get, 2))
+			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.ROSE_QUARTZ.get()),
+				RecipeCategory.BUILDING_BLOCKS, c::get, 2))
 			.simpleItem()
 			.lang("Block of Rose Quartz")
 			.register();
@@ -2067,7 +2069,8 @@ public class AllBlocks {
 		.properties(p -> p.requiresCorrectToolForDrops())
 		.transform(pickaxeOnly())
 		.blockstate(simpleCubeAll("palettes/rose_quartz_tiles"))
-		.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.POLISHED_ROSE_QUARTZ), c::get, 2))
+		.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.POLISHED_ROSE_QUARTZ.get()),
+			RecipeCategory.BUILDING_BLOCKS, c::get, 2))
 		.simpleItem()
 		.register();
 
@@ -2078,18 +2081,21 @@ public class AllBlocks {
 			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
 			.blockstate(simpleCubeAll("palettes/small_rose_quartz_tiles"))
-			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.POLISHED_ROSE_QUARTZ), c::get, 2))
+			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.POLISHED_ROSE_QUARTZ.get()),
+				RecipeCategory.BUILDING_BLOCKS, c::get, 2))
 			.simpleItem()
 			.register();
 
 	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
 		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), RecipeCategory.BUILDING_BLOCKS,
+				c::get, 2);
 		});
 
 	public static final CopperBlockSet COPPER_TILES =
 		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), RecipeCategory.BUILDING_BLOCKS,
+				c::get, 2);
 		});
 
 	// Load this class

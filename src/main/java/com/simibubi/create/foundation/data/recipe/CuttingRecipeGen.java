@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
@@ -145,8 +145,8 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public CuttingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public CuttingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

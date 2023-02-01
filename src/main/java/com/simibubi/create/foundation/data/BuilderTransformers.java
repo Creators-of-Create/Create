@@ -47,7 +47,7 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -126,7 +126,7 @@ public class BuilderTransformers {
 			.tag(BlockTags.DOORS)
 			.tag(BlockTags.WOODEN_DOORS) // for villager AI
 			.tag(AllBlockTags.NON_DOUBLE_DOOR.tag)
-			.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
+			.loot((lr, block) -> lr.add(block, lr.createDoorTable(block)))
 			.item()
 			.tag(ItemTags.DOORS)
 			.model((c, p) -> p.blockSprite(c, p.modLoc("item/" + type + "_door")))
@@ -206,7 +206,7 @@ public class BuilderTransformers {
 			.recipe((c, p) -> {
 				if (name.equals("andesite"))
 					return;
-				p.stonecutting(ingredient.get(), c::get, 2);
+				p.stonecutting(ingredient.get(), RecipeCategory.DECORATIONS, c::get, 2);
 			})
 			.model((c, p) -> p.blockSprite(c::get, p.modLoc("block/ladder_" + name)))
 			.build();

@@ -16,7 +16,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
@@ -109,8 +109,8 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public WashingRecipeGen(DataGenerator dataGenerator) {
-		super(dataGenerator);
+	public WashingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

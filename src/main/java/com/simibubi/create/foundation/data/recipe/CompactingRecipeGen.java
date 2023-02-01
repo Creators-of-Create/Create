@@ -5,7 +5,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllFluidTags;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
@@ -46,8 +46,8 @@ public class CompactingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public CompactingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public CompactingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override
