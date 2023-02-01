@@ -39,9 +39,8 @@ import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.CreateRegistry;
 import com.simibubi.create.foundation.worldgen.AllFeatures;
-import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
-import com.simibubi.create.foundation.worldgen.BuiltinRegistration;
+import com.simibubi.create.foundation.worldgen.WorldgenDataProvider;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -115,10 +114,8 @@ public class Create {
 		AllParticleTypes.register(modEventBus);
 		AllStructureProcessorTypes.register(modEventBus);
 		AllEntityDataSerializers.register(modEventBus);
-		AllOreFeatureConfigEntries.init();
 		AllFeatures.register(modEventBus);
 		AllPlacementModifiers.register(modEventBus);
-		BuiltinRegistration.register(modEventBus);
 
 		AllConfigs.register(modLoadingContext);
 
@@ -168,7 +165,7 @@ public class Create {
 			gen.addProvider(true, new MechanicalCraftingRecipeGen(gen));
 			gen.addProvider(true, new SequencedAssemblyRecipeGen(gen));
 			ProcessingRecipeGen.registerAll(gen);
-//			AllOreFeatureConfigEntries.gatherData(event);
+			gen.addProvider(true, WorldgenDataProvider.makeFactory(event.getLookupProvider()));
 		}
 	}
 
