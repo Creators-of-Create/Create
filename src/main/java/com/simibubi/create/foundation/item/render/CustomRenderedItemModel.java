@@ -9,8 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.model.BakedModelWrapper;
@@ -58,14 +57,13 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<BakedMod
 	}
 
 	public void loadPartials(ModelEvent.BakingCompleted event) {
-		ModelBakery modelLoader = event.getModelBakery();
+		ModelManager modelManager = event.getModelManager();
 		for (String name : partials.keySet())
-			partials.put(name, loadPartial(modelLoader, name));
+			partials.put(name, loadPartial(modelManager, name));
 	}
 
-	@SuppressWarnings("deprecation")
-	protected BakedModel loadPartial(ModelBakery modelLoader, String name) {
-		return modelLoader.bake(getPartialModelLocation(name), BlockModelRotation.X0_Y0);
+	protected BakedModel loadPartial(ModelManager modelManager, String name) {
+		return modelManager.getModel(getPartialModelLocation(name));
 	}
 
 	protected ResourceLocation getPartialModelLocation(String name) {

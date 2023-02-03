@@ -107,7 +107,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 	}
 
 	@Override
-	protected String getProviderName() {
+	public String getName() {
 		return "Create's Mechanical Crafting Recipes";
 	}
 

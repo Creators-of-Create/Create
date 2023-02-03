@@ -134,7 +134,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 	}
 
 	@Override
-	public String getProviderName() {
+	public String getName() {
 		return "Create's Processing Recipes: " + getRecipeType().getId()
 			.getPath();
 	}

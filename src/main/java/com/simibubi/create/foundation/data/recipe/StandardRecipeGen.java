@@ -1377,7 +1377,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	}
 
 	@Override
-	public String getProviderName() {
+	public String getName() {
 		return "Create's Standard Recipes";
 	}
 
