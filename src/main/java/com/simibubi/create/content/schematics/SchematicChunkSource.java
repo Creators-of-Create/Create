@@ -96,16 +96,19 @@ public class SchematicChunkSource extends ChunkSource {
 	public static class EmptierChunk extends LevelChunk {
 
 		private static final class DummyLevel extends Level {
-			private RegistryAccess access;
+			private final RegistryAccess access;
 
 			private DummyLevel(WritableLevelData p_46450_, ResourceKey<Level> p_46451_, Holder<DimensionType> p_46452_,
-				Supplier<ProfilerFiller> p_46453_, boolean p_46454_, boolean p_46455_, long p_46456_, int p_220359_) {
+				Supplier<ProfilerFiller> p_46453_, boolean p_46454_, boolean p_46455_, long p_46456_, int p_220359_,
+				RegistryAccess access) {
 				super(p_46450_, p_46451_, p_46452_, p_46453_, p_46454_, p_46455_, p_46456_, p_220359_);
+				this.access = access;
 			}
 
-			public Level withAccess(RegistryAccess access) {
-				this.access = access;
-				return this;
+			private DummyLevel(RegistryAccess access) {
+				this(null, null, access
+						.registryOrThrow(Registries.DIMENSION_TYPE)
+						.getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD), null, false, false, 0, 0, access);
 			}
 
 			@Override
@@ -214,7 +217,7 @@ public class SchematicChunkSource extends ChunkSource {
 
 			@Override
 			public FeatureFlagSet enabledFeatures() {
-				return null;
+				return FeatureFlagSet.of();
 			}
 
 			@Override
@@ -222,12 +225,8 @@ public class SchematicChunkSource extends ChunkSource {
 				SoundSource pSource, float pVolume, float pPitch, long pSeed) {}
 		}
 
-		private static final DummyLevel DUMMY_LEVEL = new DummyLevel(null, null, RegistryAccess.BUILTIN.get()
-			.registryOrThrow(Registries.DIMENSION_TYPE)
-			.getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD), null, false, false, 0, 0);
-
 		public EmptierChunk(RegistryAccess registryAccess) {
-			super(DUMMY_LEVEL.withAccess(registryAccess), null);
+			super(new DummyLevel(registryAccess), null);
 		}
 
 		public BlockState getBlockState(BlockPos p_180495_1_) {

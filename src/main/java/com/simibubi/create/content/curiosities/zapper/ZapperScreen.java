@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -127,6 +128,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 				.render(ms);
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void renderBlock(PoseStack ms, int x, int y) {
 		ms.pushPose();
 		ms.translate(x + 32, y + 42, 120);
@@ -137,7 +139,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 		BlockState state = Blocks.AIR.defaultBlockState();
 		if (zapper.hasTag() && zapper.getTag()
 			.contains("BlockUsed"))
-			state = NbtUtils.readBlockState(zapper.getTag()
+			state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), zapper.getTag()
 				.getCompound("BlockUsed"));
 
 		GuiGameElement.of(state)

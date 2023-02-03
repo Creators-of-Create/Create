@@ -33,7 +33,6 @@ public class AllPaletteBlocks {
 
 	static {
 		REGISTRATE
-			.creativeModeTab(() -> Create.PALETTES_CREATIVE_TAB)
 			.startSection(AllSections.PALETTES);
 	}
 

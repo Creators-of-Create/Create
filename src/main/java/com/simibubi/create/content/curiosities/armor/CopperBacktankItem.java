@@ -3,13 +3,11 @@ package com.simibubi.create.content.curiosities.armor;
 import com.simibubi.create.content.curiosities.armor.CapacityEnchantment.ICapacityEnchantable;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
@@ -41,18 +39,6 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (!allowedIn(p_150895_1_))
-			return;
-
-		ItemStack stack = new ItemStack(this);
-		CompoundTag nbt = new CompoundTag();
-		nbt.putInt("Air", BackTankUtil.maxAirWithoutEnchants());
-		stack.setTag(nbt);
-		p_150895_2_.add(stack);
-	}
-
-	@Override
 	public boolean isBarVisible(ItemStack stack) {
 		return true;
 	}
@@ -77,9 +63,6 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 		public CopperBacktankBlockItem(Block pBlock, Properties pProperties) {
 			super(pBlock, pProperties);
 		}
-
-		@Override
-		public void fillItemCategory(CreativeModeTab pGroup, NonNullList<ItemStack> pItems) {}
 
 		@Override
 		public String getDescriptionId() {

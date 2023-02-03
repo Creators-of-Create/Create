@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +22,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -47,12 +45,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	protected final DyeColor color;
-	protected final boolean inCreativeTab;
 
-	public SeatBlock(Properties properties, DyeColor color, boolean inCreativeTab) {
+	public SeatBlock(Properties properties, DyeColor color) {
 		super(properties);
 		this.color = color;
-		this.inCreativeTab = inCreativeTab;
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
@@ -76,13 +72,6 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> p_149666_2_) {
-		if (group != CreativeModeTab.TAB_SEARCH && !inCreativeTab)
-			return;
-		super.fillItemCategory(group, p_149666_2_);
 	}
 
 	@Override

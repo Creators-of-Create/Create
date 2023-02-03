@@ -58,7 +58,6 @@ import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.recipe.CompatMetals;
-import com.simibubi.create.foundation.item.HiddenIngredientItem;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -71,10 +70,6 @@ import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.Tags;
 
 public class AllItems {
-
-	static {
-		REGISTRATE.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
-	}
 
 	// Schematics
 
@@ -99,8 +94,8 @@ public class AllItems {
 
 	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
 
-	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
-		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
+	public static final ItemEntry<Item> BLAZE_CAKE_BASE =
+		REGISTRATE.item("blaze_cake_base", Item::new)
 			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 			.register();
 

@@ -12,7 +12,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -25,7 +24,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -61,13 +59,6 @@ public class BlazeBurnerBlockItem extends BlockItem {
 	private BlazeBurnerBlockItem(Block block, Properties properties, boolean capturedBlaze) {
 		super(block, properties);
 		this.capturedBlaze = capturedBlaze;
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (!hasCapturedBlaze())
-			return;
-		super.fillItemCategory(p_150895_1_, p_150895_2_);
 	}
 
 	@Override

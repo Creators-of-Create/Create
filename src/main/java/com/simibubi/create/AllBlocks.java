@@ -277,10 +277,6 @@ import net.minecraftforge.common.Tags;
 
 public class AllBlocks {
 
-	static {
-		REGISTRATE.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
-	}
-
 	// Schematics
 
 	static {
@@ -1315,7 +1311,7 @@ public class AllBlocks {
 		String colourName = colour.getSerializedName();
 		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
 		SeatInteractionBehaviour interactionBehaviour = new SeatInteractionBehaviour();
-		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour, colour == DyeColor.RED))
+		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour))
 			.initialProperties(SharedProperties::wooden)
 			.properties(p -> p.color(colour.getMaterialColor()))
 			.transform(axeOnly())
@@ -1409,14 +1405,14 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<CasingBlock> SHADOW_STEEL_CASING =
-		REGISTRATE.block("shadow_steel_casing", CasingBlock::deprecated)
+		REGISTRATE.block("shadow_steel_casing", CasingBlock::new)
 			.properties(p -> p.color(MaterialColor.COLOR_BLACK))
 			.transform(BuilderTransformers.casing(() -> AllSpriteShifts.SHADOW_STEEL_CASING))
 			.lang("Shadow Casing")
 			.register();
 
 	public static final BlockEntry<CasingBlock> REFINED_RADIANCE_CASING =
-		REGISTRATE.block("refined_radiance_casing", CasingBlock::deprecated)
+		REGISTRATE.block("refined_radiance_casing", CasingBlock::new)
 			.properties(p -> p.color(MaterialColor.SNOW))
 			.transform(BuilderTransformers.casing(() -> AllSpriteShifts.REFINED_RADIANCE_CASING))
 			.properties(p -> p.lightLevel($ -> 12))

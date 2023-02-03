@@ -14,14 +14,12 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -45,9 +43,6 @@ public class ChromaticCompoundItem extends Item {
 		return stack.getOrCreateTag()
 			.getInt("CollectingLight");
 	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {}
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {

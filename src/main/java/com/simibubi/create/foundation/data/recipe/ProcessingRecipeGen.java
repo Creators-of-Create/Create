@@ -54,7 +54,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 			public CompletableFuture<?> run(CachedOutput dc) {
 				return CompletableFuture.allOf(GENERATORS.stream()
 					.map(gen -> gen.run(dc))
-					.toArray(size -> new CompletableFuture[size]));
+					.toArray(CompletableFuture[]::new));
 			}
 		});
 	}

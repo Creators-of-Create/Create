@@ -20,6 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel.ArmPose;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -71,6 +72,7 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		boolean differentBlock = false;
@@ -78,8 +80,8 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 			.contains("BlockUsed")
 			&& newStack.getTag()
 				.contains("BlockUsed"))
-			differentBlock = NbtUtils.readBlockState(oldStack.getTag()
-				.getCompound("BlockUsed")) != NbtUtils.readBlockState(
+			differentBlock = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), oldStack.getTag()
+				.getCompound("BlockUsed")) != NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(),
 					newStack.getTag()
 						.getCompound("BlockUsed"));
 		return slotChanged || !isZapper(newStack) || differentBlock;

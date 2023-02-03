@@ -638,7 +638,7 @@ public class AllAdvancements implements DataProvider {
 		for (CreateAdvancement advancement : ENTRIES)
 			advancement.save(consumer);
 
-		return CompletableFuture.allOf(futures.toArray((entry) -> new CompletableFuture[entry]));
+		return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
 	}
 
 	@Override

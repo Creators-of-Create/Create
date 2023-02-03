@@ -7,6 +7,7 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.InteractionResult;
@@ -87,7 +88,7 @@ public class ZapperInteractionHandler {
 			data.remove("id");
 		}
 		CompoundTag tag = stack.getOrCreateTag();
-		if (tag.contains("BlockUsed") && NbtUtils.readBlockState(stack.getTag()
+		if (tag.contains("BlockUsed") && NbtUtils.readBlockState(player.level.holderLookup(Registries.BLOCK), stack.getTag()
 			.getCompound("BlockUsed")) == newState && Objects.equals(data, tag.get("BlockData"))) {
 			return false;
 		}

@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -27,8 +28,9 @@ public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> exte
 			renderBlockUsed(stack, ms, buffer, light, overlay);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void renderBlockUsed(ItemStack stack, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		BlockState state = NbtUtils.readBlockState(stack.getTag()
+		BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), stack.getTag()
 			.getCompound("BlockUsed"));
 
 		ms.pushPose();

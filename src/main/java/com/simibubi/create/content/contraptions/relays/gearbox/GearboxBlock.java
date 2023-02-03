@@ -11,9 +11,7 @@ import com.simibubi.create.foundation.block.ITE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -33,12 +31,6 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<Gearb
 	@Override
 	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.PUSH_ONLY;
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-		super.fillItemCategory(group, items);
-		items.add(AllItems.VERTICAL_GEARBOX.asStack());
 	}
 
 	@SuppressWarnings("deprecation")

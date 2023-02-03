@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.server.level.ServerPlayer;
@@ -271,7 +272,7 @@ public class ServerSchematicLoader {
 				if (table == null)
 					return;
 				table.finishUpload();
-				table.inventory.setStackInSlot(1, SchematicItem.create(schematic, player.getGameProfile()
+				table.inventory.setStackInSlot(1, SchematicItem.create(world.holderLookup(Registries.BLOCK), schematic, player.getGameProfile()
 					.getName()));
 
 			} catch (IOException e) {
@@ -337,7 +338,7 @@ public class ServerSchematicLoader {
 				SchematicAndQuillItem.replaceStructureVoidWithAir(nbttagcompound);
 				SchematicAndQuillItem.clampGlueBoxes(world, new AABB(pos, pos.offset(bounds)), nbttagcompound);
 				NbtIo.writeCompressed(nbttagcompound, outputStream);
-				player.setItemInHand(InteractionHand.MAIN_HAND, SchematicItem.create(schematic, player.getGameProfile()
+				player.setItemInHand(InteractionHand.MAIN_HAND, SchematicItem.create(world.holderLookup(Registries.BLOCK), schematic, player.getGameProfile()
 					.getName()));
 
 			} catch (IOException e) {

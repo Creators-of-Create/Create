@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -108,10 +109,11 @@ public abstract class LaunchedItem {
 			return serializeNBT;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		void readNBT(CompoundTag nbt) {
 			super.readNBT(nbt);
-			state = NbtUtils.readBlockState(nbt.getCompound("BlockState"));
+			state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), nbt.getCompound("BlockState"));
 			if (nbt.contains("Data", Tag.TAG_COMPOUND)) {
 				data = nbt.getCompound("Data");
 			}
