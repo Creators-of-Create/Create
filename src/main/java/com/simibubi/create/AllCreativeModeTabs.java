@@ -30,9 +30,11 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
 import net.minecraft.world.item.CreativeModeTab.Output;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
@@ -48,18 +50,21 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class AllCreativeModeTabs {
+	public static final ResourceLocation BASE_TAB_ID = Create.asResource("base");
+	public static final ResourceLocation PALETTES_TAB_ID = Create.asResource("palettes");
+
 	private static CreativeModeTab baseTab;
 	private static CreativeModeTab palettesTab;
 
 	@SubscribeEvent
 	public static void onCreativeModeTabRegister(CreativeModeTabEvent.Register event) {
-		baseTab = event.registerCreativeModeTab(Create.asResource("base"), builder -> {
+		baseTab = event.registerCreativeModeTab(BASE_TAB_ID, List.of(PALETTES_TAB_ID), List.of(CreativeModeTabs.SPAWN_EGGS), builder -> {
 			builder.title(Component.translatable("itemGroup.create.base"))
 				.icon(() -> AllBlocks.COGWHEEL.asStack())
 				.displayItems(new RegistrateDisplayItemsGenerator(EnumSet.complementOf(EnumSet.of(AllSections.PALETTES)), true));
 		});
 
-		palettesTab = event.registerCreativeModeTab(Create.asResource("palettes"), builder -> {
+		palettesTab = event.registerCreativeModeTab(PALETTES_TAB_ID, List.of(), List.of(CreativeModeTabs.SPAWN_EGGS, BASE_TAB_ID), builder -> {
 			builder.title(Component.translatable("itemGroup.create.palettes"))
 				.icon(() -> AllPaletteBlocks.ORNATE_IRON_WINDOW.asStack())
 				.displayItems(new RegistrateDisplayItemsGenerator(EnumSet.of(AllSections.PALETTES), false));
@@ -139,7 +144,6 @@ public class AllCreativeModeTabs {
 
 			Map<ItemProviderEntry<?>, ItemProviderEntry<?>> simpleBeforeOrderings = Map.of(
 					AllItems.EMPTY_BLAZE_BURNER, AllBlocks.BLAZE_BURNER,
-					AllItems.BELT_CONNECTOR, AllBlocks.CREATIVE_MOTOR,
 					AllItems.SCHEDULE, AllBlocks.TRACK_STATION
 			);
 
@@ -228,18 +232,23 @@ public class AllCreativeModeTabs {
 			Function<Item, ItemStack> stackFunc = makeStackFunc();
 			Function<Item, TabVisibility> visibilityFunc = makeVisibilityFunc();
 
-			if (addItems) {
-				outputAll(output, collectItems(itemRenderer, true, exclusionPredicate, orderings), stackFunc, visibilityFunc);
-			}
-
-			outputAll(output, collectBlocks(exclusionPredicate, orderings), stackFunc, visibilityFunc);
+			List<Item> items = new LinkedList<>();
 
 			if (addItems) {
-				outputAll(output, collectItems(itemRenderer, false, exclusionPredicate, orderings), stackFunc, visibilityFunc);
+				items.addAll(collectItems(itemRenderer, true, exclusionPredicate));
 			}
+
+			items.addAll(collectBlocks(exclusionPredicate));
+
+			if (addItems) {
+				items.addAll(collectItems(itemRenderer, false, exclusionPredicate));
+			}
+
+			applyOrderings(items, orderings);
+			outputAll(output, items, stackFunc, visibilityFunc);
 		}
 
-		private List<Item> collectBlocks(Predicate<Item> exclusionPredicate, List<ItemOrdering> orderings) {
+		private List<Item> collectBlocks(Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
 			for (AllSections section : sections) {
 				for (RegistryEntry<Block> entry : Create.REGISTRATE.getAll(section, Registries.BLOCK)) {
@@ -251,13 +260,12 @@ public class AllCreativeModeTabs {
 					}
 				}
 			}
-			items = new LinkedList<>(new ReferenceLinkedOpenHashSet<>(items));
-			applyOrderings(items, orderings);
+			items = new ReferenceArrayList<>(new ReferenceLinkedOpenHashSet<>(items));
 			return items;
 		}
 
-		private List<Item> collectItems(ItemRenderer itemRenderer, boolean special, Predicate<Item> exclusionPredicate, List<ItemOrdering> orderings) {
-			List<Item> items = new LinkedList<>();
+		private List<Item> collectItems(ItemRenderer itemRenderer, boolean special, Predicate<Item> exclusionPredicate) {
+			List<Item> items = new ReferenceArrayList<>();
 			for (AllSections section : sections) {
 				for (RegistryEntry<Item> entry : Create.REGISTRATE.getAll(section, Registries.ITEM)) {
 					Item item = entry.get();
@@ -271,7 +279,6 @@ public class AllCreativeModeTabs {
 					}
 				}
 			}
-			applyOrderings(items, orderings);
 			return items;
 		}
 
@@ -280,12 +287,17 @@ public class AllCreativeModeTabs {
 				int anchorIndex = items.indexOf(ordering.anchor());
 				if (anchorIndex != -1) {
 					Item item = ordering.item();
-					if (items.remove(item)) {
-						if (ordering.type() == ItemOrdering.Type.AFTER) {
-							items.add(anchorIndex + 1, item);
-						} else {
-							items.add(anchorIndex, item);
+					int itemIndex = items.indexOf(item);
+					if (itemIndex != -1) {
+						items.remove(itemIndex);
+						if (itemIndex < anchorIndex) {
+							anchorIndex--;
 						}
+					}
+					if (ordering.type() == ItemOrdering.Type.AFTER) {
+						items.add(anchorIndex + 1, item);
+					} else {
+						items.add(anchorIndex, item);
 					}
 				}
 			}

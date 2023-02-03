@@ -17,7 +17,7 @@ public class FixNormalScalingMixin {
 	 * applied, which negates the matrix again, resulting in the matrix being the
 	 * same as in the beginning.
 	 */
-	@Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/math/Matrix3f;mul(F)V", shift = Shift.AFTER), method = "scale(FFF)V", cancellable = true)
+	@Inject(at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3f;scale(F)Lorg/joml/Matrix3f;", shift = Shift.AFTER, remap = false), method = "scale(FFF)V", cancellable = true)
 	private void returnAfterNegate(float x, float y, float z, CallbackInfo ci) {
 		ci.cancel();
 	}

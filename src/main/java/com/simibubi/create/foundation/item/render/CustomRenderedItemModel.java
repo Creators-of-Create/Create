@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.model.BakedModelWrapper;
@@ -56,14 +55,14 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<BakedMod
 			this.partials.put(name, null);
 	}
 
-	public void loadPartials(ModelEvent.BakingCompleted event) {
-		ModelManager modelManager = event.getModelManager();
+	public void loadPartials(ModelEvent.ModifyBakingResult event) {
+		Map<ResourceLocation, BakedModel> models = event.getModels();
 		for (String name : partials.keySet())
-			partials.put(name, loadPartial(modelManager, name));
+			partials.put(name, loadPartial(models, name));
 	}
 
-	protected BakedModel loadPartial(ModelManager modelManager, String name) {
-		return modelManager.getModel(getPartialModelLocation(name));
+	protected BakedModel loadPartial(Map<ResourceLocation, BakedModel> models, String name) {
+		return models.get(getPartialModelLocation(name));
 	}
 
 	protected ResourceLocation getPartialModelLocation(String name) {
