@@ -27,8 +27,16 @@ public class Curios {
 					return false;
 				if (stacksHandler.getSlots() == 0)
 					return false;
-				return AllItems.GOGGLES.isIn(stacksHandler.getStacks()
-					.getStackInSlot(0));
+
+				int slotCount = stacksHandler.getSlots();
+				for (int slot = 0; slot < slotCount; slot++) {
+					if (AllItems.GOGGLES.isIn(stacksHandler.getStacks()
+							.getStackInSlot(slot))) {
+						return true;
+					}
+				}
+
+				return false;
 			})
 			.orElse(false));
 
