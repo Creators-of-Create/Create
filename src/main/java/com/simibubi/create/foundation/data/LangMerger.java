@@ -24,35 +24,37 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
+import com.tterrag.registrate.providers.RegistrateProvider;
 
 import net.minecraft.Util;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraftforge.fml.LogicalSide;
 
-public class LangMerger implements DataProvider {
+public class LangMerger implements RegistrateProvider {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
-	private static final String CATEGORY_HEADER = "\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
+	private static final String CATEGORY_HEADER =
+		"\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
 
-	private DataGenerator gen;
 	private final String modid;
 	private final String displayName;
 	private final LangPartial[] langPartials;
 
 	private List<Object> mergedLangData;
 	private List<String> langIgnore;
+	private PackOutput output;
 
-	public <T extends LangPartial> LangMerger(DataGenerator gen, String modid, String displayName, T[] langPartials) {
-		this.gen = gen;
+	public <T extends LangPartial> LangMerger(PackOutput output, String modid, String displayName,
+		AllLangPartials[] allLangPartials) {
+		this.output = output;
 		this.modid = modid;
 		this.displayName = displayName;
-		this.langPartials = langPartials;
+		this.langPartials = allLangPartials;
 		this.mergedLangData = new ArrayList<>();
 		this.langIgnore = new ArrayList<>();
 		populateLangIgnore();
@@ -77,9 +79,8 @@ public class LangMerger implements DataProvider {
 	}
 
 	@Override
-	public CompletableFuture<?> run(CachedOutput cache) {
-		Path path = this.gen.getPackOutput()
-			.createPathProvider(PackOutput.Target.RESOURCE_PACK, "lang")
+	public CompletableFuture<?> run(CachedOutput pOutput) {
+		Path path = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "lang")
 			.json(new ResourceLocation(modid, "en_us"));
 
 		return CompletableFuture.runAsync(() -> {
@@ -88,7 +89,8 @@ public class LangMerger implements DataProvider {
 				collectEntries();
 				if (mergedLangData.isEmpty())
 					return;
-				save(cache, mergedLangData, path, "Merging en_us.json with hand-written lang entries...");
+				save(pOutput, mergedLangData, path,
+					"Merging en_us.json with hand-written lang entries...");
 
 			} catch (IOException ioexception) {
 				LOGGER.error("Failed to run LangMerger", ioexception);
@@ -125,7 +127,7 @@ public class LangMerger implements DataProvider {
 				});
 			jsonobject.remove("_");
 			keysToRemove.forEach(jsonobject::remove);
-			
+
 			addAll("Game Elements", jsonobject);
 			reader.close();
 		}
@@ -209,7 +211,9 @@ public class LangMerger implements DataProvider {
 		StringBuilder builder = new StringBuilder();
 		builder.append("{\n");
 		data.forEach(builder::append);
-		builder.append("\t\"_\": \"Thank you for translating ").append(displayName).append("!\"\n\n");
+		builder.append("\t\"_\": \"Thank you for translating ")
+			.append(displayName)
+			.append("!\"\n\n");
 		builder.append("}");
 		return builder.toString();
 	}
@@ -230,6 +234,11 @@ public class LangMerger implements DataProvider {
 			return String.format(ENTRY_FORMAT, key, GSON.toJson(value, String.class));
 		}
 
+	}
+
+	@Override
+	public LogicalSide getSide() {
+		return LogicalSide.CLIENT;
 	}
 
 }

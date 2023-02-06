@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "small_limestone_brick_slab",
   "key": {
     "X": {

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "polished_cut_deepslate_slab",
   "key": {
     "X": {

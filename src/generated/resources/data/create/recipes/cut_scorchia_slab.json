@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "cut_scorchia_slab",
   "key": {
     "X": {

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "small_dripstone_brick_stairs",
   "key": {
     "X": {

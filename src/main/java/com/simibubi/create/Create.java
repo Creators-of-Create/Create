@@ -39,6 +39,7 @@ import com.simibubi.create.foundation.utility.CreateRegistry;
 import com.simibubi.create.foundation.worldgen.AllFeatures;
 import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
 import com.simibubi.create.foundation.worldgen.WorldgenDataProvider;
+import com.tterrag.registrate.providers.ProviderType;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -147,12 +148,16 @@ public class Create {
 		});
 	}
 
+	public static final ProviderType<LangMerger> LANG_MERGER =
+		ProviderType.register("lang_merger", (p, e) -> new LangMerger(e.getGenerator()
+			.getPackOutput(), Create.ID, "Create", AllLangPartials.values()));
+
 	public static void gatherData(GatherDataEvent event) {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
 		PackOutput output = gen.getPackOutput();
 		if (event.includeClient()) {
-			gen.addProvider(true, new LangMerger(gen, ID, "Create", AllLangPartials.values()));
+			REGISTRATE.addDataGenerator(LANG_MERGER, $ -> {});
 			gen.addProvider(true, AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {

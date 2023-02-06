@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "small_scorchia_brick_stairs",
   "key": {
     "X": {
