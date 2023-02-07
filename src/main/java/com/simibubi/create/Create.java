@@ -40,6 +40,7 @@ import com.simibubi.create.foundation.worldgen.AllFeatures;
 import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
 import com.simibubi.create.foundation.worldgen.WorldgenDataProvider;
 import com.tterrag.registrate.providers.ProviderType;
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -157,7 +158,7 @@ public class Create {
 		DataGenerator gen = event.getGenerator();
 		PackOutput output = gen.getPackOutput();
 		if (event.includeClient()) {
-			REGISTRATE.addDataGenerator(LANG_MERGER, $ -> {});
+			REGISTRATE.addDataGenerator(LANG_MERGER, NonNullConsumer.noop());
 			gen.addProvider(true, AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {
