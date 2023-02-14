@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.IEncased;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
@@ -18,6 +17,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,16 +27,16 @@ import net.minecraft.world.phys.HitResult;
 public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement, IEncased {
 
-	private CasingBlock casing;
+	private Block casing;
 
 	public EncasedShaftBlock(Properties properties) {
 		super(properties);
 	}
 
-	public CasingBlock getCasing() {
+	public Block getCasing() {
 		return casing;
 	}
-	public void setCasing(CasingBlock casing) {this.casing = casing;}
+	public void setCasing(Block casing) {this.casing = casing;}
 
 	@Override
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}

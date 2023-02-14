@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
@@ -16,7 +15,6 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.VoxelShaper;
-import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,20 +48,11 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	public static final BooleanProperty BOTTOM_SHAFT = BooleanProperty.create("bottom_shaft");
 
 	boolean isLarge;
-	private BlockEntry<CasingBlock> casing;
+	private Block casing;
 
-	public static EncasedCogwheelBlock andesite(boolean large, Properties properties) {
-		return new EncasedCogwheelBlock(large, properties, AllBlocks.ANDESITE_CASING);
-	}
-
-	public static EncasedCogwheelBlock brass(boolean large, Properties properties) {
-		return new EncasedCogwheelBlock(large, properties, AllBlocks.BRASS_CASING);
-	}
-
-	public EncasedCogwheelBlock(boolean large, Properties properties, BlockEntry<CasingBlock> casing) {
+	public EncasedCogwheelBlock(boolean large, Properties properties) {
 		super(properties);
 		isLarge = large;
-		this.casing = casing;
 		registerDefaultState(defaultBlockState().setValue(TOP_SHAFT, false)
 			.setValue(BOTTOM_SHAFT, false));
 	}
@@ -100,13 +89,13 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public CasingBlock getCasing() {
-		return casing.get();
+	public Block getCasing() {
+		return casing;
 	}
 
 	@Override
-	public void setCasing(CasingBlock casing) {
-
+	public void setCasing(Block casing) {
+		this.casing = casing;
 	}
 
 	@Override

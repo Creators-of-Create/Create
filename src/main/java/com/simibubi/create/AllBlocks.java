@@ -376,7 +376,7 @@ public class AllBlocks {
 					.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL = REGISTRATE
-		.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
+		.block("andesite_encased_cogwheel", p -> new EncasedCogwheelBlock(false, p))
 		.properties(p -> p.color(MaterialColor.PODZOL))
 		.transform(BuilderTransformers.encasedCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
 		.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
@@ -387,7 +387,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_COGWHEEL =
-		REGISTRATE.block("brass_encased_cogwheel", p -> EncasedCogwheelBlock.brass(false, p))
+		REGISTRATE.block("brass_encased_cogwheel", p -> new EncasedCogwheelBlock(false, p))
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(BuilderTransformers.encasedCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
 			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.BRASS_CASING,
@@ -398,7 +398,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_LARGE_COGWHEEL =
-		REGISTRATE.block("andesite_encased_large_cogwheel", p -> EncasedCogwheelBlock.andesite(true, p))
+		REGISTRATE.block("andesite_encased_large_cogwheel", p -> new EncasedCogwheelBlock(true, p))
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(BuilderTransformers.encasedLargeCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
 			.onRegisterAfter(Registry.BLOCK_REGISTRY, b -> Encasable.register(b, LARGE_COGWHEEL.get(), AllBlocks.ANDESITE_CASING.get()))
@@ -406,7 +406,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_LARGE_COGWHEEL =
-		REGISTRATE.block("brass_encased_large_cogwheel", p -> EncasedCogwheelBlock.brass(true, p))
+		REGISTRATE.block("brass_encased_large_cogwheel", p -> new EncasedCogwheelBlock(true, p))
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(BuilderTransformers.encasedLargeCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
 			.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> Encasable.register(b, LARGE_COGWHEEL.get(), AllBlocks.BRASS_CASING.get()))
