@@ -227,6 +227,7 @@ import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.Encasable;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -250,7 +251,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -359,18 +359,20 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<EncasedShaftBlock> ANDESITE_ENCASED_SHAFT =
-		REGISTRATE.block("andesite_encased_shaft", EncasedShaftBlock::andesite)
-			.properties(p -> p.color(MaterialColor.PODZOL))
-			.transform(BuilderTransformers.encasedShaft("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
-			.transform(axeOrPickaxe())
-			.register();
+			REGISTRATE.block("andesite_encased_shaft", EncasedShaftBlock::new)
+					.properties(p -> p.color(MaterialColor.PODZOL))
+					.transform(BuilderTransformers.encasedShaft("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+					.transform(axeOrPickaxe())
+					.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> Encasable.register(b, SHAFT.get(), AllBlocks.ANDESITE_CASING.get()))
+					.register();
 
 	public static final BlockEntry<EncasedShaftBlock> BRASS_ENCASED_SHAFT =
-		REGISTRATE.block("brass_encased_shaft", EncasedShaftBlock::brass)
-			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
-			.transform(BuilderTransformers.encasedShaft("brass", () -> AllSpriteShifts.BRASS_CASING))
-			.transform(axeOrPickaxe())
-			.register();
+			REGISTRATE.block("brass_encased_shaft", EncasedShaftBlock::new)
+					.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
+					.transform(BuilderTransformers.encasedShaft("brass", () -> AllSpriteShifts.BRASS_CASING))
+					.transform(axeOrPickaxe())
+					.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> Encasable.register(b, SHAFT.get(), AllBlocks.BRASS_CASING.get()))
+					.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL = REGISTRATE
 		.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
@@ -379,6 +381,7 @@ public class AllBlocks {
 		.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
 			Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
 				AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
+		.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> Encasable.register(b, COGWHEEL.get(), AllBlocks.ANDESITE_CASING.get()))
 		.transform(axeOrPickaxe())
 		.register();
 
@@ -389,6 +392,7 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.BRASS_CASING,
 				Couple.create(AllSpriteShifts.BRASS_ENCASED_COGWHEEL_SIDE,
 					AllSpriteShifts.BRASS_ENCASED_COGWHEEL_OTHERSIDE))))
+			.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> Encasable.register(b, COGWHEEL.get(), AllBlocks.BRASS_CASING.get()))
 			.transform(axeOrPickaxe())
 			.register();
 
@@ -396,6 +400,7 @@ public class AllBlocks {
 		REGISTRATE.block("andesite_encased_large_cogwheel", p -> EncasedCogwheelBlock.andesite(true, p))
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(BuilderTransformers.encasedLargeCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+			.onRegisterAfter(Registry.BLOCK_REGISTRY, b -> Encasable.register(b, LARGE_COGWHEEL.get(), AllBlocks.ANDESITE_CASING.get()))
 			.transform(axeOrPickaxe())
 			.register();
 
@@ -403,6 +408,7 @@ public class AllBlocks {
 		REGISTRATE.block("brass_encased_large_cogwheel", p -> EncasedCogwheelBlock.brass(true, p))
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(BuilderTransformers.encasedLargeCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
+			.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> Encasable.register(b, LARGE_COGWHEEL.get(), AllBlocks.BRASS_CASING.get()))
 			.transform(axeOrPickaxe())
 			.register();
 
@@ -830,6 +836,7 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
 				(s, f) -> !s.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
+			.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> Encasable.register(b, FLUID_PIPE.get(), AllBlocks.COPPER_CASING.get()))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
@@ -1392,14 +1399,14 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<CasingBlock> ANDESITE_CASING = REGISTRATE.block("andesite_casing", CasingBlock::new)
-		.properties(p -> p.color(MaterialColor.PODZOL))
-		.transform(BuilderTransformers.casing(() -> AllSpriteShifts.ANDESITE_CASING))
-		.register();
+			.properties(p -> p.color(MaterialColor.PODZOL))
+			.transform(BuilderTransformers.casing(() -> AllSpriteShifts.ANDESITE_CASING))
+			.register();
 
 	public static final BlockEntry<CasingBlock> BRASS_CASING = REGISTRATE.block("brass_casing", CasingBlock::new)
-		.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
-		.transform(BuilderTransformers.casing(() -> AllSpriteShifts.BRASS_CASING))
-		.register();
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
+			.transform(BuilderTransformers.casing(() -> AllSpriteShifts.BRASS_CASING))
+			.register();
 
 	public static final BlockEntry<CasingBlock> COPPER_CASING = REGISTRATE.block("copper_casing", CasingBlock::new)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_LIGHT_GRAY))
@@ -1971,7 +1978,7 @@ public class AllBlocks {
 		REGISTRATE.startSection(AllSections.PALETTES);
 	}
 
-	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
+	public static final BlockEntry<net.minecraft.world.level.block.Block> ZINC_ORE = REGISTRATE.block("zinc_ore", net.minecraft.world.level.block.Block::new)
 		.initialProperties(() -> Blocks.GOLD_ORE)
 		.properties(p -> p.color(MaterialColor.METAL))
 		.properties(p -> p.requiresCorrectToolForDrops()
@@ -1988,7 +1995,7 @@ public class AllBlocks {
 		.build()
 		.register();
 
-	public static final BlockEntry<Block> DEEPSLATE_ZINC_ORE = REGISTRATE.block("deepslate_zinc_ore", Block::new)
+	public static final BlockEntry<net.minecraft.world.level.block.Block> DEEPSLATE_ZINC_ORE = REGISTRATE.block("deepslate_zinc_ore", net.minecraft.world.level.block.Block::new)
 		.initialProperties(() -> Blocks.DEEPSLATE_GOLD_ORE)
 		.properties(p -> p.color(MaterialColor.STONE))
 		.properties(p -> p.requiresCorrectToolForDrops()
@@ -2005,7 +2012,7 @@ public class AllBlocks {
 		.build()
 		.register();
 
-	public static final BlockEntry<Block> RAW_ZINC_BLOCK = REGISTRATE.block("raw_zinc_block", Block::new)
+	public static final BlockEntry<net.minecraft.world.level.block.Block> RAW_ZINC_BLOCK = REGISTRATE.block("raw_zinc_block", net.minecraft.world.level.block.Block::new)
 		.initialProperties(() -> Blocks.RAW_GOLD_BLOCK)
 		.properties(p -> p.color(MaterialColor.GLOW_LICHEN))
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -2018,7 +2025,7 @@ public class AllBlocks {
 		.build()
 		.register();
 
-	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
+	public static final BlockEntry<net.minecraft.world.level.block.Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new net.minecraft.world.level.block.Block(p))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.properties(p -> p.color(MaterialColor.GLOW_LICHEN))
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -2032,7 +2039,7 @@ public class AllBlocks {
 		.lang("Block of Zinc")
 		.register();
 
-	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
+	public static final BlockEntry<net.minecraft.world.level.block.Block> BRASS_BLOCK = REGISTRATE.block("brass_block", net.minecraft.world.level.block.Block::new)
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -2061,7 +2068,7 @@ public class AllBlocks {
 			.lang("Block of Rose Quartz")
 			.register();
 
-	public static final BlockEntry<Block> ROSE_QUARTZ_TILES = REGISTRATE.block("rose_quartz_tiles", Block::new)
+	public static final BlockEntry<net.minecraft.world.level.block.Block> ROSE_QUARTZ_TILES = REGISTRATE.block("rose_quartz_tiles", net.minecraft.world.level.block.Block::new)
 		.initialProperties(() -> Blocks.DEEPSLATE)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_PINK))
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -2071,8 +2078,8 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<Block> SMALL_ROSE_QUARTZ_TILES =
-		REGISTRATE.block("small_rose_quartz_tiles", Block::new)
+	public static final BlockEntry<net.minecraft.world.level.block.Block> SMALL_ROSE_QUARTZ_TILES =
+		REGISTRATE.block("small_rose_quartz_tiles", net.minecraft.world.level.block.Block::new)
 			.initialProperties(() -> Blocks.DEEPSLATE)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_PINK))
 			.properties(p -> p.requiresCorrectToolForDrops())

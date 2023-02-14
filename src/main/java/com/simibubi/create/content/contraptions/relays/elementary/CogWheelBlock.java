@@ -35,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel {
+public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel, IEncasable {
 
 	boolean isLarge;
 
@@ -122,38 +122,8 @@ public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		EncasedCogwheelBlock[] encasedBlocks = isLarge
-			? new EncasedCogwheelBlock[] { AllBlocks.ANDESITE_ENCASED_LARGE_COGWHEEL.get(),
-				AllBlocks.BRASS_ENCASED_LARGE_COGWHEEL.get() }
-			: new EncasedCogwheelBlock[] { AllBlocks.ANDESITE_ENCASED_COGWHEEL.get(),
-				AllBlocks.BRASS_ENCASED_COGWHEEL.get() };
-
-		for (EncasedCogwheelBlock encasedCog : encasedBlocks) {
-			if (!encasedCog.getCasing()
-				.isIn(heldItem))
-				continue;
-
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
-
-			BlockState encasedState = encasedCog.defaultBlockState()
-				.setValue(AXIS, state.getValue(AXIS));
-
-			for (Direction d : Iterate.directionsInAxis(state.getValue(AXIS))) {
-				BlockState adjacentState = world.getBlockState(pos.relative(d));
-				if (!(adjacentState.getBlock() instanceof IRotate))
-					continue;
-				IRotate def = (IRotate) adjacentState.getBlock();
-				if (!def.hasShaftTowards(world, pos.relative(d), adjacentState, d.getOpposite()))
-					continue;
-				encasedState =
-					encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
-						: EncasedCogwheelBlock.BOTTOM_SHAFT);
-			}
-
-			KineticTileEntity.switchToBlockState(world, pos, encasedState);
+		if (!tryEncase(state, world, pos, heldItem).equals(InteractionResult.PASS))
 			return InteractionResult.SUCCESS;
-		}
 
 		return InteractionResult.PASS;
 	}
@@ -225,5 +195,25 @@ public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel
 	@Override
 	public boolean isDedicatedCogWheel() {
 		return true;
+	}
+
+	@Override
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock) {
+			BlockState encasedState = encasedBlock.defaultBlockState()
+					.setValue(AXIS, state.getValue(AXIS));
+
+			for (Direction d : Iterate.directionsInAxis(state.getValue(AXIS))) {
+				BlockState adjacentState = level.getBlockState(pos.relative(d));
+				if (!(adjacentState.getBlock() instanceof IRotate))
+					continue;
+				IRotate def = (IRotate) adjacentState.getBlock();
+				if (!def.hasShaftTowards(level, pos.relative(d), adjacentState, d.getOpposite()))
+					continue;
+				encasedState =
+						encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
+								: EncasedCogwheelBlock.BOTTOM_SHAFT);
+			}
+
+			KineticTileEntity.switchToBlockState(level, pos, encasedState);
 	}
 }

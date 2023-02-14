@@ -12,8 +12,10 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.IEncased;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -42,7 +44,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.ticks.TickPriority;
 
-public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, ITE<FluidPipeTileEntity> {
+public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, ITE<FluidPipeTileEntity>, IEncased {
+	private CasingBlock casing;
 
 	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = PipeBlock.PROPERTY_BY_DIRECTION;
 
@@ -61,7 +64,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 		builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
 		super.createBlockStateDefinition(builder);
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -154,4 +157,13 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 		return AllTileEntities.ENCASED_FLUID_PIPE.get();
 	}
 
+	@Override
+	public CasingBlock getCasing() {
+		return casing;
+	}
+
+	@Override
+	public void setCasing(CasingBlock casing) {
+		this.casing = casing;
+	}
 }

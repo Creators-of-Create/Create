@@ -6,6 +6,7 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
@@ -26,12 +27,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractSimpleShaftBlock {
+public class ShaftBlock extends AbstractSimpleShaftBlock implements IEncasable {
 
 	public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -77,20 +79,8 @@ public class ShaftBlock extends AbstractSimpleShaftBlock {
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		for (EncasedShaftBlock encasedShaft : new EncasedShaftBlock[] { AllBlocks.ANDESITE_ENCASED_SHAFT.get(),
-			AllBlocks.BRASS_ENCASED_SHAFT.get() }) {
-
-			if (!encasedShaft.getCasing()
-				.isIn(heldItem))
-				continue;
-
-			if (world.isClientSide)
+		if (!tryEncase(state, world, pos, heldItem).equals(InteractionResult.PASS))
 				return InteractionResult.SUCCESS;
-
-			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.defaultBlockState()
-				.setValue(AXIS, state.getValue(AXIS)));
-			return InteractionResult.SUCCESS;
-		}
 
 		if (AllBlocks.METAL_GIRDER.isIn(heldItem) && state.getValue(AXIS) != Axis.Y) {
 			KineticTileEntity.switchToBlockState(world, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
@@ -110,6 +100,12 @@ public class ShaftBlock extends AbstractSimpleShaftBlock {
 				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		return InteractionResult.PASS;
+	}
+
+	@Override
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock) {
+		KineticTileEntity.switchToBlockState(level, pos, encasedBlock.defaultBlockState()
+				.setValue(RotatedPillarKineticBlock.AXIS, state.getValue(RotatedPillarKineticBlock.AXIS)));
 	}
 
 	@MethodsReturnNonnullByDefault

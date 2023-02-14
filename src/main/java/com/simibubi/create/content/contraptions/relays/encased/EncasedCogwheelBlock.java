@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ITr
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.content.contraptions.relays.elementary.IEncased;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -43,7 +44,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
-	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock {
+	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock, IEncased {
 
 	public static final BooleanProperty TOP_SHAFT = BooleanProperty.create("top_shaft");
 	public static final BooleanProperty BOTTOM_SHAFT = BooleanProperty.create("bottom_shaft");
@@ -81,7 +82,7 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 			return ((BlockHitResult) target).getDirection()
 				.getAxis() != getRotationAxis(state)
 					? isLarge ? AllBlocks.LARGE_COGWHEEL.asStack() : AllBlocks.COGWHEEL.asStack()
-					: getCasing().asStack();
+					: getCasing().asItem().getDefaultInstance();
 		return super.getCloneItemStack(state, target, world, pos, player);
 	}
 
@@ -98,8 +99,14 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 		return stateForPlacement;
 	}
 
-	public BlockEntry<CasingBlock> getCasing() {
-		return casing;
+	@Override
+	public CasingBlock getCasing() {
+		return casing.get();
+	}
+
+	@Override
+	public void setCasing(CasingBlock casing) {
+
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.IEncasable;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -50,7 +51,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class FluidPipeBlock extends PipeBlock
-	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity> {
+	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity>, IEncasable {
 
 	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
 
@@ -95,7 +96,7 @@ public class FluidPipeBlock extends PipeBlock
 				.filter(pc -> pc != null && pc.hasFlow())
 				.findAny()
 				.ifPresent($ -> AllAdvancements.GLASS_PIPE.awardTo(context.getPlayer())));
-			
+
 			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockAndUpdate(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
 				.setValue(GlassFluidPipeBlock.AXIS, axis)
@@ -114,17 +115,12 @@ public class FluidPipeBlock extends PipeBlock
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult hit) {
-		if (!AllBlocks.COPPER_CASING.isIn(player.getItemInHand(hand)))
-			return InteractionResult.PASS;
-		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
-		
-		FluidTransportBehaviour.cacheFlows(world, pos);
-		world.setBlockAndUpdate(pos,
-			EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
-		FluidTransportBehaviour.loadFlows(world, pos);
-		return InteractionResult.SUCCESS;
 
+		ItemStack heldItem = player.getItemInHand(hand);
+		if (!tryEncase(state, world, pos, heldItem).equals(InteractionResult.PASS))
+			return InteractionResult.SUCCESS;
+
+		return InteractionResult.PASS;
 	}
 
 	public BlockState getAxisState(Axis axis) {
@@ -342,4 +338,11 @@ public class FluidPipeBlock extends PipeBlock
 		return OCCLUSION_BOX;
 	}
 
+	@Override
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock) {
+		FluidTransportBehaviour.cacheFlows(level, pos);
+		level.setBlockAndUpdate(pos,
+				EncasedPipeBlock.transferSixWayProperties(state, encasedBlock.defaultBlockState()));
+		FluidTransportBehaviour.loadFlows(level, pos);
+	}
 }
