@@ -251,6 +251,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -1399,14 +1400,14 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<CasingBlock> ANDESITE_CASING = REGISTRATE.block("andesite_casing", CasingBlock::new)
-			.properties(p -> p.color(MaterialColor.PODZOL))
-			.transform(BuilderTransformers.casing(() -> AllSpriteShifts.ANDESITE_CASING))
-			.register();
+		.properties(p -> p.color(MaterialColor.PODZOL))
+		.transform(BuilderTransformers.casing(() -> AllSpriteShifts.ANDESITE_CASING))
+		.register();
 
 	public static final BlockEntry<CasingBlock> BRASS_CASING = REGISTRATE.block("brass_casing", CasingBlock::new)
-			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
-			.transform(BuilderTransformers.casing(() -> AllSpriteShifts.BRASS_CASING))
-			.register();
+		.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
+		.transform(BuilderTransformers.casing(() -> AllSpriteShifts.BRASS_CASING))
+		.register();
 
 	public static final BlockEntry<CasingBlock> COPPER_CASING = REGISTRATE.block("copper_casing", CasingBlock::new)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_LIGHT_GRAY))
@@ -1978,7 +1979,7 @@ public class AllBlocks {
 		REGISTRATE.startSection(AllSections.PALETTES);
 	}
 
-	public static final BlockEntry<net.minecraft.world.level.block.Block> ZINC_ORE = REGISTRATE.block("zinc_ore", net.minecraft.world.level.block.Block::new)
+	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_ORE)
 		.properties(p -> p.color(MaterialColor.METAL))
 		.properties(p -> p.requiresCorrectToolForDrops()
@@ -1995,7 +1996,7 @@ public class AllBlocks {
 		.build()
 		.register();
 
-	public static final BlockEntry<net.minecraft.world.level.block.Block> DEEPSLATE_ZINC_ORE = REGISTRATE.block("deepslate_zinc_ore", net.minecraft.world.level.block.Block::new)
+	public static final BlockEntry<Block> DEEPSLATE_ZINC_ORE = REGISTRATE.block("deepslate_zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.DEEPSLATE_GOLD_ORE)
 		.properties(p -> p.color(MaterialColor.STONE))
 		.properties(p -> p.requiresCorrectToolForDrops()
@@ -2012,7 +2013,7 @@ public class AllBlocks {
 		.build()
 		.register();
 
-	public static final BlockEntry<net.minecraft.world.level.block.Block> RAW_ZINC_BLOCK = REGISTRATE.block("raw_zinc_block", net.minecraft.world.level.block.Block::new)
+	public static final BlockEntry<Block> RAW_ZINC_BLOCK = REGISTRATE.block("raw_zinc_block", Block::new)
 		.initialProperties(() -> Blocks.RAW_GOLD_BLOCK)
 		.properties(p -> p.color(MaterialColor.GLOW_LICHEN))
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -2025,7 +2026,7 @@ public class AllBlocks {
 		.build()
 		.register();
 
-	public static final BlockEntry<net.minecraft.world.level.block.Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new net.minecraft.world.level.block.Block(p))
+	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.properties(p -> p.color(MaterialColor.GLOW_LICHEN))
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -2039,7 +2040,7 @@ public class AllBlocks {
 		.lang("Block of Zinc")
 		.register();
 
-	public static final BlockEntry<net.minecraft.world.level.block.Block> BRASS_BLOCK = REGISTRATE.block("brass_block", net.minecraft.world.level.block.Block::new)
+	public static final BlockEntry<Block> BRASS_BLOCK = REGISTRATE.block("brass_block", Block::new)
 		.initialProperties(() -> Blocks.IRON_BLOCK)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW))
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -2068,7 +2069,7 @@ public class AllBlocks {
 			.lang("Block of Rose Quartz")
 			.register();
 
-	public static final BlockEntry<net.minecraft.world.level.block.Block> ROSE_QUARTZ_TILES = REGISTRATE.block("rose_quartz_tiles", net.minecraft.world.level.block.Block::new)
+	public static final BlockEntry<Block> ROSE_QUARTZ_TILES = REGISTRATE.block("rose_quartz_tiles", Block::new)
 		.initialProperties(() -> Blocks.DEEPSLATE)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_PINK))
 		.properties(p -> p.requiresCorrectToolForDrops())
@@ -2078,8 +2079,8 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<net.minecraft.world.level.block.Block> SMALL_ROSE_QUARTZ_TILES =
-		REGISTRATE.block("small_rose_quartz_tiles", net.minecraft.world.level.block.Block::new)
+	public static final BlockEntry<Block> SMALL_ROSE_QUARTZ_TILES =
+		REGISTRATE.block("small_rose_quartz_tiles", Block::new)
 			.initialProperties(() -> Blocks.DEEPSLATE)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_PINK))
 			.properties(p -> p.requiresCorrectToolForDrops())
