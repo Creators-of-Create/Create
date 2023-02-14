@@ -118,6 +118,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltModel;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockModel;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
+import com.simibubi.create.content.contraptions.relays.elementary.EncasingRegistry;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.content.contraptions.relays.encased.ClutchBlock;
@@ -227,7 +228,6 @@ import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.simibubi.create.content.contraptions.relays.elementary.EncasableRegistry;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -360,56 +360,56 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<EncasedShaftBlock> ANDESITE_ENCASED_SHAFT =
-		REGISTRATE.block("andesite_encased_shaft", EncasedShaftBlock::new)
-				.properties(p -> p.color(MaterialColor.PODZOL))
-				.transform(BuilderTransformers.encasedShaft("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
-				.transform(axeOrPickaxe())
-				.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> EncasableRegistry.register(b, SHAFT.get(), AllBlocks.ANDESITE_CASING.get()))
-				.register();
+		REGISTRATE.block("andesite_encased_shaft", p -> new EncasedShaftBlock(p, AllBlocks.ANDESITE_CASING::get))
+			.properties(p -> p.color(MaterialColor.PODZOL))
+			.transform(BuilderTransformers.encasedShaft("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.SHAFT))
+			.transform(axeOrPickaxe())
+			.register();
 
 	public static final BlockEntry<EncasedShaftBlock> BRASS_ENCASED_SHAFT =
-		REGISTRATE.block("brass_encased_shaft", EncasedShaftBlock::new)
-				.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
-				.transform(BuilderTransformers.encasedShaft("brass", () -> AllSpriteShifts.BRASS_CASING))
-				.transform(axeOrPickaxe())
-				.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> EncasableRegistry.register(b, SHAFT.get(), AllBlocks.BRASS_CASING.get()))
-				.register();
+		REGISTRATE.block("brass_encased_shaft", p -> new EncasedShaftBlock(p, AllBlocks.BRASS_CASING::get))
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
+			.transform(BuilderTransformers.encasedShaft("brass", () -> AllSpriteShifts.BRASS_CASING))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.SHAFT))
+			.transform(axeOrPickaxe())
+			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL = REGISTRATE
-		.block("andesite_encased_cogwheel", p -> new EncasedCogwheelBlock(false, p))
+		.block("andesite_encased_cogwheel", p -> new EncasedCogwheelBlock(p, false, AllBlocks.ANDESITE_CASING::get))
 		.properties(p -> p.color(MaterialColor.PODZOL))
 		.transform(BuilderTransformers.encasedCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+		.transform(EncasingRegistry.addVariantTo(AllBlocks.COGWHEEL))
 		.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
 			Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
 				AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
-		.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> EncasableRegistry.register(b, COGWHEEL.get(), AllBlocks.ANDESITE_CASING.get()))
 		.transform(axeOrPickaxe())
 		.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_COGWHEEL =
-		REGISTRATE.block("brass_encased_cogwheel", p -> new EncasedCogwheelBlock(false, p))
+		REGISTRATE.block("brass_encased_cogwheel", p -> new EncasedCogwheelBlock(p, false, AllBlocks.BRASS_CASING::get))
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(BuilderTransformers.encasedCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.COGWHEEL))
 			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.BRASS_CASING,
 				Couple.create(AllSpriteShifts.BRASS_ENCASED_COGWHEEL_SIDE,
 					AllSpriteShifts.BRASS_ENCASED_COGWHEEL_OTHERSIDE))))
-			.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> EncasableRegistry.register(b, COGWHEEL.get(), AllBlocks.BRASS_CASING.get()))
 			.transform(axeOrPickaxe())
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_LARGE_COGWHEEL =
-		REGISTRATE.block("andesite_encased_large_cogwheel", p -> new EncasedCogwheelBlock(true, p))
+		REGISTRATE.block("andesite_encased_large_cogwheel", p -> new EncasedCogwheelBlock(p, true, AllBlocks.ANDESITE_CASING::get))
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(BuilderTransformers.encasedLargeCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
-			.onRegisterAfter(Registry.BLOCK_REGISTRY, b -> EncasableRegistry.register(b, LARGE_COGWHEEL.get(), AllBlocks.ANDESITE_CASING.get()))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.LARGE_COGWHEEL))
 			.transform(axeOrPickaxe())
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_LARGE_COGWHEEL =
-		REGISTRATE.block("brass_encased_large_cogwheel", p -> new EncasedCogwheelBlock(true, p))
+		REGISTRATE.block("brass_encased_large_cogwheel", p -> new EncasedCogwheelBlock(p, true, AllBlocks.BRASS_CASING::get))
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(BuilderTransformers.encasedLargeCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
-			.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> EncasableRegistry.register(b, LARGE_COGWHEEL.get(), AllBlocks.BRASS_CASING.get()))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.LARGE_COGWHEEL))
 			.transform(axeOrPickaxe())
 			.register();
 
@@ -827,7 +827,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<EncasedPipeBlock> ENCASED_FLUID_PIPE =
-		REGISTRATE.block("encased_fluid_pipe", EncasedPipeBlock::new)
+		REGISTRATE.block("encased_fluid_pipe", p -> new EncasedPipeBlock(p, AllBlocks.COPPER_CASING::get))
 			.initialProperties(SharedProperties::copperMetal)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_LIGHT_GRAY))
 			.properties(BlockBehaviour.Properties::noOcclusion)
@@ -837,8 +837,8 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
 				(s, f) -> !s.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
-			.onRegisterAfter(Registry.BLOCK_REGISTRY, (b) -> EncasableRegistry.register(b, FLUID_PIPE.get(), AllBlocks.COPPER_CASING.get()))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.FLUID_PIPE))
 			.register();
 
 	public static final BlockEntry<GlassFluidPipeBlock> GLASS_FLUID_PIPE =

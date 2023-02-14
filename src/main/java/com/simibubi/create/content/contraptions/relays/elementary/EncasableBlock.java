@@ -13,26 +13,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
- * Implement this interface to indicate that a block should be encasable
+ * Implement this interface to indicate that this block is encasable.
  */
-public interface Encasable {
-
+public interface EncasableBlock {
 	/**
-	 * Implement this method into your overridden use method.
-	 * @return If the Interaction result was a success, or pass
+	 * This method should be called in the {@link Block#use(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)} method.
 	 */
 	default InteractionResult tryEncase(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
 		BlockHitResult ray) {
-		List<Block> encasedBlocks = EncasableRegistry.getValidEncasedBlocks(state.getBlock());
-		for (Block block : encasedBlocks) {
-			if (block instanceof Encased encased) {
+		List<Block> encasedVariants = EncasingRegistry.getVariants(state.getBlock());
+		for (Block block : encasedVariants) {
+			if (block instanceof EncasedBlock encased) {
 				if (encased.getCasing().asItem() != heldItem.getItem())
 					continue;
 
 				if (level.isClientSide)
 					return InteractionResult.SUCCESS;
 
-				encased.handleEncasing(state, level, pos, block, hand, heldItem, player, ray);
+				encased.handleEncasing(state, level, pos, heldItem, player, hand, ray);
 				return InteractionResult.SUCCESS;
 			}
 		}

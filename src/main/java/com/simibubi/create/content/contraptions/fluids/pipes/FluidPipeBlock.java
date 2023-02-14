@@ -11,7 +11,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
-import com.simibubi.create.content.contraptions.relays.elementary.Encasable;
+import com.simibubi.create.content.contraptions.relays.elementary.EncasableBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -51,7 +51,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class FluidPipeBlock extends PipeBlock
-	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity>, Encasable {
+	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity>, EncasableBlock {
 
 	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
 
@@ -115,10 +115,10 @@ public class FluidPipeBlock extends PipeBlock
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
-
 		ItemStack heldItem = player.getItemInHand(hand);
-		if (tryEncase(state, world, pos, heldItem, player, hand, ray).consumesAction())
-			return InteractionResult.SUCCESS;
+		InteractionResult result = tryEncase(state, world, pos, heldItem, player, hand, ray);
+		if (result.consumesAction())
+			return result;
 
 		return InteractionResult.PASS;
 	}

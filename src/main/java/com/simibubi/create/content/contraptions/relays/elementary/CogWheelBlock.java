@@ -33,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel, Encasable {
+public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel, EncasableBlock {
 
 	boolean isLarge;
 
@@ -120,8 +120,9 @@ public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		if (tryEncase(state, world, pos, heldItem, player, hand, ray).consumesAction())
-			return InteractionResult.SUCCESS;
+		InteractionResult result = tryEncase(state, world, pos, heldItem, player, hand, ray);
+		if (result.consumesAction())
+			return result;
 
 		return InteractionResult.PASS;
 	}

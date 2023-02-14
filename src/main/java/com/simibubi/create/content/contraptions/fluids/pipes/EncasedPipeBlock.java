@@ -9,12 +9,13 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
-import com.simibubi.create.content.contraptions.relays.elementary.Encased;
+import com.simibubi.create.content.contraptions.relays.elementary.EncasedBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -45,13 +46,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.ticks.TickPriority;
 
-public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, ITE<FluidPipeTileEntity>, Encased {
-	private Block casing;
-
+public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, ITE<FluidPipeTileEntity>, EncasedBlock {
 	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = PipeBlock.PROPERTY_BY_DIRECTION;
 
-	public EncasedPipeBlock(Properties p_i48339_1_) {
-		super(p_i48339_1_);
+	private final Supplier<Block> casing;
+
+	public EncasedPipeBlock(Properties properties, Supplier<Block> casing) {
+		super(properties);
+		this.casing = casing;
 		registerDefaultState(defaultBlockState().setValue(NORTH, false)
 			.setValue(SOUTH, false)
 			.setValue(DOWN, false)
@@ -160,20 +162,15 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 
 	@Override
 	public Block getCasing() {
-		return casing;
+		return casing.get();
 	}
 
 	@Override
-	public void setCasing(Block casing) {
-		this.casing = casing;
-	}
-
-	@Override
-	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock, InteractionHand hand, ItemStack heldItem, Player player,
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
 	    BlockHitResult ray) {
 		FluidTransportBehaviour.cacheFlows(level, pos);
 		level.setBlockAndUpdate(pos,
-				EncasedPipeBlock.transferSixWayProperties(state, encasedBlock.defaultBlockState()));
+				EncasedPipeBlock.transferSixWayProperties(state, defaultBlockState()));
 		FluidTransportBehaviour.loadFlows(level, pos);
 	}
 }

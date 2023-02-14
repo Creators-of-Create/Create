@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -8,7 +10,7 @@ import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.Encased;
+import com.simibubi.create.content.contraptions.relays.elementary.EncasedBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
@@ -44,17 +46,18 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
-	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock, Encased {
+	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock, EncasedBlock {
 
 	public static final BooleanProperty TOP_SHAFT = BooleanProperty.create("top_shaft");
 	public static final BooleanProperty BOTTOM_SHAFT = BooleanProperty.create("bottom_shaft");
 
-	boolean isLarge;
-	private Block casing;
+	protected final boolean isLarge;
+	private final Supplier<Block> casing;
 
-	public EncasedCogwheelBlock(boolean large, Properties properties) {
+	public EncasedCogwheelBlock(Properties properties, boolean large, Supplier<Block> casing) {
 		super(properties);
 		isLarge = large;
+		this.casing = casing;
 		registerDefaultState(defaultBlockState().setValue(TOP_SHAFT, false)
 			.setValue(BOTTOM_SHAFT, false));
 	}
@@ -89,12 +92,6 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 				stateForPlacement.setValue(AXIS, ((IRotate) placedOn.getBlock()).getRotationAxis(placedOn));
 		return stateForPlacement;
 	}
-
-	@Override
-	public Block getCasing() { return casing; }
-
-	@Override
-	public void setCasing(Block casing) { this.casing = casing; }
 
 	@Override
 	public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pDirection) {
@@ -157,6 +154,16 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 				return false;
 		}
 		return super.areStatesKineticallyEquivalent(oldState, newState);
+	}
+
+	@Override
+	public boolean isSmallCog() {
+		return !isLarge;
+	}
+
+	@Override
+	public boolean isLargeCog() {
+		return isLarge;
 	}
 
 	@Override
@@ -260,21 +267,15 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 		return isLarge ? AllTileEntities.ENCASED_LARGE_COGWHEEL.get() : AllTileEntities.ENCASED_COGWHEEL.get();
 	}
 
-
 	@Override
-	public boolean isSmallCog() {
-		return !isLarge;
+	public Block getCasing() {
+		return casing.get();
 	}
 
 	@Override
-	public boolean isLargeCog() {
-		return isLarge;
-	}
-
-	@Override
-	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock, InteractionHand hand, ItemStack heldItem, Player player,
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
 	    BlockHitResult ray) {
-		BlockState encasedState = encasedBlock.defaultBlockState()
+		BlockState encasedState = defaultBlockState()
 				.setValue(AXIS, state.getValue(AXIS));
 
 		for (Direction d : Iterate.directionsInAxis(state.getValue(AXIS))) {
@@ -285,8 +286,8 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 			if (!def.hasShaftTowards(level, pos.relative(d), adjacentState, d.getOpposite()))
 				continue;
 			encasedState =
-					encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
-							: EncasedCogwheelBlock.BOTTOM_SHAFT);
+				encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
+						: EncasedCogwheelBlock.BOTTOM_SHAFT);
 		}
 
 		KineticTileEntity.switchToBlockState(level, pos, encasedState);

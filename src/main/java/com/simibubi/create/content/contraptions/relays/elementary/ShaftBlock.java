@@ -30,7 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractSimpleShaftBlock implements Encasable {
+public class ShaftBlock extends AbstractSimpleShaftBlock implements EncasableBlock {
 
 	public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -76,8 +76,9 @@ public class ShaftBlock extends AbstractSimpleShaftBlock implements Encasable {
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		if (tryEncase(state, world, pos, heldItem, player, hand, ray).consumesAction())
-			return InteractionResult.SUCCESS;
+		InteractionResult result = tryEncase(state, world, pos, heldItem, player, hand, ray);
+		if (result.consumesAction())
+			return result;
 
 		if (AllBlocks.METAL_GIRDER.isIn(heldItem) && state.getValue(AXIS) != Axis.Y) {
 			KineticTileEntity.switchToBlockState(world, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()

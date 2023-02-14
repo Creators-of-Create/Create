@@ -1,10 +1,12 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.Encased;
+import com.simibubi.create.content.contraptions.relays.elementary.EncasedBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
@@ -27,12 +29,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedShaftBlock extends AbstractEncasedShaftBlock
-	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement, Encased {
+	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement, EncasedBlock {
 
-	private Block casing;
+	private final Supplier<Block> casing;
 
-	public EncasedShaftBlock(Properties properties) {
+	public EncasedShaftBlock(Properties properties, Supplier<Block> casing) {
 		super(properties);
+		this.casing = casing;
 	}
 
 	@Override
@@ -73,18 +76,15 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 		return AllTileEntities.ENCASED_SHAFT.get();
 	}
 
+	@Override
 	public Block getCasing() {
-		return casing;
-	}
-
-	public void setCasing(Block casing) {
-		this.casing = casing;
+		return casing.get();
 	}
 
 	@Override
-	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock, InteractionHand hand, ItemStack heldItem, Player player,
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
 	    BlockHitResult ray) {
-		KineticTileEntity.switchToBlockState(level, pos, encasedBlock.defaultBlockState()
+		KineticTileEntity.switchToBlockState(level, pos, defaultBlockState()
 				.setValue(RotatedPillarKineticBlock.AXIS, state.getValue(RotatedPillarKineticBlock.AXIS)));
 	}
 }
