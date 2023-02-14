@@ -6,7 +6,6 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
 import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -26,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -78,7 +76,7 @@ public class ShaftBlock extends AbstractSimpleShaftBlock implements Encasable {
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		if (tryEncase(state, world, pos, heldItem).consumesAction())
+		if (tryEncase(state, world, pos, heldItem, player, hand, ray).consumesAction())
 			return InteractionResult.SUCCESS;
 
 		if (AllBlocks.METAL_GIRDER.isIn(heldItem) && state.getValue(AXIS) != Axis.Y) {
@@ -99,12 +97,6 @@ public class ShaftBlock extends AbstractSimpleShaftBlock implements Encasable {
 				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		return InteractionResult.PASS;
-	}
-
-	@Override
-	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock) {
-		KineticTileEntity.switchToBlockState(level, pos, encasedBlock.defaultBlockState()
-				.setValue(RotatedPillarKineticBlock.AXIS, state.getValue(RotatedPillarKineticBlock.AXIS)));
 	}
 
 	@MethodsReturnNonnullByDefault

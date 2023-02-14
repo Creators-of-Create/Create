@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +41,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.ticks.TickPriority;
 
@@ -164,5 +166,14 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	@Override
 	public void setCasing(Block casing) {
 		this.casing = casing;
+	}
+
+	@Override
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock, InteractionHand hand, ItemStack heldItem, Player player,
+	    BlockHitResult ray) {
+		FluidTransportBehaviour.cacheFlows(level, pos);
+		level.setBlockAndUpdate(pos,
+				EncasedPipeBlock.transferSixWayProperties(state, encasedBlock.defaultBlockState()));
+		FluidTransportBehaviour.loadFlows(level, pos);
 	}
 }

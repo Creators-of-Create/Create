@@ -3,20 +3,22 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.Encased;
-import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -32,10 +34,6 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 	public EncasedShaftBlock(Properties properties) {
 		super(properties);
 	}
-
-	public Block getCasing() { return casing; }
-
-	public void setCasing(Block casing) { this.casing = casing; }
 
 	@Override
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
@@ -75,4 +73,18 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 		return AllTileEntities.ENCASED_SHAFT.get();
 	}
 
+	public Block getCasing() {
+		return casing;
+	}
+
+	public void setCasing(Block casing) {
+		this.casing = casing;
+	}
+
+	@Override
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock, InteractionHand hand, ItemStack heldItem, Player player,
+	    BlockHitResult ray) {
+		KineticTileEntity.switchToBlockState(level, pos, encasedBlock.defaultBlockState()
+				.setValue(RotatedPillarKineticBlock.AXIS, state.getValue(RotatedPillarKineticBlock.AXIS)));
+	}
 }

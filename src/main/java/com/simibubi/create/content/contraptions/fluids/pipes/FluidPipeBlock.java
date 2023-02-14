@@ -114,10 +114,10 @@ public class FluidPipeBlock extends PipeBlock
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult hit) {
+		BlockHitResult ray) {
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		if (tryEncase(state, world, pos, heldItem).consumesAction())
+		if (tryEncase(state, world, pos, heldItem, player, hand, ray).consumesAction())
 			return InteractionResult.SUCCESS;
 
 		return InteractionResult.PASS;
@@ -336,13 +336,5 @@ public class FluidPipeBlock extends PipeBlock
 	@Override
 	public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
 		return OCCLUSION_BOX;
-	}
-
-	@Override
-	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock) {
-		FluidTransportBehaviour.cacheFlows(level, pos);
-		level.setBlockAndUpdate(pos,
-				EncasedPipeBlock.transferSixWayProperties(state, encasedBlock.defaultBlockState()));
-		FluidTransportBehaviour.loadFlows(level, pos);
 	}
 }

@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticT
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -158,16 +160,6 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public boolean isSmallCog() {
-		return !isLarge;
-	}
-
-	@Override
-	public boolean isLargeCog() {
-		return isLarge;
-	}
-
-	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
 		return CogWheelBlock.isValidCogwheelPosition(ICogWheel.isLargeCog(state), worldIn, pos, state.getValue(AXIS));
 	}
@@ -268,4 +260,35 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 		return isLarge ? AllTileEntities.ENCASED_LARGE_COGWHEEL.get() : AllTileEntities.ENCASED_COGWHEEL.get();
 	}
 
+
+	@Override
+	public boolean isSmallCog() {
+		return !isLarge;
+	}
+
+	@Override
+	public boolean isLargeCog() {
+		return isLarge;
+	}
+
+	@Override
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, Block encasedBlock, InteractionHand hand, ItemStack heldItem, Player player,
+	    BlockHitResult ray) {
+		BlockState encasedState = encasedBlock.defaultBlockState()
+				.setValue(AXIS, state.getValue(AXIS));
+
+		for (Direction d : Iterate.directionsInAxis(state.getValue(AXIS))) {
+			BlockState adjacentState = level.getBlockState(pos.relative(d));
+			if (!(adjacentState.getBlock() instanceof IRotate))
+				continue;
+			IRotate def = (IRotate) adjacentState.getBlock();
+			if (!def.hasShaftTowards(level, pos.relative(d), adjacentState, d.getOpposite()))
+				continue;
+			encasedState =
+					encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
+							: EncasedCogwheelBlock.BOTTOM_SHAFT);
+		}
+
+		KineticTileEntity.switchToBlockState(level, pos, encasedState);
+	}
 }
