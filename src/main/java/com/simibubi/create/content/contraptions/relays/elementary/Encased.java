@@ -5,7 +5,9 @@ import net.minecraft.world.level.block.Block;
 /**
  * Implement this interface to indicate that this block is an EncasedBlock
  */
-public interface IEncased {
+public interface Encased {
+
 	Block getCasing();
+
 	void setCasing(Block casing);
 }

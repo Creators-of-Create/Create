@@ -1,11 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import java.util.ArrayList;
-
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
-
-import com.simibubi.create.foundation.data.Encasable;
+import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -17,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 /**
  * Implement this interface to indicate that a block should be encasable
  */
-public interface IEncasable {
+public interface Encasable {
 
 	/**
 	 * Handles how encasement should be done if tryEncase is successful
@@ -29,9 +24,9 @@ public interface IEncasable {
 	 * @return If the Interaction result was a success, or pass
 	 */
 	default InteractionResult tryEncase(BlockState state, Level level, BlockPos pos,ItemStack heldItem) {
-		ArrayList<Block> encasedBlocks = Encasable.encasableBlocks.get(state.getBlock());
+		List<Block> encasedBlocks = EncasableRegistry.getValidEncasedBlocks(state.getBlock());
 		for (Block block : encasedBlocks) {
-			if(block instanceof IEncased encased){
+			if (block instanceof Encased encased) {
 				if (encased.getCasing().asItem() != heldItem.getItem())
 					continue;
 

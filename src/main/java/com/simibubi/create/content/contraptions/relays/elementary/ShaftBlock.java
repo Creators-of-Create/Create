@@ -8,7 +8,6 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -33,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractSimpleShaftBlock implements IEncasable {
+public class ShaftBlock extends AbstractSimpleShaftBlock implements Encasable {
 
 	public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -79,8 +78,8 @@ public class ShaftBlock extends AbstractSimpleShaftBlock implements IEncasable {
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		if (!tryEncase(state, world, pos, heldItem).equals(InteractionResult.PASS))
-				return InteractionResult.SUCCESS;
+		if (tryEncase(state, world, pos, heldItem).consumesAction())
+			return InteractionResult.SUCCESS;
 
 		if (AllBlocks.METAL_GIRDER.isIn(heldItem) && state.getValue(AXIS) != Axis.Y) {
 			KineticTileEntity.switchToBlockState(world, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()

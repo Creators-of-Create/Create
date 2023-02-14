@@ -8,8 +8,8 @@ import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.Encased;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.content.contraptions.relays.elementary.IEncased;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -42,7 +42,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
-	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock, IEncased {
+	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock, Encased {
 
 	public static final BooleanProperty TOP_SHAFT = BooleanProperty.create("top_shaft");
 	public static final BooleanProperty BOTTOM_SHAFT = BooleanProperty.create("bottom_shaft");
@@ -89,14 +89,10 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public Block getCasing() {
-		return casing;
-	}
+	public Block getCasing() { return casing; }
 
 	@Override
-	public void setCasing(Block casing) {
-		this.casing = casing;
-	}
+	public void setCasing(Block casing) { this.casing = casing; }
 
 	@Override
 	public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pDirection) {

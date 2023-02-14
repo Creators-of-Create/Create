@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.elementary.IEncased;
+import com.simibubi.create.content.contraptions.relays.elementary.Encased;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedShaftBlock extends AbstractEncasedShaftBlock
-	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement, IEncased {
+	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement, Encased {
 
 	private Block casing;
 
@@ -33,10 +33,9 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 		super(properties);
 	}
 
-	public Block getCasing() {
-		return casing;
-	}
-	public void setCasing(Block casing) {this.casing = casing;}
+	public Block getCasing() { return casing; }
+
+	public void setCasing(Block casing) { this.casing = casing; }
 
 	@Override
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
@@ -46,7 +45,7 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock
 		if (context.getLevel().isClientSide)
 			return InteractionResult.SUCCESS;
 		context.getLevel()
-			.levelEvent(2001, context.getClickedPos(), ShaftBlock.getId(state));
+			.levelEvent(2001, context.getClickedPos(), Block.getId(state));
 		KineticTileEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
 			AllBlocks.SHAFT.getDefaultState()
 				.setValue(AXIS, state.getValue(AXIS)));
