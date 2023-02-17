@@ -124,7 +124,7 @@ public class TrackBlock extends Block
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
 		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_BE, WATERLOGGED));
 	}
-	
+
 	@Override
 	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
 		return BlockPathTypes.RAIL;
@@ -208,7 +208,7 @@ public class TrackBlock extends Block
 			return;
 		withBlockEntityDo(pLevel, pPos, be -> {
 			be.cancelDrops = true;
-			be.removeInboundConnections();
+			be.removeInboundConnections(true);
 		});
 	}
 
@@ -233,6 +233,7 @@ public class TrackBlock extends Block
 	@Override
 	public void tick(BlockState state, ServerLevel level, BlockPos pos, Random p_60465_) {
 		TrackPropagator.onRailAdded(level, pos, state);
+		withBlockEntityDo(level, pos, tbe -> tbe.tilt.undoSmoothing());
 		if (!state.getValue(SHAPE)
 			.isPortal())
 			connectToNether(level, pos, state);
@@ -297,12 +298,14 @@ public class TrackBlock extends Block
 		Player player = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, Predicates.alwaysTrue());
 		if (player == null)
 			return;
-		player.displayClientMessage(Components.literal("<!> ").append(Lang.translateDirect("portal_track.failed"))
+		player.displayClientMessage(Components.literal("<!> ")
+			.append(Lang.translateDirect("portal_track.failed"))
 			.withStyle(ChatFormatting.GOLD), false);
-		MutableComponent component =
-			failPos != null ? Lang.translateDirect("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
-				: Lang.translateDirect("portal_track." + fail);
-		player.displayClientMessage(Components.literal(" - ").withStyle(ChatFormatting.GRAY)
+		MutableComponent component = failPos != null
+			? Lang.translateDirect("portal_track." + fail, failPos.getX(), failPos.getY(), failPos.getZ())
+			: Lang.translateDirect("portal_track." + fail);
+		player.displayClientMessage(Components.literal(" - ")
+			.withStyle(ChatFormatting.GRAY)
 			.append(component.withStyle(st -> st.withColor(0xFFD3B4))), false);
 	}
 
@@ -362,6 +365,12 @@ public class TrackBlock extends Block
 	}
 
 	@Override
+	public int getYOffsetAt(BlockGetter world, BlockPos pos, BlockState state, Vec3 end) {
+		return getBlockEntityOptional(world, pos).map(tbe -> tbe.tilt.getYOffsetForAxisEnd(end))
+			.orElse(0);
+	}
+
+	@Override
 	public Collection<DiscoveredLocation> getConnected(BlockGetter worldIn, BlockPos pos, BlockState state,
 		boolean linear, TrackNodeLocation connectedTo) {
 		Collection<DiscoveredLocation> list;
@@ -378,8 +387,8 @@ public class TrackBlock extends Block
 					ITrackBlock.addToListIfConnected(connectedTo, list,
 						(d, b) -> axis.scale(b ? 0 : fromCenter ? -d : d)
 							.add(center),
-						b -> shape.getNormal(), b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, axis,
-						null);
+						b -> shape.getNormal(), b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, v -> 0,
+						axis, null);
 		} else
 			list = ITrackBlock.super.getConnected(world, pos, state, linear, connectedTo);
 
@@ -395,7 +404,7 @@ public class TrackBlock extends Block
 		Map<BlockPos, BezierConnection> connections = trackTE.getConnections();
 		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
 			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get,
-			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, null, bc));
+			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, bc::yOffsetAt, null, bc));
 
 		if (trackTE.boundLocation == null || !(world instanceof ServerLevel level))
 			return list;
@@ -421,7 +430,7 @@ public class TrackBlock extends Block
 		getTrackAxes(world, pos, state).forEach(axis -> {
 			ITrackBlock.addToListIfConnected(connectedTo, list, (d, b) -> (b ? axis : boundAxis).scale(d)
 				.add(b ? center : boundCenter), b -> (b ? shape : boundShape).getNormal(),
-				b -> b ? level.dimension() : otherLevel.dimension(), axis, null);
+				b -> b ? level.dimension() : otherLevel.dimension(), v -> 0, axis, null);
 		});
 
 		return list;
@@ -444,8 +453,10 @@ public class TrackBlock extends Block
 		boolean removeBE = false;
 		if (pState.getValue(HAS_BE) && (!pState.is(pNewState.getBlock()) || !pNewState.getValue(HAS_BE))) {
 			BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-			if (blockEntity instanceof TrackBlockEntity && !pLevel.isClientSide)
-				((TrackBlockEntity) blockEntity).removeInboundConnections();
+			if (blockEntity instanceof TrackBlockEntity tbe && !pLevel.isClientSide) {
+				tbe.cancelDrops |= pNewState.getBlock() == this;
+				tbe.removeInboundConnections(true);
+			}
 			removeBE = true;
 		}
 
@@ -468,7 +479,7 @@ public class TrackBlock extends Block
 			if (!entry.getValue()
 				.isInside(pos))
 				continue;
-			if (world.getBlockEntity(entry.getKey()) instanceof StationBlockEntity station)
+			if (world.getBlockEntity(entry.getKey())instanceof StationBlockEntity station)
 				if (station.trackClicked(player, hand, this, state, pos))
 					return InteractionResult.SUCCESS;
 		}
@@ -484,7 +495,7 @@ public class TrackBlock extends Block
 				BlockPos girderPos = pPos.below()
 					.offset(vec3.z * side, 0, vec3.x * side);
 				BlockState girderState = pLevel.getBlockState(girderPos);
-				if (girderState.getBlock() instanceof GirderBlock girderBlock
+				if (girderState.getBlock()instanceof GirderBlock girderBlock
 					&& !blockTicks.hasScheduledTick(girderPos, girderBlock))
 					pLevel.scheduleTick(girderPos, girderBlock, 1);
 			}
@@ -689,7 +700,7 @@ public class TrackBlock extends Block
 		Vec3 normal = null;
 		Vec3 offset = null;
 
-		if (bezierPoint != null && world.getBlockEntity(pos) instanceof TrackBlockEntity trackTE) {
+		if (bezierPoint != null && world.getBlockEntity(pos)instanceof TrackBlockEntity trackTE) {
 			BezierConnection bc = trackTE.connections.get(bezierPoint.curveTarget());
 			if (bc != null) {
 				double length = Mth.floor(bc.getLength() * 2);
@@ -732,6 +743,16 @@ public class TrackBlock extends Block
 			msr.translate(0, 4 / 16f, 0);
 			if (direction == AxisDirection.NEGATIVE)
 				msr.rotateCentered(Direction.UP, Mth.PI);
+		}
+
+		if (bezierPoint == null && world.getBlockEntity(pos)instanceof TrackBlockEntity trackTE && trackTE.isTilted()) {
+			double yOffset = 0;
+			for (BezierConnection bc : trackTE.connections.values())
+				yOffset += bc.starts.getFirst().y - pos.getY();
+			msr.centre()
+				.rotateX(-direction.getStep() * trackTE.tilt.smoothingAngle.get())
+				.unCentre()
+				.translate(0, yOffset / 2, 0);
 		}
 
 		return switch (type) {
@@ -779,8 +800,7 @@ public class TrackBlock extends Block
 	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {
 		@Override
 		@Nullable
-		public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState,
-				int progress) {
+		public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState, int progress) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (blockEntity instanceof TrackBlockEntity track) {
 				return new HashSet<>(track.connections.keySet());

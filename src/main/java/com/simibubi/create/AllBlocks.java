@@ -226,6 +226,7 @@ import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockStateGenerator;
+import com.simibubi.create.content.logistics.trains.track.TrackModel;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
@@ -1541,6 +1542,7 @@ public class AllBlocks {
 			.noOcclusion())
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
+		.onRegister(CreateRegistrate.blockModel(() -> TrackModel::new))
 		.blockstate(new TrackBlockStateGenerator()::generate)
 		.tag(AllBlockTags.RELOCATION_NOT_SUPPORTED.tag)
 		.lang("Train Track")

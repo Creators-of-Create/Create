@@ -150,6 +150,8 @@ public class TrackPlacement {
 				.tooJumbly();
 		if (!state1.hasProperty(TrackBlock.HAS_BE))
 			return info.withMessage("original_missing");
+		if (level.getBlockEntity(pos2) instanceof TrackBlockEntity tbe && tbe.isTilted())
+			return info.withMessage("turn_start");
 
 		if (axis1.dot(end2.subtract(end1)) < 0) {
 			axis1 = axis1.scale(-1);
@@ -556,6 +558,8 @@ public class TrackPlacement {
 
 		tte1.addConnection(info.curve);
 		tte2.addConnection(info.curve.secondary());
+		tte1.tilt.tryApplySmoothing();
+		tte2.tilt.tryApplySmoothing();
 		return info;
 	}
 
