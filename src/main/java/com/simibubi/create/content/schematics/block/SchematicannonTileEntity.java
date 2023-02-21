@@ -155,7 +155,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		schematicProgress = compound.getFloat("Progress");
 		bookPrintingProgress = compound.getFloat("PaperProgress");
 		fuelLevel = compound.getFloat("Fuel");
-		state = State.valueOf(compound.getString("State"));
+		String stateString = compound.getString("State");
+		state = stateString.isEmpty() ? State.STOPPED : State.valueOf(compound.getString("State"));
 		blocksPlaced = compound.getInt("AmountPlaced");
 		blocksToPlace = compound.getInt("AmountToPlace");
 
@@ -458,7 +459,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			sendUpdate = true;
 			return;
 		}
-		
+
 		if (printer.isWorldEmpty()) {
 			state = State.STOPPED;
 			statusMsg = "schematicExpired";
@@ -675,10 +676,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		ItemStack paper = inventory.extractItem(BookInput, 1, true);
 		boolean outputFull = inventory.getStackInSlot(BookOutput)
 			.getCount() == inventory.getSlotLimit(BookOutput);
-		
+
 		if (printer.isErrored())
 			return;
-		
+
 		if (!printer.isLoaded()) {
 			if (!blueprint.isEmpty())
 				initializePrinter(blueprint);
@@ -817,7 +818,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			blocksToPlace += printer.markAllBlockRequirements(checklist, level, this::shouldPlace);
 			printer.markAllEntityRequirements(checklist);
 		}
-		
+
 		checklist.gathered.clear();
 		findInventories();
 		for (LazyOptional<IItemHandler> cap : attachedInventories) {
