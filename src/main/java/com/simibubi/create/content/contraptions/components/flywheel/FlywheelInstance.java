@@ -12,13 +12,13 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
-public class FlyWheelInstance extends KineticBlockEntityInstance<FlywheelBlockEntity> implements DynamicInstance {
+public class FlywheelInstance extends KineticBlockEntityInstance<FlywheelBlockEntity> implements DynamicInstance {
 
 	protected final RotatingData shaft;
 	protected final ModelData wheel;
 	protected float lastAngle = Float.NaN;
 
-	public FlyWheelInstance(MaterialManager materialManager, FlywheelBlockEntity blockEntity) {
+	public FlywheelInstance(MaterialManager materialManager, FlywheelBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
 		shaft = setup(getRotatingMaterial().getModel(shaft())

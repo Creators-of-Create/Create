@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -17,14 +16,14 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FluidValveRenderer extends KineticBlockEntityRenderer {
+public class FluidValveRenderer extends KineticBlockEntityRenderer<FluidValveBlockEntity> {
 
 	public FluidValveRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(FluidValveBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
 		if (Backend.canUseInstancing(be.getLevel())) return;
@@ -34,12 +33,9 @@ public class FluidValveRenderer extends KineticBlockEntityRenderer {
 		SuperByteBuffer pointer = CachedBufferer.partial(AllBlockPartials.FLUID_VALVE_POINTER, blockState);
 		Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
-		if (!(be instanceof FluidValveBlockEntity valve))
-			return;
-
-		float pointerRotation = Mth.lerp(valve.pointer.getValue(partialTicks), 0, -90);
+		float pointerRotation = Mth.lerp(be.pointer.getValue(partialTicks), 0, -90);
 		Axis pipeAxis = FluidValveBlock.getPipeAxis(blockState);
-		Axis shaftAxis = KineticBlockEntityRenderer.getRotationAxisOf(be);
+		Axis shaftAxis = getRotationAxisOf(be);
 
 		int pointerRotationOffset = 0;
 		if (pipeAxis.isHorizontal() && shaftAxis == Axis.X || pipeAxis.isVertical())
@@ -55,8 +51,8 @@ public class FluidValveRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
-		return KineticBlockEntityRenderer.shaft(KineticBlockEntityRenderer.getRotationAxisOf(be));
+	protected BlockState getRenderedBlockState(FluidValveBlockEntity be) {
+		return shaft(getRotationAxisOf(be));
 	}
 
 }

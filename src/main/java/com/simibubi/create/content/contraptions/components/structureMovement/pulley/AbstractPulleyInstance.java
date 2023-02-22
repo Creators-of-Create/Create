@@ -20,7 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
 
-public abstract class AbstractPulleyInstance extends ShaftInstance implements DynamicInstance, TickingLightListener {
+public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> extends ShaftInstance<T> implements DynamicInstance, TickingLightListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
@@ -34,7 +34,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements Dy
 	private final GridAlignedBB volume = new GridAlignedBB();
 	private final LightVolume light;
 
-	public AbstractPulleyInstance(MaterialManager dispatcher, KineticBlockEntity blockEntity) {
+	public AbstractPulleyInstance(MaterialManager dispatcher, T blockEntity) {
 		super(dispatcher, blockEntity);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);

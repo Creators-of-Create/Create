@@ -11,14 +11,12 @@ import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class PressInstance extends ShaftInstance implements DynamicInstance {
+public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> implements DynamicInstance {
 
 	private final OrientedData pressHead;
-	private final MechanicalPressBlockEntity press;
 
 	public PressInstance(MaterialManager materialManager, MechanicalPressBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
-		press = blockEntity;
 
 		pressHead = materialManager.defaultSolid()
 				.material(Materials.ORIENTED)
@@ -39,7 +37,7 @@ public class PressInstance extends ShaftInstance implements DynamicInstance {
 	}
 
 	private void transformModels() {
-		float renderedHeadOffset = getRenderedHeadOffset(press);
+		float renderedHeadOffset = getRenderedHeadOffset(blockEntity);
 
 		pressHead.setPosition(getInstancePosition())
 			.nudge(0, -renderedHeadOffset, 0);

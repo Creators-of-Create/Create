@@ -24,7 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
-public class ArmInstance extends SingleRotatingInstance implements DynamicInstance {
+public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implements DynamicInstance {
 
 	final ModelData base;
 	final ModelData lowerBody;
@@ -34,7 +34,6 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 	private final ArrayList<ModelData> clawGrips;
 
 	private final ArrayList<ModelData> models;
-	private final ArmBlockEntity arm;
 	private final Boolean ceiling;
 
 	private boolean firstRender = true;
@@ -66,7 +65,6 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
 		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
-		arm = blockEntity;
 		ceiling = blockState.getValue(ArmBlock.CEILING);
 
 		animateArm(false);
@@ -74,7 +72,7 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 
 	@Override
 	public void beginFrame() {
-		if (arm.phase == ArmBlockEntity.Phase.DANCING && blockEntity.getSpeed() != 0) {
+		if (blockEntity.phase == ArmBlockEntity.Phase.DANCING && blockEntity.getSpeed() != 0) {
 			animateArm(true);
 			firstRender = true;
 			return;
@@ -82,10 +80,10 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 
 		float pt = AnimationTickHolder.getPartialTicks();
 
-		float baseAngleNow = arm.baseAngle.getValue(pt);
-		float lowerArmAngleNow = arm.lowerArmAngle.getValue(pt);
-		float upperArmAngleNow = arm.upperArmAngle.getValue(pt);
-		float headAngleNow = arm.headAngle.getValue(pt);
+		float baseAngleNow = blockEntity.baseAngle.getValue(pt);
+		float lowerArmAngleNow = blockEntity.lowerArmAngle.getValue(pt);
+		float upperArmAngleNow = blockEntity.upperArmAngle.getValue(pt);
+		float headAngleNow = blockEntity.headAngle.getValue(pt);
 
 		boolean settled = Mth.equal(baseAngle, baseAngleNow) && Mth.equal(lowerArmAngle, lowerArmAngleNow)
 			&& Mth.equal(upperArmAngle, upperArmAngleNow) && Mth.equal(headAngle, headAngleNow);
@@ -110,7 +108,7 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 		int color;
 
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getLevel()) + (blockEntity.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime(blockEntity.getLevel()) + (blockEntity.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
@@ -150,7 +148,7 @@ public class ArmInstance extends SingleRotatingInstance implements DynamicInstan
 		ArmRenderer.transformClaw(msr);
 		claw.setTransform(msLocal);
 
-		ItemStack item = this.arm.heldItem;
+		ItemStack item = blockEntity.heldItem;
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 		boolean hasItem = !item.isEmpty();

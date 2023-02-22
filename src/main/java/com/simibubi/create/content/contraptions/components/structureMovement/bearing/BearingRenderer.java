@@ -17,28 +17,27 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class BearingRenderer extends KineticBlockEntityRenderer {
+public class BearingRenderer<T extends KineticBlockEntity & IBearingBlockEntity> extends KineticBlockEntityRenderer<T> {
 
 	public BearingRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
 		if (Backend.canUseInstancing(be.getLevel())) return;
 
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		IBearingBlockEntity bearingBE = (IBearingBlockEntity) be;
 		final Direction facing = be.getBlockState()
 				.getValue(BlockStateProperties.FACING);
 		PartialModel top =
-				bearingBE.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
+				be.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
 		SuperByteBuffer superBuffer = CachedBufferer.partial(top, be.getBlockState());
 
-		float interpolatedAngle = bearingBE.getInterpolatedAngle(partialTicks - 1);
+		float interpolatedAngle = be.getInterpolatedAngle(partialTicks - 1);
 		kineticRotationTransform(superBuffer, be, facing.getAxis(), (float) (interpolatedAngle / 180 * Math.PI), light);
 
 		if (facing.getAxis()

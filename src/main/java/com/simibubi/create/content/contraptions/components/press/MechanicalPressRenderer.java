@@ -5,7 +5,6 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -15,19 +14,19 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class MechanicalPressRenderer extends KineticBlockEntityRenderer {
+public class MechanicalPressRenderer extends KineticBlockEntityRenderer<MechanicalPressBlockEntity> {
 
 	public MechanicalPressRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticBlockEntity be) {
+	public boolean shouldRenderOffScreen(MechanicalPressBlockEntity be) {
 		return true;
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(MechanicalPressBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
@@ -35,7 +34,7 @@ public class MechanicalPressRenderer extends KineticBlockEntityRenderer {
 			return;
 
 		BlockState blockState = be.getBlockState();
-		PressingBehaviour pressingBehaviour = ((MechanicalPressBlockEntity) be).getPressingBehaviour();
+		PressingBehaviour pressingBehaviour = be.getPressingBehaviour();
 		float renderedHeadOffset =
 			pressingBehaviour.getRenderedHeadOffset(partialTicks) * pressingBehaviour.mode.headOffset;
 
@@ -47,7 +46,7 @@ public class MechanicalPressRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
+	protected BlockState getRenderedBlockState(MechanicalPressBlockEntity be) {
 		return shaft(getRotationAxisOf(be));
 	}
 

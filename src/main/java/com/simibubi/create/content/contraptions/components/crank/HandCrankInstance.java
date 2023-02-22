@@ -12,15 +12,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class HandCrankInstance extends SingleRotatingInstance implements DynamicInstance {
+public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEntity> implements DynamicInstance {
 
-    private final HandCrankBlockEntity blockEntity;
     private ModelData crank;
     private Direction facing;
 
     public HandCrankInstance(MaterialManager modelManager, HandCrankBlockEntity blockEntity) {
         super(modelManager, blockEntity);
-		this.blockEntity = blockEntity;
 
 		Block block = blockState.getBlock();
 		PartialModel renderedHandle = null;

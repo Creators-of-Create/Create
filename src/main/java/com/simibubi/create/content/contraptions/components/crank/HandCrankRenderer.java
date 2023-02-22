@@ -5,7 +5,6 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -17,14 +16,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class HandCrankRenderer extends KineticBlockEntityRenderer {
+public class HandCrankRenderer extends KineticBlockEntityRenderer<HandCrankBlockEntity> {
 
 	public HandCrankRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(HandCrankBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
@@ -40,9 +39,8 @@ public class HandCrankRenderer extends KineticBlockEntityRenderer {
 
 		Direction facing = state.getValue(FACING);
 		SuperByteBuffer handle = CachedBufferer.partialFacing(renderedHandle, state, facing.getOpposite());
-		HandCrankBlockEntity crank = (HandCrankBlockEntity) be;
 		kineticRotationTransform(handle, be, facing.getAxis(),
-				(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);
+				(be.independentAngle + partialTicks * be.chasingVelocity) / 360, light);
 		handle.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 

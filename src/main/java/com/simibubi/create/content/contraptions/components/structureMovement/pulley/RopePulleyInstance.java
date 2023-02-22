@@ -8,7 +8,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class RopePulleyInstance extends AbstractPulleyInstance {
+public class RopePulleyInstance extends AbstractPulleyInstance<PulleyBlockEntity> {
 	public RopePulleyInstance(MaterialManager materialManager, PulleyBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 	}
@@ -35,7 +35,7 @@ public class RopePulleyInstance extends AbstractPulleyInstance {
 
 	protected float getOffset() {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
-		return PulleyRenderer.getBlockEntityOffset(partialTicks, (PulleyBlockEntity) blockEntity);
+		return PulleyRenderer.getBlockEntityOffset(partialTicks, blockEntity);
 	}
 
 	protected boolean isRunning() {

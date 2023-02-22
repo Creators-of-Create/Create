@@ -3,13 +3,12 @@ package com.simibubi.create.content.contraptions.components.structureMovement.el
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.light.TickingLightListener;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
 // TODO
-public class ElevatorPulleyInstance extends ShaftInstance implements DynamicInstance, TickingLightListener {
+public class ElevatorPulleyInstance extends ShaftInstance<ElevatorPulleyBlockEntity> implements DynamicInstance, TickingLightListener {
 
-	public ElevatorPulleyInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+	public ElevatorPulleyInstance(MaterialManager materialManager, ElevatorPulleyBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 	}
 

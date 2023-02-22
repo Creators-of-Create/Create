@@ -4,7 +4,6 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -17,13 +16,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BacktankRenderer extends KineticBlockEntityRenderer {
+public class BacktankRenderer extends KineticBlockEntityRenderer<BacktankBlockEntity> {
 	public BacktankRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(BacktankBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
@@ -41,7 +40,7 @@ public class BacktankRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
+	protected SuperByteBuffer getRotatedModel(BacktankBlockEntity be, BlockState state) {
 		return CachedBufferer.partial(getShaftModel(state), state);
 	}
 

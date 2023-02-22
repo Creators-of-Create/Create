@@ -13,9 +13,9 @@ import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
 import net.minecraft.core.Direction;
 
-public class MechanicalCrafterInstance extends SingleRotatingInstance {
+public class ShaftlessCogwheelInstance extends SingleRotatingInstance<KineticBlockEntity> {
 
-    public MechanicalCrafterInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+    public ShaftlessCogwheelInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
         super(materialManager, blockEntity);
     }
 

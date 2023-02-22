@@ -3,13 +3,12 @@ package com.simibubi.create.content.contraptions.components.millstone;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
-public class MillStoneCogInstance extends SingleRotatingInstance {
+public class MillstoneCogInstance extends SingleRotatingInstance<MillstoneBlockEntity> {
 
-    public MillStoneCogInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+    public MillstoneCogInstance(MaterialManager materialManager, MillstoneBlockEntity blockEntity) {
         super(materialManager, blockEntity);
     }
 

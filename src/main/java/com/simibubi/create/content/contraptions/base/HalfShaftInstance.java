@@ -8,8 +8,8 @@ import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class HalfShaftInstance extends SingleRotatingInstance {
-    public HalfShaftInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+public class HalfShaftInstance<T extends KineticBlockEntity> extends SingleRotatingInstance<T> {
+    public HalfShaftInstance(MaterialManager materialManager, T blockEntity) {
         super(materialManager, blockEntity);
     }
 

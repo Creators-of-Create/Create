@@ -5,7 +5,6 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlockEntity.Phase;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -25,19 +24,18 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ArmRenderer extends KineticBlockEntityRenderer {
+public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 
 	public ArmRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float pt, PoseStack ms, MultiBufferSource buffer, int light,
+	protected void renderSafe(ArmBlockEntity be, float pt, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		super.renderSafe(be, pt, ms, buffer, light, overlay);
 
-		ArmBlockEntity arm = (ArmBlockEntity) be;
-		ItemStack item = arm.heldItem;
+		ItemStack item = be.heldItem;
 		boolean hasItem = !item.isEmpty();
 		boolean usingFlywheel = Backend.canUseInstancing(be.getLevel());
 
@@ -63,7 +61,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer {
 		float headAngle;
 		int color;
 
-		boolean rave = arm.phase == Phase.DANCING && be.getSpeed() != 0;
+		boolean rave = be.phase == Phase.DANCING && be.getSpeed() != 0;
 		if (rave) {
 			float renderTick = AnimationTickHolder.getRenderTime(be.getLevel()) + (be.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
@@ -73,10 +71,10 @@ public class ArmRenderer extends KineticBlockEntityRenderer {
 			color = Color.rainbowColor(AnimationTickHolder.getTicks() * 100)
 				.getRGB();
 		} else {
-			baseAngle = arm.baseAngle.getValue(pt);
-			lowerArmAngle = arm.lowerArmAngle.getValue(pt) - 135;
-			upperArmAngle = arm.upperArmAngle.getValue(pt) - 90;
-			headAngle = arm.headAngle.getValue(pt);
+			baseAngle = be.baseAngle.getValue(pt);
+			lowerArmAngle = be.lowerArmAngle.getValue(pt) - 135;
+			upperArmAngle = be.upperArmAngle.getValue(pt) - 90;
+			headAngle = be.headAngle.getValue(pt);
 			color = 0xFFFFFF;
 		}
 
@@ -197,12 +195,12 @@ public class ArmRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticBlockEntity be) {
+	public boolean shouldRenderOffScreen(ArmBlockEntity be) {
 		return true;
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
+	protected SuperByteBuffer getRotatedModel(ArmBlockEntity be, BlockState state) {
 		return CachedBufferer.partial(AllBlockPartials.ARM_COG, state);
 	}
 

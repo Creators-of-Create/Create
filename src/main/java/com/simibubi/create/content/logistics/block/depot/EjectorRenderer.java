@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.contraptions.relays.encased.ShaftRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -21,10 +21,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class EjectorRenderer extends KineticBlockEntityRenderer {
+public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 
 	static final Vec3 pivot = VecHelper.voxelSpace(0, 11.25, 0.75);
 
@@ -33,18 +32,17 @@ public class EjectorRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticBlockEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(EjectorBlockEntity p_188185_1_) {
 		return true;
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(EjectorBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		EjectorBlockEntity ejector = (EjectorBlockEntity) be;
 		VertexConsumer vertexBuilder = buffer.getBuffer(RenderType.solid());
-		float lidProgress = ((EjectorBlockEntity) be).getLidProgress(partialTicks);
+		float lidProgress = be.getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
 		if (!Backend.canUseInstancing(be.getLevel())) {
@@ -57,18 +55,18 @@ public class EjectorRenderer extends KineticBlockEntityRenderer {
 		TransformStack msr = TransformStack.cast(ms);
 
 		float maxTime =
-				(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
-		for (IntAttached<ItemStack> intAttached : ejector.launchedItems) {
+				(float) (be.earlyTarget != null ? be.earlyTargetTime : be.launcher.getTotalFlyingTicks());
+		for (IntAttached<ItemStack> intAttached : be.launchedItems) {
 			float time = intAttached.getFirst() + partialTicks;
 			if (time > maxTime)
 				continue;
 
 			ms.pushPose();
-			Vec3 launchedItemLocation = ejector.getLaunchedItemLocation(time);
+			Vec3 launchedItemLocation = be.getLaunchedItemLocation(time);
 			msr.translate(launchedItemLocation.subtract(Vec3.atLowerCornerOf(be.getBlockPos())));
 			Vec3 itemRotOffset = VecHelper.voxelSpace(0, 3, 0);
 			msr.translate(itemRotOffset);
-			msr.rotateY(AngleHelper.horizontalAngle(ejector.getFacing()));
+			msr.rotateY(AngleHelper.horizontalAngle(be.getFacing()));
 			msr.rotateX(time * 40);
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
@@ -103,11 +101,6 @@ public class EjectorRenderer extends KineticBlockEntityRenderer {
 			.translate(rotationOffset)
 			.rotateX(-angle)
 			.translateBack(rotationOffset);
-	}
-
-	@Override
-	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
-		return shaft(getRotationAxisOf(be));
 	}
 
 }

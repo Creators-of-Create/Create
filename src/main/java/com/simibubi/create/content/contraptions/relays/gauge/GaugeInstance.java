@@ -9,7 +9,6 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
@@ -18,18 +17,17 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public abstract class GaugeInstance extends ShaftInstance implements DynamicInstance {
+public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> implements DynamicInstance {
 
     protected final ArrayList<DialFace> faces;
 
     protected PoseStack ms;
 
-    protected GaugeInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+    protected GaugeInstance(MaterialManager materialManager, GaugeBlockEntity blockEntity) {
         super(materialManager, blockEntity);
 
         faces = new ArrayList<>(2);
 
-        GaugeBlockEntity gaugeBlockEntity = (GaugeBlockEntity) blockEntity;
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
         Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
@@ -39,7 +37,7 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
         TransformStack msr = TransformStack.cast(ms);
         msr.translate(getInstancePosition());
 
-        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeBlockEntity.prevDialState, gaugeBlockEntity.dialState);
+        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), blockEntity.prevDialState, blockEntity.dialState);
 
         for (Direction facing : Iterate.directions) {
             if (!gaugeBlock.shouldRenderHeadOnFace(world, pos, blockState, facing))
@@ -144,7 +142,7 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
     }
 
     public static class Speed extends GaugeInstance {
-        public Speed(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+        public Speed(MaterialManager materialManager, GaugeBlockEntity blockEntity) {
             super(materialManager, blockEntity);
         }
 
@@ -155,7 +153,7 @@ public abstract class GaugeInstance extends ShaftInstance implements DynamicInst
     }
 
     public static class Stress extends GaugeInstance {
-        public Stress(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+        public Stress(MaterialManager materialManager, GaugeBlockEntity blockEntity) {
             super(materialManager, blockEntity);
         }
 

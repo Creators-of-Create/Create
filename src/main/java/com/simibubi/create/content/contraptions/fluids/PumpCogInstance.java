@@ -16,9 +16,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class PumpCogInstance extends SingleRotatingInstance implements DynamicInstance {
+public class PumpCogInstance extends SingleRotatingInstance<PumpBlockEntity> implements DynamicInstance {
 
-	private final PumpBlockEntity blockEntity = (PumpBlockEntity) super.blockEntity;
 	private final ModelData[] arrows = new ModelData[2];
 	private final Direction direction = blockState.getValue(PumpBlock.FACING);
 

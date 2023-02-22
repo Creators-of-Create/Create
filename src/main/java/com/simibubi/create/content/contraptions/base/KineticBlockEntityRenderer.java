@@ -26,7 +26,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class KineticBlockEntityRenderer extends SafeBlockEntityRenderer<KineticBlockEntity> {
+public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends SafeBlockEntityRenderer<T> {
 
 	public static final SuperByteBufferCache.Compartment<BlockState> KINETIC_BLOCK = new SuperByteBufferCache.Compartment<>();
 	public static boolean rainbowMode = false;
@@ -40,7 +40,7 @@ public class KineticBlockEntityRenderer extends SafeBlockEntityRenderer<KineticB
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		if (Backend.canUseInstancing(be.getLevel())) return;
 
@@ -50,18 +50,18 @@ public class KineticBlockEntityRenderer extends SafeBlockEntityRenderer<KineticB
 			renderRotatingBuffer(be, getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
 	}
 
-	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
+	protected BlockState getRenderedBlockState(T be) {
 		return be.getBlockState();
 	}
 
-	protected RenderType getRenderType(KineticBlockEntity be, BlockState state) {
+	protected RenderType getRenderType(T be, BlockState state) {
 		for (RenderType type : REVERSED_CHUNK_BUFFER_LAYERS)
 			if (ItemBlockRenderTypes.canRenderInLayer(state, type))
 				return type;
 		return null;
 	}
 
-	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
+	protected SuperByteBuffer getRotatedModel(T be, BlockState state) {
 		return CachedBufferer.block(KINETIC_BLOCK, state);
 	}
 

@@ -20,14 +20,14 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GantryCarriageRenderer extends KineticBlockEntityRenderer {
+public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCarriageBlockEntity> {
 
 	public GantryCarriageRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(GantryCarriageBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
@@ -40,7 +40,7 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer {
 		BlockPos visualPos = facing.getAxisDirection() == AxisDirection.POSITIVE ? be.getBlockPos()
 				: be.getBlockPos()
 				.relative(facing.getOpposite());
-		float angleForBE = getAngleForTe(be, visualPos, rotationAxis);
+		float angleForBE = getAngleForBE(be, visualPos, rotationAxis);
 
 		Axis gantryAxis = Axis.X;
 		for (Axis axis : Iterate.axes)
@@ -69,14 +69,14 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer {
 
 	}
 
-	public static float getAngleForTe(KineticBlockEntity be, final BlockPos pos, Axis axis) {
+	public static float getAngleForBE(KineticBlockEntity be, final BlockPos pos, Axis axis) {
 		float time = AnimationTickHolder.getRenderTime(be.getLevel());
 		float offset = getRotationOffsetForPosition(be, pos, axis);
 		return (time * be.getSpeed() * 3f / 20 + offset) % 360;
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
+	protected BlockState getRenderedBlockState(GantryCarriageBlockEntity be) {
 		return shaft(getRotationAxisOf(be));
 	}
 

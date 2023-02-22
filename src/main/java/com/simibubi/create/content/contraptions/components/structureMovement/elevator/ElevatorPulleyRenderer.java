@@ -7,7 +7,6 @@ import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.AbstractPulleyRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyRenderer;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -21,14 +20,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer {
+public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorPulleyBlockEntity> {
 
 	public ElevatorPulleyRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(ElevatorPulleyBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
 //		if (Backend.canUseInstancing(be.getLevel()))
@@ -41,7 +40,7 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer {
 			renderRotatingBuffer(be, getRotatedModel(be, state), ms, buffer.getBuffer(type), light);
 		//
 		
-		float offset = PulleyRenderer.getBlockEntityOffset(partialTicks, (PulleyBlockEntity) be);
+		float offset = PulleyRenderer.getBlockEntityOffset(partialTicks, be);
 		boolean running = PulleyRenderer.isPulleyRunning(be);
 
 		SpriteShiftEntry beltShift = AllSpriteShifts.ELEVATOR_BELT;
@@ -100,7 +99,7 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
+	protected BlockState getRenderedBlockState(ElevatorPulleyBlockEntity be) {
 		return shaft(getRotationAxisOf(be));
 	}
 
@@ -116,7 +115,7 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticBlockEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(ElevatorPulleyBlockEntity p_188185_1_) {
 		return true;
 	}
 

@@ -23,8 +23,8 @@ import com.simibubi.create.content.contraptions.components.actors.controls.Contr
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlockEntity;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockRenderer;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterInstance;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterRenderer;
+import com.simibubi.create.content.contraptions.components.crafter.ShaftlessCogwheelInstance;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlockEntity;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankInstance;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankRenderer;
@@ -37,11 +37,11 @@ import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlockEn
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanRenderer;
 import com.simibubi.create.content.contraptions.components.fan.FanInstance;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlockEntity;
-import com.simibubi.create.content.contraptions.components.flywheel.FlyWheelInstance;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlockEntity;
+import com.simibubi.create.content.contraptions.components.flywheel.FlywheelInstance;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelRenderer;
-import com.simibubi.create.content.contraptions.components.millstone.MillStoneCogInstance;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlockEntity;
+import com.simibubi.create.content.contraptions.components.millstone.MillstoneCogInstance;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneRenderer;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlockEntity;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerRenderer;
@@ -573,14 +573,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<FlywheelBlockEntity> FLYWHEEL = REGISTRATE
 		.blockEntity("flywheel", FlywheelBlockEntity::new)
-		.instance(() -> FlyWheelInstance::new, false)
+		.instance(() -> FlywheelInstance::new, false)
 		.validBlocks(AllBlocks.FLYWHEEL)
 		.renderer(() -> FlywheelRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<MillstoneBlockEntity> MILLSTONE = REGISTRATE
 		.blockEntity("millstone", MillstoneBlockEntity::new)
-		.instance(() -> MillStoneCogInstance::new, false)
+		.instance(() -> MillstoneCogInstance::new, false)
 		.validBlocks(AllBlocks.MILLSTONE)
 		.renderer(() -> MillstoneRenderer::new)
 		.register();
@@ -641,7 +641,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<MechanicalCrafterBlockEntity> MECHANICAL_CRAFTER = REGISTRATE
 		.blockEntity("mechanical_crafter", MechanicalCrafterBlockEntity::new)
-		.instance(() -> MechanicalCrafterInstance::new)
+		.instance(() -> ShaftlessCogwheelInstance::new)
 		.validBlocks(AllBlocks.MECHANICAL_CRAFTER)
 		.renderer(() -> MechanicalCrafterRenderer::new)
 		.register();
@@ -838,7 +838,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<FlapDisplayBlockEntity> FLAP_DISPLAY = REGISTRATE
 		.blockEntity("flap_display", FlapDisplayBlockEntity::new)
-		.instance(() -> MechanicalCrafterInstance::new)
+		.instance(() -> ShaftlessCogwheelInstance::new)
 		.renderer(() -> FlapDisplayRenderer::new)
 		.validBlocks(AllBlocks.DISPLAY_BOARD)
 		.register();

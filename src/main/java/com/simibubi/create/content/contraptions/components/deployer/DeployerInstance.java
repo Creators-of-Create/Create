@@ -10,7 +10,6 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -20,9 +19,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 
-public class DeployerInstance extends ShaftInstance implements DynamicInstance, TickableInstance {
+public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> implements DynamicInstance, TickableInstance {
 
-    final DeployerBlockEntity blockEntity;
     final Direction facing;
     final float yRot;
     final float xRot;
@@ -35,10 +33,9 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
     PartialModel currentHand;
     float progress;
 
-    public DeployerInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+    public DeployerInstance(MaterialManager materialManager, DeployerBlockEntity blockEntity) {
         super(materialManager, blockEntity);
 
-        this.blockEntity = (DeployerBlockEntity) super.blockEntity;
         facing = blockState.getValue(FACING);
 
         boolean rotatePole = blockState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;

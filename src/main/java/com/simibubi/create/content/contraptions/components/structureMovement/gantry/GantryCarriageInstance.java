@@ -4,7 +4,6 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -14,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class GantryCarriageInstance extends ShaftInstance implements DynamicInstance {
+public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEntity> implements DynamicInstance {
 
 	private final ModelData gantryCogs;
 
@@ -26,7 +25,7 @@ public class GantryCarriageInstance extends ShaftInstance implements DynamicInst
 
 	private float lastAngle = Float.NaN;
 
-	public GantryCarriageInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+	public GantryCarriageInstance(MaterialManager materialManager, GantryCarriageBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
 		gantryCogs = getTransformMaterial()
@@ -56,7 +55,7 @@ public class GantryCarriageInstance extends ShaftInstance implements DynamicInst
 	}
 
 	private float getCogAngle() {
-		return GantryCarriageRenderer.getAngleForTe(blockEntity, visualPos, rotationAxis) * rotationMult;
+		return GantryCarriageRenderer.getAngleForBE(blockEntity, visualPos, rotationAxis) * rotationMult;
 	}
 
 	private void animateCogs(float cogAngle) {

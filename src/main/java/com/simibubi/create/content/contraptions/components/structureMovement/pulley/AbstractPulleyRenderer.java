@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AbstractPulleyRenderer extends KineticBlockEntityRenderer {
+public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> extends KineticBlockEntityRenderer<T> {
 
 	private PartialModel halfRope;
 	private PartialModel halfMagnet;
@@ -36,12 +36,12 @@ public abstract class AbstractPulleyRenderer extends KineticBlockEntityRenderer 
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticBlockEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(T p_188185_1_) {
 		return true;
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
 		if (Backend.canUseInstancing(be.getLevel()))
@@ -89,24 +89,24 @@ public abstract class AbstractPulleyRenderer extends KineticBlockEntityRenderer 
 			.renderInto(ms, buffer);
 	}
 
-	protected abstract Axis getShaftAxis(KineticBlockEntity be);
+	protected abstract Axis getShaftAxis(T be);
 
 	protected abstract PartialModel getCoil();
 
-	protected abstract SuperByteBuffer renderRope(KineticBlockEntity be);
+	protected abstract SuperByteBuffer renderRope(T be);
 
-	protected abstract SuperByteBuffer renderMagnet(KineticBlockEntity be);
+	protected abstract SuperByteBuffer renderMagnet(T be);
 
-	protected abstract float getOffset(KineticBlockEntity be, float partialTicks);
+	protected abstract float getOffset(T be, float partialTicks);
 
-	protected abstract boolean isRunning(KineticBlockEntity be);
+	protected abstract boolean isRunning(T be);
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
+	protected BlockState getRenderedBlockState(T be) {
 		return shaft(getShaftAxis(be));
 	}
 
-	protected SuperByteBuffer getRotatedCoil(KineticBlockEntity be) {
+	protected SuperByteBuffer getRotatedCoil(T be) {
 		BlockState blockState = be.getBlockState();
 		return CachedBufferer.partialFacing(getCoil(), blockState,
 			Direction.get(AxisDirection.POSITIVE, getShaftAxis(be)));

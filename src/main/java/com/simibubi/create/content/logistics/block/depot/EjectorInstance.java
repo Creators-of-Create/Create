@@ -9,9 +9,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Mth;
 
-public class EjectorInstance extends ShaftInstance implements DynamicInstance {
-
-	protected final EjectorBlockEntity blockEntity;
+public class EjectorInstance extends ShaftInstance<EjectorBlockEntity> implements DynamicInstance {
 
 	protected final ModelData plate;
 
@@ -19,7 +17,6 @@ public class EjectorInstance extends ShaftInstance implements DynamicInstance {
 
 	public EjectorInstance(MaterialManager dispatcher, EjectorBlockEntity blockEntity) {
 		super(dispatcher, blockEntity);
-		this.blockEntity = blockEntity;
 
 		plate = getTransformMaterial().getModel(AllBlockPartials.EJECTOR_TOP, blockState).createInstance();
 

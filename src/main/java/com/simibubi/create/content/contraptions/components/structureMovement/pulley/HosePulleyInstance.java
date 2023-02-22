@@ -8,7 +8,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlockEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class HosePulleyInstance extends AbstractPulleyInstance {
+public class HosePulleyInstance extends AbstractPulleyInstance<HosePulleyBlockEntity> {
 
 	public HosePulleyInstance(MaterialManager dispatcher, HosePulleyBlockEntity blockEntity) {
 		super(dispatcher, blockEntity);
@@ -39,7 +39,7 @@ public class HosePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected float getOffset() {
-		return ((HosePulleyBlockEntity) blockEntity).getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
+		return blockEntity.getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
 	}
 
 	protected boolean isRunning() {
