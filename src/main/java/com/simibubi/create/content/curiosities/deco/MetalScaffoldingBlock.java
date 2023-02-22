@@ -64,7 +64,9 @@ public class MetalScaffoldingBlock extends ScaffoldingBlock implements IWrenchab
 		Direction dir) {
 		if (!neighborState.is(this))
 			return false;
-		return dir.getAxis() != Axis.Y && neighborState.getValue(BOTTOM);
+		if (!neighborState.getValue(BOTTOM) && state.getValue(BOTTOM))
+			return false;
+		return dir.getAxis() != Axis.Y;
 	}
 
 }
