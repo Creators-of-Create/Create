@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 42",
+	"_": "Missing Localizations: 50",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Mechanischer Pflug",
 	"block.create.mechanical_press": "Mechanische Presse",
 	"block.create.mechanical_pump": "Mechanische Pumpe",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Mechanische Säge",
 	"block.create.metal_bracket": "Metallhalterung",
 	"block.create.metal_girder": "Metallträger",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s wurde von %2$s in einen Schmelzer geworfen",
 	"death.attack.create.mechanical_drill": "%1$s wurde von einem Bohrer durchlöchert",
 	"death.attack.create.mechanical_drill.player": "%1$s wurde von %2$s vor einen Bohrer gestoßen",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s wurde zersägt",
 	"death.attack.create.mechanical_saw.player": "%1$s wurde von %2$s in eine Säge gestoßen",
 	"death.attack.create.potato_cannon": "%1$s wurde von %2$s's Kartoffelkanone erschossen",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Zeige immer in Bewegungsrichtung",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Pausiere Akteure beim drehen",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Sperre Rotation",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Rotationsrichtung",
 	"create.contraptions.clockwork.clock_hands": "Uhrzeiger",
 	"create.contraptions.clockwork.hour_first": "Stundenzeiger zuerst",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Filter angewendet auf %1$s.",
 	"create.logistics.filter.apply_click_again": "Filter angewendet auf %1$s, klicke nochmal um Menge zu kopieren.",
 	"create.logistics.filter.apply_count": "Extraktionsmenge auf Filter angewendet.",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Generator Statistik:",
 	"create.gui.goggles.kinetic_stats": "Kinetische Statistik:",

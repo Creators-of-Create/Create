@@ -101,10 +101,10 @@ public class StockpileSwitchBlockEntity extends SmartBlockEntity {
 
 		if (targetBlockEntity instanceof StockpileSwitchObservable observable) {
 			currentLevel = observable.getPercent() / 100f;
-		
+
 		} else if (StorageDrawers.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
 			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
-			
+
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
 				// Item inventory
@@ -154,7 +154,7 @@ public class StockpileSwitchBlockEntity extends SmartBlockEntity {
 
 		currentLevel = Mth.clamp(currentLevel, 0, 1);
 		changed = currentLevel != prevLevel;
-		
+
 		boolean previouslyPowered = redstoneState;
 		if (redstoneState && currentLevel <= offWhenBelow)
 			redstoneState = false;
@@ -195,7 +195,10 @@ public class StockpileSwitchBlockEntity extends SmartBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).moveText(new Vec3(0, 5, 0))
-			.withCallback($ -> updateCurrentLevel());
+			.withCallback($ -> {
+				updateCurrentLevel();
+				return true;
+			});
 		behaviours.add(filtering);
 
 		InterfaceProvider towardBlockFacing = InterfaceProvider.towardBlockFacing();

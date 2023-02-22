@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 51",
+	"_": "Missing Localizations: 59",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Mechaniczny pług",
 	"block.create.mechanical_press": "Mechaniczna prasa",
 	"block.create.mechanical_pump": "Mechaniczna pompa",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Mechaniczna piła",
 	"block.create.metal_bracket": "Metalowy wspornik",
 	"block.create.metal_girder": "Metalowa belka",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "Gracz %1$s został wepchnięty w strumień kropel lawy przez %2$s",
 	"death.attack.create.mechanical_drill": "Gracz %1$s nabił się na mechaniczne wiertło",
 	"death.attack.create.mechanical_drill.player": "Gracz %1$s został wepchnięty na mechaniczne wiertło przez %2$s",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "Gracz %1$s został przecięty na pół przez mechaniczną piłę",
 	"death.attack.create.mechanical_saw.player": "Gracz %1$s został wepchnięty na mechaniczną piłę przez %2$s",
 	"death.attack.create.potato_cannon": "Gracz %1$s został zestrzelowny przez armate na ziemniaki należącą do %2$s",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Zawsze kieruj w stronę ruchu",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Zatrzymaj komponenty podczas obrotu",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Zablokuj obrót",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Kierunek obrotu",
 	"create.contraptions.clockwork.clock_hands": "Wskazówki zegara",
 	"create.contraptions.clockwork.hour_first": "Najpierw wskazówka godzinowa",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Zastosowano filtr na %1$s.",
 	"create.logistics.filter.apply_click_again": "Zastosowano filtr na %1$s; kliknij ponownie, aby skopiować ilość.",
 	"create.logistics.filter.apply_count": "Zastosowano limit wyciągania do filtra.",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Właściwości generatora:",
 	"create.gui.goggles.kinetic_stats": "Właściwości kinetyczne:",

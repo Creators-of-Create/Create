@@ -18,6 +18,8 @@ import com.simibubi.create.content.contraptions.components.actors.PSIInstance;
 import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceRenderer;
+import com.simibubi.create.content.contraptions.components.actors.RollerBlockEntity;
+import com.simibubi.create.content.contraptions.components.actors.RollerRenderer;
 import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsBlockEntity;
 import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlockEntity;
@@ -534,6 +536,12 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.MECHANICAL_HARVESTER)
 		.renderer(() -> HarvesterRenderer::new)
 		.register();
+
+	public static final BlockEntityEntry<RollerBlockEntity> MECHANICAL_ROLLER =
+		REGISTRATE.blockEntity("mechanical_roller", RollerBlockEntity::new)
+			.validBlocks(AllBlocks.MECHANICAL_ROLLER)
+			.renderer(() -> RollerRenderer::new)
+			.register();
 
 	public static final BlockEntityEntry<PortableItemInterfaceBlockEntity> PORTABLE_STORAGE_INTERFACE =
 		REGISTRATE

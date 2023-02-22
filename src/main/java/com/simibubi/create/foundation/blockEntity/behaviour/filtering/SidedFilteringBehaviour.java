@@ -91,11 +91,12 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 	}
 
 	@Override
-	public void setFilter(Direction side, ItemStack stack) {
+	public boolean setFilter(Direction side, ItemStack stack) {
 		if (!sidedFilters.containsKey(side))
-			return;
+			return true;
 		sidedFilters.get(side)
 			.setFilter(stack);
+		return true;
 	}
 
 	@Override

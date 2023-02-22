@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 50",
+	"_": "Missing Localizations: 58",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "动力犁",
 	"block.create.mechanical_press": "动力辊压机",
 	"block.create.mechanical_pump": "动力泵",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "动力锯",
 	"block.create.metal_bracket": "金属支架",
 	"block.create.metal_girder": "金属梁",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s被%2$s扔进了冶炼炉",
 	"death.attack.create.mechanical_drill": "%1$s被钻头刺穿了",
 	"death.attack.create.mechanical_drill.player": "%1$s被%2$s扔到钻头前",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s被动力锯切成了两截",
 	"death.attack.create.mechanical_saw.player": "%1$s被%2$s扔到动力锯上",
 	"death.attack.create.potato_cannon": "%1$s被%2$s的土豆加农炮射杀",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "始终面朝前进方向",
 	"create.contraptions.cart_movement_mode.rotate_paused": "矿车转向时机器停止工作",
 	"create.contraptions.cart_movement_mode.rotation_locked": "旋转锁定",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "旋转方向",
 	"create.contraptions.clockwork.clock_hands": "钟表指针",
 	"create.contraptions.clockwork.hour_first": "时针优先",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "已将过滤应用于%1$s",
 	"create.logistics.filter.apply_click_again": "已将过滤应用于%1$s，再次点击可将手持物品数量复制到过滤器上",
 	"create.logistics.filter.apply_count": "已将提取数量应用至过滤器",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "应力发生器状态：",
 	"create.gui.goggles.kinetic_stats": "动力学状态：",

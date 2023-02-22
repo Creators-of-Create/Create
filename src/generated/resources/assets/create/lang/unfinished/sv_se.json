@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1250",
+	"_": "Missing Localizations: 1258",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Mekanisk Plog",
 	"block.create.mechanical_press": "Mekanisk Tryckpress",
 	"block.create.mechanical_pump": "Mekanisk Pump",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Mekanisk Såg",
 	"block.create.metal_bracket": "Metallfäste",
 	"block.create.metal_girder": "Metallbalk",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s slängdes in i en smältare av %2$s",
 	"death.attack.create.mechanical_drill": "%1$s skar sig ordentligt av en Mekanisk Borr",
 	"death.attack.create.mechanical_drill.player": "%1$s slängdes in en Borr av %2$s",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s blev halverad av en Mekanisk Såg",
 	"death.attack.create.mechanical_saw.player": "%1$s kastades in i en Såg av %2$s",
 	"death.attack.create.potato_cannon": "%1$s blev skjuten av %2$ss Potatis Kanon",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Alltid riktad mot rörelse",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Pausa aktörer vid rotation",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lås rotation",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Rotationsriktning",
 	"create.contraptions.clockwork.clock_hands": "Klockvisare",
 	"create.contraptions.clockwork.hour_first": "Timvisaren först",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Tillämpade filter till %1$s.",
 	"create.logistics.filter.apply_click_again": "Tillämpade filter på %1$s, klicka igen för att kopiera beloppet.",
 	"create.logistics.filter.apply_count": "Applicerade antal extraheringar för filter.",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Generator Statistik:",
 	"create.gui.goggles.kinetic_stats": "Kinetisk Statistik:",

@@ -358,7 +358,7 @@ public class TravellingPoint {
 		return traveled;
 	}
 
-	private Double edgeTraversedFrom(TrackGraph graph, boolean forward, IEdgePointListener edgePointListener,
+	protected Double edgeTraversedFrom(TrackGraph graph, boolean forward, IEdgePointListener edgePointListener,
 		ITurnListener turnListener, double prevPos, double totalDistance) {
 		if (edge.isTurn())
 			turnListener.accept(Math.max(0, totalDistance), edge);

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 42",
+	"_": "Missing Localizations: 50",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Aratro meccanico",
 	"block.create.mechanical_press": "Pressa meccanica",
 	"block.create.mechanical_pump": "Pompa meccanica",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Sega meccanica",
 	"block.create.metal_bracket": "Supporto di metallo",
 	"block.create.metal_girder": "Trave di metallo",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s è stato gettato in una fonderia da %2$s",
 	"death.attack.create.mechanical_drill": "%1$s è stato trafitto da una trivella meccanica",
 	"death.attack.create.mechanical_drill.player": "%1$s è stato gettato di fronte a una trivella da by %2$s",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s è stato tagliato a metà",
 	"death.attack.create.mechanical_saw.player": "%1$s è stato gettato su una Sega meccanica da %2$s",
 	"death.attack.create.potato_cannon": "%1$s è stato ucciso dal Cannone a patate di %2$s",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Sempre rivolto verso il movimento",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Pausa durante la rotazione",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Blocca rotazione",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Direzione di rotazione",
 	"create.contraptions.clockwork.clock_hands": "Lancette dell'orologio",
 	"create.contraptions.clockwork.hour_first": "Prima lancetta delle ore",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Filtro applicato a %1$s.",
 	"create.logistics.filter.apply_click_again": "Filtro applicato a %1$s, clicca di nuovo per copiare.",
 	"create.logistics.filter.apply_count": "Conteggio estrazione applicato ai filtri.",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Statistiche del generatore:",
 	"create.gui.goggles.kinetic_stats": "Statistiche cinetiche:",

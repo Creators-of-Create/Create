@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 773",
+	"_": "Missing Localizations: 781",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Szántógép",
 	"block.create.mechanical_press": "Présgép",
 	"block.create.mechanical_pump": "Szivattyú",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Fűrészgép",
 	"block.create.metal_bracket": "Fémkeret",
 	"block.create.metal_girder": "Fémgerenda",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s egy tüzes légáramba lépett, miközben %2$s elől menekült",
 	"death.attack.create.mechanical_drill": "%1$s egy fúrógép előtt lyukadt ki",
 	"death.attack.create.mechanical_drill.player": "%1$s egy fúrógép elé ugrott %2$s elől",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s ketté lett fűrészelve",
 	"death.attack.create.mechanical_saw.player": "%1$s egy fűrészgép elé ugrott %2$s elől",
 	"death.attack.create.potato_cannon": "%2$s lelőtte %1$s játékost egy krumpliágyúval",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Mindig a menetirány felé",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Aktorok leállítása kanyarodáskor",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Tájolás rögzítése",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Forgási irány",
 	"create.contraptions.clockwork.clock_hands": "Óramutatók",
 	"create.contraptions.clockwork.hour_first": "Óramutató először",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Szűrő alkalmazva ehhez: %1$s",
 	"create.logistics.filter.apply_click_again": "Szűrő alkalmazva ehhez: %1$s, kattints ismét az érték másolásához.",
 	"create.logistics.filter.apply_count": "A szűrőhöz alkalmazott kivonatszám.",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Meghajtás adatai:",
 	"create.gui.goggles.kinetic_stats": "Alkatrész adatai:",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 71",
+	"_": "Missing Localizations: 79",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "メカニカルプラウ",
 	"block.create.mechanical_press": "メカニカルプレス",
 	"block.create.mechanical_pump": "メカニカルポンプ",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "メカニカルソー",
 	"block.create.metal_bracket": "金属ブラケット",
 	"block.create.metal_girder": "鉄骨",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$sは%2$sによって熱風に投げ込まれた",
 	"death.attack.create.mechanical_drill": "%1$sはメカニカルドリルに突き抜かれた",
 	"death.attack.create.mechanical_drill.player": "%1$sは%2$sにドリルの目の前に投げ込まれた",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$sはメカニカルソーで半分にカットされた",
 	"death.attack.create.mechanical_saw.player": "%1$sは%2$sによってメカニカルソーの回転する刃に投げ込まれた",
 	"death.attack.create.potato_cannon": "%1$sは%2$sのポテトキャノンに撃ち抜かれた",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "常に動いている方向を向く",
 	"create.contraptions.cart_movement_mode.rotate_paused": "回転中に機械を一時停止する",
 	"create.contraptions.cart_movement_mode.rotation_locked": "常に向きを固定する",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "回転方向",
 	"create.contraptions.clockwork.clock_hands": "時計の針",
 	"create.contraptions.clockwork.hour_first": "時針を最初に",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "フィルターを%1$sに適用しました。",
 	"create.logistics.filter.apply_click_again": "フィルターを%1$sに適用しました。再度クリックすると数量をコピーします",
 	"create.logistics.filter.apply_count": "搬出入数をフィルターに適用しました。",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "原動機の統計:",
 	"create.gui.goggles.kinetic_stats": "動力の統計:",

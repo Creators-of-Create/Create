@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1061",
+	"_": "Missing Localizations: 1069",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Arador Mecánico",
 	"block.create.mechanical_press": "Prensa Mecánica",
 	"block.create.mechanical_pump": "Bomba Mecánica",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Sierra Mecánica",
 	"block.create.metal_bracket": "Soporte Metálico",
 	"block.create.metal_girder": "UNLOCALIZED: Metal Girder",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s fué tirado dentro de una derretidora por %2$s",
 	"death.attack.create.mechanical_drill": "%1$s fué empalado por un Taladro Mecánico",
 	"death.attack.create.mechanical_drill.player": "%1$s fué tirado en frente de un Taladro por %2$s",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s fué cortado por la mitad por Sierra Mecánica",
 	"death.attack.create.mechanical_saw.player": "%1$s fué lanzado dentro de una Sierra por %2$s",
 	"death.attack.create.potato_cannon": "%1$s fue disparado por el Cañón de Papas de %2$s",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Siempre apuntar en la dirección de movimiento",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Pausar actores mientras rota",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Bloquear Rotación",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Dirección de Rotación",
 	"create.contraptions.clockwork.clock_hands": "Manijas del Reloj",
 	"create.contraptions.clockwork.hour_first": "Horario Primero",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Filtro Aplicado a %1$s.",
 	"create.logistics.filter.apply_click_again": "Filtro Aplicado a %1$s, haz click de nuevo para copiar la cantidad.",
 	"create.logistics.filter.apply_count": "Recuento de extracción aplicado al filtro.",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Estadísticas de Generación:",
 	"create.gui.goggles.kinetic_stats": "Estadísticas Kineticas:",

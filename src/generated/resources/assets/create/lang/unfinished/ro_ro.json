@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 741",
+	"_": "Missing Localizations: 749",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Plug Mecanic",
 	"block.create.mechanical_press": "Presă Mecanică",
 	"block.create.mechanical_pump": "Pompă Mecanică",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Ferăstrău Mecanic",
 	"block.create.metal_bracket": "Brachetă De Metal",
 	"block.create.metal_girder": "UNLOCALIZED: Metal Girder",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s a fost aruncat într-un topitor de către %2$s",
 	"death.attack.create.mechanical_drill": "%1$s a fost tras în țeapă de către un Burghiu Mecanic",
 	"death.attack.create.mechanical_drill.player": "%1$s a fost aruncat în fața unui Burghiu de către %2$s",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s a fost tăiat în jumătate de către un Ferăstrău Mecanic",
 	"death.attack.create.mechanical_saw.player": "%1$s a fost aruncat într-un Ferăstrău de către %2$s",
 	"death.attack.create.potato_cannon": "%1$s a fost împușcat de către Tunul De Cartofi al lui %2$s",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Mereu stă cu fața spre mișcare",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Oprește Actorii când se rotește",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Blochează Rotația",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Direcție De Rotație",
 	"create.contraptions.clockwork.clock_hands": "Ace de Ceas",
 	"create.contraptions.clockwork.hour_first": "Acul orei primul",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Filtru aplicat la %1$s.",
 	"create.logistics.filter.apply_click_again": "Filtru aplicat la %1$s, click din nou pentru a copia cantitatea.",
 	"create.logistics.filter.apply_count": "Număr de extracție applicat la filtru.",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Statistici Generator:",
 	"create.gui.goggles.kinetic_stats": "Statistici Cinetice:",

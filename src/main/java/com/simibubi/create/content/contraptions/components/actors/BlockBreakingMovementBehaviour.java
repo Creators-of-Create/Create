@@ -40,9 +40,9 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 			damageEntities(context, pos, world);
 		if (world.isClientSide)
 			return;
+		
 		if (!canBreak(world, pos, stateVisited))
 			return;
-
 		context.data.put("BreakingPos", NbtUtils.writeBlockPos(pos));
 		context.stall = true;
 	}
@@ -180,7 +180,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 			return;
 		}
 
-		float breakSpeed = Mth.clamp(Math.abs(context.getAnimationSpeed()) / 500f, 1 / 128f, 16f);
+		float breakSpeed = getBlockBreakingSpeed(context);
 		destroyProgress += Mth.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
 		world.playSound(null, breakingPos, stateToBreak.getSoundType()
 			.getHitSound(), SoundSource.NEUTRAL, .25f, 1);
@@ -199,7 +199,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 			context.stall = false;
 			if (shouldDestroyStartBlock(stateToBreak))
-				BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> this.dropItem(context, stack));
+				destroyBlock(context, breakingPos);
 			onBlockBroken(context, ogPos, stateToBreak);
 			ticksUntilNextProgress = -1;
 			data.remove("Progress");
@@ -212,6 +212,14 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		world.destroyBlockProgress(id, breakingPos, (int) destroyProgress);
 		data.putInt("TicksUntilNextProgress", ticksUntilNextProgress);
 		data.putInt("Progress", destroyProgress);
+	}
+
+	protected void destroyBlock(MovementContext context, BlockPos breakingPos) {
+		BlockHelper.destroyBlock(context.world, breakingPos, 1f, stack -> this.dropItem(context, stack));
+	}
+
+	protected float getBlockBreakingSpeed(MovementContext context) {
+		return Mth.clamp(Math.abs(context.getAnimationSpeed()) / 500f, 1 / 128f, 16f);
 	}
 
 	protected boolean shouldDestroyStartBlock(BlockState stateToBreak) {

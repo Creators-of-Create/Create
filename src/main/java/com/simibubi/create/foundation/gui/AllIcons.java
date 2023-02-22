@@ -104,6 +104,10 @@ public class AllIcons implements ScreenElement {
 
 		I_ADD_INVERTED_ATTRIBUTE = next(),
 		I_FLIP = next(),
+		
+		I_ROLLER_PAVE = next(),
+		I_ROLLER_FILL = next(),
+		I_ROLLER_WIDE_FILL = next(),
 
 		I_PLAY = newRow(),
 		I_PAUSE = next(),

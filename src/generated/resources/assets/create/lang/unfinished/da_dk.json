@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1354",
+	"_": "Missing Localizations: 1362",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Mekanisk plov",
 	"block.create.mechanical_press": "Mekanisk presse",
 	"block.create.mechanical_pump": "Mekanisk pumpe",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Mekanisk sav",
 	"block.create.metal_bracket": "Metalbeslag",
 	"block.create.metal_girder": "Metalbjælke",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s blev kastet ind i en smelteovn af %2$s",
 	"death.attack.create.mechanical_drill": "%1$s blev spiddet af et mekanisk bor",
 	"death.attack.create.mechanical_drill.player": "%1$s blev kastet ind foran et bor af %2$s",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s blev skåret halvt over af en mekanisk sav",
 	"death.attack.create.mechanical_saw.player": "%1$s blev kastet ind i en sav af %2$s",
 	"death.attack.create.potato_cannon": "%1$s blev skudt af %2$ss kartoffelkanon",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Peg altid mod bevægelse",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Stop maskiner under rotation",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lås rotation",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Omdrejningsretning",
 	"create.contraptions.clockwork.clock_hands": "Urvisere",
 	"create.contraptions.clockwork.hour_first": "Timeviser først",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Anvendte filter på %1$s.",
 	"create.logistics.filter.apply_click_again": "Anvendte filter på %1$s, klik igen for at kopiere antal.",
 	"create.logistics.filter.apply_count": "Anvendte udtagningsantal til filter.",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Generatorstatistik:",
 	"create.gui.goggles.kinetic_stats": "Kinetisk statistik:",

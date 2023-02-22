@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 215",
+	"_": "Missing Localizations: 223",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Механічний плуг",
 	"block.create.mechanical_press": "Механічний прес",
 	"block.create.mechanical_pump": "Механічний насос",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Механічна пила",
 	"block.create.metal_bracket": "Металевий кронштейн",
 	"block.create.metal_girder": "Металевий брус",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%2$s скинув %1$s в плавильню",
 	"death.attack.create.mechanical_drill": "%1$s простромлено механічним буром",
 	"death.attack.create.mechanical_drill.player": "%2$s скинув %1$s попереду механічного бура",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s розрізано навпіл механічною пилою",
 	"death.attack.create.mechanical_saw.player": "%2$s скинув %1$s на пилу",
 	"death.attack.create.potato_cannon": "%2$s застрелив %1$s картопляною гарматою",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Завжди бути повернутим в напрямку руху",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Призупинити прилади під час обертання",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Заблокувати обертання",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Напрям обертання",
 	"create.contraptions.clockwork.clock_hands": "Стрілки годинника",
 	"create.contraptions.clockwork.hour_first": "Спочатку годинна стрілка",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Фільтр застосовано до блоку %1$s.",
 	"create.logistics.filter.apply_click_again": "Фільтр застосовано до блоку %1$s, натисніть ще раз, щоб скопіювати кількість.",
 	"create.logistics.filter.apply_count": "До фільтра застосовано кількість вилучення",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Статистика генератора:",
 	"create.gui.goggles.kinetic_stats": "Кінетична статистика:",

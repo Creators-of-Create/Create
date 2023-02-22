@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 48",
+	"_": "Missing Localizations: 56",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "機械犁",
 	"block.create.mechanical_press": "機械鍛壓機",
 	"block.create.mechanical_pump": "機械幫浦",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "機械圓鋸機",
 	"block.create.metal_bracket": "金屬支架",
 	"block.create.metal_girder": "金屬樑",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s 被 %2$s 推進岩漿",
 	"death.attack.create.mechanical_drill": "%1$s 被鑽頭鑽爆腦袋",
 	"death.attack.create.mechanical_drill.player": "%1$s 被 %2$s 當成礦物放在鑽頭前面而死",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s 被鋸切成了兩半",
 	"death.attack.create.mechanical_saw.player": "%1$s 被 %2$s 鋸掉了",
 	"death.attack.create.potato_cannon": "%1$s 被 %2$s 的馬鈴薯大砲餵飽了",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "結構與礦車保持相同方向",
 	"create.contraptions.cart_movement_mode.rotate_paused": "礦車轉向時機器停止工作",
 	"create.contraptions.cart_movement_mode.rotation_locked": "結構方向保持不變",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "旋轉方向",
 	"create.contraptions.clockwork.clock_hands": "鐘錶指針",
 	"create.contraptions.clockwork.hour_first": "時針優先",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "將過濾器應用來 %1$s",
 	"create.logistics.filter.apply_click_again": "將過濾器應用來 %1$s，再次點擊以複製數量",
 	"create.logistics.filter.apply_count": "使用提取計數過濾",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "發動機狀態：",
 	"create.gui.goggles.kinetic_stats": "動力學狀態：",

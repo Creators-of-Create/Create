@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 42",
+	"_": "Missing Localizations: 50",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "Charrue mécanique",
 	"block.create.mechanical_press": "Presse mécanique",
 	"block.create.mechanical_pump": "Pompe mécanique",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "Scie mécanique",
 	"block.create.metal_bracket": "Support en métal",
 	"block.create.metal_girder": "Poutre en métal",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s a été lancé(e) dans un ventilateur de lave par %2$s",
 	"death.attack.create.mechanical_drill": "%1$s a été empalé(e) par une perceuse mécanique",
 	"death.attack.create.mechanical_drill.player": "%1$s a été lancé(e) devant une perceuse mécanique par %2$s",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s a été coupé(e) en deux par une scie mécanique",
 	"death.attack.create.mechanical_saw.player": "%1$s a été lancé(e) devant une scie mécanique par %2$s",
 	"death.attack.create.potato_cannon": "%1$s s'est fait tirer dessus par le canon à pomme de terre de %2$s",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "Toujours face au mouvement",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Mettre en pause les acteurs pendant une rotation",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Verrouiller la rotation",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "Direction de la rotation",
 	"create.contraptions.clockwork.clock_hands": "Aiguilles",
 	"create.contraptions.clockwork.hour_first": "Aiguille des heures en premier",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "Filtre appliqué à %1$s.",
 	"create.logistics.filter.apply_click_again": "Filtre appliqué à %1$s, appuyez de nouveau pour copier le montant.",
 	"create.logistics.filter.apply_count": "Montant d'extraction appliqué au filtre",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "Statistiques du générateur :",
 	"create.gui.goggles.kinetic_stats": "Statistiques cinétiques :",

@@ -49,6 +49,7 @@ public class AllShapes {
 			.forDirectional(),
 		SAIL_FRAME = shape(0, 5, 0, 16, 9, 16).forDirectional(), SAIL = shape(0, 5, 0, 16, 10, 16).forDirectional(),
 		HARVESTER_BASE = shape(0, 2, 0, 16, 14, 3).forDirectional(SOUTH),
+		ROLLER_BASE = shape(0, 0, 0, 16, 16, 10).forDirectional(SOUTH),
 		NOZZLE = shape(2, 0, 2, 14, 14, 14).add(1, 13, 1, 15, 15, 15)
 			.erase(3, 13, 3, 13, 15, 13)
 			.forDirectional(),

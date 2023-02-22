@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 50",
+	"_": "Missing Localizations: 58",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -306,6 +306,7 @@
 	"block.create.mechanical_plough": "쟁기",
 	"block.create.mechanical_press": "압착기",
 	"block.create.mechanical_pump": "펌프",
+	"block.create.mechanical_roller": "UNLOCALIZED: Mechanical Roller",
 	"block.create.mechanical_saw": "톱",
 	"block.create.metal_bracket": "금속 지지대",
 	"block.create.metal_girder": "금속 거더",
@@ -880,6 +881,8 @@
 	"death.attack.create.fan_lava.player": "%1$s이(가) %2$s 때문에 용암 바람으로 재가 되었습니다",
 	"death.attack.create.mechanical_drill": "%1$s이(가) 드릴에 관통당했습니다",
 	"death.attack.create.mechanical_drill.player": "%1$s이(가) %2$s 때문에 드릴에 관통당했습니다",
+	"death.attack.create.mechanical_roller": "UNLOCALIZED: %1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "UNLOCALIZED: %1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s이(가) 톱날에 반으로 갈라져 죽었습니다",
 	"death.attack.create.mechanical_saw.player": "%1$s이(가) %2$s 때문에 톱날에 반으로 갈라져 죽었습니다",
 	"death.attack.create.potato_cannon": "%1$s이(가) %2$s의 감자포에 맞고 죽었습니다.",
@@ -1057,6 +1060,10 @@
 	"create.contraptions.cart_movement_mode.rotate": "구조물이 항상 전방을 향함",
 	"create.contraptions.cart_movement_mode.rotate_paused": "수레가 회전할때 구조물이 행동을 멈춤",
 	"create.contraptions.cart_movement_mode.rotation_locked": "구조물이 회전하지 않음",
+	"create.contraptions.roller_mode": "UNLOCALIZED: Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "UNLOCALIZED: Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "UNLOCALIZED: Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "UNLOCALIZED: Sloped Fill Below",
 	"create.contraptions.windmill.rotation_direction": "회전 방향",
 	"create.contraptions.clockwork.clock_hands": "시계침",
 	"create.contraptions.clockwork.hour_first": "시침 먼저",
@@ -1071,6 +1078,7 @@
 	"create.logistics.filter.apply": "%1$s에 필터를 적용했습니다",
 	"create.logistics.filter.apply_click_again": "%1$s에 필터를 적용했습니다. 다시 클릭하면 가지고 있는 아이템의 수량을 복사하여 필터에 적용합니다",
 	"create.logistics.filter.apply_count": "필터에 수량을 적용했습니다",
+	"create.logistics.filter.invalid_item": "UNLOCALIZED: Cannot use this item here.",
 
 	"create.gui.goggles.generator_stats": "동력 상태:",
 	"create.gui.goggles.kinetic_stats": "작동 상태:",

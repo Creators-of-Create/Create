@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllBlockPartials;
@@ -18,15 +19,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
 public class HarvesterActorInstance extends ActorInstance {
-    static double oneOverRadius = 16.0 / 6.5;
     static float originOffset = 1 / 16f;
     static Vec3 rotOffset = new Vec3(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
-
 
     ModelData harvester;
     private Direction facing;
 
-    private float horizontalAngle;
+    protected float horizontalAngle;
 
     private double rotation;
     private double previousRotation;
@@ -41,11 +40,23 @@ public class HarvesterActorInstance extends ActorInstance {
 
         facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
-        harvester = material.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
+        harvester = material.getModel(getRollingPartial(), state).createInstance();
 
         horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
 		harvester.setBlockLight(localBlockLight());
+	}
+
+	protected PartialModel getRollingPartial() {
+		return AllBlockPartials.HARVESTER_BLADE;
+	}
+	
+	protected Vec3 getRotationOffset() {
+		return rotOffset;
+	}
+	
+	protected double getRadius() {
+		return 6.5;
 	}
 
 	@Override
@@ -60,7 +71,7 @@ public class HarvesterActorInstance extends ActorInstance {
 
 		double arcLength = context.motion.length();
 
-		double radians = arcLength * oneOverRadius;
+		double radians = arcLength * 16 / getRadius();
 
 		float deg = AngleHelper.deg(radians);
 
@@ -78,9 +89,9 @@ public class HarvesterActorInstance extends ActorInstance {
 				.centre()
 				.rotateY(horizontalAngle)
 				.unCentre()
-				.translate(rotOffset)
+				.translate(getRotationOffset())
 				.rotateX(getRotation())
-				.translateBack(rotOffset);
+				.translateBack(getRotationOffset());
 	}
 
     private double getRotation() {

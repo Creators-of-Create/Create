@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.filtering;
 
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
@@ -33,7 +33,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour {
 
 	private ItemStack filter;
 	public int count;
-	private Consumer<ItemStack> callback;
+	private Predicate<ItemStack> callback;
 	private Supplier<Boolean> isActive;
 	private Supplier<Boolean> showCountPredicate;
 
@@ -48,8 +48,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour {
 		filter = ItemStack.EMPTY;
 		slotPositioning = slot;
 		showCount = false;
-		callback = stack -> {
-		};
+		callback = stack -> true;
 		isActive = () -> true;
 		textShift = Vec3.ZERO;
 		count = 0;
@@ -102,7 +101,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour {
 		ticksUntilScrollPacket = -1;
 	}
 
-	public FilteringBehaviour withCallback(Consumer<ItemStack> filterCallback) {
+	public FilteringBehaviour withCallback(Predicate<ItemStack> filterCallback) {
 		callback = filterCallback;
 		return this;
 	}
@@ -143,20 +142,23 @@ public class FilteringBehaviour extends BlockEntityBehaviour {
 		scrollableValue = count;
 	}
 
-	public void setFilter(Direction face, ItemStack stack) {
-		setFilter(stack);
+	public boolean setFilter(Direction face, ItemStack stack) {
+		return setFilter(stack);
 	}
 
-	public void setFilter(ItemStack stack) {
+	public boolean setFilter(ItemStack stack) {
 		boolean confirm = ItemHandlerHelper.canItemStacksStack(stack, filter);
-		filter = stack.copy();
-		callback.accept(filter);
+		ItemStack toApply = stack.copy();
+		if (!callback.test(toApply))
+			return false;
+		filter = toApply;
 		count = !confirm ? 0
 			: (filter.getItem() instanceof FilterItem) ? 0 : Math.min(stack.getCount(), stack.getMaxStackSize());
 		forceClientState = true;
 
 		blockEntity.setChanged();
 		blockEntity.sendData();
+		return true;
 	}
 
 	@Override
