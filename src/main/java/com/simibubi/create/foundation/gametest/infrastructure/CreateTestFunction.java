@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.gametest.infrastructure;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.StructureUtils;
 import net.minecraft.gametest.framework.TestFunction;
@@ -24,6 +25,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+/**
+ * An extension to game tests implementing functionality for {@link CreateGameTestHelper} and {@link GameTestGroup}.
+ * To use, create a {@link GameTestGenerator} that provides tests using {@link #getTestsFrom(Class[])}.
+ */
 public class CreateTestFunction extends TestFunction {
 	public static final Map<String, CreateTestFunction> NAMES_TO_FUNCTIONS = new HashMap<>();
 
@@ -35,6 +40,10 @@ public class CreateTestFunction extends TestFunction {
 		NAMES_TO_FUNCTIONS.put(fullyQualifiedName, this);
 	}
 
+	/**
+	 * Get all Create test functions from the given classes. This enables functionality
+	 * of {@link CreateGameTestHelper} and {@link GameTestGroup}.
+	 */
 	public static Collection<TestFunction> getTestsFrom(Class<?>... classes) {
 		return Stream.of(classes)
 				.map(Class::getDeclaredMethods)

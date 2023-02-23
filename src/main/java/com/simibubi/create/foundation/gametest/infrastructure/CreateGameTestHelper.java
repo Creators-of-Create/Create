@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.foundation.gametest.CreateGameTests;
 import com.simibubi.create.foundation.mixin.accessor.GameTestHelperAccessor;
 
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeverBlock;
 import net.minecraftforge.fluids.FluidStack;
 
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -51,7 +54,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * An extension to {@link GameTestHelper} with added utilities.
+ * A helper class expanding the functionality of {@link GameTestHelper}.
+ * This class may replace the default helper parameter if a test is registered through {@link CreateTestFunction}.
  */
 public class CreateGameTestHelper extends GameTestHelper {
 	public static final int TICKS_PER_SECOND = 20;
@@ -72,6 +76,8 @@ public class CreateGameTestHelper extends GameTestHelper {
 		return helper;
 	}
 
+	// blocks
+
 	/**
 	 * Flip the direction of any block with the {@link BlockStateProperties#FACING} property.
 	 */
@@ -84,6 +90,86 @@ public class CreateGameTestHelper extends GameTestHelper {
 		setBlock(pos, reversed);
 	}
 
+	public void assertNixieRedstone(BlockPos pos, int strength) {
+		NixieTubeTileEntity nixie = getBlockEntity(AllTileEntities.NIXIE_TUBE.get(), pos);
+		int actualStrength = nixie.getRedstoneStrength();
+		if (actualStrength != strength)
+			fail("Expected nixie tube at %s to have power of %s, got %s".formatted(pos, strength, actualStrength));
+	}
+
+	/**
+	 * Turn off a lever.
+	 */
+	public void powerLever(BlockPos pos) {
+		assertBlockPresent(Blocks.LEVER, pos);
+		if (!getBlockState(pos).getValue(LeverBlock.POWERED)) {
+			pullLever(pos);
+		}
+	}
+
+	/**
+	 * Turn on a lever.
+	 */
+	public void unpowerLever(BlockPos pos) {
+		assertBlockPresent(Blocks.LEVER, pos);
+		if (getBlockState(pos).getValue(LeverBlock.POWERED)) {
+			pullLever(pos);
+		}
+	}
+
+	/**
+	 * Set the {@link SelectionMode} of a belt tunnel at the given position.
+	 * @param pos
+	 * @param mode
+	 */
+	public void setTunnelMode(BlockPos pos, SelectionMode mode) {
+		ScrollValueBehaviour behavior = getBehavior(pos, ScrollOptionBehaviour.TYPE);
+		behavior.setValue(mode.ordinal());
+	}
+
+	// block entities
+
+	/**
+	 * Get the block entity of the expected type. If the type does not match, this fails the test.
+	 */
+	public <T extends BlockEntity> T getBlockEntity(BlockEntityType<T> type, BlockPos pos) {
+		BlockEntity be = getBlockEntity(pos);
+		BlockEntityType<?> actualType = be == null ? null : be.getType();
+		if (actualType != type) {
+			String actualId = actualType == null ? "null" : RegisteredObjects.getKeyOrThrow(actualType).toString();
+			String error = "Expected block entity at pos [%s] with type [%s], got [%s]".formatted(
+					pos, RegisteredObjects.getKeyOrThrow(type), actualId
+			);
+			fail(error);
+		}
+		return (T) be;
+	}
+
+	/**
+	 * Given any segment of an {@link IMultiTileContainer}, get the controller for it.
+	 */
+	public <T extends BlockEntity & IMultiTileContainer> T getControllerBlockEntity(BlockEntityType<T> type, BlockPos anySegment) {
+		T be = getBlockEntity(type, anySegment).getControllerTE();
+		if (be == null)
+			fail("Could not get block entity controller with type [%s] from pos [%s]".formatted(RegisteredObjects.getKeyOrThrow(type), anySegment));
+		return be;
+	}
+
+	/**
+	 * Get the expected {@link TileEntityBehaviour} from the given position, failing if not present.
+	 */
+	public <T extends TileEntityBehaviour> T getBehavior(BlockPos pos, BehaviourType<T> type) {
+		T behavior = TileEntityBehaviour.get(getLevel(), absolutePos(pos), type);
+		if (behavior == null)
+			fail("Behavior at " + pos + " missing, expected " + type.getName());
+		return behavior;
+	}
+
+	// entities
+
+	/**
+	 * Spawn an item entity at the given position with no velocity.
+	 */
 	public ItemEntity spawnItem(BlockPos pos, ItemStack stack) {
 		Vec3 spawn = Vec3.atCenterOf(absolutePos(pos));
 		ServerLevel level = getLevel();
@@ -92,11 +178,50 @@ public class CreateGameTestHelper extends GameTestHelper {
 		return item;
 	}
 
+	/**
+	 * Get the first entity found at the given position.
+	 */
+	public <T extends Entity> T getFirstEntity(EntityType<T> type, BlockPos pos) {
+		List<T> list = getEntitiesBetween(type, pos.north().east().above(), pos.south().west().below());
+		if (list.isEmpty())
+			fail("No entities at pos: " + pos);
+		return list.get(0);
+	}
+
+	/**
+	 * Get a list of all entities between two positions, inclusive.
+	 */
+	public <T extends Entity> List<T> getEntitiesBetween(EntityType<T> type, BlockPos pos1, BlockPos pos2) {
+		BoundingBox box = BoundingBox.fromCorners(absolutePos(pos1), absolutePos(pos2));
+		List<? extends T> entities = getLevel().getEntities(type, e -> box.isInside(e.blockPosition()));
+		return (List<T>) entities;
+	}
+
+
+	// transfer - fluids
+
+	public IFluidHandler fluidStorageAt(BlockPos pos) {
+		BlockEntity be = getBlockEntity(pos);
+		if (be == null)
+			fail("BlockEntity not present");
+		Optional<IFluidHandler> handler = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve();
+		if (handler.isEmpty())
+			fail("handler not present");
+		return handler.get();
+	}
+
+	/**
+	 * Get the content of the tank at the pos.
+	 * content is determined by what the tank allows to be extracted.
+	 */
 	public FluidStack getTankContents(BlockPos tank) {
 		IFluidHandler handler = fluidStorageAt(tank);
 		return handler.drain(Integer.MAX_VALUE, FluidAction.SIMULATE);
 	}
 
+	/**
+	 * Get the total capacity of a tank at the given position.
+	 */
 	public long getTankCapacity(BlockPos pos) {
 		IFluidHandler handler = fluidStorageAt(pos);
 		long total = 0;
@@ -117,6 +242,26 @@ public class CreateGameTestHelper extends GameTestHelper {
 		return total;
 	}
 
+	/**
+	 * Assert that the given fluid stack is present in the given tank. The tank might also hold more than the fluid.
+	 */
+	public void assertFluidPresent(FluidStack fluid, BlockPos pos) {
+		FluidStack contained = getTankContents(pos);
+		if (!fluid.isFluidEqual(contained))
+			fail("Different fluids");
+		if (fluid.getAmount() != contained.getAmount())
+			fail("Different amounts");
+	}
+
+	/**
+	 * Assert that the given tank holds no fluid.
+	 */
+	public void assertTankEmpty(BlockPos pos) {
+		assertFluidPresent(FluidStack.EMPTY, pos);
+	}
+
+	// transfer - items
+
 	public IItemHandler itemStorageAt(BlockPos pos) {
 		BlockEntity be = getBlockEntity(pos);
 		if (be == null)
@@ -127,6 +272,9 @@ public class CreateGameTestHelper extends GameTestHelper {
 		return handler.get();
 	}
 
+	/**
+	 * Collect all ItemStacks from an inventory. Duplicate item types are possible.
+	 */
 	public List<ItemStack> getAllContainedStacks(BlockPos pos) {
 		IItemHandler handler = itemStorageAt(pos);
 		List<ItemStack> stacks = new ArrayList<>();
@@ -138,6 +286,9 @@ public class CreateGameTestHelper extends GameTestHelper {
 		return stacks;
 	}
 
+	/**
+	 * Get the combined total of all ItemStacks inside the inventory.
+	 */
 	public long getTotalItems(BlockPos pos) {
 		IItemHandler storage = itemStorageAt(pos);
 		long total = 0;
@@ -147,45 +298,9 @@ public class CreateGameTestHelper extends GameTestHelper {
 		return total;
 	}
 
-	public IFluidHandler fluidStorageAt(BlockPos pos) {
-		BlockEntity be = getBlockEntity(pos);
-		if (be == null)
-			fail("BlockEntity not present");
-		Optional<IFluidHandler> handler = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve();
-		if (handler.isEmpty())
-			fail("handler not present");
-		return handler.get();
-	}
-
-	public <T extends BlockEntity> T getBlockEntity(BlockEntityType<T> type, BlockPos pos) {
-		BlockEntity be = getBlockEntity(pos);
-		BlockEntityType<?> actualType = be == null ? null : be.getType();
-		if (actualType != type) {
-			String actualId = actualType == null ? "null" : RegisteredObjects.getKeyOrThrow(actualType).toString();
-			String error = "Expected block entity at pos [%s] with type [%s], got [%s]".formatted(
-					pos, RegisteredObjects.getKeyOrThrow(type), actualId
-			);
-			fail(error);
-		}
-		return (T) be;
-	}
-
-	public <T extends BlockEntity & IMultiTileContainer> T getControllerBlockEntity(BlockEntityType<T> type, BlockPos anySegment) {
-		T be = getBlockEntity(type, anySegment).getControllerTE();
-		if (be == null)
-			fail("Could not get block entity controller with type [%s] from pos [%s]".formatted(RegisteredObjects.getKeyOrThrow(type), anySegment));
-		return be;
-	}
-
-	public void assertSecondsPassed(int seconds) {
-		if (getTick() < (long) seconds * TICKS_PER_SECOND)
-			fail("Waiting for %s seconds to pass".formatted(seconds));
-	}
-
-	public long secondsPassed() {
-		return getTick() % 20;
-	}
-
+	/**
+	 * Of the provided items, assert that at least one is present in the given inventory.
+	 */
 	public void assertAnyContained(BlockPos pos, Item... items) {
 		IItemHandler handler = itemStorageAt(pos);
 		boolean noneFound = true;
@@ -201,6 +316,9 @@ public class CreateGameTestHelper extends GameTestHelper {
 			fail("No matching items " + Arrays.toString(items) + " found in handler at pos: " + pos);
 	}
 
+	/**
+	 * Assert that the inventory contains all the ItemStacks provided.
+	 */
 	public void assertAllStacksPresent(List<ItemStack> stacks, BlockPos pos) {
 		IItemHandler handler = itemStorageAt(pos);
 		List<ItemStack> toExtract = new ArrayList<>(); // compress stacks
@@ -220,38 +338,77 @@ public class CreateGameTestHelper extends GameTestHelper {
 		}
 	}
 
-	public void assertFluidPresent(FluidStack fluid, BlockPos pos) {
-		FluidStack contained = getTankContents(pos);
-		if (!fluid.isFluidEqual(contained))
-			fail("Different fluids");
-		if (fluid.getAmount() != contained.getAmount())
-			fail("Different amounts");
+	/**
+	 * Assert that all the given inventories hold no items.
+	 */
+	public void assertContainersEmpty(List<BlockPos> positions) {
+		for (BlockPos pos : positions) {
+			assertContainerEmpty(pos);
+		}
 	}
 
-	public void assertTankEmpty(BlockPos pos) {
-		assertFluidPresent(FluidStack.EMPTY, pos);
+	/**
+	 * Assert that the given inventory holds no items.
+	 */
+	@Override
+	public void assertContainerEmpty(@NotNull BlockPos pos) {
+		IItemHandler storage = itemStorageAt(pos);
+		for (int i = 0; i < storage.getSlots(); i++) {
+			if (!storage.getStackInSlot(i).isEmpty())
+				fail("Storage not empty");
+		}
 	}
 
-	public <T extends Entity> T getFirstEntity(EntityType<T> type, BlockPos pos) {
-		List<T> list = getEntitiesBetween(type, pos.north().east().above(), pos.south().west().below());
-		if (list.isEmpty())
-			fail("No entities at pos: " + pos);
-		return list.get(0);
+	/** @see CreateGameTestHelper#assertContainerContains(BlockPos, ItemStack) */
+	public void assertContainerContains(BlockPos pos, ItemLike item) {
+		assertContainerContains(pos, item.asItem());
 	}
 
-	public <T extends Entity> List<T> getEntitiesBetween(EntityType<T> type, BlockPos pos1, BlockPos pos2) {
-		BoundingBox box = BoundingBox.fromCorners(absolutePos(pos1), absolutePos(pos2));
-		List<? extends T> entities = getLevel().getEntities(type, e -> box.isInside(e.blockPosition()));
-		return (List<T>) entities;
+	/** @see CreateGameTestHelper#assertContainerContains(BlockPos, ItemStack) */
+	@Override
+	public void assertContainerContains(@NotNull BlockPos pos, @NotNull Item item) {
+		assertContainerContains(pos, new ItemStack(item));
 	}
 
-	public void assertNixieRedstone(BlockPos pos, int strength) {
-		NixieTubeTileEntity nixie = getBlockEntity(AllTileEntities.NIXIE_TUBE.get(), pos);
-		int actualStrength = nixie.getRedstoneStrength();
-		if (actualStrength != strength)
-			fail("Expected nixie tube at %s to have power of %s, got %s".formatted(pos, strength, actualStrength));
+	/**
+	 * Assert that the inventory holds at least the given ItemStack. It may also hold more than the stack.
+	 */
+	public void assertContainerContains(BlockPos pos, ItemStack item) {
+		IItemHandler storage = itemStorageAt(pos);
+		ItemStack extracted = ItemHelper.extract(storage, stack -> ItemHandlerHelper.canItemStacksStack(stack, item), item.getCount(), true);
+		if (extracted.isEmpty())
+			fail("item not present: " + item);
 	}
 
+	// time
+
+	/**
+	 * Fail unless the desired number seconds have passed since test start.
+	 */
+	public void assertSecondsPassed(int seconds) {
+		if (getTick() < (long) seconds * TICKS_PER_SECOND)
+			fail("Waiting for %s seconds to pass".formatted(seconds));
+	}
+
+	/**
+	 * Get the total number of seconds that have passed since test start.
+	 */
+	public long secondsPassed() {
+		return getTick() % 20;
+	}
+
+	/**
+	 * Run an action later, once enough time has passed.
+	 */
+	public void whenSecondsPassed(int seconds, Runnable run) {
+		runAfterDelay((long) seconds * TICKS_PER_SECOND, run);
+	}
+
+	// numbers
+
+	/**
+	 * Assert that a number is <1 away from its expected value
+	 */
 	public void assertCloseEnoughTo(double value, double expected) {
 		assertInRange(value, expected - 1, expected + 1);
 	}
@@ -263,58 +420,11 @@ public class CreateGameTestHelper extends GameTestHelper {
 			fail("Value %s greater than expected max of %s".formatted(value, max));
 	}
 
-	public void whenSecondsPassed(int seconds, Runnable run) {
-		runAfterDelay((long) seconds * TICKS_PER_SECOND, run);
-	}
-
-	public <T extends TileEntityBehaviour> T getBehavior(BlockPos pos, BehaviourType<T> type) {
-		T behavior = TileEntityBehaviour.get(getLevel(), absolutePos(pos), type);
-		if (behavior == null)
-			fail("Behavior at " + pos + " missing, expected " + type.getName());
-		return behavior;
-	}
-
-	public void setTunnelMode(BlockPos pos, SelectionMode mode) {
-		ScrollValueBehaviour behavior = getBehavior(pos, ScrollOptionBehaviour.TYPE);
-		behavior.setValue(mode.ordinal());
-	}
-
-	@Override
-	public void assertContainerEmpty(@NotNull BlockPos pos) {
-		IItemHandler storage = itemStorageAt(pos);
-		for (int i = 0; i < storage.getSlots(); i++) {
-			if (!storage.getStackInSlot(i).isEmpty())
-				fail("Storage not empty");
-		}
-	}
-
-	public void assertContainersEmpty(List<BlockPos> positions) {
-		for (BlockPos pos : positions) {
-			assertContainerEmpty(pos);
-		}
-	}
+	// misc
 
 	@Contract("_->fail") // make IDEA happier
 	@Override
 	public void fail(@NotNull String exceptionMessage) {
 		super.fail(exceptionMessage);
-	}
-
-	// support non-minecraft storages
-
-	public void assertContainerContains(BlockPos pos, ItemLike item) {
-		assertContainerContains(pos, item.asItem());
-	}
-
-	@Override
-	public void assertContainerContains(@NotNull BlockPos pos, @NotNull Item item) {
-		assertContainerContains(pos, new ItemStack(item));
-	}
-
-	public void assertContainerContains(BlockPos pos, ItemStack item) {
-		IItemHandler storage = itemStorageAt(pos);
-		ItemStack extracted = ItemHelper.extract(storage, stack -> ItemHandlerHelper.canItemStacksStack(stack, item), item.getCount(), true);
-		if (extracted.isEmpty())
-			fail("item not present: " + item);
 	}
 }
