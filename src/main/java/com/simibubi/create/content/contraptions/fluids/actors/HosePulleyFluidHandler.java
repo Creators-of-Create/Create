@@ -125,4 +125,8 @@ public class HosePulleyFluidHandler implements IFluidHandler {
 		return internalTank.isFluidValid(tank, stack);
 	}
 
+	public SmartFluidTank getInternalTank() {
+		return internalTank;
+	}
+
 }

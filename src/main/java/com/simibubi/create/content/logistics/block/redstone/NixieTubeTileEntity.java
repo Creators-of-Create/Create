@@ -123,6 +123,10 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 		customText = Optional.empty();
 	}
 
+	public int getRedstoneStrength() {
+		return redstoneStrength;
+	}
+
 	//
 
 	@Override
