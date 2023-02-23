@@ -1,5 +1,9 @@
 package com.simibubi.create.content.schematics.client;
 
+import com.simibubi.create.content.schematics.SchematicExport;
+
+import net.minecraftforge.fml.loading.FMLEnvironment;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,6 +20,10 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 
+import javax.annotation.Nullable;
+
+import java.nio.file.Path;
+
 public class SchematicPromptScreen extends AbstractSimiScreen {
 
 	private AllGuiTextures background;
@@ -23,11 +31,14 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	private final Component convertLabel = Lang.translateDirect("schematicAndQuill.convert");
 	private final Component abortLabel = Lang.translateDirect("action.discard");
 	private final Component confirmLabel = Lang.translateDirect("action.saveToFile");
+	private final Component exportTestLabel = Lang.translateDirect("action.saveAsTest");
 
 	private EditBox nameField;
 	private IconButton confirm;
 	private IconButton abort;
 	private IconButton convert;
+	@Nullable // only present in development environment
+	private IconButton saveTest;
 
 	public SchematicPromptScreen() {
 		super(Lang.translateDirect("schematicAndQuill.title"));
@@ -46,7 +57,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		nameField.setTextColor(-1);
 		nameField.setTextColorUneditable(-1);
 		nameField.setBordered(false);
-		nameField.setMaxLength(35);
+		nameField.setMaxLength(64);
 		nameField.changeFocus(true);
 		setFocused(nameField);
 		addRenderableWidget(nameField);
@@ -72,6 +83,13 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		});
 		convert.setToolTip(convertLabel);
 		addRenderableWidget(convert);
+
+		if (FMLEnvironment.production)
+			return;
+		saveTest = new IconButton(x + 129, y + 53, AllIcons.I_CONFIRM);
+		saveTest.withCallback(this::exportTest);
+		saveTest.setToolTip(exportTestLabel);
+		addRenderableWidget(saveTest);
 	}
 
 	@Override
@@ -107,6 +125,18 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 
 	private void confirm(boolean convertImmediately) {
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getValue(), convertImmediately);
+		onClose();
+	}
+
+	private void exportTest() {
+		Path dir = SchematicExport.GAMETESTS;
+		String name = nameField.getValue();
+		String[] split = name.split("/");
+		String actualName = split[split.length - 1];
+		for (int i = 0; i < split.length - 1; i++) {
+			dir = dir.resolve(split[i]);
+		}
+		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(actualName, dir, false);
 		onClose();
 	}
 
