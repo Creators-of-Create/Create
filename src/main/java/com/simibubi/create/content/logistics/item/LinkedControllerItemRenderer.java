@@ -2,10 +2,13 @@ package com.simibubi.create.content.logistics.item;
 
 import java.util.Vector;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler.Mode;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -21,7 +24,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 
-public class LinkedControllerItemRenderer extends CustomRenderedItemModelRenderer<LinkedControllerModel> {
+public class LinkedControllerItemRenderer extends CustomRenderedItemModelRenderer {
+
+	protected static final PartialModel POWERED = new PartialModel(Create.asResource("item/linked_controller/powered"));
+	protected static final PartialModel BUTTON = new PartialModel(Create.asResource("item/linked_controller/button"));
 
 	static LerpedFloat equipProgress;
 	static Vector<LerpedFloat> buttons;
@@ -61,25 +67,25 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	}
 
 	@Override
-	protected void render(ItemStack stack, LinkedControllerModel model, PartialItemModelRenderer renderer,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
 		ItemTransforms.TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		renderNormal(stack, model, renderer, transformType, ms, light);
 	}
 
-	protected static void renderNormal(ItemStack stack, LinkedControllerModel model,
+	protected static void renderNormal(ItemStack stack, CustomRenderedItemModel model,
 	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
   		int light) {
 		render(stack, model, renderer, transformType, ms, light, RenderType.NORMAL, false, false);
 	}
 
-	public static void renderInLectern(ItemStack stack, LinkedControllerModel model,
+	public static void renderInLectern(ItemStack stack, CustomRenderedItemModel model,
 	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
   		int light, boolean active, boolean renderDepression) {
 		render(stack, model, renderer, transformType, ms, light, RenderType.LECTERN, active, renderDepression);
 	}
 
-	protected static void render(ItemStack stack, LinkedControllerModel model,
+	protected static void render(ItemStack stack, CustomRenderedItemModel model,
 	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
   		int light, RenderType renderType, boolean active, boolean renderDepression) {
 		float pt = AnimationTickHolder.getPartialTicks();
@@ -119,14 +125,14 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 			renderDepression = true;
 		}
 
-		renderer.render(active ? model.getPartial("powered") : model.getOriginalModel(), light);
+		renderer.render(active ? POWERED.get() : model.getOriginalModel(), light);
 
 		if (!active) {
 			ms.popPose();
 			return;
 		}
 
-		BakedModel button = model.getPartial("button");
+		BakedModel button = BUTTON.get();
 		float s = 1 / 16f;
 		float b = s * -.75f;
 		int index = 0;
@@ -166,11 +172,6 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 		}
 		renderer.renderSolid(button, light);
 		ms.popPose();
-	}
-
-	@Override
-	public LinkedControllerModel createModel(BakedModel originalModel) {
-		return new LinkedControllerModel(originalModel);
 	}
 
 	protected enum RenderType {

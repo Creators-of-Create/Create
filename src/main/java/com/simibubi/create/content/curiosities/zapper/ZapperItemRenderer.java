@@ -16,10 +16,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.CrossCollisionBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> extends CustomRenderedItemModelRenderer<M> {
+public abstract class ZapperItemRenderer extends CustomRenderedItemModelRenderer {
 
 	@Override
-	protected void render(ItemStack stack, M model, PartialItemModelRenderer renderer, TransformType transformType,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, TransformType transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		// Block indicator
 		if (transformType == TransformType.GUI && stack.hasTag() && stack.getTag()

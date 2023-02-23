@@ -1,9 +1,12 @@
 package com.simibubi.create.content.curiosities.weapons;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -14,15 +17,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 
-public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<PotatoCannonModel> {
+public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
+
+	protected static final PartialModel COG = new PartialModel(Create.asResource("item/potato_cannon/cog"));
 
 	@Override
-	protected void render(ItemStack stack, PotatoCannonModel model, PartialItemModelRenderer renderer,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
 		TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
@@ -46,7 +50,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 		ms.translate(0, offset, 0);
 		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
-		renderer.render(model.getPartial("cog"), light);
+		renderer.render(COG.get(), light);
 		ms.popPose();
 
 		if (transformType == TransformType.GUI) {
@@ -61,11 +65,6 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 				});
 		}
 
-	}
-
-	@Override
-	public PotatoCannonModel createModel(BakedModel originalModel) {
-		return new PotatoCannonModel(originalModel);
 	}
 
 }
