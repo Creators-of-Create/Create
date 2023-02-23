@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 44",
+	"_": "Missing Localizations: 47",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -261,6 +261,7 @@
 	"block.create.jungle_window_pane": "정글나무 유리판",
 	"block.create.large_bogey": "큰 대차",
 	"block.create.large_cogwheel": "큰 톱니바퀴",
+	"block.create.large_water_wheel": "UNLOCALIZED: Large Water Wheel",
 	"block.create.layered_andesite": "단층 안산암",
 	"block.create.layered_asurine": "단층 담청암",
 	"block.create.layered_calcite": "단층 방해석",
@@ -530,6 +531,7 @@
 	"block.create.warped_window": "뒤틀린 유리창",
 	"block.create.warped_window_pane": "뒤틀린 유리판",
 	"block.create.water_wheel": "물레바퀴",
+	"block.create.water_wheel_structure": "UNLOCALIZED: Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "밀랍칠한 구리 판자 반 블록",
 	"block.create.waxed_copper_shingle_stairs": "밀랍칠한 구리 판자 계단",
 	"block.create.waxed_copper_shingles": "밀랍칠한 구리 판자",
@@ -1044,6 +1046,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "쉬프트-우클릭으로 모양 설정하기",
 	"create.terrainzapper.usingBlock": "사용 중: %1$s",
 	"create.terrainzapper.leftClickToSet": "좌클릭으로 재료로 쓸 블록을 선택하세요",
+
+	"create.large_water_wheel.not_enough_space": "UNLOCALIZED: Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "광산 수레는 최대 2개의 커플링만 가질 수 있습니다",
 	"create.minecart_coupling.unloaded": "열차 일부분이 로딩되지 않은 청크에 있는 것 같습니다",

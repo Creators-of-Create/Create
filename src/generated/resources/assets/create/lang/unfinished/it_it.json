@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 38",
+	"_": "Missing Localizations: 41",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -261,6 +261,7 @@
 	"block.create.jungle_window_pane": "Pannello di finestra della giungla",
 	"block.create.large_bogey": "Carrello grande",
 	"block.create.large_cogwheel": "Ingranaggio grande",
+	"block.create.large_water_wheel": "UNLOCALIZED: Large Water Wheel",
 	"block.create.layered_andesite": "Andesite stratificata",
 	"block.create.layered_asurine": "Azurite stratificata",
 	"block.create.layered_calcite": "Calcite stratificata",
@@ -530,6 +531,7 @@
 	"block.create.warped_window": "Finestra distorta",
 	"block.create.warped_window_pane": "Pannello di finestra distorta",
 	"block.create.water_wheel": "Mulino ad acqua",
+	"block.create.water_wheel_structure": "UNLOCALIZED: Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "Lastra di tegole di rame cerato",
 	"block.create.waxed_copper_shingle_stairs": "Scalini di tegole di rame cerato",
 	"block.create.waxed_copper_shingles": "Tegole di rame cerato",
@@ -1044,6 +1046,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "Shift-click destro per impostare la forma",
 	"create.terrainzapper.usingBlock": "Blocco in uso: %1$s",
 	"create.terrainzapper.leftClickToSet": "Fai click sinistro su un blocco per scegliere il materiale",
+
+	"create.large_water_wheel.not_enough_space": "UNLOCALIZED: Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "I carrelli da miniera non possono avere più di due agganci ciascuno",
 	"create.minecart_coupling.unloaded": "Parti del tuo Macchinario sembrano essere in mezzo a chunk non caricati",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1367",
+	"_": "Missing Localizations: 1370",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -261,6 +261,7 @@
 	"block.create.jungle_window_pane": "Vidraça da selva",
 	"block.create.large_bogey": "Roda grande do trem",
 	"block.create.large_cogwheel": "Roda dentada grande",
+	"block.create.large_water_wheel": "UNLOCALIZED: Large Water Wheel",
 	"block.create.layered_andesite": "Andesito estratificado",
 	"block.create.layered_asurine": "Asurino estratificado",
 	"block.create.layered_calcite": "Calcita estratificada",
@@ -530,6 +531,7 @@
 	"block.create.warped_window": "Janela distorcida",
 	"block.create.warped_window_pane": "Vidraça distorcida",
 	"block.create.water_wheel": "Roda de Água",
+	"block.create.water_wheel_structure": "UNLOCALIZED: Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "Laje de telha de cobre encerada",
 	"block.create.waxed_copper_shingle_stairs": "Escada de telha de cobre encerada",
 	"block.create.waxed_copper_shingles": "Telha de cobre encerada",
@@ -1044,6 +1046,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "UNLOCALIZED: Shift-Right-Click to Select a Shape",
 	"create.terrainzapper.usingBlock": "UNLOCALIZED: Using: %1$s",
 	"create.terrainzapper.leftClickToSet": "UNLOCALIZED: Left-Click a Block to set Material",
+
+	"create.large_water_wheel.not_enough_space": "UNLOCALIZED: Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "Carrinhos de mina não podem ter mais de dois acoplamentos cada",
 	"create.minecart_coupling.unloaded": "Partes do seu trem aparentam estar em um chunk descarregado",

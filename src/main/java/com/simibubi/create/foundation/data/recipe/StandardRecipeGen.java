@@ -247,8 +247,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.requires(I.planks())),
 
 		WATER_WHEEL = create(AllBlocks.WATER_WHEEL).unlockedBy(I::andesite)
-			.viaShaped(b -> b.define('S', ItemTags.WOODEN_SLABS)
-				.define('C', AllBlocks.LARGE_COGWHEEL.get())
+			.viaShaped(b -> b.define('S', I.planks())
+				.define('C', I.shaft())
+				.pattern("SSS")
+				.pattern("SCS")
+				.pattern("SSS")),
+
+		LARGE_WATER_WHEEL = create(AllBlocks.LARGE_WATER_WHEEL).unlockedBy(AllBlocks.WATER_WHEEL::get)
+			.viaShaped(b -> b.define('S', I.planks())
+				.define('C', AllBlocks.WATER_WHEEL.get())
 				.pattern("SSS")
 				.pattern("SCS")
 				.pattern("SSS")),

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1024",
+	"_": "Missing Localizations: 1027",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -261,6 +261,7 @@
 	"block.create.jungle_window_pane": "Panel de Ventana de Jungla",
 	"block.create.large_bogey": "UNLOCALIZED: Large Bogey",
 	"block.create.large_cogwheel": "Engranaje Grande",
+	"block.create.large_water_wheel": "UNLOCALIZED: Large Water Wheel",
 	"block.create.layered_andesite": "Capa de Andesita",
 	"block.create.layered_asurine": "UNLOCALIZED: Layered Asurine",
 	"block.create.layered_calcite": "UNLOCALIZED: Layered Calcite",
@@ -530,6 +531,7 @@
 	"block.create.warped_window": "Ventana Distorsionada",
 	"block.create.warped_window_pane": "Panel de Ventana Distorsionada",
 	"block.create.water_wheel": "Rueda de Agua",
+	"block.create.water_wheel_structure": "UNLOCALIZED: Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "UNLOCALIZED: Waxed Copper Shingle Slab",
 	"block.create.waxed_copper_shingle_stairs": "UNLOCALIZED: Waxed Copper Shingle Stairs",
 	"block.create.waxed_copper_shingles": "UNLOCALIZED: Waxed Copper Shingles",
@@ -1044,6 +1046,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "Shift-Click Derecho para Seleccionar una Forma",
 	"create.terrainzapper.usingBlock": "Usando: %1$s",
 	"create.terrainzapper.leftClickToSet": "Click Izquierdo a un Bloque para elegir Material",
+
+	"create.large_water_wheel.not_enough_space": "UNLOCALIZED: Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "Las vagonetas no pueden tener mas de dos uniones cada una",
 	"create.minecart_coupling.unloaded": "Partes de tu tren parecen estar en chunks no cargados",

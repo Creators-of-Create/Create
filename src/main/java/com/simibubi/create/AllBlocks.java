@@ -85,7 +85,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.content.contraptions.components.tracks.ControllerRailGenerator;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableBlock;
+import com.simibubi.create.content.contraptions.components.waterwheel.LargeWaterWheelBlock;
+import com.simibubi.create.content.contraptions.components.waterwheel.LargeWaterWheelBlockItem;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
+import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelStructuralBlock;
 import com.simibubi.create.content.contraptions.fluids.PipeAttachmentModel;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlock;
@@ -526,6 +529,32 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
+	public static final BlockEntry<LargeWaterWheelBlock> LARGE_WATER_WHEEL =
+		REGISTRATE.block("large_water_wheel", LargeWaterWheelBlock::new)
+			.initialProperties(SharedProperties::wooden)
+			.properties(p -> p.color(MaterialColor.DIRT))
+			.properties(BlockBehaviour.Properties::noOcclusion)
+			.transform(axeOrPickaxe())
+			.blockstate((c, p) -> axisBlock(c, p,
+				s -> s.getValue(LargeWaterWheelBlock.EXTENSION) ? AssetLookup.partialBaseModel(c, p, "extension")
+					: AssetLookup.partialBaseModel(c, p)))
+			.transform(BlockStressDefaults.setCapacity(64.0))
+			.transform(BlockStressDefaults.setGeneratorSpeed(WaterWheelBlock::getSpeedRange))
+			.item(LargeWaterWheelBlockItem::new)
+			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<WaterWheelStructuralBlock> WATER_WHEEL_STRUCTURAL =
+		REGISTRATE.block("water_wheel_structure", WaterWheelStructuralBlock::new)
+			.initialProperties(SharedProperties::wooden)
+			.blockstate((c, p) -> p.getVariantBuilder(c.get())
+				.forAllStatesExcept(BlockStateGen.mapToAir(p), WaterWheelStructuralBlock.FACING))
+			.properties(p -> p.color(MaterialColor.DIRT))
+			.properties(BlockBehaviour.Properties::noOcclusion)
+			.transform(axeOrPickaxe())
+			.lang("Large Water Wheel")
+			.register();
+
 	public static final BlockEntry<EncasedFanBlock> ENCASED_FAN = REGISTRATE.block("encased_fan", EncasedFanBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.properties(p -> p.color(MaterialColor.PODZOL))
@@ -604,10 +633,11 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(pickaxeOnly())
-			.blockstate(BlockStateGen.axisBlockProvider(false))
+			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> AssetLookup.partialBaseModel(c, p)))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(BlockStressDefaults.setImpact(8.0))
-			.simpleItem()
+			.item()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<CrushingWheelControllerBlock> CRUSHING_WHEEL_CONTROLLER =
@@ -618,10 +648,7 @@ public class AllBlocks {
 				.noDrops()
 				.air())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
-				.forAllStatesExcept(state -> ConfiguredModel.builder()
-					.modelFile(p.models()
-						.getExistingFile(p.mcLoc("block/air")))
-					.build(), CrushingWheelControllerBlock.FACING))
+				.forAllStatesExcept(BlockStateGen.mapToAir(p), CrushingWheelControllerBlock.FACING))
 			.register();
 
 	public static final BlockEntry<MechanicalPressBlock> MECHANICAL_PRESS =

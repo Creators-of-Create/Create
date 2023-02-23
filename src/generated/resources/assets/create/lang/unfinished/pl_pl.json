@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 48",
+	"_": "Missing Localizations: 51",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -261,6 +261,7 @@
 	"block.create.jungle_window_pane": "Dżunglowa szyba okienna",
 	"block.create.large_bogey": "Duży wózek",
 	"block.create.large_cogwheel": "Duże koło zębate",
+	"block.create.large_water_wheel": "UNLOCALIZED: Large Water Wheel",
 	"block.create.layered_andesite": "Warstwowy andezyt",
 	"block.create.layered_asurine": "Warstwowy azuryn",
 	"block.create.layered_calcite": "Warstwowy kalcyt",
@@ -530,6 +531,7 @@
 	"block.create.warped_window": "Spaczone okno",
 	"block.create.warped_window_pane": "Spaczona szyba okienna",
 	"block.create.water_wheel": "Koło wodne",
+	"block.create.water_wheel_structure": "UNLOCALIZED: Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "Woskowana płyta z miedzianych dachówek",
 	"block.create.waxed_copper_shingle_stairs": "Woskowane schody z miedzianych dachówek",
 	"block.create.waxed_copper_shingles": "Woskowane miedziane dachówki",
@@ -1044,6 +1046,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "Shift+Prawe kliknięcie, aby wybrać kształt",
 	"create.terrainzapper.usingBlock": "Używając: %1$s",
 	"create.terrainzapper.leftClickToSet": "Kliknij LPM na blok aby ustawić materiał",
+
+	"create.large_water_wheel.not_enough_space": "UNLOCALIZED: Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "Wagoniki nie mogą mieć więcej niż dwa łączniki każdy",
 	"create.minecart_coupling.unloaded": "Część twojego pociągu wydaje się być w niezaładowanych Chunkach.",

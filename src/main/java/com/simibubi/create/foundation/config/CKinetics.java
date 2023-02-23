@@ -8,8 +8,6 @@ public class CKinetics extends ConfigBase {
 	public final ConfigInt maxBeltLength = i(20, 5, "maxBeltLength", Comments.maxBeltLength);
 	public final ConfigInt crushingDamage = i(4, 0, "crushingDamage", Comments.crushingDamage);
 	public final ConfigInt maxMotorSpeed = i(256, 64, "maxMotorSpeed", Comments.rpm, Comments.maxMotorSpeed, ConfigAnnotations.RequiresRestart.BOTH.asComment());
-	public final ConfigInt waterWheelBaseSpeed = i(4, 1, "waterWheelBaseSpeed", Comments.rpm, Comments.waterWheelBaseSpeed);
-	public final ConfigInt waterWheelFlowSpeed = i(4, 1, "waterWheelFlowSpeed", Comments.rpm, Comments.waterWheelFlowSpeed);
 	public final ConfigInt maxRotationSpeed = i(256, 64, "maxRotationSpeed", Comments.rpm, Comments.maxRotationSpeed);
 	public final ConfigEnum<DeployerAggroSetting> ignoreDeployerAttacks =
 		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
@@ -93,9 +91,6 @@ public class CKinetics extends ConfigBase {
 		static String highCapacity = "Minimum added Capacity by sources to be considered 'high'";
 		static String stress = "Fine tune the kinetic stats of individual components";
 		static String ignoreDeployerAttacks = "Select what mobs should ignore Deployers when attacked by them.";
-		static String waterWheelBaseSpeed = "Added rotation speed by a water wheel when at least one flow is present.";
-		static String waterWheelFlowSpeed =
-			"Rotation speed gained by a water wheel for each side with running fluids. (halved if not against blades)";
 		static String disableStress = "Disable the Stress mechanic altogether.";
 		static String kineticValidationFrequency =
 			"Game ticks between Kinetic Blocks checking whether their source is still valid.";

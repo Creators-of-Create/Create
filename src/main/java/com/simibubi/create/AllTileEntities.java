@@ -81,6 +81,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.RopePulleyInstance;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableTileEntity;
+import com.simibubi.create.content.contraptions.components.waterwheel.LargeWaterWheelTileEntity;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpCogInstance;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
@@ -600,6 +601,13 @@ public class AllTileEntities {
 		.tileEntity("water_wheel", WaterWheelTileEntity::new)
 		.instance(() -> CutoutRotatingInstance::new, false)
 		.validBlocks(AllBlocks.WATER_WHEEL)
+		.renderer(() -> KineticTileEntityRenderer::new)
+		.register();
+	
+	public static final BlockEntityEntry<LargeWaterWheelTileEntity> LARGE_WATER_WHEEL = Create.registrate()
+		.tileEntity("large_water_wheel", LargeWaterWheelTileEntity::new)
+		.instance(() -> CutoutRotatingInstance::new, false)
+		.validBlocks(AllBlocks.LARGE_WATER_WHEEL)
 		.renderer(() -> KineticTileEntityRenderer::new)
 		.register();
 

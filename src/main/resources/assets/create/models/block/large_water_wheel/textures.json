@@ -1,0 +1,13 @@
+{
+	"parent": "block/block",
+	"ambientocclusion": false,
+	"textures": {
+		"axis": "create:block/axis",
+		"axis_top": "create:block/axis_top",
+		"log": "block/oak_log",
+		"planks": "block/oak_planks",
+		"metal": "create:block/waterwheel_metal",
+		"stripped_log_top": "block/stripped_oak_log_top",
+		"particle": "#planks"
+	}
+}

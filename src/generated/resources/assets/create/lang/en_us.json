@@ -260,6 +260,7 @@
 	"block.create.jungle_window_pane": "Jungle Window Pane",
 	"block.create.large_bogey": "Large Bogey",
 	"block.create.large_cogwheel": "Large Cogwheel",
+	"block.create.large_water_wheel": "Large Water Wheel",
 	"block.create.layered_andesite": "Layered Andesite",
 	"block.create.layered_asurine": "Layered Asurine",
 	"block.create.layered_calcite": "Layered Calcite",
@@ -529,6 +530,7 @@
 	"block.create.warped_window": "Warped Window",
 	"block.create.warped_window_pane": "Warped Window Pane",
 	"block.create.water_wheel": "Water Wheel",
+	"block.create.water_wheel_structure": "Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "Waxed Copper Shingle Slab",
 	"block.create.waxed_copper_shingle_stairs": "Waxed Copper Shingle Stairs",
 	"block.create.waxed_copper_shingles": "Waxed Copper Shingles",
@@ -1043,6 +1045,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "Shift-Right-Click to Select a Shape",
 	"create.terrainzapper.usingBlock": "Using: %1$s",
 	"create.terrainzapper.leftClickToSet": "Left-Click a Block to set Material",
+
+	"create.large_water_wheel.not_enough_space": "Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "Minecarts cannot have more than two couplings each",
 	"create.minecart_coupling.unloaded": "Parts of your train seem to be in unloaded chunks",

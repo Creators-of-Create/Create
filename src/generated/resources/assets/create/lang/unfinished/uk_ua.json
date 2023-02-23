@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1022",
+	"_": "Missing Localizations: 1025",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -261,6 +261,7 @@
 	"block.create.jungle_window_pane": "Склянна панель з тропічним деревом",
 	"block.create.large_bogey": "UNLOCALIZED: Large Bogey",
 	"block.create.large_cogwheel": "Велика шестірня",
+	"block.create.large_water_wheel": "UNLOCALIZED: Large Water Wheel",
 	"block.create.layered_andesite": "Багатошаровий андезит",
 	"block.create.layered_asurine": "UNLOCALIZED: Layered Asurine",
 	"block.create.layered_calcite": "UNLOCALIZED: Layered Calcite",
@@ -530,6 +531,7 @@
 	"block.create.warped_window": "Скло з багряного дерева",
 	"block.create.warped_window_pane": "Склянна панель з багряного дерева",
 	"block.create.water_wheel": "Водяне колесо",
+	"block.create.water_wheel_structure": "UNLOCALIZED: Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "UNLOCALIZED: Waxed Copper Shingle Slab",
 	"block.create.waxed_copper_shingle_stairs": "UNLOCALIZED: Waxed Copper Shingle Stairs",
 	"block.create.waxed_copper_shingles": "UNLOCALIZED: Waxed Copper Shingles",
@@ -1044,6 +1046,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "ПКМ щоб вибрати форму",
 	"create.terrainzapper.usingBlock": "Використовується: %1$s",
 	"create.terrainzapper.leftClickToSet": "Left-Click a Block to set Material",
+
+	"create.large_water_wheel.not_enough_space": "UNLOCALIZED: Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "Вагонетки можуть мати лише два зв'язки",
 	"create.minecart_coupling.unloaded": "Здається, частина вашого поїзда у незавантажених чанках",

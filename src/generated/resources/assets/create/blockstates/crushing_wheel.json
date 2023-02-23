@@ -1,15 +1,15 @@
 {
   "variants": {
     "axis=x": {
-      "model": "create:block/crushing_wheel",
+      "model": "create:block/crushing_wheel/block",
       "x": 90,
       "y": 90
     },
     "axis=y": {
-      "model": "create:block/crushing_wheel"
+      "model": "create:block/crushing_wheel/block"
     },
     "axis=z": {
-      "model": "create:block/crushing_wheel",
+      "model": "create:block/crushing_wheel/block",
       "x": 90,
       "y": 180
     }

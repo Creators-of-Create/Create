@@ -34,6 +34,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -74,7 +75,6 @@ public class GoggleOverlayRenderer {
 		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		ClientLevel world = mc.level;
 		BlockPos pos = result.getBlockPos();
-		BlockEntity te = world.getBlockEntity(pos);
 
 		int prevHoverTicks = hoverTicks;
 		if (lastHovered == null || lastHovered.equals(pos))
@@ -83,6 +83,9 @@ public class GoggleOverlayRenderer {
 			hoverTicks = 0;
 		lastHovered = pos;
 
+		pos = proxiedOverlayPosition(world, pos);
+		
+		BlockEntity te = world.getBlockEntity(pos);
 		boolean wearingGoggles = GogglesItem.isWearingGoggles(mc.player);
 
 		boolean hasGoggleInformation = te instanceof IHaveGoggleInformation;
@@ -202,6 +205,13 @@ public class GoggleOverlayRenderer {
 			.at(posX + 10, posY - 16, 450)
 			.render(poseStack);
 		poseStack.popPose();
+	}
+	
+	public static BlockPos proxiedOverlayPosition(Level level, BlockPos pos) {
+		BlockState targetedState = level.getBlockState(pos);
+		if (targetedState.getBlock() instanceof IProxyHoveringInformation proxy)
+			return proxy.getInformationSource(level, pos, targetedState);
+		return pos;
 	}
 
 }

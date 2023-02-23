@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 878",
+	"_": "Missing Localizations: 881",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -261,6 +261,7 @@
 	"block.create.jungle_window_pane": "Tropenholzfensterscheibe",
 	"block.create.large_bogey": "Großes Drehgestell",
 	"block.create.large_cogwheel": "Großes Zahnrad",
+	"block.create.large_water_wheel": "UNLOCALIZED: Large Water Wheel",
 	"block.create.layered_andesite": "Geschichteter Andesit",
 	"block.create.layered_asurine": "Geschichtetes Asurin",
 	"block.create.layered_calcite": "Geschichtetes Kalzit",
@@ -530,6 +531,7 @@
 	"block.create.warped_window": "Wirrfenster",
 	"block.create.warped_window_pane": "Wirrfensterscheibe",
 	"block.create.water_wheel": "Wasserrad",
+	"block.create.water_wheel_structure": "UNLOCALIZED: Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "Gewachste Kupferschindelstufe",
 	"block.create.waxed_copper_shingle_stairs": "Gewachste Kupferschindeltreppe",
 	"block.create.waxed_copper_shingles": "Gewachste Kupferschindel",
@@ -1044,6 +1046,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "Shift-Rechts-Klick um eine Form auszuwählen",
 	"create.terrainzapper.usingBlock": "Nutze: %1$s",
 	"create.terrainzapper.leftClickToSet": "Linksklicke einen Block, um ein Material auszuwählen",
+
+	"create.large_water_wheel.not_enough_space": "UNLOCALIZED: Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "Jede Lore kann nicht mehr als zwei Kupplungen haben",
 	"create.minecart_coupling.unloaded": "Teile des Zuges scheinen in nicht geladenen Chunks zu sein",

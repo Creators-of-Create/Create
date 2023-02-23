@@ -10,6 +10,7 @@
     "HumanoidArmorLayerMixin",
     "MapItemSavedDataMixin",
     "ContraptionDriverInteractMixin",
+    "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",

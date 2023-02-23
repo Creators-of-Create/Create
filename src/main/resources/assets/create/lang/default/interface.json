@@ -172,6 +172,8 @@
 	"create.terrainzapper.usingBlock": "Using: %1$s",
 	"create.terrainzapper.leftClickToSet": "Left-Click a Block to set Material",
 
+	"create.large_water_wheel.not_enough_space": "Clear Blocks for Placement",
+	
 	"create.minecart_coupling.two_couplings_max": "Minecarts cannot have more than two couplings each",
 	"create.minecart_coupling.unloaded": "Parts of your train seem to be in unloaded chunks",
 	"create.minecart_coupling.no_loops": "Couplings cannot form a loop",

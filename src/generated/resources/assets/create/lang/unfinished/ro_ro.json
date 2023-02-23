@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 691",
+	"_": "Missing Localizations: 694",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -261,6 +261,7 @@
 	"block.create.jungle_window_pane": "Geam De Junglă",
 	"block.create.large_bogey": "UNLOCALIZED: Large Bogey",
 	"block.create.large_cogwheel": "Roată Dințată Mare",
+	"block.create.large_water_wheel": "UNLOCALIZED: Large Water Wheel",
 	"block.create.layered_andesite": "Andezit Stratificat",
 	"block.create.layered_asurine": "Asurină Stratificată",
 	"block.create.layered_calcite": "Calcit Stratificat",
@@ -530,6 +531,7 @@
 	"block.create.warped_window": "Sticlă Deformată",
 	"block.create.warped_window_pane": "Geam Deformat",
 	"block.create.water_wheel": "Roată De Apă",
+	"block.create.water_wheel_structure": "UNLOCALIZED: Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "Lespede De Șindrilă De Cupru Ceruit",
 	"block.create.waxed_copper_shingle_stairs": "Scări De Șindrilă De Cupru Ceruit",
 	"block.create.waxed_copper_shingles": "Șindrile De Cupru Ceruite",
@@ -1044,6 +1046,8 @@
 	"create.terrainzapper.shiftRightClickToSet": "Shift-Click-Dreapta pentru a Selecta o Formă",
 	"create.terrainzapper.usingBlock": "Folosing: %1$s",
 	"create.terrainzapper.leftClickToSet": "Click-Stânga pe un Bloc pentru a seta Materialul",
+
+	"create.large_water_wheel.not_enough_space": "UNLOCALIZED: Clear Blocks for Placement",
 
 	"create.minecart_coupling.two_couplings_max": "Vagonetele nu pot avea nu mai mult de două cuplaje fiecare",
 	"create.minecart_coupling.unloaded": "Părți din trenul tău par să fie în chunkuri neîncărcate",
