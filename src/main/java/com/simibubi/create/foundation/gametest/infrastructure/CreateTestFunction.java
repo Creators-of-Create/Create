@@ -1,10 +1,13 @@
 package com.simibubi.create.foundation.gametest.infrastructure;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.StructureUtils;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.level.block.Rotation;
+
+import net.minecraft.world.level.block.entity.StructureBlockEntity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -15,13 +18,21 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class CreateTestFunction extends TestFunction {
-	public CreateTestFunction(String pBatchName, String pTestName, String pStructureName, Rotation pRotation, int pMaxTicks, long pSetupTicks, boolean pRequired, int pRequiredSuccesses, int pMaxAttempts, Consumer<GameTestHelper> pFunction) {
+	public static final Map<String, CreateTestFunction> NAMES_TO_FUNCTIONS = new HashMap<>();
+
+	public final String fullyQualifiedName;
+
+	protected CreateTestFunction(String fullyQualifiedName, String pBatchName, String pTestName, String pStructureName, Rotation pRotation, int pMaxTicks, long pSetupTicks, boolean pRequired, int pRequiredSuccesses, int pMaxAttempts, Consumer<GameTestHelper> pFunction) {
 		super(pBatchName, pTestName, pStructureName, pRotation, pMaxTicks, pSetupTicks, pRequired, pRequiredSuccesses, pMaxAttempts, pFunction);
+		this.fullyQualifiedName = fullyQualifiedName;
+		NAMES_TO_FUNCTIONS.put(fullyQualifiedName, this);
 	}
 
 	public static Collection<TestFunction> getTestsFrom(Class<?>... classes) {
@@ -47,9 +58,10 @@ public class CreateTestFunction extends TestFunction {
 		String structure = "%s:gametest/%s/%s".formatted(group.namespace(), group.path(), gt.template());
 		Rotation rotation = StructureUtils.getRotationForRotationSteps(gt.rotationSteps());
 
+		String fullyQualifiedName = owner.getName() + "." + method.getName();
 		return new CreateTestFunction(
 				// use structure for test name since that's what MC fills structure blocks with for some reason
-				gt.batch(), structure, structure, rotation, gt.timeoutTicks(), gt.setupTicks(),
+				fullyQualifiedName, gt.batch(), structure, structure, rotation, gt.timeoutTicks(), gt.setupTicks(),
 				gt.required(), gt.requiredSuccesses(), gt.attempts(), asConsumer(method)
 		);
 	}
@@ -82,7 +94,10 @@ public class CreateTestFunction extends TestFunction {
 	}
 
 	@Override
-	public void run(@NotNull GameTestHelper pGameTestHelper) {
-		super.run(CreateGameTestHelper.of(pGameTestHelper));
+	public void run(@NotNull GameTestHelper helper) {
+		// give structure block test info
+		StructureBlockEntity be = (StructureBlockEntity) helper.getBlockEntity(BlockPos.ZERO);
+		be.getTileData().putString("CreateTestFunction", fullyQualifiedName);
+		super.run(CreateGameTestHelper.of(helper));
 	}
 }

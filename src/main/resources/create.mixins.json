@@ -9,6 +9,7 @@
     "ContraptionDriverInteractMixin",
     "CustomItemUseEffectsMixin",
     "MapItemSavedDataMixin",
+    "TestCommandMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
