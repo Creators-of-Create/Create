@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
@@ -37,6 +38,7 @@ public class SchematicPrinter {
 	}
 
 	private boolean schematicLoaded;
+	private boolean isErrored;
 	private SchematicWorld blockReader;
 	private BlockPos schematicAnchor;
 
@@ -93,7 +95,16 @@ public class SchematicPrinter {
 		schematicAnchor = NbtUtils.readBlockPos(blueprint.getTag()
 			.getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
-		activeTemplate.placeInWorld(blockReader, schematicAnchor, schematicAnchor, settings, blockReader.getRandom(), Block.UPDATE_CLIENTS);
+
+		try {
+			activeTemplate.placeInWorld(blockReader, schematicAnchor, schematicAnchor, settings,
+				blockReader.getRandom(), Block.UPDATE_CLIENTS);
+		} catch (Exception e) {
+			Create.LOGGER.error("Failed to load Schematic for Printing", e);
+			schematicLoaded = true;
+			isErrored = true;
+			return;
+		}
 
 		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, new BlockPos(activeTemplate.getSize())
 			.offset(-1, -1, -1));
@@ -115,6 +126,7 @@ public class SchematicPrinter {
 	public void resetSchematic() {
 		schematicLoaded = false;
 		schematicAnchor = null;
+		isErrored = false;
 		currentPos = null;
 		blockReader = null;
 		printingEntityIndex = -1;
@@ -125,9 +137,13 @@ public class SchematicPrinter {
 	public boolean isLoaded() {
 		return schematicLoaded;
 	}
+	
+	public boolean isErrored() {
+		return isErrored;
+	}
 
 	public BlockPos getCurrentTarget() {
-		if (!isLoaded())
+		if (!isLoaded() || isErrored())
 			return null;
 		return schematicAnchor.offset(currentPos);
 	}

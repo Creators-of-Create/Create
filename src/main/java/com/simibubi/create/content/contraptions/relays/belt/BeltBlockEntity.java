@@ -168,6 +168,8 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	protected void initializeItemHandler() {
 		if (level.isClientSide || itemHandler.isPresent())
 			return;
+		if (beltLength == 0 || controller == null)
+			return;
 		if (!level.isLoaded(controller))
 			return;
 		BlockEntity be = level.getBlockEntity(controller);

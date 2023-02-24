@@ -274,6 +274,7 @@
 	"create.schematicAndQuill.saved": "Saved as %1$s",
 
 	"create.schematic.invalid": "[!] Invalid Item - Use the Schematic Table instead",
+	"create.schematic.error": "Schematic failed to Load - Check Game Logs",
 	"create.schematic.position": "Position",
 	"create.schematic.rotation": "Rotation",
 	"create.schematic.rotation.none": "None",
@@ -372,6 +373,8 @@
 	"create.schematicannon.status.schematicInvalid": "Schematic Invalid",
 	"create.schematicannon.status.schematicNotPlaced": "Schematic not Positioned",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
+	"create.schematicannon.status.schematicErrored": "Incompatible Blocks",
+	"create.schematicannon.status.schematicErroredCheckLogs": "Check Server Logs",
 
 	"create.materialChecklist": "Material Checklist",
 	"create.materialChecklist.blocksNotLoaded": "* Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
@@ -930,6 +933,9 @@
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
-	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world"
+	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
+	
+	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
+  	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused."
 
 }
