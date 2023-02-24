@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.el
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
@@ -50,7 +50,7 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 		BlockState blockState = be.getBlockState();
 		BlockPos pos = be.getBlockPos();
 
-		SuperByteBuffer magnet = CachedBufferer.partial(AllBlockPartials.ELEVATOR_MAGNET, blockState);
+		SuperByteBuffer magnet = CachedBufferer.partial(AllPartialModels.ELEVATOR_MAGNET, blockState);
 		if (running || offset == 0)
 			AbstractPulleyRenderer.renderAt(world, magnet, offset, pos, ms, vb);
 
@@ -73,8 +73,8 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 			.light(light)
 			.renderInto(ms, vb);
 
-		SuperByteBuffer halfRope = CachedBufferer.partial(AllBlockPartials.ELEVATOR_BELT_HALF, blockState);
-		SuperByteBuffer rope = CachedBufferer.partial(AllBlockPartials.ELEVATOR_BELT, blockState);
+		SuperByteBuffer halfRope = CachedBufferer.partial(AllPartialModels.ELEVATOR_BELT_HALF, blockState);
+		SuperByteBuffer rope = CachedBufferer.partial(AllPartialModels.ELEVATOR_BELT, blockState);
 
 		float f = offset % 1;
 		if (f < .25f || f > .75f) {
@@ -105,7 +105,7 @@ public class ElevatorPulleyRenderer extends KineticBlockEntityRenderer<ElevatorP
 
 	protected SuperByteBuffer getRotatedCoil(KineticBlockEntity be) {
 		BlockState blockState = be.getBlockState();
-		return CachedBufferer.partialFacing(AllBlockPartials.ELEVATOR_COIL, blockState,
+		return CachedBufferer.partialFacing(AllPartialModels.ELEVATOR_COIL, blockState,
 			blockState.getValue(ElevatorPulleyBlock.HORIZONTAL_FACING));
 	}
 

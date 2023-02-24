@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.AbstractPulleyRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -12,7 +12,7 @@ import net.minecraft.core.Direction.Axis;
 public class HosePulleyRenderer extends AbstractPulleyRenderer<HosePulleyBlockEntity> {
 
 	public HosePulleyRenderer(BlockEntityRendererProvider.Context context) {
-		super(context, AllBlockPartials.HOSE_HALF, AllBlockPartials.HOSE_HALF_MAGNET);
+		super(context, AllPartialModels.HOSE_HALF, AllPartialModels.HOSE_HALF_MAGNET);
 	}
 
 	@Override
@@ -25,17 +25,17 @@ public class HosePulleyRenderer extends AbstractPulleyRenderer<HosePulleyBlockEn
 
 	@Override
 	protected PartialModel getCoil() {
-		return AllBlockPartials.HOSE_COIL;
+		return AllPartialModels.HOSE_COIL;
 	}
 
 	@Override
 	protected SuperByteBuffer renderRope(HosePulleyBlockEntity be) {
-		return CachedBufferer.partial(AllBlockPartials.HOSE, be.getBlockState());
+		return CachedBufferer.partial(AllPartialModels.HOSE, be.getBlockState());
 	}
 
 	@Override
 	protected SuperByteBuffer renderMagnet(HosePulleyBlockEntity be) {
-		return CachedBufferer.partial(AllBlockPartials.HOSE_MAGNET, be.getBlockState());
+		return CachedBufferer.partial(AllPartialModels.HOSE_MAGNET, be.getBlockState());
 	}
 
 	@Override

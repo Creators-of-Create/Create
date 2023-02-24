@@ -237,7 +237,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 		CompoundTag tag = new CompoundTag();
 		ItemAttribute itemAttribute = attributesOfItem.get(index);
 		itemAttribute.serializeNBT(tag);
-		AllPackets.channel
+		AllPackets.getChannel()
 			.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
 		menu.appendSelectedAttribute(itemAttribute, inverted);
 		if (menu.selectedAttributes.size() == 1)

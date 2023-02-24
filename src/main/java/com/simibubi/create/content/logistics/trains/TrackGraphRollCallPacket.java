@@ -71,7 +71,7 @@ public class TrackGraphRollCallPacket extends SimplePacketBase {
 				}
 
 				for (Integer failed : failedIds)
-					AllPackets.channel.sendToServer(new TrackGraphRequestPacket(failed));
+					AllPackets.getChannel().sendToServer(new TrackGraphRequestPacket(failed));
 				for (UUID unused : unusedIds)
 					manager.trackNetworks.remove(unused);
 

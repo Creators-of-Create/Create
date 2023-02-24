@@ -34,7 +34,7 @@ public class BlueprintTransferHandler implements IRecipeTransferHandler<Blueprin
 		if (!doTransfer)
 			return null;
 
-		AllPackets.channel.sendToServer(new BlueprintAssignCompleteRecipePacket(craftingRecipe.getId()));
+		AllPackets.getChannel().sendToServer(new BlueprintAssignCompleteRecipePacket(craftingRecipe.getId()));
 		return null;
 	}
 

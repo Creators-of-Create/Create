@@ -5,7 +5,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -37,9 +37,9 @@ public class EncasedFanRenderer extends KineticBlockEntityRenderer<EncasedFanBlo
 		int lightInFront = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos().relative(direction));
 
 		SuperByteBuffer shaftHalf =
-				CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, be.getBlockState(), direction.getOpposite());
+				CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction.getOpposite());
 		SuperByteBuffer fanInner =
-				CachedBufferer.partialFacing(AllBlockPartials.ENCASED_FAN_INNER, be.getBlockState(), direction.getOpposite());
+				CachedBufferer.partialFacing(AllPartialModels.ENCASED_FAN_INNER, be.getBlockState(), direction.getOpposite());
 
 		float time = AnimationTickHolder.getRenderTime(be.getLevel());
 		float speed = be.getSpeed() * 5;

@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.math.Quaternion;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.actors.flwdata.ActorData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -39,7 +39,7 @@ public class DrillActorInstance extends ActorInstance {
         else
             eulerY = facing.toYRot() + ((axis == Direction.Axis.X) ? 180 : 0);
 
-        drillHead = material.getModel(AllBlockPartials.DRILL_HEAD, state).createInstance();
+        drillHead = material.getModel(AllPartialModels.DRILL_HEAD, state).createInstance();
 
         drillHead.setPosition(context.localPos)
                  .setBlockLight(localBlockLight())

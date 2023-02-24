@@ -46,11 +46,11 @@ public enum ContraptionMovementSetting {
 	}
 
 	public static void registerDefaults() {
-		register(Blocks.SPAWNER, () -> AllConfigs.SERVER.kinetics.spawnerMovement.get());
-		register(Blocks.BUDDING_AMETHYST, () -> AllConfigs.SERVER.kinetics.amethystMovement.get());
-		register(Blocks.OBSIDIAN, () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
-		register(Blocks.CRYING_OBSIDIAN, () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
-		register(Blocks.RESPAWN_ANCHOR, () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
+		register(Blocks.SPAWNER, () -> AllConfigs.server().kinetics.spawnerMovement.get());
+		register(Blocks.BUDDING_AMETHYST, () -> AllConfigs.server().kinetics.amethystMovement.get());
+		register(Blocks.OBSIDIAN, () -> AllConfigs.server().kinetics.obsidianMovement.get());
+		register(Blocks.CRYING_OBSIDIAN, () -> AllConfigs.server().kinetics.obsidianMovement.get());
+		register(Blocks.RESPAWN_ANCHOR, () -> AllConfigs.server().kinetics.obsidianMovement.get());
 	}
 
 	public interface IMovementSettingProvider extends IForgeBlock {

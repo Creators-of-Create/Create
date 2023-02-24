@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.saw;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
@@ -24,7 +24,7 @@ public class SawInstance extends SingleRotatingInstance<SawBlockEntity> {
 			.isHorizontal()) {
 			BlockState referenceState = blockState.rotate(blockEntity.getLevel(), blockEntity.getBlockPos(), Rotation.CLOCKWISE_180);
 			Direction facing = referenceState.getValue(BlockStateProperties.FACING);
-			return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, referenceState, facing);
+			return getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, referenceState, facing);
 		} else {
 			return getRotatingMaterial().getModel(shaft());
 		}

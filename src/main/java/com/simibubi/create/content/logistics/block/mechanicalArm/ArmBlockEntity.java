@@ -560,7 +560,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 	}
 
 	public static int getRange() {
-		return AllConfigs.SERVER.logistics.mechanicalArmRange.get();
+		return AllConfigs.server().logistics.mechanicalArmRange.get();
 	}
 
 	@Override

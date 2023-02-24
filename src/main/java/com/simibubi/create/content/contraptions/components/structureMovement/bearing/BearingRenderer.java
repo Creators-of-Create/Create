@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -34,7 +34,7 @@ public class BearingRenderer<T extends KineticBlockEntity & IBearingBlockEntity>
 		final Direction facing = be.getBlockState()
 				.getValue(BlockStateProperties.FACING);
 		PartialModel top =
-				be.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
+				be.isWoodenTop() ? AllPartialModels.BEARING_TOP_WOODEN : AllPartialModels.BEARING_TOP;
 		SuperByteBuffer superBuffer = CachedBufferer.partial(top, be.getBlockState());
 
 		float interpolatedAngle = be.getInterpolatedAngle(partialTicks - 1);
@@ -50,7 +50,7 @@ public class BearingRenderer<T extends KineticBlockEntity & IBearingBlockEntity>
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
-		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, state, state
+		return CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, state, state
 				.getValue(BearingBlock.FACING)
 				.getOpposite());
 	}

@@ -54,7 +54,7 @@ public class HonkPacket extends SimplePacketBase {
 					train.honkTicks = train.honkTicks > 5 ? 6 : 0;
 			} else {
 				AllAdvancements.TRAIN_WHISTLE.awardTo(sender);
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new HonkPacket(train, isHonk));
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new HonkPacket(train, isHonk));
 			}
 
 		});

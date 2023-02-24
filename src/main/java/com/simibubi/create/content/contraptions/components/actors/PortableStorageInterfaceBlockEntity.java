@@ -191,7 +191,7 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 	}
 
 	protected Integer getTransferTimeout() {
-		return AllConfigs.SERVER.logistics.psiTimeout.get();
+		return AllConfigs.server().logistics.psiTimeout.get();
 	}
 
 	@Override

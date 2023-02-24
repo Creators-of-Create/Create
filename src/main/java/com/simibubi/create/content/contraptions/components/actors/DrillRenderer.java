@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
@@ -26,13 +26,13 @@ public class DrillRenderer extends KineticBlockEntityRenderer<DrillBlockEntity> 
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(DrillBlockEntity be, BlockState state) {
-		return CachedBufferer.partialFacing(AllBlockPartials.DRILL_HEAD, state);
+		return CachedBufferer.partialFacing(AllPartialModels.DRILL_HEAD, state);
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		BlockState state = context.state;
-		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.DRILL_HEAD, state);
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.DRILL_HEAD, state);
 		Direction facing = state.getValue(DrillBlock.FACING);
 
 		float speed = (float) (context.contraption.stalled

@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainIconType;
@@ -89,7 +89,7 @@ public class StationScreen extends AbstractStationScreen {
 		dropScheduleButton.active = false;
 		dropScheduleButton.visible = false;
 		dropScheduleButton
-			.withCallback(() -> AllPackets.channel.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
+			.withCallback(() -> AllPackets.getChannel().sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
 		addRenderableWidget(dropScheduleButton);
 
 		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
@@ -333,32 +333,32 @@ public class StationScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		if (train != null && !trainNameBox.getValue()
 			.equals(train.name.getString()))
-			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
+			AllPackets.getChannel().sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
 	}
 
 	private void syncStationName() {
 		if (!nameBox.getValue()
 			.equals(station.name))
-			AllPackets.channel.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, nameBox.getValue()));
+			AllPackets.getChannel().sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, nameBox.getValue()));
 	}
 
 	@Override
 	public void removed() {
 		super.removed();
-		AllPackets.channel
+		AllPackets.getChannel()
 			.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode, nameBox.getValue()));
 		Train train = displayedTrain.get();
 		if (train == null)
 			return;
 		if (!switchingToAssemblyMode)
-			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
+			AllPackets.getChannel().sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
 		else
 			blockEntity.imminentTrain = null;
 	}
 
 	@Override
 	protected PartialModel getFlag(float partialTicks) {
-		return blockEntity.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF;
+		return blockEntity.flag.getValue(partialTicks) > 0.75f ? AllPartialModels.STATION_ON : AllPartialModels.STATION_OFF;
 	}
 
 }

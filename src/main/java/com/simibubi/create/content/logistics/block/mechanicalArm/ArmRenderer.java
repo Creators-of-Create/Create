@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlockEntity.Phase;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -110,17 +110,17 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 	private void renderArm(VertexConsumer builder, PoseStack ms, PoseStack msLocal, TransformStack msr,
 		BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle,
 		boolean hasItem, boolean isBlockItem, int light) {
-		SuperByteBuffer base = CachedBufferer.partial(AllBlockPartials.ARM_BASE, blockState)
+		SuperByteBuffer base = CachedBufferer.partial(AllPartialModels.ARM_BASE, blockState)
 			.light(light);
-		SuperByteBuffer lowerBody = CachedBufferer.partial(AllBlockPartials.ARM_LOWER_BODY, blockState)
+		SuperByteBuffer lowerBody = CachedBufferer.partial(AllPartialModels.ARM_LOWER_BODY, blockState)
 			.light(light);
-		SuperByteBuffer upperBody = CachedBufferer.partial(AllBlockPartials.ARM_UPPER_BODY, blockState)
+		SuperByteBuffer upperBody = CachedBufferer.partial(AllPartialModels.ARM_UPPER_BODY, blockState)
 			.light(light);
-		SuperByteBuffer head = CachedBufferer.partial(AllBlockPartials.ARM_HEAD, blockState)
+		SuperByteBuffer head = CachedBufferer.partial(AllPartialModels.ARM_HEAD, blockState)
 			.light(light);
-		SuperByteBuffer claw = CachedBufferer.partial(AllBlockPartials.ARM_CLAW_BASE, blockState)
+		SuperByteBuffer claw = CachedBufferer.partial(AllPartialModels.ARM_CLAW_BASE, blockState)
 			.light(light);
-		SuperByteBuffer clawGrip = CachedBufferer.partial(AllBlockPartials.ARM_CLAW_GRIP, blockState);
+		SuperByteBuffer clawGrip = CachedBufferer.partial(AllPartialModels.ARM_CLAW_GRIP, blockState);
 
 		transformBase(msr, baseAngle);
 		base.transform(msLocal)
@@ -201,7 +201,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(ArmBlockEntity be, BlockState state) {
-		return CachedBufferer.partial(AllBlockPartials.ARM_COG, state);
+		return CachedBufferer.partial(AllPartialModels.ARM_COG, state);
 	}
 
 }

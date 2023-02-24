@@ -81,7 +81,7 @@ public class BlockEntityRenderHelper {
 
 				String message = "BlockEntity " + RegisteredObjects.getKeyOrThrow(blockEntity.getType())
 					.toString() + " could not be rendered virtually.";
-				if (AllConfigs.CLIENT.explainRenderErrors.get())
+				if (AllConfigs.client().explainRenderErrors.get())
 					Create.LOGGER.error(message, e);
 				else
 					Create.LOGGER.error(message);

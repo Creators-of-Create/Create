@@ -231,9 +231,9 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			if (state == State.DETACH)
 				return;
 			else if (state == State.SELECT_BOX)
-				toolboxes.forEach(be -> AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(be.getBlockPos())));
+				toolboxes.forEach(be -> AllPackets.getChannel().sendToServer(new ToolboxDisposeAllPacket(be.getBlockPos())));
 			else
-				AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(selectedBox.getBlockPos()));
+				AllPackets.getChannel().sendToServer(new ToolboxDisposeAllPacket(selectedBox.getBlockPos()));
 			return;
 		}
 
@@ -242,13 +242,13 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 		if (state == State.DETACH) {
 			if (selected == UNEQUIP)
-				AllPackets.channel.sendToServer(
+				AllPackets.getChannel().sendToServer(
 					new ToolboxEquipPacket(null, selected, minecraft.player.getInventory().selected));
 			return;
 		}
 
 		if (selected == UNEQUIP)
-			AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+			AllPackets.getChannel().sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
 				minecraft.player.getInventory().selected));
 
 		if (selected < 0)
@@ -261,7 +261,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			.isEmpty())
 			return;
 
-		AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+		AllPackets.getChannel().sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
 			minecraft.player.getInventory().selected));
 	}
 
@@ -334,7 +334,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 			if (state == State.SELECT_ITEM_UNEQUIP && selected == UNEQUIP) {
 				if (toolboxes.size() > 1) {
-					AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
+					AllPackets.getChannel().sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
 						minecraft.player.getInventory().selected));
 					state = State.SELECT_BOX;
 					return true;

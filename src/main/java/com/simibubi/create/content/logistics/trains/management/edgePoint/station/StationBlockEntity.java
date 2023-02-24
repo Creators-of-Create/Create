@@ -362,8 +362,8 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 
 		BlockPos bogeyOffset = new BlockPos(track.getUpNormal(level, targetPosition, trackState));
 
-		int MAX_LENGTH = AllConfigs.SERVER.trains.maxAssemblyLength.get();
-		int MAX_BOGEY_COUNT = AllConfigs.SERVER.trains.maxBogeyCount.get();
+		int MAX_LENGTH = AllConfigs.server().trains.maxAssemblyLength.get();
+		int MAX_BOGEY_COUNT = AllConfigs.server().trains.maxBogeyCount.get();
 
 		int bogeyIndex = 0;
 		int maxBogeyCount = MAX_BOGEY_COUNT;
@@ -655,7 +655,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 
 		train.collectInitiallyOccupiedSignalBlocks();
 		Create.RAILWAYS.addTrain(train);
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, true));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(train, true));
 		clearException();
 
 		award(AllAdvancements.TRAIN);

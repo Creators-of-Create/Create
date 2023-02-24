@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ga
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -29,7 +29,7 @@ public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEnt
 		super(materialManager, blockEntity);
 
 		gantryCogs = getTransformMaterial()
-								 .getModel(AllBlockPartials.GANTRY_COGS, blockState)
+								 .getModel(AllPartialModels.GANTRY_COGS, blockState)
 								 .createInstance();
 
 		facing = blockState.getValue(GantryCarriageBlock.FACING);

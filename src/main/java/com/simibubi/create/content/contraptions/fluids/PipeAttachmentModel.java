@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes.ComponentPartials;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
@@ -69,14 +69,14 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		for (Direction d : Iterate.directions) {
 			AttachmentTypes type = pipeData.getAttachment(d);
 			for (ComponentPartials partial : type.partials) {
-				quads.addAll(AllBlockPartials.PIPE_ATTACHMENTS.get(partial)
+				quads.addAll(AllPartialModels.PIPE_ATTACHMENTS.get(partial)
 					.get(d)
 					.get()
 					.getQuads(state, side, rand, data));
 			}
 		}
 		if (pipeData.isEncased())
-			quads.addAll(AllBlockPartials.FLUID_PIPE_CASING.get()
+			quads.addAll(AllPartialModels.FLUID_PIPE_CASING.get()
 				.getQuads(state, side, rand, data));
 	}
 

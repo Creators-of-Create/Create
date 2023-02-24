@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_BOTTOM;
-import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_MIDDLE;
-import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_TOP;
-import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_LEFT;
-import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_RIGHT;
-import static com.simibubi.create.AllBlockPartials.TRACK_TIE;
+import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_BOTTOM;
+import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_MIDDLE;
+import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_TOP;
+import static com.simibubi.create.AllPartialModels.TRACK_SEGMENT_LEFT;
+import static com.simibubi.create.AllPartialModels.TRACK_SEGMENT_RIGHT;
+import static com.simibubi.create.AllPartialModels.TRACK_TIE;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.TransformStack;

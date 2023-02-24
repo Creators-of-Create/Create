@@ -251,7 +251,7 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 				break;
 			}
 
-			int range = AllConfigs.SERVER.curiosities.placementAssistRange.get();
+			int range = AllConfigs.server().curiosities.placementAssistRange.get();
 			if (player != null) {
 				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))

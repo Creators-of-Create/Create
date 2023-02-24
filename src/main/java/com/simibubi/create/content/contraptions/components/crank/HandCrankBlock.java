@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -55,7 +55,7 @@ public class HandCrankBlock extends DirectionalKineticBlock
 
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel getRenderedHandle() {
-		return AllBlockPartials.HAND_CRANK_HANDLE;
+		return AllPartialModels.HAND_CRANK_HANDLE;
 	}
 
 	public int getRotationSpeed() {
@@ -74,7 +74,7 @@ public class HandCrankBlock extends DirectionalKineticBlock
 			return InteractionResult.PASS;
 
 		withBlockEntityDo(worldIn, pos, be -> be.turn(player.isShiftKeyDown()));
-		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
+		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.server().kinetics.crankHungerMultiplier.getF());
 
 		if (player.getFoodData()
 			.getFoodLevel() == 0)

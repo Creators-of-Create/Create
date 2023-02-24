@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.BackHalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -30,7 +30,7 @@ public class BearingInstance<B extends KineticBlockEntity & IBearingBlockEntity>
 		blockOrientation = getBlockStateOrientation(facing);
 
 		PartialModel top =
-				blockEntity.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
+				blockEntity.isWoodenTop() ? AllPartialModels.BEARING_TOP_WOODEN : AllPartialModels.BEARING_TOP;
 
 		topInstance = getOrientedMaterial().getModel(top, blockState).createInstance();
 

@@ -109,7 +109,7 @@ public class ContraptionHandlerClient {
 			BlockPos pos = rayTraceResult.getBlockPos();
 
 			if (contraptionEntity.handlePlayerInteraction(player, pos, face, hand)) {
-				AllPackets.channel.sendToServer(new ContraptionInteractionPacket(contraptionEntity, hand, pos, face));
+				AllPackets.getChannel().sendToServer(new ContraptionInteractionPacket(contraptionEntity, hand, pos, face));
 			} else if (handleSpecialInteractions(contraptionEntity, player, pos, face, hand)) {
 			} else
 				continue;

@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -60,19 +60,19 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 
 		if (SawBlock.isHorizontal(blockState)) {
 			if (speed > 0) {
-				partial = AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE;
+				partial = AllPartialModels.SAW_BLADE_HORIZONTAL_ACTIVE;
 			} else if (speed < 0) {
-				partial = AllBlockPartials.SAW_BLADE_HORIZONTAL_REVERSED;
+				partial = AllPartialModels.SAW_BLADE_HORIZONTAL_REVERSED;
 			} else {
-				partial = AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE;
+				partial = AllPartialModels.SAW_BLADE_HORIZONTAL_INACTIVE;
 			}
 		} else {
 			if (be.getSpeed() > 0) {
-				partial = AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE;
+				partial = AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE;
 			} else if (speed < 0) {
-				partial = AllBlockPartials.SAW_BLADE_VERTICAL_REVERSED;
+				partial = AllPartialModels.SAW_BLADE_VERTICAL_REVERSED;
 			} else {
-				partial = AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE;
+				partial = AllPartialModels.SAW_BLADE_VERTICAL_INACTIVE;
 			}
 
 			if (blockState.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE))
@@ -147,7 +147,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		if (state.getValue(FACING)
 			.getAxis()
 			.isHorizontal())
-			return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF,
+			return CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF,
 				state.rotate(be.getLevel(), be.getBlockPos(), Rotation.CLOCKWISE_180));
 		return CachedBufferer.block(KineticBlockEntityRenderer.KINETIC_BLOCK,
 			getRenderedBlockState(be));
@@ -178,14 +178,14 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		SuperByteBuffer superBuffer;
 		if (SawBlock.isHorizontal(state)) {
 			if (shouldAnimate)
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllPartialModels.SAW_BLADE_HORIZONTAL_ACTIVE, state);
 			else
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllPartialModels.SAW_BLADE_HORIZONTAL_INACTIVE, state);
 		} else {
 			if (shouldAnimate)
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE, state);
 			else
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllPartialModels.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
 		superBuffer.transform(matrices.getModel())

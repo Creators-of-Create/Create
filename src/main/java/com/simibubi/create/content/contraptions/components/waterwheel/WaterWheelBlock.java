@@ -135,7 +135,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements IBE<Wate
 				be.award(
 					FluidHelper.isLava(fluid.getType()) ? AllAdvancements.LAVA_WHEEL : AllAdvancements.WATER_WHEEL);
 
-			Integer flowModifier = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
+			Integer flowModifier = AllConfigs.server().kinetics.waterWheelFlowSpeed.get();
 			be.setFlow(side, (float) (flowStrength * flowModifier / 2f));
 		});
 	}
@@ -217,8 +217,8 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements IBE<Wate
 	}
 
 	public static Couple<Integer> getSpeedRange() {
-		Integer base = AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get();
-		Integer flow = AllConfigs.SERVER.kinetics.waterWheelFlowSpeed.get();
+		Integer base = AllConfigs.server().kinetics.waterWheelBaseSpeed.get();
+		Integer flow = AllConfigs.server().kinetics.waterWheelFlowSpeed.get();
 		return Couple.create(base, base + 4 * flow);
 	}
 

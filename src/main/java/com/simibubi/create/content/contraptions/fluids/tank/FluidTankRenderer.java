@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.tank;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -90,13 +90,13 @@ public class FluidTankRenderer extends SafeBlockEntityRenderer<FluidTankBlockEnt
 
 		for (Direction d : Iterate.horizontalDirections) {
 			ms.pushPose();
-			CachedBufferer.partial(AllBlockPartials.BOILER_GAUGE, blockState)
+			CachedBufferer.partial(AllPartialModels.BOILER_GAUGE, blockState)
 				.rotateY(d.toYRot())
 				.unCentre()
 				.translate(be.width / 2f - 6 / 16f, 0, 0)
 				.light(light)
 				.renderInto(ms, vb);
-			CachedBufferer.partial(AllBlockPartials.BOILER_GAUGE_DIAL, blockState)
+			CachedBufferer.partial(AllPartialModels.BOILER_GAUGE_DIAL, blockState)
 				.rotateY(d.toYRot())
 				.unCentre()
 				.translate(be.width / 2f - 6 / 16f, 0, 0)

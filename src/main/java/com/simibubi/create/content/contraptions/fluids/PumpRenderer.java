@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.fluids;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -30,7 +30,7 @@ public class PumpRenderer extends KineticBlockEntityRenderer<PumpBlockEntity> {
 		Vec3 rotationOffset = new Vec3(.5, 14 / 16f, .5);
 		BlockState blockState = be.getBlockState();
 		float angle = Mth.lerp(be.arrowDirection.getValue(partialTicks), 0, 90) - 90;
-		SuperByteBuffer arrow = CachedBufferer.partial(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
+		SuperByteBuffer arrow = CachedBufferer.partial(AllPartialModels.MECHANICAL_PUMP_ARROW, blockState);
 		for (float yRot : new float[] { 0, 90 }) {
 			Direction direction = blockState.getValue(PumpBlock.FACING);
             arrow.centre()
@@ -48,7 +48,7 @@ public class PumpRenderer extends KineticBlockEntityRenderer<PumpBlockEntity> {
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(PumpBlockEntity be, BlockState state) {
-		return CachedBufferer.partialFacing(AllBlockPartials.MECHANICAL_PUMP_COG, state);
+		return CachedBufferer.partialFacing(AllPartialModels.MECHANICAL_PUMP_COG, state);
 	}
 
 }

@@ -9,7 +9,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
@@ -58,7 +58,7 @@ public class EncasedCogInstance extends KineticBlockEntityInstance<KineticBlockE
 		for (Direction d : Iterate.directionsInAxis(axis)) {
 			if (!def.hasShaftTowards(blockEntity.getLevel(), blockEntity.getBlockPos(), blockState, d))
 				continue;
-			RotatingData data = setup(getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, d)
+			RotatingData data = setup(getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, blockState, d)
 				.createInstance());
 			if (d.getAxisDirection() == AxisDirection.POSITIVE)
 				rotatingTopShaft = Optional.of(data);
@@ -92,7 +92,7 @@ public class EncasedCogInstance extends KineticBlockEntityInstance<KineticBlockE
 		BlockState referenceState = blockEntity.getBlockState();
 		Direction facing =
 			Direction.fromAxisAndDirection(referenceState.getValue(BlockStateProperties.AXIS), AxisDirection.POSITIVE);
-		PartialModel partial = large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL;
+		PartialModel partial = large ? AllPartialModels.SHAFTLESS_LARGE_COGWHEEL : AllPartialModels.SHAFTLESS_COGWHEEL;
 
 		return getRotatingMaterial().getModel(partial, referenceState, facing, () -> {
 			PoseStack poseStack = new PoseStack();

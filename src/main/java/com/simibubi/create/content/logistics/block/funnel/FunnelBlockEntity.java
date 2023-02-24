@@ -219,7 +219,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	}
 
 	private int startCooldown() {
-		return extractionCooldown = AllConfigs.SERVER.logistics.defaultExtractionTimer.get();
+		return extractionCooldown = AllConfigs.server().logistics.defaultExtractionTimer.get();
 	}
 
 	@Override
@@ -284,7 +284,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 	public void flap(boolean inward) {
 		if (!level.isClientSide) {
-			AllPackets.channel.send(packetTarget(), new FunnelFlapPacket(this, inward));
+			AllPackets.getChannel().send(packetTarget(), new FunnelFlapPacket(this, inward));
 		} else {
 			flap.setValue(inward ? 1 : -1);
 			AllSoundEvents.FUNNEL_FLAP.playAt(level, worldPosition, 1, 1, true);

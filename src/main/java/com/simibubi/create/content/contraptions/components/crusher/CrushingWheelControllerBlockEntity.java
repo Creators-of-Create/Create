@@ -218,7 +218,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 		if (!(processingEntity instanceof ItemEntity)) {
 			Vec3 entityOutPos = outPos.add(facing.getAxis() == Axis.X ? .5f * offset : 0f,
 				facing.getAxis() == Axis.Y ? .5f * offset : 0f, facing.getAxis() == Axis.Z ? .5f * offset : 0f);
-			int crusherDamage = AllConfigs.SERVER.kinetics.crushingDamage.get();
+			int crusherDamage = AllConfigs.server().kinetics.crushingDamage.get();
 
 			if (processingEntity instanceof LivingEntity) {
 				if ((((LivingEntity) processingEntity).getHealth() - crusherDamage <= 0) // Takes LivingEntity instances

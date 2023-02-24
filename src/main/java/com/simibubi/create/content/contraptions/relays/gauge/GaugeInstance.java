@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
@@ -30,7 +30,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
 
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-        Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
+        Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllPartialModels.GAUGE_DIAL, blockState);
         Instancer<ModelData> headModel = getHeadModel();
 
         ms = new PoseStack();
@@ -148,7 +148,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
 
         @Override
         protected Instancer<ModelData> getHeadModel() {
-            return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
+            return getTransformMaterial().getModel(AllPartialModels.GAUGE_HEAD_SPEED, blockState);
         }
     }
 
@@ -159,7 +159,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
 
         @Override
         protected Instancer<ModelData> getHeadModel() {
-            return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
+            return getTransformMaterial().getModel(AllPartialModels.GAUGE_HEAD_STRESS, blockState);
         }
     }
 }

@@ -16,7 +16,7 @@ import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
@@ -112,11 +112,11 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 			leftLightPos = new BlockPos[segCount];
 			rightLightPos = new BlockPos[segCount];
 
-			mat.getModel(AllBlockPartials.TRACK_TIE)
+			mat.getModel(AllPartialModels.TRACK_TIE)
 				.createInstances(ties);
-			mat.getModel(AllBlockPartials.TRACK_SEGMENT_LEFT)
+			mat.getModel(AllPartialModels.TRACK_SEGMENT_LEFT)
 				.createInstances(left);
-			mat.getModel(AllBlockPartials.TRACK_SEGMENT_RIGHT)
+			mat.getModel(AllPartialModels.TRACK_SEGMENT_RIGHT)
 				.createInstances(right);
 
 			SegmentAngles[] segments = bc.getBakedSegments();
@@ -184,9 +184,9 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 				beams = Couple.create(() -> new ModelData[segCount]);
 				beamCaps = Couple.create(() -> Couple.create(() -> new ModelData[segCount]));
 				lightPos = new BlockPos[segCount];
-				beams.forEach(mat.getModel(AllBlockPartials.GIRDER_SEGMENT_MIDDLE)::createInstances);
-				beamCaps.forEachWithContext((c, top) -> c.forEach(mat.getModel(top ? AllBlockPartials.GIRDER_SEGMENT_TOP
-					: AllBlockPartials.GIRDER_SEGMENT_BOTTOM)::createInstances));
+				beams.forEach(mat.getModel(AllPartialModels.GIRDER_SEGMENT_MIDDLE)::createInstances);
+				beamCaps.forEachWithContext((c, top) -> c.forEach(mat.getModel(top ? AllPartialModels.GIRDER_SEGMENT_TOP
+					: AllPartialModels.GIRDER_SEGMENT_BOTTOM)::createInstances));
 
 				GirderAngles[] bakedGirders = bc.getBakedGirders();
 				for (int i = 1; i < bakedGirders.length; i++) {

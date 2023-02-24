@@ -124,7 +124,7 @@ public class ArmInteractionPointHandler {
 					.sendStatus(player);
 		}
 
-		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));
+		AllPackets.getChannel().sendToServer(new ArmPlacementPacket(currentSelection, pos));
 		currentSelection.clear();
 		currentItem = null;
 	}

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
@@ -20,6 +20,6 @@ public class DrillInstance extends SingleRotatingInstance<DrillBlockEntity> {
     protected Instancer<RotatingData> getModel() {
 		BlockState referenceState = blockEntity.getBlockState();
 		Direction facing = referenceState.getValue(BlockStateProperties.FACING);
-		return getRotatingMaterial().getModel(AllBlockPartials.DRILL_HEAD, referenceState, facing);
+		return getRotatingMaterial().getModel(AllPartialModels.DRILL_HEAD, referenceState, facing);
 	}
 }

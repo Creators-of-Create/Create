@@ -75,7 +75,7 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 		ItemStack filter = getFilter(context);
 		int filterAmount = context.blockEntityData.getInt("FilterAmount");
 		if (filterAmount <= 0)
-			filterAmount = hasFilter ? AllConfigs.SERVER.logistics.defaultExtractionLimit.get() : 1;
+			filterAmount = hasFilter ? AllConfigs.server().logistics.defaultExtractionLimit.get() : 1;
 
 		ItemStack extract = ItemHelper.extract(context.contraption.getSharedInventory(),
 			s -> FilterItem.test(world, s, filter), ItemHelper.ExtractionCountMode.UPTO, filterAmount, false);

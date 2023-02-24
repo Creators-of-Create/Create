@@ -151,7 +151,7 @@ public class TrainRelocator {
 		boolean result = relocate(relocating, mc.level, blockPos, hoveredBezier, direction, lookAngle, true);
 		if (!simulate && result) {
 			relocating.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));			
-			AllPackets.channel.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, hoveredBezier,
+			AllPackets.getChannel().sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, hoveredBezier,
 				direction, lookAngle, relocatingEntityId));
 		}
 

@@ -5,7 +5,7 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -31,7 +31,7 @@ public class PumpCogInstance extends SingleRotatingInstance<PumpBlockEntity> imp
 
 		materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState)
+				.getModel(AllPartialModels.MECHANICAL_PUMP_ARROW, blockState)
 				.createInstances(arrows);
 	}
 
@@ -62,7 +62,7 @@ public class PumpCogInstance extends SingleRotatingInstance<PumpBlockEntity> imp
     protected Instancer<RotatingData> getModel() {
 		BlockState referenceState = blockEntity.getBlockState();
 		Direction facing = referenceState.getValue(BlockStateProperties.FACING);
-		return getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_PUMP_COG, referenceState, facing);
+		return getRotatingMaterial().getModel(AllPartialModels.MECHANICAL_PUMP_COG, referenceState, facing);
 	}
 
 	@Override

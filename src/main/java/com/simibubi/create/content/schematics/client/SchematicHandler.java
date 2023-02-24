@@ -324,7 +324,7 @@ public class SchematicHandler {
 	public void sync() {
 		if (activeSchematicItem == null)
 			return;
-		AllPackets.channel.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
+		AllPackets.getChannel().sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
 			transformation.getAnchor(), deployed));
 	}
 
@@ -367,7 +367,7 @@ public class SchematicHandler {
 	}
 
 	public void printInstantly() {
-		AllPackets.channel.sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
+		AllPackets.getChannel().sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
 		CompoundTag nbt = activeSchematicItem.getTag();
 		nbt.putBoolean("Deployed", false);
 		activeSchematicItem.setTag(nbt);

@@ -132,7 +132,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			configValue.set(change.value);
 
 			if (type == ModConfig.Type.SERVER) {
-				AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(ConfigScreen.modID, path, change.value));
+				AllPackets.getChannel().sendToServer(new CConfigureConfigPacket<>(ConfigScreen.modID, path, change.value));
 			}
 
 			String command = change.annotations.get("Execute");

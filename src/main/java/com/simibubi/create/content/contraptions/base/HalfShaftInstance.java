@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
 import net.minecraft.core.Direction;
@@ -16,7 +16,7 @@ public class HalfShaftInstance<T extends KineticBlockEntity> extends SingleRotat
     @Override
     protected Instancer<RotatingData> getModel() {
 		Direction dir = getShaftDirection();
-		return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, dir);
+		return getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, blockState, dir);
 	}
 
     protected Direction getShaftDirection() {

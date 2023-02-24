@@ -9,8 +9,8 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
@@ -140,7 +140,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 					return stack;
 				};
 
-				SuperByteBuffer superBuffer = CachedBufferer.partialDirectional(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
+				SuperByteBuffer superBuffer = CachedBufferer.partialDirectional(AllPartialModels.BELT_PULLEY, blockState, dir, matrixStackSupplier);
 				KineticBlockEntityRenderer.standardKineticRotationTransform(superBuffer, be, light).renderInto(ms, vb);
 			}
 		}
@@ -159,17 +159,17 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 	public static PartialModel getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
 		if (diagonal) {
-			if (start) return AllBlockPartials.BELT_DIAGONAL_START;
-			if (end) return AllBlockPartials.BELT_DIAGONAL_END;
-			return AllBlockPartials.BELT_DIAGONAL_MIDDLE;
+			if (start) return AllPartialModels.BELT_DIAGONAL_START;
+			if (end) return AllPartialModels.BELT_DIAGONAL_END;
+			return AllPartialModels.BELT_DIAGONAL_MIDDLE;
 		} else if (bottom) {
-			if (start) return AllBlockPartials.BELT_START_BOTTOM;
-			if (end) return AllBlockPartials.BELT_END_BOTTOM;
-			return AllBlockPartials.BELT_MIDDLE_BOTTOM;
+			if (start) return AllPartialModels.BELT_START_BOTTOM;
+			if (end) return AllPartialModels.BELT_END_BOTTOM;
+			return AllPartialModels.BELT_MIDDLE_BOTTOM;
 		} else {
-			if (start) return AllBlockPartials.BELT_START;
-			if (end) return AllBlockPartials.BELT_END;
-			return AllBlockPartials.BELT_MIDDLE;
+			if (start) return AllPartialModels.BELT_START;
+			if (end) return AllPartialModels.BELT_END;
+			return AllPartialModels.BELT_MIDDLE;
 		}
 	}
 

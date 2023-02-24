@@ -204,7 +204,7 @@ public class MinecartContraptionItem extends Item {
 		Player player = event.getPlayer();
 		if (player == null || entity == null)
 			return;
-		if (!AllConfigs.SERVER.kinetics.survivalContraptionPickup.get() && !player.isCreative())
+		if (!AllConfigs.server().kinetics.survivalContraptionPickup.get() && !player.isCreative())
 			return;
 
 		ItemStack wrench = player.getItemInHand(event.getHand());

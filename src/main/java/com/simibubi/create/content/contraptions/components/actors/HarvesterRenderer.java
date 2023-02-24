@@ -4,7 +4,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -33,7 +33,7 @@ public class HarvesterRenderer extends SafeBlockEntityRenderer<HarvesterBlockEnt
 	protected void renderSafe(HarvesterBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		BlockState blockState = be.getBlockState();
-		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.HARVESTER_BLADE, blockState);
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.HARVESTER_BLADE, blockState);
 		transform(be.getLevel(), blockState.getValue(HarvesterBlock.FACING), superBuffer,
 				be.getAnimatedSpeed());
 		superBuffer.light(light)
@@ -44,7 +44,7 @@ public class HarvesterRenderer extends SafeBlockEntityRenderer<HarvesterBlockEnt
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
 		BlockState blockState = context.state;
 		Direction facing = blockState.getValue(HORIZONTAL_FACING);
-		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.HARVESTER_BLADE, blockState);
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.HARVESTER_BLADE, blockState);
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
 				? context.getAnimationSpeed()
 				: 0);

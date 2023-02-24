@@ -62,11 +62,11 @@ public class AssemblyException extends Exception {
 	}
 
 	public static AssemblyException structureTooLarge() {
-		return new AssemblyException("structureTooLarge", AllConfigs.SERVER.kinetics.maxBlocksMoved.get());
+		return new AssemblyException("structureTooLarge", AllConfigs.server().kinetics.maxBlocksMoved.get());
 	}
 
 	public static AssemblyException tooManyPistonPoles() {
-		return new AssemblyException("tooManyPistonPoles", AllConfigs.SERVER.kinetics.maxPistonPoles.get());
+		return new AssemblyException("tooManyPistonPoles", AllConfigs.server().kinetics.maxPistonPoles.get());
 	}
 
 	public static AssemblyException noPistonPoles() {
@@ -74,7 +74,7 @@ public class AssemblyException extends Exception {
 	}
 	
 	public static AssemblyException notEnoughSails(int sails) {
-		return new AssemblyException("not_enough_sails", sails, AllConfigs.SERVER.kinetics.minimumWindmillSails.get());
+		return new AssemblyException("not_enough_sails", sails, AllConfigs.server().kinetics.minimumWindmillSails.get());
 	}
 
 	public boolean hasPosition() {

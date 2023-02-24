@@ -4,8 +4,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class RopePulleyInstance extends AbstractPulleyInstance<PulleyBlockEntity> {
@@ -22,15 +22,15 @@ public class RopePulleyInstance extends AbstractPulleyInstance<PulleyBlockEntity
 	}
 
 	protected Instancer<OrientedData> getHalfMagnetModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF_MAGNET, blockState);
+		return getOrientedMaterial().getModel(AllPartialModels.ROPE_HALF_MAGNET, blockState);
 	}
 
 	protected Instancer<OrientedData> getCoilModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_COIL, blockState, rotatingAbout);
+		return getOrientedMaterial().getModel(AllPartialModels.ROPE_COIL, blockState, rotatingAbout);
 	}
 
 	protected Instancer<OrientedData> getHalfRopeModel() {
-		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF, blockState);
+		return getOrientedMaterial().getModel(AllPartialModels.ROPE_HALF, blockState);
 	}
 
 	protected float getOffset() {

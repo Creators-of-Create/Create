@@ -2,8 +2,8 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -46,15 +46,15 @@ public class BacktankRenderer extends KineticBlockEntityRenderer<BacktankBlockEn
 
 	public static PartialModel getCogsModel(BlockState state) {
 		if (AllBlocks.NETHERITE_BACKTANK.has(state)) {
-			return AllBlockPartials.NETHERITE_BACKTANK_COGS;
+			return AllPartialModels.NETHERITE_BACKTANK_COGS;
 		}
-		return AllBlockPartials.COPPER_BACKTANK_COGS;
+		return AllPartialModels.COPPER_BACKTANK_COGS;
 	}
 
 	public static PartialModel getShaftModel(BlockState state) {
 		if (AllBlocks.NETHERITE_BACKTANK.has(state)) {
-			return AllBlockPartials.NETHERITE_BACKTANK_SHAFT;
+			return AllPartialModels.NETHERITE_BACKTANK_SHAFT;
 		}
-		return AllBlockPartials.COPPER_BACKTANK_SHAFT;
+		return AllPartialModels.COPPER_BACKTANK_SHAFT;
 	}
 }

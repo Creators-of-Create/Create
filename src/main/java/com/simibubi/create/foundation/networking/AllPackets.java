@@ -202,7 +202,7 @@ public enum AllPackets {
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
 	public static final int NETWORK_VERSION = 2;
 	public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
-	public static SimpleChannel channel;
+	private static SimpleChannel channel;
 
 	private LoadedPacket<?> packet;
 
@@ -221,8 +221,12 @@ public enum AllPackets {
 			packet.packet.register();
 	}
 
+	public static SimpleChannel getChannel() {
+		return channel;
+	}
+
 	public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
-		channel.send(
+		getChannel().send(
 			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())),
 			message);
 	}
@@ -245,7 +249,7 @@ public enum AllPackets {
 		}
 
 		private void register() {
-			channel.messageBuilder(type, index++, direction)
+			getChannel().messageBuilder(type, index++, direction)
 				.encoder(encoder)
 				.decoder(decoder)
 				.consumer(handler)

@@ -41,7 +41,7 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 	public ItemVaultBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 
-		inventory = new ItemStackHandler(AllConfigs.SERVER.logistics.vaultCapacity.get()) {
+		inventory = new ItemStackHandler(AllConfigs.server().logistics.vaultCapacity.get()) {
 			@Override
 			protected void onContentsChanged(int slot) {
 				super.onContentsChanged(slot);

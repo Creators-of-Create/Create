@@ -172,7 +172,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		ListTag serialized = Instruction.serializeAll(instructions);
 		if (serialized.equals(compareTag))
 			return;
-		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));
+		AllPackets.getChannel().sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -48,18 +48,18 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 
 		Material<ModelData> mat = getTransformMaterial();
 
-		base = mat.getModel(AllBlockPartials.ARM_BASE, blockState)
+		base = mat.getModel(AllPartialModels.ARM_BASE, blockState)
 			.createInstance();
-		lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY, blockState)
+		lowerBody = mat.getModel(AllPartialModels.ARM_LOWER_BODY, blockState)
 			.createInstance();
-		upperBody = mat.getModel(AllBlockPartials.ARM_UPPER_BODY, blockState)
+		upperBody = mat.getModel(AllPartialModels.ARM_UPPER_BODY, blockState)
 			.createInstance();
-		head = mat.getModel(AllBlockPartials.ARM_HEAD, blockState)
+		head = mat.getModel(AllPartialModels.ARM_HEAD, blockState)
 			.createInstance();
-		claw = mat.getModel(AllBlockPartials.ARM_CLAW_BASE, blockState)
+		claw = mat.getModel(AllPartialModels.ARM_CLAW_BASE, blockState)
 			.createInstance();
 
-		Instancer<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP, blockState);
+		Instancer<ModelData> clawHalfModel = mat.getModel(AllPartialModels.ARM_CLAW_GRIP, blockState);
 		ModelData clawGrip1 = clawHalfModel.createInstance();
 		ModelData clawGrip2 = clawHalfModel.createInstance();
 
@@ -175,7 +175,7 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 
 	@Override
 	protected Instancer<RotatingData> getModel() {
-		return getRotatingMaterial().getModel(AllBlockPartials.ARM_COG, blockEntity.getBlockState());
+		return getRotatingMaterial().getModel(AllPartialModels.ARM_COG, blockEntity.getBlockState());
 	}
 
 	@Override

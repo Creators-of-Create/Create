@@ -120,7 +120,7 @@ public class EjectorTargetHandler {
 		h = Math.abs(diff.getX() + diff.getZ());
 		v = -diff.getY();
 
-		AllPackets.channel.sendToServer(new EjectorPlacementPacket(h, v, pos, validTargetDirection));
+		AllPackets.getChannel().sendToServer(new EjectorPlacementPacket(h, v, pos, validTargetDirection));
 		currentSelection = null;
 		currentItem = null;
 
@@ -134,7 +134,7 @@ public class EjectorTargetHandler {
 
 		int xDiff = currentSelection.getX() - pos.getX();
 		int zDiff = currentSelection.getZ() - pos.getZ();
-		int max = AllConfigs.SERVER.kinetics.maxEjectorDistance.get();
+		int max = AllConfigs.server().kinetics.maxEjectorDistance.get();
 
 		if (Math.abs(xDiff) > max || Math.abs(zDiff) > max)
 			return null;

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ga
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -54,7 +54,7 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCar
 			if (facing == Direction.NORTH || facing == Direction.EAST)
 				angleForBE *= -1;
 
-		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.GANTRY_COGS, state);
+		SuperByteBuffer cogs = CachedBufferer.partial(AllPartialModels.GANTRY_COGS, state);
 		cogs.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)

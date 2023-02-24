@@ -168,7 +168,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 
 			if (launcher.getHorizontalDistance() * launcher.getHorizontalDistance()
 				+ launcher.getVerticalDistance() * launcher.getVerticalDistance() >= 25 * 25)
-				AllPackets.channel.sendToServer(new EjectorAwardPacket(worldPosition));
+				AllPackets.getChannel().sendToServer(new EjectorAwardPacket(worldPosition));
 
 			if (!(playerEntity.getItemBySlot(EquipmentSlot.CHEST)
 				.getItem() instanceof ElytraItem))
@@ -179,7 +179,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 			playerEntity.setDeltaMovement(playerEntity.getDeltaMovement()
 				.scale(.75f));
 			deployElytra(playerEntity);
-			AllPackets.channel.sendToServer(new EjectorElytraPacket(worldPosition));
+			AllPackets.getChannel().sendToServer(new EjectorElytraPacket(worldPosition));
 		}
 
 		if (doLogic) {
@@ -264,7 +264,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 
 	protected boolean addToLaunchedItems(ItemStack stack) {
 		if ((!level.isClientSide || isVirtual()) && trackedItem == null && scanCooldown == 0) {
-			scanCooldown = AllConfigs.SERVER.kinetics.ejectorScanInterval.get();
+			scanCooldown = AllConfigs.server().kinetics.ejectorScanInterval.get();
 			trackedItem = stack;
 		}
 		return launchedItems.add(IntAttached.withZero(stack));
@@ -537,7 +537,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		if (launcher.getHorizontalDistance() != horizontalDistance
 			|| launcher.getVerticalDistance() != verticalDistance) {
 			launcher.set(horizontalDistance, verticalDistance);
-			launcher.clamp(AllConfigs.SERVER.kinetics.maxEjectorDistance.get());
+			launcher.clamp(AllConfigs.server().kinetics.maxEjectorDistance.get());
 		}
 
 		powered = compound.getBoolean("Powered");

@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.tools;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
@@ -98,7 +98,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 		ms.translate(0, 0, -4 / 16f);
 		ms.scale(1, 1, 1 / (1 + animation));
 		renderer.renderSolid((leftHand || rightHand) ? ExtendoGripRenderHandler.pose.get()
-			: AllBlockPartials.DEPLOYER_HAND_POINTING.get(), light);
+			: AllPartialModels.DEPLOYER_HAND_POINTING.get(), light);
 		ms.popPose();
 
 		ms.popPose();

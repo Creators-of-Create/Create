@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -20,7 +20,7 @@ public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> imp
 
 		pressHead = materialManager.defaultSolid()
 				.material(Materials.ORIENTED)
-				.getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
+				.getModel(AllPartialModels.MECHANICAL_PRESS_HEAD, blockState)
 				.createInstance();
 
 		Quaternion q = Vector3f.YP

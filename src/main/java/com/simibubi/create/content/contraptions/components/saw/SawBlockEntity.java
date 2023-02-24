@@ -86,7 +86,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity {
 
 	public SawBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		inventory = new ProcessingInventory(this::start).withSlotLimit(!AllConfigs.SERVER.recipes.bulkCutting.get());
+		inventory = new ProcessingInventory(this::start).withSlotLimit(!AllConfigs.server().recipes.bulkCutting.get());
 		inventory.remainingTime = -1;
 		recipeIndex = 0;
 		invProvider = LazyOptional.of(() -> inventory);
@@ -366,8 +366,8 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity {
 			return ImmutableList.of(assemblyRecipe.get());
 
 		Predicate<Recipe<?>> types = RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType(),
-			AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get() ? RecipeType.STONECUTTING : null,
-			AllConfigs.SERVER.recipes.allowWoodcuttingOnSaw.get() ? woodcuttingRecipeType.get() : null);
+			AllConfigs.server().recipes.allowStonecuttingOnSaw.get() ? RecipeType.STONECUTTING : null,
+			AllConfigs.server().recipes.allowWoodcuttingOnSaw.get() ? woodcuttingRecipeType.get() : null);
 
 		List<Recipe<?>> startedSearch = RecipeFinder.get(cuttingRecipesKey, level, types);
 		return startedSearch.stream()

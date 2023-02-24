@@ -69,7 +69,7 @@ public class AirCurrent {
 			Vec3 pos = VecHelper.getCenterOf(source.getAirCurrentPos())
 				.add(Vec3.atLowerCornerOf(facing.getNormal())
 					.scale(offset));
-			if (world.random.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
+			if (world.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())
 				world.addParticle(new AirFlowParticleData(source.getAirCurrentPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
 

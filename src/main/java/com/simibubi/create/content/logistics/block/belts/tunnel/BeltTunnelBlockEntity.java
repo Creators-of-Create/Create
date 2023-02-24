@@ -181,7 +181,7 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
 	}
 
 	private void sendFlaps() {
-		AllPackets.channel.send(packetTarget(), new TunnelFlapPacket(this, flapsToSend));
+		AllPackets.getChannel().send(packetTarget(), new TunnelFlapPacket(this, flapsToSend));
 
 		flapsToSend.clear();
 	}

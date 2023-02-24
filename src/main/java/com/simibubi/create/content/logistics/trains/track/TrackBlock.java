@@ -26,8 +26,8 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
@@ -675,7 +675,7 @@ public class TrackBlock extends Block
 		PoseStack ms) {
 		TransformStack.cast(ms)
 			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction)));
-		return AllBlockPartials.TRACK_ASSEMBLING_OVERLAY;
+		return AllPartialModels.TRACK_ASSEMBLING_OVERLAY;
 	}
 
 	@Override
@@ -735,10 +735,10 @@ public class TrackBlock extends Block
 		}
 
 		return switch (type) {
-		case DUAL_SIGNAL -> AllBlockPartials.TRACK_SIGNAL_DUAL_OVERLAY;
-		case OBSERVER -> AllBlockPartials.TRACK_OBSERVER_OVERLAY;
-		case SIGNAL -> AllBlockPartials.TRACK_SIGNAL_OVERLAY;
-		case STATION -> AllBlockPartials.TRACK_STATION_OVERLAY;
+		case DUAL_SIGNAL -> AllPartialModels.TRACK_SIGNAL_DUAL_OVERLAY;
+		case OBSERVER -> AllPartialModels.TRACK_OBSERVER_OVERLAY;
+		case SIGNAL -> AllPartialModels.TRACK_SIGNAL_OVERLAY;
+		case STATION -> AllPartialModels.TRACK_STATION_OVERLAY;
 		};
 	}
 

@@ -5,7 +5,7 @@ import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -24,15 +24,15 @@ public class SteamEngineInstance extends BlockEntityInstance<SteamEngineBlockEnt
 
 		piston = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.ENGINE_PISTON, blockState)
+				.getModel(AllPartialModels.ENGINE_PISTON, blockState)
 				.createInstance();
 		linkage = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.ENGINE_LINKAGE, blockState)
+				.getModel(AllPartialModels.ENGINE_LINKAGE, blockState)
 				.createInstance();
 		connector = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.ENGINE_CONNECTOR, blockState)
+				.getModel(AllPartialModels.ENGINE_CONNECTOR, blockState)
 				.createInstance();
 	}
 

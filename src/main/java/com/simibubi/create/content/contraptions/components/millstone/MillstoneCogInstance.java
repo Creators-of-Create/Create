@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.millstone;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
@@ -14,6 +14,6 @@ public class MillstoneCogInstance extends SingleRotatingInstance<MillstoneBlockE
 
     @Override
     protected Instancer<RotatingData> getModel() {
-        return getRotatingMaterial().getModel(AllBlockPartials.MILLSTONE_COG, blockEntity.getBlockState());
+        return getRotatingMaterial().getModel(AllPartialModels.MILLSTONE_COG, blockEntity.getBlockState());
     }
 }

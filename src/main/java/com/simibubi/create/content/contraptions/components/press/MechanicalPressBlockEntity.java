@@ -192,7 +192,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 	}
 
 	public static <C extends Container> boolean canCompress(Recipe<C> recipe) {
-		if (!(recipe instanceof CraftingRecipe) || !AllConfigs.SERVER.recipes.allowShapedSquareInPress.get())
+		if (!(recipe instanceof CraftingRecipe) || !AllConfigs.server().recipes.allowShapedSquareInPress.get())
 			return false;
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		return (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.matchAllIngredients(ingredients);
@@ -212,7 +212,7 @@ public class MechanicalPressBlockEntity extends BasinOperatingBlockEntity implem
 
 	@Override
 	public boolean canProcessInBulk() {
-		return AllConfigs.SERVER.recipes.bulkPressing.get();
+		return AllConfigs.server().recipes.bulkPressing.get();
 	}
 
 	@Override

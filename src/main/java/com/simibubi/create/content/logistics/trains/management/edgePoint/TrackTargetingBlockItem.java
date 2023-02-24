@@ -161,7 +161,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		boolean front = player.getLookAngle()
 			.dot(selection.direction()) < 0;
 
-		AllPackets.channel.sendToServer(new CurvedTrackSelectionPacket(be.getBlockPos(), loc.curveTarget(),
+		AllPackets.getChannel().sendToServer(new CurvedTrackSelectionPacket(be.getBlockPos(), loc.curveTarget(),
 			loc.segment(), front, player.getInventory().selected));
 		return true;
 	}

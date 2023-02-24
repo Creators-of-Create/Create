@@ -163,7 +163,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 	}
 
 	protected void send(boolean invert) {
-		AllPackets.channel.sendToServer(new ConfigureStockswitchPacket(blockEntity.getBlockPos(), offBelow.getState() / 100f,
+		AllPackets.getChannel().sendToServer(new ConfigureStockswitchPacket(blockEntity.getBlockPos(), offBelow.getState() / 100f,
 			onAbove.getState() / 100f, invert));
 	}
 

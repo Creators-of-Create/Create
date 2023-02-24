@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.jozufozu.flywheel.util.transform.Translate;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -46,7 +46,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		float angle = lidProgress * 70;
 
 		if (!Backend.canUseInstancing(be.getLevel())) {
-			SuperByteBuffer model = CachedBufferer.partial(AllBlockPartials.EJECTOR_TOP, be.getBlockState());
+			SuperByteBuffer model = CachedBufferer.partial(AllPartialModels.EJECTOR_TOP, be.getBlockState());
 			applyLidAngle(be, angle, model);
 			model.light(light)
 					.renderInto(ms, vertexBuilder);

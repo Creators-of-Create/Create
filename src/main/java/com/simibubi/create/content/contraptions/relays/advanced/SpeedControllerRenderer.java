@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -43,7 +43,7 @@ public class SpeedControllerRenderer extends SmartBlockEntityRenderer<SpeedContr
 		BlockState blockState = blockEntity.getBlockState();
 		boolean alongX = blockState.getValue(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
 
-		SuperByteBuffer bracket = CachedBufferer.partial(AllBlockPartials.SPEED_CONTROLLER_BRACKET, blockState);
+		SuperByteBuffer bracket = CachedBufferer.partial(AllPartialModels.SPEED_CONTROLLER_BRACKET, blockState);
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(Direction.UP,
 				(float) (alongX ? Math.PI : Math.PI / 2));

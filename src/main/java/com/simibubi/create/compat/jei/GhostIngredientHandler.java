@@ -82,7 +82,7 @@ public class GhostIngredientHandler<T extends GhostItemMenu<?>>
 				return;
 
 			// sync new filter contents with server
-			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
+			AllPackets.getChannel().sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
 		}
 	}
 }

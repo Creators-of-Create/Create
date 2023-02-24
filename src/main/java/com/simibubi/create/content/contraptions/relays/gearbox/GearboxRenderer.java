@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -37,7 +37,7 @@ public class GearboxRenderer extends KineticBlockEntityRenderer<GearboxBlockEnti
 			if (boxAxis == axis)
 				continue;
 
-			SuperByteBuffer shaft = CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, be.getBlockState(), direction);
+			SuperByteBuffer shaft = CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
 			float offset = getRotationOffsetForPosition(be, pos, axis);
 			float angle = (time * be.getSpeed() * 3f / 10) % 360;
 

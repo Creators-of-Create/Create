@@ -7,8 +7,8 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -103,16 +103,16 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 
 	static PartialModel getMiddleForState(BlockState state, boolean lit) {
 		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
-			return lit ? AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE_POWERED
-				: AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE;
-		return lit ? AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED
-			: AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE;
+			return lit ? AllPartialModels.PORTABLE_FLUID_INTERFACE_MIDDLE_POWERED
+				: AllPartialModels.PORTABLE_FLUID_INTERFACE_MIDDLE;
+		return lit ? AllPartialModels.PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED
+			: AllPartialModels.PORTABLE_STORAGE_INTERFACE_MIDDLE;
 	}
 
 	static PartialModel getTopForState(BlockState state) {
 		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
-			return AllBlockPartials.PORTABLE_FLUID_INTERFACE_TOP;
-		return AllBlockPartials.PORTABLE_STORAGE_INTERFACE_TOP;
+			return AllPartialModels.PORTABLE_FLUID_INTERFACE_TOP;
+		return AllPartialModels.PORTABLE_STORAGE_INTERFACE_TOP;
 	}
 
 }

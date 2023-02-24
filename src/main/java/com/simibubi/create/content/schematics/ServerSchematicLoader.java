@@ -175,7 +175,7 @@ public class ServerSchematicLoader {
 	}
 
 	public CSchematics getConfig() {
-		return AllConfigs.SERVER.schematics;
+		return AllConfigs.server().schematics;
 	}
 
 	public void handleWriteRequest(ServerPlayer player, String schematic, byte[] data) {

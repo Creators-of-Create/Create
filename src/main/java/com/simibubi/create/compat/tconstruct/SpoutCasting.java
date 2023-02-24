@@ -66,7 +66,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 			TICON_PRESENT = Mods.TCONSTRUCT.isLoaded();
 		if (!TICON_PRESENT)
 			return false;
-		return AllConfigs.SERVER.recipes.allowCastingBySpout.get();
+		return AllConfigs.server().recipes.allowCastingBySpout.get();
 	}
 
 }

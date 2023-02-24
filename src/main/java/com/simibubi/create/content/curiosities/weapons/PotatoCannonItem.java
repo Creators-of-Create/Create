@@ -101,7 +101,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 	}
 
 	private int maxUses() {
-		return AllConfigs.SERVER.curiosities.maxPotatoCannonShots.get();
+		return AllConfigs.server().curiosities.maxPotatoCannonShots.get();
 	}
 
 	public boolean isCannon(ItemStack stack) {

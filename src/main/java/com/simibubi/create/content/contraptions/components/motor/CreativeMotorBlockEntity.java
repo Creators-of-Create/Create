@@ -27,7 +27,7 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		Integer max = AllConfigs.SERVER.kinetics.maxMotorSpeed.get();
+		Integer max = AllConfigs.server().kinetics.maxMotorSpeed.get();
 
 		CenteredSideValueBoxTransform slot = new CenteredSideValueBoxTransform(
 			(motor, side) -> motor.getValue(CreativeMotorBlock.FACING) == side.getOpposite());

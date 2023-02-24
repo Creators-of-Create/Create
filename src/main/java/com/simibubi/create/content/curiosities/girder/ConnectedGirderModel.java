@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -46,7 +46,7 @@ public class ConnectedGirderModel extends CTModel {
 		ConnectionData data = extraData.getData(CONNECTION_PROPERTY);
 		for (Direction d : Iterate.horizontalDirections)
 			if (data.isConnected(d))
-				quads.addAll(AllBlockPartials.METAL_GIRDER_BRACKETS.get(d)
+				quads.addAll(AllPartialModels.METAL_GIRDER_BRACKETS.get(d)
 					.get()
 					.getQuads(state, side, rand, extraData));
 		return quads;

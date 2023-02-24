@@ -297,7 +297,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	}
 
 	public CSchematics config() {
-		return AllConfigs.SERVER.schematics;
+		return AllConfigs.server().schematics;
 	}
 
 	protected void tickPrinter() {

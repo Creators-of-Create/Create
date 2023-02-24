@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.motor;
 
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -16,7 +16,7 @@ public class CreativeMotorRenderer extends KineticBlockEntityRenderer<CreativeMo
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(CreativeMotorBlockEntity be, BlockState state) {
-		return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, state);
+		return CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, state);
 	}
 
 }

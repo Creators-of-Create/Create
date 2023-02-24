@@ -91,7 +91,7 @@ public class ToolboxHandlerClient {
 				if (!ItemStack.tagMatches(inSlot, result))
 					continue;
 
-				AllPackets.channel.sendToServer(
+				AllPackets.getChannel().sendToServer(
 					new ToolboxEquipPacket(toolboxBlockEntity.getBlockPos(), comp, player.getInventory().selected));
 				return true;
 			}

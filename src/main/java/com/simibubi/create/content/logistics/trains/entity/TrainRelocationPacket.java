@@ -84,7 +84,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 			if (!train.id.equals(cce.trainId))
 				return;
 
-			int verifyDistance = AllConfigs.SERVER.trains.maxTrackPlacementLength.get() * 2;
+			int verifyDistance = AllConfigs.server().trains.maxTrackPlacementLength.get() * 2;
 			if (!sender.position()
 				.closerThan(Vec3.atCenterOf(pos), verifyDistance)) {
 				Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from clicked pos");
@@ -102,7 +102,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 					.withStyle(ChatFormatting.GREEN), true);
 				train.carriages.forEach(c -> c.forEachPresentEntity(e -> {
 					e.nonDamageTicks = 10;
-					AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> e),
+					AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> e),
 						new ContraptionRelocationPacket(e.getId()));
 				}));
 				return;

@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.bell;
 import java.util.Random;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,7 +32,7 @@ public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel getBellModel() {
-		return AllBlockPartials.HAUNTED_BELL;
+		return AllPartialModels.HAUNTED_BELL;
 	}
 	
 	@Override

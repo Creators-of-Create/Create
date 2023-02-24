@@ -77,7 +77,7 @@ public class NozzleBlockEntity extends SmartBlockEntity {
 		Vec3 center = VecHelper.getCenterOf(worldPosition);
 		if (level.isClientSide && range != 0) {
 			if (level.random.nextInt(
-				Mth.clamp((AllConfigs.SERVER.kinetics.fanPushDistance.get() - (int) range), 1, 10)) == 0) {
+				Mth.clamp((AllConfigs.server().kinetics.fanPushDistance.get() - (int) range), 1, 10)) == 0) {
 				Vec3 start = VecHelper.offsetRandomly(center, level.random, pushing ? 1 : range / 2);
 				Vec3 motion = center.subtract(start)
 					.normalize()

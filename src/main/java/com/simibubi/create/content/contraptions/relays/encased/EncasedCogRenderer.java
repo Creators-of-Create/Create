@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticBlockEntity;
@@ -51,7 +51,7 @@ public class EncasedCogRenderer extends KineticBlockEntityRenderer<SimpleKinetic
 		for (Direction d : Iterate.directionsInAxis(getRotationAxisOf(be))) {
 			if (!def.hasShaftTowards(be.getLevel(), be.getBlockPos(), blockState, d))
 				continue;
-			renderRotatingBuffer(be, CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, be.getBlockState(), d),
+			renderRotatingBuffer(be, CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), d),
 				ms, buffer.getBuffer(RenderType.solid()), light);
 		}
 	}
@@ -59,7 +59,7 @@ public class EncasedCogRenderer extends KineticBlockEntityRenderer<SimpleKinetic
 	@Override
 	protected SuperByteBuffer getRotatedModel(SimpleKineticBlockEntity be, BlockState state) {
 		return CachedBufferer.partialFacingVertical(
-			large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL, state,
+			large ? AllPartialModels.SHAFTLESS_LARGE_COGWHEEL : AllPartialModels.SHAFTLESS_COGWHEEL, state,
 			Direction.fromAxisAndDirection(state.getValue(EncasedCogwheelBlock.AXIS), AxisDirection.POSITIVE));
 	}
 

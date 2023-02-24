@@ -63,7 +63,7 @@ public class MountedFluidStorage {
 				packetCooldown--;
 			else if (sendPacket) {
 				sendPacket = false;
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
 					new ContraptionFluidPacket(entity.getId(), pos, tank.getFluid()));
 				packetCooldown = 8;
 			}

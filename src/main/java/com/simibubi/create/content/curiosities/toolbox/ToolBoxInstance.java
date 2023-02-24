@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -32,12 +32,12 @@ public class ToolBoxInstance extends BlockEntityInstance<ToolboxBlockEntity> imp
 
 		Instancer<ModelData> drawerModel = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.TOOLBOX_DRAWER, blockState);
+				.getModel(AllPartialModels.TOOLBOX_DRAWER, blockState);
 
 		drawers = new ModelData[]{drawerModel.createInstance(), drawerModel.createInstance()};
 		lid = materialManager.defaultCutout()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.TOOLBOX_LIDS.get(blockEntity.getColor()), blockState)
+				.getModel(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor()), blockState)
 				.createInstance();
 
 	}

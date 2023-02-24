@@ -160,7 +160,7 @@ public class PistonContraption extends TranslatingContraption {
 		boolean retracting = direction != orientation;
 		if (retracting && !sticky)
 			return true;
-		for (int offset = 0; offset <= AllConfigs.SERVER.kinetics.maxChassisRange.get(); offset++) {
+		for (int offset = 0; offset <= AllConfigs.server().kinetics.maxChassisRange.get(); offset++) {
 			if (offset == 1 && retracting)
 				return true;
 			BlockPos currentPos = pos.relative(orientation, offset + initialExtensionProgress);

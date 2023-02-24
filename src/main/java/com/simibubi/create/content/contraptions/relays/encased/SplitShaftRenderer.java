@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -48,7 +48,7 @@ public class SplitShaftRenderer extends KineticBlockEntityRenderer<SplitShaftBlo
 			angle = angle / 180f * (float) Math.PI;
 
 			SuperByteBuffer superByteBuffer =
-					CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, be.getBlockState(), direction);
+					CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
 			kineticRotationTransform(superByteBuffer, be, axis, angle, light);
 			superByteBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}

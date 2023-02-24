@@ -204,7 +204,7 @@ public class SymmetryWandItem extends Item {
 			.getCompound(SYMMETRY));
 
 		Vec3 mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
+		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.server().curiosities.maxSymmetryWandRange.get())
 			return;
 		if (!player.isCreative() && isHoldingBlock(player, block)
 			&& BlockHelper.findAndRemoveInInventory(block, player, 1) == 0)
@@ -267,7 +267,7 @@ public class SymmetryWandItem extends Item {
 			}
 		}
 
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
 			new SymmetryEffectPacket(to, targets));
 	}
 
@@ -292,7 +292,7 @@ public class SymmetryWandItem extends Item {
 			.getCompound(SYMMETRY));
 
 		Vec3 mirrorPos = symmetry.getPosition();
-		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.SERVER.curiosities.maxSymmetryWandRange.get())
+		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.server().curiosities.maxSymmetryWandRange.get())
 			return;
 
 		symmetry.process(blockSet);
@@ -325,7 +325,7 @@ public class SymmetryWandItem extends Item {
 			}
 		}
 
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
 			new SymmetryEffectPacket(to, targets));
 	}
 

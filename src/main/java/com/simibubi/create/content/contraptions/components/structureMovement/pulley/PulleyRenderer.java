@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
 public class PulleyRenderer extends AbstractPulleyRenderer<PulleyBlockEntity> {
 
 	public PulleyRenderer(BlockEntityRendererProvider.Context context) {
-		super(context, AllBlockPartials.ROPE_HALF, AllBlockPartials.ROPE_HALF_MAGNET);
+		super(context, AllPartialModels.ROPE_HALF, AllPartialModels.ROPE_HALF_MAGNET);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer<PulleyBlockEntity> {
 
 	@Override
 	protected PartialModel getCoil() {
-		return AllBlockPartials.ROPE_COIL;
+		return AllPartialModels.ROPE_COIL;
 	}
 
 	@Override

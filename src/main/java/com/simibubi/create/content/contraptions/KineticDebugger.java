@@ -61,7 +61,7 @@ public class KineticDebugger {
 	}
 
 	public static boolean isActive() {
-		return isF3DebugModeActive() && AllConfigs.CLIENT.rainbowDebug.get();
+		return isF3DebugModeActive() && AllConfigs.client().rainbowDebug.get();
 	}
 
 	public static boolean isF3DebugModeActive() {

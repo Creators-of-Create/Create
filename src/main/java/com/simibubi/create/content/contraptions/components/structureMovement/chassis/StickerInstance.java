@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -24,7 +24,7 @@ public class StickerInstance extends BlockEntityInstance<StickerBlockEntity> imp
 	public StickerInstance(MaterialManager materialManager, StickerBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		head = getTransformMaterial().getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();
+		head = getTransformMaterial().getModel(AllPartialModels.STICKER_HEAD, blockState).createInstance();
 
 		fakeWorld = blockEntity.getLevel() != Minecraft.getInstance().level;
 		facing = blockState.getValue(StickerBlock.FACING);

@@ -253,7 +253,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	private void tickAirStreams(float itemSpeed) {
 		if (!level.isClientSide && airCurrentUpdateCooldown-- <= 0) {
-			airCurrentUpdateCooldown = AllConfigs.SERVER.kinetics.fanBlockCheckRate.get();
+			airCurrentUpdateCooldown = AllConfigs.server().kinetics.fanBlockCheckRate.get();
 			updateAirFlow = true;
 		}
 

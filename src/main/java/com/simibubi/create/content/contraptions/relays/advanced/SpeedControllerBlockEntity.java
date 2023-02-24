@@ -42,7 +42,7 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		Integer max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
+		Integer max = AllConfigs.server().kinetics.maxRotationSpeed.get();
 
 		targetSpeed =
 			new ScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, new ControllerValueBoxTransform());

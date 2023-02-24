@@ -16,8 +16,7 @@ public class CustomRenderedItems {
 
 	/**
 	 * Track an item that uses a subclass of {@link CustomRenderedItemModelRenderer} as its custom renderer
-	 * to automatically register {@link #createModel} to {@link CustomRenderedItems} on client setup so that
-	 * its model can be swapped.
+	 * to automatically wrap its model with {@link CustomRenderedItemModel}.
 	 * @param item The item that should have its model swapped.
 	 */
 	public static void register(Item item) {

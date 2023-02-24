@@ -30,7 +30,7 @@ public class ContraptionData {
 	 * @return true if the given NBT is too large for a contraption to be synced to clients.
 	 */
 	public static boolean isTooLargeForSync(CompoundTag data) {
-		int max = AllConfigs.SERVER.kinetics.maxDataSize.get();
+		int max = AllConfigs.server().kinetics.maxDataSize.get();
 		return max != 0 && packetSize(data) > max;
 	}
 

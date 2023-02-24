@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -43,7 +43,7 @@ public class BracketedKineticBlockEntityRenderer extends KineticBlockEntityRende
 
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		renderRotatingBuffer(be,
-			CachedBufferer.partialFacingVertical(AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL, be.getBlockState(), facing),
+			CachedBufferer.partialFacingVertical(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, be.getBlockState(), facing),
 			ms, buffer.getBuffer(RenderType.solid()), light);
 
 		float offset = getShaftAngleOffset(axis, pos);
@@ -51,7 +51,7 @@ public class BracketedKineticBlockEntityRenderer extends KineticBlockEntityRende
 		float angle = ((time * be.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
 
 		SuperByteBuffer shaft =
-			CachedBufferer.partialFacingVertical(AllBlockPartials.COGWHEEL_SHAFT, be.getBlockState(), facing);
+			CachedBufferer.partialFacingVertical(AllPartialModels.COGWHEEL_SHAFT, be.getBlockState(), facing);
 		kineticRotationTransform(shaft, be, axis, angle, light);
 		shaft.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 

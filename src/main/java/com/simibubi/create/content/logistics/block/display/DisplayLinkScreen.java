@@ -244,7 +244,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 			configWidgets.forEach(s -> s.saveValues(sourceData));
 		}
 
-		AllPackets.channel.sendToServer(new DisplayLinkConfigurationPacket(blockEntity.getBlockPos(), sourceData,
+		AllPackets.getChannel().sendToServer(new DisplayLinkConfigurationPacket(blockEntity.getBlockPos(), sourceData,
 				targetLineSelector == null ? 0 : targetLineSelector.getState()));
 	}
 

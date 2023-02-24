@@ -10,8 +10,8 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.BeltData;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
@@ -143,7 +143,7 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
             return modelTransform;
         };
 
-        return getRotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
+        return getRotatingMaterial().getModel(AllPartialModels.BELT_PULLEY, blockState, dir, ms);
     }
 
     private Direction getOrientation() {

@@ -195,7 +195,7 @@ public class FluidPropagator {
 	}
 
 	public static int getPumpRange() {
-		return AllConfigs.SERVER.fluids.mechanicalPumpRange.get();
+		return AllConfigs.server().fluids.mechanicalPumpRange.get();
 	}
 
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {

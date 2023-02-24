@@ -42,7 +42,7 @@ public class BearingContraption extends Contraption {
 			return false;
 		startMoving(world);
 		expandBoundsAroundAxis(facing.getAxis());
-		if (isWindmill && sailBlocks < AllConfigs.SERVER.kinetics.minimumWindmillSails.get())
+		if (isWindmill && sailBlocks < AllConfigs.server().kinetics.minimumWindmillSails.get())
 			throw AssemblyException.notEnoughSails(sailBlocks);
 		if (blocks.isEmpty())
 			return false;

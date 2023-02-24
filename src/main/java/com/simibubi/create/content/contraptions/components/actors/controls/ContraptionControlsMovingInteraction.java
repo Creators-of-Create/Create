@@ -101,7 +101,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 	}
 
 	private void send(AbstractContraptionEntity contraptionEntity, ItemStack filter, boolean disable) {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> contraptionEntity),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> contraptionEntity),
 			new ContraptionDisableActorPacket(contraptionEntity.getId(), filter, !disable));
 	}
 
@@ -118,7 +118,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 		if (efs.currentTargetY == contraption.clientYTarget)
 			return false;
 
-		AllPackets.channel.sendToServer(new ElevatorTargetFloorPacket(contraptionEntity, efs.currentTargetY));
+		AllPackets.getChannel().sendToServer(new ElevatorTargetFloorPacket(contraptionEntity, efs.currentTargetY));
 		if (contraption.presentBlockEntities.get(ctx.localPos)instanceof ContraptionControlsBlockEntity cte)
 			cte.pressButton();
 		return true;

@@ -135,7 +135,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 		BlockState blockState = level.getBlockState(worldPosition);
 		if (blockState.hasProperty(TrackBlock.HAS_BE))
 			level.setBlockAndUpdate(worldPosition, blockState.setValue(TrackBlock.HAS_BE, false));
-		AllPackets.channel.send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
+		AllPackets.getChannel().send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
 	}
 
 	public void removeInboundConnections() {
@@ -150,7 +150,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 				bezierConnection.spawnItems(level);
 			bezierConnection.spawnDestroyParticles(level);
 		}
-		AllPackets.channel.send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
+		AllPackets.getChannel().send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
 	}
 
 	public void bind(ResourceKey<Level> boundDimension, BlockPos boundLocation) {
