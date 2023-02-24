@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.components.waterwheel;
 
 import java.util.Random;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class LargeWaterWheelBlock extends RotatedPillarKineticBlock implements ITE<LargeWaterWheelTileEntity> {
+public class LargeWaterWheelBlock extends RotatedPillarKineticBlock implements IBE<LargeWaterWheelBlockEntity> {
 
 	public static final BooleanProperty EXTENSION = BooleanProperty.create("extension");
 
@@ -82,7 +82,7 @@ public class LargeWaterWheelBlock extends RotatedPillarKineticBlock implements I
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
-		return onTileEntityUse(pLevel, pPos, wwt -> wwt.applyMaterialIfValid(pPlayer.getItemInHand(pHand)));
+		return onBlockEntityUse(pLevel, pPos, wwt -> wwt.applyMaterialIfValid(pPlayer.getItemInHand(pHand)));
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class LargeWaterWheelBlock extends RotatedPillarKineticBlock implements I
 				pLevel.setBlockAndUpdate(structurePos, requiredStructure);
 			}
 		}
-		withTileEntityDo(pLevel, pPos, WaterWheelTileEntity::determineAndApplyFlowScore);
+		withBlockEntityDo(pLevel, pPos, WaterWheelBlockEntity::determineAndApplyFlowScore);
 	}
 
 	@Override
@@ -137,13 +137,13 @@ public class LargeWaterWheelBlock extends RotatedPillarKineticBlock implements I
 	}
 
 	@Override
-	public BlockEntityType<? extends LargeWaterWheelTileEntity> getTileEntityType() {
-		return AllTileEntities.LARGE_WATER_WHEEL.get();
+	public BlockEntityType<? extends LargeWaterWheelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.LARGE_WATER_WHEEL.get();
 	}
 
 	@Override
-	public Class<LargeWaterWheelTileEntity> getTileEntityClass() {
-		return LargeWaterWheelTileEntity.class;
+	public Class<LargeWaterWheelBlockEntity> getBlockEntityClass() {
+		return LargeWaterWheelBlockEntity.class;
 	}
 
 	@Override

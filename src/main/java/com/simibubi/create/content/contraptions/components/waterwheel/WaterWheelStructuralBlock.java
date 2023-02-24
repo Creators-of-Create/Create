@@ -1,16 +1,19 @@
 package com.simibubi.create.content.contraptions.components.waterwheel;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.goggles.IProxyHoveringInformation;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.render.DestroyProgressRenderingHandler;
+import com.simibubi.create.foundation.block.render.MultiPosDestructionHandler;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleEngine;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -156,7 +159,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 		return true;
 	}
 
-	public static class RenderProperties implements IBlockRenderProperties, DestroyProgressRenderingHandler {
+	public static class RenderProperties implements IBlockRenderProperties, MultiPosDestructionHandler {
 
 		@Override
 		public boolean addDestroyEffects(BlockState state, Level Level, BlockPos pos, ParticleEngine manager) {
@@ -172,18 +175,18 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 					manager.crack(WaterWheelStructuralBlock.getMaster(level, targetPos, state), bhr.getDirection());
 				return true;
 			}
-			return DestroyProgressRenderingHandler.super.addHitEffects(state, level, target, manager);
+			return IBlockRenderProperties.super.addHitEffects(state, level, target, manager);
 		}
 
 		@Override
-		public boolean renderDestroyProgress(ClientLevel level, LevelRenderer renderer, int breakerId,
-			BlockPos targetPos, int progress, BlockState blockState) {
+		@Nullable
+		public Set<BlockPos> getExtraPositions(ClientLevel level, BlockPos pos, BlockState blockState, int progress) {
 			WaterWheelStructuralBlock waterWheelStructuralBlock = AllBlocks.WATER_WHEEL_STRUCTURAL.get();
-			if (!waterWheelStructuralBlock.stillValid(level, targetPos, blockState, false))
-				return true;
-			BlockPos masterPos = WaterWheelStructuralBlock.getMaster(level, targetPos, blockState);
-			renderer.destroyBlockProgress(masterPos.hashCode(), masterPos, progress);
-			return true;
+			if (!waterWheelStructuralBlock.stillValid(level, pos, blockState, false))
+				return null;
+			HashSet<BlockPos> set = new HashSet<>();
+			set.add(WaterWheelStructuralBlock.getMaster(level, pos, blockState));
+			return set;
 		}
 	}
 
