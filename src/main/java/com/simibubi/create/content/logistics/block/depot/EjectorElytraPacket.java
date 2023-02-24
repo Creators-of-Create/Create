@@ -39,9 +39,9 @@ public class EjectorElytraPacket extends SimplePacketBase {
 				Level world = player.level;
 				if (world == null || !world.isLoaded(pos))
 					return;
-				BlockEntity tileEntity = world.getBlockEntity(pos);
-				if (tileEntity instanceof EjectorTileEntity)
-					((EjectorTileEntity) tileEntity).deployElytra(player);
+				BlockEntity blockEntity = world.getBlockEntity(pos);
+				if (blockEntity instanceof EjectorBlockEntity)
+					((EjectorBlockEntity) blockEntity).deployElytra(player);
 			});
 		context.get()
 			.setPacketHandled(true);

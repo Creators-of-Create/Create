@@ -2,9 +2,12 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
 import static java.lang.Math.max;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -13,15 +16,18 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 
-public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel> {
+public class WorldshaperItemRenderer extends ZapperItemRenderer {
+
+	protected static final PartialModel CORE = new PartialModel(Create.asResource("item/handheld_worldshaper/core"));
+	protected static final PartialModel CORE_GLOW = new PartialModel(Create.asResource("item/handheld_worldshaper/core_glow"));
+	protected static final PartialModel ACCELERATOR = new PartialModel(Create.asResource("item/handheld_worldshaper/accelerator"));
 
 	@Override
-	protected void render(ItemStack stack, WorldshaperModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		super.render(stack, model, renderer, transformType, ms, buffer, light, overlay);
 
@@ -45,8 +51,8 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 
 		int lightItensity = (int) (15 * Mth.clamp(multiplier, 0, 1));
 		int glowLight = LightTexture.pack(lightItensity, max(lightItensity, 4));
-		renderer.renderSolidGlowing(model.getPartial("core"), glowLight);
-		renderer.renderGlowing(model.getPartial("core_glow"), glowLight);
+		renderer.renderSolidGlowing(CORE.get(), glowLight);
+		renderer.renderGlowing(CORE_GLOW.get(), glowLight);
 
 		// Accelerator spins
 		float angle = worldTime * -25;
@@ -58,12 +64,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		ms.translate(0, offset, 0);
 		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
-		renderer.render(model.getPartial("accelerator"), light);
-	}
-
-	@Override
-	public WorldshaperModel createModel(BakedModel originalModel) {
-		return new WorldshaperModel(originalModel);
+		renderer.render(ACCELERATOR.get(), light);
 	}
 
 }

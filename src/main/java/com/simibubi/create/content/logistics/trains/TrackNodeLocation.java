@@ -46,7 +46,7 @@ public class TrackNodeLocation extends Vec3i {
 	}
 
 	public Vec3 getLocation() {
-		return new Vec3(getX() / 2f, getY() / 2f, getZ() / 2f);
+		return new Vec3(getX() / 2.0, getY() / 2.0, getZ() / 2.0);
 	}
 
 	public ResourceKey<Level> getDimension() {
@@ -58,7 +58,7 @@ public class TrackNodeLocation extends Vec3i {
 		return equalsIgnoreDim(pOther) && pOther instanceof TrackNodeLocation tnl
 			&& Objects.equals(tnl.dimension, dimension);
 	}
-	
+
 	public boolean equalsIgnoreDim(Object pOther) {
 		return super.equals(pOther);
 	}
@@ -83,12 +83,18 @@ public class TrackNodeLocation extends Vec3i {
 	}
 
 	public void send(FriendlyByteBuf buffer, DimensionPalette dimensions) {
-		buffer.writeBlockPos(new BlockPos(this));
+		buffer.writeVarInt(this.getX());
+		buffer.writeShort(this.getY());
+		buffer.writeVarInt(this.getZ());
 		buffer.writeVarInt(dimensions.encode(dimension));
 	}
 
 	public static TrackNodeLocation receive(FriendlyByteBuf buffer, DimensionPalette dimensions) {
-		TrackNodeLocation location = fromPackedPos(buffer.readBlockPos());
+		TrackNodeLocation location = fromPackedPos(new BlockPos(
+				buffer.readVarInt(),
+				buffer.readShort(),
+				buffer.readVarInt()
+		));
 		location.dimension = dimensions.decode(buffer.readVarInt());
 		return location;
 	}

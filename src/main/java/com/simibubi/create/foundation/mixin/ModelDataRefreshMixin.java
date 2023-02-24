@@ -19,15 +19,15 @@ import net.minecraftforge.client.model.ModelDataManager;
 public class ModelDataRefreshMixin {
 
 	/**
-	 * Normally ModelDataManager will throw an exception if a tile entity tries
+	 * Normally ModelDataManager will throw an exception if a block entity tries
 	 * to refresh its model data from a world the client isn't currently in,
-	 * but we need that to not happen for tile entities in fake schematic
+	 * but we need that to not happen for block entities in fake schematic
 	 * worlds, so in those cases just do nothing instead.
 	 */
 	@Inject(at = @At("HEAD"), method = "requestModelDataRefresh", cancellable = true, remap = false)
-	private static void requestModelDataRefresh(BlockEntity te, CallbackInfo ci) {
-		if (te != null) {
-			Level world = te.getLevel();
+	private static void requestModelDataRefresh(BlockEntity be, CallbackInfo ci) {
+		if (be != null) {
+			Level world = be.getLevel();
 			if (world != Minecraft.getInstance().level && world instanceof SchematicWorld)
 				ci.cancel();
 		}

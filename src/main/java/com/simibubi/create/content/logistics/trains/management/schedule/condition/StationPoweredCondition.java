@@ -28,8 +28,8 @@ public class StationPoweredCondition extends ScheduleWaitCondition {
 		GlobalStation currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
-		BlockPos stationPos = currentStation.getTilePos();
-		ResourceKey<Level> stationDim = currentStation.getTileDimension();
+		BlockPos stationPos = currentStation.getBlockEntityPos();
+		ResourceKey<Level> stationDim = currentStation.getBlockEntityDimension();
 		MinecraftServer server = level.getServer();
 		if (server == null)
 			return false;

@@ -7,16 +7,16 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -34,45 +34,45 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
+public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 
 	public SawRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	protected void renderSafe(SawTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
+	protected void renderSafe(SawBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
-		renderBlade(te, ms, buffer, light);
-		renderItems(te, partialTicks, ms, buffer, light, overlay);
-		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
+		renderBlade(be, ms, buffer, light);
+		renderItems(be, partialTicks, ms, buffer, light, overlay);
+		FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getLevel()))
+		if (Backend.canUseInstancing(be.getLevel()))
 			return;
 
-		renderShaft(te, ms, buffer, light, overlay);
+		renderShaft(be, ms, buffer, light, overlay);
 	}
 
-	protected void renderBlade(SawTileEntity te, PoseStack ms, MultiBufferSource buffer, int light) {
-		BlockState blockState = te.getBlockState();
+	protected void renderBlade(SawBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light) {
+		BlockState blockState = be.getBlockState();
 		PartialModel partial;
-		float speed = te.getSpeed();
+		float speed = be.getSpeed();
 		boolean rotate = false;
 
 		if (SawBlock.isHorizontal(blockState)) {
 			if (speed > 0) {
-				partial = AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE;
+				partial = AllPartialModels.SAW_BLADE_HORIZONTAL_ACTIVE;
 			} else if (speed < 0) {
-				partial = AllBlockPartials.SAW_BLADE_HORIZONTAL_REVERSED;
+				partial = AllPartialModels.SAW_BLADE_HORIZONTAL_REVERSED;
 			} else {
-				partial = AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE;
+				partial = AllPartialModels.SAW_BLADE_HORIZONTAL_INACTIVE;
 			}
 		} else {
-			if (te.getSpeed() > 0) {
-				partial = AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE;
+			if (be.getSpeed() > 0) {
+				partial = AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE;
 			} else if (speed < 0) {
-				partial = AllBlockPartials.SAW_BLADE_VERTICAL_REVERSED;
+				partial = AllPartialModels.SAW_BLADE_VERTICAL_REVERSED;
 			} else {
-				partial = AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE;
+				partial = AllPartialModels.SAW_BLADE_VERTICAL_INACTIVE;
 			}
 
 			if (blockState.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE))
@@ -88,44 +88,44 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
-	protected void renderShaft(SawTileEntity te, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te), ms,
+	protected void renderShaft(SawBlockEntity be, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+		KineticBlockEntityRenderer.renderRotatingBuffer(be, getRotatedModel(be), ms,
 			buffer.getBuffer(RenderType.solid()), light);
 	}
 
-	protected void renderItems(SawTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderItems(SawBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		boolean processingMode = te.getBlockState()
+		boolean processingMode = be.getBlockState()
 			.getValue(SawBlock.FACING) == Direction.UP;
-		if (processingMode && !te.inventory.isEmpty()) {
-			boolean alongZ = !te.getBlockState()
+		if (processingMode && !be.inventory.isEmpty()) {
+			boolean alongZ = !be.getBlockState()
 				.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE);
 			ms.pushPose();
 
-			boolean moving = te.inventory.recipeDuration != 0;
-			float offset = moving ? (float) (te.inventory.remainingTime) / te.inventory.recipeDuration : 0;
-			float processingSpeed = Mth.clamp(Math.abs(te.getSpeed()) / 32, 1, 128);
+			boolean moving = be.inventory.recipeDuration != 0;
+			float offset = moving ? (float) (be.inventory.remainingTime) / be.inventory.recipeDuration : 0;
+			float processingSpeed = Mth.clamp(Math.abs(be.getSpeed()) / 32, 1, 128);
 			if (moving) {
 				offset = Mth
-					.clamp(offset + ((-partialTicks + .5f) * processingSpeed) / te.inventory.recipeDuration, 0.125f, 1f);
-				if (!te.inventory.appliedRecipe)
+					.clamp(offset + ((-partialTicks + .5f) * processingSpeed) / be.inventory.recipeDuration, 0.125f, 1f);
+				if (!be.inventory.appliedRecipe)
 					offset += 1;
 				offset /= 2;
 			}
 
-			if (te.getSpeed() == 0)
+			if (be.getSpeed() == 0)
 				offset = .5f;
-			if (te.getSpeed() < 0 ^ alongZ)
+			if (be.getSpeed() < 0 ^ alongZ)
 				offset = 1 - offset;
 
-			for (int i = 0; i < te.inventory.getSlots(); i++) {
-				ItemStack stack = te.inventory.getStackInSlot(i);
+			for (int i = 0; i < be.inventory.getSlots(); i++) {
+				ItemStack stack = be.inventory.getStackInSlot(i);
 				if (stack.isEmpty())
 					continue;
 
 				ItemRenderer itemRenderer = Minecraft.getInstance()
 					.getItemRenderer();
-				BakedModel modelWithOverrides = itemRenderer.getModel(stack, te.getLevel(), null, 0);
+				BakedModel modelWithOverrides = itemRenderer.getModel(stack, be.getLevel(), null, 0);
 				boolean blockItem = modelWithOverrides.isGui3d();
 
 				ms.translate(alongZ ? offset : .5, blockItem ? .925f : 13f / 16f, alongZ ? .5 : offset);
@@ -142,19 +142,19 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		}
 	}
 
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		BlockState state = te.getBlockState();
+	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be) {
+		BlockState state = be.getBlockState();
 		if (state.getValue(FACING)
 			.getAxis()
 			.isHorizontal())
-			return CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF,
-				state.rotate(te.getLevel(), te.getBlockPos(), Rotation.CLOCKWISE_180));
-		return CachedBufferer.block(KineticTileEntityRenderer.KINETIC_TILE,
-			getRenderedBlockState(te));
+			return CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF,
+				state.rotate(be.getLevel(), be.getBlockPos(), Rotation.CLOCKWISE_180));
+		return CachedBufferer.block(KineticBlockEntityRenderer.KINETIC_BLOCK,
+			getRenderedBlockState(be));
 	}
 
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te));
+	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
+		return KineticBlockEntityRenderer.shaft(KineticBlockEntityRenderer.getRotationAxisOf(be));
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
@@ -178,14 +178,14 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		SuperByteBuffer superBuffer;
 		if (SawBlock.isHorizontal(state)) {
 			if (shouldAnimate)
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_ACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllPartialModels.SAW_BLADE_HORIZONTAL_ACTIVE, state);
 			else
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_HORIZONTAL_INACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllPartialModels.SAW_BLADE_HORIZONTAL_INACTIVE, state);
 		} else {
 			if (shouldAnimate)
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE, state);
 			else
-				superBuffer = CachedBufferer.partial(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
+				superBuffer = CachedBufferer.partial(AllPartialModels.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
 		superBuffer.transform(matrices.getModel())

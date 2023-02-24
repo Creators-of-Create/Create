@@ -7,23 +7,23 @@ import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
-public class SchematicannonInstance extends BlockEntityInstance<SchematicannonTileEntity> implements DynamicInstance {
+public class SchematicannonInstance extends BlockEntityInstance<SchematicannonBlockEntity> implements DynamicInstance {
 
     private final ModelData connector;
     private final ModelData pipe;
 
-    public SchematicannonInstance(MaterialManager modelManager, SchematicannonTileEntity tile) {
-        super(modelManager, tile);
+    public SchematicannonInstance(MaterialManager materialManager, SchematicannonBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
 
         Material<ModelData> mat = getTransformMaterial();
 
-        connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
-        pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
+        connector = mat.getModel(AllPartialModels.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
+        pipe = mat.getModel(AllPartialModels.SCHEMATICANNON_PIPE, blockState).createInstance();
 	}
 
     @Override

@@ -15,8 +15,8 @@ import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.VanillaFluidTargets;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
@@ -47,7 +47,7 @@ public class FluidPropagator {
 	public static void propagateChangedPipe(LevelAccessor world, BlockPos pipePos, BlockState pipeState) {
 		List<Pair<Integer, BlockPos>> frontier = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
-		Set<Pair<PumpTileEntity, Direction>> discoveredPumps = new HashSet<>();
+		Set<Pair<PumpBlockEntity, Direction>> discoveredPumps = new HashSet<>();
 
 		frontier.add(Pair.of(0, pipePos));
 
@@ -69,13 +69,13 @@ public class FluidPropagator {
 				if (world instanceof Level l && !l.isLoaded(target))
 					continue;
 
-				BlockEntity tileEntity = world.getBlockEntity(target);
+				BlockEntity blockEntity = world.getBlockEntity(target);
 				BlockState targetState = world.getBlockState(target);
-				if (tileEntity instanceof PumpTileEntity) {
+				if (blockEntity instanceof PumpBlockEntity) {
 					if (!AllBlocks.MECHANICAL_PUMP.has(targetState) || targetState.getValue(PumpBlock.FACING)
 						.getAxis() != direction.getAxis())
 						continue;
-					discoveredPumps.add(Pair.of((PumpTileEntity) tileEntity, direction.getOpposite()));
+					discoveredPumps.add(Pair.of((PumpBlockEntity) blockEntity, direction.getOpposite()));
 					continue;
 				}
 				if (visited.contains(target))
@@ -160,7 +160,7 @@ public class FluidPropagator {
 	}
 
 	public static FluidTransportBehaviour getPipe(BlockGetter reader, BlockPos pos) {
-		return TileEntityBehaviour.get(reader, pos, FluidTransportBehaviour.TYPE);
+		return BlockEntityBehaviour.get(reader, pos, FluidTransportBehaviour.TYPE);
 	}
 
 	public static boolean isOpenEnd(BlockGetter reader, BlockPos pos, Direction side) {
@@ -195,15 +195,15 @@ public class FluidPropagator {
 	}
 
 	public static int getPumpRange() {
-		return AllConfigs.SERVER.fluids.mechanicalPumpRange.get();
+		return AllConfigs.server().fluids.mechanicalPumpRange.get();
 	}
 
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {
-		BlockEntity tileEntity = world.getBlockEntity(pos);
-		if (tileEntity == null)
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity == null)
 			return false;
 		LazyOptional<IFluidHandler> capability =
-			tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+			blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
 		return capability.isPresent();
 	}
 

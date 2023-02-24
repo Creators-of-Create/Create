@@ -6,15 +6,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CrafterHelper {
 
-	public static MechanicalCrafterTileEntity getCrafter(BlockAndTintGetter reader, BlockPos pos) {
-		BlockEntity te = reader.getBlockEntity(pos);
-		if (!(te instanceof MechanicalCrafterTileEntity))
+	public static MechanicalCrafterBlockEntity getCrafter(BlockAndTintGetter reader, BlockPos pos) {
+		BlockEntity blockEntity = reader.getBlockEntity(pos);
+		if (!(blockEntity instanceof MechanicalCrafterBlockEntity))
 			return null;
-		return (MechanicalCrafterTileEntity) te;
+		return (MechanicalCrafterBlockEntity) blockEntity;
 	}
 
 	public static ConnectedInputHandler.ConnectedInput getInput(BlockAndTintGetter reader, BlockPos pos) {
-		MechanicalCrafterTileEntity crafter = getCrafter(reader, pos);
+		MechanicalCrafterBlockEntity crafter = getCrafter(reader, pos);
 		return crafter == null ? null : crafter.input;
 	}
 

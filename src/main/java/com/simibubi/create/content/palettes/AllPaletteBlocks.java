@@ -1,5 +1,6 @@
 package com.simibubi.create.content.palettes;
 
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.WindowGen.customWindowBlock;
 import static com.simibubi.create.foundation.data.WindowGen.customWindowPane;
 import static com.simibubi.create.foundation.data.WindowGen.framedGlass;
@@ -7,13 +8,12 @@ import static com.simibubi.create.foundation.data.WindowGen.framedGlassPane;
 import static com.simibubi.create.foundation.data.WindowGen.woodenWindowBlock;
 import static com.simibubi.create.foundation.data.WindowGen.woodenWindowPane;
 
+import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.SimpleCTBehaviour;
 import com.simibubi.create.foundation.data.BlockStateGen;
-import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.WindowGen;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -30,9 +30,9 @@ import net.minecraftforge.common.Tags;
 
 public class AllPaletteBlocks {
 
-	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.creativeModeTab(() -> Create.PALETTES_CREATIVE_TAB)
-		.startSection(AllSections.PALETTES);
+	static {
+		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.PALETTES_CREATIVE_TAB);
+	}
 
 	// Windows and Glass
 

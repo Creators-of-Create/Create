@@ -6,10 +6,10 @@ import net.minecraftforge.items.IItemHandler;
 
 public class BrassTunnelItemHandler implements IItemHandler {
 
-	private BrassTunnelTileEntity te;
+	private BrassTunnelBlockEntity blockEntity;
 
-	public BrassTunnelItemHandler(BrassTunnelTileEntity te) {
-		this.te = te;
+	public BrassTunnelItemHandler(BrassTunnelBlockEntity be) {
+		this.blockEntity = be;
 	}
 	
 	@Override
@@ -19,28 +19,28 @@ public class BrassTunnelItemHandler implements IItemHandler {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return te.stackToDistribute;
+		return blockEntity.stackToDistribute;
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (!te.hasDistributionBehaviour()) {
-			LazyOptional<IItemHandler> beltCapability = te.getBeltCapability();
+		if (!blockEntity.hasDistributionBehaviour()) {
+			LazyOptional<IItemHandler> beltCapability = blockEntity.getBeltCapability();
 			if (!beltCapability.isPresent())
 				return stack;
 			return beltCapability.orElse(null).insertItem(slot, stack, simulate);
 		}
 		
-		if (!te.canTakeItems())
+		if (!blockEntity.canTakeItems())
 			return stack;
 		if (!simulate) 
-			te.setStackToDistribute(stack, null);
+			blockEntity.setStackToDistribute(stack, null);
 		return ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		LazyOptional<IItemHandler> beltCapability = te.getBeltCapability();
+		LazyOptional<IItemHandler> beltCapability = blockEntity.getBeltCapability();
 		if (!beltCapability.isPresent())
 			return ItemStack.EMPTY;
 		return beltCapability.orElse(null).extractItem(slot, amount, simulate);
@@ -48,7 +48,7 @@ public class BrassTunnelItemHandler implements IItemHandler {
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return te.stackToDistribute.isEmpty() ? 64 : te.stackToDistribute.getMaxStackSize();
+		return blockEntity.stackToDistribute.isEmpty() ? 64 : blockEntity.stackToDistribute.getMaxStackSize();
 	}
 
 	@Override

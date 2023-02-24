@@ -103,7 +103,7 @@ public class CloneCommand {
 		int blockPastes = 0;
 
 		List<StructureTemplate.StructureBlockInfo> blocks = Lists.newArrayList();
-		List<StructureTemplate.StructureBlockInfo> tileBlocks = Lists.newArrayList();
+		List<StructureTemplate.StructureBlockInfo> beBlocks = Lists.newArrayList();
 
 		for (int z = sourceArea.minZ(); z <= sourceArea.maxZ(); ++z) {
 			for (int y = sourceArea.minY(); y <= sourceArea.maxY(); ++y) {
@@ -112,10 +112,10 @@ public class CloneCommand {
 					BlockPos newPos = currentPos.offset(diffToTarget);
 					BlockInWorld cached = new BlockInWorld(world, currentPos, false);
 					BlockState state = cached.getState();
-					BlockEntity te = world.getBlockEntity(currentPos);
-					if (te != null) {
-						CompoundTag nbt = te.saveWithFullMetadata();
-						tileBlocks.add(new StructureTemplate.StructureBlockInfo(newPos, state, nbt));
+					BlockEntity be = world.getBlockEntity(currentPos);
+					if (be != null) {
+						CompoundTag nbt = be.saveWithFullMetadata();
+						beBlocks.add(new StructureTemplate.StructureBlockInfo(newPos, state, nbt));
 					} else {
 						blocks.add(new StructureTemplate.StructureBlockInfo(newPos, state, null));
 					}
@@ -125,13 +125,13 @@ public class CloneCommand {
 
 		List<StructureTemplate.StructureBlockInfo> allBlocks = Lists.newArrayList();
 		allBlocks.addAll(blocks);
-		allBlocks.addAll(tileBlocks);
+		allBlocks.addAll(beBlocks);
 
 		List<StructureTemplate.StructureBlockInfo> reverse = Lists.reverse(allBlocks);
 
 		for (StructureTemplate.StructureBlockInfo info : reverse) {
-			BlockEntity te = world.getBlockEntity(info.pos);
-			Clearable.tryClear(te);
+			BlockEntity be = world.getBlockEntity(info.pos);
+			Clearable.tryClear(be);
 			world.setBlock(info.pos, Blocks.BARRIER.defaultBlockState(), 2);
 		}
 
@@ -140,17 +140,17 @@ public class CloneCommand {
 				blockPastes++;
 		}
 
-		for (StructureTemplate.StructureBlockInfo info : tileBlocks) {
-			BlockEntity te = world.getBlockEntity(info.pos);
-			if (te != null && info.nbt != null) {
+		for (StructureTemplate.StructureBlockInfo info : beBlocks) {
+			BlockEntity be = world.getBlockEntity(info.pos);
+			if (be != null && info.nbt != null) {
 				info.nbt.putInt("x", info.pos.getX());
 				info.nbt.putInt("y", info.pos.getY());
 				info.nbt.putInt("z", info.pos.getZ());
-				te.load(info.nbt);
-				te.setChanged();
+				be.load(info.nbt);
+				be.setChanged();
 			}
 
-			// idk why the state is set twice for a te, but its done like this in the
+			// idk why the state is set twice for a be, but its done like this in the
 			// original clone command
 			world.setBlock(info.pos, info.state, 2);
 		}

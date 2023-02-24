@@ -82,13 +82,13 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
-		BlockEntity te = world.getBlockEntity(pos);
+		BlockEntity be = world.getBlockEntity(pos);
 		Player player = context.getPlayer();
 
-		if (!(te instanceof SpawnerBlockEntity))
+		if (!(be instanceof SpawnerBlockEntity))
 			return super.useOn(context);
 
-		BaseSpawner spawner = ((SpawnerBlockEntity) te).getSpawner();
+		BaseSpawner spawner = ((SpawnerBlockEntity) be).getSpawner();
 
 		List<SpawnData> possibleSpawns = spawner.spawnPotentials.unwrap()
 			.stream()

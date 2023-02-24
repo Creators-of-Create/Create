@@ -2,11 +2,11 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.Random;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -41,7 +41,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class StockpileSwitchBlock extends HorizontalDirectionalBlock
-	implements ITE<StockpileSwitchTileEntity>, IWrenchable {
+	implements IBE<StockpileSwitchBlockEntity>, IWrenchable {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);
 
@@ -70,7 +70,7 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock
 	}
 
 	private void updateObservedInventory(BlockState state, LevelReader world, BlockPos pos) {
-		withTileEntityDo(world, pos, StockpileSwitchTileEntity::updateCurrentLevel);
+		withBlockEntityDo(world, pos, StockpileSwitchBlockEntity::updateCurrentLevel);
 	}
 
 	@Override
@@ -88,14 +88,14 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock
 		if (side == blockState.getValue(FACING)
 			.getOpposite())
 			return 0;
-		return getTileEntityOptional(blockAccess, pos).filter(StockpileSwitchTileEntity::isPowered)
+		return getBlockEntityOptional(blockAccess, pos).filter(StockpileSwitchBlockEntity::isPowered)
 			.map($ -> 15)
 			.orElse(0);
 	}
 
 	@Override
 	public void tick(BlockState blockState, ServerLevel world, BlockPos pos, Random random) {
-		getTileEntityOptional(world, pos).ifPresent(StockpileSwitchTileEntity::updatePowerAfterDelay);
+		getBlockEntityOptional(world, pos).ifPresent(StockpileSwitchBlockEntity::updatePowerAfterDelay);
 	}
 
 	@Override
@@ -110,14 +110,14 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock
 		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
+			() -> () -> withBlockEntityDo(worldIn, pos, be -> this.displayScreen(be, player)));
 		return InteractionResult.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(StockpileSwitchTileEntity te, Player player) {
+	protected void displayScreen(StockpileSwitchBlockEntity be, Player player) {
 		if (player instanceof LocalPlayer)
-			ScreenOpener.open(new StockpileSwitchScreen(te));
+			ScreenOpener.open(new StockpileSwitchScreen(be));
 	}
 
 	@Override
@@ -128,12 +128,12 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock
 
 		Direction preferredFacing = null;
 		for (Direction face : Iterate.horizontalDirections) {
-			BlockEntity te = context.getLevel()
+			BlockEntity be = context.getLevel()
 				.getBlockEntity(context.getClickedPos()
 					.relative(face));
-			if (te != null && (te.getCapability(itemCap)
+			if (be != null && (be.getCapability(itemCap)
 				.isPresent()
-				|| te.getCapability(fluidCap)
+				|| be.getCapability(fluidCap)
 					.isPresent()))
 				if (preferredFacing == null)
 					preferredFacing = face;
@@ -156,13 +156,13 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public Class<StockpileSwitchTileEntity> getTileEntityClass() {
-		return StockpileSwitchTileEntity.class;
+	public Class<StockpileSwitchBlockEntity> getBlockEntityClass() {
+		return StockpileSwitchBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends StockpileSwitchTileEntity> getTileEntityType() {
-		return AllTileEntities.STOCKPILE_SWITCH.get();
+	public BlockEntityType<? extends StockpileSwitchBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.STOCKPILE_SWITCH.get();
 	}
 
 }

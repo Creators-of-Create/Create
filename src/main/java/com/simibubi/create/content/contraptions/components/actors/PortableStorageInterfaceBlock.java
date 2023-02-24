@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
-	implements ITE<PortableStorageInterfaceTileEntity> {
+	implements IBE<PortableStorageInterfaceBlockEntity> {
 
 	boolean fluids;
 
@@ -45,7 +45,7 @@ public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 	@Override
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
 		boolean p_220069_6_) {
-		withTileEntityDo(world, pos, PortableStorageInterfaceTileEntity::neighbourChanged);
+		withBlockEntityDo(world, pos, PortableStorageInterfaceBlockEntity::neighbourChanged);
 	}
 
 	@Override
@@ -75,19 +75,19 @@ public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 
 	@Override
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-		return getTileEntityOptional(worldIn, pos).map(te -> te.isConnected() ? 15 : 0)
+		return getBlockEntityOptional(worldIn, pos).map(be -> be.isConnected() ? 15 : 0)
 			.orElse(0);
 	}
 
 	@Override
-	public Class<PortableStorageInterfaceTileEntity> getTileEntityClass() {
-		return PortableStorageInterfaceTileEntity.class;
+	public Class<PortableStorageInterfaceBlockEntity> getBlockEntityClass() {
+		return PortableStorageInterfaceBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends PortableStorageInterfaceTileEntity> getTileEntityType() {
-		return fluids ? AllTileEntities.PORTABLE_FLUID_INTERFACE.get()
-			: AllTileEntities.PORTABLE_STORAGE_INTERFACE.get();
+	public BlockEntityType<? extends PortableStorageInterfaceBlockEntity> getBlockEntityType() {
+		return fluids ? AllBlockEntityTypes.PORTABLE_FLUID_INTERFACE.get()
+			: AllBlockEntityTypes.PORTABLE_STORAGE_INTERFACE.get();
 	}
 
 }

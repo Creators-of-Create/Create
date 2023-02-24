@@ -5,7 +5,7 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -16,14 +16,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class PumpCogInstance extends SingleRotatingInstance implements DynamicInstance {
+public class PumpCogInstance extends SingleRotatingInstance<PumpBlockEntity> implements DynamicInstance {
 
-	private final PumpTileEntity blockEntity = (PumpTileEntity) super.blockEntity;
 	private final ModelData[] arrows = new ModelData[2];
 	private final Direction direction = blockState.getValue(PumpBlock.FACING);
 
-    public PumpCogInstance(MaterialManager modelManager, PumpTileEntity tile) {
-        super(modelManager, tile);
+    public PumpCogInstance(MaterialManager materialManager, PumpBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
     }
 
 	@Override
@@ -32,7 +31,7 @@ public class PumpCogInstance extends SingleRotatingInstance implements DynamicIn
 
 		materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState)
+				.getModel(AllPartialModels.MECHANICAL_PUMP_ARROW, blockState)
 				.createInstances(arrows);
 	}
 
@@ -63,7 +62,7 @@ public class PumpCogInstance extends SingleRotatingInstance implements DynamicIn
     protected Instancer<RotatingData> getModel() {
 		BlockState referenceState = blockEntity.getBlockState();
 		Direction facing = referenceState.getValue(BlockStateProperties.FACING);
-		return getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_PUMP_COG, referenceState, facing);
+		return getRotatingMaterial().getModel(AllPartialModels.MECHANICAL_PUMP_COG, referenceState, facing);
 	}
 
 	@Override

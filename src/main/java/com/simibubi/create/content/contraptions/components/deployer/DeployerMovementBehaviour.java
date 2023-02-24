@@ -12,7 +12,7 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlockEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -108,8 +108,8 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
 
 		if ((context.contraption instanceof MountedContraption || context.contraption instanceof CarriageContraption)
-			&& player.placedTracks && context.tileData != null && context.tileData.contains("Owner"))
-			AllAdvancements.SELF_DEPLOYING.awardTo(world.getPlayerByUUID(context.tileData.getUUID("Owner")));
+			&& player.placedTracks && context.blockEntityData != null && context.blockEntityData.contains("Owner"))
+			AllAdvancements.SELF_DEPLOYING.awardTo(world.getPlayerByUUID(context.blockEntityData.getUUID("Owner")));
 	}
 
 	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,
@@ -141,25 +141,25 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		ItemStack contextStack = requiredItems.isEmpty() ? ItemStack.EMPTY : requiredItems.get(0).stack;
 
 		if (!context.contraption.hasUniversalCreativeCrate) {
-			IItemHandler iItemHandler = context.contraption.getSharedInventory();
+			IItemHandler itemHandler = context.contraption.getSharedInventory();
 			for (ItemRequirement.StackRequirement required : requiredItems) {
 				ItemStack stack= ItemHelper
-					.extract(iItemHandler, required::matches, ExtractionCountMode.EXACTLY,
+					.extract(itemHandler, required::matches, ExtractionCountMode.EXACTLY,
 						required.stack.getCount(), true);
 				if (stack.isEmpty())
 					return;
 			}
 			for (ItemRequirement.StackRequirement required : requiredItems)
-				contextStack = ItemHelper.extract(iItemHandler, required::matches,
+				contextStack = ItemHelper.extract(itemHandler, required::matches,
 					ExtractionCountMode.EXACTLY, required.stack.getCount(), false);
 		}
 
 		CompoundTag data = null;
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-			BlockEntity tile = schematicWorld.getBlockEntity(pos);
-			if (tile != null) {
-				data = tile.saveWithFullMetadata();
-				data = NBTProcessors.process(tile, data, true);
+			BlockEntity blockEntity = schematicWorld.getBlockEntity(pos);
+			if (blockEntity != null) {
+				data = blockEntity.saveWithFullMetadata();
+				data = NBTProcessors.process(blockEntity, data, true);
 			}
 		}
 
@@ -221,7 +221,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			return;
 
 		cancelStall(context);
-		context.tileData.put("Inventory", player.getInventory()
+		context.blockEntityData.put("Inventory", player.getInventory()
 			.save(new ListTag()));
 		player.discard();
 	}
@@ -277,22 +277,22 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) context.world);
 			deployerFakePlayer.onMinecartContraption = context.contraption instanceof MountedContraption;
 			deployerFakePlayer.getInventory()
-				.load(context.tileData.getList("Inventory", Tag.TAG_COMPOUND));
+				.load(context.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND));
 			if (context.data.contains("HeldItem"))
 				deployerFakePlayer.setItemInHand(InteractionHand.MAIN_HAND,
 					ItemStack.of(context.data.getCompound("HeldItem")));
-			context.tileData.remove("Inventory");
+			context.blockEntityData.remove("Inventory");
 			context.temporaryData = deployerFakePlayer;
 		}
 		return (DeployerFakePlayer) context.temporaryData;
 	}
 
 	private ItemStack getFilter(MovementContext context) {
-		return ItemStack.of(context.tileData.getCompound("Filter"));
+		return ItemStack.of(context.blockEntityData.getCompound("Filter"));
 	}
 
 	private Mode getMode(MovementContext context) {
-		return NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
+		return NBTHelper.readEnum(context.blockEntityData, "Mode", Mode.class);
 	}
 
 	@Override

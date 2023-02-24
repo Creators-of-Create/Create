@@ -53,10 +53,10 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 				Level world = player.level;
 				if (world == null || !world.isLoaded(pos))
 					return;
-				BlockEntity tileEntity = world.getBlockEntity(pos);
+				BlockEntity blockEntity = world.getBlockEntity(pos);
 				BlockState state = world.getBlockState(pos);
-				if (tileEntity instanceof EjectorTileEntity)
-					((EjectorTileEntity) tileEntity).setTarget(h, v);
+				if (blockEntity instanceof EjectorBlockEntity)
+					((EjectorBlockEntity) blockEntity).setTarget(h, v);
 				if (AllBlocks.WEIGHTED_EJECTOR.has(state))
 					world.setBlockAndUpdate(pos, state.setValue(EjectorBlock.HORIZONTAL_FACING, facing));
 			});

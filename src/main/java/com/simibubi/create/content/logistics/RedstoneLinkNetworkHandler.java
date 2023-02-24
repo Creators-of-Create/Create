@@ -9,15 +9,14 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.WorldHelper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
 public class RedstoneLinkNetworkHandler {
@@ -112,10 +111,7 @@ public class RedstoneLinkNetworkHandler {
 				iterator.remove();
 				continue;
 			}
-			if (!(world instanceof Level level) || !level.isLoaded(other.getLocation())) {
-				iterator.remove();
-				continue;
-			}
+			
 			if (!withinRange(actor, other))
 				continue;
 
@@ -142,7 +138,7 @@ public class RedstoneLinkNetworkHandler {
 		if (from == to)
 			return true;
 		return from.getLocation()
-			.closerThan(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());
+			.closerThan(to.getLocation(), AllConfigs.server().logistics.linkRange.get());
 	}
 
 	public Map<Couple<Frequency>, Set<IRedstoneLinkable>> networksIn(LevelAccessor world) {

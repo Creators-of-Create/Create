@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.elevator;
 
-import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
+import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class ElevatorContactEditPacket extends TileEntityConfigurationPacket<ElevatorContactTileEntity> {
+public class ElevatorContactEditPacket extends BlockEntityConfigurationPacket<ElevatorContactBlockEntity> {
 
 	private String shortName;
 	private String longName;
@@ -33,8 +33,8 @@ public class ElevatorContactEditPacket extends TileEntityConfigurationPacket<Ele
 	}
 
 	@Override
-	protected void applySettings(ElevatorContactTileEntity te) {
-		te.updateName(shortName, longName);
+	protected void applySettings(ElevatorContactBlockEntity be) {
+		be.updateName(shortName, longName);
 	}
 
 }

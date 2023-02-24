@@ -6,26 +6,23 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.BackHalfShaftInstance;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> extends BackHalfShaftInstance implements DynamicInstance {
-	final B bearing;
-
+public class BearingInstance<B extends KineticBlockEntity & IBearingBlockEntity> extends BackHalfShaftInstance<B> implements DynamicInstance {
 	final OrientedData topInstance;
 
 	final Vector3f rotationAxis;
 	final Quaternion blockOrientation;
 
-	public BearingInstance(MaterialManager modelManager, B tile) {
-		super(modelManager, tile);
-		this.bearing = tile;
+	public BearingInstance(MaterialManager materialManager, B blockEntity) {
+		super(materialManager, blockEntity);
 
 		Direction facing = blockState.getValue(BlockStateProperties.FACING);
 		rotationAxis = Direction.get(Direction.AxisDirection.POSITIVE, axis).step();
@@ -33,7 +30,7 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 		blockOrientation = getBlockStateOrientation(facing);
 
 		PartialModel top =
-				bearing.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
+				blockEntity.isWoodenTop() ? AllPartialModels.BEARING_TOP_WOODEN : AllPartialModels.BEARING_TOP;
 
 		topInstance = getOrientedMaterial().getModel(top, blockState).createInstance();
 
@@ -43,7 +40,7 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 	@Override
 	public void beginFrame() {
 
-		float interpolatedAngle = bearing.getInterpolatedAngle(AnimationTickHolder.getPartialTicks() - 1);
+		float interpolatedAngle = blockEntity.getInterpolatedAngle(AnimationTickHolder.getPartialTicks() - 1);
 		Quaternion rot = rotationAxis.rotationDegrees(interpolatedAngle);
 
 		rot.mul(blockOrientation);

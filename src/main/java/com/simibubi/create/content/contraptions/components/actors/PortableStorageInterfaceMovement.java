@@ -98,7 +98,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 		if (!currentFacingIfValid.isPresent())
 			return;
 
-		PortableStorageInterfaceTileEntity stationaryInterface =
+		PortableStorageInterfaceBlockEntity stationaryInterface =
 			getStationaryInterfaceAt(context.world, pos, context.state, currentFacingIfValid.get());
 		if (stationaryInterface == null) {
 			reset(context);
@@ -108,7 +108,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 		if (stationaryInterface.connectedEntity == null)
 			stationaryInterface.startTransferringTo(context.contraption, stationaryInterface.distance);
 
-		boolean timerBelow = stationaryInterface.transferTimer <= PortableStorageInterfaceTileEntity.ANIMATION;
+		boolean timerBelow = stationaryInterface.transferTimer <= PortableStorageInterfaceBlockEntity.ANIMATION;
 		stationaryInterface.keepAlive = 2;
 		if (context.stall && timerBelow) {
 			context.stall = false;
@@ -123,7 +123,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 			return false;
 
 		Direction currentFacing = currentFacingIfValid.get();
-		PortableStorageInterfaceTileEntity psi =
+		PortableStorageInterfaceBlockEntity psi =
 			findStationaryInterface(context.world, pos, context.state, currentFacing);
 
 		if (psi == null)
@@ -165,10 +165,10 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 		getAnimation(context).chase(0, 0.25f, Chaser.LINEAR);
 	}
 
-	private PortableStorageInterfaceTileEntity findStationaryInterface(Level world, BlockPos pos, BlockState state,
+	private PortableStorageInterfaceBlockEntity findStationaryInterface(Level world, BlockPos pos, BlockState state,
 		Direction facing) {
 		for (int i = 0; i < 2; i++) {
-			PortableStorageInterfaceTileEntity interfaceAt =
+			PortableStorageInterfaceBlockEntity interfaceAt =
 				getStationaryInterfaceAt(world, pos.relative(facing, i), state, facing);
 			if (interfaceAt == null)
 				continue;
@@ -177,10 +177,10 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 		return null;
 	}
 
-	private PortableStorageInterfaceTileEntity getStationaryInterfaceAt(Level world, BlockPos pos, BlockState state,
+	private PortableStorageInterfaceBlockEntity getStationaryInterfaceAt(Level world, BlockPos pos, BlockState state,
 		Direction facing) {
-		BlockEntity te = world.getBlockEntity(pos);
-		if (!(te instanceof PortableStorageInterfaceTileEntity psi))
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (!(blockEntity instanceof PortableStorageInterfaceBlockEntity psi))
 			return null;
 		BlockState blockState = world.getBlockState(pos);
 		if (blockState.getBlock() != state.getBlock())

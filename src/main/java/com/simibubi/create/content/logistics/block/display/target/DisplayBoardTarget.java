@@ -5,8 +5,8 @@ import java.util.List;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -23,13 +23,13 @@ public class DisplayBoardTarget extends DisplayTarget {
 	public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {}
 
 	public void acceptFlapText(int line, List<List<MutableComponent>> text, DisplayLinkContext context) {
-		FlapDisplayTileEntity controller = getController(context);
+		FlapDisplayBlockEntity controller = getController(context);
 		if (controller == null)
 			return;
 		if (!controller.isSpeedRequirementFulfilled())
 			return;
 
-		DisplaySource source = context.te().activeSource;
+		DisplaySource source = context.blockEntity().activeSource;
 		List<FlapDisplayLayout> lines = controller.getLines();
 		for (int i = 0; i + line < lines.size(); i++) {
 
@@ -66,34 +66,34 @@ public class DisplayBoardTarget extends DisplayTarget {
 	@Override
 	public boolean isReserved(int line, BlockEntity target, DisplayLinkContext context) {
 		return super.isReserved(line, target, context)
-			|| target instanceof FlapDisplayTileEntity fdte && fdte.manualLines.length > line && fdte.manualLines[line];
+			|| target instanceof FlapDisplayBlockEntity fdte && fdte.manualLines.length > line && fdte.manualLines[line];
 	}
 
 	@Override
 	public DisplayTargetStats provideStats(DisplayLinkContext context) {
-		FlapDisplayTileEntity controller = getController(context);
+		FlapDisplayBlockEntity controller = getController(context);
 		if (controller == null)
 			return new DisplayTargetStats(1, 1, this);
 		return new DisplayTargetStats(controller.ySize * 2, controller.getMaxCharCount(), this);
 	}
 
-	private FlapDisplayTileEntity getController(DisplayLinkContext context) {
-		BlockEntity teIn = context.getTargetTE();
-		if (!(teIn instanceof FlapDisplayTileEntity te))
+	private FlapDisplayBlockEntity getController(DisplayLinkContext context) {
+		BlockEntity teIn = context.getTargetBlockEntity();
+		if (!(teIn instanceof FlapDisplayBlockEntity be))
 			return null;
-		return te.getController();
+		return be.getController();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AABB getMultiblockBounds(LevelAccessor level, BlockPos pos) {
 		AABB baseShape = super.getMultiblockBounds(level, pos);
-		BlockEntity te = level.getBlockEntity(pos);
+		BlockEntity be = level.getBlockEntity(pos);
 
-		if (!(te instanceof FlapDisplayTileEntity fdte))
+		if (!(be instanceof FlapDisplayBlockEntity fdte))
 			return baseShape;
 
-		FlapDisplayTileEntity controller = fdte.getController();
+		FlapDisplayBlockEntity controller = fdte.getController();
 		if (controller == null)
 			return baseShape;
 

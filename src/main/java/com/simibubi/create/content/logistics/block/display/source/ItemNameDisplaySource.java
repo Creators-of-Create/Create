@@ -2,12 +2,12 @@ package com.simibubi.create.content.logistics.block.display.source;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +18,7 @@ public class ItemNameDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		DisplayLinkTileEntity gatherer = context.te();
+		DisplayLinkBlockEntity gatherer = context.blockEntity();
 		Direction direction = gatherer.getDirection();
 		MutableBlockPos pos = gatherer.getSourcePosition()
 			.mutable();
@@ -27,7 +27,7 @@ public class ItemNameDisplaySource extends SingleLineDisplaySource {
 
 		for (int i = 0; i < 32; i++) {
 			TransportedItemStackHandlerBehaviour behaviour =
-				TileEntityBehaviour.get(context.level(), pos, TransportedItemStackHandlerBehaviour.TYPE);
+				BlockEntityBehaviour.get(context.level(), pos, TransportedItemStackHandlerBehaviour.TYPE);
 			pos.move(direction);
 
 			if (behaviour == null)

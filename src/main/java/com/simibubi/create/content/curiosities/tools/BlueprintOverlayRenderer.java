@@ -13,7 +13,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintCraftingInventory;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
+import com.simibubi.create.content.logistics.item.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;

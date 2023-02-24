@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyFluidHandler;
-import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -121,7 +121,7 @@ public class HosePulleyScenes {
 		}
 
 		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.modifyTileEntity(util.grid.at(1, 5, 1), HosePulleyTileEntity.class, te -> te
+		scene.world.modifyBlockEntity(util.grid.at(1, 5, 1), HosePulleyBlockEntity.class, be -> be
 			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			.ifPresent(
 				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
@@ -221,10 +221,10 @@ public class HosePulleyScenes {
 		scene.world.showSectionAndMerge(cogs, Direction.NORTH, hoselink);
 		scene.world.showSectionAndMerge(pipes, Direction.WEST, hoselink);
 		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.modifyTileEntity(util.grid.at(1, 6, 1), HosePulleyTileEntity.class, te -> te
+		scene.world.modifyBlockEntity(util.grid.at(1, 6, 1), HosePulleyBlockEntity.class, be -> be
 			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
+				fh -> ((HosePulleyFluidHandler) fh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		Vec3 surface = util.vector.topOf(1, 3, 1)

@@ -12,8 +12,8 @@ public class SignDisplayTarget extends DisplayTarget {
 
 	@Override
 	public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-		BlockEntity te = context.getTargetTE();
-		if (!(te instanceof SignBlockEntity sign))
+		BlockEntity be = context.getTargetBlockEntity();
+		if (!(be instanceof SignBlockEntity sign))
 			return;
 
 		boolean changed = false;

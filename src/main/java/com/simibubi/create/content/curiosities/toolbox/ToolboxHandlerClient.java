@@ -60,7 +60,7 @@ public class ToolboxHandlerClient {
 			return false;
 
 		ItemStack result = ItemStack.EMPTY;
-		List<ToolboxTileEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
+		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
 
 		if (toolboxes.isEmpty())
 			return false;
@@ -80,8 +80,8 @@ public class ToolboxHandlerClient {
 		if (result.isEmpty())
 			return false;
 
-		for (ToolboxTileEntity toolboxTileEntity : toolboxes) {
-			ToolboxInventory inventory = toolboxTileEntity.inventory;
+		for (ToolboxBlockEntity toolboxBlockEntity : toolboxes) {
+			ToolboxInventory inventory = toolboxBlockEntity.inventory;
 			for (int comp = 0; comp < 8; comp++) {
 				ItemStack inSlot = inventory.takeFromCompartment(1, comp, true);
 				if (inSlot.isEmpty())
@@ -91,8 +91,8 @@ public class ToolboxHandlerClient {
 				if (!ItemStack.tagMatches(inSlot, result))
 					continue;
 
-				AllPackets.channel.sendToServer(
-					new ToolboxEquipPacket(toolboxTileEntity.getBlockPos(), comp, player.getInventory().selected));
+				AllPackets.getChannel().sendToServer(
+					new ToolboxEquipPacket(toolboxBlockEntity.getBlockPos(), comp, player.getInventory().selected));
 				return true;
 			}
 
@@ -115,8 +115,8 @@ public class ToolboxHandlerClient {
 			return;
 		Level level = player.level;
 
-		List<ToolboxTileEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
-		toolboxes.sort(Comparator.comparing(ToolboxTileEntity::getUniqueId));
+		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
+		toolboxes.sort(Comparator.comparing(ToolboxBlockEntity::getUniqueId));
 
 		CompoundTag compound = player.getPersistentData()
 			.getCompound("CreateToolboxData");
@@ -132,9 +132,9 @@ public class ToolboxHandlerClient {
 
 			if (canReachToolbox) {
 				BlockEntity blockEntity = level.getBlockEntity(pos);
-				if (blockEntity instanceof ToolboxTileEntity) {
+				if (blockEntity instanceof ToolboxBlockEntity) {
 					RadialToolboxMenu screen = new RadialToolboxMenu(toolboxes,
-						RadialToolboxMenu.State.SELECT_ITEM_UNEQUIP, (ToolboxTileEntity) blockEntity);
+						RadialToolboxMenu.State.SELECT_ITEM_UNEQUIP, (ToolboxBlockEntity) blockEntity);
 					screen.prevSlot(compound.getCompound(slotKey)
 						.getInt("Slot"));
 					ScreenOpener.open(screen);

@@ -1,11 +1,10 @@
 package com.simibubi.create.content.contraptions.components.millstone;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -32,7 +31,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEntity>, ICogWheel {
+public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEntity>, ICogWheel {
 
 	public MillstoneBlock(Properties properties) {
 		super(properties);
@@ -57,7 +56,7 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
 
-		withTileEntityDo(worldIn, pos, millstone -> {
+		withBlockEntityDo(worldIn, pos, millstone -> {
 			boolean emptyOutput = true;
 			IItemHandlerModifiable inv = millstone.outputInv;
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
@@ -96,10 +95,10 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 		if (!entityIn.isAlive())
 			return;
 
-		MillstoneTileEntity millstone = null;
+		MillstoneBlockEntity millstone = null;
 		for (BlockPos pos : Iterate.hereAndBelow(entityIn.blockPosition()))
 			if (millstone == null)
-				millstone = getTileEntity(worldIn, pos);
+				millstone = getBlockEntity(worldIn, pos);
 
 		if (millstone == null)
 			return;
@@ -119,30 +118,18 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
-			withTileEntityDo(worldIn, pos, te -> {
-				ItemHelper.dropContents(worldIn, pos, te.inputInv);
-				ItemHelper.dropContents(worldIn, pos, te.outputInv);
-			});
-
-			worldIn.removeBlockEntity(pos);
-		}
-	}
-
-	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return Axis.Y;
 	}
 
 	@Override
-	public Class<MillstoneTileEntity> getTileEntityClass() {
-		return MillstoneTileEntity.class;
+	public Class<MillstoneBlockEntity> getBlockEntityClass() {
+		return MillstoneBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends MillstoneTileEntity> getTileEntityType() {
-		return AllTileEntities.MILLSTONE.get();
+	public BlockEntityType<? extends MillstoneBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.MILLSTONE.get();
 	}
 
 	@Override

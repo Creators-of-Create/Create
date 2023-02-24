@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;

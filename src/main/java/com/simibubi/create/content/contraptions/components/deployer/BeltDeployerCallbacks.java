@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlockEntity.Mode;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlockEntity.State;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
@@ -17,9 +17,9 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,66 +35,66 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class BeltDeployerCallbacks {
 
 	public static ProcessingResult onItemReceived(TransportedItemStack s, TransportedItemStackHandlerBehaviour i,
-		DeployerTileEntity deployerTileEntity) {
+		DeployerBlockEntity blockEntity) {
 
-		if (deployerTileEntity.getSpeed() == 0)
+		if (blockEntity.getSpeed() == 0)
 			return ProcessingResult.PASS;
-		if (deployerTileEntity.mode == Mode.PUNCH)
+		if (blockEntity.mode == Mode.PUNCH)
 			return ProcessingResult.PASS;
-		BlockState blockState = deployerTileEntity.getBlockState();
+		BlockState blockState = blockEntity.getBlockState();
 		if (!blockState.hasProperty(FACING) || blockState.getValue(FACING) != Direction.DOWN)
 			return ProcessingResult.PASS;
-		if (deployerTileEntity.state != State.WAITING)
+		if (blockEntity.state != State.WAITING)
 			return ProcessingResult.HOLD;
-		if (deployerTileEntity.redstoneLocked)
+		if (blockEntity.redstoneLocked)
 			return ProcessingResult.PASS;
 
-		DeployerFakePlayer player = deployerTileEntity.getPlayer();
+		DeployerFakePlayer player = blockEntity.getPlayer();
 		ItemStack held = player == null ? ItemStack.EMPTY : player.getMainHandItem();
 
 		if (held.isEmpty())
 			return ProcessingResult.HOLD;
-		if (deployerTileEntity.getRecipe(s.stack) == null)
+		if (blockEntity.getRecipe(s.stack) == null)
 			return ProcessingResult.PASS;
 
-		deployerTileEntity.start();
+		blockEntity.start();
 		return ProcessingResult.HOLD;
 	}
 
 	public static ProcessingResult whenItemHeld(TransportedItemStack s, TransportedItemStackHandlerBehaviour i,
-		DeployerTileEntity deployerTileEntity) {
+		DeployerBlockEntity blockEntity) {
 
-		if (deployerTileEntity.getSpeed() == 0)
+		if (blockEntity.getSpeed() == 0)
 			return ProcessingResult.PASS;
-		BlockState blockState = deployerTileEntity.getBlockState();
+		BlockState blockState = blockEntity.getBlockState();
 		if (!blockState.hasProperty(FACING) || blockState.getValue(FACING) != Direction.DOWN)
 			return ProcessingResult.PASS;
 
-		DeployerFakePlayer player = deployerTileEntity.getPlayer();
+		DeployerFakePlayer player = blockEntity.getPlayer();
 		ItemStack held = player == null ? ItemStack.EMPTY : player.getMainHandItem();
 		if (held.isEmpty())
 			return ProcessingResult.HOLD;
 
-		Recipe<?> recipe = deployerTileEntity.getRecipe(s.stack);
+		Recipe<?> recipe = blockEntity.getRecipe(s.stack);
 		if (recipe == null)
 			return ProcessingResult.PASS;
 
-		if (deployerTileEntity.state == State.RETRACTING && deployerTileEntity.timer == 1000) {
-			activate(s, i, deployerTileEntity, recipe);
+		if (blockEntity.state == State.RETRACTING && blockEntity.timer == 1000) {
+			activate(s, i, blockEntity, recipe);
 			return ProcessingResult.HOLD;
 		}
 
-		if (deployerTileEntity.state == State.WAITING) {
-			if (deployerTileEntity.redstoneLocked)
+		if (blockEntity.state == State.WAITING) {
+			if (blockEntity.redstoneLocked)
 				return ProcessingResult.PASS;
-			deployerTileEntity.start();
+			blockEntity.start();
 		}
 
 		return ProcessingResult.HOLD;
 	}
 
 	public static void activate(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
-		DeployerTileEntity deployerTileEntity, Recipe<?> recipe) {
+		DeployerBlockEntity blockEntity, Recipe<?> recipe) {
 		
 		List<TransportedItemStack> collect =
 			InWorldProcessing.applyRecipeOn(ItemHandlerHelper.copyStackWithSize(transported.stack, 1), recipe)
@@ -113,10 +113,10 @@ public class BeltDeployerCallbacks {
 				})
 				.collect(Collectors.toList());
 
-		deployerTileEntity.award(AllAdvancements.DEPLOYER);
+		blockEntity.award(AllAdvancements.DEPLOYER);
 		
 		TransportedItemStack left = transported.copy();
-		deployerTileEntity.player.spawnedItemEffects = transported.stack.copy();
+		blockEntity.player.spawnedItemEffects = transported.stack.copy();
 		left.stack.shrink(1);
 		ItemStack resultItem = null;
 
@@ -128,7 +128,7 @@ public class BeltDeployerCallbacks {
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 		}
 
-		ItemStack heldItem = deployerTileEntity.player.getMainHandItem();
+		ItemStack heldItem = blockEntity.player.getMainHandItem();
 		boolean unbreakable = heldItem.hasTag() && heldItem.getTag()
 			.getBoolean("Unbreakable");
 		boolean keepHeld =
@@ -136,27 +136,27 @@ public class BeltDeployerCallbacks {
 
 		if (!unbreakable && !keepHeld) {
 			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, deployerTileEntity.player,
+				heldItem.hurtAndBreak(1, blockEntity.player,
 					s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 			else
 				heldItem.shrink(1);
 		}
 
 		if (resultItem != null && !resultItem.isEmpty())
-			awardAdvancements(deployerTileEntity, resultItem);
+			awardAdvancements(blockEntity, resultItem);
 
-		BlockPos pos = deployerTileEntity.getBlockPos();
-		Level world = deployerTileEntity.getLevel();
+		BlockPos pos = blockEntity.getBlockPos();
+		Level world = blockEntity.getLevel();
 		if (heldItem.isEmpty())
 			world.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, .25f, 1);
 		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .25f, .75f);
 		if (recipe instanceof SandPaperPolishingRecipe)
 			AllSoundEvents.SANDING_SHORT.playOnServer(world, pos, .35f, 1f);
 
-		deployerTileEntity.sendData();
+		blockEntity.sendData();
 	}
 
-	private static void awardAdvancements(DeployerTileEntity deployerTileEntity, ItemStack created) {
+	private static void awardAdvancements(DeployerBlockEntity blockEntity, ItemStack created) {
 		CreateAdvancement advancement = null;
 
 		if (AllBlocks.ANDESITE_CASING.isIn(created))
@@ -170,7 +170,7 @@ public class BeltDeployerCallbacks {
 		else
 			return;
 
-		deployerTileEntity.award(advancement);
+		blockEntity.award(advancement);
 	}
 
 }

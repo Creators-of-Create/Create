@@ -20,6 +20,7 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.server.MinecraftServer;
@@ -62,7 +63,7 @@ public class GlobalRailwayManager {
 					.toList(),
 				serverPlayer);
 			for (Train train : trains.values())
-				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+				AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> serverPlayer),
 					new TrainPacket(train, true));
 		}
 	}
@@ -227,7 +228,7 @@ public class GlobalRailwayManager {
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
 				continue;
 			}
 
@@ -243,7 +244,7 @@ public class GlobalRailwayManager {
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
 				continue;
 			}
 
@@ -256,15 +257,19 @@ public class GlobalRailwayManager {
 	}
 
 	public void tickSignalOverlay() {
-		if (!KineticDebugger.isActive())
+		if (!isTrackGraphDebugActive())
 			for (TrackGraph trackGraph : trackNetworks.values())
 				TrackGraphVisualizer.visualiseSignalEdgeGroups(trackGraph);
 	}
 
 	public void clientTick() {
-		if (KineticDebugger.isActive())
+		if (isTrackGraphDebugActive())
 			for (TrackGraph trackGraph : trackNetworks.values())
 				TrackGraphVisualizer.debugViewGraph(trackGraph);
+	}
+	
+	private static boolean isTrackGraphDebugActive() {
+		return KineticDebugger.isF3DebugModeActive() && AllConfigs.client().showTrackGraphOnF3.get();
 	}
 
 	public GlobalRailwayManager sided(LevelAccessor level) {

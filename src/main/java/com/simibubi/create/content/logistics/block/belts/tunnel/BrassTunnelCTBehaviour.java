@@ -33,12 +33,12 @@ public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour.Base {
 		if (yDiff != 0)
 			return false;
 
-		BlockEntity te = reader.getBlockEntity(pos);
-		if (!(te instanceof BrassTunnelTileEntity))
+		BlockEntity be = reader.getBlockEntity(pos);
+		if (!(be instanceof BrassTunnelBlockEntity))
 			return false;
-		BrassTunnelTileEntity tunnelTE = (BrassTunnelTileEntity) te;
+		BrassTunnelBlockEntity tunnelBE = (BrassTunnelBlockEntity) be;
 		boolean leftSide = zDiff > 0;
-		return tunnelTE.isConnected(leftSide);
+		return tunnelBE.isConnected(leftSide);
 	}
 
 }

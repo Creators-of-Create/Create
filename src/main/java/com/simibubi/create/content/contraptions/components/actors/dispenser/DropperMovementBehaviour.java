@@ -50,7 +50,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 	private void updateTemporaryData(MovementContext context) {
 		if (!(context.temporaryData instanceof NonNullList) && context.world != null) {
 			NonNullList<ItemStack> stacks = NonNullList.withSize(getInvSize(), ItemStack.EMPTY);
-			ContainerHelper.loadAllItems(context.tileData, stacks);
+			ContainerHelper.loadAllItems(context.blockEntityData, stacks);
 			context.temporaryData = stacks;
 		}
 	}
@@ -84,7 +84,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 		NonNullList<ItemStack> stacks = getStacks(context);
 		if (stacks == null)
 			return;
-		ContainerHelper.saveAllItems(context.tileData, stacks);
+		ContainerHelper.saveAllItems(context.blockEntityData, stacks);
 	}
 
 	@Override

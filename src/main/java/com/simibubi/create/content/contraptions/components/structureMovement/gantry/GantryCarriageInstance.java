@@ -3,9 +3,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ga
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -14,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class GantryCarriageInstance extends ShaftInstance implements DynamicInstance {
+public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEntity> implements DynamicInstance {
 
 	private final ModelData gantryCogs;
 
@@ -26,21 +25,21 @@ public class GantryCarriageInstance extends ShaftInstance implements DynamicInst
 
 	private float lastAngle = Float.NaN;
 
-	public GantryCarriageInstance(MaterialManager dispatcher, KineticTileEntity tile) {
-		super(dispatcher, tile);
+	public GantryCarriageInstance(MaterialManager materialManager, GantryCarriageBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 
 		gantryCogs = getTransformMaterial()
-								 .getModel(AllBlockPartials.GANTRY_COGS, blockState)
+								 .getModel(AllPartialModels.GANTRY_COGS, blockState)
 								 .createInstance();
 
 		facing = blockState.getValue(GantryCarriageBlock.FACING);
 		alongFirst = blockState.getValue(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
-		rotationAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
+		rotationAxis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
 
 		rotationMult = getRotationMultiplier(getGantryAxis(), facing);
 
-		visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? tile.getBlockPos()
-				: tile.getBlockPos()
+		visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? blockEntity.getBlockPos()
+				: blockEntity.getBlockPos()
 					  .relative(facing.getOpposite());
 
 		animateCogs(getCogAngle());
@@ -56,7 +55,7 @@ public class GantryCarriageInstance extends ShaftInstance implements DynamicInst
 	}
 
 	private float getCogAngle() {
-		return GantryCarriageRenderer.getAngleForTe(blockEntity, visualPos, rotationAxis) * rotationMult;
+		return GantryCarriageRenderer.getAngleForBE(blockEntity, visualPos, rotationAxis) * rotationMult;
 	}
 
 	private void animateCogs(float cogAngle) {

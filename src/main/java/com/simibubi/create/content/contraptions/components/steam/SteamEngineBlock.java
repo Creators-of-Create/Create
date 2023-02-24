@@ -4,14 +4,14 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -48,7 +48,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
-	implements SimpleWaterloggedBlock, IWrenchable, ITE<SteamEngineTileEntity> {
+	implements SimpleWaterloggedBlock, IWrenchable, IBE<SteamEngineBlockEntity> {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -163,13 +163,13 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public Class<SteamEngineTileEntity> getTileEntityClass() {
-		return SteamEngineTileEntity.class;
+	public Class<SteamEngineBlockEntity> getBlockEntityClass() {
+		return SteamEngineBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends SteamEngineTileEntity> getTileEntityType() {
-		return AllTileEntities.STEAM_ENGINE.get();
+	public BlockEntityType<? extends SteamEngineBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.STEAM_ENGINE.get();
 	}
 
 	@MethodsReturnNonnullByDefault

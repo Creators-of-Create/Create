@@ -13,13 +13,14 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
+import com.simibubi.create.AllTags.AllItemTags;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlockEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -120,7 +121,7 @@ public class DeployerHandler {
 		}
 
 		if (!held.isEmpty() && facing == Direction.DOWN
-			&& TileEntityBehaviour.get(world, targetPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
+			&& BlockEntityBehaviour.get(world, targetPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
 			return false;
 
 		return true;
@@ -180,12 +181,18 @@ public class DeployerHandler {
 							.consumesAction())
 						success = true;
 				}
-				if (!success && stack.isEdible() && entity instanceof Player) {
-					Player playerEntity = (Player) entity;
-					FoodProperties foodProperties = item.getFoodProperties(stack, player);
-					if (playerEntity.canEat(foodProperties.canAlwaysEat())) {
-						playerEntity.eat(world, stack);
+				if (!success && entity instanceof Player playerEntity) {
+					if (stack.isEdible()) {
+						FoodProperties foodProperties = item.getFoodProperties(stack, player);
+						if (playerEntity.canEat(foodProperties.canAlwaysEat())) {
+							playerEntity.eat(world, stack);
+							player.spawnedItemEffects = stack.copy();
+							success = true;
+						}
+					}
+					if (AllItemTags.DEPLOYABLE_DRINK.matches(stack)) {
 						player.spawnedItemEffects = stack.copy();
+						player.setItemInHand(hand, stack.finishUsingItem(world, playerEntity));
 						success = true;
 					}
 				}
@@ -229,8 +236,7 @@ public class DeployerHandler {
 			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, face);
 			if (event.isCanceled())
 				return;
-			if (BlockHelper.extinguishFire(world, player, clickedPos, face)) // FIXME: is there an equivalent in world,
-																				// as there was in 1.15?
+			if (BlockHelper.extinguishFire(world, player, clickedPos, face))
 				return;
 			if (event.getUseBlock() != DENY)
 				clickedState.attack(world, clickedPos, player);
@@ -320,6 +326,8 @@ public class DeployerHandler {
 		}
 		if (item == Items.ENDER_PEARL)
 			return;
+		if (AllItemTags.DEPLOYABLE_DRINK.matches(item))
+			return;
 
 		// buckets create their own ray, We use a fake wall to contain the active area
 		Level itemUseWorld = world;
@@ -356,7 +364,7 @@ public class DeployerHandler {
 		if (net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(world, gameType, player, pos) == -1)
 			return false;
 
-		BlockEntity tileentity = world.getBlockEntity(pos);
+		BlockEntity blockEntity = world.getBlockEntity(pos);
 		if (player.getMainHandItem()
 			.onBlockStartBreak(pos, player))
 			return false;
@@ -390,7 +398,7 @@ public class DeployerHandler {
 		if (!canHarvest)
 			return true;
 
-		Block.getDrops(blockstate, world, pos, tileentity, player, prevHeldItem)
+		Block.getDrops(blockstate, world, pos, blockEntity, player, prevHeldItem)
 			.forEach(item -> player.getInventory().placeItemBackInInventory(item));
 		blockstate.spawnAfterBreak(world, pos, prevHeldItem);
 		return true;

@@ -2,7 +2,7 @@ package com.simibubi.create.compat.tconstruct;
 
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
-import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
@@ -25,23 +25,23 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 	ResourceLocation BASIN = new ResourceLocation("tconstruct", "basin");
 
 	@Override
-	public int fillBlock(Level level, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
+	public int fillBlock(Level level, BlockPos pos, SpoutBlockEntity spout, FluidStack availableFluid,
 		boolean simulate) {
 		if (!enabled())
 			return 0;
 
-		BlockEntity te = level.getBlockEntity(pos);
-		if (te == null)
+		BlockEntity blockEntity = level.getBlockEntity(pos);
+		if (blockEntity == null)
 			return 0;
 
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP)
+		IFluidHandler handler = blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP)
 			.orElse(null);
 		if (handler == null)
 			return 0;
 		if (handler.getTanks() != 1)
 			return 0;
 
-		ResourceLocation registryName = RegisteredObjects.getKeyOrThrow(te.getType());
+		ResourceLocation registryName = RegisteredObjects.getKeyOrThrow(blockEntity.getType());
 		if (!registryName.equals(TABLE) && !registryName.equals(BASIN))
 			return 0;
 		if (!handler.isFluidValid(0, availableFluid))
@@ -66,7 +66,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 			TICON_PRESENT = Mods.TCONSTRUCT.isLoaded();
 		if (!TICON_PRESENT)
 			return false;
-		return AllConfigs.SERVER.recipes.allowCastingBySpout.get();
+		return AllConfigs.server().recipes.allowCastingBySpout.get();
 	}
 
 }

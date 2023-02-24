@@ -39,7 +39,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBoundary;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -734,13 +734,13 @@ public class Train {
 		GlobalStation currentStation = getCurrentStation();
 		if (currentStation != null) {
 			currentStation.cancelReservation(this);
-			BlockPos tilePos = currentStation.getTilePos();
-			if (level.getBlockEntity(tilePos)instanceof StationTileEntity ste)
+			BlockPos blockEntityPos = currentStation.getBlockEntityPos();
+			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity ste)
 				ste.lastDisassembledTrainName = name.copy();
 		}
 
 		Create.RAILWAYS.removeTrain(id);
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
 		return true;
 	}
 
@@ -1070,18 +1070,18 @@ public class Train {
 	}
 
 	public float maxSpeed() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainTopSpeed.getF()
-			: AllConfigs.SERVER.trains.trainTopSpeed.getF()) / 20;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainTopSpeed.getF()
+			: AllConfigs.server().trains.trainTopSpeed.getF()) / 20;
 	}
 
 	public float maxTurnSpeed() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainTurningTopSpeed.getF()
-			: AllConfigs.SERVER.trains.trainTurningTopSpeed.getF()) / 20;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainTurningTopSpeed.getF()
+			: AllConfigs.server().trains.trainTurningTopSpeed.getF()) / 20;
 	}
 
 	public float acceleration() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainAcceleration.getF()
-			: AllConfigs.SERVER.trains.trainAcceleration.getF()) / 400;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainAcceleration.getF()
+			: AllConfigs.server().trains.trainAcceleration.getF()) / 400;
 	}
 
 	public CompoundTag write(DimensionPalette dimensions) {

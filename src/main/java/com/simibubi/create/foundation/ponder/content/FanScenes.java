@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
+import com.simibubi.create.content.logistics.block.depot.DepotBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -238,7 +238,7 @@ public class FanScenes {
 			.add(0, 0.25, 0);
 		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 30);
 		scene.idle(30);
-		scene.world.modifyTileNBT(util.select.position(depos), DepotTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(depos), DepotBlockEntity.class,
 			nbt -> nbt.put("HeldItem", new TransportedItemStack(clay).serializeNBT()));
 		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 30);
 		scene.overlay.showText(90)

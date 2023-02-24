@@ -8,10 +8,10 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
+import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
-import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -28,28 +28,28 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 
-public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEntity> {
+public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEntity> {
 
 	public ItemDrainRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(ItemDrainTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(ItemDrainBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
-		renderFluid(te, partialTicks, ms, buffer, light);
-		renderItem(te, partialTicks, ms, buffer, light, overlay);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
+		renderFluid(be, partialTicks, ms, buffer, light);
+		renderItem(be, partialTicks, ms, buffer, light, overlay);
 	}
 
-	protected void renderItem(ItemDrainTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderItem(ItemDrainBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		TransportedItemStack transported = te.heldItem;
+		TransportedItemStack transported = be.heldItem;
 		if (transported == null)
 			return;
 
 		TransformStack msr = TransformStack.cast(ms);
-		Vec3 itemPosition = VecHelper.getCenterOf(te.getBlockPos());
+		Vec3 itemPosition = VecHelper.getCenterOf(be.getBlockPos());
 
 		Direction insertedFrom = transported.insertedFrom;
 		if (!insertedFrom.getAxis()
@@ -131,9 +131,9 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		ms.popPose();
 	}
 
-	protected void renderFluid(ItemDrainTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderFluid(ItemDrainBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light) {
-		SmartFluidTankBehaviour tank = te.internalTank;
+		SmartFluidTankBehaviour tank = be.internalTank;
 		if (tank == null)
 			return;
 
@@ -154,10 +154,10 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			ms.popPose();
 		}
 
-		ItemStack heldItemStack = te.getHeldItemStack();
+		ItemStack heldItemStack = be.getHeldItemStack();
 		if (heldItemStack.isEmpty())
 			return;
-		FluidStack fluidStack2 = EmptyingByBasin.emptyItem(te.getLevel(), heldItemStack, true)
+		FluidStack fluidStack2 = EmptyingByBasin.emptyItem(be.getLevel(), heldItemStack, true)
 			.getFirst();
 		if (fluidStack2.isEmpty()) {
 			if (fluidStack.isEmpty())
@@ -165,8 +165,8 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			fluidStack2 = fluidStack;
 		}
 
-		int processingTicks = te.processingTicks;
-		float processingPT = te.processingTicks - partialTicks;
+		int processingTicks = be.processingTicks;
+		float processingPT = be.processingTicks - partialTicks;
 		float processingProgress = 1 - (processingPT - 5) / 10;
 		processingProgress = Mth.clamp(processingProgress, 0, 1);
 		float radius = 0;

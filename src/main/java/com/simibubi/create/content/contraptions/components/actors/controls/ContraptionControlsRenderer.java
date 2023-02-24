@@ -6,14 +6,14 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsMovement.ElevatorFloorSelection;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
+import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
@@ -33,7 +33,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class ContraptionControlsRenderer extends SmartTileEntityRenderer<ContraptionControlsTileEntity> {
+public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<ContraptionControlsBlockEntity> {
 
 	private static Random r = new Random();
 
@@ -42,27 +42,27 @@ public class ContraptionControlsRenderer extends SmartTileEntityRenderer<Contrap
 	}
 
 	@Override
-	protected void renderSafe(ContraptionControlsTileEntity tileEntityIn, float pt, PoseStack ms,
+	protected void renderSafe(ContraptionControlsBlockEntity blockEntity, float pt, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-		BlockState blockState = tileEntityIn.getBlockState();
+		BlockState blockState = blockEntity.getBlockState();
 		Direction facing = blockState.getValue(ContraptionControlsBlock.FACING)
 			.getOpposite();
 		Vec3 buttonAxis = VecHelper.rotate(new Vec3(0, 1, -.325), AngleHelper.horizontalAngle(facing), Axis.Y)
-			.scale(-1 / 24f * tileEntityIn.button.getValue(pt));
+			.scale(-1 / 24f * blockEntity.button.getValue(pt));
 
 		ms.pushPose();
 		ms.translate(buttonAxis.x, buttonAxis.y, buttonAxis.z);
-		super.renderSafe(tileEntityIn, pt, ms, buffer, light, overlay);
+		super.renderSafe(blockEntity, pt, ms, buffer, light, overlay);
 
 		VertexConsumer vc = buffer.getBuffer(RenderType.solid());
-		CachedBufferer.partialFacing(AllBlockPartials.CONTRAPTION_CONTROLS_BUTTON, blockState, facing)
+		CachedBufferer.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_BUTTON, blockState, facing)
 			.light(light)
 			.renderInto(ms, vc);
 
 		ms.popPose();
 
-		int i = (((int) tileEntityIn.indicator.getValue(pt) / 45) % 8) + 8;
-		CachedBufferer.partialFacing(AllBlockPartials.CONTRAPTION_CONTROLS_INDICATOR.get(i % 8), blockState, facing)
+		int i = (((int) blockEntity.indicator.getValue(pt) / 45) % 8) + 8;
+		CachedBufferer.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_INDICATOR.get(i % 8), blockState, facing)
 			.light(light)
 			.renderInto(ms, vc);
 	}
@@ -101,7 +101,7 @@ public class ContraptionControlsRenderer extends SmartTileEntityRenderer<Contrap
 		msr.rotate(Direction.WEST, AngleHelper.rad(67.5f));
 
 		float buttondepth = -.25f;
-		if (ctx.contraption.presentTileEntities.get(ctx.localPos)instanceof ContraptionControlsTileEntity cte)
+		if (ctx.contraption.presentBlockEntities.get(ctx.localPos)instanceof ContraptionControlsBlockEntity cte)
 			buttondepth += -1 / 24f * cte.button.getValue(AnimationTickHolder.getPartialTicks(renderWorld));
 
 		if (!text.isBlank() && playerDistance < 100) {

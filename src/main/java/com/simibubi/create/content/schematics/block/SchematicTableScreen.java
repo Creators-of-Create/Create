@@ -14,8 +14,8 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
@@ -30,7 +30,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer> {
+public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableMenu> {
 
 	private final Component uploading = Lang.translateDirect("gui.schematicTable.uploading");
 	private final Component finished = Lang.translateDirect("gui.schematicTable.finished");
@@ -55,9 +55,9 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 	private List<Rect2i> extraAreas = Collections.emptyList();
 
-	public SchematicTableScreen(SchematicTableContainer container, Inventory playerInventory,
+	public SchematicTableScreen(SchematicTableMenu menu, Inventory playerInventory,
 		Component title) {
-		super(container, playerInventory, title);
+		super(menu, playerInventory, title);
 		background = AllGuiTextures.SCHEMATIC_TABLE;
 	}
 

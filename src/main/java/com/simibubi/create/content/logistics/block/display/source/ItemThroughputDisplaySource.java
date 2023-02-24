@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
@@ -30,7 +30,7 @@ public class ItemThroughputDisplaySource extends AccumulatedItemCountDisplaySour
 
 		if (rate > 0) {
 			long previousTime = conf.getLong("LastReceived");
-			long gameTime = context.te()
+			long gameTime = context.blockEntity()
 				.getLevel()
 				.getGameTime();
 			int diff = (int) (gameTime - previousTime);
@@ -47,14 +47,14 @@ public class ItemThroughputDisplaySource extends AccumulatedItemCountDisplaySour
 			.component();
 	}
 
-	public void itemReceived(DisplayLinkTileEntity te, int amount) {
-		if (te.getBlockState()
+	public void itemReceived(DisplayLinkBlockEntity be, int amount) {
+		if (be.getBlockState()
 			.getOptionalValue(DisplayLinkBlock.POWERED)
 			.orElse(true))
 			return;
 
-		CompoundTag conf = te.getSourceConfig();
-		long gameTime = te.getLevel()
+		CompoundTag conf = be.getSourceConfig();
+		long gameTime = be.getLevel()
 			.getGameTime();
 
 		if (!conf.contains("LastReceived")) {
@@ -95,7 +95,7 @@ public class ItemThroughputDisplaySource extends AccumulatedItemCountDisplaySour
 		conf.putLong("LastReceived", gameTime);
 		conf.putInt("Index", poolIndex + 1);
 		conf.put("PrevRates", rates);
-		te.updateGatheredData();
+		be.updateGatheredData();
 	}
 
 	@Override

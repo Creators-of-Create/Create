@@ -90,12 +90,12 @@ public class OpenCreateMenuButton extends Button {
 			int rowIdx = 0, offsetX = 0;
 			if (gui instanceof TitleScreen) {
 				menu = MenuRows.MAIN_MENU;
-				rowIdx = AllConfigs.CLIENT.mainMenuConfigButtonRow.get();
-				offsetX = AllConfigs.CLIENT.mainMenuConfigButtonOffsetX.get();
+				rowIdx = AllConfigs.client().mainMenuConfigButtonRow.get();
+				offsetX = AllConfigs.client().mainMenuConfigButtonOffsetX.get();
 			} else if (gui instanceof PauseScreen) {
 				menu = MenuRows.INGAME_MENU;
-				rowIdx = AllConfigs.CLIENT.ingameMenuConfigButtonRow.get();
-				offsetX = AllConfigs.CLIENT.ingameMenuConfigButtonOffsetX.get();
+				rowIdx = AllConfigs.client().ingameMenuConfigButtonRow.get();
+				offsetX = AllConfigs.client().ingameMenuConfigButtonOffsetX.get();
 			}
 
 			if (rowIdx != 0 && menu != null) {

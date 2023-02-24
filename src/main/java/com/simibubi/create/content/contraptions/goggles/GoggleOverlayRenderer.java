@@ -12,12 +12,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.IDi
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -77,19 +77,16 @@ public class GoggleOverlayRenderer {
 		BlockPos pos = result.getBlockPos();
 
 		int prevHoverTicks = hoverTicks;
-		if (lastHovered == null || lastHovered.equals(pos))
-			hoverTicks++;
-		else
-			hoverTicks = 0;
+		hoverTicks++;
 		lastHovered = pos;
 
 		pos = proxiedOverlayPosition(world, pos);
 		
-		BlockEntity te = world.getBlockEntity(pos);
+		BlockEntity be = world.getBlockEntity(pos);
 		boolean wearingGoggles = GogglesItem.isWearingGoggles(mc.player);
 
-		boolean hasGoggleInformation = te instanceof IHaveGoggleInformation;
-		boolean hasHoveringInformation = te instanceof IHaveHoveringInformation;
+		boolean hasGoggleInformation = be instanceof IHaveGoggleInformation;
+		boolean hasHoveringInformation = be instanceof IHaveHoveringInformation;
 
 		boolean goggleAddedInformation = false;
 		boolean hoverAddedInformation = false;
@@ -97,22 +94,22 @@ public class GoggleOverlayRenderer {
 		List<Component> tooltip = new ArrayList<>();
 
 		if (hasGoggleInformation && wearingGoggles) {
-			IHaveGoggleInformation gte = (IHaveGoggleInformation) te;
+			IHaveGoggleInformation gte = (IHaveGoggleInformation) be;
 			goggleAddedInformation = gte.addToGoggleTooltip(tooltip, mc.player.isShiftKeyDown());
 		}
 
 		if (hasHoveringInformation) {
 			if (!tooltip.isEmpty())
 				tooltip.add(Components.immutableEmpty());
-			IHaveHoveringInformation hte = (IHaveHoveringInformation) te;
+			IHaveHoveringInformation hte = (IHaveHoveringInformation) be;
 			hoverAddedInformation = hte.addToTooltip(tooltip, mc.player.isShiftKeyDown());
 
 			if (goggleAddedInformation && !hoverAddedInformation)
 				tooltip.remove(tooltip.size() - 1);
 		}
 
-		if (te instanceof IDisplayAssemblyExceptions) {
-			boolean exceptionAdded = ((IDisplayAssemblyExceptions) te).addExceptionToTooltip(tooltip);
+		if (be instanceof IDisplayAssemblyExceptions) {
+			boolean exceptionAdded = ((IDisplayAssemblyExceptions) be).addExceptionToTooltip(tooltip);
 			if (exceptionAdded) {
 				hasHoveringInformation = true;
 				hoverAddedInformation = true;
@@ -125,8 +122,10 @@ public class GoggleOverlayRenderer {
 				hoverTicks = prevHoverTicks + 1;
 
 		// break early if goggle or hover returned false when present
-		if ((hasGoggleInformation && !goggleAddedInformation) && (hasHoveringInformation && !hoverAddedInformation))
+		if ((hasGoggleInformation && !goggleAddedInformation) && (hasHoveringInformation && !hoverAddedInformation)) {
+			hoverTicks = 0;
 			return;
+		}
 
 		// check for piston poles if goggles are worn
 		BlockState state = world.getBlockState(pos);
@@ -143,8 +142,10 @@ public class GoggleOverlayRenderer {
 					.getBlock() instanceof MechanicalPistonBlock;
 			}
 
-			if (!pistonFound)
+			if (!pistonFound) {
+				hoverTicks = 0;				
 				return;
+			}
 			if (!tooltip.isEmpty())
 				tooltip.add(Components.immutableEmpty());
 
@@ -153,8 +154,10 @@ public class GoggleOverlayRenderer {
 				.append(Components.literal(" " + poles)));
 		}
 
-		if (tooltip.isEmpty())
+		if (tooltip.isEmpty()) {
+			hoverTicks = 0;			
 			return;
+		}
 
 		poseStack.pushPose();
 
@@ -171,14 +174,14 @@ public class GoggleOverlayRenderer {
 			tooltipHeight += (tooltip.size() - 1) * 10;
 		}
 
-		CClient cfg = AllConfigs.CLIENT;
+		CClient cfg = AllConfigs.client();
 		int posX = width / 2 + cfg.overlayOffsetX.get();
 		int posY = height / 2 + cfg.overlayOffsetY.get();
 
 		posX = Math.min(posX, width - tooltipTextWidth - 20);
 		posY = Math.min(posY, height - tooltipHeight - 20);
 
-		float fade = Mth.clamp((hoverTicks + partialTicks) / 12f, 0, 1);
+		float fade = Mth.clamp((hoverTicks + partialTicks) / 24f, 0, 1);
 		Boolean useCustom = cfg.overlayCustomColor.get();
 		Color colorBackground = useCustom ? new Color(cfg.overlayBackgroundColor.get())
 			: Theme.c(Theme.Key.VANILLA_TOOLTIP_BACKGROUND)
@@ -191,7 +194,7 @@ public class GoggleOverlayRenderer {
 				.copy();
 
 		if (fade < 1) {
-			poseStack.translate((1 - fade) * Math.signum(cfg.overlayOffsetX.get() + .5f) * 4, 0, 0);
+			poseStack.translate(Math.pow(1 - fade, 3) * Math.signum(cfg.overlayOffsetX.get() + .5f) * 8, 0, 0);
 			colorBackground.scaleAlpha(fade);
 			colorBorderTop.scaleAlpha(fade);
 			colorBorderBot.scaleAlpha(fade);

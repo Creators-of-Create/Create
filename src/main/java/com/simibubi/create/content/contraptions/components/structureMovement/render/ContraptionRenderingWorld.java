@@ -64,6 +64,7 @@ public abstract class ContraptionRenderingWorld<C extends ContraptionRenderInfo>
 				.map(Reference::get)
 				.filter(Objects::nonNull)
 				.map(AbstractContraptionEntity::getContraption)
+				.filter(Objects::nonNull) // contraptions that are too large will not be synced, and un-synced contraptions will be null
 				.forEach(this::getRenderInfo);
 	}
 

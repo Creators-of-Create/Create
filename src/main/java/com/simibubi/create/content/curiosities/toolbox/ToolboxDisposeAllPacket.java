@@ -46,9 +46,9 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 			if (player.distanceToSqr(toolboxPos.getX() + 0.5, toolboxPos.getY(), toolboxPos.getZ() + 0.5) > maxRange
 				* maxRange)
 				return;
-			if (!(blockEntity instanceof ToolboxTileEntity))
+			if (!(blockEntity instanceof ToolboxBlockEntity))
 				return;
-			ToolboxTileEntity toolbox = (ToolboxTileEntity) blockEntity;
+			ToolboxBlockEntity toolbox = (ToolboxBlockEntity) blockEntity;
 
 			CompoundTag compound = player.getPersistentData()
 				.getCompound("CreateToolboxData");

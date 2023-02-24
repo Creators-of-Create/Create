@@ -11,8 +11,8 @@ import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
-import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
+import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeBlockEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -935,7 +935,7 @@ public class KineticsScenes {
 		scene.world.moveSection(comparator, util.vector.of(-2, 0, 0), 0);
 		scene.world.toggleRedstonePower(util.select.position(5, 1, 1));
 		scene.world.cycleBlockProperty(wire, RedStoneWireBlock.POWER);
-		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 1));
+		scene.world.modifyBlockEntityNBT(nixie, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 1));
 
 		scene.idle(5);
 
@@ -945,13 +945,13 @@ public class KineticsScenes {
 		scene.world.rotateSection(contraption, -180, 0, 0, 40);
 		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
 		scene.world.cycleBlockProperty(wire, RedStoneWireBlock.POWER);
-		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 2));
+		scene.world.modifyBlockEntityNBT(nixie, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 2));
 		scene.idle(40);
 
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
 		scene.world.setKineticSpeed(outputKinetics, 0);
 		scene.world.cycleBlockProperty(wire, RedStoneWireBlock.POWER);
-		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 3));
+		scene.world.modifyBlockEntityNBT(nixie, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 3));
 		scene.idle(20);
 
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
@@ -960,14 +960,14 @@ public class KineticsScenes {
 		scene.world.rotateSection(contraption, 90, 0, 0, 40);
 		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
 		scene.world.cycleBlockProperty(wire, RedStoneWireBlock.POWER);
-		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 4));
+		scene.world.modifyBlockEntityNBT(nixie, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 4));
 		scene.idle(40);
 
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
 		scene.world.modifyBlock(wire, s -> s.setValue(RedStoneWireBlock.POWER, 0), false);
 		scene.world.toggleRedstonePower(util.select.position(5, 1, 1));
-		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
+		scene.world.modifyBlockEntityNBT(nixie, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
 		scene.world.setKineticSpeed(outputKinetics, 0);
 	}
 
@@ -1090,13 +1090,13 @@ public class KineticsScenes {
 				.setValue(CrushingWheelBlock.AXIS, Axis.X);
 			scene.world.setBlock(util.grid.at(5, 1, 3), state, true);
 			scene.world.setKineticSpeed(util.select.position(5, 1, 3), 32);
-			scene.world.modifyTileNBT(util.select.position(gaugePos), StressGaugeTileEntity.class,
+			scene.world.modifyBlockEntityNBT(util.select.position(gaugePos), StressGaugeBlockEntity.class,
 				nbt -> nbt.putFloat("Value", .5f));
 			scene.effects.indicateRedstone(gaugePos);
 			scene.idle(20);
 			scene.world.setBlock(util.grid.at(4, 1, 3), state, true);
 			scene.world.setKineticSpeed(util.select.position(4, 1, 3), 32);
-			scene.world.modifyTileNBT(util.select.position(gaugePos), StressGaugeTileEntity.class,
+			scene.world.modifyBlockEntityNBT(util.select.position(gaugePos), StressGaugeBlockEntity.class,
 				nbt -> nbt.putFloat("Value", .9f));
 			scene.effects.indicateRedstone(gaugePos);
 			scene.idle(10);

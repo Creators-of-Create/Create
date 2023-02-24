@@ -2,11 +2,11 @@ package com.simibubi.create.content.curiosities.armor;
 
 import java.util.Optional;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,7 +47,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayer;
 
 public class BacktankBlock extends HorizontalKineticBlock
-	implements ITE<BacktankTileEntity>, SimpleWaterloggedBlock {
+	implements IBE<BacktankBlockEntity>, SimpleWaterloggedBlock {
 
 	public BacktankBlock(Properties properties) {
 		super(properties);
@@ -76,7 +76,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 
 	@Override
 	public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
-		return getTileEntityOptional(world, pos).map(BacktankTileEntity::getComparatorOutput)
+		return getBlockEntityOptional(world, pos).map(BacktankBlockEntity::getComparatorOutput)
 			.orElse(0);
 	}
 
@@ -113,14 +113,14 @@ public class BacktankBlock extends HorizontalKineticBlock
 			return;
 		if (stack == null)
 			return;
-		withTileEntityDo(worldIn, pos, te -> {
-			te.setCapacityEnchantLevel(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), stack));
-			te.setAirLevel(stack.getOrCreateTag()
+		withBlockEntityDo(worldIn, pos, be -> {
+			be.setCapacityEnchantLevel(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), stack));
+			be.setAirLevel(stack.getOrCreateTag()
 				.getInt("Air"));
 			if (stack.isEnchanted())
-				te.setEnchantmentTag(stack.getEnchantmentTags());
+				be.setEnchantmentTag(stack.getEnchantmentTags());
 			if (stack.hasCustomHoverName())
-				te.setCustomName(stack.getHoverName());
+				be.setCustomName(stack.getHoverName());
 		});
 	}
 
@@ -155,14 +155,14 @@ public class BacktankBlock extends HorizontalKineticBlock
 		}
 
 		ItemStack stack = new ItemStack(item);
-		Optional<BacktankTileEntity> tileEntityOptional = getTileEntityOptional(blockGetter, pos);
+		Optional<BacktankBlockEntity> blockEntityOptional = getBlockEntityOptional(blockGetter, pos);
 
-		int air = tileEntityOptional.map(BacktankTileEntity::getAirLevel)
+		int air = blockEntityOptional.map(BacktankBlockEntity::getAirLevel)
 			.orElse(0);
 		CompoundTag tag = stack.getOrCreateTag();
 		tag.putInt("Air", air);
 
-		ListTag enchants = tileEntityOptional.map(BacktankTileEntity::getEnchantmentTag)
+		ListTag enchants = blockEntityOptional.map(BacktankBlockEntity::getEnchantmentTag)
 			.orElse(new ListTag());
 		if (!enchants.isEmpty()) {
 			ListTag enchantmentTagList = stack.getEnchantmentTags();
@@ -170,7 +170,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 			tag.put("Enchantments", enchantmentTagList);
 		}
 
-		Component customName = tileEntityOptional.map(BacktankTileEntity::getCustomName)
+		Component customName = blockEntityOptional.map(BacktankBlockEntity::getCustomName)
 			.orElse(null);
 		if (customName != null)
 			stack.setHoverName(customName);
@@ -184,13 +184,13 @@ public class BacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public Class<BacktankTileEntity> getTileEntityClass() {
-		return BacktankTileEntity.class;
+	public Class<BacktankBlockEntity> getBlockEntityClass() {
+		return BacktankBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends BacktankTileEntity> getTileEntityType() {
-		return AllTileEntities.BACKTANK.get();
+	public BlockEntityType<? extends BacktankBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.BACKTANK.get();
 	}
 
 	@Override

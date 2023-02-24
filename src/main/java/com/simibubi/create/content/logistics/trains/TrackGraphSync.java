@@ -33,7 +33,7 @@ public class TrackGraphSync {
 			for (TrackGraphPacket packet : queuedPackets) {
 				if (!packet.packetDeletesGraph && !Create.RAILWAYS.trackNetworks.containsKey(packet.graphId))
 					continue;
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), packet);
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), packet);
 				rollCallIn = 3;
 			}
 
@@ -54,22 +54,26 @@ public class TrackGraphSync {
 	public void nodeAdded(TrackGraph graph, TrackNode node) {
 		flushGraphPacket(graph);
 		currentGraphSyncPacket.addedNodes.put(node.getNetId(), Pair.of(node.getLocation(), node.getNormal()));
+		currentPayload++;
 	}
 
 	public void edgeAdded(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge) {
 		flushGraphPacket(graph);
 		currentGraphSyncPacket.addedEdges
 			.add(Pair.of(Couple.create(node1.getNetId(), node2.getNetId()), edge.getTurn()));
+		currentPayload++;
 	}
 
 	public void pointAdded(TrackGraph graph, TrackEdgePoint point) {
 		flushGraphPacket(graph);
 		currentGraphSyncPacket.addedEdgePoints.add(point);
+		currentPayload++;
 	}
 
 	public void pointRemoved(TrackGraph graph, TrackEdgePoint point) {
 		flushGraphPacket(graph);
 		currentGraphSyncPacket.removedEdgePoints.add(point.getId());
+		currentPayload++;
 	}
 
 	public void nodeRemoved(TrackGraph graph, TrackNode node) {
@@ -102,16 +106,16 @@ public class TrackGraphSync {
 	//
 
 	public void sendEdgeGroups(List<UUID> ids, List<EdgeGroupColor> colors, ServerPlayer player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player),
+		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> player),
 			new SignalEdgeGroupPacket(ids, colors, true));
 	}
 
 	public void edgeGroupCreated(UUID id, EdgeGroupColor color) {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(id, color));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(id, color));
 	}
 
 	public void edgeGroupRemoved(UUID id) {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(),
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(),
 			new SignalEdgeGroupPacket(ImmutableList.of(id), Collections.emptyList(), false));
 	}
 
@@ -120,12 +124,14 @@ public class TrackGraphSync {
 	public void edgeDataChanged(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge) {
 		flushGraphPacket(graph);
 		currentGraphSyncPacket.syncEdgeData(node1, node2, edge);
+		currentPayload++;
 	}
 
 	public void edgeDataChanged(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge, TrackEdge edge2) {
 		flushGraphPacket(graph);
 		currentGraphSyncPacket.syncEdgeData(node1, node2, edge);
 		currentGraphSyncPacket.syncEdgeData(node2, node1, edge2);
+		currentPayload++;
 	}
 
 	public void sendFullGraphTo(TrackGraph graph, ServerPlayer player) {
@@ -178,11 +184,11 @@ public class TrackGraphSync {
 	}
 
 	private void sendRollCall() {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrackGraphRollCallPacket());
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrackGraphRollCallPacket());
 	}
 
 	private TrackGraphSyncPacket flushAndCreateNew(TrackGraph graph, ServerPlayer player, TrackGraphSyncPacket packet) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
+		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
 		packet = new TrackGraphSyncPacket(graph.id, graph.netId);
 		return packet;
 	}
@@ -190,6 +196,7 @@ public class TrackGraphSync {
 	//
 
 	private TrackGraphSyncPacket currentGraphSyncPacket;
+	private int currentPayload;
 
 	private void flushGraphPacket() {
 		flushGraphPacket(null, 0);
@@ -201,14 +208,17 @@ public class TrackGraphSync {
 
 	private void flushGraphPacket(@Nullable UUID graphId, int netId) {
 		if (currentGraphSyncPacket != null) {
-			if (currentGraphSyncPacket.graphId.equals(graphId))
+			if (currentGraphSyncPacket.graphId.equals(graphId) && currentPayload < 1000)
 				return;
 			queuedPackets.add(currentGraphSyncPacket);
 			currentGraphSyncPacket = null;
+			currentPayload = 0;
 		}
 
-		if (graphId != null)
+		if (graphId != null) {
 			currentGraphSyncPacket = new TrackGraphSyncPacket(graphId, netId);
+			currentPayload = 0;
+		}
 	}
 
 }

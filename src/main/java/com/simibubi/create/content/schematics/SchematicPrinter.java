@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
-import com.simibubi.create.foundation.tileEntity.IMergeableTE;
+import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
@@ -37,6 +38,7 @@ public class SchematicPrinter {
 	}
 
 	private boolean schematicLoaded;
+	private boolean isErrored;
 	private SchematicWorld blockReader;
 	private BlockPos schematicAnchor;
 
@@ -93,7 +95,16 @@ public class SchematicPrinter {
 		schematicAnchor = NbtUtils.readBlockPos(blueprint.getTag()
 			.getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
-		activeTemplate.placeInWorld(blockReader, schematicAnchor, schematicAnchor, settings, blockReader.getRandom(), Block.UPDATE_CLIENTS);
+
+		try {
+			activeTemplate.placeInWorld(blockReader, schematicAnchor, schematicAnchor, settings,
+				blockReader.getRandom(), Block.UPDATE_CLIENTS);
+		} catch (Exception e) {
+			Create.LOGGER.error("Failed to load Schematic for Printing", e);
+			schematicLoaded = true;
+			isErrored = true;
+			return;
+		}
 
 		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, new BlockPos(activeTemplate.getSize())
 			.offset(-1, -1, -1));
@@ -101,8 +112,8 @@ public class SchematicPrinter {
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());
-		for (BlockEntity te : blockReader.tileEntities.values())
-			transform.apply(te);
+		for (BlockEntity be : blockReader.blockEntities.values())
+			transform.apply(be);
 
 		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
@@ -115,6 +126,7 @@ public class SchematicPrinter {
 	public void resetSchematic() {
 		schematicLoaded = false;
 		schematicAnchor = null;
+		isErrored = false;
 		currentPos = null;
 		blockReader = null;
 		printingEntityIndex = -1;
@@ -125,9 +137,13 @@ public class SchematicPrinter {
 	public boolean isLoaded() {
 		return schematicLoaded;
 	}
+	
+	public boolean isErrored() {
+		return isErrored;
+	}
 
 	public BlockPos getCurrentTarget() {
-		if (!isLoaded())
+		if (!isLoaded() || isErrored())
 			return null;
 		return schematicAnchor.offset(currentPos);
 	}
@@ -147,7 +163,7 @@ public class SchematicPrinter {
 
 	@FunctionalInterface
 	public interface BlockTargetHandler {
-		void handle(BlockPos target, BlockState blockState, BlockEntity tileEntity);
+		void handle(BlockPos target, BlockState blockState, BlockEntity blockEntity);
 	}
 	@FunctionalInterface
 	public interface EntityTargetHandler {
@@ -164,14 +180,14 @@ public class SchematicPrinter {
 			entityHandler.handle(target, entity);
 		} else {
 			BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
-			BlockEntity tileEntity = blockReader.getBlockEntity(target);
-			blockHandler.handle(target, blockState, tileEntity);
+			BlockEntity blockEntity = blockReader.getBlockEntity(target);
+			blockHandler.handle(target, blockState, blockEntity);
 		}
 	}
 
 	@FunctionalInterface
 	public interface PlacementPredicate {
-		boolean shouldPlace(BlockPos target, BlockState blockState, BlockEntity tileEntity,
+		boolean shouldPlace(BlockPos target, BlockState blockState, BlockEntity blockEntity,
 							BlockState toReplace, BlockState toReplaceOther, boolean isNormalCube);
 	}
 
@@ -189,10 +205,10 @@ public class SchematicPrinter {
 
 	public boolean shouldPlaceBlock(Level world, PlacementPredicate predicate, BlockPos pos) {
 		BlockState state = BlockHelper.setZeroAge(blockReader.getBlockState(pos));
-		BlockEntity tileEntity = blockReader.getBlockEntity(pos);
+		BlockEntity blockEntity = blockReader.getBlockEntity(pos);
 
 		BlockState toReplace = world.getBlockState(pos);
-		BlockEntity toReplaceTE = world.getBlockEntity(pos);
+		BlockEntity toReplaceBE = world.getBlockEntity(pos);
 		BlockState toReplaceOther = null;
 		
 		if (state.hasProperty(BlockStateProperties.BED_PART) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
@@ -202,8 +218,8 @@ public class SchematicPrinter {
 				&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
 			toReplaceOther = world.getBlockState(pos.above());
 
-		boolean mergeTEs = tileEntity != null && toReplaceTE instanceof IMergeableTE mergeTE && toReplaceTE.getType()
-			.equals(tileEntity.getType());
+		boolean mergeTEs = blockEntity != null && toReplaceBE instanceof IMergeableBE mergeBE && toReplaceBE.getType()
+			.equals(blockEntity.getType());
 
 		if (!world.isLoaded(pos))
 			return false;
@@ -216,7 +232,7 @@ public class SchematicPrinter {
 			return false;
 
 		boolean isNormalCube = state.isRedstoneConductor(blockReader, currentPos);
-		return predicate.shouldPlace(pos, state, tileEntity, toReplace, toReplaceOther, isNormalCube);
+		return predicate.shouldPlace(pos, state, blockEntity, toReplace, toReplaceOther, isNormalCube);
 	}
 
 	public ItemRequirement getCurrentRequirement() {
@@ -227,8 +243,8 @@ public class SchematicPrinter {
 
 		BlockPos target = getCurrentTarget();
 		BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
-		BlockEntity tileEntity = blockReader.getBlockEntity(target);
-		return ItemRequirement.of(blockState, tileEntity);
+		BlockEntity blockEntity = blockReader.getBlockEntity(target);
+		return ItemRequirement.of(blockState, blockEntity);
 	}
 
 	public int markAllBlockRequirements(MaterialChecklist checklist, Level world, PlacementPredicate predicate) {
@@ -236,7 +252,7 @@ public class SchematicPrinter {
 		for (BlockPos pos : blockReader.getAllPositions()) {
 			BlockPos relPos = pos.offset(schematicAnchor);
 			BlockState required = blockReader.getBlockState(relPos);
-			BlockEntity requiredTE = blockReader.getBlockEntity(relPos);
+			BlockEntity requiredBE = blockReader.getBlockEntity(relPos);
 
 			if (!world.isLoaded(pos.offset(schematicAnchor))) {
 				checklist.warnBlockNotLoaded();
@@ -244,7 +260,7 @@ public class SchematicPrinter {
 			}
 			if (!shouldPlaceBlock(world, predicate, relPos))
 				continue;
-			ItemRequirement requirement = ItemRequirement.of(required, requiredTE);
+			ItemRequirement requirement = ItemRequirement.of(required, requiredBE);
 			if (requirement.isEmpty())
 				continue;
 			if (requirement.isInvalid())

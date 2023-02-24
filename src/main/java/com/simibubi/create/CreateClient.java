@@ -1,6 +1,6 @@
 package com.simibubi.create;
 
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -76,15 +76,15 @@ public class CreateClient {
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
-		BUFFER_CACHE.registerCompartment(CachedBufferer.GENERIC_TILE);
+		BUFFER_CACHE.registerCompartment(CachedBufferer.GENERIC_BLOCK);
 		BUFFER_CACHE.registerCompartment(CachedBufferer.PARTIAL);
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
-		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+		BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
 		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
-		AllBlockPartials.init();
+		AllPartialModels.init();
 		AllStitchedTextures.init();
 
 		PonderIndex.register();
@@ -121,7 +121,7 @@ public class CreateClient {
 		if (mc.options.graphicsMode != GraphicsStatus.FABULOUS)
 			return;
 
-		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
+		if (AllConfigs.client().ignoreFabulousWarning.get())
 			return;
 
 		MutableComponent text = ComponentUtils.wrapInSquareBrackets(Components.literal("WARN"))

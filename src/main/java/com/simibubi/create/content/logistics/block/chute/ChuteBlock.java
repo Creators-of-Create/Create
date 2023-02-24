@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.chute;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -148,8 +148,8 @@ public class ChuteBlock extends AbstractChuteBlock {
 	}
 	
 	@Override
-	public BlockEntityType<? extends ChuteTileEntity> getTileEntityType() {
-		return AllTileEntities.CHUTE.get();
+	public BlockEntityType<? extends ChuteBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CHUTE.get();
 	}
 
 }

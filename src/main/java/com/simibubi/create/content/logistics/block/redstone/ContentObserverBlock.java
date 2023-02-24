@@ -2,17 +2,17 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.Random;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlockEntity;
+import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -38,7 +38,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class ContentObserverBlock extends HorizontalDirectionalBlock implements ITE<ContentObserverTileEntity>, IWrenchable {
+public class ContentObserverBlock extends HorizontalDirectionalBlock implements IBE<ContentObserverBlockEntity>, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -71,18 +71,18 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 				.relative(face);
 			Level world = context.getLevel();
 			boolean canDetect = false;
-			BlockEntity tileEntity = world.getBlockEntity(offsetPos);
+			BlockEntity blockEntity = world.getBlockEntity(offsetPos);
 
-			if (TileEntityBehaviour.get(tileEntity, TransportedItemStackHandlerBehaviour.TYPE) != null)
+			if (BlockEntityBehaviour.get(blockEntity, TransportedItemStackHandlerBehaviour.TYPE) != null)
 				canDetect = true;
-			else if (TileEntityBehaviour.get(tileEntity, FluidTransportBehaviour.TYPE) != null)
+			else if (BlockEntityBehaviour.get(blockEntity, FluidTransportBehaviour.TYPE) != null)
 				canDetect = true;
-			else if (tileEntity != null && (tileEntity.getCapability(itemCap)
+			else if (blockEntity != null && (blockEntity.getCapability(itemCap)
 				.isPresent()
-				|| tileEntity.getCapability(fluidCap)
+				|| blockEntity.getCapability(fluidCap)
 					.isPresent()))
 				canDetect = true;
-			else if (tileEntity instanceof FunnelTileEntity)
+			else if (blockEntity instanceof FunnelBlockEntity)
 				canDetect = true;
 
 			if (canDetect) {
@@ -126,16 +126,13 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
-			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-			worldIn.removeBlockEntity(pos);
-		}
+		IBE.onRemove(state, worldIn, pos, newState);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		InvManipulationBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		InvManipulationBehaviour behaviour = BlockEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);
 	}
@@ -148,25 +145,25 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 				continue;
 			if (detectorState.getValue(FACING) != direction.getOpposite())
 				continue;
-			withTileEntityDo(world, detectorPos, te -> {
-				FilteringBehaviour filteringBehaviour = TileEntityBehaviour.get(te, FilteringBehaviour.TYPE);
+			withBlockEntityDo(world, detectorPos, be -> {
+				FilteringBehaviour filteringBehaviour = BlockEntityBehaviour.get(be, FilteringBehaviour.TYPE);
 				if (filteringBehaviour == null)
 					return;
 				if (!filteringBehaviour.test(transferred))
 					return;
-				te.activate(4);
+				be.activate(4);
 			});
 		}
 	}
 
 	@Override
-	public Class<ContentObserverTileEntity> getTileEntityClass() {
-		return ContentObserverTileEntity.class;
+	public Class<ContentObserverBlockEntity> getBlockEntityClass() {
+		return ContentObserverBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends ContentObserverTileEntity> getTileEntityType() {
-		return AllTileEntities.CONTENT_OBSERVER.get();
+	public BlockEntityType<? extends ContentObserverBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CONTENT_OBSERVER.get();
 	}
 
 }

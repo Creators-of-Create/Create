@@ -164,7 +164,7 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 	}
 
 	private void confirm() {
-		AllPackets.channel.sendToServer(new ElevatorContactEditPacket(pos, shortName, longName));
+		AllPackets.getChannel().sendToServer(new ElevatorContactEditPacket(pos, shortName, longName));
 		onClose();
 	}
 

@@ -4,13 +4,13 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -24,18 +24,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntity> {
+public class HarvesterRenderer extends SafeBlockEntityRenderer<HarvesterBlockEntity> {
 
 	public HarvesterRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	protected void renderSafe(HarvesterTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(HarvesterBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		BlockState blockState = te.getBlockState();
-		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.HARVESTER_BLADE, blockState);
-		transform(te.getLevel(), blockState.getValue(HarvesterBlock.FACING), superBuffer,
-				te.getAnimatedSpeed());
+		BlockState blockState = be.getBlockState();
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.HARVESTER_BLADE, blockState);
+		transform(be.getLevel(), blockState.getValue(HarvesterBlock.FACING), superBuffer,
+				be.getAnimatedSpeed());
 		superBuffer.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
@@ -44,7 +44,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		ContraptionMatrices matrices, MultiBufferSource buffers) {
 		BlockState blockState = context.state;
 		Direction facing = blockState.getValue(HORIZONTAL_FACING);
-		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.HARVESTER_BLADE, blockState);
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.HARVESTER_BLADE, blockState);
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
 				? context.getAnimationSpeed()
 				: 0);

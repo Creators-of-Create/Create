@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.relays.elementary;
 
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 
 public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
-	implements ITE<KineticTileEntity>, ProperWaterloggedBlock {
+	implements IBE<KineticBlockEntity>, ProperWaterloggedBlock {
 
 	public AbstractShaftBlock(Properties properties) {
 		super(properties);
@@ -33,8 +33,8 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public Class<KineticTileEntity> getTileEntityClass() {
-		return KineticTileEntity.class;
+	public Class<KineticBlockEntity> getBlockEntityClass() {
+		return KineticBlockEntity.class;
 	}
 
 	@Override

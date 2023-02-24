@@ -34,8 +34,8 @@ public class BlueprintAssignCompleteRecipePacket extends SimplePacketBase {
 							.getSender();
 					if (player == null)
 						return;
-					if (player.containerMenu instanceof BlueprintContainer) {
-						BlueprintContainer c = (BlueprintContainer) player.containerMenu;
+					if (player.containerMenu instanceof BlueprintMenu) {
+						BlueprintMenu c = (BlueprintMenu) player.containerMenu;
 						player.getLevel()
 								.getRecipeManager()
 								.byKey(recipeID)

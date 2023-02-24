@@ -25,7 +25,7 @@ public class ServerSpeedProvider {
 	public static void serverTick() {
 		serverTimer++;
 		if (serverTimer > getSyncInterval()) {
-			AllPackets.channel.send(PacketDistributor.ALL.noArg(), new Packet());
+			AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new Packet());
 			serverTimer = 0;
 		}
 	}
@@ -42,7 +42,7 @@ public class ServerSpeedProvider {
 	}
 
 	public static Integer getSyncInterval() {
-		return AllConfigs.SERVER.tickrateSyncTimer.get();
+		return AllConfigs.server().tickrateSyncTimer.get();
 	}
 
 	public static float get() {

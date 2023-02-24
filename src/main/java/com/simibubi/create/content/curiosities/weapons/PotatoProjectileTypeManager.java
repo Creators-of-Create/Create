@@ -95,11 +95,11 @@ public class PotatoProjectileTypeManager {
 	}
 
 	public static void syncTo(ServerPlayer player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new SyncPacket());
+		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> player), new SyncPacket());
 	}
 
 	public static void syncToAll() {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SyncPacket());
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new SyncPacket());
 	}
 
 	public static class ReloadListener extends SimpleJsonResourceReloadListener {

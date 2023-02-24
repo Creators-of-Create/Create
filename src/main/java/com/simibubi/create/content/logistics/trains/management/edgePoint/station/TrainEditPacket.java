@@ -55,7 +55,7 @@ public class TrainEditPacket extends SimplePacketBase {
 				train.name = Components.literal(name);
 			train.icon = TrainIconType.byId(iconType);
 			if (sender != null)
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainEditReturnPacket(id, name, iconType));
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainEditReturnPacket(id, name, iconType));
 		});
 		ctx.setPacketHandled(true);
 	}

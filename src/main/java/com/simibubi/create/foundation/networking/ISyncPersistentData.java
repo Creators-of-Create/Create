@@ -15,7 +15,7 @@ public interface ISyncPersistentData {
 	void onPersistentDataUpdated();
 
 	default void syncPersistentDataWithTracking(Entity self) {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> self), new PersistentDataPacket(self));
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> self), new PersistentDataPacket(self));
 	}
 
 	public static class PersistentDataPacket extends SimplePacketBase {

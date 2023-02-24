@@ -12,15 +12,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class HandCrankInstance extends SingleRotatingInstance implements DynamicInstance {
+public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEntity> implements DynamicInstance {
 
-    private final HandCrankTileEntity tile;
     private ModelData crank;
     private Direction facing;
 
-    public HandCrankInstance(MaterialManager modelManager, HandCrankTileEntity tile) {
-        super(modelManager, tile);
-		this.tile = tile;
+    public HandCrankInstance(MaterialManager modelManager, HandCrankBlockEntity blockEntity) {
+        super(modelManager, blockEntity);
 
 		Block block = blockState.getBlock();
 		PartialModel renderedHandle = null;
@@ -46,7 +44,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements Dynamic
 
     private void rotateCrank() {
         Direction.Axis axis = facing.getAxis();
-        float angle = (tile.independentAngle + AnimationTickHolder.getPartialTicks() * tile.chasingVelocity) / 360;
+        float angle = (blockEntity.independentAngle + AnimationTickHolder.getPartialTicks() * blockEntity.chasingVelocity) / 360;
 
         crank.loadIdentity()
                      .translate(getInstancePosition())

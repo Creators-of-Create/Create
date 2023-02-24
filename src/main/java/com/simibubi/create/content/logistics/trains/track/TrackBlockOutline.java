@@ -44,7 +44,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(Dist.CLIENT)
 public class TrackBlockOutline {
 
-	public static WorldAttached<Map<BlockPos, TrackTileEntity>> TRACKS_WITH_TURNS =
+	public static WorldAttached<Map<BlockPos, TrackBlockEntity>> TRACKS_WITH_TURNS =
 		new WorldAttached<>(w -> new HashMap<>());
 
 	public static BezierPointSelection result;
@@ -66,10 +66,10 @@ public class TrackBlockOutline {
 
 		AttributeInstance range = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
 		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range.getValue()) + 1, origin);
-		Map<BlockPos, TrackTileEntity> turns = TRACKS_WITH_TURNS.get(mc.level);
+		Map<BlockPos, TrackBlockEntity> turns = TRACKS_WITH_TURNS.get(mc.level);
 
-		for (TrackTileEntity te : turns.values()) {
-			for (BezierConnection bc : te.connections.values()) {
+		for (TrackBlockEntity be : turns.values()) {
+			for (BezierConnection bc : be.connections.values()) {
 				if (!bc.isPrimary())
 					continue;
 
@@ -125,7 +125,7 @@ public class TrackBlockOutline {
 						.distanceToSqr(0, 0.25f, 0);
 
 					BezierTrackPointLocation location = new BezierTrackPointLocation(bc.getKey(), i);
-					result = new BezierPointSelection(te, location, anchor, angles, diff.normalize());
+					result = new BezierPointSelection(be, location, anchor, angles, diff.normalize());
 				}
 
 				if (bestSegment != -1)
@@ -288,7 +288,7 @@ public class TrackBlockOutline {
 		renderer.accept(LONG_ORTHO);
 	}
 
-	public static record BezierPointSelection(TrackTileEntity te, BezierTrackPointLocation loc, Vec3 vec, Vec3 angles,
+	public static record BezierPointSelection(TrackBlockEntity blockEntity, BezierTrackPointLocation loc, Vec3 vec, Vec3 angles,
 		Vec3 direction) {
 	}
 

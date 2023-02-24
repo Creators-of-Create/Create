@@ -9,22 +9,25 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Supplier;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.EncasedBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -39,15 +42,18 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.ticks.TickPriority;
 
-public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, ITE<FluidPipeTileEntity> {
-
+public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, IBE<FluidPipeBlockEntity>, EncasedBlock {
 	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = PipeBlock.PROPERTY_BY_DIRECTION;
 
-	public EncasedPipeBlock(Properties p_i48339_1_) {
-		super(p_i48339_1_);
+	private final Supplier<Block> casing;
+
+	public EncasedPipeBlock(Properties properties, Supplier<Block> casing) {
+		super(properties);
+		this.casing = casing;
 		registerDefaultState(defaultBlockState().setValue(NORTH, false)
 			.setValue(SOUTH, false)
 			.setValue(DOWN, false)
@@ -61,7 +67,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 		builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
 		super.createBlockStateDefinition(builder);
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
@@ -140,18 +146,31 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState(), te);
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
+		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState(), be);
 	}
 
 	@Override
-	public Class<FluidPipeTileEntity> getTileEntityClass() {
-		return FluidPipeTileEntity.class;
+	public Class<FluidPipeBlockEntity> getBlockEntityClass() {
+		return FluidPipeBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends FluidPipeTileEntity> getTileEntityType() {
-		return AllTileEntities.ENCASED_FLUID_PIPE.get();
+	public BlockEntityType<? extends FluidPipeBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ENCASED_FLUID_PIPE.get();
 	}
 
+	@Override
+	public Block getCasing() {
+		return casing.get();
+	}
+
+	@Override
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
+	    BlockHitResult ray) {
+		FluidTransportBehaviour.cacheFlows(level, pos);
+		level.setBlockAndUpdate(pos,
+				EncasedPipeBlock.transferSixWayProperties(state, defaultBlockState()));
+		FluidTransportBehaviour.loadFlows(level, pos);
+	}
 }

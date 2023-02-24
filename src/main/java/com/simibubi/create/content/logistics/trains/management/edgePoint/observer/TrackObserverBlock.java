@@ -1,10 +1,8 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.observer;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +15,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-public class TrackObserverBlock extends Block implements ITE<TrackObserverTileEntity>, IWrenchable {
+public class TrackObserverBlock extends Block implements IBE<TrackObserverBlockEntity>, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -47,21 +45,18 @@ public class TrackObserverBlock extends Block implements ITE<TrackObserverTileEn
 	}
 
 	@Override
-	public Class<TrackObserverTileEntity> getTileEntityClass() {
-		return TrackObserverTileEntity.class;
+	public Class<TrackObserverBlockEntity> getBlockEntityClass() {
+		return TrackObserverBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends TrackObserverTileEntity> getTileEntityType() {
-		return AllTileEntities.TRACK_OBSERVER.get();
+	public BlockEntityType<? extends TrackObserverBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.TRACK_OBSERVER.get();
 	}
 
 	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		if (pState.hasBlockEntity() && (!pState.is(pNewState.getBlock()) || !pNewState.hasBlockEntity())) {
-			TileEntityBehaviour.destroy(pLevel, pPos, FilteringBehaviour.TYPE);
-			pLevel.removeBlockEntity(pPos);
-		}
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		IBE.onRemove(state, worldIn, pos, newState);
 	}
 
 }

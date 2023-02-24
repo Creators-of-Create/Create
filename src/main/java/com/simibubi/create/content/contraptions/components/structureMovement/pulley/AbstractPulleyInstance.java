@@ -13,14 +13,14 @@ import com.jozufozu.flywheel.light.TickingLightListener;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
 
-public abstract class AbstractPulleyInstance extends ShaftInstance implements DynamicInstance, TickingLightListener {
+public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> extends ShaftInstance<T> implements DynamicInstance, TickingLightListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
@@ -34,8 +34,8 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements Dy
 	private final GridAlignedBB volume = new GridAlignedBB();
 	private final LightVolume light;
 
-	public AbstractPulleyInstance(MaterialManager dispatcher, KineticTileEntity tile) {
-		super(dispatcher, tile);
+	public AbstractPulleyInstance(MaterialManager dispatcher, T blockEntity) {
+		super(dispatcher, blockEntity);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);
 		rotationAxis = rotatingAbout.step();

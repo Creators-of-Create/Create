@@ -1,17 +1,13 @@
 package com.simibubi.create.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
-import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.fan.AirCurrent;
-import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsHandler;
@@ -45,24 +41,22 @@ import com.simibubi.create.content.logistics.trains.management.schedule.TrainHat
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
+import com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkRenderer;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueHandler;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.item.ItemDescription;
-import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
-import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
-import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
@@ -72,8 +66,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -103,9 +96,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
-
-	private static final String ITEM_PREFIX = "item." + Create.ID;
-	private static final String BLOCK_PREFIX = "block." + Create.ID;
 
 	@SubscribeEvent
 	public static void onTick(ClientTickEvent event) {
@@ -245,40 +235,19 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void addToItemTooltip(ItemTooltipEvent event) {
-		if (!AllConfigs.CLIENT.tooltips.get())
+		if (!AllConfigs.client().tooltips.get())
 			return;
 		if (event.getPlayer() == null)
 			return;
 
-		ItemStack stack = event.getItemStack();
-		String translationKey = stack.getItem()
-			.getDescriptionId(stack);
-
-		if (translationKey.startsWith(ITEM_PREFIX) || translationKey.startsWith(BLOCK_PREFIX))
-			if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
-				List<Component> itemTooltip = event.getToolTip();
-				List<Component> toolTip = new ArrayList<>();
-				toolTip.add(itemTooltip.remove(0));
-				TooltipHelper.getTooltip(stack)
-					.addInformation(toolTip);
-				itemTooltip.addAll(0, toolTip);
-			}
-
-		if (stack.getItem() instanceof BlockItem) {
-			BlockItem item = (BlockItem) stack.getItem();
-			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof SteamEngineBlock) {
-				List<Component> kineticStats = ItemDescription.getKineticStats(item.getBlock());
-				if (!kineticStats.isEmpty()) {
-					event.getToolTip()
-						.add(Components.immutableEmpty());
-					event.getToolTip()
-						.addAll(kineticStats);
-				}
-			}
+		Item item = event.getItemStack().getItem();
+		TooltipModifier modifier = TooltipModifier.REGISTRY.get(item);
+		if (modifier != null && modifier != TooltipModifier.EMPTY) {
+			modifier.modify(event);
 		}
 
-		PonderTooltipHandler.addToTooltip(event.getToolTip(), stack);
-		SequencedAssemblyRecipe.addToTooltip(event.getToolTip(), stack);
+		PonderTooltipHandler.addToTooltip(event);
+		SequencedAssemblyRecipe.addToTooltip(event);
 	}
 
 	@SubscribeEvent
@@ -334,11 +303,13 @@ public class ClientEvents {
 			return;
 		}
 
-		if (FluidHelper.isWater(fluid) && DivingHelmetItem
-			.isWornBy(Minecraft.getInstance().cameraEntity)) {
-			event.scaleFarPlaneDistance(6.25f);
-			event.setCanceled(true);
-			return;
+		ItemStack divingHelmet = DivingHelmetItem.getWornItem(Minecraft.getInstance().cameraEntity);
+		if (divingHelmet != null) {
+			if (FluidHelper.isWater(fluid) || FluidHelper.isLava(fluid) && AllItems.NETHERITE_DIVING_HELMET.isIn(divingHelmet)) {
+				event.scaleFarPlaneDistance(6.25f);
+				event.setCanceled(true);
+				return;
+			}
 		}
 	}
 
@@ -374,7 +345,7 @@ public class ClientEvents {
 	public static void leftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
 		ItemStack stack = event.getItemStack();
 		if (stack.getItem() instanceof ZapperItem) {
-			AllPackets.channel.sendToServer(new LeftClickPacket());
+			AllPackets.getChannel().sendToServer(new LeftClickPacket());
 		}
 	}
 

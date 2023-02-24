@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.components.waterwheel;
 
 import java.util.Random;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<WaterWheelTileEntity> {
+public class WaterWheelBlock extends DirectionalKineticBlock implements IBE<WaterWheelBlockEntity> {
 
 	public WaterWheelBlock(Properties properties) {
 		super(properties);
@@ -57,7 +57,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
-		return onTileEntityUse(pLevel, pPos, wwt -> wwt.applyMaterialIfValid(pPlayer.getItemInHand(pHand)));
+		return onBlockEntityUse(pLevel, pPos, wwt -> wwt.applyMaterialIfValid(pPlayer.getItemInHand(pHand)));
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
-		withTileEntityDo(pLevel, pPos, WaterWheelTileEntity::determineAndApplyFlowScore);
+		withBlockEntityDo(pLevel, pPos, WaterWheelBlockEntity::determineAndApplyFlowScore);
 	}
 
 	@Override
@@ -124,13 +124,13 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	}
 
 	@Override
-	public Class<WaterWheelTileEntity> getTileEntityClass() {
-		return WaterWheelTileEntity.class;
+	public Class<WaterWheelBlockEntity> getBlockEntityClass() {
+		return WaterWheelBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends WaterWheelTileEntity> getTileEntityType() {
-		return AllTileEntities.WATER_WHEEL.get();
+	public BlockEntityType<? extends WaterWheelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.WATER_WHEEL.get();
 	}
 
 	public static Couple<Integer> getSpeedRange() {

@@ -2,10 +2,10 @@ package com.simibubi.create.content.curiosities.deco;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionWorld;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +36,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 
-public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<SlidingDoorTileEntity> {
+public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<SlidingDoorBlockEntity> {
 
 	protected static final VoxelShape SE_AABB = Block.box(0.0D, 0.0D, -13.0D, 3.0D, 16.0D, 3.0D);
 	protected static final VoxelShape ES_AABB = Block.box(-13.0D, 0.0D, 0.0D, 3.0D, 16.0D, 3.0D);
@@ -170,8 +170,8 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 		if (isPowered == pState.getValue(POWERED))
 			return;
 
-		SlidingDoorTileEntity te = getTileEntity(pLevel, lower ? pPos : pPos.below());
-		if (te != null && te.deferUpdate)
+		SlidingDoorBlockEntity be = getBlockEntity(pLevel, lower ? pPos : pPos.below());
+		if (be != null && be.deferUpdate)
 			return;
 
 		BlockState changedState = pState.setValue(POWERED, Boolean.valueOf(isPowered))
@@ -241,7 +241,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 	}
 
 	public void deferUpdate(LevelAccessor level, BlockPos pos) {
-		withTileEntityDo(level, pos, sdte -> sdte.deferUpdate = true);
+		withBlockEntityDo(level, pos, sdte -> sdte.deferUpdate = true);
 	}
 
 	public static boolean isDoubleDoor(BlockState pState, DoorHingeSide hinge, Direction facing, BlockState otherDoor) {
@@ -269,17 +269,17 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, ITE<Slid
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (state.getValue(HALF) == DoubleBlockHalf.UPPER)
 			return null;
-		return ITE.super.newBlockEntity(pos, state);
+		return IBE.super.newBlockEntity(pos, state);
 	}
 
 	@Override
-	public Class<SlidingDoorTileEntity> getTileEntityClass() {
-		return SlidingDoorTileEntity.class;
+	public Class<SlidingDoorBlockEntity> getBlockEntityClass() {
+		return SlidingDoorBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends SlidingDoorTileEntity> getTileEntityType() {
-		return AllTileEntities.SLIDING_DOOR.get();
+	public BlockEntityType<? extends SlidingDoorBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.SLIDING_DOOR.get();
 	}
 
 }

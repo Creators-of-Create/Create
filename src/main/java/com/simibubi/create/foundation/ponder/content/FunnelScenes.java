@@ -4,7 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -449,7 +449,7 @@ public class FunnelScenes {
 					.attachKeyFrame()
 					.pointAt(filterSlot.getCenter())
 					.placeNearTarget();
-				scene.world.setFilterData(util.select.position(brassFunnel), FunnelTileEntity.class, emerald);
+				scene.world.setFilterData(util.select.position(brassFunnel), FunnelBlockEntity.class, emerald);
 			} else
 				scene.idle(10);
 

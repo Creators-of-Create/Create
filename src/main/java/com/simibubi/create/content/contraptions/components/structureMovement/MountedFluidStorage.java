@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ContraptionFluidPacket;
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity.CreativeSmartFluidTank;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -25,34 +25,34 @@ public class MountedFluidStorage {
 
 	SmartFluidTank tank;
 	private boolean valid;
-	private BlockEntity te;
+	private BlockEntity blockEntity;
 
 	private int packetCooldown = 0;
 	private boolean sendPacket = false;
 
-	public static boolean canUseAsStorage(BlockEntity te) {
-		if (te instanceof FluidTankTileEntity)
-			return ((FluidTankTileEntity) te).isController();
+	public static boolean canUseAsStorage(BlockEntity be) {
+		if (be instanceof FluidTankBlockEntity)
+			return ((FluidTankBlockEntity) be).isController();
 		return false;
 	}
 
-	public MountedFluidStorage(BlockEntity te) {
-		assignTileEntity(te);
+	public MountedFluidStorage(BlockEntity be) {
+		assignBlockEntity(be);
 	}
 
-	public void assignTileEntity(BlockEntity te) {
-		this.te = te;
-		tank = createMountedTank(te);
+	public void assignBlockEntity(BlockEntity be) {
+		this.blockEntity = be;
+		tank = createMountedTank(be);
 	}
 
-	private SmartFluidTank createMountedTank(BlockEntity te) {
-		if (te instanceof CreativeFluidTankTileEntity)
+	private SmartFluidTank createMountedTank(BlockEntity be) {
+		if (be instanceof CreativeFluidTankBlockEntity)
 			return new CreativeSmartFluidTank(
-				((FluidTankTileEntity) te).getTotalTankSize() * FluidTankTileEntity.getCapacityMultiplier(), $ -> {
+				((FluidTankBlockEntity) be).getTotalTankSize() * FluidTankBlockEntity.getCapacityMultiplier(), $ -> {
 				});
-		if (te instanceof FluidTankTileEntity)
+		if (be instanceof FluidTankBlockEntity)
 			return new SmartFluidTank(
-				((FluidTankTileEntity) te).getTotalTankSize() * FluidTankTileEntity.getCapacityMultiplier(),
+				((FluidTankBlockEntity) be).getTotalTankSize() * FluidTankBlockEntity.getCapacityMultiplier(),
 				this::onFluidStackChanged);
 		return null;
 	}
@@ -63,26 +63,26 @@ public class MountedFluidStorage {
 				packetCooldown--;
 			else if (sendPacket) {
 				sendPacket = false;
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
 					new ContraptionFluidPacket(entity.getId(), pos, tank.getFluid()));
 				packetCooldown = 8;
 			}
 			return;
 		}
 
-		if (!(te instanceof FluidTankTileEntity))
+		if (!(blockEntity instanceof FluidTankBlockEntity))
 			return;
-		FluidTankTileEntity tank = (FluidTankTileEntity) te;
+		FluidTankBlockEntity tank = (FluidTankBlockEntity) blockEntity;
 		tank.getFluidLevel()
 			.tickChaser();
 	}
 
 	public void updateFluid(FluidStack fluid) {
 		tank.setFluid(fluid);
-		if (!(te instanceof FluidTankTileEntity))
+		if (!(blockEntity instanceof FluidTankBlockEntity))
 			return;
 		float fillState = tank.getFluidAmount() / (float) tank.getCapacity();
-		FluidTankTileEntity tank = (FluidTankTileEntity) te;
+		FluidTankBlockEntity tank = (FluidTankBlockEntity) blockEntity;
 		if (tank.getFluidLevel() == null)
 			tank.setFluidLevel(LerpedFloat.linear()
 				.startWithValue(fillState));
@@ -95,10 +95,10 @@ public class MountedFluidStorage {
 
 	public void removeStorageFromWorld() {
 		valid = false;
-		if (te == null)
+		if (blockEntity == null)
 			return;
 
-		IFluidHandler teHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		IFluidHandler teHandler = blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			.orElse(null);
 		if (!(teHandler instanceof SmartFluidTank))
 			return;
@@ -112,11 +112,11 @@ public class MountedFluidStorage {
 		sendPacket = true;
 	}
 
-	public void addStorageToWorld(BlockEntity te) {
+	public void addStorageToWorld(BlockEntity be) {
 		if (tank instanceof CreativeSmartFluidTank)
 			return;
 
-		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> capability = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
 		IFluidHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof SmartFluidTank))
 			return;

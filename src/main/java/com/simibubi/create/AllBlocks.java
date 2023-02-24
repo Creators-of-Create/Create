@@ -2,20 +2,19 @@ package com.simibubi.create;
 
 import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
 import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
-import static com.simibubi.create.AllTags.axeOnly;
-import static com.simibubi.create.AllTags.axeOrPickaxe;
-import static com.simibubi.create.AllTags.pickaxeOnly;
-import static com.simibubi.create.AllTags.tagBlockAndItem;
-import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.BlockStateGen.simpleCubeAll;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
+import static com.simibubi.create.foundation.data.TagGen.axeOnly;
+import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
+import static com.simibubi.create.foundation.data.TagGen.tagBlockAndItem;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
@@ -125,6 +124,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltModel;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockModel;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogwheelBlockItem;
+import com.simibubi.create.content.contraptions.relays.elementary.EncasingRegistry;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.content.contraptions.relays.encased.ClutchBlock;
@@ -243,7 +243,7 @@ import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
-import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.UncontainableBlockItem;
 import com.simibubi.create.foundation.utility.ColorHandlers;
 import com.simibubi.create.foundation.utility.Couple;
@@ -290,14 +290,11 @@ import net.minecraftforge.common.Tags;
 
 public class AllBlocks {
 
-	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
+	static {
+		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);
+	}
 
 	// Schematics
-
-	static {
-		REGISTRATE.startSection(SCHEMATICS);
-	}
 
 	public static final BlockEntry<SchematicannonBlock> SCHEMATICANNON =
 		REGISTRATE.block("schematicannon", SchematicannonBlock::new)
@@ -331,10 +328,6 @@ public class AllBlocks {
 			.register();
 
 	// Kinetics
-
-	static {
-		REGISTRATE.startSection(AllSections.KINETICS);
-	}
 
 	public static final BlockEntry<ShaftBlock> SHAFT = REGISTRATE.block("shaft", ShaftBlock::new)
 		.initialProperties(SharedProperties::stone)
@@ -372,23 +365,26 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<EncasedShaftBlock> ANDESITE_ENCASED_SHAFT =
-		REGISTRATE.block("andesite_encased_shaft", EncasedShaftBlock::andesite)
+		REGISTRATE.block("andesite_encased_shaft", p -> new EncasedShaftBlock(p, AllBlocks.ANDESITE_CASING::get))
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(BuilderTransformers.encasedShaft("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.SHAFT))
 			.transform(axeOrPickaxe())
 			.register();
 
 	public static final BlockEntry<EncasedShaftBlock> BRASS_ENCASED_SHAFT =
-		REGISTRATE.block("brass_encased_shaft", EncasedShaftBlock::brass)
+		REGISTRATE.block("brass_encased_shaft", p -> new EncasedShaftBlock(p, AllBlocks.BRASS_CASING::get))
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(BuilderTransformers.encasedShaft("brass", () -> AllSpriteShifts.BRASS_CASING))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.SHAFT))
 			.transform(axeOrPickaxe())
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL = REGISTRATE
-		.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
+		.block("andesite_encased_cogwheel", p -> new EncasedCogwheelBlock(p, false, AllBlocks.ANDESITE_CASING::get))
 		.properties(p -> p.color(MaterialColor.PODZOL))
 		.transform(BuilderTransformers.encasedCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+		.transform(EncasingRegistry.addVariantTo(AllBlocks.COGWHEEL))
 		.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
 			Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
 				AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
@@ -396,9 +392,10 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_COGWHEEL =
-		REGISTRATE.block("brass_encased_cogwheel", p -> EncasedCogwheelBlock.brass(false, p))
+		REGISTRATE.block("brass_encased_cogwheel", p -> new EncasedCogwheelBlock(p, false, AllBlocks.BRASS_CASING::get))
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(BuilderTransformers.encasedCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.COGWHEEL))
 			.onRegister(CreateRegistrate.connectedTextures(() -> new EncasedCogCTBehaviour(AllSpriteShifts.BRASS_CASING,
 				Couple.create(AllSpriteShifts.BRASS_ENCASED_COGWHEEL_SIDE,
 					AllSpriteShifts.BRASS_ENCASED_COGWHEEL_OTHERSIDE))))
@@ -406,16 +403,18 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_LARGE_COGWHEEL =
-		REGISTRATE.block("andesite_encased_large_cogwheel", p -> EncasedCogwheelBlock.andesite(true, p))
+		REGISTRATE.block("andesite_encased_large_cogwheel", p -> new EncasedCogwheelBlock(p, true, AllBlocks.ANDESITE_CASING::get))
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(BuilderTransformers.encasedLargeCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.LARGE_COGWHEEL))
 			.transform(axeOrPickaxe())
 			.register();
 
 	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_LARGE_COGWHEEL =
-		REGISTRATE.block("brass_encased_large_cogwheel", p -> EncasedCogwheelBlock.brass(true, p))
+		REGISTRATE.block("brass_encased_large_cogwheel", p -> new EncasedCogwheelBlock(p, true, AllBlocks.BRASS_CASING::get))
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(BuilderTransformers.encasedLargeCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.LARGE_COGWHEEL))
 			.transform(axeOrPickaxe())
 			.register();
 
@@ -614,7 +613,7 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.transform(BuilderTransformers.cuckooClock())
 			.lang("Cuckoo Clock")
-			.onRegisterAfter(Registry.ITEM_REGISTRY, c -> TooltipHelper.referTo(c, CUCKOO_CLOCK))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, c -> ItemDescription.referKey(c, CUCKOO_CLOCK))
 			.register();
 
 	public static final BlockEntry<MillstoneBlock> MILLSTONE = REGISTRATE.block("millstone", MillstoneBlock::new)
@@ -881,7 +880,7 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<EncasedPipeBlock> ENCASED_FLUID_PIPE =
-		REGISTRATE.block("encased_fluid_pipe", EncasedPipeBlock::new)
+		REGISTRATE.block("encased_fluid_pipe", p -> new EncasedPipeBlock(p, AllBlocks.COPPER_CASING::get))
 			.initialProperties(SharedProperties::copperMetal)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_LIGHT_GRAY))
 			.properties(BlockBehaviour.Properties::noOcclusion)
@@ -892,6 +891,7 @@ public class AllBlocks {
 				(s, f) -> !s.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
+			.transform(EncasingRegistry.addVariantTo(AllBlocks.FLUID_PIPE))
 			.register();
 
 	public static final BlockEntry<GlassFluidPipeBlock> GLASS_FLUID_PIPE =
@@ -1444,7 +1444,7 @@ public class AllBlocks {
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 			})
-			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemDescription.useKey(v, "block.create.seat"))
 			.tag(AllBlockTags.SEATS.tag)
 			.item()
 			.tag(AllItemTags.SEATS.tag)
@@ -1578,10 +1578,6 @@ public class AllBlocks {
 			.register();
 
 	// Logistics
-
-	static {
-		REGISTRATE.startSection(AllSections.LOGISTICS);
-	}
 
 	public static final BlockEntry<ArmBlock> MECHANICAL_ARM = REGISTRATE.block("mechanical_arm", ArmBlock::new)
 		.initialProperties(SharedProperties::softMetal)
@@ -2024,10 +2020,6 @@ public class AllBlocks {
 
 	// Curiosities
 
-	static {
-		REGISTRATE.startSection(AllSections.CURIOSITIES);
-	}
-
 	public static final BlockEntry<BacktankBlock> COPPER_BACKTANK =
 		REGISTRATE.block("copper_backtank", BacktankBlock::new)
 			.initialProperties(SharedProperties::copperMetal)
@@ -2079,7 +2071,7 @@ public class AllBlocks {
 					.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/block"))
 					.texture("0", p.modLoc("block/toolbox/" + colourName)));
 			})
-			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> TooltipHelper.referTo(v, "block.create.toolbox"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemDescription.useKey(v, "block.create.toolbox"))
 			.tag(AllBlockTags.TOOLBOXES.tag)
 			.item(UncontainableBlockItem::new)
 			.model((c, p) -> p.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/item"))
@@ -2090,10 +2082,6 @@ public class AllBlocks {
 	});
 
 	// Materials
-
-	static {
-		REGISTRATE.startSection(AllSections.PALETTES);
-	}
 
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_ORE)

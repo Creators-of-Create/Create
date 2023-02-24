@@ -12,8 +12,8 @@ import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock.SignalType;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.OverlayState;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlockEntity.OverlayState;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlockEntity.SignalState;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -96,24 +96,24 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	@Override
-	public void tileAdded(BlockEntity tile, boolean front) {
-		Map<BlockPos, Boolean> tilesOnSide = blockEntities.get(front);
-		if (tilesOnSide.isEmpty())
-			tile.getBlockState()
+	public void blockEntityAdded(BlockEntity blockEntity, boolean front) {
+		Map<BlockPos, Boolean> blockEntitiesOnSide = blockEntities.get(front);
+		if (blockEntitiesOnSide.isEmpty())
+			blockEntity.getBlockState()
 				.getOptionalValue(SignalBlock.TYPE)
 				.ifPresent(type -> types.set(front, type));
-		tilesOnSide.put(tile.getBlockPos(), tile instanceof SignalTileEntity ste && ste.getReportedPower());
+		blockEntitiesOnSide.put(blockEntity.getBlockPos(), blockEntity instanceof SignalBlockEntity ste && ste.getReportedPower());
 	}
 
-	public void updateTilePower(SignalTileEntity tile) {
+	public void updateBlockEntityPower(SignalBlockEntity blockEntity) {
 		for (boolean front : Iterate.trueAndFalse)
 			blockEntities.get(front)
-				.computeIfPresent(tile.getBlockPos(), (p, c) -> tile.getReportedPower());
+				.computeIfPresent(blockEntity.getBlockPos(), (p, c) -> blockEntity.getReportedPower());
 	}
 
 	@Override
-	public void tileRemoved(BlockPos tilePos, boolean front) {
-		blockEntities.forEach(s -> s.remove(tilePos));
+	public void blockEntityRemoved(BlockPos blockEntityPos, boolean front) {
+		blockEntities.forEach(s -> s.remove(blockEntityPos));
 		if (blockEntities.both(Map::isEmpty))
 			removeFromAllGraphs();
 	}
@@ -138,11 +138,11 @@ public class SignalBoundary extends TrackEdgePoint {
 			.isEmpty();
 	}
 
-	public OverlayState getOverlayFor(BlockPos tile) {
+	public OverlayState getOverlayFor(BlockPos blockEntity) {
 		for (boolean first : Iterate.trueAndFalse) {
 			Map<BlockPos, Boolean> set = blockEntities.get(first);
 			for (BlockPos blockPos : set.keySet()) {
-				if (blockPos.equals(tile))
+				if (blockPos.equals(blockEntity))
 					return blockEntities.get(!first)
 						.isEmpty() ? OverlayState.RENDER : OverlayState.DUAL;
 				return OverlayState.SKIP;
@@ -151,15 +151,15 @@ public class SignalBoundary extends TrackEdgePoint {
 		return OverlayState.SKIP;
 	}
 
-	public SignalType getTypeFor(BlockPos tile) {
+	public SignalType getTypeFor(BlockPos blockEntity) {
 		return types.get(blockEntities.getFirst()
-			.containsKey(tile));
+			.containsKey(blockEntity));
 	}
 
-	public SignalState getStateFor(BlockPos tile) {
+	public SignalState getStateFor(BlockPos blockEntity) {
 		for (boolean first : Iterate.trueAndFalse) {
 			Map<BlockPos, Boolean> set = blockEntities.get(first);
-			if (set.containsKey(tile))
+			if (set.containsKey(blockEntity))
 				return cachedStates.get(first);
 		}
 		return SignalState.INVALID;

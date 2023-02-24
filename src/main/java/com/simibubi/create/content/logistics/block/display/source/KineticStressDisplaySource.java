@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
-import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
+import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
@@ -19,7 +19,7 @@ public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySourc
 		if (mode == 1)
 			return super.formatNumeric(context, currentLevel);
 		LangBuilder builder = Lang.number(currentLevel);
-		if (context.getTargetTE() instanceof FlapDisplayTileEntity)
+		if (context.getTargetBlockEntity() instanceof FlapDisplayBlockEntity)
 			builder.space();
 		return builder.translate("generic.unit.stress")
 			.component();
@@ -32,11 +32,11 @@ public class KineticStressDisplaySource extends PercentOrProgressBarDisplaySourc
 
 	@Override
 	protected Float getProgress(DisplayLinkContext context) {
-		if (!(context.getSourceTE()instanceof StressGaugeTileEntity gaugeTile))
+		if (!(context.getSourceBlockEntity()instanceof StressGaugeBlockEntity stressGauge))
 			return null;
 
-		float capacity = gaugeTile.getNetworkCapacity();
-		float stress = gaugeTile.getNetworkStress();
+		float capacity = stressGauge.getNetworkCapacity();
+		float stress = stressGauge.getNetworkStress();
 
 		if (capacity == 0)
 			return 0f;

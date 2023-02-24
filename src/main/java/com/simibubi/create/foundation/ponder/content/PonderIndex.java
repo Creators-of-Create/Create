@@ -345,7 +345,7 @@ public class PonderIndex {
 	}
 
 	public static boolean editingModeActive() {
-		return AllConfigs.CLIENT.editingMode.get();
+		return AllConfigs.client().editingMode.get();
 	}
 
 	public static void registerTags() {

@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlockEntity;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlockEntity.Phase;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -322,7 +322,7 @@ public class ArmScenes {
 					.showControls(new InputWindowElement(filterSlot.add(2 - x, -y, 0), Pointing.LEFT).rightClick()
 						.withItem(item), 5);
 				scene.idle(7);
-				scene.world.setFilterData(util.select.position(5 - x, 3 - y, 2), FunnelTileEntity.class, item);
+				scene.world.setFilterData(util.select.position(5 - x, 3 - y, 2), FunnelBlockEntity.class, item);
 				scene.idle(4);
 			}
 		}
@@ -352,7 +352,7 @@ public class ArmScenes {
 			BlockPos funnelPos = util.grid.at(5 - index % 3, 1 + index / 3, 2);
 			scene.world.flapFunnel(funnelPos, false);
 			scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, i == 3 ? ItemStack.EMPTY : sand, -1);
-			scene.world.modifyTileEntity(funnelPos.north(), MechanicalCrafterTileEntity.class, mct -> mct.getInventory()
+			scene.world.modifyBlockEntity(funnelPos.north(), MechanicalCrafterBlockEntity.class, mct -> mct.getInventory()
 				.insertItem(0, sand.copy(), false));
 			scene.idle(10);
 		}
@@ -372,7 +372,7 @@ public class ArmScenes {
 			BlockPos funnelPos = util.grid.at(3 + index % 3, 1 + index / 3, 2);
 			scene.world.flapFunnel(funnelPos, false);
 			scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, i == 4 ? ItemStack.EMPTY : sulphur, -1);
-			scene.world.modifyTileEntity(funnelPos.north(), MechanicalCrafterTileEntity.class, mct -> mct.getInventory()
+			scene.world.modifyBlockEntity(funnelPos.north(), MechanicalCrafterBlockEntity.class, mct -> mct.getInventory()
 				.insertItem(0, sulphur.copy(), false));
 			scene.idle(10);
 		}

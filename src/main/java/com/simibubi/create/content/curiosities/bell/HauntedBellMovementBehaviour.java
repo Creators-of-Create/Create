@@ -20,19 +20,19 @@ public class HauntedBellMovementBehaviour extends BellMovementBehaviour {
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		if (!context.world.isClientSide && getRecharge(context) == 0) {
 			HauntedBellPulser.sendPulse(context.world, pos, DISTANCE, false);
-			setRecharge(context, HauntedBellTileEntity.RECHARGE_TICKS);
+			setRecharge(context, HauntedBellBlockEntity.RECHARGE_TICKS);
 			playSound(context);
 		}
 	}
 
 	@Override
 	public void writeExtraData(MovementContext context) {
-		context.tileData.putInt("Recharge", getRecharge(context));
+		context.blockEntityData.putInt("Recharge", getRecharge(context));
 	}
 
 	private int getRecharge(MovementContext context) {
 		if (!(context.temporaryData instanceof Integer) && context.world != null) {
-			context.temporaryData = context.tileData.getInt("Recharge");
+			context.temporaryData = context.blockEntityData.getInt("Recharge");
 		}
 		return (Integer) context.temporaryData;
 	}

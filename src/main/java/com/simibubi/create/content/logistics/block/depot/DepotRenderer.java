@@ -7,8 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -22,23 +22,23 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
+public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 
 	public DepotRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	protected void renderSafe(DepotTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(DepotBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		renderItemsOf(te, partialTicks, ms, buffer, light, overlay, te.depotBehaviour);
+		renderItemsOf(be, partialTicks, ms, buffer, light, overlay, be.depotBehaviour);
 	}
 
-	public static void renderItemsOf(SmartTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	public static void renderItemsOf(SmartBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay, DepotBehaviour depotBehaviour) {
 
 		TransportedItemStack transported = depotBehaviour.heldItem;
 		TransformStack msr = TransformStack.cast(ms);
-		Vec3 itemPosition = VecHelper.getCenterOf(te.getBlockPos());
+		Vec3 itemPosition = VecHelper.getCenterOf(be.getBlockPos());
 
 		ms.pushPose();
 		ms.translate(.5f, 15 / 16f, .5f);

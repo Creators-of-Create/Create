@@ -16,7 +16,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class CustomBlockModels {
 
 	private final Multimap<ResourceLocation, NonNullFunction<BakedModel, ? extends BakedModel>> modelFuncs = MultimapBuilder.hashKeys().arrayListValues().build();
-	private final Map<Block, NonNullFunction<BakedModel, ? extends BakedModel>> finalModelFunc = new IdentityHashMap<>();
+	private final Map<Block, NonNullFunction<BakedModel, ? extends BakedModel>> finalModelFuncs = new IdentityHashMap<>();
+	private boolean funcsLoaded = false;
 
 	public void register(ResourceLocation block, NonNullFunction<BakedModel, ? extends BakedModel> func) {
 		modelFuncs.put(block, func);
@@ -24,16 +25,18 @@ public class CustomBlockModels {
 
 	public void forEach(NonNullBiConsumer<Block, NonNullFunction<BakedModel, ? extends BakedModel>> consumer) {
 		loadEntriesIfMissing();
-		finalModelFunc.forEach(consumer);
+		finalModelFuncs.forEach(consumer);
 	}
 
 	private void loadEntriesIfMissing() {
-		if (finalModelFunc.isEmpty())
+		if (!funcsLoaded) {
 			loadEntries();
+			funcsLoaded = true;
+		}
 	}
 
 	private void loadEntries() {
-		finalModelFunc.clear();
+		finalModelFuncs.clear();
 		modelFuncs.asMap().forEach((location, funcList) -> {
 			Block block = ForgeRegistries.BLOCKS.getValue(location);
 			if (block == null) {
@@ -49,7 +52,7 @@ public class CustomBlockModels {
 				}
 			}
 
-			finalModelFunc.put(block, finalFunc);
+			finalModelFuncs.put(block, finalFunc);
 		});
 	}
 

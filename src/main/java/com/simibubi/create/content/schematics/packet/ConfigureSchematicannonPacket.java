@@ -2,9 +2,9 @@ package com.simibubi.create.content.schematics.packet;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.schematics.block.SchematicannonContainer;
-import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
-import com.simibubi.create.content.schematics.block.SchematicannonTileEntity.State;
+import com.simibubi.create.content.schematics.block.SchematicannonBlockEntity;
+import com.simibubi.create.content.schematics.block.SchematicannonBlockEntity.State;
+import com.simibubi.create.content.schematics.block.SchematicannonMenu;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,7 +14,7 @@ import net.minecraftforge.network.NetworkEvent.Context;
 public class ConfigureSchematicannonPacket extends SimplePacketBase {
 
 	public static enum Option {
-		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_TILES, PLAY, PAUSE, STOP;
+		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_BLOCK_ENTITIES, PLAY, PAUSE, STOP;
 	}
 
 	private Option option;
@@ -37,41 +37,41 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayer player = context.get().getSender();
-			if (player == null || !(player.containerMenu instanceof SchematicannonContainer))
+			if (player == null || !(player.containerMenu instanceof SchematicannonMenu))
 				return;
 
-			SchematicannonTileEntity te = ((SchematicannonContainer) player.containerMenu).contentHolder;
+			SchematicannonBlockEntity be = ((SchematicannonMenu) player.containerMenu).contentHolder;
 			switch (option) {
 			case DONT_REPLACE:
 			case REPLACE_ANY:
 			case REPLACE_EMPTY:
 			case REPLACE_SOLID:
-				te.replaceMode = option.ordinal();
+				be.replaceMode = option.ordinal();
 				break;
 			case SKIP_MISSING:
-				te.skipMissing = set;
+				be.skipMissing = set;
 				break;
-			case SKIP_TILES:
-				te.replaceTileEntities = set;
+			case SKIP_BLOCK_ENTITIES:
+				be.replaceBlockEntities = set;
 				break;
 
 			case PLAY:
-				te.state = State.RUNNING;
-				te.statusMsg = "running";
+				be.state = State.RUNNING;
+				be.statusMsg = "running";
 				break;
 			case PAUSE:
-				te.state = State.PAUSED;
-				te.statusMsg = "paused";
+				be.state = State.PAUSED;
+				be.statusMsg = "paused";
 				break;
 			case STOP:
-				te.state = State.STOPPED;
-				te.statusMsg = "stopped";
+				be.state = State.STOPPED;
+				be.statusMsg = "stopped";
 				break;
 			default:
 				break;
 			}
 
-			te.sendUpdate = true;
+			be.sendUpdate = true;
 		});
 		context.get().setPacketHandled(true);
 	}

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.curiosities.armor.CapacityEnchantment.ICapacityEnchantable;
-import com.simibubi.create.foundation.item.MultiLayeredArmorItem;
+import com.simibubi.create.foundation.item.LayeredArmorItem;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -119,14 +119,14 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 		}
 	}
 
-	public static class MultiLayered extends BacktankItem implements MultiLayeredArmorItem {
-		public MultiLayered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc, Supplier<BacktankBlockItem> placeable) {
+	public static class Layered extends BacktankItem implements LayeredArmorItem {
+		public Layered(ArmorMaterial material, Properties properties, ResourceLocation textureLoc, Supplier<BacktankBlockItem> placeable) {
 			super(material, properties, textureLoc, placeable);
 		}
 
 		@Override
-		public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String layer) {
-			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%s.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
+		public String getArmorTextureLocation(LivingEntity entity, EquipmentSlot slot, ItemStack stack, int layer) {
+			return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%d.png", textureLoc.getNamespace(), textureLoc.getPath(), layer);
 		}
 	}
 }

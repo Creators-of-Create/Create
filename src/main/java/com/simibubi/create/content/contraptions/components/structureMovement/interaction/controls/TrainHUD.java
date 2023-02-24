@@ -60,7 +60,7 @@ public class TrainHUD {
 
 		Train train = carriage.train;
 		double value =
-			Math.abs(train.speed) / (train.maxSpeed() * AllConfigs.SERVER.trains.manualTrainSpeedModifier.getF());
+			Math.abs(train.speed) / (train.maxSpeed() * AllConfigs.server().trains.manualTrainSpeedModifier.getF());
 		value = Mth.clamp(value + 0.05f, 0, 1);
 
 		displayedSpeed.chase((int) (value * 18) / 18f, .5f, Chaser.EXP);
@@ -73,14 +73,14 @@ public class TrainHUD {
 		if (isSprintKeyPressed && honkPacketCooldown-- <= 0) {
 			train.determineHonk(mc.level);
 			if (train.lowHonk != null) {
-				AllPackets.channel.sendToServer(new HonkPacket.Serverbound(train, true));
+				AllPackets.getChannel().sendToServer(new HonkPacket.Serverbound(train, true));
 				honkPacketCooldown = 5;
 				usedToHonk = true;
 			}
 		}
 
 		if (!isSprintKeyPressed && usedToHonk) {
-			AllPackets.channel.sendToServer(new HonkPacket.Serverbound(train, false));
+			AllPackets.getChannel().sendToServer(new HonkPacket.Serverbound(train, false));
 			honkPacketCooldown = 0;
 			usedToHonk = false;
 		}
@@ -94,7 +94,7 @@ public class TrainHUD {
 		}
 
 		if (hudPacketCooldown-- <= 0) {
-			AllPackets.channel.sendToServer(new TrainHUDUpdatePacket.Serverbound(train, editedThrottle));
+			AllPackets.getChannel().sendToServer(new TrainHUDUpdatePacket.Serverbound(train, editedThrottle));
 			hudPacketCooldown = 5;
 		}
 	}

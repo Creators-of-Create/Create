@@ -79,14 +79,14 @@ import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
+import com.simibubi.create.foundation.blockEntity.RemoveBlockEntityPacket;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringCountUpdatePacket;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.command.HighlightPacket;
 import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
-import com.simibubi.create.foundation.gui.container.ClearContainerPacket;
-import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
-import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
+import com.simibubi.create.foundation.gui.menu.ClearMenuPacket;
+import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.core.BlockPos;
@@ -109,7 +109,7 @@ public enum AllPackets {
 		PLAY_TO_SERVER),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new, PLAY_TO_SERVER),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new, PLAY_TO_SERVER),
-	CLEAR_CONTAINER(ClearContainerPacket.class, ClearContainerPacket::new, PLAY_TO_SERVER),
+	CLEAR_CONTAINER(ClearMenuPacket.class, ClearMenuPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new, PLAY_TO_SERVER),
 	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new, PLAY_TO_SERVER),
@@ -185,7 +185,7 @@ public enum AllPackets {
 	SYNC_RAIL_GRAPH(TrackGraphSyncPacket.class, TrackGraphSyncPacket::new, PLAY_TO_CLIENT),
 	SYNC_EDGE_GROUP(SignalEdgeGroupPacket.class, SignalEdgeGroupPacket::new, PLAY_TO_CLIENT),
 	SYNC_TRAIN(TrainPacket.class, TrainPacket::new, PLAY_TO_CLIENT),
-	REMOVE_TE(RemoveTileEntityPacket.class, RemoveTileEntityPacket::new, PLAY_TO_CLIENT),
+	REMOVE_TE(RemoveBlockEntityPacket.class, RemoveBlockEntityPacket::new, PLAY_TO_CLIENT),
 	S_CONFIGURE_TRAIN(TrainEditReturnPacket.class, TrainEditReturnPacket::new, PLAY_TO_CLIENT),
 	CONTROLS_ABORT(ControlsStopControllingPacket.class, ControlsStopControllingPacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_HUD(TrainHUDUpdatePacket.class, TrainHUDUpdatePacket::new, PLAY_TO_CLIENT),
@@ -202,7 +202,7 @@ public enum AllPackets {
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
 	public static final int NETWORK_VERSION = 2;
 	public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
-	public static SimpleChannel channel;
+	private static SimpleChannel channel;
 
 	private LoadedPacket<?> packet;
 
@@ -221,8 +221,12 @@ public enum AllPackets {
 			packet.packet.register();
 	}
 
+	public static SimpleChannel getChannel() {
+		return channel;
+	}
+
 	public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
-		channel.send(
+		getChannel().send(
 			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())),
 			message);
 	}
@@ -245,7 +249,7 @@ public enum AllPackets {
 		}
 
 		private void register() {
-			channel.messageBuilder(type, index++, direction)
+			getChannel().messageBuilder(type, index++, direction)
 				.encoder(encoder)
 				.decoder(decoder)
 				.consumer(handler)

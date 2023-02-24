@@ -7,20 +7,17 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class SchematicannonInventory extends ItemStackHandler {
-	/**
-	 * 
-	 */
-	private final SchematicannonTileEntity te;
+	private final SchematicannonBlockEntity blockEntity;
 
-	public SchematicannonInventory(SchematicannonTileEntity schematicannonTileEntity) {
+	public SchematicannonInventory(SchematicannonBlockEntity blockEntity) {
 		super(5);
-		te = schematicannonTileEntity;
+		this.blockEntity = blockEntity;
 	}
 
 	@Override
 	protected void onContentsChanged(int slot) {
 		super.onContentsChanged(slot);
-		te.setChanged();
+		blockEntity.setChanged();
 	}
 
 	@Override

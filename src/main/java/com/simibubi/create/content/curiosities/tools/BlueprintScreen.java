@@ -8,13 +8,13 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContainer> {
+public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintMenu> {
 
 	protected AllGuiTextures background;
 	private List<Rect2i> extraAreas = Collections.emptyList();
@@ -33,8 +33,8 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	private IconButton resetButton;
 	private IconButton confirmButton;
 
-	public BlueprintScreen(BlueprintContainer container, Inventory inv, Component title) {
-		super(container, inv, title);
+	public BlueprintScreen(BlueprintMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title);
 		this.background = AllGuiTextures.BLUEPRINT;
 	}
 
@@ -76,7 +76,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		background.render(ms, x, y, this);
 		font.draw(ms, title, x + 15, y + 4, 0xFFFFFF);
 
-		GuiGameElement.of(AllBlockPartials.CRAFTING_BLUEPRINT_1x1).<GuiGameElement
+		GuiGameElement.of(AllPartialModels.CRAFTING_BLUEPRINT_1x1).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.width + 20, y + background.height - 32, 0)
 			.rotate(45, -45, 22.5f)
 			.scale(40)
@@ -166,7 +166,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	protected void contentsCleared() {}
 
 	protected void sendOptionUpdate(Option option) {
-		AllPackets.channel.sendToServer(new FilterScreenPacket(option));
+		AllPackets.getChannel().sendToServer(new FilterScreenPacket(option));
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 
 import net.minecraft.core.BlockPos;
@@ -49,7 +49,7 @@ public class FluidTankItem extends BlockItem {
 			if (nbt.contains("TankContent")) {
 				FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("TankContent"));
 				if (!fluid.isEmpty()) {
-					fluid.setAmount(Math.min(FluidTankTileEntity.getCapacityMultiplier(), fluid.getAmount()));
+					fluid.setAmount(Math.min(FluidTankBlockEntity.getCapacityMultiplier(), fluid.getAmount()));
 					nbt.put("TankContent", fluid.writeToNBT(new CompoundTag()));
 				}
 			}
@@ -76,24 +76,24 @@ public class FluidTankItem extends BlockItem {
 		if (!FluidTankBlock.isTank(placedOnState))
 			return;
 		boolean creative = getBlock().equals(AllBlocks.CREATIVE_FLUID_TANK.get());
-		FluidTankTileEntity tankAt = ConnectivityHandler.partAt(
-			creative ? AllTileEntities.CREATIVE_FLUID_TANK.get() : AllTileEntities.FLUID_TANK.get(), world, placedOnPos
+		FluidTankBlockEntity tankAt = ConnectivityHandler.partAt(
+			creative ? AllBlockEntityTypes.CREATIVE_FLUID_TANK.get() : AllBlockEntityTypes.FLUID_TANK.get(), world, placedOnPos
 		);
 		if (tankAt == null)
 			return;
-		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
-		if (controllerTE == null)
+		FluidTankBlockEntity controllerBE = tankAt.getControllerBE();
+		if (controllerBE == null)
 			return;
 
-		int width = controllerTE.width;
+		int width = controllerBE.width;
 		if (width == 1)
 			return;
 
 		int tanksToPlace = 0;
-		BlockPos startPos = face == Direction.DOWN ? controllerTE.getBlockPos()
+		BlockPos startPos = face == Direction.DOWN ? controllerBE.getBlockPos()
 			.below()
-			: controllerTE.getBlockPos()
-				.above(controllerTE.height);
+			: controllerBE.getBlockPos()
+				.above(controllerBE.height);
 
 		if (startPos.getY() != pos.getY())
 			return;

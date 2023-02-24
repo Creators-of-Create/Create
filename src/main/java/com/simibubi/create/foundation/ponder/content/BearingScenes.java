@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -226,10 +226,10 @@ public class BearingScenes {
 		scene.markAsFinished();
 		scene.world.rotateBearing(bearingPos, -720, 400);
 		scene.world.rotateSection(contraption, 0, -720, 0, 400);
-		scene.world.modifyTileEntity(util.grid.at(2, 1, 5), HarvesterTileEntity.class,
+		scene.world.modifyBlockEntity(util.grid.at(2, 1, 5), HarvesterBlockEntity.class,
 			hte -> hte.setAnimatedSpeed(-150));
 		scene.idle(400);
-		scene.world.modifyTileEntity(util.grid.at(2, 1, 5), HarvesterTileEntity.class, hte -> hte.setAnimatedSpeed(0));
+		scene.world.modifyBlockEntity(util.grid.at(2, 1, 5), HarvesterBlockEntity.class, hte -> hte.setAnimatedSpeed(0));
 	}
 
 	public static void mechanicalBearing(SceneBuilder scene, SceneBuildingUtil util) {

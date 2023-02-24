@@ -7,8 +7,8 @@ import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringHandler;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueHandler;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;

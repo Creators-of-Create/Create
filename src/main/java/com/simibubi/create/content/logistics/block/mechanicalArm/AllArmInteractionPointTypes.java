@@ -9,31 +9,32 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
 import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlockEntity;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResultHolder;
@@ -261,7 +262,7 @@ public class AllArmInteractionPointTypes {
 		@Override
 		public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
 			return AllBlocks.MECHANICAL_SAW.has(state) && state.getValue(SawBlock.FACING) == Direction.UP
-				&& ((KineticTileEntity) level.getBlockEntity(pos)).getSpeed() != 0;
+				&& ((KineticBlockEntity) level.getBlockEntity(pos)).getSpeed() != 0;
 		}
 
 		@Override
@@ -376,11 +377,11 @@ public class AllArmInteractionPointTypes {
 		@Override
 		public void keepAlive() {
 			super.keepAlive();
-			BeltTileEntity beltTE = BeltHelper.getSegmentTE(level, pos);
-			if (beltTE == null)
+			BeltBlockEntity beltBE = BeltHelper.getSegmentBE(level, pos);
+			if (beltBE == null)
 				return;
 			TransportedItemStackHandlerBehaviour transport =
-				beltTE.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
+				beltBE.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
 			if (transport == null)
 				return;
 			MutableBoolean found = new MutableBoolean(false);
@@ -443,10 +444,10 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		public ItemStack extract(int slot, int amount, boolean simulate) {
-			BlockEntity te = level.getBlockEntity(pos);
-			if (!(te instanceof MechanicalCrafterTileEntity))
+			BlockEntity be = level.getBlockEntity(pos);
+			if (!(be instanceof MechanicalCrafterBlockEntity))
 				return ItemStack.EMPTY;
-			MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
+			MechanicalCrafterBlockEntity crafter = (MechanicalCrafterBlockEntity) be;
 			SmartInventory inventory = crafter.getInventory();
 			inventory.allowExtraction();
 			ItemStack extract = super.extract(slot, amount, simulate);
@@ -501,16 +502,17 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
+			Direction funnelFacing = FunnelBlock.getFunnelFacing(cachedState);
+			Vec3i normal = funnelFacing != null ? funnelFacing.getNormal() : Vec3i.ZERO;
 			return VecHelper.getCenterOf(pos)
-				.add(Vec3.atLowerCornerOf(FunnelBlock.getFunnelFacing(cachedState)
-					.getNormal())
+				.add(Vec3.atLowerCornerOf(normal)
 					.scale(-.15f));
 		}
 
 		@Override
 		protected Direction getInteractionDirection() {
-			return FunnelBlock.getFunnelFacing(cachedState)
-				.getOpposite();
+			Direction funnelFacing = FunnelBlock.getFunnelFacing(cachedState);
+			return funnelFacing != null ? funnelFacing.getOpposite() : Direction.UP;
 		}
 
 		@Override
@@ -523,8 +525,8 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		public ItemStack insert(ItemStack stack, boolean simulate) {
-			FilteringBehaviour filtering = TileEntityBehaviour.get(level, pos, FilteringBehaviour.TYPE);
-			InvManipulationBehaviour inserter = TileEntityBehaviour.get(level, pos, InvManipulationBehaviour.TYPE);
+			FilteringBehaviour filtering = BlockEntityBehaviour.get(level, pos, FilteringBehaviour.TYPE);
+			InvManipulationBehaviour inserter = BlockEntityBehaviour.get(level, pos, InvManipulationBehaviour.TYPE);
 			if (cachedState.getOptionalValue(BlockStateProperties.POWERED)
 				.orElse(false))
 				return stack;
@@ -536,12 +538,12 @@ public class AllArmInteractionPointTypes {
 				inserter.simulate();
 			ItemStack insert = inserter.insert(stack);
 			if (!simulate && insert.getCount() != stack.getCount()) {
-				BlockEntity tileEntity = level.getBlockEntity(pos);
-				if (tileEntity instanceof FunnelTileEntity) {
-					FunnelTileEntity funnelTileEntity = (FunnelTileEntity) tileEntity;
-					funnelTileEntity.onTransfer(stack);
-					if (funnelTileEntity.hasFlap())
-						funnelTileEntity.flap(true);
+				BlockEntity blockEntity = level.getBlockEntity(pos);
+				if (blockEntity instanceof FunnelBlockEntity) {
+					FunnelBlockEntity funnelBlockEntity = (FunnelBlockEntity) blockEntity;
+					funnelBlockEntity.onTransfer(stack);
+					if (funnelBlockEntity.hasFlap())
+						funnelBlockEntity.flap(true);
 				}
 			}
 			return insert;

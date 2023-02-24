@@ -3,7 +3,7 @@ package com.simibubi.create.content.schematics.packet;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.schematics.block.SchematicTableContainer;
+import com.simibubi.create.content.schematics.block.SchematicTableMenu;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -71,7 +71,7 @@ public class SchematicUploadPacket extends SimplePacketBase {
 				if (player == null)
 					return;
 				if (code == BEGIN) {
-					BlockPos pos = ((SchematicTableContainer) player.containerMenu).contentHolder
+					BlockPos pos = ((SchematicTableMenu) player.containerMenu).contentHolder
 							.getBlockPos();
 					Create.SCHEMATIC_RECEIVER.handleNewUpload(player, schematic, size, pos);
 				}

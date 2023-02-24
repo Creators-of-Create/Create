@@ -32,7 +32,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return false;
 	}
 	

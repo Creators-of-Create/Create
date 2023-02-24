@@ -90,7 +90,7 @@ public class CouplingHandler {
 			distanceTo = 2;
 		}
 		
-		if (distanceTo > AllConfigs.SERVER.kinetics.maxCartCouplingLength.get()) {
+		if (distanceTo > AllConfigs.server().kinetics.maxCartCouplingLength.get()) {
 			status(player, tooFar);
 			return false;
 		}

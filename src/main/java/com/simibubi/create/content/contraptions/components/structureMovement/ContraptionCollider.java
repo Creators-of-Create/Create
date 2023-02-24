@@ -352,6 +352,9 @@ public class ContraptionCollider {
 			if (surfaceCollision.isTrue()) {
 				contraptionEntity.registerColliding(entity);
 				entity.fallDistance = 0;
+				for (Entity rider : entity.getIndirectPassengers())
+					if (getPlayerType(rider) == PlayerType.CLIENT)
+						AllPackets.getChannel().sendToServer(new ClientMotionPacket(rider.getDeltaMovement(), true, 0));
 				boolean canWalk = bounce != 0 || slide == 0;
 				if (canWalk || !rotation.hasVerticalRotation()) {
 					if (canWalk)
@@ -375,7 +378,7 @@ public class ContraptionCollider {
 			float limbSwing = Mth.sqrt((float) (d0 * d0 + d1 * d1)) * 4.0F;
 			if (limbSwing > 1.0F)
 				limbSwing = 1.0F;
-			AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
+			AllPackets.getChannel().sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 
 			if (entity.isOnGround() && contraption instanceof TranslatingContraption) {
 				safetyLock.setLeft(new WeakReference<>(contraptionEntity));
@@ -457,7 +460,7 @@ public class ContraptionCollider {
 			return entityMotion;
 		if (cce.nonDamageTicks != 0)
 			return entityMotion;
-		if (!AllConfigs.SERVER.trains.trainsCauseDamage.get())
+		if (!AllConfigs.server().trains.trainsCauseDamage.get())
 			return entityMotion;
 
 		Vec3 diffMotion = contraptionMotion.subtract(entity.getDeltaMovement());
@@ -474,7 +477,7 @@ public class ContraptionCollider {
 			return entityMotion;
 
 		if (playerType == PlayerType.CLIENT) {
-			AllPackets.channel.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
+			AllPackets.getChannel().sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
 			world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
 				SoundSource.NEUTRAL, 1, .75f);
 		} else {

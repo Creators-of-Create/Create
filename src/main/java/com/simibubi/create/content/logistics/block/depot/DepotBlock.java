@@ -2,10 +2,10 @@ package com.simibubi.create.content.logistics.block.depot;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchable {
+public class DepotBlock extends Block implements IBE<DepotBlockEntity>, IWrenchable {
 
 	public DepotBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -38,13 +38,13 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchab
 	}
 
 	@Override
-	public Class<DepotTileEntity> getTileEntityClass() {
-		return DepotTileEntity.class;
+	public Class<DepotBlockEntity> getBlockEntityClass() {
+		return DepotBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends DepotTileEntity> getTileEntityType() {
-		return AllTileEntities.DEPOT.get();
+	public BlockEntityType<? extends DepotBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.DEPOT.get();
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchab
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		SharedDepotBlockMethods.onReplaced(state, worldIn, pos, newState, isMoving);
+		IBE.onRemove(state, worldIn, pos, newState);
 	}
 
 	@Override

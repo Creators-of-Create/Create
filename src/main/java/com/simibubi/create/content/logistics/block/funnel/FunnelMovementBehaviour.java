@@ -73,9 +73,9 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 			return;
 
 		ItemStack filter = getFilter(context);
-		int filterAmount = context.tileData.getInt("FilterAmount");
+		int filterAmount = context.blockEntityData.getInt("FilterAmount");
 		if (filterAmount <= 0)
-			filterAmount = hasFilter ? AllConfigs.SERVER.logistics.defaultExtractionLimit.get() : 1;
+			filterAmount = hasFilter ? AllConfigs.server().logistics.defaultExtractionLimit.get() : 1;
 
 		ItemStack extract = ItemHelper.extract(context.contraption.getSharedInventory(),
 			s -> FilterItem.test(world, s, filter), ItemHelper.ExtractionCountMode.UPTO, filterAmount, false);
@@ -119,12 +119,12 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 
 	private ItemStack getFilter(MovementContext context) {
-		return hasFilter ? ItemStack.of(context.tileData.getCompound("Filter")) : ItemStack.EMPTY;
+		return hasFilter ? ItemStack.of(context.blockEntityData.getCompound("Filter")) : ItemStack.EMPTY;
 	}
 
 }

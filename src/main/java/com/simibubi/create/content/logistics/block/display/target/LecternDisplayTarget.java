@@ -20,8 +20,8 @@ public class LecternDisplayTarget extends DisplayTarget {
 
 	@Override
 	public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-		BlockEntity te = context.getTargetTE();
-		if (!(te instanceof LecternBlockEntity lectern))
+		BlockEntity be = context.getTargetBlockEntity();
+		if (!(be instanceof LecternBlockEntity lectern))
 			return;
 		ItemStack book = lectern.getBook();
 		if (book.isEmpty())

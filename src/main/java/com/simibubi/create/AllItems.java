@@ -4,11 +4,7 @@ import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
-import static com.simibubi.create.content.AllSections.CURIOSITIES;
-import static com.simibubi.create.content.AllSections.KINETICS;
-import static com.simibubi.create.content.AllSections.LOGISTICS;
-import static com.simibubi.create.content.AllSections.MATERIALS;
-import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
@@ -58,8 +54,8 @@ import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.recipe.CompatMetals;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.tags.ItemTags;
@@ -72,14 +68,11 @@ import net.minecraftforge.common.Tags;
 
 public class AllItems {
 
-	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
-
-	// Schematics
-
 	static {
-		REGISTRATE.startSection(MATERIALS);
+		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
+
+	// Materials
 
 	public static final ItemEntry<Item> WHEAT_FLOUR =
 		taggedIngredient("wheat_flour", forgeItemTag("flour/wheat"), forgeItemTag("flour")),
@@ -200,10 +193,6 @@ public class AllItems {
 
 	// Kinetics
 
-	static {
-		REGISTRATE.startSection(KINETICS);
-	}
-
 	public static final ItemEntry<BeltConnectorItem> BELT_CONNECTOR =
 		REGISTRATE.item("belt_connector", BeltConnectorItem::new)
 			.lang("Mechanical Belt")
@@ -259,7 +248,7 @@ public class AllItems {
 			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
 			.register(),
 
-		NETHERITE_BACKTANK = REGISTRATE.item("netherite_backtank", p -> new BacktankItem.MultiLayered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving"), NETHERITE_BACKTANK_PLACEABLE))
+		NETHERITE_BACKTANK = REGISTRATE.item("netherite_backtank", p -> new BacktankItem.Layered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving"), NETHERITE_BACKTANK_PLACEABLE))
 			.model(AssetLookup.customGenericItemModel("_", "item"))
 			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
 			.register();
@@ -269,7 +258,7 @@ public class AllItems {
 		COPPER_DIVING_HELMET = REGISTRATE.item("copper_diving_helmet", p -> new DivingHelmetItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
 			.register(),
 
-		NETHERITE_DIVING_HELMET = REGISTRATE.item("netherite_diving_helmet", p -> new DivingHelmetItem.MultiLayered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+		NETHERITE_DIVING_HELMET = REGISTRATE.item("netherite_diving_helmet", p -> new DivingHelmetItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.register();
 
 	public static final ItemEntry<? extends DivingBootsItem>
@@ -277,7 +266,7 @@ public class AllItems {
 		COPPER_DIVING_BOOTS = REGISTRATE.item("copper_diving_boots", p -> new DivingBootsItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
 			.register(),
 
-		NETHERITE_DIVING_BOOTS = REGISTRATE.item("netherite_diving_boots", p -> new DivingBootsItem.MultiLayered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+		NETHERITE_DIVING_BOOTS = REGISTRATE.item("netherite_diving_boots", p -> new DivingBootsItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
@@ -286,7 +275,7 @@ public class AllItems {
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
-		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
+		.onRegister(s -> ItemDescription.referKey(s, SAND_PAPER))
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
@@ -308,10 +297,6 @@ public class AllItems {
 			.register();
 
 	// Curiosities
-
-	static {
-		REGISTRATE.startSection(CURIOSITIES);
-	}
 
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
@@ -349,10 +334,6 @@ public class AllItems {
 
 	// Logistics
 
-	static {
-		REGISTRATE.startSection(LOGISTICS);
-	}
-
 	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
 		.model(AssetLookup.existingItemModel())
 		.register();
@@ -367,10 +348,6 @@ public class AllItems {
 		.register();
 
 	// Schematics
-
-	static {
-		REGISTRATE.startSection(SCHEMATICS);
-	}
 
 	public static final ItemEntry<Item> EMPTY_SCHEMATIC = REGISTRATE.item("empty_schematic", Item::new)
 		.properties(p -> p.stacksTo(1))
