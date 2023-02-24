@@ -42,8 +42,8 @@ import net.minecraftforge.common.ForgeMod;
 
 public class CopycatStepBlock extends WaterloggedCopycatBlock {
 
-	public static EnumProperty<Half> HALF = BlockStateProperties.HALF;
-	public static DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+	public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
+	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 

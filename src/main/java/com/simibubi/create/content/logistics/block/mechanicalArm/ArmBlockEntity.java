@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes.JukeboxPoint;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
@@ -45,7 +45,7 @@ import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class ArmBlockEntity extends KineticBlockEntity implements ITransformableTE {
+public class ArmBlockEntity extends KineticBlockEntity implements ITransformableBlockEntity {
 
 	// Server
 	List<ArmInteractionPoint> inputs;

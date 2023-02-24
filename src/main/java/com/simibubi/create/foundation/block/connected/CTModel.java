@@ -7,7 +7,8 @@ import java.util.Random;
 
 import com.simibubi.create.content.curiosities.frames.CopycatBlock;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
-import com.simibubi.create.foundation.block.render.QuadHelper;
+import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
+import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -34,9 +35,9 @@ public class CTModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+	protected void gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
 		IModelData blockEntityData) {
-		return builder.withInitial(CT_PROPERTY, createCTData(world, pos, state));
+		builder.withInitial(CT_PROPERTY, createCTData(world, pos, state));
 	}
 
 	protected CTData createCTData(BlockAndTintGetter world, BlockPos pos, BlockState state) {
@@ -80,14 +81,14 @@ public class CTModel extends BakedModelWrapperWithData {
 			if (quad.getSprite() != spriteShift.getOriginal())
 				continue;
 
-			BakedQuad newQuad = QuadHelper.clone(quad);
+			BakedQuad newQuad = BakedQuadHelper.clone(quad);
 			int[] vertexData = newQuad.getVertices();
 
 			for (int vertex = 0; vertex < 4; vertex++) {
-				float u = QuadHelper.getU(vertexData, vertex);
-				float v = QuadHelper.getV(vertexData, vertex);
-				QuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u, index));
-				QuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v, index));
+				float u = BakedQuadHelper.getU(vertexData, vertex);
+				float v = BakedQuadHelper.getV(vertexData, vertex);
+				BakedQuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u, index));
+				BakedQuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v, index));
 			}
 
 			quads.set(i, newQuad);

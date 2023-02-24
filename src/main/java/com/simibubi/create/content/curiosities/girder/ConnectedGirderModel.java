@@ -21,20 +21,20 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class ConnectedGirderModel extends CTModel {
 
-	protected static ModelProperty<ConnectionData> CONNECTION_PROPERTY = new ModelProperty<>();
+	protected static final ModelProperty<ConnectionData> CONNECTION_PROPERTY = new ModelProperty<>();
 
 	public ConnectedGirderModel(BakedModel originalModel) {
 		super(originalModel, new GirderCTBehaviour());
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+	protected void gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
 		IModelData blockEntityData) {
+		super.gatherModelData(builder, world, pos, state, blockEntityData);
 		ConnectionData connectionData = new ConnectionData();
 		for (Direction d : Iterate.horizontalDirections)
 			connectionData.setConnected(d, GirderBlock.isConnected(world, pos, state, d));
-		return super.gatherModelData(builder, world, pos, state, blockEntityData).withInitial(CONNECTION_PROPERTY,
-			connectionData);
+		builder.withInitial(CONNECTION_PROPERTY, connectionData);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class ConnectedGirderModel extends CTModel {
 		return quads;
 	}
 
-	private class ConnectionData {
+	private static class ConnectionData {
 		boolean[] connectedFaces;
 
 		public ConnectionData() {

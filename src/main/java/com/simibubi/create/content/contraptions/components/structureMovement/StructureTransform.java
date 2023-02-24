@@ -111,8 +111,8 @@ public class StructureTransform {
 	}
 
 	public void apply(BlockEntity be) {
-		if (be instanceof ITransformableTE)
-			((ITransformableTE) be).transform(this);
+		if (be instanceof ITransformableBlockEntity)
+			((ITransformableBlockEntity) be).transform(this);
 	}
 
 	/**

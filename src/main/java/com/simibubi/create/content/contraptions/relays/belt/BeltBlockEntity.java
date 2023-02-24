@@ -56,7 +56,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
@@ -517,11 +516,9 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		return empty;
 	}
 
-	public static final ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
-
 	@Override
 	public IModelData getModelData() {
-		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
+		return new ModelDataMap.Builder().withInitial(BeltModel.CASING_PROPERTY, casing)
 			.build();
 	}
 

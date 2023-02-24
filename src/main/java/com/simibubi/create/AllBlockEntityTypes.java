@@ -831,8 +831,8 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.TRAIN_DOOR, AllBlocks.FRAMED_GLASS_DOOR)
 		.register();
 
-	public static final BlockEntityEntry<CopycatBlockEntity> UNIVERSAL_FRAME = REGISTRATE
-		.blockEntity("universal_frame", CopycatBlockEntity::new)
+	public static final BlockEntityEntry<CopycatBlockEntity> COPYCAT = REGISTRATE
+		.blockEntity("copycat", CopycatBlockEntity::new)
 		.validBlocks(AllBlocks.COPYCAT_PANEL, AllBlocks.COPYCAT_STEP)
 		.register();
 

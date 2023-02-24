@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 
@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BracketedKineticBlockEntity extends SimpleKineticBlockEntity implements ITransformableTE {
+public class BracketedKineticBlockEntity extends SimpleKineticBlockEntity implements ITransformableBlockEntity {
 
 	public BracketedKineticBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);

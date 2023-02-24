@@ -10,8 +10,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.A
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes.ComponentPartials;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedBlockEntityBehaviour;
-import com.simibubi.create.foundation.block.connected.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
@@ -34,7 +34,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+	protected void gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
 		IModelData blockEntityData) {
 		PipeModelData data = new PipeModelData();
 		FluidTransportBehaviour transport = BlockEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
@@ -47,7 +47,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 			data.putBracket(bracket.getBracket());
 
 		data.setEncased(FluidPipeBlock.shouldDrawCasing(world, pos, state));
-		return builder.withInitial(PIPE_PROPERTY, data);
+		builder.withInitial(PIPE_PROPERTY, data);
 	}
 
 	@Override
