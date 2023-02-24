@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
+import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TEN_SECONDS;
 import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TWENTY_SECONDS;
 
 @GameTestGroup(path = "fluids")
@@ -111,30 +112,24 @@ public class TestFluids {
 		BlockPos tank1Pos = new BlockPos(5, 2, 1);
 		BlockPos tank2Pos = tank1Pos.south();
 		BlockPos tank3Pos = tank2Pos.south();
-		long totalContents = helper.getFluidInTanks(tank1Pos, tank2Pos, tank3Pos);
+		long initialContents = helper.getFluidInTanks(tank1Pos, tank2Pos, tank3Pos);
 
 		BlockPos pumpPos = new BlockPos(2, 2, 2);
 		helper.flipBlock(pumpPos);
 		helper.succeedWhen(() -> {
 			helper.assertSecondsPassed(13);
+			// make sure fully drained
+			helper.assertTanksEmpty(tank1Pos, tank2Pos, tank3Pos);
+			// and fully moved
 			BlockPos outputTankPos = new BlockPos(1, 2, 2);
-			IFluidHandler storage = helper.fluidStorageAt(outputTankPos);
-			long moved = helper.getTankContents(outputTankPos).getAmount();
-			long capacity = helper.getTankCapacity(outputTankPos);
-			// verify tank is correctly filled
-			if (moved != capacity) {
-				helper.fail("tank not full [%s/%s]".formatted(moved, capacity));
-			}
+			long moved = helper.getFluidInTanks(outputTankPos);
+			if (moved != initialContents)
+				helper.fail("Wrong amount of fluid amount. expected [%s], got [%s]".formatted(initialContents, moved));
 			// verify nothing was duped or deleted
-			long remaining = helper.getFluidInTanks(tank1Pos, tank2Pos, tank3Pos);
-			long newTotalContents = moved + remaining;
-			if (newTotalContents != totalContents) {
-				helper.fail("Wrong total fluid amount. expected [%s], got [%s]".formatted(totalContents, newTotalContents));
-			}
 		});
 	}
 
-	@GameTest(template = "3_pipe_split", timeoutTicks = TWENTY_SECONDS)
+	@GameTest(template = "3_pipe_split", timeoutTicks = TEN_SECONDS)
 	public static void threePipeSplit(CreateGameTestHelper helper) {
 		BlockPos pumpPos = new BlockPos(2, 2, 2);
 		BlockPos tank1Pos = new BlockPos(5, 2, 1);
@@ -146,7 +141,7 @@ public class TestFluids {
 		helper.flipBlock(pumpPos);
 
 		helper.succeedWhen(() -> {
-			helper.assertSecondsPassed(13);
+			helper.assertSecondsPassed(7);
 			FluidStack contents = helper.getTankContents(outputTankPos);
 			if (!contents.isEmpty()) {
 				helper.fail("Tank not empty: " + contents.getAmount());

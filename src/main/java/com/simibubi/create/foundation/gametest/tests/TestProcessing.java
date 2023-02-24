@@ -5,16 +5,22 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 
+import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
+import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper;
 import com.simibubi.create.foundation.gametest.infrastructure.GameTestGroup;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestAssertException;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.items.IItemHandler;
 
 import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TEN_SECONDS;
@@ -54,24 +60,26 @@ public class TestProcessing {
 		helper.succeedWhen(() -> helper.assertContainerContains(chest, expected));
 	}
 
-	// FIXME: this doesn't work and it feels like a bug, but it's the same as forge, so leave it out for now
-//	@GameTest(template = "iron_compacting", timeoutTicks = TEN_SECONDS)
-//	public static void ironCompacting(CreateGameTestHelper helper) {
-//		BlockPos output = new BlockPos(4, 2, 4);
-//		List<BlockPos> levers = List.of(
-//				new BlockPos(4, 3, 2),
-//				new BlockPos(1, 3, 2)
-//		);
-//		levers.forEach(helper::pullLever);
-//		helper.succeedWhen(() -> helper.assertContainerContains(output, Items.IRON_BLOCK));
-//	}
-
 	@GameTest(template = "precision_mechanism_crafting", timeoutTicks = TWENTY_SECONDS)
 	public static void precisionMechanismCrafting(CreateGameTestHelper helper) {
-		BlockPos lever = new BlockPos(2, 5, 4);
-		BlockPos output = new BlockPos(7, 2, 1);
+		BlockPos lever = new BlockPos(6, 3, 6);
+		BlockPos output = new BlockPos(11, 3, 1);
 		helper.pullLever(lever);
-		helper.succeedWhen(() -> helper.assertContainerContains(output, AllItems.PRECISION_MECHANISM.get()));
+
+		SequencedAssemblyRecipe recipe = (SequencedAssemblyRecipe) helper.getLevel().getRecipeManager()
+				.byKey(Create.asResource("sequenced_assembly/precision_mechanism"))
+				.orElseThrow(() -> new GameTestAssertException("Precision Mechanism recipe not found"));
+		Item result = recipe.getResultItem().getItem();
+		Item[] possibleResults = recipe.resultPool.stream()
+				.map(ProcessingOutput::getStack)
+				.map(ItemStack::getItem)
+				.filter(item -> item != result)
+				.toArray(Item[]::new);
+
+		helper.succeedWhen(() -> {
+			helper.assertContainerContains(output, result);
+			helper.assertAnyContained(output, possibleResults);
+		});
 	}
 
 	@GameTest(template = "sand_washing", timeoutTicks = TEN_SECONDS)
@@ -107,13 +115,11 @@ public class TestProcessing {
 
 	@GameTest(template = "water_filling_bottle")
 	public static void waterFillingBottle(CreateGameTestHelper helper) {
-		BlockPos lever = new BlockPos(2, 3, 2);
-		BlockPos spawn = new BlockPos(1, 2, 1);
-		BlockPos output = new BlockPos(1, 2, 4);
-		ItemStack waterBottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+		BlockPos lever = new BlockPos(3, 3, 3);
+		BlockPos output = new BlockPos(2, 2, 4);
+		ItemStack expected = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
 		helper.pullLever(lever);
-		helper.whenSecondsPassed(1, () -> helper.spawnItem(spawn, Items.GLASS_BOTTLE.getDefaultInstance()));
-		helper.succeedWhen(() -> helper.assertContainerContains(output, waterBottle));
+		helper.succeedWhen(() -> helper.assertContainerContains(output, expected));
 	}
 
 	@GameTest(template = "wheat_milling")

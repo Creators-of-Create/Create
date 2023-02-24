@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.gametest.infrastructure;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import com.simibubi.create.foundation.gametest.CreateGameTests;
 import com.simibubi.create.foundation.mixin.accessor.GameTestHelperAccessor;
 
+import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraftforge.fluids.FluidStack;
@@ -90,7 +90,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 		setBlock(pos, reversed);
 	}
 
-	public void assertNixieRedstone(BlockPos pos, int strength) {
+	public void assertNixiePower(BlockPos pos, int strength) {
 		NixieTubeTileEntity nixie = getBlockEntity(AllTileEntities.NIXIE_TUBE.get(), pos);
 		int actualStrength = nixie.getRedstoneStrength();
 		if (actualStrength != strength)
@@ -179,6 +179,19 @@ public class CreateGameTestHelper extends GameTestHelper {
 	}
 
 	/**
+	 * Spawn item entities given an item and amount. The amount will be split into multiple entities if
+	 * larger than the item's max stack size.
+	 */
+	public void spawnItems(BlockPos pos, Item item, int amount) {
+		while (amount > 0) {
+			int toSpawn = Math.min(amount, item.getMaxStackSize());
+			amount -= toSpawn;
+			ItemStack stack = new ItemStack(item, toSpawn);
+			spawnItem(pos, stack);
+		}
+	}
+
+	/**
 	 * Get the first entity found at the given position.
 	 */
 	public <T extends Entity> T getFirstEntity(EntityType<T> type, BlockPos pos) {
@@ -260,6 +273,12 @@ public class CreateGameTestHelper extends GameTestHelper {
 		assertFluidPresent(FluidStack.EMPTY, pos);
 	}
 
+	public void assertTanksEmpty(BlockPos... tanks) {
+		for (BlockPos tank : tanks) {
+			assertTankEmpty(tank);
+		}
+	}
+
 	// transfer - items
 
 	public IItemHandler itemStorageAt(BlockPos pos) {
@@ -273,17 +292,21 @@ public class CreateGameTestHelper extends GameTestHelper {
 	}
 
 	/**
-	 * Collect all ItemStacks from an inventory. Duplicate item types are possible.
+	 * Get a map of contained items to their amounts. This is not safe for NBT!
 	 */
-	public List<ItemStack> getAllContainedStacks(BlockPos pos) {
+	public Object2LongMap<Item> getItemContent(BlockPos pos) {
 		IItemHandler handler = itemStorageAt(pos);
-		List<ItemStack> stacks = new ArrayList<>();
+		Object2LongMap<Item> map = new Object2LongArrayMap<>();
 		for (int i = 0; i < handler.getSlots(); i++) {
 			ItemStack stack = handler.getStackInSlot(i);
-			if (!stack.isEmpty())
-				stacks.add(stack);
+			if (stack.isEmpty())
+				continue;
+			Item item = stack.getItem();
+			long amount = map.getLong(item);
+			amount += stack.getCount();
+			map.put(item, amount);
 		}
-		return stacks;
+		return map;
 	}
 
 	/**
@@ -317,25 +340,24 @@ public class CreateGameTestHelper extends GameTestHelper {
 	}
 
 	/**
-	 * Assert that the inventory contains all the ItemStacks provided.
+	 * Assert that the inventory contains all the provided content.
 	 */
-	public void assertAllStacksPresent(List<ItemStack> stacks, BlockPos pos) {
+	public void assertContentPresent(Object2LongMap<Item> content, BlockPos pos) {
 		IItemHandler handler = itemStorageAt(pos);
-		List<ItemStack> toExtract = new ArrayList<>(); // compress stacks
-		stacks.forEach(stack -> {
-			for (ItemStack stackToExtract : toExtract) {
-				if (ItemHandlerHelper.canItemStacksStack(stack, stackToExtract)) {
-					stackToExtract.grow(stack.getCount());
-					return;
-				}
-			}
-			toExtract.add(stack);
-		});
-		for (ItemStack stack : toExtract) {
-			ItemStack extracted = ItemHelper.extract(handler, s -> ItemHandlerHelper.canItemStacksStack(stack, s), stack.getCount(), true);
-			if (extracted.isEmpty())
-				fail("ItemStack not present: " + stack);
+		Object2LongMap<Item> map = new Object2LongArrayMap<>(content);
+		for (int i = 0; i < handler.getSlots(); i++) {
+			ItemStack stack = handler.getStackInSlot(i);
+			if (stack.isEmpty())
+				continue;
+			Item item = stack.getItem();
+			long amount = map.getLong(item);
+			amount -= stack.getCount();
+			if (amount == 0)
+				map.removeLong(item);
+			else map.put(item, amount);
 		}
+		if (!map.isEmpty())
+			fail("Storage missing content: " + map);
 	}
 
 	/**

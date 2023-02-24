@@ -16,15 +16,16 @@ import com.simibubi.create.content.logistics.trains.management.display.FlapDispl
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper;
 import com.simibubi.create.foundation.gametest.infrastructure.GameTestGroup;
-import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Components;
 
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
@@ -156,45 +157,33 @@ public class TestItems {
 
 	@GameTest(template = "brass_tunnel_round_robin", timeoutTicks = TEN_SECONDS)
 	public static void brassTunnelRoundRobin(CreateGameTestHelper helper) {
-		BlockPos lever = new BlockPos(2, 3, 2);
-		List<BlockPos> tunnels = List.of(
-				new BlockPos(3, 3, 1),
-				new BlockPos(3, 3, 2),
-				new BlockPos(3, 3, 3)
-		);
 		List<BlockPos> outputs = List.of(
 				new BlockPos(7, 3, 1),
 				new BlockPos(7, 3, 2),
 				new BlockPos(7, 3, 3)
 		);
-		helper.pullLever(lever);
-		tunnels.forEach(pos -> helper.setTunnelMode(pos, SelectionMode.ROUND_ROBIN));
-		helper.succeedWhen(() -> {
-			long items = 0;
-			for (BlockPos out : outputs) {
-				helper.assertContainerContains(out, AllBlocks.BRASS_CASING.get());
-				items += helper.getTotalItems(out);
-			}
-			if (items != 10)
-				helper.fail("expected 10 items, got " + items);
-		});
+		brassTunnelModeTest(helper, SelectionMode.ROUND_ROBIN, outputs);
 	}
 
 	@GameTest(template = "brass_tunnel_split")
 	public static void brassTunnelSplit(CreateGameTestHelper helper) {
+		List<BlockPos> outputs = List.of(
+				new BlockPos(7, 2, 1),
+				new BlockPos(7, 2, 2),
+				new BlockPos(7, 2, 3)
+		);
+		brassTunnelModeTest(helper, SelectionMode.SPLIT, outputs);
+	}
+
+	private static void brassTunnelModeTest(CreateGameTestHelper helper, SelectionMode mode, List<BlockPos> outputs) {
 		BlockPos lever = new BlockPos(2, 3, 2);
 		List<BlockPos> tunnels = List.of(
 				new BlockPos(3, 3, 1),
 				new BlockPos(3, 3, 2),
 				new BlockPos(3, 3, 3)
 		);
-		List<BlockPos> outputs = List.of(
-				new BlockPos(7, 2, 1),
-				new BlockPos(7, 2, 2),
-				new BlockPos(7, 2, 3)
-		);
 		helper.pullLever(lever);
-		tunnels.forEach(tunnel -> helper.setTunnelMode(tunnel, SelectionMode.SPLIT));
+		tunnels.forEach(tunnel -> helper.setTunnelMode(tunnel, mode));
 		helper.succeedWhen(() -> {
 			long items = 0;
 			for (BlockPos out : outputs) {
@@ -251,7 +240,7 @@ public class TestItems {
 
 		BlockPos doubleChest = new BlockPos(2, 2, 3);
 		long totalDoubleChestItems = helper.getTotalItems(doubleChest);
-		BlockPos doubleChestNixiePos = new BlockPos(2, 3, 1);
+		BlockPos doubleChestNixiePos = new BlockPos(1, 3, 3);
 		NixieTubeTileEntity doubleChestNixie = helper.getBlockEntity(AllTileEntities.NIXIE_TUBE.get(), doubleChestNixiePos);
 
 		helper.succeedWhen(() -> {
@@ -312,30 +301,33 @@ public class TestItems {
 	public static void storages(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(12, 3, 2);
 		BlockPos startChest = new BlockPos(13, 3, 1);
-		List<ItemStack> originalStacks = helper.getAllContainedStacks(startChest);
+		Object2LongMap<Item> originalContent = helper.getItemContent(startChest);
 		BlockPos endShulker = new BlockPos(1, 3, 1);
 		helper.pullLever(lever);
-		helper.succeedWhen(() -> helper.assertAllStacksPresent(originalStacks, endShulker));
+		helper.succeedWhen(() -> helper.assertContentPresent(originalContent, endShulker));
 	}
 
 	@GameTest(template = "vault_comparator_output")
 	public static void vaultComparatorOutput(CreateGameTestHelper helper) {
-		BlockPos smallInput = new BlockPos(1, 3, 1).above();
+		BlockPos smallInput = new BlockPos(1, 4, 1);
 		BlockPos smallNixie = new BlockPos(3, 2, 1);
-		helper.assertNixieRedstone(smallNixie, 0);
-		helper.spawnItem(smallInput, new ItemStack(Items.BREAD, 64 * 9));
-		BlockPos medInput = new BlockPos(1, 4, 4).above();
+		helper.assertNixiePower(smallNixie, 0);
+		helper.whenSecondsPassed(1, () -> helper.spawnItems(smallInput, Items.BREAD, 64 * 9));
+
+		BlockPos medInput = new BlockPos(1, 5, 4);
 		BlockPos medNixie = new BlockPos(4, 2, 4);
-		helper.assertNixieRedstone(medNixie, 0);
-		helper.spawnItem(medInput, new ItemStack(Items.BREAD, 1)); // todo count for power 7
-		BlockPos bigInput = new BlockPos(1, 5, 8).above();
+		helper.assertNixiePower(medNixie, 0);
+		helper.whenSecondsPassed(2, () -> helper.spawnItems(medInput, Items.BREAD, 64 * 77));
+
+		BlockPos bigInput = new BlockPos(1, 6, 8);
 		BlockPos bigNixie = new BlockPos(5, 2, 7);
-		helper.assertNixieRedstone(bigNixie, 0);
-		helper.spawnItem(bigInput, new ItemStack(Items.BREAD, 1)); // todo count for power 7
+		helper.assertNixiePower(bigNixie, 0);
+		helper.whenSecondsPassed(3, () -> helper.spawnItems(bigInput, Items.BREAD, 64 * 240));
+
 		helper.succeedWhen(() -> {
-			helper.assertNixieRedstone(smallNixie, 7);
-			helper.assertNixieRedstone(medNixie, 7);
-			helper.assertNixieRedstone(bigNixie, 7);
+			helper.assertNixiePower(smallNixie, 7);
+			helper.assertNixiePower(medNixie, 7);
+			helper.assertNixiePower(bigNixie, 7);
 		});
 	}
 }

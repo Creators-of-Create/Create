@@ -5,10 +5,12 @@ import java.util.List;
 import com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper;
 import com.simibubi.create.foundation.gametest.infrastructure.GameTestGroup;
 
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -31,7 +33,7 @@ public class TestContraptions {
 			List<Arrow> arrows = helper.getEntitiesBetween(EntityType.ARROW, pos1, pos2);
 			if (arrows.size() != 4)
 				helper.fail("Expected 4 arrows");
-			helper.pullLever(lever); // disassemble contraption
+			helper.powerLever(lever); // disassemble contraption
 			BlockPos dispenser = new BlockPos(2, 5, 2);
 			// there should be 1 left over
 			helper.assertContainerContains(dispenser, Items.ARROW);
@@ -43,23 +45,19 @@ public class TestContraptions {
 		BlockPos lever = new BlockPos(4, 3, 1);
 		helper.pullLever(lever);
 		BlockPos output = new BlockPos(1, 3, 12);
-		helper.succeedWhen(() -> {
-			helper.assertAnyContained(output, Items.WHEAT, Items.POTATO, Items.CARROT);
-		});
+		helper.succeedWhen(() -> helper.assertAnyContained(output, Items.WHEAT, Items.POTATO, Items.CARROT));
 	}
 
 	@GameTest(template = "mounted_item_extract", timeoutTicks = TWENTY_SECONDS)
 	public static void mountedItemExtract(CreateGameTestHelper helper) {
 		BlockPos barrel = new BlockPos(1, 3, 2);
-		List<ItemStack> originalStacks = helper.getAllContainedStacks(barrel);
+		Object2LongMap<Item> content = helper.getItemContent(barrel);
 		BlockPos lever = new BlockPos(1, 5, 1);
 		helper.pullLever(lever);
 		BlockPos outputPos = new BlockPos(4, 2, 1);
 		helper.succeedWhen(() -> {
-			helper.assertAllStacksPresent(originalStacks, outputPos); // verify all extracted
-			if (!helper.getBlockState(lever).getValue(LeverBlock.POWERED)) {
-				helper.pullLever(lever); // disassemble contraption
-			}
+			helper.assertContentPresent(content, outputPos); // verify all extracted
+			helper.powerLever(lever);
 			helper.assertContainerEmpty(barrel); // verify nothing left
 		});
 	}
@@ -68,14 +66,14 @@ public class TestContraptions {
 	public static void mountedFluidDrain(CreateGameTestHelper helper) {
 		BlockPos tank = new BlockPos(1, 3, 2);
 		FluidStack fluid = helper.getTankContents(tank);
+		if (fluid.isEmpty())
+			helper.fail("Tank empty");
 		BlockPos lever = new BlockPos(1, 5, 1);
 		helper.pullLever(lever);
 		BlockPos output = new BlockPos(4, 2, 1);
 		helper.succeedWhen(() -> {
 			helper.assertFluidPresent(fluid, output); // verify all extracted
-			if (!helper.getBlockState(lever).getValue(LeverBlock.POWERED)) {
-				helper.pullLever(lever); // disassemble contraption
-			}
+			helper.powerLever(lever); // disassemble contraption
 			helper.assertTankEmpty(tank); // verify nothing left
 		});
 	}

@@ -31,10 +31,10 @@ public class TestMisc {
 		BlockPos redEndTop = helper.absolutePos(new BlockPos(5, 4, 7));
 		ServerLevel level = helper.getLevel();
 		SchematicExport.saveSchematic(
-				SchematicExport.SCHEMATICS, "schematicannon_gametest", true,
+				SchematicExport.SCHEMATICS.resolve("uploaded/Deployer"), "schematicannon_gametest", true,
 				level, whiteEndBottom, redEndTop
 		);
-		ItemStack schematic = SchematicItem.create("schematicannon_gametest.nbt", "?");
+		ItemStack schematic = SchematicItem.create("schematicannon_gametest.nbt", "Deployer");
 		// deploy to pos
 		BlockPos anchor = helper.absolutePos(new BlockPos(1, 2, 1));
 		schematic.getOrCreateTag().putBoolean("Deployed", true);
