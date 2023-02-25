@@ -16,6 +16,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.actors.DoorControlBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
@@ -80,6 +81,7 @@ import net.minecraftforge.network.PacketDistributor;
 public class StationBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity {
 
 	public TrackTargetingBehaviour<GlobalStation> edgePoint;
+	public DoorControlBehaviour doorControls;
 	public LerpedFloat flag;
 
 	protected int failedCarriageIndex;
@@ -111,6 +113,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.STATION));
+		behaviours.add(doorControls = new DoorControlBehaviour(this));
 		behaviours.add(depotBehaviour = new DepotBehaviour(this).onlyAccepts(AllItems.SCHEDULE::isIn)
 			.withCallback(s -> applyAutoSchedule()));
 		depotBehaviour.addSubBehaviours(behaviours);
