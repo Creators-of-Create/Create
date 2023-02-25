@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.render.QuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -27,6 +30,18 @@ public class CopycatPanelModel extends CopycatModel {
 		IModelData wrappedData) {
 		Direction facing = state.getOptionalValue(CopycatPanelBlock.FACING)
 			.orElse(Direction.UP);
+
+		BlockState specialCopycatModelState = null;
+		if (CopycatSpecialCases.isBarsMaterial(material))
+			specialCopycatModelState = AllBlocks.COPYCAT_BARS.getDefaultState();
+
+		if (specialCopycatModelState != null) {
+			BakedModel blockModel = Minecraft.getInstance()
+				.getBlockRenderer()
+				.getBlockModel(specialCopycatModelState.setValue(DirectionalBlock.FACING, facing));
+			if (blockModel instanceof CopycatModel cm)
+				return cm.getCroppedQuads(state, side, rand, material, wrappedData);
+		}
 
 		Vec3 normal = Vec3.atLowerCornerOf(facing.getNormal());
 		AABB cube = new AABB(BlockPos.ZERO);
@@ -56,8 +71,9 @@ public class CopycatPanelModel extends CopycatModel {
 					bb = bb.move(normal.scale(14 / 16f));
 
 				BakedQuad newQuad = QuadHelper.clone(quad);
-				if (cropAndMove(newQuad, bb, normal.scale(front ? 0 : -13 / 16f)));
-					quads.add(newQuad);
+				if (cropAndMove(newQuad, bb, normal.scale(front ? 0 : -13 / 16f)))
+					;
+				quads.add(newQuad);
 			}
 
 		}

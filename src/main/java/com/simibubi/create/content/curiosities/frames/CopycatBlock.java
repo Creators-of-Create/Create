@@ -157,19 +157,21 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 	}
 
 	@Nullable
-	public static BlockState getAcceptedBlockState(Level pLevel, BlockPos pPos, ItemStack item, Direction face) {
+	public BlockState getAcceptedBlockState(Level pLevel, BlockPos pPos, ItemStack item, Direction face) {
 		if (!(item.getItem()instanceof BlockItem bi))
 			return null;
 
 		Block block = bi.getBlock();
 		if (block instanceof CopycatBlock)
 			return null;
-		if (AllBlockTags.COPYCAT_DENY.matches(block))
-			return null;
 
 		BlockState appliedState = block.defaultBlockState();
+		boolean hardCodedAllow = isAcceptedRegardless(appliedState);
 
-		if (!AllBlockTags.COPYCAT_ALLOW.matches(block)) {
+		if (!AllBlockTags.COPYCAT_ALLOW.matches(block) && !hardCodedAllow) {
+
+			if (AllBlockTags.COPYCAT_DENY.matches(block))
+				return null;
 			if (block instanceof EntityBlock)
 				return null;
 			if (block instanceof StairBlock)
@@ -200,6 +202,10 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 		}
 
 		return appliedState;
+	}
+
+	public boolean isAcceptedRegardless(BlockState material) {
+		return false;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 48",
+	"_": "Missing Localizations: 52",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -8,6 +8,7 @@
 	"block.create.adjustable_chain_gearshift": "Regulowany przekładnik łańcuchowy",
 	"block.create.analog_lever": "Dźwignia analogowa",
 	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
+	"block.create.andesite_bars": "UNLOCALIZED: Andesite Bars",
 	"block.create.andesite_belt_funnel": "Andezytowy lejek taśmowy",
 	"block.create.andesite_casing": "Andezytowa obudowa",
 	"block.create.andesite_encased_cogwheel": "Andezytowe izolowane koło zębate",
@@ -35,6 +36,7 @@
 	"block.create.blue_seat": "Niebieskie siedzenie",
 	"block.create.blue_toolbox": "Niebieska skrzynka na narzędzia",
 	"block.create.blue_valve_handle": "Niebieskie pokrętło",
+	"block.create.brass_bars": "UNLOCALIZED: Brass Bars",
 	"block.create.brass_belt_funnel": "Mosiężny lejek taśmowy",
 	"block.create.brass_block": "Blok mosiądzu",
 	"block.create.brass_casing": "Mosiężna obudowa",
@@ -62,6 +64,7 @@
 	"block.create.controller_rail": "Tory sterujące",
 	"block.create.controls": "Kontroler pociągów",
 	"block.create.copper_backtank": "Miedziany zbiornik w plecaku",
+	"block.create.copper_bars": "UNLOCALIZED: Copper Bars",
 	"block.create.copper_casing": "Miedziana obudowa",
 	"block.create.copper_ladder": "Miedziana drabina",
 	"block.create.copper_scaffolding": "UNLOCALIZED: Copper Scaffolding",
@@ -72,6 +75,7 @@
 	"block.create.copper_tile_stairs": "Schody z miedziaych kafelków",
 	"block.create.copper_tiles": "Miedziane kafelki",
 	"block.create.copper_valve_handle": "Miedziane pokrętło",
+	"block.create.copycat_bars": "UNLOCALIZED: Copycat Bars",
 	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
 	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
 	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",

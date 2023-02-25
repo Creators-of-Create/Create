@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:andesite_bars_from_andesite_alloy_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_andesite_alloy": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:andesite_alloy"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:andesite_bars_from_andesite_alloy_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_andesite_alloy",
+      "has_the_recipe"
+    ]
+  ]
+}

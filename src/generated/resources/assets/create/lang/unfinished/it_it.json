@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 38",
+	"_": "Missing Localizations: 42",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -8,6 +8,7 @@
 	"block.create.adjustable_chain_gearshift": "Cambio a catena regolabile",
 	"block.create.analog_lever": "Leva analogica",
 	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
+	"block.create.andesite_bars": "UNLOCALIZED: Andesite Bars",
 	"block.create.andesite_belt_funnel": "Imbuto di andesite su nastro",
 	"block.create.andesite_casing": "Rivestimento di andesite",
 	"block.create.andesite_encased_cogwheel": "Ingranaggio rivestito in andesite",
@@ -35,6 +36,7 @@
 	"block.create.blue_seat": "Sedile blu",
 	"block.create.blue_toolbox": "Cassetta degli attrezzi blu",
 	"block.create.blue_valve_handle": "Maniglia per valvola blu",
+	"block.create.brass_bars": "UNLOCALIZED: Brass Bars",
 	"block.create.brass_belt_funnel": "Imbuto di ottone su nastro",
 	"block.create.brass_block": "Blocco di ottone",
 	"block.create.brass_casing": "Rivestimento di ottone",
@@ -62,6 +64,7 @@
 	"block.create.controller_rail": "Binario di controllo",
 	"block.create.controls": "Comandi del treno",
 	"block.create.copper_backtank": "Zaino serbatoio",
+	"block.create.copper_bars": "UNLOCALIZED: Copper Bars",
 	"block.create.copper_casing": "Rivestimento di rame",
 	"block.create.copper_ladder": "Scala a pioli in rame",
 	"block.create.copper_scaffolding": "UNLOCALIZED: Copper Scaffolding",
@@ -72,6 +75,7 @@
 	"block.create.copper_tile_stairs": "Scalini di mattonelle di rame",
 	"block.create.copper_tiles": "Piastrelle di rame",
 	"block.create.copper_valve_handle": "Maniglia per valvola di rame",
+	"block.create.copycat_bars": "UNLOCALIZED: Copycat Bars",
 	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
 	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
 	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",

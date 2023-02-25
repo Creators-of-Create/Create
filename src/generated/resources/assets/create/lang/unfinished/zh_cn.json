@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 36",
+	"_": "Missing Localizations: 40",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -8,6 +8,7 @@
 	"block.create.adjustable_chain_gearshift": "可调节链式传动箱",
 	"block.create.analog_lever": "模拟拉杆",
 	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
+	"block.create.andesite_bars": "UNLOCALIZED: Andesite Bars",
 	"block.create.andesite_belt_funnel": "安山岩传送带漏斗",
 	"block.create.andesite_casing": "安山机壳",
 	"block.create.andesite_encased_cogwheel": "安山齿轮箱",
@@ -35,6 +36,7 @@
 	"block.create.blue_seat": "蓝色坐垫",
 	"block.create.blue_toolbox": "蓝色工具箱",
 	"block.create.blue_valve_handle": "蓝色阀门手轮",
+	"block.create.brass_bars": "UNLOCALIZED: Brass Bars",
 	"block.create.brass_belt_funnel": "黄铜传送带漏斗",
 	"block.create.brass_block": "黄铜块",
 	"block.create.brass_casing": "黄铜机壳",
@@ -62,6 +64,7 @@
 	"block.create.controller_rail": "控制铁轨",
 	"block.create.controls": "列车驾驶台",
 	"block.create.copper_backtank": "铜背罐",
+	"block.create.copper_bars": "UNLOCALIZED: Copper Bars",
 	"block.create.copper_casing": "铜机壳",
 	"block.create.copper_ladder": "铜梯子",
 	"block.create.copper_scaffolding": "UNLOCALIZED: Copper Scaffolding",
@@ -72,6 +75,7 @@
 	"block.create.copper_tile_stairs": "铜瓦楼梯",
 	"block.create.copper_tiles": "铜瓦",
 	"block.create.copper_valve_handle": "铜阀门手轮",
+	"block.create.copycat_bars": "UNLOCALIZED: Copycat Bars",
 	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
 	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
 	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",

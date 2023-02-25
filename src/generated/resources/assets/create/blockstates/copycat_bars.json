@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "create:block/copycat_panel/bars_vertical",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "create:block/copycat_panel/bars_vertical"
+    },
+    "facing=north": {
+      "model": "create:block/copycat_panel/bars",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "create:block/copycat_panel/bars"
+    },
+    "facing=west": {
+      "model": "create:block/copycat_panel/bars",
+      "y": 90
+    },
+    "facing=east": {
+      "model": "create:block/copycat_panel/bars",
+      "y": 270
+    }
+  }
+}

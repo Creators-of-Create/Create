@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 2173",
+	"_": "Missing Localizations: 2177",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -8,6 +8,7 @@
 	"block.create.adjustable_chain_gearshift": "UNLOCALIZED: Adjustable Chain Gearshift",
 	"block.create.analog_lever": "Levier analogique",
 	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
+	"block.create.andesite_bars": "UNLOCALIZED: Andesite Bars",
 	"block.create.andesite_belt_funnel": "Entonnoir en andésite pour tapis roulant",
 	"block.create.andesite_casing": "Revêtement en andésite",
 	"block.create.andesite_encased_cogwheel": "UNLOCALIZED: Andesite Encased Cogwheel",
@@ -35,6 +36,7 @@
 	"block.create.blue_seat": "Siège bleu",
 	"block.create.blue_toolbox": "UNLOCALIZED: Blue Toolbox",
 	"block.create.blue_valve_handle": "Vanne bleue",
+	"block.create.brass_bars": "UNLOCALIZED: Brass Bars",
 	"block.create.brass_belt_funnel": "Entonnoir en laiton pour tapis roulant",
 	"block.create.brass_block": "Bloc de laiton",
 	"block.create.brass_casing": "Revêtement en laiton",
@@ -62,6 +64,7 @@
 	"block.create.controller_rail": "Rails controlleurs",
 	"block.create.controls": "UNLOCALIZED: Train Controls",
 	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
+	"block.create.copper_bars": "UNLOCALIZED: Copper Bars",
 	"block.create.copper_casing": "Revêtement en cuivre",
 	"block.create.copper_ladder": "UNLOCALIZED: Copper Ladder",
 	"block.create.copper_scaffolding": "UNLOCALIZED: Copper Scaffolding",
@@ -72,6 +75,7 @@
 	"block.create.copper_tile_stairs": "UNLOCALIZED: Copper Tile Stairs",
 	"block.create.copper_tiles": "Tuiles en cuivre",
 	"block.create.copper_valve_handle": "Vanne en cuivre",
+	"block.create.copycat_bars": "UNLOCALIZED: Copycat Bars",
 	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
 	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
 	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",

@@ -145,10 +145,12 @@ import com.simibubi.create.content.curiosities.deco.PlacardBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.curiosities.deco.TrainTrapdoorBlock;
 import com.simibubi.create.content.curiosities.deco.TrapdoorCTBehaviour;
+import com.simibubi.create.content.curiosities.frames.CopycatBarsModel;
 import com.simibubi.create.content.curiosities.frames.CopycatPanelBlock;
 import com.simibubi.create.content.curiosities.frames.CopycatPanelModel;
 import com.simibubi.create.content.curiosities.frames.CopycatStepBlock;
 import com.simibubi.create.content.curiosities.frames.CopycatStepModel;
+import com.simibubi.create.content.curiosities.frames.SpecialCopycatPanelBlockState;
 import com.simibubi.create.content.curiosities.girder.ConnectedGirderModel;
 import com.simibubi.create.content.curiosities.girder.GirderBlock;
 import com.simibubi.create.content.curiosities.girder.GirderBlockStateGenerator;
@@ -234,10 +236,12 @@ import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
+import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.MetalBarsGen;
 import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -263,6 +267,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -823,23 +828,31 @@ public class AllBlocks {
 				BuilderTransformers.ladder("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper"))))
 			.register();
 
-	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD = REGISTRATE
-		.block("andesite_scaffolding", MetalScaffoldingBlock::new)
-		.transform(BuilderTransformers.scaffold("andesite", () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()),
-			AllSpriteShifts.ANDESITE_SCAFFOLD, AllSpriteShifts.ANDESITE_CASING))
-		.register();
+	public static final BlockEntry<IronBarsBlock> ANDESITE_BARS =
+		MetalBarsGen.createBars("andesite", true, () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()));
+	public static final BlockEntry<IronBarsBlock> BRASS_BARS =
+		MetalBarsGen.createBars("brass", true, () -> DataIngredient.tag(AllTags.forgeItemTag("plates/brass")));
+	public static final BlockEntry<IronBarsBlock> COPPER_BARS =
+		MetalBarsGen.createBars("copper", true, () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper")));
+
+	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD =
+		REGISTRATE.block("andesite_scaffolding", MetalScaffoldingBlock::new)
+			.transform(BuilderTransformers.scaffold("andesite",
+				() -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()), AllSpriteShifts.ANDESITE_SCAFFOLD,
+				AllSpriteShifts.ANDESITE_SCAFFOLD_INSIDE, AllSpriteShifts.ANDESITE_CASING))
+			.register();
 
 	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD = REGISTRATE
 		.block("brass_scaffolding", MetalScaffoldingBlock::new)
 		.transform(BuilderTransformers.scaffold("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/brass")),
-			AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_CASING))
+			AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_SCAFFOLD_INSIDE, AllSpriteShifts.BRASS_CASING))
 		.register();
 
 	public static final BlockEntry<MetalScaffoldingBlock> COPPER_SCAFFOLD =
 		REGISTRATE.block("copper_scaffolding", MetalScaffoldingBlock::new)
-			.transform(
-				BuilderTransformers.scaffold("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper")),
-					AllSpriteShifts.COPPER_SCAFFOLD, AllSpriteShifts.COPPER_CASING))
+			.transform(BuilderTransformers.scaffold("copper",
+				() -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), AllSpriteShifts.COPPER_SCAFFOLD,
+				AllSpriteShifts.COPPER_SCAFFOLD_INSIDE, AllSpriteShifts.COPPER_CASING))
 			.register();
 
 	// Fluids
@@ -1731,6 +1744,12 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatPanelModel::new))
 			.item()
 			.transform(customItemModel("copycat_base", "panel"))
+			.register();
+
+	public static final BlockEntry<WrenchableDirectionalBlock> COPYCAT_BARS =
+		REGISTRATE.block("copycat_bars", WrenchableDirectionalBlock::new)
+			.blockstate(new SpecialCopycatPanelBlockState("bars")::generate)
+			.onRegister(CreateRegistrate.blockModel(() -> CopycatBarsModel::new))
 			.register();
 
 	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)

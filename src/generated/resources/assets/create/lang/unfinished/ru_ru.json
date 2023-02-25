@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 36",
+	"_": "Missing Localizations: 40",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -8,6 +8,7 @@
 	"block.create.adjustable_chain_gearshift": "Регулируемая цепная коробка передач",
 	"block.create.analog_lever": "Аналоговый рычаг",
 	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
+	"block.create.andesite_bars": "UNLOCALIZED: Andesite Bars",
 	"block.create.andesite_belt_funnel": "Андезитовая конвейерная воронка",
 	"block.create.andesite_casing": "Андезитовый корпус",
 	"block.create.andesite_encased_cogwheel": "Шестерня в андезитовом корпусе",
@@ -35,6 +36,7 @@
 	"block.create.blue_seat": "Синее сиденье",
 	"block.create.blue_toolbox": "Синий ящик для инструментов",
 	"block.create.blue_valve_handle": "Синий ручной вентиль",
+	"block.create.brass_bars": "UNLOCALIZED: Brass Bars",
 	"block.create.brass_belt_funnel": "Латунная конвейерная воронка",
 	"block.create.brass_block": "Латунный блок",
 	"block.create.brass_casing": "Латунный корпус",
@@ -62,6 +64,7 @@
 	"block.create.controller_rail": "Контролирующие рельсы",
 	"block.create.controls": "Контроллер поезда",
 	"block.create.copper_backtank": "Медный баллон",
+	"block.create.copper_bars": "UNLOCALIZED: Copper Bars",
 	"block.create.copper_casing": "Медный корпус",
 	"block.create.copper_ladder": "Медная лестница",
 	"block.create.copper_scaffolding": "UNLOCALIZED: Copper Scaffolding",
@@ -72,6 +75,7 @@
 	"block.create.copper_tile_stairs": "Ступеньки из медной плитки",
 	"block.create.copper_tiles": "Медная плитка",
 	"block.create.copper_valve_handle": "Медный ручной вентиль",
+	"block.create.copycat_bars": "UNLOCALIZED: Copycat Bars",
 	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
 	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
 	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",

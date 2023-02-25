@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 691",
+	"_": "Missing Localizations: 695",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -8,6 +8,7 @@
 	"block.create.adjustable_chain_gearshift": "Schimbător De Viteze Reglabil Înlănțuit",
 	"block.create.analog_lever": "Manetă Analogică",
 	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
+	"block.create.andesite_bars": "UNLOCALIZED: Andesite Bars",
 	"block.create.andesite_belt_funnel": "Pâlnie De Andezit Pentru Benzi",
 	"block.create.andesite_casing": "Carcasă De Andezit",
 	"block.create.andesite_encased_cogwheel": "Roată Dințată Încapsulată În Andezit",
@@ -35,6 +36,7 @@
 	"block.create.blue_seat": "Scaun Albastru",
 	"block.create.blue_toolbox": "Trusă De Scule Albastră",
 	"block.create.blue_valve_handle": "Mâner De Supapă Albastru",
+	"block.create.brass_bars": "UNLOCALIZED: Brass Bars",
 	"block.create.brass_belt_funnel": "Pâlnie De Alamă Pentru Benzi",
 	"block.create.brass_block": "Bloc De Alamă",
 	"block.create.brass_casing": "Carcasă De Alamă",
@@ -62,6 +64,7 @@
 	"block.create.controller_rail": "Controlor De Șină",
 	"block.create.controls": "UNLOCALIZED: Train Controls",
 	"block.create.copper_backtank": "Backtank De Cupru",
+	"block.create.copper_bars": "UNLOCALIZED: Copper Bars",
 	"block.create.copper_casing": "Carcasă De Cupru",
 	"block.create.copper_ladder": "UNLOCALIZED: Copper Ladder",
 	"block.create.copper_scaffolding": "UNLOCALIZED: Copper Scaffolding",
@@ -72,6 +75,7 @@
 	"block.create.copper_tile_stairs": "Scări De Țiglă De Cupru",
 	"block.create.copper_tiles": "Țigle De Cupru",
 	"block.create.copper_valve_handle": "Mâner De Supapă De Cupru",
+	"block.create.copycat_bars": "UNLOCALIZED: Copycat Bars",
 	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
 	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
 	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",

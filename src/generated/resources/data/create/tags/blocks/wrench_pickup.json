@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
+    "create:andesite_bars",
+    "create:brass_bars",
+    "create:copper_bars",
     "#minecraft:rails",
     "#minecraft:buttons",
     "#minecraft:pressure_plates",

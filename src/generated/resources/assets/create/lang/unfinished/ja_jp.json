@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 40",
+	"_": "Missing Localizations: 44",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -8,6 +8,7 @@
 	"block.create.adjustable_chain_gearshift": "可変チェーンギアシフト",
 	"block.create.analog_lever": "アナログレバー",
 	"block.create.andesite_alloy_block": "UNLOCALIZED: Block of Andesite Alloy",
+	"block.create.andesite_bars": "UNLOCALIZED: Andesite Bars",
 	"block.create.andesite_belt_funnel": "安山岩ベルトファンネル",
 	"block.create.andesite_casing": "安山岩ケーシング",
 	"block.create.andesite_encased_cogwheel": "安山岩ケース入り歯車",
@@ -35,6 +36,7 @@
 	"block.create.blue_seat": "青色のシート",
 	"block.create.blue_toolbox": "青色の工具箱",
 	"block.create.blue_valve_handle": "青色のバルブハンドル",
+	"block.create.brass_bars": "UNLOCALIZED: Brass Bars",
 	"block.create.brass_belt_funnel": "真鍮ベルトファンネル",
 	"block.create.brass_block": "真鍮ブロック",
 	"block.create.brass_casing": "真鍮ケーシング",
@@ -62,6 +64,7 @@
 	"block.create.controller_rail": "コントローラーレール",
 	"block.create.controls": "列車運転台",
 	"block.create.copper_backtank": "銅のバックタンク",
+	"block.create.copper_bars": "UNLOCALIZED: Copper Bars",
 	"block.create.copper_casing": "銅ケーシング",
 	"block.create.copper_ladder": "銅のはしご",
 	"block.create.copper_scaffolding": "UNLOCALIZED: Copper Scaffolding",
@@ -72,6 +75,7 @@
 	"block.create.copper_tile_stairs": "銅タイルの階段",
 	"block.create.copper_tiles": "銅タイル",
 	"block.create.copper_valve_handle": "銅のバルブハンドル",
+	"block.create.copycat_bars": "UNLOCALIZED: Copycat Bars",
 	"block.create.copycat_base": "UNLOCALIZED: Copycat Base",
 	"block.create.copycat_panel": "UNLOCALIZED: Copycat Panel",
 	"block.create.copycat_step": "UNLOCALIZED: Copycat Step",
