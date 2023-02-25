@@ -53,7 +53,7 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 		if (offset >= 0)
 			resetContraptionToOffset();
 		if (level.isClientSide) {
-			AllPackets.channel.sendToServer(new ElevatorFloorListPacket.RequestFloorList(contraption));
+			AllPackets.getChannel().sendToServer(new ElevatorFloorListPacket.RequestFloorList(contraption));
 			return;
 		}
 
@@ -233,7 +233,7 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 		if (getSpeed() == 0)
 			return;
 
-		int maxLength = AllConfigs.SERVER.kinetics.maxRopeLength.get();
+		int maxLength = AllConfigs.server().kinetics.maxRopeLength.get();
 		int i = 1;
 		while (i <= maxLength) {
 			BlockPos ropePos = worldPosition.below(i);

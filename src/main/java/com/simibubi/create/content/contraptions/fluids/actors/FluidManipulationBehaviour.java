@@ -83,15 +83,15 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 	}
 
 	protected int maxRange() {
-		return AllConfigs.SERVER.fluids.hosePulleyRange.get();
+		return AllConfigs.server().fluids.hosePulleyRange.get();
 	}
 
 	protected int maxBlocks() {
-		return AllConfigs.SERVER.fluids.hosePulleyBlockThreshold.get();
+		return AllConfigs.server().fluids.hosePulleyBlockThreshold.get();
 	}
 
 	protected boolean fillInfinite() {
-		return AllConfigs.SERVER.fluids.fillInfinite.get();
+		return AllConfigs.server().fluids.fillInfinite.get();
 	}
 
 	public void reset() {
@@ -218,7 +218,7 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 	protected boolean canDrainInfinitely(Fluid fluid) {
 		if (fluid == null)
 			return false;
-		return maxBlocks() != -1 && AllConfigs.SERVER.fluids.bottomlessFluidMode.get()
+		return maxBlocks() != -1 && AllConfigs.server().fluids.bottomlessFluidMode.get()
 			.test(fluid);
 	}
 

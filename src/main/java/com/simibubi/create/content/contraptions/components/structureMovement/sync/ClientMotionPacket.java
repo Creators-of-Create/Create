@@ -55,7 +55,7 @@ public class ClientMotionPacket extends SimplePacketBase {
 					sender.connection.aboveGroundTickCount = 0;
 					sender.connection.aboveGroundVehicleTickCount = 0;
 				}
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> sender),
+				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> sender),
 					new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing));
 			});
 		context.get()

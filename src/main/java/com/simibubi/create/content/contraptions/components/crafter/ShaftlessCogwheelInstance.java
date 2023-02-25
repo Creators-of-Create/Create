@@ -6,16 +6,16 @@ import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
 import net.minecraft.core.Direction;
 
-public class MechanicalCrafterInstance extends SingleRotatingInstance {
+public class ShaftlessCogwheelInstance extends SingleRotatingInstance<KineticBlockEntity> {
 
-    public MechanicalCrafterInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+    public ShaftlessCogwheelInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
         super(materialManager, blockEntity);
     }
 
@@ -23,7 +23,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
     protected Instancer<RotatingData> getModel() {
         Direction facing = blockState.getValue(MechanicalCrafterBlock.HORIZONTAL_FACING);
 
-		return getRotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState, facing, rotateToFace(facing));
+		return getRotatingMaterial().getModel(AllPartialModels.SHAFTLESS_COGWHEEL, blockState, facing, rotateToFace(facing));
     }
 
 	private Supplier<PoseStack> rotateToFace(Direction facing) {

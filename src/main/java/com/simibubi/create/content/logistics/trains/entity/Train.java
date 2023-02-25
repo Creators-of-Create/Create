@@ -740,7 +740,7 @@ public class Train {
 		}
 
 		Create.RAILWAYS.removeTrain(id);
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(this, false));
 		return true;
 	}
 
@@ -1070,18 +1070,18 @@ public class Train {
 	}
 
 	public float maxSpeed() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainTopSpeed.getF()
-			: AllConfigs.SERVER.trains.trainTopSpeed.getF()) / 20;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainTopSpeed.getF()
+			: AllConfigs.server().trains.trainTopSpeed.getF()) / 20;
 	}
 
 	public float maxTurnSpeed() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainTurningTopSpeed.getF()
-			: AllConfigs.SERVER.trains.trainTurningTopSpeed.getF()) / 20;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainTurningTopSpeed.getF()
+			: AllConfigs.server().trains.trainTurningTopSpeed.getF()) / 20;
 	}
 
 	public float acceleration() {
-		return (fuelTicks > 0 ? AllConfigs.SERVER.trains.poweredTrainAcceleration.getF()
-			: AllConfigs.SERVER.trains.trainAcceleration.getF()) / 400;
+		return (fuelTicks > 0 ? AllConfigs.server().trains.poweredTrainAcceleration.getF()
+			: AllConfigs.server().trains.trainAcceleration.getF()) / 400;
 	}
 
 	public CompoundTag write(DimensionPalette dimensions) {

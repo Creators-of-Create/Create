@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
@@ -66,9 +66,9 @@ public class CouplingRenderer {
 
 		BlockState renderState = Blocks.AIR.defaultBlockState();
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		SuperByteBuffer attachment = CachedBufferer.partial(AllBlockPartials.COUPLING_ATTACHMENT, renderState);
-		SuperByteBuffer ring = CachedBufferer.partial(AllBlockPartials.COUPLING_RING, renderState);
-		SuperByteBuffer connector = CachedBufferer.partial(AllBlockPartials.COUPLING_CONNECTOR, renderState);
+		SuperByteBuffer attachment = CachedBufferer.partial(AllPartialModels.COUPLING_ATTACHMENT, renderState);
+		SuperByteBuffer ring = CachedBufferer.partial(AllPartialModels.COUPLING_RING, renderState);
+		SuperByteBuffer connector = CachedBufferer.partial(AllPartialModels.COUPLING_CONNECTOR, renderState);
 
 		Vec3 zero = Vec3.ZERO;
 		Vec3 firstEndpoint = transforms.getFirst()

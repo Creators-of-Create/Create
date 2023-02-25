@@ -42,8 +42,8 @@ import net.minecraftforge.common.ForgeMod;
 
 public class CopycatStepBlock extends WaterloggedCopycatBlock {
 
-	public static EnumProperty<Half> HALF = BlockStateProperties.HALF;
-	public static DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+	public static final EnumProperty<Half> HALF = BlockStateProperties.HALF;
+	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -251,7 +251,7 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 				break;
 			}
 
-			int range = AllConfigs.SERVER.curiosities.placementAssistRange.get();
+			int range = AllConfigs.server().curiosities.placementAssistRange.get();
 			if (player != null) {
 				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))

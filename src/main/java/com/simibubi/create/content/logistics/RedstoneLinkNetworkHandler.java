@@ -138,7 +138,7 @@ public class RedstoneLinkNetworkHandler {
 		if (from == to)
 			return true;
 		return from.getLocation()
-			.closerThan(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());
+			.closerThan(to.getLocation(), AllConfigs.server().logistics.linkRange.get());
 	}
 
 	public Map<Couple<Frequency>, Set<IRedstoneLinkable>> networksIn(LevelAccessor world) {

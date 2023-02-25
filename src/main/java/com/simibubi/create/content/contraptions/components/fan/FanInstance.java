@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
@@ -25,10 +25,10 @@ public class FanInstance extends KineticBlockEntityInstance<EncasedFanBlockEntit
 		direction = blockState.getValue(FACING);
 
 		opposite = direction.getOpposite();
-		shaft = getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite).createInstance();
+		shaft = getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, blockState, opposite).createInstance();
 		fan = materialManager.defaultCutout()
 				.material(AllMaterialSpecs.ROTATING)
-				.getModel(AllBlockPartials.ENCASED_FAN_INNER, blockState, opposite)
+				.getModel(AllPartialModels.ENCASED_FAN_INNER, blockState, opposite)
 				.createInstance();
 
 		setup(shaft);

@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -48,7 +48,7 @@ public class HarvesterActorInstance extends ActorInstance {
 	}
 
 	protected PartialModel getRollingPartial() {
-		return AllBlockPartials.HARVESTER_BLADE;
+		return AllPartialModels.HARVESTER_BLADE;
 	}
 	
 	protected Vec3 getRotationOffset() {

@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
@@ -51,7 +51,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 		
 		if (!isAssembling || (station == null || station.getPresentTrain() != null) && !be.isVirtual()) {
 			renderFlag(
-				be.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF, be,
+				be.flag.getValue(partialTicks) > 0.75f ? AllPartialModels.STATION_ON : AllPartialModels.STATION_OFF, be,
 				partialTicks, ms, buffer, light, overlay);
 			ms.pushPose();
 			ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
@@ -61,7 +61,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 			return;
 		}
 
-		renderFlag(AllBlockPartials.STATION_ASSEMBLE, be, partialTicks, ms, buffer, light, overlay);
+		renderFlag(AllPartialModels.STATION_ASSEMBLE, be, partialTicks, ms, buffer, light, overlay);
 
 		ITrackBlock track = (ITrackBlock) block;
 		Direction direction = be.assemblyDirection;

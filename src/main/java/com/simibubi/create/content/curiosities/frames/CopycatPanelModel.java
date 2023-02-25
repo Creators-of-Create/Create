@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.render.QuadHelper;
+import com.simibubi.create.foundation.model.BakedModelHelper;
+import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -18,6 +19,8 @@ import net.minecraftforge.client.model.data.IModelData;
 
 public class CopycatPanelModel extends CopycatModel {
 
+	protected static final AABB CUBE_AABB = new AABB(BlockPos.ZERO);
+
 	public CopycatPanelModel(BakedModel originalModel) {
 		super(originalModel);
 	}
@@ -28,17 +31,22 @@ public class CopycatPanelModel extends CopycatModel {
 		Direction facing = state.getOptionalValue(CopycatPanelBlock.FACING)
 			.orElse(Direction.UP);
 
-		Vec3 normal = Vec3.atLowerCornerOf(facing.getNormal());
-		AABB cube = new AABB(BlockPos.ZERO);
-
 		BakedModel model = getModelOf(material);
 		List<BakedQuad> templateQuads = model.getQuads(material, side, rand, wrappedData);
 		int size = templateQuads.size();
 
 		List<BakedQuad> quads = new ArrayList<>();
 
+		Vec3 normal = Vec3.atLowerCornerOf(facing.getNormal());
+		Vec3 normalScaled14 = normal.scale(14 / 16f);
+
 		// 2 Pieces
 		for (boolean front : Iterate.trueAndFalse) {
+			Vec3 normalScaledN13 = normal.scale(front ? 0 : -13 / 16f);
+			float contract = 16 - (front ? 1 : 2);
+			AABB bb = CUBE_AABB.contract(normal.x * contract / 16, normal.y * contract / 16, normal.z * contract / 16);
+			if (!front)
+				bb = bb.move(normalScaled14);
 
 			for (int i = 0; i < size; i++) {
 				BakedQuad quad = templateQuads.get(i);
@@ -49,15 +57,9 @@ public class CopycatPanelModel extends CopycatModel {
 				if (!front && direction == facing.getOpposite())
 					continue;
 
-				float contract = 16 - (front ? 1 : 2);
-				AABB bb = cube.contract(normal.x * contract / 16, normal.y * contract / 16, normal.z * contract / 16);
-
-				if (!front)
-					bb = bb.move(normal.scale(14 / 16f));
-
-				BakedQuad newQuad = QuadHelper.clone(quad);
-				if (cropAndMove(newQuad, bb, normal.scale(front ? 0 : -13 / 16f)));
-					quads.add(newQuad);
+				BakedQuad newQuad = BakedQuadHelper.clone(quad);
+				BakedModelHelper.cropAndMove(newQuad, bb, normalScaledN13);
+				quads.add(newQuad);
 			}
 
 		}

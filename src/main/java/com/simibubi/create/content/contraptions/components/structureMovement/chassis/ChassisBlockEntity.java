@@ -40,7 +40,7 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		int max = AllConfigs.SERVER.kinetics.maxChassisRange.get();
+		int max = AllConfigs.server().kinetics.maxChassisRange.get();
 		range = new BulkScrollValueBehaviour(Lang.translateDirect("generic.range"), this, new CenteredSideValueBoxTransform(),
 				be -> ((ChassisBlockEntity) be).collectChassisGroup());
 		range.requiresWrench();

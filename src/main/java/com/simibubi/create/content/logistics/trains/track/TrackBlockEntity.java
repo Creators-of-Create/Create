@@ -10,7 +10,7 @@ import java.util.Set;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
@@ -49,7 +49,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.fml.DistExecutor;
 
-public class TrackBlockEntity extends SmartBlockEntity implements ITransformableTE, IMergeableBE {
+public class TrackBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity, IMergeableBE {
 
 	Map<BlockPos, BezierConnection> connections;
 	boolean cancelDrops;
@@ -151,7 +151,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 		BlockState blockState = level.getBlockState(worldPosition);
 		if (blockState.hasProperty(TrackBlock.HAS_BE))
 			level.setBlockAndUpdate(worldPosition, blockState.setValue(TrackBlock.HAS_BE, false));
-		AllPackets.channel.send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
+		AllPackets.getChannel().send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
 	}
 
 	public void removeInboundConnections(boolean dropAndDiscard) {
@@ -165,9 +165,8 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 				bezierConnection.spawnItems(level);
 			bezierConnection.spawnDestroyParticles(level);
 		}
-
 		if (dropAndDiscard)
-			AllPackets.channel.send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
+			AllPackets.getChannel().send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
 	}
 
 	public void bind(ResourceKey<Level> boundDimension, BlockPos boundLocation) {

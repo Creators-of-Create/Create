@@ -297,14 +297,15 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 	}
 
 	public CSchematics config() {
-		return AllConfigs.SERVER.schematics;
+		return AllConfigs.server().schematics;
 	}
 
 	protected void tickPrinter() {
 		ItemStack blueprint = inventory.getStackInSlot(0);
 		blockSkipped = false;
-		
-		if (blueprint.isEmpty() && !statusMsg.equals("idle")) {
+
+		if (blueprint.isEmpty() && !statusMsg.equals("idle") && inventory.getStackInSlot(1)
+			.isEmpty()) {
 			state = State.STOPPED;
 			statusMsg = "idle";
 			sendUpdate = true;
@@ -448,12 +449,23 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		// Load blocks into reader
 		printer.loadSchematic(blueprint, level, true);
 
+		if (printer.isErrored()) {
+			state = State.STOPPED;
+			statusMsg = "schematicErrored";
+			inventory.setStackInSlot(0, ItemStack.EMPTY);
+			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get()));
+			printer.resetSchematic();
+			sendUpdate = true;
+			return;
+		}
+		
 		if (printer.isWorldEmpty()) {
 			state = State.STOPPED;
 			statusMsg = "schematicExpired";
 			inventory.setStackInSlot(0, ItemStack.EMPTY);
 			inventory.setStackInSlot(1, new ItemStack(AllItems.EMPTY_SCHEMATIC.get()));
 			printer.resetSchematic();
+			sendUpdate = true;
 			return;
 		}
 
@@ -462,6 +474,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			state = State.STOPPED;
 			statusMsg = "targetOutsideRange";
 			printer.resetSchematic();
+			sendUpdate = true;
 			return;
 		}
 
@@ -663,6 +676,9 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		boolean outputFull = inventory.getStackInSlot(BookOutput)
 			.getCount() == inventory.getSlotLimit(BookOutput);
 		
+		if (printer.isErrored())
+			return;
+		
 		if (!printer.isLoaded()) {
 			if (!blueprint.isEmpty())
 				initializePrinter(blueprint);
@@ -796,11 +812,12 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 		checklist.damageRequired.clear();
 		checklist.blocksNotLoaded = false;
 
-		if (printer.isLoaded()) {
+		if (printer.isLoaded() && !printer.isErrored()) {
 			blocksToPlace = blocksPlaced;
 			blocksToPlace += printer.markAllBlockRequirements(checklist, level, this::shouldPlace);
 			printer.markAllEntityRequirements(checklist);
 		}
+		
 		checklist.gathered.clear();
 		findInventories();
 		for (LazyOptional<IItemHandler> cap : attachedInventories) {

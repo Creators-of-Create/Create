@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -49,12 +49,12 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		transformed(AllBlockPartials.ENGINE_PISTON, blockState, facing, roll90)
+		transformed(AllPartialModels.ENGINE_PISTON, blockState, facing, roll90)
 			.translate(0, piston, 0)
 			.light(light)
 			.renderInto(ms, vb);
 
-		transformed(AllBlockPartials.ENGINE_LINKAGE, blockState, facing, roll90)
+		transformed(AllPartialModels.ENGINE_LINKAGE, blockState, facing, roll90)
 			.centre()
 			.translate(0, 1, 0)
 			.unCentre()
@@ -65,7 +65,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 			.light(light)
 			.renderInto(ms, vb);
 
-		transformed(AllBlockPartials.ENGINE_CONNECTOR, blockState, facing, roll90)
+		transformed(AllPartialModels.ENGINE_CONNECTOR, blockState, facing, roll90)
 			.translate(0, 2, 0)
 			.centre()
 			.rotateXRadians(-angle + Mth.HALF_PI)

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.block.render;
+package com.simibubi.create.foundation.model;
 
 import java.util.Arrays;
 
@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.world.phys.Vec3;
 
-public final class QuadHelper {
+public final class BakedQuadHelper {
 
 	public static final VertexFormat FORMAT = DefaultVertexFormat.BLOCK;
 	public static final int VERTEX_STRIDE = FORMAT.getIntegerSize();
@@ -22,7 +22,7 @@ public final class QuadHelper {
 	public static final int LIGHT_OFFSET = 6;
 	public static final int NORMAL_OFFSET = 7;
 
-	private QuadHelper() {}
+	private BakedQuadHelper() {}
 
 	public static BakedQuad clone(BakedQuad quad) {
 		return new BakedQuad(Arrays.copyOf(quad.getVertices(), quad.getVertices().length),
@@ -35,19 +35,19 @@ public final class QuadHelper {
         float z = Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + Z_OFFSET]);
         return new Vec3(x, y, z);
 	}
-	
+
+	public static void setXYZ(int[] vertexData, int vertex, Vec3 xyz) {
+		vertexData[vertex * VERTEX_STRIDE + X_OFFSET] = Float.floatToRawIntBits((float) xyz.x);
+		vertexData[vertex * VERTEX_STRIDE + Y_OFFSET] = Float.floatToRawIntBits((float) xyz.y);
+		vertexData[vertex * VERTEX_STRIDE + Z_OFFSET] = Float.floatToRawIntBits((float) xyz.z);
+	}
+
 	public static float getU(int[] vertexData, int vertex) {
 		return Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + U_OFFSET]);
 	}
 
 	public static float getV(int[] vertexData, int vertex) {
 		return Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + V_OFFSET]);
-	}
-	
-	public static void setXYZ(int[] vertexData, int vertex, Vec3 xyz) {
-		vertexData[vertex * VERTEX_STRIDE + X_OFFSET] = Float.floatToRawIntBits((float) xyz.x);
-		vertexData[vertex * VERTEX_STRIDE + Y_OFFSET] = Float.floatToRawIntBits((float) xyz.y);
-		vertexData[vertex * VERTEX_STRIDE + Z_OFFSET] = Float.floatToRawIntBits((float) xyz.z);
 	}
 
 	public static void setU(int[] vertexData, int vertex, float u) {

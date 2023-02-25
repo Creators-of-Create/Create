@@ -90,7 +90,7 @@ class SoundScape {
 			distanceMultiplier = (float) Mth.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
 		}
 		int soundCount = SoundScapes.getSoundCount(group, pitchGroup);
-		float max = AllConfigs.CLIENT.ambientVolumeCap.getF();
+		float max = AllConfigs.client().ambientVolumeCap.getF();
 		float argMax = (float) SoundScapes.SOUND_VOLUME_ARG_MAX;
 		return Mth.clamp(soundCount / (argMax * 10f), 0.025f, max) * distanceMultiplier;
 	}

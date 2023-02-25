@@ -420,7 +420,7 @@ public abstract class Contraption {
 		}
 
 		addBlock(pos, capture(world, pos));
-		if (blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get())
+		if (blocks.size() <= AllConfigs.server().kinetics.maxBlocksMoved.get())
 			return true;
 		else
 			throw AssemblyException.structureTooLarge();
@@ -545,7 +545,7 @@ public abstract class Contraption {
 	}
 
 	private void movePulley(Level world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited) {
-		int limit = AllConfigs.SERVER.kinetics.maxRopeLength.get();
+		int limit = AllConfigs.server().kinetics.maxRopeLength.get();
 		BlockPos ropePos = pos;
 		while (limit-- >= 0) {
 			ropePos = ropePos.below();

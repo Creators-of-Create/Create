@@ -72,7 +72,7 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 		for (Float f : flows.values())
 			speed += f;
 		if (speed != 0)
-			speed += AllConfigs.SERVER.kinetics.waterWheelBaseSpeed.get() * Math.signum(speed);
+			speed += AllConfigs.server().kinetics.waterWheelBaseSpeed.get() * Math.signum(speed);
 		return speed;
 	}
 

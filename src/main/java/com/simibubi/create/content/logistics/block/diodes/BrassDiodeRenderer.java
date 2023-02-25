@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.ColoredOverlayBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -21,7 +21,7 @@ public class BrassDiodeRenderer extends ColoredOverlayBlockEntityRenderer<BrassD
 
 	@Override
 	protected SuperByteBuffer getOverlayBuffer(BrassDiodeBlockEntity be) {
-		return CachedBufferer.partial(AllBlockPartials.FLEXPEATER_INDICATOR, be.getBlockState());
+		return CachedBufferer.partial(AllPartialModels.FLEXPEATER_INDICATOR, be.getBlockState());
 	}
 
 }

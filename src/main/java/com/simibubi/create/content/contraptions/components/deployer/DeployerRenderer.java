@@ -10,8 +10,8 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
@@ -120,7 +120,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		BlockState blockState = be.getBlockState();
 		Vec3 offset = getHandOffset(be, partialTicks, blockState);
 
-		SuperByteBuffer pole = CachedBufferer.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
+		SuperByteBuffer pole = CachedBufferer.partial(AllPartialModels.DEPLOYER_POLE, blockState);
 		SuperByteBuffer hand = CachedBufferer.partial(be.getHandPose(), blockState);
 
 		transform(pole.translate(offset.x, offset.y, offset.z), blockState, true)
@@ -167,7 +167,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			speed = 0;
 
 		SuperByteBuffer shaft = CachedBufferer.block(AllBlocks.SHAFT.getDefaultState());
-		SuperByteBuffer pole = CachedBufferer.partial(AllBlockPartials.DEPLOYER_POLE, blockState);
+		SuperByteBuffer pole = CachedBufferer.partial(AllPartialModels.DEPLOYER_POLE, blockState);
 		SuperByteBuffer hand = CachedBufferer.partial(handPose, blockState);
 
 		double factor;
@@ -225,7 +225,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 	}
 
 	static PartialModel getHandPose(DeployerBlockEntity.Mode mode) {
-		return mode == DeployerBlockEntity.Mode.PUNCH ? AllBlockPartials.DEPLOYER_HAND_PUNCHING : AllBlockPartials.DEPLOYER_HAND_POINTING;
+		return mode == DeployerBlockEntity.Mode.PUNCH ? AllPartialModels.DEPLOYER_HAND_PUNCHING : AllPartialModels.DEPLOYER_HAND_POINTING;
 	}
 
 }

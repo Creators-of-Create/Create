@@ -235,7 +235,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void addToItemTooltip(ItemTooltipEvent event) {
-		if (!AllConfigs.CLIENT.tooltips.get())
+		if (!AllConfigs.client().tooltips.get())
 			return;
 		if (event.getPlayer() == null)
 			return;
@@ -345,7 +345,7 @@ public class ClientEvents {
 	public static void leftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
 		ItemStack stack = event.getItemStack();
 		if (stack.getItem() instanceof ZapperItem) {
-			AllPackets.channel.sendToServer(new LeftClickPacket());
+			AllPackets.getChannel().sendToServer(new LeftClickPacket());
 		}
 	}
 

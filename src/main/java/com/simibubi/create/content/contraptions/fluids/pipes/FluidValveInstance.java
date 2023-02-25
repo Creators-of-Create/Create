@@ -4,8 +4,7 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -14,18 +13,16 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class FluidValveInstance extends ShaftInstance implements DynamicInstance {
+public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> implements DynamicInstance {
 
-	private final FluidValveBlockEntity blockEntity;
 	protected ModelData pointer;
 
     protected final double xRot;
     protected final double yRot;
     protected final int pointerRotationOffset;
 
-    public FluidValveInstance(MaterialManager dispatcher, KineticBlockEntity blockEntity) {
+    public FluidValveInstance(MaterialManager dispatcher, FluidValveBlockEntity blockEntity) {
         super(dispatcher, blockEntity);
-		this.blockEntity = (FluidValveBlockEntity) blockEntity;
 
         Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
@@ -40,7 +37,7 @@ public class FluidValveInstance extends ShaftInstance implements DynamicInstance
 
         pointer = materialManager.defaultSolid()
                 .material(Materials.TRANSFORMED)
-                .getModel(AllBlockPartials.FLUID_VALVE_POINTER, blockState).createInstance();
+                .getModel(AllPartialModels.FLUID_VALVE_POINTER, blockState).createInstance();
 
 		transformPointer();
     }

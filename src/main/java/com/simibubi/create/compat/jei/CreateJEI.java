@@ -503,7 +503,7 @@ public class CreateJEI implements IModPlugin {
 
 		public CreateRecipeCategory<T> build(String name, CreateRecipeCategory.Factory<T> factory) {
 			Supplier<List<T>> recipesSupplier;
-			if (predicate.test(AllConfigs.SERVER.recipes)) {
+			if (predicate.test(AllConfigs.server().recipes)) {
 				recipesSupplier = () -> {
 					List<T> recipes = new ArrayList<>();
 					for (Consumer<List<T>> consumer : recipeListConsumers)

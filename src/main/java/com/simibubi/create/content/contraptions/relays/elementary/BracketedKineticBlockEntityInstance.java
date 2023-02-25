@@ -5,8 +5,7 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
@@ -16,11 +15,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 
-public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance {
+public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<BracketedKineticBlockEntity> {
 
 	protected RotatingData additionalShaft;
 
-	public BracketedKineticBlockEntityInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+	public BracketedKineticBlockEntityInstance(MaterialManager materialManager, BracketedKineticBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 	}
 
@@ -38,7 +37,7 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance 
 		BlockPos pos = blockEntity.getBlockPos();
 		float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
-		Instancer<RotatingData> half = getRotatingMaterial().getModel(AllBlockPartials.COGWHEEL_SHAFT, blockState,
+		Instancer<RotatingData> half = getRotatingMaterial().getModel(AllPartialModels.COGWHEEL_SHAFT, blockState,
 			facing, () -> this.rotateToAxis(axis));
 
 		additionalShaft = setup(half.createInstance(), speed);
@@ -52,7 +51,7 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance 
 
 		Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
-		return getRotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL, blockState, facing,
+		return getRotatingMaterial().getModel(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, blockState, facing,
 			() -> this.rotateToAxis(axis));
 	}
 

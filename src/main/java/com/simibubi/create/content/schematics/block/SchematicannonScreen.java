@@ -310,6 +310,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		}
 
 		font.drawShadow(ms, msg, x + 103 - stringWidth / 2, y + 53, 0xCCDDFF);
+
+		if ("schematicErrored".equals(be.statusMsg))
+			font.drawShadow(ms, Lang.translateDirect("schematicannon.status.schematicErroredCheckLogs"),
+				x + 103 - stringWidth / 2, y + 65, 0xCCDDFF);
 	}
 
 	protected void renderBlueprintHighlight(PoseStack matrixStack, int x, int y) {
@@ -411,7 +415,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	protected void sendOptionUpdate(Option option, boolean set) {
-		AllPackets.channel.sendToServer(new ConfigureSchematicannonPacket(option, set));
+		AllPackets.getChannel().sendToServer(new ConfigureSchematicannonPacket(option, set));
 	}
 
 	@Override

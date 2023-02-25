@@ -36,7 +36,7 @@ public class BaseConfigScreen extends ConfigScreen {
 	static {
 		DEFAULTS.put(Create.ID, (base) -> base
 				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
-				.withSpecs(AllConfigs.CLIENT.specification, AllConfigs.COMMON.specification, AllConfigs.SERVER.specification)
+				.withSpecs(AllConfigs.client().specification, AllConfigs.common().specification, AllConfigs.server().specification)
 		);
 	}
 

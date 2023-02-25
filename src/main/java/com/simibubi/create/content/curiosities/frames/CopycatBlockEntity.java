@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.block.redstone.RoseQuartzLampBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockEntityItemRequirement;
@@ -24,55 +24,46 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBlockEntityItemRequirement, ITransformableTE {
+public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBlockEntityItemRequirement, ITransformableBlockEntity {
 
-	ItemStack consumedItem;
-	BlockState baseBlock;
+	private BlockState material;
+	private ItemStack consumedItem;
 
 	public CopycatBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		baseBlock = AllBlocks.COPYCAT_BASE.getDefaultState();
+		material = AllBlocks.COPYCAT_BASE.getDefaultState();
 		consumedItem = ItemStack.EMPTY;
 	}
 
-	public void setItem(ItemStack item) {
-		consumedItem = ItemHandlerHelper.copyStackWithSize(item, 1);
-		setChanged();
+	public BlockState getMaterial() {
+		return material;
 	}
 
-	public ItemStack getConsumedItem() {
-		return consumedItem;
-	}
-
-	@Override
-	public ItemRequirement getRequiredItems(BlockState state) {
-		if (consumedItem.isEmpty())
-			return ItemRequirement.NONE;
-		return new ItemRequirement(ItemUseType.CONSUME, consumedItem);
+	public boolean hasCustomMaterial() {
+		return !AllBlocks.COPYCAT_BASE.has(getMaterial());
 	}
 
 	public void setMaterial(BlockState blockState) {
 		BlockState wrapperState = getBlockState();
 
-		if (!baseBlock.is(blockState.getBlock()))
+		if (!material.is(blockState.getBlock()))
 			for (Direction side : Iterate.directions) {
 				BlockPos neighbour = worldPosition.relative(side);
 				BlockState neighbourState = level.getBlockState(neighbour);
 				if (neighbourState != wrapperState)
 					continue;
-				if (!(level.getBlockEntity(neighbour)instanceof CopycatBlockEntity ufte))
+				if (!(level.getBlockEntity(neighbour) instanceof CopycatBlockEntity cbe))
 					continue;
-				BlockState otherMaterial = ufte.getMaterial();
+				BlockState otherMaterial = cbe.getMaterial();
 				if (!otherMaterial.is(blockState.getBlock()))
 					continue;
 				blockState = otherMaterial;
 				break;
 			}
 
-		baseBlock = blockState;
+		material = blockState;
 		if (!level.isClientSide()) {
 			notifyUpdate();
 			return;
@@ -80,50 +71,32 @@ public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBloc
 		redraw();
 	}
 
-	public boolean hasCustomMaterial() {
-		return !AllBlocks.COPYCAT_BASE.has(getMaterial());
-	}
-
-	public BlockState getMaterial() {
-		return baseBlock;
-	}
-
 	public boolean cycleMaterial() {
-		if (baseBlock.hasProperty(BlockStateProperties.FACING))
-			setMaterial(baseBlock.cycle(BlockStateProperties.FACING));
-		else if (baseBlock.hasProperty(BlockStateProperties.HORIZONTAL_FACING))
-			setMaterial(baseBlock.cycle(BlockStateProperties.HORIZONTAL_FACING));
-		else if (baseBlock.hasProperty(BlockStateProperties.AXIS))
-			setMaterial(baseBlock.cycle(BlockStateProperties.AXIS));
-		else if (baseBlock.hasProperty(BlockStateProperties.HORIZONTAL_AXIS))
-			setMaterial(baseBlock.cycle(BlockStateProperties.HORIZONTAL_AXIS));
-		else if (baseBlock.hasProperty(BlockStateProperties.LIT))
-			setMaterial(baseBlock.cycle(BlockStateProperties.LIT));
-		else if (baseBlock.hasProperty(RoseQuartzLampBlock.POWERING))
-			setMaterial(baseBlock.cycle(RoseQuartzLampBlock.POWERING));
+		if (material.hasProperty(BlockStateProperties.FACING))
+			setMaterial(material.cycle(BlockStateProperties.FACING));
+		else if (material.hasProperty(BlockStateProperties.HORIZONTAL_FACING))
+			setMaterial(material.cycle(BlockStateProperties.HORIZONTAL_FACING));
+		else if (material.hasProperty(BlockStateProperties.AXIS))
+			setMaterial(material.cycle(BlockStateProperties.AXIS));
+		else if (material.hasProperty(BlockStateProperties.HORIZONTAL_AXIS))
+			setMaterial(material.cycle(BlockStateProperties.HORIZONTAL_AXIS));
+		else if (material.hasProperty(BlockStateProperties.LIT))
+			setMaterial(material.cycle(BlockStateProperties.LIT));
+		else if (material.hasProperty(RoseQuartzLampBlock.POWERING))
+			setMaterial(material.cycle(RoseQuartzLampBlock.POWERING));
 		else
 			return false;
 
 		return true;
 	}
 
-	@Override
-	protected void read(CompoundTag tag, boolean clientPacket) {
-		super.read(tag, clientPacket);
+	public ItemStack getConsumedItem() {
+		return consumedItem;
+	}
 
-		consumedItem = ItemStack.of(tag.getCompound("Item"));
-
-		BlockState prevMaterial = baseBlock;
-		if (!tag.contains("Material"))
-			return;
-
-		JsonOps ops = JsonOps.INSTANCE;
-		BlockState.CODEC.decode(ops, JsonParser.parseString(tag.getString("Material")))
-			.result()
-			.ifPresent(p -> baseBlock = p.getFirst());
-
-		if (clientPacket && prevMaterial != baseBlock)
-			redraw();
+	public void setConsumedItem(ItemStack stack) {
+		consumedItem = ItemHandlerHelper.copyStackWithSize(stack, 1);
+		setChanged();
 	}
 
 	private void redraw() {
@@ -138,33 +111,57 @@ public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBloc
 	}
 
 	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state) {
+		if (consumedItem.isEmpty())
+			return ItemRequirement.NONE;
+		return new ItemRequirement(ItemUseType.CONSUME, consumedItem);
+	}
+
+	@Override
+	public void transform(StructureTransform transform) {
+		material = transform.apply(material);
+		notifyUpdate();
+	}
+
+	@Override
+	protected void read(CompoundTag tag, boolean clientPacket) {
+		super.read(tag, clientPacket);
+
+		consumedItem = ItemStack.of(tag.getCompound("Item"));
+
+		BlockState prevMaterial = material;
+		if (!tag.contains("Material"))
+			return;
+
+		JsonOps ops = JsonOps.INSTANCE;
+		BlockState.CODEC.decode(ops, JsonParser.parseString(tag.getString("Material")))
+			.result()
+			.ifPresent(p -> material = p.getFirst());
+
+		if (clientPacket && prevMaterial != material)
+			redraw();
+	}
+
+	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
 
 		tag.put("Item", consumedItem.serializeNBT());
 
 		JsonOps ops = JsonOps.INSTANCE;
-		BlockState.CODEC.encode(baseBlock, ops, ops.empty())
+		BlockState.CODEC.encode(material, ops, ops.empty())
 			.result()
 			.map(je -> je.toString())
 			.ifPresent(s -> tag.putString("Material", s));
 	}
 
-	public static final ModelProperty<BlockState> MATERIAL_PROPERTY = new ModelProperty<>();
-
 	@Override
 	public IModelData getModelData() {
-		return new ModelDataMap.Builder().withInitial(MATERIAL_PROPERTY, baseBlock)
+		return new ModelDataMap.Builder().withInitial(CopycatModel.MATERIAL_PROPERTY, material)
 			.build();
-	}
-
-	@Override
-	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
-
-	@Override
-	public void transform(StructureTransform transform) {
-		baseBlock = transform.apply(baseBlock);
-		notifyUpdate();
 	}
 
 }

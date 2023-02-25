@@ -67,7 +67,7 @@ public class WindmillBearingBlockEntity extends MechanicalBearingBlockEntity {
 		if (movedContraption == null)
 			return lastGeneratedSpeed;
 		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks()
-			/ AllConfigs.SERVER.kinetics.windmillSailsPerRPM.get();
+			/ AllConfigs.server().kinetics.windmillSailsPerRPM.get();
 		return Mth.clamp(sails, 1, 16) * getAngleSpeedDirection();
 	}
 

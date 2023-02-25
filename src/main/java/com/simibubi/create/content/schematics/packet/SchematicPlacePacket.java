@@ -39,10 +39,10 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			Level world = player.getLevel();
 			SchematicPrinter printer = new SchematicPrinter();
 			printer.loadSchematic(stack, world, !player.canUseGameMasterBlocks());
-			if (!printer.isLoaded())
+			if (!printer.isLoaded() || printer.isErrored())
 				return;
 			
-			boolean includeAir = AllConfigs.SERVER.schematics.creativePrintIncludesAir.get();
+			boolean includeAir = AllConfigs.server().schematics.creativePrintIncludesAir.get();
 
 			while (printer.advanceCurrentPos()) {
 				if (!printer.shouldPlaceCurrent(world))

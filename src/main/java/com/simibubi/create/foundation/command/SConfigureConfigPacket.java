@@ -166,21 +166,21 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 			if (value.equals("info")) {
 				Component text = Components.literal("Rainbow Debug Utility is currently: ")
-					.append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
+					.append(boolToText(AllConfigs.client().rainbowDebug.get()));
 				player.displayClientMessage(text, false);
 				return;
 			}
 
-			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
-			Component text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
+			AllConfigs.client().rainbowDebug.set(Boolean.parseBoolean(value));
+			Component text = boolToText(AllConfigs.client().rainbowDebug.get())
 				.append(Components.literal(" Rainbow Debug Utility").withStyle(ChatFormatting.WHITE));
 			player.displayClientMessage(text, false);
 		}
 
 		@OnlyIn(Dist.CLIENT)
 		private static void overlayReset(String value) {
-			AllConfigs.CLIENT.overlayOffsetX.set(0);
-			AllConfigs.CLIENT.overlayOffsetY.set(0);
+			AllConfigs.client().overlayOffsetX.set(0);
+			AllConfigs.client().overlayOffsetY.set(0);
 		}
 
 		@OnlyIn(Dist.CLIENT)
@@ -213,7 +213,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 		@OnlyIn(Dist.CLIENT)
 		private static void fabulousWarning(String value) {
-			AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
+			AllConfigs.client().ignoreFabulousWarning.set(true);
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
 				player.displayClientMessage(

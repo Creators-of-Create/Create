@@ -57,13 +57,13 @@ public class ChromaticCompoundItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		return Math.round(13.0F * getLight(stack) / AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get());
+		return Math.round(13.0F * getLight(stack) / AllConfigs.server().recipes.lightSourceCountForRefinedRadiance.get());
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
 		return Color.mixColors(0x413c69, 0xFFFFFF,
-			getLight(stack) / (float) AllConfigs.SERVER.recipes.lightSourceCountForRefinedRadiance.get());
+			getLight(stack) / (float) AllConfigs.server().recipes.lightSourceCountForRefinedRadiance.get());
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class ChromaticCompoundItem extends Item {
 		CompoundTag itemData = entity.getItem()
 			.getOrCreateTag();
 		Vec3 positionVec = entity.position();
-		CRecipes config = AllConfigs.SERVER.recipes;
+		CRecipes config = AllConfigs.server().recipes;
 
 		if (world.isClientSide) {
 			int light = itemData.getInt("CollectingLight");

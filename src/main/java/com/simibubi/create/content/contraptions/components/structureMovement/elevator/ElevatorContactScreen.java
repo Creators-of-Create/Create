@@ -5,15 +5,19 @@ import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.actors.DoorControl;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.gui.widget.Label;
+import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.TooltipArea;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
@@ -31,12 +35,14 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 
 	private String shortName;
 	private String longName;
+	private DoorControl doorControl;
 
 	private BlockPos pos;
 
-	public ElevatorContactScreen(BlockPos pos, String prevShortName, String prevLongName) {
+	public ElevatorContactScreen(BlockPos pos, String prevShortName, String prevLongName, DoorControl prevDoorControl) {
 		super(Lang.translateDirect("elevator_contact.title"));
 		this.pos = pos;
+		this.doorControl = prevDoorControl;
 		background = AllGuiTextures.ELEVATOR_CONTACT;
 		this.shortName = prevShortName;
 		this.longName = prevLongName;
@@ -88,6 +94,10 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 				.component(),
 			rmbToEdit)));
 
+		Pair<ScrollInput, Label> doorControlWidgets =
+			DoorControl.createWidget(x + 58, y + 57, mode -> doorControl = mode, doorControl);
+		addRenderableWidget(doorControlWidgets.getFirst());
+		addRenderableWidget(doorControlWidgets.getSecond());
 	}
 
 	private int centerInput(int x) {
@@ -122,6 +132,7 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 			.scale(5)
 			.render(ms);
 
+		itemRenderer.renderGuiItem(AllBlocks.TRAIN_DOOR.asStack(), x + 37, y + 58);
 	}
 
 	@Override
@@ -164,7 +175,8 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 	}
 
 	private void confirm() {
-		AllPackets.channel.sendToServer(new ElevatorContactEditPacket(pos, shortName, longName));
+		AllPackets.getChannel()
+			.sendToServer(new ElevatorContactEditPacket(pos, shortName, longName, doorControl));
 		onClose();
 	}
 

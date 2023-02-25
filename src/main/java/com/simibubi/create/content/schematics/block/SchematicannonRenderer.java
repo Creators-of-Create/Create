@@ -7,8 +7,8 @@ import com.jozufozu.flywheel.core.virtual.VirtualEmptyModelData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBelt;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
@@ -57,14 +57,14 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		SuperByteBuffer connector = CachedBufferer.partial(AllBlockPartials.SCHEMATICANNON_CONNECTOR, state);
+		SuperByteBuffer connector = CachedBufferer.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR, state);
 		connector.translate(.5f, 0, .5f);
 		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		connector.translate(-.5f, 0, -.5f);
 		connector.light(light)
 			.renderInto(ms, vb);
 
-		SuperByteBuffer pipe = CachedBufferer.partial(AllBlockPartials.SCHEMATICANNON_PIPE, state);
+		SuperByteBuffer pipe = CachedBufferer.partial(AllPartialModels.SCHEMATICANNON_PIPE, state);
 		pipe.translate(.5f, 15 / 16f, .5f);
 		pipe.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));

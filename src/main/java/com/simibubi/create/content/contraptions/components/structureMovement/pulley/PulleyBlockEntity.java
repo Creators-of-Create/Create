@@ -105,7 +105,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Stoc
 			return;
 		if (speed == 0 && mirrorParent == null)
 			return;
-		int maxLength = AllConfigs.SERVER.kinetics.maxRopeLength.get();
+		int maxLength = AllConfigs.server().kinetics.maxRopeLength.get();
 		int i = 1;
 		while (i <= maxLength) {
 			BlockPos ropePos = worldPosition.below(i);
@@ -341,7 +341,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Stoc
 
 	@Override
 	protected int getExtensionRange() {
-		return Math.max(0, Math.min(AllConfigs.SERVER.kinetics.maxRopeLength.get(),
+		return Math.max(0, Math.min(AllConfigs.server().kinetics.maxRopeLength.get(),
 			(worldPosition.getY() - 1) - level.getMinBuildHeight()));
 	}
 

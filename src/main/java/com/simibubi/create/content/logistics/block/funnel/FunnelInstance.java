@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.block.flap.FlapData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -27,8 +27,8 @@ public class FunnelInstance extends BlockEntityInstance<FunnelBlockEntity> imple
 
         if (!blockEntity.hasFlap()) return;
 
-		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
-				: AllBlockPartials.BELT_FUNNEL_FLAP);
+		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllPartialModels.FUNNEL_FLAP
+				: AllPartialModels.BELT_FUNNEL_FLAP);
         Instancer<FlapData> model = materialManager.defaultSolid()
                 .material(AllMaterialSpecs.FLAPS)
 				.getModel(flapPartial, blockState);

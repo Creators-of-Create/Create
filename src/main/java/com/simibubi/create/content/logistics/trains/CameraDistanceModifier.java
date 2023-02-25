@@ -25,7 +25,7 @@ public class CameraDistanceModifier {
 	}
 
 	public static void zoomOut() {
-		zoomOut(AllConfigs.CLIENT.mountedZoomMultiplier.getF());
+		zoomOut(AllConfigs.client().mountedZoomMultiplier.getF());
 	}
 
 	public static void zoomOut(float targetMultiplier) {

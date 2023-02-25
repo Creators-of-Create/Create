@@ -97,7 +97,7 @@ public class ToolboxHandler {
 	}
 
 	public static void syncData(Player player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 			new PersistentDataPacket(player));
 	}
 
@@ -147,7 +147,7 @@ public class ToolboxHandler {
 	}
 
 	public static double getMaxRange(Player player) {
-		return AllConfigs.SERVER.curiosities.toolboxRange.get()
+		return AllConfigs.server().curiosities.toolboxRange.get()
 			.doubleValue();
 	}
 

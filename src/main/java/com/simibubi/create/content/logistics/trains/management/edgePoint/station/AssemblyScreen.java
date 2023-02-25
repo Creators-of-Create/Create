@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -65,14 +65,16 @@ public class AssemblyScreen extends AbstractStationScreen {
 		toggleAssemblyButton.active = false;
 		toggleAssemblyButton.setToolTip(Lang.translateDirect("station.assemble_train"));
 		toggleAssemblyButton.withCallback(() -> {
-			AllPackets.channel.sendToServer(StationEditPacket.tryAssemble(blockEntity.getBlockPos()));
+			AllPackets.getChannel()
+				.sendToServer(StationEditPacket.tryAssemble(blockEntity.getBlockPos()));
 		});
 
 		quitAssembly = new IconButton(x + 73, by, AllIcons.I_DISABLE);
 		quitAssembly.active = true;
 		quitAssembly.setToolTip(Lang.translateDirect("station.cancel"));
 		quitAssembly.withCallback(() -> {
-			AllPackets.channel.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name));
+			AllPackets.getChannel()
+				.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
 			minecraft.setScreen(new StationScreen(blockEntity, station));
 		});
 
@@ -90,7 +92,8 @@ public class AssemblyScreen extends AbstractStationScreen {
 		toggleAssemblyButton.active = blockEntity.bogeyCount > 0 || train != null;
 
 		if (train != null) {
-			AllPackets.channel.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name));
+			AllPackets.getChannel()
+				.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
 			minecraft.setScreen(new StationScreen(blockEntity, station));
 			for (Carriage carriage : train.carriages)
 				carriage.updateConductors();
@@ -105,10 +108,12 @@ public class AssemblyScreen extends AbstractStationScreen {
 			toggleAssemblyButton.setToolTip(Lang.translateDirect("station.assemble_train"));
 			toggleAssemblyButton.setIcon(AllGuiTextures.I_ASSEMBLE_TRAIN);
 			toggleAssemblyButton.withCallback(() -> {
-				AllPackets.channel.sendToServer(StationEditPacket.tryAssemble(blockEntity.getBlockPos()));
+				AllPackets.getChannel()
+					.sendToServer(StationEditPacket.tryAssemble(blockEntity.getBlockPos()));
 			});
 		} else {
-			AllPackets.channel.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name));
+			AllPackets.getChannel()
+				.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), false, station.name, null));
 			minecraft.setScreen(new StationScreen(blockEntity, station));
 		}
 	}
@@ -128,8 +133,8 @@ public class AssemblyScreen extends AbstractStationScreen {
 			font.draw(ms, text, x + 97 - font.width(text) / 2, y + 47, 0x775B5B);
 			int offset = 0;
 			if (blockEntity.failedCarriageIndex != -1) {
-				font.draw(ms, Lang.translateDirect("station.carriage_number", blockEntity.failedCarriageIndex), x + 30, y + 67,
-					0x7A7A7A);
+				font.draw(ms, Lang.translateDirect("station.carriage_number", blockEntity.failedCarriageIndex), x + 30,
+					y + 67, 0x7A7A7A);
 				offset += 10;
 			}
 			font.drawWordWrap(lastAssemblyException.component, x + 30, y + 67 + offset, 134, 0x775B5B);
@@ -158,13 +163,14 @@ public class AssemblyScreen extends AbstractStationScreen {
 		if (train != null) {
 			ResourceLocation iconId = iconTypes.get(iconTypeScroll.getState());
 			train.icon = TrainIconType.byId(iconId);
-			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, "", iconId));
+			AllPackets.getChannel()
+				.sendToServer(new TrainEditPacket(train.id, "", iconId));
 		}
 	}
 
 	@Override
 	protected PartialModel getFlag(float partialTicks) {
-		return AllBlockPartials.STATION_ASSEMBLE;
+		return AllPartialModels.STATION_ASSEMBLE;
 	}
 
 }

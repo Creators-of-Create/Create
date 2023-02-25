@@ -292,7 +292,7 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 	public void sendData() {
 		if (getWorld().isClientSide)
 			return;
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(this::cart),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(this::cart),
 			new MinecartControllerUpdatePacket(this));
 	}
 

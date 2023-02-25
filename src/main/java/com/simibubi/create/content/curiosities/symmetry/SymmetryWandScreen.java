@@ -148,7 +148,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	@Override
 	public void removed() {
 		SymmetryWandItem.configureSettings(wand, currentElement);
-		AllPackets.channel.sendToServer(new ConfigureSymmetryWandPacket(hand, currentElement));
+		AllPackets.getChannel().sendToServer(new ConfigureSymmetryWandPacket(hand, currentElement));
 	}
 
 }

@@ -147,7 +147,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 	protected void contentsCleared() {}
 
 	protected void sendOptionUpdate(Option option) {
-		AllPackets.channel.sendToServer(new FilterScreenPacket(option));
+		AllPackets.getChannel().sendToServer(new FilterScreenPacket(option));
 	}
 
 	@Override

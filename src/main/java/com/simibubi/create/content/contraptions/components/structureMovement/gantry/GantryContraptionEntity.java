@@ -192,7 +192,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public void sendPacket() {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new GantryContraptionUpdatePacket(getId(), getAxisCoord(), axisMotion));
 	}
 

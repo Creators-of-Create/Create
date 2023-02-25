@@ -84,7 +84,7 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
-		AllBlockPartials.init();
+		AllPartialModels.init();
 		AllStitchedTextures.init();
 
 		PonderIndex.register();
@@ -121,7 +121,7 @@ public class CreateClient {
 		if (mc.options.graphicsMode != GraphicsStatus.FABULOUS)
 			return;
 
-		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
+		if (AllConfigs.client().ignoreFabulousWarning.get())
 			return;
 
 		MutableComponent text = ComponentUtils.wrapInSquareBrackets(Components.literal("WARN"))

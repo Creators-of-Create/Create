@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
@@ -30,7 +30,7 @@ public class SplitShaftInstance extends KineticBlockEntityInstance<SplitShaftBlo
 
         for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 
-			Instancer<RotatingData> half = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, dir);
+			Instancer<RotatingData> half = rotatingMaterial.getModel(AllPartialModels.SHAFT_HALF, blockState, dir);
 
 			float splitSpeed = speed * blockEntity.getRotationSpeedModifier(dir);
 

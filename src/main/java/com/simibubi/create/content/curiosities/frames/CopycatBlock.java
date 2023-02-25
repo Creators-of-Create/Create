@@ -81,7 +81,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 			context.getLevel()
 				.levelEvent(2001, context.getClickedPos(), Block.getId(ufte.getBlockState()));
 			ufte.setMaterial(AllBlocks.COPYCAT_BASE.getDefaultState());
-			ufte.setItem(ItemStack.EMPTY);
+			ufte.setConsumedItem(ItemStack.EMPTY);
 			return InteractionResult.SUCCESS;
 		});
 	}
@@ -116,7 +116,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 				return InteractionResult.SUCCESS;
 
 			ufte.setMaterial(material);
-			ufte.setItem(itemInHand);
+			ufte.setConsumedItem(itemInHand);
 			ufte.getLevel()
 				.playSound(null, ufte.getBlockPos(), material.getSoundType()
 					.getPlaceSound(), SoundSource.BLOCKS, 1, .75f);
@@ -146,7 +146,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 				return;
 
 			ufte.setMaterial(appliedState);
-			ufte.setItem(offhandItem);
+			ufte.setConsumedItem(offhandItem);
 
 			if (pPlacer instanceof Player player && player.isCreative())
 				return;
@@ -215,7 +215,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
 		super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
 		if (pPlayer.isCreative())
-			withBlockEntityDo(pLevel, pPos, ufte -> ufte.setItem(ItemStack.EMPTY));
+			withBlockEntityDo(pLevel, pPos, ufte -> ufte.setConsumedItem(ItemStack.EMPTY));
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	@Override
 	public BlockEntityType<? extends CopycatBlockEntity> getBlockEntityType() {
-		return AllBlockEntityTypes.UNIVERSAL_FRAME.get();
+		return AllBlockEntityTypes.COPYCAT.get();
 	}
 
 	// Connected Textures

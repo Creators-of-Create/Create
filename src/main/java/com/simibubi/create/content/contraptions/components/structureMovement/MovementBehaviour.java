@@ -52,7 +52,7 @@ public interface MovementBehaviour {
 
 	default void dropItem(MovementContext context, ItemStack stack) {
 		ItemStack remainder;
-		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get())
+		if (AllConfigs.server().kinetics.moveItemsToStorage.get())
 			remainder = ItemHandlerHelper.insertItem(context.contraption.getSharedInventory(), stack, false);
 		else
 			remainder = stack;

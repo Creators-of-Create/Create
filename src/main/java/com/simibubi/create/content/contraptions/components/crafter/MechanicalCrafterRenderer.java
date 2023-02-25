@@ -9,7 +9,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity.Phase;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
@@ -170,7 +170,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
 		if (!Backend.canUseInstancing(be.getLevel())) {
-			SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
+			SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
 			standardKineticRotationTransform(superBuffer, be, light);
 			superBuffer.rotateCentered(Direction.UP, (float) (blockState.getValue(HORIZONTAL_FACING)
 				.getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));
@@ -182,15 +182,15 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 		BlockPos pos = be.getBlockPos();
 
 		if ((be.covered || be.phase != Phase.IDLE) && be.phase != Phase.CRAFTING && be.phase != Phase.INSERTING) {
-			SuperByteBuffer lidBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_LID, blockState);
+			SuperByteBuffer lidBuffer = renderAndTransform(AllPartialModels.MECHANICAL_CRAFTER_LID, blockState);
 			lidBuffer.light(light)
 				.renderInto(ms, vb);
 		}
 
 		if (MechanicalCrafterBlock.isValidTarget(be.getLevel(), pos.relative(targetDirection), blockState)) {
-			SuperByteBuffer beltBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_BELT, blockState);
+			SuperByteBuffer beltBuffer = renderAndTransform(AllPartialModels.MECHANICAL_CRAFTER_BELT, blockState);
 			SuperByteBuffer beltFrameBuffer =
-				renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_BELT_FRAME, blockState);
+				renderAndTransform(AllPartialModels.MECHANICAL_CRAFTER_BELT_FRAME, blockState);
 
 			if (be.phase == Phase.EXPORTING) {
 				int textureIndex = (int) ((be.getCountDownSpeed() / 128f * AnimationTickHolder.getTicks()));
@@ -203,7 +203,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 				.renderInto(ms, vb);
 
 		} else {
-			SuperByteBuffer arrowBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_ARROW, blockState);
+			SuperByteBuffer arrowBuffer = renderAndTransform(AllPartialModels.MECHANICAL_CRAFTER_ARROW, blockState);
 			arrowBuffer.light(light)
 				.renderInto(ms, vb);
 		}

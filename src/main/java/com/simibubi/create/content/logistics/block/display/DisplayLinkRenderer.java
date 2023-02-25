@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block.display;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.RenderTypes;
@@ -49,11 +49,11 @@ public class DisplayLinkRenderer extends SafeBlockEntityRenderer<DisplayLinkBloc
 			.rotateX(-AngleHelper.verticalAngle(face) - 90)
 			.unCentre();
 
-		CachedBufferer.partial(AllBlockPartials.DISPLAY_LINK_TUBE, blockState)
+		CachedBufferer.partial(AllPartialModels.DISPLAY_LINK_TUBE, blockState)
 			.light(LightTexture.FULL_BRIGHT)
 			.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
-		CachedBufferer.partial(AllBlockPartials.DISPLAY_LINK_GLOW, blockState)
+		CachedBufferer.partial(AllPartialModels.DISPLAY_LINK_GLOW, blockState)
 			.light(LightTexture.FULL_BRIGHT)
 			.color(color, color, color, 255)
 			.disableDiffuse()

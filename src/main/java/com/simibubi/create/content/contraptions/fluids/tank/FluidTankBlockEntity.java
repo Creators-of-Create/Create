@@ -507,11 +507,11 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 	}
 
 	public static int getCapacityMultiplier() {
-		return AllConfigs.SERVER.fluids.fluidTankCapacity.get() * 1000;
+		return AllConfigs.server().fluids.fluidTankCapacity.get() * 1000;
 	}
 
 	public static int getMaxHeight() {
-		return AllConfigs.SERVER.fluids.fluidTankMaxHeight.get();
+		return AllConfigs.server().fluids.fluidTankMaxHeight.get();
 	}
 
 	public LerpedFloat getFluidLevel() {

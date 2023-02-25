@@ -62,7 +62,7 @@ public class HauntedBellPulser {
 
 	public static void sendPulse(Level world, BlockPos pos, int distance, boolean canOverlap) {
 		LevelChunk chunk = world.getChunkAt(pos);
-		AllPackets.channel.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk),
 			new SoulPulseEffectPacket(pos, distance, canOverlap));
 	}
 

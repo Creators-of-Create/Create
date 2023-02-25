@@ -90,7 +90,7 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 			return;
 		}
 
-		AllPackets.channel.sendToServer(new ScrollValueUpdatePacket(getPos(), scrollableValue));
+		AllPackets.getChannel().sendToServer(new ScrollValueUpdatePacket(getPos(), scrollableValue));
 		ticksUntilScrollPacket = -1;
 	}
 

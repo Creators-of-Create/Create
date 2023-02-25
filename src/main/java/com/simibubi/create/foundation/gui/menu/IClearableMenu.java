@@ -5,7 +5,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 public interface IClearableMenu {
 
 	default void sendClearPacket() {
-		AllPackets.channel.sendToServer(new ClearMenuPacket());
+		AllPackets.getChannel().sendToServer(new ClearMenuPacket());
 	}
 
 	public void clearContents();

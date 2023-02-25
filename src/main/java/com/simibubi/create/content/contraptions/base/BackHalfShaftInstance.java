@@ -5,8 +5,8 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class BackHalfShaftInstance extends HalfShaftInstance {
-    public BackHalfShaftInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+public class BackHalfShaftInstance<T extends KineticBlockEntity> extends HalfShaftInstance<T> {
+    public BackHalfShaftInstance(MaterialManager materialManager, T blockEntity) {
         super(materialManager, blockEntity);
     }
 

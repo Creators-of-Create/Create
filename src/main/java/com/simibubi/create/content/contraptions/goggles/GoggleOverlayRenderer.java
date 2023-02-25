@@ -171,7 +171,7 @@ public class GoggleOverlayRenderer {
 			tooltipHeight += (tooltip.size() - 1) * 10;
 		}
 
-		CClient cfg = AllConfigs.CLIENT;
+		CClient cfg = AllConfigs.client();
 		int posX = width / 2 + cfg.overlayOffsetX.get();
 		int posY = height / 2 + cfg.overlayOffsetY.get();
 

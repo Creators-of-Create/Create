@@ -8,8 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -34,14 +33,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class FlapDisplayRenderer extends KineticBlockEntityRenderer {
+public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayBlockEntity> {
 
 	public FlapDisplayRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(FlapDisplayBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
@@ -50,13 +49,10 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer {
 
 		float scale = 1 / 32f;
 
-		if (!(be instanceof FlapDisplayBlockEntity flapTe))
+		if (!be.isController)
 			return;
 
-		if (!flapTe.isController)
-			return;
-
-		List<FlapDisplayLayout> lines = flapTe.getLines();
+		List<FlapDisplayLayout> lines = be.getLines();
 
 		ms.pushPose();
 		TransformStack.cast(ms)
@@ -74,17 +70,17 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer {
 		for (int j = 0; j < lines.size(); j++) {
 			List<FlapDisplaySection> line = lines.get(j)
 				.getSections();
-			int color = flapTe.getLineColor(j);
+			int color = be.getLineColor(j);
 			ms.pushPose();
 
 			float w = 0;
 			for (FlapDisplaySection section : line)
 				w += section.getSize() + (section.hasGap ? 8 : 1);
-			ms.translate(flapTe.xSize * 16 - w / 2 + 1, 4.5f, 0);
+			ms.translate(be.xSize * 16 - w / 2 + 1, 4.5f, 0);
 
 			Pose transform = ms.last();
 			FlapDisplayRenderOutput renderOutput = new FlapDisplayRenderOutput(buffer, color, transform.pose(), light,
-				j, !be.isSpeedRequirementFulfilled(), be.getLevel(), flapTe.isLineGlowing(j));
+				j, !be.isSpeedRequirementFulfilled(), be.getLevel(), be.isLineGlowing(j));
 
 			for (int i = 0; i < line.size(); i++) {
 				FlapDisplaySection section = line.get(i);
@@ -231,14 +227,14 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
-		return CachedBufferer.partialFacingVertical(AllBlockPartials.SHAFTLESS_COGWHEEL, state,
+	protected SuperByteBuffer getRotatedModel(FlapDisplayBlockEntity be, BlockState state) {
+		return CachedBufferer.partialFacingVertical(AllPartialModels.SHAFTLESS_COGWHEEL, state,
 			state.getValue(FlapDisplayBlock.HORIZONTAL_FACING));
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticBlockEntity pBlockEntity) {
-		return ((FlapDisplayBlockEntity) pBlockEntity).isController;
+	public boolean shouldRenderOffScreen(FlapDisplayBlockEntity be) {
+		return be.isController;
 	}
 
 }

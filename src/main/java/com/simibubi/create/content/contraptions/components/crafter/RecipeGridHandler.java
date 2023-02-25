@@ -144,7 +144,7 @@ public class RecipeGridHandler {
 		items.calcStats();
 		CraftingContainer craftinginventory = new MechanicalCraftingInventory(items);
 		ItemStack result = null;
-		if (AllConfigs.SERVER.recipes.allowRegularCraftingInCrafter.get())
+		if (AllConfigs.server().recipes.allowRegularCraftingInCrafter.get())
 			result = world.getRecipeManager()
 				.getRecipeFor(RecipeType.CRAFTING, craftinginventory, world)
 				.filter(r -> isRecipeAllowed(r, craftinginventory))
@@ -165,7 +165,7 @@ public class RecipeGridHandler {
 					numItems++;
 				}
 			}
-			if (numItems > AllConfigs.SERVER.recipes.maxFireworkIngredientsInCrafter.get()) {
+			if (numItems > AllConfigs.server().recipes.maxFireworkIngredientsInCrafter.get()) {
 				return false;
 			}
 		}

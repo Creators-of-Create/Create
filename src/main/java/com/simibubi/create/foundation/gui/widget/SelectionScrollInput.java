@@ -43,7 +43,8 @@ public class SelectionScrollInput extends ScrollInput {
 		if (this.min + 1 == min)
 			min--;
 		if (min > this.min)
-			toolTip.add(Components.literal("> ...").withStyle(ChatFormatting.GRAY));
+			toolTip.add(Components.literal("> ...")
+				.withStyle(ChatFormatting.GRAY));
 		if (this.max - 1 == max)
 			max++;
 		for (int i = min; i < max; i++) {
@@ -59,8 +60,12 @@ public class SelectionScrollInput extends ScrollInput {
 					.withStyle(ChatFormatting.GRAY));
 		}
 		if (max < this.max)
-			toolTip.add(Components.literal("> ...").withStyle(ChatFormatting.GRAY));
+			toolTip.add(Components.literal("> ...")
+				.withStyle(ChatFormatting.GRAY));
 
+		if (hint != null)
+			toolTip.add(hint.plainCopy()
+				.withStyle(s -> s.withColor(HINT_RGB)));
 		toolTip.add(scrollToSelect.plainCopy()
 			.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
 	}

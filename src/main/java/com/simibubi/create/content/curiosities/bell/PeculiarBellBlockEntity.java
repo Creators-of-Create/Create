@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.bell;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,7 +18,7 @@ public class PeculiarBellBlockEntity extends AbstractBellBlockEntity {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel getBellModel() {
-		return AllBlockPartials.PECULIAR_BELL;
+		return AllPartialModels.PECULIAR_BELL;
 	}
 
 }

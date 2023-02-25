@@ -189,7 +189,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	public static int maxAllowedPistonPoles() {
-		return AllConfigs.SERVER.kinetics.maxPistonPoles.get();
+		return AllConfigs.server().kinetics.maxPistonPoles.get();
 	}
 
 	@Override

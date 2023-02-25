@@ -7,8 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
@@ -149,14 +149,14 @@ public class StandardBogeyBlock extends Block
 	}
 
 	private void renderBogey(float wheelAngle, PoseStack ms, int light, VertexConsumer vb, BlockState air) {
-		CachedBufferer.partial(AllBlockPartials.BOGEY_FRAME, air)
+		CachedBufferer.partial(AllPartialModels.BOGEY_FRAME, air)
 			.scale(1 - 1 / 512f)
 			.light(light)
 			.renderInto(ms, vb);
 
 		for (int side : Iterate.positiveAndNegative) {
 			ms.pushPose();
-			CachedBufferer.partial(AllBlockPartials.SMALL_BOGEY_WHEELS, air)
+			CachedBufferer.partial(AllPartialModels.SMALL_BOGEY_WHEELS, air)
 				.translate(0, 12 / 16f, side)
 				.rotateX(wheelAngle)
 				.light(light)
@@ -176,22 +176,22 @@ public class StandardBogeyBlock extends Block
 				.light(light)
 				.renderInto(ms, vb);
 
-		CachedBufferer.partial(AllBlockPartials.BOGEY_DRIVE, air)
+		CachedBufferer.partial(AllPartialModels.BOGEY_DRIVE, air)
 			.scale(1 - 1 / 512f)
 			.light(light)
 			.renderInto(ms, vb);
-		CachedBufferer.partial(AllBlockPartials.BOGEY_PISTON, air)
+		CachedBufferer.partial(AllPartialModels.BOGEY_PISTON, air)
 			.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)))
 			.light(light)
 			.renderInto(ms, vb);
 
 		ms.pushPose();
-		CachedBufferer.partial(AllBlockPartials.LARGE_BOGEY_WHEELS, air)
+		CachedBufferer.partial(AllPartialModels.LARGE_BOGEY_WHEELS, air)
 			.translate(0, 1, 0)
 			.rotateX(wheelAngle)
 			.light(light)
 			.renderInto(ms, vb);
-		CachedBufferer.partial(AllBlockPartials.BOGEY_PIN, air)
+		CachedBufferer.partial(AllPartialModels.BOGEY_PIN, air)
 			.translate(0, 1, 0)
 			.rotateX(wheelAngle)
 			.translate(0, 1 / 4f, 0)

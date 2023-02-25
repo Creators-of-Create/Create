@@ -16,8 +16,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.actors.DoorControlBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.block.depot.DepotBehaviour;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
@@ -77,9 +78,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
-public class StationBlockEntity extends SmartBlockEntity implements ITransformableTE {
+public class StationBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity {
 
 	public TrackTargetingBehaviour<GlobalStation> edgePoint;
+	public DoorControlBehaviour doorControls;
 	public LerpedFloat flag;
 
 	protected int failedCarriageIndex;
@@ -111,6 +113,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.STATION));
+		behaviours.add(doorControls = new DoorControlBehaviour(this));
 		behaviours.add(depotBehaviour = new DepotBehaviour(this).onlyAccepts(AllItems.SCHEDULE::isIn)
 			.withCallback(s -> applyAutoSchedule()));
 		depotBehaviour.addSubBehaviours(behaviours);
@@ -362,8 +365,8 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 
 		BlockPos bogeyOffset = new BlockPos(track.getUpNormal(level, targetPosition, trackState));
 
-		int MAX_LENGTH = AllConfigs.SERVER.trains.maxAssemblyLength.get();
-		int MAX_BOGEY_COUNT = AllConfigs.SERVER.trains.maxBogeyCount.get();
+		int MAX_LENGTH = AllConfigs.server().trains.maxAssemblyLength.get();
+		int MAX_BOGEY_COUNT = AllConfigs.server().trains.maxBogeyCount.get();
 
 		int bogeyIndex = 0;
 		int maxBogeyCount = MAX_BOGEY_COUNT;
@@ -655,7 +658,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 
 		train.collectInitiallyOccupiedSignalBlocks();
 		Create.RAILWAYS.addTrain(train);
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, true));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(train, true));
 		clearException();
 
 		award(AllAdvancements.TRAIN);

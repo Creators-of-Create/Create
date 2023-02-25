@@ -2,9 +2,8 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -19,14 +18,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 
-public class SplitShaftRenderer extends KineticBlockEntityRenderer {
+public class SplitShaftRenderer extends KineticBlockEntityRenderer<SplitShaftBlockEntity> {
 
 	public SplitShaftRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(SplitShaftBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 			int light, int overlay) {
 		if (Backend.canUseInstancing(be.getLevel())) return;
 
@@ -42,17 +41,14 @@ public class SplitShaftRenderer extends KineticBlockEntityRenderer {
 
 			float offset = getRotationOffsetForPosition(be, pos, axis);
 			float angle = (time * be.getSpeed() * 3f / 10) % 360;
-			float modifier = 1;
-
-			if (be instanceof SplitShaftBlockEntity)
-				modifier = ((SplitShaftBlockEntity) be).getRotationSpeedModifier(direction);
+			float modifier = be.getRotationSpeedModifier(direction);
 
 			angle *= modifier;
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 
 			SuperByteBuffer superByteBuffer =
-					CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, be.getBlockState(), direction);
+					CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
 			kineticRotationTransform(superByteBuffer, be, axis, angle, light);
 			superByteBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}

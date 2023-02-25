@@ -115,7 +115,7 @@ public class StressGaugeBlockEntity extends GaugeBlockEntity {
 		}
 
 		if (!worldPosition.equals(lastSent))
-			AllPackets.channel.sendToServer(new GaugeObservedPacket(lastSent = worldPosition));
+			AllPackets.getChannel().sendToServer(new GaugeObservedPacket(lastSent = worldPosition));
 
 		return true;
 	}

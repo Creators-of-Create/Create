@@ -218,7 +218,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 	protected List<Recipe<?>> getMatchingRecipes() {
 		List<Recipe<?>> matchingRecipes = super.getMatchingRecipes();
 
-		if (!AllConfigs.SERVER.recipes.allowBrewingInMixer.get())
+		if (!AllConfigs.server().recipes.allowBrewingInMixer.get())
 			return matchingRecipes;
 		
 		Optional<BasinBlockEntity> basin = getBasin();
@@ -254,7 +254,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 	@Override
 	protected <C extends Container> boolean matchStaticFilters(Recipe<C> r) {
 		return ((r instanceof CraftingRecipe && !(r instanceof IShapedRecipe<?>)
-				 && AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
+				 && AllConfigs.server().recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
 				 && !MechanicalPressBlockEntity.canCompress(r)) && !AllRecipeTypes.shouldIgnoreInAutomation(r)
 			|| r.getType() == AllRecipeTypes.MIXING.getType());

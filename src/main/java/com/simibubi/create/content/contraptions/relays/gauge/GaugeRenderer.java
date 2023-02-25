@@ -4,9 +4,9 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.contraptions.relays.encased.ShaftRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock.Type;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -19,7 +19,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GaugeRenderer extends KineticBlockEntityRenderer {
+public class GaugeRenderer extends ShaftRenderer {
 
 	protected GaugeBlock.Type type;
 
@@ -46,10 +46,10 @@ public class GaugeRenderer extends KineticBlockEntityRenderer {
 		BlockState gaugeState = be.getBlockState();
 		GaugeBlockEntity gaugeBE = (GaugeBlockEntity) be;
 
-		PartialModel partialModel = (type == Type.SPEED ? AllBlockPartials.GAUGE_HEAD_SPEED : AllBlockPartials.GAUGE_HEAD_STRESS);
+		PartialModel partialModel = (type == Type.SPEED ? AllPartialModels.GAUGE_HEAD_SPEED : AllPartialModels.GAUGE_HEAD_STRESS);
 		SuperByteBuffer headBuffer =
 				CachedBufferer.partial(partialModel, gaugeState);
-		SuperByteBuffer dialBuffer = CachedBufferer.partial(AllBlockPartials.GAUGE_DIAL, gaugeState);
+		SuperByteBuffer dialBuffer = CachedBufferer.partial(AllPartialModels.GAUGE_DIAL, gaugeState);
 
 		float dialPivot = 5.75f / 16;
 		float progress = Mth.lerp(partialTicks, gaugeBE.prevDialState, gaugeBE.dialState);
@@ -68,11 +68,6 @@ public class GaugeRenderer extends KineticBlockEntityRenderer {
 			rotateBufferTowards(headBuffer, facing).light(light)
 				.renderInto(ms, vb);
 		}
-	}
-
-	@Override
-	protected BlockState getRenderedBlockState(KineticBlockEntity be) {
-		return shaft(getRotationAxisOf(be));
 	}
 
 	protected SuperByteBuffer rotateBufferTowards(SuperByteBuffer buffer, Direction target) {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -74,7 +74,7 @@ public class CarriageCouplingRenderer {
 				ms.pushPose();
 				ms.pushPose();
 				ms.translate(anchor.x, anchor.y, anchor.z);
-				CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
+				CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_HEAD, air)
 					.rotateY(-yRot)
 					.rotateX(xRot)
 					.light(lightCoords)
@@ -86,7 +86,7 @@ public class CarriageCouplingRenderer {
 				int couplingSegments = (int) Math.round(couplingDistance * 4);
 				double stretch = ((anchor2.distanceTo(anchor) - 2 * margin) * 4) / couplingSegments;
 				for (int j = 0; j < couplingSegments; j++) {
-					CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_CABLE, air)
+					CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_CABLE, air)
 						.rotateY(-yRot + 180)
 						.rotateX(-xRot)
 						.translate(0, 0, margin + 2 / 16f)
@@ -102,7 +102,7 @@ public class CarriageCouplingRenderer {
 				ms.translate(-position.x, -position.y, -position.z);
 				ms.translate(position2.x, position2.y, position2.z);
 				ms.translate(anchor2.x, anchor2.y, anchor2.z);
-				CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
+				CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_HEAD, air)
 					.rotateY(-yRot + 180)
 					.rotateX(-xRot)
 					.light(lightCoords2)

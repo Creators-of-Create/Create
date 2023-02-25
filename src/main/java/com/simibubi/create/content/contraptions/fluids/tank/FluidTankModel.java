@@ -42,12 +42,13 @@ public class FluidTankModel extends CTModel {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+	protected void gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
 		IModelData blockEntityData) {
+		super.gatherModelData(builder, world, pos, state, blockEntityData);
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
 			cullData.setCulled(d, ConnectivityHandler.isConnected(world, pos, pos.relative(d)));
-		return super.gatherModelData(builder, world, pos, state, blockEntityData).withInitial(CULL_PROPERTY, cullData);
+		builder.withInitial(CULL_PROPERTY, cullData);
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class FluidTankModel extends CTModel {
 		return quads;
 	}
 
-	private class CullData {
+	private static class CullData {
 		boolean[] culledFaces;
 
 		public CullData() {

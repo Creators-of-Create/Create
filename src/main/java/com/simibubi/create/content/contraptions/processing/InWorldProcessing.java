@@ -125,7 +125,7 @@ public class InWorldProcessing {
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
 			int processingTime =
-				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+				(int) (AllConfigs.server().kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			transported.processingTime = processingTime;
 			if (!type.canProcess(transported.stack, world))
 				transported.processingTime = -1;
@@ -211,7 +211,7 @@ public class InWorldProcessing {
 			int timeModifierForStackSize = ((entity.getItem()
 				.getCount() - 1) / 16) + 1;
 			int processingTime =
-				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+				(int) (AllConfigs.server().kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			processing.putInt("Time", processingTime);
 		}
 

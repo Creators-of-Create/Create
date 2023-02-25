@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.signal;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
@@ -32,10 +32,10 @@ public class SignalRenderer extends SafeBlockEntityRenderer<SignalBlockEntity> {
 
 		float renderTime = AnimationTickHolder.getRenderTime(be.getLevel());
 		if (signalState.isRedLight(renderTime))
-			CachedBufferer.partial(AllBlockPartials.SIGNAL_ON, blockState)
+			CachedBufferer.partial(AllPartialModels.SIGNAL_ON, blockState)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		else
-			CachedBufferer.partial(AllBlockPartials.SIGNAL_OFF, blockState)
+			CachedBufferer.partial(AllPartialModels.SIGNAL_OFF, blockState)
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 

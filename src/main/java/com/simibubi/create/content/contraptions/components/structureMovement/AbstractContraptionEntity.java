@@ -162,7 +162,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		contraption.getSeatMapping()
 			.put(passenger.getUUID(), seatIndex);
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()));
 	}
 
@@ -179,7 +179,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 		contraption.getSeatMapping()
 			.remove(passenger.getUUID());
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping(), passenger.getId()));
 	}
 
@@ -269,7 +269,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public void stopControlling(BlockPos controlsLocalPos) {
 		getControllingPlayer().map(level::getPlayerByUUID)
 			.map(p -> (p instanceof ServerPlayer) ? ((ServerPlayer) p) : null)
-			.ifPresent(p -> AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> p),
+			.ifPresent(p -> AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> p),
 				new ControlsStopControllingPacket()));
 		setControllingPlayer(null);
 	}
@@ -412,7 +412,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	public void setBlock(BlockPos localPos, StructureBlockInfo newInfo) {
 		contraption.blocks.put(localPos, newInfo);
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionBlockChangedPacket(getId(), localPos, newInfo.state));
 	}
 
@@ -508,7 +508,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	protected void onContraptionStalled() {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionStallPacket(getId(), getX(), getY(), getZ(), getStalledAngle()));
 	}
 
@@ -649,7 +649,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		StructureTransform transform = makeStructureTransform();
 
 		contraption.stop(level);
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 			new ContraptionDisassemblyPacket(this.getId(), transform));
 
 		contraption.addBlocksToWorld(level, transform);

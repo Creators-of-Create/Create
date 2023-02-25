@@ -4,6 +4,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -25,7 +26,7 @@ public class LecternControllerRenderer extends SafeBlockEntityRenderer<LecternCo
 
 		ItemStack stack = AllItems.LINKED_CONTROLLER.asStack();
 		TransformType transformType = TransformType.NONE;
-		LinkedControllerModel mainModel = (LinkedControllerModel) Minecraft.getInstance()
+		CustomRenderedItemModel mainModel = (CustomRenderedItemModel) Minecraft.getInstance()
 			.getItemRenderer()
 			.getModel(stack, be.getLevel(), null, 0);
 		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, transformType, ms, buffer, overlay);

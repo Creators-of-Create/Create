@@ -102,7 +102,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 		}
 
 		if (validationCountdown-- <= 0) {
-			validationCountdown = AllConfigs.SERVER.kinetics.kineticValidationFrequency.get();
+			validationCountdown = AllConfigs.server().kinetics.kineticValidationFrequency.get();
 			validateKinetics();
 		}
 
@@ -392,7 +392,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
-		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
+		if (overStressed && AllConfigs.client().enableOverstressedTooltip.get()) {
 			Lang.translate("gui.stressometer.overstressed")
 				.style(GOLD)
 				.forGoggles(tooltip);

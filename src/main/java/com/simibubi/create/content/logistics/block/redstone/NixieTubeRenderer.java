@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.block.redstone.DoubleFaceAttachedBlock.DoubleAttachFace;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -137,7 +137,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		boolean invertTubes =
 			facing == Direction.DOWN || blockState.getValue(NixieTubeBlock.FACE) == DoubleAttachFace.WALL_REVERSED;
 
-		CachedBufferer.partial(AllBlockPartials.SIGNAL_PANEL, blockState)
+		CachedBufferer.partial(AllPartialModels.SIGNAL_PANEL, blockState)
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
@@ -166,7 +166,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 				float longSide = yellow ? 1 : 4;
 				float longSideGlow = yellow ? 2 : 5.125f;
 
-				CachedBufferer.partial(AllBlockPartials.SIGNAL_WHITE_CUBE, blockState)
+				CachedBufferer.partial(AllPartialModels.SIGNAL_WHITE_CUBE, blockState)
 					.light(0xf000f0)
 					.disableDiffuse()
 					.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
@@ -174,8 +174,8 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 
 				CachedBufferer
 					.partial(
-						first ? AllBlockPartials.SIGNAL_RED_GLOW
-							: yellow ? AllBlockPartials.SIGNAL_YELLOW_GLOW : AllBlockPartials.SIGNAL_WHITE_GLOW,
+						first ? AllPartialModels.SIGNAL_RED_GLOW
+							: yellow ? AllPartialModels.SIGNAL_YELLOW_GLOW : AllPartialModels.SIGNAL_WHITE_GLOW,
 						blockState)
 					.light(0xf000f0)
 					.disableDiffuse()
@@ -184,8 +184,8 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			}
 
 			CachedBufferer
-				.partial(first ? AllBlockPartials.SIGNAL_RED
-					: yellow ? AllBlockPartials.SIGNAL_YELLOW : AllBlockPartials.SIGNAL_WHITE, blockState)
+				.partial(first ? AllPartialModels.SIGNAL_RED
+					: yellow ? AllPartialModels.SIGNAL_YELLOW : AllPartialModels.SIGNAL_WHITE, blockState)
 				.light(0xF000F0)
 				.disableDiffuse()
 				.scale(1 + 1 / 16f)

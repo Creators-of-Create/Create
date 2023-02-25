@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.block.connected;
+package com.simibubi.create.foundation.model;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -21,10 +21,11 @@ public abstract class BakedModelWrapperWithData extends BakedModelWrapper<BakedM
 		Builder builder = new ModelDataMap.Builder();
 		if (originalModel instanceof BakedModelWrapperWithData)
 			((BakedModelWrapperWithData) originalModel).gatherModelData(builder, world, pos, state, blockEntityData);
-		return gatherModelData(builder, world, pos, state, blockEntityData).build();
+		gatherModelData(builder, world, pos, state, blockEntityData);
+		return builder.build();
 	}
 
-	protected abstract ModelDataMap.Builder gatherModelData(ModelDataMap.Builder builder, BlockAndTintGetter world,
+	protected abstract void gatherModelData(ModelDataMap.Builder builder, BlockAndTintGetter world,
 		BlockPos pos, BlockState state, IModelData blockEntityData);
 
 }

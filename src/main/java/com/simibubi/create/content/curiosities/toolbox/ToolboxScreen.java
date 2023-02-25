@@ -7,8 +7,8 @@ import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -58,7 +58,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 
 		disposeButton = new IconButton(leftPos + 30 + 81, topPos + 69, AllIcons.I_TOOLBOX);
 		disposeButton.withCallback(() -> {
-			AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
+			AllPackets.getChannel().sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
 		});
 		disposeButton.setToolTip(Lang.translateDirect("toolbox.depositBox"));
 		addRenderableWidget(disposeButton);
@@ -141,7 +141,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			.translate(0, -6 / 16f, 12 / 16f)
 			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))
 			.translate(0, 6 / 16f, -12 / 16f);
-		GuiGameElement.of(AllBlockPartials.TOOLBOX_LIDS.get(color))
+		GuiGameElement.of(AllPartialModels.TOOLBOX_LIDS.get(color))
 			.render(ms);
 		ms.popPose();
 
@@ -149,7 +149,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			ms.pushPose();
 			ms.translate(0, -offset * 1 / 8f,
 				menu.contentHolder.drawers.getValue(partialTicks) * -.175f * (2 - offset));
-			GuiGameElement.of(AllBlockPartials.TOOLBOX_DRAWER)
+			GuiGameElement.of(AllPartialModels.TOOLBOX_DRAWER)
 				.render(ms);
 			ms.popPose();
 		}

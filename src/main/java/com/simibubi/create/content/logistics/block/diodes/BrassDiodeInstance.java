@@ -5,7 +5,7 @@ import com.jozufozu.flywheel.api.instance.TickableInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Color;
 
 public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeBlockEntity> implements TickableInstance {
@@ -19,7 +19,7 @@ public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeBlockEntit
 
         indicator = materialManager.defaultSolid()
                 .material(Materials.TRANSFORMED)
-                .getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();
+                .getModel(AllPartialModels.FLEXPEATER_INDICATOR, blockState).createInstance();
 
         indicator.loadIdentity()
 				.translate(getInstancePosition())

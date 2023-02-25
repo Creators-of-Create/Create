@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticBlockEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -18,7 +18,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class EncasedCogRenderer extends KineticBlockEntityRenderer {
+public class EncasedCogRenderer extends KineticBlockEntityRenderer<SimpleKineticBlockEntity> {
 
 	private boolean large;
 
@@ -36,7 +36,7 @@ public class EncasedCogRenderer extends KineticBlockEntityRenderer {
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(SimpleKineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 		if (Backend.canUseInstancing(be.getLevel()))
@@ -51,15 +51,15 @@ public class EncasedCogRenderer extends KineticBlockEntityRenderer {
 		for (Direction d : Iterate.directionsInAxis(getRotationAxisOf(be))) {
 			if (!def.hasShaftTowards(be.getLevel(), be.getBlockPos(), blockState, d))
 				continue;
-			renderRotatingBuffer(be, CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, be.getBlockState(), d),
+			renderRotatingBuffer(be, CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), d),
 				ms, buffer.getBuffer(RenderType.solid()), light);
 		}
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
+	protected SuperByteBuffer getRotatedModel(SimpleKineticBlockEntity be, BlockState state) {
 		return CachedBufferer.partialFacingVertical(
-			large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL, state,
+			large ? AllPartialModels.SHAFTLESS_LARGE_COGWHEEL : AllPartialModels.SHAFTLESS_COGWHEEL, state,
 			Direction.fromAxisAndDirection(state.getValue(EncasedCogwheelBlock.AXIS), AxisDirection.POSITIVE));
 	}
 

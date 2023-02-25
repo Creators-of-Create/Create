@@ -58,7 +58,7 @@ public class KineticStats implements TooltipModifier {
 	public static List<Component> getKineticStats(Block block, Player player) {
 		List<Component> list = new ArrayList<>();
 
-		CKinetics config = AllConfigs.SERVER.kinetics;
+		CKinetics config = AllConfigs.server().kinetics;
 		LangBuilder rpmUnit = Lang.translate("generic.unit.rpm");
 		LangBuilder suUnit = Lang.translate("generic.unit.stress");
 

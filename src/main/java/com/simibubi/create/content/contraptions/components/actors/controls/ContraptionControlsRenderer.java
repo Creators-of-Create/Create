@@ -6,8 +6,8 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsMovement.ElevatorFloorSelection;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
@@ -55,14 +55,14 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		super.renderSafe(blockEntity, pt, ms, buffer, light, overlay);
 
 		VertexConsumer vc = buffer.getBuffer(RenderType.solid());
-		CachedBufferer.partialFacing(AllBlockPartials.CONTRAPTION_CONTROLS_BUTTON, blockState, facing)
+		CachedBufferer.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_BUTTON, blockState, facing)
 			.light(light)
 			.renderInto(ms, vc);
 
 		ms.popPose();
 
 		int i = (((int) blockEntity.indicator.getValue(pt) / 45) % 8) + 8;
-		CachedBufferer.partialFacing(AllBlockPartials.CONTRAPTION_CONTROLS_INDICATOR.get(i % 8), blockState, facing)
+		CachedBufferer.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_INDICATOR.get(i % 8), blockState, facing)
 			.light(light)
 			.renderInto(ms, vc);
 	}

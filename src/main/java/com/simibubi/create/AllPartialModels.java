@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
 
-public class AllBlockPartials {
+public class AllPartialModels {
 
 	public static final PartialModel
 

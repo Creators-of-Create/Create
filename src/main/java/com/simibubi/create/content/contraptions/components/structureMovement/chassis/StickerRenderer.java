@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -28,7 +28,7 @@ public class StickerRenderer extends SafeBlockEntityRenderer<StickerBlockEntity>
 		if (Backend.canUseInstancing(be.getLevel())) return;
 
 		BlockState state = be.getBlockState();
-		SuperByteBuffer head = CachedBufferer.partial(AllBlockPartials.STICKER_HEAD, state);
+		SuperByteBuffer head = CachedBufferer.partial(AllPartialModels.STICKER_HEAD, state);
 		float offset = be.piston.getValue(AnimationTickHolder.getPartialTicks(be.getLevel()));
 
 		if (be.getLevel() != Minecraft.getInstance().level && !be.isVirtual())

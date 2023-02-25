@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.render.QuadHelper;
+import com.simibubi.create.foundation.model.BakedModelHelper;
+import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -19,6 +20,11 @@ import net.minecraftforge.client.model.data.IModelData;
 
 public class CopycatStepModel extends CopycatModel {
 
+	protected static final Vec3 VEC_Y_3 = new Vec3(0, .75, 0);
+	protected static final Vec3 VEC_Y_2 = new Vec3(0, .5, 0);
+	protected static final Vec3 VEC_Y_N2 = new Vec3(0, -.5, 0);
+	protected static final AABB CUBE_AABB = new AABB(BlockPos.ZERO);
+
 	public CopycatStepModel(BakedModel originalModel) {
 		super(originalModel);
 	}
@@ -31,20 +37,32 @@ public class CopycatStepModel extends CopycatModel {
 		boolean upperHalf = state.getOptionalValue(CopycatStepBlock.HALF)
 			.orElse(Half.BOTTOM) == Half.TOP;
 
-		Vec3 zero = Vec3.ZERO;
-		Vec3 up = new Vec3(0, 1, 0);
-		Vec3 normal = Vec3.atLowerCornerOf(facing.getNormal());
-
 		BakedModel model = getModelOf(material);
 		List<BakedQuad> templateQuads = model.getQuads(material, side, rand, wrappedData);
 		int size = templateQuads.size();
-		AABB cube = new AABB(BlockPos.ZERO);
 
 		List<BakedQuad> quads = new ArrayList<>();
+
+		Vec3 normal = Vec3.atLowerCornerOf(facing.getNormal());
+		Vec3 normalScaled2 = normal.scale(.5);
+		Vec3 normalScaledN3 = normal.scale(-.75);
+		AABB bb = CUBE_AABB.contract(-normal.x * .75, .75, -normal.z * .75);
 
 		// 4 Pieces
 		for (boolean top : Iterate.trueAndFalse) {
 			for (boolean front : Iterate.trueAndFalse) {
+
+				AABB bb1 = bb;
+				if (front)
+					bb1 = bb1.move(normalScaledN3);
+				if (top)
+					bb1 = bb1.move(VEC_Y_3);
+
+				Vec3 offset = Vec3.ZERO;
+				if (front)
+					offset = offset.add(normalScaled2);
+				if (top != upperHalf)
+					offset = offset.add(upperHalf ? VEC_Y_2 : VEC_Y_N2);
 
 				for (int i = 0; i < size; i++) {
 					BakedQuad quad = templateQuads.get(i);
@@ -59,23 +77,9 @@ public class CopycatStepModel extends CopycatModel {
 					if (top && direction == Direction.DOWN)
 						continue;
 
-					AABB bb = cube.contract(-normal.x * .75, .75, -normal.z * .75);
-
-					if (front)
-						bb = bb.move(normal.scale(-.75));
-					if (top)
-						bb = bb.move(up.scale(.75));
-
-					Vec3 offset = zero;
-
-					if (front)
-						offset = offset.add(normal.scale(.5));
-					if (top != upperHalf)
-						offset = offset.add(up.scale(upperHalf ? .5 : -.5));
-
-					BakedQuad newQuad = QuadHelper.clone(quad);
-					if (cropAndMove(newQuad, bb, offset))
-						quads.add(newQuad);
+					BakedQuad newQuad = BakedQuadHelper.clone(quad);
+					BakedModelHelper.cropAndMove(newQuad, bb1, offset);
+					quads.add(newQuad);
 				}
 
 			}

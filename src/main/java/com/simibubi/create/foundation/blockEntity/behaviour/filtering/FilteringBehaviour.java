@@ -97,7 +97,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour {
 			return;
 		}
 
-		AllPackets.channel.sendToServer(new FilteringCountUpdatePacket(getPos(), scrollableValue));
+		AllPackets.getChannel().sendToServer(new FilteringCountUpdatePacket(getPos(), scrollableValue));
 		ticksUntilScrollPacket = -1;
 	}
 

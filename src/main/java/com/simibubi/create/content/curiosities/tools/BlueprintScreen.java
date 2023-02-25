@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -76,7 +76,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintMenu> 
 		background.render(ms, x, y, this);
 		font.draw(ms, title, x + 15, y + 4, 0xFFFFFF);
 
-		GuiGameElement.of(AllBlockPartials.CRAFTING_BLUEPRINT_1x1).<GuiGameElement
+		GuiGameElement.of(AllPartialModels.CRAFTING_BLUEPRINT_1x1).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.width + 20, y + background.height - 32, 0)
 			.rotate(45, -45, 22.5f)
 			.scale(40)
@@ -166,7 +166,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintMenu> 
 	protected void contentsCleared() {}
 
 	protected void sendOptionUpdate(Option option) {
-		AllPackets.channel.sendToServer(new FilterScreenPacket(option));
+		AllPackets.getChannel().sendToServer(new FilterScreenPacket(option));
 	}
 
 	@Override

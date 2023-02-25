@@ -34,11 +34,11 @@ public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 
 	public static float getDialTarget(float speed) {
 		speed = Math.abs(speed);
-		float medium = AllConfigs.SERVER.kinetics.mediumSpeed.get()
+		float medium = AllConfigs.server().kinetics.mediumSpeed.get()
 			.floatValue();
-		float fast = AllConfigs.SERVER.kinetics.fastSpeed.get()
+		float fast = AllConfigs.server().kinetics.fastSpeed.get()
 			.floatValue();
-		float max = AllConfigs.SERVER.kinetics.maxRotationSpeed.get()
+		float max = AllConfigs.server().kinetics.maxRotationSpeed.get()
 			.floatValue();
 		float target = 0;
 		if (speed == 0)

@@ -1,8 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
@@ -19,21 +18,21 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DrillRenderer extends KineticBlockEntityRenderer {
+public class DrillRenderer extends KineticBlockEntityRenderer<DrillBlockEntity> {
 
 	public DrillRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticBlockEntity be, BlockState state) {
-		return CachedBufferer.partialFacing(AllBlockPartials.DRILL_HEAD, state);
+	protected SuperByteBuffer getRotatedModel(DrillBlockEntity be, BlockState state) {
+		return CachedBufferer.partialFacing(AllPartialModels.DRILL_HEAD, state);
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		BlockState state = context.state;
-		SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.DRILL_HEAD, state);
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.DRILL_HEAD, state);
 		Direction facing = state.getValue(DrillBlock.FACING);
 
 		float speed = (float) (context.contraption.stalled
