@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.UnaryOperator;
 
-import com.simibubi.create.foundation.block.render.QuadHelper;
+import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -65,10 +65,10 @@ public class TrackModel extends BakedModelWrapper<BakedModel> {
 		int size = templateQuads.size();
 		List<BakedQuad> quads = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
-			BakedQuad quad = QuadHelper.clone(templateQuads.get(i));
+			BakedQuad quad = BakedQuadHelper.clone(templateQuads.get(i));
 			int[] vertexData = quad.getVertices();
 			for (int j = 0; j < 4; j++)
-				QuadHelper.setXYZ(vertexData, j, transform.apply(QuadHelper.getXYZ(vertexData, j)));
+				BakedQuadHelper.setXYZ(vertexData, j, transform.apply(BakedQuadHelper.getXYZ(vertexData, j)));
 			quads.add(quad);
 		}
 

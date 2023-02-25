@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
 import net.minecraft.world.phys.Vec3;
@@ -23,7 +23,7 @@ public class RollerActorInstance extends HarvesterActorInstance {
 
 		Material<ModelData> material = materialManager.defaultCutout()
 			.material(Materials.TRANSFORMED);
-		frame = material.getModel(AllBlockPartials.ROLLER_FRAME, context.state)
+		frame = material.getModel(AllPartialModels.ROLLER_FRAME, context.state)
 			.createInstance();
 		frame.setBlockLight(localBlockLight());
 	}
@@ -40,7 +40,7 @@ public class RollerActorInstance extends HarvesterActorInstance {
 
 	@Override
 	protected PartialModel getRollingPartial() {
-		return AllBlockPartials.ROLLER_WHEEL;
+		return AllPartialModels.ROLLER_WHEEL;
 	}
 
 	@Override

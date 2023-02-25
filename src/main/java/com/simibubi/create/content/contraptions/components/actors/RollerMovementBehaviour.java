@@ -298,7 +298,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			return;
 
 		while (paveResult == PaveResult.PASS) {
-			if (yOffset > AllConfigs.SERVER.kinetics.rollerFillDepth.get()) {
+			if (yOffset > AllConfigs.server().kinetics.rollerFillDepth.get()) {
 				paveResult = PaveResult.FAIL;
 				break;
 			}
