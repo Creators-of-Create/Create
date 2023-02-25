@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data;
 
+import static com.simibubi.create.Create.REGISTRATE;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.EAST;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.NORTH;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.SOUTH;
@@ -24,8 +25,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class MetalBarsGen {
-
-	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	public static <P extends IronBarsBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> barsBlockState(
 		String name, boolean specialEdge) {

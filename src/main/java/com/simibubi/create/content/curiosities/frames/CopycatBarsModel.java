@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.render.QuadHelper;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.model.BakedQuadHelper;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -53,13 +53,13 @@ public class CopycatBarsModel extends CopycatModel {
 		for (int i = 0; i < superQuads.size(); i++) {
 			BakedQuad quad = superQuads.get(i);
 			TextureAtlasSprite original = quad.getSprite();
-			BakedQuad newQuad = QuadHelper.clone(quad);
+			BakedQuad newQuad = BakedQuadHelper.clone(quad);
 			int[] vertexData = newQuad.getVertices();
 			for (int vertex = 0; vertex < 4; vertex++) {
-				QuadHelper.setU(vertexData, vertex, targetSprite
-					.getU(SpriteShiftEntry.getUnInterpolatedU(original, QuadHelper.getU(vertexData, vertex))));
-				QuadHelper.setV(vertexData, vertex, targetSprite
-					.getV(SpriteShiftEntry.getUnInterpolatedV(original, QuadHelper.getV(vertexData, vertex))));
+				BakedQuadHelper.setU(vertexData, vertex, targetSprite
+					.getU(SpriteShiftEntry.getUnInterpolatedU(original, BakedQuadHelper.getU(vertexData, vertex))));
+				BakedQuadHelper.setV(vertexData, vertex, targetSprite
+					.getV(SpriteShiftEntry.getUnInterpolatedV(original, BakedQuadHelper.getV(vertexData, vertex))));
 			}
 			quads.add(newQuad);
 		}
