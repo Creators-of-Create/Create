@@ -26,7 +26,6 @@ import java.nio.file.StandardOpenOption;
 
 public class SchematicExport {
 	public static final Path SCHEMATICS = FMLPaths.GAMEDIR.get().resolve("schematics");
-	public static final Path GAMETESTS = FMLPaths.GAMEDIR.get().normalize().getParent().resolve("src/main/resources/data/create/structures/gametest");
 
 	/**
 	 * Save a schematic to a file from a world.
@@ -40,10 +39,6 @@ public class SchematicExport {
 	 */
 	@Nullable
 	public static SchematicExportResult saveSchematic(Path dir, String fileName, boolean overwrite, Level level, BlockPos first, BlockPos second) {
-		if (dir.equals(GAMETESTS) && FMLEnvironment.production) {
-			Create.LOGGER.error("Cannot export a gametest from a production environment");
-			return null;
-		}
 		BoundingBox bb = BoundingBox.fromCorners(first, second);
 		BlockPos origin = new BlockPos(bb.minX(), bb.minY(), bb.minZ());
 		BlockPos bounds = new BlockPos(bb.getXSpan(), bb.getYSpan(), bb.getZSpan());

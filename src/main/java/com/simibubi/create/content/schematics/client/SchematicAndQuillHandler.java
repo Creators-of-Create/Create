@@ -45,8 +45,8 @@ public class SchematicAndQuillHandler {
 
 	private Object outlineSlot = new Object();
 
-	private BlockPos firstPos;
-	private BlockPos secondPos;
+	public BlockPos firstPos;
+	public BlockPos secondPos;
 	private BlockPos selectedPos;
 	private Direction selectedFace;
 	private int range = 10;
