@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.Lang;
@@ -83,13 +84,14 @@ public class TrainRelocationPacket extends SimplePacketBase {
 			if (!train.id.equals(cce.trainId))
 				return;
 
+			int verifyDistance = AllConfigs.server().trains.maxTrackPlacementLength.get() * 2;
 			if (!sender.position()
-				.closerThan(Vec3.atCenterOf(pos), 64)) {
+				.closerThan(Vec3.atCenterOf(pos), verifyDistance)) {
 				Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from clicked pos");
 				return;
 			}
 			if (!sender.position()
-				.closerThan(cce.position(), 64 + cce.getBoundingBox()
+				.closerThan(cce.position(), verifyDistance + cce.getBoundingBox()
 					.getXsize() / 2)) {
 				Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from carriage entity");
 				return;
@@ -100,7 +102,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 					.withStyle(ChatFormatting.GREEN), true);
 				train.carriages.forEach(c -> c.forEachPresentEntity(e -> {
 					e.nonDamageTicks = 10;
-					AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> e),
+					AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> e),
 						new ContraptionRelocationPacket(e.getId()));
 				}));
 				return;

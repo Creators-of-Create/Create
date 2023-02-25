@@ -24,9 +24,9 @@ import static com.simibubi.create.AllBlocks.SPEEDOMETER;
 import static com.simibubi.create.AllBlocks.STOCKPILE_SWITCH;
 import static com.simibubi.create.AllBlocks.STRESSOMETER;
 import static com.simibubi.create.AllItems.ATTRIBUTE_FILTER;
-import static com.simibubi.create.AllItems.CRAFTER_SLOT_COVER;
 import static com.simibubi.create.AllItems.COPPER_DIVING_BOOTS;
 import static com.simibubi.create.AllItems.COPPER_DIVING_HELMET;
+import static com.simibubi.create.AllItems.CRAFTER_SLOT_COVER;
 import static com.simibubi.create.AllItems.GOLDEN_SHEET;
 import static com.simibubi.create.AllItems.POWDERED_OBSIDIAN;
 import static com.simibubi.create.AllItems.SCHEMATIC;
@@ -53,7 +53,7 @@ import static com.simibubi.create.content.palettes.AllPaletteBlocks.SPRUCE_WINDO
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.Create;
 
 import net.minecraft.resources.ResourceLocation;
@@ -287,7 +287,7 @@ public class RemapHelper {
 			String path = key.getPath();
 
 			if (path.equals("copper_backtank")) {
-				mapping.remap(AllTileEntities.BACKTANK.get());
+				mapping.remap(AllBlockEntityTypes.BACKTANK.get());
 			}
 		}
 	}

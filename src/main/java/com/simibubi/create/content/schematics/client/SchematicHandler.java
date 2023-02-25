@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.client.tools.Tools;
@@ -18,6 +19,7 @@ import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
@@ -157,23 +159,31 @@ public class SchematicHandler {
 		BlockPos pos;
 
 		pos = BlockPos.ZERO;
-		schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
+		
+		try {
+			schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
+		} catch (Exception e) {
+			Minecraft.getInstance().player.displayClientMessage(Lang.translate("schematic.error")
+				.component(), false);
+			Create.LOGGER.error("Failed to load Schematic for Previewing", e);
+			return;
+		}
 
 		placementSettings.setMirror(Mirror.FRONT_BACK);
 		pos = BlockPos.ZERO.east(size.getX() - 1);
 		schematic.placeInWorld(wMirroredFB, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
 			placementSettings.getMirror());
-		for (BlockEntity te : wMirroredFB.getRenderedTileEntities())
-			transform.apply(te);
+		for (BlockEntity be : wMirroredFB.getRenderedBlockEntities())
+			transform.apply(be);
 
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
 		pos = BlockPos.ZERO.south(size.getZ() - 1);
 		schematic.placeInWorld(wMirroredLR, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
 			placementSettings.getMirror());
-		for (BlockEntity te : wMirroredLR.getRenderedTileEntities())
-			transform.apply(te);
+		for (BlockEntity be : wMirroredLR.getRenderedBlockEntities())
+			transform.apply(be);
 
 		renderers.get(0)
 			.display(w);
@@ -324,7 +334,7 @@ public class SchematicHandler {
 	public void sync() {
 		if (activeSchematicItem == null)
 			return;
-		AllPackets.channel.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
+		AllPackets.getChannel().sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
 			transformation.getAnchor(), deployed));
 	}
 
@@ -367,7 +377,7 @@ public class SchematicHandler {
 	}
 
 	public void printInstantly() {
-		AllPackets.channel.sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
+		AllPackets.getChannel().sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
 		CompoundTag nbt = activeSchematicItem.getTag();
 		nbt.putBoolean("Deployed", false);
 		activeSchematicItem.setTag(nbt);

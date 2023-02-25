@@ -4,10 +4,10 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -31,12 +31,12 @@ public interface IWrenchable {
 		if (!rotated.canSurvive(world, context.getClickedPos()))
 			return InteractionResult.PASS;
 
-		KineticTileEntity.switchToBlockState(world, context.getClickedPos(), updateAfterWrenched(rotated, context));
+		KineticBlockEntity.switchToBlockState(world, context.getClickedPos(), updateAfterWrenched(rotated, context));
 
-		BlockEntity te = context.getLevel()
+		BlockEntity be = context.getLevel()
 			.getBlockEntity(context.getClickedPos());
-		if (te instanceof GeneratingKineticTileEntity) {
-			((GeneratingKineticTileEntity) te).reActivateSource = true;
+		if (be instanceof GeneratingKineticBlockEntity) {
+			((GeneratingKineticBlockEntity) be).reActivateSource = true;
 		}
 
 		if (world.getBlockState(context.getClickedPos()) != state)

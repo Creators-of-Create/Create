@@ -20,6 +20,8 @@
     "create:belt",
     "create:creative_motor",
     "create:water_wheel",
+    "create:large_water_wheel",
+    "create:water_wheel_structure",
     "create:encased_fan",
     "create:nozzle",
     "create:turntable",

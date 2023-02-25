@@ -8,9 +8,9 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -65,18 +65,18 @@ public class BeltMovementHandler {
 		return true;
 	}
 
-	public static void transportEntity(BeltTileEntity beltTe, Entity entityIn, TransportedEntityInfo info) {
+	public static void transportEntity(BeltBlockEntity beltBE, Entity entityIn, TransportedEntityInfo info) {
 		BlockPos pos = info.lastCollidedPos;
-		Level world = beltTe.getLevel();
-		BlockEntity te = world.getBlockEntity(pos);
-		BlockEntity tileEntityBelowPassenger = world.getBlockEntity(entityIn.blockPosition());
+		Level world = beltBE.getLevel();
+		BlockEntity be = world.getBlockEntity(pos);
+		BlockEntity blockEntityBelowPassenger = world.getBlockEntity(entityIn.blockPosition());
 		BlockState blockState = info.lastCollidedState;
 		Direction movementFacing =
 			Direction.fromAxisAndDirection(blockState.getValue(BlockStateProperties.HORIZONTAL_FACING)
-				.getAxis(), beltTe.getSpeed() < 0 ? POSITIVE : NEGATIVE);
+				.getAxis(), beltBE.getSpeed() < 0 ? POSITIVE : NEGATIVE);
 
-		boolean collidedWithBelt = te instanceof BeltTileEntity;
-		boolean betweenBelts = tileEntityBelowPassenger instanceof BeltTileEntity && tileEntityBelowPassenger != te;
+		boolean collidedWithBelt = be instanceof BeltBlockEntity;
+		boolean betweenBelts = blockEntityBelowPassenger instanceof BeltBlockEntity && blockEntityBelowPassenger != be;
 
 		// Don't fight other Belts
 		if (!collidedWithBelt || betweenBelts) {
@@ -84,9 +84,9 @@ public class BeltMovementHandler {
 		}
 
 		// Too slow
-		boolean notHorizontal = beltTe.getBlockState()
+		boolean notHorizontal = beltBE.getBlockState()
 			.getValue(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL;
-		if (Math.abs(beltTe.getSpeed()) < 1)
+		if (Math.abs(beltBE.getSpeed()) < 1)
 			return;
 
 		// Not on top
@@ -101,7 +101,7 @@ public class BeltMovementHandler {
 		final Direction beltFacing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 		final BeltSlope slope = blockState.getValue(BeltBlock.SLOPE);
 		final Axis axis = beltFacing.getAxis();
-		float movementSpeed = beltTe.getBeltMovementSpeed();
+		float movementSpeed = beltBE.getBeltMovementSpeed();
 		final Direction movementDirection = Direction.get(axis == Axis.X ? NEGATIVE : POSITIVE, axis);
 
 		Vec3i centeringDirection = Direction.get(POSITIVE, beltFacing.getClockWise()

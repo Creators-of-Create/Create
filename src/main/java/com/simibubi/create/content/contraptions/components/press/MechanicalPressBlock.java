@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.components.press;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +20,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<MechanicalPressTileEntity> {
+public class MechanicalPressBlock extends HorizontalKineticBlock implements IBE<MechanicalPressBlockEntity> {
 
 	public MechanicalPressBlock(Properties properties) {
 		super(properties);
@@ -61,13 +61,13 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 	}
 
 	@Override
-	public Class<MechanicalPressTileEntity> getTileEntityClass() {
-		return MechanicalPressTileEntity.class;
+	public Class<MechanicalPressBlockEntity> getBlockEntityClass() {
+		return MechanicalPressBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends MechanicalPressTileEntity> getTileEntityType() {
-		return AllTileEntities.MECHANICAL_PRESS.get();
+	public BlockEntityType<? extends MechanicalPressBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.MECHANICAL_PRESS.get();
 	}
 
 	@Override

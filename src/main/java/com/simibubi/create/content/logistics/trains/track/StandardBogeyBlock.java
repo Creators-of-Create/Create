@@ -6,9 +6,9 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
@@ -16,7 +16,7 @@ import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -47,7 +47,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StandardBogeyBlock extends Block
-	implements IBogeyBlock, ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
+	implements IBogeyBlock, IBE<StandardBogeyBlockEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	private final boolean large;
@@ -149,14 +149,14 @@ public class StandardBogeyBlock extends Block
 	}
 
 	private void renderBogey(float wheelAngle, PoseStack ms, int light, VertexConsumer vb, BlockState air) {
-		CachedBufferer.partial(AllBlockPartials.BOGEY_FRAME, air)
+		CachedBufferer.partial(AllPartialModels.BOGEY_FRAME, air)
 			.scale(1 - 1 / 512f)
 			.light(light)
 			.renderInto(ms, vb);
 
 		for (int side : Iterate.positiveAndNegative) {
 			ms.pushPose();
-			CachedBufferer.partial(AllBlockPartials.SMALL_BOGEY_WHEELS, air)
+			CachedBufferer.partial(AllPartialModels.SMALL_BOGEY_WHEELS, air)
 				.translate(0, 12 / 16f, side)
 				.rotateX(wheelAngle)
 				.light(light)
@@ -176,22 +176,22 @@ public class StandardBogeyBlock extends Block
 				.light(light)
 				.renderInto(ms, vb);
 
-		CachedBufferer.partial(AllBlockPartials.BOGEY_DRIVE, air)
+		CachedBufferer.partial(AllPartialModels.BOGEY_DRIVE, air)
 			.scale(1 - 1 / 512f)
 			.light(light)
 			.renderInto(ms, vb);
-		CachedBufferer.partial(AllBlockPartials.BOGEY_PISTON, air)
+		CachedBufferer.partial(AllPartialModels.BOGEY_PISTON, air)
 			.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)))
 			.light(light)
 			.renderInto(ms, vb);
 
 		ms.pushPose();
-		CachedBufferer.partial(AllBlockPartials.LARGE_BOGEY_WHEELS, air)
+		CachedBufferer.partial(AllPartialModels.LARGE_BOGEY_WHEELS, air)
 			.translate(0, 1, 0)
 			.rotateX(wheelAngle)
 			.light(light)
 			.renderInto(ms, vb);
-		CachedBufferer.partial(AllBlockPartials.BOGEY_PIN, air)
+		CachedBufferer.partial(AllPartialModels.BOGEY_PIN, air)
 			.translate(0, 1, 0)
 			.rotateX(wheelAngle)
 			.translate(0, 1 / 4f, 0)
@@ -225,17 +225,17 @@ public class StandardBogeyBlock extends Block
 	}
 
 	@Override
-	public Class<StandardBogeyTileEntity> getTileEntityClass() {
-		return StandardBogeyTileEntity.class;
+	public Class<StandardBogeyBlockEntity> getBlockEntityClass() {
+		return StandardBogeyBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends StandardBogeyTileEntity> getTileEntityType() {
-		return AllTileEntities.BOGEY.get();
+	public BlockEntityType<? extends StandardBogeyBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.BOGEY.get();
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
 		return new ItemRequirement(ItemUseType.CONSUME, AllBlocks.RAILWAY_CASING.asStack());
 	}
 

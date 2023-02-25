@@ -18,12 +18,12 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 		Map<String, ItemStackHandler> map = new HashMap<>();
 		map.put("InputItems", new ItemStackHandler(9));
 		map.put("OutputItems", new ItemStackHandler(8));
-		map.forEach((s, h) -> h.deserializeNBT(context.tileData.getCompound(s)));
+		map.forEach((s, h) -> h.deserializeNBT(context.blockEntityData.getCompound(s)));
 		return map;
 	}
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 
@@ -50,11 +50,11 @@ public class BasinMovementBehaviour implements MovementBehaviour {
 				context.world.addFreshEntity(itemEntity);
 				itemStackHandler.setStackInSlot(i, ItemStack.EMPTY);
 			}
-			context.tileData.put(key, itemStackHandler.serializeNBT());
+			context.blockEntityData.put(key, itemStackHandler.serializeNBT());
 		});
-		BlockEntity tileEntity = context.contraption.presentTileEntities.get(context.localPos);
-		if (tileEntity instanceof BasinTileEntity)
-			((BasinTileEntity) tileEntity).readOnlyItems(context.tileData);
+		BlockEntity blockEntity = context.contraption.presentBlockEntities.get(context.localPos);
+		if (blockEntity instanceof BasinBlockEntity)
+			((BasinBlockEntity) blockEntity).readOnlyItems(context.blockEntityData);
 		context.temporaryData = false; // did already dump, so can't any more
 	}
 }

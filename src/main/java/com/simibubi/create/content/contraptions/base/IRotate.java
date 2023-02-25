@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 
@@ -46,10 +46,10 @@ public interface IRotate extends IWrenchable {
 		public float getSpeedValue() {
 			switch (this) {
 			case FAST:
-				return AllConfigs.SERVER.kinetics.fastSpeed.get()
+				return AllConfigs.server().kinetics.fastSpeed.get()
 					.floatValue();
 			case MEDIUM:
-				return AllConfigs.SERVER.kinetics.mediumSpeed.get()
+				return AllConfigs.server().kinetics.mediumSpeed.get()
 					.floatValue();
 			case SLOW:
 				return 1;
@@ -62,9 +62,9 @@ public interface IRotate extends IWrenchable {
 		public static SpeedLevel of(float speed) {
 			speed = Math.abs(speed);
 
-			if (speed >= AllConfigs.SERVER.kinetics.fastSpeed.get())
+			if (speed >= AllConfigs.server().kinetics.fastSpeed.get())
 				return FAST;
-			if (speed >= AllConfigs.SERVER.kinetics.mediumSpeed.get())
+			if (speed >= AllConfigs.server().kinetics.mediumSpeed.get())
 				return MEDIUM;
 			if (speed >= 1)
 				return SLOW;
@@ -73,7 +73,7 @@ public interface IRotate extends IWrenchable {
 
 		public static LangBuilder getFormattedSpeedText(float speed, boolean overstressed) {
 			SpeedLevel speedLevel = of(speed);
-			LangBuilder builder = Lang.text(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
+			LangBuilder builder = Lang.text(TooltipHelper.makeProgressBar(3, speedLevel.ordinal()));
 
 			builder.translate("tooltip.speedRequirement." + Lang.asId(speedLevel.name()))
 				.space()
@@ -128,12 +128,12 @@ public interface IRotate extends IWrenchable {
 		}
 
 		public static boolean isEnabled() {
-			return !AllConfigs.SERVER.kinetics.disableStress.get();
+			return !AllConfigs.server().kinetics.disableStress.get();
 		}
 
 		public static LangBuilder getFormattedStressText(double stressPercent) {
 			StressImpact stressLevel = of(stressPercent);
-			return Lang.text(ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal() + 1, 3)))
+			return Lang.text(TooltipHelper.makeProgressBar(3, Math.min(stressLevel.ordinal() + 1, 3)))
 				.translate("tooltip.stressImpact." + Lang.asId(stressLevel.name()))
 				.text(String.format(" (%s%%) ", (int) (stressPercent * 100)))
 				.style(stressLevel.getRelativeColor());

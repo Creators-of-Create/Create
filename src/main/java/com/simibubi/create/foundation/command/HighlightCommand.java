@@ -35,7 +35,7 @@ public class HighlightCommand {
 						BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
 
 						for (ServerPlayer p : players) {
-							AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> p), new HighlightPacket(pos));
+							AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> p), new HighlightPacket(pos));
 						}
 
 						return players.size();
@@ -44,7 +44,7 @@ public class HighlightCommand {
 				.executes(ctx -> {
 					BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
 
-					AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource()
+					AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource()
 						.getEntity()), new HighlightPacket(pos));
 
 					return Command.SINGLE_SUCCESS;
@@ -80,13 +80,13 @@ public class HighlightCommand {
 		}
 
 		BlockPos pos = ray.getBlockPos();
-		BlockEntity te = world.getBlockEntity(pos);
-		if (!(te instanceof IDisplayAssemblyExceptions)) {
+		BlockEntity be = world.getBlockEntity(pos);
+		if (!(be instanceof IDisplayAssemblyExceptions)) {
 			sendMissMessage(source);
 			return 0;
 		}
 
-		IDisplayAssemblyExceptions display = (IDisplayAssemblyExceptions) te;
+		IDisplayAssemblyExceptions display = (IDisplayAssemblyExceptions) be;
 		AssemblyException exception = display.getLastAssemblyException();
 		if (exception == null) {
 			sendMissMessage(source);

@@ -79,7 +79,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 					return;
 				}
 			} catch (NullPointerException ignored) {
-				itemStack = backup; // Something went wrong with the TE being null in ContraptionBlockSource, reset the stack
+				itemStack = backup; // Something went wrong with the BE being null in ContraptionBlockSource, reset the stack
 			}
 
 			setItemStackAt(location, DEFAULT_BEHAVIOUR.dispense(itemStack, context, pos), context);  // the default: launch the item

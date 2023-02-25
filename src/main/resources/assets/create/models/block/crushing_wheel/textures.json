@@ -1,0 +1,12 @@
+{
+	"parent": "block/block",
+	"ambientocclusion": false,
+	"textures": {
+		"axis": "create:block/axis",
+		"axis_top": "create:block/axis_top",
+		"plates": "create:block/crushing_wheel_plates",
+		"insert": "create:block/crushing_wheel_insert",
+		"spruce_log_top": "block/spruce_log_top",
+		"particle": "create:block/palettes/stone_types/cut/andesite_cut"
+	}
+}

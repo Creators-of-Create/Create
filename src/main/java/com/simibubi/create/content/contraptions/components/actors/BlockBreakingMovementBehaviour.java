@@ -28,7 +28,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 	public void startMoving(MovementContext context) {
 		if (context.world.isClientSide)
 			return;
-		context.data.putInt("BreakerId", -BlockBreakingKineticTileEntity.NEXT_BREAKER_ID.incrementAndGet());
+		context.data.putInt("BreakerId", -BlockBreakingKineticBlockEntity.NEXT_BREAKER_ID.incrementAndGet());
 	}
 
 	@Override
@@ -220,7 +220,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 
 	public boolean canBreak(Level world, BlockPos breakingPos, BlockState state) {
 		float blockHardness = state.getDestroySpeed(world, breakingPos);
-		return BlockBreakingKineticTileEntity.isBreakable(state, blockHardness);
+		return BlockBreakingKineticBlockEntity.isBreakable(state, blockHardness);
 	}
 
 	protected void onBlockBroken(MovementContext context, BlockPos pos, BlockState brokenState) {

@@ -90,7 +90,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 			BlockHitResult ray) {
 			Direction dir = player.getXRot() < 0 ? Direction.UP : Direction.DOWN;
 
-			int range = AllConfigs.SERVER.curiosities.placementAssistRange.get();
+			int range = AllConfigs.server().curiosities.placementAssistRange.get();
 			if (player != null) {
 				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))

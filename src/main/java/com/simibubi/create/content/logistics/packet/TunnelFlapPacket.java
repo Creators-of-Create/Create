@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
-import com.simibubi.create.foundation.networking.TileEntityDataPacket;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlockEntity;
+import com.simibubi.create.foundation.networking.BlockEntityDataPacket;
 
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity> {
+public class TunnelFlapPacket extends BlockEntityDataPacket<BeltTunnelBlockEntity> {
 
     private List<Pair<Direction, Boolean>> flaps;
 
@@ -30,8 +30,8 @@ public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity>
         }
     }
 
-    public TunnelFlapPacket(BeltTunnelTileEntity tile, List<Pair<Direction, Boolean>> flaps) {
-        super(tile.getBlockPos());
+    public TunnelFlapPacket(BeltTunnelBlockEntity blockEntity, List<Pair<Direction, Boolean>> flaps) {
+        super(blockEntity.getBlockPos());
 
         this.flaps = new ArrayList<>(flaps);
     }
@@ -47,9 +47,9 @@ public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity>
     }
 
     @Override
-    protected void handlePacket(BeltTunnelTileEntity tile) {
+    protected void handlePacket(BeltTunnelBlockEntity blockEntity) {
         for (Pair<Direction, Boolean> flap : flaps) {
-            tile.flap(flap.getLeft(), flap.getRight());
+            blockEntity.flap(flap.getLeft(), flap.getRight());
         }
     }
 }

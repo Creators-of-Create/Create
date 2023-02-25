@@ -72,7 +72,7 @@ public class TrackTargetingClient {
 				}
 
 			} else if (bezierSelection != null) {
-				hovered = bezierSelection.te()
+				hovered = bezierSelection.blockEntity()
 					.getBlockPos();
 				hoveredBezier = bezierSelection.loc();
 				direction = lookAngle.dot(bezierSelection.direction()) < 0;

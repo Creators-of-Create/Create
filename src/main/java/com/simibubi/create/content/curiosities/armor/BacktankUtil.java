@@ -79,12 +79,12 @@ public class BacktankUtil {
 	}
 
 	public static int maxAir(int enchantLevel) {
-		return AllConfigs.SERVER.curiosities.airInBacktank.get()
-			+ AllConfigs.SERVER.curiosities.enchantedBacktankCapacity.get() * enchantLevel;
+		return AllConfigs.server().curiosities.airInBacktank.get()
+			+ AllConfigs.server().curiosities.enchantedBacktankCapacity.get() * enchantLevel;
 	}
 
 	public static int maxAirWithoutEnchants() {
-		return AllConfigs.SERVER.curiosities.airInBacktank.get();
+		return AllConfigs.server().curiosities.airInBacktank.get();
 	}
 
 	public static boolean canAbsorbDamage(LivingEntity entity, int usesPerTank) {

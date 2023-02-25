@@ -264,6 +264,7 @@
 	"block.create.jungle_window_pane": "Jungle Window Pane",
 	"block.create.large_bogey": "Large Bogey",
 	"block.create.large_cogwheel": "Large Cogwheel",
+	"block.create.large_water_wheel": "Large Water Wheel",
 	"block.create.layered_andesite": "Layered Andesite",
 	"block.create.layered_asurine": "Layered Asurine",
 	"block.create.layered_calcite": "Layered Calcite",
@@ -533,6 +534,7 @@
 	"block.create.warped_window": "Warped Window",
 	"block.create.warped_window_pane": "Warped Window Pane",
 	"block.create.water_wheel": "Water Wheel",
+	"block.create.water_wheel_structure": "Large Water Wheel",
 	"block.create.waxed_copper_shingle_slab": "Waxed Copper Shingle Slab",
 	"block.create.waxed_copper_shingle_stairs": "Waxed Copper Shingle Stairs",
 	"block.create.waxed_copper_shingles": "Waxed Copper Shingles",
@@ -1048,6 +1050,8 @@
 	"create.terrainzapper.usingBlock": "Using: %1$s",
 	"create.terrainzapper.leftClickToSet": "Left-Click a Block to set Material",
 
+	"create.large_water_wheel.not_enough_space": "Clear Blocks for Placement",
+
 	"create.minecart_coupling.two_couplings_max": "Minecarts cannot have more than two couplings each",
 	"create.minecart_coupling.unloaded": "Parts of your train seem to be in unloaded chunks",
 	"create.minecart_coupling.no_loops": "Couplings cannot form a loop",
@@ -1142,6 +1146,7 @@
 	"create.schematicAndQuill.saved": "Saved as %1$s",
 
 	"create.schematic.invalid": "[!] Invalid Item - Use the Schematic Table instead",
+	"create.schematic.error": "Schematic failed to Load - Check Game Logs",
 	"create.schematic.position": "Position",
 	"create.schematic.rotation": "Rotation",
 	"create.schematic.rotation.none": "None",
@@ -1207,12 +1212,12 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Replace Solid with Any",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Replace Solid with Empty",
 	"create.gui.schematicannon.option.skipMissing": "Skip missing Blocks",
-	"create.gui.schematicannon.option.skipTileEntities": "Protect Tile Entities",
+	"create.gui.schematicannon.option.skipBlockEntities": "Protect Block Entities",
 	"create.gui.schematicannon.slot.gunpowder": "Add gunpowder to fuel the cannon",
 	"create.gui.schematicannon.slot.listPrinter": "Place books here to print a Checklist for your Schematic",
 	"create.gui.schematicannon.slot.schematic": "Add your Schematic here. Make sure it is deployed at a specific location.",
 	"create.gui.schematicannon.option.skipMissing.description": "If the cannon cannot find a required Block for placement, it will continue at the next Location.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "The cannon will avoid replacing data holding blocks such as Chests.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "The cannon will never replace any Solid blocks in its working area, only non-Solid and Air.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "The cannon will only replace Solid blocks in its working area if the Schematic contains a solid Block at the Location.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "The cannon will replace Solid blocks in its working area if the Schematic contains any Block at the Location.",
@@ -1235,6 +1240,8 @@
 	"create.schematicannon.status.schematicInvalid": "Schematic Invalid",
 	"create.schematicannon.status.schematicNotPlaced": "Schematic not Positioned",
 	"create.schematicannon.status.schematicExpired": "Schematic File Expired",
+	"create.schematicannon.status.schematicErrored": "Incompatible Blocks",
+	"create.schematicannon.status.schematicErroredCheckLogs": "Check Server Logs",
 
 	"create.materialChecklist": "Material Checklist",
 	"create.materialChecklist.blocksNotLoaded": "* Disclaimer *\n\nMaterial List may be inaccurate due to relevant chunks not being loaded.",
@@ -1780,6 +1787,9 @@
 
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
 	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
+
+	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
+	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused.",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",

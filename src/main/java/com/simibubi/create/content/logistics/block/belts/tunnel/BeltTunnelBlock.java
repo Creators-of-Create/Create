@@ -1,14 +1,14 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
-import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>, IWrenchable {
+public class BeltTunnelBlock extends Block implements IBE<BeltTunnelBlockEntity>, IWrenchable {
 
 	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final Property<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
@@ -100,7 +100,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
 		if (!(world instanceof WrappedWorld) && !world.isClientSide())
-			withTileEntityDo(world, pos, BeltTunnelTileEntity::updateTunnelConnections);
+			withBlockEntityDo(world, pos, BeltTunnelBlockEntity::updateTunnelConnections);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			.isVertical())
 			return state;
 		if (!(worldIn instanceof WrappedWorld) && !worldIn.isClientSide())
-			withTileEntityDo(worldIn, currentPos, BeltTunnelTileEntity::updateTunnelConnections);
+			withBlockEntityDo(worldIn, currentPos, BeltTunnelBlockEntity::updateTunnelConnections);
 		BlockState tunnelState = getTunnelState(worldIn, currentPos);
 		if (tunnelState.getValue(HORIZONTAL_AXIS) == state.getValue(HORIZONTAL_AXIS)) {
 			if (hasWindow(tunnelState) == hasWindow(state))
@@ -125,9 +125,9 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		BlockState newTunnel = getTunnelState(world, pos);
 		if (tunnel != newTunnel && !world.isClientSide()) {
 			world.setBlock(pos, newTunnel, 3);
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te != null && (te instanceof BeltTunnelTileEntity))
-				((BeltTunnelTileEntity) te).updateTunnelConnections();
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be != null && (be instanceof BeltTunnelBlockEntity))
+				((BeltTunnelBlockEntity) be).updateTunnelConnections();
 		}
 	}
 
@@ -185,7 +185,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			return blockState.getValue(BeltBlock.HORIZONTAL_FACING)
 				.getAxis() == side.getAxis();
 		DirectBeltInputBehaviour behaviour =
-			TileEntityBehaviour.get(world, pos.relative(side), DirectBeltInputBehaviour.TYPE);
+			BlockEntityBehaviour.get(world, pos.relative(side), DirectBeltInputBehaviour.TYPE);
 		return behaviour != null && behaviour.canInsertFromSide(side);
 	}
 
@@ -232,13 +232,13 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	@Override
-	public Class<BeltTunnelTileEntity> getTileEntityClass() {
-		return BeltTunnelTileEntity.class;
+	public Class<BeltTunnelBlockEntity> getBlockEntityClass() {
+		return BeltTunnelBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends BeltTunnelTileEntity> getTileEntityType() {
-		return AllTileEntities.ANDESITE_TUNNEL.get();
+	public BlockEntityType<? extends BeltTunnelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ANDESITE_TUNNEL.get();
 	}
 
 }

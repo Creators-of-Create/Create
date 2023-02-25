@@ -4,16 +4,20 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.CustomArmPoseItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.model.HumanoidModel.ArmPose;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -43,7 +47,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public abstract class ZapperItem extends Item {
+public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 
 	public ZapperItem(Properties properties) {
 		super(properties.stacksTo(1));
@@ -58,10 +62,9 @@ public abstract class ZapperItem extends Item {
 				.getCompound("BlockUsed"))
 				.getBlock()
 				.getName();
-			ItemDescription.add(tooltip,
-				Lang.translateDirect("terrainzapper.usingBlock",
-					usedBlock.withStyle(ChatFormatting.GRAY))
-						.withStyle(ChatFormatting.DARK_GRAY));
+			tooltip.add(Lang.translateDirect("terrainzapper.usingBlock",
+				usedBlock.withStyle(ChatFormatting.GRAY))
+					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 
@@ -213,22 +216,31 @@ public abstract class ZapperItem extends Item {
 		return UseAnim.NONE;
 	}
 
+	@Override
+	@Nullable
+	public ArmPose getArmPose(ItemStack stack, AbstractClientPlayer player, InteractionHand hand) {
+		if (!player.swinging) {
+			return ArmPose.CROSSBOW_HOLD;
+		}
+		return null;
+	}
+
 	public static void configureSettings(ItemStack stack, PlacementPatterns pattern) {
 		CompoundTag nbt = stack.getOrCreateTag();
 		NBTHelper.writeEnum(nbt, "Pattern", pattern);
 	}
 
-	public static void setTileData(Level world, BlockPos pos, BlockState state, CompoundTag data, Player player) {
+	public static void setBlockEntityData(Level world, BlockPos pos, BlockState state, CompoundTag data, Player player) {
 		if (data != null && AllBlockTags.SAFE_NBT.matches(state)) {
-			BlockEntity tile = world.getBlockEntity(pos);
-			if (tile != null) {
-				data = NBTProcessors.process(tile, data, !player.isCreative());
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (blockEntity != null) {
+				data = NBTProcessors.process(blockEntity, data, !player.isCreative());
 				if (data == null)
 					return;
 				data.putInt("x", pos.getX());
 				data.putInt("y", pos.getY());
 				data.putInt("z", pos.getZ());
-				tile.load(data);
+				blockEntity.load(data);
 			}
 		}
 	}

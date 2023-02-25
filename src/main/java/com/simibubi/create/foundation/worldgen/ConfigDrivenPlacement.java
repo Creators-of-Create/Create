@@ -64,7 +64,7 @@ public class ConfigDrivenPlacement extends PlacementModifier {
 	}
 
 	public float getFrequency() {
-		if (AllConfigs.COMMON.worldGen.disable.get())
+		if (AllConfigs.common().worldGen.disable.get())
 			return 0;
 		return entry.frequency.getF();
 	}

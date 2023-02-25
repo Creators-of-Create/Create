@@ -74,11 +74,11 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		Supplier<ItemLike> singleIngredient, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
 		ProcessingRecipeSerializer<T> serializer = getSerializer();
 		GeneratedRecipe generatedRecipe = c -> {
-			ItemLike iItemProvider = singleIngredient.get();
+			ItemLike itemLike = singleIngredient.get();
 			transform
 				.apply(new ProcessingRecipeBuilder<>(serializer.getFactory(),
-					new ResourceLocation(namespace, RegisteredObjects.getKeyOrThrow(iItemProvider.asItem())
-						.getPath())).withItemIngredients(Ingredient.of(iItemProvider)))
+					new ResourceLocation(namespace, RegisteredObjects.getKeyOrThrow(itemLike.asItem())
+						.getPath())).withItemIngredients(Ingredient.of(itemLike)))
 				.build(c);
 		};
 		all.add(generatedRecipe);

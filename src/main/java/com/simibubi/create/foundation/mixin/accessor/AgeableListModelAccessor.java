@@ -10,6 +10,7 @@ import net.minecraft.client.model.geom.ModelPart;
 public interface AgeableListModelAccessor {
 	@Invoker("headParts")
 	Iterable<ModelPart> create$callHeadParts();
+
 	@Invoker("bodyParts")
 	Iterable<ModelPart> create$callBodyParts();
 }

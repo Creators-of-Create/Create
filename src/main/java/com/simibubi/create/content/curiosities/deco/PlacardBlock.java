@@ -2,16 +2,16 @@ package com.simibubi.create.content.curiosities.deco;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
-	implements ProperWaterloggedBlock, ITE<PlacardTileEntity>, ISpecialBlockItemRequirement, IWrenchable {
+	implements ProperWaterloggedBlock, IBE<PlacardBlockEntity>, ISpecialBlockItemRequirement, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -122,7 +122,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 			return InteractionResult.SUCCESS;
 
 		ItemStack inHand = player.getItemInHand(pHand);
-		return onTileEntityUse(pLevel, pPos, pte -> {
+		return onBlockEntityUse(pLevel, pPos, pte -> {
 			ItemStack inBlock = pte.getHeldItem();
 
 			if (!player.mayBuild() || inHand.isEmpty() || !inBlock.isEmpty()) {
@@ -174,7 +174,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 		if (pState.hasBlockEntity() && (blockChanged || !pNewState.hasBlockEntity())) {
 			if (!pIsMoving)
-				withTileEntityDo(pLevel, pPos, te -> Block.popResource(pLevel, pPos, te.getHeldItem()));
+				withBlockEntityDo(pLevel, pPos, be -> Block.popResource(pLevel, pPos, be.getHeldItem()));
 			pLevel.removeBlockEntity(pPos);
 		}
 	}
@@ -188,7 +188,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	public void attack(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
 		if (pLevel.isClientSide)
 			return;
-		withTileEntityDo(pLevel, pPos, pte -> {
+		withBlockEntityDo(pLevel, pPos, pte -> {
 			ItemStack heldItem = pte.getHeldItem();
 			if (heldItem.isEmpty())
 				return;
@@ -200,10 +200,10 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
 		ItemStack placardStack = AllBlocks.PLACARD.asStack();
-		if (te instanceof PlacardTileEntity pte) {
-			ItemStack heldItem = pte.getHeldItem();
+		if (be instanceof PlacardBlockEntity pbe) {
+			ItemStack heldItem = pbe.getHeldItem();
 			if (!heldItem.isEmpty()) {
 				return new ItemRequirement(List.of(
 					new ItemRequirement.StackRequirement(placardStack, ItemUseType.CONSUME),
@@ -215,13 +215,13 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public Class<PlacardTileEntity> getTileEntityClass() {
-		return PlacardTileEntity.class;
+	public Class<PlacardBlockEntity> getBlockEntityClass() {
+		return PlacardBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends PlacardTileEntity> getTileEntityType() {
-		return AllTileEntities.PLACARD.get();
+	public BlockEntityType<? extends PlacardBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.PLACARD.get();
 	}
 
 }

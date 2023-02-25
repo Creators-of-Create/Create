@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.Optional;
 
-import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedBlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +31,7 @@ public class BracketBlockItem extends BlockItem {
 		BracketBlock bracketBlock = getBracketBlock();
 		Player player = context.getPlayer();
 
-		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		BracketedBlockEntityBehaviour behaviour = BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 
 		if (behaviour == null)
 			return InteractionResult.FAIL;

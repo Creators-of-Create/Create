@@ -53,8 +53,8 @@ public class ConnectedInputHandler {
 	}
 
 	public static void toggleConnection(Level world, BlockPos pos, BlockPos pos2) {
-		MechanicalCrafterTileEntity crafter1 = CrafterHelper.getCrafter(world, pos);
-		MechanicalCrafterTileEntity crafter2 = CrafterHelper.getCrafter(world, pos2);
+		MechanicalCrafterBlockEntity crafter1 = CrafterHelper.getCrafter(world, pos);
+		MechanicalCrafterBlockEntity crafter2 = CrafterHelper.getCrafter(world, pos2);
 
 		if (crafter1 == null || crafter2 == null)
 			return;
@@ -65,7 +65,7 @@ public class ConnectedInputHandler {
 			.offset(crafter2.input.data.get(0));
 
 		if (controllerPos1.equals(controllerPos2)) {
-			MechanicalCrafterTileEntity controller = CrafterHelper.getCrafter(world, controllerPos1);
+			MechanicalCrafterBlockEntity controller = CrafterHelper.getCrafter(world, controllerPos1);
 
 			Set<BlockPos> positions = controller.input.data.stream()
 				.map(controllerPos1::offset)
@@ -114,7 +114,7 @@ public class ConnectedInputHandler {
 		crafter2.connectivityChanged();
 	}
 
-	public static void initAndAddAll(Level world, MechanicalCrafterTileEntity crafter, Collection<BlockPos> positions) {
+	public static void initAndAddAll(Level world, MechanicalCrafterBlockEntity crafter, Collection<BlockPos> positions) {
 		crafter.input = new ConnectedInput();
 		positions.forEach(splitPos -> {
 			modifyAndUpdate(world, splitPos, input -> {
@@ -124,8 +124,8 @@ public class ConnectedInputHandler {
 		});
 	}
 
-	public static void connectControllers(Level world, MechanicalCrafterTileEntity crafter1,
-		MechanicalCrafterTileEntity crafter2) {
+	public static void connectControllers(Level world, MechanicalCrafterBlockEntity crafter1,
+		MechanicalCrafterBlockEntity crafter2) {
 
 		crafter1.input.data.forEach(offset -> {
 			BlockPos connectedPos = crafter1.getBlockPos()
@@ -150,11 +150,11 @@ public class ConnectedInputHandler {
 	}
 
 	private static void modifyAndUpdate(Level world, BlockPos pos, Consumer<ConnectedInput> callback) {
-		BlockEntity te = world.getBlockEntity(pos);
-		if (!(te instanceof MechanicalCrafterTileEntity))
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (!(blockEntity instanceof MechanicalCrafterBlockEntity))
 			return;
 
-		MechanicalCrafterTileEntity crafter = (MechanicalCrafterTileEntity) te;
+		MechanicalCrafterBlockEntity crafter = (MechanicalCrafterBlockEntity) blockEntity;
 		callback.accept(crafter.input);
 		crafter.setChanged();
 		crafter.connectivityChanged();

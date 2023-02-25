@@ -4,7 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -183,7 +183,7 @@ public class PumpScenes {
 		Selection megapipe1 = util.select.fromTo(0, 3, 5, 1, 4, 2);
 		Selection megapipe2 = util.select.fromTo(3, 3, 1, 5, 6, 2);
 
-		scene.world.modifyTileEntity(util.grid.at(0, 1, 2), FluidTankTileEntity.class, te -> te.getTankInventory()
+		scene.world.modifyBlockEntity(util.grid.at(0, 1, 2), FluidTankBlockEntity.class, be -> be.getTankInventory()
 			.drain(3000, FluidAction.EXECUTE));
 
 		BlockPos east = pumpPos.east();

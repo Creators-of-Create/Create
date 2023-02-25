@@ -1024,11 +1024,11 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	public boolean isComfyReadingEnabled() {
-		return AllConfigs.CLIENT.comfyReading.get();
+		return AllConfigs.client().comfyReading.get();
 	}
 
 	public void setComfyReadingEnabled(boolean slowTextMode) {
-		AllConfigs.CLIENT.comfyReading.set(slowTextMode);
+		AllConfigs.client().comfyReading.set(slowTextMode);
 	}
 
 }

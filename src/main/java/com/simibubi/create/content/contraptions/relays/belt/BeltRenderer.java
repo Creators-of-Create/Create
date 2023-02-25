@@ -9,16 +9,16 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -40,23 +40,23 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
+public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 	public BeltRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(BeltTileEntity te) {
-		return te.isController();
+	public boolean shouldRenderOffScreen(BeltBlockEntity be) {
+		return be.isController();
 	}
 
 	@Override
-	protected void renderSafe(BeltTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(BeltBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (!Backend.canUseInstancing(te.getLevel())) {
+		if (!Backend.canUseInstancing(be.getLevel())) {
 
-			BlockState blockState = te.getBlockState();
+			BlockState blockState = be.getBlockState();
 			if (!AllBlocks.BELT.has(blockState)) return;
 
 			BeltSlope beltSlope = blockState.getValue(BeltBlock.SLOPE);
@@ -75,7 +75,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			PoseStack localTransforms = new PoseStack();
             TransformStack msr = TransformStack.cast(localTransforms);
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-			float renderTick = AnimationTickHolder.getRenderTime(te.getLevel());
+			float renderTick = AnimationTickHolder.getRenderTime(be.getLevel());
 
 			msr.centre()
 					.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0))
@@ -89,7 +89,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				end = b;
 			}
 
-			DyeColor color = te.color.orElse(null);
+			DyeColor color = be.color.orElse(null);
 
 			for (boolean bottom : Iterate.trueAndFalse) {
 
@@ -101,8 +101,8 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				SpriteShiftEntry spriteShift = getSpriteShiftEntry(color, diagonal, bottom);
 
 				// UV shift
-				float speed = te.getSpeed();
-				if (speed != 0 || te.color.isPresent()) {
+				float speed = be.getSpeed();
+				if (speed != 0 || be.color.isPresent()) {
 					float time = renderTick * axisDirection.getStep();
 					if (diagonal && (downward ^ alongX) || !sideways && !diagonal && alongX || sideways && axisDirection == AxisDirection.NEGATIVE)
 						speed = -speed;
@@ -126,7 +126,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				if (diagonal) break;
 			}
 
-			if (te.hasPulley()) {
+			if (be.hasPulley()) {
 				Direction dir = sideways ? Direction.UP : blockState.getValue(BeltBlock.HORIZONTAL_FACING).getClockWise();
 
 				Supplier<PoseStack> matrixStackSupplier = () -> {
@@ -140,12 +140,12 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					return stack;
 				};
 
-				SuperByteBuffer superBuffer = CachedBufferer.partialDirectional(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
-				KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
+				SuperByteBuffer superBuffer = CachedBufferer.partialDirectional(AllPartialModels.BELT_PULLEY, blockState, dir, matrixStackSupplier);
+				KineticBlockEntityRenderer.standardKineticRotationTransform(superBuffer, be, light).renderInto(ms, vb);
 			}
 		}
 
-		renderItems(te, partialTicks, ms, buffer, light, overlay);
+		renderItems(be, partialTicks, ms, buffer, light, overlay);
 	}
 
 	public static SpriteShiftEntry getSpriteShiftEntry(DyeColor color, boolean diagonal, boolean bottom) {
@@ -159,44 +159,44 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	public static PartialModel getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
 		if (diagonal) {
-			if (start) return AllBlockPartials.BELT_DIAGONAL_START;
-			if (end) return AllBlockPartials.BELT_DIAGONAL_END;
-			return AllBlockPartials.BELT_DIAGONAL_MIDDLE;
+			if (start) return AllPartialModels.BELT_DIAGONAL_START;
+			if (end) return AllPartialModels.BELT_DIAGONAL_END;
+			return AllPartialModels.BELT_DIAGONAL_MIDDLE;
 		} else if (bottom) {
-			if (start) return AllBlockPartials.BELT_START_BOTTOM;
-			if (end) return AllBlockPartials.BELT_END_BOTTOM;
-			return AllBlockPartials.BELT_MIDDLE_BOTTOM;
+			if (start) return AllPartialModels.BELT_START_BOTTOM;
+			if (end) return AllPartialModels.BELT_END_BOTTOM;
+			return AllPartialModels.BELT_MIDDLE_BOTTOM;
 		} else {
-			if (start) return AllBlockPartials.BELT_START;
-			if (end) return AllBlockPartials.BELT_END;
-			return AllBlockPartials.BELT_MIDDLE;
+			if (start) return AllPartialModels.BELT_START;
+			if (end) return AllPartialModels.BELT_END;
+			return AllPartialModels.BELT_MIDDLE;
 		}
 	}
 
-	protected void renderItems(BeltTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderItems(BeltBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		if (!te.isController())
+		if (!be.isController())
 			return;
-		if (te.beltLength == 0)
+		if (be.beltLength == 0)
 			return;
 
 		ms.pushPose();
 
-		Direction beltFacing = te.getBeltFacing();
+		Direction beltFacing = be.getBeltFacing();
 		Vec3i directionVec = beltFacing
 							   .getNormal();
 		Vec3 beltStartOffset = Vec3.atLowerCornerOf(directionVec).scale(-.5)
 			.add(.5, 15 / 16f, .5);
 		ms.translate(beltStartOffset.x, beltStartOffset.y, beltStartOffset.z);
-		BeltSlope slope = te.getBlockState()
+		BeltSlope slope = be.getBlockState()
 			.getValue(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		boolean slopeAlongX = beltFacing
 								.getAxis() == Axis.X;
 
-		boolean onContraption = te.getLevel() instanceof WrappedWorld;
+		boolean onContraption = be.getLevel() instanceof WrappedWorld;
 
-		for (TransportedItemStack transported : te.getInventory()
+		for (TransportedItemStack transported : be.getInventory()
 			.getTransportedItems()) {
 			ms.pushPose();
             TransformStack.cast(ms)
@@ -206,7 +206,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			float sideOffset;
 			float verticalMovement;
 
-			if (te.getSpeed() == 0) {
+			if (be.getSpeed() == 0) {
 				offset = transported.beltPosition;
 				sideOffset = transported.sideOffset;
 			} else {
@@ -217,12 +217,12 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			if (offset < .5)
 				verticalMovement = 0;
 			else
-				verticalMovement = verticality * (Math.min(offset, te.beltLength - .5f) - .5f);
+				verticalMovement = verticality * (Math.min(offset, be.beltLength - .5f) - .5f);
 			Vec3 offsetVec = Vec3.atLowerCornerOf(directionVec).scale(offset);
 			if (verticalMovement != 0)
 				offsetVec = offsetVec.add(0, verticalMovement, 0);
 			boolean onSlope =
-				slope != BeltSlope.HORIZONTAL && Mth.clamp(offset, .5f, te.beltLength - .5f) == offset;
+				slope != BeltSlope.HORIZONTAL && Mth.clamp(offset, .5f, be.beltLength - .5f) == offset;
 			boolean tiltForward = (slope == BeltSlope.DOWNWARD ^ beltFacing
 																   .getAxisDirection() == AxisDirection.POSITIVE) == (beltFacing
 																														.getAxis() == Axis.Z);
@@ -237,11 +237,11 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				sideOffset *= -1;
 			ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
 
-			int stackLight = onContraption ? light : getPackedLight(te, offset);
+			int stackLight = onContraption ? light : getPackedLight(be, offset);
 			ItemRenderer itemRenderer = Minecraft.getInstance()
 				.getItemRenderer();
 			boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
-			boolean blockItem = itemRenderer.getModel(transported.stack, te.getLevel(), null, 0)
+			boolean blockItem = itemRenderer.getModel(transported.stack, be.getLevel(), null, 0)
 				.isGui3d();
 			int count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
 			Random r = new Random(transported.angle);
@@ -267,7 +267,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
 				if (renderViewEntity != null) {
 					Vec3 positionVec = renderViewEntity.position();
-					Vec3 vectorForOffset = BeltHelper.getVectorForOffset(te, offset);
+					Vec3 vectorForOffset = BeltHelper.getVectorForOffset(be, offset);
 					Vec3 diff = vectorForOffset.subtract(positionVec);
 					float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
 					ms.mulPose(Vector3f.YP.rotation(yRot));
@@ -289,7 +289,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				}
 
 				ms.scale(.5f, .5f, .5f);
-				itemRenderer.renderStatic(null, transported.stack, TransformType.FIXED, false, ms, buffer, te.getLevel(), stackLight, overlay, 0);
+				itemRenderer.renderStatic(null, transported.stack, TransformType.FIXED, false, ms, buffer, be.getLevel(), stackLight, overlay, 0);
 				ms.popPose();
 
 				if (!renderUpright) {
@@ -306,7 +306,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		ms.popPose();
 	}
 
-	protected int getPackedLight(BeltTileEntity controller, float beltPos) {
+	protected int getPackedLight(BeltBlockEntity controller, float beltPos) {
 		int segment = (int) Math.floor(beltPos);
 		if (controller.lighter == null || segment >= controller.lighter.lightSegments() || segment < 0)
 			return 0;

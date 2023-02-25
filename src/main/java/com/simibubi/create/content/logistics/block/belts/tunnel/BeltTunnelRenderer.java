@@ -4,10 +4,10 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -20,31 +20,31 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEntity> {
+public class BeltTunnelRenderer extends SmartBlockEntityRenderer<BeltTunnelBlockEntity> {
 
 	public BeltTunnelRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(BeltTunnelTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(BeltTunnelBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getLevel()))
+		if (Backend.canUseInstancing(be.getLevel()))
 			return;
 
-		SuperByteBuffer flapBuffer = CachedBufferer.partial(AllBlockPartials.BELT_TUNNEL_FLAP, te.getBlockState());
+		SuperByteBuffer flapBuffer = CachedBufferer.partial(AllPartialModels.BELT_TUNNEL_FLAP, be.getBlockState());
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 1f);
 		TransformStack msr = TransformStack.cast(ms);
 
 		for (Direction direction : Iterate.directions) {
-			if (!te.flaps.containsKey(direction))
+			if (!be.flaps.containsKey(direction))
 				continue;
 
 			float horizontalAngle = AngleHelper.horizontalAngle(direction.getOpposite());
-			float f = te.flaps.get(direction)
+			float f = be.flaps.get(direction)
 				.getValue(partialTicks);
 
 			ms.pushPose();

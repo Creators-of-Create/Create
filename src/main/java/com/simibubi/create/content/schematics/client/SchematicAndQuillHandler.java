@@ -252,16 +252,16 @@ public class SchematicAndQuillHandler {
 		if (!convertImmediately)
 			return;
 		if (!Files.exists(path)) {
-			Create.LOGGER.fatal("Missing Schematic file: " + path.toString());
+			Create.LOGGER.error("Missing Schematic file: " + path.toString());
 			return;
 		}
 		try {
 			if (!ClientSchematicLoader.validateSizeLimitation(Files.size(path)))
 				return;
-			AllPackets.channel.sendToServer(new InstantSchematicPacket(filename, origin, bounds));
+			AllPackets.getChannel().sendToServer(new InstantSchematicPacket(filename, origin, bounds));
 
 		} catch (IOException e) {
-			Create.LOGGER.fatal("Error finding Schematic file: " + path.toString());
+			Create.LOGGER.error("Error finding Schematic file: " + path.toString());
 			e.printStackTrace();
 			return;
 		}

@@ -2,11 +2,11 @@ package com.simibubi.create.content.curiosities.frames;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -49,7 +49,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntity>, IWrenchable {
+public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEntity>, IWrenchable {
 
 	public CopycatBlock(Properties pProperties) {
 		super(pProperties);
@@ -70,7 +70,7 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
-		return onTileEntityUse(context.getLevel(), context.getClickedPos(), ufte -> {
+		return onBlockEntityUse(context.getLevel(), context.getClickedPos(), ufte -> {
 			ItemStack consumedItem = ufte.getConsumedItem();
 			if (!ufte.hasCustomMaterial())
 				return InteractionResult.PASS;
@@ -81,7 +81,7 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 			context.getLevel()
 				.levelEvent(2001, context.getClickedPos(), Block.getId(ufte.getBlockState()));
 			ufte.setMaterial(AllBlocks.COPYCAT_BASE.getDefaultState());
-			ufte.setItem(ItemStack.EMPTY);
+			ufte.setConsumedItem(ItemStack.EMPTY);
 			return InteractionResult.SUCCESS;
 		});
 	}
@@ -100,7 +100,7 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 		if (material == null)
 			return InteractionResult.PASS;
 
-		return onTileEntityUse(pLevel, pPos, ufte -> {
+		return onBlockEntityUse(pLevel, pPos, ufte -> {
 			if (ufte.getMaterial()
 				.is(material.getBlock())) {
 				if (!ufte.cycleMaterial())
@@ -116,7 +116,7 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 				return InteractionResult.SUCCESS;
 
 			ufte.setMaterial(material);
-			ufte.setItem(itemInHand);
+			ufte.setConsumedItem(itemInHand);
 			ufte.getLevel()
 				.playSound(null, ufte.getBlockPos(), material.getSoundType()
 					.getPlaceSound(), SoundSource.BLOCKS, 1, .75f);
@@ -141,12 +141,12 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 
 		if (appliedState == null)
 			return;
-		withTileEntityDo(pLevel, pPos, ufte -> {
+		withBlockEntityDo(pLevel, pPos, ufte -> {
 			if (ufte.hasCustomMaterial())
 				return;
 
 			ufte.setMaterial(appliedState);
-			ufte.setItem(offhandItem);
+			ufte.setConsumedItem(offhandItem);
 
 			if (pPlacer instanceof Player player && player.isCreative())
 				return;
@@ -213,7 +213,7 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 		if (!pState.hasBlockEntity() || pState.getBlock() == pNewState.getBlock())
 			return;
 		if (!pIsMoving)
-			withTileEntityDo(pLevel, pPos, ufte -> Block.popResource(pLevel, pPos, ufte.getConsumedItem()));
+			withBlockEntityDo(pLevel, pPos, ufte -> Block.popResource(pLevel, pPos, ufte.getConsumedItem()));
 		pLevel.removeBlockEntity(pPos);
 	}
 
@@ -221,17 +221,17 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 	public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
 		super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
 		if (pPlayer.isCreative())
-			withTileEntityDo(pLevel, pPos, ufte -> ufte.setItem(ItemStack.EMPTY));
+			withBlockEntityDo(pLevel, pPos, ufte -> ufte.setConsumedItem(ItemStack.EMPTY));
 	}
 
 	@Override
-	public Class<CopycatTileEntity> getTileEntityClass() {
-		return CopycatTileEntity.class;
+	public Class<CopycatBlockEntity> getBlockEntityClass() {
+		return CopycatBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends CopycatTileEntity> getTileEntityType() {
-		return AllTileEntities.UNIVERSAL_FRAME.get();
+	public BlockEntityType<? extends CopycatBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.COPYCAT.get();
 	}
 
 	// Connected Textures
@@ -262,7 +262,7 @@ public abstract class CopycatBlock extends Block implements ITE<CopycatTileEntit
 	}
 
 	public static BlockState getMaterial(BlockGetter reader, BlockPos targetPos) {
-		if (reader.getBlockEntity(targetPos)instanceof CopycatTileEntity ufte)
+		if (reader.getBlockEntity(targetPos)instanceof CopycatBlockEntity ufte)
 			return ufte.getMaterial();
 		return Blocks.AIR.defaultBlockState();
 	}

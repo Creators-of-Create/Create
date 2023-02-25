@@ -1,13 +1,13 @@
 package com.simibubi.create.content.logistics.block.depot;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
+import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
-public class EjectorAwardPacket extends TileEntityConfigurationPacket<EjectorTileEntity> {
+public class EjectorAwardPacket extends BlockEntityConfigurationPacket<EjectorBlockEntity> {
 
 	public EjectorAwardPacket(FriendlyByteBuf buffer) {
 		super(buffer);
@@ -24,11 +24,11 @@ public class EjectorAwardPacket extends TileEntityConfigurationPacket<EjectorTil
 	protected void readSettings(FriendlyByteBuf buffer) {}
 
 	@Override
-	protected void applySettings(ServerPlayer player, EjectorTileEntity te) {
+	protected void applySettings(ServerPlayer player, EjectorBlockEntity be) {
 		AllAdvancements.EJECTOR_MAXED.awardTo(player);
 	}
 
 	@Override
-	protected void applySettings(EjectorTileEntity te) {}
+	protected void applySettings(EjectorBlockEntity be) {}
 
 }

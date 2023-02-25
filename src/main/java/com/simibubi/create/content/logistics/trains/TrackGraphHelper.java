@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
-import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockEntity;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
@@ -135,7 +135,7 @@ public class TrackGraphHelper {
 
 		if (!(state.getBlock()instanceof ITrackBlock track))
 			return null;
-		if (!(level.getBlockEntity(pos)instanceof TrackTileEntity trackTE))
+		if (!(level.getBlockEntity(pos)instanceof TrackBlockEntity trackTE))
 			return null;
 		BezierConnection bc = trackTE.getConnections()
 			.get(targetBezier.curveTarget());

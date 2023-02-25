@@ -29,15 +29,15 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 
 	@Override
 	public void startMoving(MovementContext context) {
-		if (context.contraption instanceof ElevatorContraption && context.tileData != null)
-			context.tileData.remove("Filter");
+		if (context.contraption instanceof ElevatorContraption && context.blockEntityData != null)
+			context.blockEntityData.remove("Filter");
 	}
 
 	@Override
 	public void stopMoving(MovementContext context) {
 		ItemStack filter = getFilter(context);
 		if (filter != null)
-			context.tileData.putBoolean("Disabled", context.contraption.isActorTypeDisabled(filter)
+			context.blockEntityData.putBoolean("Disabled", context.contraption.isActorTypeDisabled(filter)
 				|| context.contraption.isActorTypeDisabled(ItemStack.EMPTY));
 	}
 
@@ -48,14 +48,14 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 	}
 
 	public static ItemStack getFilter(MovementContext ctx) {
-		CompoundTag tileData = ctx.tileData;
-		if (tileData == null)
+		CompoundTag blockEntityData = ctx.blockEntityData;
+		if (blockEntityData == null)
 			return null;
-		return ItemStack.of(tileData.getCompound("Filter"));
+		return ItemStack.of(blockEntityData.getCompound("Filter"));
 	}
 
 	public static boolean isDisabledInitially(MovementContext ctx) {
-		return ctx.tileData != null && ctx.tileData.getBoolean("Disabled");
+		return ctx.blockEntityData != null && ctx.blockEntityData.getBoolean("Disabled");
 	}
 
 	@Override
@@ -65,15 +65,15 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 
 		Contraption contraption = ctx.contraption;
 		if (!(contraption instanceof ElevatorContraption ec)) {
-			if (!(contraption.presentTileEntities.get(ctx.localPos)instanceof ContraptionControlsTileEntity cte))
+			if (!(contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe))
 				return;
 			ItemStack filter = getFilter(ctx);
 			int value =
 				contraption.isActorTypeDisabled(filter) || contraption.isActorTypeDisabled(ItemStack.EMPTY) ? 4 * 45
 					: 0;
-			cte.indicator.setValue(value);
-			cte.indicator.updateChaseTarget(value);
-			cte.tickAnimations();
+			cbe.indicator.setValue(value);
+			cbe.indicator.updateChaseTarget(value);
+			cbe.tickAnimations();
 			return;
 		}
 
@@ -83,15 +83,15 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 		ElevatorFloorSelection efs = (ElevatorFloorSelection) ctx.temporaryData;
 		tickFloorSelection(efs, ec);
 
-		if (!(contraption.presentTileEntities.get(ctx.localPos)instanceof ContraptionControlsTileEntity cte))
+		if (!(contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe))
 			return;
 
-		cte.tickAnimations();
+		cbe.tickAnimations();
 
 		int currentY = (int) Math.round(contraption.entity.getY() + ec.getContactYOffset());
 		boolean atTargetY = ec.clientYTarget == currentY;
 
-		LerpedFloat indicator = cte.indicator;
+		LerpedFloat indicator = cbe.indicator;
 		float currentIndicator = indicator.getChaseTarget();
 		boolean below = atTargetY ? currentIndicator > 0 : ec.clientYTarget <= currentY;
 
@@ -99,7 +99,7 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 			int startingPoint = below ? 181 : -181;
 			indicator.setValue(startingPoint);
 			indicator.updateChaseTarget(startingPoint);
-			cte.tickAnimations();
+			cbe.tickAnimations();
 			return;
 		}
 
@@ -139,7 +139,7 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 	}
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 

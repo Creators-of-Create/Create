@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlock;
-import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerTileEntity;
+import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 
 import net.minecraft.core.BlockPos;
@@ -46,15 +46,15 @@ public class BeltCrusherInteractionHandler {
                 return false;
             currentItem.beltPosition = crusherEntry;
 
-            BlockEntity te = world.getBlockEntity(crusherPos);
-            if (!(te instanceof CrushingWheelControllerTileEntity))
+            BlockEntity be = world.getBlockEntity(crusherPos);
+            if (!(be instanceof CrushingWheelControllerBlockEntity))
                 return true;
 
-            CrushingWheelControllerTileEntity crusherTE = (CrushingWheelControllerTileEntity) te;
+            CrushingWheelControllerBlockEntity crusherBE = (CrushingWheelControllerBlockEntity) be;
 
             ItemStack toInsert = currentItem.stack.copy();
 
-            ItemStack remainder = ItemHandlerHelper.insertItemStacked(crusherTE.inventory, toInsert, false);
+            ItemStack remainder = ItemHandlerHelper.insertItemStacked(crusherBE.inventory, toInsert, false);
             if (toInsert.equals(remainder, false))
                 return true;
 

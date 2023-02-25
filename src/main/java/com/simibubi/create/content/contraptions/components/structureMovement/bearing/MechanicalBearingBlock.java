@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class MechanicalBearingBlock extends BearingBlock implements ITE<MechanicalBearingTileEntity> {
+public class MechanicalBearingBlock extends BearingBlock implements IBE<MechanicalBearingBlockEntity> {
 
 	public MechanicalBearingBlock(Properties properties) {
 		super(properties);
@@ -29,12 +29,12 @@ public class MechanicalBearingBlock extends BearingBlock implements ITE<Mechanic
 			.isEmpty()) {
 			if (worldIn.isClientSide)
 				return InteractionResult.SUCCESS;
-			withTileEntityDo(worldIn, pos, te -> {
-				if (te.running) {
-					te.disassemble();
+			withBlockEntityDo(worldIn, pos, be -> {
+				if (be.running) {
+					be.disassemble();
 					return;
 				}
-				te.assembleNextTick = true;
+				be.assembleNextTick = true;
 			});
 			return InteractionResult.SUCCESS;
 		}
@@ -42,13 +42,13 @@ public class MechanicalBearingBlock extends BearingBlock implements ITE<Mechanic
 	}
 
 	@Override
-	public Class<MechanicalBearingTileEntity> getTileEntityClass() {
-		return MechanicalBearingTileEntity.class;
+	public Class<MechanicalBearingBlockEntity> getBlockEntityClass() {
+		return MechanicalBearingBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends MechanicalBearingTileEntity> getTileEntityType() {
-		return AllTileEntities.MECHANICAL_BEARING.get();
+	public BlockEntityType<? extends MechanicalBearingBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.MECHANICAL_BEARING.get();
 	}
 
 }

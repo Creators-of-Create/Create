@@ -2,10 +2,10 @@ package com.simibubi.create.content.logistics.block.display;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.RenderTypes;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.renderer.LightTexture;
@@ -16,14 +16,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DisplayLinkRenderer extends SafeTileEntityRenderer<DisplayLinkTileEntity> {
+public class DisplayLinkRenderer extends SafeBlockEntityRenderer<DisplayLinkBlockEntity> {
 
 	public DisplayLinkRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(DisplayLinkTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(DisplayLinkBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		float glow = te.glow.getValue(partialTicks);
+		float glow = be.glow.getValue(partialTicks);
 		if (glow < .125f)
 			return;
 
@@ -32,7 +32,7 @@ public class DisplayLinkRenderer extends SafeTileEntityRenderer<DisplayLinkTileE
 
 		int color = (int) (200 * glow);
 
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		TransformStack msr = TransformStack.cast(ms);
 
 		Direction face = blockState.getOptionalValue(DisplayLinkBlock.FACING)
@@ -49,11 +49,11 @@ public class DisplayLinkRenderer extends SafeTileEntityRenderer<DisplayLinkTileE
 			.rotateX(-AngleHelper.verticalAngle(face) - 90)
 			.unCentre();
 
-		CachedBufferer.partial(AllBlockPartials.DISPLAY_LINK_TUBE, blockState)
+		CachedBufferer.partial(AllPartialModels.DISPLAY_LINK_TUBE, blockState)
 			.light(LightTexture.FULL_BRIGHT)
 			.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
-		CachedBufferer.partial(AllBlockPartials.DISPLAY_LINK_GLOW, blockState)
+		CachedBufferer.partial(AllPartialModels.DISPLAY_LINK_GLOW, blockState)
 			.light(LightTexture.FULL_BRIGHT)
 			.color(color, color, color, 255)
 			.disableDiffuse()

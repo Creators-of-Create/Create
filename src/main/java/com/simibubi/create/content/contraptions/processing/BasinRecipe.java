@@ -10,11 +10,11 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.item.SmartInventory;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
@@ -32,7 +32,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
-	public static boolean match(BasinTileEntity basin, Recipe<?> recipe) {
+	public static boolean match(BasinBlockEntity basin, Recipe<?> recipe) {
 		FilteringBehaviour filter = basin.getFilter();
 		if (filter == null)
 			return false;
@@ -54,11 +54,11 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		return apply(basin, recipe, true);
 	}
 
-	public static boolean apply(BasinTileEntity basin, Recipe<?> recipe) {
+	public static boolean apply(BasinBlockEntity basin, Recipe<?> recipe) {
 		return apply(basin, recipe, false);
 	}
 
-	private static boolean apply(BasinTileEntity basin, Recipe<?> recipe, boolean test) {
+	private static boolean apply(BasinBlockEntity basin, Recipe<?> recipe, boolean test) {
 		boolean isBasinRecipe = recipe instanceof BasinRecipe;
 		IItemHandler availableItems = basin.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			.orElse(null);
@@ -68,7 +68,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = BasinTileEntity.getHeatLevelOf(basin.getLevel()
+		HeatLevel heat = BasinBlockEntity.getHeatLevelOf(basin.getLevel()
 			.getBlockState(basin.getBlockPos()
 				.below(1)));
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()

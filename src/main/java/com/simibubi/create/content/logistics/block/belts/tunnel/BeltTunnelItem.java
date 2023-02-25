@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity.CasingType;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -37,7 +37,7 @@ public class BeltTunnelItem extends BlockItem {
 		BlockState state) {
 		boolean flag = super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, state);
 		if (!world.isClientSide) {
-			BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos.below());
+			BeltBlockEntity belt = BeltHelper.getSegmentBE(world, pos.below());
 			if (belt != null && belt.casing == CasingType.NONE)
 				belt.setCasingType(AllBlocks.ANDESITE_TUNNEL.has(state) ? CasingType.ANDESITE : CasingType.BRASS);
 		}

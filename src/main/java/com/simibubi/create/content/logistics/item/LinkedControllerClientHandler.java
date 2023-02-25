@@ -14,10 +14,11 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
@@ -90,11 +91,11 @@ public class LinkedControllerClientHandler {
 		selectedLocation = BlockPos.ZERO;
 
 		if (inLectern())
-			AllPackets.channel.sendToServer(new LinkedControllerStopLecternPacket(lecternPos));
+			AllPackets.getChannel().sendToServer(new LinkedControllerStopLecternPacket(lecternPos));
 		lecternPos = null;
 
 		if (!currentlyPressed.isEmpty())
-			AllPackets.channel.sendToServer(new LinkedControllerInputPacket(currentlyPressed, false));
+			AllPackets.getChannel().sendToServer(new LinkedControllerInputPacket(currentlyPressed, false));
 		currentlyPressed.clear();
 
 		LinkedControllerItemRenderer.resetButtons();
@@ -128,8 +129,8 @@ public class LinkedControllerClientHandler {
 		}
 
 		if (inLectern() && AllBlocks.LECTERN_CONTROLLER.get()
-			.getTileEntityOptional(mc.level, lecternPos)
-			.map(te -> !te.isUsedBy(mc.player))
+			.getBlockEntityOptional(mc.level, lecternPos)
+			.map(be -> !be.isUsedBy(mc.player))
 			.orElse(true)) {
 			deactivateInLectern();
 			return;
@@ -163,13 +164,13 @@ public class LinkedControllerClientHandler {
 		if (MODE == Mode.ACTIVE) {
 			// Released Keys
 			if (!releasedKeys.isEmpty()) {
-				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(releasedKeys, false, lecternPos));
+				AllPackets.getChannel().sendToServer(new LinkedControllerInputPacket(releasedKeys, false, lecternPos));
 				AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
 			}
 
 			// Newly Pressed Keys
 			if (!newKeys.isEmpty()) {
-				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(newKeys, true, lecternPos));
+				AllPackets.getChannel().sendToServer(new LinkedControllerInputPacket(newKeys, true, lecternPos));
 				packetCooldown = PACKET_RATE;
 				AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
 			}
@@ -177,7 +178,7 @@ public class LinkedControllerClientHandler {
 			// Keepalive Pressed Keys
 			if (packetCooldown == 0) {
 				if (!pressedKeys.isEmpty()) {
-					AllPackets.channel.sendToServer(new LinkedControllerInputPacket(pressedKeys, true, lecternPos));
+					AllPackets.getChannel().sendToServer(new LinkedControllerInputPacket(pressedKeys, true, lecternPos));
 					packetCooldown = PACKET_RATE;
 				}
 			}
@@ -193,9 +194,9 @@ public class LinkedControllerClientHandler {
 					.lineWidth(1 / 16f);
 
 			for (Integer integer : newKeys) {
-				LinkBehaviour linkBehaviour = TileEntityBehaviour.get(mc.level, selectedLocation, LinkBehaviour.TYPE);
+				LinkBehaviour linkBehaviour = BlockEntityBehaviour.get(mc.level, selectedLocation, LinkBehaviour.TYPE);
 				if (linkBehaviour != null) {
-					AllPackets.channel.sendToServer(new LinkedControllerBindPacket(integer, selectedLocation));
+					AllPackets.getChannel().sendToServer(new LinkedControllerBindPacket(integer, selectedLocation));
 					Lang.translate("linked_controller.key_bound", controls.get(integer)
 						.getTranslatedKeyMessage()
 						.getString())
@@ -236,7 +237,7 @@ public class LinkedControllerClientHandler {
 		list.add(Lang.translateDirect("linked_controller.bind_mode")
 			.withStyle(ChatFormatting.GOLD));
 		list.addAll(TooltipHelper.cutTextComponent(Lang.translateDirect("linked_controller.press_keybind", keys),
-			ChatFormatting.GRAY, ChatFormatting.GRAY));
+			Palette.ALL_GRAY));
 
 		int width = 0;
 		int height = list.size() * mc.font.lineHeight;

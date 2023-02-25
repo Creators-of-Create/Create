@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainTileEntity> {
+public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainBlockEntity> {
 
 	public ItemDrainBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -45,28 +45,28 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 				.isPresent())
 			return InteractionResult.PASS;
 
-		return onTileEntityUse(worldIn, pos, te -> {
+		return onBlockEntityUse(worldIn, pos, be -> {
 			if (!heldItem.isEmpty()) {
-				te.internalTank.allowInsertion();
-				InteractionResult tryExchange = tryExchange(worldIn, player, handIn, heldItem, te);
-				te.internalTank.forbidInsertion();
+				be.internalTank.allowInsertion();
+				InteractionResult tryExchange = tryExchange(worldIn, player, handIn, heldItem, be);
+				be.internalTank.forbidInsertion();
 				if (tryExchange.consumesAction())
 					return tryExchange;
 			}
 
-			ItemStack heldItemStack = te.getHeldItemStack();
+			ItemStack heldItemStack = be.getHeldItemStack();
 			if (!worldIn.isClientSide && !heldItemStack.isEmpty()) {
 				player.getInventory().placeItemBackInInventory(heldItemStack);
-				te.heldItem = null;
-				te.notifyUpdate();
+				be.heldItem = null;
+				be.notifyUpdate();
 			}
 			return InteractionResult.SUCCESS;
 		});
 	}
 
 	protected InteractionResult tryExchange(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
-		ItemDrainTileEntity te) {
-		if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, te))
+		ItemDrainBlockEntity be) {
+		if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, be))
 			return InteractionResult.SUCCESS;
 		if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
 			return InteractionResult.SUCCESS;
@@ -83,8 +83,8 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
-		withTileEntityDo(worldIn, pos, te -> {
-			ItemStack heldItemStack = te.getHeldItemStack();
+		withBlockEntityDo(worldIn, pos, be -> {
+			ItemStack heldItemStack = be.getHeldItemStack();
 			if (!heldItemStack.isEmpty())
 				Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), heldItemStack);
 		});
@@ -92,8 +92,8 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	}
 
 	@Override
-	public Class<ItemDrainTileEntity> getTileEntityClass() {
-		return ItemDrainTileEntity.class;
+	public Class<ItemDrainBlockEntity> getBlockEntityClass() {
+		return ItemDrainBlockEntity.class;
 	}
 	
 	@Override
@@ -103,8 +103,8 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	}
 	
 	@Override
-	public BlockEntityType<? extends ItemDrainTileEntity> getTileEntityType() {
-		return AllTileEntities.ITEM_DRAIN.get();
+	public BlockEntityType<? extends ItemDrainBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ITEM_DRAIN.get();
 	}
 
 	@Override

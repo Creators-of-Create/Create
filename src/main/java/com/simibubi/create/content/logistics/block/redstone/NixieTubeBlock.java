@@ -5,14 +5,14 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.Random;
 import java.util.function.BiConsumer;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -45,7 +45,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class NixieTubeBlock extends DoubleFaceAttachedBlock
-	implements ITE<NixieTubeTileEntity>, IWrenchable, SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
+	implements IBE<NixieTubeBlockEntity>, IWrenchable, SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	protected final DyeColor color;
 
@@ -64,7 +64,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		NixieTubeTileEntity nixie = getTileEntity(world, pos);
+		NixieTubeBlockEntity nixie = getBlockEntity(world, pos);
 
 		if (nixie == null)
 			return InteractionResult.PASS;
@@ -89,7 +89,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 
 		walkNixies(world, pos, (currentPos, rowPosition) -> {
 			if (display)
-				withTileEntityDo(world, currentPos, te -> te.displayCustomText(tagElement, rowPosition));
+				withBlockEntityDo(world, currentPos, be -> be.displayCustomText(tagElement, rowPosition));
 			if (dye != null)
 				world.setBlockAndUpdate(currentPos, withColor(state, dye));
 		});
@@ -151,7 +151,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
 		return new ItemRequirement(ItemUseType.CONSUME, AllBlocks.ORANGE_NIXIE_TUBE.get()
 			.asItem());
 	}
@@ -231,9 +231,9 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	private void updateDisplayedRedstoneValue(BlockState state, Level worldIn, BlockPos pos) {
 		if (worldIn.isClientSide)
 			return;
-		withTileEntityDo(worldIn, pos, te -> {
-			if (te.reactsToRedstone())
-				te.updateRedstoneStrength(getPower(worldIn, pos));
+		withBlockEntityDo(worldIn, pos, be -> {
+			if (be.reactsToRedstone())
+				be.updateRedstoneStrength(getPower(worldIn, pos));
 		});
 	}
 
@@ -263,13 +263,13 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 	}
 
 	@Override
-	public Class<NixieTubeTileEntity> getTileEntityClass() {
-		return NixieTubeTileEntity.class;
+	public Class<NixieTubeBlockEntity> getBlockEntityClass() {
+		return NixieTubeBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends NixieTubeTileEntity> getTileEntityType() {
-		return AllTileEntities.NIXIE_TUBE.get();
+	public BlockEntityType<? extends NixieTubeBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.NIXIE_TUBE.get();
 	}
 
 	public DyeColor getColor() {

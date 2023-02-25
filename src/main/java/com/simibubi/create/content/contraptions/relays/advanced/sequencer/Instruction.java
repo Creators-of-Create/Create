@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import java.util.Vector;
 
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundTag;
@@ -33,13 +33,13 @@ public class Instruction {
 		switch (instruction) {
 
 		case TURN_ANGLE:
-			double degreesPerTick = KineticTileEntity.convertToAngular(speed);
+			double degreesPerTick = KineticBlockEntity.convertToAngular(speed);
 			int ticks = (int) (target / degreesPerTick);
 			double degreesErr = target - degreesPerTick*ticks;
 			return ticks + (degreesPerTick > 2*degreesErr ? 0 : 1);
 
 		case TURN_DISTANCE:
-			double metersPerTick = KineticTileEntity.convertToLinear(speed);
+			double metersPerTick = KineticBlockEntity.convertToLinear(speed);
 			int offset = speed > 0 && speedModifier.value < 0 ? 1 : 2;
 			return (int) (target / metersPerTick + offset);
 
@@ -61,10 +61,10 @@ public class Instruction {
 		switch(instruction) {
 
 		case TURN_ANGLE:
-			return KineticTileEntity.convertToAngular(speed);
+			return KineticBlockEntity.convertToAngular(speed);
 
 		case TURN_DISTANCE:
-			return KineticTileEntity.convertToLinear(speed);
+			return KineticBlockEntity.convertToLinear(speed);
 
 		case DELAY:
 			return 1;

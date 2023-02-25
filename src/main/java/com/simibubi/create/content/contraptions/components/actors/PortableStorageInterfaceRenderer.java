@@ -7,14 +7,14 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -28,20 +28,20 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<PortableStorageInterfaceTileEntity> {
+public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<PortableStorageInterfaceBlockEntity> {
 
 	public PortableStorageInterfaceRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(PortableStorageInterfaceTileEntity te, float partialTicks, PoseStack ms,
+	protected void renderSafe(PortableStorageInterfaceBlockEntity be, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-		if (Backend.canUseInstancing(te.getLevel()))
+		if (Backend.canUseInstancing(be.getLevel()))
 			return;
 
-		BlockState blockState = te.getBlockState();
-		float progress = te.getExtensionDistance(partialTicks);
+		BlockState blockState = be.getBlockState();
+		float progress = be.getExtensionDistance(partialTicks);
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-		render(blockState, te.isConnected(), progress, null, sbb -> sbb.light(light)
+		render(blockState, be.isConnected(), progress, null, sbb -> sbb.light(light)
 			.renderInto(ms, vb));
 	}
 
@@ -86,14 +86,14 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			.unCentre();
 	}
 
-	static PortableStorageInterfaceTileEntity getTargetPSI(MovementContext context) {
+	static PortableStorageInterfaceBlockEntity getTargetPSI(MovementContext context) {
 		String _workingPos_ = PortableStorageInterfaceMovement._workingPos_;
 		if (!context.data.contains(_workingPos_))
 			return null;
 
 		BlockPos pos = NbtUtils.readBlockPos(context.data.getCompound(_workingPos_));
-		BlockEntity tileEntity = context.world.getBlockEntity(pos);
-		if (!(tileEntity instanceof PortableStorageInterfaceTileEntity psi))
+		BlockEntity blockEntity = context.world.getBlockEntity(pos);
+		if (!(blockEntity instanceof PortableStorageInterfaceBlockEntity psi))
 			return null;
 
 		if (!psi.isTransferring())
@@ -103,16 +103,16 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 
 	static PartialModel getMiddleForState(BlockState state, boolean lit) {
 		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
-			return lit ? AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE_POWERED
-				: AllBlockPartials.PORTABLE_FLUID_INTERFACE_MIDDLE;
-		return lit ? AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED
-			: AllBlockPartials.PORTABLE_STORAGE_INTERFACE_MIDDLE;
+			return lit ? AllPartialModels.PORTABLE_FLUID_INTERFACE_MIDDLE_POWERED
+				: AllPartialModels.PORTABLE_FLUID_INTERFACE_MIDDLE;
+		return lit ? AllPartialModels.PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED
+			: AllPartialModels.PORTABLE_STORAGE_INTERFACE_MIDDLE;
 	}
 
 	static PartialModel getTopForState(BlockState state) {
 		if (AllBlocks.PORTABLE_FLUID_INTERFACE.has(state))
-			return AllBlockPartials.PORTABLE_FLUID_INTERFACE_TOP;
-		return AllBlockPartials.PORTABLE_STORAGE_INTERFACE_TOP;
+			return AllPartialModels.PORTABLE_FLUID_INTERFACE_TOP;
+		return AllPartialModels.PORTABLE_STORAGE_INTERFACE_TOP;
 	}
 
 }

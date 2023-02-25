@@ -54,7 +54,7 @@ public class ElevatorColumn {
 	public void markDirty() {
 		for (BlockPos pos : getContacts()) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
-			if (blockEntity instanceof ElevatorContactTileEntity ecte)
+			if (blockEntity instanceof ElevatorContactBlockEntity ecte)
 				ecte.setChanged();
 		}
 	}
@@ -62,7 +62,7 @@ public class ElevatorColumn {
 	public void floorReached(LevelAccessor level, String name) {
 		getContacts().stream()
 			.forEach(p -> {
-				if (level.getBlockEntity(p)instanceof ElevatorContactTileEntity ecte)
+				if (level.getBlockEntity(p)instanceof ElevatorContactBlockEntity ecte)
 					ecte.updateDisplayedFloor(name);
 			});
 	}
@@ -72,7 +72,7 @@ public class ElevatorColumn {
 	public List<IntAttached<Couple<String>>> compileNamesList() {
 		return getContacts().stream()
 			.map(p -> {
-				if (level.getBlockEntity(p)instanceof ElevatorContactTileEntity ecte)
+				if (level.getBlockEntity(p)instanceof ElevatorContactBlockEntity ecte)
 					return IntAttached.with(p.getY(), ecte.getNames());
 				return null;
 			})
@@ -126,7 +126,7 @@ public class ElevatorColumn {
 			Integer y = contacts.get(i);
 
 			BlockPos pos = contactAt(y);
-			if (!(level.getBlockEntity(pos)instanceof ElevatorContactTileEntity ecte))
+			if (!(level.getBlockEntity(pos)instanceof ElevatorContactBlockEntity ecte))
 				continue;
 
 			Integer currentLevel = null;
@@ -146,7 +146,7 @@ public class ElevatorColumn {
 
 			for (int peekI = i + 1; peekI < contacts.size(); peekI++) {
 				BlockPos peekPos = contactAt(contacts.get(peekI));
-				if (!(level.getBlockEntity(peekPos)instanceof ElevatorContactTileEntity peekEcte))
+				if (!(level.getBlockEntity(peekPos)instanceof ElevatorContactBlockEntity peekEcte))
 					continue;
 				Integer tryValueOf = tryValueOf(peekEcte.shortName);
 				if (tryValueOf == null)

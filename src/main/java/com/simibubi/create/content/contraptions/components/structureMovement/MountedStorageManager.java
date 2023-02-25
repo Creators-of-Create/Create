@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -71,14 +71,14 @@ public class MountedStorageManager {
 		return new CombinedTankWrapper(Arrays.copyOf(list.toArray(), list.size(), IFluidHandler[].class));
 	}
 
-	public void addBlock(BlockPos localPos, BlockEntity te) {
-		if (te != null && MountedStorage.canUseAsStorage(te))
-			storage.put(localPos, new MountedStorage(te));
-		if (te != null && MountedFluidStorage.canUseAsStorage(te))
-			fluidStorage.put(localPos, new MountedFluidStorage(te));
+	public void addBlock(BlockPos localPos, BlockEntity be) {
+		if (be != null && MountedStorage.canUseAsStorage(be))
+			storage.put(localPos, new MountedStorage(be));
+		if (be != null && MountedFluidStorage.canUseAsStorage(be))
+			fluidStorage.put(localPos, new MountedFluidStorage(be));
 	}
 
-	public void read(CompoundTag nbt, Map<BlockPos, BlockEntity> presentTileEntities, boolean clientPacket) {
+	public void read(CompoundTag nbt, Map<BlockPos, BlockEntity> presentBlockEntities, boolean clientPacket) {
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", Tag.TAG_COMPOUND), c -> storage
 			.put(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data"))));
@@ -87,8 +87,8 @@ public class MountedStorageManager {
 		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", Tag.TAG_COMPOUND), c -> fluidStorage
 			.put(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedFluidStorage.deserialize(c.getCompound("Data"))));
 
-		if (clientPacket && presentTileEntities != null)
-			bindTanks(presentTileEntities);
+		if (clientPacket && presentBlockEntities != null)
+			bindTanks(presentBlockEntities);
 
 		List<IItemHandlerModifiable> handlers = new ArrayList<>();
 		List<IItemHandlerModifiable> fuelHandlers = new ArrayList<>();
@@ -107,18 +107,18 @@ public class MountedStorageManager {
 			.toList());
 	}
 
-	public void bindTanks(Map<BlockPos, BlockEntity> presentTileEntities) {
+	public void bindTanks(Map<BlockPos, BlockEntity> presentBlockEntities) {
 		fluidStorage.forEach((pos, mfs) -> {
-			BlockEntity tileEntity = presentTileEntities.get(pos);
-			if (!(tileEntity instanceof FluidTankTileEntity))
+			BlockEntity blockEntity = presentBlockEntities.get(pos);
+			if (!(blockEntity instanceof FluidTankBlockEntity))
 				return;
-			FluidTankTileEntity tank = (FluidTankTileEntity) tileEntity;
+			FluidTankBlockEntity tank = (FluidTankBlockEntity) blockEntity;
 			IFluidTank tankInventory = tank.getTankInventory();
 			if (tankInventory instanceof FluidTank)
 				((FluidTank) tankInventory).setFluid(mfs.tank.getFluid());
 			tank.getFluidLevel()
 				.startWithValue(tank.getFillState());
-			mfs.assignTileEntity(tank);
+			mfs.assignBlockEntity(tank);
 		});
 	}
 
@@ -157,17 +157,17 @@ public class MountedStorageManager {
 			.forEach(MountedFluidStorage::removeStorageFromWorld);
 	}
 
-	public void addStorageToWorld(StructureBlockInfo block, BlockEntity tileEntity) {
+	public void addStorageToWorld(StructureBlockInfo block, BlockEntity blockEntity) {
 		if (storage.containsKey(block.pos)) {
 			MountedStorage mountedStorage = storage.get(block.pos);
 			if (mountedStorage.isValid())
-				mountedStorage.addStorageToWorld(tileEntity);
+				mountedStorage.addStorageToWorld(blockEntity);
 		}
 
 		if (fluidStorage.containsKey(block.pos)) {
 			MountedFluidStorage mountedStorage = fluidStorage.get(block.pos);
 			if (mountedStorage.isValid())
-				mountedStorage.addStorageToWorld(tileEntity);
+				mountedStorage.addStorageToWorld(blockEntity);
 		}
 	}
 

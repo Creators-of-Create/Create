@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity;
+import com.simibubi.create.content.logistics.block.depot.EjectorBlockEntity;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -60,8 +60,8 @@ public class EjectorScenes {
 			.withItem(asStack), 50);
 		scene.idle(7);
 		scene.world.setKineticSpeed(ejectorS, 0);
-		scene.world.modifyTileNBT(ejectorS, EjectorTileEntity.class, nbt -> {
-			NBTHelper.writeEnum(nbt, "State", EjectorTileEntity.State.RETRACTING);
+		scene.world.modifyBlockEntityNBT(ejectorS, EjectorBlockEntity.class, nbt -> {
+			NBTHelper.writeEnum(nbt, "State", EjectorBlockEntity.State.RETRACTING);
 			nbt.putFloat("ForceAngle", 1);
 		});
 		scene.world.showSection(ejectorS, Direction.DOWN);
@@ -162,7 +162,7 @@ public class EjectorScenes {
 			.text("Using the Wrench, a required Stack Size can be configured")
 			.pointAt(topOfSlot)
 			.placeNearTarget();
-		scene.world.modifyTileNBT(ejectorS, EjectorTileEntity.class, nbt -> {
+		scene.world.modifyBlockEntityNBT(ejectorS, EjectorBlockEntity.class, nbt -> {
 			nbt.putInt("ScrollValue", 10);
 		});
 		scene.idle(90);
@@ -194,7 +194,7 @@ public class EjectorScenes {
 		ElementLink<ParrotElement> birb = scene.special.createBirb(util.vector.topOf(ejectorPos)
 			.add(0, -3 / 16f, 0), ParrotElement.FlappyPose::new);
 		scene.idle(15);
-		scene.world.modifyTileEntity(ejectorPos, EjectorTileEntity.class, ejector -> ejector.activateDeferred());
+		scene.world.modifyBlockEntity(ejectorPos, EjectorBlockEntity.class, ejector -> ejector.activateDeferred());
 		scene.special.moveParrot(birb, util.vector.of(-2, 3, 0), 5);
 		scene.special.rotateParrot(birb, 0, 360 * 2, 0, 21);
 		scene.idle(5);
@@ -265,7 +265,7 @@ public class EjectorScenes {
 			.text("The Stack Size set on the Ejector now determines the amount to be split off")
 			.pointAt(topOfSlot)
 			.placeNearTarget();
-		scene.world.modifyTileNBT(util.select.position(2, 1, 2), EjectorTileEntity.class, nbt -> {
+		scene.world.modifyBlockEntityNBT(util.select.position(2, 1, 2), EjectorBlockEntity.class, nbt -> {
 			nbt.putInt("ScrollValue", 10);
 		});
 		scene.idle(90);
@@ -317,7 +317,7 @@ public class EjectorScenes {
 			if (i == 1) {
 				scene.world.toggleRedstonePower(redstone);
 				scene.effects.indicateRedstone(util.grid.at(2, 1, 2));
-				scene.world.modifyTileNBT(util.select.position(4, 1, 2), EjectorTileEntity.class,
+				scene.world.modifyBlockEntityNBT(util.select.position(4, 1, 2), EjectorBlockEntity.class,
 					nbt -> nbt.putBoolean("Powered", true));
 			}
 		}
@@ -333,7 +333,7 @@ public class EjectorScenes {
 
 		scene.world.toggleRedstonePower(redstone);
 		scene.idle(2);
-		scene.world.modifyTileNBT(util.select.position(4, 1, 2), EjectorTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(4, 1, 2), EjectorBlockEntity.class,
 			nbt -> nbt.putBoolean("Powered", false));
 		scene.idle(5);
 		scene.world.hideSection(redstone, Direction.WEST);

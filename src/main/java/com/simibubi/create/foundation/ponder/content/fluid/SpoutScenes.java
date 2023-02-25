@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.content.fluid;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
-import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -103,7 +103,7 @@ public class SpoutScenes {
 		scene.idle(10);
 
 		scene.idle(20);
-		scene.world.modifyTileNBT(spoutS, SpoutTileEntity.class, nbt -> nbt.putInt("ProcessingTicks", 20));
+		scene.world.modifyBlockEntityNBT(spoutS, SpoutBlockEntity.class, nbt -> nbt.putInt("ProcessingTicks", 20));
 		scene.idle(20);
 		scene.world.removeItemsFromBelt(depotPos);
 		ItemStack potion = new ItemStack(Items.HONEY_BOTTLE);
@@ -137,7 +137,7 @@ public class SpoutScenes {
 		ElementLink<BeltItemElement> ingot2 = scene.world.createItemOnBelt(beltPos, Direction.SOUTH, bottle);
 		scene.idle(15);
 		scene.world.stallBeltItem(ingot, true);
-		scene.world.modifyTileNBT(spoutS, SpoutTileEntity.class, nbt -> nbt.putInt("ProcessingTicks", 20));
+		scene.world.modifyBlockEntityNBT(spoutS, SpoutBlockEntity.class, nbt -> nbt.putInt("ProcessingTicks", 20));
 
 		scene.overlay.showText(50)
 			.pointAt(spoutSide)
@@ -158,7 +158,7 @@ public class SpoutScenes {
 		scene.world.stallBeltItem(ingot, false);
 		scene.idle(15);
 		scene.world.stallBeltItem(ingot2, true);
-		scene.world.modifyTileNBT(spoutS, SpoutTileEntity.class, nbt -> nbt.putInt("ProcessingTicks", 20));
+		scene.world.modifyBlockEntityNBT(spoutS, SpoutBlockEntity.class, nbt -> nbt.putInt("ProcessingTicks", 20));
 		scene.idle(20);
 		for (int i = 0; i < 10; i++) {
 			scene.effects.emitParticles(util.vector.topOf(depotPos.south())

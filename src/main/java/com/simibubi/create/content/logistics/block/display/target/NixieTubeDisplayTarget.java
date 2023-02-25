@@ -5,7 +5,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,7 +25,7 @@ public class NixieTubeDisplayTarget extends SingleLineDisplayTarget {
 		NixieTubeBlock.walkNixies(context.level(), context.getTargetPos(), (currentPos, rowPosition) -> {
 			BlockEntity blockEntity = context.level()
 				.getBlockEntity(currentPos);
-			if (blockEntity instanceof NixieTubeTileEntity nixie)
+			if (blockEntity instanceof NixieTubeBlockEntity nixie)
 				nixie.displayCustomText(tagElement, rowPosition);
 		});
 	}

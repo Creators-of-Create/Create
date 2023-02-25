@@ -7,8 +7,8 @@ import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -17,13 +17,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
+public class GearboxInstance extends KineticBlockEntityInstance<GearboxBlockEntity> {
 
     protected final EnumMap<Direction, RotatingData> keys;
     protected Direction sourceFacing;
 
-    public GearboxInstance(MaterialManager modelManager, GearboxTileEntity tile) {
-        super(modelManager, tile);
+    public GearboxInstance(MaterialManager materialManager, GearboxBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
 
         keys = new EnumMap<>(Direction.class);
 
@@ -40,13 +40,13 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 			if (boxAxis == axis)
 				continue;
 
-			Instancer<RotatingData> shaft = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, direction);
+			Instancer<RotatingData> shaft = rotatingMaterial.getModel(AllPartialModels.SHAFT_HALF, blockState, direction);
 
 			RotatingData key = shaft.createInstance();
 
 			key.setRotationAxis(Direction.get(Direction.AxisDirection.POSITIVE, axis).step())
 					.setRotationalSpeed(getSpeed(direction))
-					.setRotationOffset(getRotationOffset(axis)).setColor(tile)
+					.setRotationOffset(getRotationOffset(axis)).setColor(blockEntity)
 					.setPosition(getInstancePosition())
 					.setBlockLight(blockLight)
 					.setSkyLight(skyLight);

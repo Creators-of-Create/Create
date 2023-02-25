@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.ponder.content.fluid;
 
-import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
@@ -54,11 +54,11 @@ public class DrainScenes {
 				.withItem(lavaBucket),
 			40);
 		scene.idle(7);
-		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class, te -> {
-			te.getBehaviour(SmartFluidTankBehaviour.TYPE)
+		scene.world.modifyBlockEntity(drainPos, ItemDrainBlockEntity.class, be -> {
+			be.getBehaviour(SmartFluidTankBehaviour.TYPE)
 				.allowInsertion();
-			te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.fill(new FluidStack(Fluids.LAVA, 1000), FluidAction.EXECUTE));
+			be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+				.ifPresent(fh -> fh.fill(new FluidStack(Fluids.LAVA, 1000), FluidAction.EXECUTE));
 		});
 		scene.idle(10);
 
@@ -69,9 +69,9 @@ public class DrainScenes {
 			.pointAt(util.vector.blockSurface(drainPos.west(), Direction.WEST));
 		scene.idle(60);
 
-		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.drain(500, FluidAction.EXECUTE)));
+		scene.world.modifyBlockEntity(drainPos, ItemDrainBlockEntity.class,
+			be -> be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+				.ifPresent(fh -> fh.drain(500, FluidAction.EXECUTE)));
 
 		scene.world.moveSection(drainLink, util.vector.of(1, 0, 0), 7);
 		scene.world.showSection(largeCog, Direction.UP);

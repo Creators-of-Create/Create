@@ -8,12 +8,13 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllTags.AllFluidTags;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -33,33 +34,30 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
+public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 
-	protected static class BlockPosEntry {
-		public BlockPos pos;
-		public int distance;
-
-		public BlockPosEntry(BlockPos pos, int distance) {
-			this.pos = pos;
-			this.distance = distance;
-		}
+	public static record BlockPosEntry(BlockPos pos, int distance) {
+	};
+	
+	public static class ChunkNotLoadedException extends Exception {
+		private static final long serialVersionUID = 1L;
 	}
-
+	
 	BoundingBox affectedArea;
 	BlockPos rootPos;
 	boolean infinite;
 	protected boolean counterpartActed;
 
 	// Search
-	static final int searchedPerTick = 256;
+	static final int searchedPerTick = 1024;
 	static final int validationTimerMin = 160;
 	List<BlockPosEntry> frontier;
 	Set<BlockPos> visited;
 
 	int revalidateIn;
 
-	public FluidManipulationBehaviour(SmartTileEntity te) {
-		super(te);
+	public FluidManipulationBehaviour(SmartBlockEntity be) {
+		super(be);
 		setValidationTimer();
 		infinite = false;
 		visited = new HashSet<>();
@@ -85,15 +83,15 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected int maxRange() {
-		return AllConfigs.SERVER.fluids.hosePulleyRange.get();
+		return AllConfigs.server().fluids.hosePulleyRange.get();
 	}
 
 	protected int maxBlocks() {
-		return AllConfigs.SERVER.fluids.hosePulleyBlockThreshold.get();
+		return AllConfigs.server().fluids.hosePulleyBlockThreshold.get();
 	}
 
 	protected boolean fillInfinite() {
-		return AllConfigs.SERVER.fluids.fillInfinite.get();
+		return AllConfigs.server().fluids.fillInfinite.get();
 	}
 
 	public void reset() {
@@ -143,7 +141,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected Fluid search(Fluid fluid, List<BlockPosEntry> frontier, Set<BlockPos> visited,
-		BiConsumer<BlockPos, Integer> add, boolean searchDownward) {
+		BiConsumer<BlockPos, Integer> add, boolean searchDownward) throws ChunkNotLoadedException {
 		Level world = getWorld();
 		int maxBlocks = maxBlocks();
 		int maxRange = canDrainInfinitely(fluid) ? maxRange() : maxRange() / 2;
@@ -158,6 +156,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				continue;
 			visited.add(currentPos);
 
+			if (!world.isLoaded(currentPos))
+				throw new ChunkNotLoadedException();
+			
 			FluidState fluidState = world.getFluidState(currentPos);
 			if (fluidState.isEmpty())
 				continue;
@@ -175,6 +176,8 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 					continue;
 
 				BlockPos offsetPos = currentPos.relative(side);
+				if (!world.isLoaded(offsetPos))
+					throw new ChunkNotLoadedException();
 				if (visited.contains(offsetPos))
 					continue;
 				if (offsetPos.distSqr(rootPos) > maxRangeSq)
@@ -196,7 +199,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
-		BlockPos splooshPos = pos == null ? tileEntity.getBlockPos() : pos;
+		BlockPos splooshPos = pos == null ? blockEntity.getBlockPos() : pos;
 
 		SoundEvent soundevent = fillSound ? fluid.getAttributes()
 			.getFillSound()
@@ -215,12 +218,14 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	protected boolean canDrainInfinitely(Fluid fluid) {
 		if (fluid == null)
 			return false;
-		return maxBlocks() != -1 && AllConfigs.SERVER.fluids.bottomlessFluidMode.get()
+		return maxBlocks() != -1 && AllConfigs.server().fluids.bottomlessFluidMode.get()
 			.test(fluid);
 	}
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
+		if (infinite)
+			NBTHelper.putMarker(nbt, "Infinite");
 		if (rootPos != null)
 			nbt.put("LastPos", NbtUtils.writeBlockPos(rootPos));
 		if (affectedArea != null) {
@@ -234,6 +239,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
+		infinite = nbt.contains("Infinite");
 		if (nbt.contains("LastPos"))
 			rootPos = NbtUtils.readBlockPos(nbt.getCompound("LastPos"));
 		if (nbt.contains("AffectedAreaFrom") && nbt.contains("AffectedAreaTo"))
@@ -243,30 +249,21 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	public enum BottomlessFluidMode implements Predicate<Fluid> {
-		ALLOW_ALL {
-			@Override
-			public boolean test(Fluid fluid) {
-				return true;
-			}
-		},
-		DENY_ALL {
-			@Override
-			public boolean test(Fluid fluid) {
-				return false;
-			}
-		},
-		ALLOW_BY_TAG {
-			@Override
-			public boolean test(Fluid fluid) {
-				return AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid);
-			}
-		},
-		DENY_BY_TAG {
-			@Override
-			public boolean test(Fluid fluid) {
-				return !AllFluidTags.BOTTOMLESS_DENY.matches(fluid);
-			}
-		};
+		ALLOW_ALL(fluid -> true),
+		DENY_ALL(fluid -> false),
+		ALLOW_BY_TAG(fluid -> AllFluidTags.BOTTOMLESS_ALLOW.matches(fluid)),
+		DENY_BY_TAG(fluid -> !AllFluidTags.BOTTOMLESS_DENY.matches(fluid));
+
+		private final Predicate<Fluid> predicate;
+
+		BottomlessFluidMode(Predicate<Fluid> predicate) {
+			this.predicate = predicate;
+		}
+
+		@Override
+		public boolean test(Fluid fluid) {
+			return predicate.test(fluid);
+		}
 	}
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
+import com.simibubi.create.content.logistics.item.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -26,7 +26,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterContainer> {
+public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterMenu> {
 
 	private static final String PREFIX = "gui.attribute_filter.";
 
@@ -55,8 +55,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	private SelectionScrollInput attributeSelector;
 	private Label attributeSelectorLabel;
 
-	public AttributeFilterScreen(AttributeFilterContainer container, Inventory inv, Component title) {
-		super(container, inv, title, AllGuiTextures.ATTRIBUTE_FILTER);
+	public AttributeFilterScreen(AttributeFilterMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title, AllGuiTextures.ATTRIBUTE_FILTER);
 	}
 
 	@Override
@@ -237,7 +237,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		CompoundTag tag = new CompoundTag();
 		ItemAttribute itemAttribute = attributesOfItem.get(index);
 		itemAttribute.serializeNBT(tag);
-		AllPackets.channel
+		AllPackets.getChannel()
 			.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
 		menu.appendSelectedAttribute(itemAttribute, inverted);
 		if (menu.selectedAttributes.size() == 1)

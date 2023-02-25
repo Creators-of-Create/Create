@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.components.actors.controls;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -19,7 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ContraptionControlsBlock extends ControlsBlock implements ITE<ContraptionControlsTileEntity> {
+public class ContraptionControlsBlock extends ControlsBlock implements IBE<ContraptionControlsBlockEntity> {
 
 	public ContraptionControlsBlock(Properties pProperties) {
 		super(pProperties);
@@ -28,12 +28,12 @@ public class ContraptionControlsBlock extends ControlsBlock implements ITE<Contr
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
-		return onTileEntityUse(pLevel, pPos, cte -> {
+		return onBlockEntityUse(pLevel, pPos, cte -> {
 			cte.pressButton();
 			cte.disabled = !cte.disabled;
 			cte.notifyUpdate();
 			if (!pLevel.isClientSide()) {
-				ContraptionControlsTileEntity.sendStatus(pPlayer, cte.filtering.getFilter(), !cte.disabled);
+				ContraptionControlsBlockEntity.sendStatus(pPlayer, cte.filtering.getFilter(), !cte.disabled);
 				AllSoundEvents.CONTROLLER_CLICK.play(cte.getLevel(), null, cte.getBlockPos(), 1,
 					cte.disabled ? 0.8f : 1.5f);
 			}
@@ -44,7 +44,7 @@ public class ContraptionControlsBlock extends ControlsBlock implements ITE<Contr
 	@Override
 	public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos,
 		boolean pIsMoving) {
-		withTileEntityDo(pLevel, pPos, ContraptionControlsTileEntity::updatePoweredState);
+		withBlockEntityDo(pLevel, pPos, ContraptionControlsBlockEntity::updatePoweredState);
 	}
 
 	@Override
@@ -53,13 +53,13 @@ public class ContraptionControlsBlock extends ControlsBlock implements ITE<Contr
 	}
 
 	@Override
-	public Class<ContraptionControlsTileEntity> getTileEntityClass() {
-		return ContraptionControlsTileEntity.class;
+	public Class<ContraptionControlsBlockEntity> getBlockEntityClass() {
+		return ContraptionControlsBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends ContraptionControlsTileEntity> getTileEntityType() {
-		return AllTileEntities.CONTRAPTION_CONTROLS.get();
+	public BlockEntityType<? extends ContraptionControlsBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CONTRAPTION_CONTROLS.get();
 	}
 
 }

@@ -4,8 +4,10 @@ import java.util.Vector;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.SidedFilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -13,8 +15,6 @@ import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pointing;
@@ -54,8 +54,8 @@ public class TunnelScenes {
 
 		for (int i = 0; i < 3; i++) {
 			scene.world.cycleBlockProperty(util.grid.at(1 + i, 1, 2), BeltBlock.CASING);
-			scene.world.modifyTileNBT(util.select.position(1 + i, 1, 2), BeltTileEntity.class,
-				nbt -> NBTHelper.writeEnum(nbt, "Casing", BeltTileEntity.CasingType.ANDESITE), true);
+			scene.world.modifyBlockEntityNBT(util.select.position(1 + i, 1, 2), BeltBlockEntity.class,
+				nbt -> NBTHelper.writeEnum(nbt, "Casing", BeltBlockEntity.CasingType.ANDESITE), true);
 			scene.idle(4);
 		}
 
@@ -126,8 +126,8 @@ public class TunnelScenes {
 
 		for (int i = 0; i < 3; i++) {
 			scene.world.cycleBlockProperty(util.grid.at(2 + i, 1, 2), BeltBlock.CASING);
-			scene.world.modifyTileNBT(util.select.position(2 + i, 1, 2), BeltTileEntity.class,
-				nbt -> NBTHelper.writeEnum(nbt, "Casing", BeltTileEntity.CasingType.BRASS), true);
+			scene.world.modifyBlockEntityNBT(util.select.position(2 + i, 1, 2), BeltBlockEntity.class,
+				nbt -> NBTHelper.writeEnum(nbt, "Casing", BeltBlockEntity.CasingType.BRASS), true);
 			scene.idle(4);
 		}
 
@@ -178,8 +178,8 @@ public class TunnelScenes {
 			.placeNearTarget()
 			.text("Filters on inbound connections simply block non-matching items");
 		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
-		Class<BrassTunnelTileEntity> tunnelClass = BrassTunnelTileEntity.class;
-		scene.world.modifyTileEntity(tunnelPos, tunnelClass, te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		Class<BrassTunnelBlockEntity> tunnelClass = BrassTunnelBlockEntity.class;
+		scene.world.modifyBlockEntity(tunnelPos, tunnelClass, be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 			.setFilter(Direction.EAST, copper));
 		scene.overlay.showControls(new InputWindowElement(tunnelFilterVec, Pointing.DOWN).withItem(copper), 30);
 		ItemStack zinc = AllItems.ZINC_INGOT.asStack();
@@ -190,7 +190,7 @@ public class TunnelScenes {
 		scene.rotateCameraY(-70);
 		scene.world.multiplyKineticSpeed(util.select.everywhere(), -.5f);
 		scene.idle(20);
-		scene.world.modifyTileEntity(tunnelPos, tunnelClass, te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		scene.world.modifyBlockEntity(tunnelPos, tunnelClass, be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 			.setFilter(Direction.EAST, ItemStack.EMPTY));
 
 		tunnelFilterVec = getTunnelFilterVec(tunnelPos, Direction.NORTH);
@@ -205,12 +205,12 @@ public class TunnelScenes {
 		scene.idle(70);
 
 		scene.overlay.showControls(new InputWindowElement(tunnelFilterVec, Pointing.LEFT).withItem(copper), 30);
-		scene.world.modifyTileEntity(tunnelPos, tunnelClass, te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		scene.world.modifyBlockEntity(tunnelPos, tunnelClass, be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 			.setFilter(Direction.WEST, copper));
 		scene.idle(4);
 		tunnelFilterVec = getTunnelFilterVec(tunnelPos, Direction.NORTH);
 		scene.overlay.showControls(new InputWindowElement(tunnelFilterVec, Pointing.RIGHT).withItem(zinc), 30);
-		scene.world.modifyTileEntity(tunnelPos, tunnelClass, te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		scene.world.modifyBlockEntity(tunnelPos, tunnelClass, be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 			.setFilter(Direction.NORTH, zinc));
 
 		scene.world.multiplyKineticSpeed(util.select.everywhere(), 1.5f);
@@ -220,9 +220,9 @@ public class TunnelScenes {
 		}
 
 		scene.idle(30);
-		scene.world.modifyTileEntity(tunnelPos, tunnelClass, te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		scene.world.modifyBlockEntity(tunnelPos, tunnelClass, be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 			.setFilter(Direction.NORTH, ItemStack.EMPTY));
-		scene.world.modifyTileEntity(tunnelPos, tunnelClass, te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		scene.world.modifyBlockEntity(tunnelPos, tunnelClass, be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 			.setFilter(Direction.WEST, ItemStack.EMPTY));
 		scene.idle(10);
 
@@ -273,18 +273,18 @@ public class TunnelScenes {
 			.south();
 		scene.overlay
 			.showControls(new InputWindowElement(tunnelFilterVec.add(0, 0, -1), Pointing.RIGHT).withItem(item1), 20);
-		scene.world.modifyTileEntity(newTunnelPos.north(), tunnelClass,
-			te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		scene.world.modifyBlockEntity(newTunnelPos.north(), tunnelClass,
+			be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 				.setFilter(Direction.WEST, item1));
 		scene.idle(4);
 		scene.overlay.showControls(new InputWindowElement(tunnelFilterVec, Pointing.DOWN).withItem(item2), 20);
-		scene.world.modifyTileEntity(newTunnelPos, tunnelClass, te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		scene.world.modifyBlockEntity(newTunnelPos, tunnelClass, be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 			.setFilter(Direction.WEST, item2));
 		scene.idle(4);
 		scene.overlay.showControls(new InputWindowElement(tunnelFilterVec.add(0, 0, 1), Pointing.LEFT).withItem(item3),
 			20);
-		scene.world.modifyTileEntity(newTunnelPos.south(), tunnelClass,
-			te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
+		scene.world.modifyBlockEntity(newTunnelPos.south(), tunnelClass,
+			be -> be.getBehaviour(SidedFilteringBehaviour.TYPE)
 				.setFilter(Direction.WEST, item3));
 		scene.idle(30);
 
@@ -371,7 +371,7 @@ public class TunnelScenes {
 			.text("Using a Wrench, the distribution behaviour of Brass Tunnels can be configured");
 		scene.idle(130);
 
-		Class<BrassTunnelTileEntity> tunnelClass = BrassTunnelTileEntity.class;
+		Class<BrassTunnelBlockEntity> tunnelClass = BrassTunnelBlockEntity.class;
 		ElementLink<WorldSectionElement> blockage =
 			scene.world.showIndependentSection(util.select.position(4, 1, 0), Direction.UP);
 		scene.world.moveSection(blockage, util.vector.of(-3, 0, 0), 0);
@@ -406,9 +406,9 @@ public class TunnelScenes {
 			if (i == 4) {
 				scene.overlay.showControls(
 					new InputWindowElement(modeVec, Pointing.RIGHT).showing(AllIcons.I_TUNNEL_FORCED_SPLIT), 140);
-				scene.world.modifyTileEntity(util.grid.at(1, 2, 3), tunnelClass,
-					te -> te.getBehaviour(ScrollOptionBehaviour.TYPE)
-						.setValue(BrassTunnelTileEntity.SelectionMode.FORCED_SPLIT.ordinal()));
+				scene.world.modifyBlockEntity(util.grid.at(1, 2, 3), tunnelClass,
+					be -> be.getBehaviour(ScrollOptionBehaviour.TYPE)
+						.setValue(BrassTunnelBlockEntity.SelectionMode.FORCED_SPLIT.ordinal()));
 			}
 
 			if (i == 5) {
@@ -425,9 +425,9 @@ public class TunnelScenes {
 			}
 
 			if (i == 7) {
-				scene.world.modifyTileEntity(util.grid.at(1, 2, 3), tunnelClass,
-					te -> te.getBehaviour(ScrollOptionBehaviour.TYPE)
-						.setValue(BrassTunnelTileEntity.SelectionMode.ROUND_ROBIN.ordinal()));
+				scene.world.modifyBlockEntity(util.grid.at(1, 2, 3), tunnelClass,
+					be -> be.getBehaviour(ScrollOptionBehaviour.TYPE)
+						.setValue(BrassTunnelBlockEntity.SelectionMode.ROUND_ROBIN.ordinal()));
 				scene.overlay.showControls(
 					new InputWindowElement(modeVec, Pointing.RIGHT).showing(AllIcons.I_TUNNEL_ROUND_ROBIN), 140);
 				scene.overlay.showText(80)
@@ -453,9 +453,9 @@ public class TunnelScenes {
 			if (i == 15) {
 				scene.overlay.showControls(
 					new InputWindowElement(modeVec, Pointing.RIGHT).showing(AllIcons.I_TUNNEL_FORCED_ROUND_ROBIN), 140);
-				scene.world.modifyTileEntity(util.grid.at(1, 2, 3), tunnelClass,
-					te -> te.getBehaviour(ScrollOptionBehaviour.TYPE)
-						.setValue(BrassTunnelTileEntity.SelectionMode.FORCED_ROUND_ROBIN.ordinal()));
+				scene.world.modifyBlockEntity(util.grid.at(1, 2, 3), tunnelClass,
+					be -> be.getBehaviour(ScrollOptionBehaviour.TYPE)
+						.setValue(BrassTunnelBlockEntity.SelectionMode.FORCED_ROUND_ROBIN.ordinal()));
 			}
 
 			if (i == 16) {
@@ -473,9 +473,9 @@ public class TunnelScenes {
 			if (i == 19) {
 				scene.overlay.showControls(
 					new InputWindowElement(modeVec, Pointing.RIGHT).showing(AllIcons.I_TUNNEL_PREFER_NEAREST), 140);
-				scene.world.modifyTileEntity(util.grid.at(1, 2, 3), tunnelClass,
-					te -> te.getBehaviour(ScrollOptionBehaviour.TYPE)
-						.setValue(BrassTunnelTileEntity.SelectionMode.PREFER_NEAREST.ordinal()));
+				scene.world.modifyBlockEntity(util.grid.at(1, 2, 3), tunnelClass,
+					be -> be.getBehaviour(ScrollOptionBehaviour.TYPE)
+						.setValue(BrassTunnelBlockEntity.SelectionMode.PREFER_NEAREST.ordinal()));
 				scene.world.moveSection(blockage, util.vector.of(1, 0, 0), 10);
 				scene.world.setBlock(util.grid.at(1, 1, 0), barrier, false);
 				scene.overlay.showText(70)
@@ -502,9 +502,9 @@ public class TunnelScenes {
 			if (i == 26) {
 				scene.overlay.showControls(
 					new InputWindowElement(modeVec, Pointing.RIGHT).showing(AllIcons.I_TUNNEL_RANDOMIZE), 140);
-				scene.world.modifyTileEntity(util.grid.at(1, 2, 3), tunnelClass,
-					te -> te.getBehaviour(ScrollOptionBehaviour.TYPE)
-						.setValue(BrassTunnelTileEntity.SelectionMode.RANDOMIZE.ordinal()));
+				scene.world.modifyBlockEntity(util.grid.at(1, 2, 3), tunnelClass,
+					be -> be.getBehaviour(ScrollOptionBehaviour.TYPE)
+						.setValue(BrassTunnelBlockEntity.SelectionMode.RANDOMIZE.ordinal()));
 			}
 
 			if (i == 27) {
@@ -520,9 +520,9 @@ public class TunnelScenes {
 		scene.idle(10);
 		scene.overlay
 			.showControls(new InputWindowElement(modeVec, Pointing.RIGHT).showing(AllIcons.I_TUNNEL_SYNCHRONIZE), 140);
-		scene.world.modifyTileEntity(util.grid.at(1, 2, 3), tunnelClass,
-			te -> te.getBehaviour(ScrollOptionBehaviour.TYPE)
-				.setValue(BrassTunnelTileEntity.SelectionMode.SYNCHRONIZE.ordinal()));
+		scene.world.modifyBlockEntity(util.grid.at(1, 2, 3), tunnelClass,
+			be -> be.getBehaviour(ScrollOptionBehaviour.TYPE)
+				.setValue(BrassTunnelBlockEntity.SelectionMode.SYNCHRONIZE.ordinal()));
 		scene.idle(30);
 		scene.overlay.showText(70)
 			.attachKeyFrame()

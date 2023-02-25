@@ -29,8 +29,8 @@ public class ShootableGadgetItemMethods {
 	public static void sendPackets(Player player, Function<Boolean, ? extends ShootGadgetPacket> factory) {
 		if (!(player instanceof ServerPlayer))
 			return;
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), factory.apply(false));
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), factory.apply(true));
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> player), factory.apply(false));
+		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), factory.apply(true));
 	}
 
 	public static boolean shouldSwap(Player player, ItemStack item, InteractionHand hand, Predicate<ItemStack> predicate) {

@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
-import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -236,7 +236,7 @@ public class ChainDriveScenes {
 		scene.world.showSection(util.select.fromTo(analogPos, analogPos.south()), Direction.DOWN);
 
 		scene.idle(15);
-		scene.world.modifyTileNBT(util.select.position(analogPos), AnalogLeverTileEntity.class, nbt -> {
+		scene.world.modifyBlockEntityNBT(util.select.position(analogPos), AnalogLeverBlockEntity.class, nbt -> {
 			nbt.putInt("State", 8);
 		});
 		scene.world.modifyBlock(analogPos.south(), s -> s.setValue(RedStoneWireBlock.POWER, 8), false);

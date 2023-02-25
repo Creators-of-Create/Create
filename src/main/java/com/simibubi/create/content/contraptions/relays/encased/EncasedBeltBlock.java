@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 
-public class EncasedBeltBlock extends RotatedPillarKineticBlock implements ITE<KineticTileEntity> {
+public class EncasedBeltBlock extends RotatedPillarKineticBlock implements IBE<KineticBlockEntity> {
 
 	public static final Property<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty CONNECTED_ALONG_FIRST_COORDINATE =
@@ -189,13 +189,13 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock implements ITE<K
 		return connectionAxis;
 	}
 
-	public static float getRotationSpeedModifier(KineticTileEntity from, KineticTileEntity to) {
+	public static float getRotationSpeedModifier(KineticBlockEntity from, KineticBlockEntity to) {
 		float fromMod = 1;
 		float toMod = 1;
-		if (from instanceof AdjustablePulleyTileEntity)
-			fromMod = ((AdjustablePulleyTileEntity) from).getModifier();
-		if (to instanceof AdjustablePulleyTileEntity)
-			toMod = ((AdjustablePulleyTileEntity) to).getModifier();
+		if (from instanceof AdjustablePulleyBlockEntity)
+			fromMod = ((AdjustablePulleyBlockEntity) from).getModifier();
+		if (to instanceof AdjustablePulleyBlockEntity)
+			toMod = ((AdjustablePulleyBlockEntity) to).getModifier();
 		return fromMod / toMod;
 	}
 
@@ -209,13 +209,13 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock implements ITE<K
 	}
 
 	@Override
-	public Class<KineticTileEntity> getTileEntityClass() {
-		return KineticTileEntity.class;
+	public Class<KineticBlockEntity> getBlockEntityClass() {
+		return KineticBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
-		return AllTileEntities.ENCASED_SHAFT.get();
+	public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ENCASED_SHAFT.get();
 	}
 
 }

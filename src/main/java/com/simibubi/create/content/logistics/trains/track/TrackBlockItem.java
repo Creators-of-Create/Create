@@ -157,7 +157,7 @@ public class TrackBlockItem extends BlockItem {
 		if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())
 			return;
 		if (Minecraft.getInstance().options.keySprint.isDown())
-			AllPackets.channel
+			AllPackets.getChannel()
 				.sendToServer(new PlaceExtendedCurvePacket(event.getHand() == InteractionHand.MAIN_HAND, true));
 	}
 

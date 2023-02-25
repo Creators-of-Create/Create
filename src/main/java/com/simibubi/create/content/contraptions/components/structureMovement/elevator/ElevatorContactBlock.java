@@ -5,15 +5,15 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorColumn.ColumnCoords;
 import com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
@@ -44,7 +44,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public class ElevatorContactBlock extends WrenchableDirectionalBlock
-	implements ITE<ElevatorContactTileEntity>, ISpecialBlockItemRequirement {
+	implements IBE<ElevatorContactBlockEntity>, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty CALLING = BooleanProperty.create("calling");
@@ -99,7 +99,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 			BlockState otherState = pLevel.getBlockState(otherPos);
 			if (!AllBlocks.ELEVATOR_CONTACT.has(otherState))
 				continue;
-			pLevel.setBlock(otherPos, otherState.setValue(CALLING, false), 2);
+			pLevel.setBlock(otherPos, otherState.setValue(CALLING, false), 2 | 16);
 			scheduleActivation(pLevel, otherPos);
 		}
 
@@ -121,11 +121,11 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
 		boolean wasPowering = pState.getValue(POWERING);
 
-		Optional<ElevatorContactTileEntity> optionalTE = getTileEntityOptional(pLevel, pPos);
-		boolean shouldBePowering = optionalTE.map(te -> {
-			boolean activateBlock = te.activateBlock;
-			te.activateBlock = false;
-			te.setChanged();
+		Optional<ElevatorContactBlockEntity> optionalBE = getBlockEntityOptional(pLevel, pPos);
+		boolean shouldBePowering = optionalBE.map(be -> {
+			boolean activateBlock = be.activateBlock;
+			be.activateBlock = false;
+			be.setChanged();
 			return activateBlock;
 		})
 			.orElse(false);
@@ -133,7 +133,7 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 		shouldBePowering |= RedstoneContactBlock.hasValidContact(pLevel, pPos, pState.getValue(FACING));
 
 		if (wasPowering || shouldBePowering)
-			pLevel.setBlock(pPos, pState.setValue(POWERING, shouldBePowering), 2);
+			pLevel.setBlock(pPos, pState.setValue(POWERING, shouldBePowering), 2 | 16);
 
 		pLevel.updateNeighborsAt(pPos, this);
 	}
@@ -182,21 +182,21 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	public Class<ElevatorContactTileEntity> getTileEntityClass() {
-		return ElevatorContactTileEntity.class;
+	public Class<ElevatorContactBlockEntity> getBlockEntityClass() {
+		return ElevatorContactBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends ElevatorContactTileEntity> getTileEntityType() {
-		return AllTileEntities.ELEVATOR_CONTACT.get();
+	public BlockEntityType<? extends ElevatorContactBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ELEVATOR_CONTACT.get();
 	}
 
 	@Override
 	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		return ItemRequirement.of(AllBlocks.REDSTONE_CONTACT.getDefaultState(), te);
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
+		return ItemRequirement.of(AllBlocks.REDSTONE_CONTACT.getDefaultState(), be);
 	}
 
 	@Override
@@ -205,14 +205,14 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
+			() -> () -> withBlockEntityDo(worldIn, pos, be -> this.displayScreen(be, player)));
 		return InteractionResult.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(ElevatorContactTileEntity te, Player player) {
+	protected void displayScreen(ElevatorContactBlockEntity be, Player player) {
 		if (player instanceof LocalPlayer)
-			ScreenOpener.open(new ElevatorContactScreen(te.getBlockPos(), te.shortName, te.longName));
+			ScreenOpener.open(new ElevatorContactScreen(be.getBlockPos(), be.shortName, be.longName));
 	}
 
 	public static int getLight(BlockState state) {

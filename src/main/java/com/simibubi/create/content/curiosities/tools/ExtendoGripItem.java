@@ -225,7 +225,7 @@ public class ExtendoGripItem extends Item {
 	}
 
 	private static int maxUses() {
-		return AllConfigs.SERVER.curiosities.maxExtendoGripActions.get();
+		return AllConfigs.server().curiosities.maxExtendoGripActions.get();
 	}
 
 	@SubscribeEvent
@@ -274,7 +274,7 @@ public class ExtendoGripItem extends Item {
 			return;
 		Player player = (Player) entity;
 		if (isHoldingExtendoGrip(player))
-			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target));
+			AllPackets.getChannel().sendToServer(new ExtendoGripInteractionPacket(target));
 	}
 
 	@SubscribeEvent
@@ -286,7 +286,7 @@ public class ExtendoGripItem extends Item {
 			return;
 		Player player = (Player) entity;
 		if (isHoldingExtendoGrip(player))
-			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
+			AllPackets.getChannel().sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
 	}
 
 	@SubscribeEvent
@@ -298,7 +298,7 @@ public class ExtendoGripItem extends Item {
 			return;
 		Player player = (Player) entity;
 		if (isHoldingExtendoGrip(player))
-			AllPackets.channel
+			AllPackets.getChannel()
 				.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand(), event.getLocalPos()));
 	}
 

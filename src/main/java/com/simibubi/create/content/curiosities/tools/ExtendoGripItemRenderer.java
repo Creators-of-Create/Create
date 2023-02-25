@@ -1,26 +1,34 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.Create;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<ExtendoGripModel> {
+public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 
-	private static final Vec3 rotationOffset = new Vec3(0, 1 / 2f, 1 / 2f);
-	private static final Vec3 cogRotationOffset = new Vec3(0, 1 / 16f, 0);
+	protected static final PartialModel COG = new PartialModel(Create.asResource("item/extendo_grip/cog"));
+	protected static final PartialModel THIN_SHORT = new PartialModel(Create.asResource("item/extendo_grip/thin_short"));
+	protected static final PartialModel WIDE_SHORT = new PartialModel(Create.asResource("item/extendo_grip/wide_short"));
+	protected static final PartialModel THIN_LONG = new PartialModel(Create.asResource("item/extendo_grip/thin_long"));
+	protected static final PartialModel WIDE_LONG = new PartialModel(Create.asResource("item/extendo_grip/wide_long"));
+
+	private static final Vec3 ROTATION_OFFSET = new Vec3(0, 1 / 2f, 1 / 2f);
+	private static final Vec3 COG_ROTATION_OFFSET = new Vec3(0, 1 / 16f, 0);
 
 	@Override
-	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, TransformType transformType,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, TransformType transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		TransformStack stacker = TransformStack.cast(ms);
 		float animation = 0.25f;
@@ -45,43 +53,43 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		ms.scale(1, 1, 1 + animation);
 		ms.pushPose();
 		stacker.rotateX(-halfAngle)
-			.translate(rotationOffset);
-		renderer.renderSolid(model.getPartial("thin_short"), light);
-		stacker.translateBack(rotationOffset);
+			.translate(ROTATION_OFFSET);
+		renderer.renderSolid(THIN_SHORT.get(), light);
+		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.translate(0, 5.5f / 16f, 0);
 		stacker.rotateX(-oppositeAngle)
-			.translate(rotationOffset);
-		renderer.renderSolid(model.getPartial("wide_long"), light);
-		stacker.translateBack(rotationOffset);
+			.translate(ROTATION_OFFSET);
+		renderer.renderSolid(WIDE_LONG.get(), light);
+		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.translate(0, 11 / 16f, 0);
 		stacker.rotateX(oppositeAngle)
-			.translate(rotationOffset);
+			.translate(ROTATION_OFFSET);
 		ms.translate(0, 0.5f / 16f, 0);
-		renderer.renderSolid(model.getPartial("thin_short"), light);
-		stacker.translateBack(rotationOffset);
+		renderer.renderSolid(THIN_SHORT.get(), light);
+		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.popPose();
 		ms.pushPose();
 
 		stacker.rotateX(-180 + halfAngle)
-			.translate(rotationOffset);
-		renderer.renderSolid(model.getPartial("wide_short"), light);
-		stacker.translateBack(rotationOffset);
+			.translate(ROTATION_OFFSET);
+		renderer.renderSolid(WIDE_SHORT.get(), light);
+		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.translate(0, 5.5f / 16f, 0);
 		stacker.rotateX(oppositeAngle)
-			.translate(rotationOffset);
-		renderer.renderSolid(model.getPartial("thin_long"), light);
-		stacker.translateBack(rotationOffset);
+			.translate(ROTATION_OFFSET);
+		renderer.renderSolid(THIN_LONG.get(), light);
+		stacker.translateBack(ROTATION_OFFSET);
 
 		ms.translate(0, 11 / 16f, 0);
 		stacker.rotateX(-oppositeAngle)
-			.translate(rotationOffset);
+			.translate(ROTATION_OFFSET);
 		ms.translate(0, 0.5f / 16f, 0);
-		renderer.renderSolid(model.getPartial("wide_short"), light);
-		stacker.translateBack(rotationOffset);
+		renderer.renderSolid(WIDE_SHORT.get(), light);
+		stacker.translateBack(ROTATION_OFFSET);
 
 		// hand
 		ms.translate(0, 5.5f / 16f, 0);
@@ -90,7 +98,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		ms.translate(0, 0, -4 / 16f);
 		ms.scale(1, 1, 1 / (1 + animation));
 		renderer.renderSolid((leftHand || rightHand) ? ExtendoGripRenderHandler.pose.get()
-			: AllBlockPartials.DEPLOYER_HAND_POINTING.get(), light);
+			: AllPartialModels.DEPLOYER_HAND_POINTING.get(), light);
 		ms.popPose();
 
 		ms.popPose();
@@ -101,16 +109,11 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		if (leftHand || rightHand)
 			angle += 360 * animation;
 		angle %= 360;
-		stacker.translate(cogRotationOffset)
+		stacker.translate(COG_ROTATION_OFFSET)
 			.rotateZ(angle)
-			.translateBack(cogRotationOffset);
-		renderer.renderSolid(model.getPartial("cog"), light);
+			.translateBack(COG_ROTATION_OFFSET);
+		renderer.renderSolid(COG.get(), light);
 		ms.popPose();
-	}
-
-	@Override
-	public ExtendoGripModel createModel(BakedModel originalModel) {
-		return new ExtendoGripModel(originalModel);
 	}
 
 }

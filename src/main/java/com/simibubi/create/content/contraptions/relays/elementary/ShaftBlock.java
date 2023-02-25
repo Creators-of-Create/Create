@@ -5,9 +5,8 @@ import java.util.function.Predicate;
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -31,7 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ShaftBlock extends AbstractSimpleShaftBlock {
+public class ShaftBlock extends AbstractSimpleShaftBlock implements EncasableBlock {
 
 	public static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -77,23 +76,12 @@ public class ShaftBlock extends AbstractSimpleShaftBlock {
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		for (EncasedShaftBlock encasedShaft : new EncasedShaftBlock[] { AllBlocks.ANDESITE_ENCASED_SHAFT.get(),
-			AllBlocks.BRASS_ENCASED_SHAFT.get() }) {
-
-			if (!encasedShaft.getCasing()
-				.isIn(heldItem))
-				continue;
-
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
-
-			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.defaultBlockState()
-				.setValue(AXIS, state.getValue(AXIS)));
-			return InteractionResult.SUCCESS;
-		}
+		InteractionResult result = tryEncase(state, world, pos, heldItem, player, hand, ray);
+		if (result.consumesAction())
+			return result;
 
 		if (AllBlocks.METAL_GIRDER.isIn(heldItem) && state.getValue(AXIS) != Axis.Y) {
-			KineticTileEntity.switchToBlockState(world, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
+			KineticBlockEntity.switchToBlockState(world, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
 				.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
 				.setValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS, state.getValue(AXIS) == Axis.Z ? Axis.Z : Axis.X));
 			if (!world.isClientSide && !player.isCreative()) {

@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.config;
 
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
+import com.simibubi.create.foundation.utility.ContraptionData;
 
 public class CKinetics extends ConfigBase {
 
@@ -8,8 +9,6 @@ public class CKinetics extends ConfigBase {
 	public final ConfigInt maxBeltLength = i(20, 5, "maxBeltLength", Comments.maxBeltLength);
 	public final ConfigInt crushingDamage = i(4, 0, "crushingDamage", Comments.crushingDamage);
 	public final ConfigInt maxMotorSpeed = i(256, 64, "maxMotorSpeed", Comments.rpm, Comments.maxMotorSpeed, ConfigAnnotations.RequiresRestart.BOTH.asComment());
-	public final ConfigInt waterWheelBaseSpeed = i(4, 1, "waterWheelBaseSpeed", Comments.rpm, Comments.waterWheelBaseSpeed);
-	public final ConfigInt waterWheelFlowSpeed = i(4, 1, "waterWheelFlowSpeed", Comments.rpm, Comments.waterWheelFlowSpeed);
 	public final ConfigInt maxRotationSpeed = i(256, 64, "maxRotationSpeed", Comments.rpm, Comments.maxRotationSpeed);
 	public final ConfigEnum<DeployerAggroSetting> ignoreDeployerAttacks =
 		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
@@ -30,10 +29,13 @@ public class CKinetics extends ConfigBase {
 
 	public final ConfigGroup contraptions = group(1, "contraptions", "Moving Contraptions");
 	public final ConfigInt maxBlocksMoved = i(2048, 1, "maxBlocksMoved", Comments.maxBlocksMoved);
+	public final ConfigInt maxDataSize =
+		i(ContraptionData.DEFAULT_MAX, 0, "maxDataSize", Comments.bytes, Comments.maxDataDisable, Comments.maxDataSize, Comments.maxDataSize2);
 	public final ConfigInt maxChassisRange = i(16, 1, "maxChassisRange", Comments.maxChassisRange);
 	public final ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public final ConfigInt maxRopeLength = i(256, 1, "maxRopeLength", Comments.maxRopeLength);
 	public final ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
+	public final ConfigBool survivalContraptionPickup = b(true, "survivalContraptionPickup", Comments.survivalContraptionPickup);
 	public final ConfigEnum<ContraptionMovementSetting> spawnerMovement =
 		e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
 	public final ConfigEnum<ContraptionMovementSetting> amethystMovement =
@@ -64,7 +66,7 @@ public class CKinetics extends ConfigBase {
 		static String maxBeltLength = "Maximum length in blocks of mechanical belts.";
 		static String crushingDamage = "Damage dealt by active Crushing Wheels.";
 		static String maxMotorSpeed = "Maximum allowed speed of a configurable motor.";
-		static String maxRotationSpeed = "Maximum allowed rotation speed for any Kinetic Tile.";
+		static String maxRotationSpeed = "Maximum allowed rotation speed for any Kinetic Block.";
 		static String fanPushDistance = "Maximum distance in blocks Fans can push entities.";
 		static String fanPullDistance = "Maximum distance in blocks from where Fans can pull entities.";
 		static String fanBlockCheckRate = "Game ticks between Fans checking for anything blocking their air flow.";
@@ -74,6 +76,9 @@ public class CKinetics extends ConfigBase {
 			"multiplier used for calculating exhaustion from speed when a crank is turned.";
 		static String maxBlocksMoved =
 			"Maximum amount of blocks in a structure movable by Pistons, Bearings or other means.";
+		static String maxDataSize = "Maximum amount of data a contraption can have before it can't be synced with players.";
+		static String maxDataSize2 = "Un-synced contraptions will not be visible and will not have collision.";
+		static String maxDataDisable = "[0 to disable this limit]";
 		static String maxChassisRange = "Maximum value of a chassis attachment range.";
 		static String maxPistonPoles = "Maximum amount of extension poles behind a Mechanical Piston.";
 		static String maxRopeLength = "Max length of rope available off a Rope Pulley.";
@@ -85,6 +90,7 @@ public class CKinetics extends ConfigBase {
 		static String stats = "Configure speed/capacity levels for requirements and indicators.";
 		static String rpm = "[in Revolutions per Minute]";
 		static String su = "[in Stress Units]";
+		static String bytes = "[in Bytes]";
 		static String mediumSpeed = "Minimum speed of rotation to be considered 'medium'";
 		static String fastSpeed = "Minimum speed of rotation to be considered 'fast'";
 		static String mediumStressImpact = "Minimum stress impact to be considered 'medium'";
@@ -93,9 +99,6 @@ public class CKinetics extends ConfigBase {
 		static String highCapacity = "Minimum added Capacity by sources to be considered 'high'";
 		static String stress = "Fine tune the kinetic stats of individual components";
 		static String ignoreDeployerAttacks = "Select what mobs should ignore Deployers when attacked by them.";
-		static String waterWheelBaseSpeed = "Added rotation speed by a water wheel when at least one flow is present.";
-		static String waterWheelFlowSpeed =
-			"Rotation speed gained by a water wheel for each side with running fluids. (halved if not against blades)";
 		static String disableStress = "Disable the Stress mechanic altogether.";
 		static String kineticValidationFrequency =
 			"Game ticks between Kinetic Blocks checking whether their source is still valid.";
@@ -105,6 +108,7 @@ public class CKinetics extends ConfigBase {
 		static String maxEjectorDistance = "Max Distance in blocks a Weighted Ejector can throw";
 		static String ejectorScanInterval =
 			"Time in ticks until the next item launched by an ejector scans blocks for potential collisions";
+		static String survivalContraptionPickup = "Whether minecart contraptions can be picked up in survival mode.";
 		static String spawnerMovement = "Configure how Spawner blocks can be moved by contraptions.";
 		static String amethystMovement = "Configure how Budding Amethyst can be moved by contraptions.";
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";

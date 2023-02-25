@@ -117,9 +117,7 @@ public class CarriageSyncData {
 
 		TrackGraph graph = carriage.train.graph;
 		if (graph == null) {
-			fallbackLocations = Pair.of(dce.positionAnchor, dce.rotationAnchors);
-			dce.pointsInitialised = true;
-			setDirty(true);
+			updateFallbackLocations(dce);
 			return;
 		}
 
@@ -129,17 +127,29 @@ public class CarriageSyncData {
 		for (boolean first : Iterate.trueAndFalse) {
 			if (!first && !carriage.isOnTwoBogeys())
 				break;
+			
 			CarriageBogey bogey = carriage.bogeys.get(first);
 			for (boolean firstPoint : Iterate.trueAndFalse) {
 				TravellingPoint point = bogey.points.get(firstPoint);
 				int index = (first ? 0 : 2) + (firstPoint ? 0 : 1);
-				Pair<Couple<Integer>, Float> pair =
-					Pair.of(Couple.create(point.node1.getNetId(), point.node2.getNetId()), (float) point.position);
-				wheelLocations.set(index, pair);
+				Couple<TrackNode> nodes = Couple.create(point.node1, point.node2);
+
+				if (nodes.either(Objects::isNull)) {
+					updateFallbackLocations(dce);
+					return;
+				}
+
+				wheelLocations.set(index, Pair.of(nodes.map(TrackNode::getNetId), (float) point.position));
 			}
 		}
 
 		distanceToDestination = (float) carriage.train.navigation.distanceToDestination;
+		setDirty(true);
+	}
+
+	private void updateFallbackLocations(DimensionalCarriageEntity dce) {
+		fallbackLocations = Pair.of(dce.positionAnchor, dce.rotationAnchors);
+		dce.pointsInitialised = true;
 		setDirty(true);
 	}
 

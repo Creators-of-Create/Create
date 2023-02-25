@@ -2,17 +2,17 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlockEntity;
 import com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock;
 import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
-import com.simibubi.create.content.logistics.block.diodes.PulseExtenderTileEntity;
-import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterTileEntity;
+import com.simibubi.create.content.logistics.block.diodes.PulseExtenderBlockEntity;
+import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterBlockEntity;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
-import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlockEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlockEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
-import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -69,7 +69,7 @@ public class RedstoneScenes {
 		scene.world.toggleRedstonePower(redstone);
 		scene.world.modifyBlock(stickerPos, s -> s.setValue(StickerBlock.EXTENDED, true), false);
 		scene.effects.indicateRedstone(buttonPos);
-		scene.world.modifyTileNBT(stickerSelect, StickerTileEntity.class, nbt -> {
+		scene.world.modifyBlockEntityNBT(stickerSelect, StickerBlockEntity.class, nbt -> {
 		});
 		scene.idle(20);
 
@@ -95,7 +95,7 @@ public class RedstoneScenes {
 		scene.world.toggleRedstonePower(redstone);
 		scene.world.modifyBlock(stickerPos, s -> s.setValue(StickerBlock.EXTENDED, false), false);
 		scene.effects.indicateRedstone(buttonPos);
-		scene.world.modifyTileNBT(stickerSelect, StickerTileEntity.class, nbt -> {
+		scene.world.modifyBlockEntityNBT(stickerSelect, StickerBlockEntity.class, nbt -> {
 		});
 		scene.idle(20);
 
@@ -199,7 +199,7 @@ public class RedstoneScenes {
 		BlockPos circuitPos = util.grid.at(2, 1, 2);
 		BlockPos leverPos = util.grid.at(4, 1, 2);
 
-		scene.world.modifyTileNBT(util.select.position(circuitPos), PulseExtenderTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(circuitPos), PulseExtenderBlockEntity.class,
 			nbt -> nbt.putInt("ScrollValue", 30));
 		scene.world.showSection(util.select.layersFrom(1)
 			.substract(util.select.position(circuitPos)), Direction.UP);
@@ -251,7 +251,7 @@ public class RedstoneScenes {
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(circuitTop);
-		scene.world.modifyTileNBT(util.select.position(circuitPos), PulseExtenderTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(circuitPos), PulseExtenderBlockEntity.class,
 			nbt -> nbt.putInt("ScrollValue", 120));
 		scene.idle(70);
 
@@ -284,7 +284,7 @@ public class RedstoneScenes {
 		BlockPos circuitPos = util.grid.at(2, 1, 2);
 		BlockPos leverPos = util.grid.at(4, 1, 2);
 
-		scene.world.modifyTileNBT(util.select.position(circuitPos), PulseRepeaterTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(circuitPos), PulseRepeaterBlockEntity.class,
 			nbt -> nbt.putInt("ScrollValue", 30));
 		scene.world.showSection(util.select.layersFrom(1)
 			.substract(util.select.position(circuitPos)), Direction.UP);
@@ -324,7 +324,7 @@ public class RedstoneScenes {
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(circuitTop);
-		scene.world.modifyTileNBT(util.select.position(circuitPos), PulseRepeaterTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(circuitPos), PulseRepeaterBlockEntity.class,
 			nbt -> nbt.putInt("ScrollValue", 120));
 		scene.idle(70);
 
@@ -536,7 +536,7 @@ public class RedstoneScenes {
 		for (int i = 0; i < 7; i++) {
 			scene.idle(2);
 			final int state = i + 1;
-			scene.world.modifyTileNBT(leverSelection, AnalogLeverTileEntity.class, nbt -> nbt.putInt("State", state));
+			scene.world.modifyBlockEntityNBT(leverSelection, AnalogLeverBlockEntity.class, nbt -> nbt.putInt("State", state));
 			scene.world.modifyBlock(wireLocations[i], s -> s.setValue(power, 7 - state), false);
 			scene.effects.indicateRedstone(wireLocations[i]);
 		}
@@ -556,7 +556,7 @@ public class RedstoneScenes {
 			scene.idle(2);
 			final int state = i - 1;
 			if (i > 3) {
-				scene.world.modifyTileNBT(leverSelection, AnalogLeverTileEntity.class,
+				scene.world.modifyBlockEntityNBT(leverSelection, AnalogLeverBlockEntity.class,
 					nbt -> nbt.putInt("State", state));
 				scene.effects.indicateRedstone(wireLocations[i]);
 			}
@@ -578,7 +578,7 @@ public class RedstoneScenes {
 			scene.idle(2);
 			final int state = i + 1;
 			if (i >= 4) {
-				scene.world.modifyTileNBT(leverSelection, AnalogLeverTileEntity.class,
+				scene.world.modifyBlockEntityNBT(leverSelection, AnalogLeverBlockEntity.class,
 					nbt -> nbt.putInt("State", state));
 				scene.effects.indicateRedstone(wireLocations[i]);
 			}
@@ -603,10 +603,10 @@ public class RedstoneScenes {
 		Selection tubes = util.select.fromTo(3, 1, 3, 1, 1, 3);
 
 		scene.effects.indicateRedstone(util.grid.at(2, 1, 1));
-		scene.world.modifyTileNBT(util.select.position(2, 1, 1), AnalogLeverTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(2, 1, 1), AnalogLeverBlockEntity.class,
 			nbt -> nbt.putInt("State", 11));
 		scene.world.modifyBlock(util.grid.at(2, 1, 2), s -> s.setValue(RedStoneWireBlock.POWER, 11), false);
-		scene.world.modifyTileNBT(tubes, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 11));
+		scene.world.modifyBlockEntityNBT(tubes, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 11));
 		scene.idle(20);
 
 		Vec3 centerTube = util.vector.centerOf(2, 1, 3);
@@ -622,7 +622,7 @@ public class RedstoneScenes {
 		scene.idle(5);
 		scene.world.hideSection(util.select.fromTo(2, 1, 1, 2, 1, 2), Direction.NORTH);
 		scene.idle(10);
-		scene.world.modifyTileNBT(tubes, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
+		scene.world.modifyBlockEntityNBT(tubes, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
 		scene.world.showSection(tubes, Direction.DOWN);
 		scene.idle(20);
 
@@ -633,7 +633,7 @@ public class RedstoneScenes {
 		Component component = Components.literal("CREATE");
 		for (int i = 0; i < 3; i++) {
 			final int index = i;
-			scene.world.modifyTileNBT(util.select.position(3 - i, 1, 3), NixieTubeTileEntity.class, nbt -> {
+			scene.world.modifyBlockEntityNBT(util.select.position(3 - i, 1, 3), NixieTubeBlockEntity.class, nbt -> {
 				nbt.putString("RawCustomText", component.getString());
 				nbt.putString("CustomText", Component.Serializer.toJson(component));
 				nbt.putInt("CustomTextIndex", index);
@@ -780,30 +780,30 @@ public class RedstoneScenes {
 		scene.overlay.showControls(new InputWindowElement(backSlot, Pointing.DOWN).withItem(iron), 40);
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(frontSlot, Pointing.UP).withItem(sapling), 40);
-		scene.world.modifyTileNBT(link1Select, RedstoneLinkTileEntity.class,
+		scene.world.modifyBlockEntityNBT(link1Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundTag())));
 		scene.idle(7);
-		scene.world.modifyTileNBT(link1Select, RedstoneLinkTileEntity.class,
+		scene.world.modifyBlockEntityNBT(link1Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundTag())));
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(top2Slot, Pointing.DOWN).withItem(iron), 40);
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(bottom2Slot, Pointing.UP).withItem(sapling), 40);
-		scene.world.modifyTileNBT(link2Select, RedstoneLinkTileEntity.class,
+		scene.world.modifyBlockEntityNBT(link2Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundTag())));
 		scene.idle(7);
-		scene.world.modifyTileNBT(link2Select, RedstoneLinkTileEntity.class,
+		scene.world.modifyBlockEntityNBT(link2Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundTag())));
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(top3Slot, Pointing.DOWN).withItem(gold), 40);
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(bottom3Slot, Pointing.UP).withItem(sapling), 40);
-		scene.world.modifyTileNBT(link3Select, RedstoneLinkTileEntity.class,
+		scene.world.modifyBlockEntityNBT(link3Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyLast", gold.save(new CompoundTag())));
 		scene.idle(7);
-		scene.world.modifyTileNBT(link3Select, RedstoneLinkTileEntity.class,
+		scene.world.modifyBlockEntityNBT(link3Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundTag())));
 		scene.idle(20);
 

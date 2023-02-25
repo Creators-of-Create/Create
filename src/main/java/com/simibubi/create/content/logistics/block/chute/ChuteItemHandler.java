@@ -5,10 +5,10 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ChuteItemHandler implements IItemHandler {
 
-	private ChuteTileEntity te;
+	private ChuteBlockEntity blockEntity;
 
-	public ChuteItemHandler(ChuteTileEntity te) {
-		this.te = te;
+	public ChuteItemHandler(ChuteBlockEntity be) {
+		this.blockEntity = be;
 	}
 	
 	@Override
@@ -18,24 +18,24 @@ public class ChuteItemHandler implements IItemHandler {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return te.item;
+		return blockEntity.item;
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (!te.canAcceptItem(stack))
+		if (!blockEntity.canAcceptItem(stack))
 			return stack;
 		if (!simulate) 
-			te.setItem(stack);
+			blockEntity.setItem(stack);
 		return ItemStack.EMPTY;
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		ItemStack remainder = te.item.copy();
+		ItemStack remainder = blockEntity.item.copy();
 		ItemStack split = remainder.split(amount);
 		if (!simulate) 
-			te.setItem(remainder);
+			blockEntity.setItem(remainder);
 		return split;
 	}
 

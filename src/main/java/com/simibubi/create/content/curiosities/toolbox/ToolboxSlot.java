@@ -5,11 +5,11 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ToolboxSlot extends SlotItemHandler {
 
-	private ToolboxContainer toolboxMenu;
+	private ToolboxMenu toolboxMenu;
 
-	public ToolboxSlot(ToolboxContainer container, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+	public ToolboxSlot(ToolboxMenu menu, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		super(itemHandler, index, xPosition, yPosition);
-		this.toolboxMenu = container;
+		this.toolboxMenu = menu;
 	}
 	
 	@Override

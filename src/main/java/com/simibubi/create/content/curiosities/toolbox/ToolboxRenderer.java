@@ -2,10 +2,10 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,25 +14,25 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ToolboxRenderer extends SmartTileEntityRenderer<ToolboxTileEntity> {
+public class ToolboxRenderer extends SmartBlockEntityRenderer<ToolboxBlockEntity> {
 
 	public ToolboxRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(ToolboxTileEntity tileEntityIn, float partialTicks, PoseStack ms,
+	protected void renderSafe(ToolboxBlockEntity blockEntity, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
 
-		BlockState blockState = tileEntityIn.getBlockState();
+		BlockState blockState = blockEntity.getBlockState();
 		Direction facing = blockState.getValue(ToolboxBlock.FACING)
 			.getOpposite();
 		SuperByteBuffer lid =
-			CachedBufferer.partial(AllBlockPartials.TOOLBOX_LIDS.get(tileEntityIn.getColor()), blockState);
-		SuperByteBuffer drawer = CachedBufferer.partial(AllBlockPartials.TOOLBOX_DRAWER, blockState);
+			CachedBufferer.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor()), blockState);
+		SuperByteBuffer drawer = CachedBufferer.partial(AllPartialModels.TOOLBOX_DRAWER, blockState);
 
-		float lidAngle = tileEntityIn.lid.getValue(partialTicks);
-		float drawerOffset = tileEntityIn.drawers.getValue(partialTicks);
+		float lidAngle = blockEntity.lid.getValue(partialTicks);
+		float drawerOffset = blockEntity.drawers.getValue(partialTicks);
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.cutoutMipped());
 		lid.centre()

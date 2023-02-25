@@ -32,10 +32,10 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 	private Vector<Vector<ScrollInput>> inputs;
 
-	public SequencedGearshiftScreen(SequencedGearshiftTileEntity te) {
+	public SequencedGearshiftScreen(SequencedGearshiftBlockEntity be) {
 		super(Lang.translateDirect("gui.sequenced_gearshift.title"));
-		this.instructions = te.instructions;
-		this.pos = te.getBlockPos();
+		this.instructions = be.instructions;
+		this.pos = be.getBlockPos();
 		compareTag = Instruction.serializeAll(instructions);
 	}
 
@@ -172,7 +172,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		ListTag serialized = Instruction.serializeAll(instructions);
 		if (serialized.equals(compareTag))
 			return;
-		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));
+		AllPackets.getChannel().sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));
 	}
 
 	@Override

@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -36,7 +36,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTileEntity>, SimpleWaterloggedBlock {
+public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBlockEntity>, SimpleWaterloggedBlock {
 	public static DamageSource damageSourceDrill = new DamageSource("create.mechanical_drill").bypassArmor();
 
 	public DrillBlock(Properties properties) {
@@ -51,10 +51,10 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 		if (!new AABB(pos).deflate(.1f)
 			.intersects(entityIn.getBoundingBox()))
 			return;
-		withTileEntityDo(worldIn, pos, te -> {
-			if (te.getSpeed() == 0)
+		withBlockEntityDo(worldIn, pos, be -> {
+			if (be.getSpeed() == 0)
 				return;
-			entityIn.hurt(damageSourceDrill, (float) getDamage(te.getSpeed()));
+			entityIn.hurt(damageSourceDrill, (float) getDamage(be.getSpeed()));
 		});
 	}
 
@@ -66,7 +66,7 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		withTileEntityDo(worldIn, pos, DrillTileEntity::destroyNextTick);
+		withBlockEntityDo(worldIn, pos, DrillBlockEntity::destroyNextTick);
 	}
 
 	@Override
@@ -125,12 +125,12 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	}
 
 	@Override
-	public Class<DrillTileEntity> getTileEntityClass() {
-		return DrillTileEntity.class;
+	public Class<DrillBlockEntity> getBlockEntityClass() {
+		return DrillBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends DrillTileEntity> getTileEntityType() {
-		return AllTileEntities.DRILL.get();
+	public BlockEntityType<? extends DrillBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.DRILL.get();
 	}
 }

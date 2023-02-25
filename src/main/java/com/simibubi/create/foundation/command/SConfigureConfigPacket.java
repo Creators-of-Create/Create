@@ -3,8 +3,9 @@ package com.simibubi.create.foundation.command;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
 
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.goggles.GoggleConfigScreen;
 import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
@@ -35,6 +36,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.network.NetworkEvent;
 
 public class SConfigureConfigPacket extends SimplePacketBase {
+
+	private static final Logger LOGGER = LogUtils.getLogger();
 
 	private final String option;
 	private final String value;
@@ -68,8 +71,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 					Actions.valueOf(option)
 						.performAction(value);
 				} catch (IllegalArgumentException e) {
-					LogManager.getLogger()
-						.warn("Received ConfigureConfigPacket with invalid Option: " + option);
+					LOGGER.warn("Received ConfigureConfigPacket with invalid Option: " + option);
 				}
 			}));
 
@@ -164,21 +166,21 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 			if (value.equals("info")) {
 				Component text = Components.literal("Rainbow Debug Utility is currently: ")
-					.append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
+					.append(boolToText(AllConfigs.client().rainbowDebug.get()));
 				player.displayClientMessage(text, false);
 				return;
 			}
 
-			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
-			Component text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
+			AllConfigs.client().rainbowDebug.set(Boolean.parseBoolean(value));
+			Component text = boolToText(AllConfigs.client().rainbowDebug.get())
 				.append(Components.literal(" Rainbow Debug Utility").withStyle(ChatFormatting.WHITE));
 			player.displayClientMessage(text, false);
 		}
 
 		@OnlyIn(Dist.CLIENT)
 		private static void overlayReset(String value) {
-			AllConfigs.CLIENT.overlayOffsetX.set(0);
-			AllConfigs.CLIENT.overlayOffsetY.set(0);
+			AllConfigs.client().overlayOffsetX.set(0);
+			AllConfigs.client().overlayOffsetY.set(0);
 		}
 
 		@OnlyIn(Dist.CLIENT)
@@ -211,7 +213,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 		@OnlyIn(Dist.CLIENT)
 		private static void fabulousWarning(String value) {
-			AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
+			AllConfigs.client().ignoreFabulousWarning.set(true);
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
 				player.displayClientMessage(

@@ -16,7 +16,7 @@ public class LinkedControllerStopLecternPacket extends LinkedControllerPacketBas
 	}
 
 	@Override
-	protected void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern) {
+	protected void handleLectern(ServerPlayer player, LecternControllerBlockEntity lectern) {
 		lectern.tryStopUsing(player);
 	}
 

@@ -20,12 +20,12 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 		double x = pos.getX() + facing.x * .7 + .5;
 		double y = pos.getY() + facing.y * .7 + .5;
 		double z = pos.getZ() + facing.z * .7 + .5;
-		Projectile ProjectileEntity = this.getProjectileEntity(context.world, x, y, z, itemStack.copy());
-		if (ProjectileEntity == null)
+		Projectile projectile = this.getProjectileEntity(context.world, x, y, z, itemStack.copy());
+		if (projectile == null)
 			return itemStack;
 		Vec3 effectiveMovementVec = facing.scale(getProjectileVelocity()).add(context.motion);
-		ProjectileEntity.shoot(effectiveMovementVec.x, effectiveMovementVec.y, effectiveMovementVec.z, (float) effectiveMovementVec.length(), this.getProjectileInaccuracy());
-		context.world.addFreshEntity(ProjectileEntity);
+		projectile.shoot(effectiveMovementVec.x, effectiveMovementVec.y, effectiveMovementVec.z, (float) effectiveMovementVec.length(), this.getProjectileInaccuracy());
+		context.world.addFreshEntity(projectile);
 		itemStack.shrink(1);
 		return itemStack;
 	}

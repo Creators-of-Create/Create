@@ -8,10 +8,10 @@ import net.minecraftforge.items.IItemHandler;
 public class DepotItemHandler implements IItemHandler {
 
 	private static final int MAIN_SLOT = 0;
-	private DepotBehaviour te;
+	private DepotBehaviour behaviour;
 
-	public DepotItemHandler(DepotBehaviour te) {
-		this.te = te;
+	public DepotItemHandler(DepotBehaviour behaviour) {
+		this.behaviour = behaviour;
 	}
 
 	@Override
@@ -21,52 +21,52 @@ public class DepotItemHandler implements IItemHandler {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return slot == MAIN_SLOT ? te.getHeldItemStack() : te.processingOutputBuffer.getStackInSlot(slot - 1);
+		return slot == MAIN_SLOT ? behaviour.getHeldItemStack() : behaviour.processingOutputBuffer.getStackInSlot(slot - 1);
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		if (slot != MAIN_SLOT)
 			return stack;
-		if (!te.getHeldItemStack()
-			.isEmpty() && !te.canMergeItems())
+		if (!behaviour.getHeldItemStack()
+			.isEmpty() && !behaviour.canMergeItems())
 			return stack;
-		if (!te.isOutputEmpty() && !te.canMergeItems())
+		if (!behaviour.isOutputEmpty() && !behaviour.canMergeItems())
 			return stack;
 
-		ItemStack remainder = te.insert(new TransportedItemStack(stack), simulate);
+		ItemStack remainder = behaviour.insert(new TransportedItemStack(stack), simulate);
 		if (!simulate && remainder != stack)
-			te.tileEntity.notifyUpdate();
+			behaviour.blockEntity.notifyUpdate();
 		return remainder;
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		if (slot != MAIN_SLOT)
-			return te.processingOutputBuffer.extractItem(slot - 1, amount, simulate);
+			return behaviour.processingOutputBuffer.extractItem(slot - 1, amount, simulate);
 
-		TransportedItemStack held = te.heldItem;
+		TransportedItemStack held = behaviour.heldItem;
 		if (held == null)
 			return ItemStack.EMPTY;
 		ItemStack stack = held.stack.copy();
 		ItemStack extracted = stack.split(amount);
 		if (!simulate) {
-			te.heldItem.stack = stack;
+			behaviour.heldItem.stack = stack;
 			if (stack.isEmpty())
-				te.heldItem = null;
-			te.tileEntity.notifyUpdate();
+				behaviour.heldItem = null;
+			behaviour.blockEntity.notifyUpdate();
 		}
 		return extracted;
 	}
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return slot == MAIN_SLOT ? te.maxStackSize.get() : 64;
+		return slot == MAIN_SLOT ? behaviour.maxStackSize.get() : 64;
 	}
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		return slot == MAIN_SLOT && te.isItemValid(stack);
+		return slot == MAIN_SLOT && behaviour.isItemValid(stack);
 	}
 
 }

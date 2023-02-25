@@ -13,9 +13,9 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Components;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
@@ -113,7 +113,7 @@ public class ConfigModListScreen extends ConfigScreen {
 				button.updateColorsFromState();
 				button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BaseConfigScreen.DISABLED_RENDERER));
 				labelTooltip.add(Components.literal(toHumanReadable(id)));
-				labelTooltip.addAll(TooltipHelper.cutTextComponent(Components.literal("This Mod does not have any configs registered or is not using Forge's config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
+				labelTooltip.addAll(TooltipHelper.cutStringTextComponent("This Mod does not have any configs registered or is not using Forge's config system", Palette.ALL_GRAY));
 			}
 
 			listeners.add(button);

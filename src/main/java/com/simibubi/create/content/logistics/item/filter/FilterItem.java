@@ -9,8 +9,7 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
-import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.content.logistics.item.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -75,8 +74,8 @@ public class FilterItem extends Item implements MenuProvider {
 			List<Component> makeSummary = makeSummary(stack);
 			if (makeSummary.isEmpty())
 				return;
-			ItemDescription.add(tooltip, Components.literal(" "));
-			ItemDescription.add(tooltip, makeSummary);
+			tooltip.add(Components.literal(" "));
+			tooltip.addAll(makeSummary);
 		}
 	}
 
@@ -156,9 +155,9 @@ public class FilterItem extends Item implements MenuProvider {
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		ItemStack heldItem = player.getMainHandItem();
 		if (type == FilterType.REGULAR)
-			return FilterContainer.create(id, inv, heldItem);
+			return FilterMenu.create(id, inv, heldItem);
 		if (type == FilterType.ATTRIBUTE)
-			return AttributeFilterContainer.create(id, inv, heldItem);
+			return AttributeFilterMenu.create(id, inv, heldItem);
 		return null;
 	}
 

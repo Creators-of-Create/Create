@@ -17,6 +17,8 @@
     "create:adjustable_chain_gearshift",
     "create:belt",
     "create:water_wheel",
+    "create:large_water_wheel",
+    "create:water_wheel_structure",
     "create:encased_fan",
     "create:nozzle",
     "create:turntable",

@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
@@ -87,7 +87,7 @@ public class PlaneMirror extends SymmetryMirror {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel getModel() {
-		return AllBlockPartials.SYMMETRY_PLANE;
+		return AllPartialModels.SYMMETRY_PLANE;
 	}
 
 	@Override

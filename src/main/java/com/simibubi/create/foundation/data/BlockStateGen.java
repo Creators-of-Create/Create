@@ -30,6 +30,7 @@ import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import com.tterrag.registrate.util.nullness.NonnullType;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -520,6 +521,13 @@ public class BlockStateGen {
 			.condition(propertyMap.get(rightD), right)
 			.condition(propertyMap.get(downD), down)
 			.end();
+	}
+
+	public static Function<BlockState, ConfiguredModel[]> mapToAir(@NonnullType RegistrateBlockstateProvider p) {
+		return state -> ConfiguredModel.builder()
+			.modelFile(p.models()
+				.getExistingFile(p.mcLoc("block/air")))
+			.build();
 	}
 
 }

@@ -24,10 +24,8 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -68,7 +66,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	 * (Ctrl-o) in Eclipse
 	 */
 
-	private Marker MATERIALS = enterSection(AllSections.MATERIALS);
+	private Marker MATERIALS = enterFolder("materials");
 
 	GeneratedRecipe
 
@@ -136,7 +134,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	private Marker CURIOSITIES = enterSection(AllSections.CURIOSITIES);
+	private Marker CURIOSITIES = enterFolder("curiosities");
 
 	GeneratedRecipe
 
@@ -175,7 +173,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	private Marker KINETICS = enterSection(AllSections.KINETICS);
+	private Marker KINETICS = enterFolder("kinetics");
 
 	GeneratedRecipe BASIN = create(AllBlocks.BASIN).unlockedBy(I::andesite)
 		.viaShaped(b -> b.define('A', I.andesite())
@@ -240,8 +238,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.requires(I.planks())),
 
 		WATER_WHEEL = create(AllBlocks.WATER_WHEEL).unlockedBy(I::andesite)
-			.viaShaped(b -> b.define('S', ItemTags.WOODEN_SLABS)
-				.define('C', AllBlocks.LARGE_COGWHEEL.get())
+			.viaShaped(b -> b.define('S', I.planks())
+				.define('C', I.shaft())
+				.pattern("SSS")
+				.pattern("SCS")
+				.pattern("SSS")),
+
+		LARGE_WATER_WHEEL = create(AllBlocks.LARGE_WATER_WHEEL).unlockedBy(AllBlocks.WATER_WHEEL::get)
+			.viaShaped(b -> b.define('S', I.planks())
+				.define('C', AllBlocks.WATER_WHEEL.get())
 				.pattern("SSS")
 				.pattern("SCS")
 				.pattern("SSS")),
@@ -822,7 +827,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	private Marker LOGISTICS = enterSection(AllSections.LOGISTICS);
+	private Marker LOGISTICS = enterFolder("logistics");
 
 	GeneratedRecipe
 
@@ -928,7 +933,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	private Marker SCHEMATICS = enterSection(AllSections.SCHEMATICS);
+	private Marker SCHEMATICS = enterFolder("schematics");
 
 	GeneratedRecipe
 
@@ -958,7 +963,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	private Marker PALETTES = enterSection(AllSections.PALETTES);
+	private Marker PALETTES = enterFolder("palettes");
 
 	GeneratedRecipe
 
@@ -1078,11 +1083,6 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	 */
 
 	String currentFolder = "";
-
-	Marker enterSection(AllSections section) {
-		currentFolder = Lang.asId(section.name());
-		return new Marker();
-	}
 
 	Marker enterFolder(String folder) {
 		currentFolder = folder;
