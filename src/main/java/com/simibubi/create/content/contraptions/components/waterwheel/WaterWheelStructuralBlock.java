@@ -17,6 +17,7 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -83,6 +84,16 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 		}
 
 		return IWrenchable.super.onSneakWrenched(state, context);
+	}
+
+	@Override
+	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
+		BlockHitResult pHit) {
+		if (!stillValid(pLevel, pPos, pState, false))
+			return InteractionResult.FAIL;
+		if (!(pLevel.getBlockEntity(getMaster(pLevel, pPos, pState))instanceof WaterWheelBlockEntity wwt))
+			return InteractionResult.FAIL;
+		return wwt.applyMaterialIfValid(pPlayer.getItemInHand(pHand));
 	}
 
 	@Override

@@ -3,6 +3,11 @@
 	"loader": "forge:obj",
 	"flip-v": true,
 	"model": "create:models/block/large_water_wheel/waterwheel_large.obj",
+	"textures": {
+		"log": "block/spruce_log",
+		"planks": "block/spruce_planks",
+		"log_top": "block/spruce_log_top"
+	},
 	"display": {
         "gui": {
         	"rotation": [ 30, 225, 0 ],

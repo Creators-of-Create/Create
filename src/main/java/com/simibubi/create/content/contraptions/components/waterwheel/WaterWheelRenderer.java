@@ -1,7 +1,9 @@
 package com.simibubi.create.content.contraptions.components.waterwheel;
 
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.Optional;
+import java.util.Random;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.StitchedSprite;
@@ -18,16 +20,18 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends KineticBlockEntityRenderer<T> {
 	public static final Compartment<WaterWheelModelKey> WATER_WHEEL = new Compartment<>();
@@ -91,25 +95,51 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 		boolean extension = key.state().getOptionalValue(LargeWaterWheelBlock.EXTENSION).orElse(false);
 		BakedModel template = getTemplateModel(key.large(), extension).get();
 
-		// TODO waterwheels: improve sprite selection
-		BlockState material = key.material();
-		Block block = material.getBlock();
-		ResourceLocation id = RegisteredObjects.getKeyOrThrow(block);
+		BlockState planksBlockState = key.material();
+		Block planksBlock = planksBlockState.getBlock();
+		ResourceLocation id = RegisteredObjects.getKeyOrThrow(planksBlock);
 		String path = id.getPath();
 
 		if (path.endsWith("_planks")) {
 			String namespace = id.getNamespace();
 			String wood = path.substring(0, path.length() - 7);
-			Function<ResourceLocation, TextureAtlasSprite> spriteFunc = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS);
-
+			BlockState logBlockState = getLogBlockState(namespace, wood);
+			
 			Map<TextureAtlasSprite, TextureAtlasSprite> map = new Reference2ReferenceOpenHashMap<>();
-			map.put(OAK_PLANKS_TEMPLATE.get(), spriteFunc.apply(new ResourceLocation(namespace, "block/" + wood + "_planks")));
-			map.put(OAK_LOG_TEMPLATE.get(), spriteFunc.apply(new ResourceLocation(namespace, "block/" + wood + "_log")));
-			map.put(OAK_LOG_TOP_TEMPLATE.get(), spriteFunc.apply(new ResourceLocation(namespace, "block/" + wood + "_log_top")));
+			map.put(OAK_PLANKS_TEMPLATE.get(), getSpriteOnSide(planksBlockState, Direction.UP));
+			map.put(OAK_LOG_TEMPLATE.get(), getSpriteOnSide(logBlockState, Direction.NORTH));
+			map.put(OAK_LOG_TOP_TEMPLATE.get(), getSpriteOnSide(logBlockState, Direction.UP));
 
 			return BakedModelHelper.generateModel(template, map::get);
 		}
 
 		return BakedModelHelper.generateModel(template, sprite -> null);
 	}
+
+	private static BlockState getLogBlockState(String namespace, String wood) {
+		for (String suffix : new String[] { "_log", "_stem" }) {
+			Optional<BlockState> state =
+				ForgeRegistries.BLOCKS.getHolder(new ResourceLocation(namespace, wood + suffix))
+					.map(Holder::value)
+					.map(Block::defaultBlockState);
+			if (state.isPresent())
+				return state.get();
+		}
+		return Blocks.OAK_LOG.defaultBlockState();
+	}
+
+	private static TextureAtlasSprite getSpriteOnSide(BlockState blockstate, Direction side) {
+		BakedModel blockModel = Minecraft.getInstance()
+			.getBlockRenderer()
+			.getBlockModel(blockstate);
+		if (blockModel == null)
+			return null;
+		@SuppressWarnings("deprecation")
+		List<BakedQuad> quads = blockModel.getQuads(blockstate, side, new Random());
+		if (quads.isEmpty())
+			return null;
+		return quads.get(0)
+			.getSprite();
+	}
+
 }

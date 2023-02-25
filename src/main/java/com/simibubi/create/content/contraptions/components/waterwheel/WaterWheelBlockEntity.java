@@ -26,6 +26,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -89,8 +90,11 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 			return InteractionResult.PASS;
 		if (!material.is(BlockTags.PLANKS))
 			return InteractionResult.PASS;
+		if (level.isClientSide())
+			return InteractionResult.SUCCESS;
 		this.material = material;
 		notifyUpdate();
+		level.levelEvent(2001, worldPosition, Block.getId(material));
 		return InteractionResult.SUCCESS;
 	}
 
