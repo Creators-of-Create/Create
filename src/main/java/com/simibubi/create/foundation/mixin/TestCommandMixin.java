@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.mixin;
 
-import com.simibubi.create.foundation.gametest.infrastructure.CreateTestFunction;
+import com.simibubi.create.gametest.infrastructure.CreateTestFunction;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestRegistry;

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gametest.infrastructure;
+package com.simibubi.create.gametest.infrastructure;
 
 import com.simibubi.create.Create;
 

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gametest.tests;
+package com.simibubi.create.gametest.tests;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.schematics.SchematicExport;
@@ -6,8 +6,8 @@ import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity.State;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 
-import com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper;
-import com.simibubi.create.foundation.gametest.infrastructure.GameTestGroup;
+import com.simibubi.create.gametest.infrastructure.CreateGameTestHelper;
+import com.simibubi.create.gametest.infrastructure.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
-import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.FIFTEEN_SECONDS;
+import static com.simibubi.create.gametest.infrastructure.CreateGameTestHelper.FIFTEEN_SECONDS;
 
 @GameTestGroup(path = "misc")
 public class TestMisc {

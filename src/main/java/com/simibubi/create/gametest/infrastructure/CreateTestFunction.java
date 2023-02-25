@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gametest.infrastructure;
+package com.simibubi.create.gametest.infrastructure;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;

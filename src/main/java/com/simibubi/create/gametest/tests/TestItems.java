@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gametest.tests;
+package com.simibubi.create.gametest.tests;
 
 import java.util.List;
 import java.util.Locale;
@@ -14,8 +14,8 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
-import com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper;
-import com.simibubi.create.foundation.gametest.infrastructure.GameTestGroup;
+import com.simibubi.create.gametest.infrastructure.CreateGameTestHelper;
+import com.simibubi.create.gametest.infrastructure.GameTestGroup;
 import com.simibubi.create.foundation.utility.Components;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
@@ -35,8 +35,6 @@ import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TEN_SECONDS;
-
 @GameTestGroup(path = "items")
 public class TestItems {
 	@GameTest(template = "andesite_tunnel_split")
@@ -51,7 +49,7 @@ public class TestItems {
 		helper.succeedWhen(() -> outputs.forEach(helper::assertContainerContains));
 	}
 
-	@GameTest(template = "arm_purgatory", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "arm_purgatory", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void armPurgatory(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(2, 3, 2);
 		BlockPos depot1Pos = new BlockPos(3, 2, 1);
@@ -76,7 +74,7 @@ public class TestItems {
 		});
 	}
 
-	@GameTest(template = "attribute_filters", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "attribute_filters", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void attributeFilters(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(2, 3, 1);
 		BlockPos end = new BlockPos(11, 2, 2);
@@ -102,7 +100,7 @@ public class TestItems {
 		});
 	}
 
-	@GameTest(template = "belt_coaster", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "belt_coaster", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void beltCoaster(CreateGameTestHelper helper) {
 		BlockPos input = new BlockPos(1, 5, 6);
 		BlockPos output = new BlockPos(3, 8, 6);
@@ -132,7 +130,7 @@ public class TestItems {
 		helper.succeedWhen(() -> outputs.forEach(helper::assertContainerContains));
 	}
 
-	@GameTest(template = "brass_tunnel_prefer_nearest", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "brass_tunnel_prefer_nearest", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void brassTunnelPreferNearest(CreateGameTestHelper helper) {
 		List<BlockPos> tunnels = List.of(
 				new BlockPos(3, 3, 1),
@@ -155,7 +153,7 @@ public class TestItems {
 		);
 	}
 
-	@GameTest(template = "brass_tunnel_round_robin", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "brass_tunnel_round_robin", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void brassTunnelRoundRobin(CreateGameTestHelper helper) {
 		List<BlockPos> outputs = List.of(
 				new BlockPos(7, 3, 1),
@@ -195,7 +193,7 @@ public class TestItems {
 		});
 	}
 
-	@GameTest(template = "brass_tunnel_sync_input", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "brass_tunnel_sync_input", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void brassTunnelSyncInput(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(1, 3, 2);
 		List<BlockPos> redstoneBlocks = List.of(
@@ -255,7 +253,7 @@ public class TestItems {
 		});
 	}
 
-	@GameTest(template = "depot_display", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "depot_display", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void depotDisplay(CreateGameTestHelper helper) {
 		BlockPos displayPos = new BlockPos(5, 3, 1);
 		List<DepotTileEntity> depots = Stream.of(
@@ -297,7 +295,7 @@ public class TestItems {
 		helper.succeedWhen(() -> helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, true));
 	}
 
-	@GameTest(template = "storages", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "storages", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void storages(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(12, 3, 2);
 		BlockPos startChest = new BlockPos(13, 3, 1);

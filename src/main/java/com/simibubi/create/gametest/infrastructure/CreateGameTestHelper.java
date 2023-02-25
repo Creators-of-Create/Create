@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gametest.infrastructure;
+package com.simibubi.create.gametest.infrastructure;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,9 +1,9 @@
-package com.simibubi.create.foundation.gametest.tests;
+package com.simibubi.create.gametest.tests;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper;
-import com.simibubi.create.foundation.gametest.infrastructure.GameTestGroup;
+import com.simibubi.create.gametest.infrastructure.CreateGameTestHelper;
+import com.simibubi.create.gametest.infrastructure.GameTestGroup;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.core.BlockPos;
@@ -11,18 +11,13 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LeverBlock;
 import net.minecraftforge.fluids.FluidStack;
-
-import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TEN_SECONDS;
-import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TWENTY_SECONDS;
 
 @GameTestGroup(path = "contraptions")
 public class TestContraptions {
-	@GameTest(template = "arrow_dispenser", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "arrow_dispenser", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void arrowDispenser(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(2, 3, 1);
 		helper.pullLever(lever);
@@ -40,7 +35,7 @@ public class TestContraptions {
 		});
 	}
 
-	@GameTest(template = "crop_farming", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "crop_farming", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void cropFarming(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(4, 3, 1);
 		helper.pullLever(lever);
@@ -48,7 +43,7 @@ public class TestContraptions {
 		helper.succeedWhen(() -> helper.assertAnyContained(output, Items.WHEAT, Items.POTATO, Items.CARROT));
 	}
 
-	@GameTest(template = "mounted_item_extract", timeoutTicks = TWENTY_SECONDS)
+	@GameTest(template = "mounted_item_extract", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
 	public static void mountedItemExtract(CreateGameTestHelper helper) {
 		BlockPos barrel = new BlockPos(1, 3, 2);
 		Object2LongMap<Item> content = helper.getItemContent(barrel);
@@ -62,7 +57,7 @@ public class TestContraptions {
 		});
 	}
 
-	@GameTest(template = "mounted_fluid_drain", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "mounted_fluid_drain", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void mountedFluidDrain(CreateGameTestHelper helper) {
 		BlockPos tank = new BlockPos(1, 3, 2);
 		FluidStack fluid = helper.getTankContents(tank);

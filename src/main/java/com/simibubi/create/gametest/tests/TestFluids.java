@@ -1,13 +1,13 @@
-package com.simibubi.create.foundation.gametest.tests;
+package com.simibubi.create.gametest.tests;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyFluidHandler;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
 
-import com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper;
+import com.simibubi.create.gametest.infrastructure.CreateGameTestHelper;
 
-import com.simibubi.create.foundation.gametest.infrastructure.GameTestGroup;
+import com.simibubi.create.gametest.infrastructure.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -22,12 +22,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TEN_SECONDS;
-import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TWENTY_SECONDS;
-
 @GameTestGroup(path = "fluids")
 public class TestFluids {
-	@GameTest(template = "hose_pulley_transfer", timeoutTicks = TWENTY_SECONDS)
+	@GameTest(template = "hose_pulley_transfer", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
 	public static void hosePulleyTransfer(CreateGameTestHelper helper) {
 		// there was supposed to be redstone here built in, but it kept popping off, so put it there manually
 		BlockPos brokenRedstone = new BlockPos(4, 8, 3);
@@ -107,7 +104,7 @@ public class TestFluids {
 		});
 	}
 
-	@GameTest(template = "3_pipe_combine", timeoutTicks = TWENTY_SECONDS)
+	@GameTest(template = "3_pipe_combine", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
 	public static void threePipeCombine(CreateGameTestHelper helper) {
 		BlockPos tank1Pos = new BlockPos(5, 2, 1);
 		BlockPos tank2Pos = tank1Pos.south();
@@ -129,7 +126,7 @@ public class TestFluids {
 		});
 	}
 
-	@GameTest(template = "3_pipe_split", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "3_pipe_split", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void threePipeSplit(CreateGameTestHelper helper) {
 		BlockPos pumpPos = new BlockPos(2, 2, 2);
 		BlockPos tank1Pos = new BlockPos(5, 2, 1);

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gametest.tests;
+package com.simibubi.create.gametest.tests;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper;
-import com.simibubi.create.foundation.gametest.infrastructure.GameTestGroup;
+import com.simibubi.create.gametest.infrastructure.CreateGameTestHelper;
+import com.simibubi.create.gametest.infrastructure.GameTestGroup;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.BlockPos;
@@ -20,15 +20,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.items.IItemHandler;
-
-import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TEN_SECONDS;
-import static com.simibubi.create.foundation.gametest.infrastructure.CreateGameTestHelper.TWENTY_SECONDS;
 
 @GameTestGroup(path = "processing")
 public class TestProcessing {
-	@GameTest(template = "brass_mixing", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "brass_mixing", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void brassMixing(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(2, 3, 2);
 		BlockPos chest = new BlockPos(7, 3, 1);
@@ -36,7 +32,7 @@ public class TestProcessing {
 		helper.succeedWhen(() -> helper.assertContainerContains(chest, AllItems.BRASS_INGOT.get()));
 	}
 
-	@GameTest(template = "brass_mixing_2", timeoutTicks = TWENTY_SECONDS)
+	@GameTest(template = "brass_mixing_2", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
 	public static void brassMixing2(CreateGameTestHelper helper) {
 		BlockPos basinLever = new BlockPos(3, 3, 1);
 		BlockPos armLever = new BlockPos(3, 3, 5);
@@ -47,7 +43,7 @@ public class TestProcessing {
 		helper.succeedWhen(() -> helper.assertContainerContains(output, AllItems.BRASS_INGOT.get()));
 	}
 
-	@GameTest(template = "crushing_wheel_crafting", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "crushing_wheel_crafting", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void crushingWheelCrafting(CreateGameTestHelper helper) {
 		BlockPos chest = new BlockPos(1, 4, 3);
 		List<BlockPos> levers = List.of(
@@ -60,7 +56,7 @@ public class TestProcessing {
 		helper.succeedWhen(() -> helper.assertContainerContains(chest, expected));
 	}
 
-	@GameTest(template = "precision_mechanism_crafting", timeoutTicks = TWENTY_SECONDS)
+	@GameTest(template = "precision_mechanism_crafting", timeoutTicks = CreateGameTestHelper.TWENTY_SECONDS)
 	public static void precisionMechanismCrafting(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(6, 3, 6);
 		BlockPos output = new BlockPos(11, 3, 1);
@@ -82,7 +78,7 @@ public class TestProcessing {
 		});
 	}
 
-	@GameTest(template = "sand_washing", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "sand_washing", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void sandWashing(CreateGameTestHelper helper) {
 		BlockPos leverPos = new BlockPos(5, 3, 1);
 		helper.pullLever(leverPos);
@@ -90,7 +86,7 @@ public class TestProcessing {
 		helper.succeedWhen(() -> helper.assertContainerContains(chestPos, Items.CLAY_BALL));
 	}
 
-	@GameTest(template = "stone_cobble_sand_crushing", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "stone_cobble_sand_crushing", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void stoneCobbleSandCrushing(CreateGameTestHelper helper) {
 		BlockPos chest = new BlockPos(1, 6, 2);
 		BlockPos lever = new BlockPos(2, 3, 1);
@@ -99,7 +95,7 @@ public class TestProcessing {
 		helper.succeedWhen(() -> helper.assertContainerContains(chest, expected));
 	}
 
-	@GameTest(template = "track_crafting", timeoutTicks = TEN_SECONDS)
+	@GameTest(template = "track_crafting", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void trackCrafting(CreateGameTestHelper helper) {
 		BlockPos output = new BlockPos(7, 3, 2);
 		BlockPos lever = new BlockPos(2, 3, 1);

@@ -1,14 +1,14 @@
-package com.simibubi.create.foundation.gametest;
+package com.simibubi.create.gametest;
 
 import java.util.Collection;
 
-import com.simibubi.create.foundation.gametest.infrastructure.CreateTestFunction;
+import com.simibubi.create.gametest.infrastructure.CreateTestFunction;
 
-import com.simibubi.create.foundation.gametest.tests.TestContraptions;
-import com.simibubi.create.foundation.gametest.tests.TestFluids;
-import com.simibubi.create.foundation.gametest.tests.TestItems;
-import com.simibubi.create.foundation.gametest.tests.TestMisc;
-import com.simibubi.create.foundation.gametest.tests.TestProcessing;
+import com.simibubi.create.gametest.tests.TestContraptions;
+import com.simibubi.create.gametest.tests.TestFluids;
+import com.simibubi.create.gametest.tests.TestItems;
+import com.simibubi.create.gametest.tests.TestMisc;
+import com.simibubi.create.gametest.tests.TestProcessing;
 
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
