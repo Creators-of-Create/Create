@@ -962,7 +962,6 @@
 	"create.action.confirm": "Confirm",
 	"create.action.abort": "Abort",
 	"create.action.saveToFile": "Save",
-	"create.action.saveAsTest": "Save as GameTest",
 	"create.action.discard": "Discard",
 
 	"create.keyinfo.toolmenu": "Focus Schematic Overlay",
