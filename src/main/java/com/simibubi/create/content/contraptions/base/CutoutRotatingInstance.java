@@ -10,6 +10,7 @@ public class CutoutRotatingInstance<T extends KineticBlockEntity> extends Single
 		super(materialManager, blockEntity);
 	}
 
+	@Override
 	protected Material<RotatingData> getRotatingMaterial() {
 		return materialManager.defaultCutout()
 				.material(AllMaterialSpecs.ROTATING);

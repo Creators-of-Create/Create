@@ -5,6 +5,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.glu
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
+import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelRenderer;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.curiosities.armor.RemainingAirOverlay;
@@ -80,6 +81,7 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(CachedBufferer.PARTIAL);
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
 		BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
+		BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
 		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 

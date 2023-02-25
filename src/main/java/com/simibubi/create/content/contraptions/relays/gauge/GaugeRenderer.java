@@ -5,7 +5,6 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock.Type;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -19,7 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GaugeRenderer extends ShaftRenderer {
+public class GaugeRenderer extends ShaftRenderer<GaugeBlockEntity> {
 
 	protected GaugeBlock.Type type;
 
@@ -37,7 +36,7 @@ public class GaugeRenderer extends ShaftRenderer {
 	}
 
 	@Override
-	protected void renderSafe(KineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(GaugeBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		if (Backend.canUseInstancing(be.getLevel())) return;
 

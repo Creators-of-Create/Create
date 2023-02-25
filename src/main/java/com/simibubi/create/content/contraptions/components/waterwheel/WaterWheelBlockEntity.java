@@ -1,13 +1,11 @@
 package com.simibubi.create.content.contraptions.components.waterwheel;
 
+import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gson.JsonParser;
-import com.mojang.serialization.JsonOps;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -22,6 +20,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
@@ -34,14 +33,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
 
 public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 
-	public static Map<Axis, Set<BlockPos>> SMALL_OFFSETS = new IdentityHashMap<>();
-	public static Map<Axis, Set<BlockPos>> LARGE_OFFSETS = new IdentityHashMap<>();
+	public static final Map<Axis, Set<BlockPos>> SMALL_OFFSETS = new EnumMap<>(Axis.class);
+	public static final Map<Axis, Set<BlockPos>> LARGE_OFFSETS = new EnumMap<>(Axis.class);
 
 	static {
 		for (Axis axis : Iterate.axes) {
@@ -70,11 +66,11 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 	}
 
 	public int flowScore;
-	public BlockState baseBlock; // <-- TODO use planks/corresponding logs in rendered instance
+	public BlockState material;
 
 	public WaterWheelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		baseBlock = Blocks.SPRUCE_PLANKS.defaultBlockState();
+		material = Blocks.SPRUCE_PLANKS.defaultBlockState();
 	}
 
 	protected int getSize() {
@@ -85,15 +81,15 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 		return (getSize() == 1 ? SMALL_OFFSETS : LARGE_OFFSETS).get(getAxis());
 	}
 	
-	public InteractionResult applyMaterialIfValid(ItemStack item) {
-		if (!(item.getItem() instanceof BlockItem blockItem))
+	public InteractionResult applyMaterialIfValid(ItemStack stack) {
+		if (!(stack.getItem() instanceof BlockItem blockItem))
 			return InteractionResult.PASS;
 		BlockState material = blockItem.getBlock().defaultBlockState();
-		if (material == this.baseBlock)
+		if (material == this.material)
 			return InteractionResult.PASS;
 		if (!material.is(BlockTags.PLANKS))
 			return InteractionResult.PASS;
-		baseBlock = material;
+		this.material = material;
 		notifyUpdate();
 		return InteractionResult.SUCCESS;
 	}
@@ -155,30 +151,6 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 		setChanged();
 	}
 
-	@Override
-	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		super.addBehaviours(behaviours);
-		registerAwardables(behaviours, AllAdvancements.LAVA_WHEEL, AllAdvancements.WATER_WHEEL);
-	}
-
-	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		super.read(compound, clientPacket);
-		flowScore = compound.getInt("FlowScore");
-
-		BlockState prevMaterial = baseBlock;
-		if (!compound.contains("Material"))
-			return;
-
-		JsonOps ops = JsonOps.INSTANCE;
-		BlockState.CODEC.decode(ops, JsonParser.parseString(compound.getString("Material")))
-			.result()
-			.ifPresent(p -> baseBlock = p.getFirst());
-
-		if (clientPacket && prevMaterial != baseBlock)
-			redraw();
-	}
-
 	private void redraw() {
 		if (!isVirtual())
 			requestModelDataUpdate();
@@ -190,23 +162,32 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 		}
 	}
 
-	public static final ModelProperty<BlockState> MATERIAL_PROPERTY = new ModelProperty<>();
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		registerAwardables(behaviours, AllAdvancements.LAVA_WHEEL, AllAdvancements.WATER_WHEEL);
+	}
 
 	@Override
-	public IModelData getModelData() {
-		return new ModelDataMap.Builder().withInitial(MATERIAL_PROPERTY, baseBlock)
-			.build();
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
+		flowScore = compound.getInt("FlowScore");
+
+		BlockState prevMaterial = material;
+		if (!compound.contains("Material"))
+			return;
+
+		material = NbtUtils.readBlockState(compound.getCompound("Material"));
+
+		if (clientPacket && prevMaterial != material)
+			redraw();
 	}
 
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 		compound.putInt("FlowScore", flowScore);
-		JsonOps ops = JsonOps.INSTANCE;
-		BlockState.CODEC.encode(baseBlock, ops, ops.empty())
-			.result()
-			.map(je -> je.toString())
-			.ifPresent(s -> compound.putString("Material", s));
+		compound.put("Material", NbtUtils.writeBlockState(material));
 	}
 
 	@Override

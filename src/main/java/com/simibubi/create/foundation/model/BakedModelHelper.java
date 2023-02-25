@@ -3,12 +3,25 @@ package com.simibubi.create.foundation.model;
 import static com.simibubi.create.foundation.block.render.SpriteShiftEntry.getUnInterpolatedU;
 import static com.simibubi.create.foundation.block.render.SpriteShiftEntry.getUnInterpolatedV;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.UnaryOperator;
+
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.SimpleBakedModel;
+import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class BakedModelHelper {
 	public static void cropAndMove(BakedQuad quad, AABB crop, Vec3 move) {
@@ -78,5 +91,52 @@ public class BakedModelHelper {
 
 			BakedQuadHelper.setXYZ(vertexData, vertex, newXyz.add(move));
 		}
+	}
+
+	public static BakedModel generateModel(BakedModel template, UnaryOperator<TextureAtlasSprite> spriteSwapper) {
+		Random random = new Random();
+
+		Map<Direction, List<BakedQuad>> culledFaces = new EnumMap<>(Direction.class);
+		for (Direction cullFace : Iterate.directions) {
+			random.setSeed(42L);
+			List<BakedQuad> quads = template.getQuads(null, cullFace, random, EmptyModelData.INSTANCE);
+			culledFaces.put(cullFace, swapSprites(quads, spriteSwapper));
+		}
+
+		random.setSeed(42L);
+		List<BakedQuad> quads = template.getQuads(null, null, random, EmptyModelData.INSTANCE);
+		List<BakedQuad> unculledFaces = swapSprites(quads, spriteSwapper);
+
+		TextureAtlasSprite particleSprite = template.getParticleIcon(EmptyModelData.INSTANCE);
+		TextureAtlasSprite swappedParticleSprite = spriteSwapper.apply(particleSprite);
+		if (swappedParticleSprite != null) {
+			particleSprite = swappedParticleSprite;
+		}
+		return new SimpleBakedModel(unculledFaces, culledFaces, template.useAmbientOcclusion(), template.usesBlockLight(), template.isGui3d(), particleSprite, template.getTransforms(), ItemOverrides.EMPTY);
+	}
+
+	public static List<BakedQuad> swapSprites(List<BakedQuad> quads, UnaryOperator<TextureAtlasSprite> spriteSwapper) {
+		List<BakedQuad> newQuads = new ArrayList<>(quads);
+		int size = quads.size();
+		for (int i = 0; i < size; i++) {
+			BakedQuad quad = quads.get(i);
+			TextureAtlasSprite sprite = quad.getSprite();
+			TextureAtlasSprite newSprite = spriteSwapper.apply(sprite);
+			if (newSprite == null || sprite == newSprite)
+				continue;
+
+			BakedQuad newQuad = BakedQuadHelper.clone(quad);
+			int[] vertexData = newQuad.getVertices();
+
+			for (int vertex = 0; vertex < 4; vertex++) {
+				float u = BakedQuadHelper.getU(vertexData, vertex);
+				float v = BakedQuadHelper.getV(vertexData, vertex);
+				BakedQuadHelper.setU(vertexData, vertex, newSprite.getU(getUnInterpolatedU(sprite, u)));
+				BakedQuadHelper.setV(vertexData, vertex, newSprite.getV(getUnInterpolatedV(sprite, v)));
+			}
+
+			newQuads.set(i, newQuad);
+		}
+		return newQuads;
 	}
 }

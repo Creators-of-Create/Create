@@ -159,6 +159,11 @@ public class AllPartialModels {
 		WHISTLE_MOUTH_MEDIUM = block("steam_whistle/medium_mouth"),
 		WHISTLE_MOUTH_SMALL = block("steam_whistle/small_mouth"),
 
+		WATER_WHEEL = block("water_wheel/block"),
+		WATER_WHEEL_EXTENSION = block("water_wheel/block_extension"),
+		LARGE_WATER_WHEEL = block("large_water_wheel/block"),
+		LARGE_WATER_WHEEL_EXTENSION = block("large_water_wheel/block_extension"),
+
 		CRAFTING_BLUEPRINT_1x1 = entity("crafting_blueprint_small"),
 		CRAFTING_BLUEPRINT_2x2 = entity("crafting_blueprint_medium"),
 		CRAFTING_BLUEPRINT_3x3 = entity("crafting_blueprint_large"),

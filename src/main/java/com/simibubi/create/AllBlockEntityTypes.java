@@ -85,6 +85,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.turntable.TurntableBlockEntity;
 import com.simibubi.create.content.contraptions.components.waterwheel.LargeWaterWheelBlockEntity;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlockEntity;
+import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelInstance;
+import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelRenderer;
 import com.simibubi.create.content.contraptions.fluids.PumpBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpCogInstance;
 import com.simibubi.create.content.contraptions.fluids.PumpRenderer;
@@ -602,16 +604,16 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<WaterWheelBlockEntity> WATER_WHEEL = REGISTRATE
 		.blockEntity("water_wheel", WaterWheelBlockEntity::new)
-		.instance(() -> CutoutRotatingInstance::new, false)
+		.instance(() -> WaterWheelInstance::standard, false)
 		.validBlocks(AllBlocks.WATER_WHEEL)
-		.renderer(() -> KineticBlockEntityRenderer::new)
+		.renderer(() -> WaterWheelRenderer::standard)
 		.register();
-	
+
 	public static final BlockEntityEntry<LargeWaterWheelBlockEntity> LARGE_WATER_WHEEL = REGISTRATE
 		.blockEntity("large_water_wheel", LargeWaterWheelBlockEntity::new)
-		.instance(() -> CutoutRotatingInstance::new, false)
+		.instance(() -> WaterWheelInstance::large, false)
 		.validBlocks(AllBlocks.LARGE_WATER_WHEEL)
-		.renderer(() -> KineticBlockEntityRenderer::new)
+		.renderer(() -> WaterWheelRenderer::large)
 		.register();
 
 	public static final BlockEntityEntry<MechanicalPressBlockEntity> MECHANICAL_PRESS = REGISTRATE

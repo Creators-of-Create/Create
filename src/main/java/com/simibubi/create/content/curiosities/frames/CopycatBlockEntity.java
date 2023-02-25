@@ -2,8 +2,6 @@ package com.simibubi.create.content.curiosities.frames;
 
 import java.util.List;
 
-import com.google.gson.JsonParser;
-import com.mojang.serialization.JsonOps;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
@@ -18,6 +16,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -136,10 +135,7 @@ public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBloc
 		if (!tag.contains("Material"))
 			return;
 
-		JsonOps ops = JsonOps.INSTANCE;
-		BlockState.CODEC.decode(ops, JsonParser.parseString(tag.getString("Material")))
-			.result()
-			.ifPresent(p -> material = p.getFirst());
+		material = NbtUtils.readBlockState(tag.getCompound("Material"));
 
 		if (clientPacket && prevMaterial != material)
 			redraw();
@@ -148,14 +144,8 @@ public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBloc
 	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
-
 		tag.put("Item", consumedItem.serializeNBT());
-
-		JsonOps ops = JsonOps.INSTANCE;
-		BlockState.CODEC.encode(material, ops, ops.empty())
-			.result()
-			.map(je -> je.toString())
-			.ifPresent(s -> tag.putString("Material", s));
+		tag.put("Material", NbtUtils.writeBlockState(material));
 	}
 
 	@Override
