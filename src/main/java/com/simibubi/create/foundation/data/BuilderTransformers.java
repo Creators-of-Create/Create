@@ -234,16 +234,14 @@ public class BuilderTransformers {
 			.transform(pickaxeOnly())
 			.tag(BlockTags.CLIMBABLE)
 			.item()
-			.recipe((c, p) -> {
-				if (!name.equals("andesite"))
-					p.stonecutting(ingredient.get(), c::get, 2);
-			})
+			.recipe((c, p) -> p.stonecutting(ingredient.get(), c::get, 2))
 			.model((c, p) -> p.blockSprite(c::get, p.modLoc("block/ladder_" + name)))
 			.build();
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> scaffold(String name,
-		Supplier<DataIngredient> ingredient, CTSpriteShiftEntry scaffoldShift, CTSpriteShiftEntry casingShift) {
+		Supplier<DataIngredient> ingredient, CTSpriteShiftEntry scaffoldShift, CTSpriteShiftEntry scaffoldInsideShift,
+		CTSpriteShiftEntry casingShift) {
 		return b -> b.initialProperties(() -> Blocks.SCAFFOLDING)
 			.properties(p -> p.sound(SoundType.COPPER))
 			.addLayer(() -> RenderType::cutout)
@@ -254,18 +252,18 @@ public class BuilderTransformers {
 						.modelFile(p.models()
 							.withExistingParent(c.getName() + suffix, p.modLoc("block/scaffold/block" + suffix))
 							.texture("top", p.modLoc("block/funnel/" + name + "_funnel_frame"))
+							.texture("inside", p.modLoc("block/scaffold/" + name + "_scaffold_inside"))
 							.texture("side", p.modLoc("block/scaffold/" + name + "_scaffold"))
-							.texture("particle", p.modLoc("block/" + name + "_casing")))
+							.texture("casing", p.modLoc("block/" + name + "_casing"))
+							.texture("particle", p.modLoc("block/scaffold/" + name + "_scaffold")))
 						.build();
 				}, MetalScaffoldingBlock.WATERLOGGED, MetalScaffoldingBlock.DISTANCE))
-			.onRegister(connectedTextures(() -> new MetalScaffoldingCTBehaviour(scaffoldShift, casingShift)))
+			.onRegister(connectedTextures(
+				() -> new MetalScaffoldingCTBehaviour(scaffoldShift, scaffoldInsideShift, casingShift)))
 			.transform(pickaxeOnly())
 			.tag(BlockTags.CLIMBABLE)
 			.item(MetalScaffoldingBlockItem::new)
-			.recipe((c, p) -> {
-				if (!name.equals("andesite"))
-					p.stonecutting(ingredient.get(), c::get, 2);
-			})
+			.recipe((c, p) -> p.stonecutting(ingredient.get(), c::get, 2))
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + c.getName())))
 			.build();
 	}

@@ -31,6 +31,10 @@ public class AllSpriteShifts {
 		BRASS_SCAFFOLD = horizontal("scaffold/brass_scaffold"),
 		COPPER_SCAFFOLD = horizontal("scaffold/copper_scaffold");
 
+	public static final CTSpriteShiftEntry ANDESITE_SCAFFOLD_INSIDE = horizontal("scaffold/andesite_scaffold_inside"),
+		BRASS_SCAFFOLD_INSIDE = horizontal("scaffold/brass_scaffold_inside"),
+		COPPER_SCAFFOLD_INSIDE = horizontal("scaffold/copper_scaffold_inside");
+
 	public static final CTSpriteShiftEntry FRAMED_GLASS =
 		getCT(AllCTTypes.OMNIDIRECTIONAL, "palettes/framed_glass", "palettes/framed_glass"),
 		HORIZONTAL_FRAMED_GLASS =

@@ -45,6 +45,11 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 	}
 
 	@Override
+	public boolean isAcceptedRegardless(BlockState material) {
+		return CopycatSpecialCases.isBarsMaterial(material);
+	}
+	
+	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
 
@@ -143,9 +148,14 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 	@Override
 	public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
 		Direction dir) {
-		if (state.is(this) == neighborState.is(this)
-			&& getMaterial(level, pos).skipRendering(getMaterial(level, pos.relative(dir)), dir.getOpposite()))
-			return isOccluded(state, neighborState, dir.getOpposite());
+		if (state.is(this) == neighborState.is(this)) {
+			if (CopycatSpecialCases.isBarsMaterial(getMaterial(level, pos))
+				&& CopycatSpecialCases.isBarsMaterial(getMaterial(level, pos.relative(dir))))
+				return state.getValue(FACING) == neighborState.getValue(FACING);
+			if (getMaterial(level, pos).skipRendering(getMaterial(level, pos.relative(dir)), dir.getOpposite()))
+				return isOccluded(state, neighborState, dir.getOpposite());
+		}
+
 		return state.getValue(FACING) == dir.getOpposite()
 			&& getMaterial(level, pos).skipRendering(neighborState, dir.getOpposite());
 	}

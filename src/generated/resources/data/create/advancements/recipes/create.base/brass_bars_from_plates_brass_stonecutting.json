@@ -2,18 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/kinetics/andesite_ladder"
+      "create:brass_bars_from_plates_brass_stonecutting"
     ]
   },
   "criteria": {
-    "has_item": {
+    "has_plates_brass": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": [
-              "create:andesite_alloy"
-            ]
+            "tag": "forge:plates/brass"
           }
         ]
       }
@@ -21,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/kinetics/andesite_ladder"
+        "recipe": "create:brass_bars_from_plates_brass_stonecutting"
       }
     }
   },
   "requirements": [
     [
-      "has_item",
+      "has_plates_brass",
       "has_the_recipe"
     ]
   ]

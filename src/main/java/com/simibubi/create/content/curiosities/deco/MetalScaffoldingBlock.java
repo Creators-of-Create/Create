@@ -62,7 +62,7 @@ public class MetalScaffoldingBlock extends ScaffoldingBlock implements IWrenchab
 	@Override
 	public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
 		Direction dir) {
-		if (!neighborState.is(this))
+		if (!(neighborState.getBlock() instanceof MetalScaffoldingBlock))
 			return false;
 		if (!neighborState.getValue(BOTTOM) && state.getValue(BOTTOM))
 			return false;

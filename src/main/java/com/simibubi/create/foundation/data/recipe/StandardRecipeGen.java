@@ -175,17 +175,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	private Marker KINETICS = enterFolder("kinetics");
 
-	GeneratedRecipe ANDESITE_LADDER = create(AllBlocks.ANDESITE_LADDER).returns(4)
-		.unlockedBy(I::andesite)
+	GeneratedRecipe BASIN = create(AllBlocks.BASIN).unlockedBy(I::andesite)
 		.viaShaped(b -> b.define('A', I.andesite())
 			.pattern("A A")
-			.pattern("AAA")
-			.pattern("A A")),
-
-		BASIN = create(AllBlocks.BASIN).unlockedBy(I::andesite)
-			.viaShaped(b -> b.define('A', I.andesite())
-				.pattern("A A")
-				.pattern("AAA")),
+			.pattern("AAA")),
 
 		GOGGLES = create(AllItems.GOGGLES).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
