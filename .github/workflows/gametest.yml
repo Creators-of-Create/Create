@@ -17,6 +17,12 @@ jobs:
               with:
                   java-version: ${{ matrix.java }}
 
+            - uses: actions/cache@v2
+              with:
+                path: ~/build/fg_cache
+                key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+                restore-keys: ${{ runner.os }}-gradle
+
             - name: make gradle wrapper executable
               run: chmod +x ./gradlew
 
