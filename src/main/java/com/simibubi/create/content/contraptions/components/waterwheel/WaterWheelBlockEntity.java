@@ -182,6 +182,8 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 			return;
 
 		material = NbtUtils.readBlockState(compound.getCompound("Material"));
+		if (material.isAir())
+			material = Blocks.SPRUCE_PLANKS.defaultBlockState();
 
 		if (clientPacket && prevMaterial != material)
 			redraw();
