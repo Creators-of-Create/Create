@@ -1,5 +1,5 @@
 name: gametest
-on: [ pull_request, push ]
+on: [ pull_request, push, workflow_dispatch ]
 
 jobs:
     build:
@@ -20,5 +20,8 @@ jobs:
             - name: make gradle wrapper executable
               run: chmod +x ./gradlew
 
+            - name: prepare to run gametests
+              run: ./gradlew prepareRunGameTestServer
+
             - name: run gametests
-              run: ./gradlew gameTestServer
+              run: ./gradlew runGameTestServer
