@@ -46,7 +46,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		nameField.setTextColor(-1);
 		nameField.setTextColorUneditable(-1);
 		nameField.setBordered(false);
-		nameField.setMaxLength(64);
+		nameField.setMaxLength(35);
 		nameField.changeFocus(true);
 		setFocused(nameField);
 		addRenderableWidget(nameField);
