@@ -19,20 +19,21 @@ import net.minecraftforge.fluids.FluidStack;
 public class TestContraptions {
 	@GameTest(template = "arrow_dispenser", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void arrowDispenser(CreateGameTestHelper helper) {
-		BlockPos lever = new BlockPos(2, 3, 1);
-		helper.pullLever(lever);
-		BlockPos pos1 = new BlockPos(0, 5, 0);
-		BlockPos pos2 = new BlockPos(4, 5, 4);
-		helper.succeedWhen(() -> {
-			helper.assertSecondsPassed(7);
-			List<Arrow> arrows = helper.getEntitiesBetween(EntityType.ARROW, pos1, pos2);
-			if (arrows.size() != 4)
-				helper.fail("Expected 4 arrows");
-			helper.powerLever(lever); // disassemble contraption
-			BlockPos dispenser = new BlockPos(2, 5, 2);
-			// there should be 1 left over
-			helper.assertContainerContains(dispenser, Items.ARROW);
-		});
+		helper.fail("testing");
+//		BlockPos lever = new BlockPos(2, 3, 1);
+//		helper.pullLever(lever);
+//		BlockPos pos1 = new BlockPos(0, 5, 0);
+//		BlockPos pos2 = new BlockPos(4, 5, 4);
+//		helper.succeedWhen(() -> {
+//			helper.assertSecondsPassed(7);
+//			List<Arrow> arrows = helper.getEntitiesBetween(EntityType.ARROW, pos1, pos2);
+//			if (arrows.size() != 4)
+//				helper.fail("Expected 4 arrows");
+//			helper.powerLever(lever); // disassemble contraption
+//			BlockPos dispenser = new BlockPos(2, 5, 2);
+//			// there should be 1 left over
+//			helper.assertContainerContains(dispenser, Items.ARROW);
+//		});
 	}
 
 	@GameTest(template = "crop_farming", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
