@@ -5,9 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -35,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel {
+public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel, EncasableBlock {
 
 	boolean isLarge;
 
@@ -122,38 +120,9 @@ public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		EncasedCogwheelBlock[] encasedBlocks = isLarge
-			? new EncasedCogwheelBlock[] { AllBlocks.ANDESITE_ENCASED_LARGE_COGWHEEL.get(),
-				AllBlocks.BRASS_ENCASED_LARGE_COGWHEEL.get() }
-			: new EncasedCogwheelBlock[] { AllBlocks.ANDESITE_ENCASED_COGWHEEL.get(),
-				AllBlocks.BRASS_ENCASED_COGWHEEL.get() };
-
-		for (EncasedCogwheelBlock encasedCog : encasedBlocks) {
-			if (!encasedCog.getCasing()
-				.isIn(heldItem))
-				continue;
-
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
-
-			BlockState encasedState = encasedCog.defaultBlockState()
-				.setValue(AXIS, state.getValue(AXIS));
-
-			for (Direction d : Iterate.directionsInAxis(state.getValue(AXIS))) {
-				BlockState adjacentState = world.getBlockState(pos.relative(d));
-				if (!(adjacentState.getBlock() instanceof IRotate))
-					continue;
-				IRotate def = (IRotate) adjacentState.getBlock();
-				if (!def.hasShaftTowards(world, pos.relative(d), adjacentState, d.getOpposite()))
-					continue;
-				encasedState =
-					encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
-						: EncasedCogwheelBlock.BOTTOM_SHAFT);
-			}
-
-			KineticTileEntity.switchToBlockState(world, pos, encasedState);
-			return InteractionResult.SUCCESS;
-		}
+		InteractionResult result = tryEncase(state, world, pos, heldItem, player, hand, ray);
+		if (result.consumesAction())
+			return result;
 
 		return InteractionResult.PASS;
 	}
