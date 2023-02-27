@@ -331,7 +331,7 @@ public class ServerSchematicLoader {
 			Optional<Path> oldest = files.stream().min(Comparator.comparingLong(this::getLastModifiedTime));
 			Files.delete(oldest.orElseThrow());
 			return true;
-		} catch (IOException | RuntimeException e) {
+		} catch (IOException | IllegalStateException e) {
 			Create.LOGGER.error("Error deleting oldest schematic", e);
 			return false;
 		}
@@ -342,7 +342,7 @@ public class ServerSchematicLoader {
 			return Files.getLastModifiedTime(file).toMillis();
 		} catch (IOException e) {
 			Create.LOGGER.error("Error getting modification time of file " + file.getFileName(), e);
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 

@@ -205,12 +205,8 @@ public class SchematicAndQuillHandler {
 	}
 
 	public void saveSchematic(String string, boolean convertImmediately) {
-		saveSchematic(string, SchematicExport.SCHEMATICS, convertImmediately);
-	}
-
-	public void saveSchematic(String string, Path dir, boolean convertImmediately) {
 		SchematicExportResult result = SchematicExport.saveSchematic(
-				dir, string, false,
+				SchematicExport.SCHEMATICS, string, false,
 				Minecraft.getInstance().level, firstPos, secondPos
 		);
 		LocalPlayer player = Minecraft.getInstance().player;
