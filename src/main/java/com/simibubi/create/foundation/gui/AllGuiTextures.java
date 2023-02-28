@@ -114,6 +114,7 @@ public enum AllGuiTextures implements ScreenElement {
 	SCHEDULE_STRIP_DOTTED("schedule", 23, 239, 11, 16),
 	SCHEDULE_STRIP_END("schedule", 34, 239, 11, 16),
 	SCHEDULE_STRIP_ACTION("schedule", 209, 239, 11, 16),
+	SCHEDULE_STRIP_SKIP("schedule", 218, 239, 11, 16),
 	SCHEDULE_EDITOR("schedule_2", 256, 89),
 	SCHEDULE_EDITOR_ADDITIONAL_SLOT("schedule_2", 55, 47, 32, 18),
 	SCHEDULE_EDITOR_INACTIVE_SLOT("schedule_2", 0, 91, 18, 18),

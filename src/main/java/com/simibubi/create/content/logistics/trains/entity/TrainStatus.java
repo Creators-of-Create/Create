@@ -40,6 +40,13 @@ public class TrainStatus {
 		navigation = true;
 	}
 
+	public void allStationsWereSkipped() {
+		if (navigation)
+			return;
+		displayInformation("all_skipped", false);
+		navigation = true;
+	}
+
 	public void successfulNavigation() {
 		if (!navigation)
 			return;

@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
 
 import java.util.Arrays;
 import java.util.List;

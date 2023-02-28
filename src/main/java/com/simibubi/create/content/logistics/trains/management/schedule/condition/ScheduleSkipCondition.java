@@ -1,20 +1,23 @@
 package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
+import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
+import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleDataEntry;
+import com.simibubi.create.foundation.utility.Pair;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+
 import java.util.function.Supplier;
 
-import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
-import com.simibubi.create.foundation.utility.Pair;
+public abstract class ScheduleSkipCondition extends ScheduleCondition {
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-
-public abstract class ScheduleWaitCondition extends ScheduleCondition {
-
-	public static ScheduleWaitCondition fromTag(CompoundTag tag) {
+	public static ScheduleSkipCondition fromTag(CompoundTag tag) {
 		ResourceLocation location = new ResourceLocation(tag.getString("Id"));
-		Supplier<? extends ScheduleWaitCondition> supplier = null;
-		for (Pair<ResourceLocation, Supplier<? extends ScheduleWaitCondition>> pair : Schedule.WAIT_CONDITION_TYPES)
+		Supplier<? extends ScheduleSkipCondition> supplier = null;
+		for (Pair<ResourceLocation, Supplier<? extends ScheduleSkipCondition>> pair : Schedule.SKIP_CONDITION_TYPES)
 			if (pair.getFirst()
 				.equals(location))
 				supplier = pair.getSecond();
@@ -24,7 +27,7 @@ public abstract class ScheduleWaitCondition extends ScheduleCondition {
 			return null;
 		}
 
-		ScheduleWaitCondition condition = supplier.get();
+		ScheduleSkipCondition condition = supplier.get();
 		condition.data = tag.getCompound("Data");
 		condition.readAdditional(tag);
 		return condition;

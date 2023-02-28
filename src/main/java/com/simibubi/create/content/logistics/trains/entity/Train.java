@@ -94,6 +94,8 @@ public class Train {
 	public Component name;
 	public TrainStatus status;
 
+	public Level level;
+
 	public boolean invalid;
 
 	public SteerDirection manualSteer;
@@ -180,6 +182,8 @@ public class Train {
 			return;
 
 		tickOccupiedObservers(level);
+
+		this.level = level;
 	}
 
 	private void tickOccupiedObservers(Level level) {
@@ -263,6 +267,8 @@ public class Train {
 			updateConductors();
 			return;
 		}
+
+		this.level = level;
 
 		updateConductors();
 		runtime.tick(level);

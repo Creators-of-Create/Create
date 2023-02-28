@@ -1,7 +1,8 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
 
 import com.simibubi.create.content.logistics.trains.entity.Train;
 
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 

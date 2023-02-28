@@ -1,9 +1,10 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
 
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;

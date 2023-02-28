@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;

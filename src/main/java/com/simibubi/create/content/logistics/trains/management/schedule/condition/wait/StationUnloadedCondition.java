@@ -1,8 +1,9 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
