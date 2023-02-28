@@ -1,16 +1,13 @@
 package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
-import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
-import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleDataEntry;
-import com.simibubi.create.foundation.utility.Pair;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
-
 import java.util.function.Supplier;
+
+import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
+import com.simibubi.create.foundation.utility.Pair;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 public abstract class ScheduleSkipCondition extends ScheduleCondition {
 
@@ -19,7 +16,7 @@ public abstract class ScheduleSkipCondition extends ScheduleCondition {
 		Supplier<? extends ScheduleSkipCondition> supplier = null;
 		for (Pair<ResourceLocation, Supplier<? extends ScheduleSkipCondition>> pair : Schedule.SKIP_CONDITION_TYPES)
 			if (pair.getFirst()
-				.equals(location))
+					.equals(location))
 				supplier = pair.getSecond();
 
 		if (supplier == null) {

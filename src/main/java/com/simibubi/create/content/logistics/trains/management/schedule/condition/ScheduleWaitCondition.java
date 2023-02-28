@@ -16,7 +16,7 @@ public abstract class ScheduleWaitCondition extends ScheduleCondition {
 		Supplier<? extends ScheduleWaitCondition> supplier = null;
 		for (Pair<ResourceLocation, Supplier<? extends ScheduleWaitCondition>> pair : Schedule.WAIT_CONDITION_TYPES)
 			if (pair.getFirst()
-				.equals(location))
+					.equals(location))
 				supplier = pair.getSecond();
 
 		if (supplier == null) {
