@@ -11,9 +11,8 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData.TrainDeparturePrediction;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleSkipCondition;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.wait.ScheduledDelay;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeThrottleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
@@ -86,7 +85,7 @@ public class ScheduleRuntime {
 		if (currentEntry >= schedule.entries.size()) {
 			return;
 		}
-		List<List<ScheduleWaitCondition>> conditions = schedule.entries.get(currentEntry).waitConditions;
+		List<List<ScheduleCondition>> conditions = schedule.entries.get(currentEntry).waitConditions;
 		for (int i = 0; i < conditions.size(); i++) {
 			conditionProgress.add(0);
 			conditionContext.add(new CompoundTag());
@@ -153,9 +152,9 @@ public class ScheduleRuntime {
 	}
 
 	public void tickConditions(Level level) {
-		List<List<ScheduleWaitCondition>> conditions = schedule.entries.get(currentEntry).waitConditions;
+		List<List<ScheduleCondition>> conditions = schedule.entries.get(currentEntry).waitConditions;
 		for (int i = 0; i < conditions.size(); i++) {
-			List<ScheduleWaitCondition> list = conditions.get(i);
+			List<ScheduleCondition> list = conditions.get(i);
 			int progress = conditionProgress.get(i);
 
 			if (progress >= list.size()) {
@@ -165,7 +164,7 @@ public class ScheduleRuntime {
 			}
 
 			CompoundTag tag = conditionContext.get(i);
-			ScheduleWaitCondition condition = list.get(progress);
+			ScheduleCondition condition = list.get(progress);
 			int prevVersion = tag.getInt("StatusVersion");
 
 			if (condition.tickCompletion(level, train, tag)) {
@@ -188,15 +187,15 @@ public class ScheduleRuntime {
 		ScheduleEntry entry = schedule.entries.get(currentEntry);
 		ScheduleInstruction instruction = entry.instruction;
 
-		List<List<ScheduleSkipCondition>> skipConditions = entry.skipConditions;
+		List<List<ScheduleCondition>> skipConditions = entry.skipConditions;
 
 		int currentEntry = this.currentEntry;
 
 		do {
 			boolean skip = !skipConditions.isEmpty();
 
-			for (List<ScheduleSkipCondition> list : skipConditions) {
-				for (ScheduleSkipCondition condition : list) {
+			for (List<ScheduleCondition> list : skipConditions) {
+				for (ScheduleCondition condition : list) {
 					if (!condition.tickCompletion(train.level, train, new CompoundTag())) {
 						System.out.println("Skipping " + condition);
 						skip = false;
@@ -386,9 +385,9 @@ public class ScheduleRuntime {
 
 			ScheduleEntry entry = schedule.entries.get(index);
 
-			for (List<ScheduleSkipCondition> condition : entry.skipConditions) {
+			for (List<ScheduleCondition> condition : entry.skipConditions) {
 				for (int j = 0; j < condition.size(); j++) {
-					ScheduleSkipCondition skipCondition = condition.get(j);
+					ScheduleCondition skipCondition = condition.get(j);
 					if (!skipCondition.tickCompletion(train.level, train, new CompoundTag())) {
 						continue;
 					}
@@ -453,9 +452,9 @@ public class ScheduleRuntime {
 
 		ScheduleEntry scheduleEntry = schedule.entries.get(index);
 		Columns:
-		for (List<ScheduleWaitCondition> list : scheduleEntry.waitConditions) {
+		for (List<ScheduleCondition> list : scheduleEntry.waitConditions) {
 			int total = 0;
-			for (ScheduleWaitCondition condition : list) {
+			for (ScheduleCondition condition : list) {
 				if (!(condition instanceof ScheduledDelay wait)) {
 					continue Columns;
 				}
@@ -558,19 +557,19 @@ public class ScheduleRuntime {
 	}
 
 	public MutableComponent getWaitingStatus(Level level) {
-		List<List<ScheduleWaitCondition>> conditions = schedule.entries.get(currentEntry).waitConditions;
+		List<List<ScheduleCondition>> conditions = schedule.entries.get(currentEntry).waitConditions;
 		if (conditions.isEmpty() || conditionProgress.isEmpty() || conditionContext.isEmpty()) {
 			return Components.empty();
 		}
 
-		List<ScheduleWaitCondition> list = conditions.get(0);
+		List<ScheduleCondition> list = conditions.get(0);
 		int progress = conditionProgress.get(0);
 		if (progress >= list.size()) {
 			return Components.empty();
 		}
 
 		CompoundTag tag = conditionContext.get(0);
-		ScheduleWaitCondition condition = list.get(progress);
+		ScheduleCondition condition = list.get(progress);
 		return condition.getWaitingStatus(level, train, tag);
 	}
 

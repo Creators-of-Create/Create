@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -23,14 +23,14 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class PlayerPassengerCondition extends ScheduleWaitCondition {
+public class PlayerPassengerCondition extends ScheduleCondition {
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
 		int target = getTarget();
 		return Pair.of(AllBlocks.SEATS.get(DyeColor.YELLOW)
-			.asStack(),
-			Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"), target));
+						.asStack(),
+				Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"), target));
 	}
 
 	@Override
@@ -50,8 +50,8 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 	public List<Component> getTitleAs(String type) {
 		int target = getTarget();
 		return ImmutableList.of(Lang.translateDirect("schedule.condition.player_count.seated",
-			Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
-				Components.literal("" + target).withStyle(ChatFormatting.DARK_AQUA))));
+				Lang.translateDirect("schedule.condition.player_count." + (target == 1 ? "summary" : "summary_plural"),
+						Components.literal("" + target).withStyle(ChatFormatting.DARK_AQUA))));
 	}
 
 	@Override
@@ -59,13 +59,13 @@ public class PlayerPassengerCondition extends ScheduleWaitCondition {
 	public void initConfigurationWidgets(ModularGuiLineBuilder builder) {
 		builder.addScrollInput(0, 31, (i, l) -> {
 			i.titled(Lang.translateDirect("schedule.condition.player_count.players"))
-				.withShiftStep(5)
-				.withRange(0, 21);
+					.withShiftStep(5)
+					.withRange(0, 21);
 		}, "Count");
 
 		builder.addSelectionScrollInput(36, 85, (i, l) -> {
 			i.forOptions(Lang.translatedOptions("schedule.condition.player_count", "exactly", "or_above"))
-				.titled(Lang.translateDirect("schedule.condition.player_count.condition"));
+					.titled(Lang.translateDirect("schedule.condition.player_count.condition"));
 		}, "Exact");
 	}
 

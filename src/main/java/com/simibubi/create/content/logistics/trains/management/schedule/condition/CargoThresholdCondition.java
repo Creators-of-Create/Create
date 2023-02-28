@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,12 +61,12 @@ public abstract class CargoThresholdCondition extends LazyTickedScheduleConditio
 		context.putInt("LastChecked", status);
 		return test(level, train, context);
 	}
-	
+
 	protected void requestStatusToUpdate(int amount, CompoundTag context) {
 		context.putInt("CurrentDisplay", amount);
 		super.requestStatusToUpdate(context);
 	};
-	
+
 	protected int getLastDisplaySnapshot(CompoundTag context) {
 		if (!context.contains("CurrentDisplay"))
 			return -1;

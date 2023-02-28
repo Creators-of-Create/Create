@@ -1,8 +1,10 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -11,8 +13,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.skip.TimeOfDaySkipCondition;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
@@ -33,7 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class TimeOfDayWaitCondition extends ScheduleWaitCondition {
+public class TimeOfDayCondition extends ScheduleCondition {
 	public static enum Ops {
 		GREATER(">"),
 		LESS("<"),
@@ -61,7 +61,7 @@ public class TimeOfDayWaitCondition extends ScheduleWaitCondition {
 		}
 	}
 
-	public TimeOfDayWaitCondition() {
+	public TimeOfDayCondition() {
 		data.putInt("Hour", 8);
 		data.putInt("Rotation", 5);
 	}
@@ -167,12 +167,10 @@ public class TimeOfDayWaitCondition extends ScheduleWaitCondition {
 		AtomicBoolean hasChangedValuePosition = new AtomicBoolean(false);
 
 		builder.addSelectionScrollInput(-1, 12, (i, l) -> {
-			i.forOptions(TimeOfDaySkipCondition.Ops.translatedOptions())
+			i.forOptions(Ops.translatedOptions())
 					.titled(Lang.translateDirect("schedule.condition.threshold.time"))
-					.format(state -> Components.literal(TimeOfDaySkipCondition.Ops.values()[state].formatted));
+					.format(state -> Components.literal(Ops.values()[state].formatted));
 		}, "Operator");
-
-		timeLabel.getValue().text = Components.literal(getDigitalDisplay(intData("Hour"), intData("Minute"), true, false).getString().replace(" ", ""));
 
 		builder.addScrollInput(12, 12, (i, l) -> {
 			i.withRange(0, 24);

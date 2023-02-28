@@ -1,9 +1,9 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -17,7 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class StationUnloadedCondition extends ScheduleWaitCondition {
+public class StationUnloadedCondition extends ScheduleCondition {
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
 		return Pair.of(ItemStack.EMPTY, Lang.translateDirect("schedule.condition.unloaded"));
@@ -40,10 +40,12 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundTag tag) {}
+	protected void writeAdditional(CompoundTag tag) {
+	}
 
 	@Override
-	protected void readAdditional(CompoundTag tag) {}
+	protected void readAdditional(CompoundTag tag) {
+	}
 
 	@Override
 	public ResourceLocation getId() {

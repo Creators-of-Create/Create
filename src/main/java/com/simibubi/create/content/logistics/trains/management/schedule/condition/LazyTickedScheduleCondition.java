@@ -1,19 +1,19 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
-public abstract class LazyTickedScheduleCondition extends ScheduleWaitCondition {
+public abstract class LazyTickedScheduleCondition extends ScheduleCondition {
 
 	private int tickRate;
 
 	public LazyTickedScheduleCondition(int tickRate) {
 		this.tickRate = tickRate;
 	}
-	
+
 	@Override
 	public boolean tickCompletion(Level level, Train train, CompoundTag context) {
 		int time = context.getInt("Time");
@@ -27,5 +27,5 @@ public abstract class LazyTickedScheduleCondition extends ScheduleWaitCondition 
 	}
 
 	protected abstract boolean lazyTickCompletion(Level level, Train train, CompoundTag context);
-	
+
 }

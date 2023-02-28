@@ -1,4 +1,4 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class ScheduledDelay extends TimedWaitCondition {
+public class ScheduledDelay extends TimedCondition {
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {
@@ -23,7 +23,7 @@ public class ScheduledDelay extends TimedWaitCondition {
 		int time = context.getInt("Time");
 		if (time >= totalWaitTicks())
 			return true;
-		
+
 		context.putInt("Time", time + 1);
 		requestDisplayIfNecessary(context, time);
 		return false;

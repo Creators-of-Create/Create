@@ -44,6 +44,8 @@ public class NBTHelper {
 	public static <T> ListTag writeCompoundList(Iterable<T> list, Function<T, CompoundTag> serializer) {
 		ListTag listNBT = new ListTag();
 		list.forEach(t -> {
+			System.out.println("NBTHelper.writeCompoundList: " + t);
+
 			CompoundTag apply = serializer.apply(t);
 			if (apply == null)
 				return;

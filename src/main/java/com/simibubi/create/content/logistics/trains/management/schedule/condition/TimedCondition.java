@@ -1,10 +1,10 @@
-package com.simibubi.create.content.logistics.trains.management.schedule.condition.wait;
+package com.simibubi.create.content.logistics.trains.management.schedule.condition;
 
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class TimedWaitCondition extends ScheduleWaitCondition {
+public abstract class TimedCondition extends ScheduleCondition {
 
 	public static enum TimeUnit {
 		TICKS(1, "t", "generic.unit.ticks"),
@@ -53,7 +53,7 @@ public abstract class TimedWaitCondition extends ScheduleWaitCondition {
 		return getValue() * getUnit().ticksPer;
 	}
 
-	public TimedWaitCondition() {
+	public TimedCondition() {
 		data.putInt("Value", 5);
 		data.putInt("TimeUnit", TimeUnit.SECONDS.ordinal());
 	}
