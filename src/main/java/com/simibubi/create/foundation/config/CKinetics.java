@@ -43,17 +43,17 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool moveItemsToStorage = b(true, "moveItemsToStorage", Comments.moveItemsToStorage);
 	public final ConfigBool harvestPartiallyGrown = b(false, "harvestPartiallyGrown", Comments.harvestPartiallyGrown);
 	public final ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
-
-	public final CStress stressValues = nested(1, CStress::new, Comments.stress);
-
-	public final ConfigGroup state = group(1, "stats", Comments.stats);
+	
+	public final ConfigGroup stats = group(1, "stats", Comments.stats);
 	public final ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
 	public final ConfigFloat fastSpeed = f(100, 0, 65535, "fastSpeed", Comments.rpm, Comments.fastSpeed);
 	public final ConfigFloat mediumStressImpact =
 		f(4, 0, 4096, "mediumStressImpact", Comments.su, Comments.mediumStressImpact);
 	public final ConfigFloat highStressImpact = f(8, 0, 65535, "highStressImpact", Comments.su, Comments.highStressImpact);
-	public final ConfigFloat mediumCapacity = f(128, 0, 4096, "mediumCapacity", Comments.su, Comments.mediumCapacity);
+	public final ConfigFloat mediumCapacity = f(256, 0, 4096, "mediumCapacity", Comments.su, Comments.mediumCapacity);
 	public final ConfigFloat highCapacity = f(1024, 0, 65535, "highCapacity", Comments.su, Comments.highCapacity);
+
+	public final CStress stressValues = nested(1, CStress::new, Comments.stress);
 
 	@Override
 	public String getName() {

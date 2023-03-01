@@ -1,0 +1,20 @@
+# Blender 3.4.1 MTL File: 'waterwheel.blend'
+# www.blender.org
+
+newmtl Casing
+map_Kd #gearbox
+
+newmtl axis
+map_Kd #axis
+
+newmtl axis_top
+map_Kd #axis_top
+
+newmtl waterwheel_log
+map_Kd #log
+
+newmtl waterwheel_metal
+map_Kd #metal
+
+newmtl waterwheel_plank
+map_Kd #planks

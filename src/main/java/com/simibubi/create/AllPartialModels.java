@@ -159,8 +159,7 @@ public class AllPartialModels {
 		WHISTLE_MOUTH_MEDIUM = block("steam_whistle/medium_mouth"),
 		WHISTLE_MOUTH_SMALL = block("steam_whistle/small_mouth"),
 
-		WATER_WHEEL = block("water_wheel/block"),
-		WATER_WHEEL_EXTENSION = block("water_wheel/block_extension"),
+		WATER_WHEEL = block("water_wheel/wheel"),
 		LARGE_WATER_WHEEL = block("large_water_wheel/block"),
 		LARGE_WATER_WHEEL_EXTENSION = block("large_water_wheel/block_extension"),
 

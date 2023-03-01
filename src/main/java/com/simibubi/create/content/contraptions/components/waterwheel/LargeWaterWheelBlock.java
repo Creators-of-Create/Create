@@ -167,7 +167,7 @@ public class LargeWaterWheelBlock extends RotatedPillarKineticBlock implements I
 	}
 
 	public static Couple<Integer> getSpeedRange() {
-		return Couple.create(4, 8);
+		return Couple.create(4, 4);
 	}
 
 }

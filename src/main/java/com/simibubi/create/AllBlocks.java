@@ -526,11 +526,14 @@ public class AllBlocks {
 		.properties(p -> p.color(MaterialColor.DIRT))
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.transform(axeOrPickaxe())
-		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
+		.blockstate(
+			(c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, s -> AssetLookup.partialBaseModel(c, p)))
 		.addLayer(() -> RenderType::cutoutMipped)
-		.transform(BlockStressDefaults.setCapacity(16.0))
+		.transform(BlockStressDefaults
+			.setCapacity(32.0))
 		.transform(BlockStressDefaults.setGeneratorSpeed(WaterWheelBlock::getSpeedRange))
-		.simpleItem()
+		.item()
+		.transform(customItemModel())
 		.register();
 
 	public static final BlockEntry<LargeWaterWheelBlock> LARGE_WATER_WHEEL =
@@ -542,8 +545,8 @@ public class AllBlocks {
 			.blockstate((c, p) -> axisBlock(c, p,
 				s -> s.getValue(LargeWaterWheelBlock.EXTENSION) ? AssetLookup.partialBaseModel(c, p, "extension")
 					: AssetLookup.partialBaseModel(c, p)))
-			.transform(BlockStressDefaults.setCapacity(64.0))
-			.transform(BlockStressDefaults.setGeneratorSpeed(WaterWheelBlock::getSpeedRange))
+			.transform(BlockStressDefaults.setCapacity(128.0))
+			.transform(BlockStressDefaults.setGeneratorSpeed(LargeWaterWheelBlock::getSpeedRange))
 			.item(LargeWaterWheelBlockItem::new)
 			.transform(customItemModel())
 			.register();

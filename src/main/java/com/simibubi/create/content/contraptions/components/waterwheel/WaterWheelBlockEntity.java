@@ -203,7 +203,7 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 
 	@Override
 	public float getGeneratedSpeed() {
-		return Mth.clamp(flowScore / getSize(), -2, 2) * 8 / getSize();
+		return Mth.clamp(flowScore, -1, 1) * 8 / getSize();
 	}
 
 }

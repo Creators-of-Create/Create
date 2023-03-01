@@ -81,18 +81,14 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 				return AllPartialModels.LARGE_WATER_WHEEL;
 			}
 		} else {
-			if (extension) {
-				return AllPartialModels.WATER_WHEEL_EXTENSION;
-			} else {
-				return AllPartialModels.WATER_WHEEL;
-			}
+			return AllPartialModels.WATER_WHEEL;
 		}
 	}
 
 	public static BakedModel generateModel(WaterWheelModelKey key) {
-		// TODO waterwheels
-//		boolean extension = state.getValue(LargeWaterWheelBlock.EXTENSION);
-		boolean extension = key.state().getOptionalValue(LargeWaterWheelBlock.EXTENSION).orElse(false);
+		boolean extension = key.state()
+			.getOptionalValue(LargeWaterWheelBlock.EXTENSION)
+			.orElse(false);
 		BakedModel template = getTemplateModel(key.large(), extension).get();
 
 		BlockState planksBlockState = key.material();
