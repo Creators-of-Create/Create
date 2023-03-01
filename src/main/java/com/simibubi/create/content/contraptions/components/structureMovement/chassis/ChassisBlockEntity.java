@@ -7,12 +7,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Function;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.BulkScrollValueBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -23,16 +29,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public class ChassisBlockEntity extends SmartBlockEntity {
 
 	ScrollValueBehaviour range;
+
+	public int currentlySelectedRange;
 
 	public ChassisBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -41,22 +54,30 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		int max = AllConfigs.server().kinetics.maxChassisRange.get();
-		range = new BulkScrollValueBehaviour(Lang.translateDirect("generic.range"), this, new CenteredSideValueBoxTransform(),
-				be -> ((ChassisBlockEntity) be).collectChassisGroup());
+		range = new ChassisScrollValueBehaviour(Lang.translateDirect("contraptions.chassis.range"), this,
+			new CenteredSideValueBoxTransform(), be -> ((ChassisBlockEntity) be).collectChassisGroup());
 		range.requiresWrench();
 		range.between(1, max);
-		range
-				.withClientCallback(
-						i -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
-		range.value = max / 2;
+		range.withClientCallback(
+			i -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
+		range.setValue(max / 2);
+		range.withFormatter(s -> String.valueOf(currentlySelectedRange));
 		behaviours.add(range);
+		currentlySelectedRange = range.getValue();
 	}
 
 	@Override
 	public void initialize() {
 		super.initialize();
 		if (getBlockState().getBlock() instanceof RadialChassisBlock)
-			range.setLabel(Lang.translateDirect("generic.radius"));
+			range.setLabel(Lang.translateDirect("contraptions.chassis.radius"));
+	}
+
+	@Override
+	protected void read(CompoundTag tag, boolean clientPacket) {
+		super.read(tag, clientPacket);
+		if (clientPacket)
+			currentlySelectedRange = getRange();
 	}
 
 	public int getRange() {
@@ -67,11 +88,12 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 		if (!(getBlockState().getBlock() instanceof AbstractChassisBlock))
 			return Collections.emptyList();
 		return isRadial() ? getIncludedBlockPositionsRadial(forcedMovement, visualize)
-				: getIncludedBlockPositionsLinear(forcedMovement, visualize);
+			: getIncludedBlockPositionsLinear(forcedMovement, visualize);
 	}
 
 	protected boolean isRadial() {
-		return level.getBlockState(worldPosition).getBlock() instanceof RadialChassisBlock;
+		return level.getBlockState(worldPosition)
+			.getBlock() instanceof RadialChassisBlock;
 	}
 
 	public List<ChassisBlockEntity> collectChassisGroup() {
@@ -149,7 +171,7 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 		AbstractChassisBlock block = (AbstractChassisBlock) state.getBlock();
 		Axis axis = state.getValue(AbstractChassisBlock.AXIS);
 		Direction facing = Direction.get(AxisDirection.POSITIVE, axis);
-		int chassisRange = visualize ? range.scrollableValue : getRange();
+		int chassisRange = visualize ? currentlySelectedRange : getRange();
 
 		for (int offset : new int[] { 1, -1 }) {
 			if (offset == -1)
@@ -183,7 +205,7 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 		BlockState state = level.getBlockState(worldPosition);
 		Axis axis = state.getValue(AbstractChassisBlock.AXIS);
 		AbstractChassisBlock block = (AbstractChassisBlock) state.getBlock();
-		int chassisRange = visualize ? range.scrollableValue : getRange();
+		int chassisRange = visualize ? currentlySelectedRange : getRange();
 
 		for (Direction facing : Iterate.directions) {
 			if (facing.getAxis() == axis)
@@ -227,6 +249,48 @@ public class ChassisBlockEntity extends SmartBlockEntity {
 		}
 
 		return positions;
+	}
+
+	class ChassisScrollValueBehaviour extends BulkScrollValueBehaviour {
+
+		public ChassisScrollValueBehaviour(Component label, SmartBlockEntity be, ValueBoxTransform slot,
+			Function<SmartBlockEntity, List<? extends SmartBlockEntity>> groupGetter) {
+			super(label, be, slot, groupGetter);
+		}
+
+		@Override
+		public ValueSettingsBoard createBoard(Player player, BlockHitResult hitResult) {
+			ImmutableList<Component> rows = ImmutableList.of(Lang.translateDirect("contraptions.chassis.distance"));
+			ValueSettingsFormatter formatter =
+				new ValueSettingsFormatter(vs -> new ValueSettings(vs.row(), vs.value() + 1).format());
+			return new ValueSettingsBoard(label, max - 1, 1, rows, formatter);
+		}
+
+		@Override
+		@OnlyIn(Dist.CLIENT)
+		public void newSettingHovered(ValueSettings valueSetting) {
+			if (!level.isClientSide)
+				return;
+			if (!AllKeys.ctrlDown())
+				currentlySelectedRange = valueSetting.value() + 1;
+			else
+				for (SmartBlockEntity be : getBulk())
+					if (be instanceof ChassisBlockEntity cbe)
+						cbe.currentlySelectedRange = valueSetting.value() + 1;
+			ChassisRangeDisplay.display(ChassisBlockEntity.this);
+		}
+
+		@Override
+		public void setValueSettings(Player player, ValueSettings vs, boolean ctrlHeld) {
+			super.setValueSettings(player, new ValueSettings(vs.row(), vs.value() + 1), ctrlHeld);
+		}
+
+		@Override
+		public ValueSettings getValueSettings() {
+			ValueSettings vs = super.getValueSettings();
+			return new ValueSettings(vs.row(), vs.value() - 1);
+		}
+
 	}
 
 }

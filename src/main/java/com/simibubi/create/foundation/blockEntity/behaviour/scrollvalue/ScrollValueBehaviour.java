@@ -4,19 +4,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class ScrollValueBehaviour extends BlockEntityBehaviour {
+public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueSettingsBehaviour {
 
 	public static final BehaviourType<ScrollValueBehaviour> TYPE = new BehaviourType<>();
 
@@ -24,17 +30,12 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 	Vec3 textShift;
 
 	int min = 0;
-	int max = 1;
+	protected int max = 1;
 	public int value;
-	public int scrollableValue;
-	int ticksUntilScrollPacket;
-	boolean forceClientState;
-	Component label;
+	public Component label;
 	Consumer<Integer> callback;
 	Consumer<Integer> clientCallback;
 	Function<Integer, String> formatter;
-	Function<Integer, Component> unit;
-	Function<StepContext, Integer> step;
 	private Supplier<Boolean> isActive;
 	boolean needsWrench;
 
@@ -46,52 +47,26 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 		};
 		clientCallback = i -> {
 		};
-		textShift = Vec3.ZERO;
 		formatter = i -> Integer.toString(i);
-		step = (c) -> 1;
 		value = 0;
 		isActive = () -> true;
-		ticksUntilScrollPacket = -1;
 	}
 
 	@Override
-	public boolean isSafeNBT() { return true; }
+	public boolean isSafeNBT() {
+		return true;
+	}
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
 		nbt.putInt("ScrollValue", value);
-		if (clientPacket && forceClientState) {
-			nbt.putBoolean("ForceScrollable", true);
-			forceClientState = false;
-		}
 		super.write(nbt, clientPacket);
 	}
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
 		value = nbt.getInt("ScrollValue");
-		if (nbt.contains("ForceScrollable")) {
-			ticksUntilScrollPacket = -1;
-			scrollableValue = value;
-		}
 		super.read(nbt, clientPacket);
-	}
-
-	@Override
-	public void tick() {
-		super.tick();
-
-		if (!getWorld().isClientSide)
-			return;
-		if (ticksUntilScrollPacket == -1)
-			return;
-		if (ticksUntilScrollPacket > 0) {
-			ticksUntilScrollPacket--;
-			return;
-		}
-
-		AllPackets.getChannel().sendToServer(new ScrollValueUpdatePacket(getPos(), scrollableValue));
-		ticksUntilScrollPacket = -1;
 	}
 
 	public ScrollValueBehaviour withClientCallback(Consumer<Integer> valueCallback) {
@@ -110,11 +85,6 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 		return this;
 	}
 
-	public ScrollValueBehaviour moveText(Vec3 shift) {
-		textShift = shift;
-		return this;
-	}
-
 	public ScrollValueBehaviour requiresWrench() {
 		this.needsWrench = true;
 		return this;
@@ -125,26 +95,9 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 		return this;
 	}
 
-	public ScrollValueBehaviour withUnit(Function<Integer, Component> unit) {
-		this.unit = unit;
-		return this;
-	}
-
 	public ScrollValueBehaviour onlyActiveWhen(Supplier<Boolean> condition) {
 		isActive = condition;
 		return this;
-	}
-
-	public ScrollValueBehaviour withStepFunction(Function<StepContext, Integer> step) {
-		this.step = step;
-		return this;
-	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
-		setValue(value);
-		scrollableValue = value;
 	}
 
 	public void setValue(int value) {
@@ -152,11 +105,9 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 		if (value == this.value)
 			return;
 		this.value = value;
-		forceClientState = true;
 		callback.accept(value);
 		blockEntity.setChanged();
 		blockEntity.sendData();
-		scrollableValue = value;
 	}
 
 	public int getValue() {
@@ -164,7 +115,7 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 	}
 
 	public String formatValue() {
-		return formatter.apply(scrollableValue);
+		return formatter.apply(value);
 	}
 
 	@Override
@@ -172,10 +123,12 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 		return TYPE;
 	}
 
+	@Override
 	public boolean isActive() {
 		return isActive.get();
 	}
 
+	@Override
 	public boolean testHit(Vec3 hit) {
 		BlockState state = blockEntity.getBlockState();
 		Vec3 localHit = hit.subtract(Vec3.atLowerCornerOf(blockEntity.getBlockPos()));
@@ -191,6 +144,35 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour {
 		public boolean forward;
 		public boolean shift;
 		public boolean control;
+	}
+
+	@Override
+	public ValueBoxTransform getSlotPositioning() {
+		return slotPositioning;
+	}
+
+	@Override
+	public ValueSettingsBoard createBoard(Player player, BlockHitResult hitResult) {
+		return new ValueSettingsBoard(label, max, 10, ImmutableList.of(Components.literal("Value")),
+			new ValueSettingsFormatter(ValueSettings::format));
+	}
+
+	@Override
+	public void setValueSettings(Player player, ValueSettings valueSetting, boolean ctrlDown) {
+		if (valueSetting.equals(getValueSettings()))
+			return;
+		setValue(valueSetting.value());
+		playFeedbackSound(this);
+	}
+
+	@Override
+	public ValueSettings getValueSettings() {
+		return new ValueSettings(0, value);
+	}
+
+	@Override
+	public boolean onlyVisibleWithWrench() {
+		return needsWrench;
 	}
 
 }

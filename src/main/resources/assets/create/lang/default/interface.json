@@ -193,21 +193,47 @@
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lock rotation",
 
 	"create.contraptions.windmill.rotation_direction": "Rotation Direction",
-	"create.contraptions.clockwork.clock_hands": "Clock Hands",
+	"create.contraptions.clockwork.clock_hands": "Clock Hand Arrangement",
 	"create.contraptions.clockwork.hour_first": "Hour hand first",
 	"create.contraptions.clockwork.minute_first": "Minute hand first",
 	"create.contraptions.clockwork.hour_first_24": "24-Hour hand first",
 
+	"create.logistics.crafter.connected": "Connected Crafters",
+	"create.logistics.crafter.click_to_merge": "Click to merge Inventories",
+	"create.logistics.crafter.click_to_separate": "Click to separate Inventories",
+
 	"create.logistics.filter": "Filter",
 	"create.logistics.recipe_filter": "Recipe Filter",
 	"create.logistics.fluid_filter": "Fluid Filter",
-	"create.logistics.firstFrequency": "Freq. #1",
-	"create.logistics.secondFrequency": "Freq. #2",
+	"create.logistics.firstFrequency": "Frequency #1",
+	"create.logistics.secondFrequency": "Frequency #2",
+	
+	"create.logistics.filter.click_to_set": "Click with item to set",
+	"create.logistics.filter.click_to_replace": "Click with item to replace",
+	"create.logistics.filter.hold_to_set_amount": "Click and hold for amount",
 
-	"create.logistics.filter.apply": "Applied filter to %1$s.",
-	"create.logistics.filter.apply_click_again": "Applied filter to %1$s, click again to copy the amount.",
-	"create.logistics.filter.apply_count": "Applied extraction count to filter.",
-
+	"create.logistics.filter.extracted_amount": "Extracted Amount",
+	"create.logistics.filter.any_amount_short": "Any",
+	"create.logistics.filter.up_to": "Up to",
+	"create.logistics.filter.exactly": "Exactly",
+	
+	"create.logistics.creative_crate.supply": "Infinite Supply",
+	"create.logistics.train_observer.cargo_filter": "Cargo Filter",
+	
+	"create.kinetics.creative_motor.rotation_speed": "Generated Speed in RPM",
+	"create.kinetics.speed_controller.rotation_speed": "Targeted Speed in RPM",
+	
+	"create.logistics.redstone_interval": "Redstone Interval",
+	
+	"create.contraptions.contoller.target": "Targeted Component",
+	
+	"create.contraptions.chassis.radius": "Radius when Sticky",
+	"create.contraptions.chassis.range": "Range of Sticky Sides",
+	"create.contraptions.chassis.distance": "Distance",
+	
+	"create.gui.value_settings.hold_to_edit": "Click and hold to edit",
+	"create.gui.value_settings.release_to_confirm": "Release %1$s to Confirm",
+	
 	"create.gui.goggles.generator_stats": "Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
 	"create.gui.goggles.at_current_speed": "at current speed",
@@ -515,7 +541,7 @@
 	"create.weighted_ejector.targeting": "Ejecting to [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "Ejected Stack Size",
 
-	"create.logistics.when_multiple_outputs_available": "When Multiple Outputs Available",
+	"create.logistics.when_multiple_outputs_available": "Distribution Method",
 
 	"create.mechanical_arm.selection_mode.round_robin": "Round Robin",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "Forced Round Robin",

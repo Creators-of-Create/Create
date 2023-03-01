@@ -6,21 +6,22 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform.Si
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Components;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 
 public class ValueBox extends ChasingAABBOutline {
 
@@ -37,10 +38,12 @@ public class ValueBox extends ChasingAABBOutline {
 	protected ValueBoxTransform transform;
 	protected BlockState blockState;
 
+	protected AllIcons outline = AllIcons.VALUE_BOX_HOVER_4PX;
+
 	public ValueBox(Component label, AABB bb, BlockPos pos) {
 		this(label, bb, pos, Minecraft.getInstance().level.getBlockState(pos));
 	}
-	
+
 	public ValueBox(Component label, AABB bb, BlockPos pos, BlockState state) {
 		super(bb);
 		this.label = label;
@@ -53,24 +56,8 @@ public class ValueBox extends ChasingAABBOutline {
 		return this;
 	}
 
-	public ValueBox offsetLabel(Vec3 offset) {
-		this.labelOffset = offset;
-		return this;
-	}
-
-	public ValueBox subLabel(Component sublabel) {
-		this.sublabel = sublabel;
-		return this;
-	}
-
-	public ValueBox scrollTooltip(Component scrollTip) {
-		this.scrollTooltip = scrollTip;
-		return this;
-	}
-
-	public ValueBox withColors(int passive, int highlight) {
-		this.passiveColor = passive;
-		this.highlightColor = highlight;
+	public ValueBox wideOutline() {
+		this.outline = AllIcons.VALUE_BOX_HOVER_6PX;
 		return this;
 	}
 
@@ -94,35 +81,24 @@ public class ValueBox extends ChasingAABBOutline {
 		transformNormals = ms.last()
 			.normal()
 			.copy();
-		params.colored(isPassive ? passiveColor : highlightColor);
-		super.render(ms, buffer, pt);
-
-		float fontScale = hasTransform ? -transform.getFontScale() : -1 / 64f;
-		ms.scale(fontScale, fontScale, fontScale);
-
-		ms.pushPose();
-		renderContents(ms, buffer);
-		ms.popPose();
 
 		if (!isPassive) {
 			ms.pushPose();
-			ms.translate(17.5, -.5, 7);
-			ms.translate(labelOffset.x, labelOffset.y, labelOffset.z);
-
-			renderHoveringText(ms, buffer, label);
-			if (!sublabel.getString().isEmpty()) {
-				ms.translate(0, 10, 0);
-				renderHoveringText(ms, buffer, sublabel);
-			}
-			if (!scrollTooltip.getString().isEmpty()) {
-				ms.translate(0, 10, 0);
-				renderHoveringText(ms, buffer, scrollTooltip, 0x998899, 0x111111);
-			}
-
+			ms.scale(-2.01f, -2.01f, 2.01f);
+			ms.translate(-8 / 16.0, -8 / 16.0, -.5 / 16.0);
+			getOutline().render(ms, buffer, 0xffffff);
 			ms.popPose();
 		}
 
+		float fontScale = hasTransform ? -transform.getFontScale() : -1 / 64f;
+		ms.scale(fontScale, fontScale, fontScale);
+		renderContents(ms, buffer);
+		
 		ms.popPose();
+	}
+
+	public AllIcons getOutline() {
+		return outline;
 	}
 
 	public void renderContents(PoseStack ms, MultiBufferSource buffer) {}
@@ -130,33 +106,57 @@ public class ValueBox extends ChasingAABBOutline {
 	public static class ItemValueBox extends ValueBox {
 		ItemStack stack;
 		int count;
+		boolean upTo;
 
-		public ItemValueBox(Component label, AABB bb, BlockPos pos, ItemStack stack, int count) {
+		public ItemValueBox(Component label, AABB bb, BlockPos pos, ItemStack stack, int count, boolean upTo) {
 			super(label, bb, pos);
 			this.stack = stack;
 			this.count = count;
+			this.upTo = upTo;
+		}
+
+		@Override
+		public AllIcons getOutline() {
+			if (stack.getItem() instanceof FilterItem)
+				return AllIcons.VALUE_BOX_HOVER_8PX;
+			if (!stack.isEmpty())
+				return AllIcons.VALUE_BOX_HOVER_6PX;
+			return super.getOutline();
 		}
 
 		@Override
 		public void renderContents(PoseStack ms, MultiBufferSource buffer) {
 			super.renderContents(ms, buffer);
+			if (count == -1)
+				return;
+
 			Font font = Minecraft.getInstance().font;
-			Component countString = Components.literal(count == 0 ? "*" : count + "");
+			boolean wildcard = count == 0 || upTo && count == stack.getMaxStackSize();
+			Component countString = Components.literal(wildcard ? "*" : count + "");
 			ms.translate(17.5f, -5f, 7f);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;
 			boolean isEmpty = stack.isEmpty();
+
+			ItemRenderer itemRenderer = Minecraft.getInstance()
+				.getItemRenderer();
+			BakedModel modelWithOverrides = itemRenderer.getModel(stack, null, null, 0);
+			boolean blockItem =
+				modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
+
 			float scale = 1.5f;
 			ms.translate(-font.width(countString), 0, 0);
 
 			if (isFilter)
-				ms.translate(3, 8, 7.25f);
+				ms.translate(-5, 8, 7.25f);
 			else if (isEmpty) {
-				ms.translate(-17, -2, 3f);
-				scale = 2f;
-			}
-			else
-				ms.translate(-7, 10, 10 + 1 / 4f);
+				ms.translate(-15, -1f, -2.75f);
+				scale = 1.65f;
+			} else
+				ms.translate(-7, 10, blockItem ? 10 + 1 / 4f : 0);
+
+			if (wildcard)
+				ms.translate(-1, 3f, 0);
 
 			ms.scale(scale, scale, scale);
 			drawString(ms, buffer, countString, 0, 0, isFilter ? 0xFFFFFF : 0xEDEDED);
@@ -173,7 +173,7 @@ public class ValueBox extends ChasingAABBOutline {
 			super(label, bb, pos);
 			this.text = text;
 		}
-		
+
 		public TextValueBox(Component label, AABB bb, BlockPos pos, BlockState state, Component text) {
 			super(label, bb, pos, state);
 			this.text = text;
@@ -183,7 +183,7 @@ public class ValueBox extends ChasingAABBOutline {
 		public void renderContents(PoseStack ms, MultiBufferSource buffer) {
 			super.renderContents(ms, buffer);
 			Font font = Minecraft.getInstance().font;
-			float scale = 4;
+			float scale = 3;
 			ms.scale(scale, scale, 1);
 			ms.translate(-4, -4, 5);
 
@@ -207,25 +207,18 @@ public class ValueBox extends ChasingAABBOutline {
 
 		public IconValueBox(Component label, INamedIconOptions iconValue, AABB bb, BlockPos pos) {
 			super(label, bb, pos);
-			subLabel(Lang.translateDirect(iconValue.getTranslationKey()));
 			icon = iconValue.getIcon();
 		}
 
 		@Override
 		public void renderContents(PoseStack ms, MultiBufferSource buffer) {
 			super.renderContents(ms, buffer);
-			float scale = 4 * 16;
+			float scale = 2 * 16;
 			ms.scale(scale, scale, scale);
-			ms.translate(-.5f, -.5f, 1 / 32f);
+			ms.translate(-.5f, -.5f, 5 / 32f);
 			icon.render(ms, buffer, 0xFFFFFF);
 		}
 
-	}
-
-	// util
-
-	protected void renderHoveringText(PoseStack ms, MultiBufferSource buffer, Component text) {
-		renderHoveringText(ms, buffer, text, highlightColor, Color.mixColors(passiveColor, 0, 0.75f));
 	}
 
 	protected void renderHoveringText(PoseStack ms, MultiBufferSource buffer, Component text, int color,
@@ -237,7 +230,8 @@ public class ValueBox extends ChasingAABBOutline {
 		ms.popPose();
 	}
 
-	private static void drawString(PoseStack ms, MultiBufferSource buffer, Component text, float x, float y, int color) {
+	private static void drawString(PoseStack ms, MultiBufferSource buffer, Component text, float x, float y,
+		int color) {
 		Minecraft.getInstance().font.drawInBatch(text, x, y, color, false, ms.last()
 			.pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
 	}

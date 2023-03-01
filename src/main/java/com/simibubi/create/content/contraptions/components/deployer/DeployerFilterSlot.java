@@ -16,7 +16,7 @@ public class DeployerFilterSlot extends ValueBoxTransform {
 	@Override
 	protected Vec3 getLocalOffset(BlockState state) {
 		Direction facing = state.getValue(DeployerBlock.FACING);
-		Vec3 vec = VecHelper.voxelSpace(8f, 13.5f, 11.5f);
+		Vec3 vec = VecHelper.voxelSpace(8f, 13f, 11.5f);
 
 		float yRot = AngleHelper.horizontalAngle(facing);
 		float xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;

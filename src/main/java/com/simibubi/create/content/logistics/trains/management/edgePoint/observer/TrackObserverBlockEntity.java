@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -37,6 +38,7 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.OBSERVER));
 		behaviours.add(filtering = createFilter().withCallback(this::onFilterChanged));
+		filtering.setLabel(Lang.translateDirect("logistics.train_observer.cargo_filter"));
 	}
 
 	private void onFilterChanged(ItemStack newFilter) {
@@ -102,12 +104,8 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 
 			@Override
 			protected Vec3 getLocalOffset(BlockState state) {
-				return new Vec3(0.5, 15 / 16d, 0.5);
+				return new Vec3(0.5, 15.5 / 16d, 0.5);
 			}
-
-			protected float getScale() {
-				return super.getScale() * 1.5f;
-			};
 
 		});
 	}

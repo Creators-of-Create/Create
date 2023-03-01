@@ -19,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 public class ContentObserverBlockEntity extends SmartBlockEntity {
 
@@ -36,7 +35,7 @@ public class ContentObserverBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).moveText(new Vec3(0, 5, 0));
+		filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot());
 		behaviours.add(filtering);
 
 		InterfaceProvider towardBlockFacing = InterfaceProvider.towardBlockFacing();

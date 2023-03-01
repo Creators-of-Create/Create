@@ -7,12 +7,10 @@ import java.util.List;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,12 +27,11 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		maxState = new ScrollValueBehaviour(Lang.translateDirect("generic.delay"), this, new BrassDiodeScrollSlot())
-			.between(2, 60 * 20 * 30);
-		maxState.withStepFunction(this::step);
+		maxState = new BrassDiodeScrollValueBehaviour(Lang.translateDirect("logistics.redstone_interval"), this,
+			new BrassDiodeScrollSlot()).between(2, 60 * 20 * 60);
 		maxState.withFormatter(this::format);
-		maxState.withUnit(this::getUnit);
 		maxState.withCallback(this::onMaxDelayChanged);
+		maxState.setValue(2);
 		behaviours.add(maxState);
 	}
 
@@ -76,32 +73,12 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity {
 		super.write(compound, clientPacket);
 	}
 
-	private int step(StepContext context) {
-		int value = context.currentValue;
-		if (!context.forward)
-			value--;
-
-		if (value < 20)
-			return 1;
-		if (value < 20 * 60)
-			return 20;
-		return 20 * 60;
-	}
-
 	private String format(int value) {
-		if (value < 20)
+		if (value < 60)
 			return value + "t";
 		if (value < 20 * 60)
 			return (value / 20) + "s";
 		return (value / 20 / 60) + "m";
-	}
-
-	private Component getUnit(int value) {
-		if (value < 20)
-			return Lang.translateDirect("generic.unit.ticks");
-		if (value < 20 * 60)
-			return Lang.translateDirect("generic.unit.seconds");
-		return Lang.translateDirect("generic.unit.minutes");
 	}
 
 }

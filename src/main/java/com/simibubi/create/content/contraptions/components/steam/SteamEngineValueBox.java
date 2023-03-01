@@ -40,7 +40,7 @@ public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 		if (engineFacing.getAxis() == Axis.Y)
 			recessed ^= state.getValue(SteamEngineBlock.FACING).getAxis() == Axis.X;
 
-		Vec3 local = VecHelper.voxelSpace(8, recessed ? 13 : 15, 9);
+		Vec3 local = VecHelper.voxelSpace(8, recessed ? 12.5 : 14.5, 9);
 
 		local = VecHelper.rotateCentered(local, roll, Axis.Z);
 		local = VecHelper.rotateCentered(local, horizontalAngle, Axis.Y);

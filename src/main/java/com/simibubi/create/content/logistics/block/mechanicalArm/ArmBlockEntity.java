@@ -598,14 +598,14 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 		@Override
 		protected Vec3 getLocalOffset(BlockState state) {
 			int yPos = state.getValue(ArmBlock.CEILING) ? 16 - 3 : 3;
-			Vec3 location = VecHelper.voxelSpace(8, yPos, 15.95);
+			Vec3 location = VecHelper.voxelSpace(8, yPos, 15.5);
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Direction.Axis.Y);
 			return location;
 		}
 
 		@Override
 		protected float getScale() {
-			return .3f;
+			return super.getScale();
 		}
 
 	}

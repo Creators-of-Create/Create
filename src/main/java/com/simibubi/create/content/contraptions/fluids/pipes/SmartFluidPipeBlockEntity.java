@@ -71,9 +71,14 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 		@Override
 		protected Vec3 getLocalOffset(BlockState state) {
 			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
-			float y = face == AttachFace.CEILING ? 0.3f : face == AttachFace.WALL ? 11.3f : 15.3f;
-			float z = face == AttachFace.CEILING ? 4.6f : face == AttachFace.WALL ? 0.6f : 4.6f;
+			float y = face == AttachFace.CEILING ? 0.55f : face == AttachFace.WALL ? 11.4f : 15.45f;
+			float z = face == AttachFace.CEILING ? 4.6f : face == AttachFace.WALL ? 0.55f : 4.625f;
 			return VecHelper.rotateCentered(VecHelper.voxelSpace(8, y, z), angleY(state), Axis.Y);
+		}
+		
+		@Override
+		protected float getScale() {
+			return super.getScale() * 1.02f;
 		}
 
 		@Override

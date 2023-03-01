@@ -36,10 +36,10 @@ public class ChassisRangeDisplay {
 			this.be = be;
 			timer = DISPLAY_TIME;
 			CreateClient.OUTLINER.showCluster(getOutlineKey(), createSelection(be))
-					.colored(0xFFFFFF)
-					.disableNormals()
-					.lineWidth(1 / 16f)
-					.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
+				.colored(0xFFFFFF)
+				.disableNormals()
+				.lineWidth(1 / 16f)
+				.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
 		}
 
 		protected Object getOutlineKey() {
@@ -173,7 +173,7 @@ public class ChassisRangeDisplay {
 			GroupEntry hoveredGroup = new GroupEntry(chassis);
 
 			for (ChassisBlockEntity included : hoveredGroup.includedBEs)
-				CreateClient.OUTLINER.remove(included.getBlockPos());
+				CreateClient.OUTLINER.remove(Pair.of(included.getBlockPos(), 1));
 
 			groupEntries.forEach(entry -> CreateClient.OUTLINER.remove(entry.getOutlineKey()));
 			groupEntries.clear();

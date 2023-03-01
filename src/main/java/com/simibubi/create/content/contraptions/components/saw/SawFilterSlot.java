@@ -15,8 +15,8 @@ public class SawFilterSlot extends ValueBoxTransform {
 	protected Vec3 getLocalOffset(BlockState state) {
 		if (state.getValue(SawBlock.FACING) != Direction.UP)
 			return null;
-		Vec3 x = VecHelper.voxelSpace(8f, 12.5f, 12.25f);
-		Vec3 z = VecHelper.voxelSpace(12.25f, 12.5f, 8f);
+		Vec3 x = VecHelper.voxelSpace(8f, 12.5f, 11f);
+		Vec3 z = VecHelper.voxelSpace(11f, 12.5f, 8f);
 		return state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? z : x;
 	}
 

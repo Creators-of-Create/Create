@@ -126,6 +126,9 @@ public class AllIcons implements ScreenElement {
 
 		I_SCHEMATIC = newRow(),
 		I_SEQ_REPEAT = next(),
+		VALUE_BOX_HOVER_6PX = next(),
+		VALUE_BOX_HOVER_4PX = next(),
+		VALUE_BOX_HOVER_8PX = next(),
 
 		I_MTD_LEFT = newRow(),
 		I_MTD_CLOSE = next(),
@@ -187,7 +190,7 @@ public class AllIcons implements ScreenElement {
 
 	@OnlyIn(Dist.CLIENT)
 	public void render(PoseStack ms, MultiBufferSource buffer, int color) {
-		VertexConsumer builder = buffer.getBuffer(RenderType.textSeeThrough(ICON_ATLAS));
+		VertexConsumer builder = buffer.getBuffer(RenderType.text(ICON_ATLAS));
 		Matrix4f matrix = ms.last().pose();
 		Color rgb = new Color(color);
 		int light = LightTexture.FULL_BRIGHT;

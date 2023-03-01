@@ -22,7 +22,7 @@ public class CenteredSideValueBoxTransform extends ValueBoxTransform.Sided {
 
 	@Override
 	protected Vec3 getSouthLocation() {
-		return VecHelper.voxelSpace(8, 8, 16);
+		return VecHelper.voxelSpace(8, 8, 15.5);
 	}
 
 	@Override

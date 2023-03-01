@@ -47,12 +47,14 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		BlockState blockState = blockEntity.getBlockState();
 		Direction facing = blockState.getValue(ContraptionControlsBlock.FACING)
 			.getOpposite();
-		Vec3 buttonAxis = VecHelper.rotate(new Vec3(0, 1, -.325), AngleHelper.horizontalAngle(facing), Axis.Y)
-			.scale(-1 / 24f * blockEntity.button.getValue(pt));
+		Vec3 buttonMovementAxis = VecHelper.rotate(new Vec3(0, 1, -.325), AngleHelper.horizontalAngle(facing), Axis.Y);
+		Vec3 buttonMovement = buttonMovementAxis.scale(-0.07f + -1 / 24f * blockEntity.button.getValue(pt));
+		Vec3 buttonOffset = buttonMovementAxis.scale(0.07f);
 
 		ms.pushPose();
-		ms.translate(buttonAxis.x, buttonAxis.y, buttonAxis.z);
+		ms.translate(buttonMovement.x, buttonMovement.y, buttonMovement.z);
 		super.renderSafe(blockEntity, pt, ms, buffer, light, overlay);
+		ms.translate(buttonOffset.x, buttonOffset.y, buttonOffset.z);
 
 		VertexConsumer vc = buffer.getBuffer(RenderType.solid());
 		CachedBufferer.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_BUTTON, blockState, facing)

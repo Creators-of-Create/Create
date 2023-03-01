@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.blockEntity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity implements IPartialSafeNBT, IInteractionChecker, ISpecialBlockEntityItemRequirement {
+public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity
+	implements IPartialSafeNBT, IInteractionChecker, ISpecialBlockEntityItemRequirement {
 
 	private final Map<BehaviourType<?>, BlockEntityBehaviour> behaviours = new HashMap<>();
 	private boolean initialized = false;
@@ -51,8 +53,8 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity impleme
 	public abstract void addBehaviours(List<BlockEntityBehaviour> behaviours);
 
 	/**
-	 * Gets called just before reading block entity data for behaviours. Register anything
-	 * here that depends on your custom BE data.
+	 * Gets called just before reading block entity data for behaviours. Register
+	 * anything here that depends on your custom BE data.
 	 */
 	public void addBehavioursDeferred(List<BlockEntityBehaviour> behaviours) {}
 
@@ -173,9 +175,12 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity impleme
 		return (T) behaviours.get(type);
 	}
 
-	protected void forEachBehaviour(Consumer<BlockEntityBehaviour> action) {
-		behaviours.values()
-			.forEach(action);
+	public void forEachBehaviour(Consumer<BlockEntityBehaviour> action) {
+		getAllBehaviours().forEach(action);
+	}
+
+	public Collection<BlockEntityBehaviour> getAllBehaviours() {
+		return behaviours.values();
 	}
 
 	protected void attachBehaviourLate(BlockEntityBehaviour behaviour) {
@@ -184,8 +189,7 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity impleme
 	}
 
 	public ItemRequirement getRequiredItems(BlockState state) {
-		return behaviours.values()
-			.stream()
+		return getAllBehaviours().stream()
 			.reduce(ItemRequirement.NONE, (r, b) -> r.union(b.getRequiredItems()), (r, r1) -> r.union(r1));
 	}
 
@@ -208,7 +212,7 @@ public abstract class SmartBlockEntity extends CachedRenderBBBlockEntity impleme
 	public boolean isVirtual() {
 		return virtualMode;
 	}
-	
+
 	public boolean isChunkUnloaded() {
 		return chunkUnloaded;
 	}

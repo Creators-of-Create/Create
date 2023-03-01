@@ -14,7 +14,7 @@ public class BrassDiodeScrollSlot extends ValueBoxTransform {
 
 	@Override
 	protected Vec3 getLocalOffset(BlockState state) {
-		return VecHelper.voxelSpace(8, 3f, 8);
+		return VecHelper.voxelSpace(8, 2.6f, 8);
 	}
 
 	@Override

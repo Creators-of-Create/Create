@@ -48,7 +48,8 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		behaviours.add(filtering = new FilteringBehaviour(this, new ControlsSlot()).moveText(new Vec3(-30, 20, 10)));
+		behaviours.add(filtering = new FilteringBehaviour(this, new ControlsSlot()));
+		filtering.setLabel(Lang.translateDirect("contraptions.contoller.target"));
 	}
 
 	public void pressButton() {
@@ -107,13 +108,13 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 			.color(DyeHelper.DYE_TABLE.get(enabled ? DyeColor.LIME : DyeColor.ORANGE)
 				.getFirst())
 			.component();
-		
+
 		if (filter.isEmpty()) {
 			Lang.translate("contraption.controls.all_actor_toggle", state)
 				.sendStatus(player);
 			return;
 		}
-		
+
 		Lang.translate("contraption.controls.specific_actor_toggle", filter.getHoverName()
 			.getString(), state)
 			.sendStatus(player);
@@ -125,7 +126,7 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 		protected Vec3 getLocalOffset(BlockState state) {
 			Direction facing = state.getValue(ControlsBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing);
-			return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 10.875f, 5.1f), yRot, Axis.Y);
+			return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12f, 5.5f), yRot, Axis.Y);
 		}
 
 		@Override

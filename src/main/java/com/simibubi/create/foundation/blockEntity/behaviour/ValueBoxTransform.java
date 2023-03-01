@@ -54,7 +54,7 @@ public abstract class ValueBoxTransform {
 	}
 
 	protected float getScale() {
-		return .4f;
+		return .5f;
 	}
 
 	protected float getFontScale() {

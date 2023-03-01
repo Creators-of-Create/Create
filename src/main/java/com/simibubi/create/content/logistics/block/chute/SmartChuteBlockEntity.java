@@ -32,7 +32,7 @@ public class SmartChuteBlockEntity extends ChuteBlockEntity {
 
 	@Override
 	protected ExtractionCountMode getExtractionMode() {
-		return filtering.isCountVisible() && !filtering.anyAmount() ? ExtractionCountMode.EXACTLY
+		return filtering.isCountVisible() && !filtering.anyAmount() && !filtering.upTo ? ExtractionCountMode.EXACTLY
 			: ExtractionCountMode.UPTO;
 	}
 

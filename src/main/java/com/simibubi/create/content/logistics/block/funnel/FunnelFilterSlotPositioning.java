@@ -28,7 +28,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 15.5f, 13), stateAngle, Axis.Y);
 			case PULLING:
 			case PUSHING:
-				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.1, 8.7f), horizontalAngle, Axis.Y);
+				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.0f, 8.675f), horizontalAngle, Axis.Y);
 			default:
 			case RETRACTED:
 				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 13, 7.5f), horizontalAngle, Axis.Y);
@@ -41,7 +41,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 			return VecHelper.rotateCentered(southLocation, horizontalAngle, Axis.Y);
 		}
 
-		return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.1, 8.7f), horizontalAngle, Axis.Y);
+		return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.2, 8.55f), horizontalAngle, Axis.Y);
 	}
 
 	@Override

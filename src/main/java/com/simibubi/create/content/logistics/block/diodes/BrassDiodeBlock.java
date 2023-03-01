@@ -36,6 +36,11 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player player, InteractionHand pHand,
 		BlockHitResult pHit) {
+		return toggle(pLevel, pPos, pState, player, pHand);
+	}
+
+	public InteractionResult toggle(Level pLevel, BlockPos pPos, BlockState pState, Player player,
+		InteractionHand pHand) {
 		if (!player.mayBuild())
 			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())

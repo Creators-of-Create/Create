@@ -42,8 +42,7 @@ public class AllSpriteShifts {
 		VERTICAL_FRAMED_GLASS = getCT(AllCTTypes.VERTICAL, "palettes/framed_glass", "palettes/vertical_framed_glass"),
 		ORNATE_IRON_WINDOW = vertical("palettes/ornate_iron_window");
 
-	public static final CTSpriteShiftEntry CRAFTER_FRONT =
-		getCT(AllCTTypes.OMNIDIRECTIONAL, "crafter_top", "brass_casing"), CRAFTER_SIDE = vertical("crafter_side"),
+	public static final CTSpriteShiftEntry CRAFTER_SIDE = vertical("crafter_side"),
 		CRAFTER_OTHERSIDE = horizontal("crafter_side"),
 		ANDESITE_ENCASED_COGWHEEL_SIDE = vertical("andesite_encased_cogwheel_side"),
 		ANDESITE_ENCASED_COGWHEEL_OTHERSIDE = horizontal("andesite_encased_cogwheel_side"),

@@ -112,7 +112,6 @@ public class ClientEvents {
 
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
-		ScrollValueHandler.tick();
 
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
@@ -160,6 +159,8 @@ public class ClientEvents {
 		CameraDistanceModifier.tick();
 		CameraAngleAnimationService.tick();
 		TrainHUD.tick();
+		CreateClient.VALUE_SETTINGS_HANDLER.tick();
+		ScrollValueHandler.tick();
 	}
 
 	@SubscribeEvent

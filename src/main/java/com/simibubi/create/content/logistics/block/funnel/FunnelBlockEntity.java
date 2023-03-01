@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInput
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -74,7 +75,8 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 			BeltBlockEntity belt = BeltHelper.getSegmentBE(level, worldPosition.below());
 			if (belt != null)
-				return belt.getMovementFacing() == state.getValue(BeltFunnelBlock.HORIZONTAL_FACING) ? Mode.PUSHING_TO_BELT
+				return belt.getMovementFacing() == state.getValue(BeltFunnelBlock.HORIZONTAL_FACING)
+					? Mode.PUSHING_TO_BELT
 					: Mode.TAKING_FROM_BELT;
 			return Mode.INVALID;
 		}
@@ -136,8 +138,9 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 		// Find other entities blocking the extract (only if necessary)
 		int amountToExtract = getAmountToExtract();
+		ExtractionCountMode mode = getModeToExtract();
 		ItemStack stack = invManipulation.simulate()
-			.extract(amountToExtract);
+			.extract(mode, amountToExtract);
 		if (stack.isEmpty())
 			return;
 		for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class, area)) {
@@ -146,7 +149,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		}
 
 		// Extract
-		stack = invManipulation.extract(amountToExtract);
+		stack = invManipulation.extract(mode, amountToExtract);
 		if (stack.isEmpty())
 			return;
 
@@ -176,8 +179,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		startCooldown();
 	}
 
-	static final AABB coreBB =
-		new AABB(VecHelper.CENTER_OF_ORIGIN, VecHelper.CENTER_OF_ORIGIN).inflate(.75f);
+	static final AABB coreBB = new AABB(VecHelper.CENTER_OF_ORIGIN, VecHelper.CENTER_OF_ORIGIN).inflate(.75f);
 
 	private AABB getEntityOverflowScanningArea() {
 		Direction facing = AbstractFunnelBlock.getFunnelFacing(getBlockState());
@@ -199,8 +201,10 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 			return;
 
 		int amountToExtract = getAmountToExtract();
-		ItemStack stack = invManipulation.extract(amountToExtract, s -> inputBehaviour.handleInsertion(s, facing, true)
-			.isEmpty());
+		ExtractionCountMode mode = getModeToExtract();
+		ItemStack stack =
+			invManipulation.extract(mode, amountToExtract, s -> inputBehaviour.handleInsertion(s, facing, true)
+				.isEmpty());
 		if (stack.isEmpty())
 			return;
 		flap(false);
@@ -211,11 +215,17 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 	public int getAmountToExtract() {
 		if (!supportsAmountOnFilter())
-			return -1;
+			return 64;
 		int amountToExtract = invManipulation.getAmountFromFilter();
 		if (!filtering.isActive())
 			amountToExtract = 1;
 		return amountToExtract;
+	}
+
+	public ExtractionCountMode getModeToExtract() {
+		if (!supportsAmountOnFilter() || !filtering.isActive())
+			return ExtractionCountMode.UPTO;
+		return invManipulation.getModeFromFilter();
 	}
 
 	private int startCooldown() {
@@ -284,7 +294,8 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 	public void flap(boolean inward) {
 		if (!level.isClientSide) {
-			AllPackets.getChannel().send(packetTarget(), new FunnelFlapPacket(this, inward));
+			AllPackets.getChannel()
+				.send(packetTarget(), new FunnelFlapPacket(this, inward));
 		} else {
 			flap.setValue(inward ? 1 : -1);
 			AllSoundEvents.FUNNEL_FLAP.playAt(level, worldPosition, 1, 1, true);
@@ -336,7 +347,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 			.onFunnelTransfer(level, worldPosition, stack);
 		award(AllAdvancements.FUNNEL);
 	}
-	
+
 	private LerpedFloat createChasingFlap() {
 		return LerpedFloat.linear()
 			.startWithValue(.25f)

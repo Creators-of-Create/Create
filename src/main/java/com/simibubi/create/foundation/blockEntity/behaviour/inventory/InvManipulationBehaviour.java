@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.inventory;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
@@ -8,6 +7,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -48,18 +48,14 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 	}
 
 	public ItemStack extract() {
-		return extract(getAmountFromFilter());
+		return extract(getModeFromFilter(), getAmountFromFilter());
 	}
 
-	public ItemStack extract(int amount) {
-		return extract(amount, Predicates.alwaysTrue());
+	public ItemStack extract(ExtractionCountMode mode, int amount) {
+		return extract(mode, amount, Predicates.alwaysTrue());
 	}
 
-	public ItemStack extract(int amount, Predicate<ItemStack> filter) {
-		return extract(amount, filter, ItemStack::getMaxStackSize);
-	}
-
-	public ItemStack extract(int amount, Predicate<ItemStack> filter, Function<ItemStack, Integer> amountThreshold) {
+	public ItemStack extract(ExtractionCountMode mode, int amount, Predicate<ItemStack> filter) {
 		boolean shouldSimulate = simulateNext;
 		simulateNext = false;
 
@@ -70,19 +66,10 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 			return ItemStack.EMPTY;
 
 		Predicate<ItemStack> test = getFilterTest(filter);
-
-		ItemStack simulatedItems = extractAmountOrThresh(inventory, test, amount, amountThreshold, true);
+		ItemStack simulatedItems = ItemHelper.extract(inventory, test, mode, amount, true);
 		if (shouldSimulate || simulatedItems.isEmpty())
 			return simulatedItems;
-
-		return extractAmountOrThresh(inventory, test, amount, amountThreshold, false);
-	}
-
-	private static ItemStack extractAmountOrThresh(IItemHandler inventory, Predicate<ItemStack> test, int amount,
-		Function<ItemStack, Integer> amountThreshold, boolean shouldSimulate) {
-		if (amount == -1)
-			return ItemHelper.extract(inventory, test, amountThreshold, shouldSimulate);
-		return ItemHelper.extract(inventory, test, amount, shouldSimulate);
+		return ItemHelper.extract(inventory, test, mode, amount, false);
 	}
 
 	public ItemStack insert(ItemStack stack) {

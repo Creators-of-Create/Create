@@ -252,6 +252,13 @@ public class UIRenderHelper {
 			tex.startY / 256f, (tex.startY + tex.height) / 256f);
 	}
 
+	public static void drawCropped(PoseStack ms, int left, int top, int w, int h, int z, AllGuiTextures tex) {
+		tex.bind();
+		drawTexturedQuad(ms.last()
+			.pose(), Color.WHITE, left, left + w, top, top + h, z, tex.startX / 256f, (tex.startX + w) / 256f,
+			tex.startY / 256f, (tex.startY + h) / 256f);
+	}
+
 	private static void drawColoredTexture(PoseStack ms, Color c, int left, int right, int top, int bot, int z, int tex_width, int tex_height, float tex_left, float tex_top, int sheet_width, int sheet_height) {
 		drawTexturedQuad(ms.last().pose(), c, left, right, top, bot, z, (tex_left + 0.0F) / (float) sheet_width, (tex_left + (float) tex_width) / (float) sheet_width, (tex_top + 0.0F) / (float) sheet_height, (tex_top + (float) tex_height) / (float) sheet_height);
 	}

@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.filtering;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpecialTextures;
@@ -13,7 +16,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -25,6 +27,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -66,28 +69,32 @@ public class FilteringRenderer {
 		ItemStack filter = behaviour.getFilter();
 		boolean isFilterSlotted = filter.getItem() instanceof FilterItem;
 		boolean showCount = behaviour.isCountVisible();
-		boolean fluids = behaviour.fluidFilter;
-		Component label = isFilterSlotted ? Components.immutableEmpty()
-			: Lang.translateDirect(behaviour.recipeFilter ? "logistics.recipe_filter"
-				: fluids ? "logistics.fluid_filter" : "logistics.filter");
+		Component label = behaviour.getLabel();
 		boolean hit = behaviour.slotPositioning.testHit(state, target.getLocation()
 			.subtract(Vec3.atLowerCornerOf(pos)));
 
 		AABB emptyBB = new AABB(Vec3.ZERO, Vec3.ZERO);
 		AABB bb = isFilterSlotted ? emptyBB.inflate(.45f, .31f, .2f) : emptyBB.inflate(.25f);
 
-		ValueBox box = showCount ? new ItemValueBox(label, bb, pos, filter, behaviour.scrollableValue)
-				: new ValueBox(label, bb, pos);
-
-		box.offsetLabel(behaviour.textShift)
-				.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
-				.scrollTooltip(showCount && !isFilterSlotted ? Components.literal("[").append(Lang.translateDirect("action.scroll")).append("]") : Components.immutableEmpty())
-				.passive(!hit);
+		ValueBox box = new ItemValueBox(label, bb, pos, filter, showCount ? behaviour.count : -1, behaviour.upTo);
+		box.passive(!hit);
 
 		CreateClient.OUTLINER.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
-				.lineWidth(1 / 64f)
-				.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
-				.highlightFace(result.getDirection());
+			.lineWidth(1 / 64f)
+			.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
+			.highlightFace(result.getDirection());
+
+		if (!hit)
+			return;
+
+		List<MutableComponent> tip = new ArrayList<>();
+		tip.add(label.copy());
+		tip.add(Lang
+			.translateDirect(filter.isEmpty() ? "logistics.filter.click_to_set" : "logistics.filter.click_to_replace"));
+		if (showCount)
+			tip.add(Lang.translateDirect("logistics.filter.hold_to_set_amount"));
+
+		CreateClient.VALUE_SETTINGS_HANDLER.showHoverTip(tip);
 	}
 
 	public static void renderOnBlockEntity(SmartBlockEntity be, float partialTicks, PoseStack ms,
@@ -100,7 +107,8 @@ public class FilteringRenderer {
 			Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 			if (cameraEntity != null && be.getLevel() == cameraEntity.getLevel()) {
 				float max = AllConfigs.client().filterItemRenderDistance.getF();
-				if (cameraEntity.position().distanceToSqr(VecHelper.getCenterOf(be.getBlockPos())) > (max * max)) {
+				if (cameraEntity.position()
+					.distanceToSqr(VecHelper.getCenterOf(be.getBlockPos())) > (max * max)) {
 					return;
 				}
 			}

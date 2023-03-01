@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.linked;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -19,6 +21,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -51,13 +54,26 @@ public class LinkRenderer {
 			boolean hit = behaviour.testHit(first, target.getLocation());
 			ValueBoxTransform transform = first ? behaviour.firstSlot : behaviour.secondSlot;
 
-			ValueBox box = new ValueBox(label, bb, pos).withColors(0x601F18, 0xB73C2D)
-					.offsetLabel(behaviour.textShift)
-					.passive(!hit);
+			ValueBox box = new ValueBox(label, bb, pos).passive(!hit);
+			boolean empty = behaviour.getNetworkKey()
+				.get(first)
+				.getStack()
+				.isEmpty();
+
+			if (!empty)
+				box.wideOutline();
+
 			CreateClient.OUTLINER.showValueBox(Pair.of(Boolean.valueOf(first), pos), box.transform(transform))
-					.lineWidth(1 / 64f)
-					.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
-					.highlightFace(result.getDirection());
+				.highlightFace(result.getDirection());
+
+			if (!hit)
+				continue;
+
+			List<MutableComponent> tip = new ArrayList<>();
+			tip.add(label.copy());
+			tip.add(
+				Lang.translateDirect(empty ? "logistics.filter.click_to_set" : "logistics.filter.click_to_replace"));
+			CreateClient.VALUE_SETTINGS_HANDLER.showHoverTip(tip);
 		}
 	}
 
@@ -66,7 +82,7 @@ public class LinkRenderer {
 
 		if (be == null || be.isRemoved())
 			return;
-		
+
 		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 		float max = AllConfigs.client().filterItemRenderDistance.getF();
 		if (!be.isVirtual() && cameraEntity != null && cameraEntity.position()

@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.CreateClient;
@@ -16,6 +19,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -52,6 +56,14 @@ public class ScrollValueRenderer {
 			}
 		} else
 			addBox(world, pos, face, behaviour, highlight);
+
+		if (!highlight)
+			return;
+
+		List<MutableComponent> tip = new ArrayList<>();
+		tip.add(behaviour.label.copy());
+		tip.add(Lang.translateDirect("gui.value_settings.hold_to_edit"));
+		CreateClient.VALUE_SETTINGS_HANDLER.showHoverTip(tip);
 	}
 
 	protected static void addBox(ClientLevel world, BlockPos pos, Direction face, ScrollValueBehaviour behaviour,
@@ -66,18 +78,13 @@ public class ScrollValueRenderer {
 			box = new IconValueBox(label, ((ScrollOptionBehaviour<?>) behaviour).getIconForSelected(), bb, pos);
 		} else {
 			box = new TextValueBox(label, bb, pos, Components.literal(behaviour.formatValue()));
-			if (behaviour.unit != null)
-				box.subLabel(Components.literal("(").append(behaviour.unit.apply(behaviour.scrollableValue)).append(")"));
 		}
 
-		box.scrollTooltip(Components.literal("[").append(Lang.translateDirect("action.scroll")).append("]"));
-		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
-				.withColors(0x5A5D5A, 0xB5B7B6)
-				.passive(!highlight);
+		box.passive(!highlight)
+			.wideOutline();
 
 		CreateClient.OUTLINER.showValueBox(pos, box.transform(behaviour.slotPositioning))
-				.lineWidth(1 / 64f)
-				.highlightFace(face);
+			.highlightFace(face);
 	}
 
 }

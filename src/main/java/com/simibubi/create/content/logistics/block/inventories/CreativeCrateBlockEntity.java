@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +34,7 @@ public class CreativeCrateBlockEntity extends CrateBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(filtering = createFilter());
+		filtering.setLabel(Lang.translateDirect("logistics.creative_crate.supply"));
 	}
 
 	@Override
@@ -60,11 +62,11 @@ public class CreativeCrateBlockEntity extends CrateBlockEntity {
 
 			@Override
 			protected Vec3 getLocalOffset(BlockState state) {
-				return new Vec3(0.5, 13 / 16d, 0.5);
+				return new Vec3(0.5, 13.5 / 16d, 0.5);
 			}
 
 			protected float getScale() {
-				return super.getScale() * 1.5f;
+				return super.getScale();
 			};
 
 		});

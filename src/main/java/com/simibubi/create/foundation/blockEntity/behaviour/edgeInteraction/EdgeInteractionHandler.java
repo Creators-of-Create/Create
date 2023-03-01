@@ -96,7 +96,7 @@ public class EdgeInteractionHandler {
 		int x = vec.getX();
 		int y = vec.getY();
 		int z = vec.getZ();
-		double margin = 12 / 16f;
+		double margin = 10 / 16f;
 		double absX = Math.abs(x) * margin;
 		double absY = Math.abs(y) * margin;
 		double absZ = Math.abs(z) * margin;

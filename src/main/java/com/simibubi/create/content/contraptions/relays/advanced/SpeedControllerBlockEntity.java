@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
-import com.simibubi.create.content.contraptions.components.motor.CreativeMotorBlockEntity;
+import com.simibubi.create.content.contraptions.components.motor.KineticScrollValueBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -44,16 +44,13 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 		super.addBehaviours(behaviours);
 		Integer max = AllConfigs.server().kinetics.maxRotationSpeed.get();
 
-		targetSpeed =
-			new ScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, new ControllerValueBoxTransform());
+		targetSpeed = new KineticScrollValueBehaviour(Lang.translateDirect("kinetics.speed_controller.rotation_speed"),
+			this, new ControllerValueBoxTransform());
 		targetSpeed.between(-max, max);
 		targetSpeed.value = DEFAULT_SPEED;
-		targetSpeed.moveText(new Vec3(9, 0, 10));
-		targetSpeed.withUnit(i -> Lang.translateDirect("generic.unit.rpm"));
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
-		targetSpeed.withStepFunction(CreativeMotorBlockEntity::step);
 		behaviours.add(targetSpeed);
-		
+
 		registerAwardables(behaviours, AllAdvancements.SPEED_CONTROLLER);
 	}
 
@@ -63,7 +60,7 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 		RotationPropagator.handleRemoved(level, worldPosition, this);
 		removeSource();
 		attachKinetics();
-		
+
 		if (isCogwheelPresent() && getSpeed() != 0)
 			award(AllAdvancements.SPEED_CONTROLLER);
 	}
@@ -124,14 +121,15 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 	private boolean isCogwheelPresent() {
 		BlockState stateAbove = level.getBlockState(worldPosition.above());
 		return ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
-			&& stateAbove.getValue(CogWheelBlock.AXIS).isHorizontal();
+			&& stateAbove.getValue(CogWheelBlock.AXIS)
+				.isHorizontal();
 	}
 
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 
 		@Override
 		protected Vec3 getSouthLocation() {
-			return VecHelper.voxelSpace(8, 11f, 16);
+			return VecHelper.voxelSpace(8, 11f, 15.5f);
 		}
 
 		@Override
@@ -144,7 +142,7 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 
 		@Override
 		protected float getScale() {
-			return 0.275f;
+			return 0.5f;
 		}
 
 	}

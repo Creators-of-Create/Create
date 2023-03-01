@@ -7,8 +7,6 @@ import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
 import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction;
-import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringHandler;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueHandler;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -43,8 +41,7 @@ public class InputEvents {
 		double delta = event.getScrollDelta();
 //		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.SCHEMATIC_HANDLER.mouseScrolled(delta)
-			|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
-			|| ScrollValueHandler.onScroll(delta) || TrainHUD.onScroll(delta)
+			|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || TrainHUD.onScroll(delta)
 			|| ElevatorControlsHandler.onScroll(delta);
 		event.setCanceled(cancelled);
 	}

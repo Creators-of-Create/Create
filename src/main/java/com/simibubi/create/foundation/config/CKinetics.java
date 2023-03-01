@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.config;
 
-import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
 import com.simibubi.create.foundation.utility.ContraptionData;
 
 public class CKinetics extends ConfigBase {
@@ -8,7 +7,6 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool disableStress = b(false, "disableStress", Comments.disableStress);
 	public final ConfigInt maxBeltLength = i(20, 5, "maxBeltLength", Comments.maxBeltLength);
 	public final ConfigInt crushingDamage = i(4, 0, "crushingDamage", Comments.crushingDamage);
-	public final ConfigInt maxMotorSpeed = i(256, 64, "maxMotorSpeed", Comments.rpm, Comments.maxMotorSpeed, ConfigAnnotations.RequiresRestart.BOTH.asComment());
 	public final ConfigInt maxRotationSpeed = i(256, 64, "maxRotationSpeed", Comments.rpm, Comments.maxRotationSpeed);
 	public final ConfigEnum<DeployerAggroSetting> ignoreDeployerAttacks =
 		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
@@ -65,7 +63,6 @@ public class CKinetics extends ConfigBase {
 	private static class Comments {
 		static String maxBeltLength = "Maximum length in blocks of mechanical belts.";
 		static String crushingDamage = "Damage dealt by active Crushing Wheels.";
-		static String maxMotorSpeed = "Maximum allowed speed of a configurable motor.";
 		static String maxRotationSpeed = "Maximum allowed rotation speed for any Kinetic Block.";
 		static String fanPushDistance = "Maximum distance in blocks Fans can push entities.";
 		static String fanPullDistance = "Maximum distance in blocks from where Fans can pull entities.";

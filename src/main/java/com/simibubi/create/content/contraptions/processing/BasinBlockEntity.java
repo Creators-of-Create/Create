@@ -123,8 +123,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this));
-		filtering = new FilteringBehaviour(this, new BasinValueBox()).moveText(new Vec3(2, -8, 0))
-			.withCallback(newFilter -> contentsChanged = true)
+		filtering = new FilteringBehaviour(this, new BasinValueBox()).withCallback(newFilter -> contentsChanged = true)
 			.forRecipes();
 		behaviours.add(filtering);
 
@@ -194,7 +193,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		visualizedOutputItems.clear();
 		visualizedOutputFluids.clear();
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -202,7 +201,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		ItemHelper.dropContents(level, worldPosition, outputInventory);
 		spoutputBuffer.forEach(is -> Block.popResource(level, worldPosition, is));
 	}
-	
+
 	@Override
 	public void remove() {
 		super.remove();
@@ -212,7 +211,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	public void onEmptied() {
 		getOperator().ifPresent(be -> be.basinRemoved = true);
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
@@ -740,7 +739,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 		@Override
 		protected Vec3 getSouthLocation() {
-			return VecHelper.voxelSpace(8, 12, 15.75);
+			return VecHelper.voxelSpace(8, 12, 16.05);
 		}
 
 		@Override

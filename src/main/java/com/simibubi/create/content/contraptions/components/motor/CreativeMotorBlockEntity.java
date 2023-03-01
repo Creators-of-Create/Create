@@ -2,22 +2,29 @@ package com.simibubi.create.content.contraptions.components.motor;
 
 import java.util.List;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 
 	public static final int DEFAULT_SPEED = 16;
+	public static final int MAX_SPEED = 256;
+
 	protected ScrollValueBehaviour generatedSpeed;
 
 	public CreativeMotorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -27,18 +34,12 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		Integer max = AllConfigs.server().kinetics.maxMotorSpeed.get();
-
-		CenteredSideValueBoxTransform slot = new CenteredSideValueBoxTransform(
-			(motor, side) -> motor.getValue(CreativeMotorBlock.FACING) == side.getOpposite());
-
-		generatedSpeed = new ScrollValueBehaviour(Lang.translateDirect("generic.speed"), this, slot);
+		int max = MAX_SPEED;
+		generatedSpeed = new KineticScrollValueBehaviour(Lang.translateDirect("kinetics.creative_motor.rotation_speed"),
+			this, new MotorValueBox());
 		generatedSpeed.between(-max, max);
 		generatedSpeed.value = DEFAULT_SPEED;
-		generatedSpeed.scrollableValue = DEFAULT_SPEED;
-		generatedSpeed.withUnit(i -> Lang.translateDirect("generic.unit.rpm"));
 		generatedSpeed.withCallback(i -> this.updateGeneratedRotation());
-		generatedSpeed.withStepFunction(CreativeMotorBlockEntity::step);
 		behaviours.add(generatedSpeed);
 	}
 
@@ -56,22 +57,40 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 		return convertToDirection(generatedSpeed.getValue(), getBlockState().getValue(CreativeMotorBlock.FACING));
 	}
 
-	public static int step(StepContext context) {
-		int current = context.currentValue;
-		int step = 1;
+	class MotorValueBox extends ValueBoxTransform.Sided {
 
-		if (!context.shift) {
-			int magnitude = Math.abs(current) - (context.forward == current > 0 ? 0 : 1);
-
-			if (magnitude >= 4)
-				step *= 4;
-			if (magnitude >= 32)
-				step *= 4;
-			if (magnitude >= 128)
-				step *= 4;
+		@Override
+		protected Vec3 getSouthLocation() {
+			return VecHelper.voxelSpace(8, 8, 12.5);
 		}
 
-		return (int) (current + (context.forward ? step : -step) == 0 ? step + 1 : step);
+		@Override
+		protected Vec3 getLocalOffset(BlockState state) {
+			Direction facing = state.getValue(CreativeMotorBlock.FACING);
+			return super.getLocalOffset(state).add(Vec3.atLowerCornerOf(facing.getNormal())
+				.scale(-1 / 16f));
+		}
+
+		@Override
+		protected void rotate(BlockState state, PoseStack ms) {
+			super.rotate(state, ms);
+			Direction facing = state.getValue(CreativeMotorBlock.FACING);
+			if (facing.getAxis() == Axis.Y)
+				return;
+			if (getSide() != Direction.UP)
+				return;
+			TransformStack.cast(ms)
+				.rotateZ(-AngleHelper.horizontalAngle(facing) + 180);
+		}
+
+		@Override
+		protected boolean isSideActive(BlockState state, Direction direction) {
+			Direction facing = state.getValue(CreativeMotorBlock.FACING);
+			if (facing.getAxis() != Axis.Y && direction == Direction.DOWN)
+				return false;
+			return direction.getAxis() != facing.getAxis();
+		}
+
 	}
 
 }

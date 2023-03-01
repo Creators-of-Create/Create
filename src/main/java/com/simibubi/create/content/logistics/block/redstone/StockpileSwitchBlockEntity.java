@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.TickPriority;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -101,10 +100,10 @@ public class StockpileSwitchBlockEntity extends SmartBlockEntity {
 
 		if (targetBlockEntity instanceof StockpileSwitchObservable observable) {
 			currentLevel = observable.getPercent() / 100f;
-		
+
 		} else if (StorageDrawers.isDrawer(targetBlockEntity) && observedInventory.hasInventory()) {
 			currentLevel = StorageDrawers.getTrueFillLevel(observedInventory.getInventory(), filtering);
-			
+
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
 				// Item inventory
@@ -154,7 +153,7 @@ public class StockpileSwitchBlockEntity extends SmartBlockEntity {
 
 		currentLevel = Mth.clamp(currentLevel, 0, 1);
 		changed = currentLevel != prevLevel;
-		
+
 		boolean previouslyPowered = redstoneState;
 		if (redstoneState && currentLevel <= offWhenBelow)
 			redstoneState = false;
@@ -194,8 +193,8 @@ public class StockpileSwitchBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).moveText(new Vec3(0, 5, 0))
-			.withCallback($ -> updateCurrentLevel());
+		filtering =
+			new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).withCallback($ -> updateCurrentLevel());
 		behaviours.add(filtering);
 
 		InterfaceProvider towardBlockFacing = InterfaceProvider.towardBlockFacing();
