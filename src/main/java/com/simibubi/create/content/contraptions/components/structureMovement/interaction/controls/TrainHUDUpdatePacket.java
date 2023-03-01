@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -47,10 +46,9 @@ public class TrainHUDUpdatePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context c = context.get();
-		c.enqueueWork(() -> {
-			ServerPlayer sender = c.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
 			boolean clientSide = sender == null;
 			Train train = Create.RAILWAYS.sided(clientSide ? null : sender.level).trains.get(trainId);
 			if (train == null)
@@ -62,9 +60,8 @@ public class TrainHUDUpdatePacket extends SimplePacketBase {
 				train.speed = speed;
 				train.fuelTicks = fuelTicks;
 			}
-
 		});
-		c.setPacketHandled(true);
+		return true;
 	}
 
 	public static class Serverbound extends TrainHUDUpdatePacket {

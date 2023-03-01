@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
@@ -65,10 +64,9 @@ public class TrainRelocationPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer sender = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
 			Train train = Create.RAILWAYS.trains.get(trainId);
 			Entity entity = sender.level.getEntity(entityId);
 
@@ -109,9 +107,8 @@ public class TrainRelocationPacket extends SimplePacketBase {
 			}
 
 			Create.LOGGER.warn(messagePrefix + train.name.getString() + ": relocation failed server-side");
-
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

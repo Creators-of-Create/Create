@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -30,16 +28,13 @@ public class CouplingCreationPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer sender = context.get()
-					.getSender();
-				if (sender != null)
-					CouplingHandler.tryToCoupleCarts(sender, sender.level, id1, id2);
-			});
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
+			if (sender != null)
+				CouplingHandler.tryToCoupleCarts(sender, sender.level, id1, id2);
+		});
+		return true;
 	}
 
 }

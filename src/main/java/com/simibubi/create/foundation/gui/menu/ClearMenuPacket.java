@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.gui.menu;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,19 +16,16 @@ public class ClearMenuPacket extends SimplePacketBase {
 	public void write(FriendlyByteBuf buffer) {}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer player = context.get()
-					.getSender();
-				if (player == null)
-					return;
-				if (!(player.containerMenu instanceof IClearableMenu))
-					return;
-				((IClearableMenu) player.containerMenu).clearContents();
-			});
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			if (!(player.containerMenu instanceof IClearableMenu))
+				return;
+			((IClearableMenu) player.containerMenu).clearContents();
+		});
+		return true;
 	}
 
 }

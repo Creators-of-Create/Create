@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.gui.menu;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -31,22 +29,18 @@ public class GhostItemSubmitPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-				.enqueueWork(() -> {
-					ServerPlayer player = context.get()
-							.getSender();
-					if (player == null)
-						return;
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
 
-					if (player.containerMenu instanceof GhostItemMenu<?> menu) {
-						menu.ghostInventory.setStackInSlot(slot, item);
-						menu.getSlot(36 + slot).setChanged();
-					}
-
-				});
-		context.get()
-				.setPacketHandled(true);
+			if (player.containerMenu instanceof GhostItemMenu<?> menu) {
+				menu.ghostInventory.setStackInSlot(slot, item);
+				menu.getSlot(36 + slot).setChanged();
+			}
+		});
+		return true;
 	}
 
 }

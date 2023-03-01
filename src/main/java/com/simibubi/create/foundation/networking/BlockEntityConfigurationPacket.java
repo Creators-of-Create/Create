@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.networking;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 
 import net.minecraft.core.BlockPos;
@@ -32,30 +30,26 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer player = context.get()
-					.getSender();
-				if (player == null)
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			Level world = player.level;
+			if (world == null || !world.isLoaded(pos))
+				return;
+			if (!pos.closerThan(player.blockPosition(), maxRange()))
+				return;
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (blockEntity instanceof SyncedBlockEntity) {
+				applySettings(player, (BE) blockEntity);
+				if (!causeUpdate())
 					return;
-				Level world = player.level;
-				if (world == null || !world.isLoaded(pos))
-					return;
-				if (!pos.closerThan(player.blockPosition(), maxRange()))
-					return;
-				BlockEntity blockEntity = world.getBlockEntity(pos);
-				if (blockEntity instanceof SyncedBlockEntity) {
-					applySettings(player, (BE) blockEntity);
-					if (!causeUpdate())
-						return;
-					((SyncedBlockEntity) blockEntity).sendData();
-					blockEntity.setChanged();
-				}
-			});
-		context.get()
-			.setPacketHandled(true);
-
+				((SyncedBlockEntity) blockEntity).sendData();
+				blockEntity.setChanged();
+			}
+		});
+		return true;
 	}
 
 	protected int maxRange() {

@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.actors.controls;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -40,35 +39,32 @@ public class ContraptionDisableActorPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
-				if (!(entityByID instanceof AbstractContraptionEntity ace))
-					return;
-				
-				Contraption contraption = ace.getContraption();
-				List<ItemStack> disabledActors = contraption.getDisabledActors();
-				if (filter.isEmpty())
-					disabledActors.clear();
-				
-				if (!enable) {
-					disabledActors.add(filter);
-					contraption.setActorsActive(filter, false);
-					return;
-				}
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
+			if (!(entityByID instanceof AbstractContraptionEntity ace))
+				return;
+			
+			Contraption contraption = ace.getContraption();
+			List<ItemStack> disabledActors = contraption.getDisabledActors();
+			if (filter.isEmpty())
+				disabledActors.clear();
+			
+			if (!enable) {
+				disabledActors.add(filter);
+				contraption.setActorsActive(filter, false);
+				return;
+			}
 
-				for (Iterator<ItemStack> iterator = disabledActors.iterator(); iterator.hasNext();) {
-					ItemStack next = iterator.next();
-					if (ContraptionControlsMovement.isSameFilter(next, filter) || next.isEmpty())
-						iterator.remove();
-				}
-				
-				contraption.setActorsActive(filter, true);
-
-			});
-		context.get()
-			.setPacketHandled(true);
+			for (Iterator<ItemStack> iterator = disabledActors.iterator(); iterator.hasNext();) {
+				ItemStack next = iterator.next();
+				if (ContraptionControlsMovement.isSameFilter(next, filter) || next.isEmpty())
+					iterator.remove();
+			}
+			
+			contraption.setActorsActive(filter, true);
+		});
+		return true;
 	}
 	
 }

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -44,10 +42,9 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			Level world = player.level;
 
 			if (toolboxPos == null) {
@@ -102,7 +99,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			toolboxBlockEntity.connectPlayer(slot, player, hotbarSlot);
 			ToolboxHandler.syncData(player);
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.sync;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -38,16 +36,14 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-				if (!(entityByID instanceof AbstractContraptionEntity))
-					return;
-				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-				contraptionEntity.getContraption().handleContraptionFluidPacket(localPos, containedFluid);
-			});
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
+			if (!(entityByID instanceof AbstractContraptionEntity))
+				return;
+			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
+			contraptionEntity.getContraption().handleContraptionFluidPacket(localPos, containedFluid);
+		});
+		return true;
 	}
 }

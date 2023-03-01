@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
 import java.util.Collection;
-import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -45,26 +44,22 @@ public class ArmPlacementPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer player = context.get()
-					.getSender();
-				if (player == null)
-					return;
-				Level world = player.level;
-				if (world == null || !world.isLoaded(pos))
-					return;
-				BlockEntity blockEntity = world.getBlockEntity(pos);
-				if (!(blockEntity instanceof ArmBlockEntity))
-					return;
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			Level world = player.level;
+			if (world == null || !world.isLoaded(pos))
+				return;
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (!(blockEntity instanceof ArmBlockEntity))
+				return;
 
-				ArmBlockEntity arm = (ArmBlockEntity) blockEntity;
-				arm.interactionPointTag = receivedTag;
-			});
-		context.get()
-			.setPacketHandled(true);
-
+			ArmBlockEntity arm = (ArmBlockEntity) blockEntity;
+			arm.interactionPointTag = receivedTag;
+		});
+		return true;
 	}
 
 }

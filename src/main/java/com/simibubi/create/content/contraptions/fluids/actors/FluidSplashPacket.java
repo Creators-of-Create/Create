@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -29,21 +27,21 @@ public class FluidSplashPacket extends SimplePacketBase {
 		fluid = buffer.readFluidStack();
 	}
 
+	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		buffer.writeFluidStack(fluid);
 	}
 
-	public void handle(Supplier<Context> ctx) {
-		ctx.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				if (Minecraft.getInstance().player.position()
-					.distanceTo(new Vec3(pos.getX(), pos.getY(), pos.getZ())) > 100)
-					return;
-				FluidFX.splash(pos, fluid);
-			}));
-		ctx.get()
-			.setPacketHandled(true);
+	@Override
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			if (Minecraft.getInstance().player.position()
+				.distanceTo(new Vec3(pos.getX(), pos.getY(), pos.getZ())) > 100)
+				return;
+			FluidFX.splash(pos, fluid);
+		}));
+		return true;
 	}
 
 }

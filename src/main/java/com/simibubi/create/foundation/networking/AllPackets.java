@@ -204,11 +204,11 @@ public enum AllPackets {
 	public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
 	private static SimpleChannel channel;
 
-	private LoadedPacket<?> packet;
+	private PacketType<?> packetType;
 
 	<T extends SimplePacketBase> AllPackets(Class<T> type, Function<FriendlyByteBuf, T> factory,
 		NetworkDirection direction) {
-		packet = new LoadedPacket<>(type, factory, direction);
+		packetType = new PacketType<>(type, factory, direction);
 	}
 
 	public static void registerPackets() {
@@ -217,8 +217,9 @@ public enum AllPackets {
 			.clientAcceptedVersions(NETWORK_VERSION_STR::equals)
 			.networkProtocolVersion(() -> NETWORK_VERSION_STR)
 			.simpleChannel();
+
 		for (AllPackets packet : values())
-			packet.packet.register();
+			packet.packetType.register();
 	}
 
 	public static SimpleChannel getChannel() {
@@ -231,7 +232,7 @@ public enum AllPackets {
 			message);
 	}
 
-	private static class LoadedPacket<T extends SimplePacketBase> {
+	private static class PacketType<T extends SimplePacketBase> {
 		private static int index = 0;
 
 		private BiConsumer<T, FriendlyByteBuf> encoder;
@@ -240,10 +241,15 @@ public enum AllPackets {
 		private Class<T> type;
 		private NetworkDirection direction;
 
-		private LoadedPacket(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
+		private PacketType(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
 			encoder = T::write;
 			decoder = factory;
-			handler = T::handle;
+			handler = (packet, contextSupplier) -> {
+				Context context = contextSupplier.get();
+				if (packet.handle(context)) {
+					context.setPacketHandled(true);
+				}
+			};
 			this.type = type;
 			this.direction = direction;
 		}
