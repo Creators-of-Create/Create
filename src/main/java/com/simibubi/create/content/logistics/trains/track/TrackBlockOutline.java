@@ -191,9 +191,11 @@ public class TrackBlockOutline {
 
 		boolean holdingTrack = AllBlocks.TRACK.isIn(Minecraft.getInstance().player.getMainHandItem());
 		TrackShape shape = blockstate.getValue(TrackBlock.SHAPE);
-		boolean isJunction = shape.isJunction();
+		boolean canConnectFrom = !shape.isJunction()
+			&& !(mc.level.getBlockEntity(pos)instanceof TrackBlockEntity tbe && tbe.isTilted());
+
 		walkShapes(shape, TransformStack.cast(ms), s -> {
-			renderShape(s, ms, vb, holdingTrack ? !isJunction : null);
+			renderShape(s, ms, vb, holdingTrack ? canConnectFrom : null);
 			event.setCanceled(true);
 		});
 
@@ -288,8 +290,8 @@ public class TrackBlockOutline {
 		renderer.accept(LONG_ORTHO);
 	}
 
-	public static record BezierPointSelection(TrackBlockEntity blockEntity, BezierTrackPointLocation loc, Vec3 vec, Vec3 angles,
-		Vec3 direction) {
+	public static record BezierPointSelection(TrackBlockEntity blockEntity, BezierTrackPointLocation loc, Vec3 vec,
+		Vec3 angles, Vec3 direction) {
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -27,12 +25,10 @@ public class ContraptionRelocationPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-				() -> () -> OrientedContraptionEntity.handleRelocationPacket(this)));
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			() -> () -> OrientedContraptionEntity.handleRelocationPacket(this)));
+		return true;
 	}
 
 }

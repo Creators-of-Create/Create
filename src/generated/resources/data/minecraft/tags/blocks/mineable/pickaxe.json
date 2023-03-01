@@ -110,6 +110,7 @@
     "create:elevator_contact",
     "create:mechanical_harvester",
     "create:mechanical_plough",
+    "create:mechanical_roller",
     "create:andesite_casing",
     "create:brass_casing",
     "create:copper_casing",

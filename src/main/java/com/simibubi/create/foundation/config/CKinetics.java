@@ -33,6 +33,7 @@ public class CKinetics extends ConfigBase {
 	public final ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public final ConfigInt maxRopeLength = i(256, 1, "maxRopeLength", Comments.maxRopeLength);
 	public final ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
+	public final ConfigInt rollerFillDepth = i(12, 1, "rollerFillDepth", Comments.rollerFillDepth);
 	public final ConfigBool survivalContraptionPickup = b(true, "survivalContraptionPickup", Comments.survivalContraptionPickup);
 	public final ConfigEnum<ContraptionMovementSetting> spawnerMovement =
 		e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
@@ -80,6 +81,7 @@ public class CKinetics extends ConfigBase {
 		static String maxPistonPoles = "Maximum amount of extension poles behind a Mechanical Piston.";
 		static String maxRopeLength = "Max length of rope available off a Rope Pulley.";
 		static String maxCartCouplingLength = "Maximum allowed distance of two coupled minecarts.";
+		static String rollerFillDepth = "Maximum depth of blocks filled in using a Mechanical Roller.";
 		static String moveItemsToStorage =
 			"Whether items mined or harvested by contraptions should be placed in their mounted storage.";
 		static String harvestPartiallyGrown = "Whether harvesters should break crops that aren't fully grown.";

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
@@ -44,6 +45,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.fml.DistExecutor;
 
 public class TrackBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity, IMergeableBE {
@@ -52,11 +55,13 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 	boolean cancelDrops;
 
 	public Pair<ResourceKey<Level>, BlockPos> boundLocation;
+	public TrackBlockEntityTilt tilt;
 
 	public TrackBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		connections = new HashMap<>();
 		setLazyTickRate(100);
+		tilt = new TrackBlockEntityTilt(this);
 	}
 
 	public Map<BlockPos, BezierConnection> getConnections() {
@@ -68,6 +73,12 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 		super.initialize();
 		if (!level.isClientSide && hasInteractableConnections())
 			registerToCurveInteraction();
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		tilt.undoSmoothing();
 	}
 
 	@Override
@@ -103,8 +114,10 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 				continue;
 			}
 
-			if (!trackTE.connections.containsKey(worldPosition))
+			if (!trackTE.connections.containsKey(worldPosition)) {
 				trackTE.addConnection(bc.secondary());
+				trackTE.tilt.tryApplySmoothing();
+			}
 		}
 
 		for (BlockPos blockPos : invalid)
@@ -121,6 +134,9 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 	}
 
 	public void removeConnection(BlockPos target) {
+		if (isTilted())
+			tilt.captureSmoothingHandles();
+
 		BezierConnection removed = connections.remove(target);
 		notifyUpdate();
 
@@ -138,19 +154,19 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 		AllPackets.getChannel().send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
 	}
 
-	public void removeInboundConnections() {
+	public void removeInboundConnections(boolean dropAndDiscard) {
 		for (BezierConnection bezierConnection : connections.values()) {
-			BlockEntity blockEntity = level.getBlockEntity(bezierConnection.getKey());
-			if (!(blockEntity instanceof TrackBlockEntity))
+			if (!(level.getBlockEntity(bezierConnection.getKey())instanceof TrackBlockEntity tbe))
 				return;
-			TrackBlockEntity other = (TrackBlockEntity) blockEntity;
-			other.removeConnection(bezierConnection.tePositions.getFirst());
-
+			tbe.removeConnection(bezierConnection.tePositions.getFirst());
+			if (!dropAndDiscard)
+				continue;
 			if (!cancelDrops)
 				bezierConnection.spawnItems(level);
 			bezierConnection.spawnDestroyParticles(level);
 		}
-		AllPackets.getChannel().send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
+		if (dropAndDiscard)
+			AllPackets.getChannel().send(packetTarget(), new RemoveBlockEntityPacket(worldPosition));
 	}
 
 	public void bind(ResourceKey<Level> boundDimension, BlockPos boundLocation) {
@@ -158,16 +174,22 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 		setChanged();
 	}
 
+	public boolean isTilted() {
+		return tilt.smoothingAngle.isPresent();
+	}
+
 	@Override
 	public void writeSafe(CompoundTag tag) {
 		super.writeSafe(tag);
-		writeTurns(tag);
+		writeTurns(tag, true);
 	}
 
 	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
-		writeTurns(tag);
+		writeTurns(tag, false);
+		if (isTilted())
+			tag.putDouble("Smoothing", tilt.smoothingAngle.get());
 		if (boundLocation == null)
 			return;
 		tag.put("BoundLocation", NbtUtils.writeBlockPos(boundLocation.getSecond()));
@@ -176,10 +198,11 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 			.toString());
 	}
 
-	private void writeTurns(CompoundTag tag) {
+	private void writeTurns(CompoundTag tag, boolean restored) {
 		ListTag listTag = new ListTag();
 		for (BezierConnection bezierConnection : connections.values())
-			listTag.add(bezierConnection.write(worldPosition));
+			listTag.add((restored ? tilt.restoreToOriginalCurve(bezierConnection.clone()) : bezierConnection)
+				.write(worldPosition));
 		tag.put("Connections", listTag);
 	}
 
@@ -192,6 +215,13 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 				return;
 			BezierConnection connection = new BezierConnection((CompoundTag) t, worldPosition);
 			connections.put(connection.getKey(), connection);
+		}
+
+		boolean smoothingPreviously = tilt.smoothingAngle.isPresent();
+		tilt.smoothingAngle = Optional.ofNullable(tag.contains("Smoothing") ? tag.getDouble("Smoothing") : null);
+		if (smoothingPreviously != tilt.smoothingAngle.isPresent() && clientPacket) {
+			requestModelDataUpdate();
+			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 16);
 		}
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
@@ -233,6 +263,15 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 
 	@Override
 	public void transform(StructureTransform transform) {
+		Map<BlockPos, BezierConnection> restoredConnections = new HashMap<>();
+		for (Entry<BlockPos, BezierConnection> entry : connections.entrySet())
+			restoredConnections.put(entry.getKey(),
+				tilt.restoreToOriginalCurve(tilt.restoreToOriginalCurve(entry.getValue()
+					.secondary())
+					.secondary()));
+		connections = restoredConnections;
+		tilt.smoothingAngle = Optional.empty();
+
 		if (transform.rotationAxis != Axis.Y)
 			return;
 
@@ -298,6 +337,15 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 
 	private void removeFromCurveInteraction() {
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::removeFromCurveInteractionUnsafe);
+	}
+
+	@Override
+	public IModelData getModelData() {
+		if (!isTilted())
+			return super.getModelData();
+		return new ModelDataMap.Builder()
+			.withInitial(TrackBlockEntityTilt.ASCENDING_PROPERTY, tilt.smoothingAngle.get())
+			.build();
 	}
 
 	@OnlyIn(Dist.CLIENT)

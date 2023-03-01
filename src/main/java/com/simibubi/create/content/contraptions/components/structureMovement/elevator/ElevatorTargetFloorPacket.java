@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.elevator;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -36,10 +34,9 @@ public class ElevatorTargetFloorPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer sender = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
 			Entity entityByID = sender.getLevel()
 				.getEntity(entityId);
 			if (!(entityByID instanceof AbstractContraptionEntity ace))
@@ -69,7 +66,7 @@ public class ElevatorTargetFloorPacket extends SimplePacketBase {
 			elevatorColumn.target(targetY);
 			elevatorColumn.markDirty();
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

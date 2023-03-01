@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.armor;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -137,14 +135,14 @@ public final class NetheriteDivingHandler {
 		}
 
 		@Override
-		public void handle(Supplier<Context> context) {
-			context.get().enqueueWork(() -> {
+		public boolean handle(Context context) {
+			context.enqueueWork(() -> {
 				Entity entity = Minecraft.getInstance().level.getEntity(entityId);
 				if (entity != null) {
 					entity.getPersistentData().putBoolean(FIRE_IMMUNE_KEY, fireImmune);
 				}
 			});
-			context.get().setPacketHandled(true);
+			return true;
 		}
 	}
 }

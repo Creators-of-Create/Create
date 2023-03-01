@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.el
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -47,21 +46,18 @@ public class ElevatorFloorListPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
+			if (!(entityByID instanceof AbstractContraptionEntity ace))
+				return;
+			if (!(ace.getContraption()instanceof ElevatorContraption ec))
+				return;
 
-				Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-				if (!(entityByID instanceof AbstractContraptionEntity ace))
-					return;
-				if (!(ace.getContraption()instanceof ElevatorContraption ec))
-					return;
-
-				ec.namesList = floorsList;
-				ec.syncControlDisplays();
-			});
-		context.get()
-			.setPacketHandled(true);
+			ec.namesList = floorsList;
+			ec.syncControlDisplays();
+		});
+		return true;
 	}
 
 	public static class RequestFloorList extends SimplePacketBase {
@@ -82,10 +78,9 @@ public class ElevatorFloorListPacket extends SimplePacketBase {
 		}
 
 		@Override
-		public void handle(Supplier<Context> context) {
-			Context ctx = context.get();
-			ctx.enqueueWork(() -> {
-				ServerPlayer sender = ctx.getSender();
+		public boolean handle(Context context) {
+			context.enqueueWork(() -> {
+				ServerPlayer sender = context.getSender();
 				Entity entityByID = sender.getLevel()
 					.getEntity(entityId);
 				if (!(entityByID instanceof AbstractContraptionEntity ace))
@@ -95,7 +90,7 @@ public class ElevatorFloorListPacket extends SimplePacketBase {
 				AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> sender),
 					new ElevatorFloorListPacket(ace, ec.namesList));
 			});
-			ctx.setPacketHandled(true);
+			return true;
 		}
 
 	}

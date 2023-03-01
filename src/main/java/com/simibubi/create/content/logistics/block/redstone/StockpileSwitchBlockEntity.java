@@ -193,8 +193,10 @@ public class StockpileSwitchBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		filtering =
-			new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).withCallback($ -> updateCurrentLevel());
+		filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).withCallback($ -> {
+			updateCurrentLevel();
+			return true;
+		});
 		behaviours.add(filtering);
 
 		InterfaceProvider towardBlockFacing = InterfaceProvider.towardBlockFacing();

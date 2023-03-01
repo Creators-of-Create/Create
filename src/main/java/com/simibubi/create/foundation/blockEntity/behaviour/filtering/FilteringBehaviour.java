@@ -1,10 +1,11 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.filtering;
 
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
@@ -47,8 +48,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	private ItemStack filter;
 	public int count;
 	public boolean upTo;
-
-	private Consumer<ItemStack> callback;
+	private Predicate<ItemStack> callback;
 	private Supplier<Boolean> isActive;
 	private Supplier<Boolean> showCountPredicate;
 
@@ -60,8 +60,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		filter = ItemStack.EMPTY;
 		slotPositioning = slot;
 		showCount = false;
-		callback = stack -> {
-		};
+		callback = stack -> true;
 		isActive = () -> true;
 		count = 64;
 		showCountPredicate = () -> showCount;
@@ -91,7 +90,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		super.read(nbt, clientPacket);
 	}
 
-	public FilteringBehaviour withCallback(Consumer<ItemStack> filterCallback) {
+	public FilteringBehaviour withCallback(Predicate<ItemStack> filterCallback) {
 		callback = filterCallback;
 		return this;
 	}
@@ -121,20 +120,23 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		return this;
 	}
 
-	public void setFilter(Direction face, ItemStack stack) {
-		setFilter(stack);
+	public boolean setFilter(Direction face, ItemStack stack) {
+		return setFilter(stack);
 	}
 
 	public void setLabel(MutableComponent label) {
 		this.customLabel = label;
 	}
 
-	public void setFilter(ItemStack stack) {
-		filter = stack.copy();
-		callback.accept(filter);
+	public boolean setFilter(ItemStack stack) {
+		ItemStack filter = stack.copy();
+		if (!callback.test(filter))
+			return false;
+		this.filter = filter;
 		count = Math.min(count, stack.getMaxStackSize());
 		blockEntity.setChanged();
 		blockEntity.sendData();
+		return true;
 	}
 
 	@Override
@@ -271,7 +273,12 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		if (toApply.getItem() instanceof FilterItem)
 			toApply.setCount(1);
 
-		setFilter(side, toApply);
+		if (!setFilter(side, toApply)) {
+			player.displayClientMessage(Lang.translateDirect(""), true);
+			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+			return;
+		}
+		
 		level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f, .1f);
 	}
 

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.zapper;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
@@ -53,26 +51,24 @@ public abstract class ShootGadgetPacket extends SimplePacketBase {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public final void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				Entity renderViewEntity = Minecraft.getInstance()
-					.getCameraEntity();
-				if (renderViewEntity == null)
-					return;
-				if (renderViewEntity.position()
-					.distanceTo(location) > 100)
-					return;
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			Entity renderViewEntity = Minecraft.getInstance()
+				.getCameraEntity();
+			if (renderViewEntity == null)
+				return;
+			if (renderViewEntity.position()
+				.distanceTo(location) > 100)
+				return;
 
-				ShootableGadgetRenderHandler handler = getHandler();
-				handleAdditional();
-				if (self)
-					handler.shoot(hand, location);
-				else
-					handler.playSound(hand, location);
-			});
-		context.get()
-			.setPacketHandled(true);
+			ShootableGadgetRenderHandler handler = getHandler();
+			handleAdditional();
+			if (self)
+				handler.shoot(hand, location);
+			else
+				handler.playSound(hand, location);
+		});
+		return true;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.el
 
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.components.actors.DoorControlBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorColumn.ColumnCoords;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ElevatorContactBlockEntity extends SmartBlockEntity {
 
+	public DoorControlBehaviour doorControls;
 	public ColumnCoords columnCoords;
 	public boolean activateBlock;
 
@@ -35,7 +37,9 @@ public class ElevatorContactBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(doorControls = new DoorControlBehaviour(this));
+	}
 
 	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {

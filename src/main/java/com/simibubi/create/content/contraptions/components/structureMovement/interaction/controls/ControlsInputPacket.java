@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.in
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -55,10 +54,9 @@ public class ControlsInputPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			Level world = player.getCommandSenderWorld();
 			UUID uniqueID = player.getUUID();
 
@@ -77,7 +75,7 @@ public class ControlsInputPacket extends SimplePacketBase {
 				.closerThan(player.position(), 16))
 				ControlsServerHandler.receivePressed(world, ace, controlsPos, uniqueID, activatedButtons, press);
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

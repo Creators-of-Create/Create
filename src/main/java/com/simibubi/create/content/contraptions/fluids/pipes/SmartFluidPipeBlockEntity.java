@@ -39,10 +39,11 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
 	}
 
-	private void onFilterChanged(ItemStack newFilter) {
+	private boolean onFilterChanged(ItemStack newFilter) {
 		if (level.isClientSide)
-			return;
+			return true;
 		FluidPropagator.propagateChangedPipe(level, worldPosition, getBlockState());
+		return true;
 	}
 
 	class SmartPipeBehaviour extends StraightPipeFluidTransportBehaviour {

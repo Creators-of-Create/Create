@@ -212,7 +212,8 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	@OnlyIn(value = Dist.CLIENT)
 	protected void displayScreen(ElevatorContactBlockEntity be, Player player) {
 		if (player instanceof LocalPlayer)
-			ScreenOpener.open(new ElevatorContactScreen(be.getBlockPos(), be.shortName, be.longName));
+			ScreenOpener
+				.open(new ElevatorContactScreen(be.getBlockPos(), be.shortName, be.longName, be.doorControls.mode));
 	}
 
 	public static int getLight(BlockState state) {

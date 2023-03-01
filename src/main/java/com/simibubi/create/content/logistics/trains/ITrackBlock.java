@@ -38,6 +38,10 @@ public interface ITrackBlock {
 
 	public Vec3 getCurveStart(BlockGetter world, BlockPos pos, BlockState state, Vec3 axis);
 
+	public default int getYOffsetAt(BlockGetter world, BlockPos pos, BlockState state, Vec3 end) {
+		return 0;
+	}
+
 	public BlockState getBogeyAnchor(BlockGetter world, BlockPos pos, BlockState state); // should be on bogey side
 
 	public boolean trackEquals(BlockState state1, BlockState state2);
@@ -71,10 +75,17 @@ public interface ITrackBlock {
 			.add(0, getElevationAtCenter(world, pos, state), 0);
 		List<DiscoveredLocation> list = new ArrayList<>();
 		TrackShape shape = state.getValue(TrackBlock.SHAPE);
-		getTrackAxes(world, pos, state).forEach(axis -> {
-			addToListIfConnected(connectedTo, list, (d, b) -> axis.scale(b ? d : -d)
-				.add(center), b -> shape.getNormal(), b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD,
-				axis, null);
+		List<Vec3> trackAxes = getTrackAxes(world, pos, state);
+
+		trackAxes.forEach(axis -> {
+			BiFunction<Double, Boolean, Vec3> offsetFactory = (d, b) -> axis.scale(b ? d : -d)
+				.add(center);
+			Function<Boolean, ResourceKey<Level>> dimensionFactory =
+				b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD;
+			Function<Vec3, Integer> yOffsetFactory = v -> getYOffsetAt(world, pos, state, v);
+
+			addToListIfConnected(connectedTo, list, offsetFactory, b -> shape.getNormal(), dimensionFactory,
+				yOffsetFactory, axis, null);
 		});
 
 		return list;
@@ -82,22 +93,28 @@ public interface ITrackBlock {
 
 	public static void addToListIfConnected(@Nullable TrackNodeLocation fromEnd, Collection<DiscoveredLocation> list,
 		BiFunction<Double, Boolean, Vec3> offsetFactory, Function<Boolean, Vec3> normalFactory,
-		Function<Boolean, ResourceKey<Level>> dimensionFactory, Vec3 axis, BezierConnection viaTurn) {
+		Function<Boolean, ResourceKey<Level>> dimensionFactory, Function<Vec3, Integer> yOffsetFactory, Vec3 axis,
+		BezierConnection viaTurn) {
 
+		Vec3 firstOffset = offsetFactory.apply(0.5d, true);
 		DiscoveredLocation firstLocation =
-			new DiscoveredLocation(dimensionFactory.apply(true), offsetFactory.apply(0.5d, true)).viaTurn(viaTurn)
+			new DiscoveredLocation(dimensionFactory.apply(true), firstOffset).viaTurn(viaTurn)
 				.withNormal(normalFactory.apply(true))
-				.withDirection(axis);
+				.withDirection(axis)
+				.withYOffset(yOffsetFactory.apply(firstOffset));
+
+		Vec3 secondOffset = offsetFactory.apply(0.5d, false);
 		DiscoveredLocation secondLocation =
-			new DiscoveredLocation(dimensionFactory.apply(false), offsetFactory.apply(0.5d, false)).viaTurn(viaTurn)
+			new DiscoveredLocation(dimensionFactory.apply(false), secondOffset).viaTurn(viaTurn)
 				.withNormal(normalFactory.apply(false))
-				.withDirection(axis);
+				.withDirection(axis)
+				.withYOffset(yOffsetFactory.apply(secondOffset));
 
 		if (!firstLocation.dimension.equals(secondLocation.dimension)) {
 			firstLocation.forceNode();
 			secondLocation.forceNode();
 		}
-		
+
 		boolean skipFirst = false;
 		boolean skipSecond = false;
 

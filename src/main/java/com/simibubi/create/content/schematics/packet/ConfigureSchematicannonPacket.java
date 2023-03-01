@@ -1,7 +1,5 @@
 package com.simibubi.create.content.schematics.packet;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.schematics.block.SchematicannonBlockEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonBlockEntity.State;
 import com.simibubi.create.content.schematics.block.SchematicannonMenu;
@@ -29,14 +27,16 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 		this(buffer.readEnum(Option.class), buffer.readBoolean());
 	}
 
+	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeEnum(option);
 		buffer.writeBoolean(set);
 	}
 
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	@Override
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null || !(player.containerMenu instanceof SchematicannonMenu))
 				return;
 
@@ -73,7 +73,7 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 
 			be.sendUpdate = true;
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

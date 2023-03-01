@@ -58,6 +58,7 @@
     "create:elevator_contact",
     "create:mechanical_harvester",
     "create:mechanical_plough",
+    "create:mechanical_roller",
     "create:white_seat",
     "create:orange_seat",
     "create:magenta_seat",

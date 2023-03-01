@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.item.filter;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -40,9 +38,9 @@ public class FilterScreenPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
 
@@ -77,7 +75,7 @@ public class FilterScreenPacket extends SimplePacketBase {
 			}
 
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

@@ -26,6 +26,8 @@ import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PloughMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
+import com.simibubi.create.content.contraptions.components.actors.RollerBlock;
+import com.simibubi.create.content.contraptions.components.actors.RollerMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatInteractionBehaviour;
@@ -233,6 +235,7 @@ import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockStateGenerator;
+import com.simibubi.create.content.logistics.trains.track.TrackModel;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.BlockStressDefaults;
@@ -1239,7 +1242,7 @@ public class AllBlocks {
 			.item()
 			.transform(customItemModel())
 			.register();
-	
+
 	public static final BlockEntry<CartAssemblerBlock> CART_ASSEMBLER =
 		REGISTRATE.block("cart_assembler", CartAssemblerBlock::new)
 			.initialProperties(SharedProperties::stone)
@@ -1390,7 +1393,7 @@ public class AllBlocks {
 			.item(RedstoneContactItem::new)
 			.transform(customItemModel("_", "block"))
 			.register();
-	
+
 	public static final BlockEntry<ElevatorContactBlock> ELEVATOR_CONTACT =
 		REGISTRATE.block("elevator_contact", ElevatorContactBlock::new)
 			.initialProperties(SharedProperties::softMetal)
@@ -1429,6 +1432,19 @@ public class AllBlocks {
 			.onRegister(movementBehaviour(new PloughMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(false))
 			.simpleItem()
+			.register();
+
+	public static final BlockEntry<RollerBlock> MECHANICAL_ROLLER =
+		REGISTRATE.block("mechanical_roller", RollerBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.color(MaterialColor.COLOR_GRAY)
+				.noOcclusion())
+			.transform(axeOrPickaxe())
+			.onRegister(movementBehaviour(new RollerMovementBehaviour()))
+			.blockstate(BlockStateGen.horizontalBlockProvider(true))
+			.addLayer(() -> RenderType::cutoutMipped)
+			.item()
+			.transform(customItemModel())
 			.register();
 
 	public static final DyedBlockList<SeatBlock> SEATS = new DyedBlockList<>(colour -> {
@@ -1617,6 +1633,7 @@ public class AllBlocks {
 			.noOcclusion())
 		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
+		.onRegister(CreateRegistrate.blockModel(() -> TrackModel::new))
 		.blockstate(new TrackBlockStateGenerator()::generate)
 		.tag(AllBlockTags.RELOCATION_NOT_SUPPORTED.tag)
 		.lang("Train Track")
@@ -1780,8 +1797,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.color(
-			MaterialColor.TERRACOTTA_BLUE))
+		.properties(p -> p.color(MaterialColor.TERRACOTTA_BLUE))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK)
 			.explosionResistance(1200))
 		.transform(pickaxeOnly())

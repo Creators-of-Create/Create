@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.networking;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 
 import net.minecraft.client.Minecraft;
@@ -35,9 +33,8 @@ public abstract class BlockEntityDataPacket<BE extends SyncedBlockEntity> extend
 	}
 
 	@Override
-	public void handle(Supplier<NetworkEvent.Context> context) {
-		NetworkEvent.Context ctx = context.get();
-		ctx.enqueueWork(() -> {
+	public boolean handle(NetworkEvent.Context context) {
+		context.enqueueWork(() -> {
 			ClientLevel world = Minecraft.getInstance().level;
 
 			if (world == null)
@@ -49,7 +46,7 @@ public abstract class BlockEntityDataPacket<BE extends SyncedBlockEntity> extend
 				handlePacket((BE) blockEntity);
 			}
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 	protected abstract void writeData(FriendlyByteBuf buffer);

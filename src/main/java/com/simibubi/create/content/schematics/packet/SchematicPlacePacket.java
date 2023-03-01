@@ -1,7 +1,5 @@
 package com.simibubi.create.content.schematics.packet;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.schematics.SchematicPrinter;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -26,13 +24,15 @@ public class SchematicPlacePacket extends SimplePacketBase {
 		stack = buffer.readItem();
 	}
 
+	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeItem(stack);
 	}
 
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	@Override
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
 
@@ -60,7 +60,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 				});
 			}
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

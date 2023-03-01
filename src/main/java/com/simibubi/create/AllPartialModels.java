@@ -52,6 +52,9 @@ public class AllPartialModels {
 		ANALOG_LEVER_INDICATOR = block("analog_lever/indicator"), FUNNEL_FLAP = block("funnel/flap"),
 		BELT_FUNNEL_FLAP = block("belt_funnel/flap"), BELT_TUNNEL_FLAP = block("belt_tunnel/flap"),
 		FLEXPEATER_INDICATOR = block("diodes/indicator"),
+		
+		ROLLER_WHEEL = block("mechanical_roller/wheel"),
+		ROLLER_FRAME = block("mechanical_roller/frame"),
 
 		CUCKOO_MINUTE_HAND = block("cuckoo_clock/minute_hand"), CUCKOO_HOUR_HAND = block("cuckoo_clock/hour_hand"),
 		CUCKOO_LEFT_DOOR = block("cuckoo_clock/left_door"), CUCKOO_RIGHT_DOOR = block("cuckoo_clock/right_door"),

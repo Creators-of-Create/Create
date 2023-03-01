@@ -33,7 +33,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent.Context;
 
 public class SConfigureConfigPacket extends SimplePacketBase {
 
@@ -59,24 +59,21 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<NetworkEvent.Context> ctx) {
-		ctx.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				if (option.startsWith("SET")) {
-					trySetConfig(option.substring(3), value);
-					return;
-				}
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			if (option.startsWith("SET")) {
+				trySetConfig(option.substring(3), value);
+				return;
+			}
 
-				try {
-					Actions.valueOf(option)
-						.performAction(value);
-				} catch (IllegalArgumentException e) {
-					LOGGER.warn("Received ConfigureConfigPacket with invalid Option: " + option);
-				}
-			}));
-
-		ctx.get()
-			.setPacketHandled(true);
+			try {
+				Actions.valueOf(option)
+					.performAction(value);
+			} catch (IllegalArgumentException e) {
+				LOGGER.warn("Received ConfigureConfigPacket with invalid Option: " + option);
+			}
+		}));
+		return true;
 	}
 
 	private static void trySetConfig(String option, String value) {

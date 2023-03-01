@@ -8,7 +8,6 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.components.actors.AttachedActorBlock;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
-import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
@@ -353,10 +352,6 @@ public class BlockMovementChecks {
 			return state.getValue(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
 			return state.getValue(BlockStateProperties.FACING) == facing;
-		if (AllBlocks.MECHANICAL_HARVESTER.has(state))
-			return state.getValue(HarvesterBlock.FACING) == facing;
-		if (AllBlocks.MECHANICAL_PLOUGH.has(state))
-			return state.getValue(PloughBlock.FACING) == facing;
 
 		if (AllBlocks.CART_ASSEMBLER.has(state))
 			return Direction.DOWN == facing;
@@ -364,7 +359,7 @@ public class BlockMovementChecks {
 			return state.getValue(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.PORTABLE_STORAGE_INTERFACE.has(state))
 			return state.getValue(PortableStorageInterfaceBlock.FACING) == facing;
-		if (state.getBlock() instanceof AttachedActorBlock)
+		if (state.getBlock() instanceof AttachedActorBlock && !AllBlocks.MECHANICAL_ROLLER.has(state))
 			return state.getValue(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		if (AllBlocks.ROPE_PULLEY.has(state))
 			return facing == Direction.DOWN;

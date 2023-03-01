@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.station;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.actors.DoorControl;
 import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
@@ -9,6 +10,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -20,6 +22,7 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 	boolean dropSchedule;
 	boolean assemblyMode;
 	Boolean tryAssemble;
+	DoorControl doorControl;
 	String name;
 
 	public static StationEditPacket dropSchedule(BlockPos pos) {
@@ -40,11 +43,12 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 		return packet;
 	}
 
-	public static StationEditPacket configure(BlockPos pos, boolean assemble, String name) {
+	public static StationEditPacket configure(BlockPos pos, boolean assemble, String name, DoorControl doorControl) {
 		StationEditPacket packet = new StationEditPacket(pos);
 		packet.assemblyMode = assemble;
 		packet.tryAssemble = null;
 		packet.name = name;
+		packet.doorControl = doorControl;
 		return packet;
 	}
 
@@ -61,6 +65,9 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 		buffer.writeBoolean(dropSchedule);
 		if (dropSchedule)
 			return;
+		buffer.writeBoolean(doorControl != null);
+		if (doorControl != null)
+			buffer.writeVarInt(doorControl.ordinal());
 		buffer.writeBoolean(tryAssemble != null);
 		if (tryAssemble != null) {
 			buffer.writeBoolean(tryAssemble);
@@ -76,6 +83,8 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 			dropSchedule = true;
 			return;
 		}
+		if (buffer.readBoolean())
+			doorControl = DoorControl.values()[Mth.clamp(buffer.readVarInt(), 0, DoorControl.values().length)];
 		name = "";
 		if (buffer.readBoolean()) {
 			tryAssemble = buffer.readBoolean();
@@ -95,6 +104,9 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 			scheduleDropRequested(player, be);
 			return;
 		}
+		
+		if (doorControl != null)
+			be.doorControls.set(doorControl);
 
 		if (!name.isBlank()) {
 			GlobalStation station = be.getStation();
