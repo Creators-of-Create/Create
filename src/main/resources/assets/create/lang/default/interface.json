@@ -233,6 +233,7 @@
 	"create.logistics.redstone_interval": "Redstone Interval",
 	
 	"create.contraptions.contoller.target": "Targeted Component",
+	"create.contraptions.mechanical_roller.pave_material": "Paving Material",
 	
 	"create.contraptions.chassis.radius": "Radius when Sticky",
 	"create.contraptions.chassis.range": "Range of Sticky Sides",

@@ -42,10 +42,11 @@ public class RollerBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		behaviours.add(filtering = new FilteringBehaviour(this, new RollerValueBox(4)).moveText(new Vec3(-30, 23, 10))
-			.withCallback(this::onFilterChanged));
+		behaviours
+			.add(filtering = new FilteringBehaviour(this, new RollerValueBox(4)).withCallback(this::onFilterChanged));
+		filtering.setLabel(Lang.translateDirect("contraptions.mechanical_roller.pave_material"));
 		behaviours.add(mode = new ScrollOptionBehaviour<RollingMode>(RollingMode.class,
-			Lang.translateDirect("contraptions.roller_mode"), this, new RollerValueBox(-2)));
+			Lang.translateDirect("contraptions.roller_mode"), this, new RollerValueBox(-4)));
 	}
 
 	protected boolean onFilterChanged(ItemStack newFilter) {
@@ -130,7 +131,7 @@ public class RollerBlockEntity extends SmartBlockEntity {
 		protected Vec3 getLocalOffset(BlockState state) {
 			Direction facing = state.getValue(RollerBlock.FACING);
 			float stateAngle = AngleHelper.horizontalAngle(facing) + 180;
-			return VecHelper.rotateCentered(VecHelper.voxelSpace(7.75 + hOffset, 15.5f, 11), stateAngle, Axis.Y);
+			return VecHelper.rotateCentered(VecHelper.voxelSpace(8 + hOffset, 15.5f, 11), stateAngle, Axis.Y);
 		}
 
 	}

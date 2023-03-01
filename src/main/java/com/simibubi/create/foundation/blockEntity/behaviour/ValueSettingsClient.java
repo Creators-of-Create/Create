@@ -124,7 +124,7 @@ public class ValueSettingsClient implements IIngameOverlay {
 			return;
 
 		int x = width / 2;
-		int y = height - 93;
+		int y = height - 96;
 		float alpha = hoverTicks > 5 ? (11 - hoverTicks) / 5f : Math.min(1, hoverTicks / 5f);
 
 		Color color = new Color(0xffffff);
