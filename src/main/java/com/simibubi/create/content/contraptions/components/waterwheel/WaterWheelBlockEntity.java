@@ -72,6 +72,7 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 	public WaterWheelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		material = Blocks.SPRUCE_PLANKS.defaultBlockState();
+		setLazyTickRate(60);
 	}
 
 	protected int getSize() {
@@ -81,11 +82,12 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 	protected Set<BlockPos> getOffsetsToCheck() {
 		return (getSize() == 1 ? SMALL_OFFSETS : LARGE_OFFSETS).get(getAxis());
 	}
-	
+
 	public InteractionResult applyMaterialIfValid(ItemStack stack) {
-		if (!(stack.getItem() instanceof BlockItem blockItem))
+		if (!(stack.getItem()instanceof BlockItem blockItem))
 			return InteractionResult.PASS;
-		BlockState material = blockItem.getBlock().defaultBlockState();
+		BlockState material = blockItem.getBlock()
+			.defaultBlockState();
 		if (material == this.material)
 			return InteractionResult.PASS;
 		if (!material.is(BlockTags.PLANKS))
@@ -104,6 +106,14 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 		if (blockState.getBlock()instanceof IRotate irotate)
 			axis = irotate.getRotationAxis(blockState);
 		return axis;
+	}
+
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+
+		// Water can change flow direction without notifying neighbours
+		determineAndApplyFlowScore();
 	}
 
 	public void determineAndApplyFlowScore() {

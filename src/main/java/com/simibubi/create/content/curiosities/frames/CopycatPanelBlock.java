@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -24,10 +25,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -46,9 +49,28 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 
 	@Override
 	public boolean isAcceptedRegardless(BlockState material) {
-		return CopycatSpecialCases.isBarsMaterial(material);
+		return CopycatSpecialCases.isBarsMaterial(material) || CopycatSpecialCases.isTrapdoorMaterial(material);
 	}
-	
+
+	@Override
+	public BlockState prepareMaterial(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer,
+		InteractionHand pHand, BlockHitResult pHit, BlockState material) {
+		if (!CopycatSpecialCases.isTrapdoorMaterial(material))
+			return super.prepareMaterial(pLevel, pPos, pState, pPlayer, pHand, pHit, material);
+
+		Direction panelFacing = pState.getValue(FACING);
+		if (panelFacing == Direction.DOWN)
+			material = material.setValue(TrapDoorBlock.HALF, Half.TOP);
+		if (panelFacing.getAxis() == Axis.Y)
+			return material.setValue(TrapDoorBlock.FACING, pPlayer.getDirection())
+				.setValue(TrapDoorBlock.OPEN, false);
+
+		boolean clickedNearTop = pHit.getLocation().y - .5 > pPos.getY();
+		return material.setValue(TrapDoorBlock.OPEN, true)
+			.setValue(TrapDoorBlock.HALF, clickedNearTop ? Half.TOP : Half.BOTTOM)
+			.setValue(TrapDoorBlock.FACING, panelFacing);
+	}
+
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {

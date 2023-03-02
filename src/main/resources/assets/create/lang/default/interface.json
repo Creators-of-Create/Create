@@ -629,6 +629,8 @@
 	"create.boiler.heat_dots": "...... ",
 	"create.boiler.via_one_engine": "via 1 engine",
 	"create.boiler.via_engines": "via %1$s engines",
+	"create.boiler.water_input_rate": "Water input rate",
+	"create.boiler.per_tick": "%1$s per Tick",
 
 	"create.elevator_contact.title": "Elevator Contact",
 	"create.elevator_contact.floor_identifier": "Floor Identifier",

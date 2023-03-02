@@ -96,7 +96,7 @@ public class BoilerData {
 			for (float i : supplyOverTime)
 				waterSupply = Math.max(i, waterSupply);
 		}
-		
+
 		if (controller instanceof CreativeFluidTankBlockEntity)
 			waterSupply = waterSupplyPerLevel * 20;
 
@@ -170,6 +170,22 @@ public class BoilerData {
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 
 		tooltip.add(Components.immutableEmpty());
+
+		if (attachedEngines > 0 && maxHeatForSize > 0 && maxHeatForWater == 0 && (passiveHeat ? 1 : activeHeat) > 0) {
+			Lang.translate("boiler.water_input_rate")
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
+			Lang.number(waterSupply)
+				.style(ChatFormatting.BLUE)
+				.add(Lang.translate("generic.unit.millibuckets"))
+				.add(Lang.text(" / ")
+					.style(ChatFormatting.GRAY))
+				.add(Lang.translate("boiler.per_tick", Lang.number(waterSupplyPerLevel)
+					.add(Lang.translate("generic.unit.millibuckets")))
+					.style(ChatFormatting.DARK_GRAY))
+				.forGoggles(tooltip, 1);
+			return true;
+		}
 
 		Lang.translate("tooltip.capacityProvided")
 			.style(ChatFormatting.GRAY)
@@ -250,7 +266,8 @@ public class BoilerData {
 	}
 
 	private MutableComponent bars(int level, ChatFormatting format) {
-		return Components.literal(Strings.repeat('|', level)).withStyle(format);
+		return Components.literal(Strings.repeat('|', level))
+			.withStyle(format);
 	}
 
 	public boolean evaluate(FluidTankBlockEntity controller) {

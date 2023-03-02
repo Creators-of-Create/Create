@@ -95,11 +95,14 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 		Direction face = pHit.getDirection();
 		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
-		BlockState material = getAcceptedBlockState(pLevel, pPos, itemInHand, face);
+		BlockState materialIn = getAcceptedBlockState(pLevel, pPos, itemInHand, face);
 
-		if (material == null)
+		if (materialIn != null)
+			materialIn = prepareMaterial(pLevel, pPos, pState, pPlayer, pHand, pHit, materialIn);
+		if (materialIn == null)
 			return InteractionResult.PASS;
 
+		BlockState material = materialIn;
 		return onBlockEntityUse(pLevel, pPos, ufte -> {
 			if (ufte.getMaterial()
 				.is(material.getBlock())) {
@@ -206,6 +209,11 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	public boolean isAcceptedRegardless(BlockState material) {
 		return false;
+	}
+
+	public BlockState prepareMaterial(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer,
+		InteractionHand pHand, BlockHitResult pHit, BlockState material) {
+		return material;
 	}
 
 	@Override

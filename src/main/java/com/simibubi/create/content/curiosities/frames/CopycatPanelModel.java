@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.model.BakedQuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -33,14 +34,18 @@ public class CopycatPanelModel extends CopycatModel {
 		IModelData wrappedData) {
 		Direction facing = state.getOptionalValue(CopycatPanelBlock.FACING)
 			.orElse(Direction.UP);
+		BlockRenderDispatcher blockRenderer = Minecraft.getInstance()
+			.getBlockRenderer();
 
 		BlockState specialCopycatModelState = null;
 		if (CopycatSpecialCases.isBarsMaterial(material))
 			specialCopycatModelState = AllBlocks.COPYCAT_BARS.getDefaultState();
+		if (CopycatSpecialCases.isTrapdoorMaterial(material))
+			return blockRenderer.getBlockModel(material)
+				.getQuads(state, side, rand, wrappedData);
 
 		if (specialCopycatModelState != null) {
-			BakedModel blockModel = Minecraft.getInstance()
-				.getBlockRenderer()
+			BakedModel blockModel = blockRenderer
 				.getBlockModel(specialCopycatModelState.setValue(DirectionalBlock.FACING, facing));
 			if (blockModel instanceof CopycatModel cm)
 				return cm.getCroppedQuads(state, side, rand, material, wrappedData);

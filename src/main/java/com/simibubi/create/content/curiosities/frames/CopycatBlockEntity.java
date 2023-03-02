@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -25,7 +26,8 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBlockEntityItemRequirement, ITransformableBlockEntity {
+public class CopycatBlockEntity extends SmartBlockEntity
+	implements ISpecialBlockEntityItemRequirement, ITransformableBlockEntity {
 
 	private BlockState material;
 	private ItemStack consumedItem;
@@ -53,7 +55,7 @@ public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBloc
 				BlockState neighbourState = level.getBlockState(neighbour);
 				if (neighbourState != wrapperState)
 					continue;
-				if (!(level.getBlockEntity(neighbour) instanceof CopycatBlockEntity cbe))
+				if (!(level.getBlockEntity(neighbour)instanceof CopycatBlockEntity cbe))
 					continue;
 				BlockState otherMaterial = cbe.getMaterial();
 				if (!otherMaterial.is(blockState.getBlock()))
@@ -71,10 +73,15 @@ public class CopycatBlockEntity extends SmartBlockEntity implements ISpecialBloc
 	}
 
 	public boolean cycleMaterial() {
-		if (material.hasProperty(BlockStateProperties.FACING))
+		if (material.hasProperty(TrapDoorBlock.HALF) && material.getOptionalValue(TrapDoorBlock.OPEN)
+			.orElse(false))
+			setMaterial(material.cycle(TrapDoorBlock.HALF));
+		else if (material.hasProperty(BlockStateProperties.FACING))
 			setMaterial(material.cycle(BlockStateProperties.FACING));
 		else if (material.hasProperty(BlockStateProperties.HORIZONTAL_FACING))
-			setMaterial(material.cycle(BlockStateProperties.HORIZONTAL_FACING));
+			setMaterial(material.setValue(BlockStateProperties.HORIZONTAL_FACING,
+				material.getValue(BlockStateProperties.HORIZONTAL_FACING)
+					.getClockWise()));
 		else if (material.hasProperty(BlockStateProperties.AXIS))
 			setMaterial(material.cycle(BlockStateProperties.AXIS));
 		else if (material.hasProperty(BlockStateProperties.HORIZONTAL_AXIS))
