@@ -22,8 +22,10 @@ public class MixerInstance extends EncasedCogInstance implements DynamicInstance
 		super(materialManager, blockEntity, false);
 		this.mixer = blockEntity;
 
-		mixerHead = getRotatingMaterial().getModel(AllPartialModels.MECHANICAL_MIXER_HEAD, blockState)
-				.createInstance();
+		mixerHead = materialManager.defaultCutout()
+			.material(AllMaterialSpecs.ROTATING)
+			.getModel(AllPartialModels.MECHANICAL_MIXER_HEAD, blockState)
+			.createInstance();
 
 		mixerHead.setRotationAxis(Direction.Axis.Y);
 
