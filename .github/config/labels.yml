@@ -1,12 +1,12 @@
 1.14:
-    - "### Minecraft Version\\n\\n1\\.14(?:\\.\\d)?"
+    - '### Minecraft Version\\n\\n1\.14(?:\.\d)?'
 1.15:
-    - "### Minecraft Version\\n\\n1\\.15(?:\\.\\d)?"
+    - '### Minecraft Version\\n\\n1\.15(?:\.\d)?'
 1.16:
-    - "### Minecraft Version\\n\\n1\\.16(?:\\.\\d)?"
+    - '### Minecraft Version\\n\\n1\.16(?:\.\d)?'
 1.17:
-    - "### Minecraft Version\\n\\n1\\.17(?:\\.\\d)?"
+    - '### Minecraft Version\\n\\n1\.17(?:\.\d)?'
 1.18:
-    - "### Minecraft Version\\n\\n1\\.18(?:\\.\\d)?"
+    - '### Minecraft Version\\n\\n1\.18(?:\.\d)?'
 1.19:
-    - "### Minecraft Version\\n\\n1\\.19(?:\\.\\d)?"
+    - '### Minecraft Version\\n\\n1\.19(?:\.\d)?'
