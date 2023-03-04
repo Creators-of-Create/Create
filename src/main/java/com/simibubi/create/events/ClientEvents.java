@@ -46,6 +46,7 @@ import com.simibubi.create.content.logistics.trains.track.CurvedTrackInteraction
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -100,6 +101,7 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
@@ -322,14 +324,14 @@ public class ClientEvents {
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f/32f);
+			event.scaleFarPlaneDistance(AllConfigs.CLIENT.chocolateFogDistance.getF());
 			event.setCanceled(true);
 			return;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f/8f);
+			event.scaleFarPlaneDistance(AllConfigs.CLIENT.honeyFogDistance.getF());
 			event.setCanceled(true);
 			return;
 		}
