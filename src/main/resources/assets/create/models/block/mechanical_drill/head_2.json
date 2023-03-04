@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"4": "create:block/mechanical_drill_head",
+		"5": "create:block/mechanical_drill_head_2",
 		"particle": "create:block/funnel/andesite_funnel_frame"
 	},
 	"elements": [
@@ -10,8 +10,8 @@
 			"from": [2, 8, 2],
 			"to": [14, 12, 14],
 			"faces": {
-				"north": {"uv": [2, 12, 14, 16], "texture": "#4"},
-				"south": {"uv": [2, 12, 14, 16], "texture": "#4"}
+				"east": {"uv": [2, 12, 14, 16], "texture": "#5"},
+				"west": {"uv": [2, 12, 14, 16], "texture": "#5"}
 			}
 		},
 		{
@@ -19,8 +19,8 @@
 			"from": [3, 12, 3],
 			"to": [13, 16, 13],
 			"faces": {
-				"north": {"uv": [3, 8, 13, 12], "texture": "#4"},
-				"south": {"uv": [3, 8, 13, 12], "texture": "#4"}
+				"east": {"uv": [3, 8, 13, 12], "texture": "#5"},
+				"west": {"uv": [3, 8, 13, 12], "texture": "#5"}
 			}
 		},
 		{
@@ -28,8 +28,8 @@
 			"from": [4, 16, 4],
 			"to": [12, 20, 12],
 			"faces": {
-				"north": {"uv": [4, 4, 12, 8], "texture": "#4"},
-				"south": {"uv": [4, 4, 12, 8], "texture": "#4"}
+				"east": {"uv": [4, 4, 12, 8], "texture": "#5"},
+				"west": {"uv": [4, 4, 12, 8], "texture": "#5"}
 			}
 		},
 		{
@@ -37,8 +37,8 @@
 			"from": [5, 20, 5],
 			"to": [11, 24, 11],
 			"faces": {
-				"north": {"uv": [5, 0, 11, 4], "texture": "#4"},
-				"south": {"uv": [5, 0, 11, 4], "texture": "#4"}
+				"east": {"uv": [5, 0, 11, 4], "texture": "#5"},
+				"west": {"uv": [5, 0, 11, 4], "texture": "#5"}
 			}
 		}
 	],

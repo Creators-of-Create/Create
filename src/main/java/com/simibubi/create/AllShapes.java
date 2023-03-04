@@ -160,6 +160,9 @@ public class AllShapes {
 
 		PLACARD = shape(2, 0, 2, 14, 3, 14).forDirectional(UP),
 
+		DRILL = shape(0, 0, 0, 16, 8, 16).add(3, 0, 3, 13, 16, 13)
+			.forDirectional(UP),
+
 		TRACK_ORTHO = shape(TrackVoxelShapes.orthogonal()).forHorizontal(NORTH),
 		TRACK_ASC = shape(TrackVoxelShapes.ascending()).forHorizontal(SOUTH),
 		TRACK_DIAG = shape(TrackVoxelShapes.diagonal()).forHorizontal(SOUTH),

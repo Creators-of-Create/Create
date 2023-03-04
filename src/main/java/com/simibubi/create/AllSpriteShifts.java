@@ -72,6 +72,11 @@ public class AllSpriteShifts {
 	public static final SpriteShiftEntry ELEVATOR_BELT =
 		get("block/elevator_pulley_belt", "block/elevator_pulley_belt_scroll"),
 		ELEVATOR_COIL = get("block/elevator_pulley_coil", "block/elevator_pulley_coil_scroll");
+	
+	public static final SpriteShiftEntry 
+		DRILL = get("block/mechanical_drill_head", "block/mechanical_drill_animation"),
+		DRILL_2 = get("block/mechanical_drill_head_2", "block/mechanical_drill_animation_2"),
+		DRILL_TOP = get("block/mechanical_drill_head_top", "block/mechanical_drill_animation_top");
 
 	public static final SpriteShiftEntry BELT = get("block/belt", "block/belt_scroll"),
 		BELT_OFFSET = get("block/belt_offset", "block/belt_scroll"),
