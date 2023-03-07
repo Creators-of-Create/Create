@@ -39,7 +39,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 			return;
 
 		boolean lavaDiving = entity.isEyeInFluidType(ForgeMod.LAVA_TYPE.get());
-		if (!entity.isEyeInFluidType(ForgeMod.WATER_TYPE.get()) && !lavaDiving)
+		if (!entity.canDrownInFluidType(entity.getEyeInFluidType()) && !lavaDiving)
 			return;
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;
