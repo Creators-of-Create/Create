@@ -102,7 +102,6 @@ public class WindmillBearingBlockEntity extends MechanicalBearingBlockEntity {
 		behaviours.remove(movementMode);
 		movementDirection = new ScrollOptionBehaviour<>(RotationDirection.class,
 			Lang.translateDirect("contraptions.windmill.rotation_direction"), this, getMovementModeSlot());
-		movementDirection.requiresWrench();
 		movementDirection.withCallback($ -> onDirectionChanged());
 		behaviours.add(movementDirection);
 		registerAwardables(behaviours, AllAdvancements.WINDMILL, AllAdvancements.WINDMILL_MAXED);

@@ -30,7 +30,8 @@ public class ValueBoxRenderer {
 			.getItemRenderer();
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
 		boolean blockItem = modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
-		float scale = (!blockItem ? .5f : 1f) + 1 / 64f;
+		boolean filterItem = filter.getItem() instanceof FilterItem;
+		float scale = (!blockItem && !filterItem ? .5f : 1f) + 1 / 64f;
 		float zOffset = (!blockItem ? -.15f : 0) + customZOffset(filter.getItem());
 		ms.scale(scale, scale, scale);
 		ms.translate(0, 0, zOffset);
@@ -80,7 +81,7 @@ public class ValueBoxRenderer {
 	private static float customZOffset(Item item) {
 		float nudge = -.1f;
 		if (item instanceof FilterItem)
-			return nudge;
+			return -nudge / 2;
 		if (item instanceof BlockItem) {
 			Block block = ((BlockItem) item).getBlock();
 			if (block instanceof AbstractSimpleShaftBlock)

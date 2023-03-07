@@ -105,8 +105,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		maxStackSize = new ScrollValueBehaviour(Lang.translateDirect("weighted_ejector.stack_size"), this, new EjectorSlot())
 			.between(0, 64)
 			.withFormatter(i -> i == 0 ? "*" : String.valueOf(i))
-			.onlyActiveWhen(() -> state == State.CHARGED)
-			.requiresWrench();
+			.onlyActiveWhen(() -> state == State.CHARGED);
 		behaviours.add(maxStackSize);
 
 		depotBehaviour.maxStackSize = () -> maxStackSize.getValue();

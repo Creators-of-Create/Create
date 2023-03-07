@@ -100,7 +100,6 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		behaviours.add(selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
 			Lang.translateDirect("logistics.when_multiple_outputs_available"), this,
 			new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP)));
-		selectionMode.requiresWrench();
 
 		// Propagate settings across connected tunnels
 		selectionMode.withCallback(setting -> {

@@ -55,7 +55,6 @@ public class ClockworkBearingBlockEntity extends KineticBlockEntity
 		super.addBehaviours(behaviours);
 		operationMode = new ScrollOptionBehaviour<>(ClockHands.class,
 			Lang.translateDirect("contraptions.clockwork.clock_hands"), this, getMovementModeSlot());
-		operationMode.requiresWrench();
 		behaviours.add(operationMode);
 		registerAwardables(behaviours, AllAdvancements.CLOCKWORK_BEARING);
 	}

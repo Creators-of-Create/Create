@@ -106,7 +106,6 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 
 		selectionMode = new ScrollOptionBehaviour<SelectionMode>(SelectionMode.class,
 			Lang.translateDirect("logistics.when_multiple_outputs_available"), this, new SelectionModeValueBox());
-		selectionMode.requiresWrench();
 		behaviours.add(selectionMode);
 
 		registerAwardables(behaviours, AllAdvancements.ARM_BLAZE_BURNER, AllAdvancements.ARM_MANY_TARGETS,

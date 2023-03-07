@@ -55,7 +55,6 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		movementDirection = new ScrollOptionBehaviour<>(RotationDirection.class,
 			Lang.translateDirect("contraptions.windmill.rotation_direction"), this, new SteamEngineValueBox());
-		movementDirection.requiresWrench();
 		movementDirection.onlyActiveWhen(() -> {
 			PoweredShaftBlockEntity shaft = getShaft();
 			return shaft == null || !shaft.hasSource();

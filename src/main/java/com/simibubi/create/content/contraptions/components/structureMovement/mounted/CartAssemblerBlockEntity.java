@@ -235,7 +235,6 @@ public class CartAssemblerBlockEntity extends SmartBlockEntity implements IDispl
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		movementMode = new ScrollOptionBehaviour<>(CartMovementMode.class,
 			Lang.translateDirect("contraptions.cart_movement_mode"), this, getMovementModeSlot());
-		movementMode.requiresWrench();
 		behaviours.add(movementMode);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
 	}

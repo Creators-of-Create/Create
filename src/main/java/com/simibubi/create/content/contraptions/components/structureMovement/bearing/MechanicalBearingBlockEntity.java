@@ -53,7 +53,6 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		super.addBehaviours(behaviours);
 		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translateDirect("contraptions.movement_mode"),
 			this, getMovementModeSlot());
-		movementMode.requiresWrench();
 		behaviours.add(movementMode);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
 	}

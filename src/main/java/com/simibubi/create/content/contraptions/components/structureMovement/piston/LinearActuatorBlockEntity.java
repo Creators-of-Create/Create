@@ -51,7 +51,6 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		super.addBehaviours(behaviours);
 		movementMode = new ScrollOptionBehaviour<>(MovementMode.class, Lang.translateDirect("contraptions.movement_mode"),
 			this, getMovementModeSlot());
-		movementMode.requiresWrench();
 		movementMode.withCallback(t -> waitingForSpeedChange = false);
 		behaviours.add(movementMode);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
