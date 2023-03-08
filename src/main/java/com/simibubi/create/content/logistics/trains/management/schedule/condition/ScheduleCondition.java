@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleDataEntry;
 import com.simibubi.create.foundation.utility.Pair;
@@ -17,7 +18,18 @@ public abstract class ScheduleCondition extends ScheduleDataEntry {
 
 	private ScheduleConditionType type = ScheduleConditionType.UNDEFINED;
 
+	public ScheduleCondition() {
+	}
+
+	public ScheduleCondition(ScheduleConditionType type) {
+		this.type = type;
+	}
+
 	public abstract boolean tickCompletion(Level level, Train train, CompoundTag context);
+
+	public boolean tickCompletion(Level level, Train train, CompoundTag context, GlobalStation station) {
+		return this.tickCompletion(level, train, context);
+	}
 
 	protected void requestStatusToUpdate(CompoundTag context) {
 		context.putInt("StatusVersion", context.getInt("StatusVersion") + 1);

@@ -13,6 +13,8 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.StationPoweredCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.StationUnloadedCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeThrottleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
@@ -196,10 +198,34 @@ public class ScheduleRuntime {
 
 			for (List<ScheduleCondition> list : skipConditions) {
 				for (ScheduleCondition condition : list) {
-					if (!condition.tickCompletion(train.level, train, new CompoundTag())) {
-						System.out.println("Skipping " + condition);
-						skip = false;
-						break;
+					if ((condition instanceof StationUnloadedCondition || condition instanceof StationPoweredCondition) && instruction instanceof DestinationInstruction destinationInstruction) {
+						String regex = destinationInstruction.getFilterForRegex();
+
+						System.out.println("Checking " + condition.getClass() + " for " + regex);
+
+						GlobalStation station = null;
+						for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
+							if (globalStation.name.matches(regex)) {
+								station = globalStation;
+								break;
+							}
+						}
+
+						if (station == null) {
+							continue;
+						}
+
+						if (!condition.tickCompletion(train.level, train, new CompoundTag(), station)) {
+							System.out.println("Skipping " + condition.getClass());
+							skip = false;
+							break;
+						}
+					} else {
+						if (!condition.tickCompletion(train.level, train, new CompoundTag())) {
+							System.out.println("Skipping " + condition.getClass());
+							skip = false;
+							break;
+						}
 					}
 				}
 			}
@@ -208,6 +234,7 @@ public class ScheduleRuntime {
 				currentEntry = (currentEntry + 1) % schedule.entries.size();
 
 				entry = schedule.entries.get(currentEntry);
+				instruction = entry.instruction;
 				skipConditions = entry.skipConditions;
 
 				System.out.println("Skipping " + entry.instruction);

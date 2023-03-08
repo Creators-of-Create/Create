@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.trains.management.schedule.conditi
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -29,14 +28,20 @@ public class StationPoweredCondition extends ScheduleCondition {
 		GlobalStation currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
-		BlockPos stationPos = currentStation.getTilePos();
-		ResourceKey<Level> stationDim = currentStation.getTileDimension();
+		return this.tickCompletion(level, train, context, currentStation);
+	}
+
+	@Override
+	public boolean tickCompletion(Level level, Train train, CompoundTag context, GlobalStation station) {
+		BlockPos stationPos = station.getTilePos();
+		ResourceKey<Level> stationDim = station.getTileDimension();
 		MinecraftServer server = level.getServer();
 		if (server == null)
 			return false;
 		ServerLevel stationLevel = server.getLevel(stationDim);
 		if (stationLevel == null || !stationLevel.isLoaded(stationPos))
 			return false;
+		System.out.println("Station has neighbor signal: " + stationLevel.hasNeighborSignal(stationPos) + " at " + stationPos);
 		return stationLevel.hasNeighborSignal(stationPos);
 	}
 

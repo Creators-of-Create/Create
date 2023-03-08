@@ -30,7 +30,7 @@ public class NBTHelper {
 			String name = nbt.getString(key);
 			for (T t : enumConstants) {
 				if (t.name()
-					.equals(name))
+						.equals(name))
 					return t;
 			}
 		}
@@ -44,8 +44,6 @@ public class NBTHelper {
 	public static <T> ListTag writeCompoundList(Iterable<T> list, Function<T, CompoundTag> serializer) {
 		ListTag listNBT = new ListTag();
 		list.forEach(t -> {
-			System.out.println("NBTHelper.writeCompoundList: " + t);
-
 			CompoundTag apply = serializer.apply(t);
 			if (apply == null)
 				return;
@@ -87,7 +85,7 @@ public class NBTHelper {
 		if (bbtag == null || bbtag.isEmpty())
 			return null;
 		return new AABB(bbtag.getFloat(0), bbtag.getFloat(1), bbtag.getFloat(2), bbtag.getFloat(3),
-			bbtag.getFloat(4), bbtag.getFloat(5));
+				bbtag.getFloat(4), bbtag.getFloat(5));
 	}
 
 	public static ListTag writeVec3i(Vec3i vec) {

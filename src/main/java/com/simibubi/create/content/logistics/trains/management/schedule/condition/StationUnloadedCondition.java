@@ -3,7 +3,6 @@ package com.simibubi.create.content.logistics.trains.management.schedule.conditi
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -28,7 +27,12 @@ public class StationUnloadedCondition extends ScheduleCondition {
 		GlobalStation currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
-		ResourceKey<Level> stationDim = currentStation.getTileDimension();
+		return this.tickCompletion(level, train, context, currentStation);
+	}
+
+	@Override
+	public boolean tickCompletion(Level level, Train train, CompoundTag context, GlobalStation station) {
+		ResourceKey<Level> stationDim = station.getTileDimension();
 		MinecraftServer server = level.getServer();
 		if (server == null)
 			return false;
@@ -36,7 +40,7 @@ public class StationUnloadedCondition extends ScheduleCondition {
 		if (stationLevel == null) {
 			return false;
 		}
-		return !stationLevel.isPositionEntityTicking(currentStation.getTilePos());
+		return !stationLevel.isPositionEntityTicking(station.getTilePos());
 	}
 
 	@Override

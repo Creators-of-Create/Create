@@ -23,10 +23,10 @@ import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ComparisonTimeOfDayCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleConditionType;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
-import com.simibubi.create.content.logistics.trains.management.schedule.condition.TimeOfDayCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -168,6 +168,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 	}
 
 	protected void startEditing(IScheduleInput field, Consumer<Boolean> onClose, boolean allowDeletion) {
+		if (editingDestination != null || editingWaitCondition != null || editingSkipCondition != null)
+			return;
+
 		onEditorClose = onClose;
 		confirmButton.visible = false;
 		cyclicButton.visible = false;
@@ -189,6 +192,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			menu.ghostInventory.setStackInSlot(i, item);
 			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(item, i));
 		}
+
+		System.out.println("Starting editing " + field);
 
 		if (field instanceof ScheduleInstruction instruction) {
 			int startIndex = 0;
@@ -219,6 +224,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		}
 
 		if (field instanceof ScheduleCondition cond && cond.getType() == ScheduleConditionType.SKIP) {
+			System.out.println("Editing skip condition");
+
 			int startIndex = 0;
 			for (int i = 0; i < Schedule.SKIP_CONDITION_TYPES.size(); i++) {
 				if (Schedule.SKIP_CONDITION_TYPES.get(i)
@@ -230,7 +237,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			editingSkipCondition = cond;
 			updateEditorSubwidgets(editingSkipCondition);
 			scrollInput.forOptions(Schedule.getTypeOptions(Schedule.SKIP_CONDITION_TYPES))
-					.titled(Lang.translateDirect("schedule.condition_type"))
+					.titled(Lang.translateDirect("schedule.condition_type_skip"))
 					.writingTo(scrollInputLabel)
 					.calling(index -> {
 						ScheduleCondition newlyCreated = Schedule.SKIP_CONDITION_TYPES.get(index)
@@ -240,6 +247,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 								.equals(newlyCreated.getId())) {
 							return;
 						}
+						System.out.println("Creating new skip condition " + newlyCreated.getClass());
+						newlyCreated.setType(ScheduleConditionType.SKIP);
 						editingSkipCondition = newlyCreated;
 						updateEditorSubwidgets(editingSkipCondition);
 					})
@@ -247,6 +256,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		}
 
 		if (field instanceof ScheduleCondition cond && cond.getType() == ScheduleConditionType.WAIT) {
+			System.out.println("Editing wait condition");
+
 			int startIndex = 0;
 			for (int i = 0; i < Schedule.WAIT_CONDITION_TYPES.size(); i++) {
 				if (Schedule.WAIT_CONDITION_TYPES.get(i)
@@ -258,7 +269,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			editingWaitCondition = cond;
 			updateEditorSubwidgets(editingWaitCondition);
 			scrollInput.forOptions(Schedule.getTypeOptions(Schedule.WAIT_CONDITION_TYPES))
-					.titled(Lang.translateDirect("schedule.condition_type"))
+					.titled(Lang.translateDirect("schedule.condition_type_wait"))
 					.writingTo(scrollInputLabel)
 					.calling(index -> {
 						ScheduleCondition newlyCreated = Schedule.WAIT_CONDITION_TYPES.get(index)
@@ -268,6 +279,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 								.equals(newlyCreated.getId())) {
 							return;
 						}
+						System.out.println("Creating new wait condition " + newlyCreated.getClass());
+						newlyCreated.setType(ScheduleConditionType.WAIT);
 						editingWaitCondition = newlyCreated;
 						updateEditorSubwidgets(editingWaitCondition);
 					})
@@ -439,7 +452,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		float scrollOffset = -scroll.getValue(partialTicks);
 
 		for (int i = 0; i <= entries.size(); i++) {
-
 			if (schedule.savedProgress == i && !schedule.entries.isEmpty()) {
 				matrixStack.pushPose();
 				float expectedY = scrollOffset + topPos + yOffset + 4;
@@ -546,7 +558,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				if (!Mth.equal(chaseTarget, 0)) {
 					AllGuiTextures.SCHEDULE_SCROLL_LEFT.render(matrixStack, leftPos + 40, topPos + cardY + center);
 				}
-				if (!Mth.equal(chaseTarget, scheduleEntry.waitConditions.size() - 1)) {
+				if (!Mth.equal(chaseTarget, scheduleEntry.waitConditions.size() - 1) || !Mth.equal(chaseTarget, scheduleEntry.skipConditions.size() - 1)) {
 					AllGuiTextures.SCHEDULE_SCROLL_RIGHT.render(matrixStack, leftPos + 203, topPos + cardY + center);
 				}
 				matrixStack.popPose();
@@ -844,7 +856,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			for (List<ScheduleCondition> list : entry.skipConditions) {
 				maxSkipRows = Math.max(maxSkipRows, list.size());
 			}
-			int cardHeight = CARD_HEADER + (entry.instruction.supportsConditions() ? 24 + maxWaitRows * 18 : 4) + 24 + maxSkipRows * 18;
+			int cardHeight = CARD_HEADER + (entry.instruction.supportsConditions() ? 24 + maxWaitRows * 18 : 4) + 20 + maxSkipRows * 18;
 
 			if (y >= cardHeight + 5) {
 				y -= cardHeight + 10;
@@ -926,7 +938,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					}
 					return true;
 				}
-				if (x > 177 && x <= 184 && !Mth.equal(chaseTarget, entry.waitConditions.size() - 1)) {
+				if (x > 177 && x <= 184 && (!Mth.equal(chaseTarget, entry.waitConditions.size() - 1) || !Mth.equal(chaseTarget,
+						entry.skipConditions.size() - 1))) {
 					if (click == 0) {
 						horizontalScrolls.get(i)
 								.chase(chaseTarget + 1, 0.5f, Chaser.EXP);
@@ -949,12 +962,12 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.add_condition")), Optional.empty(),
 							mx, my);
 					if (click == 0) {
-						TimeOfDayCondition condition = new TimeOfDayCondition();
+						ComparisonTimeOfDayCondition condition = new ComparisonTimeOfDayCondition(ScheduleConditionType.SKIP);
 						condition.setType(ScheduleConditionType.SKIP);
 
 						startEditing(condition, confirmed -> {
 							if (confirmed) {
-								entry.skipConditions.add(new ArrayList<>(List.of(condition)));
+								entry.skipConditions.add(new ArrayList<>(List.of(editingSkipCondition)));
 							}
 						}, true);
 					}
@@ -975,7 +988,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					int row = y / 18;
 					if (row < conditions.size() && row >= 0) {
 						List<Component> components = new ArrayList<>();
-						components.add(Lang.translateDirect("schedule.condition_type")
+						components.add(Lang.translateDirect("schedule.condition_type_skip")
 								.withStyle(ChatFormatting.GRAY));
 						ScheduleCondition condition = conditions.get(row);
 						components.addAll(condition.getTitleAs("condition"));
@@ -992,6 +1005,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 						if (click == 0) {
 							startEditing(condition, confirmed -> {
 								conditions.remove(row);
+								System.out.println(" here3");
 								if (confirmed) {
 									editingSkipCondition.setType(ScheduleConditionType.SKIP);
 									conditions.add(row, editingSkipCondition);
@@ -1009,7 +1023,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 						renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.add_condition")), Optional.empty(),
 								mx, my);
 						if (click == 0) {
-							startEditing(new TimeOfDayCondition(), confirmed -> {
+							startEditing(new ComparisonTimeOfDayCondition(ScheduleConditionType.SKIP), confirmed -> {
+								System.out.println(editingSkipCondition.getClass() + " here");
+
 								if (confirmed) {
 									editingSkipCondition.setType(ScheduleConditionType.SKIP);
 									conditions.add(editingSkipCondition);
@@ -1020,14 +1036,18 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					}
 				}
 
+
 				if (x > 0 && x < 15 && y < 20) {
 					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.alternative_condition")), Optional.empty(),
 							mx, my);
 					if (click == 0) {
-						startEditing(new TimeOfDayCondition(), confirmed -> {
+						startEditing(new ComparisonTimeOfDayCondition(ScheduleConditionType.SKIP), confirmed -> {
+							System.out.println(editingSkipCondition.getClass() + " here2");
+
 							if (!confirmed) {
 								return;
 							}
+
 							ArrayList<ScheduleCondition> conditions = new ArrayList<>();
 							conditions.add(editingSkipCondition);
 							skipColumns.add(conditions);
@@ -1057,7 +1077,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				if (row < conditions.size() && row >= 0) {
 					boolean canRemove = conditions.size() > 1 || waitColumns.size() > 1;
 					List<Component> components = new ArrayList<>();
-					components.add(Lang.translateDirect("schedule.condition_type")
+					components.add(Lang.translateDirect("schedule.condition_type_wait")
 							.withStyle(ChatFormatting.GRAY));
 					ScheduleCondition condition = conditions.get(row);
 					components.addAll(condition.getTitleAs("condition"));
@@ -1075,6 +1095,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					}
 					if (click == 0) {
 						startEditing(condition, confirmed -> {
+							System.out.println(editingWaitCondition.getClass() + " here4");
+
 							conditions.remove(row);
 							if (confirmed) {
 								editingWaitCondition.setType(ScheduleConditionType.WAIT);
@@ -1093,7 +1115,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.add_condition")), Optional.empty(),
 							mx, my);
 					if (click == 0) {
-						startEditing(new ScheduledDelay(), confirmed -> {
+						startEditing(new ScheduledDelay(ScheduleConditionType.WAIT), confirmed -> {
+							System.out.println(editingWaitCondition.getClass() + " here5");
+
 							if (confirmed) {
 								editingWaitCondition.setType(ScheduleConditionType.WAIT);
 								conditions.add(editingWaitCondition);
@@ -1113,7 +1137,9 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.alternative_condition")), Optional.empty(),
 					mx, my);
 			if (click == 0) {
-				startEditing(new ScheduledDelay(), confirmed -> {
+				startEditing(new ScheduledDelay(ScheduleConditionType.WAIT), confirmed -> {
+					System.out.println(editingWaitCondition.getClass() + " here6");
+
 					if (!confirmed) {
 						return;
 					}
@@ -1138,7 +1164,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				}
 
 				ScheduleEntry entry = new ScheduleEntry();
-				ScheduledDelay delay = new ScheduledDelay();
+				ScheduledDelay delay = new ScheduledDelay(ScheduleConditionType.WAIT);
 				delay.setType(ScheduleConditionType.WAIT);
 				ArrayList<ScheduleCondition> initialConditions = new ArrayList<>();
 				initialConditions.add(delay);
@@ -1240,11 +1266,15 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			int y = (int) (pMouseY - topPos - 25 + scroll.getValue());
 			for (int i = 0; i < entries.size(); i++) {
 				ScheduleEntry entry = entries.get(i);
-				int maxRows = 0;
+				int maxWaitRows = 0;
 				for (List<ScheduleCondition> list : entry.waitConditions) {
-					maxRows = Math.max(maxRows, list.size());
+					maxWaitRows = Math.max(maxWaitRows, list.size());
 				}
-				int cardHeight = CARD_HEADER + 24 + maxRows * 18;
+				int maxSkipRows = 0;
+				for (List<ScheduleCondition> list : entry.skipConditions) {
+					maxSkipRows = Math.max(maxSkipRows, list.size());
+				}
+				int cardHeight = CARD_HEADER + 20 + (entry.instruction.supportsConditions() ? 24 + maxWaitRows * 18 : 4) + maxSkipRows * 18;
 
 				if (y >= cardHeight) {
 					y -= cardHeight + 9;
@@ -1273,7 +1303,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 							.chase(chaseTarget - 1, 0.5f, Chaser.EXP);
 					return true;
 				}
-				if (pDelta < 0 && !Mth.equal(chaseTarget, entry.waitConditions.size() - 1)) {
+				if (pDelta < 0 && !Mth.equal(chaseTarget, entry.waitConditions.size() - 1) && !Mth.equal(chaseTarget, entry.skipConditions.size() - 1)) {
 					horizontalScrolls.get(i)
 							.chase(chaseTarget + 1, 0.5f, Chaser.EXP);
 					return true;

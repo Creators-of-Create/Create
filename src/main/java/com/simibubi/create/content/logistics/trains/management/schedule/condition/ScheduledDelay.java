@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.management.schedule.conditi
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -12,6 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class ScheduledDelay extends TimedCondition {
+
+	public ScheduledDelay() {
+	}
+
+	public ScheduledDelay(ScheduleConditionType conditionType) {
+		super(conditionType);
+	}
 
 	@Override
 	public Pair<ItemStack, Component> getSummary() {

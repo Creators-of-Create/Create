@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.entity.Train;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
@@ -58,6 +59,12 @@ public abstract class TimedCondition extends ScheduleCondition {
 		data.putInt("TimeUnit", TimeUnit.SECONDS.ordinal());
 	}
 
+	public TimedCondition(ScheduleConditionType conditionType) {
+		super(conditionType);
+		data.putInt("Value", 5);
+		data.putInt("TimeUnit", TimeUnit.SECONDS.ordinal());
+	}
+
 	protected Component formatTime(boolean compact) {
 		if (compact)
 			return Components.literal(getValue() + getUnit().suffix);
@@ -70,6 +77,11 @@ public abstract class TimedCondition extends ScheduleCondition {
 			Components.translatable(getId().getNamespace() + ".schedule." + type + "." + getId().getPath()),
 			Lang.translateDirect("schedule.condition.for_x_time", formatTime(false))
 				.withStyle(ChatFormatting.DARK_AQUA));
+	}
+
+	@Override
+	public boolean tickCompletion(Level level, Train train, CompoundTag context, GlobalStation station) {
+		return this.tickCompletion(level, train, context);
 	}
 
 	@Override

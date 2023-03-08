@@ -5,15 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ComparisonTimeOfDayCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.FluidThresholdCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.IdleCargoCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ItemThresholdCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.PlayerPassengerCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.RedstoneLinkCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleCondition;
+import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleConditionType;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduledDelay;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.StationPoweredCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.StationUnloadedCondition;
@@ -53,29 +54,31 @@ public class Schedule {
 		registerInstruction("destination", DestinationInstruction::new);
 		registerInstruction("rename", ChangeTitleInstruction::new);
 		registerInstruction("throttle", ChangeThrottleInstruction::new);
-		registerWaitCondition("delay", ScheduledDelay::new);
-		registerWaitCondition("time_of_day", TimeOfDayCondition::new);
-		registerWaitCondition("fluid_threshold", FluidThresholdCondition::new);
-		registerWaitCondition("item_threshold", ItemThresholdCondition::new);
-		registerWaitCondition("redstone_link", RedstoneLinkCondition::new);
-		registerWaitCondition("player_count", PlayerPassengerCondition::new);
-		registerWaitCondition("idle", IdleCargoCondition::new);
-		registerWaitCondition("unloaded", StationUnloadedCondition::new);
-		registerWaitCondition("powered", StationPoweredCondition::new);
-		registerSkipCondition("time_of_day", TimeOfDayCondition::new);
+		registerCondition("delay", ScheduledDelay::new, ScheduleConditionType.WAIT);
+		registerCondition("time_of_day", TimeOfDayCondition::new, ScheduleConditionType.WAIT);
+		registerCondition("comparison_time_of_day", ComparisonTimeOfDayCondition::new, ScheduleConditionType.SKIP);
+		registerCondition("fluid_threshold", FluidThresholdCondition::new, ScheduleConditionType.WAIT, ScheduleConditionType.SKIP);
+		registerCondition("item_threshold", ItemThresholdCondition::new, ScheduleConditionType.WAIT, ScheduleConditionType.SKIP);
+		registerCondition("redstone_link", RedstoneLinkCondition::new, ScheduleConditionType.WAIT, ScheduleConditionType.SKIP);
+		registerCondition("player_count", PlayerPassengerCondition::new, ScheduleConditionType.WAIT, ScheduleConditionType.SKIP);
+		registerCondition("idle", IdleCargoCondition::new, ScheduleConditionType.WAIT);
+		registerCondition("unloaded", StationUnloadedCondition::new, ScheduleConditionType.WAIT, ScheduleConditionType.SKIP);
+		registerCondition("powered", StationPoweredCondition::new, ScheduleConditionType.WAIT, ScheduleConditionType.SKIP);
 	}
 
 	private static void registerInstruction(String name, Supplier<? extends ScheduleInstruction> factory) {
 		INSTRUCTION_TYPES.add(Pair.of(Create.asResource(name), factory));
 	}
 
-	private static void registerWaitCondition(String name, Supplier<? extends ScheduleCondition> factory) {
-		WAIT_CONDITION_TYPES.add(Pair.of(Create.asResource(name), factory));
+	private static void registerCondition(String name, Supplier<? extends ScheduleCondition> factory, ScheduleConditionType... types) {
+		for (ScheduleConditionType type : types) {
+			switch (type) {
+				case WAIT -> WAIT_CONDITION_TYPES.add(Pair.of(Create.asResource(name), factory));
+				case SKIP -> SKIP_CONDITION_TYPES.add(Pair.of(Create.asResource(name), factory));
+			}
+		}
 	}
 
-	private static void registerSkipCondition(String name, Supplier<? extends ScheduleCondition> factory) {
-		SKIP_CONDITION_TYPES.add(Pair.of(Create.asResource(name), factory));
-	}
 
 	public static <T> List<? extends Component> getTypeOptions(List<Pair<ResourceLocation, T>> list) {
 		String langSection = list.equals(INSTRUCTION_TYPES) ? "instruction." : "condition.";
