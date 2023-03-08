@@ -4,10 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.ContraptionData;
-
-import net.minecraft.network.chat.MutableComponent;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -21,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
+import com.simibubi.create.foundation.utility.ContraptionData;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -32,6 +29,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -68,6 +66,11 @@ public class MinecartContraptionItem extends Item {
 
 	public static MinecartContraptionItem chest(Properties builder) {
 		return new MinecartContraptionItem(Type.CHEST, builder);
+	}
+	
+	@Override
+	public boolean canFitInsideContainerItems() {
+		return AllConfigs.SERVER.kinetics.minecartContraptionInContainers.get();
 	}
 
 	private MinecartContraptionItem(Type minecartTypeIn, Properties builder) {

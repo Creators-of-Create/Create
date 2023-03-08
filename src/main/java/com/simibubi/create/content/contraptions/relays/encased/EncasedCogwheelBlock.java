@@ -1,27 +1,30 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
+import java.util.function.Supplier;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.EncasedBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
-import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -43,23 +46,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
-	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock {
+	implements ICogWheel, ITE<SimpleKineticTileEntity>, ISpecialBlockItemRequirement, ITransformableBlock, EncasedBlock {
 
 	public static final BooleanProperty TOP_SHAFT = BooleanProperty.create("top_shaft");
 	public static final BooleanProperty BOTTOM_SHAFT = BooleanProperty.create("bottom_shaft");
 
-	boolean isLarge;
-	private BlockEntry<CasingBlock> casing;
+	protected final boolean isLarge;
+	private final Supplier<Block> casing;
 
-	public static EncasedCogwheelBlock andesite(boolean large, Properties properties) {
-		return new EncasedCogwheelBlock(large, properties, AllBlocks.ANDESITE_CASING);
-	}
-
-	public static EncasedCogwheelBlock brass(boolean large, Properties properties) {
-		return new EncasedCogwheelBlock(large, properties, AllBlocks.BRASS_CASING);
-	}
-
-	public EncasedCogwheelBlock(boolean large, Properties properties, BlockEntry<CasingBlock> casing) {
+	public EncasedCogwheelBlock(Properties properties, boolean large, Supplier<Block> casing) {
 		super(properties);
 		isLarge = large;
 		this.casing = casing;
@@ -81,7 +76,7 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 			return ((BlockHitResult) target).getDirection()
 				.getAxis() != getRotationAxis(state)
 					? isLarge ? AllBlocks.LARGE_COGWHEEL.asStack() : AllBlocks.COGWHEEL.asStack()
-					: getCasing().asStack();
+					: getCasing().asItem().getDefaultInstance();
 		return super.getCloneItemStack(state, target, world, pos, player);
 	}
 
@@ -96,10 +91,6 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 			stateForPlacement =
 				stateForPlacement.setValue(AXIS, ((IRotate) placedOn.getBlock()).getRotationAxis(placedOn));
 		return stateForPlacement;
-	}
-
-	public BlockEntry<CasingBlock> getCasing() {
-		return casing;
 	}
 
 	@Override
@@ -276,4 +267,29 @@ public class EncasedCogwheelBlock extends RotatedPillarKineticBlock
 		return isLarge ? AllTileEntities.ENCASED_LARGE_COGWHEEL.get() : AllTileEntities.ENCASED_COGWHEEL.get();
 	}
 
+	@Override
+	public Block getCasing() {
+		return casing.get();
+	}
+
+	@Override
+	public void handleEncasing(BlockState state, Level level, BlockPos pos, ItemStack heldItem, Player player, InteractionHand hand,
+	    BlockHitResult ray) {
+		BlockState encasedState = defaultBlockState()
+				.setValue(AXIS, state.getValue(AXIS));
+
+		for (Direction d : Iterate.directionsInAxis(state.getValue(AXIS))) {
+			BlockState adjacentState = level.getBlockState(pos.relative(d));
+			if (!(adjacentState.getBlock() instanceof IRotate))
+				continue;
+			IRotate def = (IRotate) adjacentState.getBlock();
+			if (!def.hasShaftTowards(level, pos.relative(d), adjacentState, d.getOpposite()))
+				continue;
+			encasedState =
+				encasedState.cycle(d.getAxisDirection() == AxisDirection.POSITIVE ? EncasedCogwheelBlock.TOP_SHAFT
+						: EncasedCogwheelBlock.BOTTOM_SHAFT);
+		}
+
+		KineticTileEntity.switchToBlockState(level, pos, encasedState);
+	}
 }
