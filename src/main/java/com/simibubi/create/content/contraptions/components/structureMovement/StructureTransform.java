@@ -130,7 +130,7 @@ public class StructureTransform {
 
 		if (rotationAxis == Axis.Y) {
 			if (block instanceof BellBlock) {
-				if (state.getValue(BlockStateProperties.BELL_ATTACHMENT) == BellAttachType.DOUBLE_WALL) 
+				if (state.getValue(BlockStateProperties.BELL_ATTACHMENT) == BellAttachType.DOUBLE_WALL)
 					state = state.setValue(BlockStateProperties.BELL_ATTACHMENT, BellAttachType.SINGLE_WALL);
 				return state.setValue(BellBlock.FACING,
 					rotation.rotate(state.getValue(BellBlock.FACING)));
@@ -144,7 +144,8 @@ public class StructureTransform {
 			EnumProperty<AttachFace> faceProperty = FaceAttachedHorizontalDirectionalBlock.FACE;
 			Direction stateFacing = state.getValue(facingProperty);
 			AttachFace stateFace = state.getValue(faceProperty);
-			Direction forcedAxis = rotationAxis == Axis.Z ? Direction.EAST : Direction.SOUTH;
+			boolean z = rotationAxis == Axis.Z;
+			Direction forcedAxis = z ? Direction.WEST : Direction.SOUTH;
 
 			if (stateFacing.getAxis() == rotationAxis && stateFace == AttachFace.WALL)
 				return state;
@@ -161,7 +162,7 @@ public class StructureTransform {
 					continue;
 				}
 
-				if (stateFacing.getAxisDirection() == AxisDirection.POSITIVE) {
+				if (stateFacing.getAxisDirection() == (z ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE)) {
 					state = state.setValue(faceProperty, AttachFace.FLOOR);
 					continue;
 				}
