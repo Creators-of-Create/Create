@@ -77,10 +77,10 @@ public class CClient extends ConfigBase {
 	public final ConfigGroup trains = group(1, "trains", Comments.trains);
 	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
 
-	public final ConfigGroup fluidFog = group(1, "fluidFog", Comments.fluidFogc);
+	public final ConfigGroup fluidFog = group(1, "fluidFog", Comments.fluidFog);
 
-	public final ConfigFloat honeyFogDistance = f(1f / 8f, 0, 256, "honeyFogDistance", Comments.honeyFogDistancec);
-	public final ConfigFloat chocolateFogDistance = f(1f / 32f, 0, 256, "chocolateFogDistance", Comments.chocolateFogDistancec);
+	public final ConfigFloat honeyFogDistance = f(1f / 8f, 0, 256, "honeyFogDistance", Comments.honeyFogDistance);
+	public final ConfigFloat chocolateFogDistance = f(1f / 32f, 0, 256, "chocolateFogDistance", Comments.chocolateFogDistance);
 
 	@Override
 	public String getName() {
@@ -151,9 +151,9 @@ public class CClient extends ConfigBase {
 		static String trains = "Railway related settings";
 		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";
 
-		static String fluidFogc = "Fluid fog settings";
-		static String honeyFogDistancec = "How far will honey fog start";
-		static String chocolateFogDistancec = "How far will chocolate fog start";
+		static String fluidFog = "Fluid fog settings";
+		static String honeyFogDistance = "How far will honey fog start";
+		static String chocolateFogDistance = "How far will chocolate fog start";
 
 	}
 
