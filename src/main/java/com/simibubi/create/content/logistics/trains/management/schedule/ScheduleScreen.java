@@ -501,10 +501,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				skipH -= correction;
 			}
 
-			if (skipH <= 0) {
-				continue;
-			}
-
 			startStencil(matrixStack, leftPos + 43, topPos + skipY1, 161, skipH + 4);
 			matrixStack.pushPose();
 			matrixStack.translate(0, scrollOffset, 0);
@@ -527,10 +523,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				float correction = 16 - y1;
 				y1 += correction;
 				h -= correction;
-			}
-
-			if (h <= 0) {
-				continue;
 			}
 
 			startStencil(matrixStack, leftPos + 43, topPos + y1, 161, h);
