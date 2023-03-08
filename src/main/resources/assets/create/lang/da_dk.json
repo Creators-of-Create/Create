@@ -1305,6 +1305,7 @@
 	"create.station.no_bogeys": "Ingen bogier",
 	"create.station.one_bogey": "1 bogie",
 	"create.station.more_bogeys": "%1$s bogier",
+	"create.train_assembly.bogeys_too_close": "Bogie %1$s og %2$s er for tæt på hinanden",
 	"create.train.unnamed": "Unavngivet tog",
 	"create.train.departing_from": "Afgår fra %1$s",
 	"create.train.arrived_at": "Ankom til %1$s",
