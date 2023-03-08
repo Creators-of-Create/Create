@@ -20,12 +20,12 @@ public class WrenchEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void useOwnWrenchLogicForCreateBlocks(PlayerInteractEvent.RightClickBlock event) {
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		ItemStack itemStack = event.getItemStack();
 
 		if (event.isCanceled())
 			return;
-		if (event.getWorld() == null)
+		if (event.getLevel() == null)
 			return;
 		if (player == null || !player.mayBuild())
 			return;
@@ -36,7 +36,7 @@ public class WrenchEventHandler {
 		if (!AllItemTags.WRENCH.matches(itemStack.getItem()))
 			return;
 
-		BlockState state = event.getWorld()
+		BlockState state = event.getLevel()
 			.getBlockState(event.getPos());
 		Block block = state.getBlock();
 
