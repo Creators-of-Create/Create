@@ -67,6 +67,11 @@ public class MinecartContraptionItem extends Item {
 	public static MinecartContraptionItem chest(Properties builder) {
 		return new MinecartContraptionItem(Type.CHEST, builder);
 	}
+	
+	@Override
+	public boolean canFitInsideContainerItems() {
+		return AllConfigs.SERVER.kinetics.minecartContraptionInContainers.get();
+	}
 
 	private MinecartContraptionItem(Type minecartTypeIn, Properties builder) {
 		super(builder);
