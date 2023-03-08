@@ -31,7 +31,6 @@ public class ScheduleEntry {
 		ListTag outerWait = new ListTag();
 		tag.put("Instruction", instruction.write());
 		for (List<ScheduleCondition> column : skipConditions) {
-			System.out.println("ScheduleEntry.write: " + column);
 			outerSkip.add(NBTHelper.writeCompoundList(column, ScheduleCondition::write));
 		}
 		tag.put("SkipConditions", outerSkip);
@@ -39,7 +38,6 @@ public class ScheduleEntry {
 			return tag;
 		}
 		for (List<ScheduleCondition> column : waitConditions) {
-			System.out.println("ScheduleEntry.write: " + column);
 			outerWait.add(NBTHelper.writeCompoundList(column, ScheduleCondition::write));
 		}
 		tag.put("WaitConditions", outerWait);
@@ -53,8 +51,6 @@ public class ScheduleEntry {
 		for (Tag t : tag.getList("SkipConditions", Tag.TAG_LIST)) {
 			if (t instanceof ListTag list) {
 				entry.skipConditions.add(NBTHelper.readCompoundList(list, ScheduleCondition::fromTag));
-
-				System.out.println("ScheduleEntry.fromTag: " + entry.skipConditions + " skipConditions");
 			}
 		}
 		entry.waitConditions = new ArrayList<>();
@@ -63,8 +59,6 @@ public class ScheduleEntry {
 			for (Tag t : tag.contains("WaitConditions") ? tag.getList("WaitConditions", Tag.TAG_LIST) : tag.getList("Conditions", Tag.TAG_LIST)) {
 				if (t instanceof ListTag list) {
 					entry.waitConditions.add(NBTHelper.readCompoundList(list, ScheduleCondition::fromTag));
-
-					System.out.println("ScheduleEntry.fromTag: " + entry.waitConditions + " waitConditions");
 				}
 			}
 		}

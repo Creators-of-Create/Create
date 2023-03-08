@@ -41,7 +41,6 @@ public class StationPoweredCondition extends ScheduleCondition {
 		ServerLevel stationLevel = server.getLevel(stationDim);
 		if (stationLevel == null || !stationLevel.isLoaded(stationPos))
 			return false;
-		System.out.println("Station has neighbor signal: " + stationLevel.hasNeighborSignal(stationPos) + " at " + stationPos);
 		return stationLevel.hasNeighborSignal(stationPos);
 	}
 

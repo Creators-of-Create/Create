@@ -76,8 +76,6 @@ public class ComparisonTimeOfDayCondition extends ScheduleCondition {
 				(int) ((((targetHour + 18) % 24) * 1000 + Math.ceil(targetMinute / 60f * 1000)) % 24000);
 		int diff = dayTime - targetTicks;
 
-		System.out.println("dayTime: " + dayTime + ", targetTicks: " + targetTicks + ", diff: " + diff + ", realDiff " + (diff + (dayTime >= 18000 ? 18000 : 0)) + ", maxTickDiff: " + maxTickDiff + ", test " + getOperator().test(dayTime, diff, maxTickDiff));
-
 		return getOperator().test(dayTime, diff, maxTickDiff);
 	}
 

@@ -173,8 +173,6 @@ public class ScheduleRuntime {
 				conditionContext.set(i, new CompoundTag());
 				conditionProgress.set(i, progress + 1);
 				displayLinkUpdateRequested |= i == 0;
-
-				System.out.println("Completed " + condition);
 			}
 
 			displayLinkUpdateRequested |= i == 0 && prevVersion != tag.getInt("StatusVersion");
@@ -201,8 +199,6 @@ public class ScheduleRuntime {
 					if ((condition instanceof StationUnloadedCondition || condition instanceof StationPoweredCondition) && instruction instanceof DestinationInstruction destinationInstruction) {
 						String regex = destinationInstruction.getFilterForRegex();
 
-						System.out.println("Checking " + condition.getClass() + " for " + regex);
-
 						GlobalStation station = null;
 						for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 							if (globalStation.name.matches(regex)) {
@@ -216,13 +212,11 @@ public class ScheduleRuntime {
 						}
 
 						if (!condition.tickCompletion(train.level, train, new CompoundTag(), station)) {
-							System.out.println("Skipping " + condition.getClass());
 							skip = false;
 							break;
 						}
 					} else {
 						if (!condition.tickCompletion(train.level, train, new CompoundTag())) {
-							System.out.println("Skipping " + condition.getClass());
 							skip = false;
 							break;
 						}
@@ -236,8 +230,6 @@ public class ScheduleRuntime {
 				entry = schedule.entries.get(currentEntry);
 				instruction = entry.instruction;
 				skipConditions = entry.skipConditions;
-
-				System.out.println("Skipping " + entry.instruction);
 			} else {
 				break;
 			}

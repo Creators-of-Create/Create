@@ -193,8 +193,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(item, i));
 		}
 
-		System.out.println("Starting editing " + field);
-
 		if (field instanceof ScheduleInstruction instruction) {
 			int startIndex = 0;
 			for (int i = 0; i < Schedule.INSTRUCTION_TYPES.size(); i++) {
@@ -224,8 +222,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		}
 
 		if (field instanceof ScheduleCondition cond && cond.getType() == ScheduleConditionType.SKIP) {
-			System.out.println("Editing skip condition");
-
 			int startIndex = 0;
 			for (int i = 0; i < Schedule.SKIP_CONDITION_TYPES.size(); i++) {
 				if (Schedule.SKIP_CONDITION_TYPES.get(i)
@@ -247,7 +243,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 								.equals(newlyCreated.getId())) {
 							return;
 						}
-						System.out.println("Creating new skip condition " + newlyCreated.getClass());
 						newlyCreated.setType(ScheduleConditionType.SKIP);
 						editingSkipCondition = newlyCreated;
 						updateEditorSubwidgets(editingSkipCondition);
@@ -256,8 +251,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		}
 
 		if (field instanceof ScheduleCondition cond && cond.getType() == ScheduleConditionType.WAIT) {
-			System.out.println("Editing wait condition");
-
 			int startIndex = 0;
 			for (int i = 0; i < Schedule.WAIT_CONDITION_TYPES.size(); i++) {
 				if (Schedule.WAIT_CONDITION_TYPES.get(i)
@@ -279,7 +272,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 								.equals(newlyCreated.getId())) {
 							return;
 						}
-						System.out.println("Creating new wait condition " + newlyCreated.getClass());
 						newlyCreated.setType(ScheduleConditionType.WAIT);
 						editingWaitCondition = newlyCreated;
 						updateEditorSubwidgets(editingWaitCondition);
@@ -558,7 +550,8 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				if (!Mth.equal(chaseTarget, 0)) {
 					AllGuiTextures.SCHEDULE_SCROLL_LEFT.render(matrixStack, leftPos + 40, topPos + cardY + center);
 				}
-				if (!Mth.equal(chaseTarget, scheduleEntry.waitConditions.size() - 1) || !Mth.equal(chaseTarget, scheduleEntry.skipConditions.size() - 1)) {
+
+				if (!Mth.equal(chaseTarget, Math.max(scheduleEntry.waitConditions.size() - 1, scheduleEntry.skipConditions.size() - 1))) {
 					AllGuiTextures.SCHEDULE_SCROLL_RIGHT.render(matrixStack, leftPos + 203, topPos + cardY + center);
 				}
 				matrixStack.popPose();
@@ -1005,7 +998,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 						if (click == 0) {
 							startEditing(condition, confirmed -> {
 								conditions.remove(row);
-								System.out.println(" here3");
 								if (confirmed) {
 									editingSkipCondition.setType(ScheduleConditionType.SKIP);
 									conditions.add(row, editingSkipCondition);
@@ -1024,8 +1016,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 								mx, my);
 						if (click == 0) {
 							startEditing(new ComparisonTimeOfDayCondition(ScheduleConditionType.SKIP), confirmed -> {
-								System.out.println(editingSkipCondition.getClass() + " here");
-
 								if (confirmed) {
 									editingSkipCondition.setType(ScheduleConditionType.SKIP);
 									conditions.add(editingSkipCondition);
@@ -1042,8 +1032,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 							mx, my);
 					if (click == 0) {
 						startEditing(new ComparisonTimeOfDayCondition(ScheduleConditionType.SKIP), confirmed -> {
-							System.out.println(editingSkipCondition.getClass() + " here2");
-
 							if (!confirmed) {
 								return;
 							}
@@ -1095,8 +1083,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					}
 					if (click == 0) {
 						startEditing(condition, confirmed -> {
-							System.out.println(editingWaitCondition.getClass() + " here4");
-
 							conditions.remove(row);
 							if (confirmed) {
 								editingWaitCondition.setType(ScheduleConditionType.WAIT);
@@ -1116,8 +1102,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 							mx, my);
 					if (click == 0) {
 						startEditing(new ScheduledDelay(ScheduleConditionType.WAIT), confirmed -> {
-							System.out.println(editingWaitCondition.getClass() + " here5");
-
 							if (confirmed) {
 								editingWaitCondition.setType(ScheduleConditionType.WAIT);
 								conditions.add(editingWaitCondition);
@@ -1138,8 +1122,6 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					mx, my);
 			if (click == 0) {
 				startEditing(new ScheduledDelay(ScheduleConditionType.WAIT), confirmed -> {
-					System.out.println(editingWaitCondition.getClass() + " here6");
-
 					if (!confirmed) {
 						return;
 					}

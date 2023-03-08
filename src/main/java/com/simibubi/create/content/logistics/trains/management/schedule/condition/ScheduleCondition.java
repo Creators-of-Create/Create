@@ -60,12 +60,10 @@ public abstract class ScheduleCondition extends ScheduleDataEntry {
 
 		ScheduleCondition condition = supplier.get();
 		condition.data = tag.getCompound("Data");
-		System.out.println("HEREEEEEEEEEEEEEEEEEEEEEEE");
 		// Backwards compatibility
 		ScheduleConditionType[] enumConstants = ScheduleConditionType.class.getEnumConstants();
 		condition.type = tag.contains("Type") ? enumConstants[tag.getInt("Type") % enumConstants.length] : ScheduleConditionType.WAIT;
 		// End backwards compatibility
-		System.out.println("HEREEEEEEEEEEEEEEEEEEEEEEE " + condition.type + " " + tag.contains("Type") + " " + tag.getString("Type"));
 		condition.readAdditional(tag);
 		return condition;
 	}
