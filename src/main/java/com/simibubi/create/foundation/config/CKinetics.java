@@ -49,6 +49,8 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool moveItemsToStorage = b(true, "moveItemsToStorage", Comments.moveItemsToStorage);
 	public final ConfigBool harvestPartiallyGrown = b(false, "harvestPartiallyGrown", Comments.harvestPartiallyGrown);
 	public final ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
+	public final ConfigBool minecartContraptionInContainers =
+		b(false, "minecartContraptionInContainers", Comments.minecartContraptionInContainers);
 
 	public final CStress stressValues = nested(1, CStress::new, Comments.stress);
 
@@ -120,6 +122,7 @@ public class CKinetics extends ConfigBase {
 		static String amethystMovement = "Configure how Budding Amethyst can be moved by contraptions.";
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
 		static String reinforcedDeepslateMovement = "Configure how Reinforced Deepslate blocks can be moved by contraptions.";
+		static String minecartContraptionInContainers = "Whether minecart contraptions can be placed into container items.";
 	}
 
 	public enum DeployerAggroSetting {

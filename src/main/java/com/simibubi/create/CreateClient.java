@@ -76,7 +76,6 @@ public class CreateClient {
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllBlockPartials.init();
-		AllStitchedTextures.init();
 
 		PonderIndex.register();
 		PonderIndex.registerTags();
