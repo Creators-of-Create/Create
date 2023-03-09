@@ -4,29 +4,127 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.simibubi.create.compat.computercraft.CreateLuaTable;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.TrainEditPacket;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleEntry;
 import com.simibubi.create.content.logistics.trains.management.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
+import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.StringHelper;
-
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
+
+import net.minecraftforge.network.PacketDistributor;
 
 public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 
 	public StationPeripheral(StationTileEntity tile) {
 		super(tile);
+	}
+
+	@LuaFunction(mainThread = true)
+	public final void assemble() throws LuaException {
+		if (!tile.isAssembling())
+			throw new LuaException("station must be in assembly mode");
+
+		tile.assemble(null);
+
+		if (tile.getStation() == null || tile.getStation().getPresentTrain() == null)
+			throw new LuaException("failed to assemble train");
+
+		if (!tile.exitAssemblyMode())
+			throw new LuaException("failed to exit assembly mode");
+	}
+
+	@LuaFunction(mainThread = true)
+	public final void disassemble() throws LuaException {
+		GlobalStation station = tile.getStation();
+		if (station == null)
+			throw new LuaException("train station does not exist");
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			throw new LuaException("there is no train present");
+
+		if (!tile.enterAssemblyMode(null))
+			throw new LuaException("could not disassemble train");
+	}
+
+	@LuaFunction(mainThread = true)
+	public final void setAssemblyMode(boolean assemblyMode) throws LuaException {
+		if (assemblyMode) {
+			if (!tile.enterAssemblyMode(null))
+				throw new LuaException("failed to enter assembly mode");
+		} else {
+			if (!tile.exitAssemblyMode())
+				throw new LuaException("failed to exit assembly mode");
+		}
+	}
+
+	@LuaFunction
+	public final boolean inAssemblyMode() {
+		return tile.isAssembling();
+	}
+
+	@LuaFunction
+	public final String getStationName() throws LuaException {
+		GlobalStation station = tile.getStation();
+		if (station == null)
+			throw new LuaException("train station does not exist");
+
+		return station.name;
+	}
+
+	@LuaFunction(mainThread = true)
+	public final void setStationName(String name) throws LuaException {
+		if (!tile.updateName(name))
+			throw new LuaException("could not set station name");
+	}
+
+	@LuaFunction
+	public final boolean isTrainPresent() throws LuaException {
+		GlobalStation station = tile.getStation();
+		if (station == null)
+			throw new LuaException("train station does not exist");
+
+		return station.getPresentTrain() != null;
+	}
+
+	@LuaFunction
+	public final String getTrainName() throws LuaException {
+		GlobalStation station = tile.getStation();
+		if (station == null)
+			throw new LuaException("train station does not exist");
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			throw new LuaException("there is no train present");
+
+		return train.name.getString();
+	}
+
+	@LuaFunction
+	public final void setTrainName(String name) throws LuaException {
+		GlobalStation station = tile.getStation();
+		if (station == null)
+			throw new LuaException("train station does not exist");
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			throw new LuaException("there is no train present");
+
+		train.name = Components.literal(name);
+		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainEditPacket.TrainEditReturnPacket(train.id, name, train.icon.getId()));
 	}
 
 	@LuaFunction(mainThread = true)

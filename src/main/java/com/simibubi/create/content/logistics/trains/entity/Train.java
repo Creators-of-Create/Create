@@ -15,8 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -51,7 +49,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
-
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -67,6 +65,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -86,6 +85,7 @@ public class Train {
 	public boolean honk = false;
 
 	public UUID id;
+	@Nullable
 	public UUID owner;
 	public TrackGraph graph;
 	public Navigation navigation;
@@ -124,7 +124,7 @@ public class Train {
 	public int honkPitch;
 
 	public float accumulatedSteamRelease;
-	
+
 	int tickOffset;
 	double[] stress;
 
@@ -277,7 +277,7 @@ public class Train {
 		int carriageCount = carriages.size();
 		boolean stalled = false;
 		double maxStress = 0;
-		
+
 		if (carriageWaitingForChunks != -1)
 			distance = 0;
 
@@ -317,7 +317,7 @@ public class Train {
 						entries++;
 					}
 				}
-				
+
 
 				if (entries > 0)
 					actual = total / entries;
@@ -369,7 +369,7 @@ public class Train {
 					.getLeadingPoint();
 
 			double totalStress = derailed ? 0 : leadingStress + trailingStress;
-			
+
 			boolean first = i == 0;
 			boolean last = i == carriageCount - 1;
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
@@ -1087,7 +1087,8 @@ public class Train {
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putUUID("Id", id);
-		tag.putUUID("Owner", owner);
+		if (owner != null)
+			tag.putUUID("Owner", owner);
 		if (graph != null)
 			tag.putUUID("Graph", graph.id);
 		tag.put("Carriages", NBTHelper.writeCompoundList(carriages, c -> c.write(dimensions)));
@@ -1133,7 +1134,7 @@ public class Train {
 
 	public static Train read(CompoundTag tag, Map<UUID, TrackGraph> trackNetworks, DimensionPalette dimensions) {
 		UUID id = tag.getUUID("Id");
-		UUID owner = tag.getUUID("Owner");
+		UUID owner = tag.contains("Owner") ? tag.getUUID("Owner") : null;
 		UUID graphId = tag.contains("Graph") ? tag.getUUID("Graph") : null;
 		TrackGraph graph = graphId == null ? null : trackNetworks.get(graphId);
 		List<Carriage> carriages = new ArrayList<>();
