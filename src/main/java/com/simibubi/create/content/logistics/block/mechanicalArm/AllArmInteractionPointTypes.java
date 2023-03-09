@@ -34,6 +34,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResultHolder;
@@ -501,16 +502,17 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		protected Vec3 getInteractionPositionVector() {
+			Direction funnelFacing = FunnelBlock.getFunnelFacing(cachedState);
+			Vec3i normal = funnelFacing != null ? funnelFacing.getNormal() : Vec3i.ZERO;
 			return VecHelper.getCenterOf(pos)
-				.add(Vec3.atLowerCornerOf(FunnelBlock.getFunnelFacing(cachedState)
-					.getNormal())
+				.add(Vec3.atLowerCornerOf(normal)
 					.scale(-.15f));
 		}
 
 		@Override
 		protected Direction getInteractionDirection() {
-			return FunnelBlock.getFunnelFacing(cachedState)
-				.getOpposite();
+			Direction funnelFacing = FunnelBlock.getFunnelFacing(cachedState);
+			return funnelFacing != null ? funnelFacing.getOpposite() : Direction.UP;
 		}
 
 		@Override

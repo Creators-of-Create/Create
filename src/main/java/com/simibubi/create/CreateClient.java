@@ -85,7 +85,6 @@ public class CreateClient {
 
 		AllKeys.register();
 		AllBlockPartials.init();
-		AllStitchedTextures.init();
 
 		PonderIndex.register();
 		PonderIndex.registerTags();

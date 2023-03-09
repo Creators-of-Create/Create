@@ -17,7 +17,6 @@ import com.simibubi.create.foundation.utility.WorldHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
 public class RedstoneLinkNetworkHandler {
@@ -112,10 +111,7 @@ public class RedstoneLinkNetworkHandler {
 				iterator.remove();
 				continue;
 			}
-			if (!(world instanceof Level level) || !level.isLoaded(other.getLocation())) {
-				iterator.remove();
-				continue;
-			}
+			
 			if (!withinRange(actor, other))
 				continue;
 

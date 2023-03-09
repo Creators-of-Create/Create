@@ -193,8 +193,7 @@ public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWren
 
 	@Override
 	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		if (pState.hasBlockEntity() && (!pState.is(pNewState.getBlock()) || !pNewState.hasBlockEntity()))
-			pLevel.removeBlockEntity(pPos);
+		ITE.onRemove(pState, pLevel, pPos, pNewState);
 		FluidTankBlock.updateBoilerState(pState, pLevel, pPos.relative(getAttachedDirection(pState)));
 	}
 

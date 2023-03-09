@@ -56,8 +56,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
 		cap.invalidate();
 	}
 

@@ -34,7 +34,7 @@ public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
 
 	@Override
 	protected int getMaxOutputCount() {
-		return 9;
+		return 4;
 	}
 
 	public boolean shouldKeepHeldItem() {

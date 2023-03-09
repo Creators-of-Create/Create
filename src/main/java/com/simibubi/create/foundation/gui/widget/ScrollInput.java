@@ -4,11 +4,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -124,8 +127,10 @@ public class ScrollInput extends AbstractSimiWidget {
 
 		clampState();
 
-		if (priorState != state)
+		if (priorState != state) {
+			Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(AllSoundEvents.SCROLL_VALUE.getMainEvent(), 1.5f + 0.1f * (state-min)/(max-min)));
 			onChanged();
+		}
 
 		return priorState != state;
 	}

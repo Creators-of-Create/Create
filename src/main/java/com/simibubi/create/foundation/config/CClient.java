@@ -17,7 +17,7 @@ public class CClient extends ConfigBase {
 	public final ConfigFloat fanParticleDensity = f(.5f, 0, 1, "fanParticleDensity",
 			Comments.fanParticleDensity);
 	public final ConfigFloat filterItemRenderDistance = f(10f, 1, "filterItemRenderDistance", Comments.filterItemRenderDistance);
-	public final ConfigBool rainbowDebug = b(true, "enableRainbowDebug",
+	public final ConfigBool rainbowDebug = b(false, "enableRainbowDebug",
 			Comments.rainbowDebug);
 	public final ConfigInt maxContraptionLightVolume = i(16384, 0, Integer.MAX_VALUE, "maximumContraptionLightVolume",
 			Comments.maxContraptionLightVolume);
@@ -76,6 +76,7 @@ public class CClient extends ConfigBase {
 	//train group
 	public final ConfigGroup trains = group(1, "trains", Comments.trains);
 	public final ConfigFloat mountedZoomMultiplier = f(3, 0, "mountedZoomMultiplier", Comments.mountedZoomMultiplier);
+	public final ConfigBool showTrackGraphOnF3 = b(false, "showTrackGraphOnF3", Comments.showTrackGraphOnF3);
 
 	@Override
 	public String getName() {
@@ -96,7 +97,7 @@ public class CClient extends ConfigBase {
 				"[in Blocks]",
 				"Maximum Distance to the player at which items in Blocks' filter slots will be displayed"
 		};
-		static String rainbowDebug = "Show colourful debug information while the F3-Menu is open.";
+		static String rainbowDebug = "Show kinetic debug information on blocks while the F3-Menu is open.";
 		static String maxContraptionLightVolume = "The maximum amount of blocks for which to try and calculate dynamic contraption lighting. Decrease if large contraption cause too much lag";
 		static String[] mainMenuConfigButtonRow = new String[]{
 				"Choose the menu row that the Create config button appears on in the main menu",
@@ -145,6 +146,7 @@ public class CClient extends ConfigBase {
 
 		static String trains = "Railway related settings";
 		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";
+		static String showTrackGraphOnF3 = "Display nodes and edges of a Railway Network while f3 debug mode is active";
 	}
 
 }

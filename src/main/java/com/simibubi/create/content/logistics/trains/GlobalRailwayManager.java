@@ -20,6 +20,7 @@ import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalEdgeGroup;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.server.MinecraftServer;
@@ -256,15 +257,19 @@ public class GlobalRailwayManager {
 	}
 
 	public void tickSignalOverlay() {
-		if (!KineticDebugger.isActive())
+		if (!isTrackGraphDebugActive())
 			for (TrackGraph trackGraph : trackNetworks.values())
 				TrackGraphVisualizer.visualiseSignalEdgeGroups(trackGraph);
 	}
 
 	public void clientTick() {
-		if (KineticDebugger.isActive())
+		if (isTrackGraphDebugActive())
 			for (TrackGraph trackGraph : trackNetworks.values())
 				TrackGraphVisualizer.debugViewGraph(trackGraph);
+	}
+	
+	private static boolean isTrackGraphDebugActive() {
+		return KineticDebugger.isF3DebugModeActive() && AllConfigs.CLIENT.showTrackGraphOnF3.get();
 	}
 
 	public GlobalRailwayManager sided(LevelAccessor level) {

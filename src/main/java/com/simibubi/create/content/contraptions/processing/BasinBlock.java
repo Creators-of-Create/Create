@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -170,15 +169,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
-			return;
-		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-		withTileEntityDo(worldIn, pos, te -> {
-			ItemHelper.dropContents(worldIn, pos, te.inputInventory);
-			ItemHelper.dropContents(worldIn, pos, te.outputInventory);
-			te.spoutputBuffer.forEach(is -> Block.popResource(worldIn, pos, is));
-		});
-		worldIn.removeBlockEntity(pos);
+		ITE.onRemove(state, worldIn, pos, newState);
 	}
 
 	@Override

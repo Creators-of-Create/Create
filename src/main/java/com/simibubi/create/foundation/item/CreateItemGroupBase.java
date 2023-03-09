@@ -64,7 +64,7 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 
 	protected Collection<RegistryEntry<Block>> getBlocks() {
 		return getSections().stream()
-			.flatMap(s -> Create.registrate()
+			.flatMap(s -> Create.REGISTRATE
 				.getAll(s, Registry.BLOCK_REGISTRY)
 				.stream())
 			.collect(Collectors.toList());
@@ -72,7 +72,7 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 
 	protected Collection<RegistryEntry<Item>> getItems() {
 		return getSections().stream()
-			.flatMap(s -> Create.registrate()
+			.flatMap(s -> Create.REGISTRATE
 				.getAll(s, Registry.ITEM_REGISTRY)
 				.stream())
 			.collect(Collectors.toList());

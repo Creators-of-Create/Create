@@ -87,8 +87,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
 		ToolboxHandler.onUnload(this);
 	}
 

@@ -209,7 +209,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 					;
 				else if (remainder.isEmpty())
 					depotBehaviour.removeHeldItem();
-				else if (!remainder.sameItem(heldItemStack))
+				else if (remainder.getCount() != heldItemStack.getCount())
 					depotBehaviour.heldItem.stack = remainder;
 			}
 
@@ -469,6 +469,12 @@ public class EjectorTileEntity extends KineticTileEntity {
 	public Vec3 getLaunchedItemMotion(float time) {
 		return launcher.getGlobalVelocity(time, getFacing().getOpposite(), worldPosition)
 			.scale(.5f);
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		dropFlyingItems();
 	}
 
 	public void dropFlyingItems() {

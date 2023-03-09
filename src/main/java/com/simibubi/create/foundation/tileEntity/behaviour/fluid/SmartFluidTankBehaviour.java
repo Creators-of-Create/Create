@@ -136,8 +136,8 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void unload() {
+		super.unload();
 		capability.invalidate();
 	}
 

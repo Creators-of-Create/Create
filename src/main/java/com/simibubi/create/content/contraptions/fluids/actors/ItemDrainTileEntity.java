@@ -252,8 +252,8 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void invalidate() {
+		super.invalidate();
 		for (LazyOptional<ItemDrainItemHandler> lazyOptional : itemHandlers.values())
 			lazyOptional.invalidate();
 	}

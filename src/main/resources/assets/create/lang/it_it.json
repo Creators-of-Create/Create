@@ -1,6 +1,5 @@
 {
-    "_": "->------------------------]  Game Elements  [------------------------<-",
-
+	"_": "->------------------------]  Ponder Content  [------------------------<-",
 	"block.create.acacia_window": "Finestra di acacia",
 	"block.create.acacia_window_pane": "Pannello di finestra di acacia",
 	"block.create.adjustable_chain_gearshift": "Cambio a catena regolabile",
@@ -561,10 +560,8 @@
 	"block.create.yellow_valve_handle": "Maniglia per valvola gialla",
 	"block.create.zinc_block": "Blocco di zinco",
 	"block.create.zinc_ore": "Zinco grezzo",
-
 	"enchantment.create.capacity": "Capacità",
 	"enchantment.create.potato_recovery": "Recupero vegetale",
-
 	"entity.create.carriage_contraption": "Carrozza",
 	"entity.create.contraption": "Macchinario",
 	"entity.create.crafting_blueprint": "Progetto di fabbricazione",
@@ -573,10 +570,8 @@
 	"entity.create.seat": "Sedile",
 	"entity.create.stationary_contraption": "Macchinario stazionario",
 	"entity.create.super_glue": "Super colla",
-
 	"fluid.create.potion": "Pozione",
 	"fluid.create.tea": "Tè del costruttore",
-
 	"item.create.andesite_alloy": "Lega di andesite",
 	"item.create.attribute_filter": "Filtro attributi",
 	"item.create.bar_of_chocolate": "Barretta di cioccolato",
@@ -646,7 +641,7 @@
 	"item.create.sand_paper": "Carta vetrata",
 	"item.create.schedule": "Tabella di marcia",
 	"item.create.schematic": "Progetto",
-	"item.create.schematic_and_quill": "Pogetto e penna",
+	"item.create.schematic_and_quill": "Progetto e penna",
 	"item.create.shadow_steel": "Acciaio oscuro",
 	"item.create.sturdy_sheet": "Lamiera rinforzata",
 	"item.create.super_glue": "Super colla",
@@ -660,10 +655,6 @@
 	"item.create.wrench": "Chiave a pappagallo",
 	"item.create.zinc_ingot": "Lingotto di zinco",
 	"item.create.zinc_nugget": "Pepita di zinco",
-
-
-	"_": "->------------------------]  Advancements  [------------------------<-",
-
 	"advancement.create.root": "Benvenuti alla Create",
 	"advancement.create.root.desc": "È ora di iniziare a costruire marchingegni fantastici!",
 	"advancement.create.andesite_alloy": "Rocce più dure",
@@ -694,7 +685,7 @@
 	"advancement.create.water_wheel.desc": "Piazza un Mulino ad acqua e prova a farlo girare!",
 	"advancement.create.windmill": "Una lieve brezza",
 	"advancement.create.windmill.desc": "Assembla un mulino a vento.",
-	"advancement.create.shifting_gears": "Meccanismi moventi",
+	"advancement.create.shifting_gears": "Cambiare marcia",
 	"advancement.create.shifting_gears.desc": "Aggancia una ruota dentata grande con una piccola, permettendoti di cambiare la velocità.",
 	"advancement.create.millstone": "Frantumatore portatile",
 	"advancement.create.millstone.desc": "Piazza e alimenta una macina.",
@@ -852,13 +843,8 @@
 	"advancement.create.train_crash.desc": "Fai esperienza di un incidente ferroviario mentre sei tra i passeggeri§7\n(Progresso segreto)",
 	"advancement.create.train_crash_backwards": "Punto cieco",
 	"advancement.create.train_crash_backwards.desc": "Colpisci un altro treno mentre vai in retromarcia§7\n(Progresso segreto)",
-
-
-	"_": "->------------------------]  UI & Messages  [------------------------<-",
-
 	"itemGroup.create.base": "Create",
 	"itemGroup.create.palettes": "Create: Blocchi",
-
 	"death.attack.create.crush": "%1$s è stato frantumato",
 	"death.attack.create.crush.player": "%1$s è stato gettato tra delle Ruote frantumatrici da %2$s",
 	"death.attack.create.fan_fire": "%1$s è stato cotto a puntino",
@@ -874,17 +860,14 @@
 	"death.attack.create.cuckoo_clock_explosion": "%1$s è saltato in aria a causa di un orologio a cucù manomesso",
 	"death.attack.create.cuckoo_clock_explosion.player": "%1$s è saltato in aria a causa di un orologio a cucù manomesso",
 	"death.attack.create.run_over": "%1$s è stato travolto da %2$s",
-
 	"create.block.deployer.damage_source_name": "una mano impazzita",
 	"create.block.cart_assembler.invalid": "Piazza il tuo assemblatore di carrelli su un binario",
-
 	"create.menu.return": "Torna al menù",
 	"create.menu.configure": "Configura...",
 	"create.menu.ponder_index": "Riflessione",
 	"create.menu.only_ingame": "Disponibile nel menù di pausa",
 	"create.menu.report_bugs": "Segnala problemi",
 	"create.menu.support": "Supportaci",
-
 	"create.recipe.crushing": "Frantumazione",
 	"create.recipe.milling": "Macinatura",
 	"create.recipe.fan_washing": "Lavaggio di massa",
@@ -928,7 +911,6 @@
 	"create.recipe.heat_requirement.none": "Nessun riscaldamento",
 	"create.recipe.heat_requirement.heated": "Riscaldamento",
 	"create.recipe.heat_requirement.superheated": "Super riscaldamento",
-
 	"create.generic.range": "Portata",
 	"create.generic.radius": "Raggio",
 	"create.generic.width": "Larghezza",
@@ -955,19 +937,16 @@
 	"create.generic.counter_clockwise": "Senso anti-orario",
 	"create.generic.in_quotes": "\"%1$s\"",
 	"create.generic.pitch": "Intonazione: %1$s",
-	"create.generic.notes": "F#;F;E;D#;D;C#;C;B;A#;A;G#;G",
-
+	"create.generic.notes": "Fa#;Fa;Mi;Re#;Re;Do#;Do;Si;La#;La;Sol#;Sol",
 	"create.action.scroll": "Scorri",
 	"create.action.confirm": "Conferma",
 	"create.action.abort": "Annulla",
 	"create.action.saveToFile": "Salva",
 	"create.action.discard": "Scarta",
-
 	"create.keyinfo.toolmenu": "Focalizzazione sul menù degli strumenti",
 	"create.keyinfo.toolbelt": "Accedi a cassette degli attrezzi vicine",
 	"create.keyinfo.scrollup": "Simula rotellina del mouse verso su (nel mondo)",
 	"create.keyinfo.scrolldown": "Simula rotellina del mouse verso giù (nel mondo)",
-
 	"create.gui.scrollInput.defaultTitle": "Scegli un'opzione:",
 	"create.gui.scrollInput.scrollToModify": "Scorri per modificare",
 	"create.gui.scrollInput.scrollToAdjustAmount": "Scorri per regolare il valore",
@@ -975,26 +954,21 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "Premi shift per scorrere più velocemente",
 	"create.gui.toolmenu.focusKey": "Premi [%1$s] per aprire il menù",
 	"create.gui.toolmenu.cycle": "[SCORRI] per navigare",
-
 	"create.toolbox.unequip": "Rimuovi: %1$s",
 	"create.toolbox.outOfRange": "Cassetta con l'oggetto in mano fuori portata",
 	"create.toolbox.detach": "Smetti di monitorare e tieni l'oggetto",
 	"create.toolbox.depositAll": "Deposita gli oggetti nelle cassette vicine",
 	"create.toolbox.depositBox": "Posa l'oggetto nella cassetta",
-
 	"create.gui.symmetryWand.mirrorType": "Specchio",
 	"create.gui.symmetryWand.orientation": "Orientamento",
-
 	"create.symmetry.mirror.plane": "Singolo",
 	"create.symmetry.mirror.doublePlane": "Rettangolare",
 	"create.symmetry.mirror.triplePlane": "Ottagonale",
-
 	"create.orientation.orthogonal": "Ortogonale",
 	"create.orientation.diagonal": "Diagonale",
 	"create.orientation.horizontal": "Orizzontale",
 	"create.orientation.alongZ": "Lungo Z",
 	"create.orientation.alongX": "Lungo X",
-
 	"create.gui.terrainzapper.title": "Plasmatore del mondo",
 	"create.gui.terrainzapper.searchDiagonal": "Segui diagonali",
 	"create.gui.terrainzapper.searchFuzzy": "Ignora bordi",
@@ -1022,17 +996,14 @@
 	"create.gui.terrainzapper.tool.clear": "Ripulisci",
 	"create.gui.terrainzapper.tool.overlay": "Ricopri",
 	"create.gui.terrainzapper.tool.flatten": "Appiattisci",
-
 	"create.terrainzapper.shiftRightClickToSet": "Shift-click destro per impostare la forma",
 	"create.terrainzapper.usingBlock": "Blocco in uso: %1$s",
 	"create.terrainzapper.leftClickToSet": "Fai click sinistro su un blocco per scegliere il materiale",
-
 	"create.minecart_coupling.two_couplings_max": "I carrelli da miniera non possono avere più di due agganci ciascuno",
 	"create.minecart_coupling.unloaded": "Parti del tuo Macchinario sembrano essere in mezzo a chunk non caricati",
 	"create.minecart_coupling.no_loops": "Gli agganci non possono creare un loop",
 	"create.minecart_coupling.removed": "Agganci rimossi dai carrelli da miniera",
 	"create.minecart_coupling.too_far": "Carrelli da miniera troppo distanti",
-
 	"create.contraptions.movement_mode": "Modalità di movimento",
 	"create.contraptions.movement_mode.move_place": "Posiziona sempre quando è fermo",
 	"create.contraptions.movement_mode.move_place_returned": "Posiziona solo nella direzione iniziale",
@@ -1049,7 +1020,6 @@
 	"create.contraptions.clockwork.hour_first": "Prima lancetta delle ore",
 	"create.contraptions.clockwork.minute_first": "Prima lancetta dei minuti",
 	"create.contraptions.clockwork.hour_first_24": "Prima lancetta delle 24 ore",
-
 	"create.logistics.filter": "Filtro",
 	"create.logistics.recipe_filter": "Filtro ricette",
 	"create.logistics.fluid_filter": "Filtro fluidi",
@@ -1058,7 +1028,6 @@
 	"create.logistics.filter.apply": "Filtro applicato a %1$s.",
 	"create.logistics.filter.apply_click_again": "Filtro applicato a %1$s, clicca di nuovo per copiare.",
 	"create.logistics.filter.apply_count": "Conteggio estrazione applicato ai filtri.",
-
 	"create.gui.goggles.generator_stats": "Statistiche del generatore:",
 	"create.gui.goggles.kinetic_stats": "Statistiche cinetiche:",
 	"create.gui.goggles.at_current_speed": "alla velocità attuale",
@@ -1106,7 +1075,6 @@
 	"create.gui.sequenced_gearshift.speed.forward_fast": "Doppia velocità, avanti",
 	"create.gui.sequenced_gearshift.speed.back": "Velocità di ingresso, invertita",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Doppia velocità, invertita",
-
 	"create.schematicAndQuill.dimensions": "Dimensione progetto: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "Prima posizione impostata.",
 	"create.schematicAndQuill.secondPos": "Seconda posizione impostata.",
@@ -1116,8 +1084,8 @@
 	"create.schematicAndQuill.convert": "Salva e piazza immediatamente",
 	"create.schematicAndQuill.fallbackName": "Il mio progetto",
 	"create.schematicAndQuill.saved": "Salvato come %1$s",
-
 	"create.schematic.invalid": "[!] Oggetto non valido - utilizza il banco dei progetti",
+	"create.schematic.error": "Progetto non caricato - Controlla i log di gioco",
 	"create.schematic.position": "Posizione",
 	"create.schematic.rotation": "Rotazione",
 	"create.schematic.rotation.none": "Nessuna",
@@ -1140,29 +1108,18 @@
 	"create.schematic.tool.deploy.description.3": "[Ctrl] e scorri per cambiare la distanza.",
 	"create.schematic.tool.move.description.0": "Sposta il progetto in orizzontale.",
 	"create.schematic.tool.move.description.1": "Indica il progetto e premi [Ctrl] mentre scorri per spingerlo.",
-	"create.schematic.tool.move.description.2": "",
-	"create.schematic.tool.move.description.3": "",
 	"create.schematic.tool.movey.description.0": "Sposta il progetto verticalmente.",
 	"create.schematic.tool.movey.description.1": "[Ctrl] e scorri per spostarlo su/giù.",
-	"create.schematic.tool.movey.description.2": "",
-	"create.schematic.tool.movey.description.3": "",
 	"create.schematic.tool.rotate.description.0": "Ruota il progetto attorno al suo centro.",
 	"create.schematic.tool.rotate.description.1": "[Ctrl] e scorri per ruotarlo di 90 gradi.",
-	"create.schematic.tool.rotate.description.2": "",
-	"create.schematic.tool.rotate.description.3": "",
 	"create.schematic.tool.print.description.0": "Posiziona istantaneamente la struttura nel mondo.",
 	"create.schematic.tool.print.description.1": "Click destro per confermare la posizione corrente.",
 	"create.schematic.tool.print.description.2": "Questo strumento è solo per la modalità creativa.",
-	"create.schematic.tool.print.description.3": "",
 	"create.schematic.tool.flip.description.0": "Capovolge il progetto lungo la faccia selezionata.",
 	"create.schematic.tool.flip.description.1": "Indica il progetto e premi [Ctrl] mentre scorri per capovolgerla.",
-	"create.schematic.tool.flip.description.2": "",
-	"create.schematic.tool.flip.description.3": "",
-
 	"create.schematics.synchronizing": "Sincronizzazione...",
 	"create.schematics.uploadTooLarge": "Il progetto è troppo grande.",
 	"create.schematics.maxAllowedSize": "La dimensione massima consentita del file di progetto è:",
-
 	"create.gui.schematicTable.refresh": "Ricarica file",
 	"create.gui.schematicTable.open_folder": "Apri cartella",
 	"create.gui.schematicTable.title": "Banco dei progetti",
@@ -1193,7 +1150,6 @@
 	"create.gui.schematicannon.option.replaceWithSolid.description": "Il cannone sostituirà i blocchi solidi nella sua area di lavoro se lo schema contiene un blocco solido in quella posizione.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "Il cannone sostituirà i blocchi solidi nella sua area di lavoro se lo schema contiene un blocco qualunque in quella posizione.",
 	"create.gui.schematicannon.option.replaceWithEmpty.description": "Il cannone eliminerà tutti i blocchi nell'area di lavoro, compresi quelli che nel progetto sono solo aria.",
-
 	"create.schematicannon.status.idle": "Inattivo",
 	"create.schematicannon.status.ready": "Pronto",
 	"create.schematicannon.status.running": "In esecuzione",
@@ -1211,10 +1167,10 @@
 	"create.schematicannon.status.schematicInvalid": "Progetto non valido",
 	"create.schematicannon.status.schematicNotPlaced": "Bersaglio non impostato",
 	"create.schematicannon.status.schematicExpired": "File progetto mancante",
-
+	"create.schematicannon.status.schematicErrored": "Blocchi non compatibili",
+	"create.schematicannon.status.schematicErroredCheckLogs": "Controlla i log del Server",
 	"create.materialChecklist": "Lista dei materiali",
 	"create.materialChecklist.blocksNotLoaded": "* Attenzione *\n\nLa lista dei materiali potrebbe non essere accurata a causa di molti chunk non caricati.",
-
 	"create.gui.filter.deny_list": "Lista nera",
 	"create.gui.filter.deny_list.description": "Gli oggetti passano se NON corrispondono a nessuno di quelli nel filtro. Una lista nera vuota accetta tutto.",
 	"create.gui.filter.allow_list": "Lista bianca",
@@ -1223,7 +1179,6 @@
 	"create.gui.filter.respect_data.description": "Gli oggetti corrispondono solo se la loro durata, incantesimi e altri attributi corrispondono.",
 	"create.gui.filter.ignore_data": "Ignora dati",
 	"create.gui.filter.ignore_data.description": "Gli oggetti corrispondono indipendentemente dai loro attributi.",
-
 	"create.item_attributes.placeable": "è posizionabile",
 	"create.item_attributes.placeable.inverted": "non è posizionabile",
 	"create.item_attributes.consumable": "è commestibile",
@@ -1297,7 +1252,6 @@
 	"create.item_attributes.astralsorcery_crystal.inverted": "non ha l'attributo del cristallo %1$s",
 	"create.item_attributes.astralsorcery_perk_gem": "ha l'attributo benefico %1$s",
 	"create.item_attributes.astralsorcery_perk_gem.inverted": "non ha l'attributo benefico %1$s",
-
 	"create.gui.attribute_filter.no_selected_attributes": "Nessun attributo selezionato",
 	"create.gui.attribute_filter.selected_attributes": "Attributi selezionati:",
 	"create.gui.attribute_filter.add_attribute": "Aggiungi attributi alla lista",
@@ -1309,10 +1263,9 @@
 	"create.gui.attribute_filter.deny_list": "Lista nera",
 	"create.gui.attribute_filter.deny_list.description": "Gli oggetti passano se NON hanno nessuno degli attributi selezionati.",
 	"create.gui.attribute_filter.add_reference_item": "Aggiungi riferimento",
-
 	"create.tooltip.holdForDescription": "Tieni premuto [%1$s] per un riepilogo",
 	"create.tooltip.holdForControls": "Tieni premuto [%1$s] per i comandi",
-	"create.tooltip.keyShift": "Shift",
+	"create.tooltip.keyShift": "Maiusc",
 	"create.tooltip.keyCtrl": "Ctrl",
 	"create.tooltip.speedRequirement": "Velocità richiesta: %1$s",
 	"create.tooltip.speedRequirement.none": "Nessuna",
@@ -1331,24 +1284,19 @@
 	"create.tooltip.capacityProvided.high": "Grande",
 	"create.tooltip.generationSpeed": "Genera %1$s %2$s",
 	"create.tooltip.analogStrength": "Forza analogica: %1$s/15",
-
 	"create.mechanical_arm.extract_from": "Prendi oggetti da %1$s",
 	"create.mechanical_arm.deposit_to": "Deposita oggetti su %1$s",
 	"create.mechanical_arm.summary": "Il braccio meccanico ha %1$s input e %2$s output.",
 	"create.mechanical_arm.points_outside_range": "%1$s punti di interazione selezionati rimossi per limiti di portata.",
-
 	"create.weighted_ejector.target_set": "Bersaglio selezionato",
 	"create.weighted_ejector.target_not_valid": "Impostato su blocco adiacente (Bersaglio non valido)",
 	"create.weighted_ejector.no_target": "Impostato su blocco adiacente (Nessun bersaglio selezionato)",
 	"create.weighted_ejector.targeting": "Impostato su [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "Grandezza stack da lanciare",
-
 	"create.logistics.when_multiple_outputs_available": "Se esistono più output validi",
-
 	"create.mechanical_arm.selection_mode.round_robin": "Round Robin",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "Round Robin forzato",
 	"create.mechanical_arm.selection_mode.prefer_first": "Dai precedenza al primo",
-
 	"create.tunnel.selection_mode.split": "Dividi",
 	"create.tunnel.selection_mode.forced_split": "Dividi forzatamente",
 	"create.tunnel.selection_mode.round_robin": "Round Robin",
@@ -1356,7 +1304,6 @@
 	"create.tunnel.selection_mode.prefer_nearest": "Dai precedenza al più vicino",
 	"create.tunnel.selection_mode.randomize": "Distribuisci casualmente",
 	"create.tunnel.selection_mode.synchronize": "Sincronizza input",
-
 	"create.tooltip.chute.header": "Informazioni sullo scivolo",
 	"create.tooltip.chute.items_move_down": "Gli oggetti si spostano verso il basso",
 	"create.tooltip.chute.items_move_up": "Gli oggetti si spostano verso l'alto",
@@ -1373,13 +1320,11 @@
 	"create.tooltip.brass_tunnel.contains": "Sta distribuendo:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "Click destro per recuperare",
-
 	"create.linked_controller.bind_mode": "Modalità associa-tasti attivata",
 	"create.linked_controller.press_keybind": "Premi %1$s, %2$s, %3$s, %4$s, %5$s o %6$s per associare questa frequenza al tasto scelto",
 	"create.linked_controller.key_bound": "Frequenza associata a: %1$s",
 	"create.linked_controller.frequency_slot_1": "Pulsante %1$s, Frequenza #1",
 	"create.linked_controller.frequency_slot_2": "Pulsante %1$s, Frequenza #2",
-
 	"create.crafting_blueprint.crafting_slot": "Slot ingredienti",
 	"create.crafting_blueprint.filter_items_viable": "È permesso usare Filtri",
 	"create.crafting_blueprint.display_slot": "Slot visivo",
@@ -1387,11 +1332,9 @@
 	"create.crafting_blueprint.manually_assigned": "Assegnato manualmente",
 	"create.crafting_blueprint.secondary_display_slot": "Slot visivo secondario",
 	"create.crafting_blueprint.optional": "Opzionale",
-
 	"create.potato_cannon.ammo.attack_damage": "Danni per colpo: %1$s",
 	"create.potato_cannon.ammo.reload_ticks": "Ricarica: %1$s ticks",
 	"create.potato_cannon.ammo.knockback": "Contraccolpo: %1$s",
-
 	"create.hint.hose_pulley.title": "Fonte infinita",
 	"create.hint.hose_pulley": "Il fluido da cui stai estraendo è considerato infinito.",
 	"create.hint.mechanical_arm_no_targets.title": "Nessun bersaglio",
@@ -1400,13 +1343,10 @@
 	"create.hint.empty_bearing": "_Fai_ _clic_ _destro_ sul supporto con una _mano_ _vuota_ per _connetterlo_ alla struttura che hai costruito davanti ad esso.",
 	"create.hint.full_deployer.title": "Overflow di oggetti dell'installatore",
 	"create.hint.full_deployer": "Sembra che questo _installatore_ contenga _oggetti_ _eccessivi_ che necessitano di essere _estratti_. Usa una _tramoggia_, un _imbuto_ o altro per liberarlo dall'overflow.",
-
 	"create.backtank.low": "Pressione bassa nello Zaino serbatoio",
 	"create.backtank.depleted": "Pressione esaurita nello Zaino serbatoio",
-
 	"create.hint.derailed_train.title": "Treno deragliato",
 	"create.hint.derailed_train": "Sembra che questo _Treno_ non si trovi più sopra delle Rotaie. Fai _Click_ _destro_ con una _chiave_ _inglese_ per riportarlo su una Rotaia vicina.",
-
 	"create.boiler.status": "Status della caldaia:  %1$s",
 	"create.boiler.status_short": "Caldaia:  %1$s",
 	"create.boiler.passive": "Passivo",
@@ -1421,7 +1361,6 @@
 	"create.boiler.heat_dots": "..... ",
 	"create.boiler.via_one_engine": "tramite 1 motore",
 	"create.boiler.via_engines": "tramite %1$s motori",
-
 	"create.gui.schedule.lmb_edit": "Click sinistro per modificare",
 	"create.gui.schedule.rmb_remove": "Click destro per rimuovere",
 	"create.gui.schedule.duplicate": "Duplica",
@@ -1431,7 +1370,6 @@
 	"create.gui.schedule.move_down": "Sposta in basso",
 	"create.gui.schedule.add_condition": "Aggiungi condizione (AND)",
 	"create.gui.schedule.alternative_condition": "Condizione alternativa (OR)",
-
 	"create.schedule.instruction_type": "Prossima azione:",
 	"create.schedule.instruction.editor": "Editor di Istruzioni",
 	"create.schedule.instruction.destination": "Raggiungi stazione",
@@ -1483,6 +1421,7 @@
 	"create.schedule.condition.threshold.equal": "esattamente",
 	"create.schedule.condition.threshold.x_units_of_item": "%1$s %2$s di %3$s",
 	"create.schedule.condition.threshold.matching_content": "Contenuto corrispondente",
+	"create.schedule.condition.threshold.anything": "qualsiasi cosa",
 	"create.schedule.condition.threshold.item_measure": "Misura",
 	"create.schedule.condition.threshold.items": "Oggetti",
 	"create.schedule.condition.threshold.stacks": "Stack",
@@ -1490,6 +1429,7 @@
 	"create.schedule.condition.threshold.status": "Carico: %1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "Oggetto di riferimento",
 	"create.schedule.condition.threshold.place_item_2": "È permesso usare Filtri",
+	"create.schedule.condition.threshold.place_item_3": "Lascia vuoto per confrontare qualsiasi cosa",
 	"create.schedule.condition.fluid_threshold": "Carico di fluidi",
 	"create.schedule.condition.item_threshold": "Carico di oggetti",
 	"create.schedule.condition.redstone_link": "Connessione redstone",
@@ -1522,7 +1462,6 @@
 	"create.schedule.removed_from_train": "Tabella di marcia recuperata",
 	"create.schedule.no_stops": "Questa Tabella di marcia non ha ancora fermate",
 	"create.schedule.continued": "Tabella di marcia ripresa",
-
 	"create.track.selection_cleared": "Selezione rimossa",
 	"create.track.valid_connection": "Connessione possibile ✔",
 	"create.track.second_point": "Posiziona una rotaia o seleziona un secondo punto",
@@ -1541,11 +1480,9 @@
 	"create.track.turn_start": "Non puoi iniziare una connessione su una curva",
 	"create.track.not_enough_tracks": "Non hai abbastanza Rotaie",
 	"create.track.not_enough_pavement": "Non hai abbastanza blocchi per la pavimentazione",
-
 	"create.portal_track.failed": "Impossibile posizionare il binario nel portale:",
 	"create.portal_track.missing": "Portale di uscita non ancora generato",
 	"create.portal_track.blocked": "Destinazione bloccata (%1$s,%2$s,%3$s)",
-
 	"create.station.idle": "Stazione in attesa",
 	"create.station.assembly_title": "Assemblaggio treni",
 	"create.station.close": "Chiudi finestra",
@@ -1571,7 +1508,6 @@
 	"create.station.how_to": "Usa un Riv. di treno sulle Rotaie per creare un carrello.",
 	"create.station.how_to_1": "Rompi un carrello mirando al blocco superiore.",
 	"create.station.how_to_2": "Le carrozze si collegano con fino a due carrelli ognuna.",
-
 	"create.train_assembly.too_many_bogeys": "Troppi carrelli connessi insieme: %1$s",
 	"create.train_assembly.frontmost_bogey_at_station": "Il carrello di testa deve essere appena dietro ad un marcatore di stazione",
 	"create.train_assembly.no_bogeys": "Nessun carrello trovato",
@@ -1583,7 +1519,6 @@
 	"create.train_assembly.sideways_controls": "Ci sono dei Comandi del treno montati perpendicolarmente",
 	"create.train_assembly.bogey_created": "Carrello creato. Pemi ancora per cambiare tipo",
 	"create.train_assembly.requires_casing": "Usa dei Telai di treno per creare dei carrelli",
-
 	"create.track_target.set": "Rotaia selezionata",
 	"create.track_target.success": "Connesso con successo alla Rotaia selezionata",
 	"create.track_target.clear": "Selezione rimossa",
@@ -1592,7 +1527,6 @@
 	"create.track_target.no_junctions": "Non puoi selezionare un'intersezione",
 	"create.track_target.occupied": "La Rotaia selezionata è occupata",
 	"create.track_target.invalid": "Non puoi selezionare questa Rotaia in questo punto",
-
 	"create.train.unnamed": "Treno senza nome",
 	"create.train.cannot_relocate_moving": "Non puoi spostare un treno in corsa",
 	"create.train.relocate": "Fai click su una Rotaia per spostare %1$s su di essa. Shift-click per annullare",
@@ -1617,15 +1551,12 @@
 	"create.train.status.navigation_success": "Navigazione conclusa con successo",
 	"create.train.status.no_match": "Nessuna stazione corrisponde a '%1$s'",
 	"create.train.status.no_path": "Nessun percorso trovato verso la prossima destinazione",
-
 	"create.track_signal.cannot_change_mode": "Impossibile cambiare la modalità del segnale",
 	"create.track_signal.mode_change.entry_signal": "-> Permetti il passaggio se la sezione è libera",
 	"create.track_signal.mode_change.cross_signal": "-> Permetti il passaggio se la sezione è completamente attraversabile",
-
 	"create.contraption.controls.start_controlling": "Al comando di: %1$s",
 	"create.contraption.controls.stop_controlling": "Hai smesso di guidare il macchinario",
 	"create.contraption.controls.approach_station": "Tieni premuto %1$s per fermarti a %2$s",
-
 	"create.display_link.set": "Bersaglio selezionato",
 	"create.display_link.success": "Connesso con successo alla posizione selezionata",
 	"create.display_link.clear": "Selezione rimossa",
@@ -1642,7 +1573,6 @@
 	"create.display_link.information_type": "Tipo di informazione",
 	"create.display_link.display_on": "Scrivi in:",
 	"create.display_link.display_on_multiline": "Inizia a scrivere da:",
-
 	"create.display_source.label": "Aggiungi etichetta",
 	"create.display_source.combine_item_names": "Combina nome oggetti",
 	"create.display_source.count_items": "Numero di oggetti filtrati",
@@ -1703,11 +1633,9 @@
 	"create.display_source.redstone_power.progress_bar": "Barra dei progressi",
 	"create.display_source.boiler.not_enough_space": "Spazio insufficiente",
 	"create.display_source.boiler.for_boiler_status": "per lo Status della Caldaia",
-
 	"create.display_target.line": "Riga %1$s",
 	"create.display_target.page": "Pagina %1$s",
 	"create.display_target.single_line": "Riga singola",
-
 	"create.flap_display.cycles.alphabet": " ;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;X;Y;Z",
 	"create.flap_display.cycles.numeric": " ;0;1;2;3;4;5;6;7;8;9",
 	"create.flap_display.cycles.arrival_time": "   ; min;ora;15s;30s;45s",
@@ -1715,7 +1643,6 @@
 	"create.flap_display.cycles.fluid_units": "mB;B ",
 	"create.flap_display.cycles.instant": " ; ",
 	"create.flap_display.cycles.pixel": "█;▓;▒",
-
 	"create.super_glue.too_far": "L'area selezionata è troppo grande",
 	"create.super_glue.cannot_reach": "I blocchi scelti devono essere collegati",
 	"create.super_glue.click_to_confirm": "Pemi di nuovo per confermare",
@@ -1724,7 +1651,6 @@
 	"create.super_glue.abort": "Selezione annullata",
 	"create.super_glue.not_enough": "Non hai abbastanza colla nel tuo inventario",
 	"create.super_glue.success": "Incollaggio in corso...",
-
 	"create.gui.config.overlay1": "Ciao :)",
 	"create.gui.config.overlay2": "Questo overlay è di esempio",
 	"create.gui.config.overlay3": "Cliccalo o trascinalo col mouse",
@@ -1733,7 +1659,6 @@
 	"create.gui.config.overlay6": "salvare la nuova posizione",
 	"create.gui.config.overlay7": "Fai /create per resettare",
 	"create.gui.config.overlay8": "l'overlay alla posizione standard",
-
 	"create.command.killTPSCommand": "killtps",
 	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: Il tick del server è attualmente rallentato di %s ms :o",
 	"create.command.killTPSCommand.status.slowed_by.1": "[Create]: Il tick del server è ora rallentato di %s ms >:)",
@@ -1741,13 +1666,10 @@
 	"create.command.killTPSCommand.status.usage.0": "[Create]: usa /killtps per riportare il tick del server alla velocità normale",
 	"create.command.killTPSCommand.status.usage.1": "[Create]: usa /killtps avvia <tickTime> per rallentare artificialmente il tick del server",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
-
 	"create.contraption.minecart_contraption_too_big": "Questo Macchinario è troppo grande per essere raccolto",
 	"create.contraption.minecart_contraption_illegal_pickup": "Una forza misteriosa ti impedisce di raccogliere questo Macchinario",
-
-
-	"_": "->------------------------]  Subtitles  [------------------------<-",
-
+	"enchantment.create.capacity.desc": "Aumenta la capacità dello Zaino serbatoio.",
+	"enchantment.create.potato_recovery.desc": "I proiettili del Cannone a patate hanno una chance di essere riutilizzabili.",
 	"create.subtitle.contraption_disassemble": "Macchinario si ferma",
 	"create.subtitle.peculiar_bell_use": "Campana peculiare suona",
 	"create.subtitle.worldshaper_place": "Plasmatore del mondo spara",
@@ -1794,10 +1716,6 @@
 	"create.subtitle.copper_armor_equip": "Equipaggiamento da immersione equipaggiato",
 	"create.subtitle.mechanical_press_activation": "Attivazione Pressa meccanica",
 	"create.subtitle.contraption_assemble": "Macchinario si muove",
-
-
-	"_": "->------------------------]  Item Descriptions  [------------------------<-",
-
 	"item.create.example_item.tooltip": "OGGETTO DI ESEMPIO (solo un indicatore che esiste nella descrizione)",
 	"item.create.example_item.tooltip.summary": "Una breve descrizione dell'oggetto. La _sottolineatura_ evidenzia un termine.",
 	"item.create.example_item.tooltip.condition1": "Quando questo",
@@ -1806,21 +1724,16 @@
 	"item.create.example_item.tooltip.behaviour2": "Puoi aggiungere tutti i comportamenti che desideri",
 	"item.create.example_item.tooltip.control1": "Quando premi Ctrl",
 	"item.create.example_item.tooltip.action1": "Questi controlli vengono visualizzati.",
-
 	"block.create.wooden_bracket.tooltip": "SUPPORTO DI LEGNO",
 	"block.create.wooden_bracket.tooltip.summary": "_Decora_ le tue _assi_, _ruote dentate_ e _tubi_ rinforzandoli con del legno.",
-
 	"block.create.metal_bracket.tooltip": "SUPPORTO DI METALLO",
 	"block.create.metal_bracket.tooltip.summary": "_Decora_ le tue _assi_, _ruote dentate_ e _tubi_ rinforzandoli con del ferro.",
-
 	"block.create.seat.tooltip": "SEDILE",
 	"block.create.seat.tooltip.summary": "Siediti e goditi l'escursione! Ancora un giocatore a una macchina _in movimento_. Perfetto anche per l'arredamento! Dispone di una varietà di colori.",
 	"block.create.seat.tooltip.condition1": "Clicca con il pulsante destro sul sedile",
 	"block.create.seat.tooltip.behaviour1": "Fai sedere il giocatore sul _sedile_. Premi L-Shift per alzarti dal _sedile_.",
-
 	"item.create.blaze_cake.tooltip": "TORTA PER BLAZE",
 	"item.create.blaze_cake.tooltip.summary": "Un delizioso trattamento per i tuoi _inceneritori a blaze_. Alimentali col fuoco!",
-
 	"item.create.wand_of_symmetry.tooltip": "BASTONE DELLA SIMMETRIA",
 	"item.create.wand_of_symmetry.tooltip.summary": "Copia perfettamente il posizionamento dei blocchi, specchiandolo sui piani configurati.",
 	"item.create.wand_of_symmetry.tooltip.condition1": "Nella hotbar",
@@ -1831,7 +1744,6 @@
 	"item.create.wand_of_symmetry.tooltip.action2": "_Rimuove_ lo specchio attivo",
 	"item.create.wand_of_symmetry.tooltip.control3": "Click destro da accovacciato",
 	"item.create.wand_of_symmetry.tooltip.action3": "Apre l'_interfaccia_ _di_ _configurazione_",
-
 	"item.create.handheld_worldshaper.tooltip": "PLASMATORE DEL MONDO PORTATILE",
 	"item.create.handheld_worldshaper.tooltip.summary": "Strumento per la modifica di _paesaggi_ e _caratteristiche_ _del_ _terreno_.",
 	"item.create.handheld_worldshaper.tooltip.control1": "Click sinistro su un blocco",
@@ -1840,50 +1752,42 @@
 	"item.create.handheld_worldshaper.tooltip.action2": "Applica il _pennello_ e lo _strumento_ attualmente selezionati nella posizione colpita.",
 	"item.create.handheld_worldshaper.tooltip.control3": "Click destro da accovacciato",
 	"item.create.handheld_worldshaper.tooltip.action3": "Apre l'_interfaccia_ _di_ _configurazione_",
-
 	"item.create.tree_fertilizer.tooltip": "FERTILIZZANTE PER ALBERI",
 	"item.create.tree_fertilizer.tooltip.summary": "Una potente combinazione di minerali adatta ad accelerare la crescita degli alberi più comuni.",
 	"item.create.tree_fertilizer.tooltip.condition1": "Se utilizzato su un arboscello",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Fa crescere gli alberi _indipendentemente_ dalle _condizioni_ _di_ _spazio_",
-
 	"item.create.extendo_grip.tooltip": "BRACCIO ALLUNGABILE",
 	"item.create.extendo_grip.tooltip.summary": "Boioioing! _Incrementa notevolmente la distanza di interazione_ di chi lo brandisce.",
 	"item.create.extendo_grip.tooltip.condition1": "Quando in mano secondaria",
 	"item.create.extendo_grip.tooltip.behaviour1": "Incrementa la _distanza di interazione_ degli oggetti usati nella _mano primaria_.",
 	"item.create.extendo_grip.tooltip.condition2": "Indossando uno Zaino serbatoio",
 	"item.create.extendo_grip.tooltip.behaviour2": "Verrà consumata _Aria compressa_ invece della _Durata_ di questo oggetto.",
-
 	"item.create.potato_cannon.tooltip": "CANNONE A PATATE",
 	"item.create.potato_cannon.tooltip.summary": "Fwoomp! Lancia i tuoi frutti o ortaggi ai tuoi nemici! Può essere alimentato con l'Aria Compressa in uno _Zaino serbatoio_",
 	"item.create.potato_cannon.tooltip.condition1": "Click destro",
 	"item.create.potato_cannon.tooltip.behaviour1": "_Spara_ un oggetto compatibile dal tuo _Inventario_.",
 	"item.create.potato_cannon.tooltip.condition2": "Indossando uno Zaino serbatoio",
 	"item.create.potato_cannon.tooltip.behaviour2": "Verrà consumata _Aria compressa_ invece della _Durata_ di questo oggetto.",
-
 	"item.create.filter.tooltip": "FILTRO",
 	"item.create.filter.tooltip.summary": "_Controlla_ _gli_ _output_ e gli _input_ dei dispositivi logistici con maggiore _precisione_, confrontandoli con una _serie_ _di_ _oggetti_ o diversi _filtri_ _nidificati_.",
 	"item.create.filter.tooltip.condition1": "Quando si trova nello slot del filtro",
 	"item.create.filter.tooltip.behaviour1": "_Controlla_ il flusso degli oggetti in base alla sua _configurazione_.",
 	"item.create.filter.tooltip.condition2": "Click destro",
 	"item.create.filter.tooltip.behaviour2": "Apre l'_interfaccia_ _di_ _configurazione_.",
-
 	"item.create.attribute_filter.tooltip": "FILTRO ATTRIBUTI",
 	"item.create.attribute_filter.tooltip.summary": "_Controlla_ _gli_ _output_ e gli _input_ dei dispositivi logistici con maggiore _precisione_, confrontandoli con una _serie_ _di_ _attributi_ e _categorie_ di oggetti.",
 	"item.create.attribute_filter.tooltip.condition1": "Quando si trova nello slot del filtro",
 	"item.create.attribute_filter.tooltip.behaviour1": "_Controlla_ il flusso degli oggetti in base alla sua _configurazione_.",
 	"item.create.attribute_filter.tooltip.condition2": "Click destro",
 	"item.create.attribute_filter.tooltip.behaviour2": "Apre l'_interfaccia_ _di_ _configurazione_.",
-
 	"item.create.empty_schematic.tooltip": "PROGETTO VUOTO",
 	"item.create.empty_schematic.tooltip.summary": "Utilizzato come ingrediente per ricette e per la scrittura al _banco dei progetti_.",
-
 	"item.create.schematic.tooltip": "PROGETTO",
 	"item.create.schematic.tooltip.summary": "Contiene una struttura da posizionare e collocare nel mondo. Posiziona l'ologramma come desideri e usa uno _Spara-progetti_ per costruirla.",
 	"item.create.schematic.tooltip.condition1": "In mano",
 	"item.create.schematic.tooltip.behaviour1": "Può essere posizionato utilizzando gli strumenti sullo schermo.",
 	"item.create.schematic.tooltip.control1": "Click destro da accovacciato",
 	"item.create.schematic.tooltip.action1": "Apre un'_interfaccia_ per l'immissione di _coordinate_ esatte.",
-
 	"item.create.schematic_and_quill.tooltip": "PROGETTO E PENNA",
 	"item.create.schematic_and_quill.tooltip.summary": "Utilizzato per salvare una struttura nel tuo mondo in un file .nbt.",
 	"item.create.schematic_and_quill.tooltip.condition1": "Passo 1",
@@ -1896,17 +1800,14 @@
 	"item.create.schematic_and_quill.tooltip.action2": "Seleziona i punti a _mezz'aria_. _Scorri_ per regolare la distanza.",
 	"item.create.schematic_and_quill.tooltip.control3": "Click destro da accovacciato",
 	"item.create.schematic_and_quill.tooltip.action3": "_Resetta_ e rimuove la selezione.",
-
 	"block.create.schematicannon.tooltip": "SPARA-PROGETTI",
 	"block.create.schematicannon.tooltip.summary": "Spara blocchi per ricreare un _progetto_ posizionato nel mondo. Usa gli oggetti degli inventari adiacenti e della _polvere da sparo_ come combustibile.",
 	"block.create.schematicannon.tooltip.condition1": "Click destro",
 	"block.create.schematicannon.tooltip.behaviour1": "Apre l'_Interfaccia_",
-
 	"block.create.schematic_table.tooltip": "BANCO DEI PROGETTI",
 	"block.create.schematic_table.tooltip.summary": "Importa un file .nbt su un _progetto_ _vuoto_.",
 	"block.create.schematic_table.tooltip.condition1": "Quando viene fornito un progetto vuoto",
-	"block.create.schematic_table.tooltip.behaviour1": "Carica un file selezionato dalla cartella Schematics.",
-
+	"block.create.schematic_table.tooltip.behaviour1": "Carica un file selezionato dalla tua cartella Schematics.",
 	"item.create.goggles.tooltip": "OCCHIALI DA INGEGNERE",
 	"item.create.goggles.tooltip.summary": "Un paio di occhiali per migliorare la tua vista con utili _informazioni_ _cinetiche_.",
 	"item.create.goggles.tooltip.condition1": "Quando indossati",
@@ -1915,25 +1816,20 @@
 	"item.create.goggles.tooltip.behaviour2": "Mostra informazioni dettagliate sulla _velocità_ o lo _stress_ della rete a cui è collegato il misuratore.",
 	"item.create.goggles.tooltip.condition3": "Quando si guarda un contenitore di fluidi",
 	"item.create.goggles.tooltip.behaviour3": "Mostra informazioni dettagliate sulla _Capacità_ del blocco e sui _Fluidi_ contenuti all'interno.",
-
 	"item.create.wrench.tooltip": "CHIAVE A PAPPAGALLO",
 	"item.create.wrench.tooltip.summary": "Uno strumento utile per lavorare su congegni cinetici. Può essere usato per _ruotare_, _smontare_ e _configurare_ i componenti.",
 	"item.create.wrench.tooltip.control1": "Click destro su un blocco cinetico",
 	"item.create.wrench.tooltip.action1": "_Ruota_ _i_ _componenti_ verso o lontano dalla facciata con cui hai interagito.",
 	"item.create.wrench.tooltip.control2": "Click destro da accovacciato",
 	"item.create.wrench.tooltip.action2": "_Smonta_ _i_ _componenti_ _cinetici_ e li rimette nel _tuo_ _inventario_.",
-
 	"block.create.nozzle.tooltip": "DISPERSORE",
 	"block.create.nozzle.tooltip.summary": "Collegalo di fronte a un _ventilatore_ per distribuire il suo effetto sulle entità in _tutte_ _le_ _direzioni_.",
-
 	"block.create.cuckoo_clock.tooltip": "OROLOGIO A CUCÙ",
 	"block.create.cuckoo_clock.tooltip.summary": "Prodotto di artigianato raffinato usato per _decorare_ uno spazio e _tener_ _traccia_ _del_ _tempo_.",
 	"block.create.cuckoo_clock.tooltip.condition1": "Quando in rotazione",
 	"block.create.cuckoo_clock.tooltip.behaviour1": "Mostra l'_ora_ _corrente_ e suona una melodia due volte al giorno. Si _attiva_ una volta a mezzogiorno e una al crepuscolo, non appena i _giocatori_ _possono_ _dormire_.",
-
 	"block.create.turntable.tooltip": "PIATTAFORMA GIREVOLE",
 	"block.create.turntable.tooltip.summary": "Assorbe la _forza_ _di_ _rotazione_, girando su se' stesso.",
-
 	"block.create.toolbox.tooltip": "CASSETTA DEGLI ATTREZZI",
 	"block.create.toolbox.tooltip.summary": "Il compagno più fidato di ogni inventore. _Contiene_ una grande quantità di _8 diversi_ oggetti in maniera conveniente.",
 	"block.create.toolbox.tooltip.condition1": "Quando raccolto",
@@ -1942,52 +1838,42 @@
 	"block.create.toolbox.tooltip.behaviour2": "_Giocatori_ _vicini_ possono tenere premuto il _comando_ della _Cassetta degli attrezzi_ per accedere al suo contenuto _dalla distanza_.",
 	"block.create.toolbox.tooltip.condition3": "Click destro",
 	"block.create.toolbox.tooltip.behaviour3": "Apre l'_Interfaccia_.",
-
 	"block.create.stockpile_switch.tooltip": "INTERRUTTORE A RIEMPIMENTO",
 	"block.create.stockpile_switch.tooltip.summary": "Attiva/disattiva un segnale redstone in base allo _spazio_ _di_ _stoccaggio_ nel contenitore collegato.",
 	"block.create.stockpile_switch.tooltip.condition1": "Quando la di sotto del limite inferiore",
 	"block.create.stockpile_switch.tooltip.behaviour1": "Smette di fornire il _segnale_ _redstone_",
-
 	"block.create.content_observer.tooltip": "OSSERVATORE DI CONTENUTI",
 	"block.create.content_observer.tooltip.summary": "_Rileva oggetti_ dentro i _contenitori_ ed i _nastri_ corrispondenti ad un _filtro_. Quando l'_inventario_ del blocco, _nastro_ o _scivolo_ contiene un oggetto corrispondente, questo componente emetterà un _segnale redstone_. Quando un _imbuto_ osservato _trasferisce_ un oggetto corrispondente, questo componente emetterà un _segnale redstone_ temporaneo.",
 	"block.create.content_observer.tooltip.condition1": "Mentre osserva un contenitore",
 	"block.create.content_observer.tooltip.behaviour1": "Emette un _segnale redstone_ se il contenitore osservato contiene _oggetti corrispondenti_.",
 	"block.create.content_observer.tooltip.condition2": "Mentre osserva un imbuto",
 	"block.create.content_observer.tooltip.behaviour2": "Emette un _segnale redstone_ se l'imbuto osservato sta _trasferendo_ un _oggetto corrispondente_.",
-
 	"block.create.creative_crate.tooltip": "CASSA (CREATIVA)",
 	"block.create.creative_crate.tooltip.summary": "Fornisce una scorta infinita di blocchi agli _Spara-progetti_ adiacenti.",
 	"block.create.creative_crate.tooltip.condition1": "Quando un oggetto è nel filtro",
 	"block.create.creative_crate.tooltip.behaviour1": "Qualsiasi _estrazione_ da questo contenitore fornisce _provviste infinite_ dell'oggetto in questione. Gli oggetti _inseriti_ in questo baule verranno _cancellati_.",
-
 	"item.create.creative_blaze_cake.tooltip": "TORTA PER BLAZE (CREATIVA)",
 	"item.create.creative_blaze_cake.tooltip.summary": "Uno snack molto speciale per i tuoi _inceneritori a blaze_. Dopo aver mangiato questa torta, gli Inceneritori a Blaze _non finiranno mai il carburante_.",
 	"item.create.creative_blaze_cake.tooltip.condition1": "Quando usata su un inceneritore a blaze",
 	"item.create.creative_blaze_cake.tooltip.behaviour1": "_Modifica_ il livello di calore di un inceneritore a blaze.",
-
 	"block.create.controller_rail.tooltip": "BINARIO DI CONTROLLO",
 	"block.create.controller_rail.tooltip.summary": "Un _binario alimentato unidirezionale_ capace di _controllare precisamente_ la _velocità di movimento_ di un carrello da miniera.",
 	"block.create.controller_rail.tooltip.condition1": "Quando alimentato da redstone",
 	"block.create.controller_rail.tooltip.behaviour1": "_Accelera_ o _decelera_ i _carrelli da miniera_ che passano, a seconda della _potenza del segnale_. Propaga il segnale redstone ai binari di controllo adiacenti. Alimentare due binari di controllo con segnali differenti farà in modo che i binari tra di loro interpolino il segnale.",
-
 	"item.create.sand_paper.tooltip": "CARTA VETRATA",
 	"item.create.sand_paper.tooltip.summary": "Una superficie di carta ruvida che può essere usata per _levigare_. Può essere applicata automaticamente usando l'installatore.",
 	"item.create.sand_paper.tooltip.condition1": "Quando utilizzata",
 	"item.create.sand_paper.tooltip.behaviour1": "Applica una levigatura agli oggetti tenuti in _mano secondaria_ o per _terra_ quando li si _guarda_.",
-
 	"item.create.builders_tea.tooltip": "TÈ DEL COSTRUTTORE",
 	"item.create.builders_tea.tooltip.summary": "La bevanda perfetta per iniziare la giornata _motivato_ e _saturato._",
-
 	"item.create.refined_radiance.tooltip": "SPLENDORE RAFFINATO",
 	"item.create.refined_radiance.tooltip.summary": "Un materiale cromatico forgiato dalla _luce_ _assorbita_.",
-	"item.create.refined_radiance.tooltip.condition1": "Work In Progress",
+	"item.create.refined_radiance.tooltip.condition1": "Lavori in corso",
 	"item.create.refined_radiance.tooltip.behaviour1": "Saranno implementati utilizzi per questo materiale in versioni future.",
-
 	"item.create.shadow_steel.tooltip": "ACCIAIO OSCURO",
 	"item.create.shadow_steel.tooltip.summary": "Un materiale cromatico forgiato _nel_ _vuoto_.",
-	"item.create.shadow_steel.tooltip.condition1": "Work In Progress",
+	"item.create.shadow_steel.tooltip.condition1": "Lavori in corso",
 	"item.create.shadow_steel.tooltip.behaviour1": "Saranno implementati utilizzi per questo materiale in versioni future.",
-
 	"item.create.linked_controller.tooltip": "PULSANTIERA DI COMANDO",
 	"item.create.linked_controller.tooltip.summary": "Consegna il potere di _controllare_ le frequenze di _Connettori_ _redstone_ sul _palmo_ della tua mano grazie ai suoi _sei_ _pulsanti_.",
 	"item.create.linked_controller.tooltip.condition1": "Click destro",
@@ -1998,64 +1884,50 @@
 	"item.create.linked_controller.tooltip.behaviour3": "Abilita la _Modalità Associa-tasti_. Premi uno dei _sei pulsanti_ per impostarlo alla _Frequenza del connettore_.",
 	"item.create.linked_controller.tooltip.condition4": "Click destro su un Leggio",
 	"item.create.linked_controller.tooltip.behaviour4": "Posa la pulsantiera sul Leggio per una più facile attivazione. (Click destro da accovacciato per recuperarlo)",
-
 	"item.create.diving_helmet.tooltip": "ELMO DA IMMERSIONE",
 	"item.create.diving_helmet.tooltip.summary": "Se indossato con uno _Zaino Serbatoio_, permette al portatore di _respirare_ _sott'acqua_ per un periodo di tempo prolungato.",
 	"item.create.diving_helmet.tooltip.condition1": "Quando indossato",
 	"item.create.diving_helmet.tooltip.behaviour1": "Applica l'effetto di _Respirazione Subacquea_, consumando lentamente la _pressione dell'aria_ all'interno del serbatoio.",
-
 	"item.create.copper_backtank.tooltip": "ZAINO SERBATOIO",
 	"item.create.copper_backtank.tooltip.summary": "Un _serbatoio_ _indossabile_ adatto per trasportare aria compressa.",
 	"item.create.copper_backtank.tooltip.condition1": "Quando indossato",
 	"item.create.copper_backtank.tooltip.behaviour1": "Fornisce aria_ _compressa_ a tutto ciò che lo richiede.",
 	"item.create.copper_backtank.tooltip.condition2": "Quando posizionato e collegato a un sistema cinetico",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Assorbe_ _aria_ _compressa_ ad una velocità dipendente dalla velocità di rotazione.",
-
 	"block.create.placard.tooltip": "CORNICE DI OTTONE",
 	"block.create.placard.tooltip.summary": "_Incornicia_ i tuoi _oggetti_ in ottone usando questo elegante pannello da muro. Sicuro per i macchinari!",
 	"block.create.placard.tooltip.condition1": "Click destro con un oggetto",
 	"block.create.placard.tooltip.behaviour1": "_Aggiunge_ l'_oggetto_ nella cornice. _Emette_ un segnale _redstone_ temporaneo se contiene già un oggetto corrispondente.",
 	"block.create.placard.tooltip.condition2": "Quando colpito",
 	"block.create.placard.tooltip.behaviour2": "_Rimuove_ l'_oggetto_ attualmente incorniciato.",
-
 	"block.create.flywheel.tooltip": "VOLANO",
 	"block.create.flywheel.tooltip.summary": "_Decora_ i tuoi _macchinari_ con questa enorme ruota di ottone.",
 	"block.create.flywheel.tooltip.condition1": "Quando riceve forza centrifuga",
 	"block.create.flywheel.tooltip.behaviour1": "Gira.",
-
 	"item.create.diving_boots.tooltip": "STIVALI DA IMMERSIONE",
 	"item.create.diving_boots.tooltip.summary": "Un paio di _stivali_ _pesanti_, che permettono di esplorare meglio il fondale oceanico.",
 	"item.create.diving_boots.tooltip.condition1": "Quando indossati",
 	"item.create.diving_boots.tooltip.behaviour1": "Il portatore _affonda_ _più velocemente_ e _non può_ _nuotare_. Permette di _camminare_ e _saltare_ sott'acqua. Il portatore è inoltre immune ai _Nastri_ _meccanici_.",
-
 	"item.create.crafting_blueprint.tooltip": "PROGETTO DI FABBRICAZIONE",
 	"item.create.crafting_blueprint.tooltip.summary": "Se _appeso_ ad un muro, può essere usato per _specificare_ gli _ingredienti_ per fabbricare manualmente. Ogni slot rappresenta una ricetta.",
 	"item.create.crafting_blueprint.condition1": "Click destro su uno slot vuoto",
 	"item.create.crafting_blueprint.behaviour1": "Apri il _menù_ _di_ _fabbricazione_, permettendoti di _configurare_ una _ricetta_ e gli oggetti da mostrare.",
 	"item.create.crafting_blueprint.condition2": "Click destro si uno slot occupato",
 	"item.create.crafting_blueprint.behaviour2": "_Usa_ la _ricetta_ _selezionata_ con gli oggetti nel tuo _inventario_. _Accovacciati_ per fabbricare fino a uno _Stack_ di oggetti.",
-
 	"item.create.minecart_coupling.tooltip": "AGGANCIO PER CARRELLI DA MINIERA",
 	"item.create.minecart_coupling.tooltip.summary": "_Concatena_ i _carrelli da miniera_ e le _macchine su carrello_ insieme per formare un treno maestoso.",
 	"item.create.minecart_coupling.tooltip.condition1": "Quando usato su un carrello da miniera",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Concatena_ due carrelli insieme, provando a tenerli uniti a una _distanza costante_ mentre si muovono.",
-
 	"item.create.experience_nugget.tooltip": "PEPITA DI ESPERIENZA",
 	"item.create.experience_nugget.tooltip.summary": "_Ding!_ Una briciola di _ispirazione_ dalle tue fantastiche invenzioni.",
 	"item.create.experience_nugget.tooltip.condition1": "Quando usata",
 	"item.create.experience_nugget.tooltip.behaviour1": "_Guadagna_ i _punti_ _Esperienza_ contenuti all'interno.",
-
 	"block.create.peculiar_bell.tooltip": "CAMPANA PECULIARE",
 	"block.create.peculiar_bell.tooltip.summary": "Una _Campana di Ottone_ decorativa. Posarla sopra del _Fuoco delle Anime_ potrebbe avere strani effetti...",
-
 	"block.create.haunted_bell.tooltip": "CAMPANA INFESTATA",
 	"block.create.haunted_bell.tooltip.summary": "Una _Campana Maledetta_ infestata da anime perdute del Nether.",
 	"block.create.haunted_bell.tooltip.condition1": "Quando tenuta in mano o suonata",
 	"block.create.haunted_bell.tooltip.behaviour1": "Mostra i _punti bui_ nei quali possono apparire _creature ostili_.",
-
-
-	"_": "->------------------------]  Ponder Content  [------------------------<-",
-
 	"create.ponder.hold_to_ponder": "Tieni premuto [%1$s] per Riflettere",
 	"create.ponder.subject": "Soggetto della scena",
 	"create.ponder.pondering": "Riflessione riguardante...",
@@ -2115,18 +1987,15 @@
 	"create.ponder.tag.display_targets.description": "Componenti o blocchi che possono ricevere e visualizzare le informazioni lette da un Lettore di dati",
 	"create.ponder.tag.train_related": "Equipaggiamento per ferrovie",
 	"create.ponder.tag.train_related.description": "Componenti usati nella costruzione o gestione di Treni",
-
 	"create.ponder.analog_lever.header": "Controllare segnali usando una Leva analogica",
 	"create.ponder.analog_lever.text_1": "Le Leve analogiche sono una compatta e precisa fonte di segnali redstone",
 	"create.ponder.analog_lever.text_2": "Fai click destro per aumentare la potenza del segnale di output",
 	"create.ponder.analog_lever.text_3": "Fai click destro da accovacciato per abbassare la potenza del segnale",
-
 	"create.ponder.andesite_tunnel.header": "Usare Tunnel di andesite",
 	"create.ponder.andesite_tunnel.text_1": "I Tunnel di andesite possono essere usati per ricoprire i tuoi Nastri",
 	"create.ponder.andesite_tunnel.text_2": "Se un Tunnel ha connessioni laterali...",
 	"create.ponder.andesite_tunnel.text_3": "...estrarrà un singolo oggetto da qualsiasi stack che lo attraversa",
 	"create.ponder.andesite_tunnel.text_4": "Il resto proseguirà per la sua strada",
-
 	"create.ponder.auto_schedule.header": "Stazioni e Tabelle di marcia",
 	"create.ponder.auto_schedule.text_1": "Le Tabelle di marcia possono dare una destinazione ai conducenti",
 	"create.ponder.auto_schedule.text_2": "I Comparatori riceveranno un segnale ogni volta che c'è un treno in attesa",
@@ -2134,7 +2003,6 @@
 	"create.ponder.auto_schedule.text_4": "Le stazioni possono anche essere usate per assegnare nuove Tabelle di marcia automaticamente",
 	"create.ponder.auto_schedule.text_5": "Una Tabella di marcia posizionata su una stazione sarà automaticamente copiata sui treni presenti",
 	"create.ponder.auto_schedule.text_6": "Diversamente da come avviene in caso di assegnazione manuale, i conducenti non porteranno l'oggetto con se'",
-
 	"create.ponder.basin.header": "Processare oggetti nella Vasca",
 	"create.ponder.basin.text_1": "Una Vasca può contenere oggetti e fluidi in attesa di essere lavorati",
 	"create.ponder.basin.text_2": "Al termine di un ciclo di lavorazione, le Vasche cercano di espellere il risultato lateralmente verso il basso",
@@ -2145,15 +2013,12 @@
 	"create.ponder.basin.text_7": "Questo può tuttavia tornare utile se si intende usarli come ingredienti per un'ulteriore lavorazione",
 	"create.ponder.basin.text_8": "L'output desiderato dovrà poi comunque essere estratto dalla Vasca in qualche modo",
 	"create.ponder.basin.text_9": "Potrebbe essere necessario un filtro per evitare di estrarre oggetti ancora non lavorati",
-
 	"create.ponder.bearing_modes.header": "Modalità di movimento del Supporto meccanico",
 	"create.ponder.bearing_modes.text_1": "Se fermato, il Supporto posizionerà la struttura all'angolo più vicino allineato alla griglia",
 	"create.ponder.bearing_modes.text_2": "Può essere configurato in modo che la struttura non torni mai ad essere blocchi solidi, o a farlo solo se vicina al suo angolo di partenza",
-
 	"create.ponder.belt_casing.header": "Rivestire i Nastri",
 	"create.ponder.belt_casing.text_1": "Si possono usare Telai in andesite oppure ottone per decorare i Nastri meccanici",
 	"create.ponder.belt_casing.text_2": "Usa una Chiave a pappagallo per rimuovere il rivestimento",
-
 	"create.ponder.belt_connector.header": "Usare i Nastri meccanici",
 	"create.ponder.belt_connector.text_1": "Fare click destro su due Assi con un Nastro le connetterà tra loro",
 	"create.ponder.belt_connector.text_2": "Puoi annullare selezioni accidentali facendo click sinistro da accovacciato",
@@ -2161,7 +2026,6 @@
 	"create.ponder.belt_connector.text_4": "Tutte le Assi connesse da uno stesso Nastro gireranno alla stessa velocità e nella stessa direzione",
 	"create.ponder.belt_connector.text_5": "Le Assi addizionali possono essere rimosse con una Chiave a pappagallo",
 	"create.ponder.belt_connector.text_6": "Puoi colorare i Nastri meccanici per motivi estetici",
-
 	"create.ponder.belt_directions.header": "Orientamenti validi per i Nastri meccanici",
 	"create.ponder.belt_directions.text_1": "I Nastri meccanici non possono essere connessi in maniera arbitraria",
 	"create.ponder.belt_directions.text_2": "1. Possono essere connessi orizzontalmente",
@@ -2169,23 +2033,19 @@
 	"create.ponder.belt_directions.text_4": "3. Possono essere connessi verticalmente",
 	"create.ponder.belt_directions.text_5": "4. E possono connettere Assi verticali orizzontalmente",
 	"create.ponder.belt_directions.text_6": "Queste sono tutte le direzioni disponibili. I Nastri possono coprire una qualsiasi lunghezza tra i 2 e i 20 blocchi",
-
 	"create.ponder.belt_transport.header": "Usare Nastri meccanici per la logistica",
 	"create.ponder.belt_transport.text_1": "Un nastro in movimento può trasportare oggetti e altre entità",
 	"create.ponder.belt_transport.text_2": "Fai click destro con una mano libera per raccogliere un oggetto da un Nastro",
-
 	"create.ponder.blaze_burner.header": "Alimentare Bruciatori a blaze",
 	"create.ponder.blaze_burner.text_1": "I Bruciatori a blaze possono riscaldare gli oggetti contenuti da una Vasca",
 	"create.ponder.blaze_burner.text_2": "Per fare ciò, il Bruciatore deve essere alimentato con oggetti infiammabili",
 	"create.ponder.blaze_burner.text_3": "Una Torta per blaze permette ai Bruciatori a blaze di raggiungere un livello di calore ancora più intenso",
 	"create.ponder.blaze_burner.text_4": "Il processo di alimentazione può essere automatizzato usando Installatori o Bracci meccanici",
-
 	"create.ponder.brass_funnel.header": "L'Imbuto di ottone",
 	"create.ponder.brass_funnel.text_1": "Gli Imbuti di andesite possono estrarre solamente un oggetto alla volta.",
 	"create.ponder.brass_funnel.text_2": "Gli Imbuti di ottone possono estrarre fino ad un intero stack.",
 	"create.ponder.brass_funnel.text_3": "Scorrendo sullo slot di filtraggio dell'Imbuto permette di impostare la grandezza esatta dello stack da estrarre.",
 	"create.ponder.brass_funnel.text_4": "Usare un oggetto sullo slot di filtraggio costringerà l'Imbuto a trasferire solo oggetti ad esso corrispondenti.",
-
 	"create.ponder.brass_tunnel.header": "Usare i Tunnel di ottone",
 	"create.ponder.brass_tunnel.text_1": "I Tunnel di ottone possono essere usati per ricoprire i tuoi Nastri",
 	"create.ponder.brass_tunnel.text_2": "I Tunnel di ottone hanno uno slot di filtraggio per ogni lato aperto",
@@ -2195,7 +2055,6 @@
 	"create.ponder.brass_tunnel.text_6": "Dei Tunnel di ottone su Nastri paralleli formeranno un gruppo",
 	"create.ponder.brass_tunnel.text_7": "Gli oggetti in entrata saranno ora distribuiti tra tutte le uscite del gruppo",
 	"create.ponder.brass_tunnel.text_8": "È possibile anche inserire gli oggetti direttamente nel blocco di un Tunnel",
-
 	"create.ponder.brass_tunnel_modes.header": "Modalità di distribuzione del Tunnel di ottone",
 	"create.ponder.brass_tunnel_modes.text_1": "È possibile, usando una Chiave a pappagallo, cambiare la modalità di distribuzione di un Tunnel di ottone",
 	"create.ponder.brass_tunnel_modes.text_10": "'Sincronizza input' è una impostazione unica del Tunnel di ottone",
@@ -2209,33 +2068,27 @@
 	"create.ponder.brass_tunnel_modes.text_7": "'Round Robin forzato' non salta mai le uscite",
 	"create.ponder.brass_tunnel_modes.text_8": "'Dai precedenza al più vicino' darà priorità alle uscite più vicine al punto di entrata dell'oggetto",
 	"create.ponder.brass_tunnel_modes.text_9": "'Distribuisci casualmente' sceglierà un'uscita casuale per ogni stack in entrata",
-
 	"create.ponder.cart_assembler.header": "Spostare strutture con l'Assemblatore di carrelli",
 	"create.ponder.cart_assembler.text_1": "Gli assemblatori di carrelli attivati con della redstone montano le strutture ad essi connesse ai Carrelli da miniera di passaggio",
 	"create.ponder.cart_assembler.text_2": "Se spenti, smonteranno invece i Macchinari con Carrello di passaggio, facendoli tornare blocchi",
 	"create.ponder.cart_assembler.text_3": "Puoi usare una Chiave a pappagallo sul Carrello da miniera per raccogliere il Macchinario e portarlo altrove",
-
 	"create.ponder.cart_assembler_dual.header": "Assemblare Carrozze",
 	"create.ponder.cart_assembler_dual.text_1": "Ogni volta che due Assemblatori di carrelli condividono la struttura ad essi connessa...",
 	"create.ponder.cart_assembler_dual.text_2": "...attivare uno qualsiasi dei due li trasformerà in una Carrozza",
 	"create.ponder.cart_assembler_dual.text_3": "I carrelli si comporteranno come se fossero connessi da un Aggancio per carrelli da miniera",
-
 	"create.ponder.cart_assembler_modes.header": "Impostazioni di rotazione per Macchinari con carrello",
 	"create.ponder.cart_assembler_modes.text_1": "I Macchinari con carrello tendono a ruotare sempre nella direzione di movimento del loro carrello",
 	"create.ponder.cart_assembler_modes.text_2": "Questa freccia indica quale lato della struttura sarà considerato 'avanti'",
 	"create.ponder.cart_assembler_modes.text_3": "Se l'Assemblatore è impostato su 'Blocca rotazione', il Macchinario non ruoterà mai",
-
 	"create.ponder.cart_assembler_rails.header": "Altri tipi di carrelli da miniera e binari",
 	"create.ponder.cart_assembler_rails.text_1": "Gli Assemblatori non interferiranno con il movimento dei carrelli se posizionati su binari normali",
 	"create.ponder.cart_assembler_rails.text_2": "Se è invece su Binari Alimentati o di Controllo, i carrelli saranno fermati sul posto fino a che non riceve un segnale redstone",
 	"create.ponder.cart_assembler_rails.text_3": "Altri tipi di Carrelli da miniera possono essere usati come ancoraggio",
 	"create.ponder.cart_assembler_rails.text_4": "I carrelli con fornace si alimenteranno autonomamente, consumando il carbone all'interno di inventari connessi",
-
 	"create.ponder.chain_drive.header": "Spostare la forza centrifuga con le Trasmissioni a catena",
 	"create.ponder.chain_drive.text_1": "Le Trasmissioni a catena propagano la rotazione in una linea",
 	"create.ponder.chain_drive.text_2": "Tutte le Assi connesse in questo modo ruoteranno nella stessa direzione",
 	"create.ponder.chain_drive.text_3": "Ogni parte della linea può essere ruotata di 90 gradi",
-
 	"create.ponder.chain_gearshift.header": "Controllare la velocità di rotazione con dei Cambi a catena",
 	"create.ponder.chain_gearshift.text_1": "Normalmente, i Cambi a catena si comportano esattamente come le Trasmissioni a catena",
 	"create.ponder.chain_gearshift.text_2": "Con un segnale redstone, invece, essi raddoppieranno la velocità trasmessa agli altri Cambi nella linea",
@@ -2243,17 +2096,14 @@
 	"create.ponder.chain_gearshift.text_4": "In entrambi i casi, i Cambi a catena nella linea avranno sempre il doppio della velocità rispetto a quello che riceve il segnale",
 	"create.ponder.chain_gearshift.text_5": "I segnali analogici permettono di alterare più precisamente il rateo di accelerazione tra x1 e x2",
 	"create.ponder.chain_gearshift.text_6": "12 RPM",
-
 	"create.ponder.chute.header": "Trasportare oggetti verso il basso con gli Scivoli",
 	"create.ponder.chute.text_1": "Gli Scivoli possono trasportare oggetti verticalmente, estraendoli o inserendoli in un inventario",
 	"create.ponder.chute.text_2": "Puoi aggiungere una finestra usando la Chiave a pappagallo",
 	"create.ponder.chute.text_3": "Piazzare uno scivolo su un lato di un altro lo renderà diagonale",
-
 	"create.ponder.chute_upward.header": "Trasportare oggetti verso l'alto con gli Scivoli",
 	"create.ponder.chute_upward.text_1": "Piazzare un Ventilatore sopra o sotto ad uno Scivolo permette di spostare gli oggetti verso l'alto",
 	"create.ponder.chute_upward.text_2": "Ispezionare lo Scivolo con gli Occhiali da ingegnere mostra informazioni riguardanti la direzione del movimento",
 	"create.ponder.chute_upward.text_3": "Se vuoi inserire oggetti nell'estremità bloccata, dovrai farlo dai lati",
-
 	"create.ponder.clockwork_bearing.header": "Dare vita a strutture con il Supporto per orologi",
 	"create.ponder.clockwork_bearing.text_1": "I Supporti per orologi si connettono ai blocchi di fronte ad essi",
 	"create.ponder.clockwork_bearing.text_2": "Una volta connessa ad un sistema rotante, la struttura verrà ruotata a seconda dell'orario attuale",
@@ -2263,43 +2113,34 @@
 	"create.ponder.clockwork_bearing.text_6": "È possibile connettere una seconda struttura di fronte alla lancetta delle ore",
 	"create.ponder.clockwork_bearing.text_7": "Assicurati che le strutture non siano incollate l'una all'altra",
 	"create.ponder.clockwork_bearing.text_8": "La seconda struttura diventerà la lancetta dei minuti",
-
 	"create.ponder.clutch.header": "Controllare la forza centrifuga con una Frizione",
 	"create.ponder.clutch.text_1": "Le Frizioni propagano la rotazione in una linea retta",
 	"create.ponder.clutch.text_2": "Taglieranno invece la connessione se ricevono un segnale redstone",
-
 	"create.ponder.cog_speedup.header": "Cambiare marcia con gli Ingranaggi",
 	"create.ponder.cog_speedup.text_1": "Ingranaggi grandi e piccoli possono essere connessi diagonalmente",
 	"create.ponder.cog_speedup.text_2": "La velocità raddoppia passando da un ingranaggio grande a uno piccolo",
 	"create.ponder.cog_speedup.text_3": "La velocità dimezza se si muove invece nella direzione opposta",
-
 	"create.ponder.cogwheel.header": "Trasportare la forza centrifuga con gli Ingranaggi",
 	"create.ponder.cogwheel.text_1": "Gli Ingranaggi propagano la loro rotazione tra gli Ingranaggi adiacenti",
 	"create.ponder.cogwheel.text_2": "Assi vicine connesse in questo modo ruoteranno in direzione opposta",
-
 	"create.ponder.cogwheel_casing.header": "Rivestire gli Ingranaggi",
 	"create.ponder.cogwheel_casing.text_1": "Si possono usare Telai in andesite oppure ottone per decorare gli Ingranaggi",
 	"create.ponder.cogwheel_casing.text_2": "Eventuali componenti aggiunti in seguito non si collegheranno all'Asse di output",
 	"create.ponder.cogwheel_casing.text_3": "La Chiave a pappagallo può essere usata per attivare o disattivare tale connessione",
-
 	"create.ponder.creative_fluid_tank.header": "Serbatio per fluidi (creativa)",
 	"create.ponder.creative_fluid_tank.text_1": "La versione in Modalità Creativa dei Serbatoi per fluidi può essere usata per creare una fonte infinita di fluidi",
 	"create.ponder.creative_fluid_tank.text_2": "Fai click destro con un oggetto che contiene fluidi per impostarlo",
 	"create.ponder.creative_fluid_tank.text_3": "Eventuali tubature possono ora estrarre dal Serbatoio una quantità infinita di quel fluido",
 	"create.ponder.creative_fluid_tank.text_4": "Qualsiasi fluido spinto all'interno di questo tipo di Serbatoio verrà cancellato",
-
 	"create.ponder.creative_motor.header": "Generare forza centrifuga con un Motore (creativa)",
 	"create.ponder.creative_motor.text_1": "I Motori sono una fonte compatta e configurabile di forza centrifuga",
 	"create.ponder.creative_motor.text_2": "Scorere sul pannello posteriore cambia la RPM fornita in output",
-
 	"create.ponder.creative_motor_mojang.header": "L'Enigma di Mojang",
-
 	"create.ponder.crushing_wheels.header": "Processare oggetti con le Ruote frantumatrici",
 	"create.ponder.crushing_wheels.text_1": "Una coppia di Ruote frantumatrici sono un metodo molto efficiente per macinare oggetti",
 	"create.ponder.crushing_wheels.text_2": "La forza centrifuga in entrata deve farle girare l'una verso l'altra per farle funzionare",
 	"create.ponder.crushing_wheels.text_3": "Oggetti gettati o inseriti dall'alto verranno lavorati",
 	"create.ponder.crushing_wheels.text_4": "È possibile anche automatizzare l'inserimento e la raccolta di oggetti",
-
 	"create.ponder.deployer.header": "Usare un Installatore",
 	"create.ponder.deployer.text_1": "Un installatore può imitare l'interazione di un giocatore sfruttando la forza centrifuga",
 	"create.ponder.deployer.text_10": "Fai click destro sul lato anteriore per dargli un oggetto da usare",
@@ -2316,33 +2157,27 @@
 	"create.ponder.deployer.text_7": "attivare blocchi,",
 	"create.ponder.deployer.text_8": "raccogliere da blocchi",
 	"create.ponder.deployer.text_9": "e attaccare entità",
-
 	"create.ponder.deployer_contraption.header": "Usare Installatori in un Macchinario",
 	"create.ponder.deployer_contraption.text_1": "Quando un Installatore viene mosso come parte di un Macchinario...",
 	"create.ponder.deployer_contraption.text_2": "...si attiverà a ogni punto visitato, usando oggetti da qualsiasi inventario a bordo del Macchinario",
 	"create.ponder.deployer_contraption.text_3": "Lo slot di filtraggio può essere usato per specificare quali oggetti usare",
-
 	"create.ponder.deployer_modes.header": "Modalità degli Installatori",
 	"create.ponder.deployer_modes.text_1": "Normalmente, un Installatore imita un click destro",
 	"create.ponder.deployer_modes.text_2": "Puoi usare una Chiave a pappagallo per fare in modo che imiti invece un click sinistro",
-
 	"create.ponder.deployer_processing.header": "Processare gli oggetti con un Installatore",
 	"create.ponder.deployer_processing.text_1": "Con un oggetto adatto in mano, gli Installatori possono processare gli oggetti sotto di loro",
 	"create.ponder.deployer_processing.text_2": "Gli oggetti di input possono essere o gettati a terra o messi su una Stazione per oggetti",
 	"create.ponder.deployer_processing.text_3": "Se essi sono, invece, trasportati da un Nastro...",
 	"create.ponder.deployer_processing.text_4": "L'Installatore li fermerà e lavorerà automaticamente",
-
 	"create.ponder.deployer_redstone.header": "Controllare gli Installatori con la redstone",
 	"create.ponder.deployer_redstone.text_1": "Se ricevono un segnale redstone, gli Installatori smetteranno di funzionare",
 	"create.ponder.deployer_redstone.text_2": "Prima di fermarsi, però, completeranno qualsiasi lavoro abbiano già iniziato",
 	"create.ponder.deployer_redstone.text_3": "È possibile sfruttare questo comportamento con un impulso negativo per avviare un singolo ciclo di lavorazione",
-
 	"create.ponder.depot.header": "Usare le Stazioni per oggetti",
 	"create.ponder.depot.text_1": "Le Stazioni per oggetti funzionano come una specie di 'Nastro stazionario'",
 	"create.ponder.depot.text_2": "Fai click destro per posare o raccogliere un oggetto manualmente",
 	"create.ponder.depot.text_3": "Così come i Nastri, una Stazione per oggetti può offrire il suo contenuto a componenti di lavorazione",
 	"create.ponder.depot.text_4": "...così come può permettere ad un Braccio meccanico di interagire",
-
 	"create.ponder.display_board.header": "Usare i Tabelloni",
 	"create.ponder.display_board.text_1": "I Tabelloni sono una alternativa scalabile ai Cartelli",
 	"create.ponder.display_board.text_2": "Essi richiedono forza centrifuga per funzionare",
@@ -2350,7 +2185,6 @@
 	"create.ponder.display_board.text_4": "...oppure modificato da un Lettore di dati",
 	"create.ponder.display_board.text_5": "È inoltre possibile colorare ogni riga del Tabellone individualmente",
 	"create.ponder.display_board.text_6": "Fai click destro su una riga con una mano vuota per cancellarne il contenuto",
-
 	"create.ponder.display_link.header": "Impostare i Lettori di dati",
 	"create.ponder.display_link.text_1": "I Lettori di dati possono essere usati per mostrare informazioni in maniera dinamica",
 	"create.ponder.display_link.text_2": "Per prima cosa, fai click destro sul blocco visualizzatore che vuoi utilizzare...",
@@ -2360,12 +2194,10 @@
 	"create.ponder.display_link.text_6": "Non tutti i blocchi sono una fonte valida di informazioni...",
 	"create.ponder.display_link.text_7": "...e ogni blocco compatibile offre informazioni uniche",
 	"create.ponder.display_link.text_8": "I Lettori di dati possono funzionare con una piccola gamma di visualizzatori",
-
 	"create.ponder.display_link_redstone.header": "Controllare i Connettori con la redstone",
 	"create.ponder.display_link_redstone.text_1": "Un Lettore di dati smette di inviare dati finché riceve un segnale restone",
 	"create.ponder.display_link_redstone.text_2": "Una volta spento il segnale, il timer è azzerato e le nuove informazioni saranno inviate immediatamente",
 	"create.ponder.display_link_redstone.text_3": "Eventauli segnali emessi dalla fonte di dati sono ignorati dal Connettore",
-
 	"create.ponder.empty_blaze_burner.header": "Usare Bruciatori a blaze vuoti",
 	"create.ponder.empty_blaze_burner.text_1": "Fai click destro su un Blaze con un Bruciatore vuoto per catturarlo",
 	"create.ponder.empty_blaze_burner.text_2": "In alternativa puoi raccogliere un Blaze direttamente da un Generatore di mostri",
@@ -2373,16 +2205,13 @@
 	"create.ponder.empty_blaze_burner.text_4": "Si possono anche accendere con un Acciarino per motivi estetici",
 	"create.ponder.empty_blaze_burner.text_5": "Le fiamme possono poi essere cambiate usando un oggetto infuso di anime",
 	"create.ponder.empty_blaze_burner.text_6": "Queste fiamme non sono però abbastanza potenti per utilizzi industriali",
-
 	"create.ponder.encased_fluid_pipe.header": "Rivestire Tubi per fluidi",
 	"create.ponder.encased_fluid_pipe.text_1": "Si possono usare Telai in rame per decorare i Tubi per fluidi",
 	"create.ponder.encased_fluid_pipe.text_2": "Oltre ad essere nascosti, i Tubi rivestiti saranno forzati a mantenere il loro stato di connessione",
 	"create.ponder.encased_fluid_pipe.text_3": "Non reagirà più all'aggiunta o rimozione di blocchi adiacenti",
-
 	"create.ponder.fan_direction.header": "Flusso d'aria dei Vantilatori",
 	"create.ponder.fan_direction.text_1": "I Ventilatori usano la forza centrifuga per creare una corrente d'aria",
 	"create.ponder.fan_direction.text_2": "La potenza e la direzione della corrente dipendono dalla velocità di rotazione",
-
 	"create.ponder.fan_processing.header": "Processare oggetti con i Ventilatri",
 	"create.ponder.fan_processing.text_1": "Quando un getto d'aria passa attraverso della lava, la corrente si scalda",
 	"create.ponder.fan_processing.text_2": "Oggetti investiti dall'area saranno fusi",
@@ -2392,7 +2221,6 @@
 	"create.ponder.fan_processing.text_6": "Con questo sistema è possibile accedere a lavorazioni dal risultato interessante",
 	"create.ponder.fan_processing.text_7": "La velocità del Ventilatore non ha alcun effetto sulla velocità di lavorazione, ma solo sulla distanza",
 	"create.ponder.fan_processing.text_8": "La lavorazione con i ventilatori ha effetto anche se gli oggetti sono su Stazioni per oggetti o Nastri",
-
 	"create.ponder.fluid_pipe_flow.header": "Spostare fuidi con i tubi di rame",
 	"create.ponder.fluid_pipe_flow.text_1": "I Tubi per fluidi possono connettere due o più sorgenti e destinazioni di fluidi",
 	"create.ponder.fluid_pipe_flow.text_2": "Puoi usare una Chiave a pappagallo per aggiungere una finestra ad un tubo senza curve",
@@ -2401,90 +2229,73 @@
 	"create.ponder.fluid_pipe_flow.text_5": "All'inizio il fluido non viene estratto",
 	"create.ponder.fluid_pipe_flow.text_6": "Una volta che il flusso li connette, gli estremi iniziano a trasferire gradualmente il contenuto",
 	"create.ponder.fluid_pipe_flow.text_7": "In questo modo, i Tubi non contengono mai fisicamente nessun fluido",
-
 	"create.ponder.fluid_pipe_interaction.header": "Svuotare e riempire contenitori di liquidi",
 	"create.ponder.fluid_pipe_interaction.text_1": "Gli estremi di un sistema di tubi possono interagire con una grande varietà di blocchi",
 	"create.ponder.fluid_pipe_interaction.text_2": "Qualsiasi blocco capace di contenere liquidi piò essere riempito o svuotato",
 	"create.ponder.fluid_pipe_interaction.text_3": "Blocchi sorgente di fronte ad un estremo aperto possono essere raccolti...",
 	"create.ponder.fluid_pipe_interaction.text_4": "...mentre punti di scarico liberi possono creare sorgenti di fluidi",
 	"create.ponder.fluid_pipe_interaction.text_5": "I Tubi possono anche estrarre fluidi da alcuni specifici blocchi direttamente",
-
 	"create.ponder.fluid_tank_sizes.header": "Dimensioni dei Serbatoi per fluidi",
 	"create.ponder.fluid_tank_sizes.text_1": "I Serbatoi per fluidi possono essere uniti per sommare la loro capacità totale",
 	"create.ponder.fluid_tank_sizes.text_2": "Il quadrato della loro base può raggiungere i 3 blocchi di larghezza...",
 	"create.ponder.fluid_tank_sizes.text_3": "...e può crescere in altezza per oltre 30 strati",
 	"create.ponder.fluid_tank_sizes.text_4": "Puoi attivare o disattivare la finestra del Serbatoio con una Chiave a pappagallo",
-
 	"create.ponder.fluid_tank_storage.header": "Immagazzinare fluidi in un Serbatoio per fluidi",
 	"create.ponder.fluid_tank_storage.text_1": "I Serbatoi per fluidi sono ottimi per immagazzinare grandi quantità di fluidi",
 	"create.ponder.fluid_tank_storage.text_2": "Un sistema di Tubi può aggiungere o rimuovere fluidi da qualsiasi lato",
 	"create.ponder.fluid_tank_storage.text_3": "Il riempimento può essere misurato da un Comparatore",
 	"create.ponder.fluid_tank_storage.text_4": "Tuttavia, in Sopravvivenza i fluidi non possono essere aggiunti ne' rimossi manualmente",
 	"create.ponder.fluid_tank_storage.text_5": "Puoi usare Vasche, Prosciugatori e Beccucci per svuotare o riempire oggetti che contengono fluidi",
-
 	"create.ponder.funnel_compat.header": "Compatibilità degli Imbuti",
 	"create.ponder.funnel_compat.text_1": "Gli imbuti possono anche interagire facilmente con uno specifico insieme di componenti.",
 	"create.ponder.funnel_compat.text_2": "Seghe verticali",
 	"create.ponder.funnel_compat.text_3": "Stazioni per oggetti",
 	"create.ponder.funnel_compat.text_4": "Prosciugatori di oggetti",
-
 	"create.ponder.funnel_direction.header": "Direzione di spostamento",
 	"create.ponder.funnel_direction.text_1": "Posizionato normalmente, esso estrarrà oggetti dall'inventario.",
 	"create.ponder.funnel_direction.text_2": "Posizionandolo da accovacciato inserirà invece gli oggetti nell'inventario.",
 	"create.ponder.funnel_direction.text_3": "Puoi usare una Chiave a pappagallo per ruotare l'imbuto dopo averlo posizionato.",
 	"create.ponder.funnel_direction.text_4": "Lo stesso vale nella maggior parte delle direzioni.",
 	"create.ponder.funnel_direction.text_5": "Gli imbuti sopra un Nastro estrarranno o inseriranno oggetti dipendentemente dalla direzione del Nastro.",
-
 	"create.ponder.funnel_intro.header": "Usare gli Imbuti",
 	"create.ponder.funnel_intro.text_1": "Gli imbuti sono perfetti per trasferire oggetti da e in inventari.",
-
 	"create.ponder.funnel_redstone.header": "Controllare gli Imbuti con la redstone",
 	"create.ponder.funnel_redstone.text_1": "Un segnale redstone impedirà agli Imbuti di funzionare",
-
 	"create.ponder.funnel_transfer.header": "Trasferimento diretto",
 	"create.ponder.funnel_transfer.text_1": "Gli imbuti non possono trasferire gli oggetti direttamente tra inventari chiusi.",
 	"create.ponder.funnel_transfer.text_2": "Scivoli semplici o intelligenti potrebbero essere più adatti per tale scopo.",
 	"create.ponder.funnel_transfer.text_3": "Lo stesso vale per il movimento orizzontale. Un Nastro potrebbe tornare utile in questo caso.",
-
 	"create.ponder.gantry_carriage.header": "Usare Carrelli da gru",
 	"create.ponder.gantry_carriage.text_1": "I Carrelli da gru possono essere montati e scorrere su un'Asse da gru.",
 	"create.ponder.gantry_carriage.text_2": "I sistemi a gru possono muovere blocchi ad essi connessi.",
-
 	"create.ponder.gantry_cascaded.header": "Gru a cascata",
 	"create.ponder.gantry_cascaded.text_1": "Le Assi da gru si connettono a un Carrello senza aver bisogno di Super colla",
 	"create.ponder.gantry_cascaded.text_2": "Lo stesso vale per Carrelli connessi ad un'Asse in movimento",
 	"create.ponder.gantry_cascaded.text_3": "In questo modo è possibile creare un sistema a cascata capace di scorrere lungo multipli assi",
-
 	"create.ponder.gantry_direction.header": "Direzione di movimento della gru",
 	"create.ponder.gantry_direction.text_1": "Le Assi da gru possono muoversi in diverse direzioni",
 	"create.ponder.gantry_direction.text_2": "La direzione in cui si muove il Carrello dipende dall'orientamento della sua Asse",
 	"create.ponder.gantry_direction.text_3": "...così come dal suo senso di rotazione",
 	"create.ponder.gantry_direction.text_4": "Lo stesso vale per la rotazione trasmessa",
-
 	"create.ponder.gantry_redstone.header": "Propagazione dell'energia",
 	"create.ponder.gantry_redstone.text_1": "Dare energia redstone ad un'Asse da gru fermerà sul posto tutte le gru ad essa connesse",
 	"create.ponder.gantry_redstone.text_2": "La sua rotazione sarà, invece, trasferita alle Assi di output dei Carrelli",
-
 	"create.ponder.gantry_shaft.header": "Usare Assi da gru",
 	"create.ponder.gantry_shaft.text_1": "Le Assi da gru sono i componenti di base per costruire sistemi a gru. Eventuali Carrelli ad esse collegati si muoveranno lungo di esse.",
 	"create.ponder.gantry_shaft.text_2": "I sistemi a gru possono muovere blocchi ad essi connessi.",
-
 	"create.ponder.gearbox.header": "Trasferire forza centrifuga con gli Invertitori",
 	"create.ponder.gearbox.text_1": "Cambiare asse di rotazione può richiedere molto spazio",
 	"create.ponder.gearbox.text_2": "Un Invertitore è una versione più compatta di tale mostruosità",
 	"create.ponder.gearbox.text_3": "Assi connesse a lati adiacenti ruotano in direzioni specchiate",
 	"create.ponder.gearbox.text_4": "Connesioni in linea retta saranno invertite",
-
 	"create.ponder.gearshift.header": "Controllare la forza centrifuga con un Cambio",
 	"create.ponder.gearshift.text_1": "I Cambi propagano la rotazione in una linea retta",
 	"create.ponder.gearshift.text_2": "Invertono inoltre la rotazione se ricevono un segnale redstone",
-
 	"create.ponder.hand_crank.header": "Generare forza centrifuga usando Manovelle",
 	"create.ponder.hand_crank.text_1": "Le Manovelle possono essere usate dai giocatori per generare forza centrifuga manualmente",
 	"create.ponder.hand_crank.text_2": "Tieni premuto il pulsante destro per farla ruotare in senso antiorario",
 	"create.ponder.hand_crank.text_3": "La velocità di rotazione è relativamente alta",
 	"create.ponder.hand_crank.text_4": "Tieni premuto il pulsante destro da accovacciato per farla ruotare in senso orario",
-
 	"create.ponder.hose_pulley.header": "Riempire e svuotare bacini con delle Carrucole per fluidi",
 	"create.ponder.hose_pulley.text_1": "Le Carrucole per fluidi sono perfette per riempire o drenare interi bacini di fluidi",
 	"create.ponder.hose_pulley.text_2": "L'altezza del beccuccio può essere regolata con un input di energia cinetica",
@@ -2493,41 +2304,34 @@
 	"create.ponder.hose_pulley.text_5": "Un sistema di Tubi connesso può fornire dei fluidi...",
 	"create.ponder.hose_pulley.text_6": "...oppure risucchiarli, svuotando gradualmente il bacino",
 	"create.ponder.hose_pulley.text_7": "La velocità di riempimento o svuotamento dipende interamente da sistema di Tubi",
-
 	"create.ponder.hose_pulley_infinite.header": "Estrarre o gettare passivamente nei bacini con delle Carrucole per fluidi",
 	"create.ponder.hose_pulley_infinite.text_1": "Se il beccuccio della Carrucola per fluidi tocca un bacino abbastanza ampio...",
 	"create.ponder.hose_pulley_infinite.text_2": "...raccoglierà o getterà fluidi senza avere alcun effetto sul bacino stesso",
 	"create.ponder.hose_pulley_infinite.text_3": "Un sistema di Tubi può risucchiare o gettare fluidi infinitamente usando Carrucole di questo tipo",
-
 	"create.ponder.hose_pulley_level.header": "Livelli di riempimento e svuotamento delle Carrucole per Fluidi",
 	"create.ponder.hose_pulley_level.text_1": "Quando completamente ritirata, la Carrucola per Fluidi non fa nulla",
 	"create.ponder.hose_pulley_level.text_2": "Lo svuotamento avviene dall'alto verso il basso",
 	"create.ponder.hose_pulley_level.text_3": "La nuova superficie si troverà appena sotto la posizione del beccuccio",
 	"create.ponder.hose_pulley_level.text_4": "Il riempimeno avviene dal basso verso l'alto",
 	"create.ponder.hose_pulley_level.text_5": "Il bacino crescerà fino a riempire lo strato di blocchi in cui si trova il beccuccio",
-
 	"create.ponder.item_drain.header": "Svuotare contenitori di fluidi con i Prosciugatori di oggetti",
 	"create.ponder.item_drain.text_1": "I Prosciugatori di oggetti possono estrarre fluidi dagli oggetti posati sopra di essi",
 	"create.ponder.item_drain.text_2": "Fai click destro su di esso per versare fluidi direttamente dall'oggetto nella tua mano",
 	"create.ponder.item_drain.text_3": "Quando un oggetto viene inserito da un lato...",
 	"create.ponder.item_drain.text_4": "...esso rotolerà in avanti, svuotando i fluidi in esso contenuti",
 	"create.ponder.item_drain.text_5": "I sistemi di Tubi potranno ora estrarre i fluidi dal buffer interno del Prosciugatore",
-
 	"create.ponder.item_vault_sizes.header": "Dimensioni di un Container",
 	"create.ponder.item_vault_sizes.text_1": "I Container possono essere combinati per sommare la loro capacità totale",
 	"create.ponder.item_vault_sizes.text_2": "Il loro quadrato di base può raggiungere un massimo di 3 blocchi di spessore...",
 	"create.ponder.item_vault_sizes.text_3": "...e la loro lunghezza crescere fino a 3 volte il loro diametro",
-
 	"create.ponder.item_vault_storage.header": "Immagazzinare oggetti in un Container",
 	"create.ponder.item_vault_storage.text_1": "I Container possono essere usate per immagazzinare grandi quantità di oggetti",
 	"create.ponder.item_vault_storage.text_2": "Tuttavia, è impossibile mettere o togliere oggetti manualmente",
 	"create.ponder.item_vault_storage.text_3": "Qualsiasi componente per trasferire oggetti può sia inserire...",
 	"create.ponder.item_vault_storage.text_4": "...che rimuovere oggetti da questo contenitore",
-
 	"create.ponder.large_cogwheel.header": "Trasportare la forza centrifuga con gli Ingranaggi grandi",
 	"create.ponder.large_cogwheel.text_1": "Gli Ingranaggi grandi propagano la loro rotazione connettendosi ad angoli di 90 gradi",
 	"create.ponder.large_cogwheel.text_2": "Questo pemette di cambiare l'asse in cui viene trasportata la forza centrifuga",
-
 	"create.ponder.linear_chassis_attachment.header": "Collegare blocchi usando Telai lineari",
 	"create.ponder.linear_chassis_attachment.text_1": "Le facce aperte di un Telaio lineare possono essere rese appiccicose",
 	"create.ponder.linear_chassis_attachment.text_2": "Premi ancora per rendere appiccicoso anche il lato opposto",
@@ -2537,12 +2341,10 @@
 	"create.ponder.linear_chassis_attachment.text_6": "Tenendo premuto CTRL mentre scorri cambierai la portata di tutti i Telai collegati",
 	"create.ponder.linear_chassis_attachment.text_7": "Collegare dei blocchi a qualsiasi altro lato richiede di utilizzare della Super colla",
 	"create.ponder.linear_chassis_attachment.text_8": "Grazie a queste meccaniche, strutture di qulsiasi forma possono essere trasformate in un Macchinario",
-
 	"create.ponder.linear_chassis_group.header": "Spostare un gruppo di Telai lineari",
 	"create.ponder.linear_chassis_group.text_1": "I Telai lineari si connettono automaticamente ad altri Telai adiacenti dello stesso tipo",
 	"create.ponder.linear_chassis_group.text_2": "Se uno viene mosso come parte di un Macchinario, tutti gli altri saranno trascinati con esso",
 	"create.ponder.linear_chassis_group.text_3": "Telai di tipi diversi o ruotati in altre direzioni non si collegheranno",
-
 	"create.ponder.mechanical_arm.header": "Impostare Braccia meccaniche",
 	"create.ponder.mechanical_arm.text_1": "Prima di essere posizionato, un Braccio meccanico avrà bisogno di essere assegnato ai suoi input e output",
 	"create.ponder.mechanical_arm.text_2": "Fai click destro su un inventario mentre hai in mano il Braccio per aggiungerlo come bersaglio",
@@ -2552,7 +2354,6 @@
 	"create.ponder.mechanical_arm.text_6": "Le Braccia meccaniche possono avere qualsiasi numero di input e output entro la loro portata",
 	"create.ponder.mechanical_arm.text_7": "Non tutti gli inventari, però, possono essere selezionati direttamente",
 	"create.ponder.mechanical_arm.text_8": "Usa Imbuti e Stazioni per oggetti per risolvere questo problema",
-
 	"create.ponder.mechanical_arm_filtering.header": "Filtrare gli Output del Braccio meccanico",
 	"create.ponder.mechanical_arm_filtering.text_1": "Input",
 	"create.ponder.mechanical_arm_filtering.text_2": "Output",
@@ -2560,7 +2361,6 @@
 	"create.ponder.mechanical_arm_filtering.text_4": "Le Braccia meccaniche non hanno alcuna impostazione di filtraggio incorporata",
 	"create.ponder.mechanical_arm_filtering.text_5": "Gli Imbuti di ottone sono però in grado di comunicare i loro filtri al Braccio",
 	"create.ponder.mechanical_arm_filtering.text_6": "Il Braccio è abbastanza intelligente da evitare perfino di raccogliere eventuali oggetti che non corrispondono con nessun filtro",
-
 	"create.ponder.mechanical_arm_modes.header": "Modalità di distribuzione del Braccio meccanico",
 	"create.ponder.mechanical_arm_modes.text_1": "Input",
 	"create.ponder.mechanical_arm_modes.text_2": "Output",
@@ -2571,16 +2371,13 @@
 	"create.ponder.mechanical_arm_modes.text_7": "Se un output non è in grado di accettare altri oggetti, sarà ignorato",
 	"create.ponder.mechanical_arm_modes.text_8": "Round Robin forzato non salterà mai gli output, attendendo invece che si liberino prima di procedere",
 	"create.ponder.mechanical_arm_modes.text_9": "Dai precedenza al primo darà maggiore priorità agli output impostati per primi mentre il Braccio veniva configurato",
-
 	"create.ponder.mechanical_arm_redstone.header": "Controllare le Braccia meccaniche con la redstone",
 	"create.ponder.mechanical_arm_redstone.text_1": "Se ricevono un segnale redstone, le Braccia meccaniche smetteranno di funzionare",
 	"create.ponder.mechanical_arm_redstone.text_2": "Prima di fermarsi, però, completeranno qualsiasi spostamento abbiano già iniziato",
 	"create.ponder.mechanical_arm_redstone.text_3": "È possibile sfruttare questo comportamento con un impulso negativo per avviare un singolo ciclo di spostamento",
-
 	"create.ponder.mechanical_bearing.header": "Spostare strutture usando un Supporto meccanico",
 	"create.ponder.mechanical_bearing.text_1": "I Supporti meccanici si collegano al blocco davanti a sé",
 	"create.ponder.mechanical_bearing.text_2": "Appena riceve della forza centrifuga, il Supporto trasformerà la struttura in un Marchingegno rotante",
-
 	"create.ponder.mechanical_crafter.header": "Utilizzare i Fabbricatori meccanici",
 	"create.ponder.mechanical_crafter.text_1": "Si può costruire una matrice di Fabbricatori meccanici per automatizzare qualsiasi ricetta di Fabbricazione",
 	"create.ponder.mechanical_crafter.text_2": "Si possono alterare i percorsi dei Fabbricatori con una Chiave a pappagallo",
@@ -2590,62 +2387,50 @@
 	"create.ponder.mechanical_crafter.text_6": "Fai click destro sul lato anteriore per inserire manualmente gli oggetti",
 	"create.ponder.mechanical_crafter.text_7": "Non appena tutti gli slot saranno occupati, la fabbricazione avrà inizio",
 	"create.ponder.mechanical_crafter.text_8": "Se ciò non è vero, si può costringere il processo a partire lo stesso con un segnale redstone",
-
 	"create.ponder.mechanical_crafter_connect.header": "Connettere gli inventari di multipli Fabbricatori",
 	"create.ponder.mechanical_crafter_connect.text_1": "È possibile inserire gli oggetti nei Fabbricatori in maniera automatizzata",
 	"create.ponder.mechanical_crafter_connect.text_2": "Usare una Chiave a pappagallo permette di combinare gli input di Fabbricatori adiacenti",
 	"create.ponder.mechanical_crafter_connect.text_3": "D'ora in poi, tutti i Fabbricatori connessi condivideranno lo stesso input",
-
 	"create.ponder.mechanical_crafter_covers.header": "Coprire lo slot di un Fabbricatore",
 	"create.ponder.mechanical_crafter_covers.text_1": "Alcune ricette non hanno ingredienti contigui, e richiedono slot vuoti tra un oggetto e l'altro",
 	"create.ponder.mechanical_crafter_covers.text_2": "In casi come questi, un Fabbricatore può essere riempito con una Copertura per slot, in modo che la matrice lo consideri uno slot vuoto",
 	"create.ponder.mechanical_crafter_covers.text_3": "Gli input condivisi creati con una Chiave a pappagallo possono superare questi Fabbricatori coperti",
-
 	"create.ponder.mechanical_drill.header": "Rompere blocchi con la Trivella meccanica",
 	"create.ponder.mechanical_drill.text_1": "Quando alimentato dalla forza centrifuga, un Trapano meccanico romperà blocchi direttamente di fronte a sé",
 	"create.ponder.mechanical_drill.text_2": "La sua velocità di scavo dipende dalla velocità di rotazione",
-
 	"create.ponder.mechanical_drill_contraption.header": "Usare trivelle meccaniche in un Macchinario",
 	"create.ponder.mechanical_drill_contraption.text_1": "Quando una Trivella viene mossa come parte di un Macchinario...",
 	"create.ponder.mechanical_drill_contraption.text_2": "...essi romperanno qualunque blocco che incontrano all'avanzare della struttura",
-
 	"create.ponder.mechanical_harvester.header": "Usare Mietitrici meccaniche in un Macchinario",
 	"create.ponder.mechanical_harvester.text_1": "Quando una Mietitrice viene mossa come parte di un Macchinario...",
 	"create.ponder.mechanical_harvester.text_2": "...essa raccoglierà e ripianterà qualsiasi coltivazione che incontra",
-
 	"create.ponder.mechanical_mixer.header": "Processare oggetti con il Frullatore meccanico",
 	"create.ponder.mechanical_mixer.text_1": "È possibile automatizzare un buon numero di ricette grazie a un Frullatore e una Vasca",
 	"create.ponder.mechanical_mixer.text_2": "Le ricette disponibili includono qualsiasi fabbricazione senza forma, più alcune ricette extra",
 	"create.ponder.mechanical_mixer.text_3": "Alcune di queste ricette potrebbero richiedere il calore di un Inceneritore a blaze",
 	"create.ponder.mechanical_mixer.text_4": "Lo slot di filtraggio permette di scegliere tra ricette in conflitto.",
-
 	"create.ponder.mechanical_piston.header": "Spostare strutture usando un Pistone meccanico",
 	"create.ponder.mechanical_piston.text_1": "I Pistoni meccanici possono spingere i blocchi di fronte a sé",
 	"create.ponder.mechanical_piston.text_2": "La velocità e la direzione in cui si muovono dipende dalla rotazione in entrata",
 	"create.ponder.mechanical_piston.text_3": "I Pistoni appiccicosi possono anche trascinare i blocchi indietro",
-
 	"create.ponder.mechanical_piston_modes.header": "Modalità di movimento del Pistone meccanico",
 	"create.ponder.mechanical_piston_modes.text_1": "Quando un Pistone si ferma, la struttura trasportata si riconverte in blocchi",
 	"create.ponder.mechanical_piston_modes.text_2": "Può essere configurato in modo che la struttura non torni mai ad essere blocchi solidi, o a farlo solo al suo punto di partenza",
-
 	"create.ponder.mechanical_plough.header": "Usare Aratri meccanici in un Macchinario",
 	"create.ponder.mechanical_plough.text_1": "Quando un Aratro viene mosso come parte di un Macchinario...",
 	"create.ponder.mechanical_plough.text_2": "...esso romperà qualsiasi blocco che non ha una hitbox solida",
 	"create.ponder.mechanical_plough.text_3": "Inoltre, gli Aratri possono creare Terra zappata",
 	"create.ponder.mechanical_plough.text_4": "...e perfino lanciare entità senza ferirle",
-
 	"create.ponder.mechanical_press.header": "Processare oggetti con la Pressa meccanica",
 	"create.ponder.mechanical_press.text_1": "Le Presse meccaniche possono processare gli oggetti sotto di loro",
 	"create.ponder.mechanical_press.text_2": "Gli oggetti di input possono essere o gettati a terra o messi su una Stazione per oggetti",
 	"create.ponder.mechanical_press.text_3": "Se essi sono, invece, trasportati da un Nastro...",
 	"create.ponder.mechanical_press.text_4": "La Pressa li fermerà e lavorerà automaticamente",
-
 	"create.ponder.mechanical_press_compacting.header": "Compattare oggetti con una Pressa",
 	"create.ponder.mechanical_press_compacting.text_1": "È possibile compattare oggetti schiacciandoli in una Vasca",
 	"create.ponder.mechanical_press_compacting.text_2": "Compattare comprende qualsiasi ricetta di crafting 2x2 o 3x3 completamente piena di un solo oggetto, più alcune extra",
 	"create.ponder.mechanical_press_compacting.text_3": "Alcune di queste ricette potrebbero richiedere il calore di un Inceneritore a blaze",
 	"create.ponder.mechanical_press_compacting.text_4": "Lo slot di filtraggio permette di scegliere tra ricette in conflitto.",
-
 	"create.ponder.mechanical_pump_flow.header": "Trasportare fluidi usando Pompe meccaniche",
 	"create.ponder.mechanical_pump_flow.text_1": "Le Pompe meccaniche governano il flusso di liquidi nei sistemi di Tubi a cui sono connesse",
 	"create.ponder.mechanical_pump_flow.text_2": "Quando attivate, la loro freccia indica la direzione del flusso",
@@ -2653,45 +2438,37 @@
 	"create.ponder.mechanical_pump_flow.text_4": "...mentre il sistema di fronte li distribuisce in avanti",
 	"create.ponder.mechanical_pump_flow.text_5": "Invertire la rotazione in input inverte la direzione del flusso",
 	"create.ponder.mechanical_pump_flow.text_6": "Usa la Chiave a pappagallo per invertire manualmente la direzione della Pompa",
-
 	"create.ponder.mechanical_pump_speed.header": "Portata delle Pompe meccaniche",
 	"create.ponder.mechanical_pump_speed.text_1": "Indipendentemente dalla velocità, le Pompe meccaniche hanno una distanza massima di effetto di 16 blocchi",
 	"create.ponder.mechanical_pump_speed.text_2": "Aumentando la rotazione in input aumenta anche la velocità di propagazione dei fluidi...",
 	"create.ponder.mechanical_pump_speed.text_3": "...nonché la loro velocità di trasferimento",
 	"create.ponder.mechanical_pump_speed.text_4": "Le Pompe possono combinare la loro portata per cotrollare meglio un sistema di Tubi",
 	"create.ponder.mechanical_pump_speed.text_5": "Alternare la loro rotazione permette di allineare la direzione dei loro flussi",
-
 	"create.ponder.mechanical_saw_breaker.header": "Tagliare alberi con la Sega meccanica",
 	"create.ponder.mechanical_saw_breaker.text_1": "Al ricevere forza centrifuga, una Sega meccanica inizierà a tagliare alberi davanti a sé",
 	"create.ponder.mechanical_saw_breaker.text_2": "Perché la Sega possa abbattere l'intero albero, essa dovrà rompere il blocco che lo connette al terreno",
-
 	"create.ponder.mechanical_saw_contraption.header": "Usare Seghe meccaniche in un Macchinario",
 	"create.ponder.mechanical_saw_contraption.text_1": "Quando una Sega viene mossa come parte di un Macchinario...",
 	"create.ponder.mechanical_saw_contraption.text_2": "...essa taglierà qualsiasi albero con cui entra in contatto",
-
 	"create.ponder.mechanical_saw_processing.header": "Processare oggetti con la Sega meccanica",
 	"create.ponder.mechanical_saw_processing.text_1": "Una Sega meccanica ruotata verso l'alto può tagliare una buona varietà di oggetti",
 	"create.ponder.mechanical_saw_processing.text_2": "Gli oggetti in lavorazione si muovono sempre nella direzione opposta alla rotazione della lama",
 	"create.ponder.mechanical_saw_processing.text_3": "Le Seghe funzionano anche come porzione centrale di un Nastro meccanico",
 	"create.ponder.mechanical_saw_processing.text_4": "Se un ingrediente ha multipli possibili risultati, si può scegliere quello desiderato con lo slot di filtraggio",
 	"create.ponder.mechanical_saw_processing.text_5": "Senza filtri, la Sega li fabbricherà tutti, uno alla volta",
-
 	"create.ponder.millstone.header": "Processare oggetti in una Macina",
 	"create.ponder.millstone.text_1": "Le Macine lavorano gli oggetti triturandoli",
 	"create.ponder.millstone.text_2": "Possono essere alimentate con degli Ingranaggi",
 	"create.ponder.millstone.text_3": "Lancia o inserisci gli oggetti da sopra",
 	"create.ponder.millstone.text_4": "Dopo alcuni secondi, sarà possibile raccogliere gli oggetti con un click destro",
 	"create.ponder.millstone.text_5": "Gli output possono anche essere estratti in maniera automatizzata",
-
 	"create.ponder.nixie_tube.header": "Usare i Tubi di Nixie",
 	"create.ponder.nixie_tube.text_1": "Quando attivati da redstone, i Tubi di Nixie mostreranno l'intensità del segnale in entrata",
 	"create.ponder.nixie_tube.text_2": "Si possono usare Targhette con nomi personalizzati per cambiare il testo da mostrare a piacimento",
 	"create.ponder.nixie_tube.text_3": "Fai click destro con un colorante per cambiare il colore",
-
 	"create.ponder.piston_pole.header": "Usare i Pali di pistone",
 	"create.ponder.piston_pole.text_1": "Senza Pali ad esso connessi, un Pistone meccanico è inutile",
 	"create.ponder.piston_pole.text_2": "La lunghezza del Palo aggiunto sul suo retro definisce la sua distanza massima di estensione",
-
 	"create.ponder.portable_fluid_interface.header": "Scambio di fluidi con un Macchinario",
 	"create.ponder.portable_fluid_interface.text_1": "I Serbatoi montati su di un Macchinario in movimento non possono connettersi ad un sistema di tubi senza essere smontate",
 	"create.ponder.portable_fluid_interface.text_2": "Questo componente, invece, permette di interagire con i Serbatoi di un Macchinario senza neppure doverlo fermare",
@@ -2701,7 +2478,6 @@
 	"create.ponder.portable_fluid_interface.text_6": "È ora possibile inserire i fluidi...",
 	"create.ponder.portable_fluid_interface.text_7": "...oppure estrarli dal Macchinario",
 	"create.ponder.portable_fluid_interface.text_8": "Se non avvengono scambi per troppo tempo, il Macchinario ripartirà",
-
 	"create.ponder.portable_storage_interface.header": "Scambio di oggetti con un Macchinario",
 	"create.ponder.portable_storage_interface.text_1": "Gli inventari connessi ad un Macchinario in movimento non possono essere aperti da un giocatore ne' da altri componenti senza essere smontati",
 	"create.ponder.portable_storage_interface.text_2": "Questo componente, invece, permette di interagire con essi senza neppure dover fermare il Macchinario",
@@ -2711,34 +2487,28 @@
 	"create.ponder.portable_storage_interface.text_6": "È ora possibile inserire gli oggetti...",
 	"create.ponder.portable_storage_interface.text_7": "...oppure estrarli dal Macchinario",
 	"create.ponder.portable_storage_interface.text_8": "Se non avvengono scambi per troppo tempo, il Macchinario ripartirà",
-
 	"create.ponder.portable_storage_interface_redstone.header": "Controllare le Interfacce con la redstone",
 	"create.ponder.portable_storage_interface_redstone.text_1": "Se ricevono un segnale redstone, le Interfacce stazionarie smetteranno di funzionare",
-
 	"create.ponder.powered_latch.header": "Controllare segnali con un Circuito bi-stato",
 	"create.ponder.powered_latch.text_1": "I Circuiti bi-stato sono leve attivabili con la redstone",
 	"create.ponder.powered_latch.text_2": "Un segnale sul retro lo accende",
 	"create.ponder.powered_latch.text_3": "Un segnale sul lato lo spegne",
 	"create.ponder.powered_latch.text_4": "I Circuiti bi-stato possono anche essere azionati manualmente",
-
 	"create.ponder.powered_toggle_latch.header": "Controllare segnali con un Alternatore redstone",
 	"create.ponder.powered_toggle_latch.text_1": "Gli Alternatori redstone sono leve attivabili con la redstone",
 	"create.ponder.powered_toggle_latch.text_2": "Un segnale sul retro cambia il suo stato",
 	"create.ponder.powered_toggle_latch.text_3": "...on e poi off",
 	"create.ponder.powered_toggle_latch.text_4": "Gli Alternatori possono anche essere azionati manualmente",
-
 	"create.ponder.pulse_extender.header": "Controllare segnali con un Estensore di impulsi",
 	"create.ponder.pulse_extender.text_1": "Gli Estensori di impulsi allungano la durata di un segnale di passaggio",
 	"create.ponder.pulse_extender.text_2": "Si attivano dopo un piccolo ritardo...",
 	"create.ponder.pulse_extender.text_3": "...e rimangono attivi per la durata impostata",
 	"create.ponder.pulse_extender.text_4": "Puoi impostare il timer con la rotellina del mouse",
 	"create.ponder.pulse_extender.text_5": "La durata massima per il timer è di 30 minuti",
-
 	"create.ponder.pulse_repeater.header": "Controllare segnali con un Ripetitore di impulsi",
 	"create.ponder.pulse_repeater.text_1": "I ripetitori di impulsi emettono un piccolo segnale con un ritardo",
 	"create.ponder.pulse_repeater.text_2": "Puoi impostare questo ritardo con la rotellina del mouse",
 	"create.ponder.pulse_repeater.text_3": "La durata massima per il timer è di 30 minuti",
-
 	"create.ponder.radial_chassis.header": "Collegare blocchi usando Telai radiali",
 	"create.ponder.radial_chassis.text_1": "I Telai radiali si connettono automaticamente ad altri telai adiacenti in una linea",
 	"create.ponder.radial_chassis.text_2": "Se uno viene mosso come parte di un Macchinario, tutti gli altri saranno trascinati con esso",
@@ -2749,11 +2519,9 @@
 	"create.ponder.radial_chassis.text_7": "...essa si connetterà a tutti i blocchi raggiungibili entro un raggio su quello strato",
 	"create.ponder.radial_chassis.text_8": "Puoi usare una Chiave a pappagallo per impostare la lunghezza di tale raggio",
 	"create.ponder.radial_chassis.text_9": "I blocchi non raggiungibili da nessuna faccia appiccicosa non si connetteranno",
-
 	"create.ponder.redstone_contact.header": "Contatti redstone",
 	"create.ponder.redstone_contact.text_1": "Due Contatti redstone ruotati l'uno verso l'altro emetteranno un seganle redstone",
 	"create.ponder.redstone_contact.text_2": "Questo rimane vero anche quando uno dei due si muove come parte di un Macchinario",
-
 	"create.ponder.redstone_link.header": "Usare i Connettori redstone",
 	"create.ponder.redstone_link.text_1": "I Connettori redstone possono trasmettere segnali redstone in maniera wireless",
 	"create.ponder.redstone_link.text_2": "Fai click destro da accovacciato per metterli in modalità di ricezione o viceversa",
@@ -2761,20 +2529,16 @@
 	"create.ponder.redstone_link.text_4": "I ricevitori riceveranno i segnali redstone di trasmettitori entro 128 blocchi",
 	"create.ponder.redstone_link.text_5": "Piazzare oggetti nei due slot specifica una frequenza",
 	"create.ponder.redstone_link.text_6": "Solo i connettori con frequenze identiche potranno comunicare tra loro",
-
 	"create.ponder.rope_pulley.header": "Spostare strutture usando una Carrucola per corda",
 	"create.ponder.rope_pulley.text_1": "Le Carrucole per corda muovono i blocchi orizzontalmente quando ricevono forza centrifuga",
 	"create.ponder.rope_pulley.text_2": "La velocità e la direzione in cui si muovono dipende dalla rotazione in entrata",
-
 	"create.ponder.rope_pulley_attachment.header": "Trasportare Carrucole come parte di un Macchinario",
 	"create.ponder.rope_pulley_attachment.text_1": "Se una Carrucola è essa stessa parte di un Macchinario...",
 	"create.ponder.rope_pulley_attachment.text_2": "...le strutture ad essa connesse saranno mosse con lei",
 	"create.ponder.rope_pulley_attachment.text_3": "Ricorda che le carrucole sono trasportabili solo se non attive",
-
 	"create.ponder.rope_pulley_modes.header": "Modalità di movimento della Carrucola per corda",
 	"create.ponder.rope_pulley_modes.text_1": "Quando una Carrucola si ferma, la struttura trasportata si riconverte in blocchi",
 	"create.ponder.rope_pulley_modes.text_2": "Può essere configurata in modo che la struttura non torni mai ad essere blocchi solidi, o a farlo solo al suo punto di partenza",
-
 	"create.ponder.rose_quartz_lamp.header": "Lampade di quarzo rosa",
 	"create.ponder.rose_quartz_lamp.text_1": "Le Lampade di quarzo rosa si attivano con un segnale redstone",
 	"create.ponder.rose_quartz_lamp.text_2": "Dopodiché, continueranno ad emettere loro stesse un segnale redstone",
@@ -2782,51 +2546,41 @@
 	"create.ponder.rose_quartz_lamp.text_4": "...attivare una lampada concentrerà il segnale su di essa, disattivando le altre",
 	"create.ponder.rose_quartz_lamp.text_5": "I comparatori emetteranno un output dipendentemente dalla distanza dalla lampada accesa",
 	"create.ponder.rose_quartz_lamp.text_6": "Le lampade possono anche essere attivate o disattivate manualmente con una Chiave a pappagallo",
-
 	"create.ponder.rotation_speed_controller.header": "Usare il Regolatore di velocità di rotazione",
 	"create.ponder.rotation_speed_controller.text_1": "Un Regolatore di velocità trasposrta la forza centrifuga tra il suo asse e l'Ingranaggio grande sopra di esso",
 	"create.ponder.rotation_speed_controller.text_2": "Usando la rotellina sul suo lato si può configuare la velocità in uscita",
-
 	"create.ponder.sail.header": "Assemblare Mulini a vento con le Vele",
 	"create.ponder.sail.text_1": "Le Vele sono utili blocchi con cui costruire Mulini a vento",
 	"create.ponder.sail.text_2": "Si connettono tra di loro e con blocchi vicini senza alcun bisogno di Super colla o Telai",
 	"create.ponder.sail.text_3": "Fai click destro con un colorante per cambiarne il colore",
 	"create.ponder.sail.text_4": "Fai click destro con delle Cesoie per farle tornare Cornici",
-
 	"create.ponder.sail_frame.header": "Assemblare Mulini a vento con le Cornici di vela",
 	"create.ponder.sail_frame.text_1": "Le Cornici di vela sono utili blocchi con cui costruire Mulini a vento",
 	"create.ponder.sail_frame.text_2": "Si connettono tra di loro e con blocchi vicini senza alcun bisogno di Super colla o Telai",
-
 	"create.ponder.sequenced_gearshift.header": "Controllare la velocità di rotazione con un Cambio sequenziale",
 	"create.ponder.sequenced_gearshift.text_1": "I Cambi sequenziali trasportano la rotazione seguendo una lista di istruzioni",
 	"create.ponder.sequenced_gearshift.text_2": "Fai click destro per aprire la schermata di configurazione",
 	"create.ponder.sequenced_gearshift.text_3": "Al ricevere un segnale redstone, inizierà ad eseguire le istruzioni una alla volta",
 	"create.ponder.sequenced_gearshift.text_4": "Una volta finito, attenderà un nuovo segnale redstone per ricominciare",
 	"create.ponder.sequenced_gearshift.text_5": "Un comparatore redstone può essere usato per leggere il progresso attuale",
-
 	"create.ponder.shaft.header": "Trasportare la forza centrifuga usando le Assi",
 	"create.ponder.shaft.text_1": "Le Assi propagano la rotazione in una linea retta.",
-
 	"create.ponder.shaft_casing.header": "Rivestire le Assi",
 	"create.ponder.shaft_casing.text_1": "Si possono usare Telai di ottone o andesite per decorare le Assi",
-
 	"create.ponder.smart_chute.header": "Filtrare oggetti usando gli Scivoli intelligenti",
 	"create.ponder.smart_chute.text_1": "Gli Scivoli intelligenti sono scivoli verticali con controllo addizionale",
 	"create.ponder.smart_chute.text_2": "Gli oggetti nello slot di filtraggio specificano cosa può essere estratto e trasferito",
 	"create.ponder.smart_chute.text_3": "Usa la rotellina del mouse per specificare la grandezza dello stack da estrarre",
 	"create.ponder.smart_chute.text_4": "Un segnale redstone impedirà agli Scivoli intelligenti di funzionare.",
-
 	"create.ponder.smart_pipe.header": "Controllare i fluidi usando Tubi intelligenti",
 	"create.ponder.smart_pipe.text_1": "I Tubi intelligenti possono aiutare a controllare il flusso di qualsiasi tipo di fluido",
 	"create.ponder.smart_pipe.text_2": "Quando posizionati direttamente alla fonte, possono specificare quale fluido deve essere estratto",
 	"create.ponder.smart_pipe.text_3": "Fai semplicemente click destro sullo slot di filraggio con qualsiasi oggetto contenente il fluido che ti interessa",
 	"create.ponder.smart_pipe.text_4": "Quando posti più avanti in un sistema di Tubi, i Tubi intelligenti lasceranno passare solo il fluido impostato",
-
 	"create.ponder.speedometer.header": "Monitorare informazioni cinetiche con un Tachimetro",
 	"create.ponder.speedometer.text_1": "Il tachimetro mostra la velocità attuale dei componenti a cui è connesso",
 	"create.ponder.speedometer.text_2": "Informazioni più dettagliate sono visibili ai giocatori che indossano Occhiali da ingegnere e che osservano la lancetta",
 	"create.ponder.speedometer.text_3": "Un Comparatore emette un segnale redstone la cui potenza dipende dalle misurazioni del Tachimetro",
-
 	"create.ponder.spout_filling.header": "Riempire oggetti con uno Spruzzatore",
 	"create.ponder.spout_filling.text_1": "Lo Spruzzatore può riempire oggetti posati sotto di esso, purché siano in grado di accettare fluidi",
 	"create.ponder.spout_filling.text_2": "Il contenuto di uno Spruzzatore non può essere modificato manualmente",
@@ -2834,13 +2588,11 @@
 	"create.ponder.spout_filling.text_4": "Gli oggetti in input possono essere posti su una Stazione per oggetti sotto lo Spruzzatore",
 	"create.ponder.spout_filling.text_5": "Se essi sono, invece, trasportati da un Nastro...",
 	"create.ponder.spout_filling.text_6": "Lo Spruzzatore li fermerà e lavorerà automaticamente",
-
 	"create.ponder.stabilized_bearings.header": "Macchinari stabilizzati",
 	"create.ponder.stabilized_bearings.text_1": "Se un Supporto meccanico è esso stesso parte di un Macchinario..",
 	"create.ponder.stabilized_bearings.text_2": "...cercherà in ogni momento di restare dritto",
 	"create.ponder.stabilized_bearings.text_3": "Come sempre, il Supporto si connette al blocco di fronte a sé",
 	"create.ponder.stabilized_bearings.text_4": "Di conseguenza, l'intero sotto-macchinario rimarrà dritto",
-
 	"create.ponder.steam_engine.header": "Installare Motori a vapore",
 	"create.ponder.steam_engine.text_1": "I Motori a vapore possono essere installati su un Serbatoio per fluidi",
 	"create.ponder.steam_engine.text_10": "Lvl 4",
@@ -2855,7 +2607,6 @@
 	"create.ponder.steam_engine.text_7": "Livelli di potenza maggiori richiedono più acqua, spazio e calore",
 	"create.ponder.steam_engine.text_8": "Il livello di potenza della caldaia può essere osservato con gli Occhiali da Ingegnere",
 	"create.ponder.steam_engine.text_9": "Per ogni livello di potenza aggiunto si può far funzionare un Motore in più a pieno regime",
-
 	"create.ponder.steam_whistle.header": "Installare Fischi a vapore",
 	"create.ponder.steam_whistle.text_1": "I Fischi a vapore possono essere connessi ai Serbatoi",
 	"create.ponder.steam_whistle.text_2": "Se il Serbatoio riceve abbastanza calore...",
@@ -2863,18 +2614,15 @@
 	"create.ponder.steam_whistle.text_4": "Installa ulteriori Fischi su di esso per abbassarne l'intonazione",
 	"create.ponder.steam_whistle.text_5": "Scorri tra 3 diverse ottave usando una Chiave a pappagallo",
 	"create.ponder.steam_whistle.text_6": "Gli Occhiali da ingengere possono aiutare a scoprire l'intonazione attuale del Fischio",
-
 	"create.ponder.sticker.header": "Incollare blocchi usando l'Incollatore",
 	"create.ponder.sticker.text_1": "Gli Incollatori sono l'ideale per alterare una struttura con la redstone",
 	"create.ponder.sticker.text_2": "Essi cambiano il loro stato una volta ricevuto un segnare redstone",
 	"create.ponder.sticker.text_3": "Una volta connesso questo Incollatore ad un Macchinario, il blocco si muoverà con esso",
 	"create.ponder.sticker.text_4": "Attivandolo nuovamente, il blocco non sarà più incollato",
-
 	"create.ponder.stressometer.header": "Monitorare informazioni cinetiche con uno Stressometro",
 	"create.ponder.stressometer.text_1": "Lo Stressometro mostra la capacità di stress del sistema cinetico a cui è connesso",
 	"create.ponder.stressometer.text_2": "Informazioni più dettagliate sono visibili ai giocatori che indossano Occhiali da ingegnere che osservano la lancetta",
 	"create.ponder.stressometer.text_3": "Un Comparatore emette un segnale redstone la cui potenza dipende dalle misurazioni dello Stressometro",
-
 	"create.ponder.super_glue.header": "Incollare blocchi con la Super colla",
 	"create.ponder.super_glue.text_1": "La Super colla raggruppa blocchi insieme per renderli un unico Macchinario",
 	"create.ponder.super_glue.text_2": "Fare click destro su due punti terminali crea una nuova area di colla",
@@ -2882,19 +2630,16 @@
 	"create.ponder.super_glue.text_4": "Blocchi adiacenti che fanno parte della stessa area si tireranno l'un l'altro",
 	"create.ponder.super_glue.text_5": "Volumi di colla sovrapposti si muoveranno tutti insieme",
 	"create.ponder.super_glue.text_6": "Normalmente, i blocchi che si appoggiano su altri non richiedono colla",
-
 	"create.ponder.track_chunks.header": "Attraversare chunk non caricati",
 	"create.ponder.track_chunks.text_1": "Le Rotaie funzionano anche al di fuori dei chunk caricati",
 	"create.ponder.track_chunks.text_2": "I treni attraverseranno parti inattive del mondo senza alcun problema",
 	"create.ponder.track_chunks.text_3": "Si fermeranno perfino alle stazioni o ai Semafori rossi",
 	"create.ponder.track_chunks.text_4": "Tuttavia, Trivelle e altri componenti a bordo non funzioneranno",
 	"create.ponder.track_chunks.text_5": "Una volta tornato vicino a un giocatore, il treno riapparirà",
-
 	"create.ponder.track_observer.header": "Individuare Treni",
 	"create.ponder.track_observer.text_1": "Seleziona una Rotaia e poi posiziona l'Osservatore nelle vicinanze",
 	"create.ponder.track_observer.text_2": "L'Osservatore individuerà qualsiasi Treno di passaggio sopra il marcatore",
 	"create.ponder.track_observer.text_3": "Gli Osservatori possono essere filtrati per leggere il carico corrispondente",
-
 	"create.ponder.track_placement.header": "Posizionare Rotaie",
 	"create.ponder.track_placement.text_1": "Le Rotaie sono un nuovo tipo di binari studiati per essere usati dai Treni",
 	"create.ponder.track_placement.text_2": "Per posizionare un insieme di Rotaie in un colpo solo, premi su una Rotaia già esistente",
@@ -2904,12 +2649,10 @@
 	"create.ponder.track_placement.text_6": "Tuttavia, tenendo premuto il pulsante di corsa...",
 	"create.ponder.track_placement.text_7": "...le Rotaie creeranno la curva più larga possibile",
 	"create.ponder.track_placement.text_8": "I materiali nella mano secondaria saranno usati automaticamente come pavimentazione sotto le Rotaie",
-
 	"create.ponder.track_portal.header": "Rotaie e Nether",
 	"create.ponder.track_portal.text_1": "Posizionando delle Rotaie accanto a un Portale del Nether...",
 	"create.ponder.track_portal.text_2": "...esse cercheranno di creare una Rotaia corrispondente dall'altro lato",
 	"create.ponder.track_portal.text_3": "I treni su questa ferrovia potranno ora viaggiare tra le dimensioni",
-
 	"create.ponder.train_assembly.header": "Assemblare Treni",
 	"create.ponder.train_assembly.text_1": "Seleziona una Rotaia e posiziona la Stazione ferroviaria nelle vicinanze",
 	"create.ponder.train_assembly.text_10": "Ogni treno richiede dei Comandi a bordo",
@@ -2926,7 +2669,6 @@
 	"create.ponder.train_assembly.text_7": "Connetti i vari blocchi usando la Super colla",
 	"create.ponder.train_assembly.text_8": "I Treni si muovono più velocemente se trovano del combustibile in un inventario connesso",
 	"create.ponder.train_assembly.text_9": "Il combustibile all'interno dei Container non verrà consumato dal Treno",
-
 	"create.ponder.train_controls.header": "Guidare i Treni",
 	"create.ponder.train_controls.text_1": "I Comandi del treno sono necessari per far funzionare i Treni",
 	"create.ponder.train_controls.text_2": "Una volta assemblato il treno, fai click destro sul blocco per iniziare a guidare",
@@ -2936,7 +2678,6 @@
 	"create.ponder.train_controls.text_6": "I Treni possono essere smontati solo alle Stazioni",
 	"create.ponder.train_controls.text_7": "I Fischi assemblati possono essere azionati con il pulsante di corsa",
 	"create.ponder.train_controls.text_8": "Accovacciati oppure premi di nuovo per fermare il Treno",
-
 	"create.ponder.train_schedule.header": "Usare le Tabelle di marcia",
 	"create.ponder.train_schedule.text_1": "Le Tabelle di marcia permettono di assegnare dei conducenti ai Treni",
 	"create.ponder.train_schedule.text_2": "Fai click destro con l'oggetto in mano per aprire la sua interfaccia",
@@ -2944,18 +2685,15 @@
 	"create.ponder.train_schedule.text_4": "Qualsiasi mob o Bruciatore a blaze presente di fronte ai Comandi di un treno è un conducente valido",
 	"create.ponder.train_schedule.text_5": "Una creatura catturata con un guinzaglio può essere messa a sedere più agevolmente",
 	"create.ponder.train_schedule.text_6": "Le Tabelle di marcia possono essere ritirate in qualsiasi momento",
-
 	"create.ponder.train_signal_placement.header": "Posizionare i Semafori ferroviari",
 	"create.ponder.train_signal_placement.text_1": "Seleziona una Rotaia e posiziona il Semaforo ferroviario nelle vicinanze",
 	"create.ponder.train_signal_placement.text_2": "I Semafori controllano il traffico dei Treni non guidati da giocatori",
 	"create.ponder.train_signal_placement.text_3": "I Treni che seguono una Tabella di marcia non supereranno mai un Semaforo in direzione opposta a quella indicata",
 	"create.ponder.train_signal_placement.text_4": "...a meno che non ci sia un altro Semaforo ruotato nella suddetta direzione.",
 	"create.ponder.train_signal_placement.text_5": "I Tubi di Nixie connessi al Semaforo rendono le luci più facili da vedere",
-
 	"create.ponder.train_signal_redstone.header": "Semafori e redstone",
 	"create.ponder.train_signal_redstone.text_1": "I Semafori possono essere resi forzatamente rossi con un segnale redstone",
 	"create.ponder.train_signal_redstone.text_2": "In contrasto, i Semafori rossi emettono un segnale redstone",
-
 	"create.ponder.train_signal_signaling.header": "Prevenire le collisioni con i Semafori",
 	"create.ponder.train_signal_signaling.text_1": "I Semafori dividono la ferrovia in segmenti",
 	"create.ponder.train_signal_signaling.text_2": "Se un segmento è occupato, a nessun Treno sarà permesso di accedervi",
@@ -2966,26 +2704,22 @@
 	"create.ponder.train_signal_signaling.text_7": "Fermerà qualsiasi Treno che, dopo essere entrato...",
 	"create.ponder.train_signal_signaling.text_8": "...non avrebbe modo di lasciare il segmento immediatamente",
 	"create.ponder.train_signal_signaling.text_9": "Questo permette di tenere i treni in coda al di fuori di un segmento trafficato o una intersezione",
-
 	"create.ponder.valve_handle.header": "Generare Forza centrifuga usando Maniglie per valvola",
 	"create.ponder.valve_handle.text_1": "Le Maniglie per valvola possono essere usate dai giocatori per generare forza centrifuga manualmente",
 	"create.ponder.valve_handle.text_2": "Tieni premuto il pulsante destro per farla ruotare in senso antiorario",
 	"create.ponder.valve_handle.text_3": "La sua velocità di rotazione è lenta e precisa",
 	"create.ponder.valve_handle.text_4": "Tieni premuto il pulsante destro da accovacciato per farla ruotare in senso orario",
 	"create.ponder.valve_handle.text_5": "Le Maniglie per valvola possono essere colorate per motivi estetici",
-
 	"create.ponder.valve_pipe.header": "Controllare i fluidi usando le Valvole",
 	"create.ponder.valve_pipe.text_1": "Le Valvole possono essere usate per controllare la propagazione dei fluidi in un sistema di Tubi",
 	"create.ponder.valve_pipe.text_2": "La loro asse di input definisce se il fluido può passare oppure no",
 	"create.ponder.valve_pipe.text_3": "Dando loro forza centrifuga nella direzione di apertura, le valvole si aprono",
 	"create.ponder.valve_pipe.text_4": "Si possono poi chiudere semplicemente invertendo la rotazione in entrata",
-
 	"create.ponder.water_wheel.header": "Generare forza centrifuga con i Mulini ad acqua",
 	"create.ponder.water_wheel.text_1": "I Mulini ad acqua generano forza centrifuga grazie alle correnti d'acqua ad essi adiacenti",
 	"create.ponder.water_wheel.text_2": "Maggiori le facce a contatto con essi, più veloce sarà la rotazione del mulino",
 	"create.ponder.water_wheel.text_3": "Le lame del mulino dovrebbero sempre essere girate contro il flusso d'acqua",
 	"create.ponder.water_wheel.text_4": "Non saranno altrettanto efficienti se questa condizione non è rispettata",
-
 	"create.ponder.weighted_ejector.header": "Usare gli Espulsori di Pesi",
 	"create.ponder.weighted_ejector.text_1": "Fai click destro da accovacciato con in mano un Espulsore per selezionarne la posizione bersaglio",
 	"create.ponder.weighted_ejector.text_10": "Il componente non si attiverà finché lo stack non raggiunge quel numero di oggetti",
@@ -2998,18 +2732,15 @@
 	"create.ponder.weighted_ejector.text_7": "Piazzare oggetti su di esso lo farà attivare",
 	"create.ponder.weighted_ejector.text_8": "Se il bersaglio è un inventario, l'Espulsore aspetterà che ci sia spazio",
 	"create.ponder.weighted_ejector.text_9": "Scorri con una Chiave a pappagallo per specificare la grandezza dello stack da lanciare",
-
 	"create.ponder.weighted_ejector_redstone.header": "Controllare gli Espulsori di pesi con la redstone",
 	"create.ponder.weighted_ejector_redstone.text_1": "Un segnale redstone impedirà agli Espulsori di funzionare",
 	"create.ponder.weighted_ejector_redstone.text_2": "Inoltre, gli Osservatori possono percepire l'attivazione di un Espulsore",
-
 	"create.ponder.weighted_ejector_tunnel.header": "Dividere gli stack con gli Espulsori di pesi",
 	"create.ponder.weighted_ejector_tunnel.text_1": "Usando i Tunnel di ottone, gli Espulsori possono dividere gli stack in parti specifiche",
 	"create.ponder.weighted_ejector_tunnel.text_2": "Per prima cosa, configura il Tunnel su 'Dai precedenza al più vicino', così da dare priorità al suo output laterale",
 	"create.ponder.weighted_ejector_tunnel.text_3": "La grandezza dello stack dell'Espulsore determinerà il numero di oggetti da estrarre",
 	"create.ponder.weighted_ejector_tunnel.text_4": "All'arrivo di un nuovo stack, l'ammontare scelto uscirà dall'output laterale...",
 	"create.ponder.weighted_ejector_tunnel.text_5": "...mentre il resto proseguirà per la sua strada",
-
 	"create.ponder.windmill_source.header": "Generare forza centrifuga con i Supporti per mulino a vento",
 	"create.ponder.windmill_source.text_1": "I Supporti per mulino a vento si connettono ai blocchi di fronte ad essi",
 	"create.ponder.windmill_source.text_2": "Crea una struttura con l'aiuto della Super colla",
@@ -3018,7 +2749,6 @@
 	"create.ponder.windmill_source.text_5": "La sua velocità dipende dal numero di vele",
 	"create.ponder.windmill_source.text_6": "Usa una Chiave a pappagallo per cambiare la direzione di rotazione",
 	"create.ponder.windmill_source.text_7": "Fai click destro sul Supporto in qualsiasi momento per fermarlo e poter modificare di nuovo la struttura",
-
 	"create.ponder.windmill_structure.header": "Macchinari per Mulini a vento",
 	"create.ponder.windmill_structure.text_1": "Qualsiasi struttura può essere un Mulino a vento valido, purché contenga almeno 8 blocchi che possano essere considerati vele."
 }

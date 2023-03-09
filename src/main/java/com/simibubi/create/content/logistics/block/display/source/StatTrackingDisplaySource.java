@@ -33,7 +33,7 @@ public abstract class StatTrackingDisplaySource extends ScoreboardDisplaySource 
 			scoreboard.addObjective(name, ObjectiveCriteria.DUMMY, getObjectiveDisplayName(), RenderType.INTEGER);
 		Objective objective = scoreboard.getObjective(name);
 
-		sLevel.players()
+		sLevel.getServer().getPlayerList().getPlayers()
 			.forEach(s -> scoreboard.getOrCreatePlayerScore(s.getScoreboardName(), objective)
 				.setScore(updatedScoreOf(s)));
 
