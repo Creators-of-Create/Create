@@ -169,6 +169,8 @@ public class BeltTileEntity extends KineticTileEntity {
 	protected void initializeItemHandler() {
 		if (level.isClientSide || itemHandler.isPresent())
 			return;
+		if (beltLength == 0 || controller == null)
+			return;
 		if (!level.isLoaded(controller))
 			return;
 		BlockEntity te = level.getBlockEntity(controller);
@@ -183,6 +185,8 @@ public class BeltTileEntity extends KineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (!isRemoved() && !itemHandler.isPresent())
+			initializeItemHandler();
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			if (side == Direction.UP || BeltBlock.canAccessFromSide(side, getBlockState())) {
 				return itemHandler.cast();
@@ -192,8 +196,15 @@ public class BeltTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void setRemoved() {
-		super.setRemoved();
+	public void destroy() {
+		super.destroy();
+		if (isController())
+			getInventory().ejectAll();
+	}
+	
+	@Override
+	public void invalidate() {
+		super.invalidate();
 		itemHandler.invalidate();
 	}
 

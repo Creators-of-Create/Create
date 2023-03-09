@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.client.tools.Tools;
@@ -18,6 +19,7 @@ import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
@@ -157,7 +159,15 @@ public class SchematicHandler {
 		BlockPos pos;
 
 		pos = BlockPos.ZERO;
-		schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
+		
+		try {
+			schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
+		} catch (Exception e) {
+			Minecraft.getInstance().player.displayClientMessage(Lang.translate("schematic.error")
+				.component(), false);
+			Create.LOGGER.error("Failed to load Schematic for Previewing", e);
+			return;
+		}
 
 		placementSettings.setMirror(Mirror.FRONT_BACK);
 		pos = BlockPos.ZERO.east(size.getX() - 1);

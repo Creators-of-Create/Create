@@ -128,13 +128,8 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	protected abstract Direction getFacing(BlockState state);
 
 	@Override
-	public void onRemove(BlockState p_196243_1_, Level p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
-		boolean p_196243_5_) {
-		if (p_196243_1_.hasBlockEntity() && (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !isFunnel(p_196243_4_)
-			|| !p_196243_4_.hasBlockEntity())) {
-			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
-			p_196243_2_.removeBlockEntity(p_196243_3_);
-		}
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+		ITE.onRemove(state, world, pos, newState);
 	}
 
 	@Override

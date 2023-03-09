@@ -12,9 +12,9 @@ import java.util.zip.GZIPInputStream;
 
 import javax.annotation.Nonnull;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.schematics.SchematicProcessor;
 import com.simibubi.create.content.schematics.client.SchematicEditScreen;
@@ -53,7 +53,7 @@ import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 
 public class SchematicItem extends Item {
 
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogUtils.getLogger();
 
 	public SchematicItem(Properties properties) {
 		super(properties);

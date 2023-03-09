@@ -2,11 +2,11 @@ package com.simibubi.create;
 
 import java.util.Random;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.curios.Curios;
@@ -29,8 +29,10 @@ import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.command.ServerLagger;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
+import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
+import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
@@ -41,7 +43,6 @@ import com.simibubi.create.foundation.worldgen.AllFeatures;
 import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
 import com.simibubi.create.foundation.worldgen.BuiltinRegistration;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -66,13 +67,19 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5e";
+	public static final String VERSION = "0.5j";
 
-	public static final Logger LOGGER = LogManager.getLogger();
+	public static final Logger LOGGER = LogUtils.getLogger();
 
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
+
+	/** Use the {@link Random} of a local {@link Level} or {@link Entity} or create one */
+	@Deprecated
+	public static final Random RANDOM = new Random();
+
+	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
 
 	public static final CreativeModeTab BASE_CREATIVE_TAB = new CreateItemGroup();
 	public static final CreativeModeTab PALETTES_CREATIVE_TAB = new PalettesItemGroup();
@@ -82,11 +89,6 @@ public class Create {
 	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
 	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
 	public static final ServerLagger LAGGER = new ServerLagger();
-	/** Use the {@link Random} of a local {@link Level} or {@link Entity} or create one */
-	@Deprecated
-	public static final Random RANDOM = new Random();
-
-	private static final NonNullSupplier<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 
 	public Create() {
 		onCtor();
@@ -99,11 +101,13 @@ public class Create {
 			.getModEventBus();
 		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
+		REGISTRATE.registerEventListeners(modEventBus);
+
 		AllSoundEvents.prepare();
+		AllTags.init();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
-		AllTags.register();
 		AllPaletteBlocks.register();
 		AllContainerTypes.register();
 		AllEntityTypes.register();
@@ -138,7 +142,7 @@ public class Create {
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
-		Mods.CURIOS.executeIfInstalled(() -> Curios::init);
+		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus, forgeEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
@@ -155,9 +159,10 @@ public class Create {
 	}
 
 	public static void gatherData(GatherDataEvent event) {
+		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
 		if (event.includeClient()) {
-			gen.addProvider(new LangMerger(gen));
+			gen.addProvider(new LangMerger(gen, ID, "Create", AllLangPartials.values()));
 			gen.addProvider(AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {
@@ -168,10 +173,6 @@ public class Create {
 			ProcessingRecipeGen.registerAll(gen);
 //			AllOreFeatureConfigEntries.gatherData(event);
 		}
-	}
-
-	public static CreateRegistrate registrate() {
-		return REGISTRATE.get();
 	}
 
 	public static ResourceLocation asResource(String path) {

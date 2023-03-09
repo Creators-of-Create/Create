@@ -339,6 +339,9 @@ public class ContraptionCollider {
 			if (surfaceCollision.isTrue()) {
 				contraptionEntity.registerColliding(entity);
 				entity.fallDistance = 0;
+				for (Entity rider : entity.getIndirectPassengers())
+					if (getPlayerType(rider) == PlayerType.CLIENT)
+						AllPackets.channel.sendToServer(new ClientMotionPacket(rider.getDeltaMovement(), true, 0));
 				boolean canWalk = bounce != 0 || slide == 0;
 				if (canWalk || !rotation.hasVerticalRotation()) {
 					if (canWalk)

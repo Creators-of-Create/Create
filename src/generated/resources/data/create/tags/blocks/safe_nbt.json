@@ -25,7 +25,7 @@
     "create:placard",
     "create:pulse_repeater",
     "create:pulse_extender",
-    "#minecraft:signs",
-    "#minecraft:banners"
+    "#minecraft:banners",
+    "#minecraft:signs"
   ]
 }

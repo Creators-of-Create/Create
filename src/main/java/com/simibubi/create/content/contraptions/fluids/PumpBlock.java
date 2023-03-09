@@ -157,11 +157,10 @@ public class PumpBlock extends DirectionalKineticBlock
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
+		boolean blockTypeChanged = !state.is(newState.getBlock());
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasBlockEntity()))
-			world.removeBlockEntity(pos);
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	@Override

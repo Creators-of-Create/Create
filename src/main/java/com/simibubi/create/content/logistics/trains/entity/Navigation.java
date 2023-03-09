@@ -577,6 +577,9 @@ public class Navigation {
 		TrackNode initialNode2 = forward ? startingPoint.node2 : startingPoint.node1;
 		TrackEdge initialEdge = graph.getConnectionsFrom(initialNode1)
 			.get(initialNode2);
+		if (initialEdge == null)
+			return;
+		
 		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
 		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));

@@ -4,6 +4,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
@@ -47,8 +48,9 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 
 	@Override
 	protected void applySettings(ServerPlayer player, TrackTileEntity te) {
+		int verifyDistance = AllConfigs.SERVER.trains.maxTrackPlacementLength.get() * 4;
 		if (!te.getBlockPos()
-			.closerThan(player.blockPosition(), 128)) {
+			.closerThan(player.blockPosition(), verifyDistance)) {
 			Create.LOGGER.warn(player.getScoreboardName() + " too far away from destroyed Curve track");
 			return;
 		}

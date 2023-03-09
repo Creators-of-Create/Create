@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 
 import net.minecraft.core.BlockPos;
@@ -43,6 +44,11 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 			kineticTileEntity.preventSpeedUpdate = 2;
 		}
+	}
+	
+	@Override
+	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+		ITE.onRemove(pState, pLevel, pPos, pNewState);
 	}
 
 	@Override

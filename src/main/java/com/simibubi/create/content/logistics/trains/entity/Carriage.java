@@ -35,6 +35,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -129,7 +130,7 @@ public class Carriage {
 		boolean onTwoBogeys = isOnTwoBogeys();
 		double stress = train.derailed ? 0 : onTwoBogeys ? bogeySpacing - getAnchorDiff() : 0;
 		blocked = false;
-		
+
 		MutableDouble distanceMoved = new MutableDouble(distance);
 		boolean iterateFromBack = distance < 0;
 
@@ -141,7 +142,7 @@ public class Carriage {
 			CarriageBogey bogey = bogeys.get(actuallyFirstBogey);
 			double bogeyCorrection = stress * (actuallyFirstBogey ? 0.5d : -0.5d);
 			double bogeyStress = bogey.getStress();
-			
+
 			for (boolean firstWheel : Iterate.trueAndFalse) {
 				boolean actuallyFirstWheel = firstWheel ^ iterateFromBack;
 				TravellingPoint point = bogey.points.get(actuallyFirstWheel);
@@ -249,8 +250,11 @@ public class Carriage {
 
 			boolean discard =
 				!currentlyTraversedDimensions.isEmpty() && !currentlyTraversedDimensions.contains(entry.getKey());
-			ServerLevel currentLevel = level.getServer()
-				.getLevel(entry.getKey());
+
+			MinecraftServer server = level.getServer();
+			if (server == null)
+				continue;
+			ServerLevel currentLevel = server.getLevel(entry.getKey());
 			if (currentLevel == null)
 				continue;
 
@@ -848,7 +852,7 @@ public class Carriage {
 					train.carriageWaitingForChunks = id;
 					return;
 				}
-				
+
 				if (entity.getPassengers()
 					.stream()
 					.anyMatch(p -> p instanceof Player)
