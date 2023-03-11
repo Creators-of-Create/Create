@@ -20,6 +20,7 @@ import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.IntTag;
@@ -51,13 +52,7 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 
 	@LuaFunction(mainThread = true)
 	public final void disassemble() throws LuaException {
-		GlobalStation station = tile.getStation();
-		if (station == null)
-			throw new LuaException("train station does not exist");
-
-		Train train = station.getPresentTrain();
-		if (train == null)
-			throw new LuaException("there is no train present");
+		Train train = getTrainOrThrow();
 
 		if (!tile.enterAssemblyMode(null))
 			throw new LuaException("could not disassemble train");
@@ -104,41 +99,36 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 	}
 
 	@LuaFunction
-	public final String getTrainName() throws LuaException {
+	public final boolean isTrainImminent() throws LuaException {
 		GlobalStation station = tile.getStation();
 		if (station == null)
 			throw new LuaException("train station does not exist");
 
-		Train train = station.getPresentTrain();
-		if (train == null)
-			throw new LuaException("there is no train present");
-
-		return train.name.getString();
+		return station.getImminentTrain() != null;
 	}
 
 	@LuaFunction
+	public final String getTrainName() throws LuaException {
+		Train train = getTrainOrThrow();
+		return train.name.getString();
+	}
+
+	@LuaFunction(mainThread = true)
 	public final void setTrainName(String name) throws LuaException {
-		GlobalStation station = tile.getStation();
-		if (station == null)
-			throw new LuaException("train station does not exist");
-
-		Train train = station.getPresentTrain();
-		if (train == null)
-			throw new LuaException("there is no train present");
-
+		Train train = getTrainOrThrow();
 		train.name = Components.literal(name);
 		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainEditPacket.TrainEditReturnPacket(train.id, name, train.icon.getId()));
 	}
 
 	@LuaFunction
-	public final CreateLuaTable getSchedule() throws LuaException {
-		GlobalStation station = tile.getStation();
-		if (station == null)
-			throw new LuaException("train station does not exist");
+	public final boolean hasSchedule() throws LuaException {
+		Train train = getTrainOrThrow();
+		return train.runtime.getSchedule() != null;
+	}
 
-		Train train = station.getPresentTrain();
-		if (train == null)
-			throw new LuaException("there is no train present");
+	@LuaFunction
+	public final CreateLuaTable getSchedule() throws LuaException {
+		Train train = getTrainOrThrow();
 
 		Schedule schedule = train.runtime.getSchedule();
 		if (schedule == null)
@@ -149,6 +139,13 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 
 	@LuaFunction(mainThread = true)
 	public final void setSchedule(IArguments arguments) throws LuaException {
+		Train train = getTrainOrThrow();
+		Schedule schedule = Schedule.fromTag(toCompoundTag(new CreateLuaTable(arguments.getTable(0))));
+		boolean autoSchedule = train.runtime.getSchedule() == null || train.runtime.isAutoSchedule;
+		train.runtime.setSchedule(schedule, autoSchedule);
+	}
+
+	private @NotNull Train getTrainOrThrow() throws LuaException {
 		GlobalStation station = tile.getStation();
 		if (station == null)
 			throw new LuaException("train station does not exist");
@@ -157,9 +154,7 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 		if (train == null)
 			throw new LuaException("there is no train present");
 
-		Schedule schedule = Schedule.fromTag(toCompoundTag(new CreateLuaTable(arguments.getTable(0))));
-		boolean autoSchedule = train.runtime.getSchedule() == null || train.runtime.isAutoSchedule;
-		train.runtime.setSchedule(schedule, autoSchedule);
+		return train;
 	}
 
 	private static @NotNull CreateLuaTable fromCompoundTag(CompoundTag tag) throws LuaException {
@@ -173,15 +168,15 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 			return ((NumericTag) tag).getAsByte();
 		else if (type == Tag.TAG_BYTE)
 			return ((NumericTag) tag).getAsByte() != 0;
-		else if (type == Tag.TAG_INT || type == Tag.TAG_LONG)
+		else if (type == Tag.TAG_SHORT || type == Tag.TAG_INT || type == Tag.TAG_LONG)
 			return ((NumericTag) tag).getAsLong();
 		else if (type == Tag.TAG_FLOAT || type == Tag.TAG_DOUBLE)
 			return ((NumericTag) tag).getAsDouble();
 		else if (type == Tag.TAG_STRING)
 			return tag.getAsString();
-		else if (type == Tag.TAG_LIST) {
+		else if (type == Tag.TAG_LIST || type == Tag.TAG_BYTE_ARRAY || type == Tag.TAG_INT_ARRAY || type == Tag.TAG_LONG_ARRAY) {
 			CreateLuaTable list = new CreateLuaTable();
-			ListTag listTag = (ListTag) tag;
+			CollectionTag<?> listTag = (CollectionTag<?>) tag;
 
 			for (int i = 0; i < listTag.size(); i++) {
 				list.put(i + 1, fromNBTTag(null, listTag.get(i)));
