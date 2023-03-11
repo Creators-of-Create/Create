@@ -151,7 +151,7 @@ public class CClient extends ConfigBase {
 
 		static String trains = "Railway related settings";
 		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";
-    static String showTrackGraphOnF3 = "Display nodes and edges of a Railway Network while f3 debug mode is active";
+    	static String showTrackGraphOnF3 = "Display nodes and edges of a Railway Network while f3 debug mode is active";
 
 		static String fluidFog = "Fluid fog settings";
 		static String honeyFogDistance = "How far will honey fog start";
