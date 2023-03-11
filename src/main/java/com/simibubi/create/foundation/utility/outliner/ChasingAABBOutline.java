@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector4f;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.util.Mth;
@@ -29,7 +30,12 @@ public class ChasingAABBOutline extends AABBOutline {
 
 	@Override
 	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
-		renderBB(ms, buffer, interpolateBBs(prevBB, bb, pt));
+		params.loadColor(colorTemp);
+		Vector4f color = colorTemp;
+		int lightmap = params.lightmap;
+		boolean disableLineNormals = params.disableLineNormals;
+
+		renderBox(ms, buffer, interpolateBBs(prevBB, bb, pt), color, lightmap, disableLineNormals);
 	}
 
 	private static AABB interpolateBBs(AABB current, AABB target, float pt) {

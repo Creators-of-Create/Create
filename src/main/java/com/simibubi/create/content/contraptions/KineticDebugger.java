@@ -61,7 +61,11 @@ public class KineticDebugger {
 	}
 
 	public static boolean isActive() {
-		return Minecraft.getInstance().options.renderDebug && AllConfigs.CLIENT.rainbowDebug.get();
+		return isF3DebugModeActive() && AllConfigs.CLIENT.rainbowDebug.get();
+	}
+
+	public static boolean isF3DebugModeActive() {
+		return Minecraft.getInstance().options.renderDebug;
 	}
 
 	public static KineticTileEntity getSelectedTE() {

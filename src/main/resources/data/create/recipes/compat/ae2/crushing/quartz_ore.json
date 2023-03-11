@@ -2,24 +2,28 @@
 	"conditions": [
 		{
 		  "type": "forge:mod_loaded",
-		  "modid": "appliedenergistics2"
+		  "modid": "ae2"
 		}
 	],
     "type": "create:crushing",
     "ingredients": [
     	{
-    		"item": "appliedenergistics2:charged_quartz_ore"
+    		"item": "ae2:quartz_ore"
     	}
     ],
 	"results": [
 		{
-			"item": "appliedenergistics2:charged_certus_quartz_crystal",
-			"count": 2
+			"item": "ae2:certus_quartz_crystal",
+			"count": 1
 		},
 		{
-			"item": "appliedenergistics2:certus_quartz_dust",
+			"item": "ae2:certus_quartz_dust",
+			"count": 4
+		},
+		{
+			"item": "ae2:certus_quartz_dust",
 			"count": 1,
-			"chance": 0.25
+			"chance": 0.5
 		},
 		{
 			"item": "minecraft:cobblestone",

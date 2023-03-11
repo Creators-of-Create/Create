@@ -90,6 +90,11 @@ public class SignalBlock extends Block implements ITE<SignalTileEntity>, IWrench
 		if (pState.getValue(POWERED) && !pLevel.hasNeighborSignal(pPos))
 			pLevel.setBlock(pPos, pState.cycle(POWERED), 2);
 	}
+	
+	@Override
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		ITE.onRemove(state, worldIn, pos, newState);
+	}
 
 	@Override
 	public BlockEntityType<? extends SignalTileEntity> getTileEntityType() {

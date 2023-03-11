@@ -19,19 +19,29 @@ public class Curios {
 		modEventBus.addListener(Curios::onInterModEnqueue);
 		modEventBus.addListener(Curios::onClientSetup);
 
-		GogglesItem.addIsWearingPredicate(player -> player.getCapability(CuriosCapability.INVENTORY).map(handler -> {
-			ICurioStacksHandler stacksHandler = handler.getCurios().get("head");
-			if (stacksHandler != null) {
-				return AllItems.GOGGLES.isIn(stacksHandler.getStacks().getStackInSlot(0));
-			}
-			return false;
-		}).orElse(false));
+		GogglesItem.addIsWearingPredicate(player -> player.getCapability(CuriosCapability.INVENTORY)
+			.map(handler -> {
+				ICurioStacksHandler stacksHandler = handler.getCurios()
+					.get("head");
+				if (stacksHandler == null)
+					return false;
+				int slots = stacksHandler.getSlots();
+				for (int slot = 0; slot < slots; slot++)
+					if (AllItems.GOGGLES.isIn(stacksHandler.getStacks()
+						.getStackInSlot(slot)))
+						return true;
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(CuriosRenderers::onLayerRegister));
+				return false;
+			})
+			.orElse(false));
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			() -> () -> modEventBus.addListener(CuriosRenderers::onLayerRegister));
 	}
 
 	private static void onInterModEnqueue(final InterModEnqueueEvent event) {
-		InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder().build());
+		InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.HEAD.getMessageBuilder()
+			.build());
 	}
 
 	private static void onClientSetup(final FMLClientSetupEvent event) {

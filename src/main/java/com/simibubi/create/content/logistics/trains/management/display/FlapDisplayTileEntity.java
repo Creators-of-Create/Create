@@ -137,7 +137,11 @@ public class FlapDisplayTileEntity extends KineticTileEntity {
 	}
 
 	public void applyTextManually(int lineIndex, String rawComponentText) {
-		FlapDisplayLayout layout = getLines().get(lineIndex);
+		List<FlapDisplayLayout> lines = getLines();
+		if (lineIndex >= lines.size())
+			return;
+		
+		FlapDisplayLayout layout = lines.get(lineIndex);
 		if (!layout.isLayout("Default"))
 			layout.loadDefault(getMaxCharCount());
 		List<FlapDisplaySection> sections = layout.getSections();

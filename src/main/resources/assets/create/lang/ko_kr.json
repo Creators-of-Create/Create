@@ -1,7 +1,5 @@
 {
-
-	"_": "->------------------------]  Game Elements  [------------------------<-",
-
+	"_": "Create를 번역해 주셔서 감사합니다!",
 	"block.create.acacia_window": "아카시아나무 유리창",
 	"block.create.acacia_window_pane": "아카시아나무 유리판 ",
 	"block.create.adjustable_chain_gearshift": "벨트 변속기",
@@ -417,7 +415,7 @@
 	"block.create.rose_quartz_block": "장밋빛 석영 블록",
 	"block.create.rose_quartz_lamp": "장밋빛 석영 조명",
 	"block.create.rose_quartz_tiles": "장밋빛 석영 타일",
-	"block.create.rotation_speed_controller": "회전 속도 컨트롤러",
+	"block.create.rotation_speed_controller": "회전 속도 제어기",
 	"block.create.sail_frame": "풍차 날개 틀",
 	"block.create.schematic_table": "설계도 탁자",
 	"block.create.schematicannon": "설계도 대포",
@@ -562,10 +560,8 @@
 	"block.create.yellow_valve_handle": "노란색 밸브 손잡이",
 	"block.create.zinc_block": "아연 블록",
 	"block.create.zinc_ore": "아연 광석",
-
 	"enchantment.create.capacity": "저장량",
 	"enchantment.create.potato_recovery": "대포알 회수",
-
 	"entity.create.carriage_contraption": "기차 구조물",
 	"entity.create.contraption": "구조물",
 	"entity.create.crafting_blueprint": "조합 청사진",
@@ -574,10 +570,8 @@
 	"entity.create.seat": "좌석",
 	"entity.create.stationary_contraption": "고정된 구조물",
 	"entity.create.super_glue": "강력 접착제",
-
 	"fluid.create.potion": "포션",
 	"fluid.create.tea": "건축가의 차",
-
 	"item.create.andesite_alloy": "안산암 합금",
 	"item.create.attribute_filter": "속성 필터 틀",
 	"item.create.bar_of_chocolate": "초콜릿 바",
@@ -661,14 +655,10 @@
 	"item.create.wrench": "렌치",
 	"item.create.zinc_ingot": "아연 주괴",
 	"item.create.zinc_nugget": "아연 조각",
-
-
-	"_": "->------------------------]  Advancements  [------------------------<-",
-
 	"advancement.create.root": "Create!",
 	"advancement.create.root.desc": "장치가 있으라!",
 	"advancement.create.andesite_alloy": "더 단단한 재료",
-	"advancement.create.andesite_alloy.desc": "안산안 합금을 얻으세요. Create모드의 가장 중요한 자원입니다",
+	"advancement.create.andesite_alloy.desc": "안산암 합금을 얻으세요. Create 모드의 가장 중요한 자원입니다",
 	"advancement.create.andesite_casing": "안산암 시대",
 	"advancement.create.andesite_casing.desc": "안산암 합금을 나무에 붙여 기본적인 케이스를 만드세요",
 	"advancement.create.mechanical_press": "'깡!'",
@@ -696,9 +686,9 @@
 	"advancement.create.windmill": "산들 바람",
 	"advancement.create.windmill.desc": "풍차 베어링을 작동시키세요",
 	"advancement.create.shifting_gears": "기어 변속",
-	"advancement.create.shifting_gears.desc": "크기가 다른 톱니바퀴를 연결하여 장치의 속도를 바꿀 수 있습니다",
+	"advancement.create.shifting_gears.desc": "크기가 다른 톱니바퀴를 연결하면 장치의 속도를 바꿀 수 있습니다",
 	"advancement.create.millstone": "나만의 작은 분쇄기",
-	"advancement.create.millstone.desc": "멧돌을 설치하고 작동시키세요.",
+	"advancement.create.millstone.desc": "맷돌을 설치하고 작동시키세요",
 	"advancement.create.super_glue": "영역 접착",
 	"advancement.create.super_glue.desc": "여러 블록을 한 그룹으로 접착시키세요",
 	"advancement.create.contraption_actors": "목적있는 이동",
@@ -722,11 +712,11 @@
 	"advancement.create.anvil_plough": "대장장이포",
 	"advancement.create.anvil_plough.desc": "쟁기로 모루를 날리세요!",
 	"advancement.create.lava_wheel_00000": "불레바퀴",
-	"advancement.create.lava_wheel_00000.desc": "용암으로 물레바퀴를 회전시키세요..?§7\n(숨겨진 발전과제)",
+	"advancement.create.lava_wheel_00000.desc": "이런 게 작동해서는 안되는데§7\n(숨겨진 발전과제)",
 	"advancement.create.hand_crank_000": "워크아웃 세션",
 	"advancement.create.hand_crank_000.desc": "힘이 빠질때까지 핸드 크랭크를 돌리세요§7\n(숨겨진 발전과제)",
 	"advancement.create.belt_funnel_kiss": "퍼널은 어떻게 태어나?",
-	"advancement.create.belt_funnel_kiss.desc": "두 벨트 퍼널을 만나게하세요. 쪽!",
+	"advancement.create.belt_funnel_kiss.desc": "벨트 위 두 퍼널을 입맞춤시키세요, 쪽!§7\n(숨겨진 발전과제)",
 	"advancement.create.stressometer_maxed": "완벽한 과부하",
 	"advancement.create.stressometer_maxed.desc": "피로도 계측기에서 100% 수치를 확인하세요§7\n(숨겨진 발전과제)",
 	"advancement.create.copper": "더욱 더 단단한 재료",
@@ -818,7 +808,7 @@
 	"advancement.create.extendo_grip_dual": "띠요오오오오오오용!",
 	"advancement.create.extendo_grip_dual.desc": "양손에 외장형 연장 팔을 들어 초월적인 사거리를 가지세요§7\n(숨겨진 발전과제)",
 	"advancement.create.musical_arm": "볼륨 최대로!",
-	"advancement.create.musical_arm.desc": "기계 팔이 주크박스를 작동시키는 것을 보세요.",
+	"advancement.create.musical_arm.desc": "기계 팔이 주크박스를 작동시키는 것을 보세요§7\n(숨겨진 발전과제)",
 	"advancement.create.sturdy_sheet": "가장 단단한 재료",
 	"advancement.create.sturdy_sheet.desc": "분쇄된 흑요석을 제련하여 강판을 제작하세요",
 	"advancement.create.train_casing_00": "물류 시대",
@@ -853,13 +843,8 @@
 	"advancement.create.train_crash.desc": "탑승객인 상태에서 기차 충돌을 관찰하세요§7\n(숨겨진 발전과제)",
 	"advancement.create.train_crash_backwards": "사각지대",
 	"advancement.create.train_crash_backwards.desc": "후진하는 동안 다른 기차와 부딪히세요§7\n(숨겨진 발전과제)",
-
-
-	"_": "->------------------------]  UI & Messages  [------------------------<-",
-
 	"itemGroup.create.base": "Create",
 	"itemGroup.create.palettes": "Create 건축 블록",
-
 	"death.attack.create.crush": "%1$s이(가) 분쇄 휠로 가공되었습니다",
 	"death.attack.create.crush.player": "%1$s이(가) %2$s 때문에 분쇄 휠에서 가공되었습니다",
 	"death.attack.create.fan_fire": "%1$s이(가) 뜨거운 바람에 익어버렸습니다",
@@ -875,17 +860,14 @@
 	"death.attack.create.cuckoo_clock_explosion": "%1$s이(가) 조작된 뻐꾸기 시계에 의해 폭파당했습니다",
 	"death.attack.create.cuckoo_clock_explosion.player": "%1$s이(가) 조작된 뻐꾸기 시계에 의해 폭파당했습니다",
 	"death.attack.create.run_over": "%1$s이(가) %2$s 때문에 깔렸습니다",
-
 	"create.block.deployer.damage_source_name": "기계 손",
 	"create.block.cart_assembler.invalid": "수레 조립기를 레일 위에 설치하세요",
-
 	"create.menu.return": "메뉴로 돌아가기",
 	"create.menu.configure": "설정...",
 	"create.menu.ponder_index": "분석 메뉴",
 	"create.menu.only_ingame": "일시 정지 메뉴에서 가능합니다",
 	"create.menu.report_bugs": "버그 제보하기",
 	"create.menu.support": "후원하기",
-
 	"create.recipe.crushing": "분쇄",
 	"create.recipe.milling": "제분",
 	"create.recipe.fan_washing": "세척",
@@ -929,7 +911,6 @@
 	"create.recipe.heat_requirement.none": "열이 필요하지 않음",
 	"create.recipe.heat_requirement.heated": "가열됨",
 	"create.recipe.heat_requirement.superheated": "초고온 가열됨",
-
 	"create.generic.range": "범위",
 	"create.generic.radius": "반지름",
 	"create.generic.width": "폭",
@@ -957,45 +938,37 @@
 	"create.generic.in_quotes": "\"%1$s\"",
 	"create.generic.pitch": "음계: %1$s",
 	"create.generic.notes": "F#;F;E;D#;D;C#;C;B;A#;A;G#;G",
-
 	"create.action.scroll": "스크롤하세요",
 	"create.action.confirm": "확인",
 	"create.action.abort": "중단",
 	"create.action.saveToFile": "저장",
 	"create.action.discard": "삭제",
-
 	"create.keyinfo.toolmenu": "메뉴 세부정보 보기",
 	"create.keyinfo.toolbelt": "근처 공구상자 열기",
 	"create.keyinfo.scrollup": "마우스 휠을 위로 이동 (인게임에서)",
 	"create.keyinfo.scrolldown": "마우스 휠을 아래로 이동 (인게임에서)",
-
 	"create.gui.scrollInput.defaultTitle": "옵션을 선택하세요:",
 	"create.gui.scrollInput.scrollToModify": "스크롤로 수정하기",
 	"create.gui.scrollInput.scrollToAdjustAmount": "스크롤로 수량 조절하기",
 	"create.gui.scrollInput.scrollToSelect": "스크롤로 선택",
-	"create.gui.scrollInput.shiftScrollsFaster": "쉬프트-스크롤로 빨리 수정하기",
+	"create.gui.scrollInput.shiftScrollsFaster": "Shift-스크롤로 빨리 수정",
 	"create.gui.toolmenu.focusKey": "[%1$s]을(를) 눌러 세부정보 보기",
 	"create.gui.toolmenu.cycle": "스크롤로 순환",
-
 	"create.toolbox.unequip": "되돌리기: %1$s",
 	"create.toolbox.outOfRange": "현재 아이템이 들어있는 공구상자와 너무 멀리 있습니다",
 	"create.toolbox.detach": "공구상자와 연결 끊기",
 	"create.toolbox.depositAll": "근처 공구상자로 모든 아이템 되돌리기",
 	"create.toolbox.depositBox": "공구상자로 아이템 되돌리기",
-
 	"create.gui.symmetryWand.mirrorType": "거울의 형태",
 	"create.gui.symmetryWand.orientation": "거울의 방향",
-
 	"create.symmetry.mirror.plane": "거울",
 	"create.symmetry.mirror.doublePlane": "사각형",
 	"create.symmetry.mirror.triplePlane": "팔각형",
-
 	"create.orientation.orthogonal": "수직으로",
 	"create.orientation.diagonal": "대각선으로",
 	"create.orientation.horizontal": "수평으로",
 	"create.orientation.alongZ": "Z좌표를 따라",
 	"create.orientation.alongX": "X좌표를 따라",
-
 	"create.gui.terrainzapper.title": "크리에이티브 세계편집기",
 	"create.gui.terrainzapper.searchDiagonal": "대각선 블록 포함",
 	"create.gui.terrainzapper.searchFuzzy": "물질 경계 무시",
@@ -1023,17 +996,14 @@
 	"create.gui.terrainzapper.tool.clear": "지우기",
 	"create.gui.terrainzapper.tool.overlay": "덮어씌우기",
 	"create.gui.terrainzapper.tool.flatten": "다듬기",
-
-	"create.terrainzapper.shiftRightClickToSet": "쉬프트-우클릭으로 모양 설정하기",
+	"create.terrainzapper.shiftRightClickToSet": "웅크리고 우클릭으로 모양을 설정하세요",
 	"create.terrainzapper.usingBlock": "사용 중: %1$s",
 	"create.terrainzapper.leftClickToSet": "좌클릭으로 재료로 쓸 블록을 선택하세요",
-
 	"create.minecart_coupling.two_couplings_max": "광산 수레는 최대 2개의 커플링만 가질 수 있습니다",
 	"create.minecart_coupling.unloaded": "열차 일부분이 로딩되지 않은 청크에 있는 것 같습니다",
 	"create.minecart_coupling.no_loops": "커플링은 반복할 수 없습니다",
 	"create.minecart_coupling.removed": "광산 수레에서 모든 커플링을 제거했습니다",
 	"create.minecart_coupling.too_far": "광산 수레들이 너무 멀리 떨어져 있습니다",
-
 	"create.contraptions.movement_mode": "이동 설정",
 	"create.contraptions.movement_mode.move_place": "멈췄을 때 항상 구조물을 설치함",
 	"create.contraptions.movement_mode.move_place_returned": "멈췄을 때 시작 위치에서만 구조물을 설치함",
@@ -1050,7 +1020,6 @@
 	"create.contraptions.clockwork.hour_first": "시침 먼저",
 	"create.contraptions.clockwork.minute_first": "분침 먼저",
 	"create.contraptions.clockwork.hour_first_24": "시침 먼저 (24시간 단위)",
-
 	"create.logistics.filter": "필터",
 	"create.logistics.recipe_filter": "조합법 필터",
 	"create.logistics.fluid_filter": "액체 필터",
@@ -1059,7 +1028,6 @@
 	"create.logistics.filter.apply": "%1$s에 필터를 적용했습니다",
 	"create.logistics.filter.apply_click_again": "%1$s에 필터를 적용했습니다. 다시 클릭하면 가지고 있는 아이템의 수량을 복사하여 필터에 적용합니다",
 	"create.logistics.filter.apply_count": "필터에 수량을 적용했습니다",
-
 	"create.gui.goggles.generator_stats": "동력 상태:",
 	"create.gui.goggles.kinetic_stats": "작동 상태:",
 	"create.gui.goggles.at_current_speed": "현재 에너지량",
@@ -1107,18 +1075,17 @@
 	"create.gui.sequenced_gearshift.speed.forward_fast": "입력 속도의 2배, 그대로 회전",
 	"create.gui.sequenced_gearshift.speed.back": "입력 속도, 반대로 회전",
 	"create.gui.sequenced_gearshift.speed.back_fast": "입력 속도의 2배, 반대로 회전",
-
 	"create.schematicAndQuill.dimensions": "설계도 크기: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "첫 번째 위치를 설정했습니다",
 	"create.schematicAndQuill.secondPos": "두 번째 위치를 설정했습니다",
-	"create.schematicAndQuill.noTarget": "[Ctrl]을(를) 누르면 허공을 선택할 수 있습니다",
+	"create.schematicAndQuill.noTarget": "[Ctrl]을 누르면 허공을 선택할 수 있습니다",
 	"create.schematicAndQuill.abort": "위치 설정을 제거했습니다",
 	"create.schematicAndQuill.title": "설계도 이름:",
 	"create.schematicAndQuill.convert": "저장하고 즉시 적용",
 	"create.schematicAndQuill.fallbackName": "내 설계도",
 	"create.schematicAndQuill.saved": "%1$s(으)로 저장했습니다",
-
 	"create.schematic.invalid": "[!] 없는 아이템 - 설계도 테이블을 이용하세요",
+	"create.schematic.error": "설계도를 불러오는데 실패했습니다 - 게임 로그를 확인하세요",
 	"create.schematic.position": "위치",
 	"create.schematic.rotation": "회전",
 	"create.schematic.rotation.none": "없음",
@@ -1141,29 +1108,18 @@
 	"create.schematic.tool.deploy.description.3": "[Ctrl]을 누르고 스크롤하면 거리를 변경합니다.",
 	"create.schematic.tool.move.description.0": "설계도를 수평 이동합니다.",
 	"create.schematic.tool.move.description.1": "설계도를 바라보며 [CTRL]을 누르고 스크롤하면 설계도를 밀어냅니다.",
-	"create.schematic.tool.move.description.2": "",
-	"create.schematic.tool.move.description.3": "",
 	"create.schematic.tool.movey.description.0": "설계도를 수직 이동시킵니다.",
 	"create.schematic.tool.movey.description.1": "설계도를 보고 [CTRL]-스크롤로 밉니다.",
-	"create.schematic.tool.movey.description.2": "",
-	"create.schematic.tool.movey.description.3": "",
 	"create.schematic.tool.rotate.description.0": "설계도를 돌립니다.",
 	"create.schematic.tool.rotate.description.1": "[CTRL]-스크롤로 90도 돌립니다.",
-	"create.schematic.tool.rotate.description.2": "",
-	"create.schematic.tool.rotate.description.3": "",
 	"create.schematic.tool.print.description.0": "구조물을 즉시 설치합니다.",
 	"create.schematic.tool.print.description.1": "[우클릭]으로 현재 지점에 설치합니다.",
 	"create.schematic.tool.print.description.2": "이 도구는 크리에이티브 모드 전용입니다.",
-	"create.schematic.tool.print.description.3": "",
 	"create.schematic.tool.flip.description.0": "당신이 보는 면으로 설계도를 뒤집습니다.",
 	"create.schematic.tool.flip.description.1": "설계도를 보고 [CTRL]-스크롤로 뒤집습니다.",
-	"create.schematic.tool.flip.description.2": "",
-	"create.schematic.tool.flip.description.3": "",
-
 	"create.schematics.synchronizing": "동기화 중...",
 	"create.schematics.uploadTooLarge": "설계도가 너무 큽니다!.",
 	"create.schematics.maxAllowedSize": "최대 설계도 파일 크기:",
-
 	"create.gui.schematicTable.refresh": "파일 새로고침",
 	"create.gui.schematicTable.open_folder": "폴더 열기",
 	"create.gui.schematicTable.title": "설계도 테이블",
@@ -1194,7 +1150,6 @@
 	"create.gui.schematicannon.option.replaceWithSolid.description": "대포가 작업구역의 온전한 블록을 대포가 가진 재료로 대체합니다.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "대포가 작업구역의 온전한 블록을 대포가 가진 어떠한 재료로든 대체합니다.",
 	"create.gui.schematicannon.option.replaceWithEmpty.description": "대포가 작업구역의 블록들을 제거합니다.",
-
 	"create.schematicannon.status.idle": "휴식",
 	"create.schematicannon.status.ready": "준비됨",
 	"create.schematicannon.status.running": "작동 중",
@@ -1212,10 +1167,10 @@
 	"create.schematicannon.status.schematicInvalid": "설계도 없음",
 	"create.schematicannon.status.schematicNotPlaced": "설계도가 전개되지 않음",
 	"create.schematicannon.status.schematicExpired": "설계도 파일이 제거됨",
-
+	"create.schematicannon.status.schematicErrored": "호환되지 않는 블록",
+	"create.schematicannon.status.schematicErroredCheckLogs": "서버 로그를 확인하세요",
 	"create.materialChecklist": "재료 목록",
 	"create.materialChecklist.blocksNotLoaded": "* 경고 *\n\n관련된 청크가 불러와지지 않아 재료 목록이 부정확할 수 있습니다.",
-
 	"create.gui.filter.deny_list": "블랙리스트",
 	"create.gui.filter.deny_list.description": "위에 등록된 아이템은 통과할 수 없습니다. 빈 블랙리스트는 모든 아이템을 통과시킵니다.",
 	"create.gui.filter.allow_list": "화이트리스트",
@@ -1224,7 +1179,6 @@
 	"create.gui.filter.respect_data.description": "위 목록 아이템의 내구도, 마법부여, 그리고 다른 NBT와 일치할 때 통과시킵니다.",
 	"create.gui.filter.ignore_data": "상세정보 무시",
 	"create.gui.filter.ignore_data.description": "상세정보와 상관없이 아이템 종류만 일치한다면 통과시킵니다.",
-
 	"create.item_attributes.placeable": "설치할 수 있음",
 	"create.item_attributes.placeable.inverted": "설치할 수 없음",
 	"create.item_attributes.consumable": "먹을 수 있음",
@@ -1259,7 +1213,7 @@
 	"create.item_attributes.smokable.inverted": "훈연될 수 없음",
 	"create.item_attributes.blastable": "용광로에 녹일 수 있음",
 	"create.item_attributes.blastable.inverted": "용광로에 녹일 수 없음",
-  "create.item_attributes.compostable": "퇴비로 쓸 수 있음",
+	"create.item_attributes.compostable": "퇴비로 쓸 수 있음",
 	"create.item_attributes.compostable.inverted": "퇴비로 쓸 수 없음",
 	"create.item_attributes.shulker_level": "셜커가 %1$s 있음",
 	"create.item_attributes.shulker_level.inverted": "셜커가 %1$s 있지 않음",
@@ -1298,7 +1252,6 @@
 	"create.item_attributes.astralsorcery_crystal.inverted": "%1$s 수정 속성을 가지고 있지 않음",
 	"create.item_attributes.astralsorcery_perk_gem": "%1$s 퍽 속성을 가짐",
 	"create.item_attributes.astralsorcery_perk_gem.inverted": "%1$s 퍽 속성을 가지고 있지 않음",
-
 	"create.gui.attribute_filter.no_selected_attributes": "속성이 선택되지 않음",
 	"create.gui.attribute_filter.selected_attributes": "선택된 속성:",
 	"create.gui.attribute_filter.add_attribute": "리스트에 속성을 추가합니다",
@@ -1310,7 +1263,6 @@
 	"create.gui.attribute_filter.deny_list": "블랙리스트",
 	"create.gui.attribute_filter.deny_list.description": "아이템이 선택된 속성이 없다면 통과시킵니다.",
 	"create.gui.attribute_filter.add_reference_item": "참고할 아이템을 추가하기",
-
 	"create.tooltip.holdForDescription": "[%1$s]을(를) 눌러 설명 보기",
 	"create.tooltip.holdForControls": "[%1$s]을(를) 눌러 조작법 보기",
 	"create.tooltip.keyShift": "Shift",
@@ -1332,24 +1284,19 @@
 	"create.tooltip.capacityProvided.high": "큼",
 	"create.tooltip.generationSpeed": "%1$s %2$s만큼 발전함",
 	"create.tooltip.analogStrength": "레드스톤 출력: %1$s/15",
-
 	"create.mechanical_arm.extract_from": "%1$s을(를) 입력구로 설정했습니다",
 	"create.mechanical_arm.deposit_to": "%1$s을(를) 출력구로 설정했습니다",
 	"create.mechanical_arm.summary": "이 기계식 팔은 %1$s개의 입력구와 %2$s개의 출력구가 있습니다",
 	"create.mechanical_arm.points_outside_range": "범위 제한으로 인해 %1$s개의 선택된 지점이 해제되었습니다",
-
 	"create.weighted_ejector.target_set": "투척 지점이 설정되었습니다",
 	"create.weighted_ejector.target_not_valid": "인접한 블록에 발사합니다 (투척 지점이 올바르지 않습니다)",
 	"create.weighted_ejector.no_target": "인접한 블록에 발사합니다 (투척 지점이 설정되지 않았습니다)",
 	"create.weighted_ejector.targeting": "[%1$s,%2$s,%3$s]에 투척합니다",
 	"create.weighted_ejector.stack_size": "투척하는 아이템의 수량",
-
 	"create.logistics.when_multiple_outputs_available": "여러 출력구가 있을 때",
-
 	"create.mechanical_arm.selection_mode.round_robin": "돌아가며 처리",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "돌아가며 처리(강제적)",
 	"create.mechanical_arm.selection_mode.prefer_first": "설정 순서 우선시",
-
 	"create.tunnel.selection_mode.split": "분할",
 	"create.tunnel.selection_mode.forced_split": "분할(강제적)",
 	"create.tunnel.selection_mode.round_robin": "순서대로 처리",
@@ -1357,7 +1304,6 @@
 	"create.tunnel.selection_mode.prefer_nearest": "가장 가까운 곳",
 	"create.tunnel.selection_mode.randomize": "무작위",
 	"create.tunnel.selection_mode.synchronize": "입력 동기화",
-
 	"create.tooltip.chute.header": "슈트 정보",
 	"create.tooltip.chute.items_move_down": "아이템이 아래로 이동",
 	"create.tooltip.chute.items_move_up": "아이템이 위로 이동",
@@ -1367,20 +1313,18 @@
 	"create.tooltip.chute.fans_pull_up": "선풍기가 위에서 당김",
 	"create.tooltip.chute.fans_pull_down": "선풍기가 아래에서 당김",
 	"create.tooltip.chute.contains": "들어있는 아이템: %1$s x%2$s",
-	"create.tooltip.brass_tunnel.contains": "분배 중인 아이템:",
 	"create.tooltip.deployer.header": "기계손 정보",
 	"create.tooltip.deployer.using": "모드: 사용",
 	"create.tooltip.deployer.punching": "모드: 공격",
 	"create.tooltip.deployer.contains": "아이템: %1$s x%2$s",
+	"create.tooltip.brass_tunnel.contains": "분배 중인 아이템:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "우클릭하여 회수",
-
 	"create.linked_controller.bind_mode": "연결 모드 활성화",
 	"create.linked_controller.press_keybind": "%1$s, %2$s, %3$s, %4$s, %5$s, %6$s 중 하나를 눌러 이 주파수를 해당 조작키에 연결하세요",
 	"create.linked_controller.key_bound": "%1$s에 주파수가 연결되었습니다",
 	"create.linked_controller.frequency_slot_1": "조작키: %1$s, 주파수 #1",
 	"create.linked_controller.frequency_slot_2": "조작키: %1$s, 주파수 #2",
-
 	"create.crafting_blueprint.crafting_slot": "재료 슬롯",
 	"create.crafting_blueprint.filter_items_viable": "필터도 가능합니다",
 	"create.crafting_blueprint.display_slot": "전시 슬롯",
@@ -1388,11 +1332,9 @@
 	"create.crafting_blueprint.manually_assigned": "직접 지정함",
 	"create.crafting_blueprint.secondary_display_slot": "두번째 전시 슬롯",
 	"create.crafting_blueprint.optional": "추가적",
-
 	"create.potato_cannon.ammo.attack_damage": "%1$s 공격 피해",
 	"create.potato_cannon.ammo.reload_ticks": "%1$s 재장전 틱",
 	"create.potato_cannon.ammo.knockback": "%1$s 밀쳐내는 거리",
-
 	"create.hint.hose_pulley.title": "무한 공급",
 	"create.hint.hose_pulley": "해당 액체는 _무한_합니다.",
 	"create.hint.mechanical_arm_no_targets.title": "목표 없음",
@@ -1401,13 +1343,10 @@
 	"create.hint.empty_bearing": "_맨 손_으로 베어링을 _우클릭_하여 구조물을 _부착_하세요.",
 	"create.hint.full_deployer.title": "기계 손 아이템 과적",
 	"create.hint.full_deployer": "이 _기계 손_은 _배출_할 아이템을 가지고 있습니다. 호퍼 , 퍼널 등을 이용해 아이템을 빼내세요.",
-
 	"create.backtank.low": "산소통 기압이 낮습니다",
 	"create.backtank.depleted": "산소통 기압이 모두 소진되었습니다",
-
 	"create.hint.derailed_train.title": "선로을 벗어난 기차",
 	"create.hint.derailed_train": "이 _기차_아래에 선로이 없는 것 같습니다. _렌치_로 _우클릭_해서 근처 선로으로 옮기세요.",
-
 	"create.boiler.status": "보일러 상태:  %1$s",
 	"create.boiler.status_short": "보일러:  %1$s",
 	"create.boiler.passive": "작동중",
@@ -1422,7 +1361,6 @@
 	"create.boiler.heat_dots": "....... ",
 	"create.boiler.via_one_engine": "엔진 1개",
 	"create.boiler.via_engines": "엔진 %1$s개",
-
 	"create.gui.schedule.lmb_edit": "좌클릭으로 수정",
 	"create.gui.schedule.rmb_remove": "우클릭으로 삭제",
 	"create.gui.schedule.duplicate": "복제",
@@ -1432,7 +1370,6 @@
 	"create.gui.schedule.move_down": "아래로 이동",
 	"create.gui.schedule.add_condition": "조건 추가",
 	"create.gui.schedule.alternative_condition": "대체 조건 추가",
-
 	"create.schedule.instruction_type": "다음 행동:",
 	"create.schedule.instruction.editor": "설명 편집기",
 	"create.schedule.instruction.destination": "정거장으로 이동",
@@ -1484,6 +1421,7 @@
 	"create.schedule.condition.threshold.equal": "다음과 동일하면",
 	"create.schedule.condition.threshold.x_units_of_item": "%3$s %1$s %2$s",
 	"create.schedule.condition.threshold.matching_content": "내용물 일치",
+	"create.schedule.condition.threshold.anything": "아무 아이템",
 	"create.schedule.condition.threshold.item_measure": "아이템 단위",
 	"create.schedule.condition.threshold.items": "개",
 	"create.schedule.condition.threshold.stacks": "스택",
@@ -1491,6 +1429,7 @@
 	"create.schedule.condition.threshold.status": "저장소: %1$s/%2$s %3$s",
 	"create.schedule.condition.threshold.place_item": "기준 아이템",
 	"create.schedule.condition.threshold.place_item_2": "필터를 사용할 수 있음",
+	"create.schedule.condition.threshold.place_item_3": "아무 아이템을 기준으로 하려면 비우세요",
 	"create.schedule.condition.fluid_threshold": "액체 저장소 조건",
 	"create.schedule.condition.item_threshold": "아이템 저장소 조건",
 	"create.schedule.condition.redstone_link": "레드스톤 링크",
@@ -1523,7 +1462,6 @@
 	"create.schedule.removed_from_train": "기차에서 계획표를 회수했습니다",
 	"create.schedule.no_stops": "이 계획표는 정거장이 등록되지 않습니다",
 	"create.schedule.continued": "계획표를 진행합니다",
-
 	"create.track.selection_cleared": "선택이 해제되었습니다",
 	"create.track.valid_connection": "연결할 수 있습니다 ✔",
 	"create.track.second_point": "선로를 설치하거나 두번째 지점을 선택하세요",
@@ -1542,11 +1480,9 @@
 	"create.track.turn_start": "곡선에서 시작할 수 없습니다",
 	"create.track.not_enough_tracks": "선로이 부족합니다",
 	"create.track.not_enough_pavement": "기반 블록이 부족합니다",
-
 	"create.portal_track.failed": "차원간 선로를 설치할 수 없습니다:",
 	"create.portal_track.missing": "대상 차원문이 아직 생성되지 않았습니다",
 	"create.portal_track.blocked": "대상 좌표가 가로막혔습니다 (%1$s,%2$s,%3$s)",
-
 	"create.station.idle": "정거장이 휴식중입니다",
 	"create.station.assembly_title": "기차 조립",
 	"create.station.close": "창 닫기",
@@ -1565,14 +1501,13 @@
 	"create.station.train_not_aligned": "모든 객실이 일직선상에 없어",
 	"create.station.train_not_aligned_1": "해체할 수 없습니다",
 	"create.station.carriage_number": "%1$s번 객실:",
-	"create.station.retry": "이 문제를 해결하고 다시 시도해보세요",
+	"create.station.retry": "이 문제를 해결하고 다시 시도해 보세요",
 	"create.station.no_bogeys": "대차 없음",
 	"create.station.one_bogey": "대차 1개",
 	"create.station.more_bogeys": "대차 %1$s개",
 	"create.station.how_to": "하이라이트된 선로에 기차 케이스를 설치하여 대차를 생성하세요.",
 	"create.station.how_to_1": "대차를 제거하려면 윗 블록을 파괴하세요.",
 	"create.station.how_to_2": "객실은 1~2개의 대차를 이어 만들 수 있습니다.",
-
 	"create.train_assembly.too_many_bogeys": "대차가 너무 많이 연결되었습니다: %1$s개",
 	"create.train_assembly.frontmost_bogey_at_station": "가장 앞의 대차는 정거장 발판에 있어야합니다",
 	"create.train_assembly.no_bogeys": "대차가 없습니다",
@@ -1584,7 +1519,6 @@
 	"create.train_assembly.sideways_controls": "조종기가 측면을 바라보고 있습니다",
 	"create.train_assembly.bogey_created": "대차가 생성되었습니다. 선로를 클릭하여 모양을 변경할 수 있습니다",
 	"create.train_assembly.requires_casing": "기차 케이스를 이용해 선로에 대차를 생성하세요",
-
 	"create.track_target.set": "선로가 선택되었습니다",
 	"create.track_target.success": "성공적으로 선택된 선로와 연결되었습니다",
 	"create.track_target.clear": "선로 선택을 해제했습니다",
@@ -1593,7 +1527,6 @@
 	"create.track_target.no_junctions": "교차로 선로는 선택할 수 없습니다",
 	"create.track_target.occupied": "해당 선로는 사용중입니다",
 	"create.track_target.invalid": "이 선로를 선택할 수 없습니다",
-
 	"create.train.unnamed": "이름없는 기차",
 	"create.train.cannot_relocate_moving": "움직이는 기차를 옮길 수 없습니다",
 	"create.train.relocate": "%1$s을(를) 놓을 선로를 클릭하세요. 쉬프트 우클릭으로 취소합니다",
@@ -1618,20 +1551,17 @@
 	"create.train.status.navigation_success": "이동에 성공했습니다",
 	"create.train.status.no_match": "그래프에 '%1$s'와 일치하는 정거장이 없습니다",
 	"create.train.status.no_path": "다음 목적지로 가는 길을 찾을 수 없습니다",
-
 	"create.track_signal.cannot_change_mode": "이 신호기의 모드를 변경할 수 없습니다",
 	"create.track_signal.mode_change.entry_signal": "-> 구역이 사용중이 아니면 통과 가능",
 	"create.track_signal.mode_change.cross_signal": "-> 구역을 온전히 횡단가능하면 통과 가능",
-
 	"create.contraption.controls.start_controlling": "%1$s을(를) 조종합니다",
 	"create.contraption.controls.stop_controlling": "구조물 조종을 멈췄습니다",
 	"create.contraption.controls.approach_station": "%1$s을(를) 눌러 %2$s에 접근합니다",
-
 	"create.display_link.set": "표시할 대상을 선택했습니다",
 	"create.display_link.success": "성공적으로 대상과 연결되었습니다",
 	"create.display_link.clear": "대상 선택을 해제했습니다",
 	"create.display_link.too_far": "이곳은 대상과 너무 멉니다",
-	"create.display_link.invalid": "연결된 대상이 없습니다. 다시 시도해보세요",
+	"create.display_link.invalid": "연결된 대상이 없습니다. 다시 시도해 보세요",
 	"create.display_link.title": "디스플레이 링크",
 	"create.display_link.no_source": "디스플레이 정보 수집 대상이 아님",
 	"create.display_link.no_target": "디스플레이 정보 표시 대상이 아님",
@@ -1643,7 +1573,6 @@
 	"create.display_link.information_type": "정보 종류",
 	"create.display_link.display_on": "정보 쓰기 위치",
 	"create.display_link.display_on_multiline": "다음 위치에서 쓰기 시작:",
-
 	"create.display_source.label": "접두사",
 	"create.display_source.combine_item_names": "아이템 이름",
 	"create.display_source.count_items": "필터에 맞는 아이템 양",
@@ -1704,11 +1633,9 @@
 	"create.display_source.redstone_power.progress_bar": "진행도",
 	"create.display_source.boiler.not_enough_space": "보일러 상태를 표시할",
 	"create.display_source.boiler.for_boiler_status": "공간이 부족함",
-
 	"create.display_target.line": "%1$s번째 줄",
 	"create.display_target.page": "%1$s번째 쪽",
 	"create.display_target.single_line": "단일 줄",
-
 	"create.flap_display.cycles.alphabet": " ;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;X;Y;Z",
 	"create.flap_display.cycles.numeric": " ;0;1;2;3;4;5;6;7;8;9",
 	"create.flap_display.cycles.arrival_time": "   ; 분;잠시후;15초;30초;45초",
@@ -1716,7 +1643,6 @@
 	"create.flap_display.cycles.fluid_units": "mB;B ",
 	"create.flap_display.cycles.instant": " ; ",
 	"create.flap_display.cycles.pixel": "█;▓;▒",
-
 	"create.super_glue.too_far": "선택된 영역이 너무 큽니다",
 	"create.super_glue.cannot_reach": "선택된 블록은 붙어있어야 합니다",
 	"create.super_glue.click_to_confirm": "다시 클릭하여 확인합니다",
@@ -1725,30 +1651,25 @@
 	"create.super_glue.abort": "선택을 제거했습니다",
 	"create.super_glue.not_enough": "인벤토리에 접착제가 부족합니다",
 	"create.super_glue.success": "접착하는 중...",
-
-	"create.gui.config.overlay1": "Hi :)",
-	"create.gui.config.overlay2": "This is a sample overlay",
-	"create.gui.config.overlay3": "Click or drag with your mouse",
-	"create.gui.config.overlay4": "to move this preview",
-	"create.gui.config.overlay5": "Press ESC to exit this screen",
-	"create.gui.config.overlay6": "and save the new position",
-	"create.gui.config.overlay7": "Run /create overlay reset",
-	"create.gui.config.overlay8": "to reset to the default position",
-
+	"create.gui.config.overlay1": "안녕하세요 :)",
+	"create.gui.config.overlay2": "이 창은 오버레이 예시입니다",
+	"create.gui.config.overlay3": "이 오버레이를 옮기려면",
+	"create.gui.config.overlay4": "마우스로 클릭하거나 드래그하세요",
+	"create.gui.config.overlay5": "ESC를 눌러 닫고",
+	"create.gui.config.overlay6": "새 위치를 저장할 수 있습니다",
+	"create.gui.config.overlay7": "명령어 /create overlay reset 으로",
+	"create.gui.config.overlay8": "기본 위치로 되돌릴 수 있습니다",
 	"create.command.killTPSCommand": "killtps",
-	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: Server tick is currently slowed by %s ms :o",
-	"create.command.killTPSCommand.status.slowed_by.1": "[Create]: Server tick is slowed by %s ms now >:)",
-	"create.command.killTPSCommand.status.slowed_by.2": "[Create]: Server tick is back to regular speed :D",
-	"create.command.killTPSCommand.status.usage.0": "[Create]: use /killtps stop to bring back server tick to regular speed",
-	"create.command.killTPSCommand.status.usage.1": "[Create]: use /killtps start <tickTime> to artificially slow down the server tick",
+	"create.command.killTPSCommand.status.slowed_by.0": "[Create]: 서버 틱이 %s ms만큼 느려진 상태입니다 :o",
+	"create.command.killTPSCommand.status.slowed_by.1": "[Create]: 서버 틱이 %s ms만큼 느려졌습니다 >:)",
+	"create.command.killTPSCommand.status.slowed_by.2": "[Create]: 서버 틱이 원래대로 돌아왔습니다 :D",
+	"create.command.killTPSCommand.status.usage.0": "[Create]: 명령어 /killtps stop을 사용해서 서버 틱을 원래 속도로 되돌리세요",
+	"create.command.killTPSCommand.status.usage.1": "[Create]: 명령어 /killtps start <틱 시간> 을 사용해서 서버 틱을 늦추세요",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
-
 	"create.contraption.minecart_contraption_too_big": "이 수레 구조물은 들기에 너무 큽니다!",
 	"create.contraption.minecart_contraption_illegal_pickup": "신비로운 힘이 이 수레 구조물을 세계에 묶어두고 있습니다!",
-
-
-	"_": "->------------------------]  Subtitles  [------------------------<-",
-
+	"enchantment.create.capacity.desc": "구리 산소통의 산소 용량을 늘립니다.",
+	"enchantment.create.potato_recovery.desc": "감자포의 탄약이 재사용될 확률을 가집니다.",
 	"create.subtitle.contraption_disassemble": "구조물이 멈춤",
 	"create.subtitle.peculiar_bell_use": "황동 종이 울림",
 	"create.subtitle.worldshaper_place": "세계편집기가 쏨",
@@ -1795,34 +1716,17 @@
 	"create.subtitle.copper_armor_equip": "잠수용 장비가 철커덕거림",
 	"create.subtitle.mechanical_press_activation": "압착기가 작동함",
 	"create.subtitle.contraption_assemble": "구조물이 움직임",
-
-
-	"_": "->------------------------]  Item Descriptions  [------------------------<-",
-
-	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",
-	"item.create.example_item.tooltip.summary": "A brief description of the item. _Underscores_ highlight a term.",
-	"item.create.example_item.tooltip.condition1": "When this",
-	"item.create.example_item.tooltip.behaviour1": "Then this item does this. (behaviours show on shift)",
-	"item.create.example_item.tooltip.condition2": "And When this",
-	"item.create.example_item.tooltip.behaviour2": "You can add as many behaviours as you like",
-	"item.create.example_item.tooltip.control1": "When Ctrl pressed",
-	"item.create.example_item.tooltip.action1": "These controls are displayed.",
-
 	"block.create.wooden_bracket.tooltip": "나무 지지대",
-	"block.create.wooden_bracket.tooltip.summary": "나무를 이용해 _축, 톱니바퀴, 파이프_를 꾸며보세요.",
-
+	"block.create.wooden_bracket.tooltip.summary": "나무를 이용해 _축, 톱니바퀴, 파이프_를 꾸며 보세요.",
 	"block.create.metal_bracket.tooltip": "금속 지지대",
-	"block.create.metal_bracket.tooltip.summary": "금속을 이용해 _축, 톱니바퀴, 파이프_를 꾸며보세요.",
-
-	"block.create.seat.tooltip": "SEAT",
+	"block.create.metal_bracket.tooltip.summary": "금속을 이용해 _축, 톱니바퀴, 파이프_를 꾸며 보세요.",
+	"block.create.seat.tooltip": "좌석",
 	"block.create.seat.tooltip.summary": "앉아서 드라이브를 즐기세요! _움직이는 구조물_에 _플레이어_를 _고정_시킵니다. 가구용으로도 좋습니다! 다양한 색깔이 존재합니다.",
 	"block.create.seat.tooltip.condition1": "좌석에 우클릭",
 	"block.create.seat.tooltip.behaviour1": "플레이어가 좌석에 _앉습니다_. _왼쪽 쉬프트_를 눌러 좌석에서 _일어섭니다_.",
-
 	"item.create.blaze_cake.tooltip": "블레이즈 케이크",
 	"item.create.blaze_cake.tooltip.summary": "열심히 일하는 _블레이즈_ _버너_의 식사입니다. 블레이즈를 더 뜨겁게 만드세요!",
-
-	"item.create.wand_of_symmetry.tooltip": "SYMMETRY WAND",
+	"item.create.wand_of_symmetry.tooltip": "대칭의 지팡이",
 	"item.create.wand_of_symmetry.tooltip.summary": "설정된 반사 모드에 따라 블록 설치를 _똑같이_ _배치_합니다.",
 	"item.create.wand_of_symmetry.tooltip.condition1": "단축바에 있을 때",
 	"item.create.wand_of_symmetry.tooltip.behaviour1": "활성화 유지",
@@ -1832,8 +1736,7 @@
 	"item.create.wand_of_symmetry.tooltip.action2": "활성화된 거을을 _제거합니다_.",
 	"item.create.wand_of_symmetry.tooltip.control3": "웅크린 상태에서 우클릭",
 	"item.create.wand_of_symmetry.tooltip.action3": "_설정_ _창_을 엽니다.",
-
-	"item.create.handheld_worldshaper.tooltip": "HANDHELD WORLDSHAPER",
+	"item.create.handheld_worldshaper.tooltip": "크리에이티브 세계편집기",
 	"item.create.handheld_worldshaper.tooltip.summary": "_지형경관_을 만들 때 좋은 간편한 도구입니다.",
 	"item.create.handheld_worldshaper.tooltip.control1": "블록을 보고 좌클릭",
 	"item.create.handheld_worldshaper.tooltip.action1": "이 도구로 설치할 블록을 설정합니다.",
@@ -1841,51 +1744,43 @@
 	"item.create.handheld_worldshaper.tooltip.action2": "해당 위치에 설정된 _브러쉬_ 와 _도구_를 적용합니다.",
 	"item.create.handheld_worldshaper.tooltip.control3": "웅크린 상태에서 우클릭",
 	"item.create.handheld_worldshaper.tooltip.action3": "_설정_ _창_을 엽니다.",
-
-	"item.create.tree_fertilizer.tooltip": "TREE FERTILIZER",
+	"item.create.tree_fertilizer.tooltip": "나무 비료",
 	"item.create.tree_fertilizer.tooltip.summary": "일반적인 나무 종류들의 성장을 촉진시킬 강력한 미네랄의 혼합물입니다.",
 	"item.create.tree_fertilizer.tooltip.condition1": "묘목에 사용했을 때",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "묘목을 주위 공간과 _상관없이_ 성장시킵니다.",
-
-	"item.create.extendo_grip.tooltip": "EXTENDO GRIP",
+	"item.create.extendo_grip.tooltip": "외장형 연장 팔",
 	"item.create.extendo_grip.tooltip.summary": "띠요오옹! 사용자의 _사거리_를 늘려줍니다.",
 	"item.create.extendo_grip.tooltip.condition1": "다른 손에 있을 때",
 	"item.create.extendo_grip.tooltip.behaviour1": "_기존_ _손_에있는 아이템의 사거리를 늘립니다.",
 	"item.create.extendo_grip.tooltip.condition2": "구리 산소통을 착용했을 때",
 	"item.create.extendo_grip.tooltip.behaviour2": "_내구도_가 _소모되지_ _않고_, 탱크에서 _공기_가 _소모됩니다_.",
-
-	"item.create.potato_cannon.tooltip": "POTATO CANNON",
+	"item.create.potato_cannon.tooltip": "감자포",
 	"item.create.potato_cannon.tooltip.summary": "퐁! 집에서 키운 작물로 적을 처치하세요! _구리_ _산소통_의 산소로 움직일 수 있습니다.",
 	"item.create.potato_cannon.tooltip.condition1": "우클릭",
 	"item.create.potato_cannon.tooltip.behaviour1": "_인벤토리_에서 적당한 아이템을 _쏩니다_.",
 	"item.create.potato_cannon.tooltip.condition2": "구리 산소통을 착용했을 때",
 	"item.create.potato_cannon.tooltip.behaviour2": "_내구도_가 _소모되지_ _않고_, 탱크에서 _공기_가 _소모됩니다_.",
-
-	"item.create.filter.tooltip": "FILTER",
+	"item.create.filter.tooltip": "필터",
 	"item.create.filter.tooltip.summary": "장치의 _입력_과 _출력_을 _필터_ 목록에 따라 _조정_합니다.",
 	"item.create.filter.tooltip.condition1": "필터 슬롯에 있을 때",
 	"item.create.filter.tooltip.behaviour1": "필터 _설정_에 따라 아이템 흐름을 _조정_합니다.",
 	"item.create.filter.tooltip.condition2": "우클릭",
 	"item.create.filter.tooltip.behaviour2": "_설정_ _창_을 엽니다.",
-
-	"item.create.attribute_filter.tooltip": "ATTRIBUTE FILTER",
+	"item.create.attribute_filter.tooltip": "속성 필터",
 	"item.create.attribute_filter.tooltip.summary": "장치의 _입력_과 _출력_을 필터 _속성_ 목록에 따라 _조정_합니다.",
 	"item.create.attribute_filter.tooltip.condition1": "필터 슬롯에 있을 때",
 	"item.create.attribute_filter.tooltip.behaviour1": "필터 _설정_에 따라 아이템 흐름을 _조정_합니다.",
 	"item.create.attribute_filter.tooltip.condition2": "우클릭",
 	"item.create.attribute_filter.tooltip.behaviour2": "_설정_ _창_을 엽니다.",
-
-	"item.create.empty_schematic.tooltip": "EMPTY SCHEMATIC",
+	"item.create.empty_schematic.tooltip": "빈 설계도",
 	"item.create.empty_schematic.tooltip.summary": "조합 재료로 쓰이거나 설계도 테이블에서 설계도를 불러올 때 쓰입니다.",
-
-	"item.create.schematic.tooltip": "SCHEMATIC",
+	"item.create.schematic.tooltip": "설계도",
 	"item.create.schematic.tooltip.summary": "세계에 구조물을 _홀로그램으로_ 불러와 지정하고 설치합니다. 지정된 홀로그램은 _설계도_ _대포_의 _작업_ _영역_이 됩니다.",
 	"item.create.schematic.tooltip.condition1": "들고 있을 때",
 	"item.create.schematic.tooltip.behaviour1": "UI의 도구로 _변경/설치_ 할 수 있습니다.",
 	"item.create.schematic.tooltip.control1": "웅크린 상태에서 우클릭",
 	"item.create.schematic.tooltip.action1": "정확한 _좌표_ 입력을 위한 창을 엽니다.",
-
-	"item.create.schematic_and_quill.tooltip": "SCHEMATIC AND QUILL",
+	"item.create.schematic_and_quill.tooltip": "설계도와 깃펜",
 	"item.create.schematic_and_quill.tooltip.summary": "세계에 있는 구조물을 _.nbt파일_로 저장할 때 쓰입니다.",
 	"item.create.schematic_and_quill.tooltip.condition1": "1단계",
 	"item.create.schematic_and_quill.tooltip.behaviour1": "_두_ _모서리_를 우클릭으로 선택하세요.",
@@ -1893,22 +1788,19 @@
 	"item.create.schematic_and_quill.tooltip.behaviour2": "면을 바라보고 _Ctrl-스크롤_하여 크기를 조정하세요. 우클릭을 다시 하면 저장됩니다.",
 	"item.create.schematic_and_quill.tooltip.control1": "우클릭",
 	"item.create.schematic_and_quill.tooltip.action1": "모서리 선택 / 저장 확인",
-	"item.create.schematic_and_quill.tooltip.control2": "Ctrl를 누르고 있을 때",
+	"item.create.schematic_and_quill.tooltip.control2": "Ctrl을 누르고 있을 때",
 	"item.create.schematic_and_quill.tooltip.action2": "_Scroll_를 이용하여 거리를 조정합니다.",
 	"item.create.schematic_and_quill.tooltip.control3": "웅크린 상태에서 우클릭",
 	"item.create.schematic_and_quill.tooltip.action3": "선택 영역을 리셋하고 _삭제_합니다.",
-
-	"block.create.schematicannon.tooltip": "SCHEMATICANNON",
+	"block.create.schematicannon.tooltip": "설계도 대포",
 	"block.create.schematicannon.tooltip.summary": "장착된 설계도를 바탕으로 블록들을 _발포_합니다. _화약_을 연료로 사용하고 주변 보관함에서 아이템을 사용합니다.",
 	"block.create.schematicannon.tooltip.condition1": "우클릭",
 	"block.create.schematicannon.tooltip.behaviour1": "설정 창을 엽니다.",
-
-	"block.create.schematic_table.tooltip": "SCHEMATIC TABLE",
+	"block.create.schematic_table.tooltip": "설계도 탁자",
 	"block.create.schematic_table.tooltip.summary": "_빈_ _설계도_에 저장된 설계도를 불러옵니다.",
 	"block.create.schematic_table.tooltip.condition1": "빈 설계도를 넣을 때",
 	"block.create.schematic_table.tooltip.behaviour1": "Schematics 폴더에서 선택한 파일을 업로드합니다.",
-
-	"item.create.goggles.tooltip": "GOGGLES",
+	"item.create.goggles.tooltip": "엔지니어의 고글",
 	"item.create.goggles.tooltip.summary": "_장치 정보_를 착용자의 시야에 띄어주는 안경입니다.",
 	"item.create.goggles.tooltip.condition1": "장착했을 때",
 	"item.create.goggles.tooltip.behaviour1": "해당 장치의 _속도_, _피로도_, _용량_을 레벨에 따라 에 따라 색상 UI를 보여줍니다.",
@@ -1916,25 +1808,20 @@
 	"item.create.goggles.tooltip.behaviour2": "계측기가 연결된 네트워크의 _속도_나 _스트레스_의 자세한 정보를 보여줍니다.",
 	"item.create.goggles.tooltip.condition3": "액체 용기를 바라볼 때",
 	"item.create.goggles.tooltip.behaviour3": "_용량_이 얼마나 되는지, _어떤 액체_가 들어있는 지 알려줍니다.",
-
 	"item.create.wrench.tooltip": "렌치",
 	"item.create.wrench.tooltip.summary": "장치 구성에 유용한 도구입니다. 장치를 _회전_, _설정_, _해체_하는 데 쓰입니다.",
 	"item.create.wrench.tooltip.control1": "장치에 우클릭",
 	"item.create.wrench.tooltip.action1": "사용자가 바라보는 _면으로_ 혹은 _반대로_ 장치를 돌립니다.",
 	"item.create.wrench.tooltip.control2": "웅크린 상태에서 우클릭",
 	"item.create.wrench.tooltip.action2": "_장치_를 _해체_하고 _즉시_ _보관함_으로 넣습니다.",
-
-	"block.create.nozzle.tooltip": "NOZZLE",
+	"block.create.nozzle.tooltip": "노즐",
 	"block.create.nozzle.tooltip.summary": "선풍기 _앞_에 붙여 선풍기의 효과를 _전방향_으로 _확대_합니다.",
-
-	"block.create.cuckoo_clock.tooltip": "CUCKOO CLOCK",
+	"block.create.cuckoo_clock.tooltip": "뻐꾸기 시계",
 	"block.create.cuckoo_clock.tooltip.summary": "_시간의_ _흐름_을 알고 공간을 _꾸미는_ 데 좋은 공예품입니다.",
 	"block.create.cuckoo_clock.tooltip.condition1": "회전할 때",
 	"block.create.cuckoo_clock.tooltip.behaviour1": "현재 시각을 보여주고 하루에 두 번 울립니다. 점심과 플레이어가 바로 잘 수 있는 저녁에 울립니다.",
-
-	"block.create.turntable.tooltip": "TURNTABLE",
+	"block.create.turntable.tooltip": "돌림판",
 	"block.create.turntable.tooltip.summary": "_동력_으로 _멀미_를 일으킵니다.",
-
 	"block.create.toolbox.tooltip": "공구상자",
 	"block.create.toolbox.tooltip.summary": "모든 발명가의 가장 친한 동료입니다. _8가지 종류의_ 아이템을 편하게 _많이_ 저장할 수 있습니다.",
 	"block.create.toolbox.tooltip.condition1": "파괴했을 때",
@@ -1943,53 +1830,43 @@
 	"block.create.toolbox.tooltip.behaviour2": "_근처 플레이어_가 _단축키_를 눌러 _원격으로_ 상자 속 아이템에 접근할 수 있습니다.",
 	"block.create.toolbox.tooltip.condition3": "우클릭 때",
 	"block.create.toolbox.tooltip.behaviour3": "창을 엽니다.",
-
 	"block.create.stockpile_switch.tooltip": "stockpile_switch",
 	"block.create.stockpile_switch.tooltip.summary": "붙어있는 _보관함_에 들어있는 아이템을 기반으로 레드스톤 신호를 보냅니다. 필터도 제공됩니다. _비교기_와 반대로, 수량 스위치는 신호가 반전되는 _임계점_을 조절할 수 있습니다.",
 	"block.create.stockpile_switch.tooltip.condition1": "우클릭",
 	"block.create.stockpile_switch.tooltip.behaviour1": "설정 창을 엽니다.",
-
-	"block.create.content_observer.tooltip": "CONTENT OBSERVER",
+	"block.create.content_observer.tooltip": "정보 감지기",
 	"block.create.content_observer.tooltip.summary": "보관함이나 벨트의 아이템을 등록된 _필터_를 이용해 _탐지_합니다. _보관함, 벨트, 슈트_ 안에 해당 아이템을 탐지하는 동안, 레드스톤 신호를 보냅니다. _퍼널_가 해당 아이템을 수송하면, _1틱_의 레드스톤 신호를 보냅니다.",
 	"block.create.content_observer.tooltip.condition1": "보관함를 탐지할 때",
 	"block.create.content_observer.tooltip.behaviour1": "해당 보관함에 _필터 아이템_이 있는 동안 _레드스톤 신호_를 방출합니다.",
 	"block.create.content_observer.tooltip.condition2": "퍼널을 탐지할 때",
 	"block.create.content_observer.tooltip.behaviour2": "_필터 아이템_이 이동하면 _레드스톤 펄스_를 방출합니다.",
-
 	"block.create.creative_crate.tooltip": "THE ENDLESS CRATE",
 	"block.create.creative_crate.tooltip.summary": "이 상자는 아무 아이템을 _무한히_ 저장합니다. 설계도 대포 옆에 놓을 시 준비물을 _전부_ 공급합니다.",
 	"block.create.creative_crate.tooltip.condition1": "필터에 아이템을 설정할 시",
 	"block.create.creative_crate.tooltip.behaviour1": "선택된 아이템을 _무한정_으로 _빼낼_ 수 있습니다. 대신 _들어간_ 아이템은 _삭제_됩니다.",
-
-	"item.create.creative_blaze_cake.tooltip": "CREATIVE CAKE",
+	"item.create.creative_blaze_cake.tooltip": "크리에이티브 블레이즈 케이크",
 	"item.create.creative_blaze_cake.tooltip.summary": "_블레이즈 버너_의 열 _세기를 조절할 수 있는_ 매우 특별한 케이크입니다. 이 케이크를 섭취한 블레이즈 버너는 _절대 꺼지지_ 않습니다.",
 	"item.create.creative_blaze_cake.tooltip.condition1": "블레이즈 버너에 우클릭",
 	"item.create.creative_blaze_cake.tooltip.behaviour1": "블레이즈 버너의 열 세기를 _고정_시킵니다. 다시 사용하면 블레이즈 버너의 열 세기를 _순환_합니다.",
-
-	"block.create.controller_rail.tooltip": "CONTROLLER RAIL",
+	"block.create.controller_rail.tooltip": "방향 레일",
 	"block.create.controller_rail.tooltip.summary": "_광산 수레_의 _이동속도_를 _세밀하게_ _조정_할 수 있는 _양방향_ _전동 레일_입니다.",
 	"block.create.controller_rail.tooltip.condition1": "레드스톤 신호를 받을 때",
 	"block.create.controller_rail.tooltip.behaviour1": "_신호 세기에 따라_ 지나가는 수레를 _가속, 감속_합니다. 레드스톤 신호는 다른 방향 레일에도 전달됩니다. 두 방향레일에 다른 세기를 전달하면 중간 레일들은 두 세기 사이의 신호를 받습니다.",
-
-	"item.create.sand_paper.tooltip": "SAND PAPER",
+	"item.create.sand_paper.tooltip": "사포",
 	"item.create.sand_paper.tooltip.summary": "재료들을 _윤내는 데_ 쓰이는 거친 종이입니다. 기계 손이 자동으로 쓸 수 있습니다.",
 	"item.create.sand_paper.tooltip.condition1": "사용할 때",
 	"item.create.sand_paper.tooltip.behaviour1": "_다른 손_에있는 아이템과 _바닥에 있는 아이템_을 윤냅니다.",
-
-	"item.create.builders_tea.tooltip": "BUILDERS TEA",
+	"item.create.builders_tea.tooltip": "건축가의 차",
 	"item.create.builders_tea.tooltip.summary": "하루를 시작하기에 좋은 음료입니다. _새로운 영감_을 줍니다.",
-
-	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
+	"item.create.refined_radiance.tooltip": "정제된 광채",
 	"item.create.refined_radiance.tooltip.summary": "_흡수된_ _빛_으로 제련된 색채 혼합물입니다.",
 	"item.create.refined_radiance.tooltip.condition1": "현재 개발 중",
 	"item.create.refined_radiance.tooltip.behaviour1": "이 재료의 사용처는 이후 업데이트에 있을겁니다.",
-
-	"item.create.shadow_steel.tooltip": "SHADOW STEEL",
+	"item.create.shadow_steel.tooltip": "그림자 강철",
 	"item.create.shadow_steel.tooltip.summary": "_공허_에서 제련된 색채 혼합물입니다.",
 	"item.create.shadow_steel.tooltip.condition1": "현재 개발 중",
 	"item.create.shadow_steel.tooltip.behaviour1": "이 재료의 사용처는 이후 업데이트에 있을겁니다.",
-
-	"item.create.linked_controller.tooltip": "LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip": "레드스톤 링크 조작기",
 	"item.create.linked_controller.tooltip.summary": "_여섯_ _버튼_으로 _레드스톤_ _링크_와 연결되는 _휴대용_ _조작기_입니다.",
 	"item.create.linked_controller.tooltip.condition1": "우클릭",
 	"item.create.linked_controller.tooltip.behaviour1": "조작기를 킵니다. 조작하면서 _움직일_ _수_ _없습니다_.",
@@ -1999,64 +1876,50 @@
 	"item.create.linked_controller.tooltip.behaviour3": "_연결_ _모드_를 활성화하고, _여섯_ _버튼_ 중 하나를 눌러 조작기를 주파수와 연결합니다.",
 	"item.create.linked_controller.tooltip.condition4": "독서대에 우클릭",
 	"item.create.linked_controller.tooltip.behaviour4": "조작기를 독서대에 올려놓아 쉽게 조작할 수 있습니다. (웅크리면서 우클릭으로 회수헙니다.)",
-
-	"item.create.diving_helmet.tooltip": "DIVING HELMET",
+	"item.create.diving_helmet.tooltip": "다이빙 헬멧",
 	"item.create.diving_helmet.tooltip.summary": "_구리_ _산소통_과 함께, 착용자가 물 속에서 _오랫동안_ _호흡_할 수 있게합니다.",
 	"item.create.diving_helmet.tooltip.condition1": "착용했을 때",
 	"item.create.diving_helmet.tooltip.behaviour1": "산소통에서 공기를 느리게 빨아들이며 _수중_ _호흡_ 효과를 제공합니다.",
-
-	"item.create.copper_backtank.tooltip": "COPPER BACKTANK",
+	"item.create.copper_backtank.tooltip": "구리 산소통",
 	"item.create.copper_backtank.tooltip.summary": "공기를 옮길 수 있는 _착용가능한_ 탱크입니다.",
 	"item.create.copper_backtank.tooltip.condition1": "착용했을 때",
 	"item.create.copper_backtank.tooltip.behaviour1": "필요한 장비에 _공기_를 제공합니다.",
 	"item.create.copper_backtank.tooltip.condition2": "설치되고 동력으로 회전될 때",
 	"item.create.copper_backtank.tooltip.behaviour2": "동력 속도에 따라 _공기_를 _모읍니다_.",
-
-	"block.create.placard.tooltip": "PLACARD",
+	"block.create.placard.tooltip": "플래카드",
 	"block.create.placard.tooltip.summary": "_아이템_을 황동안에 _장식_하세요. 구조물에도 사용할 수 있습니다!",
 	"block.create.placard.tooltip.condition1": "아이템을 들고 우클릭",
 	"block.create.placard.tooltip.behaviour1": "플래카드에 _아이템_을 추가합니다. _이미_ 같은 아이템이 장식되어 있다면 짧게 _레드스톤 신호_를 _방출_합니다.",
 	"block.create.placard.tooltip.condition2": "때렸을 때",
 	"block.create.placard.tooltip.behaviour2": "플래카드의 아이템을 _제거_합니다.",
-
-	"block.create.flywheel.tooltip": "FLYWHEEL",
+	"block.create.flywheel.tooltip": "플라이휠",
 	"block.create.flywheel.tooltip.summary": "황동 바퀴로 _장치_를 _장식_해보세요.",
 	"block.create.flywheel.tooltip.condition1": "동력을 공급받을 때",
 	"block.create.flywheel.tooltip.behaviour1": "회전합니다.",
-
-	"item.create.diving_boots.tooltip": "DIVING BOOTS",
+	"item.create.diving_boots.tooltip": "다이빙 부츠",
 	"item.create.diving_boots.tooltip.summary": "해저를 돌아다니기에 적합한 _무거운_ _부츠_ 한 켤레입니다.",
 	"item.create.diving_boots.tooltip.condition1": "착용했을 때",
 	"item.create.diving_boots.tooltip.behaviour1": "착용자는 빠르게 가라앉고 _수영_할 수 _없습니다_. 대신 물 속에서 _걷고_, _뛸_ 수 있습니다. 또한 _벨트_에 영향받지 않습니다.",
-
-	"item.create.crafting_blueprint.tooltip": "CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip": "조합 청사진",
 	"item.create.crafting_blueprint.tooltip.summary": "벽에 설치해 _특정_ _재료_로 더 _쉽게_ _조합_할 수 있습니다. 각 슬롯은 조합법을 나타냅니다.",
 	"item.create.crafting_blueprint.condition1": "빈 슬롯을 우클릭",
 	"item.create.crafting_blueprint.behaviour1": "_조합법_과 전시할 아이템을 설정하는 창을 엽니다.",
 	"item.create.crafting_blueprint.condition2": "설정된 슬롯에 우클릭",
 	"item.create.crafting_blueprint.behaviour2": "자신의 _인벤토리_에서 해당 슬롯의 _조합법_을 _실행_합니다. _웅크리면서_ 우클릭하면 한 번에 여러개를 조합합니다.",
-
-	"item.create.minecart_coupling.tooltip": "MINECART COUPLING",
-	"item.create.minecart_coupling.tooltip.summary": "당신의 모든 _수레들을 이어 _멋진 _기차_를 만들어보세요.",
+	"item.create.minecart_coupling.tooltip": "광산 수레 커플링",
+	"item.create.minecart_coupling.tooltip.summary": "당신의 모든 _수레들을 이어 _멋진 _기차_를 만들어 보세요.",
 	"item.create.minecart_coupling.tooltip.condition1": "광산 수레에 사용할 때",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_두 수레를 묶어_ 이동할 때 고정된 _거리를 유지하게_ 합니다.",
-
-	"item.create.experience_nugget.tooltip": "NUGGET OF EXPERIENCE",
+	"item.create.experience_nugget.tooltip": "경험의 조각",
 	"item.create.experience_nugget.tooltip.summary": "_띵!_ 당신의 멋진 발명품에서 탄생한 _영감_의 알맹이입니다.",
 	"item.create.experience_nugget.tooltip.condition1": "사용했을 때",
 	"item.create.experience_nugget.tooltip.behaviour1": "담겨져 있던 _경험치_를 _배출_합니다.",
-
-	"block.create.peculiar_bell.tooltip": "PECULIAR BELL",
+	"block.create.peculiar_bell.tooltip": "귀신들린 종",
 	"block.create.peculiar_bell.tooltip.summary": "장식을 위한 황동 종입니다. 영혼 불꽃 위에 설치하면 _기이한_ 일이 일어난다고 합니다...",
-
-	"block.create.haunted_bell.tooltip": "HAUNTED BELL",
+	"block.create.haunted_bell.tooltip": "황동 종",
 	"block.create.haunted_bell.tooltip.summary": "지옥의 길잃은 영혼들이 씌인 _저주받은_ 종입니다.",
 	"block.create.haunted_bell.tooltip.condition1": "들고 있거나 종을 울릴 때",
 	"block.create.haunted_bell.tooltip.behaviour1": "_적대적_ _몹_이 생성되는 _빛이_ _없는_ 자리를 표시합니다.",
-
-
-	"_": "->------------------------]  Ponder Content  [------------------------<-",
-
 	"create.ponder.hold_to_ponder": "[%1$s]키를 눌러 분석하기",
 	"create.ponder.subject": "분석의 주제",
 	"create.ponder.pondering": "분석 중입니다...",
@@ -2116,18 +1979,15 @@
 	"create.ponder.tag.display_targets.description": "디스플레이 링크가 받은 정보를 표시할 수 있는 부품과 블록입니다",
 	"create.ponder.tag.train_related": "선로 장비",
 	"create.ponder.tag.train_related.description": "기차 구조물 조립이나 관리에 쓰이는 부품입니다",
-
 	"create.ponder.analog_lever.header": "아날로그 레버를 이용해 신호 조절하기",
 	"create.ponder.analog_lever.text_1": "아날로그 레버는 정확하고 간편하게 레드스톤 신호의 세기를 조절합니다.",
 	"create.ponder.analog_lever.text_2": "우클릭으로 세기를 높입니다.",
 	"create.ponder.analog_lever.text_3": "웅크리면서 우클릭하면, 세기를 낮춥니다.",
-
 	"create.ponder.andesite_tunnel.header": "안산암 터널 사용하기",
 	"create.ponder.andesite_tunnel.text_1": "안산암 터널은 벨트를 덮는데 사용할 수 있습니다.",
 	"create.ponder.andesite_tunnel.text_2": "인신임 터널의 옆면에 접촉점이 있다면...",
 	"create.ponder.andesite_tunnel.text_3": "...터널은 통과하는 아이템 스택에서 1개의 아이템을 분리시킵니다.",
 	"create.ponder.andesite_tunnel.text_4": "나머지는 가던 길을 갑니다.",
-
 	"create.ponder.auto_schedule.header": "정거장 & 계획표",
 	"create.ponder.auto_schedule.text_1": "계획표로 기관사에게 도착점을 가르칠 수 있습니다.",
 	"create.ponder.auto_schedule.text_2": "비교기는 정거장에 기차가 도착하면 신호를 방출합니다.",
@@ -2135,7 +1995,6 @@
 	"create.ponder.auto_schedule.text_4": "정거장에 새 계획표를 자동으로 지정할 수 있습니다.",
 	"create.ponder.auto_schedule.text_5": "정거장 위에 놓인 계획표는 도착한 기차 기관사에게 적용됩니다.",
 	"create.ponder.auto_schedule.text_6": "수동으로 계획표를 전달해줄 때와는 다르게, 계획표를 가져가지 않습니다.",
-
 	"create.ponder.basin.header": "대야 안에서 아이템 처리하기",
 	"create.ponder.basin.text_1": "대야는 아이템과 액체를 담을 수 있습니다.",
 	"create.ponder.basin.text_2": "처리 이후, 대야는 옆면 아래로 결과물을 내보냅니다.",
@@ -2146,15 +2005,12 @@
 	"create.ponder.basin.text_7": "결과물이 다시 사용될 때 유용합니다.",
 	"create.ponder.basin.text_8": "이 경우, 대야에서 특정 결과물을 빼내야 합니다.",
 	"create.ponder.basin.text_9": "처리되지 않은 아이템이 나오는 것을 방지하기 위해서는 필터가 필요합니다.",
-
 	"create.ponder.bearing_modes.header": "베어링의 이동 설정",
 	"create.ponder.bearing_modes.text_1": "멈췄을 때, 베어링은 구조물을 가까운 수직 각도로 설치합니다.",
 	"create.ponder.bearing_modes.text_2": "이는 절대 설치하지 않거나, 시작한 지점에만 설치하도록 설정할 수 있습니다.",
-
 	"create.ponder.belt_casing.header": "벨트 덮기",
 	"create.ponder.belt_casing.text_1": "황동, 안산암 케이스는 벨트를 꾸미는데 사용됩니다.",
 	"create.ponder.belt_casing.text_2": "렌치로 케이스를 없앨 수 있습니다.",
-
 	"create.ponder.belt_connector.header": "벨트 사용하기",
 	"create.ponder.belt_connector.text_1": "두 축을 벨트로 우클릭하여 연결합니다.",
 	"create.ponder.belt_connector.text_2": "실수로 선택했다면, 웅크리면서 우클릭하여 취소합니다.",
@@ -2162,7 +2018,6 @@
 	"create.ponder.belt_connector.text_4": "벨트로 연결된 축들은 같은 속도, 방향으로 회전합니다.",
 	"create.ponder.belt_connector.text_5": "추가된 축은 렌치로 없앨 수 있습니다.",
 	"create.ponder.belt_connector.text_6": "벨트를 염색하여 꾸밀 수 있습니다.",
-
 	"create.ponder.belt_directions.header": "벨트 설치에 알맞는 방향",
 	"create.ponder.belt_directions.text_1": "벨트는 임의의 각도로 설치할 수 없습니다.",
 	"create.ponder.belt_directions.text_2": "1. 수평으로 연결할 수 있습니다.",
@@ -2170,23 +2025,19 @@
 	"create.ponder.belt_directions.text_4": "3. 수직으로 연결할 수 있습니다.",
 	"create.ponder.belt_directions.text_5": "4. 또한 수직 축을 평행하게 연결할 수 있습니다.",
 	"create.ponder.belt_directions.text_6": "이것들이 가능한 방향입니다. 벨트는 2 ~ 20 블록 길이를 연결합니다.",
-
 	"create.ponder.belt_transport.header": "벨트를 이용한 수송",
 	"create.ponder.belt_transport.text_1": "움직이는 벨트는 아이템과 엔티티를 옮깁니다.",
 	"create.ponder.belt_transport.text_2": "빈손으로 우클릭하여 벨트 위의 아이템을 가져옵니다.",
-
 	"create.ponder.blaze_burner.header": "블레이즈 버너 데우기",
 	"create.ponder.blaze_burner.text_1": "블레이즈 버너는 대야 안에서 처리되는 아이템에 열을 제공합니다.",
 	"create.ponder.blaze_burner.text_2": "이런 식으로, 블레이즈는 가연성 물질을 먹습니다.",
 	"create.ponder.blaze_burner.text_3": "블레이즈 케아크를 먹이면 버너는 더 뜨겁게 타오릅니다.",
 	"create.ponder.blaze_burner.text_4": "이 시스템은 기계 손이나 기계 팔을 이용해 자동화될 수 있습니다.",
-
 	"create.ponder.brass_funnel.header": "황동 퍼널",
 	"create.ponder.brass_funnel.text_1": "안산암 퍼널은 아이템 한 개만 뽑아냅니다.",
 	"create.ponder.brass_funnel.text_2": "황동 퍼널은 한 스택까지 뽑을 수 있습니다.",
 	"create.ponder.brass_funnel.text_3": "핕터 슬롯을 스크롤하여 추출 갯수를 조절합니다.",
 	"create.ponder.brass_funnel.text_4": "필터 슬롯에 아이템을 사용하여 추출할 아이템 종류를 정합니다.",
-
 	"create.ponder.brass_tunnel.header": "황동 터널 사용하기",
 	"create.ponder.brass_tunnel.text_1": "황동 터널은 벨트를 덮는데 사용할 수 있습니다.",
 	"create.ponder.brass_tunnel.text_2": "황동 터널은 열린 면마다 필터 슬롯이 있습니다.",
@@ -2196,7 +2047,6 @@
 	"create.ponder.brass_tunnel.text_6": "벨트 위, 평행한 황동 터널끼리는 연결됩니다.",
 	"create.ponder.brass_tunnel.text_7": "들어오는 아이템은 연결된 모든 출구로 분배됩니다.",
 	"create.ponder.brass_tunnel.text_8": "이런 식으로, 터널을 통해 직접 아이템을 넣을 수 있습니다.",
-
 	"create.ponder.brass_tunnel_modes.header": "황동 터널의 분배 모드",
 	"create.ponder.brass_tunnel_modes.text_1": "렌치를 이용해, 황동 터널이 어떻게 분배할지 설정합니다.",
 	"create.ponder.brass_tunnel_modes.text_10": "[입력 동기화] 설정은 황동 터널만의 고유 설정입니다.",
@@ -2210,33 +2060,27 @@
 	"create.ponder.brass_tunnel_modes.text_7": "[순서대로 처리(강제적)] 설정은 출구를 제외하지 않습니다.",
 	"create.ponder.brass_tunnel_modes.text_8": "[가장 가까운 곳] 설정은 입구와 가까운 출구 순서로 우선순위를 정합니다.",
 	"create.ponder.brass_tunnel_modes.text_9": "[무작위] 설정은 랜덤한 출구로 아이템을 분배합니다.",
-
 	"create.ponder.cart_assembler.header": "수레 조립기로 구조물 움직이기",
 	"create.ponder.cart_assembler.text_1": "활성화된 수레 조립기는 지나가는 수레에 구조물을 부착합니다.",
 	"create.ponder.cart_assembler.text_2": "신호가 없다면, 구조물을 떼어 냅니다.",
 	"create.ponder.cart_assembler.text_3": "수레에 렌치로 우클릭하면 구조물을 들고 다닐 수 있습니다.",
-
 	"create.ponder.cart_assembler_dual.header": "한 구조물에 여러 수레 결합하기",
 	"create.ponder.cart_assembler_dual.text_1": "두 조립기가 같은 구조물을 공유할 때...",
 	"create.ponder.cart_assembler_dual.text_2": "둘 중 하나를 작동시키면 기차 구조물이 됩니다.",
 	"create.ponder.cart_assembler_dual.text_3": "두 수레는 수레 커플링으로 연결된 것처럼 행동합니다.",
-
 	"create.ponder.cart_assembler_modes.header": "수레 구조물 회전 설정",
 	"create.ponder.cart_assembler_modes.text_1": "구조물이 바라보는 방향은 수레의 방향과 동일합니다.",
 	"create.ponder.cart_assembler_modes.text_2": "이 화살표는 구조물이 바라보는 방향을 나타냅니다.",
 	"create.ponder.cart_assembler_modes.text_3": "조립기 설정에서 회전을 잠갔다면, 구조물은 회전하지 않습니다.",
-
 	"create.ponder.cart_assembler_rails.header": "다른 종류의 수레와 레일",
 	"create.ponder.cart_assembler_rails.text_1": "일반 레일위의 조립기는 지나가는 수레에 아무 영향을 미치지 않습니다.",
 	"create.ponder.cart_assembler_rails.text_2": "전동 레일, 방향 레일 위에 있을 때, 신호를 받을 때까지 수레는 멈춥니다.",
 	"create.ponder.cart_assembler_rails.text_3": "다른 수레들도 쓸 수 있습니다.",
 	"create.ponder.cart_assembler_rails.text_4": "화로 수레는 부착된 보관함에서 연료를 가져와 스스로 움직입니다.",
-
 	"create.ponder.chain_drive.header": "체인 드라이브로 회전 전달하기",
 	"create.ponder.chain_drive.text_1": "체인 드라이브는 한 줄로 회전을 전달합니다.",
 	"create.ponder.chain_drive.text_2": "이렇게 연결된 모든 축들은 같은 방향으로 회전합니다.",
 	"create.ponder.chain_drive.text_3": "한 줄의 아무 부분을 90도 돌릴 수 있습니다.",
-
 	"create.ponder.chain_gearshift.header": "벨트 변속기를 통해 회전 속도 조절하기",
 	"create.ponder.chain_gearshift.text_1": "신호를 받지 않은 벨트 변속기는 체인 드라이브와 똑같이 작동합니다.",
 	"create.ponder.chain_gearshift.text_2": "신호를 받으면, 다른 체인 드라이브에 전달되는 속도는 2배가 됩니다.",
@@ -2244,17 +2088,14 @@
 	"create.ponder.chain_gearshift.text_4": "두 가지 경우에도, 같은 줄의 체인 드라이브의 속도는 변속기 속도의 2배가 됩니다.",
 	"create.ponder.chain_gearshift.text_5": "아날로그 레버를 사용하면, 속도 비율을 1 ~ 2배 사이로 맞출 수 있습니다.",
 	"create.ponder.chain_gearshift.text_6": "12 RPM",
-
 	"create.ponder.chute.header": "슈트를 이용해 아이템을 아래로 옮기기",
 	"create.ponder.chute.text_1": "슈트는 보관함에 있는 아이템을 수직으로 옮깁니다.",
 	"create.ponder.chute.text_2": "렌치를 이용해 창문을 만들 수 있습니다.",
 	"create.ponder.chute.text_3": "슈트 옆면에 다른 슈트를 설치하면 대각선으로 연결됩니다.",
-
 	"create.ponder.chute_upward.header": "슈트를 이용해 아이템을 위로 옮기기",
 	"create.ponder.chute_upward.text_1": "선풍기를 위/아래에 설치하면, 슈트는 아이템을 위로 보냅니다.",
 	"create.ponder.chute_upward.text_2": "엔지니어의 고글로 슈트를 관찰하여 이동 방향을 확인하세요.",
 	"create.ponder.chute_upward.text_3": "막힌 끝 부분에서 아이템은 옆에서 넣거나 빼내야합니다.",
-
 	"create.ponder.clockwork_bearing.header": "시계 베어링을 이용한 구조물 움직이기",
 	"create.ponder.clockwork_bearing.text_1": "시계 베어링은 앞에 있는 블록을 부착시킵니다.",
 	"create.ponder.clockwork_bearing.text_2": "동력을 받으면, 현재 시간에 맞춰 구조물이 돌아갑니다.",
@@ -2264,43 +2105,34 @@
 	"create.ponder.clockwork_bearing.text_6": "시침 구조물 앞에 분침 구조물을 추가할 수 있습니다.",
 	"create.ponder.clockwork_bearing.text_7": "접착제나 슬라임볼로 두 구조물을 연결하지 마세요.",
 	"create.ponder.clockwork_bearing.text_8": "두번째 구조물은 분침처럼 돌아갑니다.",
-
 	"create.ponder.clutch.header": "클러치를 이용해 동력 조절하기",
 	"create.ponder.clutch.text_1": "클러치는 한 줄로 동력을 전달합니다.",
 	"create.ponder.clutch.text_2": "레드스톤 신호를 받으면, 동력 전달을 끊습니다.",
-
 	"create.ponder.cog_speedup.header": "톱니바퀴로 기어변속하기",
 	"create.ponder.cog_speedup.text_1": "큰 톱니바퀴와 작은 톱니바퀴는 대각선으로 연결됩니다.",
 	"create.ponder.cog_speedup.text_2": "큰 쪽에서 작은 쪽으로 가는 속도는 2배가 됩니다.",
 	"create.ponder.cog_speedup.text_3": "반대의 경우에는 속도가 절반이 됩니다.",
-
 	"create.ponder.cogwheel.header": "톱니바퀴를 이용해 동력 전달하기",
 	"create.ponder.cogwheel.text_1": "톱니바퀴는 인접한 톱니바퀴에 동력을 전달합니다.",
 	"create.ponder.cogwheel.text_2": "이렇게 연결된 톱니바퀴 축은 반대방향으로 돌아갑니다.",
-
 	"create.ponder.cogwheel_casing.header": "톱니바퀴에 케이스 씌우기",
 	"create.ponder.cogwheel_casing.text_1": "황동, 안산암 케이스는 톱니바퀴를 꾸밀 때 사용할 수 있습니다.",
 	"create.ponder.cogwheel_casing.text_2": "기본적으로 케이스를 씌운 톱니바퀴는 축과 연결되지 않습니다.",
 	"create.ponder.cogwheel_casing.text_3": "렌치를 사용하여 축과 연결하거나 차단할 수 있습니다.",
-
 	"create.ponder.creative_fluid_tank.header": "크리에이티브 탱크",
 	"create.ponder.creative_fluid_tank.text_1": "크리에이티브 탱크는 무한히 액체를 공급합니다.",
 	"create.ponder.creative_fluid_tank.text_2": "액체가 든 용기로 우클릭하여 액체를 채울 수 있습니다.",
 	"create.ponder.creative_fluid_tank.text_3": "파이프로 탱크에서 액체를 무한히 뽑아낼 수 있습니다.",
 	"create.ponder.creative_fluid_tank.text_4": "크리에이티브 탱크로 들어가는 모든 액체는 사라집니다.",
-
 	"create.ponder.creative_motor.header": "크리에이티브 모터를 이용해 동력 생산하기",
 	"create.ponder.creative_motor.text_1": "크리에이티브 모터는 동력을 쉽게 생산, 조절합니다.",
 	"create.ponder.creative_motor.text_2": "모터 후면을 스크롤해서 모터의 RPM을 조절합니다.",
-
 	"create.ponder.creative_motor_mojang.header": "Mojang의 수수께끼",
-
 	"create.ponder.crushing_wheels.header": "분쇄 휠을 이용해 아이템 가공하기",
 	"create.ponder.crushing_wheels.text_1": "한 쌍의 분쇄 휠은 아이템을 매우 효과적으로 갈아버립니다.",
 	"create.ponder.crushing_wheels.text_2": "동력을 전달하여 서로 맞물리게 해야합니다.",
 	"create.ponder.crushing_wheels.text_3": "위에서 투입된 아이템은 가공되고, 아래로 떨어집니다.",
 	"create.ponder.crushing_wheels.text_4": "이 과정은 자동화 될 수 있습니다.",
-
 	"create.ponder.deployer.header": "기계 손 이용하기",
 	"create.ponder.deployer.text_1": "동력을 받으면, 기계 손은 플레이어의 행동을 흉내냅니다.",
 	"create.ponder.deployer.text_10": "손에다 우클릭하여 기계 손이 쓸 아이템을 건네세요.",
@@ -2317,33 +2149,27 @@
 	"create.ponder.deployer.text_7": "블록 활성화하기",
 	"create.ponder.deployer.text_8": "블록 수확하기",
 	"create.ponder.deployer.text_9": "몹 공격하기",
-
 	"create.ponder.deployer_contraption.header": "구조물에서의 기계 손",
 	"create.ponder.deployer_contraption.text_1": "기계 손이 움직이는 구조물의 일부면...",
 	"create.ponder.deployer_contraption.text_2": "...기계 손은 움직일 때마다 작동하며, 구조물에 붙어있는 아무 보관함의 아이템을 사용합니다.",
 	"create.ponder.deployer_contraption.text_3": "필터를 이용해 어떤 아이템을 사용할 지 정할 수 있습니다.",
-
 	"create.ponder.deployer_modes.header": "기계 손의 작동 방식",
 	"create.ponder.deployer_modes.text_1": "기계 손은 기본적으로 우클릭을 흉내냅니다.",
 	"create.ponder.deployer_modes.text_2": "렌치를 이용해, 좌클릭을 흉내내도록 설정할 수 있습니다.",
-
 	"create.ponder.deployer_processing.header": "기계 손으로 아이템 가공하기",
 	"create.ponder.deployer_processing.text_1": "기계 손이 적절한 아이템을 가지고 있으면, 아래 있는 아이템을 가공합니다.",
 	"create.ponder.deployer_processing.text_2": "가공할 아이템은 기계 손 아래에 떨구거나 아이템 거치대에 올려두어야 합니다.",
 	"create.ponder.deployer_processing.text_3": "아이템이 벨트에 있으면...",
 	"create.ponder.deployer_processing.text_4": "...기계 손이 알아서 아이템 이동을 멈추고 가공합니다.",
-
 	"create.ponder.deployer_redstone.header": "레드스톤과 기계 손",
 	"create.ponder.deployer_redstone.text_1": "레드스톤 신호를 받으면, 기계 손은 작동하지 않습니다.",
 	"create.ponder.deployer_redstone.text_2": "작동을 멈추기 전에, 기계 손은 입력된 행동을 마무리합니다.",
 	"create.ponder.deployer_redstone.text_3": "따라서 부정 펄스는 한 번만 작동하게 합니다.",
-
 	"create.ponder.depot.header": "아이템 거치대 사용하기",
 	"create.ponder.depot.text_1": "아이템 거치대는 고정된 벨트 역할입니다.",
 	"create.ponder.depot.text_2": "우클릭해서 아이템을 놓거나 가져갑니다.",
 	"create.ponder.depot.text_3": "벨트처럼, 놓여진 아이템은 가공될 수 있습니다.",
 	"create.ponder.depot.text_4": "그리고 기계 팔의 목표가 될 수 있습니다.",
-
 	"create.ponder.display_board.header": "디스플레이 화면",
 	"create.ponder.display_board.text_1": "디스플레이 화면은 조절 가능한 표지판입니다.",
 	"create.ponder.display_board.text_2": "작동하려면 동력이 필요합니다.",
@@ -2351,7 +2177,6 @@
 	"create.ponder.display_board.text_4": "...디스플레이 링크를 이용하는 것입니다.",
 	"create.ponder.display_board.text_5": "염료를 각 줄마다 사용할 수 있습니다.",
 	"create.ponder.display_board.text_6": "맨 손으로 우클릭하여 줄을 초기화합니다.",
-
 	"create.ponder.display_link.header": "디스플레이 링크 사용하기",
 	"create.ponder.display_link.text_1": "디스플레이 링크는 유동적인 정보를 표시하는데 사용됩니다.",
 	"create.ponder.display_link.text_2": "먼저 정보를 표시할 곳을 우클릭하고...",
@@ -2361,12 +2186,10 @@
 	"create.ponder.display_link.text_6": "모든 블록이 정보를 제공하진 않습니다.",
 	"create.ponder.display_link.text_7": "호환되는 블록은 각각 다른 종류를 제공합니다.",
 	"create.ponder.display_link.text_8": "디스플레이 링크는 여러 블록에게 정보를 보낼 수 있습니다.",
-
 	"create.ponder.display_link_redstone.header": "레드스톤 신호",
 	"create.ponder.display_link_redstone.text_1": "레드스톤 신호를 받으면, 디스플레이 링크는 정보를 전달하지 않습니다.",
 	"create.ponder.display_link_redstone.text_2": "신호가 끊기면, 딜레이가 초기화되어 새 정보가 바로 전달됩니다.",
 	"create.ponder.display_link_redstone.text_3": "정보를 제공하는 블록은 링크에게 영향을 미치지 않습니다.",
-
 	"create.ponder.empty_blaze_burner.header": "빈 블레이즈 버너 사용하기",
 	"create.ponder.empty_blaze_burner.text_1": "블레이즈를 우클릭하여 버너에 가둡니다.",
 	"create.ponder.empty_blaze_burner.text_2": "또는 스포너에서도 블레이즈를 가둘 수 있습니다.",
@@ -2374,16 +2197,13 @@
 	"create.ponder.empty_blaze_burner.text_4": "장식적인 요소로는 라이터로 불을 붙일 수 있습니다.",
 	"create.ponder.empty_blaze_burner.text_5": "불꽃은 영혼불꽃으로 바꿀 수 있습니다.",
 	"create.ponder.empty_blaze_burner.text_6": "그러나 장치에 쓰일 열원으로는 적합하지 않습니다.",
-
 	"create.ponder.encased_fluid_pipe.header": "파이프에 케이스 씌우기",
 	"create.ponder.encased_fluid_pipe.text_1": "구리 케이스로 파이프를 꾸밀 수 있습니다.",
 	"create.ponder.encased_fluid_pipe.text_2": "파이프를 가려주는 것 외에도, 파이프의 방향을 고정시키는 역할도 합니다.",
 	"create.ponder.encased_fluid_pipe.text_3": "이 파이프는 이제 나중에 추가된 블록에 영향받지 않습니다.",
-
 	"create.ponder.fan_direction.header": "선풍기의 공기흐름",
 	"create.ponder.fan_direction.text_1": "선풍기는 동력을 이용해 바람을 만들어냅니다.",
 	"create.ponder.fan_direction.text_2": "바람의 세기와 방향, 거리는 동력에 따라 달라집니다.",
-
 	"create.ponder.fan_processing.header": "선풍기로 아이템 가공하기",
 	"create.ponder.fan_processing.text_1": "바람이 용암을 통과하면, 공기가 뜨거워집니다.",
 	"create.ponder.fan_processing.text_2": "바람이 지나가는 자리의 아이템은 구워집니다.",
@@ -2393,7 +2213,6 @@
 	"create.ponder.fan_processing.text_6": "이를 통해 새로운 가공을 할 수 있습니다.",
 	"create.ponder.fan_processing.text_7": "선풍기의 속도는 가공 속도와 관련이 없습니다!",
 	"create.ponder.fan_processing.text_8": "선풍기 가공은 벨트나 아이템 거치대의 아이템에도 적용됩니다.",
-
 	"create.ponder.fluid_pipe_flow.header": "파이프로 액체 옮기기",
 	"create.ponder.fluid_pipe_flow.text_1": "파이프는 한 종류의 액체만 옮깁니다.",
 	"create.ponder.fluid_pipe_flow.text_2": "렌치를 이용하여 직선 파이프에 창문을 달 수 있습니다.",
@@ -2402,90 +2221,73 @@
 	"create.ponder.fluid_pipe_flow.text_5": "처음엔 액체가 빠지지 않습니다.",
 	"create.ponder.fluid_pipe_flow.text_6": "액체 흐름이 이어지면, 시작 탱크에서 끝 탱크로 액체가 본격적으로 이동합니다.",
 	"create.ponder.fluid_pipe_flow.text_7": "이렇기 때문에, 파이프는 실질적으로 아무런 액체도 담지 않습니다.",
-
 	"create.ponder.fluid_pipe_interaction.header": "액체 용기를 비우고 채우기",
 	"create.ponder.fluid_pipe_interaction.text_1": "파이프의 끝은 다양한 블록과 상호작용할 수 있습니다.",
 	"create.ponder.fluid_pipe_interaction.text_2": "액체를 담을 수 있는 모든 블록은 비우거나 채울 수 있습니다.",
 	"create.ponder.fluid_pipe_interaction.text_3": "끝 부분에 있는 액체의 원천도 흡수할 수 있으며...",
 	"create.ponder.fluid_pipe_interaction.text_4": "...비어있는 곳에 액체를 배출할 수도 있습니다.",
 	"create.ponder.fluid_pipe_interaction.text_5": "다양한 다른 블록에서도 액체를 뽑아낼 수도 있습니다.",
-
 	"create.ponder.fluid_tank_sizes.header": "액체 탱크의 크기",
 	"create.ponder.fluid_tank_sizes.text_1": "액체 탱크는 여러개 연결하여 용량을 늘릴 수 있습니다.",
 	"create.ponder.fluid_tank_sizes.text_2": "밑면 너비는 3블록까지 늘릴 수 있습니다.",
 	"create.ponder.fluid_tank_sizes.text_3": "높이는 32블록까지 가능합니다.",
 	"create.ponder.fluid_tank_sizes.text_4": "렌치를 이용해 탱크의 창문을 닫을 수 있습니다.",
-
 	"create.ponder.fluid_tank_storage.header": "탱크에 액체 저장하기",
 	"create.ponder.fluid_tank_storage.text_1": "탱크는 많은 양의 액체를 저장합니다.",
 	"create.ponder.fluid_tank_storage.text_2": "어느 쪽에서나 파이프로 액체를 넣고 빼낼 수 있습니다.",
 	"create.ponder.fluid_tank_storage.text_3": "담긴 액체의 양은 비교기로 측정할 수 있습니다.",
 	"create.ponder.fluid_tank_storage.text_4": "그러나 서바이벌 모드에서는 액체를 직접 빼내고 넣을 순 없습니다.",
 	"create.ponder.fluid_tank_storage.text_5": "대야, 아이템 배수구, 주입기를 통해 액체를 빼내거나 채울 수 있습니다.",
-
 	"create.ponder.funnel_compat.header": "퍼널 호환성",
 	"create.ponder.funnel_compat.text_1": "퍼널은 다른 장치들 위에 설치할 수 있습니다.",
 	"create.ponder.funnel_compat.text_2": "세로 톱",
 	"create.ponder.funnel_compat.text_3": "아이템 거치대",
 	"create.ponder.funnel_compat.text_4": "아이템 배수구",
-
 	"create.ponder.funnel_direction.header": "수송 방향",
 	"create.ponder.funnel_direction.text_1": "설치하면, 보관함에서 아이템을 빼냅니다.",
 	"create.ponder.funnel_direction.text_2": "웅크리면서 설치하면, 아이템을 가져갑니다.",
 	"create.ponder.funnel_direction.text_3": "렌치를 이용해 설치 이후에도 설정을 변경할 수 있습니다.",
 	"create.ponder.funnel_direction.text_4": "다른 면에 설치해도 같은 규칙을 따릅니다.",
 	"create.ponder.funnel_direction.text_5": "벨트 위의 퍼널는 벨트의 움직임에 따라 아이템을 빼내거나 가져갑니다.",
-
 	"create.ponder.funnel_intro.header": "퍼널 사용하기",
 	"create.ponder.funnel_intro.text_1": "퍼널은 보관함에서 아이템을 옮기거나 빼낼 때 유용합니다.",
-
 	"create.ponder.funnel_redstone.header": "레드스톤 신호",
 	"create.ponder.funnel_redstone.text_1": "레드스톤 신호를 받으면 동작을 멈춥니다.",
-
 	"create.ponder.funnel_transfer.header": "직접 수송",
 	"create.ponder.funnel_transfer.text_1": "퍼널은 아이템을 보관함에서 다른 보관함로 옮깁니다.",
 	"create.ponder.funnel_transfer.text_2": "슈트나 스마트 슈트가 이런 목적에 더 적합합니다.",
 	"create.ponder.funnel_transfer.text_3": "수평 방향으로는 벨트가 적합합니다.",
-
 	"create.ponder.gantry_carriage.header": "갠트리 운반대 사용하기",
 	"create.ponder.gantry_carriage.text_1": "갠트리 운반대는 갠트리 축 위에서 움직입니다.",
 	"create.ponder.gantry_carriage.text_2": "갠트리 장치는 부착된 블록들을 움직입니다.",
-
 	"create.ponder.gantry_cascaded.header": "계단식 갠트리",
 	"create.ponder.gantry_cascaded.text_1": "갠트리 운반대에 접착제 없이 갠트리 축을 붙일 수 있습니다.",
 	"create.ponder.gantry_cascaded.text_2": "움직이는 축 위의 운반대에도 적용됩니다.",
 	"create.ponder.gantry_cascaded.text_3": "아렇게 갠트리 시스템은 여러 축으로 이어나갈 수 있습니다.",
-
 	"create.ponder.gantry_direction.header": "갠트리 동작 방향",
 	"create.ponder.gantry_direction.text_1": "갠트리 축은 서로 반대되게 설치할 수 있습니다.",
 	"create.ponder.gantry_direction.text_2": "운반대의 이동 방향은 축의 방향을 따릅니다.",
 	"create.ponder.gantry_direction.text_3": "축의 회전방향도 마찬가지입니다.",
 	"create.ponder.gantry_direction.text_4": "운반대 축의 회전에도 적용됩니다.",
-
 	"create.ponder.gantry_redstone.header": "갠트리 동력 전달",
 	"create.ponder.gantry_redstone.text_1": "레드스톤 신호를 받은 갠트리 축은 운반대를 멈춤니다.",
 	"create.ponder.gantry_redstone.text_2": "대신, 동력은 운반대의 축에게 이어집니다.",
-
 	"create.ponder.gantry_shaft.header": "갠트리 축 사용하기",
 	"create.ponder.gantry_shaft.text_1": "갠트리 축은 갠트리 장치에 필요합니다. 갠트리 운반대가 축을 따라 움직입니다.",
 	"create.ponder.gantry_shaft.text_2": "갠트리 장치는 부착된 블록들을 움직입니다.",
-
 	"create.ponder.gearbox.header": "기어박스를 이용해 동력 전달하기",
 	"create.ponder.gearbox.text_1": "회전축을 변경하는 일은 쉽게 귀찮아집니다.",
 	"create.ponder.gearbox.text_2": "기어박스는 그런 문제를 쉽게 해결합니다.",
 	"create.ponder.gearbox.text_3": "모서리 축들은 서로 다른 방향으로 돌아갑니다.",
 	"create.ponder.gearbox.text_4": "반대편 축은 거꾸로 돌아갑니다.",
-
 	"create.ponder.gearshift.header": "기어쉬프트를 이용해 동력 조절하기",
 	"create.ponder.gearshift.text_1": "기어쉬프트는 한 줄로 동력을 전달합니다.",
 	"create.ponder.gearshift.text_2": "레드스톤 신호를 받으면, 회전을 반전시킵니다.",
-
 	"create.ponder.hand_crank.header": "핸드 크랭크로 동력 생산하기",
 	"create.ponder.hand_crank.text_1": "핸드 크랭크는 플레이어가 직접 동력을 생산하는 장치입니다.",
 	"create.ponder.hand_crank.text_2": "우클릭하면 시계 반대방향으로 회전합니다.",
 	"create.ponder.hand_crank.text_3": "동력 속도는 생각보다 빠릅니다.",
 	"create.ponder.hand_crank.text_4": "웅크리고 우클릭하면 시계 방향으로 회전합니다.",
-
 	"create.ponder.hose_pulley.header": "호스 도르래로 액체 채우고 비우기",
 	"create.ponder.hose_pulley.text_1": "호스 도르래는 많은 양의 액체를 채우거나 비울 수 있습니다.",
 	"create.ponder.hose_pulley.text_2": "동력을 전달하여 호스의 높이를 정합니다.",
@@ -2494,56 +2296,47 @@
 	"create.ponder.hose_pulley.text_5": "연결된 파이프에서 호스로 전달하여 액체를 채우거나...",
 	"create.ponder.hose_pulley.text_6": "...반대 방향으로 방향을 바꿔 액체를 비울 수 있습니다.",
 	"create.ponder.hose_pulley.text_7": "호스의 채우거나 비우는 속도는 펌프 속도에 기반합니다.",
-
 	"create.ponder.hose_pulley_infinite.header": "매우 많은 양의 액체를 채우고 비우기",
 	"create.ponder.hose_pulley_infinite.text_1": "넓은 바다에서 호스 도르래를 작동시키면...",
 	"create.ponder.hose_pulley_infinite.text_2": "...물 블록을 없애거나 추가하지 않고 액체를 얻거나 버릴 수 있습니다.",
 	"create.ponder.hose_pulley_infinite.text_3": "파이프로 이런 도르래에서 무한한 액체를 얻을 수 있습니다.",
-
 	"create.ponder.hose_pulley_level.header": "호스 도르래의 채우고 비우는 기준",
 	"create.ponder.hose_pulley_level.text_1": "호스가 완전히 올라가 있을 때, 도르래는 작동하지 않습니다.",
 	"create.ponder.hose_pulley_level.text_2": "맨 위부터 비웁니다.",
 	"create.ponder.hose_pulley_level.text_3": "호스 끝부분 아래의 액체는 그대로 남습니다.",
 	"create.ponder.hose_pulley_level.text_4": "맨 아래부터 채웁니다.",
 	"create.ponder.hose_pulley_level.text_5": "호스 끝부분 위는 채우지 않습니다.",
-
 	"create.ponder.item_drain.header": "아이템 배수구로 액체 비우기",
 	"create.ponder.item_drain.text_1": "배수구는 아이템에서 액체를 비웁니다.",
 	"create.ponder.item_drain.text_2": "우클릭하여 손에 든 아이템에서 액체를 붓습니다.",
 	"create.ponder.item_drain.text_3": "아이템이 옆에서 들어온다면...",
 	"create.ponder.item_drain.text_4": "...아이템은 굴라가며 담긴 액체를 비웁니다.",
 	"create.ponder.item_drain.text_5": "배수구 탱크에 있는 액체는 파이프로 옮길 수 있습니다.",
-
 	"create.ponder.item_vault_sizes.header": "아이템 금고의 크기",
 	"create.ponder.item_vault_sizes.text_1": "아이템 금고를 여러개 연결하여 총량을 늘릴 수 있습니다.",
 	"create.ponder.item_vault_sizes.text_2": "최대 너비는 3 블록이고...",
 	"create.ponder.item_vault_sizes.text_3": "...길이는 너비의 3배까지 늘릴 수 있습니다.",
-
 	"create.ponder.item_vault_storage.header": "금고에 아이템 보관하기",
 	"create.ponder.item_vault_storage.text_1": "아이템 금고는 많은 아이템을 보관할 수 있습니다.",
 	"create.ponder.item_vault_storage.text_2": "하지만, 플레이어가 직접 꺼내거나 보관할 수는 없습니다.",
 	"create.ponder.item_vault_storage.text_3": "아이템을 수송할 수 있는 모든 부품은 아이템을 넣거나...",
 	"create.ponder.item_vault_storage.text_4": "...금고에서 아이템을 빼낼 수 있습니다",
-
 	"create.ponder.large_cogwheel.header": "큰 톱니바퀴로 동력 전달하기",
 	"create.ponder.large_cogwheel.text_1": "큰 톱니바퀴는 수직으로 서로 맞물립니다.",
 	"create.ponder.large_cogwheel.text_2": "이는 다른 축으로 동력을 전달하는데 도움이 됩니다.",
-
 	"create.ponder.linear_chassis_attachment.header": "직선 섀시를 이용해 블록 붙이기",
 	"create.ponder.linear_chassis_attachment.text_1": "직선 섀시의 열린 면은 접착할 수 있습니다.",
 	"create.ponder.linear_chassis_attachment.text_2": "다시 클릭하면 다른 면도 접착할 수 있게 만듭니다.",
 	"create.ponder.linear_chassis_attachment.text_3": "빈 손으로 웅크리고 우클릭하여 접착제를 없앨 수 있습니다.",
 	"create.ponder.linear_chassis_attachment.text_4": "직선 섀시의 접착면은 접착면 앞에 있는 블록들을 연결합니다.",
 	"create.ponder.linear_chassis_attachment.text_5": "렌치로 이용해 섀시의 접착 거리를 조절할 수 있습니다.",
-	"create.ponder.linear_chassis_attachment.text_6": "[CTRL]키를 누르고 스크롤하면 연결된 모든 섀시의 거리를 조절할 수 있습니다.",
+	"create.ponder.linear_chassis_attachment.text_6": "CTRL을 누르고 스크롤하면 연결된 모든 섀시의 거리를 조절할 수 있습니다.",
 	"create.ponder.linear_chassis_attachment.text_7": "다른 면에 블록을 붙이려면 접착제가 필요합니다.",
 	"create.ponder.linear_chassis_attachment.text_8": "이런 원리를 통해 구조물이 장치로써 움직일 수 있게 됩니다.",
-
 	"create.ponder.linear_chassis_group.header": "여러 직선 섀시 움직이기",
 	"create.ponder.linear_chassis_group.text_1": "직선 섀시는 다른 직선 섀시와 연결될 수 있습니다.",
 	"create.ponder.linear_chassis_group.text_2": "하나가 움직이면, 다른 섀시도 같이 움직입니다.",
 	"create.ponder.linear_chassis_group.text_3": "다른 종류의 섀시, 다른 면을 바라보는 섀시는 붙지 않습니다.",
-
 	"create.ponder.mechanical_arm.header": "기계 팔 설치하기",
 	"create.ponder.mechanical_arm.text_1": "기계 팔은 설치되기 전, 입력부와 출력부를 지정해야 합니다.",
 	"create.ponder.mechanical_arm.text_2": "우클릭으로 보관함을 가진 블록을 대상으로 지정합니다.",
@@ -2553,7 +2346,6 @@
 	"create.ponder.mechanical_arm.text_6": "거리안에 있다면 여러 블록을 지정할 수 있습니다.",
 	"create.ponder.mechanical_arm.text_7": "하지만 모든 보관함을 지닌 블록이 지정되지는 않습니다.",
 	"create.ponder.mechanical_arm.text_8": "퍼널와 아이템 거치대가 이런 문제를 해결할 수 있습니다.",
-
 	"create.ponder.mechanical_arm_filtering.header": "기계 팔 필터링",
 	"create.ponder.mechanical_arm_filtering.text_1": "입력부",
 	"create.ponder.mechanical_arm_filtering.text_2": "출력부",
@@ -2561,7 +2353,6 @@
 	"create.ponder.mechanical_arm_filtering.text_4": "하지만 기계 팔자체에서 필터 기능을 지원하지는 않습니다.",
 	"create.ponder.mechanical_arm_filtering.text_5": "대신, 황동 퍼널의 필터는 기계 팔의 필터역할을 합니다.",
 	"create.ponder.mechanical_arm_filtering.text_6": "기계 팔은 필터에 맞게 적당한 양만 가져가는 똑똑한 친구입니다.",
-
 	"create.ponder.mechanical_arm_modes.header": "기계 팔의 분배 설정",
 	"create.ponder.mechanical_arm_modes.text_1": "입력부",
 	"create.ponder.mechanical_arm_modes.text_2": "출력부",
@@ -2572,16 +2363,13 @@
 	"create.ponder.mechanical_arm_modes.text_7": "어느 한 곳이 더 전달받을 수 없다면, 그 곳은 넘어갑니다.",
 	"create.ponder.mechanical_arm_modes.text_8": "[돌아가며 처리(강제적)]은 전달할 곳을 절대 넘어가지 않고, 공간이 남을 때까지 기다립니다.",
 	"create.ponder.mechanical_arm_modes.text_9": "[설정 순서 우선시]은 기계 팔을 설치할 때 설정한 곳 순서대로 아이템을 전달합니다.",
-
 	"create.ponder.mechanical_arm_redstone.header": "기계 팔과 레드스톤",
 	"create.ponder.mechanical_arm_redstone.text_1": "레드스톤 신호를 받으면, 기계 팔은 작동을 멈춥니다.",
 	"create.ponder.mechanical_arm_redstone.text_2": "작동을 멈추기 전에, 기계 팔은 입력된 행동을 마무리합니다.",
 	"create.ponder.mechanical_arm_redstone.text_3": "따라서 부정 펄스는 한 번만 작동하게 합니다.",
-
 	"create.ponder.mechanical_bearing.header": "베어링으로 구조물 옮기기",
 	"create.ponder.mechanical_bearing.text_1": "베어링은 앞에 있는 블록을 부착시킵니다.",
 	"create.ponder.mechanical_bearing.text_2": "동력을 받으면, 블록들은 회전하는 구조물로 변합니다.",
-
 	"create.ponder.mechanical_crafter.header": "조합기 설치하기",
 	"create.ponder.mechanical_crafter.text_1": "다수의 조합기로 모든 조합을 자동화할 수 있습니다.",
 	"create.ponder.mechanical_crafter.text_2": "렌치를 이용해, 조합기의 경로를 변경할 수 있습니다.",
@@ -2591,62 +2379,50 @@
 	"create.ponder.mechanical_crafter.text_6": "앞면을 우클릭해서 직접 아이템을 넣습니다.",
 	"create.ponder.mechanical_crafter.text_7": "모든 면이 아이템을 가지고 있다면, 조합이 시작됩니다.",
 	"create.ponder.mechanical_crafter.text_8": "모든 면이 아이템을 가지고 있지 않아도, 레드스톤 신호로 조합을 강제 시작할 수 있습니다.",
-
 	"create.ponder.mechanical_crafter_connect.header": "조합기에 아이템 넣기",
 	"create.ponder.mechanical_crafter_connect.text_1": "조합기에 아이템을 자동으로 넣을 수 있습니다.",
 	"create.ponder.mechanical_crafter_connect.text_2": "후면에 렌치를 이용해 조합기 보관함을 연결할 수 있습니다.",
 	"create.ponder.mechanical_crafter_connect.text_3": "이제 모든 조합기가 한 곳에서 아이템을 받습니다.",
-
 	"create.ponder.mechanical_crafter_covers.header": "조합기 슬롯 덮기",
 	"create.ponder.mechanical_crafter_covers.text_1": "몇몇 조합은 빈 공간을 채워줄 조합기가 필요합니다.",
 	"create.ponder.mechanical_crafter_covers.text_2": "슬롯 덮개를 이용해, 조합기에 빈 공간을 만들 수 있습니다.",
 	"create.ponder.mechanical_crafter_covers.text_3": "렌치를 이용해 보관함을 연결해도 덮개가 있는 조합기에는 아이템이 들어오지 않습니다.",
-
 	"create.ponder.mechanical_drill.header": "드릴을 이용해 블록 부수기",
 	"create.ponder.mechanical_drill.text_1": "동력을 받으면, 드릴은 앞에 있는 블록을 파괴합니다.",
 	"create.ponder.mechanical_drill.text_2": "채굴 속도는 동력 속도에 비례합니다.",
-
 	"create.ponder.mechanical_drill_contraption.header": "구조물에서의 드릴",
 	"create.ponder.mechanical_drill_contraption.text_1": "드릴이 움직이는 구조물의 일부면...",
 	"create.ponder.mechanical_drill_contraption.text_2": "...드릴이 부딪히는 블록을 파괴합니다.",
-
 	"create.ponder.mechanical_harvester.header": "구조물에서의 수확기",
 	"create.ponder.mechanical_harvester.text_1": "수확기가 움직이는 구조물의 일부면...",
 	"create.ponder.mechanical_harvester.text_2": "...지나가는 길에 있는 작물을 수확하고, 성장 수치를 초기화합니다.",
-
 	"create.ponder.mechanical_mixer.header": "믹서로 아이템 가공하기",
 	"create.ponder.mechanical_mixer.text_1": "믹서와 대야를 이용해 몇몇 조합을 자동화할 수 있습니다.",
 	"create.ponder.mechanical_mixer.text_2": "가능한 조합법은 어느 무형 조합법이나 가능하며, 모드에서 추가된 조합법도 있습니다.",
 	"create.ponder.mechanical_mixer.text_3": "몇몇 조합법은 블레이즈 버너의 열을 요구합니다.",
 	"create.ponder.mechanical_mixer.text_4": "필터 슬롯을 이용해 조합법이 겹치는 것을 방지합니다.",
-
 	"create.ponder.mechanical_piston.header": "기계식 피스톤으로 구조물 옮기기",
 	"create.ponder.mechanical_piston.text_1": "기계식 피스톤은 블록들을 앞으로 움직입니다.",
 	"create.ponder.mechanical_piston.text_2": "속도와 방향은 들어오는 동력에 기반합니다.",
 	"create.ponder.mechanical_piston.text_3": "끈끈이 기계식 피스톤은 블록들을 다시 끌어옵니다.",
-
 	"create.ponder.mechanical_piston_modes.header": "기계식 피스톤의 이동 설정",
 	"create.ponder.mechanical_piston_modes.text_1": "피스톤이 움직임을 멈추면, 움직인 구조물은 블록으로 바뀝니다.",
 	"create.ponder.mechanical_piston_modes.text_2": "블록으로 바뀌지 않게 하거나, 시작지점에서만 바뀌도록 설정할 수 있습니다.",
-
 	"create.ponder.mechanical_plough.header": "구조물에서의 쟁기",
 	"create.ponder.mechanical_plough.text_1": "쟁기가 움직이는 구조물의 일부면...",
 	"create.ponder.mechanical_plough.text_2": "...히트박스가 없는 블록을 파괴합니다.",
 	"create.ponder.mechanical_plough.text_3": "또, 쟁기는 경작지를 만들 수 있습니다.",
 	"create.ponder.mechanical_plough.text_4": "...그리고 엔티티를 피해없이 날려보낼 수도 있습니다!",
-
 	"create.ponder.mechanical_press.header": "압착기로 아이템 가공하기",
 	"create.ponder.mechanical_press.text_1": "압착기는 아래에 놓인 아이템을 가공할 수 있습니다.",
 	"create.ponder.mechanical_press.text_2": "가공할 아이템은 압착기 아래에 떨구거나 아이템 거치대에 올려두어야 합니다.",
 	"create.ponder.mechanical_press.text_3": "아이템이 벨트에 있으면...",
 	"create.ponder.mechanical_press.text_4": "...압착기가 알아서 아이템 이동을 멈추고 가공합니다.",
-
 	"create.ponder.mechanical_press_compacting.header": "압착기로 아이템 압축하기",
 	"create.ponder.mechanical_press_compacting.text_1": "대야와 함께 사용해서 아이템을 압축할 수 있습니다.",
 	"create.ponder.mechanical_press_compacting.text_2": "가능한 조합법은 2x2 / 3x3 조합법을 포함하고, 모드에서 추가된 조합법도 있습니다.",
 	"create.ponder.mechanical_press_compacting.text_3": "몇몇 조합법은 블레이즈 버너의 열을 요구합니다.",
 	"create.ponder.mechanical_press_compacting.text_4": "필터 슬롯을 이용해 조합법이 겹치는 것을 방지합니다.",
-
 	"create.ponder.mechanical_pump_flow.header": "펌프를 이용해 액체 옮기기",
 	"create.ponder.mechanical_pump_flow.text_1": "펌프는 연결된 파이프속 흐름을 관리합니다.",
 	"create.ponder.mechanical_pump_flow.text_2": "동력을 전달받으면 화살표가 흐름의 방향을 알려줍니다.",
@@ -2654,45 +2430,37 @@
 	"create.ponder.mechanical_pump_flow.text_4": "...화살표 앞의 파이프는 액체를 밀어냅니다.",
 	"create.ponder.mechanical_pump_flow.text_5": "동력 방향을 반전시키면 흐름의 방향도 반전됩니다.",
 	"create.ponder.mechanical_pump_flow.text_6": "렌치로 펌프 방향 자체를 돌릴 수도 있습니다.",
-
 	"create.ponder.mechanical_pump_speed.header": "펌프의 처리율",
 	"create.ponder.mechanical_pump_speed.text_1": "동력 속도와는 상관없이 펌프는 16블록 길이의 파이프까지 영향을 미칩니다.",
 	"create.ponder.mechanical_pump_speed.text_2": "동력 속도를 높이면 액체가 흐르는 속도가 높아지고...",
 	"create.ponder.mechanical_pump_speed.text_3": "...옮기는 액체의 양도 증가합니다.",
 	"create.ponder.mechanical_pump_speed.text_4": "펌프는 병렬로 설치할 수 있습니다.",
 	"create.ponder.mechanical_pump_speed.text_5": "펌프 방향을 바꾸어 흐름의 뱡향을 통일할 수 있습니다.",
-
 	"create.ponder.mechanical_saw_breaker.header": "톱으로 나무 베기",
 	"create.ponder.mechanical_saw_breaker.text_1": "동력을 받으면 앞에 있는 나무를 벱니다.",
 	"create.ponder.mechanical_saw_breaker.text_2": "두꺼운 나무를 벨려면, 땅에 붙어있는 마지막 나무 블록을 파괴해야합니다.",
-
 	"create.ponder.mechanical_saw_contraption.header": "구조물에서의 톱",
 	"create.ponder.mechanical_saw_contraption.text_1": "톱이 움직이는 구조물의 일부면...",
 	"create.ponder.mechanical_saw_contraption.text_2": "...부딪히는 모든 나무를 벱니다.",
-
 	"create.ponder.mechanical_saw_processing.header": "톱으로 아이템 가공하기",
 	"create.ponder.mechanical_saw_processing.text_1": "위를 바라보는 톱은 다양한 아이템을 가공합니다.",
 	"create.ponder.mechanical_saw_processing.text_2": "가공되는 아이템은 언제나 동력의 반대로 움직입니다.",
 	"create.ponder.mechanical_saw_processing.text_3": "톱은 벨트와 연동이 가능합니다.",
 	"create.ponder.mechanical_saw_processing.text_4": "재료가 여러 결과물로 가공될 수 있을 때, 필터로 제한할 수 있습니다.",
 	"create.ponder.mechanical_saw_processing.text_5": "필터가 없다면 톱은 모든 결과물을 순서대로 만듭니다.",
-
 	"create.ponder.millstone.header": "맷돌로 아이템 갈기",
 	"create.ponder.millstone.text_1": "맷돌은 아이템을 갈아버립니다!",
 	"create.ponder.millstone.text_2": "톱니바퀴를 옆에 설치하여 돌릴 수 있습니다.",
 	"create.ponder.millstone.text_3": "윗면으로 아이템을 투입하세요.",
 	"create.ponder.millstone.text_4": "시간이 지난 후, 우클릭으로 결과물을 얻을 수 있습니다.",
 	"create.ponder.millstone.text_5": "결과물은 자동으로 빼낼 수 있습니다.",
-
 	"create.ponder.nixie_tube.header": "닉시관 사용하기",
 	"create.ponder.nixie_tube.text_1": "레드스톤 신호를 받으면, 닉시관은 레드스톤 신호 세기를 나타냅니다.",
 	"create.ponder.nixie_tube.text_2": "이름표를 사용하여 원하는 글자를 나타낼 수도 있습니다.",
 	"create.ponder.nixie_tube.text_3": "염료를 들고 우클릭하여 색을 바꿀 수 있습니다.",
-
 	"create.ponder.piston_pole.header": "피스톤 연장 축",
 	"create.ponder.piston_pole.text_1": "연장 축이 없으면, 기계식 피스톤은 움직일 수 없습니다.",
 	"create.ponder.piston_pole.text_2": "연장 축의 수가 곧 피스톤이 연장할 수 있는 거리입니다.",
-
 	"create.ponder.portable_fluid_interface.header": "구조물 장치의 액체 교환",
 	"create.ponder.portable_fluid_interface.text_1": "움직이는 구조물의 액체 탱크는 파이프와 연결되지 않습니다.",
 	"create.ponder.portable_fluid_interface.text_2": "액체 인터페이스는 장치를 멈추지 않아도 탱크와 상호작용할 수 있습니다.",
@@ -2702,7 +2470,6 @@
 	"create.ponder.portable_fluid_interface.text_6": "액체를 넣을 수도 있고...",
 	"create.ponder.portable_fluid_interface.text_7": "...장치에서 액체를 뺄 수도 있습니다.",
 	"create.ponder.portable_fluid_interface.text_8": "일정 시간동안 액체가 교환되지 않으면, 장치는 움직입니다.",
-
 	"create.ponder.portable_storage_interface.header": "구조물 장치의 아이템 교환",
 	"create.ponder.portable_storage_interface.text_1": "움직이는 장치의 보관함은 플레이어가 열 수 없습니다.",
 	"create.ponder.portable_storage_interface.text_2": "아이템 인터페이스는 장치를 멈추지 않아도 장치 보관함과 상호작용할 수 있습니다.",
@@ -2712,34 +2479,28 @@
 	"create.ponder.portable_storage_interface.text_6": "아이템을 넣을 수도 있고...",
 	"create.ponder.portable_storage_interface.text_7": "...장치에서 아이템을 뺄 수도 있습니다.",
 	"create.ponder.portable_storage_interface.text_8": "일정 시간동안 아이템이 교환되지 않으면, 장치는 움직입니다.",
-
 	"create.ponder.portable_storage_interface_redstone.header": "레드스톤 설정",
 	"create.ponder.portable_storage_interface_redstone.text_1": "레드스톤 신호를 받으면 인터페이스가 작동하지 않습니다.",
-
 	"create.ponder.powered_latch.header": "레드스톤 걸쇠 사용하기",
 	"create.ponder.powered_latch.text_1": "레드스톤 걸쇠는 설정 가능한 레버입니다.",
 	"create.ponder.powered_latch.text_2": "뒤에서 오는 신호는 걸쇠 신호를 키고...",
 	"create.ponder.powered_latch.text_3": "...옆에서 오는 신호는 걸쇠 신호를 끕니다.",
 	"create.ponder.powered_latch.text_4": "레드스톤 걸쇠는 직접 끄고 킬 수도 있습니다.",
-
 	"create.ponder.powered_toggle_latch.header": "레드스톤 토글 걸쇠 사용하기",
 	"create.ponder.powered_toggle_latch.text_1": "레드스톤 토글 걸쇠는 설정 가능한 레버입니다.",
 	"create.ponder.powered_toggle_latch.text_2": "뒤에서 오는 신호는 걸쇠의 신호를 킵니다.",
 	"create.ponder.powered_toggle_latch.text_3": "혹은 끕니다.",
 	"create.ponder.powered_toggle_latch.text_4": "레드스톤 토글 걸쇠는 직접 끄고 킬 수도 있습니다.",
-
 	"create.ponder.pulse_extender.header": "펄스 연장기로 신호 조절하기",
 	"create.ponder.pulse_extender.text_1": "펄스 연장기는 지나가는 신호의 길이를 늘릴 수 있습니다.",
 	"create.ponder.pulse_extender.text_2": "연장기는 짧은 딜레이 후에 작동하고...",
 	"create.ponder.pulse_extender.text_3": "...설정된 시간 이후에 꺼집니다.",
 	"create.ponder.pulse_extender.text_4": "마우스 휠을 이용하여 연장 시간을 조절할 수 있습니다.",
 	"create.ponder.pulse_extender.text_5": "최대 신호 연장 시간은 30분입니다",
-
 	"create.ponder.pulse_repeater.header": "펄스 중계기 사용하기",
 	"create.ponder.pulse_repeater.text_1": "펄스 중계기는 모든 레드스톤 신호를 1틱 신호로 바꿉니다.",
 	"create.ponder.pulse_repeater.text_2": "마우스 휠을 이용하여 딜레이 시간을 조절할 수 있습니다.",
 	"create.ponder.pulse_repeater.text_3": "최대 신호 딜레이 시간은 30분입니다",
-
 	"create.ponder.radial_chassis.header": "원형 섀시를 이용해 블록 붙이기",
 	"create.ponder.radial_chassis.text_1": "원형 섀시는 다른 원형 섀시와 이어집니다.",
 	"create.ponder.radial_chassis.text_2": "하나가 움직이면, 다른 섀시도 같이 움직입니다.",
@@ -2750,11 +2511,9 @@
 	"create.ponder.radial_chassis.text_7": "...해당 층 반지름 안에 있는 모든 블록을 연결합니다.",
 	"create.ponder.radial_chassis.text_8": "렌치룰 이용하여, 섀시의 부착 반지름을 조절할 수 있습니다.",
 	"create.ponder.radial_chassis.text_9": "접착면 반지름 밖의 블록은 붙지 않습니다.",
-
 	"create.ponder.redstone_contact.header": "동형 감지기",
 	"create.ponder.redstone_contact.text_1": "서로 마주보는 동형 감지기는 레드스톤 신호를 발생시킵니다.",
 	"create.ponder.redstone_contact.text_2": "어느 한쪽이 움직이는 장치의 일부라도 동일하게 작동합니다.",
-
 	"create.ponder.redstone_link.header": "레드스톤 링크 사용하기",
 	"create.ponder.redstone_link.text_1": "레드스톤 링크는 레드스톤 신호를 무선으로 전달합니다.",
 	"create.ponder.redstone_link.text_2": "웅크리면서 우클릭하여 신호를 수신하게 만듭니다.",
@@ -2762,20 +2521,16 @@
 	"create.ponder.redstone_link.text_4": "수신기는 128블록이내의 발신기 레드스톤 신호 세기를 전달합니다.",
 	"create.ponder.redstone_link.text_5": "두 슬롯에 아이템을 두어 주파수를 설정할 수 있습니다.",
 	"create.ponder.redstone_link.text_6": "맞는 주파수끼리만 레드스톤 링크가 작동합니다.",
-
 	"create.ponder.rope_pulley.header": "밧줄 도르래로 구조물 옮기기",
 	"create.ponder.rope_pulley.text_1": "밧줄 도르래는 동력을 받으면 블록을 수직으로 옮깁니다.",
 	"create.ponder.rope_pulley.text_2": "방향과 속도는 들어오는 동력에 기반합니다.",
-
 	"create.ponder.rope_pulley_attachment.header": "구조물로서의 밧줄 도르래",
 	"create.ponder.rope_pulley_attachment.text_1": "도르래가 장치에 의해 움직여지면...",
 	"create.ponder.rope_pulley_attachment.text_2": "...도르래에 딸린 구조물도 함께 움직입니다.",
 	"create.ponder.rope_pulley_attachment.text_3": "다만 도르래는 멈춰있을 때만 작동합니다.",
-
 	"create.ponder.rope_pulley_modes.header": "밧줄 도르래의 이동 설정",
 	"create.ponder.rope_pulley_modes.text_1": "도르래가 움직임을 멈추면, 움직인 구조물은 블록으로 바뀝니다.",
 	"create.ponder.rope_pulley_modes.text_2": "블록으로 바뀌지 않게 하거나, 시작지점에서만 바뀌도록 설정할 수 있습니다.",
-
 	"create.ponder.rose_quartz_lamp.header": "장밋빛 석영 조명",
 	"create.ponder.rose_quartz_lamp.text_1": "장밋빛 석영 조명은 레드스톤 신호를 받으면 켜집니다.",
 	"create.ponder.rose_quartz_lamp.text_2": "켜진 상태에서는 레드스톤 신호를 방출합니다.",
@@ -2783,51 +2538,41 @@
 	"create.ponder.rose_quartz_lamp.text_4": "...신호를 받은 조명만 켜지고 나머지 조명은 꺼집니다.",
 	"create.ponder.rose_quartz_lamp.text_5": "비교기는 켜진 조명의 거리와 비례하여 신호를 방출합니다.",
 	"create.ponder.rose_quartz_lamp.text_6": "조명은 렌치로 끄고 켤 수도 있습니다.",
-
 	"create.ponder.rotation_speed_controller.header": "회전 속도 컨트롤러 사용하기",
 	"create.ponder.rotation_speed_controller.text_1": "회전 속도 컨트롤러는 회전을 위 톱니바퀴로 회전을 전달합니다.",
 	"create.ponder.rotation_speed_controller.text_2": "스크롤하여 톱니바퀴에 전달되는 RPM을 조절합니다.",
-
 	"create.ponder.sail.header": "날개를 이용해 풍차 조립하기",
 	"create.ponder.sail.text_1": "날개는 풍차를 만들기에 좋은 블록입니다.",
 	"create.ponder.sail.text_2": "강력 접착제나 섀시 없이 연결할 수 있습니다",
 	"create.ponder.sail.text_3": "염료로 우클릭하여 염색합니다.",
 	"create.ponder.sail.text_4": "가위로 우클릭하여 틀만 남길 수 있습니다.",
-
 	"create.ponder.sail_frame.header": "날개 틀을 이용해 풍차 조립하기",
 	"create.ponder.sail_frame.text_1": "날개 틀은 풍차를 만들기에 좋은 블록입니다.",
 	"create.ponder.sail_frame.text_2": "강력 접착제나 섀시 없이 연결할 수 있습니다",
-
 	"create.ponder.sequenced_gearshift.header": "순서 기어쉬프트를 통한 회전 속도 제어",
 	"create.ponder.sequenced_gearshift.text_1": "순서 기어쉬프트는 설정한 지시에 따라 회전됩니다.",
 	"create.ponder.sequenced_gearshift.text_2": "오른쪽 버튼을 누르면 설정 창이 열립니다.",
 	"create.ponder.sequenced_gearshift.text_3": "레드스톤 신호를 받으면 설정된 지시에 따라 회전하기 시작합니다.",
 	"create.ponder.sequenced_gearshift.text_4": "완료되면, 다음 레드스톤 신호를 기다립니다.",
 	"create.ponder.sequenced_gearshift.text_5": "레드스톤 비교기를 사용하면 현재 진행 상황을 알 수 있습니다.",
-
 	"create.ponder.shaft.header": "축을 통한 동력 전달",
 	"create.ponder.shaft.text_1": "축은 일직선으로 회전을 전달합니다.",
-
 	"create.ponder.shaft_casing.header": "축에 케이스 씌우기",
 	"create.ponder.shaft_casing.text_1": "황동 케이스나 안산암 케이스로 축을 장식할 수 있습니다.",
-
 	"create.ponder.smart_chute.header": "스마트 슈트를 통한 아이템 필터",
 	"create.ponder.smart_chute.text_1": "스마트 슈트는 필터 기능이 있는 슈트입니다.",
 	"create.ponder.smart_chute.text_2": "필터 슬롯으로 아이템을 지정하여 원하는 아이템을 입출력할 수 있습니다.",
 	"create.ponder.smart_chute.text_3": "스크롤하여 한 번에 내보내는 아이템의 양을 조절합니다.",
 	"create.ponder.smart_chute.text_4": "레드스톤 신호를 받으면 작동을 멈춥니다.",
-
 	"create.ponder.smart_pipe.header": "스마트 파이프를 통한 액체 필터",
 	"create.ponder.smart_pipe.text_1": "스마트 파이프는 필터 기능이 있는 파이프입니다.",
 	"create.ponder.smart_pipe.text_2": "비울 곳에다 설치하면, 어떤 액체를 뽑아낼지 설정할 수 있습니다.",
 	"create.ponder.smart_pipe.text_3": "필터 슬롯에 원하는 액체가 담긴 용기를 우클릭하면 됩니다.",
 	"create.ponder.smart_pipe.text_4": "다른 곳에 설치하면, 스마트 파이프는 맞는 액체만 통과시킵니다.",
-
 	"create.ponder.speedometer.header": "속도 계측기를 통한 정보 확인",
 	"create.ponder.speedometer.text_1": "속도 계측기는 연결된 장치의 속도를 표시합니다.",
 	"create.ponder.speedometer.text_2": "고글을 장착하면, 세부 정보를 확인할 수 있습니다.",
 	"create.ponder.speedometer.text_3": "속도 계측기의 측정값에 따라 비교기가 레드스톤 신호를 내보냅니다.",
-
 	"create.ponder.spout_filling.header": "주입기로 아이템에 액체 채우기",
 	"create.ponder.spout_filling.text_1": "주입기는 아래있는 아이템을 액체를 채웁니다.",
 	"create.ponder.spout_filling.text_2": "주입기 탱크는 직접 건드릴 수 없습니다.",
@@ -2835,13 +2580,11 @@
 	"create.ponder.spout_filling.text_4": "주입기 아래 아이템 거치대에 아이템을 놓아, 액체를 채울 수 있습니다.",
 	"create.ponder.spout_filling.text_5": "아이템이 벨트에 있으면...",
 	"create.ponder.spout_filling.text_6": "...주입기가 알아서 아이템 이동을 멈추고 가공합니다.",
-
 	"create.ponder.stabilized_bearings.header": "베어링 안정화",
 	"create.ponder.stabilized_bearings.text_1": "베어링이 움직이는 구조물의 일부분이어도...",
 	"create.ponder.stabilized_bearings.text_2": "...방향이 유지됩니다.",
 	"create.ponder.stabilized_bearings.text_3": "베어링에 블록이 부착되어도...",
 	"create.ponder.stabilized_bearings.text_4": "...부착된 구조물의 방향이 유지됩니다.",
-
 	"create.ponder.steam_engine.header": "증기 엔진 가동하기",
 	"create.ponder.steam_engine.text_1": "증기 엔진은 액체 탱크에 설치할 수 있습니다.",
 	"create.ponder.steam_engine.text_10": "레벨 4",
@@ -2856,7 +2599,6 @@
 	"create.ponder.steam_engine.text_7": "더 많은 열, 물, 크기를 제공하면 엔진이 더 강력해집니다.",
 	"create.ponder.steam_engine.text_8": "보일러의 레벨은 엔지니어의 고글로 확인할 수 있습니다.",
 	"create.ponder.steam_engine.text_9": "레벨이 오를때마다, 추가된 엔진이 최대로 가동할 수 있습니다",
-
 	"create.ponder.steam_whistle.header": "기적 장치 사용하기",
 	"create.ponder.steam_whistle.text_1": "기적 장치는 액체 탱크에 설치할 수 있습니다.",
 	"create.ponder.steam_whistle.text_2": "탱크가 충분한 열은 가지고 있을 때...",
@@ -2864,18 +2606,15 @@
 	"create.ponder.steam_whistle.text_4": "장치를 더 붙이면 음이 낮아집니다",
 	"create.ponder.steam_whistle.text_5": "렌치로 옥타브를 변경할 수 있습니다",
 	"create.ponder.steam_whistle.text_6": "엔지니어의 고글로 기적 장치의 음계를 확인할 수 있습니다",
-
 	"create.ponder.sticker.header": "부착기를 통한 블록 부착",
 	"create.ponder.sticker.text_1": "부착기는 레드스톤으로 제어할 수 있습니다.",
 	"create.ponder.sticker.text_2": "신호를 받으면, 부착기가 블록을 부착합니다.",
 	"create.ponder.sticker.text_3": "장치가 이동하면 부착된 블록도 같이 이동합니다.",
 	"create.ponder.sticker.text_4": "다시 한번 신호를 받으면, 블록이 부착되지 않습니다.",
-
 	"create.ponder.stressometer.header": "피로도 계측기를 통한 동적 정보 확인",
 	"create.ponder.stressometer.text_1": "피로도 계측기는 연결된 장치의 현재 부하를 표시합니다.",
 	"create.ponder.stressometer.text_2": "고글을 장착하면, 세부 정보를 확인할 수 있습니다.",
 	"create.ponder.stressometer.text_3": "피로도 계측기의 측정값에 따라 비교기가 레드스톤 신호를 내보냅니다.",
-
 	"create.ponder.super_glue.header": "강력 접착제로 블록 붙이기",
 	"create.ponder.super_glue.text_1": "강력 접착제는 블록들을 하나의 움직일 수 있는 구조물로 접착할 수 있습니다",
 	"create.ponder.super_glue.text_2": "양 끝점을 클릭하면 새로운 '접착' 영역을 생성합니다",
@@ -2883,19 +2622,16 @@
 	"create.ponder.super_glue.text_4": "영역안의 블록들은 다같이 움직입니다",
 	"create.ponder.super_glue.text_5": "영역을 공유하는 블록들도 다같이 움직입니다",
 	"create.ponder.super_glue.text_6": "블록에 매달린 블록들은 접착제를 필요로하지 않습니다",
-
 	"create.ponder.track_chunks.header": "언로드된 청크에서의 이동",
 	"create.ponder.track_chunks.text_1": "언로드된 청크에서도 선로는 작동합니다.",
 	"create.ponder.track_chunks.text_2": "기차는 이런 청크에서도 문제없이 이동할 수 있습니다.",
 	"create.ponder.track_chunks.text_3": "이 기차도 정거장이나 적신호에 정지합니다.",
 	"create.ponder.track_chunks.text_4": "그러나 드릴이나 다른 장치는 작동하지 않습니다.",
 	"create.ponder.track_chunks.text_5": "플레이어 주변으로 오면, 기차는 다시 나타납니다.",
-
 	"create.ponder.track_observer.header": "기차 감지하기",
 	"create.ponder.track_observer.text_1": "선로를 선택하고 근처에 감지기를 설치하세요.",
 	"create.ponder.track_observer.text_2": "감지기는 해당 선로를 지나가는 기차를 감지합니다.",
 	"create.ponder.track_observer.text_3": "감지기에 필터를 적용하여 저장소를 감지할 수 있습니다.",
-
 	"create.ponder.track_placement.header": "기차 선로 설치하기",
 	"create.ponder.track_placement.text_1": "기차 구조물을 위한 새로운 레일입니다.",
 	"create.ponder.track_placement.text_2": "여러 레일을 설치하려면, 기존 레일에 우클릭하세요.",
@@ -2905,12 +2641,10 @@
 	"create.ponder.track_placement.text_6": "달리기 버튼을 누른채 연결하면...",
 	"create.ponder.track_placement.text_7": "...가장 길게 구부러진 선로를 설치합니다.",
 	"create.ponder.track_placement.text_8": "다른 손에 있는 재료는 선로 아래에 자동으로 깔립니다.",
-
 	"create.ponder.track_portal.header": "선로와 네더",
 	"create.ponder.track_portal.text_1": "네더 차원문을 향해 설치된 선로는...",
 	"create.ponder.track_portal.text_2": "...차원문을 넘어 동일한 선로를 생성합니다.",
 	"create.ponder.track_portal.text_3": "기차는 이제 선로를 통해 차원을 넘어갈 수 있습니다.",
-
 	"create.ponder.train_assembly.header": "기차 조립하기",
 	"create.ponder.train_assembly.text_1": "선로를 선택하고 근처에 기차 정거장을 설치하세요.",
 	"create.ponder.train_assembly.text_10": "모든 기차는 기차 조종기가 필요합니다.",
@@ -2924,10 +2658,9 @@
 	"create.ponder.train_assembly.text_4": "조립할 때는 다른 기차가 이 정거장에 정차하지 않습니다.",
 	"create.ponder.train_assembly.text_5": "선로에 기차 케이스를 설치하여 새로운 대차를 만드세요.",
 	"create.ponder.train_assembly.text_6": "선로를 우클릭하여 다른 대차 디자인으로 변경할 수 있습니다.",
-	"create.ponder.train_assembly.text_7": "강력 접착제로 블록을 붙여보세요.",
+	"create.ponder.train_assembly.text_7": "강력 접착제로 블록을 붙여 보세요.",
 	"create.ponder.train_assembly.text_8": "기차는 조립될 때 창고나 통에 연료가 있다면 더 빨리 이동합니다.",
 	"create.ponder.train_assembly.text_9": "금고에 있는 연료는 기차가 사용하지 않습니다.",
-
 	"create.ponder.train_controls.header": "기차 조종하기",
 	"create.ponder.train_controls.text_1": "기차 조종기는 모든 기차 구조물에 필요합니다.",
 	"create.ponder.train_controls.text_2": "조립되었으면, 우클릭해서 운전을 시작합니다.",
@@ -2937,7 +2670,6 @@
 	"create.ponder.train_controls.text_6": "기차는 정거장에 있을 때만 블록 상태로 해체할 수 있습니다.",
 	"create.ponder.train_controls.text_7": "기적 장치는 달리기 키로 작동시킬 수 있습니다.",
 	"create.ponder.train_controls.text_8": "웅크리거나 다시 우클릭하여 기차 운전을 그만둡니다.",
-
 	"create.ponder.train_schedule.header": "기차 계획표 사용하기",
 	"create.ponder.train_schedule.text_1": "계획표를 사용해 다른 기관사를 고용할 수 있습니다.",
 	"create.ponder.train_schedule.text_2": "아이템을 들고 우클릭하면 창을 엽니다.",
@@ -2945,18 +2677,15 @@
 	"create.ponder.train_schedule.text_4": "기차 조종기 앞에 앉은 다른 몹이나 블레이즈 버너는 적절한 기관사입니다.",
 	"create.ponder.train_schedule.text_5": "끈에 묶인 동물들은 좌석에 쉽게 앉힐 수 있습니다.",
 	"create.ponder.train_schedule.text_6": "언제든지 기관사에게서 계획표를 가져올 수 있습니다.",
-
 	"create.ponder.train_signal_placement.header": "기차 신호기 설치하기",
 	"create.ponder.train_signal_placement.text_1": "선로를 선택하고 근처에 기차 신호기를 설치하세요.",
 	"create.ponder.train_signal_placement.text_2": "신호기는 플레이어가 아닌 기관사가 조종하는 기차의 흐름을 조절합니다.",
 	"create.ponder.train_signal_placement.text_3": "계획표에 따라 움직이는 기차는 다른 방향의 신호기를 건너지 않습니다.",
 	"create.ponder.train_signal_placement.text_4": "두번째 신호기를 설치하는 경우를 제외한다면요.",
 	"create.ponder.train_signal_placement.text_5": "닉시관을 설치해 기차 신호를 잘 보이게 할 수 있습니다.",
-
 	"create.ponder.train_signal_redstone.header": "기차 신호와 레드스톤",
 	"create.ponder.train_signal_redstone.text_1": "레드스톤 신호를 받으면 적신호가 됩니다.",
 	"create.ponder.train_signal_redstone.text_2": "반대로 적신호라면 비교기에서 신호가 방출됩니다.",
-
 	"create.ponder.train_signal_signaling.header": "기차 신호로 충돌 방지하기",
 	"create.ponder.train_signal_signaling.text_1": "기차 신호기를 이용해 노선에서 구역을 나눌 수 있습니다.",
 	"create.ponder.train_signal_signaling.text_2": "만약 해당 구역이 사용중이면, 다른 기차는 진입할 수 없습니다.",
@@ -2967,26 +2696,22 @@
 	"create.ponder.train_signal_signaling.text_7": "해당 구역을 바로 지나갈 수 없을 때...",
 	"create.ponder.train_signal_signaling.text_8": "이 신호기는 기차를 정지시킵니다.",
 	"create.ponder.train_signal_signaling.text_9": "이 신호체계로 복잡한 구역의 기차들을 잘 관리할 수 있습니다.",
-
 	"create.ponder.valve_handle.header": "밸브 손잡이로 동력 생산하기",
 	"create.ponder.valve_handle.text_1": "밸브 손잡이를 사용하면 수동으로 동력을 생성할 수 있습니다.",
 	"create.ponder.valve_handle.text_2": "우클릭하면 반시계 방향으로 회전합니다.",
 	"create.ponder.valve_handle.text_3": "전달되는 속도는 상대적으로 낮습니다.",
 	"create.ponder.valve_handle.text_4": "웅크리고 우클릭하면 시계 방향으로 회전합니다.",
 	"create.ponder.valve_handle.text_5": "염료로 염색할 수 있습니다.",
-
 	"create.ponder.valve_pipe.header": "밸브로 흐름 조절하기",
 	"create.ponder.valve_pipe.text_1": "밸브는 파이프 속 액체 흐름을 조절합니다.",
 	"create.ponder.valve_pipe.text_2": "밸브의 축으로 액체가 통과할 수 있는지 조절합니다.",
 	"create.ponder.valve_pipe.text_3": "동력을 제공하면 밸브가 열립니다.",
 	"create.ponder.valve_pipe.text_4": "반대 방향으로 동력을 제공하면 밸브가 닫힙니다.",
-
 	"create.ponder.water_wheel.header": "물레바퀴로 동력 생산하기",
 	"create.ponder.water_wheel.text_1": "물레바퀴는 물의 흐름으로부터 동력을 끌어옵니다.",
 	"create.ponder.water_wheel.text_2": "많은 면에 힘이 가해질수록 물레바퀴가 더 빠르게 회전합니다.",
 	"create.ponder.water_wheel.text_3": "바퀴의 날이 물이 흐르는 방향으로 향하게 된다면...",
 	"create.ponder.water_wheel.text_4": "...회전 속도가 감소하게 됩니다.",
-
 	"create.ponder.weighted_ejector.header": "투척기 사용하기",
 	"create.ponder.weighted_ejector.text_1": "투척기를 들고 웅크리고 우클릭하면, 발사 지점을 정할 수 있습니다.",
 	"create.ponder.weighted_ejector.text_10": "투척기에 놓인 아이템의 양이 설정량에 도달한 경우에만 투척기가 작동합니다.",
@@ -2999,30 +2724,23 @@
 	"create.ponder.weighted_ejector.text_7": "투척기에 아이템을 놓으면 투척기가 작동합니다.",
 	"create.ponder.weighted_ejector.text_8": "보관함이 투척 지점인 경우에는 보관함에 공간이 생길 때까지 기다립니다.",
 	"create.ponder.weighted_ejector.text_9": "렌치를 사용하여, 투척에 필요한 아이템의 양을 설정할 수 있습니다.",
-
 	"create.ponder.weighted_ejector_redstone.header": "투척기와 레드스톤",
 	"create.ponder.weighted_ejector_redstone.text_1": "레드스톤 신호를 받으면, 투척기가 작동하지 않습니다.",
 	"create.ponder.weighted_ejector_redstone.text_2": "관측기는 투척기가 작동하는 것을 탐지할 수 있습니다.",
-
 	"create.ponder.weighted_ejector_tunnel.header": "투척기로 아이템 분할하기",
 	"create.ponder.weighted_ejector_tunnel.text_1": "황동 터널과 같이 사용하면 특정 양만큼 아이템을 분할할 수 있습니다.",
 	"create.ponder.weighted_ejector_tunnel.text_2": "먼저, 황동 터널을 '가까운 곳 선호' 방식으로 변경하여 측면에 아이템을 먼저 출력하게 만드세요.",
 	"create.ponder.weighted_ejector_tunnel.text_3": "이제, 투척기에 설정량에 따라 아이템을 분할할 수 있습니다.",
 	"create.ponder.weighted_ejector_tunnel.text_4": "설정량만큼의 아이템이 출력되고...",
 	"create.ponder.weighted_ejector_tunnel.text_5": "...나머지 아이템은 계속 수송됩니다",
-
 	"create.ponder.windmill_source.header": "풍차 베어링으로 동력 생산하기",
 	"create.ponder.windmill_source.text_1": "풍차 베어링은 앞에 있는 블록을 부착합니다.",
-	"create.ponder.windmill_source.text_2": "강력 접착제로 움직일 수 있는 구조물을 만들어보세요.",
+	"create.ponder.windmill_source.text_2": "강력 접착제로 움직일 수 있는 구조물을 만들어 보세요.",
 	"create.ponder.windmill_source.text_3": "충분한 날개 블록이 있어야 풍차 역할을 합니다.",
 	"create.ponder.windmill_source.text_4": "우클릭으로 가동하면, 풍차 베어링은 동력을 생산합니다.",
 	"create.ponder.windmill_source.text_5": "날개 블록의 개수가 동력 속도를 결정합니다.",
 	"create.ponder.windmill_source.text_6": "렌치로 회전 방향을 설정할 수 있습니다.",
 	"create.ponder.windmill_source.text_7": "베어링을 우클릭하여 언제든지 멈추고 구조물을 수정할 수 있습니다",
-
 	"create.ponder.windmill_structure.header": "풍차 구조물",
-	"create.ponder.windmill_structure.text_1": "최소 8개 이상의 날개 블록이 있는 구조물만 풍차로 사용할 수 있습니다.",
-
-	"_": "Thank you for translating Create!"
-
+	"create.ponder.windmill_structure.text_1": "최소 8개 이상의 날개 블록이 있는 구조물만 풍차로 사용할 수 있습니다."
 }

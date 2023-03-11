@@ -209,7 +209,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 					;
 				else if (remainder.isEmpty())
 					depotBehaviour.removeHeldItem();
-				else if (!remainder.sameItem(heldItemStack))
+				else if (remainder.getCount() != heldItemStack.getCount())
 					depotBehaviour.heldItem.stack = remainder;
 			}
 

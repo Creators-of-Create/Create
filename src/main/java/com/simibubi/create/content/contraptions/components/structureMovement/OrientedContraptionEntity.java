@@ -515,7 +515,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	protected void handleStallInformation(float x, float y, float z, float angle) {
+	protected void handleStallInformation(double x, double y, double z, float angle) {
 		yaw = angle;
 	}
 

@@ -138,7 +138,7 @@ public interface ItemAttribute {
 		MAX_ENCHANTED(StandardTraits::maxEnchanted),
 		RENAMED(ItemStack::hasCustomHoverName),
 		DAMAGED(ItemStack::isDamaged),
-		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
+		BADLY_DAMAGED(s -> s.isDamaged() && (float) s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
 		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s)
 			.getType() != EquipmentSlot.Type.HAND),

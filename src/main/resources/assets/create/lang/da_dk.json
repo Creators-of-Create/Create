@@ -1,7 +1,5 @@
 {
-
-	"_": "->------------------------]  Game Elements  [------------------------<-",
-
+	"_": "Tak, fordi du oversatte Create!",
 	"block.create.acacia_window": "Akacievindue",
 	"block.create.acacia_window_pane": "Akacievinduespanel",
 	"block.create.adjustable_chain_gearshift": "Justerbart kædegearskifte",
@@ -562,10 +560,8 @@
 	"block.create.yellow_valve_handle": "Gult ventilhåndtag",
 	"block.create.zinc_block": "Blok af zink",
 	"block.create.zinc_ore": "Zinkmalm",
-
 	"enchantment.create.capacity": "Kapacitet",
 	"enchantment.create.potato_recovery": "Kartoffelgenvinding",
-
 	"entity.create.carriage_contraption": "Tovognsmekanisme",
 	"entity.create.contraption": "Mekanisme",
 	"entity.create.crafting_blueprint": "Fremstillingsblåtryk",
@@ -574,10 +570,8 @@
 	"entity.create.seat": "Sæde",
 	"entity.create.stationary_contraption": "Stationær mekanisme",
 	"entity.create.super_glue": "Superlim",
-
 	"fluid.create.potion": "Eliksir",
 	"fluid.create.tea": "Håndværkerens te",
-
 	"item.create.andesite_alloy": "Andesitlegering",
 	"item.create.attribute_filter": "Attributfilter",
 	"item.create.bar_of_chocolate": "Chokoladebar",
@@ -646,7 +640,6 @@
 	"item.create.rose_quartz": "Rosenkvarts",
 	"item.create.sand_paper": "Sandpapir",
 	"item.create.schedule": "Køreplan",
-	"item.create.schematic": "Schematic",
 	"item.create.schematic_and_quill": "Schematic og fjerpen",
 	"item.create.shadow_steel": "Skyggestål",
 	"item.create.sturdy_sheet": "Robust plade",
@@ -661,9 +654,6 @@
 	"item.create.wrench": "Skruenøgle",
 	"item.create.zinc_ingot": "Zinkbarre",
 	"item.create.zinc_nugget": "Zinkklump",
-
-	"_": "->------------------------]  Advancements  [------------------------<-",
-
 	"advancement.create.root": "Velkommen til Create",
 	"advancement.create.andesite_casing": "Andesitalderen",
 	"advancement.create.mechanical_press": "Bonk",
@@ -731,12 +721,8 @@
 	"advancement.create.train_crash": "Forfærdelig service",
 	"advancement.create.train_crash.desc": "Vær vidne til en togulykke som en passager§7\n(Skjult fremskridt)",
 	"advancement.create.train_crash_backwards": "Blind vinkel",
-
-	"_": "->------------------------]  UI & Messages  [------------------------<-",
-
 	"itemGroup.create.base": "Create",
 	"itemGroup.create.palettes": "Creates byggeblokke",
-
 	"death.attack.create.crush": "%1$s blev bearbejdet af knusehjul",
 	"death.attack.create.crush.player": "%1$s blev kastet ind i knusehjul af %2$s",
 	"death.attack.create.fan_fire": "%1$s blev røget af en indkapslet blæser",
@@ -752,17 +738,14 @@
 	"death.attack.create.cuckoo_clock_explosion": "%1$s blev sprunget i luften af et kukur, der var pillet ved",
 	"death.attack.create.cuckoo_clock_explosion.player": "%1$s blev sprunget i luften af et kukur, der var pillet ved",
 	"death.attack.create.run_over": "%1$s blev kørt over af %2$s",
-
 	"create.block.deployer.damage_source_name": "en løbsk anvender",
 	"create.block.cart_assembler.invalid": "Placer din vognsamler på en sporblok",
-
 	"create.menu.return": "Tilbage til menu",
 	"create.menu.configure": "Konfigurer...",
 	"create.menu.ponder_index": "Grubleindeks",
 	"create.menu.only_ingame": "Tilgængelig i pausemenuen",
 	"create.menu.report_bugs": "Rapporter problemer",
 	"create.menu.support": "Støt os",
-
 	"create.recipe.crushing": "Knusning",
 	"create.recipe.milling": "Maling",
 	"create.recipe.fan_washing": "Massevaskning",
@@ -806,7 +789,6 @@
 	"create.recipe.heat_requirement.none": "Behøver ikke opvarmning",
 	"create.recipe.heat_requirement.heated": "Opvarmet",
 	"create.recipe.heat_requirement.superheated": "Overophedet",
-
 	"create.generic.range": "Rækkevidde",
 	"create.generic.radius": "Radius",
 	"create.generic.width": "Bredde",
@@ -824,27 +806,21 @@
 	"create.generic.daytime.second": "Sekund",
 	"create.generic.daytime.pm": "p.m.",
 	"create.generic.daytime.am": "a.m.",
-	"create.generic.unit.rpm": "RPM",
 	"create.generic.unit.stress": "SU",
 	"create.generic.unit.degrees": "°",
-	"create.generic.unit.millibuckets": "mB",
-	"create.generic.unit.buckets": "B",
 	"create.generic.clockwise": "Med uret",
 	"create.generic.counter_clockwise": "Mod uret",
 	"create.generic.in_quotes": "\"%1$s\"",
 	"create.generic.pitch": "Tonehøjde: %1$s",
-
 	"create.action.scroll": "Rul",
 	"create.action.confirm": "Bekræft",
 	"create.action.abort": "Afbryd",
 	"create.action.saveToFile": "Gem",
 	"create.action.discard": "Kassér",
-
 	"create.keyinfo.toolmenu": "Fokuser på schematic-overlay",
 	"create.keyinfo.toolbelt": "Tilgå nære værktøjskasser",
 	"create.keyinfo.scrollup": "Simuler musehjul op (i verden)",
 	"create.keyinfo.scrolldown": "Simuler musehjul ned (i verden)",
-
 	"create.gui.scrollInput.defaultTitle": "Vælg en indstilling:",
 	"create.gui.scrollInput.scrollToModify": "Rul for at Ændre",
 	"create.gui.scrollInput.scrollToAdjustAmount": "Rul for at justere mængde",
@@ -852,26 +828,21 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "Shift for at rulle hurtigere",
 	"create.gui.toolmenu.focusKey": "Hold [%1$s] for at fokusere",
 	"create.gui.toolmenu.cycle": "[RUL] for at bladre",
-
 	"create.toolbox.unequip": "Læg tilbage: %1$s",
 	"create.toolbox.outOfRange": "Værktøjskasse med holdte genstand er uden for rækkevidde",
 	"create.toolbox.detach": "Stop sporing og behold genstand",
 	"create.toolbox.depositAll": "Returner genstande til nære værktøjskasser",
 	"create.toolbox.depositBox": "Returner genstande til værktøjskasse",
-
 	"create.gui.symmetryWand.mirrorType": "Spejlvending",
 	"create.gui.symmetryWand.orientation": "Orientering",
-
 	"create.symmetry.mirror.plane": "Spejlvend én gang",
 	"create.symmetry.mirror.doublePlane": "Firkantet",
 	"create.symmetry.mirror.triplePlane": "Ottekantet",
-
 	"create.orientation.orthogonal": "Ortogonal",
 	"create.orientation.diagonal": "Diagonal",
 	"create.orientation.horizontal": "Vandret",
 	"create.orientation.alongZ": "Langs Z",
 	"create.orientation.alongX": "Langs X",
-
 	"create.gui.terrainzapper.title": "Håndholdt blokzapper",
 	"create.gui.terrainzapper.searchDiagonal": "Følg diagonaler",
 	"create.gui.terrainzapper.searchFuzzy": "Ignorer materialegrænser",
@@ -899,17 +870,14 @@
 	"create.gui.terrainzapper.tool.clear": "Fjern",
 	"create.gui.terrainzapper.tool.overlay": "Overlejr",
 	"create.gui.terrainzapper.tool.flatten": "Udjævn",
-
 	"create.terrainzapper.shiftRightClickToSet": "Shift-højreklik for at vælge en form",
 	"create.terrainzapper.usingBlock": "Bruger: %1$s",
 	"create.terrainzapper.leftClickToSet": "Venstreklik på en blok for at sætte materiale",
-
 	"create.minecart_coupling.two_couplings_max": "Minevogne kan ikke have mere end to koblinger hver",
 	"create.minecart_coupling.unloaded": "Dele af dit tog ser ud til at være i klodser, der ikke er indlæst",
 	"create.minecart_coupling.no_loops": "Koblinger må ikke forme en ring",
 	"create.minecart_coupling.removed": "Fjernede alle koblinger fra minevogn",
 	"create.minecart_coupling.too_far": "Minevognene er for langt væk fra hinanden",
-
 	"create.contraptions.movement_mode": "Bevægelsestilstand",
 	"create.contraptions.movement_mode.move_place": "Placer altid når standset",
 	"create.contraptions.movement_mode.move_place_returned": "Placer kun i startposition",
@@ -926,7 +894,6 @@
 	"create.contraptions.clockwork.hour_first": "Timeviser først",
 	"create.contraptions.clockwork.minute_first": "Minutviser først",
 	"create.contraptions.clockwork.hour_first_24": "24-timeviser først",
-
 	"create.logistics.filter": "Filter",
 	"create.logistics.recipe_filter": "Opskriftfilter",
 	"create.logistics.fluid_filter": "Væskefilter",
@@ -935,7 +902,6 @@
 	"create.logistics.filter.apply": "Anvendte filter på %1$s.",
 	"create.logistics.filter.apply_click_again": "Anvendte filter på %1$s, klik igen for at kopiere antal.",
 	"create.logistics.filter.apply_count": "Anvendte udtagningsantal til filter.",
-
 	"create.gui.goggles.generator_stats": "Generatorstatistik:",
 	"create.gui.goggles.kinetic_stats": "Kinetisk statistik:",
 	"create.gui.goggles.at_current_speed": "ved nuværende hastighed",
@@ -983,7 +949,6 @@
 	"create.gui.sequenced_gearshift.speed.forward_fast": "Dobbelt hastighed, Fremad",
 	"create.gui.sequenced_gearshift.speed.back": "Inputhastighed, Baglæns",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Dobbelt hastighed, Baglæns",
-
 	"create.schematicAndQuill.dimensions": "Størrelse på schematic: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "Første position sat.",
 	"create.schematicAndQuill.secondPos": "Anden position sat.",
@@ -993,10 +958,7 @@
 	"create.schematicAndQuill.convert": "Gem og upload direkte",
 	"create.schematicAndQuill.fallbackName": "Min schematic",
 	"create.schematicAndQuill.saved": "Gemt som %1$s",
-
 	"create.schematic.invalid": "[!] Ugyldig genstand - Brug schematic-bordet i stedet",
-	"create.schematic.position": "Position",
-	"create.schematic.rotation": "Rotation",
 	"create.schematic.rotation.none": "Ingen",
 	"create.schematic.rotation.cw90": "Med uret 90°",
 	"create.schematic.rotation.cw180": "Med uret 180°",
@@ -1005,11 +967,9 @@
 	"create.schematic.mirror.none": "Ingen",
 	"create.schematic.mirror.frontBack": "For-bag",
 	"create.schematic.mirror.leftRight": "Venstre-højre",
-	"create.schematic.tool.deploy": "Position",
 	"create.schematic.tool.move": "Flyt XZ",
 	"create.schematic.tool.movey": "Flyt Y",
 	"create.schematic.tool.rotate": "Roter",
-	"create.schematic.tool.print": "Print",
 	"create.schematic.tool.flip": "Spejlvend",
 	"create.schematic.tool.deploy.description.0": "Flytter strukturen til en placering.",
 	"create.schematic.tool.deploy.description.1": "Højreklik på jorden for at placere.",
@@ -1017,29 +977,18 @@
 	"create.schematic.tool.deploy.description.3": "[Ctrl]-rul for at ændre afstanden.",
 	"create.schematic.tool.move.description.0": "Flytter schematic'en vandret.",
 	"create.schematic.tool.move.description.1": "Kig på schematic'en og [CTRL]-rul for at flytte den.",
-	"create.schematic.tool.move.description.2": "",
-	"create.schematic.tool.move.description.3": "",
 	"create.schematic.tool.movey.description.0": "Flytter schematic'en lodret.",
 	"create.schematic.tool.movey.description.1": "[CTRL]-rul for at flytte den op/ned.",
-	"create.schematic.tool.movey.description.2": "",
-	"create.schematic.tool.movey.description.3": "",
 	"create.schematic.tool.rotate.description.0": "Roterer schematic'en omkring dens midte.",
 	"create.schematic.tool.rotate.description.1": "[CTRL]-rul for at rotere 90°.",
-	"create.schematic.tool.rotate.description.2": "",
-	"create.schematic.tool.rotate.description.3": "",
 	"create.schematic.tool.print.description.0": "Placerer øjeblikkeligt strukturen i verdenen.",
 	"create.schematic.tool.print.description.1": "Højreklik for at bekræfte den nuværende placering.",
 	"create.schematic.tool.print.description.2": "Dette værktøj er kun til kreativ-spiltilstand.",
-	"create.schematic.tool.print.description.3": "",
 	"create.schematic.tool.flip.description.0": "Spejlvender schematic'en langs den flade, du vælger.",
 	"create.schematic.tool.flip.description.1": "Kig på schematic'en og [CTRL]-rul for at spejlvende den.",
-	"create.schematic.tool.flip.description.2": "",
-	"create.schematic.tool.flip.description.3": "",
-
 	"create.schematics.synchronizing": "Synkroniserer...",
 	"create.schematics.uploadTooLarge": "Din schematic overskrider begrænsninger specificeret af serveren.",
 	"create.schematics.maxAllowedSize": "Den maksimale tilladte schematic-filstørrelse er:",
-
 	"create.gui.schematicTable.refresh": "Genindlæs filer",
 	"create.gui.schematicTable.open_folder": "Åbn mappe",
 	"create.gui.schematicTable.title": "Schematic-bord",
@@ -1061,7 +1010,6 @@
 	"create.gui.schematicannon.option.replaceWithEmpty": "Erstat massiv med tomt",
 	"create.gui.schematicannon.option.skipMissing": "Spring over manglende blokke",
 	"create.gui.schematicannon.option.skipTileEntities": "Beskyt blokojekter",
-
 	"create.schematicannon.status.idle": "Ledig",
 	"create.schematicannon.status.ready": "Klar",
 	"create.schematicannon.status.running": "I gang",
@@ -1079,10 +1027,8 @@
 	"create.schematicannon.status.schematicInvalid": "Schematic ugyldig",
 	"create.schematicannon.status.schematicNotPlaced": "Schematic ikke placeret",
 	"create.schematicannon.status.schematicExpired": "Schematic-fil udløbet",
-
 	"create.materialChecklist": "Materiale-tjekliste",
 	"create.materialChecklist.blocksNotLoaded": "* OBS *\n\nMateriale-liste er måske upræcis, da nogle relevante klodser ikke er indlæst.",
-
 	"create.gui.filter.deny_list": "Afvis-liste",
 	"create.gui.filter.deny_list.description": "Genstande består, hvis de IKKE matcher nogen af ovenstående. En tom afvis-liste accepterer alt.",
 	"create.gui.filter.allow_list": "Tillad-liste",
@@ -1091,7 +1037,6 @@
 	"create.gui.filter.respect_data.description": "Genstande matcher kun, hvis deres holdbarhed, fortryllelser og andre attributter også matcher.",
 	"create.gui.filter.ignore_data": "Ignorer data",
 	"create.gui.filter.ignore_data.description": "Genstande matcher uanset deres attributter.",
-
 	"create.item_attributes.placeable": "kan placeres",
 	"create.item_attributes.placeable.inverted": "kan ikke placeres",
 	"create.item_attributes.consumable": "kan spises",
@@ -1159,7 +1104,6 @@
 	"create.item_attributes.astralsorcery_amulet.inverted": "forbedrer ikke %1$s",
 	"create.item_attributes.astralsorcery_crystal": "har krystalattribut %1$s",
 	"create.item_attributes.astralsorcery_crystal.inverted": "har ikke krystalattribut %1$s",
-
 	"create.gui.attribute_filter.no_selected_attributes": "Ingen attributter valgt",
 	"create.gui.attribute_filter.selected_attributes": "Valgte attributter:",
 	"create.gui.attribute_filter.add_attribute": "Tilføj attribut til liste",
@@ -1171,7 +1115,6 @@
 	"create.gui.attribute_filter.deny_list": "Afvis-liste",
 	"create.gui.attribute_filter.deny_list.description": "Genstande består, hvis de IKKE har nogen af de valgte attributter.",
 	"create.gui.attribute_filter.add_reference_item": "Tilføj referencegenstand",
-
 	"create.tooltip.holdForDescription": "Hold [%1$s] for oversigt",
 	"create.tooltip.holdForControls": "Hold [%1$s] for styring",
 	"create.tooltip.keyShift": "Shift",
@@ -1193,27 +1136,21 @@
 	"create.tooltip.capacityProvided.high": "Stor",
 	"create.tooltip.generationSpeed": "Genererer med %1$s %2$s",
 	"create.tooltip.analogStrength": "Analogstyrke: %1$s/15",
-
 	"create.mechanical_arm.extract_from": "Tag genstande fra %1$s",
 	"create.mechanical_arm.deposit_to": "Aflever genstande til %1$s",
 	"create.mechanical_arm.summary": "Mekaniske arm har %1$s input(s) og %2$s output(s).",
 	"create.mechanical_arm.points_outside_range": "%1$s valgt(e) interaktionspunkt(er) fjernet pga. rækkeviddebegrænsninger.",
-
 	"create.weighted_ejector.target_set": "Mål valgt",
 	"create.weighted_ejector.target_not_valid": "Udslynger til blokken ved siden af (målet var ikke gyldigt)",
 	"create.weighted_ejector.no_target": "Udslynger til blokken ved siden af (intet mål var valgt)",
 	"create.weighted_ejector.targeting": "Udslynger til [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "Udslynget stakstørrelse",
-
 	"create.logistics.when_multiple_outputs_available": "Når flere outputs er tilgængelige",
-
 	"create.mechanical_arm.selection_mode.prefer_first": "Foretræk første mål",
-
 	"create.tunnel.selection_mode.split": "Fordel",
 	"create.tunnel.selection_mode.prefer_nearest": "Foretræk nærmeste",
 	"create.tunnel.selection_mode.randomize": "Vælg tilfældigt",
 	"create.tunnel.selection_mode.synchronize": "Synkroniser inputs",
-
 	"create.tooltip.chute.header": "Skaktinformation",
 	"create.tooltip.chute.items_move_down": "Genstande bevæger sig nedad",
 	"create.tooltip.chute.items_move_up": "Genstande bevæger sig opad",
@@ -1223,30 +1160,28 @@
 	"create.tooltip.chute.fans_pull_up": "Blæsere trækker oppefra",
 	"create.tooltip.chute.fans_pull_down": "Blæsere trækker nedefra",
 	"create.tooltip.chute.contains": "Indeholder: %1$s x%2$s",
+	"create.tooltip.deployer.header": "Anvender-information",
+	"create.tooltip.deployer.using": "Tilstand: Anvend",
+	"create.tooltip.deployer.punching": "Tilstand: Slå",
+	"create.tooltip.deployer.contains": "Genstand: %1$s x%2$s",
 	"create.tooltip.brass_tunnel.contains": "Fordeler i øjeblikket:",
 	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
 	"create.tooltip.brass_tunnel.retrieve": "Højreklik for at få tilbage",
-
 	"create.linked_controller.bind_mode": "Bindetilstand aktiv",
 	"create.linked_controller.press_keybind": "Tryk %1$s, %2$s, %3$s, %4$s, %5$s eller %6$s for at binde denne frekvens til den respektive tast",
 	"create.linked_controller.key_bound": "Frekvens bundet til %1$s",
 	"create.linked_controller.frequency_slot_1": "Tast: %1$s, Frek. #1",
 	"create.linked_controller.frequency_slot_2": "Tast: %1$s, Frek. #2",
-
 	"create.potato_cannon.ammo.attack_damage": "%1$s Angrebsstyrke",
 	"create.potato_cannon.ammo.reload_ticks": "%1$s Ladetiks",
 	"create.potato_cannon.ammo.knockback": "%1$s Tilbageslag",
-
 	"create.hint.hose_pulley.title": "Bundløs forsyning",
 	"create.hint.mechanical_arm_no_targets.title": "Ingen mål",
 	"create.hint.empty_bearing.title": "Opdater leje",
-
 	"create.backtank.low": "Tryk i rygtank lavt",
 	"create.backtank.depleted": "Tryk i rygtank udtømt",
-
 	"create.hint.derailed_train.title": "Afsporet tog",
 	"create.hint.derailed_train": "Det virker til, at dette _tog_ ikke længere sidder på et forbundet skinnestykke. _Højreklik_ med en _skruenøgle_ for at flytte det til nogle nærliggende skinner.",
-
 	"create.boiler.status": "Kedelstatus:  %1$s",
 	"create.boiler.status_short": "Kedel:  %1$s",
 	"create.boiler.passive": "Passiv",
@@ -1261,7 +1196,6 @@
 	"create.boiler.heat_dots": "...... ",
 	"create.boiler.via_one_engine": "via 1 dampmaskine",
 	"create.boiler.via_engines": "via %1$s dampmaskiner",
-
 	"create.gui.schedule.lmb_edit": "Venstreklik for at redigere",
 	"create.gui.schedule.rmb_remove": "Højreklik for at fjerne",
 	"create.gui.schedule.duplicate": "Dupliker",
@@ -1271,7 +1205,6 @@
 	"create.gui.schedule.move_down": "Flyt ned",
 	"create.gui.schedule.add_condition": "Tilføj betingelse",
 	"create.gui.schedule.alternative_condition": "Alternativ betingelse",
-
 	"create.schedule.instruction_type": "Næste handling:",
 	"create.schedule.instruction.editor": "Instruktions-editor",
 	"create.schedule.instruction.destination": "Kør til station",
@@ -1349,14 +1282,11 @@
 	"create.schedule.remove_with_empty_hand": "Fjern nuværende køreplan med en tom hånd",
 	"create.schedule.no_stops": "Denne køreplan har ingen stop endnu",
 	"create.schedule.continued": "Køreplan genoptaget",
-
 	"create.track.selection_cleared": "Markering ryddet",
 	"create.track.valid_connection": "Kan forbinde ✔",
 	"create.track.second_point": "Placer skinner eller vælg det andet punkt",
 	"create.track.too_far": "For langt væk",
-
 	"create.portal_track.failed": "Kan ikke placere portalskinne:",
-
 	"create.station.idle": "Station er ledig",
 	"create.station.assembly_title": "Togsamling",
 	"create.station.close": "Luk vindue",
@@ -1375,7 +1305,7 @@
 	"create.station.no_bogeys": "Ingen bogier",
 	"create.station.one_bogey": "1 bogie",
 	"create.station.more_bogeys": "%1$s bogier",
-
+	"create.train_assembly.bogeys_too_close": "Bogie %1$s og %2$s er for tæt på hinanden",
 	"create.train.unnamed": "Unavngivet tog",
 	"create.train.departing_from": "Afgår fra %1$s",
 	"create.train.arrived_at": "Ankom til %1$s",
@@ -1384,7 +1314,6 @@
 	"create.train.status.collision": "Sammenstød med et andet tog",
 	"create.train.status.missing_driver": "Føreren er forsvundet",
 	"create.train.status.found_driver": "En ny fører er blevet fundet",
-
 	"create.display_link.title": "Displaybindeled",
 	"create.display_link.no_source": "Ikke en displaykilde",
 	"create.display_link.no_target": "Ikke et displaymål",
@@ -1393,7 +1322,6 @@
 	"create.display_link.information_type": "Informationstype",
 	"create.display_link.display_on": "Skriv data til:",
 	"create.display_link.display_on_multiline": "Begynd at skrive på:",
-
 	"create.display_source.combine_item_names": "Kombiner genstandsnavne",
 	"create.display_source.count_items": "Antal matchende genstande",
 	"create.display_source.list_items": "Oplist matchende genstande",
@@ -1443,33 +1371,22 @@
 	"create.display_source.redstone_power.progress_bar": "Statuslinje",
 	"create.display_source.boiler.not_enough_space": "Ikke nok plads ",
 	"create.display_source.boiler.for_boiler_status": "til kedelstatus",
-
 	"create.display_target.line": "Linje %1$s",
 	"create.display_target.page": "Side %1$s",
 	"create.display_target.single_line": "Enkelt linje",
-
 	"create.flap_display.cycles.alphabet": " ;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;X;Y;Z;Æ;Ø;Å",
 	"create.flap_display.cycles.numeric": " ;0;1;2;3;4;5;6;7;8;9",
 	"create.flap_display.cycles.arrival_time": " ;min;nu;15s;30s;45s",
-	"create.flap_display.cycles.shortened_numbers": " ;K;M",
-	"create.flap_display.cycles.fluid_units": "mB;B ",
 	"create.flap_display.cycles.instant": " ; ",
 	"create.flap_display.cycles.pixel": "█;▓;▒",
-
 	"create.super_glue.click_to_confirm": "Klik igen for at bekræfte",
 	"create.super_glue.success": "Anvender lim...",
-
 	"create.gui.config.overlay1": "Hej :)",
 	"create.gui.config.overlay3": "Klik eller træk med din mus",
 	"create.gui.config.overlay4": "for at flytte denne forhåndsvisning",
-
 	"create.command.killTPSCommand": "killtps",
-
 	"create.contraption.minecart_contraption_too_big": "Denne vognmekanisme ser ud til at være for stor til at samle op",
 	"create.contraption.minecart_contraption_illegal_pickup": "En mystisk kraft binder denne vognmekanisme til verdenen",
-
-	"_": "->------------------------]  Subtitles  [------------------------<-",
-
 	"create.subtitle.contraption_disassemble": "Mekanisme standser",
 	"create.subtitle.peculiar_bell_use": "Besynderlig klokke ringer",
 	"create.subtitle.worldshaper_place": "Verdensformer siger zap",
@@ -1516,11 +1433,5 @@
 	"create.subtitle.copper_armor_equip": "Dykkerudstyr klirrer",
 	"create.subtitle.mechanical_press_activation": "Mekanisk presse siger klang",
 	"create.subtitle.contraption_assemble": "Mekanisme bevæger sig",
-
-	"_": "->------------------------]  Item Descriptions  [------------------------<-",
-
-	"_": "->------------------------]  Ponder Content  [------------------------<-",
-
-	"_": "Thank you for translating Create!"
-
+	"create.ponder.shared.ctrl_and": "Ctrl +"
 }

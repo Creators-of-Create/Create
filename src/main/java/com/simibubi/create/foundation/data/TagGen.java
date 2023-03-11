@@ -137,6 +137,9 @@ public class TagGen {
 		prov.tag(AllItemTags.STRIPPED_WOOD.tag)
 			.addTag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
 			.addTag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
+		
+		prov.tag(AllItemTags.DEPLOYABLE_DRINK.tag)
+			.add(Items.MILK_BUCKET, Items.POTION);
 
 		prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 			.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,

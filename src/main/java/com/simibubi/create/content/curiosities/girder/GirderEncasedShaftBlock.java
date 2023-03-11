@@ -8,6 +8,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -34,7 +37,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
-	implements ITE<KineticTileEntity>, SimpleWaterloggedBlock, IWrenchable {
+	implements ITE<KineticTileEntity>, SimpleWaterloggedBlock, IWrenchable, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty TOP = GirderBlock.TOP;
 	public static final BooleanProperty BOTTOM = GirderBlock.BOTTOM;
@@ -121,6 +124,12 @@ public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
 		FluidState ifluidstate = level.getFluidState(pos);
 		BlockState state = super.getStateForPlacement(context);
 		return state.setValue(WATERLOGGED, Boolean.valueOf(ifluidstate.getType() == Fluids.WATER));
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
+		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), te)
+			.union(ItemRequirement.of(AllBlocks.METAL_GIRDER.getDefaultState(), te));
 	}
 
 }

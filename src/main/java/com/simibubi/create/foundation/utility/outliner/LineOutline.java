@@ -1,6 +1,10 @@
 package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
+import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.util.Mth;
@@ -8,32 +12,49 @@ import net.minecraft.world.phys.Vec3;
 
 public class LineOutline extends Outline {
 
-	protected Vec3 start = Vec3.ZERO;
-	protected Vec3 end = Vec3.ZERO;
+	protected final Vector3f start = new Vector3f();
+	protected final Vector3f end = new Vector3f();
+
+	public LineOutline set(Vector3f start, Vector3f end) {
+		this.start.load(start);
+		this.start.load(end);
+		return this;
+	}
 
 	public LineOutline set(Vec3 start, Vec3 end) {
-		this.start = start;
-		this.end = end;
+		this.start.set((float) start.x, (float) start.y, (float) start.z);
+		this.end.set((float) end.x, (float) end.y, (float) end.z);
 		return this;
 	}
 
 	@Override
 	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
-		renderCuboidLine(ms, buffer, start, end);
+		float width = params.getLineWidth();
+		if (width == 0)
+			return;
+
+		VertexConsumer consumer = buffer.getBuffer(RenderTypes.getOutlineSolid());
+		params.loadColor(colorTemp);
+		Vector4f color = colorTemp;
+		int lightmap = params.lightmap;
+		boolean disableLineNormals = params.disableLineNormals;
+		renderInner(ms, consumer, pt, width, color, lightmap, disableLineNormals);
+	}
+
+	protected void renderInner(PoseStack ms, VertexConsumer consumer, float pt, float width, Vector4f color, int lightmap, boolean disableNormals) {
+		bufferCuboidLine(ms, consumer, start, end, width, color, lightmap, disableNormals);
 	}
 
 	public static class EndChasingLineOutline extends LineOutline {
-
-		float prevProgress = 0;
-		float progress = 0;
+		private float progress = 0;
+		private float prevProgress = 0;
 		private boolean lockStart;
+
+		private final Vector3f startTemp = new Vector3f();
 
 		public EndChasingLineOutline(boolean lockStart) {
 			this.lockStart = lockStart;
 		}
-
-		@Override
-		public void tick() {}
 
 		public EndChasingLineOutline setProgress(float progress) {
 			prevProgress = this.progress;
@@ -42,25 +63,24 @@ public class LineOutline extends Outline {
 		}
 
 		@Override
-		public LineOutline set(Vec3 start, Vec3 end) {
-			if (!end.equals(this.end))
-				super.set(start, end);
-			return this;
-		}
-
-		@Override
-		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
+		protected void renderInner(PoseStack ms, VertexConsumer consumer, float pt, float width, Vector4f color, int lightmap, boolean disableNormals) {
 			float distanceToTarget = Mth.lerp(pt, prevProgress, progress);
-			if (!lockStart)
+			Vector3f end;
+			if (lockStart) {
+				end = this.start;
+			} else {
+				end = this.end;
 				distanceToTarget = 1 - distanceToTarget;
-			Vec3 start = lockStart ? this.end : this.start;
-			Vec3 end = lockStart ? this.start : this.end;
-			
-			start = end.add(this.start.subtract(end)
-				.scale(distanceToTarget));
-			renderCuboidLine(ms, buffer, start, end);
-		}
+			}
 
+			Vector3f start = this.startTemp;
+			start.load(this.start);
+			start.sub(end);
+			start.mul(distanceToTarget);
+			start.add(end);
+
+			bufferCuboidLine(ms, consumer, start, end, width, color, lightmap, disableNormals);
+		}
 	}
 
 }
