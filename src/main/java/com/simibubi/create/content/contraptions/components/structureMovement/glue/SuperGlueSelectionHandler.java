@@ -100,7 +100,7 @@ public class SuperGlueSelectionHandler {
 				CreateClient.OUTLINER.showAABB(glueEntity, glueEntity.getBoundingBox())
 					.colored(h ? HIGHLIGHT : PASSIVE)
 					.withFaceTextures(faceTex, faceTex)
-					.disableNormals()
+					.disableLineNormals()
 					.lineWidth(h ? 1 / 16f : 1 / 64f);
 			}
 		}
@@ -155,12 +155,12 @@ public class SuperGlueSelectionHandler {
 					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
 						.colored(canReach && canAfford && !cancel ? HIGHLIGHT : FAIL)
 						.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.GLUE)
-						.disableNormals()
+						.disableLineNormals()
 						.lineWidth(1 / 16f);
 
 				CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
 					.colored(0x4D9162)
-					.disableNormals()
+					.disableLineNormals()
 					.lineWidth(1 / 64f);
 			}
 
@@ -259,7 +259,7 @@ public class SuperGlueSelectionHandler {
 			CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
 				.colored(0xB5F2C6)
 				.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.HIGHLIGHT_CHECKERED)
-				.disableNormals()
+				.disableLineNormals()
 				.lineWidth(1 / 24f);
 
 		discard();
