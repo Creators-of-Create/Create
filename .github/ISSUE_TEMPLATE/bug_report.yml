@@ -1,6 +1,6 @@
 name: Bug Report
 description: Create a bug report to help us improve Create
-labels: [ "bug" ]
+labels: [ "type: bug" ]
 body:
     -   type: textarea
         attributes:
