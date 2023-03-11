@@ -71,6 +71,8 @@ public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkTileEntit
 		synchronized (tile) {
 			tile.getSourceConfig().put(TAG_KEY, tag);
 		}
+
+		cursorX.set(x + text.length());
 	}
 
 	@LuaFunction
