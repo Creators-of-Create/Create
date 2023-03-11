@@ -3,20 +3,30 @@ package com.simibubi.create.compat.computercraft;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.lua.LuaValues;
-import dan200.computercraft.api.lua.ObjectLuaTable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class CreateLuaTable extends ObjectLuaTable {
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.lua.LuaTable;
+import dan200.computercraft.api.lua.LuaValues;
+
+public class CreateLuaTable implements LuaTable<Object, Object> {
+
+	private final Map<Object, Object> map;
+
+	public CreateLuaTable() {
+		this.map = new HashMap<>();
+	}
 
 	public CreateLuaTable(Map<?, ?> map) {
-		super(map);
+		this.map = new HashMap<>(map);
 	}
 
 	public boolean getBoolean(String key) throws LuaException {
@@ -84,6 +94,79 @@ public class CreateLuaTable extends ObjectLuaTable {
 		}
 
 		return Collections.unmodifiableList(tables);
+	}
+
+	public Map<Object, Object> getMap() {
+		return map;
+	}
+
+	@Nullable
+	@Override
+	public Object put(Object key, Object value) {
+		return map.put(key, value);
+	}
+
+	public void putBoolean(String key, boolean value) {
+		map.put(key, value);
+	}
+
+	public void putDouble(String key, double value) {
+		map.put(key, value);
+	}
+
+	public void putString(String key, String value) {
+		map.put(key, value);
+	}
+
+	public void putTable(String key, CreateLuaTable value) {
+		map.put(key, value);
+	}
+
+	public void putTable(int i, CreateLuaTable value) {
+		map.put(i, value);
+	}
+
+	@Override
+	public int size() {
+		return map.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
+
+	@Override
+	public boolean containsKey(Object o) {
+		return map.containsKey(o);
+	}
+
+	@Override
+	public boolean containsValue(Object o) {
+		return map.containsValue(o);
+	}
+
+	@Override
+	public Object get(Object o) {
+		return map.get(o);
+	}
+
+	@NotNull
+	@Override
+	public Set<Object> keySet() {
+		return map.keySet();
+	}
+
+	@NotNull
+	@Override
+	public Collection<Object> values() {
+		return map.values();
+	}
+
+	@NotNull
+	@Override
+	public Set<Entry<Object, Object>> entrySet() {
+		return map.entrySet();
 	}
 
 }

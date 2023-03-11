@@ -69,7 +69,8 @@ public class ItemThresholdCondition extends CargoThresholdCondition {
 	@Override
 	protected void readAdditional(CompoundTag tag) {
 		super.readAdditional(tag);
-		stack = ItemStack.of(tag.getCompound("Item"));
+		if (tag.contains("Item"))
+			stack = ItemStack.of(tag.getCompound("Item"));
 	}
 
 	@Override

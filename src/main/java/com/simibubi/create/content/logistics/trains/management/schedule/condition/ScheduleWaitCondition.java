@@ -16,16 +16,17 @@ import net.minecraft.world.level.Level;
 public abstract class ScheduleWaitCondition extends ScheduleDataEntry {
 
 	public abstract boolean tickCompletion(Level level, Train train, CompoundTag context);
-	
+
 	protected void requestStatusToUpdate(CompoundTag context) {
 		context.putInt("StatusVersion", context.getInt("StatusVersion") + 1);
 	}
-	
+
 	public final CompoundTag write() {
 		CompoundTag tag = new CompoundTag();
+		CompoundTag dataCopy = data.copy();
+		writeAdditional(dataCopy);
 		tag.putString("Id", getId().toString());
-		tag.put("Data", data.copy());
-		writeAdditional(tag);
+		tag.put("Data", dataCopy);
 		return tag;
 	}
 
@@ -43,8 +44,11 @@ public abstract class ScheduleWaitCondition extends ScheduleDataEntry {
 		}
 
 		ScheduleWaitCondition condition = supplier.get();
-		condition.data = tag.getCompound("Data");
+		// Left around for migration purposes. Data added in writeAdditional has moved into the "Data" tag
 		condition.readAdditional(tag);
+		CompoundTag data = tag.getCompound("Data");
+		condition.readAdditional(data);
+		condition.data = data;
 		return condition;
 	}
 

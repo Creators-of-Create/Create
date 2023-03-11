@@ -25,4 +25,22 @@ public class StringHelper {
 		return builder.toString();
 	}
 
+	public static String camelCaseToSnakeCase(String text) {
+		StringBuilder builder = new StringBuilder();
+
+		for (char c : text.toCharArray()) {
+			if (Character.isUpperCase(c)) {
+				builder.append('_');
+				builder.append(Character.toLowerCase(c));
+			} else {
+				builder.append(c);
+			}
+		}
+
+		if (builder.length() > 0 && builder.charAt(0) == '_')
+			builder.deleteCharAt(0);
+
+		return builder.toString();
+	}
+
 }

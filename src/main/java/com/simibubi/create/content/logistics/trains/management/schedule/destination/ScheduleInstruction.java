@@ -16,9 +16,10 @@ public abstract class ScheduleInstruction extends ScheduleDataEntry {
 
 	public final CompoundTag write() {
 		CompoundTag tag = new CompoundTag();
+		CompoundTag dataCopy =  data.copy();
+		writeAdditional(dataCopy);
 		tag.putString("Id", getId().toString());
-		tag.put("Data", data.copy());
-		writeAdditional(tag);
+		tag.put("Data", dataCopy);
 		return tag;
 	}
 
@@ -36,8 +37,11 @@ public abstract class ScheduleInstruction extends ScheduleDataEntry {
 		}
 
 		ScheduleInstruction scheduleDestination = supplier.get();
-		scheduleDestination.data = tag.getCompound("Data");
+		// Left around for migration purposes. Data added in writeAdditional has moved into the "Data" tag
 		scheduleDestination.readAdditional(tag);
+		CompoundTag data = tag.getCompound("Data");
+		scheduleDestination.readAdditional(data);
+		scheduleDestination.data = data;
 		return scheduleDestination;
 	}
 

@@ -18,6 +18,7 @@ public abstract class ScheduleDataEntry implements IScheduleInput {
 	@Override
 	public void setData(CompoundTag data) {
 		this.data = data;
+		readAdditional(data);
 	}
 
 	protected void writeAdditional(CompoundTag tag) {};

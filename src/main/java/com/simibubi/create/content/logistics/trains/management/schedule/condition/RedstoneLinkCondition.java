@@ -107,7 +107,8 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 
 	@Override
 	protected void readAdditional(CompoundTag tag) {
-		freq = Couple.deserializeEach(tag.getList("Frequency", Tag.TAG_COMPOUND), c -> Frequency.of(ItemStack.of(c)));
+		if (tag.contains("Frequency"))
+			freq = Couple.deserializeEach(tag.getList("Frequency", Tag.TAG_COMPOUND), c -> Frequency.of(ItemStack.of(c)));
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public class RedstoneLinkCondition extends ScheduleWaitCondition {
 				.titled(Lang.translateDirect("schedule.condition.redstone_link.frequency_state")),
 			"Inverted");
 	}
-	
+
 	@Override
 	public MutableComponent getWaitingStatus(Level level, Train train, CompoundTag tag) {
 		return Lang.translateDirect("schedule.condition.redstone_link.status");
