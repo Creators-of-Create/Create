@@ -1,7 +1,7 @@
-|                     Method                      | Description                            |
-|:-----------------------------------------------:|----------------------------------------|
-| [`setTargetSpeed(speed)`](#setTargetSpeedspeed) | Sets the target rotation speed         |
-|      [`getTargetSpeed()`](#getTargetSpeed)      | Gets the current target rotation speed |
+| Method                                           | Description                            |
+|--------------------------------------------------|----------------------------------------|
+| [`setTargetSpeed(speed)`](#setTargetSpeedspeed)  | Sets the target rotation speed         |
+| [`getTargetSpeed()`](#getTargetSpeed)            | Gets the current target rotation speed |
 
 ---
 ### `setTargetSpeed(speed)`

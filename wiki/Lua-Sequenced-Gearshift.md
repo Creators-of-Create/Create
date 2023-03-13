@@ -1,12 +1,11 @@
-| Method                                               | Description                                                  |
-|------------------------------------------------------|--------------------------------------------------------------|
-| [`rotate(angle, [modifier])`](#rotateangle-modifier) | Rotates shaft by a set angle                                 |
-| [`move(distance, [modifier])`](#moveangle-modifier)  | Rotates shaft to move Piston/Pulley/Gantry by a set distance |
-| [`isRunning()`](#isRunning)                          | Checks if the gearshift is spinning                          |
+| Method                                                 | Description                                                  |
+|--------------------------------------------------------|--------------------------------------------------------------|
+| [`rotate(angle, [modifier])`](#rotateangle-modifier)   | Rotates shaft by a set angle                                 |
+| [`move(distance, [modifier])`](#movedistance-modifier) | Rotates shaft to move Piston/Pulley/Gantry by a set distance |
+| [`isRunning()`](#isRunning)                            | Checks if the gearshift is spinning                          |
 
 ---
 ### `rotate(angle, [modifier])`
-
 Rotates connected components by a set angle.
 
 **Parameters**
