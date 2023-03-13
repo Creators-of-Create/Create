@@ -52,7 +52,10 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 
 	@LuaFunction(mainThread = true)
 	public final void disassemble() throws LuaException {
-		Train train = getTrainOrThrow();
+		if (tile.isAssembling())
+			throw new LuaException("station must not be in assembly mode");
+
+		getTrainOrThrow();
 
 		if (!tile.enterAssemblyMode(null))
 			throw new LuaException("could not disassemble train");
@@ -70,7 +73,7 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 	}
 
 	@LuaFunction
-	public final boolean inAssemblyMode() {
+	public final boolean isInAssemblyMode() {
 		return tile.isAssembling();
 	}
 
@@ -78,7 +81,7 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 	public final String getStationName() throws LuaException {
 		GlobalStation station = tile.getStation();
 		if (station == null)
-			throw new LuaException("train station does not exist");
+			throw new LuaException("station is not connected to a track");
 
 		return station.name;
 	}
@@ -93,7 +96,7 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 	public final boolean isTrainPresent() throws LuaException {
 		GlobalStation station = tile.getStation();
 		if (station == null)
-			throw new LuaException("train station does not exist");
+			throw new LuaException("station is not connected to a track");
 
 		return station.getPresentTrain() != null;
 	}
@@ -102,9 +105,18 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 	public final boolean isTrainImminent() throws LuaException {
 		GlobalStation station = tile.getStation();
 		if (station == null)
-			throw new LuaException("train station does not exist");
+			throw new LuaException("station is not connected to a track");
 
 		return station.getImminentTrain() != null;
+	}
+
+	@LuaFunction
+	public final boolean isTrainEnroute() throws LuaException {
+		GlobalStation station = tile.getStation();
+		if (station == null)
+			throw new LuaException("station is not connected to a track");
+
+		return station.getNearestTrain() != null;
 	}
 
 	@LuaFunction
@@ -148,7 +160,7 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 	private @NotNull Train getTrainOrThrow() throws LuaException {
 		GlobalStation station = tile.getStation();
 		if (station == null)
-			throw new LuaException("train station does not exist");
+			throw new LuaException("station is not connected to a track");
 
 		Train train = station.getPresentTrain();
 		if (train == null)
