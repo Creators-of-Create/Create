@@ -4,33 +4,5 @@
 	"textures": {
 		"particle": "create:item/andesite_filter",
 		"layer0": "create:item/andesite_filter"
-	},
-	"display": {
-		"thirdperson_righthand": {
-			"translation": [0, 1.5, 1],
-			"scale": [0.55, 0.55, 0.55]
-		},
-		"thirdperson_lefthand": {
-			"translation": [0, 1.5, 1],
-			"scale": [0.55, 0.55, 0.55]
-		},
-		"firstperson_righthand": {
-			"rotation": [0, -90, 25],
-			"translation": [1.13, 3.2, 2.88],
-			"scale": [0.68, 0.68, 0.68]
-		},
-		"firstperson_lefthand": {
-			"rotation": [0, -90, 25],
-			"translation": [1.13, 3.2, 2.88],
-			"scale": [0.68, 0.68, 0.68]
-		},
-		"gui": {
-			"rotation": [30, 135, 0],
-			"scale": [1.5, 1.5, 1.5]
-		},
-		"fixed": {
-			"rotation": [0, 180, 0],
-			"scale": [2, 2, 2]
-		}
 	}
 }

@@ -4,7 +4,6 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix3f;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
-import com.simibubi.create.content.logistics.item.filter.FilterItem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,8 +29,7 @@ public class ValueBoxRenderer {
 			.getItemRenderer();
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
 		boolean blockItem = modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
-		boolean filterItem = filter.getItem() instanceof FilterItem;
-		float scale = (!blockItem && !filterItem ? .5f : 1f) + 1 / 64f;
+		float scale = (!blockItem ? .5f : 1f) + 1 / 64f;
 		float zOffset = (!blockItem ? -.15f : 0) + customZOffset(filter.getItem());
 		ms.scale(scale, scale, scale);
 		ms.translate(0, 0, zOffset);
@@ -80,8 +78,6 @@ public class ValueBoxRenderer {
 	@SuppressWarnings("deprecation")
 	private static float customZOffset(Item item) {
 		float nudge = -.1f;
-		if (item instanceof FilterItem)
-			return -nudge / 2;
 		if (item instanceof BlockItem) {
 			Block block = ((BlockItem) item).getBlock();
 			if (block instanceof AbstractSimpleShaftBlock)

@@ -117,8 +117,6 @@ public class ValueBox extends ChasingAABBOutline {
 
 		@Override
 		public AllIcons getOutline() {
-			if (stack.getItem() instanceof FilterItem)
-				return AllIcons.VALUE_BOX_HOVER_8PX;
 			if (!stack.isEmpty())
 				return AllIcons.VALUE_BOX_HOVER_6PX;
 			return super.getOutline();

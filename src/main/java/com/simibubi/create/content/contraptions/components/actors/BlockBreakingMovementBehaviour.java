@@ -4,6 +4,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
+import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
@@ -219,7 +221,12 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 	}
 
 	protected float getBlockBreakingSpeed(MovementContext context) {
-		return Mth.clamp(Math.abs(context.getAnimationSpeed()) / 500f, 1 / 128f, 16f);
+		float lowerLimit = 1 / 128f;
+		if (context.contraption instanceof MountedContraption)
+			lowerLimit = 1f;
+		if (context.contraption instanceof CarriageContraption)
+			lowerLimit = 4f;
+		return Mth.clamp(Math.abs(context.getAnimationSpeed()) / 500f, lowerLimit, 16f);
 	}
 
 	protected boolean shouldDestroyStartBlock(BlockState stateToBreak) {

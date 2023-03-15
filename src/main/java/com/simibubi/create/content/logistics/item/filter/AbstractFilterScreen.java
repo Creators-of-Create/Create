@@ -77,8 +77,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(menu.contentHolder)
-				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, y + background.height - 56, -200)
-				.scale(5)
+				.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 8, y + background.height - 52, -200)
+				.scale(4)
 				.render(ms);
 	}
 

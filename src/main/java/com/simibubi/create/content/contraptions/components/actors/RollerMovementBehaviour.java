@@ -97,7 +97,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	protected float getBlockBreakingSpeed(MovementContext context) {
-		return Mth.clamp(super.getBlockBreakingSpeed(context) * 4, 1 / 128f, 16f);
+		return Mth.clamp(super.getBlockBreakingSpeed(context) * 1.5f, 1 / 128f, 16f);
 	}
 
 	@Override
