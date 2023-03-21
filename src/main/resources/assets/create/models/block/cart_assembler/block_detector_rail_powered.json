@@ -3,5 +3,6 @@
     "textures": {
         "6": "create:block/cart_assembler_side_on",
         "rail": "block/detector_rail_on"
-    }
+    },
+  "render_type": "cutout"
 }

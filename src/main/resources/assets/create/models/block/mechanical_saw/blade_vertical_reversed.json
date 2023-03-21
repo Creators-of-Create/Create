@@ -3,5 +3,6 @@
   "textures": {
     "stonecutter_saw": "create:block/saw_reversed",
     "stonecutter_saw_reversed": "minecraft:block/stonecutter_saw"
-  }
+  },
+  "render_type": "cutout"
 }

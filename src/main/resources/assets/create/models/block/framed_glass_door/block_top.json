@@ -6,6 +6,7 @@
 		"2": "create:block/glass_door_top",
 		"particle": "create:block/palettes/framed_glass"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [0, 0, 0],

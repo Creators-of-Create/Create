@@ -127,6 +127,10 @@ public class PonderIndex {
 			.addStoryBoard("item_vault/storage", ItemVaultScenes::storage, PonderTag.LOGISTICS)
 			.addStoryBoard("item_vault/sizes", ItemVaultScenes::sizes);
 
+		HELPER.forComponents(AllBlocks.VERTICAL_ITEM_VAULT)
+				.addStoryBoard("item_vault/storage", ItemVaultScenes::storage, PonderTag.LOGISTICS)
+				.addStoryBoard("item_vault/sizes", ItemVaultScenes::sizes);
+
 		// Chutes
 		HELPER.forComponents(AllBlocks.CHUTE)
 			.addStoryBoard("chute/downward", ChuteScenes::downward, PonderTag.LOGISTICS)
@@ -446,6 +450,7 @@ public class PonderIndex {
 			.add(AllBlocks.CHUTE)
 			.add(AllBlocks.SMART_CHUTE)
 			.add(AllBlocks.ITEM_VAULT)
+			.add(AllBlocks.VERTICAL_ITEM_VAULT)
 			.add(AllBlocks.DEPOT)
 			.add(AllBlocks.WEIGHTED_EJECTOR)
 			.add(AllBlocks.MECHANICAL_ARM)

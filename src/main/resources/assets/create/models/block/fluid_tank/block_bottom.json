@@ -7,6 +7,7 @@
 		"4": "create:block/fluid_tank_inner",
 		"particle": "create:block/fluid_tank"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Lid",

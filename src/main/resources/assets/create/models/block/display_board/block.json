@@ -9,6 +9,7 @@
 		"6": "create:block/flap_display_inside",
 		"particle": "create:block/flap_display_front"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [0, 0, 3],

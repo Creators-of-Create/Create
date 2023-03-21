@@ -10,6 +10,7 @@
 		"8": "create:block/smooth_dark_log_top",
 		"particle": "create:block/brass_casing"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Top",

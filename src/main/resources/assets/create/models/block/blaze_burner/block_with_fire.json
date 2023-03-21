@@ -7,5 +7,6 @@
 		"0": "create:block/blaze_heater_brazier",
 		"1": "block/campfire_fire",
 		"particle": "create:block/dark_metal_block"
-	}
+	},
+  "render_type": "cutout"
 }

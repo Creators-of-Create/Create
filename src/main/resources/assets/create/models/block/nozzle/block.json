@@ -6,6 +6,7 @@
 		"particle": "create:block/net",
 		"back": "create:block/gearbox"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "body",

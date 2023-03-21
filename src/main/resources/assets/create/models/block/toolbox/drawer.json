@@ -5,6 +5,7 @@
 		"0": "create:block/toolbox/brown",
 		"particle": "block/dark_oak_planks"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [2, 1, 4],

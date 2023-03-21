@@ -9,6 +9,7 @@
 		"crushing_wheel": "create:block/crushing_wheel",
 		"particle": "block/polished_andesite"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Axis",

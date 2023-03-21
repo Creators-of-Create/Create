@@ -5,6 +5,7 @@
 		"0": "create:block/spout",
 		"particle": "create:block/copper_plating"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Top 1",

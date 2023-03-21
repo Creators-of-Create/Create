@@ -5,6 +5,7 @@
 		"13": "create:block/chute",
 		"particle": "block/hopper_outside"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [3, 8, 1],

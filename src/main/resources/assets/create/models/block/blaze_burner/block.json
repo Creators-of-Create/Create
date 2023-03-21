@@ -7,6 +7,7 @@
 		"0": "create:block/blaze_heater_brazier",
 		"particle": "create:block/dark_metal_block"
 	},
+  "render_type": "cutout",
 	"display": {
 		"gui": {
 			"rotation": [30, 225, 0],

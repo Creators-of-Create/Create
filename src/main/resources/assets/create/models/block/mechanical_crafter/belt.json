@@ -4,6 +4,7 @@
 	"textures": {
 		"5": "create:block/brass_casing"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "belt",

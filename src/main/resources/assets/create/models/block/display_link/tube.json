@@ -4,6 +4,7 @@
 	"textures": {
 		"0": "create:block/display_link"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [2.5, 8, 7.5],

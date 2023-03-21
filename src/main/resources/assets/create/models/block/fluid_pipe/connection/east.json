@@ -5,6 +5,7 @@
 		"0": "create:block/pipes",
 		"particle": "create:block/pipes"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [12, 4, 4],

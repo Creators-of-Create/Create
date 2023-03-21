@@ -5,6 +5,7 @@
 		"1": "create:block/standard_track",
 		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "tie1",

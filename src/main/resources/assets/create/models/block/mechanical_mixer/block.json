@@ -8,6 +8,7 @@
 		"11": "create:block/mechanical_press_top",
 		"particle": "create:block/mixer_base_side"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Top",

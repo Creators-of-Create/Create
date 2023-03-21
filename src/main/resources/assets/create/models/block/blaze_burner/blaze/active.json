@@ -4,6 +4,7 @@
 		"2": "create:block/blaze_active",
 		"particle": "create:block/blaze_active"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Blaze 4",

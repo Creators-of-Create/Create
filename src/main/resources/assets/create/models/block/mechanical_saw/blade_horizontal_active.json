@@ -4,6 +4,7 @@
     "stonecutter_saw": "minecraft:block/stonecutter_saw",
     "stonecutter_saw_reversed" : "create:block/saw_reversed"
   },
+  "render_type": "cutout",
   "parent": "create:block/block",
   "elements": [
     {

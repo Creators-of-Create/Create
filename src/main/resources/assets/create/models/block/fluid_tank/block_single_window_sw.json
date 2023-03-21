@@ -8,6 +8,7 @@
 		"5": "create:block/fluid_tank_window_single",
 		"particle": "create:block/fluid_tank"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "SideRight",

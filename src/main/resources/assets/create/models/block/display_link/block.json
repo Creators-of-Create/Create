@@ -7,6 +7,7 @@
 		"3": "create:block/display_link_side",
 		"particle": "create:block/brass_casing"
 	},
+  "render_type": "cutout",
 	"children": {
 		"base": {
 			"render_type": "minecraft:solid",

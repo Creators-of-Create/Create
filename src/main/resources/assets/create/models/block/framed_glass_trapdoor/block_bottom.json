@@ -6,6 +6,7 @@
 		"1": "create:block/palettes/framed_glass",
 		"particle": "create:block/palettes/framed_glass"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [0, 0, 0],

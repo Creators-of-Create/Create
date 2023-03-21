@@ -3,6 +3,7 @@
 	"textures": {
 		"5": "create:block/controls"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [4, 9, -1],

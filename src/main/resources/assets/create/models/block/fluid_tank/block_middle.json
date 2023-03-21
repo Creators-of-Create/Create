@@ -5,6 +5,7 @@
 		"1": "create:block/fluid_tank",
 		"particle": "create:block/fluid_tank"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "SideRight",

@@ -4,6 +4,7 @@
 		"1_7": "create:block/controls",
 		"particle": "create:block/bogey/particle"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [2, 4.95, 6.75],

@@ -2,5 +2,6 @@
 	"parent": "create:block/cart_assembler/block",
     "textures": {
         "rail": "block/powered_rail"
-    }
+    },
+  "render_type": "cutout"
 }

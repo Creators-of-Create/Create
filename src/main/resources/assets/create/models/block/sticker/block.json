@@ -7,6 +7,7 @@
 		"4": "create:block/sticker_side",
 		"particle": "block/piston_bottom"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [0, 0, 0],

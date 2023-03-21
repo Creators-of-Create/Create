@@ -5,6 +5,7 @@
 		"0": "create:block/glass_fluid_pipe",
 		"particle": "create:block/copper_plating"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Outer",

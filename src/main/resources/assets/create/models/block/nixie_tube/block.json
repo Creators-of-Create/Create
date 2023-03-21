@@ -6,6 +6,7 @@
 		"0": "create:block/nixie_tube",
 		"particle": "create:block/nixie_tube"
 	},
+  "render_type": "cutout",
 	"children": {
 		"connectors": {
 			"render_type": "minecraft:solid",

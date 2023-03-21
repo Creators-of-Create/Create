@@ -3,5 +3,6 @@
   "textures": {
     "top": "create:block/diodes/pulse_extender/powered_powering",
     "torch": "minecraft:block/redstone_torch"
-  }
+  },
+  "render_type": "cutout"
 }

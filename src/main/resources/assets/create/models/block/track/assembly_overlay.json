@@ -5,6 +5,7 @@
 		"0": "create:block/track",
 		"particle": "create:block/track"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "cube5",

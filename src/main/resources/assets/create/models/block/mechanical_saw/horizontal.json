@@ -8,12 +8,13 @@
         "gearbox": "create:block/gearbox",
         "andesite_casing_short": "create:block/andesite_casing_short"
     },
+  "render_type": "cutout",
 	"parent": "create:block/block",
     "elements": [
         {
             "name": "Bottom",
-            "from": [ 0, 0, 0 ], 
-            "to": [ 16, 2, 12 ], 
+            "from": [ 0, 0, 0 ],
+            "to": [ 16, 2, 12 ],
             "faces": {
                 "north": { "texture": "#andesite_casing_short", "uv": [ 0, 14, 16, 16 ] },
                 "east": { "texture": "#andesite_casing_short", "uv": [ 4, 14, 16, 16 ] },
@@ -25,8 +26,8 @@
         },
         {
             "name": "Top",
-            "from": [ 0, 14, 0 ], 
-            "to": [ 16, 16, 12 ], 
+            "from": [ 0, 14, 0 ],
+            "to": [ 16, 16, 12 ],
             "faces": {
                 "north": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 6 ] },
                 "east": { "texture": "#andesite_casing_short", "uv": [ 4, 4, 16, 6 ] },
@@ -38,8 +39,8 @@
         },
         {
             "name": "Back",
-            "from": [ 0, 2, 0 ], 
-            "to": [ 2, 14, 2 ], 
+            "from": [ 0, 2, 0 ],
+            "to": [ 2, 14, 2 ],
             "faces": {
                 "north": { "texture": "#gearbox_top", "uv": [ 14, 2, 16, 14 ] },
                 "east": { "texture": "#gearbox_top", "uv": [ 14, 2, 16, 14 ] },
@@ -49,8 +50,8 @@
         },
         {
             "name": "Inner",
-            "from": [ 0, 2, 2 ], 
-            "to": [ 16, 14, 11 ], 
+            "from": [ 0, 2, 2 ],
+            "to": [ 16, 14, 11 ],
             "faces": {
                 "east": { "texture": "#andesite_casing_short", "uv": [ 2, 6, 14, 15 ], "rotation": 90 },
                 "south": { "texture": "#gearbox_top", "uv": [ 0, 2, 16, 14 ] },
@@ -59,16 +60,16 @@
         },
         {
             "name": "SawSlit",
-            "from": [ 1, 7, 11.062 ], 
-            "to": [ 15, 9, 11.062 ], 
+            "from": [ 1, 7, 11.062 ],
+            "to": [ 15, 9, 11.062 ],
             "faces": {
                 "south": { "texture": "#slit", "uv": [ 1, 7, 15, 9 ] }
             }
         },
         {
             "name": "Back",
-            "from": [ 14, 2, 0 ], 
-            "to": [ 16, 14, 2 ], 
+            "from": [ 14, 2, 0 ],
+            "to": [ 16, 14, 2 ],
             "faces": {
                 "north": { "texture": "#gearbox_top", "uv": [ 0, 2, 2, 14 ] },
                 "east": { "texture": "#gearbox_top", "uv": [ 14, 2, 16, 14 ] },
@@ -78,8 +79,8 @@
         },
         {
             "name": "Back",
-            "from": [ 2, 2, 1 ], 
-            "to": [ 14, 14, 2 ], 
+            "from": [ 2, 2, 1 ],
+            "to": [ 14, 14, 2 ],
             "faces": {
                 "north": { "texture": "#gearbox", "uv": [ 2, 2, 14, 14 ] }
             }

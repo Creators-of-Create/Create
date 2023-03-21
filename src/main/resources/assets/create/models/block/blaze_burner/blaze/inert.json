@@ -4,6 +4,7 @@
 		"2": "create:block/blaze_inert",
 		"particle": "create:block/blaze_inert"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Blaze 3",

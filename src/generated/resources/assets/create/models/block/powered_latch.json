@@ -2,5 +2,6 @@
   "parent": "create:block/diodes/latch_off",
   "textures": {
     "top": "create:block/diodes/powered_latch/idle"
-  }
+  },
+  "render_type": "cutout"
 }

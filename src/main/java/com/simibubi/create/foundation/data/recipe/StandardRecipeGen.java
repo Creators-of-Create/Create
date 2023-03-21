@@ -567,6 +567,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("C")
 				.pattern("B")),
 
+		VERTICAL_ITEM_VAULT = create(AllBlocks.VERTICAL_ITEM_VAULT).unlockedByTag(() -> Tags.Items.BARRELS_WOODEN)
+			.viaShapeless(b -> b
+				.requires(AllBlocks.ITEM_VAULT.get())),
+
 		TRAIN_SIGNAL = create(AllBlocks.TRACK_SIGNAL).unlockedBy(I::railwayCasing)
 			.returns(4)
 			.viaShapeless(b -> b.requires(I.railwayCasing())
@@ -1361,10 +1365,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 					SimpleCookingRecipeBuilder b = builder.apply(SimpleCookingRecipeBuilder.generic(ingredient.get(),
 						RecipeCategory.MISC, isOtherMod ? Items.DIRT : result.get(), exp,
 						(int) (cookingTime * cookingTimeModifier), serializer));
-					
+
 					if (unlockedBy != null)
 						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
-					
+
 					b.save(result -> {
 						consumer.accept(
 							isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput, recipeConditions)

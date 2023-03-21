@@ -4,6 +4,7 @@
 		"0": "create:block/copper_backtank",
 		"particle": "create:block/copper_backtank"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [5, 4, 10.5],

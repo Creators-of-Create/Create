@@ -9,6 +9,7 @@
 		"wheel": "create:block/wheel",
 		"particle": "block/stripped_spruce_log"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Axis",

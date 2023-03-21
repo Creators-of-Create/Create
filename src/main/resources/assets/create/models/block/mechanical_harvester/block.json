@@ -4,6 +4,7 @@
 		"particle": "create:block/andesite_casing_short",
 		"andesite_casing_short": "create:block/andesite_casing_short"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Core",

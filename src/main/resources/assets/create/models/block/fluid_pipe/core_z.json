@@ -4,6 +4,7 @@
 		"0": "create:block/pipes_connected",
 		"particle": "create:block/pipes_connected"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [4, 4, 4],

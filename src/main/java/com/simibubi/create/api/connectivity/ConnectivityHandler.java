@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
@@ -25,9 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class ConnectivityHandler {
 
@@ -316,13 +316,13 @@ public class ConnectivityHandler {
 		for (int yOffset = 0; yOffset < height; yOffset++) {
 			for (int xOffset = 0; xOffset < width; xOffset++) {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
-					
+
 					BlockPos pos = switch (axis) {
 					case X -> origin.offset(yOffset, xOffset, zOffset);
 					case Y -> origin.offset(xOffset, yOffset, zOffset);
 					case Z -> origin.offset(xOffset, zOffset, yOffset);
 					};
-					
+
 					T partAt = partAt(be.getType(), level, pos);
 					if (partAt == null)
 						continue;
@@ -354,19 +354,19 @@ public class ConnectivityHandler {
 						frontier.add(partAt);
 						partAt.preventConnectivityUpdate();
 					}
-					if (cache != null) 
+					if (cache != null)
 						cache.put(pos, partAt);
 				}
 			}
 		}
-		
+
 		if (be instanceof IMultiTileContainer.Inventory iinv && iinv.hasInventory())
-			be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			be.getCapability(ForgeCapabilities.FLUID_HANDLER)
 				.invalidate();
 		if (be instanceof IMultiTileContainer.Fluid ifluid && ifluid.hasTank())
-			be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			be.getCapability(ForgeCapabilities.FLUID_HANDLER)
 				.invalidate();
-		
+
 		if (tryReconnect)
 			formMulti(be.getType(), level, cache == null ? new SearchCache<>() : cache, frontier);
 	}

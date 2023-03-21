@@ -3,5 +3,6 @@
   "textures": {
     "stonecutter_saw": "create:block/static_saw",
     "stonecutter_saw_reversed": "create:block/static_saw"
-  }
+  },
+  "render_type": "cutout"
 }

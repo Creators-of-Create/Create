@@ -5,6 +5,7 @@
 		"0": "create:block/glass_fluid_pipe",
 		"particle": "#0"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Outer",

@@ -179,6 +179,7 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
+import com.simibubi.create.content.logistics.block.verticalvault.VerticalItemVaultTileEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
 import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.logistics.trains.BogeyTileEntityRenderer;
@@ -443,6 +444,11 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ITEM_VAULT)
 		.register();
 
+	public static final BlockEntityEntry<VerticalItemVaultTileEntity> VERTICAL_ITEM_VAULT = REGISTRATE
+		.tileEntity("vertical_item_vault", VerticalItemVaultTileEntity::new)
+		.validBlocks(AllBlocks.VERTICAL_ITEM_VAULT)
+		.register();
+
 	public static final BlockEntityEntry<MechanicalPistonTileEntity> MECHANICAL_PISTON = REGISTRATE
 		.tileEntity("mechanical_piston", MechanicalPistonTileEntity::new)
 		.instance(() -> ShaftInstance::new, false)
@@ -656,7 +662,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<PlacardTileEntity> PLACARD = REGISTRATE
 		.tileEntity("placard", PlacardTileEntity::new)
 		.validBlocks(AllBlocks.PLACARD)
@@ -783,7 +789,7 @@ public class AllTileEntities {
 		.renderer(() -> TrackRenderer::new)
 		.validBlocks(AllBlocks.TRACK)
 		.register();
-	
+
 	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = REGISTRATE
 		.tileEntity("fake_track", FakeTrackTileEntity::new)
 		.validBlocks(AllBlocks.FAKE_TRACK)
@@ -800,7 +806,7 @@ public class AllTileEntities {
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
-	
+
 	public static final BlockEntityEntry<SlidingDoorTileEntity> SLIDING_DOOR = REGISTRATE
 		.tileEntity("sliding_door", SlidingDoorTileEntity::new)
 		.renderer(() -> SlidingDoorRenderer::new)

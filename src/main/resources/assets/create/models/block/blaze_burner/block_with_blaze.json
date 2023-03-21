@@ -8,6 +8,7 @@
 		"1": "create:block/blaze_idle",
 		"particle": "create:block/dark_metal_block"
 	},
+  "render_type": "cutout",
 	"display": {
 		"gui": {
 			"rotation": [30, 315, 0],

@@ -6,6 +6,7 @@
 		"particle": "create:block/redstone_bridge",
 		"redstone_bridge": "create:block/redstone_bridge"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Controller",

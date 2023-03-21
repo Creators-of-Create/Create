@@ -9,6 +9,7 @@
 		"particle": "create:block/cart_assembler_side",
 		"translation_chassis_side": "create:block/cart_assembler_side"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Rail",

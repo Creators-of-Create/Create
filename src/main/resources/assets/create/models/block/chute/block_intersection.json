@@ -5,6 +5,7 @@
 		"1": "create:block/chute_diagonal",
 		"particle": "block/hopper_inside"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"from": [0, 0, 0],

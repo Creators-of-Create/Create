@@ -3,6 +3,7 @@
 	"textures": {
 		"1": "create:block/blaze_super_active"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Blaze 5",

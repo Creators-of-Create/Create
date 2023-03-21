@@ -4,6 +4,7 @@
 		"2": "create:block/blaze_idle",
 		"particle": "create:block/blaze_idle"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "Blaze 4",

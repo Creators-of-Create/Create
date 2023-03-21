@@ -245,6 +245,7 @@
 	"block.create.hose_pulley": "Hose Pulley",
 	"block.create.item_drain": "Item Drain",
 	"block.create.item_vault": "Item Vault",
+  "block.create.vertical_item_vault": "Vertical Item Vault",
 	"block.create.jungle_window": "Jungle Window",
 	"block.create.jungle_window_pane": "Jungle Window Pane",
 	"block.create.large_bogey": "Large Bogey",

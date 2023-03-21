@@ -4,6 +4,7 @@
 	"textures": {
 		"3": "create:block/crafter_thingies"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "valve_lid",

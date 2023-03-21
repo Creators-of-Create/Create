@@ -6,6 +6,7 @@
 		"2": "create:block/standard_track_mip",
 		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
 	},
+  "render_type": "cutout",
 	"elements": [
 		{
 			"name": "cube1",
