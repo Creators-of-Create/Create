@@ -124,6 +124,7 @@
     "create:framed_glass_door",
     "create:framed_glass_trapdoor",
     "create:item_vault",
+    "create:vertical_item_vault",
     "create:andesite_funnel",
     "create:andesite_belt_funnel",
     "create:brass_funnel",

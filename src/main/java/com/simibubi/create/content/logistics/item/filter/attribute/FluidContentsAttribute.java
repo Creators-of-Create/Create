@@ -12,8 +12,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -68,7 +68,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 		List<Fluid> fluids = new ArrayList<>();
 
 		LazyOptional<IFluidHandlerItem> capability =
-				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+				stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 
 		capability.ifPresent((cap) -> {
 			for(int i = 0; i < cap.getTanks(); i++) {

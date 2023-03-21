@@ -10,8 +10,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class DepotTileEntity extends SmartTileEntity {
 
@@ -29,7 +29,7 @@ public class DepotTileEntity extends SmartTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if (cap == ForgeCapabilities.ITEM_HANDLER)
 			return depotBehaviour.getItemCapability(cap, side);
 		return super.getCapability(cap, side);
 	}

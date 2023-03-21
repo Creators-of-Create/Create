@@ -9,6 +9,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.simibubi.create.AllRecipeTypes;
@@ -45,7 +47,6 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
@@ -130,7 +131,7 @@ public interface ItemAttribute {
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
 		CONSUMABLE(ItemStack::isEdible),
-		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+		FLUID_CONTAINER(s -> s.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
 			.isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
 		MAX_ENCHANTED(StandardTraits::maxEnchanted),

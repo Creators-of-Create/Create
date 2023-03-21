@@ -23,8 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public abstract class SmartTileEntity extends CachedRenderBBTileEntity implements IPartialSafeNBT, IInteractionChecker, ISpecialBlockEntityItemRequirement {
 
@@ -208,7 +207,7 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	public boolean isVirtual() {
 		return virtualMode;
 	}
-	
+
 	public boolean isChunkUnloaded() {
 		return chunkUnloaded;
 	}
@@ -232,11 +231,11 @@ public abstract class SmartTileEntity extends CachedRenderBBTileEntity implement
 	}
 
 	protected boolean isItemHandlerCap(Capability<?> cap) {
-		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+		return cap == ForgeCapabilities.ITEM_HANDLER;
 	}
 
 	protected boolean isFluidHandlerCap(Capability<?> cap) {
-		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+		return cap == ForgeCapabilities.FLUID_HANDLER;
 	}
 
 	public void registerAwardables(List<TileEntityBehaviour> behaviours, CreateAdvancement... advancements) {

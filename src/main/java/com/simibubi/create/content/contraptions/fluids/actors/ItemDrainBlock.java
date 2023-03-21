@@ -27,7 +27,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainTileEntity> {
 
@@ -41,7 +41,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 		ItemStack heldItem = player.getItemInHand(handIn);
 
 		if (heldItem.getItem() instanceof BlockItem
-			&& !heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+			&& !heldItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
 				.isPresent())
 			return InteractionResult.PASS;
 
@@ -95,13 +95,13 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	public Class<ItemDrainTileEntity> getTileEntityClass() {
 		return ItemDrainTileEntity.class;
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ItemDrainTileEntity> getTileEntityType() {
 		return AllTileEntities.ITEM_DRAIN.get();

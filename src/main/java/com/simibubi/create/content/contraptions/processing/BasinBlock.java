@@ -41,8 +41,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -95,7 +95,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 					return InteractionResult.SUCCESS;
 				if (heldItem.getItem()
 					.equals(Items.SPONGE)
-					&& !te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+					&& !te.getCapability(ForgeCapabilities.FLUID_HANDLER)
 						.map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE))
 						.orElse(FluidStack.EMPTY)
 						.isEmpty()) {

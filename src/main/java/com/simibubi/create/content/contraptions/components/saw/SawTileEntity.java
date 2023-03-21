@@ -64,8 +64,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -259,7 +259,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		super.invalidate();
 		invProvider.invalidate();
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -268,7 +268,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.DOWN)
+		if (cap == ForgeCapabilities.ITEM_HANDLER && side != Direction.DOWN)
 			return invProvider.cast();
 		return super.getCapability(cap, side);
 	}
@@ -351,8 +351,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 				ItemHelper.addToList(stack, list);
 			}
 		}
-		
-		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++) 
+
+		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
 			inventory.setStackInSlot(slot + 1, list.get(slot));
 
 		award(AllAdvancements.SAW_PROCESSING);

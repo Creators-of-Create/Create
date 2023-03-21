@@ -28,9 +28,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
@@ -58,13 +58,13 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 			}
 
 			LazyOptional<IFluidHandlerItem> capability =
-				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+				stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 			if (!capability.isPresent())
 				continue;
 
 			for (FluidStack fluidStack : fluidStacks) {
 				ItemStack copy = stack.copy();
-				copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+				copy.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
 					.ifPresent(fhi -> {
 						if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
 							return;

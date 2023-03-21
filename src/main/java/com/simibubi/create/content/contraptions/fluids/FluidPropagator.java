@@ -33,8 +33,8 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidPropagator {
@@ -203,7 +203,7 @@ public class FluidPropagator {
 		if (tileEntity == null)
 			return false;
 		LazyOptional<IFluidHandler> capability =
-			tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+			tileEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side);
 		return capability.isPresent();
 	}
 

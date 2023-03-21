@@ -25,9 +25,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
@@ -54,12 +54,12 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 			}
 
 			LazyOptional<IFluidHandlerItem> capability =
-				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+				stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 			if (!capability.isPresent())
 				continue;
 
 			ItemStack copy = stack.copy();
-			capability = copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			capability = copy.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 			IFluidHandlerItem handler = capability.orElse(null);
 			FluidStack extracted = handler.drain(1000, FluidAction.EXECUTE);
 			ItemStack result = handler.getContainer();

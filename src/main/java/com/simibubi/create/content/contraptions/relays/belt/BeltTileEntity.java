@@ -57,9 +57,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class BeltTileEntity extends KineticTileEntity {
@@ -186,7 +186,7 @@ public class BeltTileEntity extends KineticTileEntity {
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (!isRemoved() && !itemHandler.isPresent())
 			initializeItemHandler();
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+		if (cap == ForgeCapabilities.ITEM_HANDLER) {
 			if (side == Direction.UP || BeltBlock.canAccessFromSide(side, getBlockState())) {
 				return itemHandler.cast();
 			}
@@ -200,7 +200,7 @@ public class BeltTileEntity extends KineticTileEntity {
 		if (isController())
 			getInventory().ejectAll();
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();

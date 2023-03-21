@@ -15,9 +15,9 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
@@ -31,10 +31,10 @@ public class GenericItemFilling {
 	 * Forge without looking into what it actually does. In all cases this is
 	 * incorrect because having a non-bucket item turn into a bucket item does not
 	 * make sense.
-	 * 
+	 *
 	 * <p>This check is only necessary for filling since a FluidBucketWrapper will be
 	 * empty if it is initialized with a non-bucket item.
-	 * 
+	 *
 	 * @param stack The ItemStack.
 	 * @param fluidHandler The IFluidHandlerItem instance retrieved from the ItemStack.
 	 * @return If the IFluidHandlerItem is valid for the passed ItemStack.
@@ -58,7 +58,7 @@ public class GenericItemFilling {
 			return false;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return false;
@@ -79,7 +79,7 @@ public class GenericItemFilling {
 			return 1000;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return -1;
@@ -134,7 +134,7 @@ public class GenericItemFilling {
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
-			split.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			split.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return ItemStack.EMPTY;

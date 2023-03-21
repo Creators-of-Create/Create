@@ -5,6 +5,7 @@ import com.simibubi.create.content.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
+import com.simibubi.create.content.logistics.block.verticalvault.VerticalItemVaultTileEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.NonNullList;
@@ -15,8 +16,8 @@ import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -47,7 +48,7 @@ public class MountedStorage {
 		if (te instanceof ItemVaultTileEntity)
 			return true;
 
-		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> capability = te.getCapability(ForgeCapabilities.ITEM_HANDLER);
 		IItemHandler handler = capability.orElse(null);
 		return handler instanceof ItemStackHandler && !(handler instanceof ProcessingInventory);
 	}
@@ -77,7 +78,7 @@ public class MountedStorage {
 			return;
 		}
 
-		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		IItemHandler teHandler = te.getCapability(ForgeCapabilities.ITEM_HANDLER)
 			.orElse(dummyHandler);
 		if (teHandler == dummyHandler)
 			return;
@@ -85,6 +86,12 @@ public class MountedStorage {
 		// multiblock vaults need to provide individual invs
 		if (te instanceof ItemVaultTileEntity) {
 			handler = ((ItemVaultTileEntity) te).getInventoryOfBlock();
+			valid = true;
+			return;
+		}
+
+		if (te instanceof VerticalItemVaultTileEntity) {
+			handler = ((VerticalItemVaultTileEntity) te).getInventoryOfBlock();
 			valid = true;
 			return;
 		}
@@ -131,7 +138,7 @@ public class MountedStorage {
 			return;
 		}
 
-		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> capability = te.getCapability(ForgeCapabilities.ITEM_HANDLER);
 		IItemHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof IItemHandlerModifiable))
 			return;
@@ -182,7 +189,7 @@ public class MountedStorage {
 	public boolean isValid() {
 		return valid;
 	}
-	
+
 	public boolean canUseForFuel() {
 		return !noFuel;
 	}

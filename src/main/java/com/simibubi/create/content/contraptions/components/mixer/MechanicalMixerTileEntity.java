@@ -41,8 +41,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.crafting.IShapedRecipe;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
@@ -97,7 +97,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.MIXER);
 	}
-	
+
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -1.5, 0);
@@ -220,17 +220,17 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 		if (!AllConfigs.SERVER.recipes.allowBrewingInMixer.get())
 			return matchingRecipes;
-		
+
 		Optional<BasinTileEntity> basin = getBasin();
 		if (!basin.isPresent())
 			return matchingRecipes;
-		
+
 		BasinTileEntity basinTileEntity = basin.get();
 		if (basin.isEmpty())
 			return matchingRecipes;
-		
+
 		IItemHandler availableItems = basinTileEntity
-			.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			.getCapability(ForgeCapabilities.ITEM_HANDLER)
 			.orElse(null);
 		if (availableItems == null)
 			return matchingRecipes;

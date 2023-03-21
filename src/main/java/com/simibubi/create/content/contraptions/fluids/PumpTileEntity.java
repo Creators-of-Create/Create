@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -33,7 +35,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class PumpTileEntity extends KineticTileEntity {
@@ -300,7 +301,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		// fluid handler endpoint
 		if (tileEntity != null) {
 			LazyOptional<IFluidHandler> capability =
-				tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face.getOpposite());
+				tileEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, face.getOpposite());
 			if (capability.isPresent())
 				return true;
 		}

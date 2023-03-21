@@ -15,6 +15,7 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,7 +50,7 @@ public class AllFluids {
 				.tickRate(25)
 				.slopeFindDistance(3)
 				.explosionResistance(100f))
-			.tag(AllFluidTags.HONEY.tag)
+			.tag(AllFluidTags.HONEY.tag, FluidTags.WATER)
 			.source(ForgeFlowingFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
 			.bucket()
 			.tag(AllTags.forgeItemTag("buckets/honey"))
@@ -59,7 +60,7 @@ public class AllFluids {
 	public static final FluidEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
 		REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
 			.lang("Chocolate")
-			.tag(AllTags.forgeFluidTag("chocolate"))
+			.tag(AllTags.forgeFluidTag("chocolate"), FluidTags.WATER)
 			.properties(b -> b.viscosity(1500)
 				.density(1400))
 			.fluidProperties(p -> p.levelDecreasePerBlock(2)
