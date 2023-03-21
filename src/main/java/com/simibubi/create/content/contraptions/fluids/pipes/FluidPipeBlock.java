@@ -36,7 +36,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -336,5 +338,23 @@ public class FluidPipeBlock extends PipeBlock
 	@Override
 	public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
 		return OCCLUSION_BOX;
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		BlockState rotated = state;
+		for (Direction direction : Iterate.horizontalDirections) {
+			rotated = rotated.setValue(PROPERTY_BY_DIRECTION.get(rotation.rotate(direction)), state.getValue(PROPERTY_BY_DIRECTION.get(direction)));
+		}
+		return rotated;
+	}
+
+	@Override
+	public BlockState mirror(BlockState state, Mirror mirror) {
+		BlockState mirrored = state;
+		for (Direction direction : Iterate.horizontalDirections) {
+			mirrored = mirrored.setValue(PROPERTY_BY_DIRECTION.get(mirror.mirror(direction)), state.getValue(PROPERTY_BY_DIRECTION.get(direction)));
+		}
+		return mirrored;
 	}
 }
