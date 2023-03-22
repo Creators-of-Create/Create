@@ -1710,6 +1710,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.copycat())
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatStepModel::new))
 			.item()
+			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.ZINC_INGOT), c::get, 4))
 			.transform(customItemModel("copycat_base", "step"))
 			.register();
 
@@ -1718,6 +1719,7 @@ public class AllBlocks {
 			.transform(BuilderTransformers.copycat())
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatPanelModel::new))
 			.item()
+			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.ZINC_INGOT), c::get, 4))
 			.transform(customItemModel("copycat_base", "panel"))
 			.register();
 
@@ -2042,6 +2044,10 @@ public class AllBlocks {
 	});
 
 	// Materials
+	
+	static {
+		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.PALETTES_CREATIVE_TAB);
+	}
 
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_ORE)

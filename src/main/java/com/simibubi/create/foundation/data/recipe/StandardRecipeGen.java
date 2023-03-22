@@ -38,6 +38,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SpecialRecipeBuilder;
+import net.minecraft.data.recipes.UpgradeRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -631,6 +632,22 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("C")
 				.pattern("I")),
 
+		ELEVATOR_PULLEY = create(AllBlocks.ELEVATOR_PULLEY).unlockedByTag(I::brass)
+			.viaShaped(b -> b.define('B', I.brassCasing())
+				.define('C', Items.DRIED_KELP_BLOCK)
+				.define('I', I.ironSheet())
+				.pattern("B")
+				.pattern("C")
+				.pattern("I")),
+			
+		CONTRAPTION_CONTROLS = create(AllBlocks.CONTRAPTION_CONTROLS).unlockedBy(I::andesite)
+			.viaShaped(b -> b.define('B', ItemTags.BUTTONS)
+				.define('C', I.andesiteCasing())
+				.define('I', I.electronTube())
+				.pattern("B")
+				.pattern("C")
+				.pattern("I")),
+
 		EMPTY_BLAZE_BURNER = create(AllItems.EMPTY_BLAZE_BURNER).unlockedByTag(I::iron)
 			.viaShaped(b -> b.define('A', Tags.Items.NETHERRACK)
 				.define('I', I.ironSheet())
@@ -1036,7 +1053,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.viaShapeless(b -> b.requires(Ingredient.of(ItemTags.SMALL_FLOWERS), 2)
 				.requires(Ingredient.of(Items.HORN_CORAL, Items.BRAIN_CORAL, Items.TUBE_CORAL, Items.BUBBLE_CORAL,
 					Items.FIRE_CORAL))
-				.requires(Items.BONE_MEAL))
+				.requires(Items.BONE_MEAL)),
+
+		NETHERITE_DIVING_HELMET =
+			create(AllItems.NETHERITE_DIVING_HELMET).viaSmithing(AllItems.COPPER_DIVING_HELMET, I.netherite()),
+		NETHERITE_BACKTANK = create(AllItems.NETHERITE_BACKTANK).viaSmithing(AllItems.COPPER_BACKTANK, I.netherite()),
+		NETHERITE_DIVING_BOOTS =
+			create(AllItems.NETHERITE_DIVING_BOOTS).viaSmithing(AllItems.COPPER_DIVING_BOOTS, I.netherite())
 
 	;
 
@@ -1270,6 +1293,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				ShapelessRecipeBuilder b = builder.apply(ShapelessRecipeBuilder.shapeless(result.get(), amount));
 				if (unlockedBy != null)
 					b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
+				b.save(consumer, createLocation("crafting"));
+			});
+		}
+
+		GeneratedRecipe viaSmithing(ItemEntry<?> base, Ingredient upgradeMaterial) {
+			return register(consumer -> {
+				UpgradeRecipeBuilder b =
+					UpgradeRecipeBuilder.smithing(Ingredient.of(base.get()), upgradeMaterial, result.get()
+						.asItem());
+				b.unlocks("has_item", inventoryTrigger(ItemPredicate.Builder.item()
+					.of(base.get())
+					.build()));
 				b.save(consumer, createLocation("crafting"));
 			});
 		}

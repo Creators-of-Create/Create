@@ -47,14 +47,14 @@ public class BeltConnectorItem extends BlockItem {
 	public String getDescriptionId() {
 		return getOrCreateDescriptionId();
 	}
-
+	
 	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (p_150895_1_ == AllCreativeModeTabs.BASE_CREATIVE_TAB)
-			return;
-		super.fillItemCategory(p_150895_1_, p_150895_2_);
+	public void fillItemCategory(CreativeModeTab pGroup, NonNullList<ItemStack> pItems) {
+		// See CogWheelBlock.fillItemCategory()
+		if (pGroup != AllCreativeModeTabs.BASE_CREATIVE_TAB)
+			super.fillItemCategory(pGroup, pItems);
 	}
-
+	
 	@Nonnull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {

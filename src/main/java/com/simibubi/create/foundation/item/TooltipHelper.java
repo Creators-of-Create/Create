@@ -54,6 +54,10 @@ public class TooltipHelper {
 	public static Style styleFromColor(ChatFormatting color) {
 		return Style.EMPTY.applyFormat(color);
 	}
+	
+	public static Style styleFromColor(int hex) {
+		return Style.EMPTY.withColor(hex);
+	}
 
 	public static List<Component> cutStringTextComponent(String s, Palette palette) {
 		return cutTextComponent(Components.literal(s), palette);
@@ -140,6 +144,8 @@ public class TooltipHelper {
 	}
 
 	public record Palette(Style primary, Style highlight) {
+		public static final Palette STANDARD_CREATE = new Palette(styleFromColor(0xC9974C), styleFromColor(0xF1DD79));
+
 		public static final Palette BLUE = ofColors(ChatFormatting.BLUE, ChatFormatting.AQUA);
 		public static final Palette GREEN = ofColors(ChatFormatting.DARK_GREEN, ChatFormatting.GREEN);
 		public static final Palette YELLOW = ofColors(ChatFormatting.GOLD, ChatFormatting.YELLOW);
