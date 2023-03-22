@@ -18,7 +18,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 
-public sealed class BogeyInstance {
+public class BogeyInstance {
 
 	public final CarriageBogey bogey;
 	private final ModelData[] shafts;
