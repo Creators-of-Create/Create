@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.trains;
 
+import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.Transform;
@@ -59,6 +61,21 @@ public abstract class BogeyRenderer {
 		BlockState air = Blocks.AIR.defaultBlockState();
 		return inContraption ? contraptionModelData.get(model)[0]
 				: CachedBufferer.partial(model, air);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public abstract void initialiseContraptionModelData(MaterialManager materialManager, BogeySize size);
+
+	public void createModelInstances(MaterialManager materialManager, PartialModel model, int count) {
+		ModelData[] modelData = new ModelData[count];
+		materialManager.defaultSolid().material(Materials.TRANSFORMED)
+				.getModel(model).createInstances(modelData);
+		contraptionModelData.put(model, modelData);
+	}
+
+	public void createModelInstances(MaterialManager materialManager, PartialModel... models) {
+		for (PartialModel model : models)
+			createModelInstances(materialManager, model, 1);
 	}
 
 	@OnlyIn(Dist.CLIENT)
