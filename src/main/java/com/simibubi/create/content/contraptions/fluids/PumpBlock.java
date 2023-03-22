@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
@@ -107,20 +108,33 @@ public class PumpBlock extends DirectionalKineticBlock
 		Player player = context.getPlayer();
 		toPlace = ProperWaterloggedBlock.withWater(level, toPlace, pos);
 
-		if (player != null && player.isSteppingCarefully())
-			return toPlace;
+		Direction nearestLookingDirection = context.getNearestLookingDirection();
+		Direction targetDirection = context.getPlayer() != null && context.getPlayer()
+			.isShiftKeyDown() ? nearestLookingDirection : nearestLookingDirection.getOpposite();
+		Direction bestConnectedDirection = null;
+		double bestDistance = Double.MAX_VALUE;
 
 		for (Direction d : Iterate.directions) {
 			BlockPos adjPos = pos.relative(d);
 			BlockState adjState = level.getBlockState(adjPos);
 			if (!FluidPipeBlock.canConnectTo(level, adjPos, adjState, d))
 				continue;
-			toPlace = toPlace.setValue(FACING, d);
-			if (context.getClickedFace() == d.getOpposite())
-				break;
+			double distance = Vec3.atLowerCornerOf(d.getNormal())
+				.distanceTo(Vec3.atLowerCornerOf(targetDirection.getNormal()));
+			if (distance > bestDistance)
+				continue;
+			bestDistance = distance;
+			bestConnectedDirection = d;
 		}
 
-		return toPlace;
+		if (bestConnectedDirection == null)
+			return toPlace;
+		if (bestConnectedDirection.getAxis() == targetDirection.getAxis())
+			return toPlace;
+		if (player.isSteppingCarefully() && bestConnectedDirection.getAxis() != targetDirection.getAxis())
+			return toPlace;
+
+		return toPlace.setValue(FACING, bestConnectedDirection);
 	}
 
 	public static boolean isPump(BlockState state) {

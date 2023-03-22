@@ -201,7 +201,7 @@ public class PipeConnection {
 			particleSplashNextTick = false;
 		}
 
-		float flowSpeed = 1 / 32f + Mth.clamp(pressure.get(flow.inbound) / 512f, 0, 1) * 31 / 32f;
+		float flowSpeed = 1 / 32f + Mth.clamp(pressure.get(flow.inbound) / 128f, 0, 1) * 31 / 32f;
 		flow.progress.setValue(Math.min(flow.progress.getValue() + flowSpeed, 1));
 		if (flow.progress.getValue() >= 1) 
 			flow.complete = true;
