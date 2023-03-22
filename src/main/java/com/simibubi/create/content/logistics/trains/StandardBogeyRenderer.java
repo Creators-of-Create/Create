@@ -80,6 +80,8 @@ public class StandardBogeyRenderer extends BogeyRenderer {
 				.translate(0, 1 / 4f, 0)
 				.rotateX(-wheelAngle);
 		finalize(bogeyPin, ms, light, vb);
-		ms.popPose();
+		
+		if (!inContraption)
+			ms.popPose();
 	}
 }
