@@ -88,4 +88,7 @@ public interface IBogeyBlock extends IWrenchable {
 		return state;
 	}
 
+	public Class<? extends BogeyRenderer> getRendererClass();
+
+	public BogeyRenderer getRenderer();
 }
