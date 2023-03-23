@@ -38,6 +38,8 @@ public class StandardBogeyRenderer extends BogeyRenderer {
 	public void initialiseContraptionModelData(MaterialManager materialManager, BogeySize size) {
 		// Large
 		createModelInstances(materialManager, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
+		createModelInstances(materialManager, AllBlocks.SHAFT.getDefaultState()
+				.setValue(ShaftBlock.AXIS, Direction.Axis.X), 2);
 		// Small
 		createModelInstances(materialManager, SMALL_BOGEY_WHEELS, 2);
 		createModelInstances(materialManager, BOGEY_FRAME);
@@ -79,10 +81,22 @@ public class StandardBogeyRenderer extends BogeyRenderer {
 		}
 	}
 
-	public  void renderLarge(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light,
+	public void renderLarge(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light,
 							 @Nullable VertexConsumer vb) {
 
 		boolean inContraption = vb == null;
+
+		Transform<?>[] secondaryShafts = getTransformsFromBlockState(AllBlocks.SHAFT.getDefaultState()
+				.setValue(ShaftBlock.AXIS, Direction.Axis.X), ms, inContraption, 2);
+
+		for (int i : Iterate.zeroAndOne) {
+			Transform<?> secondShaft = secondaryShafts[i];
+			secondShaft.translate(-.5f, .25f, .5f + i * -2)
+					.centre()
+					.rotateX(wheelAngle)
+					.unCentre();
+			finalize(secondShaft, ms, light, vb);
+		}
 
 		Transform<?> bogeyDrive = getTransformFromPartial(BOGEY_DRIVE, ms, inContraption);
 		finalize(bogeyDrive, ms, light, vb);
