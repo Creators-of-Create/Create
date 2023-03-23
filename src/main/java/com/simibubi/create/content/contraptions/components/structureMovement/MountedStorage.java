@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -47,9 +49,30 @@ public class MountedStorage {
 		if (be instanceof ItemVaultBlockEntity)
 			return true;
 
-		LazyOptional<IItemHandler> capability = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-		IItemHandler handler = capability.orElse(null);
-		return handler instanceof ItemStackHandler && !(handler instanceof ProcessingInventory);
+		try {
+			LazyOptional<IItemHandler> capability = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+			IItemHandler handler = capability.orElse(null);
+			if (handler instanceof ItemStackHandler)
+				return !(handler instanceof ProcessingInventory);
+			return canUseModdedInventory(be, handler);
+			
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public static boolean canUseModdedInventory(BlockEntity be, IItemHandler handler) {
+		if (!(handler instanceof IItemHandlerModifiable validItemHandler))
+			return false;
+		BlockState blockState = be.getBlockState();
+		if (AllBlockTags.CONTRAPTION_INVENTORY_DENY.matches(blockState))
+			return false;
+
+		// There doesn't appear to be much of a standard for tagging chests/barrels
+		String blockId = blockState.getBlock()
+			.getRegistryName()
+			.getPath();
+		return blockId.endsWith("_chest") || blockId.endsWith("_barrel");
 	}
 
 	public MountedStorage(BlockEntity be) {
@@ -182,7 +205,7 @@ public class MountedStorage {
 	public boolean isValid() {
 		return valid;
 	}
-	
+
 	public boolean canUseForFuel() {
 		return !noFuel;
 	}

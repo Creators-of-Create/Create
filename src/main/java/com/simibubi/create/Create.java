@@ -83,10 +83,9 @@ public class Create {
 	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
 
 	static {
-		// TODO 0.5.1: choose color palette
 		REGISTRATE.setTooltipModifierFactory(item -> {
-			return new ItemDescription.Modifier(item, Palette.BLUE)
-					.andThen(TooltipModifier.mapNull(KineticStats.create(item)));
+			return new ItemDescription.Modifier(item, Palette.STANDARD_CREATE)
+				.andThen(TooltipModifier.mapNull(KineticStats.create(item)));
 		});
 	}
 

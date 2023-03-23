@@ -278,9 +278,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		InteractionHand interactionHand) {
 		int indexOfSeat = contraption.getSeats()
 			.indexOf(localPos);
-		if (indexOfSeat == -1 || AllItems.WRENCH.isIn(player.getItemInHand(interactionHand)))
-			return contraption.interactors.containsKey(localPos) && contraption.interactors.get(localPos)
-				.handlePlayerInteraction(player, interactionHand, localPos, this);
+		if (indexOfSeat == -1 || AllItems.WRENCH.isIn(player.getItemInHand(interactionHand))) {
+			if (contraption.interactors.containsKey(localPos))
+				return contraption.interactors.get(localPos)
+					.handlePlayerInteraction(player, interactionHand, localPos, this);
+			return contraption.storage.handlePlayerStorageInteraction(contraption, player, localPos);
+		}
 		if (player.isPassenger())
 			return false;
 

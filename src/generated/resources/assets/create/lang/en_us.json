@@ -1061,6 +1061,7 @@
 	"create.minecart_coupling.removed": "Removed all couplings from minecart",
 	"create.minecart_coupling.too_far": "Minecarts are too far apart",
 
+	"create.contraptions.moving_container": "Moving %1$s",
 	"create.contraptions.movement_mode": "Movement Mode",
 	"create.contraptions.movement_mode.move_place": "Always Place when Stopped",
 	"create.contraptions.movement_mode.move_place_returned": "Place only in Starting Position",

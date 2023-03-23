@@ -90,9 +90,13 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 		if (pState.getValue(CALLING))
 			return;
 
+		ElevatorColumn elevatorColumn = ElevatorColumn.getOrCreate(pLevel, getColumnCoords(pLevel, pPos));
+		callToContactAndUpdate(elevatorColumn, pState, pLevel, pPos);
+	}
+
+	public void callToContactAndUpdate(ElevatorColumn elevatorColumn, BlockState pState, Level pLevel, BlockPos pPos) {
 		pLevel.setBlock(pPos, pState.cycle(CALLING), 2);
 
-		ElevatorColumn elevatorColumn = ElevatorColumn.getOrCreate(pLevel, getColumnCoords(pLevel, pPos));
 		for (BlockPos otherPos : elevatorColumn.getContacts()) {
 			if (otherPos.equals(pPos))
 				continue;

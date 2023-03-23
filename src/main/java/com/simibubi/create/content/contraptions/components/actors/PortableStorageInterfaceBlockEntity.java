@@ -84,7 +84,7 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 			}
 		}
 
-		transferTimer = Math.min(transferTimer, ANIMATION * 2 + getTransferTimeout());
+		transferTimer = Math.min(transferTimer, ANIMATION * 2 + timeUnit);
 
 		boolean timerCanDecrement = transferTimer > ANIMATION || transferTimer > 0 && keepAlive == 0
 			&& (isVirtual() || !level.isClientSide || transferTimer != ANIMATION);
@@ -180,7 +180,7 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 	}
 
 	public void startConnecting() {
-		transferTimer = getTransferTimeout() + ANIMATION * 2;
+		transferTimer = 6 + ANIMATION * 2;
 	}
 
 	public void onContentTransferred() {
