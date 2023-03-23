@@ -6,6 +6,7 @@ import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -73,16 +74,19 @@ public class BeltFunnelInteractionHandler {
 					continue;
 
 			int amountToExtract = funnelBE.getAmountToExtract();
+			ExtractionCountMode modeToExtract = funnelBE.getModeToExtract();
+			
 			ItemStack toInsert = currentItem.stack.copy();
-			if (amountToExtract > toInsert.getCount())
+			if (amountToExtract > toInsert.getCount() && modeToExtract != ExtractionCountMode.UPTO)
 				if (blocking)
 					return true;
 				else
 					continue;
 
 			if (amountToExtract != -1) {
-				toInsert.setCount(amountToExtract);
-				ItemStack remainder = inserting.simulate().insert(toInsert);
+				toInsert.setCount(Math.min(amountToExtract, toInsert.getCount()));
+				ItemStack remainder = inserting.simulate()
+					.insert(toInsert);
 				if (!remainder.isEmpty())
 					if (blocking)
 						return true;
