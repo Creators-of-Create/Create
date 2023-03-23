@@ -99,7 +99,7 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 
 		bogeys.forEach(instance -> {
 			if (instance != null)
-				instance.remove();
+				instance.renderer.remove();
 		});
 	}
 

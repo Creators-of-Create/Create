@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains;
 
 import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -38,11 +39,11 @@ public class StandardBogeyRenderer extends BogeyRenderer {
 
 	public void renderSmall(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light,
 							@Nullable VertexConsumer vb) {
-		boolean inContraption = vb != null;
-		Transform<?> transform = getTransformFromPartial(BOGEY_FRAME, inContraption);
+		boolean inContraption = vb == null;
+		Transform<?> transform = getTransformFromPartial(BOGEY_FRAME, ms, inContraption);
 		finalize(transform, ms, light, vb);
 
-		Transform<?>[] wheels = getTransformsFromPartial(SMALL_BOGEY_WHEELS, inContraption, 2);
+		Transform<?>[] wheels = getTransformsFromPartial(SMALL_BOGEY_WHEELS, ms, inContraption, 2);
 		for (int side : Iterate.positiveAndNegative) {
 			if (!inContraption)
 				ms.pushPose();
@@ -57,30 +58,31 @@ public class StandardBogeyRenderer extends BogeyRenderer {
 
 	public  void renderLarge(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light,
 							 @Nullable VertexConsumer vb) {
-		boolean inContraption = vb != null;
 
-		Transform<?> bogeyDrive = getTransformFromPartial(BOGEY_DRIVE, inContraption);
+		boolean inContraption = vb == null;
+
+		Transform<?> bogeyDrive = getTransformFromPartial(BOGEY_DRIVE, ms, inContraption);
 		finalize(bogeyDrive, ms, light, vb);
 
-		Transform<?> bogeyPiston = getTransformFromPartial(BOGEY_PISTON, inContraption)
+		Transform<?> bogeyPiston = getTransformFromPartial(BOGEY_PISTON, ms, inContraption)
 				.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)));
 		finalize(bogeyPiston, ms, light, vb);
 
 		if (!inContraption)
 			ms.pushPose();
 
-		Transform<?> bogeyWheels = getTransformFromPartial(LARGE_BOGEY_WHEELS, inContraption)
+		Transform<?> bogeyWheels = getTransformFromPartial(LARGE_BOGEY_WHEELS, ms, inContraption)
 				.translate(0, 1, 0)
 				.rotateX(wheelAngle);
 		finalize(bogeyWheels, ms, light, vb);
 
-		Transform<?> bogeyPin = getTransformFromPartial(BOGEY_PIN, inContraption)
+		Transform<?> bogeyPin = getTransformFromPartial(BOGEY_PIN, ms, inContraption)
 				.translate(0, 1, 0)
 				.rotateX(wheelAngle)
 				.translate(0, 1 / 4f, 0)
 				.rotateX(-wheelAngle);
 		finalize(bogeyPin, ms, light, vb);
-		
+
 		if (!inContraption)
 			ms.popPose();
 	}
