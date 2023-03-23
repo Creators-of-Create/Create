@@ -80,7 +80,6 @@ public abstract class BogeyRenderer {
 
 	public Transform<?> getTransformFromPartial(PartialModel model, PoseStack ms, boolean inContraption) {
 		BlockState air = Blocks.AIR.defaultBlockState();
-		System.out.println(CachedBufferer.partial(model, air));
 		return inContraption ? contraptionModelData.get(keyFromModel(model))[0].setTransform(ms)
 				: CachedBufferer.partial(model, air);
 	}
