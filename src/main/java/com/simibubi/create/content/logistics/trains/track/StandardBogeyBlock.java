@@ -10,9 +10,12 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.StandardBogeyRenderer;
 import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
+import com.simibubi.create.content.logistics.trains.entity.StandardBogeyInstance;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
@@ -27,6 +30,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -52,9 +56,12 @@ public class StandardBogeyBlock extends Block
 	public static final EnumProperty<Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	private final boolean large;
 
+	private final BogeyRenderer renderer;
+
 	public StandardBogeyBlock(Properties p_i48440_1_, boolean large) {
 		super(p_i48440_1_);
 		this.large = large;
+		this.renderer = new StandardBogeyRenderer();
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
@@ -112,6 +119,16 @@ public class StandardBogeyBlock extends Block
 	}
 
 	@Override
+	public Class<? extends BogeyRenderer> getRendererClass() {
+		return StandardBogeyRenderer.class;
+	}
+
+	@Override
+	public BogeyRenderer getRenderer() {
+		return this.renderer;
+	}
+
+	@Override
 	public boolean isTrackAxisAlongFirstCoordinate(BlockState state) {
 		return state.getValue(AXIS) == Axis.X;
 	}
@@ -142,9 +159,9 @@ public class StandardBogeyBlock extends Block
 				.renderInto(ms, vb);
 
 		if (large) {
-			renderLargeBogey(wheelAngle, ms, light, vb, air);
+			renderer.render(new CompoundTag(), wheelAngle, ms, light, vb, BogeyRenderer.BogeySize.LARGE);
 		} else {
-			renderBogey(wheelAngle, ms, light, vb, air);
+			renderer.render(new CompoundTag(), wheelAngle, ms, light, vb, BogeyRenderer.BogeySize.SMALL);
 		}
 	}
 
@@ -204,9 +221,9 @@ public class StandardBogeyBlock extends Block
 	@Override
 	public BogeyInstance createInstance(MaterialManager materialManager, CarriageBogey bogey) {
 		if (large) {
-			return new BogeyInstance.Drive(bogey, materialManager);
+			return StandardBogeyInstance.drive(bogey, materialManager);
 		} else {
-			return new BogeyInstance.Frame(bogey, materialManager);
+			return StandardBogeyInstance.frame(bogey, materialManager);
 		}
 	}
 
