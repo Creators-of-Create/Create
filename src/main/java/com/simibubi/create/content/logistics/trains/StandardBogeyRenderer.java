@@ -7,17 +7,23 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
+import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
 import org.jetbrains.annotations.Nullable;
 
+import static com.simibubi.create.AllBlockPartials.COGWHEEL_SHAFT;
 import static com.simibubi.create.AllBlockPartials.LARGE_BOGEY_WHEELS;
 import static com.simibubi.create.AllBlockPartials.BOGEY_PIN;
 import static com.simibubi.create.AllBlockPartials.BOGEY_DRIVE;
 import static com.simibubi.create.AllBlockPartials.BOGEY_PISTON;
+import static com.simibubi.create.AllBlockPartials.SHAFT_HALF;
 import static com.simibubi.create.AllBlockPartials.SMALL_BOGEY_WHEELS;
 import static com.simibubi.create.AllBlockPartials.BOGEY_FRAME;
 
@@ -35,6 +41,23 @@ public class StandardBogeyRenderer extends BogeyRenderer {
 		// Small
 		createModelInstances(materialManager, SMALL_BOGEY_WHEELS, 2);
 		createModelInstances(materialManager, BOGEY_FRAME);
+		// Common
+		createModelInstances(materialManager, AllBlocks.SHAFT.getDefaultState()
+				.setValue(ShaftBlock.AXIS, Direction.Axis.Z), 2);
+	}
+
+	@Override
+	public void renderCommon(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, @Nullable VertexConsumer vb) {
+		boolean inContraption = vb == null;
+		Transform<?>[] shafts = getTransformsFromBlockState(AllBlocks.SHAFT.getDefaultState()
+				.setValue(ShaftBlock.AXIS, Direction.Axis.Z), ms, inContraption, 2);
+		for (int i : Iterate.zeroAndOne) {
+			shafts[i].translate(-.5f, .25f, i * -1)
+					.centre()
+					.rotateZ(wheelAngle)
+					.unCentre();
+			finalize(shafts[i], ms, light, vb);
+		}
 	}
 
 	public void renderSmall(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light,
