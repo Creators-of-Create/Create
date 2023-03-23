@@ -1,6 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.elevator;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -41,7 +40,7 @@ public class ElevatorTargetFloorPacket extends SimplePacketBase {
 				.getEntity(entityId);
 			if (!(entityByID instanceof AbstractContraptionEntity ace))
 				return;
-			if (!(ace.getContraption()instanceof ElevatorContraption ec))
+			if (!(ace.getContraption() instanceof ElevatorContraption ec))
 				return;
 			if (ace.distanceToSqr(sender) > 50 * 50)
 				return;
@@ -53,18 +52,12 @@ public class ElevatorTargetFloorPacket extends SimplePacketBase {
 			if (ec.isTargetUnreachable(targetY))
 				return;
 
-			for (BlockPos otherPos : elevatorColumn.getContacts()) {
-				BlockState otherState = level.getBlockState(otherPos);
-				if (!AllBlocks.ELEVATOR_CONTACT.has(otherState))
-					continue;
-				level.setBlock(otherPos, otherState.setValue(ElevatorContactBlock.CALLING, otherPos.getY() == targetY),
-					2);
-				AllBlocks.ELEVATOR_CONTACT.get()
-					.scheduleActivation(level, otherPos);
-			}
+			BlockPos pos = elevatorColumn.contactAt(targetY);
+			BlockState blockState = level.getBlockState(pos);
+			if (!(blockState.getBlock() instanceof ElevatorContactBlock ecb))
+				return;
 
-			elevatorColumn.target(targetY);
-			elevatorColumn.markDirty();
+			ecb.callToContactAndUpdate(elevatorColumn, blockState, level, pos);
 		});
 		return true;
 	}

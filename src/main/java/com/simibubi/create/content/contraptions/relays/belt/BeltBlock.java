@@ -38,7 +38,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -48,7 +47,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -102,11 +100,6 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
 		consumer.accept(new RenderProperties());
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
-		p_149666_2_.add(AllItems.BELT_CONNECTOR.asStack());
 	}
 
 	@Override

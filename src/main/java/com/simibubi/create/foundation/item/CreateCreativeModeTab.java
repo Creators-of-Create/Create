@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.item;
 
+import java.util.Collection;
+
 import com.simibubi.create.Create;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -24,25 +27,28 @@ public abstract class CreateCreativeModeTab extends CreativeModeTab {
 		addItems(items, false);
 	}
 
+	protected Collection<RegistryEntry<Item>> registeredItems() {
+		return Create.REGISTRATE.getAll(ForgeRegistries.ITEMS.getRegistryKey());
+	}
+
 	public void addBlocks(NonNullList<ItemStack> items) {
-		for (Item item : ForgeRegistries.ITEMS) {
-			if (item instanceof BlockItem) {
-				item.fillItemCategory(this, items);
-			}
-		}
+		for (RegistryEntry<Item> entry : registeredItems())
+			if (entry.get() instanceof BlockItem blockItem)
+				blockItem.fillItemCategory(this, items);
 	}
 
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {
-		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+		ItemRenderer itemRenderer = Minecraft.getInstance()
+			.getItemRenderer();
 
-		for (Item item : ForgeRegistries.ITEMS) {
-			if (!(item instanceof BlockItem)) {
-				ItemStack stack = new ItemStack(item);
-				BakedModel model = itemRenderer.getModel(stack, null, null, 0);
-				if (model.isGui3d() == specialItems) {
-					item.fillItemCategory(this, items);
-				}
-			}
+		for (RegistryEntry<Item> entry : registeredItems()) {
+			Item item = entry.get();
+			if (item instanceof BlockItem)
+				continue;
+			ItemStack stack = new ItemStack(item);
+			BakedModel model = itemRenderer.getModel(stack, null, null, 0);
+			if (model.isGui3d() == specialItems)
+				item.fillItemCategory(this, items);
 		}
 	}
 }

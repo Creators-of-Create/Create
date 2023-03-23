@@ -21,8 +21,6 @@ import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,15 +36,14 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class PumpBlockEntity extends KineticBlockEntity {
 
-	LerpedFloat arrowDirection;
 	Couple<MutableBoolean> sidesToUpdate;
 	boolean pressureUpdate;
-	boolean reversed;
+
+	// Backcompat- flips any pump blockstate that loads with reversed=true
+	boolean scheduleFlip;
 
 	public PumpBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
-		arrowDirection = LerpedFloat.linear()
-			.startWithValue(1);
 		sidesToUpdate = Couple.create(MutableBoolean::new);
 	}
 
@@ -59,27 +56,18 @@ public class PumpBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public void initialize() {
-		super.initialize();
-		reversed = getSpeed() < 0;
-	}
-
-	@Override
 	public void tick() {
 		super.tick();
-		float speed = getSpeed();
 
-		if (level.isClientSide) {
-			if (speed == 0)
-				return;
-			arrowDirection.chase(speed >= 0 ? 1 : -1, .5f, Chaser.EXP);
-			arrowDirection.tickChaser();
-			if (!isVirtual())
-				return;
+		if (level.isClientSide && !isVirtual())
+			return;
+
+		if (scheduleFlip) {
+			level.setBlockAndUpdate(worldPosition,
+				getBlockState().setValue(PumpBlock.FACING, getBlockState().getValue(PumpBlock.FACING)
+					.getOpposite()));
+			scheduleFlip = false;
 		}
-
-//		if (pressureUpdate)
-//			updatePressureChange();
 
 		sidesToUpdate.forEachWithContext((update, isFront) -> {
 			if (update.isFalse())
@@ -87,26 +75,16 @@ public class PumpBlockEntity extends KineticBlockEntity {
 			update.setFalse();
 			distributePressureTo(isFront ? getFront() : getFront().getOpposite());
 		});
-
-		if (speed == 0)
-			return;
-		if (speed < 0 != reversed) {
-			reversed = speed < 0;
-			updatePressureChange();
-			return;
-		}
 	}
 
 	@Override
 	public void onSpeedChanged(float previousSpeed) {
 		super.onSpeedChanged(previousSpeed);
 
-		if (previousSpeed == getSpeed())
+		if (Math.abs(previousSpeed) == Math.abs(getSpeed()))
 			return;
-		if (speed != 0) {
-			reversed = speed < 0;
+		if (speed != 0)
 			award(AllAdvancements.PUMP);
-		}
 		if (level.isClientSide && !isVirtual())
 			return;
 
@@ -124,6 +102,13 @@ public class PumpBlockEntity extends KineticBlockEntity {
 		if (behaviour != null)
 			behaviour.wipePressure();
 		sidesToUpdate.forEach(MutableBoolean::setTrue);
+	}
+
+	@Override
+	protected void read(CompoundTag compound, boolean clientPacket) {
+		super.read(compound, clientPacket);
+		if (compound.getBoolean("Reversed"))
+			scheduleFlip = true;
 	}
 
 	protected void distributePressureTo(Direction side) {
@@ -216,7 +201,7 @@ public class PumpBlockEntity extends KineticBlockEntity {
 
 		float pressure = Math.abs(getSpeed());
 		for (Set<BlockFace> set : validFaces.values()) {
-			int parallelBranches = set.size();
+			int parallelBranches = Math.max(1, set.size() - 1);
 			for (BlockFace face : set) {
 				BlockPos pipePos = face.getPos();
 				Direction pipeSide = face.getFace();
@@ -309,18 +294,6 @@ public class PumpBlockEntity extends KineticBlockEntity {
 		return FluidPropagator.isOpenEnd(world, blockFace.getPos(), face);
 	}
 
-	@Override
-	public void write(CompoundTag compound, boolean clientPacket) {
-		compound.putBoolean("Reversed", reversed);
-		super.write(compound, clientPacket);
-	}
-
-	@Override
-	protected void read(CompoundTag compound, boolean clientPacket) {
-		reversed = compound.getBoolean("Reversed");
-		super.read(compound, clientPacket);
-	}
-
 	public void updatePipesOnSide(Direction side) {
 		if (!isSideAccessible(side))
 			return;
@@ -359,7 +332,7 @@ public class PumpBlockEntity extends KineticBlockEntity {
 	}
 
 	public boolean isPullingOnSide(boolean front) {
-		return front == reversed;
+		return !front;
 	}
 
 	class PumpFluidTransferBehaviour extends FluidTransportBehaviour {
