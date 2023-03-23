@@ -161,7 +161,7 @@ public abstract class BogeyRenderer {
 	}
 
 	private String keyFromModel(BlockState state) {
-		return state.getBlock().getRegistryName().toString();
+		return state.toString();
 	}
 
 	@FunctionalInterface
