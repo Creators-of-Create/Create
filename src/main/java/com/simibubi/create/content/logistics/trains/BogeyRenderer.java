@@ -41,12 +41,20 @@ import java.util.Set;
  * 	overriden methods for each size
  */
 
+// Seperate From BogeyInstance So It Can Be Used Inworld
+
 public abstract class BogeyRenderer {
 	Map<BogeySize, Renderer> renderers = new EnumMap<>(BogeySize.class);
 	Map<PartialModel, ModelData[]> contraptionModelData = new HashMap<>();
 
-	public Transform<?>[] getTransformsFromPartial(PartialModel model, boolean inContraption, int size) {
-		return inContraption ? contraptionModelData.get(model) : createModelData(model, size);
+	public Transform<?>[] getTransformsFromPartial(PartialModel model, PoseStack ms, boolean inContraption, int size) {
+		return (inContraption) ? transformContraptionModelData(model, ms) : createModelData(model, size);
+	}
+
+	private Transform<?>[] transformContraptionModelData(PartialModel model, PoseStack ms) {
+		ModelData[] modelData = contraptionModelData.get(model);
+		Arrays.stream(modelData).forEach(modelDataElement -> modelDataElement.setTransform(ms));
+		return modelData;
 	}
 
 	private Transform<?>[] createModelData(PartialModel model, int size) {
@@ -57,9 +65,10 @@ public abstract class BogeyRenderer {
 				.toArray(SuperByteBuffer[]::new);
 	}
 
-	public Transform<?> getTransformFromPartial(PartialModel model, boolean inContraption) {
+	public Transform<?> getTransformFromPartial(PartialModel model, PoseStack ms, boolean inContraption) {
 		BlockState air = Blocks.AIR.defaultBlockState();
-		return inContraption ? contraptionModelData.get(model)[0]
+		System.out.println(CachedBufferer.partial(model, air));
+		return inContraption ? contraptionModelData.get(model)[0].setTransform(ms)
 				: CachedBufferer.partial(model, air);
 	}
 
@@ -101,6 +110,12 @@ public abstract class BogeyRenderer {
 
 	public Set<BogeySize> implementedSizes() {
 		return renderers.keySet();
+	}
+
+	public void emptyTransforms() {
+		for (ModelData[] data : contraptionModelData.values())
+			for (ModelData model : data)
+				model.setEmptyTransform();
 	}
 
 	public void updateLight(int blockLight, int skyLight) {
