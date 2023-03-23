@@ -119,6 +119,10 @@ public abstract class BogeyRenderer {
 		this.render(bogeyData, wheelAngle, ms, 0, null, size);
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	public abstract void renderCommon(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light,
+									  @Nullable VertexConsumer vb);
+
 	public static <B extends Transform<?>> void finalize(B b, PoseStack ms, int light, @Nullable VertexConsumer vb) {
 		b.scale(1 - 1/512f);
 		if (b instanceof SuperByteBuffer byteBuf && vb != null)
