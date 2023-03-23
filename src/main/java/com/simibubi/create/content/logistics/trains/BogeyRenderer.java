@@ -45,14 +45,18 @@ import java.util.Set;
 
 public abstract class BogeyRenderer {
 	Map<BogeySize, Renderer> renderers = new EnumMap<>(BogeySize.class);
-	Map<PartialModel, ModelData[]> contraptionModelData = new HashMap<>();
+	Map<String, ModelData[]> contraptionModelData = new HashMap<>();
 
 	public Transform<?>[] getTransformsFromPartial(PartialModel model, PoseStack ms, boolean inContraption, int size) {
-		return (inContraption) ? transformContraptionModelData(model, ms) : createModelData(model, size);
+		return (inContraption) ? transformContraptionModelData(keyFromModel(model), ms) : createModelData(model, size);
 	}
 
-	private Transform<?>[] transformContraptionModelData(PartialModel model, PoseStack ms) {
-		ModelData[] modelData = contraptionModelData.get(model);
+	public Transform<?>[] getTransformsFromBlockState(BlockState state, PoseStack ms, boolean inContraption, int size) {
+		return (inContraption) ? transformContraptionModelData(keyFromModel(state), ms) : createModelData(state, size);
+	}
+
+	private Transform<?>[] transformContraptionModelData(String key, PoseStack ms) {
+		ModelData[] modelData = contraptionModelData.get(key);
 		Arrays.stream(modelData).forEach(modelDataElement -> modelDataElement.setTransform(ms));
 		return modelData;
 	}
@@ -60,6 +64,15 @@ public abstract class BogeyRenderer {
 	private Transform<?>[] createModelData(PartialModel model, int size) {
 		BlockState air = Blocks.AIR.defaultBlockState();
 		SuperByteBuffer[] data = { CachedBufferer.partial(model, air) };
+		return expandArrayToLength(data, size);
+	}
+
+	private Transform<?>[] createModelData(BlockState state, int size) {
+		SuperByteBuffer[] data = { CachedBufferer.block(state) };
+		return expandArrayToLength(data, size);
+	}
+
+	private Transform<?>[] expandArrayToLength(SuperByteBuffer[] data, int size) {
 		return Arrays.stream(Collections.nCopies(size, data).toArray())
 				.flatMap(inner -> Arrays.stream((SuperByteBuffer[]) inner))
 				.toArray(SuperByteBuffer[]::new);
@@ -68,7 +81,7 @@ public abstract class BogeyRenderer {
 	public Transform<?> getTransformFromPartial(PartialModel model, PoseStack ms, boolean inContraption) {
 		BlockState air = Blocks.AIR.defaultBlockState();
 		System.out.println(CachedBufferer.partial(model, air));
-		return inContraption ? contraptionModelData.get(model)[0].setTransform(ms)
+		return inContraption ? contraptionModelData.get(keyFromModel(model))[0].setTransform(ms)
 				: CachedBufferer.partial(model, air);
 	}
 
@@ -79,7 +92,14 @@ public abstract class BogeyRenderer {
 		ModelData[] modelData = new ModelData[count];
 		materialManager.defaultSolid().material(Materials.TRANSFORMED)
 				.getModel(model).createInstances(modelData);
-		contraptionModelData.put(model, modelData);
+		contraptionModelData.put(keyFromModel(model), modelData);
+	}
+
+	public void createModelInstances(MaterialManager materialManager, BlockState state, int count) {
+		ModelData[] modelData = new ModelData[count];
+		materialManager.defaultSolid().material(Materials.TRANSFORMED)
+				.getModel(state).createInstances(modelData);
+		contraptionModelData.put(keyFromModel(state), modelData);
 	}
 
 	public void createModelInstances(MaterialManager materialManager, PartialModel... models) {
@@ -90,6 +110,7 @@ public abstract class BogeyRenderer {
 	@OnlyIn(Dist.CLIENT)
 	public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, @Nullable VertexConsumer vb,
 					   BogeySize size) {
+		renderCommon(bogeyData, wheelAngle, ms, light, vb);
 		renderers.get(size).render(bogeyData, wheelAngle, ms, light, vb);
 	}
 
@@ -129,6 +150,14 @@ public abstract class BogeyRenderer {
 			for (ModelData model : data)
 				model.delete();
 		contraptionModelData.clear();
+	}
+
+	private String keyFromModel(PartialModel partialModel) {
+		return partialModel.getLocation().toString();
+	}
+
+	private String keyFromModel(BlockState state) {
+		return state.getBlock().getRegistryName().toString();
 	}
 
 	@FunctionalInterface
