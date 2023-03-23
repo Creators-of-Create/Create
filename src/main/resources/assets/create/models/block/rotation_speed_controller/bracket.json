@@ -5,7 +5,7 @@
 		"2": "create:block/brass_casing",
 		"4": "create:block/brass_block",
 		"5": "create:block/rotation_speed_controller_bracket",
-		"6": "create:block/rotation_speed_controller",
+		"7": "create:block/funnel/brass_funnel_neutral",
 		"particle": "create:block/brass_block"
 	},
 	"elements": [
@@ -186,11 +186,11 @@
 			"to": [15, 3, 15],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 1.5, 8]},
 			"faces": {
-				"north": {"uv": [0, 10, 14, 15], "texture": "#5"},
-				"east": {"uv": [11, 1, 16, 6], "texture": "#6"},
+				"north": {"uv": [8, 1.5, 10.5, 8], "rotation": 90, "texture": "#7"},
+				"east": {"uv": [8, 10, 10.5, 12.5], "texture": "#7"},
 				"south": {"uv": [0, 10, 14, 15], "texture": "#5"},
-				"west": {"uv": [11, 1, 16, 6], "texture": "#6"},
-				"up": {"uv": [10, 1, 15, 15], "rotation": 90, "texture": "#2"}
+				"west": {"uv": [13.5, 10, 16, 12.5], "texture": "#7"},
+				"up": {"uv": [16, 1, 15, 15], "rotation": 90, "texture": "#2"}
 			}
 		},
 		{
@@ -199,10 +199,10 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 1.5, 8]},
 			"faces": {
 				"north": {"uv": [14, 10, 0, 15], "texture": "#5"},
-				"east": {"uv": [11, 1, 16, 6], "texture": "#6"},
-				"south": {"uv": [0, 10, 14, 15], "texture": "#5"},
-				"west": {"uv": [11, 1, 16, 6], "texture": "#6"},
-				"up": {"uv": [15, 1, 10, 15], "rotation": 90, "texture": "#2"}
+				"east": {"uv": [13.5, 10, 16, 12.5], "texture": "#7"},
+				"south": {"uv": [8, 1.5, 10.5, 8], "rotation": 90, "texture": "#7"},
+				"west": {"uv": [8, 10, 10.5, 12.5], "texture": "#7"},
+				"up": {"uv": [16, 1, 15, 15], "rotation": 90, "texture": "#2"}
 			}
 		}
 	]

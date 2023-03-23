@@ -58,7 +58,7 @@
 		{
 			"name": "Back",
 			"from": [2.05, -2, 12],
-			"to": [13.95, 13.95, 18],
+			"to": [13.95, 13.95, 18.1],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, -8.1, 6]},
 			"faces": {
 				"north": {"uv": [0, 0, 6, 8], "rotation": 180, "texture": "#base"},

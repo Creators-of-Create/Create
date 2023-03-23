@@ -24,7 +24,7 @@
             "from": [ 0, 0, 0 ], 
             "to": [ 2, 12, 16 ], 
             "faces": {
-                "north": { "texture": "#bearing_side", "uv": [ 13, 4, 16, 16 ] },
+                "north": { "texture": "#bearing_side", "uv": [ 14, 4, 16, 16 ] },
                 "east": { "texture": "#bearing_side", "uv": [ 0, 4, 16, 16 ] },
                 "south": { "texture": "#bearing_side", "uv": [ 0, 4, 2, 16 ] },
                 "west": { "texture": "#bearing_side", "uv": [ 0, 4, 16, 16 ] },

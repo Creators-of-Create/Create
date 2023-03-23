@@ -81,7 +81,7 @@ public class AllSpriteShifts {
 	public static final SpriteShiftEntry BELT = get("block/belt", "block/belt_scroll"),
 		BELT_OFFSET = get("block/belt_offset", "block/belt_scroll"),
 		BELT_DIAGONAL = get("block/belt_diagonal", "block/belt_diagonal_scroll"),
-		ANDESIDE_BELT_CASING = get("block/brass_casing_belt", "block/andesite_casing_belt"),
+		ANDESIDE_BELT_CASING = get("block/belt/brass_belt_casing", "block/belt/andesite_belt_casing"),
 		CRAFTER_THINGIES = get("block/crafter_thingies", "block/crafter_thingies");
 
 	static {

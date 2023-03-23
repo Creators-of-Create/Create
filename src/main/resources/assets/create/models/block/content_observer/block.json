@@ -6,6 +6,7 @@
 		"8": "create:block/content_observer",
 		"9": "create:block/content_observer_inner",
 		"10": "create:block/filtered_detector_top",
+		"particle": "create:block/filtered_detector_top",
 		"end": "create:block/filtered_detector_front"
 	},
 	"elements": [
@@ -50,10 +51,10 @@
 			"from": [0, 14, 0],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 6, 2.125, 6.25], "texture": "#7"},
-				"east": {"uv": [0, 6, 2.125, 6.25], "texture": "#7"},
-				"south": {"uv": [0, 6, 2.125, 6.25], "texture": "#7"},
-				"west": {"uv": [0, 6, 2.125, 6.25], "texture": "#7"},
+				"north": {"uv": [3.875, 0, 6, 0.25], "texture": "#7"},
+				"east": {"uv": [3.875, 0, 6, 0.25], "texture": "#7"},
+				"south": {"uv": [3.875, 0, 6, 0.25], "texture": "#7"},
+				"west": {"uv": [3.875, 0, 6, 0.25], "texture": "#7"},
 				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#10"},
 				"down": {"uv": [0, 0, 2, 2], "rotation": 270, "texture": "#7"}
 			}

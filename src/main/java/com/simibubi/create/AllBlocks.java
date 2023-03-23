@@ -692,6 +692,7 @@ public class AllBlocks {
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.transform(pickaxeOnly())
 		.blockstate(new BasinGenerator()::generate)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.onRegister(movementBehaviour(new BasinMovementBehaviour()))
 		.item()
 		.transform(customItemModel("_", "block"))

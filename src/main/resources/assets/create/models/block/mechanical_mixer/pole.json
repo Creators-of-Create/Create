@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"6": "create:block/mixer_head",
+		"6": "create:block/waterwheel_metal",
 		"mechanical_press_pole": "create:block/mechanical_press_pole"
 	},
 	"elements": [
