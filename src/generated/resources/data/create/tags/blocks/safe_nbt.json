@@ -15,8 +15,6 @@
     "create:radial_chassis",
     "create:sequenced_gearshift",
     "create:rotation_speed_controller",
-    "create:copycat_step",
-    "create:copycat_panel",
     "create:andesite_funnel",
     "create:andesite_belt_funnel",
     "create:brass_funnel",
@@ -27,6 +25,8 @@
     "create:placard",
     "create:pulse_repeater",
     "create:pulse_extender",
+    "create:copycat_step",
+    "create:copycat_panel",
     "#minecraft:banners",
     "#minecraft:signs"
   ]

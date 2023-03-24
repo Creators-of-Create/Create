@@ -1,7 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "tag": "forge:plates/brass"
+    "tag": "forge:ingots/brass"
   },
   "result": "create:brass_bars",
   "count": 4

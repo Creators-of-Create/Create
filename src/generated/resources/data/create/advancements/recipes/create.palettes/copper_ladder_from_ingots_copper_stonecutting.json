@@ -2,18 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:copycat_step_from_zinc_ingot_stonecutting"
+      "create:copper_ladder_from_ingots_copper_stonecutting"
     ]
   },
   "criteria": {
-    "has_zinc_ingot": {
+    "has_ingots_copper": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": [
-              "create:zinc_ingot"
-            ]
+            "tag": "forge:ingots/copper"
           }
         ]
       }
@@ -21,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:copycat_step_from_zinc_ingot_stonecutting"
+        "recipe": "create:copper_ladder_from_ingots_copper_stonecutting"
       }
     }
   },
   "requirements": [
     [
-      "has_zinc_ingot",
+      "has_ingots_copper",
       "has_the_recipe"
     ]
   ]

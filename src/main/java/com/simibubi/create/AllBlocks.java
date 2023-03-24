@@ -774,6 +774,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.COLOR_GRAY))
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.properties(p -> p.noOcclusion())
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
@@ -841,51 +842,6 @@ public class AllBlocks {
 					.setRolls(ConstantValue.exactly(1.0F))
 					.add(LootItem.lootTableItem(SHAFT.get()))))))
 			.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-			.register();
-
-	public static final BlockEntry<MetalLadderBlock> ANDESITE_LADDER =
-		REGISTRATE.block("andesite_ladder", MetalLadderBlock::new)
-			.transform(
-				BuilderTransformers.ladder("andesite", () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get())))
-			.register();
-
-	public static final BlockEntry<MetalLadderBlock> BRASS_LADDER =
-		REGISTRATE.block("brass_ladder", MetalLadderBlock::new)
-			.transform(
-				BuilderTransformers.ladder("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/brass"))))
-			.register();
-
-	public static final BlockEntry<MetalLadderBlock> COPPER_LADDER =
-		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
-			.transform(
-				BuilderTransformers.ladder("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper"))))
-			.register();
-
-	public static final BlockEntry<IronBarsBlock> ANDESITE_BARS =
-		MetalBarsGen.createBars("andesite", true, () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()));
-	public static final BlockEntry<IronBarsBlock> BRASS_BARS =
-		MetalBarsGen.createBars("brass", true, () -> DataIngredient.tag(AllTags.forgeItemTag("plates/brass")));
-	public static final BlockEntry<IronBarsBlock> COPPER_BARS =
-		MetalBarsGen.createBars("copper", true, () -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper")));
-
-	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD =
-		REGISTRATE.block("andesite_scaffolding", MetalScaffoldingBlock::new)
-			.transform(BuilderTransformers.scaffold("andesite",
-				() -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()), AllSpriteShifts.ANDESITE_SCAFFOLD,
-				AllSpriteShifts.ANDESITE_SCAFFOLD_INSIDE, AllSpriteShifts.ANDESITE_CASING))
-			.register();
-
-	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD = REGISTRATE
-		.block("brass_scaffolding", MetalScaffoldingBlock::new)
-		.transform(BuilderTransformers.scaffold("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("plates/brass")),
-			AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_SCAFFOLD_INSIDE, AllSpriteShifts.BRASS_CASING))
-		.register();
-
-	public static final BlockEntry<MetalScaffoldingBlock> COPPER_SCAFFOLD =
-		REGISTRATE.block("copper_scaffolding", MetalScaffoldingBlock::new)
-			.transform(BuilderTransformers.scaffold("copper",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), AllSpriteShifts.COPPER_SCAFFOLD,
-				AllSpriteShifts.COPPER_SCAFFOLD_INSIDE, AllSpriteShifts.COPPER_CASING))
 			.register();
 
 	// Fluids
@@ -1767,38 +1723,6 @@ public class AllBlocks {
 			.addLayer(() -> RenderType::cutoutMipped)
 			.register();
 
-	public static final BlockEntry<Block> COPYCAT_BASE = REGISTRATE.block("copycat_base", Block::new)
-		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.color(MaterialColor.GLOW_LICHEN))
-		.addLayer(() -> RenderType::cutoutMipped)
-		.transform(pickaxeOnly())
-		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
-		.register();
-
-	public static final BlockEntry<CopycatStepBlock> COPYCAT_STEP =
-		REGISTRATE.block("copycat_step", CopycatStepBlock::new)
-			.transform(BuilderTransformers.copycat())
-			.onRegister(CreateRegistrate.blockModel(() -> CopycatStepModel::new))
-			.item()
-			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.ZINC_INGOT), c::get, 4))
-			.transform(customItemModel("copycat_base", "step"))
-			.register();
-
-	public static final BlockEntry<CopycatPanelBlock> COPYCAT_PANEL =
-		REGISTRATE.block("copycat_panel", CopycatPanelBlock::new)
-			.transform(BuilderTransformers.copycat())
-			.onRegister(CreateRegistrate.blockModel(() -> CopycatPanelModel::new))
-			.item()
-			.recipe((c, p) -> p.stonecutting(DataIngredient.items(AllItems.ZINC_INGOT), c::get, 4))
-			.transform(customItemModel("copycat_base", "panel"))
-			.register();
-
-	public static final BlockEntry<WrenchableDirectionalBlock> COPYCAT_BARS =
-		REGISTRATE.block("copycat_bars", WrenchableDirectionalBlock::new)
-			.blockstate(new SpecialCopycatPanelBlockState("bars")::generate)
-			.onRegister(CreateRegistrate.blockModel(() -> CopycatBarsModel::new))
-			.register();
-
 	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_BLUE))
@@ -2124,11 +2048,88 @@ public class AllBlocks {
 	});
 
 	// Materials
-	
+
 	static {
 		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.PALETTES_CREATIVE_TAB);
 	}
 
+	public static final BlockEntry<MetalLadderBlock> ANDESITE_LADDER =
+		REGISTRATE.block("andesite_ladder", MetalLadderBlock::new)
+			.transform(
+				BuilderTransformers.ladder("andesite", () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get())))
+			.register();
+
+	public static final BlockEntry<MetalLadderBlock> BRASS_LADDER =
+		REGISTRATE.block("brass_ladder", MetalLadderBlock::new)
+			.transform(
+				BuilderTransformers.ladder("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass"))))
+			.register();
+
+	public static final BlockEntry<MetalLadderBlock> COPPER_LADDER =
+		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
+			.transform(
+				BuilderTransformers.ladder("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper"))))
+			.register();
+
+	public static final BlockEntry<IronBarsBlock> ANDESITE_BARS =
+		MetalBarsGen.createBars("andesite", true, () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()));
+	public static final BlockEntry<IronBarsBlock> BRASS_BARS =
+		MetalBarsGen.createBars("brass", true, () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")));
+	public static final BlockEntry<IronBarsBlock> COPPER_BARS =
+		MetalBarsGen.createBars("copper", true, () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")));
+
+	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD =
+		REGISTRATE.block("andesite_scaffolding", MetalScaffoldingBlock::new)
+			.transform(BuilderTransformers.scaffold("andesite",
+				() -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()), AllSpriteShifts.ANDESITE_SCAFFOLD,
+				AllSpriteShifts.ANDESITE_SCAFFOLD_INSIDE, AllSpriteShifts.ANDESITE_CASING))
+			.register();
+
+	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD = REGISTRATE
+		.block("brass_scaffolding", MetalScaffoldingBlock::new)
+		.transform(BuilderTransformers.scaffold("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")),
+			AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_SCAFFOLD_INSIDE, AllSpriteShifts.BRASS_CASING))
+		.register();
+
+	public static final BlockEntry<MetalScaffoldingBlock> COPPER_SCAFFOLD =
+		REGISTRATE.block("copper_scaffolding", MetalScaffoldingBlock::new)
+			.transform(BuilderTransformers.scaffold("copper",
+				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), AllSpriteShifts.COPPER_SCAFFOLD,
+				AllSpriteShifts.COPPER_SCAFFOLD_INSIDE, AllSpriteShifts.COPPER_CASING))
+			.register();
+
+	public static final BlockEntry<Block> COPYCAT_BASE = REGISTRATE.block("copycat_base", Block::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.color(MaterialColor.GLOW_LICHEN))
+		.addLayer(() -> RenderType::cutoutMipped)
+		.transform(pickaxeOnly())
+		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+		.register();
+
+	public static final BlockEntry<CopycatStepBlock> COPYCAT_STEP =
+		REGISTRATE.block("copycat_step", CopycatStepBlock::new)
+			.transform(BuilderTransformers.copycat())
+			.onRegister(CreateRegistrate.blockModel(() -> CopycatStepModel::new))
+			.item()
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/zinc")), c::get, 4))
+			.transform(customItemModel("copycat_base", "step"))
+			.register();
+
+	public static final BlockEntry<CopycatPanelBlock> COPYCAT_PANEL =
+		REGISTRATE.block("copycat_panel", CopycatPanelBlock::new)
+			.transform(BuilderTransformers.copycat())
+			.onRegister(CreateRegistrate.blockModel(() -> CopycatPanelModel::new))
+			.item()
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/zinc")), c::get, 4))
+			.transform(customItemModel("copycat_base", "panel"))
+			.register();
+
+	public static final BlockEntry<WrenchableDirectionalBlock> COPYCAT_BARS =
+		REGISTRATE.block("copycat_bars", WrenchableDirectionalBlock::new)
+			.blockstate(new SpecialCopycatPanelBlockState("bars")::generate)
+			.onRegister(CreateRegistrate.blockModel(() -> CopycatBarsModel::new))
+			.register();
+	
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_ORE)
 		.properties(p -> p.color(MaterialColor.METAL))
@@ -2210,6 +2211,7 @@ public class AllBlocks {
 		.properties(p -> p.requiresCorrectToolForDrops())
 		.transform(pickaxeOnly())
 		.blockstate(simpleCubeAll("industrial_iron_block"))
+		.tag(AllBlockTags.WRENCH_PICKUP.tag)
 		.lang("Block of Industrial Iron")
 		.simpleItem()
 		.register();
@@ -2266,12 +2268,12 @@ public class AllBlocks {
 
 	public static final CopperBlockSet COPPER_SHINGLES = new CopperBlockSet(REGISTRATE, "copper_shingles",
 		"copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), c::get, 2);
 		});
 
 	public static final CopperBlockSet COPPER_TILES =
 		new CopperBlockSet(REGISTRATE, "copper_tiles", "copper_roof_top", CopperBlockSet.DEFAULT_VARIANTS, (c, p) -> {
-			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("plates/copper")), c::get, 2);
+			p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), c::get, 2);
 		});
 
 	// Load this class

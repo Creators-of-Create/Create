@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"side": "create:block/encased_chain_drive",
 		"1": "create:block/gearbox",
-		"particle": "#side"
+		"particle": "create:block/encased_chain_drive",
+		"side": "create:block/encased_chain_drive"
 	},
 	"elements": [
 		{
@@ -22,8 +22,8 @@
 		},
 		{
 			"name": "Core",
-			"from": [2, 2, 1],
-			"to": [14, 14, 15],
+			"from": [2, 2, 0.95],
+			"to": [14, 14, 15.05],
 			"faces": {
 				"north": {"uv": [2, 2, 14, 14], "texture": "#1"},
 				"south": {"uv": [2, 2, 14, 14], "texture": "#1"}

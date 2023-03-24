@@ -24,12 +24,12 @@ public class ChuteShapes {
 
 	public static VoxelShape createShape(BlockState state) {
 		if (AllBlocks.SMART_CHUTE.has(state))
-			return AllShapes.SMART_CHUTE;
+			return Shapes.block();
 		
 		Direction direction = state.getValue(ChuteBlock.FACING);
 		Shape shape = state.getValue(ChuteBlock.SHAPE);
 
-		boolean intersection = shape == Shape.INTERSECTION;
+		boolean intersection = shape == Shape.INTERSECTION || shape == Shape.ENCASED;
 		if (direction == Direction.DOWN)
 			return intersection ? Shapes.block() : AllShapes.CHUTE;
 

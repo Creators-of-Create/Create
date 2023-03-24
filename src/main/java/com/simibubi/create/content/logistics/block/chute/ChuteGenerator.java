@@ -31,10 +31,12 @@ public class ChuteGenerator extends SpecialBlockStateGen {
 
 		if (!horizontal)
 			return shape == Shape.NORMAL ? AssetLookup.partialBaseModel(ctx, prov)
-				: shape == Shape.INTERSECTION ? AssetLookup.partialBaseModel(ctx, prov, "intersection")
+				: shape == Shape.INTERSECTION || shape == Shape.ENCASED
+					? AssetLookup.partialBaseModel(ctx, prov, "intersection")
 					: AssetLookup.partialBaseModel(ctx, prov, "windowed");
 		return shape == Shape.INTERSECTION ? AssetLookup.partialBaseModel(ctx, prov, "diagonal", "intersection")
-			: AssetLookup.partialBaseModel(ctx, prov, "diagonal");
+			: shape == Shape.ENCASED ? AssetLookup.partialBaseModel(ctx, prov, "diagonal", "encased")
+				: AssetLookup.partialBaseModel(ctx, prov, "diagonal");
 	}
 
 }

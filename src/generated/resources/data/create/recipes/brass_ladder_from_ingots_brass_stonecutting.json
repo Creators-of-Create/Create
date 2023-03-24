@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "tag": "forge:plates/brass"
+    "tag": "forge:ingots/brass"
   },
-  "result": "create:brass_scaffolding",
+  "result": "create:brass_ladder",
   "count": 2
 }

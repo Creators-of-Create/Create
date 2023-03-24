@@ -1,7 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "tag": "forge:plates/copper"
+    "tag": "forge:ingots/copper"
   },
   "result": "create:copper_bars",
   "count": 4

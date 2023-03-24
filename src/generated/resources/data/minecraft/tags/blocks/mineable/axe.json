@@ -103,14 +103,14 @@
     "create:rotation_speed_controller",
     "create:mechanical_arm",
     "create:railway_casing",
-    "create:copycat_step",
-    "create:copycat_panel",
     "create:content_observer",
     "create:stockpile_switch",
     "create:creative_crate",
     "create:display_link",
     "create:redstone_link",
     "create:analog_lever",
-    "create:lectern_controller"
+    "create:lectern_controller",
+    "create:copycat_step",
+    "create:copycat_panel"
   ]
 }

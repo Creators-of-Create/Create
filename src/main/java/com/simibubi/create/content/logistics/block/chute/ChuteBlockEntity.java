@@ -701,30 +701,32 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean downward = getItemMotion() < 0;
-		tooltip.add(componentSpacing.plainCopy()
-			.append(Lang.translateDirect("tooltip.chute.header")));
+		Lang.translate("tooltip.chute.header")
+			.forGoggles(tooltip);
+
 		if (pull == 0 && push == 0)
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.no_fans_attached"))
-				.withStyle(ChatFormatting.GRAY));
+			Lang.translate("tooltip.chute.no_fans_attached")
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
 		if (pull != 0)
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.fans_" + (pull > 0 ? "pull_up" : "push_down"))
-					.withStyle(ChatFormatting.GRAY)));
+			Lang.translate("tooltip.chute.fans_" + (pull > 0 ? "pull_up" : "push_down"))
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
 		if (push != 0)
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.fans_" + (push > 0 ? "push_up" : "pull_down"))
-					.withStyle(ChatFormatting.GRAY)));
-		tooltip.add(componentSpacing.plainCopy()
-			.append("-> ")
-			.append(Lang.translateDirect("tooltip.chute.items_move_" + (downward ? "down" : "up"))
-				.withStyle(ChatFormatting.YELLOW)));
-		if (!item.isEmpty()) {
-			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.chute.contains", Components.translatable(item.getDescriptionId())
-					.getString(), item.getCount()))
-				.withStyle(ChatFormatting.GREEN));
-		}
+			Lang.translate("tooltip.chute.fans_" + (push > 0 ? "push_up" : "pull_down"))
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
+
+		Lang.text("-> ")
+			.add(Lang.translate("tooltip.chute.items_move_" + (downward ? "down" : "up")))
+			.style(ChatFormatting.YELLOW)
+			.forGoggles(tooltip);
+		if (!item.isEmpty())
+			Lang.translate("tooltip.chute.contains", Components.translatable(item.getDescriptionId())
+				.getString(), item.getCount())
+				.style(ChatFormatting.GREEN)
+				.forGoggles(tooltip);
+
 		return true;
 	}
 

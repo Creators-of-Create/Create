@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
   "ingredient": {
-    "tag": "forge:plates/brass"
+    "tag": "forge:ingots/copper"
   },
-  "result": "create:brass_ladder",
+  "result": "create:copper_shingles",
   "count": 2
 }

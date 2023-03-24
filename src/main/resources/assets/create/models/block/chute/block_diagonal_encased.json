@@ -4,7 +4,6 @@
 	"textures": {
 		"3": "create:block/chute",
 		"4": "create:block/chute_large",
-		"5": "create:block/chute_hole",
 		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [
@@ -16,19 +15,8 @@
 				"east": {"uv": [0, 0, 16, 16], "texture": "#particle"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#particle"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#particle"},
-				"up": {"uv": [0, 0, 8, 8], "texture": "#4"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#particle"},
 				"down": {"uv": [0, 0, 8, 8], "texture": "#4"}
-			}
-		},
-		{
-			"from": [2.95, 14, 13.05],
-			"to": [13.05, 16, 2.95],
-			"faces": {
-				"north": {"uv": [9.5, 0, 14.5, 1], "texture": "#3"},
-				"east": {"uv": [9.5, 0, 14.5, 1], "texture": "#3"},
-				"south": {"uv": [9.5, 0, 14.5, 1], "texture": "#3"},
-				"west": {"uv": [9.5, 0, 14.5, 1], "texture": "#3"},
-				"down": {"uv": [3, 3, 13, 13], "texture": "#5"}
 			}
 		},
 		{
@@ -70,13 +58,13 @@
 			"name": "group",
 			"origin": [8, 8, 8],
 			"color": 0,
-			"children": [0, 1]
+			"children": [0]
 		},
 		{
 			"name": "group",
 			"origin": [8, -16, 0],
 			"color": 0,
-			"children": [2, 3, 4]
+			"children": [1, 2, 3]
 		}
 	]
 }

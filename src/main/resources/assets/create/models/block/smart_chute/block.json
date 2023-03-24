@@ -6,7 +6,8 @@
 		"7": "create:block/chute_smart",
 		"8": "create:block/funnel/funnel_open",
 		"9": "create:block/chute_smart_top",
-		"13": "create:block/chute"
+		"13": "create:block/chute",
+		"particle": "create:block/chute_smart"
 	},
 	"elements": [
 		{
@@ -22,8 +23,8 @@
 			}
 		},
 		{
-			"from": [3, 14, 13],
-			"to": [13, 16, 3],
+			"from": [2.95, 14, 13.05],
+			"to": [13.05, 16, 2.95],
 			"faces": {
 				"north": {"uv": [3, 1, 13, 3], "texture": "#9"},
 				"east": {"uv": [3, 1, 13, 3], "texture": "#9"},
@@ -33,8 +34,8 @@
 			}
 		},
 		{
-			"from": [3, 0, 13],
-			"to": [13, 2, 3],
+			"from": [2.95, 0, 13.05],
+			"to": [13.05, 2, 2.95],
 			"faces": {
 				"north": {"uv": [9.5, 7, 14.5, 8], "texture": "#13"},
 				"east": {"uv": [9.5, 7, 14.5, 8], "texture": "#13"},

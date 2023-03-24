@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:brass_bars_from_plates_brass_stonecutting"
+      "create:copycat_panel_from_ingots_zinc_stonecutting"
     ]
   },
   "criteria": {
-    "has_plates_brass": {
+    "has_ingots_zinc": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "forge:plates/brass"
+            "tag": "forge:ingots/zinc"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:brass_bars_from_plates_brass_stonecutting"
+        "recipe": "create:copycat_panel_from_ingots_zinc_stonecutting"
       }
     }
   },
   "requirements": [
     [
-      "has_plates_brass",
+      "has_ingots_zinc",
       "has_the_recipe"
     ]
   ]

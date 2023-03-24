@@ -15,7 +15,7 @@ public class SmartChuteFilterSlotPositioning extends ValueBoxTransform.Sided {
 	protected Vec3 getLocalOffset(BlockState state) {
 		Direction side = getSide();
 		float horizontalAngle = AngleHelper.horizontalAngle(side);
-		Vec3 southLocation = VecHelper.voxelSpace(8, 12, 15.5f);
+		Vec3 southLocation = VecHelper.voxelSpace(8, 11, 15.5f);
 		return VecHelper.rotateCentered(southLocation, horizontalAngle, Axis.Y);
 	}
 

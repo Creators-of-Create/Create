@@ -261,9 +261,6 @@ public class AllShapes {
 			.build(),
 		CHUTE = shape(1, 8, 1, 15, 16, 15).add(2, 0, 2, 14, 8, 14)
 			.build(),
-		SMART_CHUTE = shape(0, 0, 0, 16, 5, 16).add(0, 9, 0, 16, 15, 16)
-			.add(1, 0, 1, 15, 16, 15)
-			.build(),
 		TANK = shape(1, 0, 1, 15, 16, 15).build(), TANK_TOP = shape(TANK_TOP_LID).add(TANK)
 			.build(),
 		TANK_BOTTOM = shape(TANK_BOTTOM_LID).add(TANK)

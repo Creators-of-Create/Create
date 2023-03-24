@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.chute;
 
+import java.util.Random;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -14,6 +15,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -39,7 +41,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public AbstractChuteBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
 		consumer.accept(new ReducedDestroyEffects());
@@ -79,7 +81,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
 		super.updateEntityAfterFallOn(worldIn, entityIn);
@@ -109,8 +111,6 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
 		withBlockEntityDo(world, pos, ChuteBlockEntity::onAdded);
-		if (p_220082_5_)
-			return;
 		updateDiagonalNeighbour(state, world, pos);
 	}
 
@@ -125,16 +125,16 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 			toUpdate = toUpdate.relative(facing.getOpposite());
 
 		BlockState stateToUpdate = world.getBlockState(toUpdate);
-		BlockState updated = updateChuteState(stateToUpdate, world.getBlockState(toUpdate.above()), world, toUpdate);
-		if (stateToUpdate != updated && !world.isClientSide)
-			world.setBlockAndUpdate(toUpdate, updated);
+		if (isChute(stateToUpdate) && !world.getBlockTicks()
+			.hasScheduledTick(toUpdate, stateToUpdate.getBlock()))
+			world.scheduleTick(toUpdate, stateToUpdate.getBlock(), 1);
 	}
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		IBE.onRemove(state, world, pos, newState);
-		
-		if (isMoving || state.is(newState.getBlock()))
+
+		if (state.is(newState.getBlock()))
 			return;
 
 		updateDiagonalNeighbour(state, world, pos);
@@ -143,13 +143,17 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 			BlockPos toUpdate = pos.above()
 				.relative(direction);
 			BlockState stateToUpdate = world.getBlockState(toUpdate);
-			if (!isChute(stateToUpdate))
-				continue;
-			BlockState updated = ((AbstractChuteBlock) stateToUpdate.getBlock()).updateChuteState(stateToUpdate,
-				world.getBlockState(toUpdate.above()), world, toUpdate);
-			if (stateToUpdate != updated && !world.isClientSide)
-				world.setBlockAndUpdate(toUpdate, updated);
+			if (isChute(stateToUpdate) && !world.getBlockTicks()
+				.hasScheduledTick(toUpdate, stateToUpdate.getBlock()))
+				world.scheduleTick(toUpdate, stateToUpdate.getBlock(), 1);
 		}
+	}
+
+	@Override
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+		BlockState updated = updateChuteState(pState, pLevel.getBlockState(pPos.above()), pLevel, pPos);
+		if (pState != updated)
+			pLevel.setBlockAndUpdate(pPos, updated);
 	}
 
 	@Override
@@ -194,7 +198,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult p_225533_6_) {
 		if (!player.getItemInHand(hand)
-				.isEmpty())
+			.isEmpty())
 			return InteractionResult.PASS;
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
@@ -202,7 +206,8 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		return onBlockEntityUse(world, pos, be -> {
 			if (be.item.isEmpty())
 				return InteractionResult.PASS;
-			player.getInventory().placeItemBackInInventory(be.item);
+			player.getInventory()
+				.placeItemBackInInventory(be.item);
 			be.setItem(ItemStack.EMPTY);
 			return InteractionResult.SUCCESS;
 		});

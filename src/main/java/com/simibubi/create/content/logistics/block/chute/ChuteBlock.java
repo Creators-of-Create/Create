@@ -4,20 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -26,9 +33,10 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class ChuteBlock extends AbstractChuteBlock {
-	
+
 	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
 
@@ -39,7 +47,7 @@ public class ChuteBlock extends AbstractChuteBlock {
 	}
 
 	public enum Shape implements StringRepresentable {
-		INTERSECTION, WINDOW, NORMAL;
+		INTERSECTION, WINDOW, NORMAL, ENCASED;
 
 		@Override
 		public String getSerializedName() {
@@ -66,11 +74,36 @@ public class ChuteBlock extends AbstractChuteBlock {
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		Shape shape = state.getValue(SHAPE);
 		boolean down = state.getValue(FACING) == Direction.DOWN;
-		if (!context.getLevel().isClientSide && down && shape != Shape.INTERSECTION) {
-			context.getLevel()
-				.setBlockAndUpdate(context.getClickedPos(),
-					state.setValue(SHAPE, shape == Shape.WINDOW ? Shape.NORMAL : Shape.WINDOW));
+		if (shape == Shape.INTERSECTION)
+			return InteractionResult.PASS;
+		Level level = context.getLevel();
+		if (level.isClientSide)
+			return InteractionResult.SUCCESS;
+		if (shape == Shape.ENCASED) {
+			level.setBlockAndUpdate(context.getClickedPos(), state.setValue(SHAPE, Shape.NORMAL));
+			level.levelEvent(2001, context.getClickedPos(),
+				Block.getId(AllBlocks.INDUSTRIAL_IRON_BLOCK.getDefaultState()));
+			return InteractionResult.SUCCESS;
 		}
+		if (down)
+			level.setBlockAndUpdate(context.getClickedPos(),
+				state.setValue(SHAPE, shape != Shape.NORMAL ? Shape.NORMAL : Shape.WINDOW));
+		return InteractionResult.SUCCESS;
+	}
+
+	@Override
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult hitResult) {
+		Shape shape = state.getValue(SHAPE);
+		if (!AllBlocks.INDUSTRIAL_IRON_BLOCK.isIn(player.getItemInHand(hand)))
+			return super.use(state, level, pos, player, hand, hitResult);
+		if (shape == Shape.INTERSECTION || shape == Shape.ENCASED)
+			return super.use(state, level, pos, player, hand, hitResult);
+		if (player == null || level.isClientSide)
+			return InteractionResult.SUCCESS;
+
+		level.setBlockAndUpdate(pos, state.setValue(SHAPE, Shape.ENCASED));
+		level.playSound(null, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.BLOCKS, 0.5f, 1.05f);
 		return InteractionResult.SUCCESS;
 	}
 
@@ -129,7 +162,8 @@ public class ChuteBlock extends AbstractChuteBlock {
 		boolean noConnections = amtConnections == 0;
 		if (vertical)
 			return state.setValue(SHAPE,
-				noConnections ? state.getValue(SHAPE) == Shape.WINDOW ? Shape.WINDOW : Shape.NORMAL : Shape.INTERSECTION);
+				noConnections ? state.getValue(SHAPE) == Shape.INTERSECTION ? Shape.NORMAL : state.getValue(SHAPE)
+					: Shape.INTERSECTION);
 		if (noConnections)
 			return state.setValue(SHAPE, Shape.INTERSECTION);
 		if (connections.get(Direction.NORTH) && connections.get(Direction.SOUTH))
@@ -138,15 +172,26 @@ public class ChuteBlock extends AbstractChuteBlock {
 			return state.setValue(SHAPE, Shape.INTERSECTION);
 		if (amtConnections == 1 && connections.get(facing) && !(getChuteFacing(above) == Direction.DOWN)
 			&& !(above.getBlock() instanceof FunnelBlock && FunnelBlock.getFunnelFacing(above) == Direction.DOWN))
-			return state.setValue(SHAPE, Shape.NORMAL);
+			return state.setValue(SHAPE, state.getValue(SHAPE) == Shape.ENCASED ? Shape.ENCASED : Shape.NORMAL);
 		return state.setValue(SHAPE, Shape.INTERSECTION);
 	}
-	
+
+	@Override
+	public BlockState rotate(BlockState pState, Rotation pRot) {
+		return pState.setValue(FACING, pRot.rotate(pState.getValue(FACING)));
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	public BlockState mirror(BlockState pState, Mirror pMirror) {
+		return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
+	}
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ChuteBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.CHUTE.get();

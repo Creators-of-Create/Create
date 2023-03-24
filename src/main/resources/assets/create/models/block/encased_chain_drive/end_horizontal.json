@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"side": "create:block/encased_chain_drive",
 		"2": "create:block/encased_chain_drive_end",
-		"particle": "#side"
+		"particle": "create:block/encased_chain_drive",
+		"side": "create:block/encased_chain_drive"
 	},
 	"elements": [
 		{
@@ -22,8 +22,8 @@
 		},
 		{
 			"name": "Core",
-			"from": [1, 2, 0],
-			"to": [15, 14, 14],
+			"from": [0.95, 2, 0],
+			"to": [15.05, 14, 14],
 			"faces": {
 				"east": {"uv": [2, 2, 16, 14], "texture": "#2"},
 				"west": {"uv": [2, 2, 16, 14], "rotation": 180, "texture": "#2"}

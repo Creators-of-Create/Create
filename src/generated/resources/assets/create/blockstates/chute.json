@@ -53,6 +53,24 @@
     "facing=east,shape=normal": {
       "model": "create:block/chute/block_diagonal",
       "y": 270
+    },
+    "facing=down,shape=encased": {
+      "model": "create:block/chute/block_intersection"
+    },
+    "facing=north,shape=encased": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 180
+    },
+    "facing=south,shape=encased": {
+      "model": "create:block/chute/block_diagonal_encased"
+    },
+    "facing=west,shape=encased": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 90
+    },
+    "facing=east,shape=encased": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 270
     }
   }
 }

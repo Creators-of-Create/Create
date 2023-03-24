@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:brass_ladder_from_plates_brass_stonecutting"
+      "create:brass_ladder_from_ingots_brass_stonecutting"
     ]
   },
   "criteria": {
-    "has_plates_brass": {
+    "has_ingots_brass": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "tag": "forge:plates/brass"
+            "tag": "forge:ingots/brass"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:brass_ladder_from_plates_brass_stonecutting"
+        "recipe": "create:brass_ladder_from_ingots_brass_stonecutting"
       }
     }
   },
   "requirements": [
     [
-      "has_plates_brass",
+      "has_ingots_brass",
       "has_the_recipe"
     ]
   ]
