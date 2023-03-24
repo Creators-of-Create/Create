@@ -1,6 +1,7 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.AllRegistries;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
@@ -62,9 +63,11 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.forgespi.language.IModFileInfo;
 import net.minecraftforge.forgespi.locating.IModFile;
+import net.minecraftforge.registries.NewRegistryEvent;
 
 @EventBusSubscriber
 public class CommonEvents {
@@ -90,7 +93,7 @@ public class CommonEvents {
 		ToolboxHandler.playerLogin(player);
 		Create.RAILWAYS.playerLogin(player);
 	}
-	
+
 	@SubscribeEvent
 	public static void playerLoggedOut(PlayerLoggedOutEvent event) {
 		Player player = event.getPlayer();
@@ -166,7 +169,7 @@ public class CommonEvents {
 	public static void onEntityEnterSection(EntityEvent.EnteringSection event) {
 		CarriageEntityHandler.onEntityEnterSection(event);
 	}
-	
+
 	@SubscribeEvent
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
@@ -228,6 +231,10 @@ public class CommonEvents {
 
 	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 	public static class ModBusEvents {
+		@SubscribeEvent
+		public static void registerRegistries(final NewRegistryEvent event) {
+			AllRegistries.register(event);
+		}
 
 		@SubscribeEvent
 		public static void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -248,7 +255,5 @@ public class CommonEvents {
 				});
 			}
 		}
-
 	}
-
 }
