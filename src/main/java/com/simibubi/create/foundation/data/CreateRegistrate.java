@@ -16,8 +16,10 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
+import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.utility.CreateRegistry;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -131,6 +133,14 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		BlockEntityFactory<T> factory) {
 		return (CreateTileEntityBuilder<T, P>) this.entry(name,
 			(callback) -> CreateTileEntityBuilder.create(this, parent, name, callback, factory));
+	}
+
+	public <T extends BogeyStyle> BogeyStyleBuilder<T, CreateRegistrate> bogeyStyle(String name, T style) {
+		return this.bogeyStyle(self(), name, style);
+	}
+
+	public <T extends BogeyStyle, P> BogeyStyleBuilder<T, P> bogeyStyle(P parent, String name, T style) {
+		return this.entry(name, (callback) -> BogeyStyleBuilder.create(this, parent, name, callback, style));
 	}
 
 	@Override
