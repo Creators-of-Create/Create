@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "forge:plates/iron"
+    },
+    "C": {
+      "tag": "forge:barrels/wooden"
+    }
+  },
+  "pattern": [
+    "   ",
+    "BCB",
+    "   "
+  ],
+  "result": {
+    "item": "create:vertical_item_vault"
+  }
+}

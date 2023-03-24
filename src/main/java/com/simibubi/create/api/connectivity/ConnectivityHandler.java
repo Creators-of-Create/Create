@@ -11,6 +11,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.mojang.logging.LogUtils;
+import com.simibubi.create.content.logistics.block.verticalvault.VerticalItemVaultBlock;
+
+import com.simibubi.create.content.logistics.block.verticalvault.VerticalItemVaultTileEntity;
+
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import org.apache.commons.lang3.tuple.Pair;

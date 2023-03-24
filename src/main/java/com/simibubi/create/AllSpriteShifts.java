@@ -61,6 +61,9 @@ public class AllSpriteShifts {
 	public static final Couple<CTSpriteShiftEntry> VAULT_TOP = vault("top"), VAULT_FRONT = vault("front"),
 		VAULT_SIDE = vault("side"), VAULT_BOTTOM = vault("bottom");
 
+	public static final Couple<CTSpriteShiftEntry> VERTICAL_VAULT_TOP = vault("front"),
+			VERTICAL_VAULT_SIDE = vault("side"), VERTICAL_VAULT_BOTTOM = vault("bottom");
+
 	public static final SpriteShiftEntry BELT = get("block/belt", "block/belt_scroll"),
 		BELT_OFFSET = get("block/belt_offset", "block/belt_scroll"),
 		BELT_DIAGONAL = get("block/belt_diagonal", "block/belt_diagonal_scroll"),

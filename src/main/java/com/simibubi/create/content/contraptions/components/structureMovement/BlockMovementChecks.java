@@ -30,6 +30,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
+import com.simibubi.create.content.logistics.block.verticalvault.VerticalItemVaultBlock;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlock;
@@ -332,6 +333,8 @@ public class BlockMovementChecks {
 		if (state.getBlock() instanceof FluidTankBlock)
 			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (state.getBlock() instanceof ItemVaultBlock)
+			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction));
+		if (state.getBlock() instanceof VerticalItemVaultBlock)
 			return ConnectivityHandler.isConnected(world, pos, pos.relative(direction));
 		if (AllBlocks.STICKER.has(state) && state.getValue(StickerBlock.EXTENDED)) {
 			return direction == state.getValue(StickerBlock.FACING)

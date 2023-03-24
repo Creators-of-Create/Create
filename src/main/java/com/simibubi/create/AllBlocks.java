@@ -207,6 +207,8 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.block.verticalvault.VerticalItemVaultBlock;
+import com.simibubi.create.content.logistics.block.verticalvault.VerticalItemVaultCTBehaviour;
+import com.simibubi.create.content.logistics.block.verticalvault.VerticalItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
@@ -241,7 +243,6 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.registries.Registries;
@@ -1640,10 +1641,9 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 					.forAllStates(s -> ConfiguredModel.builder()
 							.modelFile(AssetLookup.standardModel(c, p))
-							.rotationY(s.getValue(ItemVaultBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
 							.build()))
-			.onRegister(connectedTextures(ItemVaultCTBehaviour::new))
-			.item(ItemVaultItem::new)
+			.onRegister(connectedTextures(VerticalItemVaultCTBehaviour::new))
+			.item(VerticalItemVaultItem::new)
 			.build()
 			.register();
 

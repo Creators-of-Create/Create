@@ -2,12 +2,9 @@ package com.simibubi.create.content.logistics.block.verticalvault;
 
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionResult;
@@ -54,9 +51,12 @@ public class VerticalItemVaultItem extends BlockItem {
 		Player player = ctx.getPlayer();
 		if (player == null)
 			return;
-		if (player.isSteppingCarefully())
+		if (player.isShiftKeyDown())
 			return;
 		Direction face = ctx.getClickedFace();
+		if (!face.getAxis()
+				.isVertical())
+			return;
 		ItemStack stack = ctx.getItemInHand();
 		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
@@ -65,58 +65,54 @@ public class VerticalItemVaultItem extends BlockItem {
 
 		if (!VerticalItemVaultBlock.isVault(placedOnState))
 			return;
-		VerticalItemVaultTileEntity tankAt = ConnectivityHandler.partAt(AllTileEntities.VERTICAL_ITEM_VAULT.get(), world, placedOnPos);
-		if (tankAt == null)
+		VerticalItemVaultTileEntity vvaultat = ConnectivityHandler.partAt(AllTileEntities.VERTICAL_ITEM_VAULT.get(), world, placedOnPos);
+		if (vvaultat == null)
 			return;
-		VerticalItemVaultTileEntity controllerTE = tankAt.getControllerTE();
+		VerticalItemVaultTileEntity controllerTE = vvaultat.getControllerTE();
 		if (controllerTE == null)
 			return;
 
-		int width = controllerTE.radius;
+		int width = controllerTE.getWidth();
 		if (width == 1)
 			return;
 
-		int tanksToPlace = 0;
-		if (face.getAxis() != Axis.Y)
-			return;
+		int vvaultsToPlace = 0;
+		BlockPos startPos = face == Direction.DOWN ? controllerTE.getBlockPos()
+				.below()
+				: controllerTE.getBlockPos()
+				.above(controllerTE.getHeight());
 
-		Direction vaultFacing = Direction.UP;
-		BlockPos startPos = face == vaultFacing.getOpposite() ? controllerTE.getBlockPos()
-			.relative(vaultFacing.getOpposite())
-			: controllerTE.getBlockPos()
-				.relative(vaultFacing, controllerTE.length);
-
-		if (VecHelper.getCoordinate(startPos, Axis.Y) != VecHelper.getCoordinate(pos, Axis.Y))
+		if (startPos.getY() != pos.getY())
 			return;
 
 		for (int xOffset = 0; xOffset < width; xOffset++) {
 			for (int zOffset = 0; zOffset < width; zOffset++) {
-				BlockPos offsetPos = startPos.offset(0, xOffset, zOffset);
+				BlockPos offsetPos = startPos.offset(xOffset, 0, zOffset);
 				BlockState blockState = world.getBlockState(offsetPos);
 				if (VerticalItemVaultBlock.isVault(blockState))
 					continue;
 				if (!blockState.getMaterial()
-					.isReplaceable())
+						.isReplaceable())
 					return;
-				tanksToPlace++;
+				vvaultsToPlace++;
 			}
 		}
 
-		if (!player.isCreative() && stack.getCount() < tanksToPlace)
+		if (!player.isCreative() && stack.getCount() < vvaultsToPlace)
 			return;
 
 		for (int xOffset = 0; xOffset < width; xOffset++) {
 			for (int zOffset = 0; zOffset < width; zOffset++) {
-				BlockPos offsetPos = startPos.offset(0, xOffset, zOffset);
+				BlockPos offsetPos = startPos.offset(xOffset, 0, zOffset);
 				BlockState blockState = world.getBlockState(offsetPos);
 				if (VerticalItemVaultBlock.isVault(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
 				player.getPersistentData()
-					.putBoolean("SilenceVaultSound", true);
+						.putBoolean("SilenceVaultSound", true);
 				super.place(context);
 				player.getPersistentData()
-					.remove("SilenceVaultSound");
+						.remove("SilenceVaultSound");
 			}
 		}
 	}
