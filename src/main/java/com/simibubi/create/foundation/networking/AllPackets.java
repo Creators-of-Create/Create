@@ -37,6 +37,7 @@ import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Config
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeObservedPacket;
 import com.simibubi.create.content.curiosities.armor.NetheriteDivingHandler;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardEditPacket;
 import com.simibubi.create.content.curiosities.symmetry.ConfigureSymmetryWandPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxDisposeAllPacket;
@@ -157,6 +158,7 @@ public enum AllPackets {
 	REQUEST_FLOOR_LIST(ElevatorFloorListPacket.RequestFloorList.class, ElevatorFloorListPacket.RequestFloorList::new,
 		PLAY_TO_SERVER),
 	ELEVATOR_SET_FLOOR(ElevatorTargetFloorPacket.class, ElevatorTargetFloorPacket::new, PLAY_TO_SERVER),
+	CLIPBOARD_EDIT(ClipboardEditPacket.class, ClipboardEditPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),

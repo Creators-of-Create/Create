@@ -272,6 +272,8 @@
 	"create.gui.sequenced_gearshift.speed.back": "Input speed, Reversed",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Double speed, Reversed",
 
+	"create.gui.clipboard.erase_checked": "Erase checked items",
+
 	"create.schematicAndQuill.dimensions": "Schematic Size: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "First position set.",
 	"create.schematicAndQuill.secondPos": "Second position set.",

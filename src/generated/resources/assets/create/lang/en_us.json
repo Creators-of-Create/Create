@@ -602,6 +602,7 @@
 	"item.create.chocolate_glazed_berries": "Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Chromatic Compound",
 	"item.create.cinder_flour": "Cinder Flour",
+	"item.create.clipboard": "Clipboard",
 	"item.create.copper_backtank": "Copper Backtank",
 	"item.create.copper_backtank_placeable": "Copper Backtank Placeable",
 	"item.create.copper_diving_boots": "Copper Diving Boots",
@@ -1130,6 +1131,7 @@
 	"create.gui.sequenced_gearshift.speed.forward_fast": "Double speed, Forwards",
 	"create.gui.sequenced_gearshift.speed.back": "Input speed, Reversed",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Double speed, Reversed",
+	"create.gui.clipboard.erase_checked": "Erase checked items",
 
 	"create.schematicAndQuill.dimensions": "Schematic Size: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "First position set.",

@@ -39,6 +39,8 @@ import com.simibubi.create.content.curiosities.armor.BacktankItem;
 import com.simibubi.create.content.curiosities.armor.BacktankItem.BacktankBlockItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardItem;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.tools.BlueprintItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
@@ -72,7 +74,10 @@ public class AllItems {
 		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
 
-	// Materials
+	public static final ItemEntry<ClipboardItem> CLIPBOARD = REGISTRATE.item("clipboard", ClipboardItem::new)
+		.onRegister(ClipboardItem::registerModelOverrides)
+		.model((c, p) -> ClipboardOverrides.addOverrideModels(c, p))
+		.register();
 
 	public static final ItemEntry<Item> WHEAT_FLOUR =
 		taggedIngredient("wheat_flour", forgeItemTag("flour/wheat"), forgeItemTag("flour")),

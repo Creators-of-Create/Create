@@ -76,6 +76,8 @@ public enum AllGuiTextures implements ScreenElement {
 
 	LINKED_CONTROLLER("curiosities_2", 179, 109),
 	BLUEPRINT("curiosities_2", 0, 109, 179, 109),
+	
+	CLIPBOARD("clipboard", 0, 0, 256, 256),
 
 	PROJECTOR("projector", 235, 185),
 	PROJECTOR_FILTER_STRENGTH("projector", 0, 14, 162, 22),
