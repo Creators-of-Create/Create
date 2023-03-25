@@ -13,6 +13,8 @@ import com.tterrag.registrate.builders.AbstractBuilder;
 
 import com.tterrag.registrate.builders.BuilderCallback;
 
+import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.core.particles.ParticleType;
@@ -31,7 +33,8 @@ import java.util.function.Supplier;
 public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<BogeyStyle, T, P, BogeyStyleBuilder<T, P>> {
 	private final T style;
 
-	private NonNullSupplier<Map<BogeyRenderer.BogeySize, IBogeyBlock>> bogeyBlocks = () -> new EnumMap<>(BogeyRenderer.BogeySize.class);
+	private NonNullSupplier<Map<BogeyRenderer.BogeySize, BlockEntry<? extends IBogeyBlock>>> bogeyBlocks
+			= () -> new EnumMap<>(BogeyRenderer.BogeySize.class);
 	private Supplier<AllSoundEvents.SoundEntry> sounds;
 	private Supplier<CompoundTag> data;
 	private Supplier<ParticleType<?>> particles;
@@ -41,11 +44,11 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 	}
 
 	protected BogeyStyleBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, T style) {
-		super(owner, parent, name, callback, AllRegistries.BOGEY_STYLES.get().getRegistryKey());
+		super(owner, parent, name, callback, AllRegistries.Keys.BOGEYS);
 		this.style = style;
 
-		bogeyBlocks.get().put(BogeyRenderer.BogeySize.SMALL, AllBlocks.SMALL_BOGEY.get());
-		bogeyBlocks.get().put(BogeyRenderer.BogeySize.LARGE, AllBlocks.LARGE_BOGEY.get());
+//		bogeyBlocks.get().put(BogeyRenderer.BogeySize.SMALL, AllBlocks.SMALL_BOGEY.get());
+//		bogeyBlocks.get().put(BogeyRenderer.BogeySize.LARGE, AllBlocks.LARGE_BOGEY.get());
 	}
 
 	public BogeyStyleBuilder<T, P> defaultData(CompoundTag data) {
@@ -63,7 +66,7 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 		return this;
 	}
 
-	public BogeyStyleBuilder<T, P> block(BogeyRenderer.BogeySize size, IBogeyBlock block) {
+	public BogeyStyleBuilder<T, P> block(BogeyRenderer.BogeySize size, BlockEntry<? extends IBogeyBlock> block) {
 		this.bogeyBlocks.get().put(size, block);
 		return this;
 	}

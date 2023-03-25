@@ -231,10 +231,6 @@ public class CommonEvents {
 
 	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 	public static class ModBusEvents {
-		@SubscribeEvent
-		public static void registerRegistries(final NewRegistryEvent event) {
-			AllRegistries.register(event);
-		}
 
 		@SubscribeEvent
 		public static void registerCapabilities(RegisterCapabilitiesEvent event) {

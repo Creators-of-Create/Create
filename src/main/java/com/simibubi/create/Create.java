@@ -119,9 +119,9 @@ public class Create {
 		AllEntityDataSerializers.register(modEventBus);
 		AllOreFeatureConfigEntries.init();
 		AllFeatures.register(modEventBus);
-		AllBogeyStyles.register();
 		AllPlacementModifiers.register(modEventBus);
 		BuiltinRegistration.register(modEventBus);
+		AllBogeyStyles.register();
 
 		AllConfigs.register(modLoadingContext);
 
@@ -144,8 +144,6 @@ public class Create {
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
 		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus, forgeEventBus));
-
-		System.out.println(AllRegistries.BOGEY_STYLES.get().getValues());
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
