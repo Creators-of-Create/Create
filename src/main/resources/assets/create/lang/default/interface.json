@@ -357,7 +357,7 @@
 	"create.gui.schematicannon.option.skipBlockEntities": "Protect Block Entities",
 
 	"create.gui.schematicannon.slot.gunpowder": "Add gunpowder to fuel the cannon",
-	"create.gui.schematicannon.slot.listPrinter": "Place books here to print a Checklist for your Schematic",
+	"create.gui.schematicannon.slot.listPrinter": "Place a Clipboard or Book here to print a Checklist for your Schematic",
 	"create.gui.schematicannon.slot.schematic": "Add your Schematic here. Make sure it is deployed at a specific location.",
 
 	"create.gui.schematicannon.option.skipMissing.description": "If the cannon cannot find a required Block for placement, it will continue at the next Location.",

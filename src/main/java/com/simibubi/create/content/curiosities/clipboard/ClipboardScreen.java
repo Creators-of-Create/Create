@@ -64,6 +64,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 
 	int hoveredEntry;
 	boolean hoveredCheck;
+	boolean readonly;
 
 	DisplayCache displayCache = DisplayCache.EMPTY;
 	TextFieldHelper editContext;
@@ -91,6 +92,10 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		editContext = new TextFieldHelper(this::getCurrentEntryText, this::setCurrentEntryText, this::getClipboard,
 			this::setClipboard, this::validateTextForEntry);
 		editingIndex = startEmpty ? 0 : -1;
+		readonly = item.getTag() != null && item.getTag()
+			.getBoolean("Readonly");
+		if (readonly)
+			editingIndex = -1;
 	}
 
 	@Override
@@ -122,7 +127,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		addRenderableWidget(forward);
 		addRenderableWidget(backward);
 
-		forward.visible = currentPage < 50;
+		forward.visible = currentPage < 50 && (!readonly || currentPage + 1 < pages.size());
 		backward.visible = currentPage > 0;
 	}
 
@@ -153,8 +158,9 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			for (int i = 0; i < currentEntries.size(); i++) {
 				ClipboardEntry clipboardEntry = currentEntries.get(i);
 				String text = clipboardEntry.text.getString();
-				totalHeight += Math.max(12, font.split(Components.literal(text), 150)
-					.size() * 9 + 3);
+				totalHeight +=
+					Math.max(12, font.split(Components.literal(text), clipboardEntry.icon.isEmpty() ? 150 : 130)
+						.size() * 9 + 3);
 
 				if (totalHeight > my) {
 					hoveredEntry = i;
@@ -211,17 +217,24 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		if (currentPage == previously)
 			return;
 		editingIndex = -1;
-		if (pages.size() <= currentPage)
+		if (pages.size() <= currentPage) {
+			if (readonly) {
+				currentPage = previously;
+				return;
+			}
 			pages.add(new ArrayList<>());
+		}
 		currentEntries = pages.get(currentPage);
 		if (currentEntries.isEmpty()) {
 			currentEntries.add(new ClipboardEntry(false, Components.empty()));
-			editingIndex = 0;
-			editContext.setCursorToEnd();
-			clearDisplayCacheAfterChange();
+			if (!readonly) {
+				editingIndex = 0;
+				editContext.setCursorToEnd();
+				clearDisplayCacheAfterChange();
+			}
 		}
 
-		forward.visible = currentPage < 50;
+		forward.visible = currentPage < 50 && (!readonly || currentPage + 1 < pages.size());
 		backward.visible = currentPage > 0;
 
 		if (next)
@@ -245,20 +258,24 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		for (int i = 0; i < currentEntries.size(); i++) {
 			ClipboardEntry clipboardEntry = currentEntries.get(i);
 			boolean checked = clipboardEntry.checked;
+			int iconOffset = clipboardEntry.icon.isEmpty() ? 0 : 16;
 
 			font.draw(ms, "\u25A1", x + 45, y + 51, checked ? 0x668D7F6B : 0xff8D7F6B);
 			if (checked)
 				font.draw(ms, "\u2714", x + 45, y + 50, 0x31B25D);
 
-			List<FormattedCharSequence> split = font.split(clipboardEntry.text, 150);
+			List<FormattedCharSequence> split = font.split(clipboardEntry.text, 150 - iconOffset);
 			if (split.isEmpty()) {
 				y += 12;
 				continue;
 			}
 
+			if (!clipboardEntry.icon.isEmpty())
+				itemRenderer.renderGuiItem(clipboardEntry.icon, x + 54, y + 50);
+
 			for (FormattedCharSequence sequence : split) {
 				if (i != editingIndex)
-					font.draw(ms, sequence, x + 58, y + 50, checked ? 0x31B25D : 0x311A00);
+					font.draw(ms, sequence, x + 58 + iconOffset, y + 50, checked ? 0x31B25D : 0x311A00);
 				y += 9;
 			}
 			y += 3;
@@ -525,7 +542,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 				return true;
 			}
 
-			if (hoveredEntry != editingIndex) {
+			if (hoveredEntry != editingIndex && !readonly) {
 				editingIndex = hoveredEntry;
 				if (hoveredEntry >= currentEntries.size()) {
 					currentEntries.add(new ClipboardEntry(false, Components.empty()));

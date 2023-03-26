@@ -8,12 +8,15 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardEntry;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -27,6 +30,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -158,7 +162,8 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 			return InteractionResult.SUCCESS;
 		}
 
-		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
+		boolean display =
+			heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName() || AllItems.CLIPBOARD.isIn(heldItem);
 		DyeColor dye = DyeColor.getColor(heldItem);
 
 		if (!display && dye == null)
@@ -171,8 +176,20 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 		CompoundTag tag = heldItem.getTagElement("display");
 		String tagElement = tag != null && tag.contains("Name", Tag.TAG_STRING) ? tag.getString("Name") : null;
 
-		if (display)
+		if (display) {
+			if (AllItems.CLIPBOARD.isIn(heldItem)) {
+				List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(heldItem);
+				int line = lineIndex;
+				for (int i = 0; i < entries.size(); i++) {
+					for (String string : entries.get(i).text.getString()
+						.split("\n"))
+						flapBE.applyTextManually(line++, Component.Serializer.toJson(Components.literal(string)));
+				}
+				return InteractionResult.SUCCESS;
+			}
+
 			flapBE.applyTextManually(lineIndex, tagElement);
+		}
 		if (dye != null) {
 			world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
 			flapBE.setColour(lineIndex, dye);
@@ -315,7 +332,8 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 			BlockPos relative = pPos.relative(d);
 			BlockState adjacent = pLevel.getBlockState(relative);
 			if (canConnect(pState, adjacent))
-				KineticBlockEntity.switchToBlockState(pLevel, relative, updateColumn(pLevel, relative, adjacent, false));
+				KineticBlockEntity.switchToBlockState(pLevel, relative,
+					updateColumn(pLevel, relative, adjacent, false));
 		}
 	}
 

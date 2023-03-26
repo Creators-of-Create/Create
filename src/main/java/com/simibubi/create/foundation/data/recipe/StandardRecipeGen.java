@@ -1011,6 +1011,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		.viaShapeless(b -> b.requires(I.wheatFlour())
 			.requires(Items.WATER_BUCKET)),
 
+		CLIPBOARD = create(AllItems.CLIPBOARD).unlockedBy(I::andesite)
+			.viaShaped(b -> b.define('G', I.planks())
+				.define('P', Items.PAPER)
+				.define('A', I.andesite())
+				.pattern("A")
+				.pattern("P")
+				.pattern("G")),
+
+		CLIPBOARD_CLEAR = create(AllItems.CLIPBOARD).withSuffix("_clear")
+			.unlockedBy(AllItems.CLIPBOARD::get)
+			.viaShapeless(b -> b.requires(AllItems.CLIPBOARD.get())),
+
 		DIVING_HELMET = create(AllItems.COPPER_DIVING_HELMET).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
 				.define('P', I.copper())

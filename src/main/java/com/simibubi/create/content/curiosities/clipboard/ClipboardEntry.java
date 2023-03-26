@@ -13,12 +13,19 @@ import net.minecraft.world.item.ItemStack;
 
 public class ClipboardEntry {
 
-	boolean checked;
-	MutableComponent text;
+	public boolean checked;
+	public MutableComponent text;
+	public ItemStack icon;
 
 	public ClipboardEntry(boolean checked, MutableComponent text) {
 		this.checked = checked;
 		this.text = text;
+		this.icon = ItemStack.EMPTY;
+	}
+
+	public ClipboardEntry displayItem(ItemStack icon) {
+		this.icon = icon;
+		return this;
 	}
 
 	public static List<List<ClipboardEntry>> readAll(ItemStack clipboardItem) {
@@ -29,6 +36,17 @@ public class ClipboardEntry {
 			.readCompoundList(pageTag.getList("Entries", Tag.TAG_COMPOUND), ClipboardEntry::readNBT));
 	}
 
+	public static List<ClipboardEntry> getLastViewedEntries(ItemStack heldItem) {
+		List<List<ClipboardEntry>> pages = ClipboardEntry.readAll(heldItem);
+		if (pages.isEmpty())
+			return new ArrayList<>();
+		int page = heldItem.getTag() == null ? 0
+			: Math.min(heldItem.getTag()
+				.getInt("PreviouslyOpenedPage"), pages.size() - 1);
+		List<ClipboardEntry> entries = pages.get(page);
+		return entries;
+	}
+	
 	public static void saveAll(List<List<ClipboardEntry>> entries, ItemStack clipboardItem) {
 		CompoundTag tag = clipboardItem.getOrCreateTag();
 		tag.put("Pages", NBTHelper.writeCompoundList(entries, list -> {
@@ -42,11 +60,18 @@ public class ClipboardEntry {
 		CompoundTag nbt = new CompoundTag();
 		nbt.putBoolean("Checked", checked);
 		nbt.putString("Text", Component.Serializer.toJson(text));
+		if (icon.isEmpty())
+			return nbt;
+		nbt.put("Icon", icon.serializeNBT());
 		return nbt;
 	}
 
 	public static ClipboardEntry readNBT(CompoundTag tag) {
-		return new ClipboardEntry(tag.getBoolean("Checked"), Component.Serializer.fromJson(tag.getString("Text")));
+		ClipboardEntry clipboardEntry =
+			new ClipboardEntry(tag.getBoolean("Checked"), Component.Serializer.fromJson(tag.getString("Text")));
+		if (tag.contains("Icon"))
+			clipboardEntry.displayItem(ItemStack.of(tag.getCompound("Icon")));
+		return clipboardEntry;
 	}
 
 }

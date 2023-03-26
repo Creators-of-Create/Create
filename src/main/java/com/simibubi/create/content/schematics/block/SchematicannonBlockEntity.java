@@ -700,8 +700,9 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 				updateChecklist();
 
 			dontUpdateChecklist = true;
-			inventory.extractItem(BookInput, 1, false);
-			ItemStack stack = checklist.createItem();
+			ItemStack extractItem = inventory.extractItem(BookInput, 1, false);
+			ItemStack stack = AllItems.CLIPBOARD.isIn(extractItem) ? checklist.createWrittenClipboard()
+				: checklist.createWrittenBook();
 			stack.setCount(inventory.getStackInSlot(BookOutput)
 				.getCount() + 1);
 			inventory.setStackInSlot(BookOutput, stack);
