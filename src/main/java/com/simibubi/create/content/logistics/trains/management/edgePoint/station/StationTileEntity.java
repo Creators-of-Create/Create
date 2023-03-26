@@ -231,7 +231,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		boolean canDisassemble = trainPresent && imminentTrain.canDisassemble();
 		UUID imminentID = imminentTrain != null ? imminentTrain.id : null;
 		boolean trainHasSchedule = trainPresent && imminentTrain.runtime.getSchedule() != null;
-		boolean trainHasAutoSchedule = trainHasSchedule && imminentTrain.runtime.isAutoSchedule;
+		boolean trainHasAutoSchedule = trainHasSchedule && imminentTrain.runtime.isAutoSchedule();
 		boolean newlyArrived = this.trainPresent != trainPresent;
 
 		if (trainPresent && imminentTrain.runtime.displayLinkUpdateRequested) {
@@ -719,7 +719,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return;
 
 		award(AllAdvancements.CONDUCTOR);
-		imminentTrain.runtime.setSchedule(schedule, true);
+		imminentTrain.runtime.setSuspendedSchedule(schedule);
 		AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 1, 1);
 
 		if (!(level instanceof ServerLevel server))

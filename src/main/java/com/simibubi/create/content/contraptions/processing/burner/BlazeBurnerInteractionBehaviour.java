@@ -71,7 +71,7 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 
 				AllSoundEvents.playItemPickup(player);
 				player.displayClientMessage(Lang.translateDirect(
-					train.runtime.isAutoSchedule ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
+					train.runtime.isAutoSchedule() ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
 					true);
 				player.setItemInHand(activeHand, train.runtime.returnSchedule());
 				return true;
