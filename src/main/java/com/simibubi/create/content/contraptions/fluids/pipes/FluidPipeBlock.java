@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
@@ -53,7 +55,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class FluidPipeBlock extends PipeBlock
-	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity>, EncasableBlock {
+	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity>, EncasableBlock, ITransformableBlock {
 
 	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
 
@@ -356,5 +358,22 @@ public class FluidPipeBlock extends PipeBlock
 			mirrored = mirrored.setValue(PROPERTY_BY_DIRECTION.get(mirror.mirror(direction)), state.getValue(PROPERTY_BY_DIRECTION.get(direction)));
 		}
 		return mirrored;
+	}
+
+	@Override
+	public BlockState transform(BlockState state, StructureTransform transform) {
+		if (transform.mirror != null) {
+			state = mirror(state, transform.mirror);
+		}
+
+		if (transform.rotationAxis == Direction.Axis.Y) {
+			return rotate(state, transform.rotation);
+		}
+
+		BlockState rotated = state;
+		for (Direction direction : Iterate.directionsInAxis(transform.rotationAxis)) {
+			rotated = rotated.setValue(PROPERTY_BY_DIRECTION.get(transform.rotateFacing(direction)), state.getValue(PROPERTY_BY_DIRECTION.get(direction)));
+		}
+		return rotated;
 	}
 }
