@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.verticalvault;
 
 import java.util.List;
 
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -74,9 +75,9 @@ public class VerticalItemVaultTileEntity extends SmartTileEntity implements IMul
 		level.blockEntityChanged(controllerTE.worldPosition);
 
 		BlockPos pos = controllerTE.getBlockPos();
-		for (int y = 0; y < controllerTE.radius; y++) {
-			for (int z = 0; z < (controllerTE.axis == Axis.X ? controllerTE.radius : controllerTE.length); z++) {
-				for (int x = 0; x < (controllerTE.axis == Axis.Z ? controllerTE.radius : controllerTE.length); x++) {
+		for (int x = 0; x < controllerTE.radius; x++) {
+			for (int z = 0; z < controllerTE.radius ; z++) {
+				for (int y = 0; y < controllerTE.length; y++) {
 					level.updateNeighbourForOutputSignal(pos.offset(x, y, z), getBlockState().getBlock());
 				}
 			}
@@ -245,16 +246,14 @@ public class VerticalItemVaultTileEntity extends SmartTileEntity implements IMul
 			return;
 		}
 
-		boolean alongZ = VerticalItemVaultBlock.getVaultBlockAxis(getBlockState()) == Axis.Z;
-		IItemHandlerModifiable[] invs = new IItemHandlerModifiable[length * radius * radius];
-		for (int yOffset = 0; yOffset < length; yOffset++) {
-			for (int xOffset = 0; xOffset < radius; xOffset++) {
-				for (int zOffset = 0; zOffset < radius; zOffset++) {
-					BlockPos vaultPos = alongZ ? worldPosition.offset(xOffset, zOffset, yOffset)
-						: worldPosition.offset(yOffset, xOffset, zOffset);
+		IItemHandlerModifiable[] invs = new IItemHandlerModifiable[radius * length * length];
+		for (int yOffset = 0; yOffset < radius; yOffset++) {
+			for (int xOffset = 0; xOffset < length; xOffset++) {
+				for (int zOffset = 0; zOffset < length; zOffset++) {
+					BlockPos vaultPos = worldPosition.offset(yOffset, xOffset, zOffset);
 					VerticalItemVaultTileEntity vaultAt =
 						ConnectivityHandler.partAt(AllTileEntities.VERTICAL_ITEM_VAULT.get(), level, vaultPos);
-					invs[yOffset * radius * radius + xOffset * radius + zOffset] =
+					invs[yOffset * length * length + xOffset * length + zOffset] =
 						vaultAt != null ? vaultAt.inventory : new ItemStackHandler();
 				}
 			}

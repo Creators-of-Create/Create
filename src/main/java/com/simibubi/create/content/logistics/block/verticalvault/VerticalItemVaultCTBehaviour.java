@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.verticalvault;
 
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
@@ -22,10 +23,8 @@ public class VerticalItemVaultCTBehaviour extends ConnectedTextureBehaviour.Base
 		if (vaultBlockAxis == null)
 			return null;
 
-		if (direction == Direction.UP)
+		if (direction == Direction.UP || direction == Direction.DOWN)
 			return AllSpriteShifts.VERTICAL_VAULT_TOP.get(small);
-		if (direction == Direction.DOWN)
-			return AllSpriteShifts.VERTICAL_VAULT_BOTTOM.get(small);
 
 		return AllSpriteShifts.VERTICAL_VAULT_SIDE.get(small);
 	}
@@ -33,14 +32,11 @@ public class VerticalItemVaultCTBehaviour extends ConnectedTextureBehaviour.Base
 	@Override
 	protected Direction getUpDirection(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face) {
 		Direction.Axis verticalVaultBlockAxis = VerticalItemVaultBlock.getVaultBlockAxis(state);
-		boolean alongX = verticalVaultBlockAxis == Direction.Axis.X;
-		if (face.getAxis()
-				.isVertical() && alongX)
-			return super.getUpDirection(reader, pos, state, face).getClockWise();
 		if (face.getAxis() == verticalVaultBlockAxis || face.getAxis()
-				.isVertical())
+				.isVertical()) {
 			return super.getUpDirection(reader, pos, state, face);
-		return Direction.fromAxisAndDirection(verticalVaultBlockAxis, alongX ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE);
+		}
+		return Direction.fromAxisAndDirection(verticalVaultBlockAxis, Direction.AxisDirection.NEGATIVE);
 	}
 
 	@Override
