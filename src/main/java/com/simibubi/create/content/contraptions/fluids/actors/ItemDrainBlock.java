@@ -6,7 +6,9 @@ import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
 import net.minecraft.core.BlockPos;
@@ -14,7 +16,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -56,12 +61,38 @@ public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainB
 
 			ItemStack heldItemStack = be.getHeldItemStack();
 			if (!worldIn.isClientSide && !heldItemStack.isEmpty()) {
-				player.getInventory().placeItemBackInInventory(heldItemStack);
+				player.getInventory()
+					.placeItemBackInInventory(heldItemStack);
 				be.heldItem = null;
 				be.notifyUpdate();
 			}
 			return InteractionResult.SUCCESS;
 		});
+	}
+
+	@Override
+	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
+		super.updateEntityAfterFallOn(worldIn, entityIn);
+		if (!(entityIn instanceof ItemEntity))
+			return;
+		if (!entityIn.isAlive())
+			return;
+		if (entityIn.level.isClientSide)
+			return;
+
+		ItemEntity itemEntity = (ItemEntity) entityIn;
+		DirectBeltInputBehaviour inputBehaviour =
+			BlockEntityBehaviour.get(worldIn, entityIn.blockPosition(), DirectBeltInputBehaviour.TYPE);
+		if (inputBehaviour == null)
+			return;
+		Vec3 deltaMovement = entityIn.getDeltaMovement()
+			.multiply(1, 0, 1)
+			.normalize();
+		Direction nearest = Direction.getNearest(deltaMovement.x, deltaMovement.y, deltaMovement.z);
+		ItemStack remainder = inputBehaviour.handleInsertion(itemEntity.getItem(), nearest, false);
+		itemEntity.setItem(remainder);
+		if (remainder.isEmpty())
+			itemEntity.discard();
 	}
 
 	protected InteractionResult tryExchange(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
@@ -95,13 +126,13 @@ public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainB
 	public Class<ItemDrainBlockEntity> getBlockEntityClass() {
 		return ItemDrainBlockEntity.class;
 	}
-	
+
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ItemDrainBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.ITEM_DRAIN.get();

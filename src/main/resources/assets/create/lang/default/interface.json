@@ -301,6 +301,8 @@
 	"create.gui.sequenced_gearshift.speed.back": "Input speed, Reversed",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Double speed, Reversed",
 
+	"create.gui.clipboard.erase_checked": "Erase checked items",
+
 	"create.schematicAndQuill.dimensions": "Schematic Size: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "First position set.",
 	"create.schematicAndQuill.secondPos": "Second position set.",
@@ -384,7 +386,7 @@
 	"create.gui.schematicannon.option.skipBlockEntities": "Protect Block Entities",
 
 	"create.gui.schematicannon.slot.gunpowder": "Add gunpowder to fuel the cannon",
-	"create.gui.schematicannon.slot.listPrinter": "Place books here to print a Checklist for your Schematic",
+	"create.gui.schematicannon.slot.listPrinter": "Place a Clipboard or Book here to print a Checklist for your Schematic",
 	"create.gui.schematicannon.slot.schematic": "Add your Schematic here. Make sure it is deployed at a specific location.",
 
 	"create.gui.schematicannon.option.skipMissing.description": "If the cannon cannot find a required Block for placement, it will continue at the next Location.",
@@ -763,6 +765,7 @@
 	"create.track.turn_start": "Cannot start connection from a Turn",
 	"create.track.not_enough_tracks": "Not holding enough tracks",
 	"create.track.not_enough_pavement": "Not holding enough pavement blocks",
+	"create.track.hold_for_smooth_curve": "Hold %1$s for maximized turn",
 
 	"create.portal_track.failed": "Cannot place portal track:",
 	"create.portal_track.missing": "Target portal not generated yet",

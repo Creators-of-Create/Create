@@ -2,13 +2,16 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
+import java.util.List;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardEntry;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
@@ -19,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -76,20 +80,31 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 			return InteractionResult.SUCCESS;
 		}
 
-		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
+		boolean display =
+			heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName() || AllItems.CLIPBOARD.isIn(heldItem);
 		DyeColor dye = DyeColor.getColor(heldItem);
 
 		if (!display && dye == null)
 			return InteractionResult.PASS;
-		if (world.isClientSide)
-			return InteractionResult.SUCCESS;
 
 		CompoundTag tag = heldItem.getTagElement("display");
 		String tagElement = tag != null && tag.contains("Name", Tag.TAG_STRING) ? tag.getString("Name") : null;
 
+		if (AllItems.CLIPBOARD.isIn(heldItem)) {
+			List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(heldItem);
+			for (int i = 0; i < entries.size();) {
+				tagElement = Component.Serializer.toJson(entries.get(i).text);
+				break;
+			}
+		}
+
+		if (world.isClientSide)
+			return InteractionResult.SUCCESS;
+
+		String tagUsed = tagElement;
 		walkNixies(world, pos, (currentPos, rowPosition) -> {
 			if (display)
-				withBlockEntityDo(world, currentPos, be -> be.displayCustomText(tagElement, rowPosition));
+				withBlockEntityDo(world, currentPos, be -> be.displayCustomText(tagUsed, rowPosition));
 			if (dye != null)
 				world.setBlockAndUpdate(currentPos, withColor(state, dye));
 		});

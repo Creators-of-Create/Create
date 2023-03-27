@@ -72,6 +72,8 @@ public enum AllGuiTextures implements ScreenElement {
 
 	LINKED_CONTROLLER("curiosities_2", 179, 109),
 	BLUEPRINT("curiosities_2", 0, 109, 179, 109),
+	
+	CLIPBOARD("clipboard", 0, 0, 256, 256),
 
 	DATA_GATHERER("display_link", 235, 162),
 	DATA_AREA_START("display_link", 0, 163, 2, 18),

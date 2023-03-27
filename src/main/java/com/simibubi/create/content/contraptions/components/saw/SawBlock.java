@@ -12,9 +12,13 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -24,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -40,7 +45,8 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState stateForPlacement = super.getStateForPlacement(context);
 		Direction facing = stateForPlacement.getValue(FACING);
-		if (facing.getAxis().isVertical())
+		if (facing.getAxis()
+			.isVertical())
 			return stateForPlacement;
 		return stateForPlacement.setValue(AXIS_ALONG_FIRST_COORDINATE, facing.getAxis() == Axis.X);
 	}
@@ -51,10 +57,33 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 	}
 
 	@Override
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+		BlockHitResult hit) {
+		if (player.isSpectator() || !player.getItemInHand(handIn)
+			.isEmpty())
+			return InteractionResult.PASS;
+		if (state.getOptionalValue(FACING)
+			.orElse(Direction.WEST) != Direction.UP)
+			return InteractionResult.PASS;
+		return onBlockEntityUse(worldIn, pos, be -> {
+			for (int i = 0; i < be.inventory.getSlots(); i++) {
+				ItemStack heldItemStack = be.inventory.getStackInSlot(i);
+				if (!worldIn.isClientSide && !heldItemStack.isEmpty())
+					player.getInventory()
+						.placeItemBackInInventory(heldItemStack);
+			}
+			be.inventory.clear();
+			be.notifyUpdate();
+			return InteractionResult.SUCCESS;
+		});
+	}
+
+	@Override
 	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn instanceof ItemEntity)
 			return;
-		if (!new AABB(pos).deflate(.1f).intersects(entityIn.getBoundingBox()))
+		if (!new AABB(pos).deflate(.1f)
+			.intersects(entityIn.getBoundingBox()))
 			return;
 		withBlockEntityDo(worldIn, pos, be -> {
 			if (be.getSpeed() == 0)
@@ -85,30 +114,33 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 	}
 
 	public static boolean isHorizontal(BlockState state) {
-		return state.getValue(FACING).getAxis().isHorizontal();
+		return state.getValue(FACING)
+			.getAxis()
+			.isHorizontal();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return isHorizontal(state) ? state.getValue(FACING).getAxis() : super.getRotationAxis(state);
+		return isHorizontal(state) ? state.getValue(FACING)
+			.getAxis() : super.getRotationAxis(state);
 	}
 
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-		return isHorizontal(state) ? face == state.getValue(FACING).getOpposite()
-				: super.hasShaftTowards(world, pos, state, face);
+		return isHorizontal(state) ? face == state.getValue(FACING)
+			.getOpposite() : super.hasShaftTowards(world, pos, state, face);
 	}
 
 	@Override
 	public Class<SawBlockEntity> getBlockEntityClass() {
 		return SawBlockEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SawBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.SAW.get();
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

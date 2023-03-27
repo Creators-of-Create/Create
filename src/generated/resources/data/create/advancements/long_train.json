@@ -1,5 +1,5 @@
 {
-  "parent": "create:long_bend",
+  "parent": "create:track_crafting_factory",
   "display": {
     "icon": {
       "item": "minecraft:minecart"

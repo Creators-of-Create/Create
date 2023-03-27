@@ -127,6 +127,8 @@ public class AllIcons implements ScreenElement {
 		I_PATTERN_CHANCE_75 = next(),
 		I_FOLLOW_DIAGONAL = next(),
 		I_FOLLOW_MATERIAL = next(),
+		
+		I_CLEAR_CHECKED = next(),
 
 		I_SCHEMATIC = newRow(),
 		I_SEQ_REPEAT = next(),

@@ -76,7 +76,8 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 
 	@Override
 	protected Block getStressConfigKey() {
-		return AllBlocks.HAND_CRANK.get();
+		return AllBlocks.HAND_CRANK.has(getBlockState()) ? AllBlocks.HAND_CRANK.get()
+			: AllBlocks.COPPER_VALVE_HANDLE.get();
 	}
 
 	@Override
