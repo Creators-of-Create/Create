@@ -57,7 +57,7 @@ public class ElevatorTargetFloorPacket extends SimplePacketBase {
 			if (!(blockState.getBlock() instanceof ElevatorContactBlock ecb))
 				return;
 
-			ecb.callToContactAndUpdate(elevatorColumn, blockState, level, pos);
+			ecb.callToContactAndUpdate(elevatorColumn, blockState, level, pos, false);
 		});
 		return true;
 	}

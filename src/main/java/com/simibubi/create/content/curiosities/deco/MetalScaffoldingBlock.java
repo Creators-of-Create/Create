@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -32,6 +33,20 @@ public class MetalScaffoldingBlock extends ScaffoldingBlock implements IWrenchab
 		return true;
 	}
 
+	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos,
+		CollisionContext pContext) {
+		if (pState.getValue(BOTTOM))
+			return AllShapes.SCAFFOLD_HALF;
+		return super.getCollisionShape(pState, pLevel, pPos, pContext);
+	}
+	
+	@Override
+	public boolean isScaffolding(BlockState state, LevelReader level, BlockPos pos, LivingEntity entity) {
+		return true;
+	}
+
+	@Override
 	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
 		if (pState.getValue(BOTTOM))
 			return AllShapes.SCAFFOLD_HALF;
@@ -41,6 +56,7 @@ public class MetalScaffoldingBlock extends ScaffoldingBlock implements IWrenchab
 		return Shapes.block();
 	}
 
+	@Override
 	public VoxelShape getInteractionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
 		return Shapes.block();
 	}

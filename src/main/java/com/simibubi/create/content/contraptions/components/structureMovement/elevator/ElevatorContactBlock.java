@@ -91,10 +91,11 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 			return;
 
 		ElevatorColumn elevatorColumn = ElevatorColumn.getOrCreate(pLevel, getColumnCoords(pLevel, pPos));
-		callToContactAndUpdate(elevatorColumn, pState, pLevel, pPos);
+		callToContactAndUpdate(elevatorColumn, pState, pLevel, pPos, true);
 	}
 
-	public void callToContactAndUpdate(ElevatorColumn elevatorColumn, BlockState pState, Level pLevel, BlockPos pPos) {
+	public void callToContactAndUpdate(ElevatorColumn elevatorColumn, BlockState pState, Level pLevel, BlockPos pPos,
+		boolean powered) {
 		pLevel.setBlock(pPos, pState.cycle(CALLING), 2);
 
 		for (BlockPos otherPos : elevatorColumn.getContacts()) {
@@ -107,8 +108,9 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 			scheduleActivation(pLevel, otherPos);
 		}
 
-		pLevel.setBlock(pPos, pState.setValue(POWERED, true)
-			.setValue(CALLING, true), 2);
+		if (powered)
+			pState = pState.setValue(POWERED, true);
+		pLevel.setBlock(pPos, pState.setValue(CALLING, true), 2);
 		pLevel.updateNeighborsAt(pPos, this);
 
 		elevatorColumn.target(pPos.getY());
