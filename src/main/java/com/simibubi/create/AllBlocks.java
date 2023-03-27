@@ -27,6 +27,7 @@ import com.simibubi.create.content.contraptions.components.actors.PloughMovement
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceMovement;
 import com.simibubi.create.content.contraptions.components.actors.RollerBlock;
+import com.simibubi.create.content.contraptions.components.actors.RollerBlockItem;
 import com.simibubi.create.content.contraptions.components.actors.RollerMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SawMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
@@ -904,6 +905,7 @@ public class AllBlocks {
 		REGISTRATE.block("copper_valve_handle", ValveHandleBlock::copper)
 			.transform(pickaxeOnly())
 			.transform(BuilderTransformers.valveHandle(null))
+			.transform(BlockStressDefaults.setCapacity(8.0))
 			.register();
 
 	public static final DyedBlockList<ValveHandleBlock> DYED_VALVE_HANDLES = new DyedBlockList<>(colour -> {
@@ -1375,7 +1377,7 @@ public class AllBlocks {
 			.onRegister(movementBehaviour(new RollerMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.addLayer(() -> RenderType::cutoutMipped)
-			.item()
+			.item(RollerBlockItem::new)
 			.transform(customItemModel())
 			.register();
 

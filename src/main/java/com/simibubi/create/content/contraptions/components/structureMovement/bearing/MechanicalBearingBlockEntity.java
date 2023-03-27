@@ -242,7 +242,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 	}
 
 	public boolean isNearInitialAngle() {
-		return Math.abs(angle) < 45 || Math.abs(angle) > 7 * 45;
+		return Math.abs(angle) < 22.5 || Math.abs(angle) > 360 - 22.5;
 	}
 
 	@Override

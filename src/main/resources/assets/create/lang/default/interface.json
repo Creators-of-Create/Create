@@ -734,6 +734,7 @@
 	"create.track.turn_start": "Cannot start connection from a Turn",
 	"create.track.not_enough_tracks": "Not holding enough tracks",
 	"create.track.not_enough_pavement": "Not holding enough pavement blocks",
+	"create.track.hold_for_smooth_curve": "Hold %1$s for maximized turn",
 
 	"create.portal_track.failed": "Cannot place portal track:",
 	"create.portal_track.missing": "Target portal not generated yet",

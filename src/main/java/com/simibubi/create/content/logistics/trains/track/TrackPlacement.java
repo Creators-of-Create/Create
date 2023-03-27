@@ -6,17 +6,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.jozufozu.flywheel.util.Color;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
-import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -27,6 +29,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,6 +38,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -42,6 +46,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -53,6 +58,9 @@ import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TrackPlacement {
@@ -97,6 +105,8 @@ public class TrackPlacement {
 	static boolean hoveringMaxed;
 	static int hoveringAngle;
 	static ItemStack lastItem;
+
+	static int extraTipWarmup;
 
 	public static PlacementInfo tryConnect(Level level, Player player, BlockPos pos2, BlockState state2,
 		ItemStack stack, boolean girder, boolean maximiseTurn) {
@@ -283,10 +293,10 @@ public class TrackPlacement {
 		if (skipCurve && !Mth.equal(ascend, 0)) {
 			int hDistance = info.end1Extent;
 			if (axis1.y == 0 || !Mth.equal(absAscend + 1, dist / axis1.length())) {
-				
+
 				if (axis1.y != 0 && axis1.y == -axis2.y)
 					return info.withMessage("ascending_s_curve");
-				
+
 				info.end1Extent = 0;
 				double minHDistance = Math.max(absAscend < 4 ? absAscend * 4 : absAscend * 3, 6) / axis1.length();
 				if (hDistance < minHDistance)
@@ -447,10 +457,6 @@ public class TrackPlacement {
 			BlockItem paveItem = (BlockItem) offhandItem.getItem();
 			paveTracks(level, info, paveItem, false);
 		}
-		
-		if (info.curve != null && info.curve.getLength() > 29)
-			AllAdvancements.LONG_BEND.awardTo(player);
-		
 		return placeTracks(level, info, state1, state2, targetPos1, targetPos2, false);
 	}
 
@@ -576,6 +582,8 @@ public class TrackPlacement {
 		LocalPlayer player = Minecraft.getInstance().player;
 		ItemStack stack = player.getMainHandItem();
 		HitResult hitResult = Minecraft.getInstance().hitResult;
+		int restoreWarmup = extraTipWarmup;
+		extraTipWarmup = 0;
 
 		if (hitResult == null)
 			return;
@@ -609,8 +617,14 @@ public class TrackPlacement {
 		if (!(hitState.getBlock() instanceof TrackBlock))
 			return;
 
+		extraTipWarmup = restoreWarmup;
 		boolean maxTurns = Minecraft.getInstance().options.keySprint.isDown();
 		PlacementInfo info = tryConnect(level, player, pos, hitState, stack, false, maxTurns);
+		if (extraTipWarmup < 20)
+			extraTipWarmup++;
+		if (!info.valid || !hoveringMaxed && (info.end1Extent == 0 || info.end2Extent == 0))
+			extraTipWarmup = 0;
+
 		if (!player.isCreative() && (info.valid || !info.hasRequiredTracks || !info.hasRequiredPavement))
 			BlueprintOverlayRenderer.displayTrackRequirements(info, player.getOffhandItem());
 
@@ -625,7 +639,7 @@ public class TrackPlacement {
 		if (bhr.getDirection() == Direction.UP) {
 			Vec3 lookVec = player.getLookAngle();
 			int lookAngle = (int) (22.5 + AngleHelper.deg(Mth.atan2(lookVec.z, lookVec.x)) % 360) / 8;
-			
+
 			if (!pos.equals(hintPos) || lookAngle != hintAngle) {
 				hints = Couple.create(ArrayList::new);
 				hintAngle = lookAngle;
@@ -759,6 +773,40 @@ public class TrackPlacement {
 			.lineWidth(1 / 8f)
 			.disableNormals()
 			.colored(color);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static final IIngameOverlay OVERLAY = TrackPlacement::renderOverlay;
+
+	@OnlyIn(Dist.CLIENT)
+	public static void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width,
+		int height) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
+			return;
+		if (hoveringPos == null)
+			return;
+		if (cached == null || cached.curve == null || !cached.valid)
+			return;
+		if (extraTipWarmup < 4)
+			return;
+
+		if (ObfuscationReflectionHelper.getPrivateValue(Gui.class, gui,
+			"toolHighlightTimer") instanceof Integer toolHighlightTimer && toolHighlightTimer > 0)
+			return;
+
+		boolean active = mc.options.keySprint.isDown();
+		MutableComponent text = Lang.translateDirect("track.hold_for_smooth_curve", Components.keybind("key.sprint")
+			.withStyle(active ? ChatFormatting.WHITE : ChatFormatting.GRAY));
+
+		Window window = mc.getWindow();
+		int x = (window.getGuiScaledWidth() - gui.getFont()
+			.width(text)) / 2;
+		int y = window.getGuiScaledHeight() - 61;
+		Color color = new Color(0x4ADB4A).setAlpha(Mth.clamp((extraTipWarmup - 4) / 3f, 0.1f, 1));
+		gui.getFont()
+			.draw(poseStack, text, x, y, color.getRGB());
+
 	}
 
 }

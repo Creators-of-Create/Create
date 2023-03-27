@@ -250,7 +250,6 @@ public class BuilderTransformers {
 					.texture("3", p.modLoc("block/valve_handle/valve_handle_" + variant)));
 			})
 			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.VALVE_HANDLES.tag)
-			.transform(BlockStressDefaults.setCapacity(8.0))
 			.transform(BlockStressDefaults.setGeneratorSpeed(ValveHandleBlock::getSpeedRange))
 			.onRegister(ItemUseOverrides::addBlock)
 			.item()

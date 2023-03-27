@@ -8,8 +8,10 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.block.BlockStressValues;
@@ -70,6 +72,9 @@ public class KineticStats implements TooltipModifier {
 		} else {
 			showStressImpact = true;
 		}
+
+		if (block instanceof ValveHandleBlock)
+			block = AllBlocks.COPPER_VALVE_HANDLE.get();
 
 		boolean hasStressImpact =
 			StressImpact.isEnabled() && showStressImpact && BlockStressValues.getImpact(block) > 0;
