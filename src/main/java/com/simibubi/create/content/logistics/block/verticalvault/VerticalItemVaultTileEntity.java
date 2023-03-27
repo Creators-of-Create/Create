@@ -285,7 +285,7 @@ public class VerticalItemVaultTileEntity extends SmartTileEntity implements IMul
 
 	@Override
 	public int getMaxLength(Axis longAxis, int width) {
-		if (longAxis == Axis.Y) return getMaxWidth();
+		if (longAxis != Axis.Y) return getMaxWidth();
 		return getMaxLength(width);
 	}
 
