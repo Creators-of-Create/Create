@@ -20,6 +20,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -43,9 +45,11 @@ public class ScrollValueRenderer {
 			return;
 		if (!behaviour.isActive())
 			return;
-		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
+		ItemStack mainhandItem = mc.player.getItemInHand(InteractionHand.MAIN_HAND);
+		boolean clipboard = AllItems.CLIPBOARD.isIn(mainhandItem);
+		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mainhandItem) && !clipboard)
 			return;
-		boolean highlight = behaviour.testHit(target.getLocation());
+		boolean highlight = behaviour.testHit(target.getLocation()) && !clipboard;
 
 		if (behaviour instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {
 			BulkScrollValueBehaviour bulkScrolling = (BulkScrollValueBehaviour) behaviour;

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:scorchia"
-  },
-  "result": "create:polished_cut_scorchia",
-  "count": 1
-}

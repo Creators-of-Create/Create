@@ -302,6 +302,12 @@
 	"create.gui.sequenced_gearshift.speed.back_fast": "Double speed, Reversed",
 
 	"create.gui.clipboard.erase_checked": "Erase checked items",
+	
+	"create.clipboard.actions": "Clipboard Actions",
+	"create.clipboard.to_copy": "%1$s to Copy settings",
+	"create.clipboard.to_paste": "%1$s to Paste settings",
+	"create.clipboard.copied_from": "Copying settings from %1$s",
+	"create.clipboard.pasted_to": "Applied settings to %1$s",
 
 	"create.schematicAndQuill.dimensions": "Schematic Size: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "First position set.",

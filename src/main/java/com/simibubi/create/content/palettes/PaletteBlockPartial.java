@@ -135,7 +135,6 @@ public abstract class PaletteBlockPartial<B extends Block> {
 			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
 			p.stairs(DataIngredient.items(patternBlock), c::get, c.getName(), false);
 			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 1);
-			p.stonecutting(DataIngredient.items(type.getBaseBlock()), c::get, 1);
 		}
 
 	}
@@ -198,7 +197,6 @@ public abstract class PaletteBlockPartial<B extends Block> {
 			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
 			p.slab(DataIngredient.items(patternBlock), c::get, c.getName(), false);
 			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 2);
-			p.stonecutting(DataIngredient.items(type.getBaseBlock()), c::get, 2);
 			DataIngredient ingredient = DataIngredient.items(c.get());
 			ShapelessRecipeBuilder.shapeless(patternBlock.get())
 				.requires(ingredient)
@@ -255,7 +253,6 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		protected void createRecipes(AllPaletteStoneTypes type, BlockEntry<? extends Block> patternBlock,
 			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
 			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 1);
-			p.stonecutting(DataIngredient.items(type.getBaseBlock()), c::get, 1);
 			DataIngredient ingredient = DataIngredient.items(patternBlock);
 			ShapedRecipeBuilder.shaped(c.get(), 6)
 				.pattern("XXX")

@@ -34,5 +34,10 @@ public class ScrollOptionBehaviour<E extends Enum<E> & INamedIconOptions> extend
 		return new ValueSettingsBoard(label, max, 1, ImmutableList.of(Components.literal("Select")),
 			new ScrollOptionSettingsFormatter(options));
 	}
+	
+	@Override
+	public String getClipboardKey() {
+		return options[0].getClass().getSimpleName();
+	}
 
 }

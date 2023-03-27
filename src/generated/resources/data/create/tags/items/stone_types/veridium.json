@@ -14,6 +14,7 @@
     "create:small_veridium_brick_stairs",
     "create:small_veridium_brick_wall",
     "create:layered_veridium",
-    "create:veridium_pillar"
+    "create:veridium_pillar",
+    "create:veridium"
   ]
 }

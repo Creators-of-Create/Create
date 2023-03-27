@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:asurine"
-  },
-  "result": "create:asurine_pillar",
-  "count": 1
-}

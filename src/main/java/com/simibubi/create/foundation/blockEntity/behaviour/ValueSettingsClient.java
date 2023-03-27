@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -69,7 +70,7 @@ public class ValueSettingsClient implements IIngameOverlay {
 			return;
 		Player player = mc.player;
 
-		if (!ValueSettingsInputHandler.canInteract(player)) {
+		if (!ValueSettingsInputHandler.canInteract(player) || AllItems.CLIPBOARD.isIn(player.getMainHandItem())) {
 			cancelInteraction();
 			return;
 		}
@@ -124,7 +125,7 @@ public class ValueSettingsClient implements IIngameOverlay {
 			return;
 
 		int x = width / 2;
-		int y = height - 96;
+		int y = height - 75 - lastHoverTip.size() * 12;
 		float alpha = hoverTicks > 5 ? (11 - hoverTicks) / 5f : Math.min(1, hoverTicks / 5f);
 
 		Color color = new Color(0xffffff);

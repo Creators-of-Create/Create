@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:asurine_from_stone_types_asurine_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_stone_types_asurine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/asurine"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:asurine_from_stone_types_asurine_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_asurine",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:scoria"
-  },
-  "result": "create:cut_scoria_bricks",
-  "count": 1
-}

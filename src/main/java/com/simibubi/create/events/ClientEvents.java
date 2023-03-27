@@ -22,6 +22,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRe
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.BacktankArmorLayer;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardValueSettingsHandler;
 import com.simibubi.create.content.curiosities.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
@@ -159,6 +160,7 @@ public class ClientEvents {
 		CameraDistanceModifier.tick();
 		CameraAngleAnimationService.tick();
 		TrainHUD.tick();
+		ClipboardValueSettingsHandler.clientTick();
 		CreateClient.VALUE_SETTINGS_HANDLER.tick();
 		ScrollValueHandler.tick();
 	}

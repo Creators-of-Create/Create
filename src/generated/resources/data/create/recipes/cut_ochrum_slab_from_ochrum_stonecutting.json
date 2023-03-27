@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:ochrum"
-  },
-  "result": "create:cut_ochrum_slab",
-  "count": 2
-}

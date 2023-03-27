@@ -14,6 +14,7 @@
     "create:small_dripstone_brick_stairs",
     "create:small_dripstone_brick_wall",
     "create:layered_dripstone",
-    "create:dripstone_pillar"
+    "create:dripstone_pillar",
+    "minecraft:dripstone_block"
   ]
 }

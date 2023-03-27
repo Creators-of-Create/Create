@@ -202,7 +202,7 @@ public class TrackBlockOutline {
 		ms.popPose();
 	}
 
-	private static void renderShape(VoxelShape s, PoseStack ms, VertexConsumer vb, Boolean valid) {
+	public static void renderShape(VoxelShape s, PoseStack ms, VertexConsumer vb, Boolean valid) {
 		PoseStack.Pose transform = ms.last();
 		s.forAllEdges((x1, y1, z1, x2, y2, z2) -> {
 			float xDiff = (float) (x2 - x1);

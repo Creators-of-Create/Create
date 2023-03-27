@@ -39,11 +39,9 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 		registerAwardables(behaviours, FluidPropagator.getSharedTriggers());
 	}
 
-	private boolean onFilterChanged(ItemStack newFilter) {
-		if (level.isClientSide)
-			return true;
-		FluidPropagator.propagateChangedPipe(level, worldPosition, getBlockState());
-		return true;
+	private void onFilterChanged(ItemStack newFilter) {
+		if (!level.isClientSide)
+			FluidPropagator.propagateChangedPipe(level, worldPosition, getBlockState());
 	}
 
 	class SmartPipeBehaviour extends StraightPipeFluidTransportBehaviour {
@@ -76,7 +74,7 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 			float z = face == AttachFace.CEILING ? 4.6f : face == AttachFace.WALL ? 0.55f : 4.625f;
 			return VecHelper.rotateCentered(VecHelper.voxelSpace(8, y, z), angleY(state), Axis.Y);
 		}
-		
+
 		@Override
 		protected float getScale() {
 			return super.getScale() * 1.02f;

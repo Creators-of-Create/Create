@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:veridium_from_stone_types_veridium_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_stone_types_veridium": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/veridium"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:veridium_from_stone_types_veridium_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_veridium",
+      "has_the_recipe"
+    ]
+  ]
+}

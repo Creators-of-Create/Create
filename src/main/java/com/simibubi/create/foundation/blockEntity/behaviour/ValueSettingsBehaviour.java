@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
+import com.simibubi.create.content.curiosities.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public interface ValueSettingsBehaviour {
+public interface ValueSettingsBehaviour extends ClipboardCloneable {
 
 	public static record ValueSettings(int row, int value) {
 
@@ -42,6 +44,33 @@ public interface ValueSettingsBehaviour {
 	public ValueSettings getValueSettings();
 
 	default boolean acceptsValueSettings() {
+		return true;
+	}
+
+	@Override
+	default String getClipboardKey() {
+		return "Settings";
+	}
+
+	@Override
+	default boolean writeToClipboard(CompoundTag tag, Direction side) {
+		if (!acceptsValueSettings())
+			return false;
+		ValueSettings valueSettings = getValueSettings();
+		tag.putInt("Value", valueSettings.value());
+		tag.putInt("Row", valueSettings.row());
+		return true;
+	}
+
+	@Override
+	default boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+		if (!acceptsValueSettings())
+			return false;
+		if (!tag.contains("Value") || !tag.contains("Row"))
+			return false;
+		if (simulate)
+			return true;
+		setValueSettings(player, new ValueSettings(tag.getInt("Row"), tag.getInt("Value")), false);
 		return true;
 	}
 

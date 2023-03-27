@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:andesite_from_stone_types_andesite_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_stone_types_andesite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/andesite"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:andesite_from_stone_types_andesite_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_andesite",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -2215,6 +2215,7 @@ public class AllBlocks {
 		.blockstate(simpleCubeAll("industrial_iron_block"))
 		.tag(AllBlockTags.WRENCH_PICKUP.tag)
 		.lang("Block of Industrial Iron")
+		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.INGOTS_IRON), c::get, 2))
 		.simpleItem()
 		.register();
 

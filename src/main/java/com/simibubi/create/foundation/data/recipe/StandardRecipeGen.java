@@ -91,6 +91,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("CCC")
 				.pattern("CCC")),
 
+		ANDESITE_ALLOY_FROM_BLOCK = create(AllItems.ANDESITE_ALLOY).withSuffix("_from_block")
+			.returns(9)
+			.unlockedBy(I::andesite)
+			.viaShapeless(b -> b.requires(AllBlocks.ANDESITE_ALLOY_BLOCK.get())),
+
+		ANDESITE_ALLOY_BLOCK = create(AllBlocks.ANDESITE_ALLOY_BLOCK).unlockedBy(I::andesite)
+			.viaShaped(b -> b.define('C', I.andesite())
+				.pattern("CCC")
+				.pattern("CCC")
+				.pattern("CCC")),
+
 		BRASS_COMPACTING =
 			metalCompacting(ImmutableList.of(AllItems.BRASS_NUGGET, AllItems.BRASS_INGOT, AllBlocks.BRASS_BLOCK),
 				ImmutableList.of(I::brassNugget, I::brass, I::brassBlock)),

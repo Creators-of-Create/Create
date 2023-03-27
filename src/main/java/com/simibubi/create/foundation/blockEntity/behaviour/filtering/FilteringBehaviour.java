@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.blockEntity.behaviour.filtering;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -48,7 +49,8 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	private ItemStack filter;
 	public int count;
 	public boolean upTo;
-	private Predicate<ItemStack> callback;
+	private Predicate<ItemStack> predicate;
+	private Consumer<ItemStack> callback;
 	private Supplier<Boolean> isActive;
 	private Supplier<Boolean> showCountPredicate;
 
@@ -60,7 +62,9 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		filter = ItemStack.EMPTY;
 		slotPositioning = slot;
 		showCount = false;
-		callback = stack -> true;
+		callback = stack -> {
+		};
+		predicate = stack -> true;
 		isActive = () -> true;
 		count = 64;
 		showCountPredicate = () -> showCount;
@@ -90,8 +94,13 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		super.read(nbt, clientPacket);
 	}
 
-	public FilteringBehaviour withCallback(Predicate<ItemStack> filterCallback) {
+	public FilteringBehaviour withCallback(Consumer<ItemStack> filterCallback) {
 		callback = filterCallback;
+		return this;
+	}
+
+	public FilteringBehaviour withPredicate(Predicate<ItemStack> filterPredicate) {
+		predicate = filterPredicate;
 		return this;
 	}
 
@@ -130,10 +139,11 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	public boolean setFilter(ItemStack stack) {
 		ItemStack filter = stack.copy();
-		if (!callback.test(filter))
+		if (!predicate.test(filter))
 			return false;
 		this.filter = filter;
 		count = Math.min(count, stack.getMaxStackSize());
+		callback.accept(filter);
 		blockEntity.setChanged();
 		blockEntity.sendData();
 		return true;
@@ -287,6 +297,34 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 			return customLabel;
 		return Lang.translateDirect(
 			recipeFilter ? "logistics.recipe_filter" : fluidFilter ? "logistics.fluid_filter" : "logistics.filter");
+	}
+
+	@Override
+	public String getClipboardKey() {
+		return "Filtering";
+	}
+
+	@Override
+	public boolean writeToClipboard(CompoundTag tag, Direction side) {
+		ValueSettingsBehaviour.super.writeToClipboard(tag, side);
+		ItemStack filter = getFilter(side);
+		if (filter.getItem() instanceof FilterItem)
+			return true;
+		tag.put("Filter", filter.serializeNBT());
+		return true;
+	}
+
+	@Override
+	public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+		boolean upstreamResult = ValueSettingsBehaviour.super.readFromClipboard(tag, player, side, simulate);
+		if (!tag.contains("Filter"))
+			return upstreamResult;
+		if (simulate)
+			return true;
+		if (getFilter(side).getItem() instanceof FilterItem)
+			player.getInventory()
+				.placeItemBackInInventory(getFilter(side).copy());
+		return setFilter(side, ItemStack.of(tag.getCompound("Filter")));
 	}
 
 }

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:tuff_from_stone_types_tuff_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_stone_types_tuff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/tuff"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:tuff_from_stone_types_tuff_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_tuff",
+      "has_the_recipe"
+    ]
+  ]
+}

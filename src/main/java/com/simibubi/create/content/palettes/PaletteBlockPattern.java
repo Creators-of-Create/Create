@@ -21,7 +21,6 @@ import com.simibubi.create.foundation.block.connected.RotatedPillarCTBehaviour;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -129,7 +128,6 @@ public class PaletteBlockPattern {
 
 	public void addRecipes(NonNullSupplier<Block> baseBlock, DataGenContext<Block, ? extends Block> c,
 		RegistrateRecipeProvider p) {
-		p.stonecutting(DataIngredient.items(baseBlock), c::get);
 		additionalRecipes.apply(baseBlock)
 			.accept(c, p);
 	}

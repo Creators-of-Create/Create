@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:crimsite"
-  },
-  "result": "create:small_crimsite_brick_slab",
-  "count": 2
-}

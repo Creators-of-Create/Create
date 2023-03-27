@@ -14,6 +14,7 @@
     "create:small_crimsite_brick_stairs",
     "create:small_crimsite_brick_wall",
     "create:layered_crimsite",
-    "create:crimsite_pillar"
+    "create:crimsite_pillar",
+    "create:crimsite"
   ]
 }

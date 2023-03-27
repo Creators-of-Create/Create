@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:crimsite"
-  },
-  "result": "create:polished_cut_crimsite_wall",
-  "count": 1
-}

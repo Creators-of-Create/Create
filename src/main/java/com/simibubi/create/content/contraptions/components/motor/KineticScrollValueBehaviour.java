@@ -51,5 +51,10 @@ public class KineticScrollValueBehaviour extends ScrollValueBehaviour {
 				.style(ChatFormatting.BOLD))
 			.component();
 	}
+	
+	@Override
+	public String getClipboardKey() {
+		return "Speed";
+	}
 
 }

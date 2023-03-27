@@ -41,13 +41,12 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 		filtering.setLabel(Lang.translateDirect("logistics.train_observer.cargo_filter"));
 	}
 
-	private boolean onFilterChanged(ItemStack newFilter) {
+	private void onFilterChanged(ItemStack newFilter) {
 		if (level.isClientSide())
-			return true;
+			return;
 		TrackObserver observer = getObserver();
 		if (observer != null)
 			observer.setFilterAndNotify(level, newFilter);
-		return true;
 	}
 
 	@Override

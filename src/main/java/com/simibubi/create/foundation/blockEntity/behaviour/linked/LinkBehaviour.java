@@ -7,6 +7,7 @@ import java.util.function.IntSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardCloneable;
 import com.simibubi.create.content.logistics.IRedstoneLinkable;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
@@ -17,13 +18,15 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLinkable {
+public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLinkable, ClipboardCloneable {
 
 	public static final BehaviourType<LinkBehaviour> TYPE = new BehaviourType<>();
 
@@ -155,8 +158,7 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		stack = stack.copy();
 		stack.setCount(1);
 		ItemStack toCompare = first ? frequencyFirst.getStack() : frequencyLast.getStack();
-		boolean changed =
-			!ItemStack.isSame(stack, toCompare) || !ItemStack.tagMatches(stack, toCompare);
+		boolean changed = !ItemStack.isSame(stack, toCompare) || !ItemStack.tagMatches(stack, toCompare);
 
 		if (changed)
 			getHandler().removeFromNetwork(getWorld(), this);
@@ -223,6 +225,31 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 	@Override
 	public BlockPos getLocation() {
 		return getPos();
+	}
+
+	@Override
+	public String getClipboardKey() {
+		return "Frequencies";
+	}
+
+	@Override
+	public boolean writeToClipboard(CompoundTag tag, Direction side) {
+		tag.put("First", frequencyFirst.getStack()
+			.save(new CompoundTag()));
+		tag.put("Last", frequencyLast.getStack()
+			.save(new CompoundTag()));
+		return true;
+	}
+
+	@Override
+	public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+		if (!tag.contains("First") || !tag.contains("Last"))
+			return false;
+		if (simulate)
+			return true;
+		setFrequency(true, ItemStack.of(tag.getCompound("First")));
+		setFrequency(false, ItemStack.of(tag.getCompound("Last")));
+		return true;
 	}
 
 }

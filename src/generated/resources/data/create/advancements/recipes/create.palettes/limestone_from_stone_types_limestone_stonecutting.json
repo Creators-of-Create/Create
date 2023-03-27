@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:limestone_from_stone_types_limestone_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_stone_types_limestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/limestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:limestone_from_stone_types_limestone_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_limestone",
+      "has_the_recipe"
+    ]
+  ]
+}
