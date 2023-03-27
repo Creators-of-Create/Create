@@ -176,6 +176,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void applyLocalTransforms(PoseStack matrixStack, float partialTicks) { }
 
 	public void updateClientMotion() {
