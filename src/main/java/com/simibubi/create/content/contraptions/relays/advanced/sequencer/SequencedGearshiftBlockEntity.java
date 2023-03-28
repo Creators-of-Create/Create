@@ -2,7 +2,9 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import java.util.Vector;
 
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftBlockEntity;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +21,35 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 	float currentInstructionProgress;
 	int timer;
 	boolean poweredPreviously;
+
+	public record SequenceContext(SequencerInstructions instruction, double relativeValue) {
+
+		static SequenceContext fromGearshift(SequencerInstructions instruction, double kineticSpeed,
+			int absoluteValue) {
+			return instruction.needsPropagation()
+				? new SequenceContext(instruction, kineticSpeed == 0 ? 0 : absoluteValue / kineticSpeed)
+				: null;
+		}
+
+		public double getEffectiveValue(double speedAtTarget) {
+			return Math.abs(relativeValue * speedAtTarget);
+		}
+
+		public CompoundTag serializeNBT() {
+			CompoundTag nbt = new CompoundTag();
+			NBTHelper.writeEnum(nbt, "Mode", instruction);
+			nbt.putDouble("Value", relativeValue);
+			return nbt;
+		}
+
+		public static SequenceContext fromNBT(CompoundTag nbt) {
+			if (nbt.isEmpty())
+				return null;
+			return new SequenceContext(NBTHelper.readEnum(nbt, "Mode", SequencerInstructions.class),
+				nbt.getDouble("Value"));
+		}
+
+	}
 
 	public SequencedGearshiftBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -113,6 +144,7 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 			currentInstruction = -1;
 			currentInstructionDuration = -1;
 			currentInstructionProgress = 0;
+			sequenceContext = null;
 			timer = 0;
 			if (!level.hasNeighborSignal(worldPosition))
 				level.setBlock(worldPosition, getBlockState().setValue(SequencedGearshiftBlock.STATE, 0), 3);
@@ -125,6 +157,8 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 		currentInstructionDuration = instruction.getDuration(0, getTheoreticalSpeed());
 		currentInstruction = instructionIndex;
 		currentInstructionProgress = 0;
+		sequenceContext = SequenceContext.fromGearshift(instruction.instruction, getTheoreticalSpeed() * getModifier(),
+			instruction.value);
 		timer = 0;
 		level.setBlock(worldPosition, getBlockState().setValue(SequencedGearshiftBlock.STATE, instructionIndex + 1), 3);
 	}
@@ -134,6 +168,9 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 			: null;
 	}
 
+	@Override
+	protected void copySequenceContextFrom(KineticBlockEntity sourceBE) {}
+	
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("InstructionIndex", currentInstruction);

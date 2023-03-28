@@ -12,17 +12,20 @@ public class GantryContraptionUpdatePacket extends SimplePacketBase {
 	int entityID;
 	double coord;
 	double motion;
+	double sequenceLimit;
 
-	public GantryContraptionUpdatePacket(int entityID, double coord, double motion) {
+	public GantryContraptionUpdatePacket(int entityID, double coord, double motion, double sequenceLimit) {
 		this.entityID = entityID;
 		this.coord = coord;
 		this.motion = motion;
+		this.sequenceLimit = sequenceLimit;
 	}
 
 	public GantryContraptionUpdatePacket(FriendlyByteBuf buffer) {
 		entityID = buffer.readInt();
 		coord = buffer.readFloat();
 		motion = buffer.readFloat();
+		sequenceLimit = buffer.readFloat();
 	}
 
 	@Override
@@ -30,6 +33,7 @@ public class GantryContraptionUpdatePacket extends SimplePacketBase {
 		buffer.writeInt(entityID);
 		buffer.writeFloat((float) coord);
 		buffer.writeFloat((float) motion);
+		buffer.writeFloat((float) sequenceLimit);
 	}
 
 	@Override

@@ -426,14 +426,17 @@ public class RotationPropagator {
 
 	private static List<BlockPos> getPotentialNeighbourLocations(KineticBlockEntity be) {
 		List<BlockPos> neighbours = new LinkedList<>();
+		BlockPos blockPos = be.getBlockPos();
+		Level level = be.getLevel();
 
-		if (!be.getLevel()
-			.isAreaLoaded(be.getBlockPos(), 1))
+		if (!level.isLoaded(blockPos))
 			return neighbours;
 
-		for (Direction facing : Iterate.directions)
-			neighbours.add(be.getBlockPos()
-				.relative(facing));
+		for (Direction facing : Iterate.directions) {
+			BlockPos relative = blockPos.relative(facing);
+			if (level.isLoaded(relative))
+				neighbours.add(relative);
+		}
 
 		BlockState blockState = be.getBlockState();
 		if (!(blockState.getBlock() instanceof IRotate))

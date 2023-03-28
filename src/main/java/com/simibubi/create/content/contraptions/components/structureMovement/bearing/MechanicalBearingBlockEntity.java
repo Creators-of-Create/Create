@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencerInstructions;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
@@ -35,12 +36,14 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 	protected boolean assembleNextTick;
 	protected float clientAngleDiff;
 	protected AssemblyException lastException;
+	protected double sequencedAngleLimit;
 
 	private float prevAngle;
 
 	public MechanicalBearingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		setLazyTickRate(3);
+		sequencedAngleLimit = -1;
 	}
 
 	@Override
@@ -49,10 +52,15 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 	}
 
 	@Override
+	protected boolean syncSequenceContext() {
+		return true;
+	}
+
+	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		movementMode = new ScrollOptionBehaviour<>(RotationMode.class, Lang.translateDirect("contraptions.movement_mode"),
-			this, getMovementModeSlot());
+		movementMode = new ScrollOptionBehaviour<>(RotationMode.class,
+			Lang.translateDirect("contraptions.movement_mode"), this, getMovementModeSlot());
 		movementMode.requiresWrench();
 		behaviours.add(movementMode);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
@@ -69,6 +77,8 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putFloat("Angle", angle);
+		if (sequencedAngleLimit >= 0)
+			compound.putDouble("SequencedAngleLimit", sequencedAngleLimit);
 		AssemblyException.write(compound, lastException);
 		super.write(compound, clientPacket);
 	}
@@ -83,6 +93,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		float angleBefore = angle;
 		running = compound.getBoolean("Running");
 		angle = compound.getFloat("Angle");
+		sequencedAngleLimit = compound.contains("SequencedAngleLimit") ? compound.getDouble("SequencedAngleLimit") : -1;
 		lastException = AssemblyException.read(compound);
 		super.read(compound, clientPacket);
 		if (!clientPacket)
@@ -102,18 +113,30 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 			return Mth.lerp(partialTicks + .5f, prevAngle, angle);
 		if (movedContraption == null || movedContraption.isStalled() || !running)
 			partialTicks = 0;
-		return Mth.lerp(partialTicks, angle, angle + getAngularSpeed());
+		float angularSpeed = getAngularSpeed();
+		if (sequencedAngleLimit >= 0)
+			angularSpeed = (float) Mth.clamp(angularSpeed, -sequencedAngleLimit, sequencedAngleLimit);
+		return Mth.lerp(partialTicks, angle, angle + angularSpeed);
 	}
 
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
 		assembleNextTick = true;
+		sequencedAngleLimit = -1;
 
 		if (movedContraption != null && Math.signum(prevSpeed) != Math.signum(getSpeed()) && prevSpeed != 0) {
+			if (!movedContraption.isStalled()) {
+				angle = Math.round(angle);
+				applyRotation();
+			}
 			movedContraption.getContraption()
 				.stop(level);
 		}
+
+		if (!isWindmill() && sequenceContext != null
+			&& sequenceContext.instruction() == SequencerInstructions.TURN_ANGLE)
+			sequencedAngleLimit = sequenceContext.getEffectiveValue(getTheoreticalSpeed());
 	}
 
 	public float getAngularSpeed() {
@@ -172,7 +195,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		level.addFreshEntity(movedContraption);
 
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);
-		
+
 		if (contraption.containsBlockBreakers())
 			award(AllAdvancements.CONTRAPTION_ACTORS);
 
@@ -186,6 +209,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		if (!running && movedContraption == null)
 			return;
 		angle = 0;
+		sequencedAngleLimit = -1;
 		if (isWindmill())
 			applyRotation();
 		if (movedContraption != null) {
@@ -234,6 +258,10 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 
 		if (!(movedContraption != null && movedContraption.isStalled())) {
 			float angularSpeed = getAngularSpeed();
+			if (sequencedAngleLimit >= 0) {
+				angularSpeed = (float) Mth.clamp(angularSpeed, -sequencedAngleLimit, sequencedAngleLimit);
+				sequencedAngleLimit = Math.max(0, sequencedAngleLimit - Math.abs(angularSpeed));
+			}
 			float newAngle = angle + angularSpeed;
 			angle = (float) (newAngle % 360);
 		}

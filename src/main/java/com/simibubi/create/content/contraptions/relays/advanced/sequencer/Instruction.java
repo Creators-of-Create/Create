@@ -27,28 +27,23 @@ public class Instruction {
 	int getDuration(float currentProgress, float speed) {
 		speed *= speedModifier.value;
 		speed = Math.abs(speed);
-
 		double target = value - currentProgress;
 
 		switch (instruction) {
 
+		// Always overshoot, target will stop early
 		case TURN_ANGLE:
 			double degreesPerTick = KineticBlockEntity.convertToAngular(speed);
-			int ticks = (int) (target / degreesPerTick);
-			double degreesErr = target - degreesPerTick*ticks;
-			return ticks + (degreesPerTick > 2*degreesErr ? 0 : 1);
-
+			return (int) Math.ceil(target / degreesPerTick) + 2;
 		case TURN_DISTANCE:
 			double metersPerTick = KineticBlockEntity.convertToLinear(speed);
-			int offset = speed > 0 && speedModifier.value < 0 ? 1 : 2;
-			return (int) (target / metersPerTick + offset);
+			return (int) Math.ceil(target / metersPerTick) + 2;
 
+		// Timing instructions
 		case DELAY:
 			return (int) target;
-
 		case AWAIT:
 			return -1;
-
 		case END:
 		default:
 			break;
@@ -58,7 +53,7 @@ public class Instruction {
 	}
 
 	float getTickProgress(float speed) {
-		switch(instruction) {
+		switch (instruction) {
 
 		case TURN_ANGLE:
 			return KineticBlockEntity.convertToAngular(speed);
