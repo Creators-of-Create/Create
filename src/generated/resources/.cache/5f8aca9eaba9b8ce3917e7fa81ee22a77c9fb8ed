@@ -1,4 +1,4 @@
-// 1.19.3	2023-02-06T18:13:06.6720228	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud), Create's lang merger]
+// 1.19.3	2023-03-26T10:35:25.993549	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud), Create's lang merger]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -511,6 +511,7 @@ bfb2b7eabba2e7aef4d783328c8a5a1558e7e493 assets/create/blockstates/turntable.jso
 09ffd28ac9044c7c6597f9bdb75f2bd66e0f591d assets/create/blockstates/veridium_pillar.json
 673ca844beebe630ab847fb4d6bf0d3b9a183ba6 assets/create/blockstates/vertical_framed_glass.json
 52aa6d08d9b950c2194bf126640f684342d3b0b5 assets/create/blockstates/vertical_framed_glass_pane.json
+4cf824ed216dc72c34d2f2ba4c117670d2f2c76d assets/create/blockstates/vertical_item_vault.json
 04b90c8216a1ab87eb2158313796fa687f8c619a assets/create/blockstates/warped_window.json
 116d0a8fb72bcc00bd511db7893ea3e96efda297 assets/create/blockstates/warped_window_pane.json
 00089f3c08fc3e53bd38ea67caca473f9cc07848 assets/create/blockstates/water_wheel.json
@@ -559,8 +560,8 @@ b0d8f08968763a5f74e5cd5644377a76a9f39753 assets/create/blockstates/yellow_toolbo
 fe8c497aacc641c2f01cec90bba9f19e59cc2ed2 assets/create/blockstates/yellow_valve_handle.json
 e819e93fdcbe9fd9c050a052d2718ff3b3539365 assets/create/blockstates/zinc_block.json
 64121dcb216381c83b4fe28aa361ea07c24c9ad0 assets/create/blockstates/zinc_ore.json
-af25fce0cd0f61c6f0feaf6cfe00e92fb6d0e6e0 assets/create/lang/en_ud.json
-28beca6e221b45c93aa1a370b1f86a4c509ae52e assets/create/lang/en_us.json
+5ff4db13935e1befb1880b7faa6f3b63bdf334b4 assets/create/lang/en_ud.json
+0316236559a10703763a27589fea7a13158e7978 assets/create/lang/en_us.json
 a97e1060e00ae701a02e39cd4ef8054cf345fac4 assets/create/models/block/acacia_window.json
 103e032c0b1a0a6a27c67da8c91179a564bd281c assets/create/models/block/acacia_window_pane_noside.json
 fb00b627abda76ad4fea867ca57dbfadd24fffa3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -2142,6 +2143,7 @@ ba7a9f542e9f65bdce3d3330a95f1166a0be0673 assets/create/models/item/tree_fertiliz
 9b2e4da1ab7e20cd744adb469dd3690e33cc905f assets/create/models/item/vertical_framed_glass.json
 63d94954704691fccde1b13b320ec62a4e12a13a assets/create/models/item/vertical_framed_glass_pane.json
 b0f6d37aa695395e28a23d36775092f63ab3f5a5 assets/create/models/item/vertical_gearbox.json
+7f1345799508095757d92a5e4edf19b7c1154345 assets/create/models/item/vertical_item_vault.json
 011ef16e912638b4095d34c8c711ebd67cb85fba assets/create/models/item/wand_of_symmetry.json
 9c5087114e35052c5e56bb752252de5d092408c5 assets/create/models/item/warped_window.json
 83502f4b8d0134e793611b36a56cca59af097ed5 assets/create/models/item/warped_window_pane.json
@@ -3567,6 +3569,7 @@ dfefc9afd631cfdff543c11ffd8682617793e204 data/create/loot_tables/blocks/veridium
 2d92edfc895196cb1fa89bd18a7e7d0c2f46c8da data/create/loot_tables/blocks/veridium_pillar.json
 2fdc23baa36d0a3d3008193d362abcac8b8ac93f data/create/loot_tables/blocks/vertical_framed_glass.json
 8105ac2ef881804d48f5893a829b64351c292721 data/create/loot_tables/blocks/vertical_framed_glass_pane.json
+ffcb631b06ab96bb2d1aac22699e68ce5d093e70 data/create/loot_tables/blocks/vertical_item_vault.json
 8e3f9f7ea93908d7cdfe2a11142e1f705c0b8211 data/create/loot_tables/blocks/warped_window.json
 f60d8b639de25d4829505d994e19afbd1e34df85 data/create/loot_tables/blocks/warped_window_pane.json
 17207bb6d7180aa86a59a205f5cd88fea5ec20dd data/create/loot_tables/blocks/water_wheel.json
@@ -4582,7 +4585,7 @@ b53d2d87aa0c3f62874f418180b0f1ff00d8cae7 data/minecraft/tags/blocks/doors.json
 84c712d8f5ec8ba4e0d9de9a0485af5115a5cfe2 data/minecraft/tags/blocks/impermeable.json
 515a1c773e617dd7e38aa1b893acc7db2dd30e08 data/minecraft/tags/blocks/lush_ground_replaceable.json
 fc6d9f863e27938f8b81bff7e0b613a6776a108e data/minecraft/tags/blocks/mineable/axe.json
-1c3912e5e020a47c30f36a058bc2bdcdc58c76ff data/minecraft/tags/blocks/mineable/pickaxe.json
+e4f15e9bd0774e8303aee7d18a3ea9800d71c344 data/minecraft/tags/blocks/mineable/pickaxe.json
 515a1c773e617dd7e38aa1b893acc7db2dd30e08 data/minecraft/tags/blocks/moss_replaceable.json
 0c13aae0eeb99e89febe8dbe5e002af2ff843a9e data/minecraft/tags/blocks/needs_iron_tool.json
 3cb2a92cbdf32ed5978f740dc378d363306c3e84 data/minecraft/tags/blocks/needs_stone_tool.json
@@ -4592,6 +4595,7 @@ dafa3bdb72fef5e6c0201c05846db3f2b214e587 data/minecraft/tags/blocks/stairs.json
 11427a72e181857e22ec37a22462bc652e127cc5 data/minecraft/tags/blocks/trapdoors.json
 2bcba05954ff7bc4cf9cc520478083da9973ec76 data/minecraft/tags/blocks/walls.json
 b53d2d87aa0c3f62874f418180b0f1ff00d8cae7 data/minecraft/tags/blocks/wooden_doors.json
+d81525a45ebd3bff4ad7a646ec16603d7818a0c9 data/minecraft/tags/fluids/water.json
 01d32d3b7b033aff44c047bf289d696de0b0c715 data/minecraft/tags/items/beacon_payment_items.json
 b53d2d87aa0c3f62874f418180b0f1ff00d8cae7 data/minecraft/tags/items/doors.json
 a4b539d506b2273020e043c895d7ecc8a2e1064e data/minecraft/tags/items/piglin_loved.json

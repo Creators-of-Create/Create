@@ -15,8 +15,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class DrainScenes {
@@ -57,7 +57,7 @@ public class DrainScenes {
 		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class, te -> {
 			te.getBehaviour(SmartFluidTankBehaviour.TYPE)
 				.allowInsertion();
-			te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			te.getCapability(ForgeCapabilities.FLUID_HANDLER)
 				.ifPresent(ifh -> ifh.fill(new FluidStack(Fluids.LAVA, 1000), FluidAction.EXECUTE));
 		});
 		scene.idle(10);
@@ -70,7 +70,7 @@ public class DrainScenes {
 		scene.idle(60);
 
 		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			te -> te.getCapability(ForgeCapabilities.FLUID_HANDLER)
 				.ifPresent(ifh -> ifh.drain(500, FluidAction.EXECUTE)));
 
 		scene.world.moveSection(drainLink, util.vector.of(1, 0, 0), 7);

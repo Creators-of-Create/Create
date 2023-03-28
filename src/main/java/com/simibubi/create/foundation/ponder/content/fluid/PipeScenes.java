@@ -36,8 +36,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class PipeScenes {
@@ -482,9 +482,9 @@ public class PipeScenes {
 		Selection pump = util.select.position(1, 1, 2);
 		Selection basin = util.select.position(basinPos);
 		BlockPos smartPos = util.grid.at(3, 1, 1);
-		
+
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			te -> te.getCapability(ForgeCapabilities.FLUID_HANDLER)
 				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), FluidAction.EXECUTE)));
 
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.FLUID_PIPE.get()
@@ -568,7 +568,7 @@ public class PipeScenes {
 		}
 		scene.idle(15);
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			te -> te.getCapability(ForgeCapabilities.FLUID_HANDLER)
 				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
 		scene.idle(10);
 

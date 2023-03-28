@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class HosePulleyScenes {
@@ -122,7 +122,7 @@ public class HosePulleyScenes {
 
 		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
 		scene.world.modifyTileEntity(util.grid.at(1, 5, 1), HosePulleyTileEntity.class, te -> te
-			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			.getCapability(ForgeCapabilities.FLUID_HANDLER)
 			.ifPresent(
 				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
@@ -222,7 +222,7 @@ public class HosePulleyScenes {
 		scene.world.showSectionAndMerge(pipes, Direction.WEST, hoselink);
 		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
 		scene.world.modifyTileEntity(util.grid.at(1, 6, 1), HosePulleyTileEntity.class, te -> te
-			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			.getCapability(ForgeCapabilities.FLUID_HANDLER)
 			.ifPresent(
 				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));

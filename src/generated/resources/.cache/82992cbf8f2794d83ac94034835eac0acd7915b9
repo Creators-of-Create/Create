@@ -1,4 +1,4 @@
-// 1.19.3	2023-02-06T18:08:23.2293512	Create's Standard Recipes
+// 1.19.3	2023-03-26T10:35:25.989559	Create's Standard Recipes
 58edc0e6eadb9fdd15113d313e331deb15867ab1 data/create/advancements/recipes/misc/blasting/copper_ingot_from_crushed.json
 c5c7a524b797c47093c17f363a805df18765e5d1 data/create/advancements/recipes/misc/blasting/gold_ingot_from_crushed.json
 b397254b7cdb19d1c64ed1c30e1f6aa5c8af7270 data/create/advancements/recipes/misc/blasting/ingot_aluminum_compat_immersiveengineering.json
@@ -129,6 +129,7 @@ eb90657a95c9aecdc3b8ab9aeeb6abe5ccb7ff76 data/create/advancements/recipes/misc/c
 02f3fb7faadd1c56302b94a6b50f58147e481db8 data/create/advancements/recipes/misc/crafting/kinetics/train_trapdoor.json
 3fa26c6b2a5ef120aa47b35f7d9eb06fec090149 data/create/advancements/recipes/misc/crafting/kinetics/turntable.json
 babadcfb9adc3527e03e8f8db57a34cacfffa6a5 data/create/advancements/recipes/misc/crafting/kinetics/vertical_gearboxfrom_conversion.json
+b52f4b5b2aee90a174c8de78d0bde72d91d2d262 data/create/advancements/recipes/misc/crafting/kinetics/vertical_item_vault.json
 0fa99ddc934336fb3d40a69a9ed461dba1d6b99e data/create/advancements/recipes/misc/crafting/kinetics/water_wheel.json
 6797fd44ff94f444fefde51402068df41b07b35f data/create/advancements/recipes/misc/crafting/kinetics/weighted_ejector.json
 50fe4d7138e7fb2845be8662b4ef5a75fa3c2665 data/create/advancements/recipes/misc/crafting/kinetics/whisk.json
@@ -337,6 +338,7 @@ af645fe446e0df755fb748383a51facbe9101ede data/create/recipes/crafting/kinetics/t
 88d0e6b9058362b4cf5f74e3e1aafe015f339bd2 data/create/recipes/crafting/kinetics/train_trapdoor.json
 dc79cdf805cb558f5dd2c1eab3348473f782894e data/create/recipes/crafting/kinetics/turntable.json
 613d2ef5c381445d9a0bb1020f9d0ab9fb04d766 data/create/recipes/crafting/kinetics/vertical_gearboxfrom_conversion.json
+38f58437229ea2edcdf60c572b0932c4d99b0987 data/create/recipes/crafting/kinetics/vertical_item_vault.json
 808c7a0072dd7257e7f28039efa62ae13a333e0d data/create/recipes/crafting/kinetics/water_wheel.json
 a9ba7f4d1d66262fc76882c8460066a480ea379f data/create/recipes/crafting/kinetics/weighted_ejector.json
 872cb53542b4306898c6e0a9311b39281a8e0052 data/create/recipes/crafting/kinetics/whisk.json
