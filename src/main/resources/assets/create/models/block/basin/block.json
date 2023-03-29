@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"textures": {
 		"12": "create:block/basin",
-		"particle": "create:block/basin"
+		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [
 		{
