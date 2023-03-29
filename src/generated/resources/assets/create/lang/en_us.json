@@ -961,6 +961,7 @@
 	"create.generic.length": "Length",
 	"create.generic.speed": "Speed",
 	"create.generic.delay": "Delay",
+	"create.generic.angle": "Angle",
 	"create.generic.duration": "Duration",
 	"create.generic.timeUnit": "Time Unit",
 	"create.generic.unit.ticks": "Ticks",
@@ -1103,6 +1104,7 @@
 
 	"create.kinetics.creative_motor.rotation_speed": "Generated Speed in RPM",
 	"create.kinetics.speed_controller.rotation_speed": "Targeted Speed in RPM",
+	"create.kinetics.valve_handle.rotated_angle": "Rotation when used",
 
 	"create.logistics.redstone_interval": "Redstone Interval",
 

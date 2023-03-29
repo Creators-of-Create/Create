@@ -43,8 +43,10 @@ public class ScrollValueRenderer {
 		ScrollValueBehaviour behaviour = BlockEntityBehaviour.get(world, pos, ScrollValueBehaviour.TYPE);
 		if (behaviour == null)
 			return;
-		if (!behaviour.isActive())
+		if (!behaviour.isActive()) {
+			CreateClient.OUTLINER.remove(pos);
 			return;
+		}
 		ItemStack mainhandItem = mc.player.getItemInHand(InteractionHand.MAIN_HAND);
 		boolean clipboard = AllItems.CLIPBOARD.isIn(mainhandItem);
 		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mainhandItem) && !clipboard)

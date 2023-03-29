@@ -1,8 +1,6 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
-import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockEntityTypes;
-import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -32,8 +30,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HandCrankBlock extends DirectionalKineticBlock
 	implements IBE<HandCrankBlockEntity>, ProperWaterloggedBlock {
@@ -51,11 +47,6 @@ public class HandCrankBlock extends DirectionalKineticBlock
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder.add(WATERLOGGED));
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public PartialModel getRenderedHandle() {
-		return AllPartialModels.HAND_CRANK_HANDLE;
 	}
 
 	public int getRotationSpeed() {
@@ -117,14 +108,14 @@ public class HandCrankBlock extends DirectionalKineticBlock
 			}
 		}
 	}
-	
+
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);

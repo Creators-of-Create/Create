@@ -30,6 +30,7 @@ import com.simibubi.create.content.contraptions.components.crafter.ShaftlessCogw
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlockEntity;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankInstance;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankRenderer;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlockEntity;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelBlockEntity;
 import com.simibubi.create.content.contraptions.components.crusher.CrushingWheelControllerBlockEntity;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlockEntity;
@@ -316,7 +317,14 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<HandCrankBlockEntity> HAND_CRANK = REGISTRATE
 		.blockEntity("hand_crank", HandCrankBlockEntity::new)
 		.instance(() -> HandCrankInstance::new)
-		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
+		.validBlocks(AllBlocks.HAND_CRANK)
+		.renderer(() -> HandCrankRenderer::new)
+		.register();
+	
+	public static final BlockEntityEntry<ValveHandleBlockEntity> VALVE_HANDLE = REGISTRATE
+		.blockEntity("valve_handle", ValveHandleBlockEntity::new)
+		.instance(() -> HandCrankInstance::new)
+		.validBlocks(AllBlocks.COPPER_VALVE_HANDLE)
 		.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray())
 		.renderer(() -> HandCrankRenderer::new)
 		.register();

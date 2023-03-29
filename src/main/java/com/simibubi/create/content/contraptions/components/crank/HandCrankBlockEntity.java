@@ -1,11 +1,18 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
+import com.jozufozu.flywheel.api.Instancer;
+import com.jozufozu.flywheel.api.Material;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticBlockEntity;
+import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,25 +43,35 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 			updateGeneratedRotation();
 	}
 
+	public float getIndependentAngle(float partialTicks) {
+		return (independentAngle + partialTicks * chasingVelocity) / 360;
+	}
+
 	@Override
 	public float getGeneratedSpeed() {
 		Block block = getBlockState().getBlock();
 		if (!(block instanceof HandCrankBlock))
 			return 0;
 		HandCrankBlock crank = (HandCrankBlock) block;
-		int speed = (inUse == 0 ? 0 : backwards ? -1 : 1) * crank.getRotationSpeed();
+		int speed = (inUse == 0 ? 0 : clockwise() ? -1 : 1) * crank.getRotationSpeed();
 		return convertToDirection(speed, getBlockState().getValue(HandCrankBlock.FACING));
+	}
+
+	protected boolean clockwise() {
+		return backwards;
 	}
 
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("InUse", inUse);
+		compound.putBoolean("Backwards", backwards);
 		super.write(compound, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		inUse = compound.getInt("InUse");
+		backwards = compound.getBoolean("Backwards");
 		super.read(compound, clientPacket);
 	}
 
@@ -69,9 +86,32 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 		if (inUse > 0) {
 			inUse--;
 
-			if (inUse == 0 && !level.isClientSide)
+			if (inUse == 0 && !level.isClientSide) {
+				sequenceContext = null;
 				updateGeneratedRotation();
+			}
 		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public SuperByteBuffer getRenderedHandle() {
+		BlockState blockState = getBlockState();
+		Direction facing = blockState.getOptionalValue(HandCrankBlock.FACING)
+			.orElse(Direction.UP);
+		return CachedBufferer.partialFacing(AllPartialModels.HAND_CRANK_HANDLE, blockState, facing.getOpposite());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public Instancer<ModelData> getRenderedHandleInstance(Material<ModelData> material) {
+		BlockState blockState = getBlockState();
+		Direction facing = blockState.getOptionalValue(HandCrankBlock.FACING)
+			.orElse(Direction.UP);
+		return material.getModel(AllPartialModels.HAND_CRANK_HANDLE, blockState, facing.getOpposite());
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public boolean shouldRenderShaft() {
+		return true;
 	}
 
 	@Override

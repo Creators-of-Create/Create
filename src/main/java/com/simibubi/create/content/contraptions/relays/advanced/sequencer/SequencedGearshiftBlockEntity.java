@@ -24,7 +24,7 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 
 	public record SequenceContext(SequencerInstructions instruction, double relativeValue) {
 
-		static SequenceContext fromGearshift(SequencerInstructions instruction, double kineticSpeed,
+		public static SequenceContext fromGearshift(SequencerInstructions instruction, double kineticSpeed,
 			int absoluteValue) {
 			return instruction.needsPropagation()
 				? new SequenceContext(instruction, kineticSpeed == 0 ? 0 : absoluteValue / kineticSpeed)
