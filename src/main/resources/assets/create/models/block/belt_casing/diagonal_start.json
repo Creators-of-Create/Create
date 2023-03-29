@@ -2,9 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"4": "create:block/belt/brass_belt_casing_horizontal",
 		"5": "create:block/brass_casing_connected",
-		"6": "create:block/belt/brass_belt_casing_diagonal",
+		"7": "create:block/belt/brass_belt_casing",
 		"8": "create:block/gearbox",
 		"particle": "create:block/brass_casing"
 	},
@@ -15,11 +14,11 @@
 			"to": [16.1, 11, 4.7],
 			"rotation": {"angle": 45, "axis": "x", "origin": [-22, 8, 8]},
 			"faces": {
-				"north": {"uv": [0, 4.5, 8, 9], "texture": "#6"},
-				"east": {"uv": [0, 0, 4, 4.5], "texture": "#6"},
-				"south": {"uv": [0, 5.5, 8, 10], "rotation": 180, "texture": "#4"},
-				"west": {"uv": [12, 0, 16, 4.5], "texture": "#6"},
-				"up": {"uv": [0, 6, 8, 10], "texture": "#4"},
+				"north": {"uv": [8, 2.25, 12, 4.5], "texture": "#7"},
+				"east": {"uv": [8, 0, 10, 2.25], "texture": "#7"},
+				"south": {"uv": [0, 2.75, 4, 5], "rotation": 180, "texture": "#7"},
+				"west": {"uv": [14, 0, 16, 2.25], "texture": "#7"},
+				"up": {"uv": [0, 3, 4, 5], "texture": "#7"},
 				"down": {"uv": [6, 0, 8, 1], "texture": "#5"}
 			}
 		},
@@ -29,10 +28,10 @@
 			"to": [16, 11, 16],
 			"faces": {
 				"north": {"uv": [6, 0, 8, 1.375], "texture": "#5"},
-				"east": {"uv": [0, 0, 8, 5.5], "texture": "#4"},
-				"south": {"uv": [8, 10.5, 16, 16], "texture": "#4"},
-				"west": {"uv": [0, 0, 8, 5.5], "texture": "#4"},
-				"up": {"uv": [0, 8, 8, 16], "texture": "#4"},
+				"east": {"uv": [0, 0, 4, 2.75], "texture": "#7"},
+				"south": {"uv": [4, 5.25, 8, 8], "texture": "#7"},
+				"west": {"uv": [0, 0, 4, 2.75], "texture": "#7"},
+				"up": {"uv": [0, 4, 4, 8], "texture": "#7"},
 				"down": {"uv": [2, 0, 4, 2], "rotation": 180, "texture": "#5"}
 			}
 		},
@@ -41,9 +40,9 @@
 			"from": [0, 5, 12],
 			"to": [16, 11, 4],
 			"faces": {
-				"north": {"uv": [8, 6.5, 16, 9.5], "texture": "#4"},
-				"south": {"uv": [8, 6.5, 16, 9.5], "texture": "#4"},
-				"down": {"uv": [0, 5.5, 8, 9.5], "texture": "#4"}
+				"north": {"uv": [4, 3.25, 8, 4.75], "texture": "#7"},
+				"south": {"uv": [4, 3.25, 8, 4.75], "texture": "#7"},
+				"down": {"uv": [0, 2.75, 4, 4.75], "texture": "#7"}
 			}
 		},
 		{
