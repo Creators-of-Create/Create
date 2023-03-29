@@ -19,6 +19,11 @@ public class GantryShaftBlockEntity extends KineticBlockEntity {
 		super(typeIn, pos, state);
 	}
 
+	@Override
+	protected boolean syncSequenceContext() {
+		return true;
+	}
+	
 	public void checkAttachedCarriageBlocks() {
 		if (!canAssembleOn())
 			return;

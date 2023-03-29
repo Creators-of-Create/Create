@@ -132,6 +132,8 @@ public class MechanicalPistonBlockEntity extends LinearActuatorBlockEntity {
 
 		int extensionRange = getExtensionRange();
 		movementSpeed = Mth.clamp(movementSpeed, 0 - offset, extensionRange - offset);
+		if (sequencedOffsetLimit >= 0)
+			movementSpeed = (float) Mth.clamp(movementSpeed, -sequencedOffsetLimit, sequencedOffsetLimit);
 		return movementSpeed;
 	}
 

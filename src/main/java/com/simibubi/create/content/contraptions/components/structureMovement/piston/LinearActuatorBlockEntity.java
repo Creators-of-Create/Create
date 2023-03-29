@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencerInstructions;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
@@ -35,6 +36,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	protected ScrollOptionBehaviour<MovementMode> movementMode;
 	protected boolean waitingForSpeedChange;
 	protected AssemblyException lastException;
+	protected double sequencedOffsetLimit;
 
 	// Custom position sync
 	protected float clientOffsetDiff;
@@ -44,6 +46,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		setLazyTickRate(3);
 		forceMove = true;
 		needsContraption = true;
+		sequencedOffsetLimit = -1;
 	}
 
 	@Override
@@ -54,6 +57,11 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		movementMode.withCallback(t -> waitingForSpeedChange = false);
 		behaviours.add(movementMode);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS);
+	}
+	
+	@Override
+	protected boolean syncSequenceContext() {
+		return true;
 	}
 
 	@Override
@@ -112,10 +120,21 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 			return;
 
 		float movementSpeed = getMovementSpeed();
+		boolean locked = false;
+		if (sequencedOffsetLimit > 0) {
+			sequencedOffsetLimit = Math.max(0, sequencedOffsetLimit - Math.abs(movementSpeed));
+			locked = sequencedOffsetLimit == 0;
+		}
 		float newOffset = offset + movementSpeed;
 		if ((int) newOffset != (int) offset)
 			visitNewPosition();
 
+		if (locked) {
+			forceMove = true;
+			resetContraptionToOffset();
+			sendData();
+		}
+		
 		if (contraptionPresent) {
 			if (moveAndCollideContraption()) {
 				movedContraption.setContraptionMotion(Vec3.ZERO);
@@ -169,6 +188,7 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
+		sequencedOffsetLimit = -1;
 		
 		if (isPassive())
 			return;
@@ -177,9 +197,16 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		waitingForSpeedChange = false;
 
 		if (movedContraption != null && Math.signum(prevSpeed) != Math.signum(getSpeed()) && prevSpeed != 0) {
+			if (!movedContraption.isStalled()) {
+				offset = Math.round(offset * 16) / 16;
+				resetContraptionToOffset();
+			}
 			movedContraption.getContraption()
 				.stop(level);
 		}
+
+		if (sequenceContext != null && sequenceContext.instruction() == SequencerInstructions.TURN_DISTANCE)
+			sequencedOffsetLimit = sequenceContext.getEffectiveValue(getTheoreticalSpeed());
 	}
 
 	@Override
@@ -195,6 +222,8 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		compound.putBoolean("Running", running);
 		compound.putBoolean("Waiting", waitingForSpeedChange);
 		compound.putFloat("Offset", offset);
+		if (sequencedOffsetLimit >= 0)
+			compound.putDouble("SequencedOffsetLimit", sequencedOffsetLimit);
 		AssemblyException.write(compound, lastException);
 		super.write(compound, clientPacket);
 
@@ -212,6 +241,8 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		running = compound.getBoolean("Running");
 		waitingForSpeedChange = compound.getBoolean("Waiting");
 		offset = compound.getFloat("Offset");
+		sequencedOffsetLimit =
+			compound.contains("SequencedOffsetLimit") ? compound.getDouble("SequencedOffsetLimit") : -1;
 		lastException = AssemblyException.read(compound);
 		super.read(compound, clientPacket);
 
@@ -308,6 +339,8 @@ public abstract class LinearActuatorBlockEntity extends KineticBlockEntity
 		float movementSpeed = Mth.clamp(convertToLinear(getSpeed()), -.49f, .49f) + clientOffsetDiff / 2f;
 		if (level.isClientSide)
 			movementSpeed *= ServerSpeedProvider.get();
+		if (sequencedOffsetLimit >= 0)
+			movementSpeed = (float) Mth.clamp(movementSpeed, -sequencedOffsetLimit, sequencedOffsetLimit);
 		return movementSpeed;
 	}
 

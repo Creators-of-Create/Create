@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlockEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencerInstructions;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 
@@ -83,14 +84,14 @@ public class GantryCarriageBlockEntity extends KineticBlockEntity implements IDi
 		Direction direction = blockState.getValue(GantryCarriageBlock.FACING);
 		GantryContraption contraption = new GantryContraption(direction);
 
-		BlockEntity shaftBE = level.getBlockEntity(worldPosition.relative(direction.getOpposite()));
-		if (!(shaftBE instanceof GantryShaftBlockEntity))
+		BlockEntity blockEntity = level.getBlockEntity(worldPosition.relative(direction.getOpposite()));
+		if (!(blockEntity instanceof GantryShaftBlockEntity shaftBE))
 			return;
 		BlockState shaftState = shaftBE.getBlockState();
 		if (!AllBlocks.GANTRY_SHAFT.has(shaftState))
 			return;
 
-		float pinionMovementSpeed = ((GantryShaftBlockEntity) shaftBE).getPinionMovementSpeed();
+		float pinionMovementSpeed = shaftBE.getPinionMovementSpeed();
 		Direction shaftOrientation = shaftState.getValue(GantryShaftBlock.FACING);
 		Direction movementDirection = shaftOrientation;
 		if (pinionMovementSpeed < 0)
@@ -121,6 +122,10 @@ public class GantryCarriageBlockEntity extends KineticBlockEntity implements IDi
 		movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(level, worldPosition);
 		level.addFreshEntity(movedContraption);
+
+		if (shaftBE.sequenceContext != null
+			&& shaftBE.sequenceContext.instruction() == SequencerInstructions.TURN_DISTANCE)
+			movedContraption.limitMovement(shaftBE.sequenceContext.getEffectiveValue(shaftBE.getTheoreticalSpeed()));
 	}
 
 	@Override

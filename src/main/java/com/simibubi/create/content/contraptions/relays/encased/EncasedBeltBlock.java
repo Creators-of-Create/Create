@@ -4,6 +4,8 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -18,6 +20,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
@@ -27,7 +31,8 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 
-public class EncasedBeltBlock extends RotatedPillarKineticBlock implements IBE<KineticBlockEntity> {
+public class EncasedBeltBlock extends RotatedPillarKineticBlock
+	implements IBE<KineticBlockEntity>, ITransformableBlock {
 
 	public static final Property<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty CONNECTED_ALONG_FIRST_COORDINATE =
@@ -216,6 +221,55 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock implements IBE<K
 	@Override
 	public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.ENCASED_SHAFT.get();
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		return rotate(state, rot, Axis.Y);
+	}
+
+	protected BlockState rotate(BlockState pState, Rotation rot, Axis rotAxis) {
+		Axis connectionAxis = getConnectionAxis(pState);
+		Direction direction = Direction.fromAxisAndDirection(connectionAxis, AxisDirection.POSITIVE);
+		Direction normal = Direction.fromAxisAndDirection(pState.getValue(AXIS), AxisDirection.POSITIVE);
+		for (int i = 0; i < rot.ordinal(); i++) {
+			direction = direction.getClockWise(rotAxis);
+			normal = normal.getClockWise(rotAxis);
+		}
+
+		if (direction.getAxisDirection() == AxisDirection.NEGATIVE)
+			pState = reversePart(pState);
+
+		Axis newAxis = normal.getAxis();
+		Axis newConnectingDirection = direction.getAxis();
+		boolean alongFirst = newAxis == Axis.X && newConnectingDirection == Axis.Y
+			|| newAxis != Axis.X && newConnectingDirection == Axis.X;
+
+		return pState.setValue(AXIS, newAxis)
+			.setValue(CONNECTED_ALONG_FIRST_COORDINATE, alongFirst);
+	}
+
+	@Override
+	public BlockState mirror(BlockState pState, Mirror pMirror) {
+		Axis connectionAxis = getConnectionAxis(pState);
+		if (pMirror.mirror(Direction.fromAxisAndDirection(connectionAxis, AxisDirection.POSITIVE))
+			.getAxisDirection() == AxisDirection.POSITIVE)
+			return pState;
+		return reversePart(pState);
+	}
+
+	protected BlockState reversePart(BlockState pState) {
+		Part part = pState.getValue(PART);
+		if (part == Part.START)
+			return pState.setValue(PART, Part.END);
+		if (part == Part.END)
+			return pState.setValue(PART, Part.START);
+		return pState;
+	}
+
+	@Override
+	public BlockState transform(BlockState state, StructureTransform transform) {
+		return rotate(mirror(state, transform.mirror), transform.rotation, transform.rotationAxis);
 	}
 
 }

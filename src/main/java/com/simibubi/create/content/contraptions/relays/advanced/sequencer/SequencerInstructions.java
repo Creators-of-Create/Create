@@ -44,6 +44,10 @@ public enum SequencerInstructions {
 		descriptiveTranslationKey = translationKey + ".descriptive";
 		parameterKey = translationKey + "." + parameterName;
 	}
+	
+	public boolean needsPropagation() {
+		return this == TURN_ANGLE || this == TURN_DISTANCE;
+	}
 
 	static List<Component> getOptions() {
 		List<Component> options = new ArrayList<>();

@@ -404,7 +404,7 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 		}
 
 		void tick(AbstractMinecart entity) {
-			entity.setPos(position.x, position.y, position.z);
+//			entity.setPos(position.x, position.y, position.z);
 			entity.setDeltaMovement(Vec3.ZERO);
 			entity.setYRot(yaw);
 			entity.setXRot(pitch);

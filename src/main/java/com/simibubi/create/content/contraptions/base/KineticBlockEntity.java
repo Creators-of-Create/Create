@@ -15,6 +15,7 @@ import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlockEntity.SequenceContext;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.foundation.block.BlockStressValues;
@@ -67,6 +68,8 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	private int validationCountdown;
 	protected float lastStressApplied;
 	protected float lastCapacityProvided;
+	
+	public SequenceContext sequenceContext;
 
 	public KineticBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
 		super(typeIn, pos, state);
@@ -197,6 +200,8 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	@Override
 	protected void write(CompoundTag compound, boolean clientPacket) {
 		compound.putFloat("Speed", speed);
+		if (sequenceContext != null && (!clientPacket || syncSequenceContext()))
+			compound.put("Sequence", sequenceContext.serializeNBT());
 
 		if (needsSpeedUpdate())
 			compound.putBoolean("NeedsSpeedUpdate", true);
@@ -238,6 +243,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 		}
 
 		speed = compound.getFloat("Speed");
+		sequenceContext = SequenceContext.fromNBT(compound.getCompound("Sequence"));
 
 		if (compound.contains("Source"))
 			source = NbtUtils.readBlockPos(compound.getCompound("Source"));
@@ -294,13 +300,17 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			return;
 
 		BlockEntity blockEntity = level.getBlockEntity(source);
-		if (!(blockEntity instanceof KineticBlockEntity)) {
+		if (!(blockEntity instanceof KineticBlockEntity sourceBE)) {
 			removeSource();
 			return;
 		}
 
-		KineticBlockEntity sourceBE = (KineticBlockEntity) blockEntity;
 		setNetwork(sourceBE.network);
+		copySequenceContextFrom(sourceBE);
+	}
+
+	protected void copySequenceContextFrom(KineticBlockEntity sourceBE) {
+		sequenceContext = sourceBE.sequenceContext;
 	}
 
 	public void removeSource() {
@@ -309,6 +319,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 		speed = 0;
 		source = null;
 		setNetwork(null);
+		sequenceContext = null;
 
 		onSpeedChanged(prevSpeed);
 	}
@@ -591,6 +602,10 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 
 	public int getRotationAngleOffset(Axis axis) {
 		return 0;
+	}
+	
+	protected boolean syncSequenceContext() {
+		return false;
 	}
 
 }
