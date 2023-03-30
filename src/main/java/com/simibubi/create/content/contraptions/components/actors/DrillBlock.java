@@ -60,7 +60,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBloc
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		return AllShapes.DRILL.get(state.getValue(FACING));
+		return AllShapes.CASING_12PX.get(state.getValue(FACING));
 	}
 
 	@Override
