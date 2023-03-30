@@ -20,8 +20,8 @@ public class BogeyTileEntityRenderer<T extends BlockEntity> extends SafeTileEnti
 		float angle = 0;
 		if (te instanceof StandardBogeyTileEntity sbte)
 			angle = sbte.getVirtualAngle(partialTicks);
-		if (blockState.getBlock()instanceof IBogeyBlock bogey) 
-			bogey.render(blockState, angle, ms, partialTicks, buffer, light, overlay);
+		if (blockState.getBlock()instanceof AbstractBogeyBlock bogey)
+			bogey.render(blockState, angle, ms, partialTicks, buffer, light, overlay, te.getTileData());
 	}
 
 }
