@@ -3,7 +3,6 @@
 	"parent": "block/block",
 	"textures": {
 		"4": "create:block/belt/brass_belt_casing",
-		"6": "create:block/brass_casing_connected",
 		"particle": "create:block/brass_casing"
 	},
 	"elements": [
@@ -14,10 +13,10 @@
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [8, 2.25, 12, 4.5], "texture": "#4"},
-				"east": {"uv": [15, 5.75, 12.25, 8], "texture": "#4"},
-				"west": {"uv": [8.25, 5.75, 11, 8], "texture": "#4"},
+				"east": {"uv": [14.5, 5.75, 11.75, 8], "texture": "#4"},
+				"west": {"uv": [11.75, 5.75, 14.5, 8], "texture": "#4"},
 				"up": {"uv": [12, 2.25, 16, 5], "texture": "#4"},
-				"down": {"uv": [6, 0, 8, 1.375], "texture": "#6"}
+				"down": {"uv": [8, 12, 12, 14.75], "texture": "#4"}
 			}
 		},
 		{
@@ -30,7 +29,7 @@
 				"south": {"uv": [8, 2.25, 12, 4.5], "texture": "#4"},
 				"west": {"uv": [12.25, 5.75, 15, 8], "texture": "#4"},
 				"up": {"uv": [12, 2.25, 16, 5], "texture": "#4"},
-				"down": {"uv": [6, 0.25, 8, 1.625], "texture": "#6"}
+				"down": {"uv": [8, 12.5, 12, 15.25], "texture": "#4"}
 			}
 		}
 	]

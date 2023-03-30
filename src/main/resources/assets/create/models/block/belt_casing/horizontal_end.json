@@ -3,7 +3,6 @@
 	"parent": "block/block",
 	"textures": {
 		"4": "create:block/belt/brass_belt_casing",
-		"5": "create:block/brass_casing_connected",
 		"8": "create:block/gearbox",
 		"particle": "create:block/brass_casing"
 	},
@@ -18,7 +17,7 @@
 				"south": {"uv": [4, 5.25, 8, 8], "texture": "#4"},
 				"west": {"uv": [0, 0, 4, 2.75], "texture": "#4"},
 				"up": {"uv": [0, 4, 4, 8], "texture": "#4"},
-				"down": {"uv": [2, 0, 4, 2], "rotation": 180, "texture": "#5"}
+				"down": {"uv": [12, 12, 16, 16], "rotation": 180, "texture": "#4"}
 			}
 		},
 		{
