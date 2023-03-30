@@ -45,7 +45,6 @@ public class AllPartialModels {
 		GAUGE_INDICATOR = block("gauge/indicator"), GAUGE_HEAD_SPEED = block("gauge/speedometer/head"),
 		GAUGE_HEAD_STRESS = block("gauge/stressometer/head"), BEARING_TOP = block("bearing/top"),
 		BEARING_TOP_WOODEN = block("bearing/top_wooden"), DRILL_HEAD = block("mechanical_drill/head"),
-		DRILL_HEAD_2 = block("mechanical_drill/head_2"), DRILL_HEAD_TOP = block("mechanical_drill/head_top"),
 		HARVESTER_BLADE = block("mechanical_harvester/blade"), DEPLOYER_POLE = block("deployer/pole"),
 		DEPLOYER_HAND_POINTING = block("deployer/hand_pointing"),
 		DEPLOYER_HAND_PUNCHING = block("deployer/hand_punching"),

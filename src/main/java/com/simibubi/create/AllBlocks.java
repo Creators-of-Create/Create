@@ -1303,7 +1303,6 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
 		.transform(BlockStressDefaults.setImpact(4.0))
 		.onRegister(movementBehaviour(new DrillMovementBehaviour()))
-		.addLayer(() -> RenderType::cutoutMipped)
 		.item()
 		.transform(customItemModel())
 		.register();
