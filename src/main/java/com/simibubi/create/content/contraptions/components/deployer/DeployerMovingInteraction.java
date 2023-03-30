@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import java.util.UUID;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -41,7 +43,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			DeployerFakePlayer fake = null;
 
 			if (!(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerLevel) {
-				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world);
+				UUID owner = ctx.blockEntityData.contains("Owner") ? ctx.blockEntityData.getUUID("Owner") : null;
+				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world, owner);
 				deployerFakePlayer.onMinecartContraption = ctx.contraption instanceof MountedContraption;
 				deployerFakePlayer.getInventory()
 					.load(ctx.blockEntityData.getList("Inventory", Tag.TAG_COMPOUND));

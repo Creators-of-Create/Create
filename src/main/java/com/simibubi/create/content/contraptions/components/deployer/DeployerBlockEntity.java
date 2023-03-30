@@ -5,6 +5,7 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -75,6 +76,7 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 	protected List<ItemStack> overflowItems = new ArrayList<>();
 	protected FilteringBehaviour filtering;
 	protected boolean redstoneLocked;
+	protected UUID owner;
 	private LazyOptional<IItemHandlerModifiable> invHandler;
 	private ListTag deferredInventoryList;
 
@@ -125,7 +127,7 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		if (invHandler != null)
 			return;
 		if (level instanceof ServerLevel sLevel) {
-			player = new DeployerFakePlayer(sLevel);
+			player = new DeployerFakePlayer(sLevel, owner);
 			if (deferredInventoryList != null) {
 				player.getInventory()
 					.load(deferredInventoryList);
@@ -350,6 +352,8 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
 		redstoneLocked = compound.getBoolean("Powered");
+		if (compound.contains("Owner"))
+			owner = compound.getUUID("Owner");
 
 		deferredInventoryList = compound.getList("Inventory", Tag.TAG_COMPOUND);
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", Tag.TAG_COMPOUND));
@@ -374,6 +378,8 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.putInt("Timer", timer);
 		compound.putBoolean("Powered", redstoneLocked);
+		if (owner != null)
+			compound.putUUID("Owner", owner);
 
 		if (player != null) {
 			ListTag invNBT = new ListTag();
@@ -489,8 +495,8 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 			.forGoggles(tooltip);
 
 		if (!heldItem.isEmpty())
-			Lang.translate("tooltip.deployer.contains",
-				Components.translatable(heldItem.getDescriptionId()).getString(), heldItem.getCount())
+			Lang.translate("tooltip.deployer.contains", Components.translatable(heldItem.getDescriptionId())
+				.getString(), heldItem.getCount())
 				.style(ChatFormatting.GREEN)
 				.forGoggles(tooltip);
 
