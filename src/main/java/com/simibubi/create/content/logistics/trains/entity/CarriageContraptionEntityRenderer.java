@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer<CarriageContraptionEntity> {
@@ -37,7 +38,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		MultiBufferSource buffers, int overlay) {
 		if (!entity.validForRender || entity.firstPositionUpdate)
 			return;
-		
+
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
 		Carriage carriage = entity.getCarriage();
@@ -65,8 +66,10 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
 
 				int light = getBogeyLightCoords(entity, bogey, partialTicks);
+				BlockEntity be = entity.getContraption().presentTileEntities.get(bogeyPos);
+
 				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
-					overlay);
+					overlay, be.getTileData());
 
 				ms.popPose();
 			}

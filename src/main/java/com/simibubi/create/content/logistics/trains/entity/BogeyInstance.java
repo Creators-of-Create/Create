@@ -30,13 +30,16 @@ public abstract class BogeyInstance {
 	public final BogeyRenderer renderer;
 	private final BogeyRenderer.BogeySize size;
 
-	public BogeyInstance(CarriageBogey bogey, BogeyRenderer renderer, BogeyRenderer.BogeySize size, MaterialManager materialManager) {
+	public BogeyInstance(CarriageBogey bogey, BogeyRenderer renderer, BogeyRenderer.BogeySize size,
+						 MaterialManager materialManager) {
 		this.bogey = bogey;
 		this.renderer = renderer;
 		this.size = size;
 
 		renderer.initialiseContraptionModelData(materialManager, size);
 	}
+
+	public abstract BogeyInstanceFactory getInstanceFactory();
 
 	protected void hiddenFrame() {
 		beginFrame(0, null);
@@ -60,5 +63,11 @@ public abstract class BogeyInstance {
 	private Vec3 getLightPos(CarriageContraptionEntity entity) {
 		return bogey.getAnchorPosition() != null ? bogey.getAnchorPosition()
 				: entity.getLightProbePosition(AnimationTickHolder.getPartialTicks());
+	}
+
+	@FunctionalInterface
+	interface BogeyInstanceFactory {
+		BogeyInstance create(CarriageBogey bogey, BogeyRenderer.BogeySize size,
+							 MaterialManager materialManager);
 	}
 }
