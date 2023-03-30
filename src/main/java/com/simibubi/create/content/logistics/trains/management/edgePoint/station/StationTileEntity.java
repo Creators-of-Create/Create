@@ -21,7 +21,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ITr
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.block.depot.DepotBehaviour;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -189,7 +189,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	Direction assemblyDirection;
 	int assemblyLength;
 	int[] bogeyLocations;
-	IBogeyBlock[] bogeyTypes;
+	AbstractBogeyBlock[] bogeyTypes;
 	int bogeyCount;
 
 	@Override
@@ -272,7 +272,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				BlockPos bogeyPos = pos.relative(assemblyDirection, i)
 					.offset(up);
 				BlockState blockState = level.getBlockState(bogeyPos);
-				if (blockState.getBlock() instanceof IBogeyBlock bogey) {
+				if (blockState.getBlock() instanceof AbstractBogeyBlock bogey) {
 					level.setBlock(bogeyPos, bogey.getRotatedBlockState(blockState, Direction.DOWN), 3);
 					bogey.playRotateSound(level, bogeyPos);
 					return true;
@@ -370,7 +370,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		if (bogeyLocations == null)
 			bogeyLocations = new int[maxBogeyCount];
 		if (bogeyTypes == null)
-			bogeyTypes = new IBogeyBlock[maxBogeyCount];
+			bogeyTypes = new AbstractBogeyBlock[maxBogeyCount];
 		Arrays.fill(bogeyLocations, -1);
 		Arrays.fill(bogeyTypes, null);
 
@@ -385,7 +385,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			}
 
 			BlockState potentialBogeyState = level.getBlockState(bogeyOffset.offset(currentPos));
-			if (potentialBogeyState.getBlock() instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
+			if (potentialBogeyState.getBlock() instanceof AbstractBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
 				bogeyTypes[bogeyIndex] = bogey;
 				bogeyLocations[bogeyIndex] = i;
 				bogeyIndex++;
@@ -591,7 +591,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				return;
 			}
 
-			IBogeyBlock typeOfFirstBogey = bogeyTypes[bogeyIndex];
+			AbstractBogeyBlock typeOfFirstBogey = bogeyTypes[bogeyIndex];
 			CarriageBogey firstBogey =
 				new CarriageBogey(typeOfFirstBogey, points.get(pointIndex), points.get(pointIndex + 1));
 			CarriageBogey secondBogey = null;

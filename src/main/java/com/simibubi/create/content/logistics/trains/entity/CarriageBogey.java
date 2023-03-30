@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
@@ -31,7 +31,7 @@ public class CarriageBogey {
 
 	boolean isLeading;
 
-	IBogeyBlock type;
+	AbstractBogeyBlock type;
 	Couple<TravellingPoint> points;
 
 	LerpedFloat wheelAngle;
@@ -42,7 +42,7 @@ public class CarriageBogey {
 
 	int derailAngle;
 
-	public CarriageBogey(IBogeyBlock type, TravellingPoint point, TravellingPoint point2) {
+	public CarriageBogey(AbstractBogeyBlock type, TravellingPoint point, TravellingPoint point2) {
 		this.type = type;
 		points = Couple.create(point, point2);
 		wheelAngle = LerpedFloat.angular();
@@ -155,7 +155,7 @@ public class CarriageBogey {
 
 	public static CarriageBogey read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		ResourceLocation location = new ResourceLocation(tag.getString("Type"));
-		IBogeyBlock type = (IBogeyBlock) ForgeRegistries.BLOCKS.getValue(location);
+		AbstractBogeyBlock type = (AbstractBogeyBlock) ForgeRegistries.BLOCKS.getValue(location);
 		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),
 			c -> TravellingPoint.read(c, graph, dimensions));
 		CarriageBogey carriageBogey = new CarriageBogey(type, points.getFirst(), points.getSecond());
@@ -163,7 +163,7 @@ public class CarriageBogey {
 	}
 
 	public BogeyInstance createInstance(MaterialManager materialManager) {
-		return type.createInstance(materialManager, this);
+		return type.getStyle().createInstance(this, type.getSize(), materialManager);
 	}
 
 	void setLeading() {

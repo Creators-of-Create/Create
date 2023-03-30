@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -47,7 +47,7 @@ public class TrainPacket extends SimplePacketBase {
 			for (boolean first : Iterate.trueAndFalse) {
 				if (!first && !buffer.readBoolean())
 					continue;
-				IBogeyBlock type = (IBogeyBlock) ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
+				AbstractBogeyBlock type = (AbstractBogeyBlock) ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
 				bogies.set(first, new CarriageBogey(type, new TravellingPoint(), new TravellingPoint()));
 			}
 			int spacing = buffer.readVarInt();

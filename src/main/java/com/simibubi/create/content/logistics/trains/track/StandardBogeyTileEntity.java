@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.foundation.tileEntity.CachedRenderBBTileEntity;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
@@ -21,16 +21,15 @@ public class StandardBogeyTileEntity extends CachedRenderBBTileEntity {
 	}
 
 	// Ponder
-	
 	LerpedFloat virtualAnimation = LerpedFloat.angular();
-	
+
 	public float getVirtualAngle(float partialTicks) {
 		return virtualAnimation.getValue(partialTicks);
 	}
-	
+
 	public void animate(float distanceMoved) {
 		BlockState blockState = getBlockState();
-		if (!(blockState.getBlock() instanceof IBogeyBlock type))
+		if (!(blockState.getBlock() instanceof AbstractBogeyBlock type))
 			return;
 		double angleDiff = 360 * distanceMoved / (Math.PI * 2 * type.getWheelRadius());
 		double newWheelAngle = (virtualAnimation.getValue() - angleDiff) % 360;
