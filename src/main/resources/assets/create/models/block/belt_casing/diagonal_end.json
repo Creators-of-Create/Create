@@ -2,7 +2,6 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"5": "create:block/brass_casing_connected",
 		"7": "create:block/belt/brass_belt_casing",
 		"8": "create:block/gearbox",
 		"particle": "create:block/brass_casing"
@@ -18,7 +17,7 @@
 				"east": {"uv": [1, 0, 4, 2.75], "texture": "#7"},
 				"west": {"uv": [0, 0, 3, 2.75], "texture": "#7"},
 				"up": {"uv": [0, 4, 4, 7], "texture": "#7"},
-				"down": {"uv": [2, 0.75, 4, 2], "texture": "#5"}
+				"down": {"uv": [12, 13.5, 16, 16], "texture": "#7"}
 			}
 		},
 		{
@@ -52,7 +51,7 @@
 				"south": {"uv": [8, 2.25, 12, 4.5], "texture": "#7"},
 				"west": {"uv": [8, 0, 10, 2.25], "texture": "#7"},
 				"up": {"uv": [12, 2.25, 16, 4.25], "texture": "#7"},
-				"down": {"uv": [6, 0, 8, 1], "texture": "#5"}
+				"down": {"uv": [8, 12, 12, 14], "texture": "#7"}
 			}
 		}
 	]
