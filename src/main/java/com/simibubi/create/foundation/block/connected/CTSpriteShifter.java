@@ -6,6 +6,8 @@ import java.util.Map;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 public class CTSpriteShifter {
 
@@ -17,7 +19,7 @@ public class CTSpriteShifter {
 			return (CTSpriteShiftEntry) ENTRY_CACHE.get(key);
 
 		CTSpriteShiftEntry entry = new CTSpriteShiftEntry(type);
-		entry.set(blockTexture, connectedTexture);
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> entry.set(blockTexture, connectedTexture));
 		ENTRY_CACHE.put(key, entry);
 		return entry;
 	}

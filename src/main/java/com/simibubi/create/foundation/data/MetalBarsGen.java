@@ -127,6 +127,7 @@ public class MetalBarsGen {
 			.initialProperties(() -> Blocks.IRON_BARS)
 			.properties(p -> p.sound(SoundType.COPPER))
 			.tag(AllBlockTags.WRENCH_PICKUP.tag)
+			.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.blockstate(barsBlockState(name, specialEdge))
 			.item()
 			.model((c, p) -> {

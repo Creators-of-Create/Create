@@ -2103,6 +2103,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.GLOW_LICHEN))
 		.addLayer(() -> RenderType::cutoutMipped)
+		.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 		.register();

@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"4": "create:block/belt/brass_belt_casing_sideways",
+		"4": "create:block/mechanical_arm_side",
 		"5": "create:block/mechanical_arm",
 		"7": "create:block/brass_block",
 		"particle": "create:block/crafter_top"
@@ -110,10 +110,10 @@
 			"to": [16, -10, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, -8, 8]},
 			"faces": {
-				"north": {"uv": [0, 6.5, 8, 9.5], "texture": "#4"},
-				"east": {"uv": [0, 6.5, 8, 9.5], "texture": "#4"},
-				"south": {"uv": [0, 6.5, 8, 9.5], "texture": "#4"},
-				"west": {"uv": [0, 6.5, 8, 9.5], "texture": "#4"},
+				"north": {"uv": [0, 0, 16, 6], "texture": "#4"},
+				"east": {"uv": [0, 0, 16, 6], "texture": "#4"},
+				"south": {"uv": [0, 0, 16, 6], "texture": "#4"},
+				"west": {"uv": [0, 0, 16, 6], "texture": "#4"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#7"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#7"}
 			}

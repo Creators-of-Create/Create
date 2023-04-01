@@ -60,6 +60,11 @@ public class AllDisplayBehaviours {
 		}
 	}
 
+	@Deprecated
+	public static void assignTile(DisplayBehaviour behaviour, ResourceLocation beType) {
+		assignBlockEntity(behaviour, beType);
+	}
+	
 	public static void assignBlockEntity(DisplayBehaviour behaviour, ResourceLocation beType) {
 		if (behaviour instanceof DisplaySource source) {
 			List<DisplaySource> sources = SOURCES_BY_BLOCK_ENTITY.get(beType);
@@ -88,6 +93,11 @@ public class AllDisplayBehaviours {
 		}
 	}
 
+	@Deprecated
+	public static void assignTile(DisplayBehaviour behaviour, BlockEntityType<?> beType) {
+		assignBlockEntity(behaviour, beType);
+	}
+	
 	public static void assignBlockEntity(DisplayBehaviour behaviour, BlockEntityType<?> beType) {
 		if (behaviour instanceof DisplaySource source) {
 			List<DisplaySource> sources = SOURCES_BY_BLOCK_ENTITY.get(beType);

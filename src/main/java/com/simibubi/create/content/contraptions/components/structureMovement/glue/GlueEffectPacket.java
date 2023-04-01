@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent.Context;
 
@@ -37,13 +38,16 @@ public class GlueEffectPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			Minecraft mc = Minecraft.getInstance();
-			if (!mc.player.blockPosition().closerThan(pos, 100))
-				return;
-			SuperGlueItem.spawnParticles(mc.level, pos, direction, fullBlock);
-		}));
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::handleClient));
 		return true;
 	}
-
+	
+	@OnlyIn(Dist.CLIENT)
+	public void handleClient() {
+		Minecraft mc = Minecraft.getInstance();
+		if (!mc.player.blockPosition().closerThan(pos, 100))
+			return;
+		SuperGlueItem.spawnParticles(mc.level, pos, direction, fullBlock);
+	}
+	
 }

@@ -5263,7 +5263,7 @@ d99d5c67bdffff60789a19bd51a5c5267c75e0a4 data/create/tags/blocks/casing.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/blocks/contraption_inventory_deny.json
 bc203f09dd7f48965d146d0bd035fb904cb75e7d data/create/tags/blocks/copycat_allow.json
 d4a3b66f4b763b9a2dcdea74b7273f0ae85cb335 data/create/tags/blocks/copycat_deny.json
-2b4c93e5a752ebf54217594766f30d8d60cb4343 data/create/tags/blocks/fan_transparent.json
+73c2c85233075d2854d209b71ff2160308a7919c data/create/tags/blocks/fan_transparent.json
 ee6d2b53d81f2bed492662b6c06f46c4f2b9ef9b data/create/tags/blocks/movable_empty_collider.json
 6e5d3b2123fbb00e7f439c091623619502551bca data/create/tags/blocks/non_movable.json
 10781e8cfcbb3486327aace3aa00e437fb44b331 data/create/tags/blocks/ore_override_stone.json

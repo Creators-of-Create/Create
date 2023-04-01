@@ -520,12 +520,13 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	}
 
 	private Pos2i convertScreenToLocal(Pos2i pScreenPos) {
-		return new Pos2i(pScreenPos.x - (width - 192) / 2 - 36 + 10, pScreenPos.y - 32 - 24 - yOffsetOfEditingEntry());
+		return new Pos2i(pScreenPos.x - (width - 192) / 2 - 36 + 10,
+			pScreenPos.y - 32 - 24 - yOffsetOfEditingEntry() - guiTop + 14);
 	}
 
 	private Pos2i convertLocalToScreen(Pos2i pLocalScreenPos) {
 		return new Pos2i(pLocalScreenPos.x + (width - 192) / 2 + 36 - 10,
-			pLocalScreenPos.y + 32 + 24 + yOffsetOfEditingEntry());
+			pLocalScreenPos.y + 32 + 24 + yOffsetOfEditingEntry() + guiTop - 14);
 	}
 
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {

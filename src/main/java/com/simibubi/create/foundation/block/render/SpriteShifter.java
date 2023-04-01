@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 public class SpriteShifter {
 
@@ -15,7 +17,7 @@ public class SpriteShifter {
 			return ENTRY_CACHE.get(key);
 
 		SpriteShiftEntry entry = new SpriteShiftEntry();
-		entry.set(originalLocation, targetLocation);
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> entry.set(originalLocation, targetLocation));
 		ENTRY_CACHE.put(key, entry);
 		return entry;
 	}
