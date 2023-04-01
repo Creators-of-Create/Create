@@ -17,6 +17,7 @@ import com.simibubi.create.content.logistics.trains.management.schedule.destinat
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ChangeTitleInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.DestinationInstruction;
 import com.simibubi.create.content.logistics.trains.management.schedule.destination.ScheduleInstruction;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -97,6 +98,12 @@ public class ScheduleRuntime {
 	}
 
 	public void tick(Level level) {
+		if (state == State.PRE_TRANSIT && suspendedSchedule != null) {
+			setSchedule(suspendedSchedule, true);
+			suspendedSchedule = null;
+			return;
+		}
+
 		Schedule currentSchedule = getSchedule();
 		if (currentSchedule == null)
 			return;
@@ -116,10 +123,6 @@ public class ScheduleRuntime {
 		if (state == State.POST_TRANSIT) {
 			tickConditions(level);
 			return;
-		}
-		if (state == State.PRE_TRANSIT && suspendedSchedule != null) {
-			setSchedule(suspendedSchedule, true);
-			suspendedSchedule = null;
 		}
 
 		if (currentEntry >= currentSchedule.entries.size()) {
@@ -241,8 +244,11 @@ public class ScheduleRuntime {
 		return null;
 	}
 
-	public void setSuspendedSchedule(Schedule schedule) {
+	public boolean setSuspendedSchedule(Schedule schedule) {
+		if (autoSchedules.size() >= AllConfigs.SERVER.trains.maxAutoSchedules.get())
+			return false;
 		suspendedSchedule = schedule;
+		return true;
 	}
 
 	public void setSchedule(Schedule schedule, boolean auto) {
@@ -250,6 +256,9 @@ public class ScheduleRuntime {
 		if (!auto) {
 			this.schedule = schedule;
 		} else {
+			if (schedule.cyclic)
+				autoSchedules.clear();
+
 			autoSchedules.add(schedule);
 		}
 		prepNextSchedule();
@@ -490,6 +499,10 @@ public class ScheduleRuntime {
 	}
 
 	public ItemStack returnSchedule() {
+		if (suspendedSchedule != null) {
+			suspendedSchedule = null;
+			return ItemStack.EMPTY;
+		}
 		if (getSchedule() == null)
 			return ItemStack.EMPTY;
 		if (isAutoSchedule()) {

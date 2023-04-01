@@ -719,7 +719,19 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return;
 
 		award(AllAdvancements.CONDUCTOR);
-		imminentTrain.runtime.setSuspendedSchedule(schedule);
+
+		if (!imminentTrain.runtime.setSuspendedSchedule(schedule)) {
+			AllSoundEvents.DENY.playOnServer(level, worldPosition, 1, 1);
+
+			if (!(level instanceof ServerLevel server))
+				return;
+
+			Vec3 v = Vec3.atBottomCenterOf(worldPosition.above());
+			server.sendParticles(ParticleTypes.ANGRY_VILLAGER, v.x, v.y, v.z, 6, 0.35, 0.05, 0.35, 1);
+
+			return;
+		}
+
 		AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 1, 1);
 
 		if (!(level instanceof ServerLevel server))
