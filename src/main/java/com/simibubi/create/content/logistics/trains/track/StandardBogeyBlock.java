@@ -1,13 +1,9 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import java.util.EnumSet;
-
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
-import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
@@ -22,11 +18,11 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class StandardBogeyBlock extends AbstractBogeyBlock implements ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
-	private final boolean large;
+	private final BogeyRenderer.BogeySize size;
 
-	public StandardBogeyBlock(Properties p_i48440_1_, boolean large) {
+	public StandardBogeyBlock(Properties p_i48440_1_, BogeyRenderer.BogeySize large) {
 		super(p_i48440_1_);
-		this.large = large;
+		this.size = large;
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
@@ -37,7 +33,7 @@ public class StandardBogeyBlock extends AbstractBogeyBlock implements ITE<Standa
 
 	@Override
 	public double getWheelRadius() {
-		return (large ? 12.5 : 6.5) / 16d;
+		return (size == BogeyRenderer.BogeySize.LARGE ? 12.5 : 6.5) / 16d;
 	}
 
 	@Override
@@ -46,13 +42,8 @@ public class StandardBogeyBlock extends AbstractBogeyBlock implements ITE<Standa
 	}
 
 	@Override
-	public BogeyStyle getStyle() {
-		return AllBogeyStyles.STANDARD.get();
-	}
-
-	@Override
 	public BogeyRenderer.BogeySize getSize() {
-		return large ? BogeyRenderer.BogeySize.LARGE : BogeyRenderer.BogeySize.SMALL;
+		return size;
 	}
 
 	@Override
