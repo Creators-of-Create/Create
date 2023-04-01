@@ -18,8 +18,7 @@ public class StandardBogeyInstance extends BogeyInstance {
 		return new StandardBogeyInstance(bogey, BogeyRenderer.BogeySize.SMALL, materialManager);
 	}
 
-	@Override
-	public BogeyInstanceFactory getInstanceFactory() {
+	public static BogeyInstanceFactory getInstanceFactory() {
 		return StandardBogeyInstance::new;
 	}
 }

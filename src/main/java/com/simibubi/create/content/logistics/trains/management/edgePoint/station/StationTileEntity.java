@@ -31,6 +31,7 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation.Discovered
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
+import com.simibubi.create.content.logistics.trains.entity.StandardBogeyInstance;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint;
@@ -38,6 +39,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -65,7 +67,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -592,8 +596,10 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			}
 
 			AbstractBogeyBlock typeOfFirstBogey = bogeyTypes[bogeyIndex];
+			BlockPos firstBogeyPos = contraption.anchor;
+			StandardBogeyTileEntity firstBogeyTileEntity = (StandardBogeyTileEntity) level.getBlockEntity(firstBogeyPos);
 			CarriageBogey firstBogey =
-				new CarriageBogey(typeOfFirstBogey, points.get(pointIndex), points.get(pointIndex + 1));
+				new CarriageBogey(typeOfFirstBogey, firstBogeyTileEntity.getStyle(), points.get(pointIndex), points.get(pointIndex + 1));
 			CarriageBogey secondBogey = null;
 			BlockPos secondBogeyPos = contraption.getSecondBogeyPos();
 			int bogeySpacing = 0;
@@ -605,10 +611,11 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 						contraptions.size() + 1);
 					return;
 				}
-
+				StandardBogeyTileEntity secondBogeyTileEntity =
+						(StandardBogeyTileEntity) level.getBlockEntity(secondBogeyPos);
 				bogeySpacing = bogeyLocations[bogeyIndex + 1] - bogeyLocations[bogeyIndex];
-				secondBogey = new CarriageBogey(bogeyTypes[bogeyIndex + 1], points.get(pointIndex + 2),
-					points.get(pointIndex + 3));
+				secondBogey = new CarriageBogey(bogeyTypes[bogeyIndex + 1], secondBogeyTileEntity.getStyle(),
+						points.get(pointIndex + 2), points.get(pointIndex + 3));
 				bogeyIndex++;
 
 			} else if (!typeOfFirstBogey.allowsSingleBogeyCarriage()) {

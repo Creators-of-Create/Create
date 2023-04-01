@@ -7,6 +7,8 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionEntityRenderer;
 
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
+
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -69,7 +71,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				BlockEntity be = entity.getContraption().presentTileEntities.get(bogeyPos);
 
 				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
-					overlay, be.getTileData());
+					overlay, (StandardBogeyTileEntity) be);
 
 				ms.popPose();
 			}

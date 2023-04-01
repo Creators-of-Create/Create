@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.data;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllRegistries;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
@@ -34,7 +35,7 @@ import java.util.function.Supplier;
 public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<BogeyStyle, T, P, BogeyStyleBuilder<T, P>> {
 	private final T style;
 	private NonNullSupplier<BogeyRenderer> renderer;
-	private Supplier<SoundType> soundType;
+	private Supplier<AllSoundEvents.SoundEntry> soundType;
 	private Supplier<CompoundTag> data;
 	private Supplier<ParticleType<?>> particles;
 
@@ -62,7 +63,6 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 	}
 
 	public BogeyStyleBuilder<T, P> soundType(SoundType soundEntry) {
-		this.soundType = () -> soundEntry;
 		return this;
 	}
 
@@ -82,7 +82,6 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 
 	@Override
 	protected @NotNull T createEntry() {
-		style.soundType = soundType.get();
 		style.defaultData = data.get();
 		style.renderer = renderer.get();
 		return style;

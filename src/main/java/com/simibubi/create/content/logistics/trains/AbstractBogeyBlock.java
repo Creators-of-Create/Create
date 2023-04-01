@@ -13,6 +13,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBogeyStyles;
+import com.simibubi.create.AllRegistries;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
@@ -21,6 +23,7 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -98,8 +101,8 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 
 	@OnlyIn(Dist.CLIENT)
 	public void render(@Nullable BlockState state, float wheelAngle, PoseStack ms, float partialTicks,
-		MultiBufferSource buffers, int light, int overlay, CompoundTag bogeyData) {
-		final BogeyRenderer renderer = getStyle().renderer;
+		MultiBufferSource buffers, int light, int overlay, StandardBogeyTileEntity sbte) {
+		final BogeyRenderer renderer = getStyle(sbte).renderer;
 		if (state != null) {
 			ms.translate(.5f, .5f, .5f);
 			if (state.getValue(AXIS) == Direction.Axis.X)
@@ -107,7 +110,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		}
 		ms.translate(0, -1.5 - 1 / 128f, 0);
 		VertexConsumer vb = buffers.getBuffer(RenderType.cutoutMipped());
-		renderer.render(bogeyData, wheelAngle, ms, light, vb, getSize());
+		renderer.render(sbte.bogeyData, wheelAngle, ms, light, vb, getSize());
 	}
 
 	public abstract BogeyRenderer.BogeySize getSize();
@@ -168,11 +171,8 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, AllBlocks.RAILWAY_CASING.asStack());
 	}
 
-	public CompoundTag getBogeyData(@NotNull Level level, BlockPos pos) {
-		BlockEntity te = level.getBlockEntity(pos);
-		if (te == null) return new CompoundTag();
-		return te.getTileData();
+	public BogeyStyle getStyle(StandardBogeyTileEntity sbte) {
+		sbte.setBogeyStyle(AllBogeyStyles.STANDARD.get());
+		return AllBogeyStyles.STANDARD.get();
 	}
-
-	public abstract BogeyStyle getStyle();
 }
