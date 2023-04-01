@@ -39,6 +39,8 @@ public abstract class BogeyInstance {
 		renderer.initialiseContraptionModelData(materialManager, size);
 	}
 
+	public abstract BogeyInstanceFactory getInstanceFactory();
+
 	protected void hiddenFrame() {
 		beginFrame(0, null);
 	}
