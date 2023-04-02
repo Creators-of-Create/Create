@@ -48,8 +48,6 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 		this.style = style;
 		this.particles = AllParticleTypes.AIR_FLOW::get;
 		this.data = CompoundTag::new;
-		this.block(BogeyRenderer.BogeySize.SMALL, AllBlocks.SMALL_BOGEY);
-		this.block(BogeyRenderer.BogeySize.LARGE, AllBlocks.LARGE_BOGEY);
 	}
 
 	public BogeyStyleBuilder<T, P> defaultData(CompoundTag data) {

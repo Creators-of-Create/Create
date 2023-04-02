@@ -43,6 +43,10 @@ public final class BogeyStyle extends ForgeRegistryEntry<BogeyStyle> implements 
 				.orElse(ForgeRegistries.BLOCKS.getValue(blocks.get(currentSize)));
 	}
 
+	public Block getBlockOfSize(BogeySize size) {
+		return ForgeRegistries.BLOCKS.getValue(blocks.get(size));
+	}
+
 	public Set<BogeySize> validSizes() {
 		return blocks.keySet();
 	}

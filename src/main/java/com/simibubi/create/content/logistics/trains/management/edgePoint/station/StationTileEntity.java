@@ -52,6 +52,7 @@ import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -276,7 +277,19 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 					.offset(up);
 				BlockState blockState = level.getBlockState(bogeyPos);
 				if (blockState.getBlock() instanceof AbstractBogeyBlock bogey) {
-					level.setBlock(bogeyPos, bogey.getRotatedBlockState(blockState, Direction.DOWN), 3);
+					BlockEntity be = level.getBlockEntity(bogeyPos);
+					if (!(be instanceof StandardBogeyTileEntity oldTE))
+						continue;
+					CompoundTag oldData = oldTE.getBogeyData();
+					BlockState newBlock = bogey.getNextSize(oldTE);
+					if (newBlock.getBlock() == bogey)
+						player.displayClientMessage(Lang.translateDirect("create.bogey.style.no_other_sizes")
+								.withStyle(ChatFormatting.RED), true);
+					level.setBlock(bogeyPos, newBlock, 3);
+					BlockEntity newEntity = level.getBlockEntity(bogeyPos);
+					if (!(newEntity instanceof StandardBogeyTileEntity newTE))
+						continue;
+					newTE.setBogeyData(oldData);
 					bogey.playRotateSound(level, bogeyPos);
 					return true;
 				}

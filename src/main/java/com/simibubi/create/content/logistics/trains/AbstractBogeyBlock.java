@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -18,6 +19,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRegistries;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -31,13 +33,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -143,7 +144,8 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 			return InteractionResult.CONSUME;
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (!player.isShiftKeyDown() && stack.is(AllItems.WRENCH.get()) && !player.getCooldowns().isOnCooldown(stack.getItem())) {
+		if (!player.isShiftKeyDown() && stack.is(AllItems.WRENCH.get()) && !player.getCooldowns().isOnCooldown(stack.getItem())
+				&& AllRegistries.BOGEY_REGISTRY.get().getValues().size() > 1) {
 			Collection<BogeyStyle> styles = AllRegistries.BOGEY_REGISTRY.get().getValues();
 
 			if (styles.size() <= 1)
@@ -156,24 +158,35 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 
 			player.getCooldowns().addCooldown(stack.getItem(), 20);
 			BogeyStyle currentStyle = sbte.getStyle();
+			BogeyRenderer.BogeySize size = getSize();
 
-			Optional<BogeyStyle> style = styles.stream()
-					.map(s -> getNextStyle(currentStyle))
-					.filter(s -> s.validSizes().contains(getSize()))
-					.findFirst();
+			BogeyStyle style = this.getNextStyle(currentStyle);
+			Set<BogeyRenderer.BogeySize> validSizes = style.validSizes();
 
-			if (style.isPresent()) {
-				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style"), true);
-				sbte.setBogeyStyle(style.get());
-				return InteractionResult.CONSUME;
-			} else {
-				player.displayClientMessage(Lang.translateDirect("create.bogey.style.no_other_sizes"), true);
-				return InteractionResult.FAIL;
+			for (int i = 0; i < BogeyRenderer.BogeySize.values().length; i++) {
+				if (validSizes.contains(size)) break;
+				size = size.increment();
 			}
+
+			sbte.setBogeyStyle(style);
+
+			if (size == getSize()) {
+				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style"), true);
+			} else {
+				CompoundTag oldData = sbte.getBogeyData();
+				level.setBlock(pos, this.getStateOfSize(sbte, size), 3);
+				BlockEntity newBlockEntity = level.getBlockEntity(pos);
+				if (!(newBlockEntity instanceof StandardBogeyTileEntity newTileEntity))
+					return InteractionResult.FAIL;
+				newTileEntity.setBogeyData(oldData);
+				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style_and_size"), true);
+			}
+			return InteractionResult.CONSUME;
 		}
 
 		return InteractionResult.PASS;
 	}
+
 
 	@Override
 	public BlockState getRotatedBlockState(BlockState state, Direction targetedFace) {
@@ -217,6 +230,14 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 				: nextBlock;
 	}
 
+	public BlockState getStateOfSize(StandardBogeyTileEntity sbte, BogeyRenderer.BogeySize size) {
+		BogeyStyle style = sbte.getStyle();
+		BlockState state = style.getBlockOfSize(size).defaultBlockState();
+		return state.hasProperty(WATERLOGGED)
+				? state.setValue(WATERLOGGED, sbte.getBlockState().getValue(WATERLOGGED))
+				: state;
+	}
+
 	public BogeyStyle getNextStyle(Level level, BlockPos pos) {
 		BlockEntity te = level.getBlockEntity(pos);
 		if (te instanceof StandardBogeyTileEntity sbte)
@@ -232,6 +253,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		list.sort(Comparator.comparing(BogeyStyle::getRegistryName));
 		return Iterate.cycleValue(list, style);
 	}
+
 
 	@Override
 	public @NotNull BlockState rotate(@NotNull BlockState pState, Rotation pRotation) {

@@ -173,5 +173,9 @@ public abstract class BogeyRenderer {
 	// TODO: REPLACE THIS SO THAT IT CAN BE ADDED TO
 	public enum BogeySize {
 		SMALL, LARGE;
+
+		public BogeySize increment() {
+			return values()[(ordinal() + 1) % values().length];
+		}
 	}
 }
