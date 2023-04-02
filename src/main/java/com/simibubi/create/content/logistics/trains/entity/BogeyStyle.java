@@ -22,15 +22,10 @@ import java.util.stream.Stream;
 
 public final class BogeyStyle extends ForgeRegistryEntry<BogeyStyle> implements IForgeRegistryEntry<BogeyStyle> {
 	public Map<BogeySize, ResourceLocation> blocks = new EnumMap<>(BogeySize.class);
-	public BogeyInstance.BogeyInstanceFactory instanceFactory;
 	public Component displayName;
 	public SoundType soundType;
 	public CompoundTag defaultData;
 	public BogeyRenderer renderer;
-
-	public BogeyStyle(BogeyInstance.BogeyInstanceFactory factory) {
-		this.instanceFactory = factory;
-	}
 
 	public <T extends AbstractBogeyBlock> void addBlockForSize(BogeySize size, T block) {
 		this.addBlockForSize(size, block.getRegistryName());
@@ -59,6 +54,6 @@ public final class BogeyStyle extends ForgeRegistryEntry<BogeyStyle> implements 
 	}
 
 	public BogeyInstance createInstance(CarriageBogey bogey, BogeySize size, MaterialManager materialManager) {
-		return instanceFactory.create(bogey, size, materialManager);
+		return new BogeyInstance(bogey, this.renderer.newInstance(), size, materialManager);
 	}
 }

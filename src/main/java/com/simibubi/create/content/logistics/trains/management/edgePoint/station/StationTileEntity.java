@@ -31,7 +31,6 @@ import com.simibubi.create.content.logistics.trains.TrackNodeLocation.Discovered
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
-import com.simibubi.create.content.logistics.trains.entity.StandardBogeyInstance;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainPacket;
 import com.simibubi.create.content.logistics.trains.entity.TravellingPoint;

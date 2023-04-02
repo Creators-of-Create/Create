@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import org.jetbrains.annotations.NotNull;
+
 public class StandardBogeyTileEntity extends CachedRenderBBTileEntity {
 	private BogeyStyle style;
 	public CompoundTag bogeyData;
@@ -26,12 +28,15 @@ public class StandardBogeyTileEntity extends CachedRenderBBTileEntity {
 		super(type, pos, state);
 	}
 
-	public void setBogeyStyle(BogeyStyle style) {
+	public void setBogeyStyle(@NotNull BogeyStyle style) {
 		this.style = style;
 		markUpdated();
 	}
 
+	@NotNull
 	public BogeyStyle getStyle() {
+		if (this.style == null)
+			setBogeyStyle(AllBogeyStyles.STANDARD.get());
 		return this.style;
 	}
 

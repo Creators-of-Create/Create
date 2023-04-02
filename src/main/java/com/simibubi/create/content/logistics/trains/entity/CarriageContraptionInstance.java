@@ -31,7 +31,8 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 		if (carriage == null)
 			return;
 
-		bogeys = carriage.bogeys.mapNotNullWithParam(CarriageBogey::createInstance, materialManager);
+		bogeys = carriage.bogeys.mapNotNullWithParam((bogey, manager) ->
+				bogey.style.createInstance(bogey, bogey.type.getSize(), manager), materialManager);
 		updateLight();
 	}
 

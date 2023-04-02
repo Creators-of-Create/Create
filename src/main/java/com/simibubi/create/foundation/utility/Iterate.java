@@ -45,4 +45,13 @@ public class Iterate {
 	public static List<BlockPos> hereBelowAndAbove(BlockPos pos) {
 		return Arrays.asList(pos, pos.below(), pos.above());
 	}
+
+	public static <T> T cycleValue(List<T> list, T current) {
+		int currentIndex = list.indexOf(current);
+		if (currentIndex == -1) {
+			throw new IllegalArgumentException("Current value not found in list");
+		}
+		int nextIndex = (currentIndex + 1) % list.size();
+		return list.get(nextIndex);
+	}
 }
