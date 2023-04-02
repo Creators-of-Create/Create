@@ -108,7 +108,7 @@ public class ScheduleItemEntityInteraction {
 			AllSoundEvents.playItemPickup(player);
 			player.displayClientMessage(
 				Lang.translateDirect(
-					train.runtime.isAutoSchedule() ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
+					(train.runtime.isAutoSchedule() || train.runtime.hasSuspendedSchedule()) ? "schedule.auto_removed_from_train" : "schedule.removed_from_train"),
 				true);
 
 			player.getInventory()

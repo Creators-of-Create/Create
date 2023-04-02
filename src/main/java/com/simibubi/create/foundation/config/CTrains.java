@@ -18,7 +18,7 @@ public class CTrains extends ConfigBase {
 	public final ConfigFloat poweredTrainTopSpeed = f(40, 0, "poweredTrainTopSpeed", Comments.mps, Comments.poweredTrainTopSpeed);
 	public final ConfigFloat poweredTrainTurningTopSpeed = f(20, 0, "poweredTrainTurningTopSpeed", Comments.mps, Comments.poweredTrainTurningTopSpeed);
 	public final ConfigFloat poweredTrainAcceleration = f(3, 0, "poweredTrainAcceleration", Comments.acc, Comments.poweredTrainAcceleration);
-	
+
 
 	@Override
 	public String getName() {
@@ -39,7 +39,7 @@ public class CTrains extends ConfigBase {
 		static String maxAssemblyLength = "Maximum length of a Train Stations' assembly track.";
 		static String maxBogeyCount = "Maximum amount of bogeys assembled as a single Train.";
 		static String manualTrainSpeedModifier = "Relative speed of a manually controlled Train compared to a Scheduled one.";
-		static String maxAutoSchedules = "Maximum amount of auto schedules stored in each train.";
+		static String maxAutoSchedules = "Maximum amount of auto schedules stored in each Train.";
 	}
 
 }

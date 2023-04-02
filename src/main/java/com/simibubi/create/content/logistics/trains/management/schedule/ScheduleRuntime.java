@@ -98,15 +98,14 @@ public class ScheduleRuntime {
 	}
 
 	public void tick(Level level) {
-		if (state == State.PRE_TRANSIT && suspendedSchedule != null) {
-			setSchedule(suspendedSchedule, true);
-			suspendedSchedule = null;
+		Schedule currentSchedule = getSchedule();
+		if (currentSchedule == null) {
+			if (state == State.PRE_TRANSIT && hasSuspendedSchedule()) {
+				setSchedule(suspendedSchedule, true);
+				suspendedSchedule = null;
+			}
 			return;
 		}
-
-		Schedule currentSchedule = getSchedule();
-		if (currentSchedule == null)
-			return;
 		if (paused)
 			return;
 		if (train.derailed)
@@ -137,6 +136,12 @@ public class ScheduleRuntime {
 					completed = true;
 				}
 			}
+			return;
+		}
+
+		if (hasSuspendedSchedule()) {
+			setSchedule(suspendedSchedule, true);
+			suspendedSchedule = null;
 			return;
 		}
 
@@ -245,22 +250,34 @@ public class ScheduleRuntime {
 	}
 
 	public boolean setSuspendedSchedule(Schedule schedule) {
-		if (autoSchedules.size() >= AllConfigs.SERVER.trains.maxAutoSchedules.get())
+		Schedule currentSchedule = getSchedule();
+		int maxAutoSchedules = AllConfigs.SERVER.trains.maxAutoSchedules.get();
+		if (autoSchedules.size() > maxAutoSchedules)
+			return false;
+		if (autoSchedules.size() == maxAutoSchedules && (currentEntry < currentSchedule.entries.size() - 1 || currentSchedule.cyclic))
 			return false;
 		suspendedSchedule = schedule;
 		return true;
 	}
 
+	public boolean hasSuspendedSchedule() {
+		return suspendedSchedule != null;
+	}
+
 	public void setSchedule(Schedule schedule, boolean auto) {
-		reset();
 		if (!auto) {
 			this.schedule = schedule;
 		} else {
+			Schedule currentSchedule = getSchedule();
+			if (currentSchedule != null)
+				currentSchedule.savedProgress = currentEntry;
+
 			if (schedule.cyclic)
 				autoSchedules.clear();
 
 			autoSchedules.add(schedule);
 		}
+		reset();
 		prepNextSchedule();
 	}
 
@@ -458,14 +475,15 @@ public class ScheduleRuntime {
 
 	public CompoundTag write() {
 		CompoundTag tag = new CompoundTag();
-		Schedule currentSchedule = getSchedule();
 		tag.putInt("CurrentEntry", currentEntry);
 		tag.putBoolean("Paused", paused);
 		tag.putBoolean("Completed", completed);
-		if (currentSchedule != null)
-			tag.put("Schedule", currentSchedule.write());
+		if (schedule != null)
+			tag.put("Schedule", schedule.write());
 		if (isAutoSchedule())
 			tag.put("AutoSchedules", NBTHelper.writeCompoundList(autoSchedules, Schedule::write));
+		if (hasSuspendedSchedule())
+			tag.put("SuspendedSchedule", suspendedSchedule.write());
 		NBTHelper.writeEnum(tag, "State", state);
 		tag.putIntArray("ConditionProgress", conditionProgress);
 		tag.put("ConditionContext", NBTHelper.writeCompoundList(conditionContext, CompoundTag::copy));
@@ -483,6 +501,8 @@ public class ScheduleRuntime {
 		if (tag.contains("AutoSchedules"))
 			NBTHelper.iterateCompoundList(tag.getList("AutoSchedules", tag.TAG_COMPOUND),
 				c -> autoSchedules.add(Schedule.fromTag(c)));
+		if (tag.contains("SuspendedSchedule"))
+			suspendedSchedule = Schedule.fromTag(tag.getCompound("SuspendedSchedule"));
 		state = NBTHelper.readEnum(tag, "State", State.class);
 		for (int i : tag.getIntArray("ConditionProgress"))
 			conditionProgress.add(i);
@@ -499,7 +519,7 @@ public class ScheduleRuntime {
 	}
 
 	public ItemStack returnSchedule() {
-		if (suspendedSchedule != null) {
+		if (hasSuspendedSchedule()) {
 			suspendedSchedule = null;
 			return ItemStack.EMPTY;
 		}
