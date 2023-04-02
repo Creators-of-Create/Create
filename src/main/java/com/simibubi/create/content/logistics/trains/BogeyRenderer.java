@@ -163,6 +163,8 @@ public abstract class BogeyRenderer {
 		return state.toString();
 	}
 
+	public abstract BogeyRenderer newInstance();
+
 	@FunctionalInterface
 	interface Renderer {
 		void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb);

@@ -20,8 +20,8 @@ import net.minecraft.world.phys.Vec3;
 public class StandardBogeyBlock extends AbstractBogeyBlock implements ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
 	private final BogeyRenderer.BogeySize size;
 
-	public StandardBogeyBlock(Properties p_i48440_1_, BogeyRenderer.BogeySize large) {
-		super(p_i48440_1_);
+	public StandardBogeyBlock(Properties props, BogeyRenderer.BogeySize large) {
+		super(props);
 		this.size = large;
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}

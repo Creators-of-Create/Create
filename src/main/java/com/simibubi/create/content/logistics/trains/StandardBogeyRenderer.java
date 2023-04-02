@@ -123,4 +123,9 @@ public class StandardBogeyRenderer extends BogeyRenderer {
 		if (!inContraption)
 			ms.popPose();
 	}
+
+	@Override
+	public BogeyRenderer newInstance() {
+		return new StandardBogeyRenderer();
+	}
 }
