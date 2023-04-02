@@ -24,7 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumMap;
 import java.util.Map;
 
-public abstract class BogeyInstance {
+public final class BogeyInstance {
 
 	public final CarriageBogey bogey;
 	public final BogeyRenderer renderer;
@@ -38,8 +38,6 @@ public abstract class BogeyInstance {
 
 		renderer.initialiseContraptionModelData(materialManager, size);
 	}
-
-	public abstract BogeyInstanceFactory getInstanceFactory();
 
 	protected void hiddenFrame() {
 		beginFrame(0, null);
