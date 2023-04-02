@@ -9,6 +9,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -30,12 +31,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import org.jetbrains.annotations.NotNull;
 
+import static com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity.BOGEY_STYLE_KEY;
+
 public class CarriageBogey {
 
 	public Carriage carriage;
 	boolean isLeading;
 
-	public BogeyStyle style = AllBogeyStyles.STANDARD.get();
 	public CompoundTag bogeyData;
 
 	AbstractBogeyBlock type;
@@ -49,14 +51,10 @@ public class CarriageBogey {
 
 	int derailAngle;
 
-	public static CarriageBogey fromLocation(AbstractBogeyBlock type, ResourceLocation style, TravellingPoint point, TravellingPoint point2) {
-		BogeyStyle bogeyStyle = AllRegistries.BOGEY_REGISTRY.get().getValue(style);
-		return new CarriageBogey(type, bogeyStyle, point, point2);
-	}
-
-	public CarriageBogey(AbstractBogeyBlock type, BogeyStyle style, TravellingPoint point, TravellingPoint point2) {
-		if (style != null)
-			this.style = style;
+	public CarriageBogey(AbstractBogeyBlock type, CompoundTag bogeyData, TravellingPoint point, TravellingPoint point2) {
+		if (bogeyData == null || bogeyData.isEmpty())
+			bogeyData = this.createBogeyData(); // Prevent Crash When Updating
+		this.bogeyData = bogeyData;
 		this.type = type;
 		points = Couple.create(point, point2);
 		wheelAngle = LerpedFloat.angular();
@@ -164,8 +162,7 @@ public class CarriageBogey {
 		tag.putString("Type", RegisteredObjects.getKeyOrThrow((Block) type)
 			.toString());
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
-		if (style.getRegistryName() != null)
-			 NBTHelper.writeResourceLocation(tag, "bogeyStyle", style.getRegistryName());
+		tag.put(BOGEY_STYLE_KEY, bogeyData);
 		return tag;
 	}
 
@@ -174,12 +171,23 @@ public class CarriageBogey {
 		AbstractBogeyBlock type = (AbstractBogeyBlock) ForgeRegistries.BLOCKS.getValue(location);
 		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),
 			c -> TravellingPoint.read(c, graph, dimensions));
-		ResourceLocation styleLocation = NBTHelper.readResourceLocation(tag,"bogeyStyle");
-		return CarriageBogey.fromLocation(type, styleLocation, points.getFirst(), points.getSecond());
+		CompoundTag data = tag.getCompound(StandardBogeyTileEntity.BOGEY_DATA_KEY);
+		return new CarriageBogey(type, data, points.getFirst(), points.getSecond());
 	}
 
 	public BogeyInstance createInstance(MaterialManager materialManager) {
-		return style.createInstance(this, type.getSize(), materialManager);
+		return this.getStyle().createInstance(this, type.getSize(), materialManager);
+	}
+
+	public BogeyStyle getStyle() {
+		ResourceLocation location = NBTHelper.readResourceLocation(this.bogeyData, BOGEY_STYLE_KEY);
+		return AllRegistries.BOGEY_REGISTRY.get().getValue(location);
+	}
+
+	private CompoundTag createBogeyData() {
+		CompoundTag nbt = new CompoundTag();
+		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, AllBogeyStyles.STANDARD.getId());
+		return nbt;
 	}
 
 	void setLeading() {

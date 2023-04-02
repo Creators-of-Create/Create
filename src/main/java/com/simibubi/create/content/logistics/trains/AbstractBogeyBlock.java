@@ -116,7 +116,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		}
 		ms.translate(0, -1.5 - 1 / 128f, 0);
 		VertexConsumer vb = buffers.getBuffer(RenderType.cutoutMipped());
-		renderer.render(sbte.bogeyData, wheelAngle, ms, light, vb, getSize());
+		renderer.render(sbte.getBogeyData(), wheelAngle, ms, light, vb, getSize());
 	}
 
 	public abstract BogeyRenderer.BogeySize getSize();
@@ -161,6 +161,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 					.map(s -> getNextStyle(currentStyle))
 					.filter(s -> s.validSizes().contains(getSize()))
 					.findFirst();
+
 			if (style.isPresent()) {
 				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style"), true);
 				sbte.setBogeyStyle(style.get());
@@ -181,7 +182,6 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		if (indexOf == -1)
 			return state;
 		int index = (indexOf + 1) % BOGEYS.size();
-		System.out.println("New Index " + index);
 		Direction bogeyUpDirection = getBogeyUpDirection();
 		boolean trackAxisAlongFirstCoordinate = isTrackAxisAlongFirstCoordinate(state);
 

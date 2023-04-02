@@ -735,7 +735,7 @@ public class Train {
 				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
 				if (!(be instanceof StandardBogeyTileEntity sbte))
 					continue;
-				sbte.setBogeyStyle(bogey.style);
+				sbte.setBogeyData(bogey.bogeyData);
 			}
 
 			offset += carriage.bogeySpacing;

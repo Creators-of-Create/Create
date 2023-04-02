@@ -598,7 +598,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			BlockPos firstBogeyPos = contraption.anchor;
 			StandardBogeyTileEntity firstBogeyTileEntity = (StandardBogeyTileEntity) level.getBlockEntity(firstBogeyPos);
 			CarriageBogey firstBogey =
-				new CarriageBogey(typeOfFirstBogey, firstBogeyTileEntity.getStyle(), points.get(pointIndex), points.get(pointIndex + 1));
+				new CarriageBogey(typeOfFirstBogey, firstBogeyTileEntity.getBogeyData(), points.get(pointIndex), points.get(pointIndex + 1));
 			CarriageBogey secondBogey = null;
 			BlockPos secondBogeyPos = contraption.getSecondBogeyPos();
 			int bogeySpacing = 0;
@@ -613,7 +613,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				StandardBogeyTileEntity secondBogeyTileEntity =
 						(StandardBogeyTileEntity) level.getBlockEntity(secondBogeyPos);
 				bogeySpacing = bogeyLocations[bogeyIndex + 1] - bogeyLocations[bogeyIndex];
-				secondBogey = new CarriageBogey(bogeyTypes[bogeyIndex + 1], secondBogeyTileEntity.getStyle(),
+				secondBogey = new CarriageBogey(bogeyTypes[bogeyIndex + 1], secondBogeyTileEntity.getBogeyData(),
 						points.get(pointIndex + 2), points.get(pointIndex + 3));
 				bogeyIndex++;
 

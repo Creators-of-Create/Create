@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -52,8 +53,8 @@ public class TrainPacket extends SimplePacketBase {
 				if (!isFirst && !buffer.readBoolean())
 					continue;
 				AbstractBogeyBlock type = (AbstractBogeyBlock) ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
-				BogeyStyle style = AllRegistries.BOGEY_REGISTRY.get().getValue(buffer.readResourceLocation());
-				bogies.set(isFirst, new CarriageBogey(type, style, new TravellingPoint(), new TravellingPoint()));
+				CompoundTag data = buffer.readNbt();
+				bogies.set(isFirst, new CarriageBogey(type, data, new TravellingPoint(), new TravellingPoint()));
 			}
 			int spacing = buffer.readVarInt();
 			carriages.add(new Carriage(bogies.getFirst(), bogies.getSecond(), spacing));
@@ -91,7 +92,7 @@ public class TrainPacket extends SimplePacketBase {
 				}
 				CarriageBogey bogey = carriage.bogeys.get(first);
 				buffer.writeResourceLocation(RegisteredObjects.getKeyOrThrow((Block) bogey.type));
-				buffer.writeResourceLocation(RegisteredObjects.getKeyOrThrow(AllRegistries.BOGEY_REGISTRY.get(), bogey.style));
+				buffer.writeNbt(bogey.bogeyData);
 			}
 			buffer.writeVarInt(carriage.bogeySpacing);
 		}

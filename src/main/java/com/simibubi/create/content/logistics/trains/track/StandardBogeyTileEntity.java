@@ -7,60 +7,79 @@ import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 import com.simibubi.create.foundation.tileEntity.CachedRenderBBTileEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-
+;
 import org.jetbrains.annotations.NotNull;
 
 public class StandardBogeyTileEntity extends CachedRenderBBTileEntity {
-	private BogeyStyle style;
-	public CompoundTag bogeyData;
+	public static String BOGEY_STYLE_KEY = "BogeyStyle";
+	public static String BOGEY_DATA_KEY = "BogeyData";
+
+	private CompoundTag bogeyData;
 
 	public StandardBogeyTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
+	public CompoundTag getBogeyData() {
+		if (this.bogeyData == null || !this.bogeyData.contains(BOGEY_STYLE_KEY))
+			this.bogeyData = this.createBogeyData();
+		return this.bogeyData;
+	}
+
+	public void setBogeyData(@NotNull CompoundTag newData) {
+		if (!newData.contains(BOGEY_STYLE_KEY)) {
+			ResourceLocation style = AllBogeyStyles.STANDARD.getId();
+			NBTHelper.writeResourceLocation(newData, BOGEY_STYLE_KEY, style);
+		}
+		this.bogeyData = newData;
+	}
+
 	public void setBogeyStyle(@NotNull BogeyStyle style) {
-		this.style = style;
+		ResourceLocation location = RegisteredObjects.getKeyOrThrow(AllRegistries.BOGEY_REGISTRY.get(), style);
+		CompoundTag data = this.getBogeyData();
+		NBTHelper.writeResourceLocation(data, BOGEY_STYLE_KEY, location);
 		markUpdated();
 	}
 
 	@NotNull
 	public BogeyStyle getStyle() {
-		if (this.style == null)
-			setBogeyStyle(AllBogeyStyles.STANDARD.get());
-		return this.style;
+		CompoundTag data = this.getBogeyData();
+		ResourceLocation currentStyle = NBTHelper.readResourceLocation(data, BOGEY_STYLE_KEY);
+		BogeyStyle style = AllRegistries.BOGEY_REGISTRY.get().getValue(currentStyle);
+		if (style == null) setBogeyStyle(AllBogeyStyles.STANDARD.get());
+		return style;
 	}
 
-
 	@Override
-	protected void saveAdditional(CompoundTag pTag) {
-		if (style != null && style.getRegistryName() != null)
-			NBTHelper.writeResourceLocation(pTag, "bogeyStyle", style.getRegistryName());
-		if (bogeyData != null)
-			pTag.put("bogeyData", bogeyData);
+	protected void saveAdditional(@NotNull CompoundTag pTag) {
+		CompoundTag data = this.getBogeyData();
+		if (data != null) pTag.put(BOGEY_DATA_KEY, data); // Now contains style
 		super.saveAdditional(pTag);
 	}
 
 	@Override
 	public void load(CompoundTag pTag) {
-		if (pTag.contains("bogeyStyle")) {
-			ResourceLocation location = NBTHelper.readResourceLocation(pTag, "bogeyStyle");
-			this.style = AllRegistries.BOGEY_REGISTRY.get().getValue(location);
-		} else {
-			this.style = AllBogeyStyles.STANDARD.get();
-		}
-		if (pTag.contains("bogeyData"))
-			this.bogeyData = pTag.getCompound("bogeyData");
+		if (pTag.contains(BOGEY_DATA_KEY))
+			this.bogeyData = pTag.getCompound(BOGEY_DATA_KEY);
+		else
+			this.bogeyData = this.createBogeyData();
 		super.load(pTag);
+	}
+
+	private CompoundTag createBogeyData() {
+		CompoundTag nbt = new CompoundTag();
+		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, AllBogeyStyles.STANDARD.getId());
+		return nbt;
 	}
 
 	@Override

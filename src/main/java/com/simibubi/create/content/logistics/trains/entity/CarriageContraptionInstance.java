@@ -32,7 +32,7 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 			return;
 
 		bogeys = carriage.bogeys.mapNotNullWithParam((bogey, manager) ->
-				bogey.style.createInstance(bogey, bogey.type.getSize(), manager), materialManager);
+				bogey.getStyle().createInstance(bogey, bogey.type.getSize(), manager), materialManager);
 		updateLight();
 	}
 
