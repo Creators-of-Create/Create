@@ -31,6 +31,7 @@ public class CarriageSounds {
 	LoopingSound sharedWheelSoundSeated;
 	LoopingSound sharedHonkSound;
 
+	Couple<SoundEvent> bogeySounds;
 	SoundEvent closestBogeySound;
 
 	boolean arrived;
@@ -40,6 +41,9 @@ public class CarriageSounds {
 
 	public CarriageSounds(CarriageContraptionEntity entity) {
 		this.entity = entity;
+		bogeySounds = entity.getCarriage().bogeys.map(bogey ->
+				bogey != null ? bogey.getStyle().getSoundType()
+						: AllSoundEvents.TRAIN2.getMainEvent());
 		distanceFactor = LerpedFloat.linear();
 		speedFactor = LerpedFloat.linear();
 		approachFactor = LerpedFloat.linear();
@@ -83,11 +87,8 @@ public class CarriageSounds {
 		double distance1 = toBogey1.length();
 		double distance2 = toBogey2.length();
 
-		CarriageContraptionEntity cce = dce.entity.get();
-		if (cce != null) {
-			Couple<CarriageBogey> bogeys = cce.getCarriage().bogeys;
-			closestBogeySound = bogeys.get(distance1 > distance2).getStyle().getSoundType();
-		}
+		Couple<CarriageBogey> bogeys = entity.getCarriage().bogeys;
+		closestBogeySound = bogeys.get(distance1 > distance2).getStyle().getSoundType();
 
 		Vec3 toCarriage = distance1 > distance2 ? toBogey2 : toBogey1;
 		double distance = Math.min(distance1, distance2);
