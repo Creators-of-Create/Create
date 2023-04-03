@@ -44,7 +44,7 @@ import java.util.Set;
 // Seperate From BogeyInstance So It Can Be Used Inworld
 
 public abstract class BogeyRenderer {
-	Map<BogeySize, Renderer> renderers = new EnumMap<>(BogeySize.class);
+	Map<BogeySizes.BogeySize, Renderer> renderers = new HashMap<>();
 	Map<String, ModelData[]> contraptionModelData = new HashMap<>();
 
 	public Transform<?>[] getTransformsFromPartial(PartialModel model, PoseStack ms, boolean inContraption, int size) {
@@ -85,7 +85,7 @@ public abstract class BogeyRenderer {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract void initialiseContraptionModelData(MaterialManager materialManager, BogeySize size);
+	public abstract void initialiseContraptionModelData(MaterialManager materialManager, BogeySizes.BogeySize size);
 
 	public void createModelInstances(MaterialManager materialManager, PartialModel model, int count) {
 		ModelData[] modelData = new ModelData[count];
@@ -108,13 +108,13 @@ public abstract class BogeyRenderer {
 
 	@OnlyIn(Dist.CLIENT)
 	public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, @Nullable VertexConsumer vb,
-					   BogeySize size) {
+					   BogeySizes.BogeySize size) {
 		renderCommon(bogeyData, wheelAngle, ms, light, vb);
 		renderers.get(size).render(bogeyData, wheelAngle, ms, light, vb);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, BogeySize size) {
+	public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, BogeySizes.BogeySize size) {
 		this.render(bogeyData, wheelAngle, ms, 0, null, size);
 	}
 
@@ -128,11 +128,11 @@ public abstract class BogeyRenderer {
 			byteBuf.light(light).renderInto(ms, vb);
 	}
 
-	public boolean styleImplementsSize(BogeySize size) {
+	public boolean styleImplementsSize(BogeySizes.BogeySize size) {
 		return this.renderers.containsKey(size);
 	}
 
-	public Set<BogeySize> implementedSizes() {
+	public Set<BogeySizes.BogeySize> implementedSizes() {
 		return renderers.keySet();
 	}
 
@@ -168,14 +168,5 @@ public abstract class BogeyRenderer {
 	@FunctionalInterface
 	interface Renderer {
 		void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb);
-	}
-
-	// TODO: REPLACE THIS SO THAT IT CAN BE ADDED TO
-	public enum BogeySize {
-		SMALL, LARGE;
-
-		public BogeySize increment() {
-			return values()[(ordinal() + 1) % values().length];
-		}
 	}
 }

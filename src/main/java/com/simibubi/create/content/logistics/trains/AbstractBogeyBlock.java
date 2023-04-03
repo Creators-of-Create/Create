@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -19,7 +18,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRegistries;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
-import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -120,7 +118,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		renderer.render(sbte.getBogeyData(), wheelAngle, ms, light, vb, getSize());
 	}
 
-	public abstract BogeyRenderer.BogeySize getSize();
+	public abstract BogeySizes.BogeySize getSize();
 
 	public Direction getBogeyUpDirection() {
 		return Direction.UP;
@@ -158,12 +156,12 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 
 			player.getCooldowns().addCooldown(stack.getItem(), 20);
 			BogeyStyle currentStyle = sbte.getStyle();
-			BogeyRenderer.BogeySize size = getSize();
+			BogeySizes.BogeySize size = getSize();
 
 			BogeyStyle style = this.getNextStyle(currentStyle);
-			Set<BogeyRenderer.BogeySize> validSizes = style.validSizes();
+			Set<BogeySizes.BogeySize> validSizes = style.validSizes();
 
-			for (int i = 0; i < BogeyRenderer.BogeySize.values().length; i++) {
+			for (int i = 0; i < BogeySizes.count(); i++) {
 				if (validSizes.contains(size)) break;
 				size = size.increment();
 			}
@@ -222,7 +220,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 	}
 
 	public BlockState getNextSize(StandardBogeyTileEntity sbte) {
-		BogeyRenderer.BogeySize size = this.getSize();
+		BogeySizes.BogeySize size = this.getSize();
 		BogeyStyle style = sbte.getStyle();
 		BlockState nextBlock = style.getNextBlock(size).defaultBlockState();
 		return nextBlock.hasProperty(WATERLOGGED)
@@ -230,7 +228,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 				: nextBlock;
 	}
 
-	public BlockState getStateOfSize(StandardBogeyTileEntity sbte, BogeyRenderer.BogeySize size) {
+	public BlockState getStateOfSize(StandardBogeyTileEntity sbte, BogeySizes.BogeySize size) {
 		BogeyStyle style = sbte.getStyle();
 		BlockState state = style.getBlockOfSize(size).defaultBlockState();
 		return state.hasProperty(WATERLOGGED)

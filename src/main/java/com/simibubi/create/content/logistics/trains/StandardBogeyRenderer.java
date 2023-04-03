@@ -1,15 +1,12 @@
 package com.simibubi.create.content.logistics.trains;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.content.logistics.trains.entity.BogeyInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -18,24 +15,22 @@ import net.minecraft.nbt.CompoundTag;
 
 import org.jetbrains.annotations.Nullable;
 
-import static com.simibubi.create.AllBlockPartials.COGWHEEL_SHAFT;
 import static com.simibubi.create.AllBlockPartials.LARGE_BOGEY_WHEELS;
 import static com.simibubi.create.AllBlockPartials.BOGEY_PIN;
 import static com.simibubi.create.AllBlockPartials.BOGEY_DRIVE;
 import static com.simibubi.create.AllBlockPartials.BOGEY_PISTON;
-import static com.simibubi.create.AllBlockPartials.SHAFT_HALF;
 import static com.simibubi.create.AllBlockPartials.SMALL_BOGEY_WHEELS;
 import static com.simibubi.create.AllBlockPartials.BOGEY_FRAME;
 
 public class StandardBogeyRenderer extends BogeyRenderer {
 
 	public StandardBogeyRenderer() {
-		renderers.put(BogeySize.SMALL, this::renderSmall);
-		renderers.put(BogeySize.LARGE, this::renderLarge);
+		renderers.put(BogeySizes.SMALL, this::renderSmall);
+		renderers.put(BogeySizes.LARGE, this::renderLarge);
 	}
 
 	@Override
-	public void initialiseContraptionModelData(MaterialManager materialManager, BogeySize size) {
+	public void initialiseContraptionModelData(MaterialManager materialManager, BogeySizes.BogeySize size) {
 		// Large
 		createModelInstances(materialManager, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
 		createModelInstances(materialManager, AllBlocks.SHAFT.getDefaultState()

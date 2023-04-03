@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.data;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllRegistries;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
+import com.simibubi.create.content.logistics.trains.BogeySizes;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 
 import com.tterrag.registrate.AbstractRegistrate;
@@ -23,8 +23,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.nbt.CompoundTag;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.level.block.SoundType;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -67,11 +65,11 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 		return this;
 	}
 
-	public BogeyStyleBuilder<T, P> block(BogeyRenderer.BogeySize size, BlockEntry<? extends AbstractBogeyBlock> block) {
+	public BogeyStyleBuilder<T, P> block(BogeySizes.BogeySize size, BlockEntry<? extends AbstractBogeyBlock> block) {
 		return this.block(size, block.getId());
 	}
 
-	public BogeyStyleBuilder<T, P> block(BogeyRenderer.BogeySize size, ResourceLocation location) {
+	public BogeyStyleBuilder<T, P> block(BogeySizes.BogeySize size, ResourceLocation location) {
 		this.style.addBlockForSize(size, location);
 		return this;
 	}
