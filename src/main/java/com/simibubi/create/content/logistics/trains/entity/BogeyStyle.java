@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import com.jozufozu.flywheel.api.MaterialManager;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer.BogeySize;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
@@ -15,6 +16,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +27,7 @@ import java.util.stream.Stream;
 public final class BogeyStyle extends ForgeRegistryEntry<BogeyStyle> implements IForgeRegistryEntry<BogeyStyle> {
 	public Map<BogeySize, ResourceLocation> blocks = new EnumMap<>(BogeySize.class);
 	public Component displayName;
-	public SoundEvent soundType;
+	public ResourceLocation soundType;
 	public CompoundTag defaultData;
 	public BogeyRenderer renderer;
 
@@ -56,6 +59,13 @@ public final class BogeyStyle extends ForgeRegistryEntry<BogeyStyle> implements 
 		BogeySize[] sizes = BogeySize.values();
 		int nextOrdinal = (size.ordinal() + 1) % sizes.length;
 		return sizes[nextOrdinal];
+	}
+
+	@NotNull
+	public SoundEvent getSoundType() {
+		AllSoundEvents.SoundEntry entry = AllSoundEvents.ALL.get(this.soundType);
+		if (entry == null) entry = AllSoundEvents.TRAIN2;
+		return entry.getMainEvent();
 	}
 
 	public BogeyInstance createInstance(CarriageBogey bogey, BogeySize size, MaterialManager materialManager) {

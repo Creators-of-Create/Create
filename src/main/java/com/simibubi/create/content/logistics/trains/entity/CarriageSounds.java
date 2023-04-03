@@ -86,7 +86,7 @@ public class CarriageSounds {
 		CarriageContraptionEntity cce = dce.entity.get();
 		if (cce != null) {
 			Couple<CarriageBogey> bogeys = cce.getCarriage().bogeys;
-			closestBogeySound = bogeys.get(distance1 > distance2).getStyle().soundType;
+			closestBogeySound = bogeys.get(distance1 > distance2).getStyle().getSoundType();
 		}
 
 		Vec3 toCarriage = distance1 > distance2 ? toBogey2 : toBogey1;

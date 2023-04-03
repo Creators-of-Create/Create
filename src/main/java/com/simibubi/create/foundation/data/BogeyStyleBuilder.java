@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<BogeyStyle, T, P, BogeyStyleBuilder<T, P>> {
 	private final T style;
 	private NonNullSupplier<BogeyRenderer> renderer;
-	private Supplier<SoundEvent> soundType;
+	private Supplier<ResourceLocation> soundType;
 	private Supplier<CompoundTag> data;
 	private Supplier<ParticleType<?>> particles;
 
@@ -47,7 +47,7 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 	protected BogeyStyleBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, T style) {
 		super(owner, parent, name, callback, AllRegistries.Keys.BOGEYS);
 		this.style = style;
-		this.soundType = AllSoundEvents.TRAIN2::getMainEvent;
+		this.soundType = AllSoundEvents.TRAIN2::getId;
 		this.particles = AllParticleTypes.AIR_FLOW::get;
 		this.data = CompoundTag::new;
 	}
@@ -62,7 +62,7 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 		return this;
 	}
 
-	public BogeyStyleBuilder<T, P> soundType(SoundEvent soundEntry) {
+	public BogeyStyleBuilder<T, P> soundType(ResourceLocation soundEntry) {
 		this.soundType = () -> soundEntry;
 		return this;
 	}
