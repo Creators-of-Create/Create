@@ -20,6 +20,21 @@ public class AllBogeyStyles {
 			.renderer(new StandardBogeyRenderer())
 			.register();
 
+	/*
+	public static final RegistryEntry<BogeyStyle> TEST = REGISTRATE
+			.bogeyStyle("test", new BogeyStyle())
+			.block(BogeySizes.LARGE, AllBlocks.LARGE_BOGEY)
+			.renderer(new TestBogeyRenderer())
+			.register();
+
+	public static final RegistryEntry<BogeyStyle> TEST_TWO = REGISTRATE
+			.bogeyStyle("test_two", new BogeyStyle())
+			.block(BogeySizes.SMALL, AllBlocks.SMALL_BOGEY)
+			.renderer(new TestBogeyRenderer())
+			.register();
+
+	 */
+
 	public static void register() {
 		LOGGER.info("Registered bogey styles from " + Create.ID);
 		AllRegistries.DEFERRED_BOGEY_REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());

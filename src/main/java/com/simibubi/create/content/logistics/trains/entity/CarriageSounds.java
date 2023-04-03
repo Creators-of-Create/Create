@@ -4,7 +4,6 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSoundEvents.SoundEntry;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
@@ -43,7 +42,8 @@ public class CarriageSounds {
 		this.entity = entity;
 		bogeySounds = entity.getCarriage().bogeys.map(bogey ->
 				bogey != null ? bogey.getStyle().getSoundType()
-						: AllSoundEvents.TRAIN2.getMainEvent());
+					: AllSoundEvents.TRAIN2.getMainEvent());
+		closestBogeySound = bogeySounds.getFirst();
 		distanceFactor = LerpedFloat.linear();
 		speedFactor = LerpedFloat.linear();
 		approachFactor = LerpedFloat.linear();

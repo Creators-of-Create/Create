@@ -56,7 +56,10 @@ public class StandardBogeyTileEntity extends CachedRenderBBTileEntity {
 		CompoundTag data = this.getBogeyData();
 		ResourceLocation currentStyle = NBTHelper.readResourceLocation(data, BOGEY_STYLE_KEY);
 		BogeyStyle style = AllRegistries.BOGEY_REGISTRY.get().getValue(currentStyle);
-		if (style == null) setBogeyStyle(AllBogeyStyles.STANDARD.get());
+		if (style == null) {
+			setBogeyStyle(AllBogeyStyles.STANDARD.get());
+			return getStyle();
+		}
 		return style;
 	}
 
