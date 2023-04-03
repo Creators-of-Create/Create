@@ -23,6 +23,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.nbt.CompoundTag;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.SoundType;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ import java.util.function.Supplier;
 public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<BogeyStyle, T, P, BogeyStyleBuilder<T, P>> {
 	private final T style;
 	private NonNullSupplier<BogeyRenderer> renderer;
-	private Supplier<AllSoundEvents.SoundEntry> soundType;
+	private Supplier<SoundEvent> soundType;
 	private Supplier<CompoundTag> data;
 	private Supplier<ParticleType<?>> particles;
 
@@ -46,6 +47,7 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 	protected BogeyStyleBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, T style) {
 		super(owner, parent, name, callback, AllRegistries.Keys.BOGEYS);
 		this.style = style;
+		this.soundType = AllSoundEvents.TRAIN2::getMainEvent;
 		this.particles = AllParticleTypes.AIR_FLOW::get;
 		this.data = CompoundTag::new;
 	}
@@ -60,7 +62,8 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 		return this;
 	}
 
-	public BogeyStyleBuilder<T, P> soundType(SoundType soundEntry) {
+	public BogeyStyleBuilder<T, P> soundType(SoundEvent soundEntry) {
+		this.soundType = () -> soundEntry;
 		return this;
 	}
 
@@ -82,6 +85,7 @@ public class BogeyStyleBuilder<T extends BogeyStyle, P> extends AbstractBuilder<
 	protected @NotNull T createEntry() {
 		style.defaultData = data.get();
 		style.renderer = renderer.get();
+		style.soundType = soundType.get();
 		return style;
 	}
 }

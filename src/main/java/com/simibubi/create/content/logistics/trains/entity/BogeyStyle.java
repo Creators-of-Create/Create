@@ -8,6 +8,7 @@ import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
 public final class BogeyStyle extends ForgeRegistryEntry<BogeyStyle> implements IForgeRegistryEntry<BogeyStyle> {
 	public Map<BogeySize, ResourceLocation> blocks = new EnumMap<>(BogeySize.class);
 	public Component displayName;
-	public SoundType soundType;
+	public SoundEvent soundType;
 	public CompoundTag defaultData;
 	public BogeyRenderer renderer;
 

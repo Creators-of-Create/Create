@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.trains.entity;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSoundEvents.SoundEntry;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
@@ -28,6 +30,8 @@ public class CarriageSounds {
 	LoopingSound sharedWheelSound;
 	LoopingSound sharedWheelSoundSeated;
 	LoopingSound sharedHonkSound;
+
+	SoundEvent closestBogeySound;
 
 	boolean arrived;
 
@@ -79,6 +83,12 @@ public class CarriageSounds {
 		double distance1 = toBogey1.length();
 		double distance2 = toBogey2.length();
 
+		CarriageContraptionEntity cce = dce.entity.get();
+		if (cce != null) {
+			Couple<CarriageBogey> bogeys = cce.getCarriage().bogeys;
+			closestBogeySound = bogeys.get(distance1 > distance2).getStyle().soundType;
+		}
+
 		Vec3 toCarriage = distance1 > distance2 ? toBogey2 : toBogey1;
 		double distance = Math.min(distance1, distance2);
 		Vec3 soundLocation = cam.add(toCarriage);
@@ -97,7 +107,7 @@ public class CarriageSounds {
 		seatCrossfade.tickChaser();
 
 		minecartEsqueSound = playIfMissing(mc, minecartEsqueSound, AllSoundEvents.TRAIN.getMainEvent());
-		sharedWheelSound = playIfMissing(mc, sharedWheelSound, AllSoundEvents.TRAIN2.getMainEvent());
+		sharedWheelSound = playIfMissing(mc, sharedWheelSound, closestBogeySound);
 		sharedWheelSoundSeated = playIfMissing(mc, sharedWheelSoundSeated, AllSoundEvents.TRAIN3.getMainEvent());
 
 		float volume = Math.min(Math.min(speedFactor.getValue(), distanceFactor.getValue() / 100),
@@ -205,7 +215,7 @@ public class CarriageSounds {
 	public void submitSharedSoundVolume(Vec3 location, float volume) {
 		Minecraft mc = Minecraft.getInstance();
 		minecartEsqueSound = playIfMissing(mc, minecartEsqueSound, AllSoundEvents.TRAIN.getMainEvent());
-		sharedWheelSound = playIfMissing(mc, sharedWheelSound, AllSoundEvents.TRAIN2.getMainEvent());
+		sharedWheelSound = playIfMissing(mc, sharedWheelSound, closestBogeySound);
 		sharedWheelSoundSeated = playIfMissing(mc, sharedWheelSoundSeated, AllSoundEvents.TRAIN3.getMainEvent());
 
 		boolean approach = true;
