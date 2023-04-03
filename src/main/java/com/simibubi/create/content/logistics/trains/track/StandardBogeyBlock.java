@@ -19,11 +19,9 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class StandardBogeyBlock extends AbstractBogeyBlock implements ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
-	private final BogeySizes.BogeySize size;
 
 	public StandardBogeyBlock(Properties props, BogeySizes.BogeySize size) {
-		super(props);
-		this.size = size;
+		super(props, size);
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
@@ -40,11 +38,6 @@ public class StandardBogeyBlock extends AbstractBogeyBlock implements ITE<Standa
 	@Override
 	public Vec3 getConnectorAnchorOffset() {
 		return new Vec3(0, 7 / 32f, 1);
-	}
-
-	@Override
-	public BogeySizes.BogeySize getSize() {
-		return size;
 	}
 
 	@Override

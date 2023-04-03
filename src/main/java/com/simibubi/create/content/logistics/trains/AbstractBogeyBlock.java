@@ -59,10 +59,13 @@ import org.jetbrains.annotations.NotNull;
 public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement, IWrenchable {
 	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	static final List<ResourceLocation> BOGEYS = new ArrayList<>();
+	public BogeySizes.BogeySize size;
 
-	public AbstractBogeyBlock(Properties pProperties) {
+
+	public AbstractBogeyBlock(Properties pProperties, BogeySizes.BogeySize size) {
 		super(pProperties);
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+		this.size = size;
 	}
 
 	public static void register(ResourceLocation block) {
@@ -118,7 +121,9 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		renderer.render(sbte.getBogeyData(), wheelAngle, ms, light, vb, getSize());
 	}
 
-	public abstract BogeySizes.BogeySize getSize();
+	public BogeySizes.BogeySize getSize() {
+		return this.size;
+	};
 
 	public Direction getBogeyUpDirection() {
 		return Direction.UP;
@@ -139,7 +144,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
 								 BlockHitResult hit) {
 		if (level.isClientSide)
-			return InteractionResult.CONSUME;
+			return InteractionResult.PASS;
 		ItemStack stack = player.getItemInHand(hand);
 
 		if (!player.isShiftKeyDown() && stack.is(AllItems.WRENCH.get()) && !player.getCooldowns().isOnCooldown(stack.getItem())
@@ -147,7 +152,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 			Collection<BogeyStyle> styles = AllRegistries.BOGEY_REGISTRY.get().getValues();
 
 			if (styles.size() <= 1)
-				return InteractionResult.SUCCESS;
+				return InteractionResult.PASS;
 
 			BlockEntity be = level.getBlockEntity(pos);
 
