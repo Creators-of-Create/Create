@@ -8,6 +8,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
@@ -224,7 +225,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		for (Direction d2 : Iterate.directionsInAxis(axis == Axis.X ? Axis.Z : Axis.X)) {
 			BlockState above = level.getBlockState(pos.above()
 				.relative(d2));
-			if (AllBlocks.TRACK.has(above)) {
+			if (AllTags.AllBlockTags.GIRDABLE_TRACKS.matches(above)) {
 				TrackShape shape = above.getValue(TrackBlock.SHAPE);
 				if (shape == (axis == Axis.X ? TrackShape.XO : TrackShape.ZO))
 					state = state.setValue(updateProperty, true);

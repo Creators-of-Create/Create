@@ -31,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class BezierConnection implements Iterable<BezierConnection.Segment> {
+public class BezierConnection implements Iterable<BezierConnection.Segment>, IHasTrackMaterial {
 
 	public Couple<BlockPos> tePositions;
 	public Couple<Vec3> starts;
@@ -39,6 +39,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	public Couple<Vec3> normals;
 	public boolean primary;
 	public boolean hasGirder;
+	protected TrackMaterial trackMaterial;
 
 	// runtime
 
@@ -55,19 +56,20 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	private AABB bounds;
 
 	public BezierConnection(Couple<BlockPos> positions, Couple<Vec3> starts, Couple<Vec3> axes, Couple<Vec3> normals,
-		boolean primary, boolean girder) {
+		boolean primary, boolean girder, TrackMaterial material) {
 		tePositions = positions;
 		this.starts = starts;
 		this.axes = axes;
 		this.normals = normals;
 		this.primary = primary;
 		this.hasGirder = girder;
+		this.trackMaterial = material;
 		resolved = false;
 	}
 
 	public BezierConnection secondary() {
 		return new BezierConnection(tePositions.swap(), starts.swap(), axes.swap(), normals.swap(), !primary,
-			hasGirder);
+			hasGirder, trackMaterial);
 	}
 
 	public BezierConnection(CompoundTag compound, BlockPos localTo) {
@@ -77,7 +79,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				.map(v -> v.add(Vec3.atLowerCornerOf(localTo))),
 			Couple.deserializeEach(compound.getList("Axes", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
 			Couple.deserializeEach(compound.getList("Normals", Tag.TAG_COMPOUND), VecHelper::readNBTCompound),
-			compound.getBoolean("Primary"), compound.getBoolean("Girder"));
+			compound.getBoolean("Primary"), compound.getBoolean("Girder"), TrackMaterial.deserialize(compound.getString("Material")));
 	}
 
 	public CompoundTag write(BlockPos localTo) {
@@ -91,13 +93,14 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		compound.put("Starts", starts.serializeEach(VecHelper::writeNBTCompound));
 		compound.put("Axes", axes.serializeEach(VecHelper::writeNBTCompound));
 		compound.put("Normals", normals.serializeEach(VecHelper::writeNBTCompound));
+		compound.putString("Material", getMaterial().id.toString());
 		return compound;
 	}
 
 	public BezierConnection(FriendlyByteBuf buffer) {
 		this(Couple.create(buffer::readBlockPos), Couple.create(() -> VecHelper.read(buffer)),
 			Couple.create(() -> VecHelper.read(buffer)), Couple.create(() -> VecHelper.read(buffer)),
-			buffer.readBoolean(), buffer.readBoolean());
+			buffer.readBoolean(), buffer.readBoolean(), TrackMaterial.deserialize(buffer.readUtf()));
 	}
 
 	public void write(FriendlyByteBuf buffer) {
@@ -107,6 +110,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		normals.forEach(v -> VecHelper.write(v, buffer));
 		buffer.writeBoolean(primary);
 		buffer.writeBoolean(hasGirder);
+		buffer.writeUtf(getMaterial().id.toString());
 	}
 
 	public BlockPos getKey() {
@@ -300,7 +304,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		Inventory inv = player.getInventory();
 		int tracks = getTrackItemCost();
 		while (tracks > 0) {
-			inv.placeItemBackInInventory(AllBlocks.TRACK.asStack(Math.min(64, tracks)));
+			inv.placeItemBackInInventory(getMaterial().getTrackBlock().asStack(Math.min(64, tracks)));
 			tracks -= 64;
 		}
 		int girders = getGirderItemCost();
@@ -328,7 +332,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				continue;
 			Vec3 v = VecHelper.offsetRandomly(segment.position, level.random, .125f)
 				.add(origin);
-			ItemEntity entity = new ItemEntity(level, v.x, v.y, v.z, AllBlocks.TRACK.asStack());
+			ItemEntity entity = new ItemEntity(level, v.x, v.y, v.z, getMaterial().getTrackBlock().asStack());
 			entity.setDefaultPickUpDelay();
 			level.addFreshEntity(entity);
 			if (!hasGirder)
@@ -342,7 +346,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public void spawnDestroyParticles(Level level) {
-		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.TRACK.getDefaultState());
+		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, getMaterial().getTrackBlock().getDefaultState());
 		BlockParticleOption girderData =
 			new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.METAL_GIRDER.getDefaultState());
 		if (!(level instanceof ServerLevel slevel))
@@ -358,6 +362,19 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				slevel.sendParticles(girderData, v.x, v.y - .5f, v.z, 1, 0, 0, 0, 0);
 			}
 		}
+	}
+
+	@Override
+	public TrackMaterial getMaterial() {
+		if (trackMaterial == null) {
+			trackMaterial = TrackMaterial.ANDESITE;
+		}
+		return trackMaterial;
+	}
+
+	@Override
+	public void setMaterial(TrackMaterial material) {
+		trackMaterial = material;
 	}
 
 	public static class Segment {

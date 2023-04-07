@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -117,7 +117,7 @@ public class CurvedTrackInteraction {
 		if (event.isUseItem()) {
 			ItemStack heldItem = player.getMainHandItem();
 			Item item = heldItem.getItem();
-			if (AllBlocks.TRACK.isIn(heldItem)) {
+			if (AllTags.AllBlockTags.TRACKS.matches(heldItem)) {
 				player.displayClientMessage(Lang.translateDirect("track.turn_start")
 					.withStyle(ChatFormatting.RED), true);
 				player.swing(InteractionHand.MAIN_HAND);

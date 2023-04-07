@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.press;
 import java.util.List;
 import java.util.Optional;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCraftingRecipe;
 import com.simibubi.create.content.contraptions.components.press.PressingBehaviour.Mode;
@@ -69,7 +69,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity implemen
 
 	public void onItemPressed(ItemStack result) {
 		award(AllAdvancements.PRESS);
-		if (AllBlocks.TRACK.isIn(result))
+		if (AllTags.AllBlockTags.TRACKS.matches(result))
 			tracksCreated += result.getCount();
 		if (tracksCreated >= 1000) {
 			award(AllAdvancements.TRACK_CRAFTING);

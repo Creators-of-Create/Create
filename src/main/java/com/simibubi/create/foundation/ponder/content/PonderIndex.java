@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
@@ -303,7 +304,7 @@ public class PonderIndex {
 			.addStoryBoard("rose_quartz_lamp", RedstoneScenes2::roseQuartzLamp);
 
 		// Trains
-		HELPER.forComponents(AllBlocks.TRACK)
+		HELPER.forComponents(TrackMaterial.allBlocks())
 			.addStoryBoard("train_track/placement", TrackScenes::placement)
 			.addStoryBoard("train_track/portal", TrackScenes::portal)
 			.addStoryBoard("train_track/chunks", TrackScenes::chunks);

@@ -11,6 +11,7 @@ import static com.simibubi.create.AllShapes.TRACK_ORTHO_LONG;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,11 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import com.simibubi.create.AllTags;
+import com.simibubi.create.content.logistics.trains.IHasTrackMaterial;
+
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -108,17 +114,22 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
 //init
 public class TrackBlock extends Block
-	implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
+	implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, IHasTrackMaterial {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
 
-	public TrackBlock(Properties p_49795_) {
+	protected final TrackMaterial material;
+
+	public TrackBlock(Properties p_49795_, TrackMaterial material) {
 		super(p_49795_);
 		registerDefaultState(defaultBlockState().setValue(SHAPE, TrackShape.ZO)
 			.setValue(HAS_TE, false)
 			.setValue(WATERLOGGED, false));
+		this.material = material;
 	}
+
+
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
@@ -407,7 +418,7 @@ public class TrackBlock extends Block
 			return list;
 		BlockPos boundPos = trackTE.boundLocation.getSecond();
 		BlockState boundState = otherLevel.getBlockState(boundPos);
-		if (!AllBlocks.TRACK.has(boundState))
+		if (!AllTags.AllBlockTags.TRACKS.matches(boundState))
 			return list;
 
 		Vec3 center = Vec3.atBottomCenterOf(pos)
@@ -750,7 +761,8 @@ public class TrackBlock extends Block
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		int trackAmount = 1;
+		int sameTypeTrackAmount = 1;
+		Map<TrackMaterial, Integer> otherTrackAmounts = new HashMap<>();
 		int girderAmount = 0;
 
 		if (te instanceof TrackTileEntity track) {
@@ -758,15 +770,27 @@ public class TrackBlock extends Block
 				.values()) {
 				if (!bezierConnection.isPrimary())
 					continue;
-				trackAmount += bezierConnection.getTrackItemCost();
+				TrackMaterial material = ((IHasTrackMaterial) bezierConnection).getMaterial();
+				if (material == getMaterial()) {
+					sameTypeTrackAmount += bezierConnection.getTrackItemCost();
+				} else {
+					otherTrackAmounts.put(material, otherTrackAmounts.getOrDefault(material, 0) + 1);
+				}
 				girderAmount += bezierConnection.getGirderItemCost();
 			}
 		}
 
 		List<ItemStack> stacks = new ArrayList<>();
-		while (trackAmount > 0) {
-			stacks.add(AllBlocks.TRACK.asStack(Math.min(trackAmount, 64)));
-			trackAmount -= 64;
+		while (sameTypeTrackAmount > 0) {
+			stacks.add(new ItemStack(state.getBlock(), Math.min(sameTypeTrackAmount, 64)));
+			sameTypeTrackAmount -= 64;
+		}
+		for (TrackMaterial material : otherTrackAmounts.keySet()) {
+			int amt = otherTrackAmounts.get(material);
+			while (amt > 0) {
+				stacks.add(new ItemStack(material.getTrackBlock().get(), Math.min(amt, 64)));
+				amt -= 64;
+			}
 		}
 		while (girderAmount > 0) {
 			stacks.add(AllBlocks.METAL_GIRDER.asStack(Math.min(girderAmount, 64)));
@@ -774,6 +798,11 @@ public class TrackBlock extends Block
 		}
 
 		return new ItemRequirement(ItemUseType.CONSUME, stacks);
+	}
+
+	@Override
+	public TrackMaterial getMaterial() {
+		return material;
 	}
 
 	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {
