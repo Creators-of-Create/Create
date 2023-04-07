@@ -204,6 +204,8 @@ import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRendere
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.world.level.block.Block;
+
 public class AllTileEntities {
 
 	// Schematics
@@ -783,7 +785,7 @@ public class AllTileEntities {
 		.tileEntity("track", TrackTileEntity::new)
 		.instance(() -> TrackInstance::new)
 		.renderer(() -> TrackRenderer::new)
-		.validBlocks(TrackMaterial.allBlocks().toArray(new BlockEntry<?>[0]))
+		.validBlocks(((BlockEntry<? extends Block>[]) TrackMaterial.allBlocks().toArray(new BlockEntry[0])))
 		.register();
 
 	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = REGISTRATE
