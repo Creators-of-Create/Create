@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.jozufozu.flywheel.util.Color;
 import com.simibubi.create.AllSpecialTextures;
@@ -500,8 +501,8 @@ public class TrackPlacement {
 		return onto;
 	}
 
-	private static BlockState copyProperties(BlockState from, BlockState onto, boolean keepFrom) {
-		return keepFrom ? copyProperties(from, onto) : from;
+	private static BlockState copyProperties(BlockState from, BlockState onto, Function<BlockState, Boolean> keepFrom) {
+		return keepFrom.apply(from) ? copyProperties(from, onto) : from;
 	}
 
 	private static PlacementInfo placeTracks(Level level, PlacementInfo info, BlockState state1, BlockState state2,
@@ -558,12 +559,12 @@ public class TrackPlacement {
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			BlockState onto = info.getMaterial().getTrackBlock().getDefaultState();
 			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
-				copyProperties((stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1), onto, AllTags.AllBlockTags.TRACKS.matches(stateAtPos)).setValue(TrackBlock.HAS_TE, true),
+				copyProperties((stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1), onto, AllTags.AllBlockTags.TRACKS::matches).setValue(TrackBlock.HAS_TE, true),
 				targetPos1), 3);
 
 			stateAtPos = level.getBlockState(targetPos2);
 			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
-				copyProperties((stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2), onto, AllTags.AllBlockTags.TRACKS.matches(stateAtPos)).setValue(TrackBlock.HAS_TE, true),
+				copyProperties((stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2), onto, AllTags.AllBlockTags.TRACKS::matches).setValue(TrackBlock.HAS_TE, true),
 				targetPos2), 3);
 		}
 
