@@ -86,7 +86,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 		super.tick();
 		if (inUse == 0 && cooldown > 0)
 			cooldown--;
-		independentAngle = getIndependentAngle(0);
+		independentAngle = level.isClientSide() ? getIndependentAngle(0) : 0;
 	}
 
 	@Override
