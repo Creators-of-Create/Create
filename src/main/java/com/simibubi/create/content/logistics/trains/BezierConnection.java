@@ -72,6 +72,20 @@ public class BezierConnection implements Iterable<BezierConnection.Segment>, IHa
 			hasGirder, trackMaterial);
 	}
 
+	private static boolean coupleEquals(Couple<?> a, Couple<?> b) {
+		return (a.getFirst().equals(b.getFirst()) && a.getSecond().equals(b.getSecond())) || (a.getFirst() instanceof Vec3 aFirst && a.getSecond() instanceof Vec3 aSecond && b.getFirst() instanceof Vec3 bFirst && b.getSecond() instanceof Vec3 bSecond && aFirst.closerThan(bFirst, 1e-6) && aSecond.closerThan(bSecond, 1e-6));
+	}
+
+	public boolean equalsSansMaterial(BezierConnection other) {
+		return equalsSansMaterialInner(other) || equalsSansMaterialInner(other.secondary());
+	}
+
+	private boolean equalsSansMaterialInner(BezierConnection other) {
+		return this == other || (other != null && coupleEquals(this.tePositions, other.tePositions) && coupleEquals(this.starts, other.starts)
+			&& coupleEquals(this.axes, other.axes) && coupleEquals(this.normals, other.normals)
+			&& this.hasGirder == other.hasGirder);
+	}
+
 	public BezierConnection(CompoundTag compound, BlockPos localTo) {
 		this(Couple.deserializeEach(compound.getList("Positions", Tag.TAG_COMPOUND), NbtUtils::readBlockPos)
 			.map(b -> b.offset(localTo)),

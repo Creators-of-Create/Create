@@ -113,6 +113,9 @@ public class TrackTileEntity extends SmartTileEntity implements ITransformableTE
 	}
 
 	public void addConnection(BezierConnection connection) {
+		// don't replace existing connections with different materials
+		if (connections.containsKey(connection.getKey()) && connection.equalsSansMaterial(connections.get(connection.getKey())))
+			return;
 		connections.put(connection.getKey(), connection);
 		level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
 		notifyUpdate();
