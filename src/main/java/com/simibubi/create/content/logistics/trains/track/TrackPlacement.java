@@ -557,21 +557,15 @@ public class TrackPlacement {
 
 		if (!simulate) {
 			BlockState onto = info.getMaterial().getTrackBlock().getDefaultState();
-			var relevantState = state1;
 			BlockState stateAtPos = level.getBlockState(targetPos1);
-			var stateAtPosVar = stateAtPos;
-//			BlockState injectorAllocatedLocal30 = (BlockState)(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_TE, true);
-			relevantState = copyProperties(relevantState, onto);
-			var modifiedBlock = (AllTags.AllBlockTags.TRACKS.matches(stateAtPosVar) ? stateAtPosVar : relevantState).setValue(TrackBlock.HAS_TE, true);
-			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level, modifiedBlock, targetPos1), 3);
+			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
+					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state1, onto))
+							.setValue(TrackBlock.HAS_TE, true), targetPos1), 3);
 
-			relevantState = state2;
 			stateAtPos = level.getBlockState(targetPos2);
-			stateAtPosVar = stateAtPos;
-//			BlockState injectorAllocatedLocal30 = (BlockState)(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_TE, true);
-			relevantState = copyProperties(relevantState, onto);
-			modifiedBlock = (AllTags.AllBlockTags.TRACKS.matches(stateAtPosVar) ? stateAtPosVar : relevantState).setValue(TrackBlock.HAS_TE, true);
-			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level, modifiedBlock, targetPos2), 3);
+			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
+					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state2, onto))
+							.setValue(TrackBlock.HAS_TE, true), targetPos2), 3);
 		}
 
 		BlockEntity te1 = level.getBlockEntity(targetPos1);
