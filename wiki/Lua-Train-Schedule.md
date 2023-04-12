@@ -1,4 +1,5 @@
-Train schedules are represented by a table in Lua. The table contains a list of entries where each entry has a single instruction and multiple conditions. Each instruction and condition has a `data` table that stores specific data about the instruction or condition.
+Train schedules are represented by a table in Lua. The table contains a list of entries where each entry has a single instruction and multiple conditions.
+Each instruction and condition has a `data` table that stores specific data about the instruction or condition.
 
 ```lua
 schedule = {
@@ -53,7 +54,7 @@ schedule = {
 Moves the train to the chosen train station. This instruction must have at least one condition.
 
 **Data**
-- _text:_ `string` The name of the station to travel to.
+- _text:_ `string` The name of the station to travel to. Can include * as a wildcard.
 
 ---
 ### `"create:rename"`
@@ -67,11 +68,12 @@ Renames the schedule. This name shows up on display link targets. This instructi
 Changes the throttle of the train. This instruction cannot have conditions.
 
 **Data**
-- _value:_ `number` The throttle to set the train to. Must be an integer with in the range of [5..100].
+- _value:_ `number` The throttle to set the train to. Must be an integer within the range of [5..100].
 
 ---
 ## Conditions
-Conditions are stored in a list of lists of conditions. The inner lists contain conditions that get `AND`'d together. They must all be met for that group to be true. The outer list contains the `AND`'d groups of conditions that get `OR`'d together. Only one of the groups needs to be true for the schedule to move onto the next instruction.
+Conditions are stored in a list of lists of conditions. The inner lists contain conditions that get `AND`'ed together. They must all be met for that group to be true.
+The outer list contains the `AND`'ed groups of conditions that get `OR`'ed together. Only one of the groups needs to be true for the schedule to move onto the next instruction.
 
 | ID                                                  | Description                                         |
 |-----------------------------------------------------|-----------------------------------------------------|
@@ -107,15 +109,15 @@ Wait for a time of day, then repeat at a specified interval.
 | Rotation | Time Interval    |
 |----------|------------------|
 | 0        | Every Day        |
-| 1        | Every 12 hours   |
-| 2        | Every 6 hours    |
-| 3        | Every 4 hours    |
-| 4        | Every 3 hours    |
-| 5        | Every 2 hours    |
-| 6        | Every hour       |
-| 7        | Every 45 minutes |
-| 8        | Every 30 minutes |
-| 9        | Every 15 minutes |
+| 1        | Every 12 Hours   |
+| 2        | Every 6 Hours    |
+| 3        | Every 4 Hours    |
+| 4        | Every 3 Hours    |
+| 5        | Every 2 Hours    |
+| 6        | Every Hour       |
+| 7        | Every 45 Minutes |
+| 8        | Every 30 Minutes |
+| 9        | Every 15 Minutes |
 
 ---
 ### `"create:fluid_threshold"`
@@ -128,7 +130,7 @@ Wait for a certain amount of a specific fluid to be loaded onto the train.
 - _measure:_ `number` The unit to measure the fluid in. This condition supports buckets as the only unit. Set to 0.
 
 **See also**
-- [Items](#items) How items are represented in Lua
+- [Items](#items) How items are represented in Lua.
 
 ---
 ### `"create:item_threshold"`
@@ -141,7 +143,7 @@ Wait for a certain amount of a specific item to be loaded onto the train.
 - _measure:_ `number` The unit to measure the items in. 0 for items. 1 for stacks of items.
 
 **See also**
-- [Items](#items) How items are represented in Lua
+- [Items](#items) How items are represented in Lua.
 
 ---
 ### `"create:redstone_link"`
@@ -152,7 +154,7 @@ Wait for a redstone link to be powered.
 - _inverted:_ `number` Whether the redstone link should be powered or not to meet the condition. 0 for powered. 1 for not powered.
 
 **See also**
-- [Items](#items) How items are represented in Lua
+- [Items](#items) How items are represented in Lua.
 
 ---
 ### `"create:player_count"`
@@ -184,8 +186,8 @@ In Lua, items are represented with an ID and a count.
 
 ```lua
 item = {
-    id = "minecraft:stone",
-    count = 1,
+  id = "minecraft:stone",
+  count = 1,
 }
 ```
 

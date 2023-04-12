@@ -4,7 +4,7 @@
 
 ---
 ### `getSpeed()`
-Gets the current rotation speed of the attached components
+Gets the current rotation speed of the attached components.
 
 **Returns**
-- `number` The current rotation speed
+- `number` The current rotation speed in RPM.
