@@ -3,11 +3,12 @@
 	"parent": "block/block",
 	"textures": {
 		"0": "create:block/axis",
+		"6": "create:block/pinion_bottom",
 		"8": "create:block/bearing_top_wooden",
 		"9": "create:block/windmill_bearing_side",
 		"10": "create:block/pinion",
-		"particle": "create:block/andesite_casing",
-		"opening": "create:block/gearbox"
+		"opening": "create:block/gearbox",
+		"particle": "create:block/andesite_casing"
 	},
 	"elements": [
 		{
@@ -15,7 +16,7 @@
 			"from": [0, 0, 0],
 			"to": [16, 16, 4],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#8"},
+				"north": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#6"},
 				"east": {"uv": [0, 8, 16, 12], "rotation": 270, "texture": "#10"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#8"},
 				"west": {"uv": [0, 8, 16, 12], "rotation": 90, "texture": "#10"},
@@ -136,15 +137,25 @@
 		{
 			"name": "item_andesite",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": []
 		},
 		{
 			"name": "item",
 			"origin": [8, 8, 8],
-			"children": [0, 1, 2, 3, 4, 5, 6,
+			"color": 0,
+			"children": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
 				{
 					"name": "shaft",
 					"origin": [8, 8, 8],
+					"color": 0,
 					"children": []
 				}
 			]

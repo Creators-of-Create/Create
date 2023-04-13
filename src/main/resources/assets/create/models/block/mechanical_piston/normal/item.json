@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "create:block/gearbox_top",
+		"0": "create:block/andesite_casing_piston",
 		"1": "create:block/piston_bottom",
 		"2": "create:block/gearbox",
 		"3": "create:block/piston_inner",
@@ -22,7 +22,7 @@
 				"east": {"uv": [0, 14, 16, 16], "texture": "#0"},
 				"south": {"uv": [0, 14, 16, 16], "texture": "#0"},
 				"west": {"uv": [0, 14, 16, 16], "texture": "#0"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
 			}
 		},
@@ -41,10 +41,10 @@
 			"from": [0, 2, 0],
 			"to": [2, 12, 16],
 			"faces": {
-				"north": {"uv": [14, 0, 16, 10], "texture": "#0"},
-				"east": {"uv": [0, 0, 16, 10], "texture": "#0"},
-				"south": {"uv": [0, 0, 2, 10], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 10], "texture": "#0"}
+				"north": {"uv": [14, 4, 16, 14], "texture": "#0"},
+				"east": {"uv": [0, 4, 16, 14], "texture": "#0"},
+				"south": {"uv": [16, 4, 14, 14], "texture": "#0"},
+				"west": {"uv": [0, 4, 16, 14], "texture": "#0"}
 			}
 		},
 		{
@@ -52,10 +52,10 @@
 			"from": [14, 2, 0],
 			"to": [16, 12, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 2, 10], "texture": "#0"},
-				"east": {"uv": [0, 0, 16, 10], "texture": "#0"},
-				"south": {"uv": [14, 0, 16, 10], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 10], "texture": "#0"}
+				"north": {"uv": [16, 4, 14, 14], "texture": "#0"},
+				"east": {"uv": [0, 4, 16, 14], "texture": "#0"},
+				"south": {"uv": [14, 4, 16, 14], "texture": "#0"},
+				"west": {"uv": [0, 4, 16, 14], "texture": "#0"}
 			}
 		},
 		{
@@ -85,10 +85,16 @@
 			}
 		}
 	],
-	"groups": [0, 1, 2, 3, 4,
+	"groups": [
+		0,
+		1,
+		2,
+		3,
+		4,
 		{
 			"name": "shaft",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [5]
 		}
 	]

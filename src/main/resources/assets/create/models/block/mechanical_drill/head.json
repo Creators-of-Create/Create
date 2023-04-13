@@ -5,7 +5,6 @@
 		"0": "create:block/axis_top",
 		"1": "create:block/axis",
 		"2": "block/anvil",
-		"7": "block/polished_andesite",
 		"10": "create:block/andesite_casing_very_short",
 		"particle": "block/anvil"
 	},
@@ -28,12 +27,11 @@
 			"to": [11, 11, 12],
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 6, 6], "texture": "#7"},
-				"east": {"uv": [0, 2, 6, 5], "rotation": 270, "texture": "#10"},
+				"east": {"uv": [0, 0, 6, 3], "rotation": 270, "texture": "#10"},
 				"south": {"uv": [5, 0, 11, 6], "texture": "#2"},
-				"west": {"uv": [0, 2, 6, 5], "rotation": 90, "texture": "#10"},
-				"up": {"uv": [0, 2, 6, 5], "rotation": 180, "texture": "#10"},
-				"down": {"uv": [0, 2, 6, 5], "texture": "#10"}
+				"west": {"uv": [0, 0, 6, 3], "rotation": 90, "texture": "#10"},
+				"up": {"uv": [0, 0, 6, 3], "rotation": 180, "texture": "#10"},
+				"down": {"uv": [0, 0, 6, 3], "texture": "#10"}
 			}
 		},
 		{
@@ -149,11 +147,11 @@
 			}
 		}
 	],
-	"display": {},
 	"groups": [
 		{
 			"name": "head",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 		}
 	]

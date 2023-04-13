@@ -5,10 +5,10 @@
 	"textures": {
 		"6": "create:block/piston_bottom",
 		"7": "create:block/piston_inner",
+		"particle": "create:block/gearbox_top",
 		"gearbox_top": "create:block/gearbox_top",
 		"gearbox": "create:block/gearbox",
-		"andesite_casing_short": "create:block/andesite_casing_short",
-		"particle": "create:block/gearbox_top"
+		"andesite_casing_short": "create:block/andesite_casing_short"
 	},
 	"elements": [
 		{
@@ -16,7 +16,7 @@
 			"from": [0, 0, 0],
 			"to": [16, 16, 2],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#6"},
+				"north": {"uv": [0, 16, 16, 0], "rotation": 90, "texture": "#6"},
 				"east": {"uv": [0, 14, 16, 16], "rotation": 270, "texture": "#andesite_casing_short"},
 				"south": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#gearbox_top"},
 				"west": {"uv": [0, 14, 16, 16], "rotation": 90, "texture": "#andesite_casing_short"},
@@ -31,8 +31,8 @@
 			"faces": {
 				"north": {"uv": [0, 0, 12, 14], "texture": "#gearbox"},
 				"south": {"uv": [2, 1, 14, 15], "texture": "#7"},
-				"up": {"uv": [2, 4, 14, 14], "rotation": 180, "texture": "#gearbox"},
-				"down": {"uv": [2, 4, 14, 14], "texture": "#gearbox"}
+				"up": {"uv": [2, 12, 14, 2], "rotation": 180, "texture": "#gearbox"},
+				"down": {"uv": [2, 12, 14, 2], "texture": "#gearbox"}
 			}
 		},
 		{
@@ -43,7 +43,7 @@
 				"east": {"uv": [0, 4, 16, 14], "rotation": 270, "texture": "#andesite_casing_short"},
 				"south": {"uv": [0, 0, 16, 2], "rotation": 270, "texture": "#andesite_casing_short"},
 				"west": {"uv": [0, 0, 16, 10], "rotation": 90, "texture": "#gearbox_top"},
-				"up": {"uv": [0, 2, 2, 12], "rotation": 180, "texture": "#gearbox_top"},
+				"up": {"uv": [16, 0, 14, 10], "rotation": 180, "texture": "#gearbox_top"},
 				"down": {"uv": [14, 0, 16, 10], "texture": "#gearbox_top"}
 			}
 		},
@@ -56,7 +56,7 @@
 				"south": {"uv": [0, 0, 16, 2], "rotation": 90, "texture": "#andesite_casing_short"},
 				"west": {"uv": [0, 4, 16, 14], "rotation": 90, "texture": "#andesite_casing_short"},
 				"up": {"uv": [14, 2, 16, 12], "rotation": 180, "texture": "#gearbox_top"},
-				"down": {"uv": [0, 0, 2, 10], "texture": "#gearbox_top"}
+				"down": {"uv": [16, 0, 14, 10], "texture": "#gearbox_top"}
 			}
 		}
 	],
@@ -64,6 +64,7 @@
 		{
 			"name": "body",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1, 2, 3]
 		}
 	]

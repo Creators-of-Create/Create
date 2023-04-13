@@ -22,7 +22,7 @@
 			"from": [2, 5, 14],
 			"to": [14, 14, 16],
 			"faces": {
-				"north": {"uv": [1, 0, 7, 4.5], "texture": "#1_7"},
+				"north": {"uv": [1, 9, 7, 13.5], "texture": "#4"},
 				"south": {"uv": [1, 0, 7, 4.5], "texture": "#4"},
 				"up": {"uv": [1, 0, 7, 1], "rotation": 180, "texture": "#4"}
 			}
