@@ -13,5 +13,5 @@ map_Kd #axis
 newmtl m_axis_top
 map_Kd #axis_top
 
-newmtl m_spruce_log_top.001
+newmtl m_spruce_log_top
 map_Kd #spruce_log_top

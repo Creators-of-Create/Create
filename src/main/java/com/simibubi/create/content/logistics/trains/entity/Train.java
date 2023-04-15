@@ -589,8 +589,8 @@ public class Train {
 		if (!dimension.equals(trailingPoint.node1.getLocation().dimension))
 			return;
 
-		Vec3 start = (speed < 0 ? trailingPoint : leadingPoint).getPosition();
-		Vec3 end = (speed < 0 ? leadingPoint : trailingPoint).getPosition();
+		Vec3 start = (speed < 0 ? trailingPoint : leadingPoint).getPosition(graph);
+		Vec3 end = (speed < 0 ? leadingPoint : trailingPoint).getPosition(graph);
 
 		Pair<Train, Vec3> collision = findCollidingTrain(level, start, end, this, dimension);
 		if (collision == null)
@@ -632,8 +632,8 @@ public class Train {
 					if (!otherDimension.equals(dimension))
 						continue;
 
-					Vec3 start2 = otherLeading.getPosition();
-					Vec3 end2 = otherTrailing.getPosition();
+					Vec3 start2 = otherLeading.getPosition(train.graph);
+					Vec3 end2 = otherTrailing.getPosition(train.graph);
 					if (betweenBits) {
 						end2 = start2;
 						start2 = lastPoint;

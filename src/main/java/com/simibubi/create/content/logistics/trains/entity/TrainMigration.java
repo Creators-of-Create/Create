@@ -27,7 +27,7 @@ public class TrainMigration {
 
 	public TrainMigration(TravellingPoint point) {
 		double t = point.position / point.edge.getLength();
-		fallback = point.edge.getPosition(t);
+		fallback = point.edge.getPosition(null, t);
 		curve = point.edge.isTurn();
 		positionOnOldEdge = point.position;
 		locations = Couple.create(point.node1.getLocation(), point.node2.getLocation());

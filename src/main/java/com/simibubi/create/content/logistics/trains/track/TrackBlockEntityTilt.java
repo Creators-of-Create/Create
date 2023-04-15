@@ -58,8 +58,6 @@ public class TrackBlockEntityTilt {
 		for (BezierConnection bezierConnection : blockEntity.connections.values()) {
 			if (bezierConnection.starts.getFirst().y == bezierConnection.starts.getSecond().y)
 				continue;
-			if (bezierConnection.axes.getSecond().y != 0)
-				continue;
 			Vec3 normedAxis = bezierConnection.axes.getFirst()
 				.normalize();
 

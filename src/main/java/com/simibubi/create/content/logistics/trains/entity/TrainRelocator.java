@@ -189,7 +189,7 @@ public class TrainRelocator {
 		List<Vec3> recordedVecs = new ArrayList<>();
 		Consumer<TravellingPoint> recorder = tp -> {
 			recordedLocations.add(Pair.of(Couple.create(tp.node1, tp.node2), tp.position));
-			recordedVecs.add(tp.getPosition());
+			recordedVecs.add(tp.getPosition(graph));
 		};
 		ITrackSelector steer = probe.steer(SteerDirection.NONE, track.getUpNormal(level, pos, blockState));
 		MutableBoolean blocked = new MutableBoolean(false);

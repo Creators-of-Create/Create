@@ -205,7 +205,7 @@ public class MaterialChecklist {
 		}
 
 		for (Item item : completed) {
-			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
+			if (itemsWritten == MAX_ENTRIES_PER_CLIPBOARD_PAGE) {
 				itemsWritten = 0;
 				currentPage.add(new ClipboardEntry(true, Components.literal(">>>")
 					.withStyle(ChatFormatting.DARK_GREEN)));

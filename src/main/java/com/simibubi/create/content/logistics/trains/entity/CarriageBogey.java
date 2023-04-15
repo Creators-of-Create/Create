@@ -79,8 +79,8 @@ public class CarriageBogey {
 			yRot = -90 + entity.yaw;
 			xRot = 0;
 		} else {
-			Vec3 positionVec = leading().getPosition();
-			Vec3 coupledVec = trailing().getPosition();
+			Vec3 positionVec = leading().getPosition(carriage.train.graph);
+			Vec3 coupledVec = trailing().getPosition(carriage.train.graph);
 			double diffX = positionVec.x - coupledVec.x;
 			double diffY = positionVec.y - coupledVec.y;
 			double diffZ = positionVec.z - coupledVec.z;
@@ -112,8 +112,8 @@ public class CarriageBogey {
 			return 0;
 		if (carriage.train.derailed)
 			return 0;
-		return type.getWheelPointSpacing() - leading().getPosition()
-			.distanceTo(trailing().getPosition());
+		return type.getWheelPointSpacing() - leading().getPosition(carriage.train.graph)
+			.distanceTo(trailing().getPosition(carriage.train.graph));
 	}
 
 	@Nullable
@@ -121,9 +121,9 @@ public class CarriageBogey {
 		if (leading().edge == null)
 			return null;
 		return points.getFirst()
-			.getPosition()
+			.getPosition(carriage.train.graph)
 			.add(points.getSecond()
-				.getPosition())
+				.getPosition(carriage.train.graph))
 			.scale(.5);
 	}
 

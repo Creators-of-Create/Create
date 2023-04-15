@@ -220,7 +220,7 @@ public class TrackPlacement {
 					info.end1Extent = (int) Math.round((dist + 1) / axis1.length());
 
 				} else {
-					if (!Mth.equal(ascend, 0))
+					if (!Mth.equal(ascend, 0) || normedAxis1.y != 0)
 						return info.withMessage("ascending_s_curve");
 
 					double targetT = u <= 1 ? 3 : u * 2;

@@ -1,10 +1,8 @@
 {
-  "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
   "textures": {
     "stonecutter_saw": "minecraft:block/stonecutter_saw",
     "stonecutter_saw_reversed" : "create:block/saw_reversed"
   },
-  "parent": "create:block/block",
   "elements": [
     {
       "name": "Blade",

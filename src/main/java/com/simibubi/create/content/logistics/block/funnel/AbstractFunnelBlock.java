@@ -129,7 +129,8 @@ public abstract class AbstractFunnelBlock extends Block implements IBE<FunnelBlo
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		IBE.onRemove(state, world, pos, newState);
+		if (state.getBlock() != newState.getBlock() && !isFunnel(newState) || !newState.hasBlockEntity())
+			IBE.onRemove(state, world, pos, newState);
 	}
 
 	@Override

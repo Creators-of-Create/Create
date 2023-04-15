@@ -322,6 +322,12 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	public boolean isPauseScreen() {
 		return false;
 	}
+	
+	@Override
+	public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+		changePage(pDelta < 0);
+		return true;
+	}
 
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {

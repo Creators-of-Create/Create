@@ -260,8 +260,8 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		};
 		rollerScout.travel(train.graph, lengthWiseOffset + 1, steering);
 
-		rollerScout.traversalCallback =
-			(edge, coords) -> TrackPaverV2.pave(heightProfile, edge, coords.getFirst(), coords.getSecond());
+		rollerScout.traversalCallback = (edge, coords) -> TrackPaverV2.pave(heightProfile, train.graph, edge,
+			coords.getFirst(), coords.getSecond());
 		rollerScout.travel(train.graph, distanceToTravel, steering);
 
 		for (Couple<Integer> entry : heightProfile.keys())

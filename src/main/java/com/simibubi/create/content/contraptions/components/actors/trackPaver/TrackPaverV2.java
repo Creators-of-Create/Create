@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
+import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -20,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class TrackPaverV2 {
 
-	public static void pave(PaveTask task, TrackEdge edge, double from, double to) {
+	public static void pave(PaveTask task, TrackGraph graph, TrackEdge edge, double from, double to) {
 		if (edge.isTurn()) {
 			paveCurve(task, edge.getTurn(), from, to);
 			return;
@@ -34,7 +35,7 @@ public class TrackPaverV2 {
 		Vec3 direction = VecHelper.clampComponentWise(diff, 1);
 		int extent = (int) Math.round((to - from) / direction.length());
 		double length = edge.getLength();
-		BlockPos pos = new BlockPos(edge.getPosition(Mth.clamp(from, 1 / 16f, length - 1 / 16f) / length)
+		BlockPos pos = new BlockPos(edge.getPosition(graph, Mth.clamp(from, 1 / 16f, length - 1 / 16f) / length)
 			.subtract(0, 0.5, 0));
 
 		paveStraight(task, pos, direction, extent);
