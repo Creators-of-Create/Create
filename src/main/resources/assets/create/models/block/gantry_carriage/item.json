@@ -5,7 +5,7 @@
 	"textures": {
 		"0": "create:block/axis",
 		"3": "create:block/cogwheel",
-		"8": "create:block/bearing_top_wooden",
+		"8": "create:block/bearing_top",
 		"9": "create:block/windmill_bearing_side",
 		"10": "create:block/pinion",
 		"11": "create:block/axis_top",

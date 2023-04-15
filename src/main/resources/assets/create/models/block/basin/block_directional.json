@@ -22,8 +22,8 @@
 		},
 		{
 			"name": "Basin Interior",
-			"from": [2, 16, 2],
-			"to": [14, 2, 14],
+			"from": [1.95, 16, 1.95],
+			"to": [14.05, 2, 14.05],
 			"faces": {
 				"north": {"uv": [9, 0, 15, 7], "rotation": 180, "texture": "#1"},
 				"east": {"uv": [9, 0, 15, 7], "rotation": 180, "texture": "#1"},

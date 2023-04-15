@@ -13,7 +13,7 @@
 		{
 			"name": "Top",
 			"from": [0.1, -1, 12],
-			"to": [15.9, 2, 16],
+			"to": [15.9, 2, 16.2],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 4]},
 			"faces": {
 				"north": {"uv": [0, 9, 16, 12], "texture": "#block"},

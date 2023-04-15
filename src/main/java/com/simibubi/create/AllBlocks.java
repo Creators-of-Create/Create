@@ -443,6 +443,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ClutchBlock> CLUTCH = REGISTRATE.block("clutch", ClutchBlock::new)
 		.initialProperties(SharedProperties::stone)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.properties(p -> p.color(MaterialColor.PODZOL))
 		.transform(BlockStressDefaults.setNoImpact())
@@ -454,6 +455,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<GearshiftBlock> GEARSHIFT = REGISTRATE.block("gearshift", GearshiftBlock::new)
 		.initialProperties(SharedProperties::stone)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.properties(p -> p.color(MaterialColor.PODZOL))
 		.transform(BlockStressDefaults.setNoImpact())

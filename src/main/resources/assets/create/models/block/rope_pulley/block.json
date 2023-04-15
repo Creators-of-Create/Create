@@ -4,7 +4,7 @@
 	"textures": {
 		"3": "create:block/gearbox_top",
 		"4": "create:block/gearbox",
-		"6": "create:block/andesite_casing",
+		"6": "create:block/pulley_top",
 		"particle": "create:block/pulley_rope"
 	},
 	"elements": [

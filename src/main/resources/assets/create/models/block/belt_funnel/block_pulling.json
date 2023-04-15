@@ -26,7 +26,7 @@
 		{
 			"name": "RearBackPlate",
 			"from": [0.1, -5, 13],
-			"to": [15.9, -2, 16],
+			"to": [15.9, -2, 15.9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [7, -8, 8]},
 			"faces": {
 				"north": {"uv": [0, 10, 16, 13], "texture": "#particle"},

@@ -8,8 +8,8 @@
 		"4": "create:block/gearbox",
 		"5": "create:block/pulley_rope",
 		"6": "create:block/pulley_magnet",
-		"8": "create:block/andesite_casing",
-		"particle": "create:block/andesite_casing"
+		"8": "create:block/pulley_top",
+		"particle": "create:block/pulley_top"
 	},
 	"elements": [
 		{
