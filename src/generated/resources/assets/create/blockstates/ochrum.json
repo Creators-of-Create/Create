@@ -1,7 +1,18 @@
 {
   "variants": {
-    "": {
-      "model": "create:block/ochrum"
-    }
+    "": [
+      {
+        "model": "create:block/ochrum_natural_0"
+      },
+      {
+        "model": "create:block/ochrum_natural_1"
+      },
+      {
+        "model": "create:block/ochrum_natural_2"
+      },
+      {
+        "model": "create:block/ochrum_natural_3"
+      }
+    ]
   }
 }

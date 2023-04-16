@@ -118,10 +118,11 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Palettes */
 
 	public <T extends Block> BlockBuilder<T, CreateRegistrate> paletteStoneBlock(String name,
-		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
+		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone,
+		boolean hasNaturalVariants) {
 		BlockBuilder<T, CreateRegistrate> builder = super.block(name, factory).initialProperties(propertiesFrom)
 			.transform(pickaxeOnly())
-			.blockstate((c, p) -> {
+			.blockstate(hasNaturalVariants ? BlockStateGen.naturalStoneTypeBlock(name) : (c, p) -> {
 				final String location = "block/palettes/stone_types/" + c.getName();
 				p.simpleBlock(c.get(), p.models()
 					.cubeAll(c.getName(), p.modLoc(location)));
@@ -131,13 +132,16 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.tag(BlockTags.MOSS_REPLACEABLE)
 			.tag(BlockTags.LUSH_GROUND_REPLACEABLE)
 			.item()
+			.model((c, p) -> p.cubeAll(c.getName(),
+				p.modLoc(hasNaturalVariants ? "block/palettes/stone_types/natural/" + name + "_1"
+					: "block/palettes/stone_types/" + c.getName())))
 			.build();
 		return builder;
 	}
 
 	public BlockBuilder<Block, CreateRegistrate> paletteStoneBlock(String name, NonNullSupplier<Block> propertiesFrom,
-		boolean worldGenStone) {
-		return paletteStoneBlock(name, Block::new, propertiesFrom, worldGenStone);
+		boolean worldGenStone, boolean hasNaturalVariants) {
+		return paletteStoneBlock(name, Block::new, propertiesFrom, worldGenStone, hasNaturalVariants);
 	}
 
 	/* Fluids */
