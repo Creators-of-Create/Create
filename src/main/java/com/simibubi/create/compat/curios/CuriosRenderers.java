@@ -13,9 +13,11 @@ import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 public class CuriosRenderers {
 	public static void register() {
 		CuriosRendererRegistry.register(AllItems.GOGGLES.get(), () -> new GogglesCurioRenderer(Minecraft.getInstance().getEntityModels().bakeLayer(GogglesCurioRenderer.LAYER)));
+		CuriosRendererRegistry.register(AllItems.COPPER_BACKTANK.get(), () -> new CopperBacktankCurioRenderer(Minecraft.getInstance().getEntityModels().bakeLayer(CopperBacktankCurioRenderer.LAYER)));
 	}
 
 	public static void onLayerRegister(final EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(GogglesCurioRenderer.LAYER, () -> LayerDefinition.create(GogglesCurioRenderer.mesh(), 1, 1));
+		event.registerLayerDefinition(CopperBacktankCurioRenderer.LAYER, () -> LayerDefinition.create(CopperBacktankCurioRenderer.mesh(), 1, 1));
 	}
 }
