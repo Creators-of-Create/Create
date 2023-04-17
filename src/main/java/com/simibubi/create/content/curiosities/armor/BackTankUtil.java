@@ -189,7 +189,7 @@ public class BackTankUtil {
 			return backtanks.get(0).getItem().getBarColor(backtanks.get(0));
 
 		ItemStack mostFull = backtanks.get(0);
-		float mostFullPercent = maxAir(mostFull);
+		float mostFullPercent = getAir(mostFull) / maxAir(mostFull);
 
 		for(ItemStack backtank : backtanks) {
 			float fullPercent = getAir(backtank) / maxAir(backtank);
