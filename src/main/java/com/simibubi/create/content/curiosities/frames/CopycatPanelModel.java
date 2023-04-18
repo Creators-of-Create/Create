@@ -77,9 +77,8 @@ public class CopycatPanelModel extends CopycatModel {
 				if (!front && direction == facing.getOpposite())
 					continue;
 
-				BakedQuad newQuad = BakedQuadHelper.clone(quad);
-				BakedModelHelper.cropAndMove(newQuad, bb, normalScaledN13);
-				quads.add(newQuad);
+				quads.add(BakedQuadHelper.cloneWithCustomGeometry(quad,
+					BakedModelHelper.cropAndMove(quad.getVertices(), quad.getSprite(), bb, normalScaledN13)));
 			}
 
 		}

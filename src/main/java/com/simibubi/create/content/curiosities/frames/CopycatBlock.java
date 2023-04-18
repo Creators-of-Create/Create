@@ -278,6 +278,10 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	public boolean canFaceBeOccluded(BlockState state, Direction face) {
 		return false;
 	}
+	
+	public boolean shouldFaceAlwaysRender(BlockState state, Direction face) {
+		return false;
+	}
 
 	// Wrapped properties
 

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.curiosities.frames;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -48,11 +49,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 
 		OcclusionData occlusionData = new OcclusionData();
 		if (state.getBlock() instanceof CopycatBlock copycatBlock) {
-			MutableBlockPos mutablePos = new MutableBlockPos();
-			for (Direction face : Iterate.directions)
-				if (copycatBlock.canFaceBeOccluded(state, face))
-					if (!Block.shouldRenderFace(material, world, pos, face, mutablePos.setWithOffset(pos, face)))
-						occlusionData.occlude(face);
+			gatherOcclusionData(world, pos, state, material, occlusionData, copycatBlock);
 			builder.withInitial(OCCLUSION_PROPERTY, occlusionData);
 		}
 
@@ -60,8 +57,35 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		builder.withInitial(WRAPPED_DATA_PROPERTY, wrappedData);
 	}
 
+	private void gatherOcclusionData(BlockAndTintGetter world, BlockPos pos, BlockState state, BlockState material,
+		OcclusionData occlusionData, CopycatBlock copycatBlock) {
+		MutableBlockPos mutablePos = new MutableBlockPos();
+		for (Direction face : Iterate.directions) {
+
+			// Rubidium: Run an additional IForgeBlock.hidesNeighborFace check because it
+			// seems to be missing in Block.shouldRenderFace
+			MutableBlockPos neighbourPos = mutablePos.setWithOffset(pos, face);
+			BlockState neighbourState = world.getBlockState(neighbourPos);
+			if (state.supportsExternalFaceHiding()
+				&& neighbourState.hidesNeighborFace(world, neighbourPos, state, face.getOpposite())) {
+				occlusionData.occlude(face);
+				continue;
+			}
+
+			if (!copycatBlock.canFaceBeOccluded(state, face))
+				continue;
+			if (!Block.shouldRenderFace(material, world, pos, face, neighbourPos))
+				occlusionData.occlude(face);
+		}
+	}
+
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData data) {
+
+		// Rubidium: see below
+		if (side != null && state.getBlock() instanceof CopycatBlock ccb && ccb.shouldFaceAlwaysRender(state, side))
+			return Collections.emptyList();
+
 		BlockState material = getMaterial(data);
 
 		if (material == null)
@@ -79,7 +103,16 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		if (wrappedData == null)
 			wrappedData = EmptyModelData.INSTANCE;
 
-		return getCroppedQuads(state, side, rand, material, wrappedData);
+		List<BakedQuad> croppedQuads = getCroppedQuads(state, side, rand, material, wrappedData);
+
+		// Rubidium: render side!=null versions of the base material during side==null,
+		// to avoid getting culled away
+		if (side == null && state.getBlock() instanceof CopycatBlock ccb)
+			for (Direction nonOcclusionSide : Iterate.directions)
+				if (ccb.shouldFaceAlwaysRender(state, nonOcclusionSide))
+					croppedQuads.addAll(getCroppedQuads(state, nonOcclusionSide, rand, material, wrappedData));
+
+		return croppedQuads;
 	}
 
 	protected abstract List<BakedQuad> getCroppedQuads(BlockState state, Direction side, Random rand,

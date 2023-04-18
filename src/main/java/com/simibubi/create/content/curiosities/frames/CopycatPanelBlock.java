@@ -119,6 +119,11 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 	}
 
 	@Override
+	public boolean shouldFaceAlwaysRender(BlockState state, Direction face) {
+		return canFaceBeOccluded(state, face.getOpposite());
+	}
+
+	@Override
 	public BlockState getConnectiveMaterial(BlockAndTintGetter reader, BlockState otherState, Direction face,
 		BlockPos fromPos, BlockPos toPos) {
 		BlockState panelState = reader.getBlockState(toPos);

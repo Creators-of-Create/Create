@@ -138,6 +138,11 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 			return (state.getValue(HALF) == Half.TOP) == (face == Direction.UP);
 		return state.getValue(FACING) == face;
 	}
+	
+	@Override
+	public boolean shouldFaceAlwaysRender(BlockState state, Direction face) {
+		return canFaceBeOccluded(state, face.getOpposite());
+	}
 
 	@Override
 	public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {

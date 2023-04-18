@@ -29,6 +29,10 @@ public final class BakedQuadHelper {
 			quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade());
 	}
 
+	public static BakedQuad cloneWithCustomGeometry(BakedQuad quad, int[] vertexData) {
+		return new BakedQuad(vertexData, quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade());
+	}
+
 	public static Vec3 getXYZ(int[] vertexData, int vertex) {
 		float x = Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + X_OFFSET]);
         float y = Float.intBitsToFloat(vertexData[vertex * VERTEX_STRIDE + Y_OFFSET]);

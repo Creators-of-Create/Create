@@ -77,9 +77,8 @@ public class CopycatStepModel extends CopycatModel {
 					if (top && direction == Direction.DOWN)
 						continue;
 
-					BakedQuad newQuad = BakedQuadHelper.clone(quad);
-					BakedModelHelper.cropAndMove(newQuad, bb1, offset);
-					quads.add(newQuad);
+					quads.add(BakedQuadHelper.cloneWithCustomGeometry(quad,
+						BakedModelHelper.cropAndMove(quad.getVertices(), quad.getSprite(), bb1, offset)));
 				}
 
 			}
