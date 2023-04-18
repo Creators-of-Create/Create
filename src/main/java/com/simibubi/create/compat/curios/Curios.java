@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.curios;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
@@ -19,23 +20,25 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 public class Curios {
 
 	/**
-	 * Resolves the Stacks Handler given an Entity and the slot key
+	 * Resolves the Stacks Handler Map given an Entity.
+	 * It is recommended to then use a
 	 * @param entity The entity which possibly has a Curio Inventory capability
-	 * @param key The key of the Curio slot
-	 * @return An optional of the Stacks Handler
+	 * @return An optional of the Stacks Handler Map
 	 */
-	private static Optional<ICurioStacksHandler> resolveCuriosStacksHandler(LivingEntity entity, String key) {
-		return entity.getCapability(CuriosCapability.INVENTORY).map(handler -> handler.getCurios().get(key));
+	private static Optional<Map<String, ICurioStacksHandler>> resolveCurios(LivingEntity entity) {
+		return entity.getCapability(CuriosCapability.INVENTORY).map(ICuriosItemHandler::getCurios);
 	}
 
 	public static void init(IEventBus modEventBus, IEventBus forgeEventBus) {
@@ -44,7 +47,8 @@ public class Curios {
 		// Enable if the backtank should remove back slots
 		// forgeEventBus.addListener(Curios::onEquipmentChanged);
 
-		GogglesItem.addIsWearingPredicate(player -> resolveCuriosStacksHandler(player, "head")
+		GogglesItem.addIsWearingPredicate(player -> resolveCurios(player)
+			.map(curiosMap -> curiosMap.get("head"))
 			.map(stacksHandler -> {
 				// Check all the Head slots for Goggles existing
 				int slots = stacksHandler.getSlots();
@@ -56,15 +60,17 @@ public class Curios {
 			})
 			.orElse(false));
 
-		BackTankUtil.addBacktankSupplier(entity -> resolveCuriosStacksHandler(entity, "back")
-			.map(stacksHandler -> {
-				// Check all the Back Slots for a backtank existing in one of them
+		BackTankUtil.addBacktankSupplier(entity -> resolveCurios(entity)
+			.map(curiosMap -> {
 				List<ItemStack> stacks = new ArrayList<>();
-				int slots = stacksHandler.getSlots();
-				for (int slot = 0; slot < slots; slot++) {
-					final ItemStack stack = stacksHandler.getStacks().getStackInSlot(slot);
-					if (AllItems.COPPER_BACKTANK.isIn(stack))
-						stacks.add(stack);
+				for(ICurioStacksHandler stacksHandler : curiosMap.values()) {
+					// Search all the curio slots for pressurized air sources, and add them to the list
+					int slots = stacksHandler.getSlots();
+					for (int slot = 0; slot < slots; slot++) {
+						final ItemStack itemStack = stacksHandler.getStacks().getStackInSlot(slot);
+						if (AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
+							stacks.add(itemStack);
+					}
 				}
 
 				return stacks;
@@ -99,7 +105,7 @@ public class Curios {
 	 * @param event The event.
 	 */
 	private static void onEquipmentChanged(final LivingEquipmentChangeEvent event) {
-		final Optional<ICurioStacksHandler> optStacksHandler = resolveCuriosStacksHandler(event.getEntityLiving(), "back");
+		final Optional<ICurioStacksHandler> optStacksHandler = resolveCurios(event.getEntityLiving()).map(curiosMap -> curiosMap.get("back"));
 		if (optStacksHandler.isEmpty())
 			return;
 		final ICurioStacksHandler stacksHandler = optStacksHandler.get();
