@@ -116,7 +116,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 		if (!(ctx.temporaryData instanceof ElevatorFloorSelection efs))
 			return false;
 		if (efs.currentTargetY == contraption.clientYTarget)
-			return false;
+			return true;
 
 		AllPackets.getChannel().sendToServer(new ElevatorTargetFloorPacket(contraptionEntity, efs.currentTargetY));
 		if (contraption.presentBlockEntities.get(ctx.localPos)instanceof ContraptionControlsBlockEntity cte)

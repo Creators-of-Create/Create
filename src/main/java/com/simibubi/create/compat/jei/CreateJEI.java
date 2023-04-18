@@ -456,11 +456,9 @@ public class CreateJEI implements IModPlugin {
 			return addRecipeListConsumer(recipes -> {
 				List<Recipe<?>> excludedRecipes = getTypedRecipes(recipeType.get());
 				recipes.removeIf(recipe -> {
-					for (Recipe<?> excludedRecipe : excludedRecipes) {
-						if (doInputsMatch(recipe, excludedRecipe)) {
+					for (Recipe<?> excludedRecipe : excludedRecipes)
+						if (doInputsMatch(recipe, excludedRecipe) && doOutputsMatch(recipe, excludedRecipe))
 							return true;
-						}
-					}
 					return false;
 				});
 			});
@@ -568,6 +566,10 @@ public class CreateJEI implements IModPlugin {
 		return recipe2.getIngredients()
 				.get(0)
 				.test(matchingStacks[0]);
+	}
+
+	public static boolean doOutputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
+		return ItemStack.isSame(recipe1.getResultItem(), recipe2.getResultItem());
 	}
 
 }

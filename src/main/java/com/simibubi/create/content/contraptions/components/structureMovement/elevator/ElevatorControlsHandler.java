@@ -22,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -31,7 +32,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ElevatorControlsHandler {
 
-	private static ControlsSlot slot = new ContraptionControlsBlockEntity.ControlsSlot();
+	private static ControlsSlot slot = new ElevatorControlsSlot();
+
+	private static class ElevatorControlsSlot extends ContraptionControlsBlockEntity.ControlsSlot {
+
+		@Override
+		public boolean testHit(BlockState state, Vec3 localHit) {
+			Vec3 offset = getLocalOffset(state);
+			if (offset == null)
+				return false;
+			return localHit.distanceTo(offset) < scale * .85;
+		}
+
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {

@@ -271,10 +271,6 @@ public class StationScreen extends AbstractStationScreen {
 		for (int i = carriages.size() - 1; i > 0; i--) {
 			RenderSystem.setShaderColor(1, 1, 1, Math.min(1f,
 				Math.min((position + offset - 10) / 30f, (background.width - 40 - position - offset) / 30f)));
-//			if (i == carriages.size() - 1 && train.doubleEnded) {
-//				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
-//				continue;
-//			}
 			Carriage carriage = carriages.get(blockEntity.trainBackwards ? carriages.size() - i - 1 : i);
 			offset += icon.render(carriage.bogeySpacing, ms, x + offset, y + 20) + 1;
 		}
@@ -287,8 +283,8 @@ public class StationScreen extends AbstractStationScreen {
 
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 
-		UIRenderHelper.drawStretched(ms, x + 21, y + 43, 150, 46, -100, AllGuiTextures.STATION_TEXTBOX_MIDDLE);
 		AllGuiTextures.STATION_TEXTBOX_TOP.render(ms, x + 21, y + 42);
+		UIRenderHelper.drawStretched(ms, x + 21, y + 60, 150, 26, 0, AllGuiTextures.STATION_TEXTBOX_MIDDLE);
 		AllGuiTextures.STATION_TEXTBOX_BOTTOM.render(ms, x + 21, y + 86);
 
 		ms.pushPose();

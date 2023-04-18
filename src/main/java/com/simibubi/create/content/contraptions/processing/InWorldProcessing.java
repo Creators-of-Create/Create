@@ -40,6 +40,7 @@ import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -170,20 +171,22 @@ public class InWorldProcessing {
 			.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, world);
 
 		if (type == Type.BLASTING) {
-			if (!smokingRecipe.isPresent()) {
+			RECIPE_WRAPPER.setItem(0, stack);
+			Optional<? extends AbstractCookingRecipe> smeltingRecipe = world.getRecipeManager()
+				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, world);
+			if (!smeltingRecipe.isPresent()) {
 				RECIPE_WRAPPER.setItem(0, stack);
-				Optional<SmeltingRecipe> smeltingRecipe = world.getRecipeManager()
-					.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, world);
-
-				if (smeltingRecipe.isPresent())
-					return applyRecipeOn(stack, smeltingRecipe.get());
-
-				RECIPE_WRAPPER.setItem(0, stack);
-				Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
+				smeltingRecipe = world.getRecipeManager()
 					.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, world);
+			}
 
-				if (blastingRecipe.isPresent())
-					return applyRecipeOn(stack, blastingRecipe.get());
+			if (smeltingRecipe.isPresent()) {
+				if (!smokingRecipe.isPresent() || !ItemStack.isSame(smokingRecipe.get()
+					.getResultItem(),
+					smeltingRecipe.get()
+						.getResultItem())) {
+					return applyRecipeOn(stack, smeltingRecipe.get());
+				}
 			}
 
 			return Collections.emptyList();
