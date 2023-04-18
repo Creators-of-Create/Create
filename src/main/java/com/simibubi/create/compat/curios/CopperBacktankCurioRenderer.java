@@ -64,7 +64,7 @@ public class CopperBacktankCurioRenderer implements ICurioRenderer {
 
 		// If we have a backtank in the armor slot, shift it around so the "back" slot is a micro backtank
 		ItemStack chestItemSlot = slotContext.entity().getItemBySlot(EquipmentSlot.CHEST);
-		if(AllItems.COPPER_BACKTANK.isIn(chestItemSlot)) {
+		if (AllItems.COPPER_BACKTANK.isIn(chestItemSlot)) {
 			matrixStack.translate(0.125f, 10 / 16f, 0.125f);
 			matrixStack.scale(0.75f, 0.75f, 0.75f);
 		}

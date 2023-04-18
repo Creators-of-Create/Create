@@ -43,11 +43,11 @@ public class BackTankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
 
-		for(Function<LivingEntity, List<ItemStack>> supplier : BACKTANK_SUPPLIERS) {
+		for (Function<LivingEntity, List<ItemStack>> supplier : BACKTANK_SUPPLIERS) {
 			List<ItemStack> result = supplier.apply(entity);
 
-			for(ItemStack stack : result)
-				if(!stack.isEmpty())
+			for (ItemStack stack : result)
+				if (!stack.isEmpty())
 					return stack;
 		}
 
@@ -57,11 +57,11 @@ public class BackTankUtil {
 	public static List<ItemStack> getAllWithAir(LivingEntity entity) {
 		List<ItemStack> all = new ArrayList<>();
 
-		for(Function<LivingEntity, List<ItemStack>> supplier : BACKTANK_SUPPLIERS) {
+		for (Function<LivingEntity, List<ItemStack>> supplier : BACKTANK_SUPPLIERS) {
 			List<ItemStack> result = supplier.apply(entity);
 
-			for(ItemStack stack : result)
-				if(hasAirRemaining(stack))
+			for (ItemStack stack : result)
+				if (hasAirRemaining(stack))
 					all.add(stack);
 		}
 
@@ -165,6 +165,7 @@ public class BackTankUtil {
 		if (backtanks.size() == 1)
 			return backtanks.get(0).getItem().getBarWidth(backtanks.get(0));
 
+		// If there is more than one backtank, average the bar widths.
 		int sumBarWidth = backtanks.stream()
 			.map(backtank -> backtank.getItem().getBarWidth(backtank))
 			.reduce(0 , Integer::sum);
@@ -188,10 +189,11 @@ public class BackTankUtil {
 		if (backtanks.size() == 1)
 			return backtanks.get(0).getItem().getBarColor(backtanks.get(0));
 
+		// If there is more than one backtank, use the most full for the bar color.
 		ItemStack mostFull = backtanks.get(0);
 		float mostFullPercent = getAir(mostFull) / maxAir(mostFull);
 
-		for(ItemStack backtank : backtanks) {
+		for (ItemStack backtank : backtanks) {
 			float fullPercent = getAir(backtank) / maxAir(backtank);
 			if(fullPercent <= mostFullPercent)
 				continue;

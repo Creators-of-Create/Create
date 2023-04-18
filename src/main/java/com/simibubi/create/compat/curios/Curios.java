@@ -33,11 +33,13 @@ public class Curios {
 
 	/**
 	 * Resolves the Stacks Handler Map given an Entity.
-	 * It is recommended to then use a
+	 * It is recommended to then use a `.map(curiosMap -> curiosMap.get({key})`,
+	 * which can be null and would therefore be caught by the Optional::map function.
+	 *
 	 * @param entity The entity which possibly has a Curio Inventory capability
 	 * @return An optional of the Stacks Handler Map
 	 */
-	private static Optional<Map<String, ICurioStacksHandler>> resolveCurios(LivingEntity entity) {
+	private static Optional<Map<String, ICurioStacksHandler>> resolveCuriosMap(LivingEntity entity) {
 		return entity.getCapability(CuriosCapability.INVENTORY).map(ICuriosItemHandler::getCurios);
 	}
 
@@ -47,7 +49,7 @@ public class Curios {
 		// Enable if the backtank should remove back slots
 		// forgeEventBus.addListener(Curios::onEquipmentChanged);
 
-		GogglesItem.addIsWearingPredicate(player -> resolveCurios(player)
+		GogglesItem.addIsWearingPredicate(player -> resolveCuriosMap(player)
 			.map(curiosMap -> curiosMap.get("head"))
 			.map(stacksHandler -> {
 				// Check all the Head slots for Goggles existing
@@ -60,10 +62,10 @@ public class Curios {
 			})
 			.orElse(false));
 
-		BackTankUtil.addBacktankSupplier(entity -> resolveCurios(entity)
+		BackTankUtil.addBacktankSupplier(entity -> resolveCuriosMap(entity)
 			.map(curiosMap -> {
 				List<ItemStack> stacks = new ArrayList<>();
-				for(ICurioStacksHandler stacksHandler : curiosMap.values()) {
+				for (ICurioStacksHandler stacksHandler : curiosMap.values()) {
 					// Search all the curio slots for pressurized air sources, and add them to the list
 					int slots = stacksHandler.getSlots();
 					for (int slot = 0; slot < slots; slot++) {
@@ -102,16 +104,17 @@ public class Curios {
 	/**
 	 * A listener for the LivingEquipmentChangeEvent event, handling changes to Curio slots that should happen
 	 * when particular equipment is equipped.
+	 *
 	 * @param event The event.
 	 */
 	private static void onEquipmentChanged(final LivingEquipmentChangeEvent event) {
-		final Optional<ICurioStacksHandler> optStacksHandler = resolveCurios(event.getEntityLiving()).map(curiosMap -> curiosMap.get("back"));
+		final Optional<ICurioStacksHandler> optStacksHandler = resolveCuriosMap(event.getEntityLiving()).map(curiosMap -> curiosMap.get("back"));
 		if (optStacksHandler.isEmpty())
 			return;
 		final ICurioStacksHandler stacksHandler = optStacksHandler.get();
 
 		// Test for if the backtank is being added to the chest slot -- if so, remove all back slots.
-		if(event.getSlot() == EquipmentSlot.CHEST) {
+		if (event.getSlot() == EquipmentSlot.CHEST) {
 
 			final boolean removing = AllItems.COPPER_BACKTANK.isIn(event.getFrom());
 			final boolean adding = AllItems.COPPER_BACKTANK.isIn(event.getTo());
