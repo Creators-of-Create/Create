@@ -173,13 +173,15 @@ public class BlockMovementChecks {
 	private static boolean isMovementNecessaryFallback(BlockState state, Level world, BlockPos pos) {
 		if (isBrittle(state))
 			return true;
-		if (!state.getMaterial()
-			.isReplaceable())
+		if (AllBlockTags.MOVABLE_EMPTY_COLLIDER.matches(state))
 			return true;
-		if (!state.getCollisionShape(world, pos)
+		if (state.getCollisionShape(world, pos)
 			.isEmpty())
-			return true;
-		return AllBlockTags.MOVABLE_EMPTY_COLLIDER.matches(state);
+			return false;
+		if (state.getMaterial()
+			.isReplaceable())
+			return false;
+		return true;
 	}
 
 	private static boolean isMovementAllowedFallback(BlockState state, Level world, BlockPos pos) {

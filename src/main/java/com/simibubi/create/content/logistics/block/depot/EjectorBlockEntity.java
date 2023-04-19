@@ -102,10 +102,10 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		super.addBehaviours(behaviours);
 		behaviours.add(depotBehaviour = new DepotBehaviour(this));
 
-		maxStackSize = new ScrollValueBehaviour(Lang.translateDirect("weighted_ejector.stack_size"), this, new EjectorSlot())
-			.between(0, 64)
-			.withFormatter(i -> i == 0 ? "*" : String.valueOf(i))
-			.onlyActiveWhen(() -> state == State.CHARGED);
+		maxStackSize =
+			new ScrollValueBehaviour(Lang.translateDirect("weighted_ejector.stack_size"), this, new EjectorSlot())
+				.between(0, 64)
+				.withFormatter(i -> i == 0 ? "*" : String.valueOf(i));
 		behaviours.add(maxStackSize);
 
 		depotBehaviour.maxStackSize = () -> maxStackSize.getValue();
@@ -167,7 +167,8 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 
 			if (launcher.getHorizontalDistance() * launcher.getHorizontalDistance()
 				+ launcher.getVerticalDistance() * launcher.getVerticalDistance() >= 25 * 25)
-				AllPackets.getChannel().sendToServer(new EjectorAwardPacket(worldPosition));
+				AllPackets.getChannel()
+					.sendToServer(new EjectorAwardPacket(worldPosition));
 
 			if (!(playerEntity.getItemBySlot(EquipmentSlot.CHEST)
 				.getItem() instanceof ElytraItem))
@@ -178,7 +179,8 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 			playerEntity.setDeltaMovement(playerEntity.getDeltaMovement()
 				.scale(.75f));
 			deployElytra(playerEntity);
-			AllPackets.getChannel().sendToServer(new EjectorElytraPacket(worldPosition));
+			AllPackets.getChannel()
+				.sendToServer(new EjectorElytraPacket(worldPosition));
 		}
 
 		if (doLogic) {
@@ -469,7 +471,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 		return launcher.getGlobalVelocity(time, getFacing().getOpposite(), worldPosition)
 			.scale(.5f);
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -613,15 +615,21 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 
 	}
 
-	private static class EjectorSlot extends ValueBoxTransform.Sided {
+	private class EjectorSlot extends ValueBoxTransform.Sided {
 
 		@Override
 		protected Vec3 getLocalOffset(BlockState state) {
-			return new Vec3(.5, 13 / 16f, .5).add(VecHelper.rotate(new Vec3(0, 0, -.3), angle(state), Axis.Y));
+			if (direction != Direction.UP)
+				return super.getLocalOffset(state);
+			return new Vec3(.5, 10.5 / 16f, .5).add(VecHelper.rotate(VecHelper.voxelSpace(0, 0, -5), angle(state), Axis.Y));
 		}
 
 		@Override
 		protected void rotate(BlockState state, PoseStack ms) {
+			if (direction != Direction.UP) {
+				super.rotate(state, ms);
+				return;
+			}
 			TransformStack.cast(ms)
 				.rotateY(angle(state))
 				.rotateX(90);
@@ -636,17 +644,14 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 
 		@Override
 		protected boolean isSideActive(BlockState state, Direction direction) {
-			return direction == Direction.UP;
-		}
-
-		@Override
-		protected float getScale() {
-			return 0.2f;
+			return direction.getAxis() == state.getValue(EjectorBlock.HORIZONTAL_FACING)
+				.getAxis()
+				|| direction == Direction.UP && EjectorBlockEntity.this.state != EjectorBlockEntity.State.CHARGED;
 		}
 
 		@Override
 		protected Vec3 getSouthLocation() {
-			return Vec3.ZERO;
+			return direction == Direction.UP ? Vec3.ZERO : VecHelper.voxelSpace(8, 6, 15.5);
 		}
 
 	}

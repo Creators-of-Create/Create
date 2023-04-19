@@ -1,5 +1,6 @@
 package com.simibubi.create.content.schematics.block;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,8 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity.CasingType;
+import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
@@ -741,38 +744,55 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			return blockState;
 
 		return AllBlocks.SHAFT.getDefaultState()
-			.setValue(AbstractSimpleShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y :
-				facing.getClockWise()
+			.setValue(AbstractSimpleShaftBlock.AXIS, slope == BeltSlope.SIDEWAYS ? Axis.Y
+				: facing.getClockWise()
 					.getAxis());
 	}
 
 	protected void launchBlockOrBelt(BlockPos target, ItemStack icon, BlockState blockState, BlockEntity blockEntity) {
 		if (AllBlocks.BELT.has(blockState)) {
 			blockState = stripBeltIfNotLast(blockState);
-			if (blockEntity instanceof BeltBlockEntity && AllBlocks.BELT.has(blockState))
-				launchBelt(target, blockState, ((BeltBlockEntity) blockEntity).beltLength);
-			else if (blockState != Blocks.AIR.defaultBlockState())
-				launchBlock(target, icon, blockState, null);
-		} else {
-			CompoundTag data = null;
-			if (blockEntity != null) {
-				if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-					data = blockEntity.saveWithFullMetadata();
-					data = NBTProcessors.process(blockEntity, data, true);
-				} else if (blockEntity instanceof IPartialSafeNBT) {
-					data = new CompoundTag();
-					((IPartialSafeNBT) blockEntity).writeSafe(data);
-					data = NBTProcessors.process(blockEntity, data, true);
+			if (blockEntity instanceof BeltBlockEntity bbe && AllBlocks.BELT.has(blockState)) {
+				CasingType[] casings = new CasingType[bbe.beltLength];
+				Arrays.fill(casings, CasingType.NONE);
+				BlockPos currentPos = target;
+				for (int i = 0; i < bbe.beltLength; i++) {
+					BlockState currentState = bbe.getLevel()
+						.getBlockState(currentPos);
+					if (!(currentState.getBlock() instanceof BeltBlock))
+						break;
+					if (!(bbe.getLevel()
+						.getBlockEntity(currentPos) instanceof BeltBlockEntity beltAtSegment))
+						break;
+					casings[i] = beltAtSegment.casing;
+					currentPos = BeltBlock.nextSegmentPosition(currentState, currentPos,
+						blockState.getValue(BeltBlock.PART) != BeltPart.END);
 				}
-			}
-			launchBlock(target, icon, blockState, data);
+				launchBelt(target, blockState, bbe.beltLength, casings);
+			} else if (blockState != Blocks.AIR.defaultBlockState())
+				launchBlock(target, icon, blockState, null);
+			return;
 		}
+
+		CompoundTag data = null;
+		if (blockEntity != null) {
+			if (AllBlockTags.SAFE_NBT.matches(blockState)) {
+				data = blockEntity.saveWithFullMetadata();
+				data = NBTProcessors.process(blockEntity, data, true);
+			} else if (blockEntity instanceof IPartialSafeNBT) {
+				data = new CompoundTag();
+				((IPartialSafeNBT) blockEntity).writeSafe(data);
+				data = NBTProcessors.process(blockEntity, data, true);
+			}
+		}
+
+		launchBlock(target, icon, blockState, data);
 	}
 
-	protected void launchBelt(BlockPos target, BlockState state, int length) {
+	protected void launchBelt(BlockPos target, BlockState state, int length, CasingType[] casings) {
 		blocksPlaced++;
 		ItemStack connector = AllItems.BELT_CONNECTOR.asStack();
-		flyingBlocks.add(new LaunchedItem.ForBelt(this.getBlockPos(), target, connector, state, length));
+		flyingBlocks.add(new LaunchedItem.ForBelt(this.getBlockPos(), target, connector, state, casings));
 		playFiringSound();
 	}
 

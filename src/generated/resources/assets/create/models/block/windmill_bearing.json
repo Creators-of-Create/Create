@@ -2,7 +2,6 @@
   "parent": "create:block/bearing/block",
   "textures": {
     "side": "create:block/windmill_bearing_side",
-    "nook": "create:block/andesite_casing",
     "back": "create:block/gearbox"
   }
 }

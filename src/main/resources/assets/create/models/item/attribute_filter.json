@@ -1,7 +1,0 @@
-{
-	"parent": "create:item/filter",
-	"textures": {
-		"layer0": "create:item/brass_filter",
-		"particle": "create:item/brass_filter"
-	}
-}

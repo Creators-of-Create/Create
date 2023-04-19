@@ -225,7 +225,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		if (context.contraption instanceof MountedContraption)
 			lowerLimit = 1f;
 		if (context.contraption instanceof CarriageContraption)
-			lowerLimit = 4f;
+			lowerLimit = 2f;
 		return Mth.clamp(Math.abs(context.getAnimationSpeed()) / 500f, lowerLimit, 16f);
 	}
 

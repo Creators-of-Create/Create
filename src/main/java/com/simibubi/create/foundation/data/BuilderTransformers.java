@@ -180,6 +180,7 @@ public class BuilderTransformers {
 		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
 		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
 		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
+		String gearbox = casing.equals("brass") ? "brass_gearbox" : "gearbox";
 		return encasedBase(b, drop).addLayer(() -> RenderType::cutoutMipped)
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
@@ -192,12 +193,15 @@ public class BuilderTransformers {
 				return p.models()
 					.withExistingParent(modelName, p.modLoc("block/" + blockFolder + "/block" + suffix))
 					.texture("casing", Create.asResource("block/" + casing + "_casing"))
+					.texture("particle", Create.asResource("block/" + casing + "_casing"))
+					.texture("4", Create.asResource("block/" + gearbox))
 					.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
 					.texture("side", Create.asResource("block/" + casing + encasedSuffix));
 			}, false))
 			.item()
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + blockFolder + "/item"))
 				.texture("casing", Create.asResource("block/" + casing + "_casing"))
+				.texture("particle", Create.asResource("block/" + casing + "_casing"))
 				.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
 				.texture("side", Create.asResource("block/" + casing + encasedSuffix)))
 			.build();
@@ -365,12 +369,10 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> bearing(String prefix,
-		String backTexture, boolean woodenTop) {
+		String backTexture) {
 		ResourceLocation baseBlockModelLocation = Create.asResource("block/bearing/block");
 		ResourceLocation baseItemModelLocation = Create.asResource("block/bearing/item");
-		ResourceLocation topTextureLocation = Create.asResource("block/bearing_top" + (woodenTop ? "_wooden" : ""));
-		ResourceLocation nookTextureLocation =
-			Create.asResource("block/" + (woodenTop ? "andesite" : "brass") + "_casing");
+		ResourceLocation topTextureLocation = Create.asResource("block/bearing_top");
 		ResourceLocation sideTextureLocation = Create.asResource("block/" + prefix + "_bearing_side");
 		ResourceLocation backTextureLocation = Create.asResource("block/" + backTexture);
 		return b -> b.initialProperties(SharedProperties::stone)
@@ -378,7 +380,6 @@ public class BuilderTransformers {
 			.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
 				.withExistingParent(c.getName(), baseBlockModelLocation)
 				.texture("side", sideTextureLocation)
-				.texture("nook", nookTextureLocation)
 				.texture("back", backTextureLocation)))
 			.item()
 			.model((c, p) -> p.withExistingParent(c.getName(), baseItemModelLocation)

@@ -62,6 +62,9 @@ public class FluidPipeBlockEntity extends SmartBlockEntity implements ITransform
 			BlockPos offsetPos = pos.relative(direction);
 			BlockState otherState = world.getBlockState(offsetPos);
 
+			if (state.getBlock() instanceof EncasedPipeBlock && attachment != AttachmentTypes.DRAIN)
+				return AttachmentTypes.NONE;
+
 			if (attachment == AttachmentTypes.RIM && !FluidPipeBlock.isPipe(otherState)
 				&& !AllBlocks.MECHANICAL_PUMP.has(otherState) && !AllBlocks.ENCASED_FLUID_PIPE.has(otherState)) {
 				FluidTransportBehaviour pipeBehaviour =

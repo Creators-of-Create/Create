@@ -133,7 +133,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 
 		sequenceContext = SequenceContext.fromGearshift(SequencerInstructions.TURN_ANGLE, rotationSpeed, target);
 		updateGeneratedRotation();
-		cooldown = 5;
+		cooldown = 4;
 
 		return true;
 	}

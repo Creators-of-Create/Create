@@ -127,7 +127,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		}
 
 		BlockPos argMax = null;
-		double max = Double.MIN_VALUE;
+		double max = -1;
 		for (BlockPos toBreak : positionsToBreak) {
 			float hardness = context.world.getBlockState(toBreak)
 				.getDestroySpeed(world, toBreak);
@@ -135,6 +135,11 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 				continue;
 			max = hardness;
 			argMax = toBreak;
+		}
+		
+		if (argMax == null) {
+			triggerPaver(context, pos);
+			return;
 		}
 
 		context.data.put("ReferencePos", NbtUtils.writeBlockPos(pos));
@@ -181,6 +186,16 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (mode != RollingMode.TUNNEL_PAVE)
 			return positions;
 
+		int startingY = 1;
+		if (!getStateToPaveWith(context).isAir()) {
+			ItemStack filter = ItemStack.of(context.blockEntityData.getCompound("Filter"));
+			if (!ItemHelper
+				.extract(context.contraption.getSharedInventory(),
+					stack -> FilterItem.test(context.world, stack, filter), 1, true)
+				.isEmpty())
+				startingY = 0;
+		}
+		
 		// Train
 		PaveTask profileForTracks = createHeightProfileForTracks(context);
 		if (profileForTracks != null) {
@@ -188,7 +203,11 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 				float height = profileForTracks.get(coords);
 				BlockPos targetPosition = new BlockPos(coords.getFirst(), height, coords.getSecond());
 				boolean shouldPlaceSlab = height > Math.floor(height) + .45;
-				for (int i = 0; i <= (shouldPlaceSlab ? 3 : 2); i++)
+				if (startingY == 1 && shouldPlaceSlab && context.world.getBlockState(targetPosition.above())
+					.getOptionalValue(SlabBlock.TYPE)
+					.orElse(SlabType.DOUBLE) == SlabType.BOTTOM)
+					startingY = 2;
+				for (int i = startingY; i <= (shouldPlaceSlab ? 3 : 2); i++)
 					if (testBreakerTarget(context, targetPosition.above(i), i))
 						positions.add(targetPosition.above(i));
 			}
@@ -196,7 +215,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		}
 
 		// Otherwise
-		for (int i = 0; i <= 2; i++)
+		for (int i = startingY; i <= 2; i++)
 			if (testBreakerTarget(context, visitedPos.above(i), i))
 				positions.add(visitedPos.above(i));
 

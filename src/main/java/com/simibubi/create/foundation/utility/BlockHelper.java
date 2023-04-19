@@ -245,10 +245,7 @@ public class BlockHelper {
 		if (state.hasProperty(BlockStateProperties.WATERLOGGED))
 			state = state.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
-		if (AllBlocks.BELT.has(state)) {
-			world.setBlock(target, state, 2);
-			return;
-		} else if (state.getBlock() == Blocks.COMPOSTER)
+		if (state.getBlock() == Blocks.COMPOSTER)
 			state = Blocks.COMPOSTER.defaultBlockState();
 		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
 			state = ((IPlantable) state.getBlock()).getPlant(world, target);
@@ -273,6 +270,8 @@ public class BlockHelper {
 
 		if (state.getBlock() instanceof BaseRailBlock) {
 			placeRailWithoutUpdate(world, state, target);
+		} else if (AllBlocks.BELT.has(state)) {
+			world.setBlock(target, state, 2);
 		} else {
 			world.setBlock(target, state, 18);
 		}

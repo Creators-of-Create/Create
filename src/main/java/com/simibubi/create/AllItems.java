@@ -340,13 +340,9 @@ public class AllItems {
 	// Logistics
 
 	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
-		.model(AssetLookup.existingItemModel())
-		.register();
-
-	public static final ItemEntry<FilterItem> ATTRIBUTE_FILTER =
-		REGISTRATE.item("attribute_filter", FilterItem::attribute)
-			.model(AssetLookup.existingItemModel())
-			.register();
+		.register(), ATTRIBUTE_FILTER =
+			REGISTRATE.item("attribute_filter", FilterItem::attribute)
+				.register();
 
 	public static final ItemEntry<ScheduleItem> SCHEDULE = REGISTRATE.item("schedule", ScheduleItem::new)
 		.lang("Train Schedule")

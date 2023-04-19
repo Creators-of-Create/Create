@@ -298,15 +298,11 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 		}
 
 		if (AllBlocks.BRASS_CASING.isIn(heldItem)) {
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
 			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.BRASS));
 			return InteractionResult.SUCCESS;
 		}
 
 		if (AllBlocks.ANDESITE_CASING.isIn(heldItem)) {
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
 			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.ANDESITE));
 			return InteractionResult.SUCCESS;
 		}

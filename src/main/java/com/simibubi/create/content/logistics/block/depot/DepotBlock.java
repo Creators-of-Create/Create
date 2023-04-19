@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -34,7 +35,7 @@ public class DepotBlock extends Block implements IBE<DepotBlockEntity>, IWrencha
 	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
 		CollisionContext p_220053_4_) {
-		return AllShapes.DEPOT;
+		return AllShapes.CASING_13PX.get(Direction.UP);
 	}
 
 	@Override

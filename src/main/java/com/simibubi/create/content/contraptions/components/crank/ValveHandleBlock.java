@@ -89,7 +89,7 @@ public class ValveHandleBlock extends HandCrankBlock {
 		}
 
 		onBlockEntityUse(level, pos,
-			hcbe -> (hcbe instanceof ValveHandleBlockEntity vhbe) && vhbe.activate(player.isCrouching())
+			hcbe -> (hcbe instanceof ValveHandleBlockEntity vhbe) && vhbe.activate(player.isSteppingCarefully())
 				? InteractionResult.SUCCESS
 				: InteractionResult.PASS);
 		return true;
@@ -115,11 +115,11 @@ public class ValveHandleBlock extends HandCrankBlock {
 
 	@Override
 	public int getRotationSpeed() {
-		return 16;
+		return 32;
 	}
 
 	public static Couple<Integer> getSpeedRange() {
-		return Couple.create(16, 16);
+		return Couple.create(32, 32);
 	}
 
 }

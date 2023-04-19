@@ -443,9 +443,9 @@ public class AllBlocks {
 
 	public static final BlockEntry<ClutchBlock> CLUTCH = REGISTRATE.block("clutch", ClutchBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.addLayer(() -> RenderType::cutoutMipped)
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.properties(p -> p.color(MaterialColor.PODZOL))
+		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(BlockStressDefaults.setNoImpact())
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
@@ -455,9 +455,9 @@ public class AllBlocks {
 
 	public static final BlockEntry<GearshiftBlock> GEARSHIFT = REGISTRATE.block("gearshift", GearshiftBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.addLayer(() -> RenderType::cutoutMipped)
 		.properties(BlockBehaviour.Properties::noOcclusion)
 		.properties(p -> p.color(MaterialColor.PODZOL))
+		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(BlockStressDefaults.setNoImpact())
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
@@ -467,7 +467,6 @@ public class AllBlocks {
 
 	public static final BlockEntry<EncasedBeltBlock> ENCASED_CHAIN_DRIVE =
 		REGISTRATE.block("encased_chain_drive", EncasedBeltBlock::new)
-			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(SharedProperties::stone)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.properties(p -> p.color(MaterialColor.PODZOL))
@@ -475,7 +474,6 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> p.models()
 				.getExistingFile(p.modLoc("block/" + c.getName() + "/" + suffix))).generate(c, p))
-				.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -1139,7 +1137,7 @@ public class AllBlocks {
 		REGISTRATE.block("windmill_bearing", WindmillBearingBlock::new)
 			.transform(axeOrPickaxe())
 			.properties(p -> p.color(MaterialColor.PODZOL))
-			.transform(BuilderTransformers.bearing("windmill", "gearbox", true))
+			.transform(BuilderTransformers.bearing("windmill", "gearbox"))
 			.transform(BlockStressDefaults.setCapacity(512.0))
 			.transform(BlockStressDefaults.setGeneratorSpeed(WindmillBearingBlock::getSpeedRange))
 			.tag(AllBlockTags.SAFE_NBT.tag)
@@ -1149,7 +1147,7 @@ public class AllBlocks {
 		REGISTRATE.block("mechanical_bearing", MechanicalBearingBlock::new)
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(axeOrPickaxe())
-			.transform(BuilderTransformers.bearing("mechanical", "gearbox", false))
+			.transform(BuilderTransformers.bearing("mechanical", "gearbox"))
 			.transform(BlockStressDefaults.setImpact(4.0))
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.onRegister(movementBehaviour(new StabilizedBearingMovementBehaviour()))
@@ -1159,7 +1157,7 @@ public class AllBlocks {
 		REGISTRATE.block("clockwork_bearing", ClockworkBearingBlock::new)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
 			.transform(axeOrPickaxe())
-			.transform(BuilderTransformers.bearing("clockwork", "brass_gearbox", false))
+			.transform(BuilderTransformers.bearing("clockwork", "brass_gearbox"))
 			.transform(BlockStressDefaults.setImpact(4.0))
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();

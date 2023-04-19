@@ -2,6 +2,7 @@
   "parent": "create:block/encased_cogwheel/item",
   "textures": {
     "casing": "create:block/andesite_casing",
+    "particle": "create:block/andesite_casing",
     "1": "minecraft:block/stripped_spruce_log_top",
     "side": "create:block/andesite_encased_cogwheel_side"
   }

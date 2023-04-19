@@ -1,8 +1,0 @@
-{
-	"credit": "Made with Blockbench",
-	"parent": "builtin/generated",
-	"textures": {
-		"particle": "create:item/andesite_filter",
-		"layer0": "create:item/andesite_filter"
-	}
-}

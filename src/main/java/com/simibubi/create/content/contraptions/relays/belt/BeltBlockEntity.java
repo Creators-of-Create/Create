@@ -429,16 +429,26 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	public void setCasingType(CasingType type) {
 		if (casing == type)
 			return;
+		
+		BlockState blockState = getBlockState();
+		boolean shouldBlockHaveCasing = type != CasingType.NONE;
+
+		if (level.isClientSide) {
+			casing = type;
+			level.setBlock(worldPosition, blockState.setValue(BeltBlock.CASING, shouldBlockHaveCasing), 0);
+			requestModelDataUpdate();
+			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 16);
+			return;
+		}
+		
 		if (casing != CasingType.NONE)
 			level.levelEvent(2001, worldPosition,
 				Block.getId(casing == CasingType.ANDESITE ? AllBlocks.ANDESITE_CASING.getDefaultState()
 					: AllBlocks.BRASS_CASING.getDefaultState()));
-		casing = type;
-		boolean shouldBlockHaveCasing = type != CasingType.NONE;
-		BlockState blockState = getBlockState();
 		if (blockState.getValue(BeltBlock.CASING) != shouldBlockHaveCasing)
 			KineticBlockEntity.switchToBlockState(level, worldPosition,
 				blockState.setValue(BeltBlock.CASING, shouldBlockHaveCasing));
+		casing = type;
 		setChanged();
 		sendData();
 	}
