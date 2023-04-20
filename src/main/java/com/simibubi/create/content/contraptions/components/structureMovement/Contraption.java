@@ -1006,7 +1006,7 @@ public abstract class Contraption {
 		if (disassembled)
 			return;
 		disassembled = true;
-		
+
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (StructureBlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
@@ -1047,6 +1047,10 @@ public abstract class Contraption {
 				if (state.hasProperty(SlidingDoorBlock.VISIBLE))
 					state = state.setValue(SlidingDoorBlock.VISIBLE, !state.getValue(SlidingDoorBlock.OPEN))
 						.setValue(SlidingDoorBlock.POWERED, false);
+				// Stop Sculk shriekers from getting "stuck" if moved mid-shriek.
+				if(state.is(Blocks.SCULK_SHRIEKER)){
+					state = Blocks.SCULK_SHRIEKER.defaultBlockState();
+				}
 
 				world.setBlock(targetPos, state, Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL);
 
@@ -1060,6 +1064,12 @@ public abstract class Contraption {
 				BlockEntity tileEntity = world.getBlockEntity(targetPos);
 
 				CompoundTag tag = block.nbt;
+
+				// Temporary fix: Calling load(CompoundTag tag) on a Sculk sensor causes it to not react to vibrations.
+				if(state.is(Blocks.SCULK_SENSOR) || state.is(Blocks.SCULK_SHRIEKER)){
+					tag = null;
+				}
+
 				if (tileEntity != null)
 					tag = NBTProcessors.process(tileEntity, tag, false);
 				if (tileEntity != null && tag != null) {
