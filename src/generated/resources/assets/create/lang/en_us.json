@@ -1099,6 +1099,7 @@
 	"create.logistics.filter.any_amount_short": "Any",
 	"create.logistics.filter.up_to": "Up to",
 	"create.logistics.filter.exactly": "Exactly",
+	"create.logistics.filter.requires_item_in_inventory": "Requires %1$s item in Inventory",
 	"create.logistics.creative_crate.supply": "Infinite Supply",
 	"create.logistics.train_observer.cargo_filter": "Cargo Filter",
 

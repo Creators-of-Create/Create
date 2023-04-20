@@ -1030,9 +1030,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("P")
 				.pattern("G")),
 
-		CLIPBOARD_CLEAR = create(AllItems.CLIPBOARD).withSuffix("_clear")
-			.unlockedBy(AllItems.CLIPBOARD::get)
-			.viaShapeless(b -> b.requires(AllItems.CLIPBOARD.get())),
+		CLIPBOARD_CLEAR = clearData(AllItems.CLIPBOARD),
+		SCHEDULE_CLEAR = clearData(AllItems.SCHEDULE),
+		FILTER_CLEAR = clearData(AllItems.FILTER),
+		ATTRIBUTE_FILTER_CLEAR = clearData(AllItems.ATTRIBUTE_FILTER),
 
 		DIVING_HELMET = create(AllItems.COPPER_DIVING_HELMET).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
@@ -1235,6 +1236,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.viaShapeless(b -> b.requires(currentEntry.get()));
 		}
 		return result;
+	}
+
+	GeneratedRecipe clearData(ItemProviderEntry<? extends ItemLike> item) {
+		return create(item).withSuffix("_clear")
+			.unlockedBy(item::get)
+			.viaShapeless(b -> b.requires(item.get()));
 	}
 
 	class GeneratedRecipeBuilder {

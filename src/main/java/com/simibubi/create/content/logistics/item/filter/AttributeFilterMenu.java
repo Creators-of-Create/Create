@@ -141,7 +141,6 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 
 	@Override
 	protected void saveData(ItemStack filterItem) {
-		super.saveData(filterItem);
 		filterItem.getOrCreateTag()
 				.putInt("WhitelistMode", whitelistMode.ordinal());
 		ListTag attributes = new ListTag();
@@ -156,6 +155,9 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 		});
 		filterItem.getOrCreateTag()
 			.put("MatchedAttributes", attributes);
+		
+		if (attributes.isEmpty() && whitelistMode == WhitelistMode.WHITELIST_DISJ)
+			filterItem.setTag(null);
 	}
 
 }

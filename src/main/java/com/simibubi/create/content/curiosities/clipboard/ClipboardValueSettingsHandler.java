@@ -97,12 +97,16 @@ public class ClipboardValueSettingsHandler {
 		boolean canCopy = smartBE.getAllBehaviours()
 			.stream()
 			.anyMatch(b -> b instanceof ClipboardCloneable cc
-				&& cc.writeToClipboard(new CompoundTag(), target.getDirection()));
+				&& cc.writeToClipboard(new CompoundTag(), target.getDirection()))
+			|| smartBE instanceof ClipboardCloneable ccbe
+				&& ccbe.writeToClipboard(new CompoundTag(), target.getDirection());
 
-		boolean canPaste = tagElement != null && smartBE.getAllBehaviours()
+		boolean canPaste = tagElement != null && (smartBE.getAllBehaviours()
 			.stream()
 			.anyMatch(b -> b instanceof ClipboardCloneable cc && cc.readFromClipboard(
-				tagElement.getCompound(cc.getClipboardKey()), mc.player, target.getDirection(), true));
+				tagElement.getCompound(cc.getClipboardKey()), mc.player, target.getDirection(), true))
+			|| smartBE instanceof ClipboardCloneable ccbe && ccbe.readFromClipboard(
+				tagElement.getCompound(ccbe.getClipboardKey()), mc.player, target.getDirection(), true));
 
 		if (!canCopy && !canPaste)
 			return;
@@ -162,6 +166,21 @@ public class ClipboardValueSettingsHandler {
 			anySuccess |= success;
 			if (success)
 				tag.put(clipboardKey, compoundTag);
+		}
+
+		if (smartBE instanceof ClipboardCloneable ccbe) {
+			anyValid = true;
+			String clipboardKey = ccbe.getClipboardKey();
+			if (paste) {
+				anySuccess |= ccbe.readFromClipboard(tag.getCompound(clipboardKey), player, event.getFace(),
+					world.isClientSide());
+			} else {
+				CompoundTag compoundTag = new CompoundTag();
+				boolean success = ccbe.writeToClipboard(compoundTag, event.getFace());
+				anySuccess |= success;
+				if (success)
+					tag.put(clipboardKey, compoundTag);
+			}
 		}
 
 		if (!anyValid)

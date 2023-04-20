@@ -4,19 +4,22 @@ import static com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock
 
 import java.util.List;
 
+import com.simibubi.create.content.curiosities.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class BrassDiodeBlockEntity extends SmartBlockEntity {
+public abstract class BrassDiodeBlockEntity extends SmartBlockEntity implements ClipboardCloneable {
 
 	protected int state;
 	ScrollValueBehaviour maxState;
@@ -81,4 +84,28 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity {
 		return (value / 20 / 60) + "m";
 	}
 
+	@Override
+	public String getClipboardKey() {
+		return "Block";
+	}
+	
+	@Override
+	public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
+		if (!tag.contains("Inverted"))
+			return false;
+		if (simulate)
+			return true;
+		BlockState blockState = getBlockState();
+		if (blockState.getValue(BrassDiodeBlock.INVERTED) != tag.getBoolean("Inverted"))
+			level.setBlockAndUpdate(worldPosition, blockState.cycle(BrassDiodeBlock.INVERTED));
+		return true;
+	}
+	
+	@Override
+	public boolean writeToClipboard(CompoundTag tag, Direction side) {
+		tag.putBoolean("Inverted", getBlockState().getOptionalValue(BrassDiodeBlock.INVERTED)
+			.orElse(false));
+		return true;
+	}
+	
 }

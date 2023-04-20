@@ -45,12 +45,12 @@ public class FilterMenu extends AbstractFilterMenu {
 			for (int col = 0; col < 9; ++col)
 				this.addSlot(new SlotItemHandler(ghostInventory, col + row * 9, x + col * 18, y + row * 18));
 	}
-	
+
 	@Override
 	protected ItemStackHandler createGhostInventory() {
 		return FilterItem.getFilterItems(contentHolder);
 	}
-	
+
 	@Override
 	protected void initAndReadInventory(ItemStack filterItem) {
 		super.initAndReadInventory(filterItem);
@@ -58,13 +58,21 @@ public class FilterMenu extends AbstractFilterMenu {
 		respectNBT = tag.getBoolean("RespectNBT");
 		blacklist = tag.getBoolean("Blacklist");
 	}
-	
+
 	@Override
 	protected void saveData(ItemStack filterItem) {
 		super.saveData(filterItem);
 		CompoundTag tag = filterItem.getOrCreateTag();
 		tag.putBoolean("RespectNBT", respectNBT);
 		tag.putBoolean("Blacklist", blacklist);
+
+		if (respectNBT || blacklist)
+			return;
+		for (int i = 0; i < ghostInventory.getSlots(); i++)
+			if (!ghostInventory.getStackInSlot(i)
+				.isEmpty())
+				return;
+		filterItem.setTag(null);
 	}
 
 }

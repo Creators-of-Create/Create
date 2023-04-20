@@ -16,10 +16,13 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -37,6 +40,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSettingsBehaviour {
 
@@ -276,10 +281,17 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 					player.getItemInHand(hand)
 						.shrink(1);
 			}
-			if (getFilter().getItem() instanceof FilterItem)
+		}
+
+		if (getFilter().getItem() instanceof FilterItem) {
+			if (!player.isCreative() || ItemHelper
+				.extract(new InvWrapper(player.getInventory()),
+					stack -> ItemHandlerHelper.canItemStacksStack(stack, getFilter()), true)
+				.isEmpty())
 				player.getInventory()
 					.placeItemBackInInventory(getFilter());
 		}
+
 		if (toApply.getItem() instanceof FilterItem)
 			toApply.setCount(1);
 
@@ -308,8 +320,6 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	public boolean writeToClipboard(CompoundTag tag, Direction side) {
 		ValueSettingsBehaviour.super.writeToClipboard(tag, side);
 		ItemStack filter = getFilter(side);
-		if (filter.getItem() instanceof FilterItem)
-			return true;
 		tag.put("Filter", filter.serializeNBT());
 		return true;
 	}
@@ -321,10 +331,48 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 			return upstreamResult;
 		if (simulate)
 			return true;
-		if (getFilter(side).getItem() instanceof FilterItem)
+		if (getWorld().isClientSide)
+			return true;
+
+		ItemStack refund = ItemStack.EMPTY;
+		if (getFilter(side).getItem() instanceof FilterItem && !player.isCreative())
+			refund = getFilter(side).copy();
+
+		ItemStack copied = ItemStack.of(tag.getCompound("Filter"));
+
+		if (copied.getItem() instanceof FilterItem filterType && !player.isCreative()) {
+			InvWrapper inv = new InvWrapper(player.getInventory());
+
+			for (boolean preferStacksWithoutData : Iterate.trueAndFalse) {
+				if (refund.getItem() != filterType && ItemHelper
+					.extract(inv, stack -> stack.getItem() == filterType && preferStacksWithoutData != stack.hasTag(),
+						1, false)
+					.isEmpty())
+					continue;
+
+				if (!refund.isEmpty() && refund.getItem() != filterType)
+					player.getInventory()
+						.placeItemBackInInventory(refund);
+
+				setFilter(side, copied);
+				return true;
+			}
+
+			player.displayClientMessage(Lang
+				.translate("logistics.filter.requires_item_in_inventory", copied.getHoverName()
+					.copy()
+					.withStyle(ChatFormatting.WHITE))
+				.style(ChatFormatting.RED)
+				.component(), true);
+			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+			return false;
+		}
+
+		if (!refund.isEmpty())
 			player.getInventory()
-				.placeItemBackInInventory(getFilter(side).copy());
-		return setFilter(side, ItemStack.of(tag.getCompound("Filter")));
+				.placeItemBackInInventory(refund);
+
+		return setFilter(side, copied);
 	}
 
 }

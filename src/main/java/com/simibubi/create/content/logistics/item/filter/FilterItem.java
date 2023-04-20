@@ -81,24 +81,30 @@ public class FilterItem extends Item implements MenuProvider {
 
 	private List<Component> makeSummary(ItemStack filter) {
 		List<Component> list = new ArrayList<>();
+		if (!filter.hasTag())
+			return list;
 
 		if (type == FilterType.REGULAR) {
 			ItemStackHandler filterItems = getFilterItems(filter);
 			boolean blacklist = filter.getOrCreateTag()
 				.getBoolean("Blacklist");
 
-			list.add((blacklist ? Lang.translateDirect("gui.filter.deny_list") : Lang.translateDirect("gui.filter.allow_list")).withStyle(ChatFormatting.GOLD));
+			list.add((blacklist ? Lang.translateDirect("gui.filter.deny_list")
+				: Lang.translateDirect("gui.filter.allow_list")).withStyle(ChatFormatting.GOLD));
 			int count = 0;
 			for (int i = 0; i < filterItems.getSlots(); i++) {
 				if (count > 3) {
-					list.add(Components.literal("- ...").withStyle(ChatFormatting.DARK_GRAY));
+					list.add(Components.literal("- ...")
+						.withStyle(ChatFormatting.DARK_GRAY));
 					break;
 				}
 
 				ItemStack filterStack = filterItems.getStackInSlot(i);
 				if (filterStack.isEmpty())
 					continue;
-				list.add(Components.literal("- ").append(filterStack.getHoverName()).withStyle(ChatFormatting.GRAY));
+				list.add(Components.literal("- ")
+					.append(filterStack.getHoverName())
+					.withStyle(ChatFormatting.GRAY));
 				count++;
 			}
 
@@ -123,10 +129,12 @@ public class FilterItem extends Item implements MenuProvider {
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
 				boolean inverted = compound.getBoolean("Inverted");
 				if (count > 3) {
-					list.add(Components.literal("- ...").withStyle(ChatFormatting.DARK_GRAY));
+					list.add(Components.literal("- ...")
+						.withStyle(ChatFormatting.DARK_GRAY));
 					break;
 				}
-				list.add(Components.literal("- ").append(attribute.format(inverted)));
+				list.add(Components.literal("- ")
+					.append(attribute.format(inverted)));
 				count++;
 			}
 
@@ -170,6 +178,8 @@ public class FilterItem extends Item implements MenuProvider {
 		ItemStackHandler newInv = new ItemStackHandler(18);
 		if (AllItems.FILTER.get() != stack.getItem())
 			throw new IllegalArgumentException("Cannot get filter items from non-filter: " + stack);
+		if (!stack.hasTag())
+			return newInv;
 		CompoundTag invNBT = stack.getOrCreateTagElement("Items");
 		if (!invNBT.isEmpty())
 			newInv.deserializeNBT(invNBT);
@@ -189,15 +199,18 @@ public class FilterItem extends Item implements MenuProvider {
 			return true;
 
 		if (!(filter.getItem() instanceof FilterItem))
-			return (matchNBT ? ItemHandlerHelper.canItemStacksStack(filter, stack)
-				: ItemStack.isSame(filter, stack));
+			return (matchNBT ? ItemHandlerHelper.canItemStacksStack(filter, stack) : ItemStack.isSame(filter, stack));
+
+		boolean defaults = !filter.hasTag();
 
 		if (AllItems.FILTER.get() == filter.getItem()) {
 			ItemStackHandler filterItems = getFilterItems(filter);
-			boolean respectNBT = filter.getOrCreateTag()
-				.getBoolean("RespectNBT");
-			boolean blacklist = filter.getOrCreateTag()
-				.getBoolean("Blacklist");
+			boolean respectNBT = defaults ? false
+				: filter.getTag()
+					.getBoolean("RespectNBT");
+			boolean blacklist = defaults ? false
+				: filter.getTag()
+					.getBoolean("Blacklist");
 			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
 				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
@@ -210,10 +223,12 @@ public class FilterItem extends Item implements MenuProvider {
 		}
 
 		if (AllItems.ATTRIBUTE_FILTER.get() == filter.getItem()) {
-			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
-				.getInt("WhitelistMode")];
-			ListTag attributes = filter.getOrCreateTag()
-				.getList("MatchedAttributes", Tag.TAG_COMPOUND);
+			WhitelistMode whitelistMode = WhitelistMode.values()[defaults ? 0
+				: filter.getTag()
+					.getInt("WhitelistMode")];
+			ListTag attributes = defaults ? new ListTag()
+				: filter.getTag()
+					.getList("MatchedAttributes", Tag.TAG_COMPOUND);
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
@@ -275,12 +290,16 @@ public class FilterItem extends Item implements MenuProvider {
 			return fluidEqual;
 		}
 
+		boolean defaults = !filter.hasTag();
+
 		if (AllItems.FILTER.get() == filter.getItem()) {
 			ItemStackHandler filterItems = getFilterItems(filter);
-			boolean respectNBT = filter.getOrCreateTag()
-				.getBoolean("RespectNBT");
-			boolean blacklist = filter.getOrCreateTag()
-				.getBoolean("Blacklist");
+			boolean respectNBT = defaults ? false
+				: filter.getTag()
+					.getBoolean("RespectNBT");
+			boolean blacklist = defaults ? false
+				: filter.getTag()
+					.getBoolean("Blacklist");
 			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
 				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())

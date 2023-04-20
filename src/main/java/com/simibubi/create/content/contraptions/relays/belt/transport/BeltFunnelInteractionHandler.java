@@ -83,7 +83,7 @@ public class BeltFunnelInteractionHandler {
 				else
 					continue;
 
-			if (amountToExtract != -1) {
+			if (amountToExtract != -1 && modeToExtract != ExtractionCountMode.UPTO) {
 				toInsert.setCount(Math.min(amountToExtract, toInsert.getCount()));
 				ItemStack remainder = inserting.simulate()
 					.insert(toInsert);
