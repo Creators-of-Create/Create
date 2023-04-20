@@ -4,7 +4,10 @@ import static net.minecraft.world.entity.Entity.collideBoundingBox;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
@@ -17,6 +20,7 @@ import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionColliderLockPacket.ContraptionColliderLockPacketRequest;
 import com.simibubi.create.content.contraptions.components.structureMovement.sync.ClientMotionPacket;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -30,7 +34,10 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -65,6 +72,7 @@ public class ContraptionCollider {
 	}
 
 	private static MutablePair<WeakReference<AbstractContraptionEntity>, Double> safetyLock = new MutablePair<>();
+	private static Map<AbstractContraptionEntity, Map<Player, Double>> remoteSafetyLocks = new WeakHashMap<>();
 
 	static void collideEntities(AbstractContraptionEntity contraptionEntity) {
 		Level world = contraptionEntity.getCommandSenderWorld();
@@ -95,8 +103,13 @@ public class ContraptionCollider {
 				continue;
 
 			PlayerType playerType = getPlayerType(entity);
-			if (playerType == PlayerType.REMOTE)
+			if (playerType == PlayerType.REMOTE) {
+				if (!(contraption instanceof TranslatingContraption))
+					continue;
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+					() -> () -> saveRemotePlayerFromClipping((Player) entity, contraptionEntity, contraptionMotion));
 				continue;
+			}
 
 			entity.getSelfAndPassengers()
 				.forEach(e -> {
@@ -354,7 +367,8 @@ public class ContraptionCollider {
 				entity.fallDistance = 0;
 				for (Entity rider : entity.getIndirectPassengers())
 					if (getPlayerType(rider) == PlayerType.CLIENT)
-						AllPackets.getChannel().sendToServer(new ClientMotionPacket(rider.getDeltaMovement(), true, 0));
+						AllPackets.getChannel()
+							.sendToServer(new ClientMotionPacket(rider.getDeltaMovement(), true, 0));
 				boolean canWalk = bounce != 0 || slide == 0;
 				if (canWalk || !rotation.hasVerticalRotation()) {
 					if (canWalk)
@@ -378,7 +392,8 @@ public class ContraptionCollider {
 			float limbSwing = Mth.sqrt((float) (d0 * d0 + d1 * d1)) * 4.0F;
 			if (limbSwing > 1.0F)
 				limbSwing = 1.0F;
-			AllPackets.getChannel().sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
+			AllPackets.getChannel()
+				.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 
 			if (entity.isOnGround() && contraption instanceof TranslatingContraption) {
 				safetyLock.setLeft(new WeakReference<>(contraptionEntity));
@@ -388,18 +403,31 @@ public class ContraptionCollider {
 
 	}
 
+	private static int packetCooldown = 0;
+
 	@OnlyIn(Dist.CLIENT)
 	private static void saveClientPlayerFromClipping(AbstractContraptionEntity contraptionEntity,
 		Vec3 contraptionMotion) {
-		Player entity = Minecraft.getInstance().player;
-		
+		LocalPlayer entity = Minecraft.getInstance().player;
 		if (entity.isPassenger())
 			return;
-		
+
 		double prevDiff = safetyLock.right;
 		double currentDiff = entity.getY() - contraptionEntity.getY();
 		double motion = contraptionMotion.subtract(entity.getDeltaMovement()).y;
 		double trend = Math.signum(currentDiff - prevDiff);
+
+		ClientPacketListener handler = entity.connection;
+		if (handler.getOnlinePlayers()
+			.size() > 1) {
+			if (packetCooldown > 0)
+				packetCooldown--;
+			if (packetCooldown == 0) {
+				AllPackets.getChannel()
+					.sendToServer(new ContraptionColliderLockPacketRequest(contraptionEntity.getId(), currentDiff));
+				packetCooldown = 3;
+			}
+		}
 
 		if (trend == 0)
 			return;
@@ -412,10 +440,43 @@ public class ContraptionCollider {
 			return;
 		if (speed < 0.05)
 			return;
-		
-		AABB bb = entity.getBoundingBox().deflate(1/4f, 0, 1/4f);
+
+		if (!savePlayerFromClipping(entity, contraptionEntity, contraptionMotion, prevDiff))
+			safetyLock.setLeft(null);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public static void lockPacketReceived(int contraptionId, int remotePlayerId, double suggestedOffset) {
+		ClientLevel level = Minecraft.getInstance().level;
+		if (!(level.getEntity(contraptionId) instanceof ControlledContraptionEntity contraptionEntity))
+			return;
+		if (!(level.getEntity(remotePlayerId) instanceof RemotePlayer player))
+			return;
+		remoteSafetyLocks.computeIfAbsent(contraptionEntity, $ -> new WeakHashMap<>())
+			.put(player, suggestedOffset);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void saveRemotePlayerFromClipping(Player entity, AbstractContraptionEntity contraptionEntity,
+		Vec3 contraptionMotion) {
+		if (entity.isPassenger())
+			return;
+
+		Map<Player, Double> locksOnThisContraption =
+			remoteSafetyLocks.getOrDefault(contraptionEntity, Collections.emptyMap());
+		double prevDiff = locksOnThisContraption.getOrDefault(entity, entity.getY() - contraptionEntity.getY());
+		if (!savePlayerFromClipping(entity, contraptionEntity, contraptionMotion, prevDiff))
+			if (locksOnThisContraption.containsKey(entity))
+				locksOnThisContraption.remove(entity);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static boolean savePlayerFromClipping(Player entity, AbstractContraptionEntity contraptionEntity,
+		Vec3 contraptionMotion, double yStartOffset) {
+		AABB bb = entity.getBoundingBox()
+			.deflate(1 / 4f, 0, 1 / 4f);
 		double shortestDistance = Double.MAX_VALUE;
-		double yStart = entity.getStepHeight() + contraptionEntity.getY() + prevDiff;
+		double yStart = entity.getStepHeight() + contraptionEntity.getY() + yStartOffset;
 		double rayLength = Math.max(5, Math.abs(entity.getY() - yStart));
 
 		for (int rayIndex = 0; rayIndex < 4; rayIndex++) {
@@ -432,12 +493,10 @@ public class ContraptionCollider {
 				shortestDistance = hitDiff;
 		}
 
-		if (shortestDistance > rayLength) {
-			safetyLock.setLeft(null);
-			return;
-		}
-		
+		if (shortestDistance > rayLength)
+			return false;
 		entity.setPos(entity.getX(), yStart - shortestDistance, entity.getZ());
+		return true;
 	}
 
 	private static Vec3 handleDamageFromTrain(Level world, AbstractContraptionEntity contraptionEntity,
@@ -477,7 +536,8 @@ public class ContraptionCollider {
 			return entityMotion;
 
 		if (playerType == PlayerType.CLIENT) {
-			AllPackets.getChannel().sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
+			AllPackets.getChannel()
+				.sendToServer(new TrainCollisionPacket((int) (damage * 16), contraptionEntity.getId()));
 			world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
 				SoundSource.NEUTRAL, 1, .75f);
 		} else {
