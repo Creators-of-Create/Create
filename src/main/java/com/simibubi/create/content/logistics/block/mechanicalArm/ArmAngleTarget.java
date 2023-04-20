@@ -19,8 +19,8 @@ public class ArmAngleTarget {
 	float headAngle;
 
 	private ArmAngleTarget() {
-		lowerArmAngle = 155;
-		upperArmAngle = 60;
+		lowerArmAngle = 135;
+		upperArmAngle = 45;
 		headAngle = 0;
 	}
 
