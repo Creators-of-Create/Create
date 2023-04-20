@@ -2,7 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"5": "create:block/mechanical_arm"
+		"1": "create:block/hat_test",
+		"5": "create:block/mechanical_arm",
+		"particle": "create:block/hat_test"
 	},
 	"elements": [
 		{
@@ -44,6 +46,28 @@
 				"up": {"uv": [4.5, 9, 5.5, 10], "texture": "#5"},
 				"down": {"uv": [4.5, 9, 5.5, 10], "texture": "#5"}
 			}
+		},
+		{
+			"from": [-4, 0.5, -4.25],
+			"to": [4, 4.5, 3.75],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 3, 1]},
+			"faces": {
+				"north": {"uv": [8, 2, 16, 6], "texture": "#1"},
+				"east": {"uv": [0, 2, 8, 6], "texture": "#1"},
+				"south": {"uv": [8, 10, 16, 14], "texture": "#1"},
+				"west": {"uv": [8, 2, 0, 6], "texture": "#1"}
+			}
+		},
+		{
+			"from": [-4, 0.5, 3.75],
+			"to": [4, 4.5, -4.25],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 3, 1]},
+			"faces": {
+				"north": {"uv": [8, 10, 16, 14], "texture": "#1"},
+				"east": {"uv": [8, 2, 0, 6], "texture": "#1"},
+				"south": {"uv": [8, 2, 16, 6], "texture": "#1"},
+				"west": {"uv": [0, 2, 8, 6], "texture": "#1"}
+			}
 		}
 	],
 	"display": {
@@ -79,5 +103,16 @@
 			"translation": [0, 1.75, -4.5],
 			"scale": [0.5, 0.5, 0.5]
 		}
-	}
+	},
+	"groups": [
+		0,
+		1,
+		2,
+		{
+			"name": "Goggles",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [3, 4]
+		}
+	]
 }

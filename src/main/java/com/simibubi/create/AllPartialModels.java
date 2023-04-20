@@ -89,8 +89,10 @@ public class AllPartialModels {
 
 		ARM_COG = block("mechanical_arm/cog"), ARM_BASE = block("mechanical_arm/base"),
 		ARM_LOWER_BODY = block("mechanical_arm/lower_body"), ARM_UPPER_BODY = block("mechanical_arm/upper_body"),
-		ARM_HEAD = block("mechanical_arm/head"), ARM_CLAW_BASE = block("mechanical_arm/claw_base"),
-		ARM_CLAW_GRIP = block("mechanical_arm/claw_grip"),
+		ARM_CLAW_BASE = block("mechanical_arm/claw_base"),
+		ARM_CLAW_BASE_GOGGLES = block("mechanical_arm/claw_base_goggles"),
+		ARM_CLAW_GRIP_UPPER = block("mechanical_arm/upper_claw_grip"),
+		ARM_CLAW_GRIP_LOWER = block("mechanical_arm/lower_claw_grip"),
 
 		MECHANICAL_PUMP_COG = block("mechanical_pump/cog"),
 		FLUID_PIPE_CASING = block("fluid_pipe/casing"), FLUID_VALVE_POINTER = block("fluid_valve/pointer"),

@@ -2,22 +2,20 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"5": "create:block/mechanical_arm",
-		"particle": "create:block/crafter_top"
+		"5": "create:block/mechanical_arm"
 	},
 	"elements": [
 		{
-			"name": "ClawTop",
 			"from": [-2.5, -1, -4],
 			"to": [2.5, 1, 1],
-			"rotation": {"angle": 0, "axis": "x", "origin": [-2.5, -3.5, 1]},
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 4]},
 			"faces": {
-				"north": {"uv": [9.5, 1.5, 12, 2.5], "rotation": 180, "texture": "#5"},
-				"east": {"uv": [9.5, 0, 12, 1], "rotation": 180, "texture": "#5"},
-				"south": {"uv": [9.5, 0, 12, 1], "rotation": 180, "texture": "#5"},
-				"west": {"uv": [9.5, 0, 12, 1], "rotation": 180, "texture": "#5"},
-				"up": {"uv": [9.5, 0, 12, 2.5], "rotation": 180, "texture": "#5"},
-				"down": {"uv": [9.5, 0, 12, 2.5], "rotation": 180, "texture": "#5"}
+				"north": {"uv": [10.5, 5.5, 11.5, 3], "rotation": 90, "texture": "#5"},
+				"east": {"uv": [10.5, 5.5, 11.5, 3], "rotation": 90, "texture": "#5"},
+				"south": {"uv": [10.5, 5.5, 11.5, 3], "rotation": 90, "texture": "#5"},
+				"west": {"uv": [10.5, 5.5, 11.5, 3], "rotation": 90, "texture": "#5"},
+				"up": {"uv": [7, 8, 9.5, 5.5], "texture": "#5"},
+				"down": {"uv": [7, 5.5, 9.5, 3], "rotation": 180, "texture": "#5"}
 			}
 		}
 	],
@@ -54,12 +52,5 @@
 			"translation": [0, 1.75, -4.5],
 			"scale": [0.5, 0.5, 0.5]
 		}
-	},
-	"groups": [
-		{
-			"name": "inserter",
-			"origin": [8, 8, 8],
-			"children": [0]
-		}
-	]
+	}
 }

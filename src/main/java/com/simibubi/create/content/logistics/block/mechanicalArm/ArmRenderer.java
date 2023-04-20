@@ -49,7 +49,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 			hasItem && (item.getItem() instanceof BlockItem) && itemRenderer.getModel(item, be.getLevel(), null, 0)
 				.isGui3d();
 
-		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(be.goggles ? RenderType.cutout() : RenderType.solid());
 		BlockState blockState = be.getBlockState();
 
 		PoseStack msLocal = new PoseStack();
@@ -60,6 +60,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		float upperArmAngle;
 		float headAngle;
 		int color;
+		boolean inverted = blockState.getValue(ArmBlock.CEILING);
 
 		boolean rave = be.phase == Phase.DANCING && be.getSpeed() != 0;
 		if (rave) {
@@ -80,20 +81,20 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 
 		msr.centre();
 
-		if (blockState.getValue(ArmBlock.CEILING))
+		if (inverted)
 			msr.rotateX(180);
 
 		if (usingFlywheel)
 			doItemTransforms(msr, baseAngle, lowerArmAngle, upperArmAngle, headAngle);
 		else
 			renderArm(builder, ms, msLocal, msr, blockState, color, baseAngle, lowerArmAngle, upperArmAngle, headAngle,
-				hasItem, isBlockItem, light);
+				be.goggles, inverted && be.goggles, hasItem, isBlockItem, light);
 
 		if (hasItem) {
 			ms.pushPose();
 			float itemScale = isBlockItem ? .5f : .625f;
 			msr.rotateX(90);
-			msLocal.translate(0, -4 / 16f, 0);
+			msLocal.translate(0, isBlockItem ? -9 / 16f : -10 / 16f, 0);
 			msLocal.scale(itemScale, itemScale, itemScale);
 
 			ms.last()
@@ -109,18 +110,21 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 
 	private void renderArm(VertexConsumer builder, PoseStack ms, PoseStack msLocal, TransformStack msr,
 		BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle,
-		boolean hasItem, boolean isBlockItem, int light) {
+		boolean goggles, boolean inverted, boolean hasItem, boolean isBlockItem, int light) {
 		SuperByteBuffer base = CachedBufferer.partial(AllPartialModels.ARM_BASE, blockState)
 			.light(light);
 		SuperByteBuffer lowerBody = CachedBufferer.partial(AllPartialModels.ARM_LOWER_BODY, blockState)
 			.light(light);
 		SuperByteBuffer upperBody = CachedBufferer.partial(AllPartialModels.ARM_UPPER_BODY, blockState)
 			.light(light);
-		SuperByteBuffer head = CachedBufferer.partial(AllPartialModels.ARM_HEAD, blockState)
+		SuperByteBuffer claw = CachedBufferer
+			.partial(goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE, blockState)
 			.light(light);
-		SuperByteBuffer claw = CachedBufferer.partial(AllPartialModels.ARM_CLAW_BASE, blockState)
+		SuperByteBuffer upperClawGrip = CachedBufferer.partial(AllPartialModels.ARM_CLAW_GRIP_UPPER,
+			blockState)
 			.light(light);
-		SuperByteBuffer clawGrip = CachedBufferer.partial(AllPartialModels.ARM_CLAW_GRIP, blockState);
+		SuperByteBuffer lowerClawGrip = CachedBufferer.partial(AllPartialModels.ARM_CLAW_GRIP_LOWER, blockState)
+			.light(light);
 
 		transformBase(msr, baseAngle);
 		base.transform(msLocal)
@@ -137,18 +141,20 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 			.renderInto(ms, builder);
 
 		transformHead(msr, headAngle);
-		head.transform(msLocal)
-			.renderInto(ms, builder);
-
-		transformClaw(msr);
+		
+		if (inverted)
+			msr.rotateZ(180);
+			
 		claw.transform(msLocal)
 			.renderInto(ms, builder);
+		
+		if (inverted)
+			msr.rotateZ(180);
 
 		for (int flip : Iterate.positiveAndNegative) {
 			msLocal.pushPose();
 			transformClawHalf(msr, hasItem, isBlockItem, flip);
-			clawGrip.light(light)
-				.transform(msLocal)
+			(flip > 0 ? lowerClawGrip : upperClawGrip).transform(msLocal)
 				.renderInto(ms, builder);
 			msLocal.popPose();
 		}
@@ -161,32 +167,25 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		transformLowerArm(msr, lowerArmAngle);
 		transformUpperArm(msr, upperArmAngle);
 		transformHead(msr, headAngle);
-		transformClaw(msr);
 	}
 
 	public static void transformClawHalf(TransformStack msr, boolean hasItem, boolean isBlockItem, int flip) {
-		msr.translate(0, flip * 3 / 16d, -1 / 16d);
-		msr.rotateX(flip * (hasItem ? isBlockItem ? 0 : -35 : 0));
-	}
-
-	public static void transformClaw(TransformStack msr) {
-		msr.translate(0, 0, -4 / 16d);
+		msr.translate(0, -flip * (hasItem ? isBlockItem ? 3 / 16f : 5 / 64f : 1 / 16f), -6 / 16d);
 	}
 
 	public static void transformHead(TransformStack msr, float headAngle) {
-		msr.translate(0, 11 / 16d, -11 / 16d);
-		msr.rotateX(headAngle);
+		msr.translate(0, 0, -15 / 16d);
+		msr.rotateX(headAngle - 45f);
 	}
 
 	public static void transformUpperArm(TransformStack msr, float upperArmAngle) {
-		msr.translate(0, 12 / 16d, 12 / 16d);
-		msr.rotateX(upperArmAngle);
+		msr.translate(0, 0, -14 / 16d);
+		msr.rotateX(upperArmAngle - 90);
 	}
 
 	public static void transformLowerArm(TransformStack msr, float lowerArmAngle) {
-		msr.translate(0, 1 / 16d, -2 / 16d);
-		msr.rotateX(lowerArmAngle);
-		msr.translate(0, -1 / 16d, 0);
+		msr.translate(0, 2 / 16d, 0);
+		msr.rotateX(lowerArmAngle + 135);
 	}
 
 	public static void transformBase(TransformStack msr, float baseAngle) {

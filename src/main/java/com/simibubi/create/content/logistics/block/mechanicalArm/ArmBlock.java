@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
@@ -82,7 +83,21 @@ public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogW
 	
 	@Override
 	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player,
-		InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
+		InteractionHand hand, BlockHitResult p_225533_6_) {
+		ItemStack heldItem = player.getItemInHand(hand);
+
+		if (AllItems.GOGGLES.isIn(heldItem)) {
+			InteractionResult gogglesResult = onBlockEntityUse(world, pos, ate -> {
+				if (ate.goggles)
+					return InteractionResult.PASS;
+				ate.goggles = true;
+				ate.notifyUpdate();
+				return InteractionResult.SUCCESS;
+			});
+			if (gogglesResult.consumesAction())
+				return gogglesResult;
+		}
+
 		MutableBoolean success = new MutableBoolean(false);
 		withBlockEntityDo(world, pos, be -> {
 			if (be.heldItem.isEmpty())

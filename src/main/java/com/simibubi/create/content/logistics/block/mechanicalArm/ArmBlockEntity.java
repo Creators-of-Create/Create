@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
@@ -44,6 +45,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 public class ArmBlockEntity extends KineticBlockEntity implements ITransformableBlockEntity {
 
@@ -57,6 +60,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 	int chasedPointIndex;
 	ItemStack heldItem;
 	Phase phase;
+	boolean goggles;
 
 	// Client
 	ArmAngleTarget previousTarget;
@@ -98,6 +102,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 		previousBaseAngle = previousTarget.baseAngle;
 		updateInteractionPoints = true;
 		redstoneLocked = false;
+		goggles = false;
 	}
 
 	@Override
@@ -509,6 +514,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 
 		NBTHelper.writeEnum(compound, "Phase", phase);
 		compound.putBoolean("Powered", redstoneLocked);
+		compound.putBoolean("Goggles", goggles);
 		compound.put("HeldItem", heldItem.serializeNBT());
 		compound.putInt("TargetPointIndex", chasedPointIndex);
 		compound.putFloat("MovementProgress", chasedPointProgress);
@@ -534,9 +540,15 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 		chasedPointProgress = compound.getFloat("MovementProgress");
 		interactionPointTag = compound.getList("InteractionPoints", Tag.TAG_COMPOUND);
 		redstoneLocked = compound.getBoolean("Powered");
+		
+		boolean hadGoggles = goggles;
+		goggles = compound.getBoolean("Goggles");
 
 		if (!clientPacket)
 			return;
+
+		if (hadGoggles != goggles)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 
 		boolean ceiling = isOnCeiling();
 		if (interactionPointTagBefore == null || interactionPointTagBefore.size() != interactionPointTag.size())

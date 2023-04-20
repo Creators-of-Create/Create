@@ -29,8 +29,8 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 	final ModelData base;
 	final ModelData lowerBody;
 	final ModelData upperBody;
-	final ModelData head;
-	final ModelData claw;
+	ModelData claw;
+
 	private final ArrayList<ModelData> clawGrips;
 
 	private final ArrayList<ModelData> models;
@@ -54,17 +54,18 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 			.createInstance();
 		upperBody = mat.getModel(AllPartialModels.ARM_UPPER_BODY, blockState)
 			.createInstance();
-		head = mat.getModel(AllPartialModels.ARM_HEAD, blockState)
-			.createInstance();
-		claw = mat.getModel(AllPartialModels.ARM_CLAW_BASE, blockState)
+		claw = mat
+			.getModel(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE,
+				blockState)
 			.createInstance();
 
-		Instancer<ModelData> clawHalfModel = mat.getModel(AllPartialModels.ARM_CLAW_GRIP, blockState);
-		ModelData clawGrip1 = clawHalfModel.createInstance();
-		ModelData clawGrip2 = clawHalfModel.createInstance();
+		ModelData clawGrip1 = mat.getModel(AllPartialModels.ARM_CLAW_GRIP_UPPER, blockState)
+			.createInstance();
+		ModelData clawGrip2 = mat.getModel(AllPartialModels.ARM_CLAW_GRIP_LOWER, blockState)
+			.createInstance();
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
-		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
+		models = Lists.newArrayList(base, lowerBody, upperBody, claw, clawGrip1, clawGrip2);
 		ceiling = blockState.getValue(ArmBlock.CEILING);
 
 		animateArm(false);
@@ -108,7 +109,8 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 		int color;
 
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(blockEntity.getLevel()) + (blockEntity.hashCode() % 64);
+			float renderTick =
+				AnimationTickHolder.getRenderTime(blockEntity.getLevel()) + (blockEntity.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
@@ -143,10 +145,14 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 			.setColor(color);
 
 		ArmRenderer.transformHead(msr, headAngle);
-		head.setTransform(msLocal);
-
-		ArmRenderer.transformClaw(msr);
+		
+		if (ceiling && blockEntity.goggles)
+			msr.rotateZ(180);
+		
 		claw.setTransform(msLocal);
+		
+		if (ceiling && blockEntity.goggles)
+			msr.rotateZ(180);
 
 		ItemStack item = blockEntity.heldItem;
 		ItemRenderer itemRenderer = Minecraft.getInstance()
@@ -164,6 +170,20 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 				.setTransform(msLocal);
 			msLocal.popPose();
 		}
+	}
+
+	@Override
+	public void update() {
+		super.update();
+		models.remove(claw);
+		claw.delete();
+		claw = getTransformMaterial()
+			.getModel(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE,
+				blockState)
+			.createInstance();
+		models.add(claw);
+		updateLight();
+		animateArm(false);
 	}
 
 	@Override

@@ -21,16 +21,13 @@ public class ArmAngleTarget {
 	private ArmAngleTarget() {
 		lowerArmAngle = 155;
 		upperArmAngle = 60;
-		headAngle = -15;
+		headAngle = 0;
 	}
 
 	public ArmAngleTarget(BlockPos armPos, Vec3 pointTarget, Direction clawFacing, boolean ceiling) {
-//		if (ceiling) 
-//			clawFacing = clawFacing.getOpposite();
-
 		Vec3 target = pointTarget;
 		Vec3 origin = VecHelper.getCenterOf(armPos)
-			.add(0, ceiling ? -4 / 16f : 4 / 16f, 0);
+			.add(0, ceiling ? -6 / 16f : 6 / 16f, 0);
 		Vec3 clawTarget = target;
 		target = target.add(Vec3.atLowerCornerOf(clawFacing.getOpposite()
 			.getNormal())
@@ -48,9 +45,9 @@ public class ArmAngleTarget {
 
 		float alphaOffset = AngleHelper.deg(Mth.atan2(diff.y, horizontalDistance));
 
-		float a = 18 / 16f; // lower arm length
+		float a = 14 / 16f; // lower arm length
 		float a2 = a * a;
-		float b = 17 / 16f; // upper arm length
+		float b = 15 / 16f; // upper arm length
 		float b2 = b * b;
 		float diffLength =
 			Mth.clamp(Mth.sqrt((float) (diff.y * diff.y + horizontalDistance * horizontalDistance)), 1 / 8f, a + b);
