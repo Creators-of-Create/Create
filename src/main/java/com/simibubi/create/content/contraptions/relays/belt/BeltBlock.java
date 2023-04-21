@@ -24,6 +24,7 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMoveme
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
@@ -71,6 +72,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -299,11 +301,13 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 
 		if (AllBlocks.BRASS_CASING.isIn(heldItem)) {
 			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.BRASS));
+			updateCoverProperty(world, pos, state);
 			return InteractionResult.SUCCESS;
 		}
 
 		if (AllBlocks.ANDESITE_CASING.isIn(heldItem)) {
 			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.ANDESITE));
+			updateCoverProperty(world, pos, state);
 			return InteractionResult.SUCCESS;
 		}
 
@@ -487,7 +491,33 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 		if (side.getAxis()
 			.isHorizontal())
 			updateTunnelConnections(world, pos.above());
+		if (side == Direction.UP)
+			updateCoverProperty(world, pos, state);
 		return state;
+	}
+
+	public void updateCoverProperty(LevelAccessor world, BlockPos pos, BlockState state) {
+		if (world.isClientSide())
+			return;
+		if (state.getValue(CASING) && state.getValue(SLOPE) == BeltSlope.HORIZONTAL)
+			withBlockEntityDo(world, pos, bbe -> bbe.setCovered(isBlockCoveringBelt(world, pos.above())));
+	}
+	
+	public static boolean isBlockCoveringBelt(LevelAccessor world, BlockPos pos) {
+		BlockState blockState = world.getBlockState(pos);
+		VoxelShape collisionShape = blockState.getCollisionShape(world, pos);
+		if (collisionShape.isEmpty())
+			return false;
+		AABB bounds = collisionShape.bounds();
+		if (bounds.getXsize() < .5f || bounds.getZsize() < .5f)
+			return false;
+		if (bounds.minY > 0)
+			return false;
+		if (FunnelBlock.isFunnel(blockState) && FunnelBlock.getFunnelFacing(blockState) != Direction.UP)
+			return false;
+		if (blockState.getBlock() instanceof BeltTunnelBlock)
+			return false;
+		return true;
 	}
 
 	private void updateTunnelConnections(LevelAccessor world, BlockPos pos) {

@@ -70,6 +70,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	public int index;
 	public Direction lastInsert;
 	public CasingType casing;
+	public boolean covered;
 
 	protected BlockPos controller;
 	protected BeltInventory inventory;
@@ -215,6 +216,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		compound.putInt("Length", beltLength);
 		compound.putInt("Index", index);
 		NBTHelper.writeEnum(compound, "Casing", casing);
+		compound.putBoolean("Covered", covered);
 
 		if (color.isPresent())
 			NBTHelper.writeEnum(compound, "Dye", color.get());
@@ -254,12 +256,14 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			getInventory().read(compound.getCompound("Inventory"));
 
 		CasingType casingBefore = casing;
+		boolean coverBefore = covered;
 		casing = NBTHelper.readEnum(compound, "Casing", CasingType.class);
+		covered = compound.getBoolean("Covered");
 
 		if (!clientPacket)
 			return;
 
-		if (casingBefore == casing)
+		if (casingBefore == casing && coverBefore == covered)
 			return;
 		if (!isVirtual())
 			requestModelDataUpdate();
@@ -531,6 +535,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	@Override
 	public IModelData getModelData() {
 		return new ModelDataMap.Builder().withInitial(BeltModel.CASING_PROPERTY, casing)
+			.withInitial(BeltModel.COVER_PROPERTY, covered)
 			.build();
 	}
 
@@ -660,5 +665,12 @@ public class BeltBlockEntity extends KineticBlockEntity {
 				pos.move(vec.getX(), verticality, vec.getZ());
 			}
 		}
+	}
+
+	public void setCovered(boolean blockCoveringBelt) {
+		if (blockCoveringBelt == covered)
+			return;
+		covered = blockCoveringBelt;
+		notifyUpdate();
 	}
 }

@@ -28,6 +28,10 @@ public class AllPartialModels {
 		BELT_MIDDLE_BOTTOM = block("belt/middle_bottom"), BELT_END_BOTTOM = block("belt/end_bottom"),
 		BELT_DIAGONAL_START = block("belt/diagonal_start"), BELT_DIAGONAL_MIDDLE = block("belt/diagonal_middle"),
 		BELT_DIAGONAL_END = block("belt/diagonal_end"),
+		ANDESITE_BELT_COVER_X = block("belt_cover/andesite_belt_cover_x"),
+		BRASS_BELT_COVER_X = block("belt_cover/brass_belt_cover_x"),
+		ANDESITE_BELT_COVER_Z = block("belt_cover/andesite_belt_cover_z"),
+		BRASS_BELT_COVER_Z = block("belt_cover/brass_belt_cover_z"),
 
 		ENCASED_FAN_INNER = block("encased_fan/propeller"), HAND_CRANK_HANDLE = block("hand_crank/handle"),
 		MECHANICAL_PRESS_HEAD = block("mechanical_press/head"), MECHANICAL_MIXER_POLE = block("mechanical_mixer/pole"),

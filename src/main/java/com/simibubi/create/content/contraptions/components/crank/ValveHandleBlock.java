@@ -4,6 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Couple;
@@ -62,6 +63,8 @@ public class ValveHandleBlock extends HandCrankBlock {
 		BlockState blockState = level.getBlockState(pos);
 
 		if (!(blockState.getBlock() instanceof ValveHandleBlock vhb))
+			return;
+		if (AllItems.WRENCH.isIn(player.getItemInHand(event.getHand())) && player.isSteppingCarefully())
 			return;
 
 		if (vhb.clicked(level, pos, blockState, player, event.getHand())) {

@@ -16,6 +16,7 @@ import net.minecraft.util.Mth;
 public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> implements DynamicInstance {
 
 	protected ModelData pointer;
+	protected boolean settled;
 
     protected final double xRot;
     protected final double yRot;
@@ -34,6 +35,7 @@ public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> imp
 
         boolean twist = pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.X || pipeAxis.isVertical();
         pointerRotationOffset = twist ? 90 : 0;
+        settled = false;
 
         pointer = materialManager.defaultSolid()
                 .material(Materials.TRANSFORMED)
@@ -42,15 +44,18 @@ public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> imp
 		transformPointer();
     }
 
-    @Override
-    public void beginFrame() {
-		if (blockEntity.pointer.settled()) return;
+	@Override
+	public void beginFrame() {
+		if (blockEntity.pointer.settled() && settled)
+			return;
 
-        transformPointer();
-    }
+		transformPointer();
+	}
 
-    private void transformPointer() {
-        float pointerRotation = Mth.lerp(blockEntity.pointer.getValue(AnimationTickHolder.getPartialTicks()), 0, -90);
+	private void transformPointer() {
+		float value = blockEntity.pointer.getValue(AnimationTickHolder.getPartialTicks());
+		float pointerRotation = Mth.lerp(value, 0, -90);
+		settled = (value == 0 || value == 1) && blockEntity.pointer.settled();
 
         pointer.loadIdentity()
 				 .translate(getInstancePosition())

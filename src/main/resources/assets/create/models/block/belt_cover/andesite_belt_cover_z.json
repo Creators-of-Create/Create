@@ -1,0 +1,21 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/funnel/andesite_funnel_frame",
+		"1": "create:block/andesite_belt_cover"
+	},
+	"elements": [
+		{
+			"name": "cover",
+			"from": [0, 11, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 6, 16, 11], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 5], "texture": "#1"},
+				"south": {"uv": [0, 6, 16, 11], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 5], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		}
+	]
+}
