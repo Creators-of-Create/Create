@@ -1,98 +1,194 @@
 {
   "variants": {
-    "extracting=false,facing=down,powered=false": {
+    "extracting=false,facing=down,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_vertical_pull_unpowered",
       "x": 180,
       "y": 180
     },
-    "extracting=true,facing=down,powered=false": {
+    "extracting=true,facing=down,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_vertical_push_unpowered",
       "x": 180,
       "y": 180
     },
-    "extracting=false,facing=up,powered=false": {
+    "extracting=false,facing=up,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_vertical_pull_unpowered",
       "y": 180
     },
-    "extracting=true,facing=up,powered=false": {
+    "extracting=true,facing=up,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_vertical_push_unpowered",
       "y": 180
     },
-    "extracting=false,facing=north,powered=false": {
+    "extracting=false,facing=north,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_pull_unpowered"
     },
-    "extracting=true,facing=north,powered=false": {
+    "extracting=true,facing=north,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_push_unpowered"
     },
-    "extracting=false,facing=south,powered=false": {
+    "extracting=false,facing=south,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_pull_unpowered",
       "y": 180
     },
-    "extracting=true,facing=south,powered=false": {
+    "extracting=true,facing=south,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_push_unpowered",
       "y": 180
     },
-    "extracting=false,facing=west,powered=false": {
+    "extracting=false,facing=west,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_pull_unpowered",
       "y": 270
     },
-    "extracting=true,facing=west,powered=false": {
+    "extracting=true,facing=west,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_push_unpowered",
       "y": 270
     },
-    "extracting=false,facing=east,powered=false": {
+    "extracting=false,facing=east,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_pull_unpowered",
       "y": 90
     },
-    "extracting=true,facing=east,powered=false": {
+    "extracting=true,facing=east,powered=false,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_push_unpowered",
       "y": 90
     },
-    "extracting=false,facing=down,powered=true": {
+    "extracting=false,facing=down,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_vertical_pull_powered",
       "x": 180,
       "y": 180
     },
-    "extracting=true,facing=down,powered=true": {
+    "extracting=true,facing=down,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_vertical_push_powered",
       "x": 180,
       "y": 180
     },
-    "extracting=false,facing=up,powered=true": {
+    "extracting=false,facing=up,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_vertical_pull_powered",
       "y": 180
     },
-    "extracting=true,facing=up,powered=true": {
+    "extracting=true,facing=up,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_vertical_push_powered",
       "y": 180
     },
-    "extracting=false,facing=north,powered=true": {
+    "extracting=false,facing=north,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_pull_powered"
     },
-    "extracting=true,facing=north,powered=true": {
+    "extracting=true,facing=north,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_push_powered"
     },
-    "extracting=false,facing=south,powered=true": {
+    "extracting=false,facing=south,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_pull_powered",
       "y": 180
     },
-    "extracting=true,facing=south,powered=true": {
+    "extracting=true,facing=south,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_push_powered",
       "y": 180
     },
-    "extracting=false,facing=west,powered=true": {
+    "extracting=false,facing=west,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_pull_powered",
       "y": 270
     },
-    "extracting=true,facing=west,powered=true": {
+    "extracting=true,facing=west,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_push_powered",
       "y": 270
     },
-    "extracting=false,facing=east,powered=true": {
+    "extracting=false,facing=east,powered=true,waterlogged=false": {
       "model": "create:block/brass_funnel_horizontal_pull_powered",
       "y": 90
     },
-    "extracting=true,facing=east,powered=true": {
+    "extracting=true,facing=east,powered=true,waterlogged=false": {
+      "model": "create:block/brass_funnel_horizontal_push_powered",
+      "y": 90
+    },
+    "extracting=false,facing=down,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_vertical_pull_unpowered",
+      "x": 180,
+      "y": 180
+    },
+    "extracting=true,facing=down,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_vertical_push_unpowered",
+      "x": 180,
+      "y": 180
+    },
+    "extracting=false,facing=up,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_vertical_pull_unpowered",
+      "y": 180
+    },
+    "extracting=true,facing=up,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_vertical_push_unpowered",
+      "y": 180
+    },
+    "extracting=false,facing=north,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_pull_unpowered"
+    },
+    "extracting=true,facing=north,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_push_unpowered"
+    },
+    "extracting=false,facing=south,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_pull_unpowered",
+      "y": 180
+    },
+    "extracting=true,facing=south,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_push_unpowered",
+      "y": 180
+    },
+    "extracting=false,facing=west,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_pull_unpowered",
+      "y": 270
+    },
+    "extracting=true,facing=west,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_push_unpowered",
+      "y": 270
+    },
+    "extracting=false,facing=east,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_pull_unpowered",
+      "y": 90
+    },
+    "extracting=true,facing=east,powered=false,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_push_unpowered",
+      "y": 90
+    },
+    "extracting=false,facing=down,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_vertical_pull_powered",
+      "x": 180,
+      "y": 180
+    },
+    "extracting=true,facing=down,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_vertical_push_powered",
+      "x": 180,
+      "y": 180
+    },
+    "extracting=false,facing=up,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_vertical_pull_powered",
+      "y": 180
+    },
+    "extracting=true,facing=up,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_vertical_push_powered",
+      "y": 180
+    },
+    "extracting=false,facing=north,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_pull_powered"
+    },
+    "extracting=true,facing=north,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_push_powered"
+    },
+    "extracting=false,facing=south,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_pull_powered",
+      "y": 180
+    },
+    "extracting=true,facing=south,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_push_powered",
+      "y": 180
+    },
+    "extracting=false,facing=west,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_pull_powered",
+      "y": 270
+    },
+    "extracting=true,facing=west,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_push_powered",
+      "y": 270
+    },
+    "extracting=false,facing=east,powered=true,waterlogged=true": {
+      "model": "create:block/brass_funnel_horizontal_pull_powered",
+      "y": 90
+    },
+    "extracting=true,facing=east,powered=true,waterlogged=true": {
       "model": "create:block/brass_funnel_horizontal_push_powered",
       "y": 90
     }

@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
@@ -121,8 +122,9 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbour, LevelAccessor world,
 		BlockPos pos, BlockPos p_196271_6_) {
+		updateWater(world, state, pos);
 		if (!isOnValidBelt(state, world, pos)) {
-			BlockState parentState = parent.getDefaultState();
+			BlockState parentState = ProperWaterloggedBlock.withWater(world, parent.getDefaultState(), pos);
 			if (state.getOptionalValue(POWERED)
 				.orElse(false))
 				parentState = parentState.setValue(POWERED, true);

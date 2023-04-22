@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,18 +30,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
 
-public abstract class AbstractFunnelBlock extends Block implements IBE<FunnelBlockEntity>, IWrenchable {
+public abstract class AbstractFunnelBlock extends Block
+	implements IBE<FunnelBlockEntity>, IWrenchable, ProperWaterloggedBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	protected AbstractFunnelBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
-		registerDefaultState(defaultBlockState().setValue(POWERED, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -49,10 +54,22 @@ public abstract class AbstractFunnelBlock extends Block implements IBE<FunnelBlo
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(POWERED, context.getLevel()
-			.hasNeighborSignal(context.getClickedPos()));
+		return withWater(defaultBlockState().setValue(POWERED, context.getLevel()
+			.hasNeighborSignal(context.getClickedPos())), context);
+	}
+	
+	@Override
+	public FluidState getFluidState(BlockState pState) {
+		return fluidState(pState);
 	}
 
+	@Override
+	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
+		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		updateWater(pLevel, pState, pCurrentPos);
+		return pState;
+	}
+	
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
@@ -60,7 +77,7 @@ public abstract class AbstractFunnelBlock extends Block implements IBE<FunnelBlo
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder.add(POWERED));
+		super.createBlockStateDefinition(builder.add(POWERED, WATERLOGGED));
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -156,10 +157,12 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState p_196271_3_, LevelAccessor world,
 		BlockPos pos, BlockPos p_196271_6_) {
+		updateWater(world, state, pos);
 		if (getFacing(state).getAxis()
 			.isVertical() || direction != Direction.DOWN)
 			return state;
-		BlockState equivalentFunnel = getEquivalentBeltFunnel(null, null, state);
+		BlockState equivalentFunnel =
+			ProperWaterloggedBlock.withWater(world, getEquivalentBeltFunnel(null, null, state), pos);
 		if (BeltFunnelBlock.isOnValidBelt(equivalentFunnel, world, pos))
 			return equivalentFunnel.setValue(BeltFunnelBlock.SHAPE,
 				BeltFunnelBlock.getShapeForPosition(world, pos, getFacing(state), state.getValue(EXTRACTING)));

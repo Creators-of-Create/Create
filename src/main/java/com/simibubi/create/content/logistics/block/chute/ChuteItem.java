@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.chute;
 
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -41,8 +43,11 @@ public class ChuteItem extends BlockItem {
 				return InteractionResult.FAIL;
 			AbstractChuteBlock block = (AbstractChuteBlock) blockState.getBlock();
 			if (block.getFacing(blockState) == Direction.DOWN) {
-				world.setBlockAndUpdate(correctPos, block.updateChuteState(blockState.setValue(ChuteBlock.FACING, face),
-					world.getBlockState(correctPos.above()), world, correctPos));
+				world.setBlockAndUpdate(correctPos,
+					ProperWaterloggedBlock.withWater(world,
+						block.updateChuteState(blockState.setValue(ChuteBlock.FACING, face),
+							world.getBlockState(correctPos.above()), world, correctPos),
+						correctPos));
 				return InteractionResult.SUCCESS;
 			}
 			return InteractionResult.FAIL;
