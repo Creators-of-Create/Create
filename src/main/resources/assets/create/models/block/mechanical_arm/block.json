@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"3": "create:block/mechanical_arm_side",
+		"3": "create:block/mechanical_arm",
 		"7": "create:block/brass_block",
-		"particle": "create:block/crafter_top"
+		"particle": "create:block/brass_casing"
 	},
 	"elements": [
 		{
@@ -12,10 +12,10 @@
 			"from": [0, 0, 0],
 			"to": [16, 6, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 6], "texture": "#3"},
-				"east": {"uv": [0, 0, 16, 6], "texture": "#3"},
-				"south": {"uv": [0, 0, 16, 6], "texture": "#3"},
-				"west": {"uv": [0, 0, 16, 6], "texture": "#3"},
+				"north": {"uv": [0, 8, 8, 11], "texture": "#3"},
+				"east": {"uv": [0, 8, 8, 11], "texture": "#3"},
+				"south": {"uv": [0, 8, 8, 11], "texture": "#3"},
+				"west": {"uv": [0, 8, 8, 11], "texture": "#3"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#7"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#particle"}
 			}

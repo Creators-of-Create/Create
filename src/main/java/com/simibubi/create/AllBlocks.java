@@ -1309,6 +1309,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<SawBlock> MECHANICAL_SAW = REGISTRATE.block("mechanical_saw", SawBlock::new)
 		.initialProperties(SharedProperties::stone)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.properties(p -> p.color(MaterialColor.PODZOL))
 		.transform(axeOrPickaxe())
 		.blockstate(new SawGenerator()::generate)
