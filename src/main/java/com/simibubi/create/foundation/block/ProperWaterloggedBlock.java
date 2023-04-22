@@ -38,9 +38,11 @@ public interface ProperWaterloggedBlock extends SimpleWaterloggedBlock {
 	static BlockState withWater(LevelAccessor level, BlockState placementState, BlockPos pos) {
 		if (placementState == null)
 			return null;
+		FluidState ifluidstate = level.getFluidState(pos);
+		if (placementState.isAir())
+			return ifluidstate.getType() == Fluids.WATER ? ifluidstate.createLegacyBlock() : placementState;
 		if (!(placementState.getBlock() instanceof SimpleWaterloggedBlock))
 			return placementState;
-		FluidState ifluidstate = level.getFluidState(pos);
 		return placementState.setValue(BlockStateProperties.WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
 	}
 

@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity.Casi
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -89,9 +90,10 @@ public class BeltSlicer {
 			BlockPos next = part == BeltPart.END ? pos.subtract(beltVector) : pos.offset(beltVector);
 			BlockState replacedState = world.getBlockState(next);
 			BeltBlockEntity segmentBE = BeltHelper.getSegmentBE(world, next);
-			KineticBlockEntity.switchToBlockState(world, next,
-				state.setValue(BeltBlock.CASING, segmentBE != null && segmentBE.casing != CasingType.NONE));
-			world.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
+			KineticBlockEntity.switchToBlockState(world, next, ProperWaterloggedBlock.withWater(world,
+				state.setValue(BeltBlock.CASING, segmentBE != null && segmentBE.casing != CasingType.NONE), next));
+			world.setBlock(pos, ProperWaterloggedBlock.withWater(world, Blocks.AIR.defaultBlockState(), pos),
+				Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
 			world.removeBlockEntity(pos);
 			world.levelEvent(2001, pos, Block.getId(state));
 
@@ -316,7 +318,9 @@ public class BeltSlicer {
 
 			if (mergedController == null) {
 				// Attach at end
-				world.setBlock(next, state.setValue(BeltBlock.CASING, false), Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
+				world.setBlock(next,
+					ProperWaterloggedBlock.withWater(world, state.setValue(BeltBlock.CASING, false), next),
+					Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
 				BeltBlockEntity segmentBE = BeltHelper.getSegmentBE(world, next);
 				if (segmentBE != null)
 					segmentBE.color = controllerBE.color;

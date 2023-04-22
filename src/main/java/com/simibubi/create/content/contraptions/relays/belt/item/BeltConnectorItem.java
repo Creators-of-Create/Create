@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -155,9 +156,10 @@ public class BeltConnectorItem extends BlockItem {
 					.isReplaceable())
 				world.destroyBlock(pos, false);
 
-			KineticBlockEntity.switchToBlockState(world, pos, beltBlock.setValue(BeltBlock.SLOPE, slope)
-				.setValue(BeltBlock.PART, part)
-				.setValue(BeltBlock.HORIZONTAL_FACING, facing));
+			KineticBlockEntity.switchToBlockState(world, pos,
+				ProperWaterloggedBlock.withWater(world, beltBlock.setValue(BeltBlock.SLOPE, slope)
+					.setValue(BeltBlock.PART, part)
+					.setValue(BeltBlock.HORIZONTAL_FACING, facing), pos));
 		}
 
 		if (!failed)

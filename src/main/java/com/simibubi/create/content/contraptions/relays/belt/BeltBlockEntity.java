@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.LightListener;
 import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
@@ -280,13 +279,15 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		trackerUpdateTag = new CompoundTag();
 	}
 
-	public void applyColor(DyeColor colorIn) {
+	public boolean applyColor(DyeColor colorIn) {
 		if (colorIn == null) {
 			if (!color.isPresent())
-				return;
+				return false;
 		} else if (color.isPresent() && color.get() == colorIn)
-			return;
-
+			return false;
+		if (level.isClientSide())
+			return true;
+		
 		for (BlockPos blockPos : BeltBlock.getBeltChain(level, getController())) {
 			BeltBlockEntity belt = BeltHelper.getSegmentBE(level, blockPos);
 			if (belt == null)
@@ -294,8 +295,9 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			belt.color = Optional.ofNullable(colorIn);
 			belt.setChanged();
 			belt.sendData();
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(belt));
 		}
+		
+		return true;
 	}
 
 	public BeltBlockEntity getControllerBE() {

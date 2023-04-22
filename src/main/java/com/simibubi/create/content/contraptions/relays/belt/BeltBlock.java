@@ -29,6 +29,7 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.block.render.MultiPosDestructionHandler;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -68,6 +69,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.levelgen.DebugLevelSource;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -86,7 +88,8 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEntity>, ISpecialBlockItemRequirement, ITransformableBlock {
+public class BeltBlock extends HorizontalKineticBlock
+	implements IBE<BeltBlockEntity>, ISpecialBlockItemRequirement, ITransformableBlock, ProperWaterloggedBlock {
 
 	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
 	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
@@ -96,7 +99,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(SLOPE, BeltSlope.HORIZONTAL)
 			.setValue(PART, BeltPart.START)
-			.setValue(CASING, false));
+			.setValue(CASING, false)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -254,11 +258,9 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 			.isSame(Fluids.WATER);
 		boolean isHand = heldItem.isEmpty() && handIn == InteractionHand.MAIN_HAND;
 
-		if (isDye || hasWater) {
-			if (!world.isClientSide)
-				withBlockEntityDo(world, pos, be -> be.applyColor(DyeColor.getColor(heldItem)));
-			return InteractionResult.SUCCESS;
-		}
+		if (isDye || hasWater)
+			return onBlockEntityUse(world, pos,
+				be -> be.applyColor(DyeColor.getColor(heldItem)) ? InteractionResult.SUCCESS : InteractionResult.PASS);
 
 		if (isConnector)
 			return BeltSlicer.useConnector(state, world, pos, player, handIn, hit, new Feedback());
@@ -342,7 +344,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(SLOPE, PART, CASING);
+		builder.add(SLOPE, PART, CASING, WATERLOGGED);
 		super.createBlockStateDefinition(builder);
 	}
 
@@ -480,7 +482,8 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 			world.removeBlockEntity(currentPos);
 			BlockState shaftState = AllBlocks.SHAFT.getDefaultState()
 				.setValue(BlockStateProperties.AXIS, getRotationAxis(currentState));
-			world.setBlock(currentPos, hasPulley ? shaftState : Blocks.AIR.defaultBlockState(), 3);
+			world.setBlock(currentPos, ProperWaterloggedBlock.withWater(world,
+				hasPulley ? shaftState : Blocks.AIR.defaultBlockState(), currentPos), 3);
 			world.levelEvent(2001, currentPos, Block.getId(currentState));
 		}
 	}
@@ -488,6 +491,7 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 	@Override
 	public BlockState updateShape(BlockState state, Direction side, BlockState p_196271_3_, LevelAccessor world,
 		BlockPos pos, BlockPos p_196271_6_) {
+		updateWater(world, state, pos);
 		if (side.getAxis()
 			.isHorizontal())
 			updateTunnelConnections(world, pos.above());
@@ -705,6 +709,11 @@ public class BeltBlock extends HorizontalKineticBlock implements IBE<BeltBlockEn
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+	
+	@Override
+	public FluidState getFluidState(BlockState pState) {
+		return fluidState(pState);
 	}
 
 	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {
