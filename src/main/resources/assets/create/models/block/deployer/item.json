@@ -7,6 +7,7 @@
 		"1": "create:block/axis_top",
 		"6": "create:block/piston_bottom",
 		"7": "create:block/piston_inner",
+		"10": "create:block/andesite_casing_piston",
 		"18": "create:block/deployer",
 		"particle": "create:block/axis",
 		"gearbox_top": "create:block/gearbox_top",
@@ -45,7 +46,7 @@
 			"from": [14, 0, 2],
 			"to": [16, 16, 12],
 			"faces": {
-				"east": {"uv": [0, 4, 16, 14], "rotation": 270, "texture": "#andesite_casing_short"},
+				"east": {"uv": [0, 4, 16, 14], "rotation": 270, "texture": "#10"},
 				"south": {"uv": [0, 0, 16, 2], "rotation": 270, "texture": "#andesite_casing_short"},
 				"west": {"uv": [0, 0, 16, 10], "rotation": 90, "texture": "#gearbox_top"},
 				"up": {"uv": [16, 0, 14, 10], "rotation": 180, "texture": "#gearbox_top"},
@@ -59,7 +60,7 @@
 			"faces": {
 				"east": {"uv": [0, 0, 16, 10], "rotation": 270, "texture": "#gearbox_top"},
 				"south": {"uv": [0, 0, 16, 2], "rotation": 90, "texture": "#andesite_casing_short"},
-				"west": {"uv": [0, 4, 16, 14], "rotation": 90, "texture": "#andesite_casing_short"},
+				"west": {"uv": [0, 4, 16, 14], "rotation": 90, "texture": "#10"},
 				"up": {"uv": [14, 0, 16, 10], "rotation": 180, "texture": "#gearbox_top"},
 				"down": {"uv": [16, 0, 14, 10], "texture": "#gearbox_top"}
 			}

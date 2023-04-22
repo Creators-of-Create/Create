@@ -3,6 +3,7 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
+		"5": "create:block/andesite_casing_piston",
 		"6": "create:block/piston_bottom",
 		"7": "create:block/piston_inner",
 		"particle": "create:block/gearbox_top",
@@ -44,7 +45,7 @@
 				"south": {"uv": [0, 0, 16, 2], "texture": "#andesite_casing_short"},
 				"west": {"uv": [14, 0, 16, 10], "rotation": 90, "texture": "#gearbox_top"},
 				"up": {"uv": [0, 0, 16, 10], "rotation": 180, "texture": "#gearbox_top"},
-				"down": {"uv": [0, 4, 16, 14], "texture": "#andesite_casing_short"}
+				"down": {"uv": [0, 4, 16, 14], "texture": "#5"}
 			}
 		},
 		{
@@ -55,7 +56,7 @@
 				"east": {"uv": [14, 0, 16, 10], "rotation": 270, "texture": "#gearbox_top"},
 				"south": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#andesite_casing_short"},
 				"west": {"uv": [16, 0, 14, 10], "rotation": 90, "texture": "#gearbox_top"},
-				"up": {"uv": [0, 4, 16, 14], "rotation": 180, "texture": "#andesite_casing_short"},
+				"up": {"uv": [0, 4, 16, 14], "rotation": 180, "texture": "#5"},
 				"down": {"uv": [0, 0, 16, 10], "texture": "#gearbox_top"}
 			}
 		}

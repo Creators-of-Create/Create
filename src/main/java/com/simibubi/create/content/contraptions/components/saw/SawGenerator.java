@@ -22,7 +22,7 @@ public class SawGenerator extends SpecialBlockStateGen {
 		boolean axisAlongFirst = state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE);
 		if (facing.getAxis()
 			.isVertical())
-			return axisAlongFirst ? 90 : 0;
+			return (axisAlongFirst ? 270 : 0) + (state.getValue(SawBlock.FLIPPED) ? 180 : 0);
 		return horizontalAngle(facing);
 	}
 

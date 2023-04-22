@@ -619,7 +619,7 @@
 	"create.hint.mechanical_arm_no_targets": "It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.empty_bearing.title": "Update Bearing",
 	"create.hint.empty_bearing": "_Right-click_ the bearing with an _empty_ _hand_ to _attach_ the structure you just built in front of it.",
-	"create.hint.full_deployer.title": "Deployer Item Overflow",
+	"create.hint.full_deployer.title": "Deployer cannot activate",
 	"create.hint.full_deployer": "It appears this _Deployer_ contains _excess_ _items_ that need to be _extracted._ Use a _hopper,_ _funnel_ or other means to free it from its overflow.",
 
 	"create.backtank.low": "Backtank pressure low",

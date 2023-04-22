@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "create:block/block",
 	"textures": {
-		"slit": "create:block/mechanical_saw_top",
+		"slit": "create:block/mechanical_saw_top_no_slot",
 		"stonecutter_saw": "block/stonecutter_saw",
 		"particle": "create:block/gearbox_top",
 		"gearbox_top": "create:block/gearbox_top",
@@ -54,16 +54,8 @@
 			"to": [16, 14, 11],
 			"faces": {
 				"east": {"uv": [2, 6, 14, 15], "rotation": 90, "texture": "#andesite_casing_short"},
-				"south": {"uv": [0, 2, 16, 14], "texture": "#gearbox_top"},
+				"south": {"uv": [0, 2, 16, 14], "texture": "#slit"},
 				"west": {"uv": [2, 6, 14, 15], "rotation": 270, "texture": "#andesite_casing_short"}
-			}
-		},
-		{
-			"name": "SawSlit",
-			"from": [1, 7, 11.062],
-			"to": [15, 9, 11.062],
-			"faces": {
-				"south": {"uv": [1, 7, 15, 9], "texture": "#slit"}
 			}
 		},
 		{

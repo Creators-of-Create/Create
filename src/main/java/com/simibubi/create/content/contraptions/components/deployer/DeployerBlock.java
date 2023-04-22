@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -45,7 +46,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<DeployerBlockEntity> {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
-	
+
 	public DeployerBlock(Properties properties) {
 		super(properties);
 	}
@@ -57,12 +58,21 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return AllShapes.DEPLOYER_INTERACTION.get(state.getValue(FACING));
+	}
+
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.CASING_12PX.get(state.getValue(FACING));
 	}
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
-		if (context.getClickedFace() == state.getValue(FACING)) {
+		Vec3 location = context.getClickLocation()
+			.subtract(Vec3.atCenterOf(context.getClickedPos()))
+			.multiply(Vec3.atLowerCornerOf(state.getValue(FACING)
+				.getNormal()));
+		if (location.length() > .25f) {
 			if (!context.getLevel().isClientSide)
 				withBlockEntityDo(context.getLevel(), context.getClickedPos(), DeployerBlockEntity::changeMode);
 			return InteractionResult.SUCCESS;
@@ -97,11 +107,15 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 				.consumesAction())
 				return InteractionResult.SUCCESS;
 		}
-		
+
 		if (AllItems.WRENCH.isIn(heldByPlayer))
 			return InteractionResult.PASS;
 
-		if (hit.getDirection() != state.getValue(FACING))
+		Vec3 location = hit.getLocation()
+			.subtract(Vec3.atCenterOf(pos))
+			.multiply(Vec3.atLowerCornerOf(state.getValue(FACING)
+				.getNormal()));
+		if (hit.getDirection() != state.getValue(FACING) && location.length() < .25f)
 			return InteractionResult.PASS;
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;

@@ -19,6 +19,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,8 +32,13 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
@@ -45,6 +51,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBlockEntity> {
 	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").bypassArmor();
 
+	public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
+
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
 	public SawBlock(Properties properties) {
@@ -52,13 +60,60 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 	}
 
 	@Override
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(FLIPPED));
+	}
+
+	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState stateForPlacement = super.getStateForPlacement(context);
 		Direction facing = stateForPlacement.getValue(FACING);
-		if (facing.getAxis()
-			.isVertical())
-			return stateForPlacement;
-		return stateForPlacement.setValue(AXIS_ALONG_FIRST_COORDINATE, facing.getAxis() == Axis.X);
+		return stateForPlacement.setValue(FLIPPED, facing.getAxis() == Axis.Y && context.getHorizontalDirection()
+			.getAxisDirection() == AxisDirection.POSITIVE);
+	}
+
+	@Override
+	public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
+		BlockState newState = super.getRotatedBlockState(originalState, targetedFace);
+		if (newState.getValue(FACING)
+			.getAxis() != Axis.Y)
+			return newState;
+		if (targetedFace.getAxis() != Axis.Y)
+			return newState;
+		if (!originalState.getValue(AXIS_ALONG_FIRST_COORDINATE))
+			newState = newState.cycle(FLIPPED);
+		return newState;
+	}
+
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		BlockState newState = super.rotate(state, rot);
+		if (state.getValue(FACING)
+			.getAxis() != Axis.Y)
+			return newState;
+
+		if (rot.ordinal() % 2 == 1 && (rot == Rotation.CLOCKWISE_90) != state.getValue(AXIS_ALONG_FIRST_COORDINATE))
+			newState = newState.cycle(FLIPPED);
+		if (rot == Rotation.CLOCKWISE_180)
+			newState = newState.cycle(FLIPPED);
+
+		return newState;
+	}
+
+	@Override
+	public BlockState mirror(BlockState state, Mirror mirrorIn) {
+		BlockState newState = super.mirror(state, mirrorIn);
+		if (state.getValue(FACING)
+			.getAxis() != Axis.Y)
+			return newState;
+
+		boolean alongX = state.getValue(AXIS_ALONG_FIRST_COORDINATE);
+		if (alongX && mirrorIn == Mirror.FRONT_BACK)
+			newState = newState.cycle(FLIPPED);
+		if (!alongX && mirrorIn == Mirror.LEFT_RIGHT)
+			newState = newState.cycle(FLIPPED);
+
+		return newState;
 	}
 
 	@Override
@@ -200,7 +255,8 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 			else {
 				return PlacementOffset.success(pos.relative(directions.get(0)),
 					s -> s.setValue(FACING, state.getValue(FACING))
-						.setValue(AXIS_ALONG_FIRST_COORDINATE, state.getValue(AXIS_ALONG_FIRST_COORDINATE)));
+						.setValue(AXIS_ALONG_FIRST_COORDINATE, state.getValue(AXIS_ALONG_FIRST_COORDINATE))
+						.setValue(FLIPPED, state.getValue(FLIPPED)));
 			}
 		}
 	}

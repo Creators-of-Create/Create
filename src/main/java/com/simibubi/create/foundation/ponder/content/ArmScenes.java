@@ -56,7 +56,8 @@ public class ArmScenes {
 		scene.overlay.showControls(new InputWindowElement(depotSurface, Pointing.RIGHT).rightClick()
 			.withItem(armItem), 50);
 		scene.idle(7);
-		AABB depotBounds = AllShapes.DEPOT.bounds();
+		AABB depotBounds = AllShapes.CASING_13PX.get(Direction.UP)
+			.bounds();
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, new Object(), depotBounds.move(4, 2, 1), 400);
 
 		scene.overlay.showText(70)
@@ -394,7 +395,8 @@ public class ArmScenes {
 		scene.world.showSection(util.select.fromTo(1, 1, 1, 5, 1, 2), Direction.SOUTH);
 		scene.idle(10);
 
-		AABB depotBox = AllShapes.DEPOT.bounds();
+		AABB depotBox = AllShapes.CASING_13PX.get(Direction.UP)
+			.bounds();
 		AABB beltBox = depotBox.contract(0, -3 / 16f, 0)
 			.inflate(1, 0, 0);
 		BlockPos depotPos = util.grid.at(1, 1, 4);
