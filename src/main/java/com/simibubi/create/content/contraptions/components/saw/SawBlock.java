@@ -231,20 +231,14 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 
 		@Override
 		public Predicate<BlockState> getStatePredicate() {
-			return state -> AllBlocks.MECHANICAL_SAW.has(state) && state.getValue(FACING)
-				.getAxis() != Axis.Y;
+			return state -> AllBlocks.MECHANICAL_SAW.has(state);
 		}
 
 		@Override
 		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
 			BlockHitResult ray) {
-			if (state.getValue(FACING)
-				.getAxis() == Axis.Y)
-				return PlacementOffset.fail();
-
-			List<Direction> directions = IPlacementHelper.orderedByDistanceOnlyAxis(pos, ray.getLocation(),
+			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getLocation(),
 				state.getValue(FACING)
-					.getClockWise()
 					.getAxis(),
 				dir -> world.getBlockState(pos.relative(dir))
 					.getMaterial()
@@ -255,10 +249,11 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 			else {
 				return PlacementOffset.success(pos.relative(directions.get(0)),
 					s -> s.setValue(FACING, state.getValue(FACING))
-						.setValue(AXIS_ALONG_FIRST_COORDINATE, state.getValue(AXIS_ALONG_FIRST_COORDINATE))
-						.setValue(FLIPPED, state.getValue(FLIPPED)));
+					.setValue(AXIS_ALONG_FIRST_COORDINATE, state.getValue(AXIS_ALONG_FIRST_COORDINATE))
+					.setValue(FLIPPED, state.getValue(FLIPPED)));
 			}
 		}
+		
 	}
 
 }

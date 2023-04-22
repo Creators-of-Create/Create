@@ -10,7 +10,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.components.AssemblyOperatorUseContext;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -185,8 +184,10 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 		@Override
 		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
 			BlockHitResult ray) {
-			List<Direction> directions = IPlacementHelper.orderedByDistanceOnlyAxis(pos, ray.getLocation(),
-				((KineticBlock) state.getBlock()).getRotationAxis(state), dir -> world.getBlockState(pos.relative(dir))
+			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getLocation(),
+				state.getValue(FACING)
+					.getAxis(),
+				dir -> world.getBlockState(pos.relative(dir))
 					.getMaterial()
 					.isReplaceable());
 
@@ -198,6 +199,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 						.setValue(AXIS_ALONG_FIRST_COORDINATE, state.getValue(AXIS_ALONG_FIRST_COORDINATE)));
 			}
 		}
+
 	}
 
 }
