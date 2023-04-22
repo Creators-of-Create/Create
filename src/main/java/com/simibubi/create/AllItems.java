@@ -248,30 +248,50 @@ public class AllItems {
 
 	public static final ItemEntry<? extends BacktankItem>
 
-		COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new BacktankItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving"), COPPER_BACKTANK_PLACEABLE))
+	COPPER_BACKTANK =
+		REGISTRATE
+			.item("copper_backtank",
+				p -> new BacktankItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving"),
+					COPPER_BACKTANK_PLACEABLE))
 			.model(AssetLookup.customGenericItemModel("_", "item"))
 			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
 			.register(),
 
-		NETHERITE_BACKTANK = REGISTRATE.item("netherite_backtank", p -> new BacktankItem.Layered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving"), NETHERITE_BACKTANK_PLACEABLE))
+		NETHERITE_BACKTANK = REGISTRATE
+			.item("netherite_backtank",
+				p -> new BacktankItem.Layered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving"),
+					NETHERITE_BACKTANK_PLACEABLE))
 			.model(AssetLookup.customGenericItemModel("_", "item"))
+			.properties(p -> p.fireResistant())
 			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
 			.register();
 
 	public static final ItemEntry<? extends DivingHelmetItem>
 
-		COPPER_DIVING_HELMET = REGISTRATE.item("copper_diving_helmet", p -> new DivingHelmetItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
+	COPPER_DIVING_HELMET =
+		REGISTRATE
+			.item("copper_diving_helmet",
+				p -> new DivingHelmetItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
 			.register(),
 
-		NETHERITE_DIVING_HELMET = REGISTRATE.item("netherite_diving_helmet", p -> new DivingHelmetItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+		NETHERITE_DIVING_HELMET = REGISTRATE
+			.item("netherite_diving_helmet",
+				p -> new DivingHelmetItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+			.properties(p -> p.fireResistant())
 			.register();
 
 	public static final ItemEntry<? extends DivingBootsItem>
 
-		COPPER_DIVING_BOOTS = REGISTRATE.item("copper_diving_boots", p -> new DivingBootsItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
+	COPPER_DIVING_BOOTS =
+		REGISTRATE
+			.item("copper_diving_boots",
+				p -> new DivingBootsItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
 			.register(),
 
-		NETHERITE_DIVING_BOOTS = REGISTRATE.item("netherite_diving_boots", p -> new DivingBootsItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+		NETHERITE_DIVING_BOOTS = REGISTRATE
+			.item("netherite_diving_boots",
+				p -> new DivingBootsItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+			.properties(p -> p.fireResistant())
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)

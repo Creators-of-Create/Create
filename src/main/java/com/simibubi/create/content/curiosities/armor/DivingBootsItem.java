@@ -1,5 +1,7 @@
 package com.simibubi.create.content.curiosities.armor;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.resources.ResourceLocation;
@@ -9,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,10 +26,19 @@ public class DivingBootsItem extends BaseArmorItem {
 	}
 
 	public static boolean isWornBy(Entity entity) {
-		if (!(entity instanceof LivingEntity livingEntity)) {
+		ItemStack stack = getWornItem(entity);
+		if (stack == null) {
 			return false;
 		}
-		return livingEntity.getItemBySlot(SLOT).getItem() instanceof DivingBootsItem;
+		return stack.getItem() instanceof DivingBootsItem;
+	}
+
+	@Nullable
+	public static ItemStack getWornItem(Entity entity) {
+		if (!(entity instanceof LivingEntity livingEntity)) {
+			return null;
+		}
+		return livingEntity.getItemBySlot(SLOT);
 	}
 
 	@SubscribeEvent
@@ -72,4 +84,28 @@ public class DivingBootsItem extends BaseArmorItem {
 		}
 		return true;
 	}
+
+	public static Vec3 getMovementMultiplier(Entity entity) {
+		double yMotion = entity.getDeltaMovement().y;
+		double vMultiplier = yMotion < 0 ? Math.max(0, 2.5 - Math.abs(yMotion) * 2) : 1;
+
+		if (!entity.isOnGround()) {
+			if (entity instanceof LivingEntity le && le.jumping && entity.getPersistentData()
+				.contains("LavaGrounded")) {
+				vMultiplier = yMotion == 0 ? 0 : 1 / yMotion;
+			} else if (yMotion > 0)
+				vMultiplier = 1.3;
+
+			entity.getPersistentData()
+				.remove("LavaGrounded");
+			return new Vec3(1.75, vMultiplier, 1.75);
+		}
+
+		if (entity instanceof LivingEntity)
+			entity.getPersistentData()
+				.putBoolean("LavaGrounded", true);
+		double hMultiplier = entity.isSprinting() ? 1.85 : 1.75;
+		return new Vec3(hMultiplier, vMultiplier, hMultiplier);
+	}
+
 }

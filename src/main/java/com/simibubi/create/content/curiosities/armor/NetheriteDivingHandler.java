@@ -38,35 +38,33 @@ public final class NetheriteDivingHandler {
 
 		if (slot == EquipmentSlot.HEAD) {
 			if (AllItems.NETHERITE_DIVING_HELMET.isIn(to)) {
-				setBit(entity, 0);
+				setBit(entity, slot);
 			} else {
-				clearBit(entity, 0);
+				clearBit(entity, slot);
 			}
 		} else if (slot == EquipmentSlot.CHEST) {
-			if (AllItems.NETHERITE_BACKTANK.isIn(to)) {
-				setBit(entity, 1);
+			if (AllItems.NETHERITE_BACKTANK.isIn(to) && BacktankUtil.hasAirRemaining(to)) {
+				setBit(entity, slot);
 			} else {
-				clearBit(entity, 1);
+				clearBit(entity, slot);
 			}
-		} else if (slot == EquipmentSlot.LEGS) {
-			if (to.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ArmorMaterials.NETHERITE) {
-				setBit(entity, 2);
+		} else if (slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET) {
+			if (isNetheriteArmor(to)) {
+				setBit(entity, slot);
 			} else {
-				clearBit(entity, 2);
-			}
-		} else if (slot == EquipmentSlot.FEET) {
-			if (to.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ArmorMaterials.NETHERITE) {
-				setBit(entity, 3);
-			} else {
-				clearBit(entity, 3);
+				clearBit(entity, slot);
 			}
 		}
 	}
 
-	public static void setBit(LivingEntity entity, int i) {
+	public static boolean isNetheriteArmor(ItemStack stack) {
+		return stack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ArmorMaterials.NETHERITE;
+	}
+
+	public static void setBit(LivingEntity entity, EquipmentSlot slot) {
 		CompoundTag nbt = entity.getPersistentData();
 		byte bits = nbt.getByte(NETHERITE_DIVING_BITS_KEY);
-		bits |= 1 << i;
+		bits |= 1 << slot.getIndex();
 		nbt.putByte(NETHERITE_DIVING_BITS_KEY, bits);
 
 		if ((bits & 0xF) == 0xF) {
@@ -74,7 +72,7 @@ public final class NetheriteDivingHandler {
 		}
 	}
 
-	public static void clearBit(LivingEntity entity, int i) {
+	public static void clearBit(LivingEntity entity, EquipmentSlot slot) {
 		CompoundTag nbt = entity.getPersistentData();
 		if (!nbt.contains(NETHERITE_DIVING_BITS_KEY)) {
 			return;
@@ -82,7 +80,7 @@ public final class NetheriteDivingHandler {
 
 		byte bits = nbt.getByte(NETHERITE_DIVING_BITS_KEY);
 		boolean prevFullSet = (bits & 0xF) == 0xF;
-		bits &= ~(1 << i);
+		bits &= ~(1 << slot.getIndex());
 		nbt.putByte(NETHERITE_DIVING_BITS_KEY, bits);
 
 		if (prevFullSet) {

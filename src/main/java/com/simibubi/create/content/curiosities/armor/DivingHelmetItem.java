@@ -28,11 +28,13 @@ public class DivingHelmetItem extends BaseArmorItem {
 		super(material, SLOT, properties, textureLoc);
 	}
 
-	public static boolean isWornBy(Entity entity) {
+	public static boolean isWornBy(Entity entity, boolean fireproof) {
 		ItemStack stack = getWornItem(entity);
-		if (stack == null) {
+		if (stack == null)
 			return false;
-		}
+		if (!stack.getItem()
+			.isFireResistant() && fireproof)
+			return false;
 		return stack.getItem() instanceof DivingHelmetItem;
 	}
 
@@ -55,10 +57,9 @@ public class DivingHelmetItem extends BaseArmorItem {
 			entity.getPersistentData()
 				.remove("VisualBacktankAir");
 
-		if (!isWornBy(entity))
-			return;
-
 		boolean lavaDiving = entity.isEyeInFluid(FluidTags.LAVA);
+		if (!isWornBy(entity, lavaDiving))
+			return;
 		if (!entity.isEyeInFluid(FluidTags.WATER) && !lavaDiving)
 			return;
 		if (entity instanceof Player && ((Player) entity).isCreative())
@@ -73,7 +74,9 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (lavaDiving) {
 			if (entity instanceof ServerPlayer sp)
 				AllAdvancements.DIVING_SUIT_LAVA.awardTo(sp);
-			return;
+			if (!backtank.getItem()
+				.isFireResistant())
+				return;
 		}
 
 		if (drowning)
@@ -85,12 +88,16 @@ public class DivingHelmetItem extends BaseArmorItem {
 
 		if (!second)
 			return;
+		
+		BacktankUtil.consumeAir(entity, backtank, 1);
+
+		if (lavaDiving)
+			return;
 
 		if (entity instanceof ServerPlayer sp)
 			AllAdvancements.DIVING_SUIT.awardTo(sp);
 
 		entity.setAirSupply(Math.min(entity.getMaxAirSupply(), entity.getAirSupply() + 10));
 		entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 30, 0, true, false, true));
-		BacktankUtil.consumeAir(entity, backtank, 1);
 	}
 }

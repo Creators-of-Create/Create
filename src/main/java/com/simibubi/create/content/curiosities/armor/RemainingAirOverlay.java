@@ -33,7 +33,7 @@ public class RemainingAirOverlay implements IIngameOverlay {
 		if (!player.getPersistentData()
 			.contains("VisualBacktankAir"))
 			return;
-		if (!player.isEyeInFluid(FluidTags.WATER))
+		if (!player.isEyeInFluid(FluidTags.WATER) && !player.isEyeInFluid(FluidTags.LAVA))
 			return;
 
 		int timeLeft = player.getPersistentData()
@@ -41,10 +41,12 @@ public class RemainingAirOverlay implements IIngameOverlay {
 
 		poseStack.pushPose();
 
-		poseStack.translate(width / 2 + 90, height - 53, 0);
+		ItemStack backtank = getDisplayedBacktank(player);
+		poseStack.translate(width / 2 + 90, height - 53 + (backtank.getItem()
+			.isFireResistant() ? 9 : 0), 0);
 
-		Component text = Components.literal(StringUtil.formatTickDuration(timeLeft * 20));
-		GuiGameElement.of(getDisplayedBacktank(player))
+		Component text = Components.literal(StringUtil.formatTickDuration(Math.max(0, timeLeft - 1) * 20));
+		GuiGameElement.of(backtank)
 			.at(0, 0)
 			.render(poseStack);
 		int color = 0xFF_FFFFFF;

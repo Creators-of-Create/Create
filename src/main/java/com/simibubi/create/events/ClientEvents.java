@@ -22,6 +22,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRe
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.BacktankArmorLayer;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
+import com.simibubi.create.content.curiosities.armor.NetheriteBacktankFirstPersonRenderer;
 import com.simibubi.create.content.curiosities.clipboard.ClipboardValueSettingsHandler;
 import com.simibubi.create.content.curiosities.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
@@ -67,6 +68,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -163,6 +165,7 @@ public class ClientEvents {
 		ClipboardValueSettingsHandler.clientTick();
 		CreateClient.VALUE_SETTINGS_HANDLER.tick();
 		ScrollValueHandler.tick();
+		NetheriteBacktankFirstPersonRenderer.clientTick();
 	}
 
 	@SubscribeEvent
@@ -283,14 +286,15 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void getFogDensity(EntityViewRenderEvent.RenderFogEvent event) {
-		Camera info = event.getCamera();
+		Camera camera = event.getCamera();
 		Level level = Minecraft.getInstance().level;
-		BlockPos blockPos = info.getBlockPosition();
+		BlockPos blockPos = camera.getBlockPosition();
 		FluidState fluidState = level.getFluidState(blockPos);
-		if (info.getPosition().y > blockPos.getY() + fluidState.getHeight(level, blockPos))
+		if (camera.getPosition().y >= blockPos.getY() + fluidState.getHeight(level, blockPos))
 			return;
 
 		Fluid fluid = fluidState.getType();
+		Entity entity = camera.getEntity();
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
@@ -306,10 +310,18 @@ public class ClientEvents {
 			return;
 		}
 
-		ItemStack divingHelmet = DivingHelmetItem.getWornItem(Minecraft.getInstance().cameraEntity);
+		if (entity.isSpectator())
+			return;
+
+		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
 		if (divingHelmet != null) {
-			if (FluidHelper.isWater(fluid) || FluidHelper.isLava(fluid) && AllItems.NETHERITE_DIVING_HELMET.isIn(divingHelmet)) {
+			if (FluidHelper.isWater(fluid)) {
 				event.scaleFarPlaneDistance(6.25f);
+				event.setCanceled(true);
+				return;
+			} else if (FluidHelper.isLava(fluid) && AllItems.NETHERITE_DIVING_HELMET.isIn(divingHelmet)) {
+				event.setNearPlaneDistance(-4.0f);
+				event.setFarPlaneDistance(20.0f);
 				event.setCanceled(true);
 				return;
 			}

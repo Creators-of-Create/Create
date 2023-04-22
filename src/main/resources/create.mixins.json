@@ -12,6 +12,7 @@
     "EnchantmentHelperMixin",
     "EnchantmentMixin",
     "EntityMixin",
+    "LavaSwimmingMixin",
     "MapItemSavedDataMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
