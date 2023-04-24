@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -63,15 +64,20 @@ public class ValueSettingsInputHandler {
 			if (valueSettingsBehaviour.onlyVisibleWithWrench()
 				&& !AllItemTags.WRENCH.matches(player.getItemInHand(hand)))
 				continue;
-			if (valueSettingsBehaviour.getSlotPositioning()instanceof ValueBoxTransform.Sided sidedSlot)
+			if (valueSettingsBehaviour.getSlotPositioning()instanceof ValueBoxTransform.Sided sidedSlot) {
+				if (!sidedSlot.isSideActive(sbe.getBlockState(), ray.getDirection()))
+					continue;
 				sidedSlot.fromSide(ray.getDirection());
-			if (!valueSettingsBehaviour.testHit(ray.getLocation()))
+			}
+
+			boolean fakePlayer = player instanceof FakePlayer;
+			if (!valueSettingsBehaviour.testHit(ray.getLocation()) && !fakePlayer)
 				continue;
 
 			event.setCanceled(true);
 			event.setCancellationResult(InteractionResult.SUCCESS);
 
-			if (!valueSettingsBehaviour.acceptsValueSettings()) {
+			if (!valueSettingsBehaviour.acceptsValueSettings() || fakePlayer) {
 				valueSettingsBehaviour.onShortInteract(player, hand, ray.getDirection());
 				return;
 			}

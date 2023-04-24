@@ -112,7 +112,7 @@ public class SchematicPrinter {
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());
-		for (BlockEntity be : blockReader.blockEntities.values())
+		for (BlockEntity be : blockReader.getBlockEntities())
 			transform.apply(be);
 
 		printingEntityIndex = -1;

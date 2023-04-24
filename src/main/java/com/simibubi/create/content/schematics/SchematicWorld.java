@@ -228,6 +228,10 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	public BoundingBox getBounds() {
 		return bounds;
 	}
+	
+	public Iterable<BlockEntity> getBlockEntities() {
+		return blockEntities.values();
+	}
 
 	public Iterable<BlockEntity> getRenderedBlockEntities() {
 		return renderedBlockEntities;

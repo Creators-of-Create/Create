@@ -67,11 +67,13 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		Vec3 normal = Vec3.atLowerCornerOf(state.getValue(FACING)
+			.getNormal());
 		Vec3 location = context.getClickLocation()
-			.subtract(Vec3.atCenterOf(context.getClickedPos()))
-			.multiply(Vec3.atLowerCornerOf(state.getValue(FACING)
-				.getNormal()));
-		if (location.length() > .25f) {
+			.subtract(Vec3.atCenterOf(context.getClickedPos())
+				.subtract(normal.scale(.5)))
+			.multiply(normal);
+		if (location.length() > .75f) {
 			if (!context.getLevel().isClientSide)
 				withBlockEntityDo(context.getLevel(), context.getClickedPos(), DeployerBlockEntity::changeMode);
 			return InteractionResult.SUCCESS;
@@ -110,11 +112,13 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements IBE<De
 		if (AllItems.WRENCH.isIn(heldByPlayer))
 			return InteractionResult.PASS;
 
+		Vec3 normal = Vec3.atLowerCornerOf(state.getValue(FACING)
+			.getNormal());
 		Vec3 location = hit.getLocation()
-			.subtract(Vec3.atCenterOf(pos))
-			.multiply(Vec3.atLowerCornerOf(state.getValue(FACING)
-				.getNormal()));
-		if (hit.getDirection() != state.getValue(FACING) && location.length() < .25f)
+			.subtract(Vec3.atCenterOf(pos)
+				.subtract(normal.scale(.5)))
+			.multiply(normal);
+		if (location.length() < .75f)
 			return InteractionResult.PASS;
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
