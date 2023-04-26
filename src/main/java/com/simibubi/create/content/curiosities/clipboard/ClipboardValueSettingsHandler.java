@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline;
@@ -51,7 +51,7 @@ public class ClipboardValueSettingsHandler {
 		if (!mc.level.getWorldBorder()
 			.isWithinBounds(pos))
 			return;
-		if (!AllItems.CLIPBOARD.isIn(mc.player.getMainHandItem()))
+		if (!AllBlocks.CLIPBOARD.isIn(mc.player.getMainHandItem()))
 			return;
 		if (!(mc.level.getBlockEntity(pos) instanceof SmartBlockEntity smartBE))
 			return;
@@ -85,7 +85,7 @@ public class ClipboardValueSettingsHandler {
 		Minecraft mc = Minecraft.getInstance();
 		if (!(mc.hitResult instanceof BlockHitResult target))
 			return;
-		if (!AllItems.CLIPBOARD.isIn(mc.player.getMainHandItem()))
+		if (!AllBlocks.CLIPBOARD.isIn(mc.player.getMainHandItem()))
 			return;
 		BlockPos pos = target.getBlockPos();
 		if (!(mc.level.getBlockEntity(pos) instanceof SmartBlockEntity smartBE))
@@ -133,13 +133,15 @@ public class ClipboardValueSettingsHandler {
 
 	private static void interact(PlayerInteractEvent event, boolean paste) {
 		ItemStack itemStack = event.getItemStack();
-		if (!AllItems.CLIPBOARD.isIn(itemStack))
+		if (!AllBlocks.CLIPBOARD.isIn(itemStack))
 			return;
 
 		BlockPos pos = event.getPos();
 		Level world = event.getWorld();
 		Player player = event.getPlayer();
 		if (player != null && player.isSpectator())
+			return;
+		if (player.isSteppingCarefully())
 			return;
 		if (!(world.getBlockEntity(pos) instanceof SmartBlockEntity smartBE))
 			return;

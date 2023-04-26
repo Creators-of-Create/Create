@@ -51,6 +51,7 @@ ff1073a5451691c492102243084d92de42abfc26 assets/create/blockstates/calcite_pilla
 d01a750e6e8214ca8481e40aa69cedeb5c7210f8 assets/create/blockstates/cart_assembler.json
 470e8c6a9c37b91fa745bc4f6e9d3740bd72467e assets/create/blockstates/chocolate.json
 816c17d1f546d09bc4d7f2eac17a9d26d4a8f9ca assets/create/blockstates/chute.json
+948af9d46672221a5e404126c0427b9c9353944e assets/create/blockstates/clipboard.json
 4947c261310445fa55b92038326ac82967d192dd assets/create/blockstates/clockwork_bearing.json
 1f33834c685e3243882acfe20183fe64dfa872be assets/create/blockstates/clutch.json
 e5e3757e99c139d67b2a70288466d8a74d818841 assets/create/blockstates/cogwheel.json
@@ -577,8 +578,8 @@ bf2b0310500213ff853c748c236eb5d01f61658e assets/create/blockstates/yellow_toolbo
 5616dda664dd106d576848124fc0fc1de18d0fd3 assets/create/blockstates/yellow_valve_handle.json
 7f39521b211441f5c3e06d60c5978cebe16cacfb assets/create/blockstates/zinc_block.json
 b7181bcd8182b2f17088e5aa881f374c9c65470c assets/create/blockstates/zinc_ore.json
-11c1ebd001468641aacda3e4ed11995ed37853da assets/create/lang/en_ud.json
-ff4f0cd079e13fcc7eae4f8c9af2a455af019056 assets/create/lang/en_us.json
+ce9a5edbf3f6d35c11ce3894efb89d012a3e643b assets/create/lang/en_ud.json
+e19381716210baa2b86cd113017ab3ded998376f assets/create/lang/en_us.json
 487a511a01b2a4531fb672f917922312db78f958 assets/create/models/block/acacia_window.json
 b48060cba1a382f373a05bf0039054053eccf076 assets/create/models/block/acacia_window_pane_noside.json
 3066db1bf03cffa1a9c7fbacf47ae586632f4eb3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -3277,6 +3278,7 @@ ce827895d9e1ac4ddb72a8228ec981c68d47a18e data/create/loot_tables/blocks/brown_to
 0730271bf0b0f648993e26aded5870588eb52588 data/create/loot_tables/blocks/calcite_pillar.json
 28cb11556296be42449dcd1c165c345adfb0eb82 data/create/loot_tables/blocks/cart_assembler.json
 1f748ab0b793350314446552693702874e34c910 data/create/loot_tables/blocks/chute.json
+374fc761ad454802cb3e7a484cfec94537b114d8 data/create/loot_tables/blocks/clipboard.json
 bd4ed53c029fcd6e5da7e43ebe4d15030d3fd9de data/create/loot_tables/blocks/clockwork_bearing.json
 8a5655e16f3da654e801cbfd81478c30180892a0 data/create/loot_tables/blocks/clutch.json
 982a41e1bccd9a130a2874aff995d4f7da0f0316 data/create/loot_tables/blocks/cogwheel.json
@@ -5288,7 +5290,7 @@ ee6d2b53d81f2bed492662b6c06f46c4f2b9ef9b data/create/tags/blocks/movable_empty_c
 6e5d3b2123fbb00e7f439c091623619502551bca data/create/tags/blocks/non_movable.json
 10781e8cfcbb3486327aace3aa00e437fb44b331 data/create/tags/blocks/ore_override_stone.json
 760adb521c2e475a6414f97291f46c02d294fa74 data/create/tags/blocks/passive_boiler_heaters.json
-ec0c664fa776b60b61ef8a8069355b6613b3b34f data/create/tags/blocks/safe_nbt.json
+af314e7ec90377e69387523a4c9af19e0056734e data/create/tags/blocks/safe_nbt.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/blocks/seats.json
 d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/blocks/toolboxes.json
 9460e92c8e483446318b849abe7e6f52dcd4a269 data/create/tags/blocks/tree_attachments.json
@@ -5384,8 +5386,8 @@ e16d74571ae10007f06f3b86ddf05d3ca9b73559 data/minecraft/tags/blocks/doors.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/dripstone_replaceable_blocks.json
 69f596fcb065e26b02ce246760432b5174191b76 data/minecraft/tags/blocks/impermeable.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/lush_ground_replaceable.json
-d6b2543575bcedb3796dd681717dd6ac4d1399e6 data/minecraft/tags/blocks/mineable/axe.json
-90d279fe3866cca2717befb9d043c6677533685c data/minecraft/tags/blocks/mineable/pickaxe.json
+b477e815d5f38011414b67437c8e6ba16296eea9 data/minecraft/tags/blocks/mineable/axe.json
+9a18f38279c68dcddc7d976f97e740f3d49e4887 data/minecraft/tags/blocks/mineable/pickaxe.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/moss_replaceable.json
 e157c1d3af30e409e34bbefbe15a037e6e1c8daa data/minecraft/tags/blocks/needs_iron_tool.json
 a08f67865337f62601c5e333b4011382d10020e4 data/minecraft/tags/blocks/needs_stone_tool.json

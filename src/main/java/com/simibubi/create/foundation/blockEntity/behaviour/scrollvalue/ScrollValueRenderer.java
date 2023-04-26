@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.CreateClient;
@@ -48,7 +49,7 @@ public class ScrollValueRenderer {
 			return;
 		}
 		ItemStack mainhandItem = mc.player.getItemInHand(InteractionHand.MAIN_HAND);
-		boolean clipboard = AllItems.CLIPBOARD.isIn(mainhandItem);
+		boolean clipboard = AllBlocks.CLIPBOARD.isIn(mainhandItem);
 		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mainhandItem) && !clipboard)
 			return;
 		boolean highlight = behaviour.testHit(target.getLocation()) && !clipboard;

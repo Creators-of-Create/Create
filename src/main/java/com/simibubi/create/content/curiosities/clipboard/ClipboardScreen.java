@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -16,6 +18,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -35,8 +38,10 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -50,7 +55,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ClipboardScreen extends AbstractSimiScreen {
 
-	private ItemStack item;
+	public ItemStack item;
+	public BlockPos targetedBlock;
 
 	List<List<ClipboardEntry>> pages;
 	List<ClipboardEntry> currentEntries;
@@ -74,16 +80,23 @@ public class ClipboardScreen extends AbstractSimiScreen {
 
 	private int targetSlot;
 
-	public ClipboardScreen(int targetSlot, ItemStack item) {
+	public ClipboardScreen(int targetSlot, ItemStack item, @Nullable BlockPos pos) {
 		this.targetSlot = targetSlot;
-		this.item = item;
+		this.targetedBlock = pos;
+		reopenWith(item);
+	}
+
+	public void reopenWith(ItemStack clipboard) {
+		item = clipboard;
 		pages = ClipboardEntry.readAll(item);
 		if (pages.isEmpty())
 			pages.add(new ArrayList<>());
-		currentPage = item.getTag() == null ? 0
-			: item.getTag()
-				.getInt("PreviouslyOpenedPage");
-		currentPage = Mth.clamp(currentPage, 0, pages.size() - 1);
+		if (clearBtn == null) {
+			currentPage = item.getTag() == null ? 0
+				: item.getTag()
+					.getInt("PreviouslyOpenedPage");
+			currentPage = Mth.clamp(currentPage, 0, pages.size() - 1);
+		}
 		currentEntries = pages.get(currentPage);
 		boolean startEmpty = currentEntries.isEmpty();
 		if (startEmpty)
@@ -96,6 +109,8 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			.getBoolean("Readonly");
 		if (readonly)
 			editingIndex = -1;
+		if (clearBtn != null)
+			init();
 	}
 
 	@Override
@@ -114,6 +129,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			currentEntries.removeIf(ce -> ce.checked);
 			if (currentEntries.isEmpty())
 				currentEntries.add(new ClipboardEntry(false, Components.empty()));
+			sendIfEditingBlock();
 		});
 		clearBtn.setToolTip(Lang.translateDirect("gui.clipboard.erase_checked"));
 		closeBtn = new IconButton(x + 234, y + 175, AllIcons.I_PRIORITY_VERY_LOW)
@@ -138,6 +154,18 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	public void tick() {
 		super.tick();
 		frameTick++;
+
+		if (targetedBlock != null) {
+			if (!minecraft.player.blockPosition()
+				.closerThan(targetedBlock, 10)) {
+				removed();
+				return;
+			}
+			if (!AllBlocks.CLIPBOARD.has(minecraft.level.getBlockState(targetedBlock))) {
+				removed();
+				return;
+			}
+		}
 
 		int mx = (int) (this.minecraft.mouseHandler.xpos() * (double) this.minecraft.getWindow()
 			.getGuiScaledWidth() / (double) this.minecraft.getWindow()
@@ -177,6 +205,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 
 	private void setCurrentEntryText(String text) {
 		currentEntries.get(editingIndex).text = Components.literal(text);
+		sendIfEditingBlock();
 	}
 
 	private void setClipboard(String p_98148_) {
@@ -303,26 +332,37 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			.isBlank()));
 		pages.removeIf(List::isEmpty);
 
-		ClipboardEntry.saveAll(pages, item);
-		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, item);
-
 		for (int i = 0; i < pages.size(); i++)
 			if (pages.get(i) == currentEntries)
-				item.getTag()
+				item.getOrCreateTag()
 					.putInt("PreviouslyOpenedPage", i);
 
+		send();
+
+		super.removed();
+	}
+
+	private void sendIfEditingBlock() {
+		ClientPacketListener handler = minecraft.player.connection;
+		if (handler.getOnlinePlayers()
+			.size() > 1 && targetedBlock != null)
+			send();
+	}
+
+	private void send() {
+		ClipboardEntry.saveAll(pages, item);
+		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, item);
 		if (pages.isEmpty())
 			item.setTag(new CompoundTag());
 		AllPackets.getChannel()
-			.sendToServer(new ClipboardEditPacket(targetSlot, item.getOrCreateTag()));
-		super.removed();
+			.sendToServer(new ClipboardEditPacket(targetSlot, item.getOrCreateTag(), targetedBlock));
 	}
 
 	@Override
 	public boolean isPauseScreen() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
 		changePage(pDelta < 0);
@@ -546,6 +586,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 				editingIndex = -1;
 				if (hoveredEntry < currentEntries.size())
 					currentEntries.get(hoveredEntry).checked ^= true;
+				sendIfEditingBlock();
 				return true;
 			}
 

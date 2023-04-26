@@ -110,6 +110,7 @@
     "create:redstone_link",
     "create:analog_lever",
     "create:lectern_controller",
+    "create:clipboard",
     "create:copycat_step",
     "create:copycat_panel"
   ]

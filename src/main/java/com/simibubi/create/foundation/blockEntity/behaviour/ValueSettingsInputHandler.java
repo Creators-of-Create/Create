@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
@@ -34,7 +34,7 @@ public class ValueSettingsInputHandler {
 
 		if (!canInteract(player))
 			return;
-		if (AllItems.CLIPBOARD.isIn(player.getMainHandItem()))
+		if (AllBlocks.CLIPBOARD.isIn(player.getMainHandItem()))
 			return;
 		if (!(world.getBlockEntity(pos)instanceof SmartBlockEntity sbe))
 			return;

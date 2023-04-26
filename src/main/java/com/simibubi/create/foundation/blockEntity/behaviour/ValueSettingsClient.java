@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -70,7 +70,7 @@ public class ValueSettingsClient implements IIngameOverlay {
 			return;
 		Player player = mc.player;
 
-		if (!ValueSettingsInputHandler.canInteract(player) || AllItems.CLIPBOARD.isIn(player.getMainHandItem())) {
+		if (!ValueSettingsInputHandler.canInteract(player) || AllBlocks.CLIPBOARD.isIn(player.getMainHandItem())) {
 			cancelInteraction();
 			return;
 		}

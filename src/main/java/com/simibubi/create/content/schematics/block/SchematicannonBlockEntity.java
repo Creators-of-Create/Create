@@ -14,7 +14,6 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity.CasingType;
-import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
@@ -704,7 +703,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 			dontUpdateChecklist = true;
 			ItemStack extractItem = inventory.extractItem(BookInput, 1, false);
-			ItemStack stack = AllItems.CLIPBOARD.isIn(extractItem) ? checklist.createWrittenClipboard()
+			ItemStack stack = AllBlocks.CLIPBOARD.isIn(extractItem) ? checklist.createWrittenClipboard()
 				: checklist.createWrittenBook();
 			stack.setCount(inventory.getStackInSlot(BookOutput)
 				.getCount() + 1);

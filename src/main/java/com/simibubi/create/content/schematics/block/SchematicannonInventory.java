@@ -1,5 +1,6 @@
 package com.simibubi.create.content.schematics.block;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +29,7 @@ public class SchematicannonInventory extends ItemStackHandler {
 		case 1: // Blueprint output
 			return false;
 		case 2: // Book input
-			return AllItems.CLIPBOARD.isIn(stack) || stack.sameItem(new ItemStack(Items.BOOK))
+			return AllBlocks.CLIPBOARD.isIn(stack) || stack.sameItem(new ItemStack(Items.BOOK))
 				|| stack.sameItem(new ItemStack(Items.WRITTEN_BOOK));
 		case 3: // Material List output
 			return false;

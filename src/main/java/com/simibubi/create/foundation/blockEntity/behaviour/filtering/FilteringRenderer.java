@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
@@ -81,7 +80,7 @@ public class FilteringRenderer {
 		AABB bb = isFilterSlotted ? emptyBB.inflate(.45f, .31f, .2f) : emptyBB.inflate(.25f);
 
 		ValueBox box = new ItemValueBox(label, bb, pos, filter, showCount ? behaviour.count : -1, behaviour.upTo);
-		box.passive(!hit || AllItems.CLIPBOARD.isIn(mainhandItem));
+		box.passive(!hit || AllBlocks.CLIPBOARD.isIn(mainhandItem));
 
 		CreateClient.OUTLINER.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
 			.lineWidth(1 / 64f)

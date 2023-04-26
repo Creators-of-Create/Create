@@ -146,6 +146,7 @@ import com.simibubi.create.content.curiosities.armor.BacktankRenderer;
 import com.simibubi.create.content.curiosities.bell.BellRenderer;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlockEntity;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlockEntity;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardBlockEntity;
 import com.simibubi.create.content.curiosities.deco.PlacardBlockEntity;
 import com.simibubi.create.content.curiosities.deco.PlacardRenderer;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlockEntity;
@@ -879,6 +880,11 @@ public class AllBlockEntityTypes {
 		.blockEntity("track_observer", TrackObserverBlockEntity::new)
 		.renderer(() -> TrackObserverRenderer::new)
 		.validBlocks(AllBlocks.TRACK_OBSERVER)
+		.register();
+	
+	public static final BlockEntityEntry<ClipboardBlockEntity> CLIPBOARD = REGISTRATE
+		.blockEntity("clipboard", ClipboardBlockEntity::new)
+		.validBlocks(AllBlocks.CLIPBOARD)
 		.register();
 
 	public static void register() {}

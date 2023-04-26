@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.google.common.collect.Sets;
-import com.simibubi.create.AllItems;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.curiosities.clipboard.ClipboardEntry;
 import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides;
 import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides.ClipboardType;
@@ -156,7 +156,7 @@ public class MaterialChecklist {
 	}
 
 	public ItemStack createWrittenClipboard() {
-		ItemStack clipboard = AllItems.CLIPBOARD.asStack();
+		ItemStack clipboard = AllBlocks.CLIPBOARD.asStack();
 		CompoundTag tag = clipboard.getOrCreateTag();
 		int itemsWritten = 0;
 

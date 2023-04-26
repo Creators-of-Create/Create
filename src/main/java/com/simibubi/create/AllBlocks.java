@@ -145,6 +145,9 @@ import com.simibubi.create.content.curiosities.armor.BacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardBlock;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardBlockItem;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides;
 import com.simibubi.create.content.curiosities.deco.MetalLadderBlock;
 import com.simibubi.create.content.curiosities.deco.MetalScaffoldingBlock;
 import com.simibubi.create.content.curiosities.deco.PlacardBlock;
@@ -265,6 +268,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Registry;
+import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -2050,6 +2054,19 @@ public class AllBlocks {
 			.build()
 			.register();
 	});
+
+	public static final BlockEntry<ClipboardBlock> CLIPBOARD = REGISTRATE.block("clipboard", ClipboardBlock::new)
+		.initialProperties(SharedProperties::wooden)
+		.transform(axeOrPickaxe())
+		.tag(AllBlockTags.SAFE_NBT.tag)
+		.blockstate((c, p) -> p.horizontalFaceBlock(c.get(),
+			s -> AssetLookup.partialBaseModel(c, p, s.getValue(ClipboardBlock.WRITTEN) ? "written" : "empty")))
+		.loot((lt, b) -> lt.add(b, BlockLoot.noDrop()))
+		.item(ClipboardBlockItem::new)
+		.onRegister(ClipboardBlockItem::registerModelOverrides)
+		.model((c, p) -> ClipboardOverrides.addOverrideModels(c, p))
+		.build()
+		.register();
 
 	// Materials
 

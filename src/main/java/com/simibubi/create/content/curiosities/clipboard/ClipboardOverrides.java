@@ -33,14 +33,14 @@ public class ClipboardOverrides {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerModelOverridesClient(ClipboardItem item) {
+	public static void registerModelOverridesClient(ClipboardBlockItem item) {
 		ItemProperties.register(item, ClipboardType.ID, (pStack, pLevel, pEntity, pSeed) -> {
 			CompoundTag tag = pStack.getTag();
 			return tag == null ? 0 : tag.getInt("Type");
 		});
 	}
 
-	public static ItemModelBuilder addOverrideModels(DataGenContext<Item, ClipboardItem> c,
+	public static ItemModelBuilder addOverrideModels(DataGenContext<Item, ClipboardBlockItem> c,
 		RegistrateItemModelProvider p) {
 		ItemModelBuilder builder = p.generated(() -> c.get());
 		for (int i = 0; i < ClipboardType.values().length; i++) {

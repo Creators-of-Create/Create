@@ -1022,7 +1022,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		.viaShapeless(b -> b.requires(I.wheatFlour())
 			.requires(Items.WATER_BUCKET)),
 
-		CLIPBOARD = create(AllItems.CLIPBOARD).unlockedBy(I::andesite)
+		CLIPBOARD = create(AllBlocks.CLIPBOARD).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('G', I.planks())
 				.define('P', Items.PAPER)
 				.define('A', I.andesite())
@@ -1030,7 +1030,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("P")
 				.pattern("G")),
 
-		CLIPBOARD_CLEAR = clearData(AllItems.CLIPBOARD),
+		CLIPBOARD_CLEAR = clearData(AllBlocks.CLIPBOARD),
 		SCHEDULE_CLEAR = clearData(AllItems.SCHEDULE),
 		FILTER_CLEAR = clearData(AllItems.FILTER),
 		ATTRIBUTE_FILTER_CLEAR = clearData(AllItems.ATTRIBUTE_FILTER),

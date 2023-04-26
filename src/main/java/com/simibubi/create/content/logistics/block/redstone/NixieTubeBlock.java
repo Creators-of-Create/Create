@@ -8,7 +8,6 @@ import java.util.function.BiConsumer;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.curiosities.clipboard.ClipboardEntry;
@@ -81,7 +80,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 		}
 
 		boolean display =
-			heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName() || AllItems.CLIPBOARD.isIn(heldItem);
+			heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName() || AllBlocks.CLIPBOARD.isIn(heldItem);
 		DyeColor dye = DyeColor.getColor(heldItem);
 
 		if (!display && dye == null)
@@ -90,7 +89,7 @@ public class NixieTubeBlock extends DoubleFaceAttachedBlock
 		CompoundTag tag = heldItem.getTagElement("display");
 		String tagElement = tag != null && tag.contains("Name", Tag.TAG_STRING) ? tag.getString("Name") : null;
 
-		if (AllItems.CLIPBOARD.isIn(heldItem)) {
+		if (AllBlocks.CLIPBOARD.isIn(heldItem)) {
 			List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(heldItem);
 			for (int i = 0; i < entries.size();) {
 				tagElement = Component.Serializer.toJson(entries.get(i).text);
