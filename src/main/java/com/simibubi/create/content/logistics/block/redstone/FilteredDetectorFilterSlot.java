@@ -6,24 +6,54 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class FilteredDetectorFilterSlot extends ValueBoxTransform {
-	Vec3 position = VecHelper.voxelSpace(8f, 15.5f, 11f);
+public class FilteredDetectorFilterSlot extends ValueBoxTransform.Sided {
+
+	private boolean hasSlotAtBottom;
+
+	public FilteredDetectorFilterSlot(boolean hasSlotAtBottom) {
+		this.hasSlotAtBottom = hasSlotAtBottom;
+	}
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
-		return rotateHorizontally(state, position);
+	protected boolean isSideActive(BlockState state, Direction direction) {
+		Direction targetDirection = DirectedDirectionalBlock.getTargetDirection(state);
+		if (direction == targetDirection)
+			return false;
+		if (targetDirection.getOpposite() == direction)
+			return true;
+
+		if (targetDirection.getAxis() != Axis.Y)
+			return direction == Direction.UP || direction == Direction.DOWN && hasSlotAtBottom;
+		if (targetDirection == Direction.UP)
+			direction = direction.getOpposite();
+		if (!hasSlotAtBottom)
+			return direction == state.getValue(DirectedDirectionalBlock.FACING);
+
+		return direction.getAxis() == state.getValue(DirectedDirectionalBlock.FACING)
+			.getClockWise()
+			.getAxis();
 	}
 
 	@Override
 	protected void rotate(BlockState state, PoseStack ms) {
-		float yRot = AngleHelper.horizontalAngle(state.getValue(HorizontalDirectionalBlock.FACING)) + 180;
+		super.rotate(state, ms);
+		Direction facing = state.getValue(DirectedDirectionalBlock.FACING);
+		if (facing.getAxis() == Axis.Y)
+			return;
+		if (getSide() != Direction.UP)
+			return;
 		TransformStack.cast(ms)
-			.rotateY(yRot)
-			.rotateX(90);
+			.rotateZ(-AngleHelper.horizontalAngle(facing) + 180);
+	}
+
+	@Override
+	protected Vec3 getSouthLocation() {
+		return VecHelper.voxelSpace(8f, 8f, 15.5f);
 	}
 
 }

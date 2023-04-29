@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -27,7 +28,7 @@ import net.minecraft.world.entity.player.Inventory;
 public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends AbstractSimiContainerScreen<F> {
 
 	protected AllGuiTextures background;
-    private List<Rect2i> extraAreas = Collections.emptyList();
+	private List<Rect2i> extraAreas = Collections.emptyList();
 
 	private IconButton resetButton;
 	private IconButton confirmButton;
@@ -39,7 +40,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 
 	@Override
 	protected void init() {
-		setWindowSize(Math.max(background.width, PLAYER_INVENTORY.width), background.height + 4 + PLAYER_INVENTORY.height);
+		setWindowSize(Math.max(background.width, PLAYER_INVENTORY.width),
+			background.height + 4 + PLAYER_INVENTORY.height);
 		super.init();
 
 		int x = leftPos;
@@ -59,9 +61,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 		addRenderableWidget(resetButton);
 		addRenderableWidget(confirmButton);
 
-		extraAreas = ImmutableList.of(
-			new Rect2i(x + background.width, y + background.height - 40, 80, 48)
-		);
+		extraAreas = ImmutableList.of(new Rect2i(x + background.width, y + background.height - 40, 80, 48));
 	}
 
 	@Override
@@ -74,18 +74,19 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 		int y = topPos;
 
 		background.render(ms, x, y, this);
-		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		font.draw(ms, title, x + (background.width - 8) / 2 - font.width(title) / 2, y + 4,
+			AllItems.FILTER.isIn(menu.contentHolder) ? 0x303030 : 0x592424);
 
-		GuiGameElement.of(menu.contentHolder)
-				.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 8, y + background.height - 52, -200)
-				.scale(4)
-				.render(ms);
+		GuiGameElement.of(menu.contentHolder).<GuiGameElement
+			.GuiRenderBuilder>at(x + background.width + 8, y + background.height - 52, -200)
+			.scale(4)
+			.render(ms);
 	}
 
 	@Override
 	protected void containerTick() {
 		if (!menu.player.getMainHandItem()
-				.equals(menu.contentHolder, false))
+			.equals(menu.contentHolder, false))
 			menu.player.closeContainer();
 
 		super.containerTick();
@@ -147,7 +148,8 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 	protected void contentsCleared() {}
 
 	protected void sendOptionUpdate(Option option) {
-		AllPackets.getChannel().sendToServer(new FilterScreenPacket(option));
+		AllPackets.getChannel()
+			.sendToServer(new FilterScreenPacket(option));
 	}
 
 	@Override

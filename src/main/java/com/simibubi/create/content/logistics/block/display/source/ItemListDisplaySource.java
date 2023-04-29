@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.display.source;
 import java.util.stream.Stream;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlockEntity;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.item.CountedItemStackList;
@@ -18,7 +18,7 @@ public class ItemListDisplaySource extends ValueListDisplaySource {
 	@Override
 	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
 		BlockEntity sourceBE = context.getSourceBlockEntity();
-		if (!(sourceBE instanceof ContentObserverBlockEntity cobe))
+		if (!(sourceBE instanceof SmartObserverBlockEntity cobe))
 			return Stream.empty();
 
 		InvManipulationBehaviour invManipulationBehaviour = cobe.getBehaviour(InvManipulationBehaviour.TYPE);

@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/threshold_switch/block_wall",
+  "textures": {
+    "level": "create:block/threshold_switch/level_3"
+  }
+}

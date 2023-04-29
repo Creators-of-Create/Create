@@ -343,7 +343,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	}
 
 	public void onTransfer(ItemStack stack) {
-		AllBlocks.CONTENT_OBSERVER.get()
+		AllBlocks.SMART_OBSERVER.get()
 			.onFunnelTransfer(level, worldPosition, stack);
 		award(AllAdvancements.FUNNEL);
 	}

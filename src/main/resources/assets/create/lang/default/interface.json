@@ -278,10 +278,10 @@
 	"create.gui.adjustable_crate.title": "Adjustable Crate",
 	"create.gui.adjustable_crate.storageSpace": "Storage Space",
 
-	"create.gui.stockpile_switch.title": "Stockpile Switch",
-	"create.gui.stockpile_switch.invert_signal": "Invert Signal",
-	"create.gui.stockpile_switch.move_to_lower_at": "Move to lower lane at %1$s%%",
-	"create.gui.stockpile_switch.move_to_upper_at": "Move to upper lane at %1$s%%",
+	"create.gui.threshold_switch.title": "Threshold Switch",
+	"create.gui.threshold_switch.invert_signal": "Invert Signal",
+	"create.gui.threshold_switch.move_to_lower_at": "Move to lower lane at %1$s%%",
+	"create.gui.threshold_switch.move_to_upper_at": "Move to upper lane at %1$s%%",
 
 	"create.gui.sequenced_gearshift.title": "Sequenced Gearshift",
 	"create.gui.sequenced_gearshift.instruction": "Instruction",

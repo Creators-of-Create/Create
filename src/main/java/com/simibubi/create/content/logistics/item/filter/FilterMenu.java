@@ -34,13 +34,13 @@ public class FilterMenu extends AbstractFilterMenu {
 
 	@Override
 	protected int getPlayerInventoryYOffset() {
-		return 119;
+		return 121;
 	}
 
 	@Override
 	protected void addFilterSlots() {
 		int x = 23;
-		int y = 20;
+		int y = 22;
 		for (int row = 0; row < 2; ++row)
 			for (int col = 0; col < 9; ++col)
 				this.addSlot(new SlotItemHandler(ghostInventory, col + row * 9, x + col * 18, y + row * 18));
