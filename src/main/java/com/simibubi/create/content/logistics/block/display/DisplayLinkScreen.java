@@ -255,7 +255,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 		background.render(ms, x, y, this);
 		MutableComponent header = Lang.translateDirect("display_link.title");
-		font.draw(ms, header, x + background.width / 2 - font.width(header) / 2, y + 4, 0x442000);
+		font.draw(ms, header, x + background.width / 2 - font.width(header) / 2, y + 4, 0x592424);
 
 		if (sources.isEmpty())
 			font.drawShadow(ms, Lang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);

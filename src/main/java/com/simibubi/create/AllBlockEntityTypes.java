@@ -186,11 +186,11 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlockEntity;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverInstance;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverRenderer;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlockEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlockEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlockEntity;
-import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlockEntity;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverBlockEntity;
+import com.simibubi.create.content.logistics.block.redstone.ThresholdSwitchBlockEntity;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerBlockEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
@@ -742,9 +742,9 @@ public class AllBlockEntityTypes {
 		.renderer(() -> DisplayLinkRenderer::new)
 		.register();
 
-	public static final BlockEntityEntry<StockpileSwitchBlockEntity> STOCKPILE_SWITCH = REGISTRATE
-		.blockEntity("stockpile_switch", StockpileSwitchBlockEntity::new)
-		.validBlocks(AllBlocks.STOCKPILE_SWITCH)
+	public static final BlockEntityEntry<ThresholdSwitchBlockEntity> THRESHOLD_SWITCH = REGISTRATE
+		.blockEntity("stockpile_switch", ThresholdSwitchBlockEntity::new)
+		.validBlocks(AllBlocks.THRESHOLD_SWITCH)
 		.renderer(() -> SmartBlockEntityRenderer::new)
 		.register();
 
@@ -775,9 +775,9 @@ public class AllBlockEntityTypes {
 		.renderer(() -> FunnelRenderer::new)
 		.register();
 
-	public static final BlockEntityEntry<ContentObserverBlockEntity> CONTENT_OBSERVER = REGISTRATE
-		.blockEntity("content_observer", ContentObserverBlockEntity::new)
-		.validBlocks(AllBlocks.CONTENT_OBSERVER)
+	public static final BlockEntityEntry<SmartObserverBlockEntity> SMART_OBSERVER = REGISTRATE
+		.blockEntity("content_observer", SmartObserverBlockEntity::new)
+		.validBlocks(AllBlocks.SMART_OBSERVER)
 		.renderer(() -> SmartBlockEntityRenderer::new)
 		.register();
 

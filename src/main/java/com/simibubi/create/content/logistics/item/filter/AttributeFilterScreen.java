@@ -67,34 +67,34 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 		int x = leftPos;
 		int y = topPos;
 
-		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
+		whitelistDis = new IconButton(x + 47, y + 61, AllIcons.I_WHITELIST_OR);
 		whitelistDis.withCallback(() -> {
 			menu.whitelistMode = WhitelistMode.WHITELIST_DISJ;
 			sendOptionUpdate(Option.WHITELIST);
 		});
 		whitelistDis.setToolTip(allowDisN);
-		whitelistCon = new IconButton(x + 65, y + 59, AllIcons.I_WHITELIST_AND);
+		whitelistCon = new IconButton(x + 65, y + 61, AllIcons.I_WHITELIST_AND);
 		whitelistCon.withCallback(() -> {
 			menu.whitelistMode = WhitelistMode.WHITELIST_CONJ;
 			sendOptionUpdate(Option.WHITELIST2);
 		});
 		whitelistCon.setToolTip(allowConN);
-		blacklist = new IconButton(x + 83, y + 59, AllIcons.I_WHITELIST_NOT);
+		blacklist = new IconButton(x + 83, y + 61, AllIcons.I_WHITELIST_NOT);
 		blacklist.withCallback(() -> {
 			menu.whitelistMode = WhitelistMode.BLACKLIST;
 			sendOptionUpdate(Option.BLACKLIST);
 		});
 		blacklist.setToolTip(denyN);
 
-		whitelistDisIndicator = new Indicator(x + 47, y + 53, Components.immutableEmpty());
-		whitelistConIndicator = new Indicator(x + 65, y + 53, Components.immutableEmpty());
-		blacklistIndicator = new Indicator(x + 83, y + 53, Components.immutableEmpty());
+		whitelistDisIndicator = new Indicator(x + 47, y + 55, Components.immutableEmpty());
+		whitelistConIndicator = new Indicator(x + 65, y + 55, Components.immutableEmpty());
+		blacklistIndicator = new Indicator(x + 83, y + 55, Components.immutableEmpty());
 
 		addRenderableWidgets(blacklist, whitelistCon, whitelistDis, blacklistIndicator, whitelistConIndicator,
 			whitelistDisIndicator);
 
-		addRenderableWidget(add = new IconButton(x + 182, y + 21, AllIcons.I_ADD));
-		addRenderableWidget(addInverted = new IconButton(x + 200, y + 21, AllIcons.I_ADD_INVERTED_ATTRIBUTE));
+		addRenderableWidget(add = new IconButton(x + 182, y + 23, AllIcons.I_ADD));
+		addRenderableWidget(addInverted = new IconButton(x + 200, y + 23, AllIcons.I_ADD_INVERTED_ATTRIBUTE));
 		add.withCallback(() -> {
 			handleAddedAttibute(false);
 		});
@@ -106,9 +106,9 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 
 		handleIndicators();
 
-		attributeSelectorLabel = new Label(x + 43, y + 26, Components.immutableEmpty()).colored(0xF3EBDE)
+		attributeSelectorLabel = new Label(x + 43, y + 28, Components.immutableEmpty()).colored(0xF3EBDE)
 			.withShadow();
-		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
+		attributeSelector = new SelectionScrollInput(x + 39, y + 23, 137, 18);
 		attributeSelector.forOptions(Arrays.asList(Components.immutableEmpty()));
 		attributeSelector.removeCallback();
 		referenceItemChanged(menu.ghostInventory.getStackInSlot(0));
@@ -184,7 +184,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 		matrixStack.translate(0.0F, 0.0F, 32.0F);
 		this.setBlitOffset(150);
 		this.itemRenderer.blitOffset = 150.0F;
-		this.itemRenderer.renderGuiItemDecorations(font, stack, leftPos + 22, topPos + 57,
+		this.itemRenderer.renderGuiItemDecorations(font, stack, leftPos + 22, topPos + 59,
 			String.valueOf(selectedAttributes.size() - 1));
 		this.setBlitOffset(0);
 		this.itemRenderer.blitOffset = 0.0F;

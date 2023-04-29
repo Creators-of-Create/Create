@@ -97,9 +97,7 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 
 			PoseStack pose = new PoseStack();
 			TransformStack.cast(pose)
-				.translate(getInstancePosition())
-				.nudge((int) bc.tePositions.getFirst()
-					.asLong());
+				.translate(getInstancePosition());
 
 			var mat = materialManager.cutout(RenderType.cutoutMipped())
 				.material(Materials.TRANSFORMED);

@@ -533,7 +533,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 					.rotateYRadians(anglesI.y)
 					.rotateXRadians(anglesI.x)
 					.rotateZRadians(anglesI.z)
-					.translate(0, -2 / 16f + (i % 2 == 0 ? 1 : -1) / 2048f - 1 / 256f, -1 / 32f)
+					.translate(0, -2 / 16f - 1 / 256f, -1 / 32f)
 					.scale(1, 1, (float) diff.length() * scale);
 				angles.railTransforms.set(first, poseStack.last());
 			}

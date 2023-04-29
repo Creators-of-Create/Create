@@ -63,13 +63,13 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 
 	@Override
 	protected int getPlayerInventoryYOffset() {
-		return 105;
+		return 107;
 	}
 
 	@Override
 	protected void addFilterSlots() {
-		this.addSlot(new SlotItemHandler(ghostInventory, 0, 16, 22));
-		this.addSlot(new SlotItemHandler(ghostInventory, 1, 22, 57) {
+		this.addSlot(new SlotItemHandler(ghostInventory, 0, 16, 24));
+		this.addSlot(new SlotItemHandler(ghostInventory, 1, 22, 59) {
 			@Override
 			public boolean mayPickup(Player playerIn) {
 				return false;

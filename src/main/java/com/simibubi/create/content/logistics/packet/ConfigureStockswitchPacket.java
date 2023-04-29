@@ -1,12 +1,12 @@
 package com.simibubi.create.content.logistics.packet;
 
-import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlockEntity;
+import com.simibubi.create.content.logistics.block.redstone.ThresholdSwitchBlockEntity;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class ConfigureStockswitchPacket extends BlockEntityConfigurationPacket<StockpileSwitchBlockEntity> {
+public class ConfigureStockswitchPacket extends BlockEntityConfigurationPacket<ThresholdSwitchBlockEntity> {
 
 	private float offBelow;
 	private float onAbove;
@@ -38,7 +38,7 @@ public class ConfigureStockswitchPacket extends BlockEntityConfigurationPacket<S
 	}
 
 	@Override
-	protected void applySettings(StockpileSwitchBlockEntity be) {
+	protected void applySettings(ThresholdSwitchBlockEntity be) {
 		be.offWhenBelow = offBelow;
 		be.onWhenAbove = onAbove;
 		be.setInverted(invert);

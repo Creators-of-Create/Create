@@ -244,7 +244,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.requires(I.planks())
 				.requires(I.planks())),
 
-		LARGE_COGWHEEL_FROM_LITTLE = create(AllBlocks.LARGE_COGWHEEL).withSuffix("from_little")
+		LARGE_COGWHEEL_FROM_LITTLE = create(AllBlocks.LARGE_COGWHEEL).withSuffix("_from_little")
 			.unlockedBy(I::andesite)
 			.viaShapeless(b -> b.requires(I.cog())
 				.requires(I.planks())),
@@ -908,15 +908,21 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("AA")
 				.pattern("KK")),
 
-		CONTENT_OBSERVER = create(AllBlocks.CONTENT_OBSERVER).unlockedBy(AllItems.BELT_CONNECTOR::get)
+		SMART_OBSERVER = create(AllBlocks.SMART_OBSERVER).unlockedBy(I::brassCasing)
+			.viaShaped(b -> b.define('B', I.brassCasing())
+				.define('R', I.electronTube())
+				.define('I', Blocks.OBSERVER)
+				.pattern("R")
+				.pattern("B")
+				.pattern("I")),
+			
+		THRESHOLD_SWITCH = create(AllBlocks.THRESHOLD_SWITCH).unlockedBy(I::brassCasing)
 			.viaShaped(b -> b.define('B', I.brassCasing())
 				.define('R', I.electronTube())
 				.define('I', Blocks.COMPARATOR)
-				.pattern("I")
+				.pattern("R")
 				.pattern("B")
-				.pattern("R")),
-
-		OBSERVER_CYCLE = conversionCycle(ImmutableList.of(AllBlocks.CONTENT_OBSERVER, AllBlocks.STOCKPILE_SWITCH)),
+				.pattern("I")),
 
 		PULSE_EXTENDER = create(AllBlocks.PULSE_EXTENDER).unlockedByTag(I::redstone)
 			.viaShaped(b -> b.define('T', Blocks.REDSTONE_TORCH)
@@ -1080,10 +1086,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.requires(Items.BONE_MEAL)),
 
 		NETHERITE_DIVING_HELMET =
-			create(AllItems.NETHERITE_DIVING_HELMET).viaSmithing(AllItems.COPPER_DIVING_HELMET, I.netherite()),
-		NETHERITE_BACKTANK = create(AllItems.NETHERITE_BACKTANK).viaSmithing(AllItems.COPPER_BACKTANK, I.netherite()),
+			create(AllItems.NETHERITE_DIVING_HELMET).viaSmithing(AllItems.COPPER_DIVING_HELMET::get, I::netherite),
+		NETHERITE_BACKTANK =
+			create(AllItems.NETHERITE_BACKTANK).viaSmithing(AllItems.COPPER_BACKTANK::get, I::netherite),
 		NETHERITE_DIVING_BOOTS =
-			create(AllItems.NETHERITE_DIVING_BOOTS).viaSmithing(AllItems.COPPER_DIVING_BOOTS, I.netherite())
+			create(AllItems.NETHERITE_DIVING_BOOTS).viaSmithing(AllItems.COPPER_DIVING_BOOTS::get, I::netherite),
+
+		NETHERITE_DIVING_HELMET_2 = create(AllItems.NETHERITE_DIVING_HELMET).withSuffix("_from_netherite")
+			.viaSmithing(() -> Items.NETHERITE_HELMET, () -> Ingredient.of(AllItems.COPPER_DIVING_HELMET.get())),
+		NETHERITE_BACKTANK_2 = create(AllItems.NETHERITE_BACKTANK).withSuffix("_from_netherite")
+			.viaSmithing(() -> Items.NETHERITE_CHESTPLATE, () -> Ingredient.of(AllItems.COPPER_BACKTANK.get())),
+		NETHERITE_DIVING_BOOTS_2 = create(AllItems.NETHERITE_DIVING_BOOTS).withSuffix("_from_netherite")
+			.viaSmithing(() -> Items.NETHERITE_BOOTS, () -> Ingredient.of(AllItems.COPPER_DIVING_BOOTS.get()))
 
 	;
 
@@ -1327,10 +1341,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			});
 		}
 
-		GeneratedRecipe viaSmithing(ItemEntry<?> base, Ingredient upgradeMaterial) {
+		GeneratedRecipe viaSmithing(Supplier<? extends Item> base, Supplier<Ingredient> upgradeMaterial) {
 			return register(consumer -> {
 				UpgradeRecipeBuilder b =
-					UpgradeRecipeBuilder.smithing(Ingredient.of(base.get()), upgradeMaterial, result.get()
+					UpgradeRecipeBuilder.smithing(Ingredient.of(base.get()), upgradeMaterial.get(), result.get()
 						.asItem());
 				b.unlocks("has_item", inventoryTrigger(ItemPredicate.Builder.item()
 					.of(base.get())

@@ -65,7 +65,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 	public void initInputsOfRow(int row, int backgroundX, int backgroundY) {
 		int x = backgroundX + 30;
-		int y = backgroundY + 18;
+		int y = backgroundY + 20;
 		int rowHeight = 22;
 
 		Vector<ScrollInput> rowInputs = inputs.get(row);
@@ -138,25 +138,25 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 			int yOffset = toDraw.height * row;
 			if (row >= instructions.size()) {
-				toDraw.render(ms, x, y + 14 + yOffset, this);
+				toDraw.render(ms, x, y + 16 + yOffset, this);
 				continue;
 			}
 
 			Instruction instruction = instructions.get(row);
 			SequencerInstructions def = instruction.instruction;
-			def.background.render(ms, x, y + 14 + yOffset, this);
+			def.background.render(ms, x, y + 16 + yOffset, this);
 
-			label(ms, 36, yOffset - 3, Lang.translateDirect(def.translationKey));
+			label(ms, 36, yOffset - 1, Lang.translateDirect(def.translationKey));
 			if (def.hasValueParameter) {
 				String text = def.formatValue(instruction.value);
 				int stringWidth = font.width(text);
-				label(ms, 90 + (12 - stringWidth / 2), yOffset - 3, Components.literal(text));
+				label(ms, 90 + (12 - stringWidth / 2), yOffset - 1, Components.literal(text));
 			}
 			if (def.hasSpeedParameter)
-				label(ms, 127, yOffset - 3, instruction.speedModifier.label);
+				label(ms, 127, yOffset - 1, instruction.speedModifier.label);
 		}
 
-		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		font.draw(ms, title, x + (background.width - 8) / 2 - font.width(title) / 2, y + 4, 0x592424);
 
 		GuiGameElement.of(renderedItem)
 			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 56, -200)

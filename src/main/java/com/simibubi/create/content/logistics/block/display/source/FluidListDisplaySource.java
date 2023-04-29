@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlockEntity;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
@@ -32,7 +32,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 	@Override
 	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
 		BlockEntity sourceBE = context.getSourceBlockEntity();
-		if (!(sourceBE instanceof ContentObserverBlockEntity cobe))
+		if (!(sourceBE instanceof SmartObserverBlockEntity cobe))
 			return Stream.empty();
 
 		TankManipulationBehaviour tankManipulationBehaviour = cobe.getBehaviour(TankManipulationBehaviour.OBSERVE);

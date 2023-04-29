@@ -453,8 +453,8 @@ public class PonderIndex {
 			.add(AllBlocks.BRASS_FUNNEL)
 			.add(AllBlocks.ANDESITE_TUNNEL)
 			.add(AllBlocks.BRASS_TUNNEL)
-			.add(AllBlocks.CONTENT_OBSERVER)
-			.add(AllBlocks.STOCKPILE_SWITCH)
+			.add(AllBlocks.SMART_OBSERVER)
+			.add(AllBlocks.THRESHOLD_SWITCH)
 			.add(AllBlocks.CREATIVE_CRATE)
 			.add(AllBlocks.PORTABLE_STORAGE_INTERFACE);
 
@@ -531,8 +531,8 @@ public class PonderIndex {
 		PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES)
 			.add(AllBlocks.SEATS.get(DyeColor.WHITE))
 			.add(AllBlocks.ORANGE_NIXIE_TUBE)
-			.add(AllBlocks.STOCKPILE_SWITCH)
-			.add(AllBlocks.CONTENT_OBSERVER)
+			.add(AllBlocks.THRESHOLD_SWITCH)
+			.add(AllBlocks.SMART_OBSERVER)
 			.add(AllBlocks.ANDESITE_TUNNEL)
 			.add(AllBlocks.TRACK_OBSERVER)
 			.add(AllBlocks.TRACK_STATION)

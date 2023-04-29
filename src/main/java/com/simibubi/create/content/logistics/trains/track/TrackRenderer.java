@@ -8,7 +8,6 @@ import static com.simibubi.create.AllPartialModels.TRACK_SEGMENT_RIGHT;
 import static com.simibubi.create.AllPartialModels.TRACK_TIE;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -56,9 +55,6 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 		BlockPos tePosition = bc.tePositions.getFirst();
 		BlockState air = Blocks.AIR.defaultBlockState();
 		SegmentAngles[] segments = bc.getBakedSegments();
-
-		TransformStack.cast(ms)
-			.nudge((int) tePosition.asLong());
 
 		renderGirder(level, bc, ms, vb, tePosition);
 

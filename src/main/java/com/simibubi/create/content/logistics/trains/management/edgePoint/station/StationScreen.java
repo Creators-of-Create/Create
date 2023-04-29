@@ -69,7 +69,7 @@ public class StationScreen extends AbstractStationScreen {
 			Components.literal(station.name));
 		nameBox.setBordered(false);
 		nameBox.setMaxLength(25);
-		nameBox.setTextColor(0x442000);
+		nameBox.setTextColor(0x592424);
 		nameBox.setValue(station.name);
 		nameBox.changeFocus(false);
 		nameBox.mouseClicked(0, 0, 0);

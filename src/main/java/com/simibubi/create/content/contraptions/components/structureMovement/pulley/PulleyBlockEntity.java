@@ -13,7 +13,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Blo
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.LinearActuatorBlockEntity;
-import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchObservable;
+import com.simibubi.create.content.logistics.block.redstone.ThresholdSwitchObservable;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
@@ -35,7 +35,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class PulleyBlockEntity extends LinearActuatorBlockEntity implements StockpileSwitchObservable {
+public class PulleyBlockEntity extends LinearActuatorBlockEntity implements ThresholdSwitchObservable {
 
 	protected int initialOffset;
 	private float prevAnimatedOffset;

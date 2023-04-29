@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "minecraft:netherite_helmet"
+  },
+  "addition": {
+    "item": "create:copper_diving_helmet"
+  },
+  "result": {
+    "item": "create:netherite_diving_helmet"
+  }
+}

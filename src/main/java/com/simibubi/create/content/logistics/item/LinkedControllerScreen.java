@@ -70,7 +70,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		int y = topPos;
 
 		background.render(ms, x, y, this);
-		font.draw(ms, title, x + 15, y + 4, 0x442000);
+		font.draw(ms, title, x + 15, y + 4, 0x592424);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.width - 4, y + background.height - 56, -200)

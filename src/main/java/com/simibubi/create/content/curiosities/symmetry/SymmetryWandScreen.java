@@ -122,7 +122,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		background.render(ms, x, y, this);
-		font.draw(ms, wand.getHoverName(), x + 11, y + 4, 0x6B3802);
+		font.draw(ms, wand.getHoverName(), x + 11, y + 4, 0x592424);
 
 		renderBlock(ms, x, y);
 		GuiGameElement.of(wand)

@@ -73,9 +73,9 @@ public class TagGen {
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
 			.addTag(BlockTags.BEDS)
 			.addTag(BlockTags.DOORS);
-		
+
 		prov.tag(AllBlockTags.MOVABLE_EMPTY_COLLIDER.tag)
-			.add(Blocks.COBWEB, Blocks.POWDER_SNOW)
+			.add(Blocks.COBWEB, Blocks.POWDER_SNOW, Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK)
 			.addTag(BlockTags.FENCE_GATES);
 
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)

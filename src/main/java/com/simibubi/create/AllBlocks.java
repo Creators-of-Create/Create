@@ -215,7 +215,6 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlock;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmItem;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.ContactMovementBehaviour;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
@@ -223,7 +222,10 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactItem;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RoseQuartzLampBlock;
-import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverBlock;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverGenerator;
+import com.simibubi.create.content.logistics.block.redstone.ThresholdSwitchBlock;
+import com.simibubi.create.content.logistics.block.redstone.ThresholdSwitchGenerator;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
@@ -1814,29 +1816,33 @@ public class AllBlocks {
 			.onRegister(connectedTextures(BrassTunnelCTBehaviour::new))
 			.register();
 
-	public static final BlockEntry<ContentObserverBlock> CONTENT_OBSERVER =
-		REGISTRATE.block("content_observer", ContentObserverBlock::new)
+	public static final BlockEntry<SmartObserverBlock> SMART_OBSERVER =
+		REGISTRATE.block("content_observer", SmartObserverBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
+			.properties(p -> p.noOcclusion())
 			.transform(axeOrPickaxe())
-			.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.forPowered(c, p)))
+			.blockstate(new SmartObserverGenerator()::generate)
 			.onRegister(assignDataBehaviour(new ItemCountDisplaySource(), "count_items"))
 			.onRegister(assignDataBehaviour(new ItemListDisplaySource(), "list_items"))
 			.onRegister(assignDataBehaviour(new FluidAmountDisplaySource(), "count_fluids"))
 			.onRegister(assignDataBehaviour(new FluidListDisplaySource(), "list_fluids"))
+			.lang("Smart Observer")
 			.item()
 			.transform(customItemModel("_", "block"))
 			.register();
 
-	public static final BlockEntry<StockpileSwitchBlock> STOCKPILE_SWITCH =
-		REGISTRATE.block("stockpile_switch", StockpileSwitchBlock::new)
+	public static final BlockEntry<ThresholdSwitchBlock> THRESHOLD_SWITCH =
+		REGISTRATE.block("stockpile_switch", ThresholdSwitchBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
+			.properties(p -> p.noOcclusion())
 			.transform(axeOrPickaxe())
-			.blockstate((c, p) -> p.horizontalBlock(c.get(),
-				AssetLookup.withIndicator(c, p, $ -> AssetLookup.standardModel(c, p), StockpileSwitchBlock.INDICATOR)))
+			.blockstate(new ThresholdSwitchGenerator()::generate)
 			.onRegister(assignDataBehaviour(new FillLevelDisplaySource(), "fill_level"))
-			.simpleItem()
+			.lang("Threshold Switch")
+			.item()
+			.transform(customItemModel("threshold_switch", "block_wall"))
 			.register();
 
 	public static final BlockEntry<CreativeCrateBlock> CREATIVE_CRATE =
