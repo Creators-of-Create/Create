@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.AllBogeyStyles;
-import com.simibubi.create.AllRegistries;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
@@ -28,8 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import org.jetbrains.annotations.NotNull;
 
 import static com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity.BOGEY_STYLE_KEY;
 
@@ -181,12 +178,12 @@ public class CarriageBogey {
 
 	public BogeyStyle getStyle() {
 		ResourceLocation location = NBTHelper.readResourceLocation(this.bogeyData, BOGEY_STYLE_KEY);
-		return AllRegistries.BOGEY_REGISTRY.get().getValue(location);
+		return AllBogeyStyles.BOGEY_STYLES.get(location);
 	}
 
 	private CompoundTag createBogeyData() {
 		CompoundTag nbt = new CompoundTag();
-		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, AllBogeyStyles.STANDARD.getId());
+		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, AllBogeyStyles.STANDARD.name);
 		return nbt;
 	}
 

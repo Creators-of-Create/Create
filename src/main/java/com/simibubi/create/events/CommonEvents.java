@@ -1,7 +1,6 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.AllRegistries;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
