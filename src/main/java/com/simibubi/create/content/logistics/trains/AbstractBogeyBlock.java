@@ -177,6 +177,9 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 
 			sbte.setBogeyStyle(style);
 
+			CompoundTag defaultData = style.defaultData;
+			sbte.setBogeyData(sbte.getBogeyData().merge(defaultData));
+
 			if (size == getSize()) {
 				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style")
 						.append(": " + style.displayName), true);
@@ -190,6 +193,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style_and_size")
 						.append(": " + style.displayName), true);
 			}
+
 			return InteractionResult.CONSUME;
 		}
 
