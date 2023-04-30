@@ -2238,7 +2238,9 @@ public class AllBlocks {
 		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.properties(p -> p.requiresCorrectToolForDrops())
 		.transform(pickaxeOnly())
-		.blockstate(simpleCubeAll("industrial_iron_block"))
+		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+			.cubeColumn(c.getName(), p.modLoc("block/industrial_iron_block"),
+				p.modLoc("block/industrial_iron_block_top"))))
 		.tag(AllBlockTags.WRENCH_PICKUP.tag)
 		.lang("Block of Industrial Iron")
 		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.INGOTS_IRON), c::get, 2))

@@ -50,7 +50,7 @@ public class CTModel extends BakedModelWrapperWithData {
 				&& !(actualState.getBlock()instanceof CopycatBlock ufb
 					&& !ufb.canFaceBeOccluded(actualState, face)))
 				continue;
-			CTType dataType = behaviour.getDataType(state, face);
+			CTType dataType = behaviour.getDataType(world, pos, state, face);
 			if (dataType == null)
 				continue;
 			CTContext context = behaviour.buildContext(world, pos, state, face, dataType.getContextRequirement());

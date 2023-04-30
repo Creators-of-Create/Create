@@ -25,4 +25,9 @@ public class BrassDiodeScrollSlot extends ValueBoxTransform {
 			.rotateX(90);
 	}
 
+	@Override
+	public int getOverrideColor() {
+		return 0x592424;
+	}
+	
 }

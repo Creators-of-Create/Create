@@ -64,9 +64,9 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		if (context.contraption.stalled)
 			speed = 0;
 
-		superBuffer.translate(Vec3.atLowerCornerOf(facing.getNormal())
-			.scale(17 / 16f))
-			.transform(matrices.getModel());
+		superBuffer.transform(matrices.getModel())
+			.translate(Vec3.atLowerCornerOf(facing.getNormal())
+				.scale(17 / 16f));
 		HarvesterRenderer.transform(context.world, facing, superBuffer, speed, Vec3.ZERO);
 
 		PoseStack viewProjection = matrices.getViewProjection();

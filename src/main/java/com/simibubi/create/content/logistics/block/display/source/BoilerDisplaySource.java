@@ -134,9 +134,9 @@ public class BoilerDisplaySource extends DisplaySource {
 		}
 
 		return Stream.of(List.of(Lang.translateDirect(label, boiler.getHeatLevelTextComponent())),
-			List.of(size, boiler.getSizeComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.BLACK)),
-			List.of(water, boiler.getWaterComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.BLACK)),
-			List.of(heat, boiler.getHeatComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.BLACK)));
+			List.of(size, boiler.getSizeComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.RESET)),
+			List.of(water, boiler.getWaterComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.RESET)),
+			List.of(heat, boiler.getHeatComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.RESET)));
 	}
 
 	private int labelWidth() {

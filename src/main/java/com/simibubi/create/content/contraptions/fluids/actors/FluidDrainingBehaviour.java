@@ -83,10 +83,21 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		if (validationFrontier.isEmpty() && !queue.isEmpty() && !simulate && revalidateIn == 0)
 			revalidate(root);
 
+		if (infinite) {
+			blockEntity.award(AllAdvancements.HOSE_PULLEY);
+			if (FluidHelper.isLava(fluid))
+				blockEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
+
+			playEffect(world, root, fluid, true);
+			return true;
+		}
+
 		while (!queue.isEmpty()) {
 			// Dont dequeue here, so we can decide not to dequeue a valid entry when
 			// simulating
-			BlockPos currentPos = queue.first().pos();
+			BlockPos currentPos = queue.first()
+				.pos();
+
 			BlockState blockState = world.getBlockState(currentPos);
 			BlockState emptied = blockState;
 			Fluid fluid = Fluids.EMPTY;
@@ -136,12 +147,6 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 			playEffect(world, currentPos, fluid, true);
 			blockEntity.award(AllAdvancements.HOSE_PULLEY);
-
-			if (infinite) {
-				if (FluidHelper.isLava(fluid))
-					blockEntity.award(AllAdvancements.HOSE_PULLEY_LAVA);
-				return true;
-			}
 
 			if (!blockEntity.isVirtual())
 				world.setBlock(currentPos, emptied, 2 | 16);
@@ -273,20 +278,11 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			visited.clear();
 		}
 
-		Level world = getWorld();
 		int maxBlocks = maxBlocks();
 		if (visited.size() > maxBlocks && canDrainInfinitely(fluid) && !queue.isEmpty()) {
 			infinite = true;
-			// Find first block with valid fluid
-			while (true) {
-				BlockPos first = queue.first().pos();
-				if (canPullFluidsFrom(world.getBlockState(first), first) != FluidBlockType.SOURCE) {
-					queue.dequeue();
-					continue;
-				}
-				break;
-			}
-			BlockPos firstValid = queue.first().pos();
+			BlockPos firstValid = queue.first()
+				.pos();
 			frontier.clear();
 			visited.clear();
 			queue.clear();

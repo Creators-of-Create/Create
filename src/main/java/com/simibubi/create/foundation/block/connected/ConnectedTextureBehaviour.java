@@ -21,7 +21,7 @@ public abstract class ConnectedTextureBehaviour {
 
 	// TODO: allow more than one data type per state/face?
 	@Nullable
-	public abstract CTType getDataType(BlockState state, Direction direction);
+	public abstract CTType getDataType(BlockAndTintGetter world, BlockPos pos, BlockState state, Direction direction);
 
 	public boolean buildContextForOccludedDirections() {
 		return false;
@@ -32,7 +32,7 @@ public abstract class ConnectedTextureBehaviour {
 		BlockPos blockingPos = otherPos.relative(face);
 		BlockState blockState = reader.getBlockState(pos);
 
-		if (blockState.getBlock()instanceof CopycatBlock ufb
+		if (blockState.getBlock() instanceof CopycatBlock ufb
 			&& ufb.isUnblockableConnectivitySide(reader, blockState, face, pos, otherPos))
 			return false;
 
@@ -60,7 +60,7 @@ public abstract class ConnectedTextureBehaviour {
 			.relative(vertical, sv);
 		BlockState blockState = reader.getBlockState(pos);
 
-		if (blockState.getBlock()instanceof CopycatBlock ufb
+		if (blockState.getBlock() instanceof CopycatBlock ufb
 			&& ufb.isIgnoredConnectivitySide(reader, blockState, face, pos, p))
 			return false;
 
@@ -73,7 +73,7 @@ public abstract class ConnectedTextureBehaviour {
 		BlockPos toPos) {
 		BlockState blockState = reader.getBlockState(toPos);
 
-		if (blockState.getBlock()instanceof CopycatBlock ufb) {
+		if (blockState.getBlock() instanceof CopycatBlock ufb) {
 			BlockState connectiveMaterial = ufb.getConnectiveMaterial(reader, reference, face, fromPos, toPos);
 			return connectiveMaterial == null ? blockState : connectiveMaterial;
 		}
@@ -274,7 +274,7 @@ public abstract class ConnectedTextureBehaviour {
 
 		@Override
 		@Nullable
-		public CTType getDataType(BlockState state, Direction direction) {
+		public CTType getDataType(BlockAndTintGetter world, BlockPos pos, BlockState state, Direction direction) {
 			CTSpriteShiftEntry shift = getShift(state, direction, null);
 			if (shift == null) {
 				return null;

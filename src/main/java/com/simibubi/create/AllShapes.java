@@ -253,8 +253,8 @@ public class AllShapes {
 			.build(),
 		SPOUT = shape(1, 2, 1, 15, 14, 15).add(2, 0, 2, 14, 16, 14)
 			.build(),
-		MILLSTONE = shape(0, 0, 0, 16, 6, 16).add(2, 6, 2, 14, 13, 14)
-			.add(3, 13, 3, 13, 16, 13)
+		MILLSTONE = shape(0, 0, 0, 16, 6, 16).add(2, 6, 2, 14, 12, 14)
+			.add(3, 12, 3, 13, 16, 13)
 			.build(),
 		CUCKOO_CLOCK = shape(1, 0, 1, 15, 19, 15).build(),
 		GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15)

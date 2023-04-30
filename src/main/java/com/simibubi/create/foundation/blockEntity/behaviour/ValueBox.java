@@ -30,8 +30,8 @@ public class ValueBox extends ChasingAABBOutline {
 	protected Component scrollTooltip = Components.immutableEmpty();
 	protected Vec3 labelOffset = Vec3.ZERO;
 
-	protected int passiveColor;
-	protected int highlightColor;
+	public int overrideColor = -1;
+	
 	public boolean isPassive;
 
 	protected BlockPos pos;
@@ -63,6 +63,11 @@ public class ValueBox extends ChasingAABBOutline {
 
 	public ValueBox passive(boolean passive) {
 		this.isPassive = passive;
+		return this;
+	}
+	
+	public ValueBox withColor(int color) {
+		this.overrideColor = color;
 		return this;
 	}
 
@@ -183,7 +188,7 @@ public class ValueBox extends ChasingAABBOutline {
 			Font font = Minecraft.getInstance().font;
 			float scale = 3;
 			ms.scale(scale, scale, 1);
-			ms.translate(-4, -4, 5);
+			ms.translate(-4, -3.75, 5);
 
 			int stringWidth = font.width(text);
 			float numberScale = (float) font.lineHeight / stringWidth;
@@ -195,7 +200,8 @@ public class ValueBox extends ChasingAABBOutline {
 			ms.scale(numberScale, numberScale, numberScale);
 			ms.translate(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin, 0);
 
-			renderHoveringText(ms, buffer, text, 0xEDEDED, 0x4f4f4f);
+			int overrideColor = transform.getOverrideColor();
+			renderHoveringText(ms, buffer, text, overrideColor != -1 ? overrideColor : 0xEDEDED);
 		}
 
 	}
@@ -214,17 +220,16 @@ public class ValueBox extends ChasingAABBOutline {
 			float scale = 2 * 16;
 			ms.scale(scale, scale, scale);
 			ms.translate(-.5f, -.5f, 5 / 32f);
-			icon.render(ms, buffer, 0xFFFFFF);
+			
+			int overrideColor = transform.getOverrideColor();
+			icon.render(ms, buffer, overrideColor != -1 ? overrideColor : 0xFFFFFF);
 		}
 
 	}
 
-	protected void renderHoveringText(PoseStack ms, MultiBufferSource buffer, Component text, int color,
-		int shadowColor) {
+	protected void renderHoveringText(PoseStack ms, MultiBufferSource buffer, Component text, int color) {
 		ms.pushPose();
 		drawString(ms, buffer, text, 0, 0, color);
-		ms.translate(0, 0, -.25);
-		drawString(ms, buffer, text, 1, 1, shadowColor);
 		ms.popPose();
 	}
 

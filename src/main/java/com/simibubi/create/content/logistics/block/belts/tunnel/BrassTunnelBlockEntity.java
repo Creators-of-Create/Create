@@ -21,7 +21,6 @@ import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.SidedFilteringBehaviour;
@@ -66,7 +65,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 
 	ItemStack stackToDistribute;
 	Direction stackEnteredFrom;
-	
+
 	float distributionProgress;
 	int distributionDistanceLeft;
 	int distributionDistanceRight;
@@ -98,8 +97,9 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(selectionMode = new ScrollOptionBehaviour<>(SelectionMode.class,
-			Lang.translateDirect("logistics.when_multiple_outputs_available"), this,
-			new CenteredSideValueBoxTransform((state, d) -> d == Direction.UP)));
+			Lang.translateDirect("logistics.when_multiple_outputs_available"), this, new BrassTunnelModeSlot()));
+
+		selectionMode.onlyActiveWhen(this::hasDistributionBehaviour);
 
 		// Propagate settings across connected tunnels
 		selectionMode.withCallback(setting -> {
@@ -159,7 +159,8 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 					continue;
 				distributionTargets.get(!tunnel.flapFilterEmpty(output))
 					.add(Pair.of(tunnel.worldPosition, output));
-				int distance = tunnel.worldPosition.getX() + tunnel.worldPosition.getZ() - worldPosition.getX() - worldPosition.getZ();
+				int distance = tunnel.worldPosition.getX() + tunnel.worldPosition.getZ() - worldPosition.getX()
+					- worldPosition.getZ();
 				if (distance < 0)
 					distributionDistanceLeft = Math.max(distributionDistanceLeft, -distance);
 				else
@@ -527,7 +528,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 					continue;
 				if (!tunnelBE.sides.contains(direction))
 					continue;
-				
+
 				BlockPos offset = tunnelBE.worldPosition.below()
 					.relative(direction);
 
@@ -578,11 +579,11 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		compound.putBoolean("SyncedOutput", syncedOutputActive);
 		compound.putBoolean("ConnectedLeft", connectedLeft);
 		compound.putBoolean("ConnectedRight", connectedRight);
-		
+
 		compound.put("StackToDistribute", stackToDistribute.serializeNBT());
 		if (stackEnteredFrom != null)
 			NBTHelper.writeEnum(compound, "StackEnteredFrom", stackEnteredFrom);
-		
+
 		compound.putFloat("DistributionProgress", distributionProgress);
 		compound.putInt("PreviousIndex", previousOutputIndex);
 		compound.putInt("DistanceLeft", distributionDistanceLeft);
@@ -610,7 +611,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		syncedOutputActive = compound.getBoolean("SyncedOutput");
 		connectedLeft = compound.getBoolean("ConnectedLeft");
 		connectedRight = compound.getBoolean("ConnectedRight");
-		
+
 		stackToDistribute = ItemStack.of(compound.getCompound("StackToDistribute"));
 		stackEnteredFrom =
 			compound.contains("StackEnteredFrom") ? NBTHelper.readEnum(compound, "StackEnteredFrom", Direction.class)
@@ -718,7 +719,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		super.invalidate();
 		tunnelCapability.invalidate();
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -781,20 +782,22 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		List<ItemStack> allStacks = grabAllStacksOfGroup(true);
 		if (allStacks.isEmpty())
 			return false;
-		
+
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translateDirect("tooltip.brass_tunnel.contains"))
 			.withStyle(ChatFormatting.WHITE));
 		for (ItemStack item : allStacks) {
 			tooltip.add(componentSpacing.plainCopy()
-				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry", Components.translatable(item.getDescriptionId())
-					.getString(), item.getCount()))
+				.append(Lang.translateDirect("tooltip.brass_tunnel.contains_entry",
+					Components.translatable(item.getDescriptionId())
+						.getString(),
+					item.getCount()))
 				.withStyle(ChatFormatting.GRAY));
 		}
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translateDirect("tooltip.brass_tunnel.retrieve"))
 			.withStyle(ChatFormatting.DARK_GRAY));
-		
+
 		return true;
 	}
 

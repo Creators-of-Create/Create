@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -221,6 +222,10 @@ public class AllDisplayBehaviours {
 
 		DisplayTarget targetOfBlock = targetOf(blockState);
 		DisplayTarget targetOfBlockEntity = blockEntity == null ? null : targetOf(blockEntity);
+
+		// Commonly added by mods, but with a non-vanilla blockentitytype
+		if (targetOfBlockEntity == null && blockEntity instanceof SignBlockEntity)
+			targetOfBlockEntity = targetOf(BlockEntityType.SIGN);
 
 		if (targetOfBlockEntity == null)
 			return targetOfBlock;

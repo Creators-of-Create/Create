@@ -43,6 +43,10 @@ public abstract class ValueBoxTransform {
 	public boolean shouldRender(BlockState state) {
 		return state.getMaterial() != Material.AIR && getLocalOffset(state) != null;
 	}
+	
+	public int getOverrideColor() {
+		return -1;
+	}
 
 	protected Vec3 rotateHorizontally(BlockState state, Vec3 vec) {
 		float yRot = 0;

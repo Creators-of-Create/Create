@@ -4,6 +4,7 @@
 	"textures": {
 		"3": "create:block/chute",
 		"4": "create:block/chute_large",
+		"5": "create:block/industrial_iron_block_top",
 		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [
@@ -15,7 +16,7 @@
 				"east": {"uv": [0, 0, 16, 16], "texture": "#particle"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#particle"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#particle"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#particle"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#5"},
 				"down": {"uv": [0, 0, 8, 8], "texture": "#4"}
 			}
 		},
