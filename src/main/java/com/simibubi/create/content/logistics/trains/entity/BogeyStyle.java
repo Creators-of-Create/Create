@@ -7,6 +7,7 @@ import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer.CommonRenderer;
 import com.simibubi.create.content.logistics.trains.BogeySizes;
 
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -28,13 +29,15 @@ public class BogeyStyle {
 	private final Map<BogeySizes.BogeySize, SizeData> sizes;
 	public final Component displayName;
 	public final ResourceLocation soundType;
+	public final ParticleType<?> particleType;
 	public final CompoundTag defaultData;
 
-	public BogeyStyle(ResourceLocation name, Component displayName, ResourceLocation soundType, CompoundTag defaultData,
-					  Map<BogeySizes.BogeySize, SizeData> sizes, Optional<CommonRenderer> commonRenderer) {
+	public BogeyStyle(ResourceLocation name, Component displayName, ResourceLocation soundType, ParticleType<?> particleType,
+					  CompoundTag defaultData, Map<BogeySizes.BogeySize, SizeData> sizes, Optional<CommonRenderer> commonRenderer) {
 		this.name = name;
 		this.displayName = displayName;
 		this.soundType = soundType;
+		this.particleType = particleType;
 		this.defaultData = defaultData;
 
 		this.sizes = sizes;

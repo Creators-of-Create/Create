@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -52,6 +54,7 @@ public class AllBogeyStyles {
 		protected Component displayName = Lang.translateDirect("create.bogeys.invalid");
 		protected ResourceLocation soundType = AllSoundEvents.TRAIN2.getId();
 		protected CompoundTag defaultData = new CompoundTag();
+		protected ParticleType<?> particleType = ParticleTypes.CRIT;
 		protected Optional<CommonRenderer> commonRenderer = Optional.empty();
 
 		public BogeyStyleBuilder(ResourceLocation name) {
@@ -85,6 +88,11 @@ public class AllBogeyStyles {
 			return this;
 		}
 
+		public BogeyStyleBuilder particle(ParticleType<?> particleType) {
+			this.particleType = particleType;
+			return this;
+		}
+
 		public BogeyStyleBuilder commonRenderer(Supplier<? extends CommonRenderer> commonRenderer) {
 			this.commonRenderer = Optional.of(commonRenderer.get());
 			return this;
@@ -92,7 +100,7 @@ public class AllBogeyStyles {
 
 		public BogeyStyle build() {
 			BogeyStyle entry =
-					new BogeyStyle(name, displayName, soundType, defaultData, sizes, commonRenderer);
+					new BogeyStyle(name, displayName, soundType, particleType, defaultData, sizes, commonRenderer);
 			BOGEY_STYLES.put(name, entry);
 			return entry;
 		}
