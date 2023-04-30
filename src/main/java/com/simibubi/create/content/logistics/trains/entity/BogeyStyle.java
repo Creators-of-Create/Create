@@ -69,7 +69,8 @@ public class BogeyStyle {
 	}
 
 	public BogeyRenderer getInWorldRenderInstance(BogeySizes.BogeySize size) {
-		return this.sizes.get(size).renderer();
+		SizeData sizeData = this.sizes.get(size);
+		return sizeData != null ? sizeData.renderer() : BackupBogeyRenderer.INSTANCE;
 	}
 
 	public Optional<CommonRenderer> getInWorldCommonRenderInstance() {
