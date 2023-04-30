@@ -94,7 +94,7 @@ public class HarvesterActorInstance extends ActorInstance {
 				.translateBack(getRotationOffset());
 	}
 
-    private double getRotation() {
+    protected double getRotation() {
         return AngleHelper.angleLerp(AnimationTickHolder.getPartialTicks(), previousRotation, rotation);
     }
 }

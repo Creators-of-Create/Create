@@ -13,8 +13,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class RollerActorInstance extends HarvesterActorInstance {
 
-	static Vec3 rotOffset = new Vec3(0.5f, -12 * originOffset + 0.5f, 8 * originOffset + 0.5f);
-
 	ModelData frame;
 
 	public RollerActorInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
@@ -30,11 +28,20 @@ public class RollerActorInstance extends HarvesterActorInstance {
 
 	@Override
 	public void beginFrame() {
-		super.beginFrame();
-		frame.loadIdentity()
+		harvester.loadIdentity()
 			.translate(context.localPos)
 			.centre()
 			.rotateY(horizontalAngle)
+			.unCentre()
+			.translate(0, -.25, 17 / 16f)
+			.rotateX(getRotation())
+			.translate(0, -.5, .5)
+			.rotateY(90);
+
+		frame.loadIdentity()
+			.translate(context.localPos)
+			.centre()
+			.rotateY(horizontalAngle + 180)
 			.unCentre();
 	}
 
@@ -45,7 +52,7 @@ public class RollerActorInstance extends HarvesterActorInstance {
 
 	@Override
 	protected Vec3 getRotationOffset() {
-		return rotOffset;
+		return Vec3.ZERO;
 	}
 
 	@Override

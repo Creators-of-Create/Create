@@ -23,8 +23,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> {
 
-	private static final Vec3 PIVOT = new Vec3(0, -4, 16);
-
 	public RollerRenderer(Context context) {
 		super(context);
 	}
@@ -37,19 +35,22 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		BlockState blockState = be.getBlockState();
 
 		ms.pushPose();
-		ms.translate(0, -.25, 0);
-		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.ROLLER_WHEEL, blockState)
-			.translate(0, .25, 0);
+		ms.translate(0, -0.25, 0);
+		SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.ROLLER_WHEEL, blockState);
 		Direction facing = blockState.getValue(RollerBlock.FACING);
-		HarvesterRenderer.transform(be.getLevel(), facing, superBuffer, be.getAnimatedSpeed(), PIVOT);
-		superBuffer.light(light)
+		superBuffer.translate(Vec3.atLowerCornerOf(facing.getNormal())
+			.scale(17 / 16f));
+		HarvesterRenderer.transform(be.getLevel(), facing, superBuffer, be.getAnimatedSpeed(), Vec3.ZERO);
+		superBuffer.translate(0, -.5, .5)
+			.rotateY(90)
+			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 		ms.popPose();
 
 		CachedBufferer.partial(AllPartialModels.ROLLER_FRAME, blockState)
-			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing)))
+			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180))
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
@@ -63,23 +64,26 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		if (context.contraption.stalled)
 			speed = 0;
 
-		superBuffer.translate(0, .25, 0)
+		superBuffer.translate(Vec3.atLowerCornerOf(facing.getNormal())
+			.scale(17 / 16f))
 			.transform(matrices.getModel());
-		HarvesterRenderer.transform(context.world, facing, superBuffer, speed, PIVOT);
+		HarvesterRenderer.transform(context.world, facing, superBuffer, speed, Vec3.ZERO);
 
 		PoseStack viewProjection = matrices.getViewProjection();
 		viewProjection.pushPose();
 		viewProjection.translate(0, -.25, 0);
 		int contraptionWorldLight = ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld);
-		superBuffer.light(matrices.getWorld(), contraptionWorldLight)
+		superBuffer.translate(0, -.5, .5)
+			.rotateY(90)
+			.light(matrices.getWorld(), contraptionWorldLight)
 			.renderInto(viewProjection, buffers.getBuffer(RenderType.cutoutMipped()));
 		viewProjection.popPose();
 
 		CachedBufferer.partial(AllPartialModels.ROLLER_FRAME, blockState)
 			.transform(matrices.getModel())
-			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing)))
+			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180))
 			.light(matrices.getWorld(), contraptionWorldLight)
-			.renderInto(viewProjection, buffers.getBuffer(RenderType.solid()));
+			.renderInto(viewProjection, buffers.getBuffer(RenderType.cutoutMipped()));
 	}
 
 }

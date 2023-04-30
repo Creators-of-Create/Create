@@ -1,79 +1,22 @@
 {
 	"credit": "Made with Blockbench",
-	"ambientocclusion": false,
 	"textures": {
-		"6": "create:block/mechanical_roller",
-		"7": "create:block/sticker_side",
-		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
+		"0": "create:block/roller_casing",
+		"particle": "create:block/andesite_casing"
 	},
 	"elements": [
 		{
-			"from": [0, 6, 6],
+			"name": "Casing",
+			"from": [0, 0, 0],
 			"to": [16, 16, 16],
-			"rotation": {"angle": 0, "axis": "x", "origin": [16, 0, 16]},
 			"faces": {
-				"north": {"uv": [0, 11, 8, 16], "texture": "#6"},
-				"east": {"uv": [0, 11, 5, 16], "texture": "#6"},
-				"south": {"uv": [0, 11, 8, 16], "texture": "#6"},
-				"west": {"uv": [0, 11, 5, 16], "texture": "#6"},
-				"up": {"uv": [8, 11, 16, 16], "rotation": 180, "texture": "#6"},
-				"down": {"uv": [8, 11, 16, 16], "rotation": 180, "texture": "#6"}
+				"north": {"uv": [0, 8, 8, 16], "rotation": 180, "texture": "#0"},
+				"east": {"uv": [8, 0, 0, 8], "texture": "#0"},
+				"south": {"uv": [8, 8, 16, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"up": {"uv": [8, 0, 16, 8], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [0, 8, 8, 16], "texture": "#0"}
 			}
-		},
-		{
-			"from": [1, -2, 0],
-			"to": [15, 6, 16],
-			"rotation": {"angle": 0, "axis": "x", "origin": [16, 0, 16]},
-			"faces": {
-				"north": {"uv": [1, 9, 15, 1], "texture": "#7"},
-				"east": {"uv": [0, 11, 16, 3], "texture": "#7"},
-				"south": {"uv": [1, 11, 15, 3], "texture": "#7"},
-				"west": {"uv": [0, 11, 16, 3], "texture": "#7"},
-				"up": {"uv": [1, 0, 15, 16], "rotation": 180, "texture": "#particle"}
-			}
-		}
-	],
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, 2.5, 0],
-			"scale": [0.375, 0.375, 0.375]
-		},
-		"thirdperson_lefthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, 2.5, 0],
-			"scale": [0.375, 0.375, 0.375]
-		},
-		"firstperson_righthand": {
-			"rotation": [0, 45, 0],
-			"translation": [8.5, 2.25, 0],
-			"scale": [0.4, 0.4, 0.4]
-		},
-		"firstperson_lefthand": {
-			"rotation": [0, 45, 0],
-			"translation": [8.5, 2.25, 0],
-			"scale": [0.4, 0.4, 0.4]
-		},
-		"ground": {
-			"translation": [0, 3, 0],
-			"scale": [0.25, 0.25, 0.25]
-		},
-		"gui": {
-			"rotation": [30, 225, 0],
-			"translation": [-1.5, 3.5, 0],
-			"scale": [0.45, 0.45, 0.45]
-		},
-		"fixed": {
-			"translation": [0, 4.75, 0],
-			"scale": [0.5, 0.5, 0.5]
-		}
-	},
-	"groups": [
-		{
-			"name": "roller",
-			"origin": [8, 8, 8],
-			"color": 0,
-			"children": [0, 1]
 		}
 	]
 }

@@ -50,6 +50,10 @@ public class SmartObserverBlockEntity extends SmartBlockEntity {
 	@Override
 	public void tick() {
 		super.tick();
+		
+		if (level.isClientSide())
+			return;
+		
 		BlockState state = getBlockState();
 		if (turnOffTicks > 0) {
 			turnOffTicks--;

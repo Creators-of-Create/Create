@@ -1,66 +1,73 @@
 {
 	"credit": "Made with Blockbench",
-	"ambientocclusion": false,
 	"textures": {
-		"6": "create:block/mechanical_roller",
-		"particle": "create:block/palettes/stone_types/polished/andesite_cut_polished"
+		"1": "create:block/roller_metal",
+		"particle": "create:block/roller_casing"
 	},
 	"elements": [
 		{
-			"from": [-0.95, -8.05, -1.1],
-			"to": [16.95, 0.05, 25.1],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"name": "Axle left",
+			"from": [-2, -8, -5],
+			"to": [2, 0, 3],
+			"rotation": {"angle": 45, "axis": "x", "origin": [4, -4, -1]},
 			"faces": {
-				"north": {"uv": [0, 4, 9, 8], "texture": "#6"},
-				"east": {"uv": [0, 0, 13, 4], "texture": "#6"},
-				"south": {"uv": [0, 4, 9, 8], "texture": "#6"},
-				"west": {"uv": [0, 0, 13, 4], "texture": "#6"},
-				"up": {"uv": [0, 0, 13, 4], "rotation": 270, "texture": "#6"},
-				"down": {"uv": [0, 0, 13, 4], "rotation": 270, "texture": "#6"}
+				"north": {"uv": [0, 4, 4, 6], "rotation": 90, "texture": "#1"},
+				"east": {"uv": [0, 0, 4, 4], "rotation": 90, "texture": "#1"},
+				"south": {"uv": [0, 6, 4, 8], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [0, 0, 4, 4], "texture": "#1"},
+				"up": {"uv": [0, 4, 4, 6], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [4, 6, 0, 8], "rotation": 90, "texture": "#1"}
 			}
-		}
-	],
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, 2.5, 0],
-			"scale": [0.375, 0.375, 0.375]
 		},
-		"thirdperson_lefthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, 2.5, 0],
-			"scale": [0.375, 0.375, 0.375]
-		},
-		"firstperson_righthand": {
-			"rotation": [0, 45, 0],
-			"translation": [8.5, 2.25, 0],
-			"scale": [0.4, 0.4, 0.4]
-		},
-		"firstperson_lefthand": {
-			"rotation": [0, 45, 0],
-			"translation": [8.5, 2.25, 0],
-			"scale": [0.4, 0.4, 0.4]
-		},
-		"ground": {
-			"translation": [0, 3, 0],
-			"scale": [0.25, 0.25, 0.25]
-		},
-		"gui": {
-			"rotation": [30, 225, 0],
-			"translation": [-1.5, 3.5, 0],
-			"scale": [0.45, 0.45, 0.45]
-		},
-		"fixed": {
-			"translation": [0, 4.75, 0],
-			"scale": [0.5, 0.5, 0.5]
-		}
-	},
-	"groups": [
 		{
-			"name": "roller",
-			"origin": [8, 8, 8],
-			"color": 0,
-			"children": [0]
+			"name": "Axle right",
+			"from": [14, -8, -5],
+			"to": [18, 0, 3],
+			"rotation": {"angle": 45, "axis": "x", "origin": [4, -4, -1]},
+			"faces": {
+				"north": {"uv": [0, 4, 4, 6], "rotation": 90, "texture": "#1"},
+				"east": {"uv": [0, 0, 4, 4], "rotation": 90, "texture": "#1"},
+				"south": {"uv": [0, 6, 4, 8], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [0, 0, 4, 4], "texture": "#1"},
+				"up": {"uv": [0, 4, 4, 6], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [4, 6, 0, 8], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"name": "Chute",
+			"from": [1, -4, -8],
+			"to": [15, 12, 6],
+			"rotation": {"angle": 45, "axis": "x", "origin": [4, -4, -1]},
+			"faces": {
+				"north": {"uv": [0.5, 8, 7.5, 16], "texture": "#1"},
+				"east": {"uv": [8.5, 8, 15.5, 16], "texture": "#1"},
+				"south": {"uv": [0.5, 8, 7.5, 16], "texture": "#1"},
+				"west": {"uv": [8.5, 8, 15.5, 16], "texture": "#1"},
+				"down": {"uv": [8, 16, 8.5, 8], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Chute top",
+			"from": [1, 5, -14],
+			"to": [15, 11, -8],
+			"rotation": {"angle": 45, "axis": "x", "origin": [4, -4, -1]},
+			"faces": {
+				"north": {"uv": [9, 1, 16, 4], "texture": "#1"},
+				"east": {"uv": [6, 1, 9, 4], "texture": "#1"},
+				"west": {"uv": [9, 1, 6, 4], "texture": "#1"},
+				"down": {"uv": [0.5, 13, 7.5, 10], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Cage",
+			"from": [1, -2, -14],
+			"to": [15, 5, -8],
+			"rotation": {"angle": 45, "axis": "x", "origin": [4, -4, -1]},
+			"faces": {
+				"north": {"uv": [9, 4, 16, 8], "texture": "#1"},
+				"east": {"uv": [6, 4, 9, 8], "texture": "#1"},
+				"west": {"uv": [9, 4, 6, 8], "texture": "#1"}
+			}
 		}
 	]
 }
