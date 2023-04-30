@@ -3,11 +3,11 @@
 	"parent": "block/block",
 	"textures": {
 		"3": "create:block/threshold_switch_back",
-		"level": "create:block/threshold_switch/level_0",
 		"5": "create:block/threshold_switch_front",
 		"7": "create:block/brass_block",
-		"8": "create:block/tunnel/brass_tunnel_top",
-		"particle": "#level"
+		"8": "create:block/tunnel/brass_tunnel_top_connected",
+		"particle": "create:block/threshold_switch/level_0",
+		"level": "create:block/threshold_switch/level_0"
 	},
 	"elements": [
 		{
@@ -18,7 +18,7 @@
 				"east": {"uv": [0, 0, 16, 16], "texture": "#3"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#level"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#8"},
+				"up": {"uv": [0, 0, 8, 8], "rotation": 180, "texture": "#8"},
 				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#7"}
 			}
 		},
