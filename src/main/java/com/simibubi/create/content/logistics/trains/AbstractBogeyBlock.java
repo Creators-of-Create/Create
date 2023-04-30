@@ -178,7 +178,8 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 			sbte.setBogeyStyle(style);
 
 			if (size == getSize()) {
-				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style"), true);
+				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style")
+						.append(": " + style.displayName), true);
 			} else {
 				CompoundTag oldData = sbte.getBogeyData();
 				level.setBlock(pos, this.getStateOfSize(sbte, size), 3);
@@ -186,7 +187,8 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 				if (!(newBlockEntity instanceof StandardBogeyTileEntity newTileEntity))
 					return InteractionResult.FAIL;
 				newTileEntity.setBogeyData(oldData);
-				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style_and_size"), true);
+				player.displayClientMessage(Lang.translateDirect("create.bogey.style.updated_style_and_size")
+						.append(": " + style.displayName), true);
 			}
 			return InteractionResult.CONSUME;
 		}
