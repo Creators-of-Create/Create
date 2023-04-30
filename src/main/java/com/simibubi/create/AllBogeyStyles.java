@@ -13,6 +13,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class AllBogeyStyles {
 
 	public static BogeyStyle STANDARD = create("standard")
 			.commonRenderer(CommonStandardBogeyRenderer::new)
+			.displayName(new TranslatableComponent("create.bogeys.styles.standard"))
 			.size(BogeySizes.SMALL, SmallStandardBogeyRenderer::new, AllBlocks.SMALL_BOGEY)
 			.size(BogeySizes.LARGE, LargeStandardBogeyRenderer::new, AllBlocks.LARGE_BOGEY)
 			.build();
