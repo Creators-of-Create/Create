@@ -1,13 +1,10 @@
 package com.simibubi.create.content.logistics.trains.track;
 
 import com.simibubi.create.AllBogeyStyles;
-import com.simibubi.create.AllRegistries;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 import com.simibubi.create.foundation.tileEntity.CachedRenderBBTileEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.core.BlockPos;
@@ -38,14 +35,14 @@ public class StandardBogeyTileEntity extends CachedRenderBBTileEntity {
 
 	public void setBogeyData(@NotNull CompoundTag newData) {
 		if (!newData.contains(BOGEY_STYLE_KEY)) {
-			ResourceLocation style = AllBogeyStyles.STANDARD.getId();
+			ResourceLocation style = AllBogeyStyles.STANDARD.name;
 			NBTHelper.writeResourceLocation(newData, BOGEY_STYLE_KEY, style);
 		}
 		this.bogeyData = newData;
 	}
 
 	public void setBogeyStyle(@NotNull BogeyStyle style) {
-		ResourceLocation location = RegisteredObjects.getKeyOrThrow(AllRegistries.BOGEY_REGISTRY.get(), style);
+		ResourceLocation location = style.name;
 		CompoundTag data = this.getBogeyData();
 		NBTHelper.writeResourceLocation(data, BOGEY_STYLE_KEY, location);
 		markUpdated();
@@ -55,9 +52,9 @@ public class StandardBogeyTileEntity extends CachedRenderBBTileEntity {
 	public BogeyStyle getStyle() {
 		CompoundTag data = this.getBogeyData();
 		ResourceLocation currentStyle = NBTHelper.readResourceLocation(data, BOGEY_STYLE_KEY);
-		BogeyStyle style = AllRegistries.BOGEY_REGISTRY.get().getValue(currentStyle);
+		BogeyStyle style = AllBogeyStyles.BOGEY_STYLES.get(currentStyle);
 		if (style == null) {
-			setBogeyStyle(AllBogeyStyles.STANDARD.get());
+			setBogeyStyle(AllBogeyStyles.STANDARD);
 			return getStyle();
 		}
 		return style;
@@ -81,7 +78,7 @@ public class StandardBogeyTileEntity extends CachedRenderBBTileEntity {
 
 	private CompoundTag createBogeyData() {
 		CompoundTag nbt = new CompoundTag();
-		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, AllBogeyStyles.STANDARD.getId());
+		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, AllBogeyStyles.STANDARD.name);
 		return nbt;
 	}
 

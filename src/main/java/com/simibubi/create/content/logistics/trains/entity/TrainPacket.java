@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.simibubi.create.AllRegistries;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -17,12 +16,9 @@ import com.simibubi.create.foundation.utility.RegisteredObjects;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nullable;
 
 public class TrainPacket extends SimplePacketBase {
 

@@ -8,24 +8,31 @@ import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.BogeySizes;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Optional;
+
 public final class BogeyInstance {
+	private final BogeySizes.BogeySize size;
+	private final BogeyStyle style;
 
 	public final CarriageBogey bogey;
 	public final BogeyRenderer renderer;
-	private final BogeySizes.BogeySize size;
+	public final Optional<BogeyRenderer.CommonRenderer> commonRenderer;
 
-	public BogeyInstance(CarriageBogey bogey, BogeyRenderer renderer, BogeySizes.BogeySize size,
-						 MaterialManager materialManager) {
+	public BogeyInstance(CarriageBogey bogey, BogeyStyle style, BogeySizes.BogeySize size, MaterialManager materialManager) {
 		this.bogey = bogey;
-		this.renderer = renderer;
 		this.size = size;
+		this.style = style;
 
-		renderer.initialiseContraptionModelData(materialManager, size);
+		this.renderer = this.style.createRendererInstance(this.size);
+		this.commonRenderer = this.style.getNewCommonRenderInstance();
+
+		commonRenderer.ifPresent(bogeyRenderer ->
+				bogeyRenderer.initialiseContraptionModelData(materialManager));
+		renderer.initialiseContraptionModelData(materialManager);
 	}
 
 	void hiddenFrame() {
@@ -38,11 +45,16 @@ public final class BogeyInstance {
 			return;
 		}
 
-		renderer.render(new CompoundTag(), wheelAngle, ms, this.size);
+		commonRenderer.ifPresent(bogeyRenderer ->
+				bogeyRenderer.render(bogey.bogeyData, wheelAngle, ms));
+		renderer.render(bogey.bogeyData, wheelAngle, ms);
 	}
 
 	public void updateLight(BlockAndTintGetter world, CarriageContraptionEntity entity) {
 		var lightPos = new BlockPos(getLightPos(entity));
+		commonRenderer.ifPresent(bogeyRenderer
+				-> bogeyRenderer.updateLight(world.getBrightness(LightLayer.BLOCK, lightPos),
+						world.getBrightness(LightLayer.SKY, lightPos)));
 		renderer.updateLight(world.getBrightness(LightLayer.BLOCK, lightPos),
 				world.getBrightness(LightLayer.SKY, lightPos));
 	}

@@ -2,9 +2,9 @@ package com.simibubi.create.content.logistics.trains;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -15,7 +15,6 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllRegistries;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
@@ -110,7 +109,10 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 	@OnlyIn(Dist.CLIENT)
 	public void render(@Nullable BlockState state, float wheelAngle, PoseStack ms, float partialTicks,
 		MultiBufferSource buffers, int light, int overlay, StandardBogeyTileEntity sbte) {
-		final BogeyRenderer renderer = sbte.getStyle().renderer;
+		BogeyStyle style = sbte.getStyle();
+		final Optional<BogeyRenderer.CommonRenderer> commonRenderer
+				= style.getNewCommonRenderInstance();
+		final BogeyRenderer renderer = style.getInWorldRenderInstance(this.getSize());
 		if (state != null) {
 			ms.translate(.5f, .5f, .5f);
 			if (state.getValue(AXIS) == Direction.Axis.X)
@@ -118,7 +120,9 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		}
 		ms.translate(0, -1.5 - 1 / 128f, 0);
 		VertexConsumer vb = buffers.getBuffer(RenderType.cutoutMipped());
-		renderer.render(sbte.getBogeyData(), wheelAngle, ms, light, vb, getSize());
+		renderer.render(sbte.getBogeyData(), wheelAngle, ms, light, vb);
+		commonRenderer.ifPresent(common ->
+				common.render(sbte.getBogeyData(), wheelAngle, ms, light, vb));
 	}
 
 	public BogeySizes.BogeySize getSize() {
@@ -148,8 +152,8 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		ItemStack stack = player.getItemInHand(hand);
 
 		if (!player.isShiftKeyDown() && stack.is(AllItems.WRENCH.get()) && !player.getCooldowns().isOnCooldown(stack.getItem())
-				&& AllRegistries.BOGEY_REGISTRY.get().getValues().size() > 1) {
-			Collection<BogeyStyle> styles = AllRegistries.BOGEY_REGISTRY.get().getValues();
+				&& AllBogeyStyles.BOGEY_STYLES.size() > 1) {
+			Collection<BogeyStyle> styles = AllBogeyStyles.BOGEY_STYLES.values();
 
 			if (styles.size() <= 1)
 				return InteractionResult.PASS;
@@ -245,15 +249,14 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		BlockEntity te = level.getBlockEntity(pos);
 		if (te instanceof StandardBogeyTileEntity sbte)
 			return this.getNextStyle(sbte.getStyle());
-		return AllBogeyStyles.STANDARD.get();
+		return AllBogeyStyles.STANDARD;
 	}
 
 	public BogeyStyle getNextStyle(BogeyStyle style) {
-		Collection<BogeyStyle> allStyles = AllRegistries.BOGEY_REGISTRY.get().getValues();
+		Collection<BogeyStyle> allStyles = AllBogeyStyles.BOGEY_STYLES.values();
 		if (allStyles.size() <= 1)
 			return style;
 		List<BogeyStyle> list = new ArrayList<>(allStyles);
-		list.sort(Comparator.comparing(BogeyStyle::getRegistryName));
 		return Iterate.cycleValue(list, style);
 	}
 
