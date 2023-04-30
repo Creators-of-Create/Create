@@ -135,14 +135,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			(callback) -> CreateTileEntityBuilder.create(this, parent, name, callback, factory));
 	}
 
-	public <T extends BogeyStyle> BogeyStyleBuilder<T, CreateRegistrate> bogeyStyle(String name, T style) {
-		return this.bogeyStyle(self(), name, style);
-	}
-
-	public <T extends BogeyStyle, P> BogeyStyleBuilder<T, P> bogeyStyle(P parent, String name, T style) {
-		return this.entry(name, (callback) -> BogeyStyleBuilder.create(this, parent, name, callback, style));
-	}
-
 	@Override
 	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name,
 		EntityType.EntityFactory<T> factory, MobCategory classification) {
