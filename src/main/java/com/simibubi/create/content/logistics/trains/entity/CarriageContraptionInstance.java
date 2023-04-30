@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -99,8 +100,10 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 			return;
 
 		bogeys.forEach(instance -> {
-			if (instance != null)
+			if (instance != null) {
+				instance.commonRenderer.ifPresent(BogeyRenderer::remove);
 				instance.renderer.remove();
+			}
 		});
 	}
 
