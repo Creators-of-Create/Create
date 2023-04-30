@@ -4,7 +4,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"5": "create:block/millstone",
-		"particle": "create:block/fluid_pipe"
+		"particle": "create:block/palettes/stone_types/cut/andesite_cut"
 	},
 	"elements": [
 		{
@@ -116,6 +116,7 @@
 		{
 			"name": "cogwheel",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4]
 		}
 	]
