@@ -10,7 +10,7 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt linkRange = i(256, 1, "linkRange", Comments.linkRange);
 	public final ConfigInt displayLinkRange = i(64, 1, "displayLinkRange", Comments.displayLinkRange);
 	public final ConfigInt vaultCapacity = i(20, 1, "vaultCapacity", Comments.vaultCapacity);
-	public final ConfigInt brassTunnelTimer = i(1,10,10, "brassTunnelTimer",Comments.brassTunnelTimer);
+	public final ConfigInt brassTunnelTimer = i(10,1,10, "brassTunnelTimer",Comments.brassTunnelTimer);
 	@Override
 	public String getName() {
 		return "logistics";
