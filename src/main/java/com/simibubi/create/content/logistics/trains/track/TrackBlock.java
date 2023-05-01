@@ -19,6 +19,13 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllTags;
+
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
+
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicates;
@@ -113,12 +120,17 @@ public class TrackBlock extends Block
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
 
-	public TrackBlock(Properties p_49795_) {
+	protected final TrackMaterial material;
+
+	public TrackBlock(Properties p_49795_, TrackMaterial material) {
 		super(p_49795_);
 		registerDefaultState(defaultBlockState().setValue(SHAPE, TrackShape.ZO)
 			.setValue(HAS_TE, false)
 			.setValue(WATERLOGGED, false));
+		this.material = material;
 	}
+
+
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
@@ -407,7 +419,7 @@ public class TrackBlock extends Block
 			return list;
 		BlockPos boundPos = trackTE.boundLocation.getSecond();
 		BlockState boundState = otherLevel.getBlockState(boundPos);
-		if (!AllBlocks.TRACK.has(boundState))
+		if (!AllTags.AllBlockTags.TRACKS.matches(boundState))
 			return list;
 
 		Vec3 center = Vec3.atBottomCenterOf(pos)
@@ -750,7 +762,8 @@ public class TrackBlock extends Block
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		int trackAmount = 1;
+		int sameTypeTrackAmount = 1;
+		Object2IntMap<TrackMaterial> otherTrackAmounts = new Object2IntArrayMap<>();
 		int girderAmount = 0;
 
 		if (te instanceof TrackTileEntity track) {
@@ -758,15 +771,27 @@ public class TrackBlock extends Block
 				.values()) {
 				if (!bezierConnection.isPrimary())
 					continue;
-				trackAmount += bezierConnection.getTrackItemCost();
+				TrackMaterial material = bezierConnection.getMaterial();
+				if (material == getMaterial()) {
+					sameTypeTrackAmount += bezierConnection.getTrackItemCost();
+				} else {
+					otherTrackAmounts.put(material, otherTrackAmounts.getOrDefault(material, 0) + 1);
+				}
 				girderAmount += bezierConnection.getGirderItemCost();
 			}
 		}
 
 		List<ItemStack> stacks = new ArrayList<>();
-		while (trackAmount > 0) {
-			stacks.add(AllBlocks.TRACK.asStack(Math.min(trackAmount, 64)));
-			trackAmount -= 64;
+		while (sameTypeTrackAmount > 0) {
+			stacks.add(new ItemStack(state.getBlock(), Math.min(sameTypeTrackAmount, 64)));
+			sameTypeTrackAmount -= 64;
+		}
+		for (TrackMaterial material : otherTrackAmounts.keySet()) {
+			int amt = otherTrackAmounts.getOrDefault(material, 0);
+			while (amt > 0) {
+				stacks.add(new ItemStack(material.getTrackBlock().get(), Math.min(amt, 64)));
+				amt -= 64;
+			}
 		}
 		while (girderAmount > 0) {
 			stacks.add(AllBlocks.METAL_GIRDER.asStack(Math.min(girderAmount, 64)));
@@ -774,6 +799,11 @@ public class TrackBlock extends Block
 		}
 
 		return new ItemRequirement(ItemUseType.CONSUME, stacks);
+	}
+
+	@Override
+	public TrackMaterial getMaterial() {
+		return material;
 	}
 
 	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {

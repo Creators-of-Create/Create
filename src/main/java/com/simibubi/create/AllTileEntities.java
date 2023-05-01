@@ -182,6 +182,7 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
 import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.logistics.trains.BogeyTileEntityRenderer;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayRenderer;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverRenderer;
@@ -192,6 +193,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.content.logistics.trains.track.FakeTrackTileEntity;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
+import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackInstance;
 import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
@@ -201,6 +203,11 @@ import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.tterrag.registrate.util.entry.BlockEntry;
+
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+
+import net.minecraft.world.level.block.Block;
 
 public class AllTileEntities {
 
@@ -656,7 +663,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<PlacardTileEntity> PLACARD = REGISTRATE
 		.tileEntity("placard", PlacardTileEntity::new)
 		.validBlocks(AllBlocks.PLACARD)
@@ -781,9 +788,9 @@ public class AllTileEntities {
 		.tileEntity("track", TrackTileEntity::new)
 		.instance(() -> TrackInstance::new)
 		.renderer(() -> TrackRenderer::new)
-		.validBlocks(AllBlocks.TRACK)
+		.validBlocks((NonNullSupplier<? extends TrackBlock>[]) TrackMaterial.allBlocks().toArray(new NonNullSupplier[0]))
 		.register();
-	
+
 	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = REGISTRATE
 		.tileEntity("fake_track", FakeTrackTileEntity::new)
 		.validBlocks(AllBlocks.FAKE_TRACK)
@@ -800,7 +807,7 @@ public class AllTileEntities {
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
-	
+
 	public static final BlockEntityEntry<SlidingDoorTileEntity> SLIDING_DOOR = REGISTRATE
 		.tileEntity("sliding_door", SlidingDoorTileEntity::new)
 		.renderer(() -> SlidingDoorRenderer::new)

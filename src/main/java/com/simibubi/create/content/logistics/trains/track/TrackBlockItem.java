@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.track;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -111,7 +112,7 @@ public class TrackBlockItem extends BlockItem {
 			return InteractionResult.SUCCESS;
 
 		stack = player.getMainHandItem();
-		if (AllBlocks.TRACK.isIn(stack)) {
+		if (AllTags.AllBlockTags.TRACKS.matches(stack)) {
 			stack.setTag(null);
 			player.setItemInHand(pContext.getHand(), stack);
 		}
@@ -154,7 +155,7 @@ public class TrackBlockItem extends BlockItem {
 	@OnlyIn(Dist.CLIENT)
 	public static void sendExtenderPacket(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
-		if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())
+		if (!AllTags.AllBlockTags.TRACKS.matches(stack) || !stack.hasTag())
 			return;
 		if (Minecraft.getInstance().options.keySprint.isDown())
 			AllPackets.channel

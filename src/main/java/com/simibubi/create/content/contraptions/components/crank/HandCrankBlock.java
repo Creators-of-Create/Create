@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
@@ -74,7 +75,8 @@ public class HandCrankBlock extends DirectionalKineticBlock
 			return InteractionResult.PASS;
 
 		withTileEntityDo(worldIn, pos, te -> te.turn(player.isShiftKeyDown()));
-		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
+		if(!player.getItemInHand(handIn).is(AllItems.EXTENDO_GRIP.get()))
+			player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
 
 		if (player.getFoodData()
 			.getFoodLevel() == 0)
@@ -117,14 +119,14 @@ public class HandCrankBlock extends DirectionalKineticBlock
 			}
 		}
 	}
-	
+
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);

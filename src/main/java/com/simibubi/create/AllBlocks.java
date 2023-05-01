@@ -209,6 +209,7 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.BogeySizes;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem;
@@ -1502,7 +1503,7 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<TrackBlock> TRACK = REGISTRATE.block("track", TrackBlock::new)
+	public static final BlockEntry<TrackBlock> TRACK = REGISTRATE.block("track", TrackMaterial.ANDESITE::createBlock)
 		.initialProperties(Material.STONE)
 		.properties(p -> p.color(MaterialColor.METAL)
 			.strength(0.8F)
@@ -1512,6 +1513,8 @@ public class AllBlocks {
 		.transform(pickaxeOnly())
 		.blockstate(new TrackBlockStateGenerator()::generate)
 		.tag(AllBlockTags.RELOCATION_NOT_SUPPORTED.tag)
+		.tag(AllBlockTags.TRACKS.tag)
+		.tag(AllBlockTags.GIRDABLE_TRACKS.tag)
 		.lang("Train Track")
 		.item(TrackBlockItem::new)
 		.model((c, p) -> p.generated(c, Create.asResource("item/" + c.getName())))
