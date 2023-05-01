@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 import com.jozufozu.flywheel.util.Color;
 import com.simibubi.create.AllSpecialTextures;
@@ -13,7 +12,6 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
-import com.simibubi.create.content.logistics.trains.IHasTrackMaterial;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -61,7 +59,12 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TrackPlacement {
 
-	public static class PlacementInfo implements IHasTrackMaterial {
+	public static class PlacementInfo {
+
+		public PlacementInfo(TrackMaterial material) {
+			this.trackMaterial = material;
+		}
+
 		BezierConnection curve = null;
 		boolean valid = false;
 		int end1Extent = 0;
@@ -73,7 +76,7 @@ public class TrackPlacement {
 
 		public int requiredPavement = 0;
 		public boolean hasRequiredPavement = false;
-		private TrackMaterial trackMaterial;
+		public final TrackMaterial trackMaterial;
 
 		// for visualisation
 		Vec3 end1;
@@ -94,19 +97,6 @@ public class TrackPlacement {
 			curve = null;
 			return this;
 		}
-
-		@Override
-		public TrackMaterial getMaterial() {
-			if (trackMaterial == null) {
-				throw new RuntimeException("Track material should never be null in TrackPlacement#PlacementInfo");
-			}
-			return trackMaterial;
-		}
-
-		@Override
-		public void setMaterial(TrackMaterial material) {
-			trackMaterial = material;
-		}
 	}
 
 	public static PlacementInfo cached;
@@ -126,8 +116,7 @@ public class TrackPlacement {
 			&& hoveringMaxed == maximiseTurn && lookAngle == hoveringAngle)
 			return cached;
 
-		PlacementInfo info = new PlacementInfo();
-		info.trackMaterial = IHasTrackMaterial.fromItem(stack.getItem());
+		PlacementInfo info = new PlacementInfo(TrackMaterial.fromItem(stack.getItem()));
 		hoveringMaxed = maximiseTurn;
 		hoveringAngle = lookAngle;
 		hoveringPos = pos2;
@@ -211,7 +200,7 @@ public class TrackPlacement {
 			BlockPos targetPos2 = pos2.offset(offset2.x, offset2.y, offset2.z);
 			info.curve = new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), true, girder, IHasTrackMaterial.fromItem(stack.getItem()));
+				Couple.create(normal1, normal2), true, girder, TrackMaterial.fromItem(stack.getItem()));
 		}
 
 		// S curve or Straight
@@ -371,7 +360,7 @@ public class TrackPlacement {
 		info.curve = skipCurve ? null
 			: new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), true, girder, IHasTrackMaterial.fromItem(stack.getItem()));
+				Couple.create(normal1, normal2), true, girder, TrackMaterial.fromItem(stack.getItem()));
 
 		info.valid = true;
 
@@ -533,7 +522,7 @@ public class TrackPlacement {
 				BlockPos offsetPos = pos.offset(offset.x, offset.y, offset.z);
 				BlockState stateAtPos = level.getBlockState(offsetPos);
 				// copy over all shared properties from the shaped state to the correct track material block
-				BlockState toPlace = copyProperties(state, info.getMaterial().getTrackBlock().getDefaultState());
+				BlockState toPlace = copyProperties(state, info.trackMaterial.getTrackBlock().get().defaultBlockState());
 
 				boolean canPlace = stateAtPos.getMaterial()
 					.isReplaceable();
@@ -556,7 +545,7 @@ public class TrackPlacement {
 			return info;
 
 		if (!simulate) {
-			BlockState onto = info.getMaterial().getTrackBlock().getDefaultState();
+			BlockState onto = info.trackMaterial.getTrackBlock().get().defaultBlockState();
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
 					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state1, onto))

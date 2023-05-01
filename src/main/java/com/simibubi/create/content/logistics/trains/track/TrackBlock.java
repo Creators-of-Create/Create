@@ -11,7 +11,6 @@ import static com.simibubi.create.AllShapes.TRACK_ORTHO_LONG;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +20,11 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.logistics.trains.IHasTrackMaterial;
 
 import com.simibubi.create.content.logistics.trains.TrackMaterial;
+
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -114,7 +115,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
 //init
 public class TrackBlock extends Block
-	implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock, IHasTrackMaterial {
+	implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
@@ -762,7 +763,7 @@ public class TrackBlock extends Block
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		int sameTypeTrackAmount = 1;
-		Map<TrackMaterial, Integer> otherTrackAmounts = new HashMap<>();
+		Object2IntMap<TrackMaterial> otherTrackAmounts = new Object2IntArrayMap<>();
 		int girderAmount = 0;
 
 		if (te instanceof TrackTileEntity track) {
@@ -770,7 +771,7 @@ public class TrackBlock extends Block
 				.values()) {
 				if (!bezierConnection.isPrimary())
 					continue;
-				TrackMaterial material = ((IHasTrackMaterial) bezierConnection).getMaterial();
+				TrackMaterial material = bezierConnection.getMaterial();
 				if (material == getMaterial()) {
 					sameTypeTrackAmount += bezierConnection.getTrackItemCost();
 				} else {
@@ -786,7 +787,7 @@ public class TrackBlock extends Block
 			sameTypeTrackAmount -= 64;
 		}
 		for (TrackMaterial material : otherTrackAmounts.keySet()) {
-			int amt = otherTrackAmounts.get(material);
+			int amt = otherTrackAmounts.getOrDefault(material, 0);
 			while (amt > 0) {
 				stacks.add(new ItemStack(material.getTrackBlock().get(), Math.min(amt, 64)));
 				amt -= 64;

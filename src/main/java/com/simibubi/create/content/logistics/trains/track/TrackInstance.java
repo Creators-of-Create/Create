@@ -20,7 +20,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
-import com.simibubi.create.content.logistics.trains.IHasTrackMaterial;
 import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -114,7 +113,7 @@ public class TrackInstance extends BlockEntityInstance<TrackTileEntity> {
 			leftLightPos = new BlockPos[segCount];
 			rightLightPos = new BlockPos[segCount];
 
-			TrackMaterial.TrackModelHolder modelHolder = ((IHasTrackMaterial) bc).getMaterial().modelHolder;
+			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
 			mat.getModel(modelHolder.tie())
 				.createInstances(ties);

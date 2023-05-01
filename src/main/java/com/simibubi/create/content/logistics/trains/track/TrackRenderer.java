@@ -12,7 +12,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
-import com.simibubi.create.content.logistics.trains.IHasTrackMaterial;
 import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -65,7 +64,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 			SegmentAngles segment = segments[i];
 			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(tePosition));
 
-			TrackMaterial.TrackModelHolder modelHolder = ((IHasTrackMaterial) bc).getMaterial().modelHolder;
+			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
 			CachedBufferer.partial(modelHolder.tie(), air)
 				.mulPose(segment.tieTransform.pose())

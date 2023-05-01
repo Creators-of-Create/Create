@@ -5611,7 +5611,6 @@ ac265a674626e0e832330086fd18fe0be37fc327 data/create/recipes/weathered_copper_ti
 2a2700b43614f86d3294726595cb28ed7dca4387 data/create/tags/blocks/brittle.json
 d99d5c67bdffff60789a19bd51a5c5267c75e0a4 data/create/tags/blocks/casing.json
 2b4c93e5a752ebf54217594766f30d8d60cb4343 data/create/tags/blocks/fan_transparent.json
-ad8fa04f7bbbafd70d0ce158af78a35e899301e2 data/create/tags/blocks/girdable_tracks.json
 ee6d2b53d81f2bed492662b6c06f46c4f2b9ef9b data/create/tags/blocks/movable_empty_collider.json
 6e5d3b2123fbb00e7f439c091623619502551bca data/create/tags/blocks/non_movable.json
 10781e8cfcbb3486327aace3aa00e437fb44b331 data/create/tags/blocks/ore_override_stone.json
@@ -5619,7 +5618,6 @@ ee6d2b53d81f2bed492662b6c06f46c4f2b9ef9b data/create/tags/blocks/movable_empty_c
 23eb7cf8abff36f85320c35c69b98fdb775c8ec9 data/create/tags/blocks/safe_nbt.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/blocks/seats.json
 d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/blocks/toolboxes.json
-ad8fa04f7bbbafd70d0ce158af78a35e899301e2 data/create/tags/blocks/tracks.json
 9460e92c8e483446318b849abe7e6f52dcd4a269 data/create/tags/blocks/tree_attachments.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/blocks/valve_handles.json
 eac71740fb12bdb38b5dfaa2268613d7ba82b809 data/create/tags/blocks/windmill_sails.json

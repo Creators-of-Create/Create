@@ -3,11 +3,15 @@ package com.simibubi.create.content.logistics.trains;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
-import com.tterrag.registrate.util.entry.BlockEntry;
+
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -15,15 +19,20 @@ import java.util.stream.Stream;
 public class TrackMaterialFactory {
 	private final ResourceLocation id;
 	private String langName;
-	private Supplier<BlockEntry<? extends TrackBlock>> trackBlock;
+	private NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock;
 	private Ingredient sleeperIngredient = Ingredient.EMPTY;
 	private Ingredient railsIngredient = Ingredient.fromValues(Stream.of(new Ingredient.TagValue(AllTags.forgeItemTag("nuggets/iron")), new Ingredient.TagValue(AllTags.forgeItemTag("nuggets/zinc"))));
 	private ResourceLocation particle;
 	private TrackMaterial.TrackType trackType = TrackMaterial.TrackType.STANDARD;
-	private TrackMaterial.TrackModelHolder modelHolder = null;
-	private PartialModel tieModel = null;
-	private PartialModel leftSegmentModel = null;
-	private PartialModel rightSegmentModel = null;
+
+	@OnlyIn(Dist.CLIENT)
+	private TrackMaterial.TrackModelHolder modelHolder;
+	@OnlyIn(Dist.CLIENT)
+	private PartialModel tieModel;
+	@OnlyIn(Dist.CLIENT)
+	private PartialModel leftSegmentModel;
+	@OnlyIn(Dist.CLIENT)
+	private PartialModel rightSegmentModel;
 
 	public TrackMaterialFactory(ResourceLocation id) {
 		this.id = id;
@@ -38,13 +47,13 @@ public class TrackMaterialFactory {
 		return this;
 	}
 
-	public TrackMaterialFactory block(Supplier<BlockEntry<? extends TrackBlock>> trackBlock) {
+	public TrackMaterialFactory block(NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock) {
 		this.trackBlock = trackBlock;
 		return this;
 	}
 
-	public TrackMaterialFactory setBuiltin() {
-		this.modelHolder = TrackMaterial.TrackModelHolder.DEFAULT;
+	public TrackMaterialFactory defaultModels() { // was setBuiltin
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.modelHolder = TrackMaterial.TrackModelHolder.DEFAULT);
 		return this;
 	}
 
@@ -84,19 +93,23 @@ public class TrackMaterialFactory {
 		return this;
 	}
 
-	public TrackMaterialFactory defaultModels() {
-		String namespace = id.getNamespace();
-		String prefix = "block/track/" + id.getPath() + "/";
-		tieModel = new PartialModel(new ResourceLocation(namespace, prefix + "tie"));
-		leftSegmentModel = new PartialModel(new ResourceLocation(namespace, prefix + "segment_left"));
-		rightSegmentModel = new PartialModel(new ResourceLocation(namespace, prefix + "segment_right"));
+	public TrackMaterialFactory standardModels() { // was defaultModels
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			String namespace = id.getNamespace();
+			String prefix = "block/track/" + id.getPath() + "/";
+			tieModel = new PartialModel(new ResourceLocation(namespace, prefix + "tie"));
+			leftSegmentModel = new PartialModel(new ResourceLocation(namespace, prefix + "segment_left"));
+			rightSegmentModel = new PartialModel(new ResourceLocation(namespace, prefix + "segment_right"));
+		});
 		return this;
 	}
 
-	public TrackMaterialFactory customModels(PartialModel tieModel, PartialModel leftSegmentModel, PartialModel rightSegmentModel) {
-		this.tieModel = tieModel;
-		this.leftSegmentModel = leftSegmentModel;
-		this.rightSegmentModel = rightSegmentModel;
+	public TrackMaterialFactory customModels(Supplier<Supplier<PartialModel>> tieModel, Supplier<Supplier<PartialModel>> leftSegmentModel, Supplier<Supplier<PartialModel>> rightSegmentModel) {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			this.tieModel = tieModel.get().get();
+			this.leftSegmentModel = leftSegmentModel.get().get();
+			this.rightSegmentModel = rightSegmentModel.get().get();
+		});
 		return this;
 	}
 
@@ -108,11 +121,13 @@ public class TrackMaterialFactory {
 		assert sleeperIngredient != null;
 		assert railsIngredient != null;
 		assert id != null;
-		assert modelHolder != null;
-		if (tieModel != null || leftSegmentModel != null || rightSegmentModel != null) {
-			assert tieModel != null && leftSegmentModel != null && rightSegmentModel != null;
-			modelHolder = new TrackMaterial.TrackModelHolder(tieModel, leftSegmentModel, rightSegmentModel);
-		}
-		return new TrackMaterial(id, langName, trackBlock, particle, sleeperIngredient, railsIngredient, trackType, modelHolder);
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			assert modelHolder != null;
+			if (tieModel != null || leftSegmentModel != null || rightSegmentModel != null) {
+				assert tieModel != null && leftSegmentModel != null && rightSegmentModel != null;
+				modelHolder = new TrackMaterial.TrackModelHolder(tieModel, leftSegmentModel, rightSegmentModel);
+			}
+		});
+		return new TrackMaterial(id, langName, trackBlock, particle, sleeperIngredient, railsIngredient, trackType, () -> () -> modelHolder);
 	}
 }

@@ -24,6 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -31,7 +32,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class BezierConnection implements Iterable<BezierConnection.Segment>, IHasTrackMaterial {
+public class BezierConnection implements Iterable<BezierConnection.Segment> {
 
 	public Couple<BlockPos> tePositions;
 	public Couple<Vec3> starts;
@@ -73,7 +74,10 @@ public class BezierConnection implements Iterable<BezierConnection.Segment>, IHa
 	}
 
 	private static boolean coupleEquals(Couple<?> a, Couple<?> b) {
-		return (a.getFirst().equals(b.getFirst()) && a.getSecond().equals(b.getSecond())) || (a.getFirst() instanceof Vec3 aFirst && a.getSecond() instanceof Vec3 aSecond && b.getFirst() instanceof Vec3 bFirst && b.getSecond() instanceof Vec3 bSecond && aFirst.closerThan(bFirst, 1e-6) && aSecond.closerThan(bSecond, 1e-6));
+		return (a.getFirst().equals(b.getFirst()) && a.getSecond().equals(b.getSecond()))
+				|| (a.getFirst() instanceof Vec3 aFirst && a.getSecond() instanceof Vec3 aSecond
+					&& b.getFirst() instanceof Vec3 bFirst && b.getSecond() instanceof Vec3 bSecond
+					&& aFirst.closerThan(bFirst, 1e-6) && aSecond.closerThan(bSecond, 1e-6));
 	}
 
 	public boolean equalsSansMaterial(BezierConnection other) {
@@ -318,7 +322,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment>, IHa
 		Inventory inv = player.getInventory();
 		int tracks = getTrackItemCost();
 		while (tracks > 0) {
-			inv.placeItemBackInInventory(getMaterial().getTrackBlock().asStack(Math.min(64, tracks)));
+			inv.placeItemBackInInventory(new ItemStack(getMaterial().getTrackBlock().get(), Math.min(64, tracks)));
 			tracks -= 64;
 		}
 		int girders = getGirderItemCost();
@@ -346,7 +350,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment>, IHa
 				continue;
 			Vec3 v = VecHelper.offsetRandomly(segment.position, level.random, .125f)
 				.add(origin);
-			ItemEntity entity = new ItemEntity(level, v.x, v.y, v.z, getMaterial().getTrackBlock().asStack());
+			ItemEntity entity = new ItemEntity(level, v.x, v.y, v.z, new ItemStack(getMaterial().getTrackBlock().get()));
 			entity.setDefaultPickUpDelay();
 			level.addFreshEntity(entity);
 			if (!hasGirder)
@@ -360,7 +364,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment>, IHa
 	}
 
 	public void spawnDestroyParticles(Level level) {
-		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, getMaterial().getTrackBlock().getDefaultState());
+		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, getMaterial().getTrackBlock().get().defaultBlockState());
 		BlockParticleOption girderData =
 			new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.METAL_GIRDER.getDefaultState());
 		if (!(level instanceof ServerLevel slevel))
@@ -378,15 +382,10 @@ public class BezierConnection implements Iterable<BezierConnection.Segment>, IHa
 		}
 	}
 
-	@Override
 	public TrackMaterial getMaterial() {
-		if (trackMaterial == null) {
-			trackMaterial = TrackMaterial.ANDESITE;
-		}
 		return trackMaterial;
 	}
 
-	@Override
 	public void setMaterial(TrackMaterial material) {
 		trackMaterial = material;
 	}

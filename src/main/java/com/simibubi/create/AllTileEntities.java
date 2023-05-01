@@ -193,6 +193,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
 import com.simibubi.create.content.logistics.trains.track.FakeTrackTileEntity;
 import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
+import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackInstance;
 import com.simibubi.create.content.logistics.trains.track.TrackRenderer;
 import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
@@ -203,6 +204,8 @@ import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
+
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.world.level.block.Block;
 
@@ -785,7 +788,7 @@ public class AllTileEntities {
 		.tileEntity("track", TrackTileEntity::new)
 		.instance(() -> TrackInstance::new)
 		.renderer(() -> TrackRenderer::new)
-		.validBlocks(((BlockEntry<? extends Block>[]) TrackMaterial.allBlocks().toArray(new BlockEntry[0])))
+		.validBlocks((NonNullSupplier<? extends TrackBlock>[]) TrackMaterial.allBlocks().toArray(new NonNullSupplier[0]))
 		.register();
 
 	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = REGISTRATE

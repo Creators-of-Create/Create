@@ -1501,7 +1501,7 @@ public class AllBlocks {
 		.transform(customItemModel())
 		.register();
 
-	public static final BlockEntry<TrackBlock> TRACK = REGISTRATE.block("track", TrackMaterial.ANDESITE::create)
+	public static final BlockEntry<TrackBlock> TRACK = REGISTRATE.block("track", TrackMaterial.ANDESITE::createBlock)
 		.initialProperties(Material.STONE)
 		.properties(p -> p.color(MaterialColor.METAL)
 			.strength(0.8F)

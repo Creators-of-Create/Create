@@ -97,7 +97,7 @@ public interface ITrackBlock {
 			firstLocation.forceNode();
 			secondLocation.forceNode();
 		}
-		
+
 		boolean skipFirst = false;
 		boolean skipSecond = false;
 
@@ -151,5 +151,7 @@ public interface ITrackBlock {
 		return Pair.of(best, lookVec.dot(best.multiply(1, 0, 1)
 			.normalize()) < 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
 	}
+
+	TrackMaterial getMaterial();
 
 }
