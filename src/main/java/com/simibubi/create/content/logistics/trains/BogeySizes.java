@@ -21,14 +21,15 @@ public class BogeySizes {
 		BOGEY_SIZES.add(LARGE);
 	}
 
-	public static void addSize(String modId, String name, float size) {
+	public static BogeySize addSize(String modId, String name, float size) {
 		ResourceLocation location = new ResourceLocation(modId, name);
-		addSize(location, size);
+		return addSize(location, size);
 	}
 
-	public static void addSize(ResourceLocation location, float size) {
+	public static BogeySize addSize(ResourceLocation location, float size) {
 		BogeySize customSize = new BogeySize(location, size);
 		BOGEY_SIZES.add(customSize);
+		return customSize;
 	}
 
 	public static List<BogeySize> getAllSizesSmallToLarge() {
