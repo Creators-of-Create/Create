@@ -15,7 +15,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -30,7 +29,7 @@ public class AllBogeyStyles {
 
 	public static BogeyStyle STANDARD = create("standard")
 			.commonRenderer(CommonStandardBogeyRenderer::new)
-			.displayName(new TranslatableComponent("create.bogeys.styles.standard"))
+			.displayName(Lang.translateDirect("create.bogeys.styles.standard"))
 			.size(BogeySizes.SMALL, SmallStandardBogeyRenderer::new, AllBlocks.SMALL_BOGEY)
 			.size(BogeySizes.LARGE, LargeStandardBogeyRenderer::new, AllBlocks.LARGE_BOGEY)
 			.build();
@@ -56,7 +55,7 @@ public class AllBogeyStyles {
 		protected CompoundTag defaultData = new CompoundTag();
 		protected ParticleOptions contactParticle = ParticleTypes.CRIT;
 		protected ParticleOptions smokeParticle = ParticleTypes.POOF;
-		protected Optional<CommonRenderer> commonRenderer = Optional.empty();
+		protected Optional<Supplier<? extends CommonRenderer>> commonRenderer = Optional.empty();
 
 		public BogeyStyleBuilder(ResourceLocation name) {
 			this.name = name;
@@ -85,7 +84,7 @@ public class AllBogeyStyles {
 
 		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<? extends BogeyRenderer> renderer,
 									   ResourceLocation location) {
-			this.sizes.put(size, new BogeyStyle.SizeData(location, renderer.get()));
+			this.sizes.put(size, new BogeyStyle.SizeData(location, renderer, renderer.get()));
 			return this;
 		}
 
@@ -100,7 +99,7 @@ public class AllBogeyStyles {
 		}
 
 		public BogeyStyleBuilder commonRenderer(Supplier<? extends CommonRenderer> commonRenderer) {
-			this.commonRenderer = Optional.of(commonRenderer.get());
+			this.commonRenderer = Optional.of(commonRenderer);
 			return this;
 		}
 

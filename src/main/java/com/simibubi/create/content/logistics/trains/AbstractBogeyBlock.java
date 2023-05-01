@@ -111,7 +111,7 @@ public abstract class AbstractBogeyBlock extends Block implements ITE<StandardBo
 		MultiBufferSource buffers, int light, int overlay, StandardBogeyTileEntity sbte) {
 		BogeyStyle style = sbte.getStyle();
 		final Optional<BogeyRenderer.CommonRenderer> commonRenderer
-				= style.getNewCommonRenderInstance();
+				= style.getInWorldCommonRenderInstance();
 		final BogeyRenderer renderer = style.getInWorldRenderInstance(this.getSize());
 		if (state != null) {
 			ms.translate(.5f, .5f, .5f);
