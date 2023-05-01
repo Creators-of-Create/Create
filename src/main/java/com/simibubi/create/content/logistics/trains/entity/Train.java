@@ -17,6 +17,10 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
+
+import net.minecraft.world.level.block.entity.BlockEntity;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -124,7 +128,7 @@ public class Train {
 	public int honkPitch;
 
 	public float accumulatedSteamRelease;
-	
+
 	int tickOffset;
 	double[] stress;
 
@@ -277,7 +281,7 @@ public class Train {
 		int carriageCount = carriages.size();
 		boolean stalled = false;
 		double maxStress = 0;
-		
+
 		if (carriageWaitingForChunks != -1)
 			distance = 0;
 
@@ -317,7 +321,7 @@ public class Train {
 						entries++;
 					}
 				}
-				
+
 
 				if (entries > 0)
 					actual = total / entries;
@@ -369,7 +373,7 @@ public class Train {
 					.getLeadingPoint();
 
 			double totalStress = derailed ? 0 : leadingStress + trailingStress;
-			
+
 			boolean first = i == 0;
 			boolean last = i == carriageCount - 1;
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
@@ -724,6 +728,15 @@ public class Train {
 			entity.setPos(Vec3
 				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
 			entity.disassemble();
+
+			for (CarriageBogey bogey : carriage.bogeys) {
+				Vec3 bogeyPosition = bogey.getAnchorPosition();
+				if (bogeyPosition == null) continue;
+				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
+				if (!(be instanceof StandardBogeyTileEntity sbte))
+					continue;
+				sbte.setBogeyData(bogey.bogeyData);
+			}
 
 			offset += carriage.bogeySpacing;
 

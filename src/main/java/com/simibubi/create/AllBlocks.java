@@ -207,6 +207,8 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
+import com.simibubi.create.content.logistics.trains.BogeyRenderer;
+import com.simibubi.create.content.logistics.trains.BogeySizes;
 import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
@@ -668,7 +670,7 @@ public class AllBlocks {
 			.onRegister(movementBehaviour(new BlazeBurnerMovementBehaviour()))
 			.onRegister(interactionBehaviour(new BlazeBurnerInteractionBehaviour()))
 			.item(BlazeBurnerBlockItem::withBlaze)
-			.model(AssetLookup.<BlazeBurnerBlockItem>customBlockItemModel("blaze_burner", "block_with_blaze"))
+			.model(AssetLookup.customBlockItemModel("blaze_burner", "block_with_blaze"))
 			.build()
 			.register();
 
@@ -927,7 +929,7 @@ public class AllBlocks {
 		.onRegister(assignDataBehaviour(new BoilerDisplaySource(), "boiler_status"))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.item(FluidTankItem::new)
-		.model(AssetLookup.<FluidTankItem>customBlockItemModel("_", "block_single_window"))
+		.model(AssetLookup.customBlockItemModel("_", "block_single_window"))
 		.build()
 		.register();
 
@@ -1581,13 +1583,13 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<StandardBogeyBlock> SMALL_BOGEY =
-		REGISTRATE.block("small_bogey", p -> new StandardBogeyBlock(p, false))
+		REGISTRATE.block("small_bogey", p -> new StandardBogeyBlock(p, BogeySizes.SMALL))
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(BuilderTransformers.bogey())
 			.register();
 
 	public static final BlockEntry<StandardBogeyBlock> LARGE_BOGEY =
-		REGISTRATE.block("large_bogey", p -> new StandardBogeyBlock(p, true))
+		REGISTRATE.block("large_bogey", p -> new StandardBogeyBlock(p, BogeySizes.LARGE))
 			.properties(p -> p.color(MaterialColor.PODZOL))
 			.transform(BuilderTransformers.bogey())
 			.register();

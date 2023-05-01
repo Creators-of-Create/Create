@@ -22,7 +22,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.components.structureMovement.train.TrainCargoManager;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -71,7 +71,7 @@ public class CarriageContraption extends Contraption {
 	// render
 	public int portalCutoffMin;
 	public int portalCutoffMax;
-	
+
 	static final IItemHandlerModifiable fallbackItems = new ItemStackHandler();
 	static final IFluidHandler fallbackFluids = new FluidTank(0);
 
@@ -162,7 +162,7 @@ public class CarriageContraption extends Contraption {
 				.getStep(), toLocalPos(pos));
 		}
 
-		if (blockState.getBlock() instanceof IBogeyBlock) {
+		if (blockState.getBlock() instanceof AbstractBogeyBlock) {
 			bogeys++;
 			if (bogeys == 2)
 				secondBogeyPos = pos;
@@ -235,7 +235,7 @@ public class CarriageContraption extends Contraption {
 	protected MountedStorageManager getStorageForSpawnPacket() {
 		return storageProxy;
 	}
-	
+
 	@Override
 	protected ContraptionType getType() {
 		return ContraptionType.CARRIAGE;
