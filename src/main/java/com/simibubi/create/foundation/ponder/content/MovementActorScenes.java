@@ -51,7 +51,7 @@ public class MovementActorScenes {
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.attachKeyFrame()
-			.text("Inventories on moving contraptions cannot be accessed by players.");
+			.text("Moving inventories can be tricky to access with automation.");
 
 		scene.idle(70);
 		BlockPos psi = util.grid.at(4, 2, 2);
@@ -84,17 +84,17 @@ public class MovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.of(3, 3, 2.5))
 			.text("Whenever they pass by each other, they will engage in a connection");
-		scene.idle(35);
+		scene.idle(38);
 
 		Selection both = util.select.fromTo(2, 2, 2, 4, 2, 2);
 		Class<PortableItemInterfaceBlockEntity> psiClass = PortableItemInterfaceBlockEntity.class;
 
 		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);
-			nbt.putFloat("Timer", 40);
+			nbt.putFloat("Timer", 12);
 		});
 
-		scene.idle(20);
+		scene.idle(17);
 		scene.overlay.showOutline(PonderPalette.GREEN, psi, util.select.fromTo(5, 3, 2, 6, 3, 2), 80);
 		scene.idle(10);
 
@@ -154,7 +154,7 @@ public class MovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(psi2))
 			.text("After no items have been exchanged for a while, the contraption will continue on its way");
-		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 9));
+		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 2));
 
 		scene.idle(15);
 		scene.markAsFinished();
@@ -171,7 +171,7 @@ public class MovementActorScenes {
 		Selection psis = util.select.fromTo(1, 1, 3, 1, 3, 3);
 		scene.world.modifyBlockEntityNBT(psis, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);
-			nbt.putFloat("Timer", 40);
+			nbt.putFloat("Timer", 12);
 		});
 
 		scene.world.showSection(util.select.layer(0), Direction.UP);
@@ -184,8 +184,7 @@ public class MovementActorScenes {
 		BlockPos bearing = util.grid.at(3, 1, 3);
 		scene.world.configureCenterOfRotation(contraption, util.vector.topOf(bearing));
 		scene.idle(20);
-		scene.world.modifyBlockEntityNBT(psis, psiClass, nbt -> nbt.putFloat("Timer", 9));
-		scene.idle(20);
+		scene.world.modifyBlockEntityNBT(psis, psiClass, nbt -> nbt.putFloat("Timer", 2));
 		scene.world.rotateBearing(bearing, 360 * 3 + 270, 240 + 60);
 		scene.world.rotateSection(contraption, 0, 360 * 3 + 270, 0, 240 + 60);
 		scene.idle(20);

@@ -21,7 +21,7 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 	Vec3 vertical = VecHelper.voxelSpace(10f, 2.5f, 5.5f);
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		Direction facing = state.getValue(RedstoneLinkBlock.FACING);
 		Vec3 location = VecHelper.voxelSpace(8f, 3.01f, 5.5f);
 
@@ -40,7 +40,7 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		Direction facing = state.getValue(RedstoneLinkBlock.FACING);
 		float yRot = facing.getAxis()
 			.isVertical() ? 0 : AngleHelper.horizontalAngle(facing) + 180;
@@ -51,7 +51,7 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 	}
 
 	@Override
-	protected float getScale() {
+	public float getScale() {
 		return .4975f;
 	}
 

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content.fluid;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
+import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -38,6 +39,8 @@ public class SpoutScenes {
 			scene.world.showIndependentSection(util.select.position(2, 1, 1), Direction.DOWN);
 		scene.world.moveSection(depot, util.vector.of(0, 0, 1), 0);
 		scene.idle(10);
+		
+		scene.world.modifyBlock(util.grid.at(2, 3, 3), s -> s.setValue(PumpBlock.FACING, Direction.NORTH), false);
 
 		Selection largeCog = util.select.position(3, 0, 5);
 		Selection kinetics = util.select.fromTo(2, 1, 5, 2, 2, 3);

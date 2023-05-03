@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.ponder.content.fluid;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceBlockEntity;
+import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -47,6 +48,8 @@ public class FluidMovementActorScenes {
 		ItemStack bucket = AllFluids.CHOCOLATE.get()
 			.getAttributes()
 			.getBucket(chocolate);
+		
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.NORTH), false);
 
 		scene.world.modifyBlockEntity(st, type, be -> be.getCapability(fhc)
 			.ifPresent(ifh -> ifh.fill(FluidHelper.copyStackWithAmount(chocolate, 10000), FluidAction.EXECUTE)));
@@ -98,17 +101,17 @@ public class FluidMovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.of(3, 3, 2.5))
 			.text("Whenever they pass by each other, they will engage in a connection");
-		scene.idle(35);
+		scene.idle(38);
 
 		Selection both = util.select.fromTo(2, 2, 2, 4, 2, 2);
 		Class<PortableFluidInterfaceBlockEntity> psiClass = PortableFluidInterfaceBlockEntity.class;
 
 		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);
-			nbt.putFloat("Timer", 40);
+			nbt.putFloat("Timer", 14);
 		});
 
-		scene.idle(20);
+		scene.idle(17);
 		scene.overlay.showOutline(PonderPalette.GREEN, psi, util.select.fromTo(5, 3, 2, 6, 4, 2), 80);
 		scene.idle(10);
 
@@ -160,7 +163,7 @@ public class FluidMovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(pumpPos))
 			.text("...or extracted from the contraption");
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), -1);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.SOUTH), true);
 		scene.world.propagatePipeChange(pumpPos);
 		scene.idle(30);
 
@@ -188,7 +191,7 @@ public class FluidMovementActorScenes {
 			.attachKeyFrame()
 			.pointAt(util.vector.topOf(psi2))
 			.text("After no contents have been exchanged for a while, the contraption will continue on its way");
-		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 9));
+		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 2));
 
 		scene.idle(15);
 		scene.world.rotateBearing(bearing, 270, 120);

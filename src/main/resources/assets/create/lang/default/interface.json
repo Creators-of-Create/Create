@@ -251,6 +251,7 @@
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
 	"create.gui.goggles.at_current_speed": "at current speed",
 	"create.gui.goggles.pole_length": "Pole Length:",
+	"create.gui.goggles.basin_contents": "Basin Contents:",
 	"create.gui.goggles.fluid_container": "Fluid Container Info:",
 	"create.gui.goggles.fluid_container.capacity": "Capacity: ",
 

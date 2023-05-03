@@ -65,14 +65,14 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 		}
 
 		@Override
-		protected Vec3 getLocalOffset(BlockState state) {
+		public Vec3 getLocalOffset(BlockState state) {
 			Direction facing = state.getValue(CreativeMotorBlock.FACING);
 			return super.getLocalOffset(state).add(Vec3.atLowerCornerOf(facing.getNormal())
 				.scale(-1 / 16f));
 		}
 
 		@Override
-		protected void rotate(BlockState state, PoseStack ms) {
+		public void rotate(BlockState state, PoseStack ms) {
 			super.rotate(state, ms);
 			Direction facing = state.getValue(CreativeMotorBlock.FACING);
 			if (facing.getAxis() == Axis.Y)

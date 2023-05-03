@@ -131,9 +131,7 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 
 	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction side) {
-		if (side == null)
-			return true;
-		return state.getValue(FACING) != side.getOpposite();
+		return side != null && state.getValue(FACING) != side.getOpposite();
 	}
 
 	@Override

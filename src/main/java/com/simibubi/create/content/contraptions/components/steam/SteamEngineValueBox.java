@@ -36,7 +36,7 @@ public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		Direction side = getSide();
 		Direction engineFacing = SteamEngineBlock.getFacing(state);
 
@@ -59,7 +59,7 @@ public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		Direction facing = SteamEngineBlock.getFacing(state);
 
 		if (facing.getAxis() == Axis.Y) {

@@ -66,15 +66,29 @@ public class ChuteScenes {
 				.withWrench(),
 			40);
 		scene.idle(7);
-		scene.world.modifyBlock(util.grid.at(3, 3, 3), s -> s.setValue(ChuteBlock.SHAPE, ChuteBlock.Shape.WINDOW), false);
+		scene.world.modifyBlock(util.grid.at(3, 3, 3), s -> s.setValue(ChuteBlock.SHAPE, ChuteBlock.Shape.WINDOW),
+			false);
 		scene.overlay.showText(50)
 			.attachKeyFrame()
 			.pointAt(util.vector.blockSurface(util.grid.at(2, 3, 2), Direction.WEST))
 			.placeNearTarget()
 			.text("Using the Wrench, a window can be created");
 
+		scene.idle(60);
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.NORTH), Pointing.RIGHT)
+				.rightClick()
+				.withItem(AllBlocks.INDUSTRIAL_IRON_BLOCK.asStack()),
+			40);
+		scene.idle(7);
+		scene.world.modifyBlock(util.grid.at(3, 2, 3), s -> s.setValue(ChuteBlock.SHAPE, ChuteBlock.Shape.ENCASED),
+			false);
+		scene.overlay.showText(50)
+			.pointAt(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.WEST))
+			.placeNearTarget()
+			.text("Using Industrial Iron Blocks, chutes can be encased");
+
 		scene.idle(10);
-		scene.world.modifyBlock(util.grid.at(3, 2, 3), s -> s.setValue(SHAPE, Shape.WINDOW), false);
 
 		for (int i = 0; i < 8; i++) {
 			scene.idle(10);
@@ -84,9 +98,11 @@ public class ChuteScenes {
 		scene.world.hideIndependentSection(bottom, Direction.EAST);
 		scene.world.hideIndependentSection(top, Direction.EAST);
 		scene.idle(15);
+		scene.addKeyframe();
 
 		scene.rotateCameraY(-90);
 		scene.world.modifyBlock(util.grid.at(2, 2, 1), s -> s.setValue(SHAPE, Shape.NORMAL), false);
+		scene.world.modifyBlock(util.grid.at(2, 3, 2), s -> s.setValue(SHAPE, Shape.INTERSECTION), false);
 		scene.world.showSection(util.select.fromTo(2, 1, 1, 2, 2, 1), Direction.DOWN);
 		scene.idle(30);
 		ItemStack chuteItem = AllBlocks.CHUTE.asStack();
@@ -98,7 +114,8 @@ public class ChuteScenes {
 		scene.idle(7);
 		scene.world.showSection(util.select.position(2, 3, 2), Direction.NORTH);
 		scene.world.restoreBlocks(util.select.position(2, 2, 1));
-		scene.idle(35);
+		scene.idle(15);
+		scene.idle(20);
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 2), Direction.SOUTH), Pointing.LEFT)
 				.rightClick()
@@ -106,7 +123,9 @@ public class ChuteScenes {
 			30);
 		scene.idle(7);
 		scene.world.showSection(util.select.position(2, 4, 3), Direction.NORTH);
-		scene.idle(35);
+		scene.idle(10);
+		scene.world.restoreBlocks(util.select.position(2, 3, 2));
+		scene.idle(25);
 
 		scene.overlay.showText(70)
 			.attachKeyFrame()
@@ -122,7 +141,8 @@ public class ChuteScenes {
 		for (int i = 0; i < 3; i++) {
 			remove = scene.world.createItemEntity(util.vector.centerOf(util.grid.at(2, 6, 3)
 				.relative(offset)), util.vector.of(0, 0.1, 0)
-					.add(Vec3.atLowerCornerOf(offset.getNormal()).scale(-.1)),
+					.add(Vec3.atLowerCornerOf(offset.getNormal())
+						.scale(-.1)),
 				stack);
 			scene.idle(12);
 			scene.world.createItemOnBeltLike(util.grid.at(2, 4, 3), Direction.UP, stack);
@@ -202,8 +222,6 @@ public class ChuteScenes {
 		scene.world.showSection(util.select.fromTo(2, 1, 2, 2, 2, 2), Direction.DOWN);
 		scene.idle(10);
 		scene.world.showSection(util.select.position(2, 3, 2), Direction.DOWN);
-		scene.idle(5);
-		scene.world.showSection(util.select.position(2, 4, 2), Direction.DOWN);
 
 		scene.overlay.showText(60)
 			.text("Smart Chutes are vertical chutes with additional control")
@@ -213,32 +231,37 @@ public class ChuteScenes {
 		scene.idle(70);
 
 		Vec3 filter = util.vector.blockSurface(smarty, Direction.NORTH)
-			.add(0, 0.25, 0);
-		scene.overlay.showFilterSlotInput(filter, 60);
-		ItemStack copper = new ItemStack(Items.IRON_INGOT);
-		scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).rightClick()
-			.withItem(copper), 40);
-		scene.idle(7);
-		scene.world.setFilterData(util.select.position(smarty), SmartChuteBlockEntity.class, copper);
+			.add(0, 3 / 16f, 0);
+		scene.overlay.showFilterSlotInput(filter, Direction.NORTH, 70);
 		scene.idle(10);
 		scene.rotateCameraY(20);
 		scene.overlay.showText(60)
-			.text("Items in the filter slot specify what exactly they can extract and transfer")
+			.text("Items in the filter slot specify what to extract or transfer")
 			.attachKeyFrame()
-			.pointAt(filter)
+			.pointAt(filter.add(0, 0, 0.125))
 			.placeNearTarget();
-		scene.idle(10);
+		scene.idle(60);
+		
+		scene.world.showSection(util.select.position(2, 4, 2), Direction.DOWN);
+		scene.idle(15);
+
+		ItemStack copper = new ItemStack(Items.IRON_INGOT);
+		scene.overlay.showControls(new InputWindowElement(filter.add(0, 0.125, 0), Pointing.DOWN).rightClick()
+			.withItem(copper), 40);
+		scene.idle(7);
+		scene.world.setFilterData(util.select.position(smarty), SmartChuteBlockEntity.class, copper);
 
 		for (int i = 0; i < 18; i++) {
 			scene.idle(10);
 			scene.world.createItemOnBeltLike(util.grid.at(2, 2, 2), Direction.UP, copper);
 			if (i == 8) {
 				scene.rotateCameraY(-20);
-				scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).scroll(), 40);
+				scene.overlay.showControls(new InputWindowElement(filter.add(0, 0.125, 0), Pointing.DOWN).rightClick(),
+					40);
 				scene.overlay.showText(50)
-					.text("Use the Mouse Wheel to specify the extracted stack size")
+					.text("Use the value panel to specify the extracted stack size")
 					.attachKeyFrame()
-					.pointAt(filter)
+					.pointAt(filter.add(0, 0, 0.125))
 					.placeNearTarget();
 			}
 			if (i == 13)

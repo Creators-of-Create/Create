@@ -450,7 +450,7 @@ public class ProcessingScenes {
 
 		scene.idle(60);
 		Vec3 filterPos = util.vector.of(1, 2.75f, 2.5f);
-		scene.overlay.showFilterSlotInput(filterPos, 100);
+		scene.overlay.showFilterSlotInput(filterPos, Direction.WEST, 100);
 		scene.overlay.showText(100)
 			.pointAt(filterPos)
 			.placeNearTarget()
@@ -551,7 +551,7 @@ public class ProcessingScenes {
 
 		scene.idle(60);
 		Vec3 filterPos = util.vector.of(1, 2.75f, 2.5f);
-		scene.overlay.showFilterSlotInput(filterPos, 100);
+		scene.overlay.showFilterSlotInput(filterPos, Direction.WEST, 100);
 		scene.overlay.showText(100)
 			.pointAt(filterPos)
 			.placeNearTarget()
@@ -676,11 +676,6 @@ public class ProcessingScenes {
 		scene.world.hideSection(util.select.position(burner.above()), Direction.UP);
 		scene.idle(20);
 		scene.world.setBlock(burner.above(), Blocks.AIR.defaultBlockState(), false);
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(burner), Pointing.DOWN).rightClick()
-			.withItem(new ItemStack(Items.OAK_PLANKS)), 15);
-		scene.idle(7);
-		scene.world.modifyBlock(burner, s -> s.setValue(BlazeBurnerBlock.HEAT_LEVEL, HeatLevel.FADING), false);
-		scene.idle(15);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(burner), Pointing.DOWN).rightClick()
 			.withItem(new ItemStack(Items.OAK_PLANKS)), 15);
 		scene.idle(7);
@@ -905,8 +900,8 @@ public class ProcessingScenes {
 			.placeNearTarget();
 		scene.idle(80);
 
-		Vec3 filter = util.vector.of(2.5, 2.85, 2.5);
-		scene.overlay.showFilterSlotInput(filter, 80);
+		Vec3 filter = util.vector.of(2.5, 2.825, 2.5);
+		scene.overlay.showFilterSlotInput(filter, Direction.EAST, 80);
 		scene.overlay.showText(70)
 			.text("A Filter might be necessary to avoid pulling out un-processed items")
 			.pointAt(filter)

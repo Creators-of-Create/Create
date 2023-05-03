@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
+import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity.CreativeSmartFluidTank;
@@ -91,20 +92,16 @@ public class FluidTankScenes {
 		scene.idle(5);
 		scene.world.setKineticSpeed(pump, 0);
 		scene.world.showSection(pipe, Direction.EAST);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.SOUTH), false);
 		scene.idle(10);
 		scene.world.showSection(largeCog1, Direction.UP);
 		scene.world.showSection(kinetics1, Direction.WEST);
 		scene.idle(10);
 		scene.world.setBlock(util.grid.at(1, -1, 5), AllBlocks.FLUID_TANK.getDefaultState(), false);
-		scene.world.setKineticSpeed(pump, 128);
+		scene.world.setKineticSpeed(pump, -32);
 
 		scene.idle(5);
-		Selection pumpRedstone = util.select.fromTo(2, 1, 4, 2, 2, 4);
-		Selection pumpCogs = util.select.fromTo(2, 1, 3, 1, 1, 3);
-		scene.world.toggleRedstonePower(pumpRedstone);
-		scene.world.multiplyKineticSpeed(pumpCogs, -1);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.effects.rotationDirectionIndicator(pumpPos);
 		scene.world.modifyBlockEntity(util.grid.at(2, 0, 5), FluidTankBlockEntity.class, be -> be.getTankInventory()
 			.fill(content, FluidAction.EXECUTE));
 		scene.idle(20);
@@ -122,10 +119,8 @@ public class FluidTankScenes {
 			.pointAt(util.vector.centerOf(1, 1, 2));
 		scene.idle(40);
 
-		scene.world.toggleRedstonePower(pumpRedstone);
-		scene.world.multiplyKineticSpeed(pumpCogs, -1);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.NORTH), true);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.effects.rotationDirectionIndicator(pumpPos);
 		for (int i = 0; i < 4; i++) {
 			scene.world.modifyBlockEntity(tankPos, FluidTankBlockEntity.class, be -> be.getTankInventory()
 				.fill(FluidHelper.copyStackWithAmount(content, 2000), FluidAction.EXECUTE));
@@ -395,25 +390,24 @@ public class FluidTankScenes {
 		scene.idle(7);
 		scene.world.showSection(tank, Direction.DOWN);
 		scene.idle(5);
+		
+		scene.rotateCameraY(-30);
 
 		scene.world.showSection(largeCog, Direction.UP);
 		scene.world.showSection(cog, Direction.NORTH);
 		scene.world.showSection(pipes, Direction.NORTH);
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), -1);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.SOUTH), false);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.effects.rotationDirectionIndicator(pumpPos);
 		scene.idle(40);
 
 		scene.overlay.showText(70)
 			.text("Pipe Networks can now endlessly draw the assigned fluid from the tank")
 			.attachKeyFrame()
-			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 2), Direction.WEST));
 		scene.idle(120);
 
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), -1);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.NORTH), true);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.effects.rotationDirectionIndicator(pumpPos);
 		scene.idle(40);
 
 		scene.overlay.showText(70)

@@ -55,17 +55,17 @@ public class CreativeCrateBlockEntity extends CrateBlockEntity {
 		return new FilteringBehaviour(this, new ValueBoxTransform() {
 
 			@Override
-			protected void rotate(BlockState state, PoseStack ms) {
+			public void rotate(BlockState state, PoseStack ms) {
 				TransformStack.cast(ms)
 					.rotateX(90);
 			}
 
 			@Override
-			protected Vec3 getLocalOffset(BlockState state) {
+			public Vec3 getLocalOffset(BlockState state) {
 				return new Vec3(0.5, 13.5 / 16d, 0.5);
 			}
 
-			protected float getScale() {
+			public float getScale() {
 				return super.getScale();
 			};
 

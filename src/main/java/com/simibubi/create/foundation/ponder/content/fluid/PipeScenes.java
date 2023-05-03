@@ -138,7 +138,8 @@ public class PipeScenes {
 		scene.world.showSection(largeCog, Direction.UP);
 		scene.world.showSection(kinetics, Direction.SOUTH);
 		scene.idle(10);
-		scene.world.setKineticSpeed(util.select.position(pumpPos), 32);
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), 0.25f);
+		scene.world.setKineticSpeed(util.select.position(pumpPos), 8);
 		scene.world.propagatePipeChange(pumpPos);
 
 		scene.overlay.showText(70)
@@ -151,7 +152,7 @@ public class PipeScenes {
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.text("No fluid is being extracted at first");
-		scene.idle(90);
+		scene.idle(70);
 
 		scene.overlay.showOutline(PonderPalette.GREEN, new Object(), tank, 100);
 		scene.idle(5);
@@ -216,7 +217,8 @@ public class PipeScenes {
 		scene.idle(5);
 		scene.world.showSection(kinetics, Direction.NORTH);
 		scene.idle(10);
-		scene.world.setKineticSpeed(util.select.position(pumpPos), 64);
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), 0.5f);
+		scene.world.setKineticSpeed(util.select.position(pumpPos), 32);
 		BlockPos drainPos = util.grid.at(1, 1, 2);
 		scene.world.modifyBlockEntity(drainPos, ItemDrainBlockEntity.class,
 			be -> be.getBehaviour(SmartFluidTankBehaviour.TYPE)
@@ -253,7 +255,7 @@ public class PipeScenes {
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
 			.setValue(AxisPipeBlock.AXIS, Axis.Z), false);
 		scene.idle(10);
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), 2);
+//		scene.world.multiplyKineticSpeed(util.select.everywhere(), 2);
 		scene.world.propagatePipeChange(pumpPos);
 		ElementLink<WorldSectionElement> water = scene.world.showIndependentSection(waterSourceS, Direction.DOWN);
 		scene.world.moveSection(water, util.vector.of(0, 0, 1), 0);
@@ -427,11 +429,13 @@ public class PipeScenes {
 			.attachKeyFrame()
 			.pointAt(util.vector.topOf(valvePos));
 		scene.idle(60);
-		scene.world.showSection(util.select.position(handlePos), Direction.DOWN);
+		ElementLink<WorldSectionElement> handleLink =
+			scene.world.showIndependentSection(util.select.position(handlePos), Direction.DOWN);
 		scene.idle(15);
 
 		Selection valveKinetics = util.select.fromTo(2, 1, 1, 2, 2, 1);
 		scene.world.setKineticSpeed(valveKinetics, 16);
+		scene.world.rotateSection(handleLink, 0, 90, 0, 22);
 		scene.effects.rotationSpeedIndicator(handlePos);
 		scene.world.modifyBlockEntity(valvePos, FluidValveBlockEntity.class, be -> be.onSpeedChanged(0));
 		scene.idle(22);
@@ -455,6 +459,7 @@ public class PipeScenes {
 		scene.idle(40);
 
 		scene.world.setKineticSpeed(valveKinetics, -16);
+		scene.world.rotateSection(handleLink, 0, -90, 0, 22);
 		scene.effects.rotationSpeedIndicator(handlePos);
 		scene.world.modifyBlockEntity(valvePos, FluidValveBlockEntity.class, be -> be.onSpeedChanged(0));
 		scene.idle(22);
@@ -513,7 +518,6 @@ public class PipeScenes {
 		scene.overlay.showText(50)
 			.placeNearTarget()
 			.text("Smart pipes can help control flows by fluid type")
-			.attachKeyFrame()
 			.pointAt(filterVec);
 		scene.idle(60);
 
@@ -543,17 +547,16 @@ public class PipeScenes {
 		scene.idle(50);
 
 		scene.world.showSection(kinetics2, Direction.WEST);
-		scene.world.setKineticSpeed(kinetics2, 64);
+		scene.world.setKineticSpeed(kinetics2, 24);
 		scene.idle(5);
 		scene.world.showSection(kinetics1, Direction.EAST);
-		scene.world.setKineticSpeed(kinetics1, -64);
+		scene.world.setKineticSpeed(kinetics1, -24);
 		scene.idle(10);
-		scene.world.setKineticSpeed(pump, 128);
+		scene.world.setKineticSpeed(pump, 48);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.idle(120);
+		scene.idle(100);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.effects.rotationSpeedIndicator(pumpPos);
 		scene.idle(15);
 		scene.world.showSection(tank2, Direction.DOWN);
 		scene.world.showSection(additionalPipes, Direction.NORTH);
@@ -592,9 +595,9 @@ public class PipeScenes {
 		scene.world.setFilterData(util.select.position(2, 1, 3), SmartFluidPipeBlockEntity.class, bucket);
 		scene.idle(30);
 
-		scene.world.setKineticSpeed(kinetics2, 64);
-		scene.world.setKineticSpeed(kinetics1, -64);
-		scene.world.setKineticSpeed(pump, 128);
+		scene.world.setKineticSpeed(kinetics2, 24);
+		scene.world.setKineticSpeed(kinetics1, -24);
+		scene.world.setKineticSpeed(pump, 48);
 		scene.world.propagatePipeChange(pumpPos);
 		scene.effects.rotationSpeedIndicator(pumpPos);
 		scene.idle(40);

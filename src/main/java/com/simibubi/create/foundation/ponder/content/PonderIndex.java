@@ -77,6 +77,9 @@ public class PonderIndex {
 			.addStoryBoard("creative_motor_mojang", KineticsScenes::creativeMotorMojang);
 		HELPER.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
 			PonderTag.KINETIC_SOURCES);
+		HELPER.addStoryBoard(AllBlocks.LARGE_WATER_WHEEL, "large_water_wheel", KineticsScenes::largeWaterWheel,
+			PonderTag.KINETIC_SOURCES);
+		
 		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, PonderTag.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
@@ -368,6 +371,7 @@ public class PonderIndex {
 			.add(AllBlocks.HAND_CRANK)
 			.add(AllBlocks.COPPER_VALVE_HANDLE)
 			.add(AllBlocks.WATER_WHEEL)
+			.add(AllBlocks.LARGE_WATER_WHEEL)
 			.add(AllBlocks.WINDMILL_BEARING)
 			.add(AllBlocks.STEAM_ENGINE)
 			.add(AllBlocks.CREATIVE_MOTOR);

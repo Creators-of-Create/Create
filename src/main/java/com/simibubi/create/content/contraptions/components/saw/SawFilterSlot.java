@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 public class SawFilterSlot extends ValueBoxTransform {
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		if (state.getValue(SawBlock.FACING) != Direction.UP)
 			return null;
 		int offset = state.getValue(SawBlock.FLIPPED) ? -3 : 3;
@@ -22,7 +22,7 @@ public class SawFilterSlot extends ValueBoxTransform {
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		int yRot = (state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0)
 			+ (state.getValue(SawBlock.FLIPPED) ? 0 : 180);
 		TransformStack.cast(ms)

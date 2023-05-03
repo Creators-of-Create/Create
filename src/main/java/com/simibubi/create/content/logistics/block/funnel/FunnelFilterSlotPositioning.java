@@ -15,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		Direction side = getSide();
 		float horizontalAngle = AngleHelper.horizontalAngle(side);
 		Direction funnelFacing = FunnelBlock.getFunnelFacing(state);
@@ -45,7 +45,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		Direction facing = FunnelBlock.getFunnelFacing(state);
 
 		if (facing.getAxis()

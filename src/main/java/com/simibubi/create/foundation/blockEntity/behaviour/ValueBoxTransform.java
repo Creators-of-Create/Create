@@ -20,9 +20,9 @@ public abstract class ValueBoxTransform {
 
 	protected float scale = getScale();
 
-	protected abstract Vec3 getLocalOffset(BlockState state);
+	public abstract Vec3 getLocalOffset(BlockState state);
 
-	protected abstract void rotate(BlockState state, PoseStack ms);
+	public abstract void rotate(BlockState state, PoseStack ms);
 
 	public boolean testHit(BlockState state, Vec3 localHit) {
 		Vec3 offset = getLocalOffset(state);
@@ -57,11 +57,11 @@ public abstract class ValueBoxTransform {
 		return VecHelper.rotateCentered(vec, yRot, Axis.Y);
 	}
 
-	protected float getScale() {
+	public float getScale() {
 		return .5f;
 	}
 
-	protected float getFontScale() {
+	public float getFontScale() {
 		return 1 / 64f;
 	}
 
@@ -100,7 +100,7 @@ public abstract class ValueBoxTransform {
 		}
 
 		@Override
-		protected Vec3 getLocalOffset(BlockState state) {
+		public Vec3 getLocalOffset(BlockState state) {
 			Vec3 location = getSouthLocation();
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Axis.Y);
 			location = VecHelper.rotateCentered(location, AngleHelper.verticalAngle(getSide()), Axis.X);
@@ -110,7 +110,7 @@ public abstract class ValueBoxTransform {
 		protected abstract Vec3 getSouthLocation();
 
 		@Override
-		protected void rotate(BlockState state, PoseStack ms) {
+		public void rotate(BlockState state, PoseStack ms) {
 			float yRot = AngleHelper.horizontalAngle(getSide()) + 180;
 			float xRot = getSide() == Direction.UP ? 90 : getSide() == Direction.DOWN ? 270 : 0;
 			TransformStack.cast(ms)

@@ -123,14 +123,14 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 	public static class ControlsSlot extends ValueBoxTransform.Sided {
 
 		@Override
-		protected Vec3 getLocalOffset(BlockState state) {
+		public Vec3 getLocalOffset(BlockState state) {
 			Direction facing = state.getValue(ControlsBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing);
 			return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12f, 5.5f), yRot, Axis.Y);
 		}
 
 		@Override
-		protected void rotate(BlockState state, PoseStack ms) {
+		public void rotate(BlockState state, PoseStack ms) {
 			Direction facing = state.getValue(ControlsBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing);
 			TransformStack.cast(ms)
@@ -139,7 +139,7 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 		}
 
 		@Override
-		protected float getScale() {
+		public float getScale() {
 			return .5f;
 		}
 

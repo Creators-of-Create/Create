@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides.ClipboardType;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -278,26 +280,22 @@ public class DisplayScenes {
 		scene.rotateCameraY(-60);
 		scene.idle(20);
 
-		scene.world.showSection(util.select.position(0, 1, 2), Direction.DOWN);
-		scene.idle(15);
-
 		Vec3 target = util.vector.of(3.95, 2.75, 3.25);
-		scene.overlay
-			.showControls(new InputWindowElement(target, Pointing.RIGHT).withItem(new ItemStack(Items.NAME_TAG))
-				.rightClick(), 40);
+		ItemStack clipboard = AllBlocks.CLIPBOARD.asStack();
+		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, clipboard);
+		scene.overlay.showControls(new InputWindowElement(target, Pointing.RIGHT).withItem(clipboard)
+			.rightClick(), 40);
 		scene.idle(6);
 		scene.world.setDisplayBoardText(board, 0, Components.literal("Create"));
 		scene.idle(25);
 
 		scene.overlay.showText(50)
-			.text("Text can be displayed using Name Tags...")
+			.text("Static text can be applied using written Clipboards")
 			.pointAt(target.add(-2, 0, 0))
 			.attachKeyFrame()
 			.placeNearTarget();
-		scene.idle(40);
-		scene.world.hideSection(util.select.position(0, 1, 2), Direction.WEST);
-		scene.idle(20);
-
+		scene.idle(80);
+		
 		scene.world.showSection(depot, Direction.DOWN);
 		scene.idle(10);
 		scene.world.showSection(link, Direction.EAST);
@@ -308,8 +306,8 @@ public class DisplayScenes {
 			.deflate(0, 0, 3 / 16f), 60);
 		scene.idle(20);
 
-		scene.overlay.showText(50)
-			.text("...or through the use of Display Links")
+		scene.overlay.showText(70)
+			.text("And dynamic text through the use of Display Links")
 			.pointAt(target.add(-2, 0, 0))
 			.attachKeyFrame()
 			.colored(PonderPalette.OUTPUT)

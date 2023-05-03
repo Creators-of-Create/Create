@@ -276,7 +276,7 @@ public class CartAssemblerBlockEntity extends SmartBlockEntity implements IDispl
 
 		@Override
 		protected Vec3 getSouthLocation() {
-			return VecHelper.voxelSpace(8, 8, 17.5);
+			return VecHelper.voxelSpace(8, 7, 17.5);
 		}
 
 	}

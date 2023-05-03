@@ -40,7 +40,7 @@ public class FilteredDetectorFilterSlot extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		super.rotate(state, ms);
 		Direction facing = state.getValue(DirectedDirectionalBlock.FACING);
 		if (facing.getAxis() == Axis.Y)

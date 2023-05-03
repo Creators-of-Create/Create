@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 public class DeployerFilterSlot extends ValueBoxTransform.Sided {
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		Direction facing = state.getValue(DeployerBlock.FACING);
 		Vec3 vec = VecHelper.voxelSpace(8f, 8f, 15.5f);
 
@@ -37,7 +37,7 @@ public class DeployerFilterSlot extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		Direction facing = getSide();
 		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;

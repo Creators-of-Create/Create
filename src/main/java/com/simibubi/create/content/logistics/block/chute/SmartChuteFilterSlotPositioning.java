@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 public class SmartChuteFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		Direction side = getSide();
 		float horizontalAngle = AngleHelper.horizontalAngle(side);
 		Vec3 southLocation = VecHelper.voxelSpace(8, 11, 15.5f);

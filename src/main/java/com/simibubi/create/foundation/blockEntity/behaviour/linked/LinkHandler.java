@@ -14,7 +14,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -29,7 +32,7 @@ public class LinkHandler {
 		BlockPos pos = event.getPos();
 		Player player = event.getPlayer();
 		InteractionHand hand = event.getHand();
-		
+
 		if (player.isShiftKeyDown() || player.isSpectator())
 			return;
 
@@ -46,9 +49,23 @@ public class LinkHandler {
 		if (AllItems.WRENCH.isIn(heldItem))
 			return;
 
+		boolean fakePlayer = player instanceof FakePlayer;
+		boolean fakePlayerChoice = false;
+
+		if (fakePlayer) {
+			BlockState blockState = world.getBlockState(pos);
+			Vec3 localHit = ray.getLocation()
+				.subtract(Vec3.atLowerCornerOf(pos))
+				.add(Vec3.atLowerCornerOf(ray.getDirection()
+					.getNormal())
+					.scale(.25f));
+			fakePlayerChoice = localHit.distanceToSqr(behaviour.firstSlot.getLocalOffset(blockState)) > localHit
+				.distanceToSqr(behaviour.secondSlot.getLocalOffset(blockState));
+		}
+
 		for (boolean first : Arrays.asList(false, true)) {
-			if (behaviour.testHit(first, ray.getLocation())) {
-				if (event.getSide() != LogicalSide.CLIENT) 
+			if (behaviour.testHit(first, ray.getLocation()) || fakePlayer && fakePlayerChoice == first) {
+				if (event.getSide() != LogicalSide.CLIENT)
 					behaviour.setFrequency(first, heldItem);
 				event.setCanceled(true);
 				event.setCancellationResult(InteractionResult.SUCCESS);

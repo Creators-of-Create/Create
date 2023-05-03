@@ -303,13 +303,13 @@ public class BeltBlock extends HorizontalKineticBlock
 
 		if (AllBlocks.BRASS_CASING.isIn(heldItem)) {
 			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.BRASS));
-			updateCoverProperty(world, pos, state);
+			updateCoverProperty(world, pos, world.getBlockState(pos));
 			return InteractionResult.SUCCESS;
 		}
 
 		if (AllBlocks.ANDESITE_CASING.isIn(heldItem)) {
 			withBlockEntityDo(world, pos, be -> be.setCasingType(CasingType.ANDESITE));
-			updateCoverProperty(world, pos, state);
+			updateCoverProperty(world, pos, world.getBlockState(pos));
 			return InteractionResult.SUCCESS;
 		}
 
@@ -516,6 +516,8 @@ public class BeltBlock extends HorizontalKineticBlock
 		if (bounds.getXsize() < .5f || bounds.getZsize() < .5f)
 			return false;
 		if (bounds.minY > 0)
+			return false;
+		if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(blockState))
 			return false;
 		if (FunnelBlock.isFunnel(blockState) && FunnelBlock.getFunnelFacing(blockState) != Direction.UP)
 			return false;

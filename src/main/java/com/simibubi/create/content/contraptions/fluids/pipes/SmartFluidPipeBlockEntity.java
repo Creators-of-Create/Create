@@ -68,7 +68,7 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 	class SmartPipeFilterSlot extends ValueBoxTransform {
 
 		@Override
-		protected Vec3 getLocalOffset(BlockState state) {
+		public Vec3 getLocalOffset(BlockState state) {
 			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
 			float y = face == AttachFace.CEILING ? 0.55f : face == AttachFace.WALL ? 11.4f : 15.45f;
 			float z = face == AttachFace.CEILING ? 4.6f : face == AttachFace.WALL ? 0.55f : 4.625f;
@@ -76,12 +76,12 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 		}
 
 		@Override
-		protected float getScale() {
+		public float getScale() {
 			return super.getScale() * 1.02f;
 		}
 
 		@Override
-		protected void rotate(BlockState state, PoseStack ms) {
+		public void rotate(BlockState state, PoseStack ms) {
 			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
 			TransformStack.cast(ms)
 				.rotateY(angleY(state))

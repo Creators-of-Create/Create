@@ -369,7 +369,7 @@ public class SceneBuilder {
 		}
 
 		public void showCenteredScrollInput(BlockPos pos, Direction side, int duration) {
-			showScrollInput(scene.getSceneBuildingUtil().vector.blockSurface(pos, side), side, duration);
+			showFilterSlotInput(scene.getSceneBuildingUtil().vector.blockSurface(pos, side), side, duration);
 		}
 
 		public void showScrollInput(Vec3 location, Direction side, int duration) {
@@ -381,17 +381,15 @@ public class SceneBuilder {
 		}
 
 		public void showRepeaterScrollInput(BlockPos pos, int duration) {
-			float s = 1 / 16f;
-			float q = 1 / 6f;
-			Vec3 expands = new Vec3(q, s, q);
-			addInstruction(
-				new HighlightValueBoxInstruction(scene.getSceneBuildingUtil().vector.blockSurface(pos, Direction.DOWN)
-					.add(0, 3 / 16f, 0), expands, duration));
+			showFilterSlotInput(scene.getSceneBuildingUtil().vector.blockSurface(pos, Direction.DOWN)
+				.add(0, 3 / 16f, 0), Direction.UP, duration);
 		}
 
-		public void showFilterSlotInput(Vec3 location, int duration) {
-			float s = .1f;
-			Vec3 expands = new Vec3(s, s, s);
+		public void showFilterSlotInput(Vec3 location, Direction side, int duration) {
+			location = location.add(Vec3.atLowerCornerOf(side.getNormal())
+				.scale(-3 / 128f));
+			Vec3 expands = VecHelper.axisAlingedPlaneOf(side)
+				.scale(11 / 128f);
 			addInstruction(new HighlightValueBoxInstruction(location, expands, duration));
 		}
 
@@ -794,7 +792,8 @@ public class SceneBuilder {
 			modifyBlockEntityNBT(selection, beType, consumer, false);
 		}
 
-		public <T extends BlockEntity> void modifyBlockEntity(BlockPos position, Class<T> beType, Consumer<T> consumer) {
+		public <T extends BlockEntity> void modifyBlockEntity(BlockPos position, Class<T> beType,
+			Consumer<T> consumer) {
 			addInstruction(scene -> {
 				BlockEntity blockEntity = scene.getWorld()
 					.getBlockEntity(position);
@@ -813,12 +812,13 @@ public class SceneBuilder {
 
 		public void instructArm(BlockPos armLocation, ArmBlockEntity.Phase phase, ItemStack heldItem,
 			int targetedPoint) {
-			modifyBlockEntityNBT(scene.getSceneBuildingUtil().select.position(armLocation), ArmBlockEntity.class, compound -> {
-				NBTHelper.writeEnum(compound, "Phase", phase);
-				compound.put("HeldItem", heldItem.serializeNBT());
-				compound.putInt("TargetPointIndex", targetedPoint);
-				compound.putFloat("MovementProgress", 0);
-			});
+			modifyBlockEntityNBT(scene.getSceneBuildingUtil().select.position(armLocation), ArmBlockEntity.class,
+				compound -> {
+					NBTHelper.writeEnum(compound, "Phase", phase);
+					compound.put("HeldItem", heldItem.serializeNBT());
+					compound.putInt("TargetPointIndex", targetedPoint);
+					compound.putFloat("MovementProgress", 0);
+				});
 		}
 
 		public void flapFunnel(BlockPos position, boolean outward) {
@@ -865,7 +865,8 @@ public class SceneBuilder {
 		}
 
 		public void flashDisplayLink(BlockPos position) {
-			modifyBlockEntity(position, DisplayLinkBlockEntity.class, linkBlockEntity -> linkBlockEntity.glow.setValue(2));
+			modifyBlockEntity(position, DisplayLinkBlockEntity.class,
+				linkBlockEntity -> linkBlockEntity.glow.setValue(2));
 		}
 
 	}

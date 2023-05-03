@@ -141,7 +141,7 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 		}
 
 		@Override
-		protected float getScale() {
+		public float getScale() {
 			return 0.5f;
 		}
 

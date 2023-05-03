@@ -106,12 +106,12 @@ public class EdgeInteractionRenderer {
 		}
 
 		@Override
-		protected Vec3 getLocalOffset(BlockState state) {
+		public Vec3 getLocalOffset(BlockState state) {
 			return add;
 		}
 
 		@Override
-		protected void rotate(BlockState state, PoseStack ms) {
+		public void rotate(BlockState state, PoseStack ms) {
 			super.rotate(state, ms);
 		}
 

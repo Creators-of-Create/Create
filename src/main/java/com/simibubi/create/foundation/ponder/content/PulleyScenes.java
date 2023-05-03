@@ -164,13 +164,13 @@ public class PulleyScenes {
 		scene.world.setBlock(flowerPos, Blocks.BLUE_ORCHID.defaultBlockState(), false);
 		scene.world.showSection(util.select.position(flowerPos), Direction.DOWN);
 		scene.overlay.showCenteredScrollInput(pulleyPos, Direction.UP, 60);
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(pulleyPos), Pointing.DOWN).scroll()
-			.withWrench(), 60);
+		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(pulleyPos), Pointing.DOWN).rightClick(),
+			60);	
 		scene.overlay.showText(70)
 			.pointAt(util.vector.topOf(pulleyPos))
 			.placeNearTarget()
 			.attachKeyFrame()
-			.sharedText("behaviour_modify_wrench");
+			.sharedText("behaviour_modify_value_panel");
 		scene.idle(80);
 
 		scene.world.toggleRedstonePower(redstoneStuff);

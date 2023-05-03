@@ -266,6 +266,8 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 	}
 
 	public boolean isValidBlockAbove() {
+		if (isVirtual())
+			return false;
 		BlockState blockState = level.getBlockState(worldPosition.above());
 		return AllBlocks.BASIN.has(blockState) || blockState.getBlock() instanceof FluidTankBlock;
 	}

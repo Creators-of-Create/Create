@@ -39,8 +39,6 @@ import com.simibubi.create.content.curiosities.armor.BacktankItem;
 import com.simibubi.create.content.curiosities.armor.BacktankItem.BacktankBlockItem;
 import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
-import com.simibubi.create.content.curiosities.clipboard.ClipboardBlockItem;
-import com.simibubi.create.content.curiosities.clipboard.ClipboardOverrides;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.tools.BlueprintItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
@@ -355,6 +353,7 @@ public class AllItems {
 	// Logistics
 
 	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
+		.lang("List Filter")
 		.register(), ATTRIBUTE_FILTER =
 			REGISTRATE.item("attribute_filter", FilterItem::attribute)
 				.register();

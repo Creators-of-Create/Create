@@ -13,12 +13,12 @@ import net.minecraft.world.phys.Vec3;
 public class BrassDiodeScrollSlot extends ValueBoxTransform {
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		return VecHelper.voxelSpace(8, 2.6f, 8);
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		float yRot = AngleHelper.horizontalAngle(state.getValue(BlockStateProperties.HORIZONTAL_FACING)) + 180;
 		TransformStack.cast(ms)
 			.rotateY(yRot)

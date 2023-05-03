@@ -539,7 +539,7 @@ public class TrainSignalScenes {
 			.pointAt(util.vector.blockSurface(util.grid.at(3, 2, 3), Direction.WEST))
 			.attachKeyFrame()
 			.placeNearTarget()
-			.text("Reversely, red signals emit a comparator output");
+			.text("Conversely, red signals emit a comparator output");
 		scene.idle(40);
 
 		scene.world.toggleControls(util.grid.at(6, 3, 5));

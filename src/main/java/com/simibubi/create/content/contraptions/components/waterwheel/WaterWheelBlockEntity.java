@@ -92,7 +92,7 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 			return InteractionResult.PASS;
 		if (!material.is(BlockTags.PLANKS))
 			return InteractionResult.PASS;
-		if (level.isClientSide())
+		if (level.isClientSide() && !isVirtual())
 			return InteractionResult.SUCCESS;
 		this.material = material;
 		notifyUpdate();

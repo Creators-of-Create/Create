@@ -256,15 +256,14 @@ public class CartAssemblerScenes {
 		scene.idle(25);
 
 		Vec3 blockSurface = util.vector.blockSurface(assemblerPos, Direction.NORTH)
-			.add(0, 0, -2 / 16f);
-		scene.overlay.showScrollInput(blockSurface, Direction.NORTH, 60);
-		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).scroll()
-			.withWrench(), 60);
+			.add(0, -1 / 16f, -2 / 16f);
+		scene.overlay.showFilterSlotInput(blockSurface, Direction.NORTH, 60);
+		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick(), 60);
 		scene.idle(10);
 		scene.overlay.showText(60)
 			.pointAt(util.vector.of(3, 1.5, 3))
 			.placeNearTarget()
-			.sharedText("behaviour_modify_wrench");
+			.sharedText("behaviour_modify_value_panel");
 		scene.idle(70);
 
 		contraption = scene.world.showIndependentSection(util.select.fromTo(3, 2, 3, 2, 2, 3), Direction.DOWN);

@@ -107,8 +107,7 @@ public class TrackObserverScenes {
 
 		target = util.vector.topOf(5, 1, 4);
 		bb = new AABB(target, target);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, bb, bb, 1);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, bb, bb.inflate(.2f, 0, .2f), 60);
+		scene.overlay.showCenteredScrollInput(util.grid.at(5, 1, 4), Direction.UP, 60);
 
 		scene.overlay.showText(80)
 			.pointAt(util.vector.topOf(5, 1, 4))

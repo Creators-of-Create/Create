@@ -156,7 +156,7 @@ public class TunnelScenes {
 			if (d == Direction.SOUTH)
 				continue;
 			Vec3 filter = getTunnelFilterVec(tunnelPos, d);
-			scene.overlay.showFilterSlotInput(filter, 40);
+			scene.overlay.showFilterSlotInput(filter, d, 40);
 			scene.idle(3);
 		}
 
@@ -171,7 +171,7 @@ public class TunnelScenes {
 
 		scene.idle(20);
 		Vec3 tunnelFilterVec = getTunnelFilterVec(tunnelPos, Direction.EAST);
-		scene.overlay.showFilterSlotInput(tunnelFilterVec, 40);
+		scene.overlay.showFilterSlotInput(tunnelFilterVec, Direction.EAST, 10);
 		scene.overlay.showText(60)
 			.attachKeyFrame()
 			.pointAt(tunnelFilterVec)
@@ -194,9 +194,9 @@ public class TunnelScenes {
 			.setFilter(Direction.EAST, ItemStack.EMPTY));
 
 		tunnelFilterVec = getTunnelFilterVec(tunnelPos, Direction.NORTH);
-		scene.overlay.showFilterSlotInput(tunnelFilterVec, 40);
+		scene.overlay.showFilterSlotInput(tunnelFilterVec, Direction.NORTH, 40);
 		tunnelFilterVec = getTunnelFilterVec(tunnelPos, Direction.WEST);
-		scene.overlay.showFilterSlotInput(tunnelFilterVec, 40);
+		scene.overlay.showFilterSlotInput(tunnelFilterVec, Direction.WEST, 40);
 		scene.overlay.showText(60)
 			.attachKeyFrame()
 			.pointAt(tunnelFilterVec)
@@ -227,9 +227,6 @@ public class TunnelScenes {
 		scene.idle(10);
 
 		Vec3 tunnelTop = util.vector.topOf(tunnelPos);
-		scene.overlay.showControls(new InputWindowElement(tunnelTop, Pointing.DOWN).scroll()
-			.withWrench(), 80);
-		scene.idle(7);
 		scene.overlay.showCenteredScrollInput(tunnelPos, Direction.UP, 120);
 		scene.overlay.showText(120)
 			.attachKeyFrame()
@@ -340,7 +337,8 @@ public class TunnelScenes {
 
 	protected static Vec3 getTunnelFilterVec(BlockPos pos, Direction d) {
 		return VecHelper.getCenterOf(pos)
-			.add(Vec3.atLowerCornerOf(d.getNormal()).scale(.5))
+			.add(Vec3.atLowerCornerOf(d.getNormal())
+				.scale(.5))
 			.add(0, 0.3, 0);
 	}
 
@@ -360,15 +358,14 @@ public class TunnelScenes {
 		}
 
 		Vec3 tunnelTop = util.vector.topOf(util.grid.at(2, 2, 3));
-		scene.overlay.showControls(new InputWindowElement(tunnelTop, Pointing.DOWN).scroll()
-			.withWrench(), 80);
+		scene.overlay.showControls(new InputWindowElement(tunnelTop, Pointing.DOWN).rightClick(), 80);
 		scene.idle(7);
 		scene.overlay.showCenteredScrollInput(util.grid.at(2, 2, 3), Direction.UP, 120);
 		scene.overlay.showText(120)
 			.attachKeyFrame()
 			.pointAt(tunnelTop)
 			.placeNearTarget()
-			.text("Using a Wrench, the distribution behaviour of Brass Tunnels can be configured");
+			.text("The distribution behaviour of Brass Tunnels can be configured");
 		scene.idle(130);
 
 		Class<BrassTunnelBlockEntity> tunnelClass = BrassTunnelBlockEntity.class;

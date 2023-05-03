@@ -30,14 +30,18 @@ import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -60,10 +64,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
@@ -731,8 +737,46 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+		Lang.translate("gui.goggles.basin_contents")
+			.forGoggles(tooltip);
+
+		IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
+		IFluidHandler fluids = fluidCapability.orElse(new FluidTank(0));
+		boolean isEmpty = true;
+
+		for (int i = 0; i < items.getSlots(); i++) {
+			ItemStack stackInSlot = items.getStackInSlot(i);
+			if (stackInSlot.isEmpty())
+				continue;
+			Lang.text("")
+				.add(Components.translatable(stackInSlot.getDescriptionId())
+					.withStyle(ChatFormatting.GRAY))
+				.add(Lang.text(" x" + stackInSlot.getCount())
+					.style(ChatFormatting.GREEN))
+				.forGoggles(tooltip, 1);
+			isEmpty = false;
+		}
+
+		LangBuilder mb = Lang.translate("generic.unit.millibuckets");
+		for (int i = 0; i < fluids.getTanks(); i++) {
+			FluidStack fluidStack = fluids.getFluidInTank(i);
+			if (fluidStack.isEmpty())
+				continue;
+			Lang.text("")
+				.add(Lang.fluidName(fluidStack)
+					.add(Lang.text(" "))
+					.style(ChatFormatting.GRAY)
+					.add(Lang.number(fluidStack.getAmount())
+						.add(mb)
+						.style(ChatFormatting.BLUE)))
+				.forGoggles(tooltip, 1);
+			isEmpty = false;
+		}
+
+		if (isEmpty)
+			tooltip.remove(0);
+
+		return true;
 	}
 
 	class BasinValueBox extends ValueBoxTransform.Sided {

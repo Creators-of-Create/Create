@@ -76,7 +76,7 @@ public class PumpScenes {
 		scene.idle(15);
 
 		scene.overlay.showText(60)
-			.text("When powered, their arrow indicates the direction of flow")
+			.text("Their arrow indicates the direction of flow")
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(pumpPos)
@@ -124,23 +124,17 @@ public class PumpScenes {
 		scene.world.propagatePipeChange(pumpPos);
 		scene.idle(15);
 
-		scene.overlay.showText(70)
-			.text("Reversing the input rotation reverses the direction of flow")
+		scene.overlay.showText(60)
+			.text("The pumps direction is unaffected by the input rotation")
+			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.attachKeyFrame()
 			.pointAt(util.vector.topOf(pumpPos)
 				.subtract(0.5f, 0.125f, 0));
 
 		scene.idle(25);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb1.move(util.vector.centerOf(1, 1, 3)), 3);
-		scene.idle(2);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb2.move(util.vector.centerOf(1, 1, 2)), 30);
-		scene.idle(15);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb1.move(util.vector.centerOf(3, 1, 1)
-			.add(0, 0, -.5)), 3);
-		scene.idle(2);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb2.move(util.vector.centerOf(3, 1, 2)), 30);
-		scene.idle(55);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, in, new AABB(leverPos.below()), 30);
+		scene.idle(45);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(pumpPos), Pointing.DOWN).rightClick()
 			.withWrench(), 40);
@@ -150,7 +144,7 @@ public class PumpScenes {
 			.attachKeyFrame()
 			.pointAt(util.vector.centerOf(2, 1, 1))
 			.placeNearTarget()
-			.text("Use a Wrench to reverse the orientation of pumps manually");
+			.text("Instead, a Wrench can be used to reverse the direction");
 		scene.world.propagatePipeChange(pumpPos);
 		scene.idle(40);
 
@@ -182,9 +176,11 @@ public class PumpScenes {
 		Selection tank2 = util.select.fromTo(0, 1, 2, 0, 2, 2);
 		Selection megapipe1 = util.select.fromTo(0, 3, 5, 1, 4, 2);
 		Selection megapipe2 = util.select.fromTo(3, 3, 1, 5, 6, 2);
-
+		
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.WEST), false);
 		scene.world.modifyBlockEntity(util.grid.at(0, 1, 2), FluidTankBlockEntity.class, be -> be.getTankInventory()
 			.drain(3000, FluidAction.EXECUTE));
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), 0.125f);
 
 		BlockPos east = pumpPos.east();
 		scene.world.setBlock(east, Blocks.AIR.defaultBlockState(), false);
@@ -194,7 +190,7 @@ public class PumpScenes {
 		scene.world.setBlock(pumpPos.south(), AllBlocks.COGWHEEL.getDefaultState()
 			.setValue(CogWheelBlock.AXIS, Axis.X), false);
 		Selection southPump = util.select.position(pumpPos.south());
-		scene.world.setKineticSpeed(southPump, 32);
+		scene.world.setKineticSpeed(southPump, 4);
 
 		scene.world.setKineticSpeed(pump, 0);
 		scene.world.showSection(pump, Direction.DOWN);
@@ -231,12 +227,12 @@ public class PumpScenes {
 		scene.world.showSection(largeCog, Direction.UP);
 		scene.world.showSection(cogs, Direction.SOUTH);
 		scene.idle(10);
-		scene.world.setKineticSpeed(util.select.position(pumpPos), -32);
+		scene.world.setKineticSpeed(util.select.position(pumpPos), -4);
 		scene.effects.rotationSpeedIndicator(pumpPos);
 		scene.world.propagatePipeChange(pumpPos);
 		scene.idle(40);
 
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), 4);
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), 8);
 		scene.effects.rotationSpeedIndicator(pumpPos);
 		scene.world.propagatePipeChange(pumpPos);
 		scene.idle(20);
@@ -251,7 +247,7 @@ public class PumpScenes {
 		scene.overlay.showText(50)
 			.pointAt(util.vector.blockSurface(util.grid.at(0, 1, 2), Direction.WEST))
 			.placeNearTarget()
-			.text("...aswell as how quickly fluids are transferred");
+			.text("...and the speed at which fluids are transferred");
 		scene.idle(60);
 
 		BlockState pipeState = AllBlocks.FLUID_PIPE.getDefaultState()
@@ -279,7 +275,7 @@ public class PumpScenes {
 		scene.world.showSection(util.select.position(west.south()), Direction.DOWN);
 
 		scene.world.restoreBlocks(southPump);
-		scene.world.modifyBlock(pumpPos.south(), s -> s.setValue(PumpBlock.FACING, Direction.EAST), false);
+		scene.world.modifyBlock(pumpPos.south(), s -> s.setValue(PumpBlock.FACING, Direction.WEST), true);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
 		scene.world.showSection(northPump, Direction.DOWN);
 		scene.world.modifyBlock(pumpPos.north(), s -> s.setValue(PumpBlock.FACING, Direction.EAST), false);
@@ -299,11 +295,6 @@ public class PumpScenes {
 			.text("Pumps can combine their throughputs within shared pipe networks");
 		scene.idle(70);
 
-		scene.overlay
-			.showControls(new InputWindowElement(util.vector.topOf(pumpPos.south()), Pointing.DOWN).rightClick()
-				.withWrench(), 30);
-		scene.idle(7);
-		scene.world.modifyBlock(pumpPos.south(), s -> s.setValue(PumpBlock.FACING, Direction.WEST), true);
 		scene.idle(30);
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(pumpPos.north()), Pointing.DOWN).rightClick()
@@ -317,10 +308,10 @@ public class PumpScenes {
 			.pointAt(util.vector.topOf(pumpPos.north())
 				.subtract(0.5f, 0.125f, 0))
 			.placeNearTarget()
-			.text("Alternating their orientation can help align their flow directions");
+			.text("Ensure that all of them are facing in the same direction");
 		scene.idle(40);
 
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), 8);
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), 4);
 		scene.effects.rotationSpeedIndicator(pumpPos);
 		scene.effects.rotationSpeedIndicator(pumpPos.north());
 		scene.effects.rotationSpeedIndicator(pumpPos.south());

@@ -179,7 +179,7 @@ public class RollerBlockEntity extends SmartBlockEntity {
 		}
 
 		@Override
-		protected void rotate(BlockState state, PoseStack ms) {
+		public void rotate(BlockState state, PoseStack ms) {
 			Direction facing = state.getValue(RollerBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing) + 180;
 			TransformStack.cast(ms)
@@ -196,7 +196,7 @@ public class RollerBlockEntity extends SmartBlockEntity {
 		}
 
 		@Override
-		protected Vec3 getLocalOffset(BlockState state) {
+		public Vec3 getLocalOffset(BlockState state) {
 			Direction facing = state.getValue(RollerBlock.FACING);
 			float stateAngle = AngleHelper.horizontalAngle(facing) + 180;
 			return VecHelper.rotateCentered(VecHelper.voxelSpace(8 + hOffset, 15.5f, 11), stateAngle, Axis.Y);

@@ -618,14 +618,14 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 	private class EjectorSlot extends ValueBoxTransform.Sided {
 
 		@Override
-		protected Vec3 getLocalOffset(BlockState state) {
+		public Vec3 getLocalOffset(BlockState state) {
 			if (direction != Direction.UP)
 				return super.getLocalOffset(state);
 			return new Vec3(.5, 10.5 / 16f, .5).add(VecHelper.rotate(VecHelper.voxelSpace(0, 0, -5), angle(state), Axis.Y));
 		}
 
 		@Override
-		protected void rotate(BlockState state, PoseStack ms) {
+		public void rotate(BlockState state, PoseStack ms) {
 			if (direction != Direction.UP) {
 				super.rotate(state, ms);
 				return;

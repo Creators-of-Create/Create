@@ -182,7 +182,7 @@ public class ChassisScenes {
 
 		Vec3 blockSurface = util.vector.blockSurface(chassisPos, Direction.NORTH);
 		scene.overlay.showCenteredScrollInput(chassisPos, Direction.NORTH, 50);
-		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.UP).scroll()
+		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.UP).rightClick()
 			.withWrench(), 50);
 
 		scene.idle(10);
@@ -215,7 +215,7 @@ public class ChassisScenes {
 
 		scene.overlay.showCenteredScrollInput(chassisPos, Direction.NORTH, 50);
 		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.UP).whileCTRL()
-			.scroll()
+			.rightClick()
 			.withWrench(), 50);
 
 		column1 = util.select.fromTo(1, 3, 2, 3, 3, 2);
@@ -234,7 +234,7 @@ public class ChassisScenes {
 
 		scene.overlay.showText(80)
 			.pointAt(blockSurface)
-			.text("Holding CTRL and scrolling adjusts the range of all attached Chassis Blocks")
+			.text("Holding CTRL adjusts the range of all connected Chassis Blocks")
 			.placeNearTarget();
 		scene.idle(90);
 
@@ -441,7 +441,7 @@ public class ChassisScenes {
 		scene.addKeyframe();
 		blockSurface = util.vector.topOf(chassisPos);
 		scene.overlay.showCenteredScrollInput(chassisPos, Direction.UP, 50);
-		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).scroll()
+		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick()
 			.withWrench(), 50);
 
 		scene.idle(10);

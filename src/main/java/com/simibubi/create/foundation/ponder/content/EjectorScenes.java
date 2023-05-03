@@ -151,16 +151,16 @@ public class EjectorScenes {
 		scene.world.setBlock(targetPos, AllBlocks.ANDESITE_CASING.getDefaultState(), false);
 		scene.world.showSection(targetS, Direction.NORTH);
 
-		Vec3 input = util.vector.of(4.8, 1 + 12 / 16f, 2.5);
+		Vec3 input = util.vector.blockSurface(ejectorPos, Direction.WEST)
+			.add(0, -2 / 16f, 0);
 		Vec3 topOfSlot = input.add(0, 2 / 16f, 0);
-		scene.overlay.showControls(new InputWindowElement(topOfSlot, Pointing.DOWN).scroll()
-			.withWrench(), 60);
-		scene.overlay.showFilterSlotInput(input, 80);
+		scene.overlay.showControls(new InputWindowElement(topOfSlot, Pointing.DOWN).rightClick(), 60);
+		scene.overlay.showFilterSlotInput(input, Direction.WEST, 80);
 		scene.idle(10);
 		scene.overlay.showText(80)
 			.attachKeyFrame()
-			.text("Using the Wrench, a required Stack Size can be configured")
-			.pointAt(topOfSlot)
+			.text("Using the value panel, a required Stack Size can be configured")
+			.pointAt(input.add(0, 0, 0.125))
 			.placeNearTarget();
 		scene.world.modifyBlockEntityNBT(ejectorS, EjectorBlockEntity.class, nbt -> {
 			nbt.putInt("ScrollValue", 10);
@@ -206,7 +206,7 @@ public class EjectorScenes {
 		scene.idle(15);
 		scene.special.changeBirbPose(birb, ParrotElement.FaceCursorPose::new);
 		scene.overlay.showText(80)
-			.text("Other Entities will always trigger an Ejector when stepping on it")
+			.text("Mobs and Players will always trigger an Ejector when stepping on it")
 			.pointAt(util.vector.topOf(targetPos))
 			.placeNearTarget();
 		scene.idle(50);
@@ -215,6 +215,7 @@ public class EjectorScenes {
 
 	public static void splitY(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("weighted_ejector_tunnel", "Splitting item stacks using Weighted Ejectors");
+		Selection coverbelt = util.select.fromTo(3, 1, 1, 2, 1, 0);
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
@@ -224,8 +225,7 @@ public class EjectorScenes {
 		scene.idle(10);
 		scene.world.showSection(util.select.position(2, 1, 2), Direction.SOUTH);
 		scene.idle(5);
-		scene.world.showSection(util.select.fromTo(4, 1, 2, 3, 1, 1), Direction.SOUTH);
-		scene.world.showSection(util.select.fromTo(2, 1, 1, 2, 1, 0), Direction.SOUTH);
+		scene.world.showSection(util.select.fromTo(4, 1, 2, 3, 1, 2), Direction.SOUTH);
 		scene.idle(10);
 
 		BlockPos ejectorPos = util.grid.at(2, 1, 2);
@@ -238,12 +238,10 @@ public class EjectorScenes {
 		scene.idle(90);
 
 		BlockPos tunnel = util.grid.at(2, 2, 3);
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(tunnel), Pointing.DOWN).scroll()
-			.withWrench(), 70);
-		scene.idle(10);
 		scene.overlay.showControls(
-			new InputWindowElement(util.vector.topOf(tunnel), Pointing.UP).showing(AllIcons.I_TUNNEL_PREFER_NEAREST),
-			60);
+			new InputWindowElement(util.vector.topOf(tunnel), Pointing.DOWN).showing(AllIcons.I_TUNNEL_PREFER_NEAREST),
+			80);
+		scene.idle(10);
 		scene.overlay.showCenteredScrollInput(tunnel, Direction.UP, 100);
 		scene.idle(10);
 		scene.overlay.showText(100)
@@ -254,11 +252,10 @@ public class EjectorScenes {
 			.placeNearTarget();
 		scene.idle(110);
 
-		Vec3 input = util.vector.of(2.5, 1 + 12 / 16f, 2.8);
+		Vec3 input = util.vector.blockSurface(ejectorPos, Direction.NORTH)
+			.subtract(0, 2 / 16f, 0);
 		Vec3 topOfSlot = input.add(0, 2 / 16f, 0);
-		scene.overlay.showControls(new InputWindowElement(topOfSlot, Pointing.DOWN).scroll()
-			.withWrench(), 60);
-		scene.overlay.showFilterSlotInput(input, 80);
+		scene.overlay.showFilterSlotInput(input, Direction.NORTH, 80);
 		scene.idle(10);
 		scene.overlay.showText(80)
 			.attachKeyFrame()
@@ -272,6 +269,8 @@ public class EjectorScenes {
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(util.grid.at(4, 1, 3)), Pointing.DOWN)
 			.withItem(new ItemStack(Items.COPPER_INGOT)), 20);
+		scene.world.showSection(coverbelt, Direction.SOUTH);
+		
 		scene.idle(7);
 		scene.world.createItemOnBelt(util.grid.at(4, 1, 3), Direction.UP, new ItemStack(Items.COPPER_INGOT, 64));
 		scene.idle(40);
@@ -337,7 +336,7 @@ public class EjectorScenes {
 			nbt -> nbt.putBoolean("Powered", false));
 		scene.idle(5);
 		scene.world.hideSection(redstone, Direction.WEST);
-		scene.idle(10);
+		scene.idle(30);
 		ElementLink<WorldSectionElement> observer =
 			scene.world.showIndependentSection(util.select.position(4, 1, 1), Direction.SOUTH);
 		scene.world.moveSection(observer, util.vector.of(0.5, 1.5, -0.5), 0);
@@ -366,7 +365,7 @@ public class EjectorScenes {
 					.attachKeyFrame()
 					.pointAt(util.vector.blockSurface(util.grid.at(4, 1, 1), Direction.NORTH))
 					.placeNearTarget()
-					.text("Furthermore, Observers can detect when Ejectors activate");
+					.text("Observers can detect when Ejectors activate");
 			}
 		}
 

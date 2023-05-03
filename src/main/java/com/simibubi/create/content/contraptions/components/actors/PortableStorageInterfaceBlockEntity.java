@@ -89,7 +89,7 @@ public abstract class PortableStorageInterfaceBlockEntity extends SmartBlockEnti
 		boolean timerCanDecrement = transferTimer > ANIMATION || transferTimer > 0 && keepAlive == 0
 			&& (isVirtual() || !level.isClientSide || transferTimer != ANIMATION);
 
-		if (timerCanDecrement && (!isVirtual() || transferTimer != timeUnit)) {
+		if (timerCanDecrement && (!isVirtual() || transferTimer != ANIMATION)) {
 			transferTimer--;
 			if (transferTimer == ANIMATION - 1)
 				sendData();
