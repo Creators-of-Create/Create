@@ -88,7 +88,13 @@ public class CarriageSounds {
 		double distance2 = toBogey2.length();
 
 		Couple<CarriageBogey> bogeys = entity.getCarriage().bogeys;
-		closestBogeySound = bogeys.get(distance1 > distance2).getStyle().getSoundType();
+		CarriageBogey relevantBogey = bogeys.get(distance1 > distance2);
+		if (relevantBogey == null) {
+			relevantBogey = bogeys.getFirst();
+		}
+		if (relevantBogey != null) {
+			closestBogeySound = relevantBogey.getStyle().getSoundType();
+		}
 
 		Vec3 toCarriage = distance1 > distance2 ? toBogey2 : toBogey1;
 		double distance = Math.min(distance1, distance2);

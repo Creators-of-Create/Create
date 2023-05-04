@@ -7,6 +7,7 @@ import com.simibubi.create.content.logistics.trains.BogeySizes;
 import com.simibubi.create.content.logistics.trains.StandardBogeyRenderer.*;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -30,7 +31,7 @@ public class AllBogeyStyles {
 
 	public static BogeyStyle STANDARD = create("standard")
 			.commonRenderer(CommonStandardBogeyRenderer::new)
-			.displayName(new TranslatableComponent("create.bogeys.styles.standard"))
+			.displayName(Components.translatable("create.bogeys.styles.standard"))
 			.size(BogeySizes.SMALL, SmallStandardBogeyRenderer::new, AllBlocks.SMALL_BOGEY)
 			.size(BogeySizes.LARGE, LargeStandardBogeyRenderer::new, AllBlocks.LARGE_BOGEY)
 			.build();

@@ -16,6 +16,8 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.command.DebugValueCommand;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -306,6 +308,9 @@ public class Carriage {
 		double leadingWheelSpacing = leadingBogey.type.getWheelPointSpacing();
 		double trailingWheelSpacing = trailingBogey.type.getWheelPointSpacing();
 
+		boolean leadingUpsideDown = leadingBogey.isUpsideDown();
+		boolean trailingUpsideDown = trailingBogey.isUpsideDown();
+
 		for (boolean leading : Iterate.trueAndFalse) {
 			TravellingPoint point = leading ? getLeadingPoint() : getTrailingPoint();
 			TravellingPoint otherPoint = !leading ? getLeadingPoint() : getTrailingPoint();
@@ -321,24 +326,31 @@ public class Carriage {
 
 			dce.positionAnchor = dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
 				: pivoted(dce, dimension, point,
-					leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2);
+					leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2,
+					leadingUpsideDown, trailingUpsideDown, leading);
+
+			boolean backAnchorFlip = trailingBogey.isUpsideDown() ^ leadingBogey.isUpsideDown();
 
 			if (isOnTwoBogeys()) {
 				dce.rotationAnchors.setFirst(dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
 					: pivoted(dce, dimension, point,
-						leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2));
-				dce.rotationAnchors.setSecond(dimension.equals(trailingBogeyDim) ? trailingBogey.getAnchorPosition()
+						leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2,
+						leadingUpsideDown, trailingUpsideDown, leading));
+				dce.rotationAnchors.setSecond(dimension.equals(trailingBogeyDim) ? trailingBogey.getAnchorPosition(backAnchorFlip)
 					: pivoted(dce, dimension, point,
-						leading ? leadingWheelSpacing / 2 + bogeySpacing : trailingWheelSpacing / 2));
+						leading ? leadingWheelSpacing / 2 + bogeySpacing : trailingWheelSpacing / 2,
+						leadingUpsideDown, trailingUpsideDown, leading));
 
 			} else {
 				if (dimension.equals(otherDimension)) {
 					dce.rotationAnchors = leadingBogey.points.map(TravellingPoint::getPosition);
 				} else {
 					dce.rotationAnchors.setFirst(leadingBogey.points.getFirst() == point ? point.getPosition()
-						: pivoted(dce, dimension, point, leadingWheelSpacing));
+						: pivoted(dce, dimension, point, leadingWheelSpacing,
+							leadingUpsideDown, trailingUpsideDown, leading));
 					dce.rotationAnchors.setSecond(leadingBogey.points.getSecond() == point ? point.getPosition()
-						: pivoted(dce, dimension, point, leadingWheelSpacing));
+						: pivoted(dce, dimension, point, leadingWheelSpacing,
+							leadingUpsideDown, trailingUpsideDown, leading));
 				}
 			}
 
@@ -356,15 +368,20 @@ public class Carriage {
 	}
 
 	private Vec3 pivoted(DimensionalCarriageEntity dce, ResourceKey<Level> dimension, TravellingPoint start,
-		double offset) {
+		double offset, boolean leadingUpsideDown, boolean trailingUpsideDown, boolean isLeading) {
 		if (train.graph == null)
 			return dce.pivot == null ? null : dce.pivot.getLocation();
 		TrackNodeLocation pivot = dce.findPivot(dimension, start == getLeadingPoint());
 		if (pivot == null)
 			return null;
-		Vec3 startVec = start.getPosition();
+		Vec3 startVec = start.getPosition(start != getLeadingPoint() && (leadingBogey().isUpsideDown() != trailingBogey().isUpsideDown()));
 		Vec3 portalVec = pivot.getLocation()
-			.add(0, 1, 0);
+			.add(0, DebugValueCommand.tmpPortalOffset(leadingUpsideDown, trailingUpsideDown, isLeading), 0);
+		// same side - other side
+		// n(ormal)-n(ormal)
+		// u(pside down)-u(pside down) what about un ? not tested yet  un doesn't work with + 1 or -1. HALP
+		// 1 works for: nn   n   nu
+		//-1 works for: uu   u
 		return VecHelper.lerp((float) (offset / startVec.distanceTo(portalVec)), startVec, portalVec);
 	}
 

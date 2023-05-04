@@ -60,6 +60,7 @@ public class AllCommands {
 				.then(CameraDistanceCommand.register())
 				.then(CameraAngleCommand.register())
 				.then(FlySpeedCommand.register())
+				.then(DebugValueCommand.register())
 				//.then(KillTPSCommand.register())
 				.build();
 

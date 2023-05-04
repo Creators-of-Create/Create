@@ -8,7 +8,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
-import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
+import com.simibubi.create.content.logistics.trains.track.AbstractBogeyTileEntity;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import static com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity.BOGEY_STYLE_KEY;
+import static com.simibubi.create.content.logistics.trains.track.AbstractBogeyTileEntity.BOGEY_STYLE_KEY;
 
 public class CarriageBogey {
 
@@ -38,6 +38,7 @@ public class CarriageBogey {
 	public CompoundTag bogeyData;
 
 	AbstractBogeyBlock type;
+	boolean upsideDown;
 	Couple<TravellingPoint> points;
 
 	LerpedFloat wheelAngle;
@@ -48,11 +49,14 @@ public class CarriageBogey {
 
 	int derailAngle;
 
-	public CarriageBogey(AbstractBogeyBlock type, CompoundTag bogeyData, TravellingPoint point, TravellingPoint point2) {
+	public CarriageBogey(AbstractBogeyBlock type, boolean upsideDown, CompoundTag bogeyData, TravellingPoint point, TravellingPoint point2) {
+		this.type = type;
 		if (bogeyData == null || bogeyData.isEmpty())
 			bogeyData = this.createBogeyData(); // Prevent Crash When Updating
 		this.bogeyData = bogeyData;
-		this.type = type;
+		this.upsideDown = type.canBeUpsideDown() && upsideDown;
+		point.upsideDown = this.upsideDown;
+		point2.upsideDown = this.upsideDown;
 		points = Couple.create(point, point2);
 		wheelAngle = LerpedFloat.angular();
 		yaw = LerpedFloat.angular();
@@ -109,11 +113,15 @@ public class CarriageBogey {
 	}
 
 	public TravellingPoint leading() {
-		return points.getFirst();
+		TravellingPoint point = points.getFirst();
+		point.upsideDown = isUpsideDown();
+		return point;
 	}
 
 	public TravellingPoint trailing() {
-		return points.getSecond();
+		TravellingPoint point = points.getSecond();
+		point.upsideDown = isUpsideDown();
+		return point;
 	}
 
 	public double getStress() {
@@ -127,18 +135,23 @@ public class CarriageBogey {
 
 	@Nullable
 	public Vec3 getAnchorPosition() {
+		return getAnchorPosition(false);
+	}
+
+	@Nullable
+	public Vec3 getAnchorPosition(boolean flipUpsideDown) {
 		if (leading().edge == null)
 			return null;
 		return points.getFirst()
-			.getPosition()
-			.add(points.getSecond()
-				.getPosition())
-			.scale(.5);
+				.getPosition(flipUpsideDown)
+				.add(points.getSecond()
+						.getPosition(flipUpsideDown))
+				.scale(.5);
 	}
 
 	public void updateCouplingAnchor(Vec3 entityPos, float entityXRot, float entityYRot, int bogeySpacing,
 		float partialTicks, boolean leading) {
-		Vec3 thisOffset = type.getConnectorAnchorOffset();
+		Vec3 thisOffset = type.getConnectorAnchorOffset(isUpsideDown());
 		thisOffset = thisOffset.multiply(1, 1, leading ? -1 : 1);
 
 		thisOffset = VecHelper.rotate(thisOffset, pitch.getValue(partialTicks), Axis.X);
@@ -159,6 +172,7 @@ public class CarriageBogey {
 		tag.putString("Type", RegisteredObjects.getKeyOrThrow((Block) type)
 			.toString());
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
+		tag.putBoolean("UpsideDown", upsideDown);
 		tag.put(BOGEY_STYLE_KEY, bogeyData);
 		return tag;
 	}
@@ -166,10 +180,11 @@ public class CarriageBogey {
 	public static CarriageBogey read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		ResourceLocation location = new ResourceLocation(tag.getString("Type"));
 		AbstractBogeyBlock type = (AbstractBogeyBlock) ForgeRegistries.BLOCKS.getValue(location);
+		boolean upsideDown = tag.getBoolean("UpsideDown");
 		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),
 			c -> TravellingPoint.read(c, graph, dimensions));
-		CompoundTag data = tag.getCompound(StandardBogeyTileEntity.BOGEY_DATA_KEY);
-		return new CarriageBogey(type, data, points.getFirst(), points.getSecond());
+		CompoundTag data = tag.getCompound(AbstractBogeyTileEntity.BOGEY_DATA_KEY);
+		return new CarriageBogey(type, upsideDown, data, points.getFirst(), points.getSecond());
 	}
 
 	public BogeyInstance createInstance(MaterialManager materialManager) {
@@ -183,11 +198,15 @@ public class CarriageBogey {
 
 	private CompoundTag createBogeyData() {
 		CompoundTag nbt = new CompoundTag();
-		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, AllBogeyStyles.STANDARD.name);
+		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, (type != null ? type.getDefaultStyle() : AllBogeyStyles.STANDARD).name);
 		return nbt;
 	}
 
 	void setLeading() {
 		isLeading = true;
+	}
+
+	public boolean isUpsideDown() {
+		return type.canBeUpsideDown() && upsideDown;
 	}
 }

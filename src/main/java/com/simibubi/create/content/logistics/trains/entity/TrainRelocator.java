@@ -115,10 +115,13 @@ public class TrainRelocator {
 		BlockPos blockPos = blockhit.getBlockPos();
 		BezierTrackPointLocation hoveredBezier = null;
 
+		boolean upsideDown = relocating.carriages.get(0).leadingBogey().isUpsideDown();
+		Vec3 offset = upsideDown ? new Vec3(0, -0.5, 0) : Vec3.ZERO;
+
 		if (simulate && toVisualise != null && lastHoveredResult != null) {
 			for (int i = 0; i < toVisualise.size() - 1; i++) {
-				Vec3 vec1 = toVisualise.get(i);
-				Vec3 vec2 = toVisualise.get(i + 1);
+				Vec3 vec1 = toVisualise.get(i).add(offset);
+				Vec3 vec2 = toVisualise.get(i + 1).add(offset);
 				CreateClient.OUTLINER.showLine(Pair.of(relocating, i), vec1.add(0, -.925f, 0), vec2.add(0, -.925f, 0))
 					.colored(lastHoveredResult || i != toVisualise.size() - 2 ? 0x95CD41 : 0xEA5C2B)
 					.disableLineNormals()
@@ -150,7 +153,7 @@ public class TrainRelocator {
 		boolean direction = bezierSelection != null && lookAngle.dot(bezierSelection.direction()) < 0;
 		boolean result = relocate(relocating, mc.level, blockPos, hoveredBezier, direction, lookAngle, true);
 		if (!simulate && result) {
-			relocating.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));			
+			relocating.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));
 			AllPackets.channel.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, hoveredBezier,
 				direction, lookAngle, relocatingEntityId));
 		}
@@ -182,7 +185,7 @@ public class TrainRelocator {
 		if (edge == null)
 			return false;
 
-		TravellingPoint probe = new TravellingPoint(node1, node2, edge, graphLocation.position);
+		TravellingPoint probe = new TravellingPoint(node1, node2, edge, graphLocation.position, false);
 		IEdgePointListener ignoreSignals = probe.ignoreEdgePoints();
 		ITurnListener ignoreTurns = probe.ignoreTurns();
 		List<Pair<Couple<TrackNode>, Double>> recordedLocations = new ArrayList<>();

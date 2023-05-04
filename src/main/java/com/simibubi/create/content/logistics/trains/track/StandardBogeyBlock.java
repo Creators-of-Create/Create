@@ -1,10 +1,11 @@
 package com.simibubi.create.content.logistics.trains.track;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.BogeySizes;
+import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class StandardBogeyBlock extends AbstractBogeyBlock implements ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
+public class StandardBogeyBlock extends AbstractBogeyBlock<StandardBogeyTileEntity> implements ITE<StandardBogeyTileEntity>, ProperWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	public StandardBogeyBlock(Properties props, BogeySizes.BogeySize size) {
 		super(props, size);
@@ -38,6 +39,11 @@ public class StandardBogeyBlock extends AbstractBogeyBlock implements ITE<Standa
 	@Override
 	public Vec3 getConnectorAnchorOffset() {
 		return new Vec3(0, 7 / 32f, 1);
+	}
+
+	@Override
+	public BogeyStyle getDefaultStyle() {
+		return AllBogeyStyles.STANDARD;
 	}
 
 	@Override
