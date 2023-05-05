@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.CommandBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DebugValueCommand { //fixme this is *very* temporary
+public class DebugValueCommand {
 
 	public static float value = 0;
 
@@ -38,42 +38,4 @@ public class DebugValueCommand { //fixme this is *very* temporary
 					}));
 
 	}
-
-	// same side - other side
-	// n(ormal)-n(ormal)
-	// u(pside down)-u(pside down)
-	// nu works with special handling, now to get un to work!
-	// 1 works for: nn   n
-	//-1 works for: uu   u
-	public static double tmpPortalOffset(boolean leadingUpsideDown, boolean trailingUpsideDown, boolean isLeading) {
-		double portalOffset = 0.0;
-		if (!leadingUpsideDown && !trailingUpsideDown) {       // nn
-			return 1.0;
-		} else if (leadingUpsideDown && trailingUpsideDown) {  // uu
-			return -1.0;
-		} else if (leadingUpsideDown && !trailingUpsideDown) { // un
-			if (isLeading) {
-				return -1.0;
-			} else {
-				return -1.0;
-			}
-		} else if (!leadingUpsideDown && trailingUpsideDown) { // nu
-			if (isLeading) {
-				return 1.0;
-			} else {
-				return 1.0;
-			}
-		}
-		Create.LOGGER.error("Theoretically unreachable code just got reached. HALP me please");
-		return 0.0; // this is actually unreachable but yay
-		/*if (!leadingUpsideDown) { // leading up
-			portalOffset = 1.0;
-		} else if (trailingUpsideDown) { // leading down, trailing down
-			portalOffset = -1.0;
-		} else { // leading down, trailing up - ahh
-			portalOffset = DebugValueCommand.value;
-		}
-		return portalOffset;*/
-	}
-
 }

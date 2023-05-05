@@ -16,8 +16,6 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.command.DebugValueCommand;
-
 import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -327,7 +325,7 @@ public class Carriage {
 			dce.positionAnchor = dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
 				: pivoted(dce, dimension, point,
 					leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2,
-					leadingUpsideDown, trailingUpsideDown, leading);
+					leadingUpsideDown, trailingUpsideDown);
 
 			boolean backAnchorFlip = trailingBogey.isUpsideDown() ^ leadingBogey.isUpsideDown();
 
@@ -335,11 +333,11 @@ public class Carriage {
 				dce.rotationAnchors.setFirst(dimension.equals(leadingBogeyDim) ? leadingBogey.getAnchorPosition()
 					: pivoted(dce, dimension, point,
 						leading ? leadingWheelSpacing / 2 : bogeySpacing + trailingWheelSpacing / 2,
-						leadingUpsideDown, trailingUpsideDown, leading));
+						leadingUpsideDown, trailingUpsideDown));
 				dce.rotationAnchors.setSecond(dimension.equals(trailingBogeyDim) ? trailingBogey.getAnchorPosition(backAnchorFlip)
 					: pivoted(dce, dimension, point,
 						leading ? leadingWheelSpacing / 2 + bogeySpacing : trailingWheelSpacing / 2,
-						leadingUpsideDown, trailingUpsideDown, leading));
+						leadingUpsideDown, trailingUpsideDown));
 
 			} else {
 				if (dimension.equals(otherDimension)) {
@@ -347,10 +345,10 @@ public class Carriage {
 				} else {
 					dce.rotationAnchors.setFirst(leadingBogey.points.getFirst() == point ? point.getPosition()
 						: pivoted(dce, dimension, point, leadingWheelSpacing,
-							leadingUpsideDown, trailingUpsideDown, leading));
+							leadingUpsideDown, trailingUpsideDown));
 					dce.rotationAnchors.setSecond(leadingBogey.points.getSecond() == point ? point.getPosition()
 						: pivoted(dce, dimension, point, leadingWheelSpacing,
-							leadingUpsideDown, trailingUpsideDown, leading));
+							leadingUpsideDown, trailingUpsideDown));
 				}
 			}
 
@@ -368,26 +366,16 @@ public class Carriage {
 	}
 
 	private Vec3 pivoted(DimensionalCarriageEntity dce, ResourceKey<Level> dimension, TravellingPoint start,
-		double offset, boolean leadingUpsideDown, boolean trailingUpsideDown, boolean isLeading) {
+		double offset, boolean leadingUpsideDown, boolean trailingUpsideDown) {
 		if (train.graph == null)
 			return dce.pivot == null ? null : dce.pivot.getLocation();
 		TrackNodeLocation pivot = dce.findPivot(dimension, start == getLeadingPoint());
 		if (pivot == null)
 			return null;
-		boolean flipped = false;
-		if (!leadingUpsideDown && trailingUpsideDown) { // nu // fixme this code sucks and needs to be better
-			flipped = start != getLeadingPoint() && (leadingBogey().isUpsideDown() != trailingBogey().isUpsideDown());
-		} else if (leadingUpsideDown && !trailingUpsideDown) { // un
-			flipped = start != getLeadingPoint() && (leadingBogey().isUpsideDown() != trailingBogey().isUpsideDown());
-		}
+		boolean flipped = start != getLeadingPoint() && (leadingUpsideDown != trailingUpsideDown);
 		Vec3 startVec = start.getPosition(flipped);
 		Vec3 portalVec = pivot.getLocation()
-			.add(0, DebugValueCommand.tmpPortalOffset(leadingUpsideDown, trailingUpsideDown, isLeading), 0);
-		// same side - other side
-		// n(ormal)-n(ormal)
-		// u(pside down)-u(pside down) what about un ? not tested yet  un doesn't work with + 1 or -1. HALP
-		// 1 works for: nn   n   nu
-		//-1 works for: uu   u
+			.add(0, leadingUpsideDown ? -1.0 : 1.0, 0);
 		return VecHelper.lerp((float) (offset / startVec.distanceTo(portalVec)), startVec, portalVec);
 	}
 
