@@ -82,7 +82,7 @@ public class CarriageCouplingRenderer {
 
 				float margin = 3 / 16f;
 				double couplingDistance = train.carriageSpacing.get(i) - 2 * margin
-					- bogey1.type.getConnectorAnchorOffset(bogey1.isUpsideDown()).z - bogey2.type.getConnectorAnchorOffset(bogey1.isUpsideDown()).z;
+					- bogey1.type.getConnectorAnchorOffset(bogey1.isUpsideDown()).z - bogey2.type.getConnectorAnchorOffset(bogey2.isUpsideDown()).z;
 				int couplingSegments = (int) Math.round(couplingDistance * 4);
 				double stretch = ((anchor2.distanceTo(anchor) - 2 * margin) * 4) / couplingSegments;
 				for (int j = 0; j < couplingSegments; j++) {

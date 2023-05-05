@@ -374,7 +374,13 @@ public class Carriage {
 		TrackNodeLocation pivot = dce.findPivot(dimension, start == getLeadingPoint());
 		if (pivot == null)
 			return null;
-		Vec3 startVec = start.getPosition(start != getLeadingPoint() && (leadingBogey().isUpsideDown() != trailingBogey().isUpsideDown()));
+		boolean flipped = false;
+		if (!leadingUpsideDown && trailingUpsideDown) { // nu // fixme this code sucks and needs to be better
+			flipped = start != getLeadingPoint() && (leadingBogey().isUpsideDown() != trailingBogey().isUpsideDown());
+		} else if (leadingUpsideDown && !trailingUpsideDown) { // un
+			flipped = start != getLeadingPoint() && (leadingBogey().isUpsideDown() != trailingBogey().isUpsideDown());
+		}
+		Vec3 startVec = start.getPosition(flipped);
 		Vec3 portalVec = pivot.getLocation()
 			.add(0, DebugValueCommand.tmpPortalOffset(leadingUpsideDown, trailingUpsideDown, isLeading), 0);
 		// same side - other side

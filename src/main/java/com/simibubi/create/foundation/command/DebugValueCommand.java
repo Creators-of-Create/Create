@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.CommandBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DebugValueCommand {
+public class DebugValueCommand { //fixme this is *very* temporary
 
 	public static float value = 0;
 
@@ -41,8 +41,9 @@ public class DebugValueCommand {
 
 	// same side - other side
 	// n(ormal)-n(ormal)
-	// u(pside down)-u(pside down) what about un ? not tested yet  un doesn't work with + 1 or -1. HALP
-	// 1 works for: nn   n   nu
+	// u(pside down)-u(pside down)
+	// nu works with special handling, now to get un to work!
+	// 1 works for: nn   n
 	//-1 works for: uu   u
 	public static double tmpPortalOffset(boolean leadingUpsideDown, boolean trailingUpsideDown, boolean isLeading) {
 		double portalOffset = 0.0;
@@ -52,9 +53,9 @@ public class DebugValueCommand {
 			return -1.0;
 		} else if (leadingUpsideDown && !trailingUpsideDown) { // un
 			if (isLeading) {
-				return 0.1;
+				return -1.0;
 			} else {
-				return 0.2;
+				return -1.0;
 			}
 		} else if (!leadingUpsideDown && trailingUpsideDown) { // nu
 			if (isLeading) {

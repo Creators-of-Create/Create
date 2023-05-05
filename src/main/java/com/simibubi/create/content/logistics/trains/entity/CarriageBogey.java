@@ -151,7 +151,9 @@ public class CarriageBogey {
 
 	public void updateCouplingAnchor(Vec3 entityPos, float entityXRot, float entityYRot, int bogeySpacing,
 		float partialTicks, boolean leading) {
-		Vec3 thisOffset = type.getConnectorAnchorOffset(isUpsideDown());
+		boolean selfUpsideDown = isUpsideDown();
+		boolean leadingUpsideDown = carriage.leadingBogey().isUpsideDown();
+		Vec3 thisOffset = type.getConnectorAnchorOffset(selfUpsideDown);
 		thisOffset = thisOffset.multiply(1, 1, leading ? -1 : 1);
 
 		thisOffset = VecHelper.rotate(thisOffset, pitch.getValue(partialTicks), Axis.X);
@@ -163,6 +165,8 @@ public class CarriageBogey {
 		thisOffset = VecHelper.rotate(thisOffset, 180, Axis.Y);
 		thisOffset = VecHelper.rotate(thisOffset, -entityXRot, Axis.X);
 		thisOffset = VecHelper.rotate(thisOffset, entityYRot + 90, Axis.Y);
+		if (selfUpsideDown != leadingUpsideDown)
+			thisOffset = thisOffset.add(0, selfUpsideDown ? -2 : 2, 0);
 
 		couplingAnchors.set(leading, entityPos.add(thisOffset));
 	}
