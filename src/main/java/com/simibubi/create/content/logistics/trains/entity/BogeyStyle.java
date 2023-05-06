@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import com.jozufozu.flywheel.api.MaterialManager;
+import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 
 public class BogeyStyle {
 	public final ResourceLocation name;
+	public final ResourceLocation cycleGroup;
 	private final Optional<CommonRenderer> commonRenderer;
 	private final Map<BogeySizes.BogeySize, SizeData> sizes;
 	public final Component displayName;
@@ -33,9 +35,10 @@ public class BogeyStyle {
 	public final ParticleOptions smokeParticle;
 	public final CompoundTag defaultData;
 
-	public BogeyStyle(ResourceLocation name, Component displayName, ResourceLocation soundType, ParticleOptions contactParticle, ParticleOptions smokeParticle,
+	public BogeyStyle(ResourceLocation name, ResourceLocation cycleGroup, Component displayName, ResourceLocation soundType, ParticleOptions contactParticle, ParticleOptions smokeParticle,
 					  CompoundTag defaultData, Map<BogeySizes.BogeySize, SizeData> sizes, Optional<CommonRenderer> commonRenderer) {
 		this.name = name;
+		this.cycleGroup = cycleGroup;
 		this.displayName = displayName;
 		this.soundType = soundType;
 		this.contactParticle = contactParticle;
@@ -44,6 +47,10 @@ public class BogeyStyle {
 
 		this.sizes = sizes;
 		this.commonRenderer = commonRenderer;
+	}
+
+	public Map<ResourceLocation, BogeyStyle> getCycleGroup() {
+		return AllBogeyStyles.getCycleGroup(cycleGroup);
 	}
 
 	public Block getNextBlock(BogeySizes.BogeySize currentSize) {

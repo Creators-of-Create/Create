@@ -192,7 +192,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	Direction assemblyDirection;
 	int assemblyLength;
 	int[] bogeyLocations;
-	AbstractBogeyBlock[] bogeyTypes;
+	AbstractBogeyBlock<?>[] bogeyTypes;
 	boolean[] upsideDownBogeys;
 	int bogeyCount;
 
@@ -285,7 +285,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 						CompoundTag oldData = oldTE.getBogeyData();
 						BlockState newBlock = bogey.getNextSize(oldTE);
 						if (newBlock.getBlock() == bogey)
-							player.displayClientMessage(Lang.translateDirect("create.bogey.style.no_other_sizes")
+							player.displayClientMessage(Lang.translateDirect("bogey.style.no_other_sizes")
 									.withStyle(ChatFormatting.RED), true);
 						level.setBlock(bogeyPos, newBlock, 3);
 						BlockEntity newEntity = level.getBlockEntity(bogeyPos);
@@ -307,7 +307,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			return false;
 		}
 
-		boolean upsideDown = (player.getViewXRot(1.0F) < 0 && (track.getBogeyAnchor(level, pos, state)).getBlock() instanceof AbstractBogeyBlock bogey && bogey.canBeUpsideDown());
+		boolean upsideDown = (player.getViewXRot(1.0F) < 0 && (track.getBogeyAnchor(level, pos, state)).getBlock() instanceof AbstractBogeyBlock<?> bogey && bogey.canBeUpsideDown());
 
 		BlockPos targetPos = upsideDown ? pos.offset(down) : pos.offset(up);
 		if (level.getBlockState(targetPos)
@@ -318,7 +318,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		level.destroyBlock(targetPos, true);
 
 		BlockState bogeyAnchor = track.getBogeyAnchor(level, pos, state);
-		if (bogeyAnchor.getBlock() instanceof AbstractBogeyBlock bogey) {
+		if (bogeyAnchor.getBlock() instanceof AbstractBogeyBlock<?> bogey) {
 			bogeyAnchor = bogey.getVersion(bogeyAnchor, upsideDown);
 		}
 		bogeyAnchor = ProperWaterloggedBlock.withWater(level, bogeyAnchor, pos);
@@ -415,12 +415,12 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 			BlockState potentialBogeyState = level.getBlockState(bogeyOffset.offset(currentPos));
 			BlockPos upsideDownBogeyOffset = new BlockPos(bogeyOffset.getX(), bogeyOffset.getY()*-1, bogeyOffset.getZ());
 			if (bogeyIndex < bogeyLocations.length) {
-				if (potentialBogeyState.getBlock() instanceof AbstractBogeyBlock bogey && !bogey.isUpsideDown(potentialBogeyState)) {
+				if (potentialBogeyState.getBlock() instanceof AbstractBogeyBlock<?> bogey && !bogey.isUpsideDown(potentialBogeyState)) {
 					bogeyTypes[bogeyIndex] = bogey;
 					bogeyLocations[bogeyIndex] = i;
 					upsideDownBogeys[bogeyIndex] = false;
 					bogeyIndex++;
-				} else if ((potentialBogeyState = level.getBlockState(upsideDownBogeyOffset.offset(currentPos))).getBlock() instanceof AbstractBogeyBlock bogey && bogey.isUpsideDown(potentialBogeyState)) {
+				} else if ((potentialBogeyState = level.getBlockState(upsideDownBogeyOffset.offset(currentPos))).getBlock() instanceof AbstractBogeyBlock<?> bogey && bogey.isUpsideDown(potentialBogeyState)) {
 					bogeyTypes[bogeyIndex] = bogey;
 					bogeyLocations[bogeyIndex] = i;
 					upsideDownBogeys[bogeyIndex] = true;
@@ -629,7 +629,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				return;
 			}
 
-			AbstractBogeyBlock typeOfFirstBogey = bogeyTypes[bogeyIndex];
+			AbstractBogeyBlock<?> typeOfFirstBogey = bogeyTypes[bogeyIndex];
 			boolean firstBogeyIsUpsideDown = upsideDownBogeys[bogeyIndex];
 			BlockPos firstBogeyPos = contraption.anchor;
 			AbstractBogeyTileEntity firstBogeyTileEntity = (AbstractBogeyTileEntity) level.getBlockEntity(firstBogeyPos);
@@ -637,9 +637,6 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 				new CarriageBogey(typeOfFirstBogey, firstBogeyIsUpsideDown, firstBogeyTileEntity.getBogeyData(), points.get(pointIndex), points.get(pointIndex + 1));
 			CarriageBogey secondBogey = null;
 			BlockPos secondBogeyPos = contraption.getSecondBogeyPos();
-			/*if (secondBogeyPos != null && (bogeyIndex + 1 < upsideDownBogeys.length && upsideDownBogeys[bogeyIndex + 1])) {
-				secondBogeyPos = secondBogeyPos.above(2);
-			}*/
 			int bogeySpacing = 0;
 
 			if (secondBogeyPos != null) {
