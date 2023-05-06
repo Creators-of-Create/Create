@@ -5,10 +5,10 @@
       "tag": "minecraft:wooden_doors"
     },
     {
-      "item": "create:railway_casing"
+      "item": "create:copper_casing"
     }
   ],
   "result": {
-    "item": "create:train_door"
+    "item": "create:copper_door"
   }
 }

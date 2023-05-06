@@ -335,14 +335,29 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.requires(I.brassSheet())),
 
 		TRAIN_DOOR = create(AllBlocks.TRAIN_DOOR).returns(1)
-			.unlockedByTag(() -> I.brass())
+			.unlockedBy(() -> I.railwayCasing())
 			.viaShapeless(b -> b.requires(ItemTags.WOODEN_DOORS)
-				.requires(I.brassSheet())),
+				.requires(I.railwayCasing())),
+
+		ANDESITE_DOOR = create(AllBlocks.ANDESITE_DOOR).returns(1)
+			.unlockedBy(() -> I.andesiteCasing())
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_DOORS)
+				.requires(I.andesiteCasing())),
+
+		BRASS_DOOR = create(AllBlocks.BRASS_DOOR).returns(1)
+			.unlockedBy(() -> I.brassCasing())
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_DOORS)
+				.requires(I.brassCasing())),
+
+		COPPER_DOOR = create(AllBlocks.COPPER_DOOR).returns(1)
+			.unlockedBy(() -> I.copperCasing())
+			.viaShapeless(b -> b.requires(ItemTags.WOODEN_DOORS)
+				.requires(I.copperCasing())),
 
 		TRAIN_TRAPDOOR = create(AllBlocks.TRAIN_TRAPDOOR).returns(1)
-			.unlockedByTag(() -> I.brass())
+			.unlockedBy(() -> I.railwayCasing())
 			.viaShapeless(b -> b.requires(ItemTags.WOODEN_TRAPDOORS)
-				.requires(I.brassSheet())),
+				.requires(I.railwayCasing())),
 
 		FRAMED_GLASS_DOOR = create(AllBlocks.FRAMED_GLASS_DOOR).returns(1)
 			.unlockedBy(AllPaletteBlocks.FRAMED_GLASS::get)
@@ -650,7 +665,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("B")
 				.pattern("C")
 				.pattern("I")),
-			
+
 		CONTRAPTION_CONTROLS = create(AllBlocks.CONTRAPTION_CONTROLS).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('B', ItemTags.BUTTONS)
 				.define('C', I.andesiteCasing())
@@ -915,7 +930,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("R")
 				.pattern("B")
 				.pattern("I")),
-			
+
 		THRESHOLD_SWITCH = create(AllBlocks.THRESHOLD_SWITCH).unlockedBy(I::brassCasing)
 			.viaShaped(b -> b.define('B', I.brassCasing())
 				.define('R', I.electronTube())
@@ -1036,10 +1051,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("P")
 				.pattern("G")),
 
-		CLIPBOARD_CLEAR = clearData(AllBlocks.CLIPBOARD),
-		SCHEDULE_CLEAR = clearData(AllItems.SCHEDULE),
-		FILTER_CLEAR = clearData(AllItems.FILTER),
-		ATTRIBUTE_FILTER_CLEAR = clearData(AllItems.ATTRIBUTE_FILTER),
+		CLIPBOARD_CLEAR = clearData(AllBlocks.CLIPBOARD), SCHEDULE_CLEAR = clearData(AllItems.SCHEDULE),
+		FILTER_CLEAR = clearData(AllItems.FILTER), ATTRIBUTE_FILTER_CLEAR = clearData(AllItems.ATTRIBUTE_FILTER),
 
 		DIVING_HELMET = create(AllItems.COPPER_DIVING_HELMET).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('G', Tags.Items.GLASS)

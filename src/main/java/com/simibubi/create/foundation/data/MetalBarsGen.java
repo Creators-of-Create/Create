@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class MetalBarsGen {
@@ -121,11 +122,12 @@ public class MetalBarsGen {
 	}
 
 	public static BlockEntry<IronBarsBlock> createBars(String name, boolean specialEdge,
-		Supplier<DataIngredient> ingredient) {
+		Supplier<DataIngredient> ingredient, MaterialColor color) {
 		return REGISTRATE.block(name + "_bars", IronBarsBlock::new)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(() -> Blocks.IRON_BARS)
-			.properties(p -> p.sound(SoundType.COPPER))
+			.properties(p -> p.sound(SoundType.COPPER)
+				.color(color))
 			.tag(AllBlockTags.WRENCH_PICKUP.tag)
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.blockstate(barsBlockState(name, specialEdge))

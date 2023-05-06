@@ -417,21 +417,22 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.register();
 
-	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_LARGE_COGWHEEL =
-		REGISTRATE.block("andesite_encased_large_cogwheel", p -> new EncasedCogwheelBlock(p, true, AllBlocks.ANDESITE_CASING::get))
-			.properties(p -> p.color(MaterialColor.PODZOL))
-			.transform(BuilderTransformers.encasedLargeCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
-			.transform(EncasingRegistry.addVariantTo(AllBlocks.LARGE_COGWHEEL))
-			.transform(axeOrPickaxe())
-			.register();
+	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_LARGE_COGWHEEL = REGISTRATE
+		.block("andesite_encased_large_cogwheel",
+			p -> new EncasedCogwheelBlock(p, true, AllBlocks.ANDESITE_CASING::get))
+		.properties(p -> p.color(MaterialColor.PODZOL))
+		.transform(BuilderTransformers.encasedLargeCogwheel("andesite", () -> AllSpriteShifts.ANDESITE_CASING))
+		.transform(EncasingRegistry.addVariantTo(AllBlocks.LARGE_COGWHEEL))
+		.transform(axeOrPickaxe())
+		.register();
 
-	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_LARGE_COGWHEEL =
-		REGISTRATE.block("brass_encased_large_cogwheel", p -> new EncasedCogwheelBlock(p, true, AllBlocks.BRASS_CASING::get))
-			.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
-			.transform(BuilderTransformers.encasedLargeCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
-			.transform(EncasingRegistry.addVariantTo(AllBlocks.LARGE_COGWHEEL))
-			.transform(axeOrPickaxe())
-			.register();
+	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_LARGE_COGWHEEL = REGISTRATE
+		.block("brass_encased_large_cogwheel", p -> new EncasedCogwheelBlock(p, true, AllBlocks.BRASS_CASING::get))
+		.properties(p -> p.color(MaterialColor.TERRACOTTA_BROWN))
+		.transform(BuilderTransformers.encasedLargeCogwheel("brass", () -> AllSpriteShifts.BRASS_CASING))
+		.transform(EncasingRegistry.addVariantTo(AllBlocks.LARGE_COGWHEEL))
+		.transform(axeOrPickaxe())
+		.register();
 
 	public static final BlockEntry<GearboxBlock> GEARBOX = REGISTRATE.block("gearbox", GearboxBlock::new)
 		.initialProperties(SharedProperties::stone)
@@ -539,8 +540,7 @@ public class AllBlocks {
 		.blockstate(
 			(c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, s -> AssetLookup.partialBaseModel(c, p)))
 		.addLayer(() -> RenderType::cutoutMipped)
-		.transform(BlockStressDefaults
-			.setCapacity(32.0))
+		.transform(BlockStressDefaults.setCapacity(32.0))
 		.transform(BlockStressDefaults.setGeneratorSpeed(WaterWheelBlock::getSpeedRange))
 		.item()
 		.transform(customItemModel())
@@ -825,31 +825,6 @@ public class AllBlocks {
 		.item(BracketBlockItem::new)
 		.transform(BracketGenerator.itemModel("metal"))
 		.register();
-
-	public static final BlockEntry<GirderBlock> METAL_GIRDER = REGISTRATE.block("metal_girder", GirderBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.blockstate(GirderBlockStateGenerator::blockState)
-		.properties(p -> p.color(MaterialColor.COLOR_GRAY))
-		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
-		.transform(pickaxeOnly())
-		.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-		.item()
-		.transform(customItemModel())
-		.register();
-
-	public static final BlockEntry<GirderEncasedShaftBlock> METAL_GIRDER_ENCASED_SHAFT =
-		REGISTRATE.block("metal_girder_encased_shaft", GirderEncasedShaftBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.blockstate(GirderBlockStateGenerator::blockStateWithShaft)
-			.properties(p -> p.color(MaterialColor.COLOR_GRAY))
-			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
-			.transform(pickaxeOnly())
-			.loot((p, b) -> p.add(b, RegistrateBlockLootTables.createSingleItemTable(METAL_GIRDER.get())
-				.withPool(RegistrateBlockLootTables.applyExplosionCondition(SHAFT.get(), LootPool.lootPool()
-					.setRolls(ConstantValue.exactly(1.0F))
-					.add(LootItem.lootTableItem(SHAFT.get()))))))
-			.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-			.register();
 
 	// Fluids
 
@@ -1423,43 +1398,6 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final DyedBlockList<SeatBlock> SEATS = new DyedBlockList<>(colour -> {
-		String colourName = colour.getSerializedName();
-		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
-		SeatInteractionBehaviour interactionBehaviour = new SeatInteractionBehaviour();
-		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour, colour == DyeColor.RED))
-			.initialProperties(SharedProperties::wooden)
-			.properties(p -> p.color(colour.getMaterialColor()))
-			.transform(axeOnly())
-			.onRegister(movementBehaviour(movementBehaviour))
-			.onRegister(interactionBehaviour(interactionBehaviour))
-			.onRegister(assignDataBehaviour(new EntityNameDisplaySource(), "entity_name"))
-			.blockstate((c, p) -> {
-				p.simpleBlock(c.get(), p.models()
-					.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
-					.texture("1", p.modLoc("block/seat/top_" + colourName))
-					.texture("2", p.modLoc("block/seat/side_" + colourName)));
-			})
-			.recipe((c, p) -> {
-				ShapelessRecipeBuilder.shapeless(c.get())
-					.requires(DyeHelper.getWoolOfDye(colour))
-					.requires(ItemTags.WOODEN_SLABS)
-					.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
-					.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
-				ShapelessRecipeBuilder.shapeless(c.get())
-					.requires(colour.getTag())
-					.requires(AllItemTags.SEATS.tag)
-					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
-					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
-			})
-			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemDescription.useKey(v, "block.create.seat"))
-			.tag(AllBlockTags.SEATS.tag)
-			.item()
-			.tag(AllItemTags.SEATS.tag)
-			.build()
-			.register();
-	});
-
 	public static final BlockEntry<SailBlock> SAIL_FRAME = REGISTRATE.block("sail_frame", p -> SailBlock.frame(p))
 		.initialProperties(SharedProperties::wooden)
 		.properties(p -> p.color(MaterialColor.DIRT))
@@ -1708,40 +1646,6 @@ public class AllBlocks {
 		.item()
 		.transform(customItemModel())
 		.register();
-
-	public static final BlockEntry<SlidingDoorBlock> TRAIN_DOOR = REGISTRATE.block("train_door", SlidingDoorBlock::new)
-		.transform(BuilderTransformers.slidingDoor("train"))
-		.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN)
-			.sound(SoundType.NETHERITE_BLOCK)
-			.noOcclusion())
-		.register();
-
-	public static final BlockEntry<TrainTrapdoorBlock> TRAIN_TRAPDOOR =
-		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN)
-				.sound(SoundType.NETHERITE_BLOCK))
-			.transform(BuilderTransformers.trapdoor(true))
-			.register();
-
-	public static final BlockEntry<SlidingDoorBlock> FRAMED_GLASS_DOOR =
-		REGISTRATE.block("framed_glass_door", SlidingDoorBlock::new)
-			.transform(BuilderTransformers.slidingDoor("glass"))
-			.properties(p -> p.color(MaterialColor.NONE)
-				.sound(SoundType.GLASS)
-				.noOcclusion())
-			.register();
-
-	public static final BlockEntry<TrainTrapdoorBlock> FRAMED_GLASS_TRAPDOOR =
-		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.transform(BuilderTransformers.trapdoor(false))
-			.properties(p -> p.color(MaterialColor.NONE)
-				.sound(SoundType.GLASS)
-				.noOcclusion())
-			.onRegister(connectedTextures(TrapdoorCTBehaviour::new))
-			.addLayer(() -> RenderType::cutoutMipped)
-			.register();
 
 	public static final BlockEntry<ItemVaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", ItemVaultBlock::new)
 		.initialProperties(SharedProperties::softMetal)
@@ -2094,47 +1998,73 @@ public class AllBlocks {
 
 	public static final BlockEntry<MetalLadderBlock> ANDESITE_LADDER =
 		REGISTRATE.block("andesite_ladder", MetalLadderBlock::new)
-			.transform(
-				BuilderTransformers.ladder("andesite", () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get())))
+			.transform(BuilderTransformers.ladder("andesite", () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()),
+				MaterialColor.STONE))
 			.register();
 
 	public static final BlockEntry<MetalLadderBlock> BRASS_LADDER =
 		REGISTRATE.block("brass_ladder", MetalLadderBlock::new)
-			.transform(
-				BuilderTransformers.ladder("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass"))))
+			.transform(BuilderTransformers.ladder("brass",
+				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MaterialColor.TERRACOTTA_YELLOW))
 			.register();
 
 	public static final BlockEntry<MetalLadderBlock> COPPER_LADDER =
 		REGISTRATE.block("copper_ladder", MetalLadderBlock::new)
-			.transform(
-				BuilderTransformers.ladder("copper", () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper"))))
+			.transform(BuilderTransformers.ladder("copper",
+				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MaterialColor.COLOR_ORANGE))
 			.register();
 
-	public static final BlockEntry<IronBarsBlock> ANDESITE_BARS =
-		MetalBarsGen.createBars("andesite", true, () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()));
-	public static final BlockEntry<IronBarsBlock> BRASS_BARS =
-		MetalBarsGen.createBars("brass", true, () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")));
-	public static final BlockEntry<IronBarsBlock> COPPER_BARS =
-		MetalBarsGen.createBars("copper", true, () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")));
+	public static final BlockEntry<IronBarsBlock> ANDESITE_BARS = MetalBarsGen.createBars("andesite", true,
+		() -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()), MaterialColor.STONE);
+	public static final BlockEntry<IronBarsBlock> BRASS_BARS = MetalBarsGen.createBars("brass", true,
+		() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MaterialColor.TERRACOTTA_YELLOW);
+	public static final BlockEntry<IronBarsBlock> COPPER_BARS = MetalBarsGen.createBars("copper", true,
+		() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MaterialColor.COLOR_ORANGE);
 
-	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD =
-		REGISTRATE.block("andesite_scaffolding", MetalScaffoldingBlock::new)
-			.transform(BuilderTransformers.scaffold("andesite",
-				() -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()), AllSpriteShifts.ANDESITE_SCAFFOLD,
-				AllSpriteShifts.ANDESITE_SCAFFOLD_INSIDE, AllSpriteShifts.ANDESITE_CASING))
-			.register();
-
-	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD = REGISTRATE
-		.block("brass_scaffolding", MetalScaffoldingBlock::new)
-		.transform(BuilderTransformers.scaffold("brass", () -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")),
-			AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_SCAFFOLD_INSIDE, AllSpriteShifts.BRASS_CASING))
+	public static final BlockEntry<MetalScaffoldingBlock> ANDESITE_SCAFFOLD = REGISTRATE
+		.block("andesite_scaffolding", MetalScaffoldingBlock::new)
+		.transform(BuilderTransformers.scaffold("andesite", () -> DataIngredient.items(AllItems.ANDESITE_ALLOY.get()),
+			MaterialColor.STONE, AllSpriteShifts.ANDESITE_SCAFFOLD, AllSpriteShifts.ANDESITE_SCAFFOLD_INSIDE,
+			AllSpriteShifts.ANDESITE_CASING))
 		.register();
+
+	public static final BlockEntry<MetalScaffoldingBlock> BRASS_SCAFFOLD =
+		REGISTRATE.block("brass_scaffolding", MetalScaffoldingBlock::new)
+			.transform(BuilderTransformers.scaffold("brass",
+				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/brass")), MaterialColor.TERRACOTTA_YELLOW,
+				AllSpriteShifts.BRASS_SCAFFOLD, AllSpriteShifts.BRASS_SCAFFOLD_INSIDE, AllSpriteShifts.BRASS_CASING))
+			.register();
 
 	public static final BlockEntry<MetalScaffoldingBlock> COPPER_SCAFFOLD =
 		REGISTRATE.block("copper_scaffolding", MetalScaffoldingBlock::new)
 			.transform(BuilderTransformers.scaffold("copper",
-				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), AllSpriteShifts.COPPER_SCAFFOLD,
-				AllSpriteShifts.COPPER_SCAFFOLD_INSIDE, AllSpriteShifts.COPPER_CASING))
+				() -> DataIngredient.tag(AllTags.forgeItemTag("ingots/copper")), MaterialColor.COLOR_ORANGE,
+				AllSpriteShifts.COPPER_SCAFFOLD, AllSpriteShifts.COPPER_SCAFFOLD_INSIDE, AllSpriteShifts.COPPER_CASING))
+			.register();
+
+	public static final BlockEntry<GirderBlock> METAL_GIRDER = REGISTRATE.block("metal_girder", GirderBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.blockstate(GirderBlockStateGenerator::blockState)
+		.properties(p -> p.color(MaterialColor.COLOR_GRAY))
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.transform(pickaxeOnly())
+		.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
+		.item()
+		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<GirderEncasedShaftBlock> METAL_GIRDER_ENCASED_SHAFT =
+		REGISTRATE.block("metal_girder_encased_shaft", GirderEncasedShaftBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.blockstate(GirderBlockStateGenerator::blockStateWithShaft)
+			.properties(p -> p.color(MaterialColor.COLOR_GRAY))
+			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+			.transform(pickaxeOnly())
+			.loot((p, b) -> p.add(b, RegistrateBlockLootTables.createSingleItemTable(METAL_GIRDER.get())
+				.withPool(RegistrateBlockLootTables.applyExplosionCondition(SHAFT.get(), LootPool.lootPool()
+					.setRolls(ConstantValue.exactly(1.0F))
+					.add(LootItem.lootTableItem(SHAFT.get()))))))
+			.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
 			.register();
 
 	public static final BlockEntry<Block> COPYCAT_BASE = REGISTRATE.block("copycat_base", Block::new)
@@ -2169,7 +2099,103 @@ public class AllBlocks {
 			.blockstate(new SpecialCopycatPanelBlockState("bars")::generate)
 			.onRegister(CreateRegistrate.blockModel(() -> CopycatBarsModel::new))
 			.register();
-	
+
+	public static final DyedBlockList<SeatBlock> SEATS = new DyedBlockList<>(colour -> {
+		String colourName = colour.getSerializedName();
+		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
+		SeatInteractionBehaviour interactionBehaviour = new SeatInteractionBehaviour();
+		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour, true))
+			.initialProperties(SharedProperties::wooden)
+			.properties(p -> p.color(colour.getMaterialColor()))
+			.transform(axeOnly())
+			.onRegister(movementBehaviour(movementBehaviour))
+			.onRegister(interactionBehaviour(interactionBehaviour))
+			.onRegister(assignDataBehaviour(new EntityNameDisplaySource(), "entity_name"))
+			.blockstate((c, p) -> {
+				p.simpleBlock(c.get(), p.models()
+					.withExistingParent(colourName + "_seat", p.modLoc("block/seat"))
+					.texture("1", p.modLoc("block/seat/top_" + colourName))
+					.texture("2", p.modLoc("block/seat/side_" + colourName)));
+			})
+			.recipe((c, p) -> {
+				ShapelessRecipeBuilder.shapeless(c.get())
+					.requires(DyeHelper.getWoolOfDye(colour))
+					.requires(ItemTags.WOODEN_SLABS)
+					.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
+					.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
+				ShapelessRecipeBuilder.shapeless(c.get())
+					.requires(colour.getTag())
+					.requires(AllItemTags.SEATS.tag)
+					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
+					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
+			})
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> ItemDescription.useKey(v, "block.create.seat"))
+			.tag(AllBlockTags.SEATS.tag)
+			.item()
+			.tag(AllItemTags.SEATS.tag)
+			.build()
+			.register();
+	});
+
+	public static final BlockEntry<SlidingDoorBlock> ANDESITE_DOOR =
+		REGISTRATE.block("andesite_door", p -> new SlidingDoorBlock(p, true))
+			.transform(BuilderTransformers.slidingDoor("andesite"))
+			.properties(p -> p.color(MaterialColor.STONE)
+				.sound(SoundType.STONE)
+				.noOcclusion())
+			.register();
+
+	public static final BlockEntry<SlidingDoorBlock> BRASS_DOOR =
+		REGISTRATE.block("brass_door", p -> new SlidingDoorBlock(p, false))
+			.transform(BuilderTransformers.slidingDoor("brass"))
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_YELLOW)
+				.sound(SoundType.STONE)
+				.noOcclusion())
+			.register();
+
+	public static final BlockEntry<SlidingDoorBlock> COPPER_DOOR =
+		REGISTRATE.block("copper_door", p -> new SlidingDoorBlock(p, true))
+			.transform(BuilderTransformers.slidingDoor("copper"))
+			.properties(p -> p.color(MaterialColor.COLOR_ORANGE)
+				.sound(SoundType.STONE)
+				.noOcclusion())
+			.register();
+
+	public static final BlockEntry<SlidingDoorBlock> TRAIN_DOOR =
+		REGISTRATE.block("train_door", p -> new SlidingDoorBlock(p, false))
+			.transform(BuilderTransformers.slidingDoor("train"))
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN)
+				.sound(SoundType.NETHERITE_BLOCK)
+				.noOcclusion())
+			.register();
+
+	public static final BlockEntry<TrainTrapdoorBlock> TRAIN_TRAPDOOR =
+		REGISTRATE.block("train_trapdoor", TrainTrapdoorBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.color(MaterialColor.TERRACOTTA_CYAN)
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(BuilderTransformers.trapdoor(true))
+			.register();
+
+	public static final BlockEntry<SlidingDoorBlock> FRAMED_GLASS_DOOR =
+		REGISTRATE.block("framed_glass_door", p -> new SlidingDoorBlock(p, false))
+			.transform(BuilderTransformers.slidingDoor("glass"))
+			.properties(p -> p.color(MaterialColor.NONE)
+				.sound(SoundType.GLASS)
+				.noOcclusion())
+			.register();
+
+	public static final BlockEntry<TrainTrapdoorBlock> FRAMED_GLASS_TRAPDOOR =
+		REGISTRATE.block("framed_glass_trapdoor", TrainTrapdoorBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.transform(BuilderTransformers.trapdoor(false))
+			.properties(p -> p.color(MaterialColor.NONE)
+				.sound(SoundType.GLASS)
+				.noOcclusion())
+			.onRegister(connectedTextures(TrapdoorCTBehaviour::new))
+			.addLayer(() -> RenderType::cutoutMipped)
+			.register();
+
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_ORE)
 		.properties(p -> p.color(MaterialColor.METAL))
@@ -2230,7 +2256,7 @@ public class AllBlocks {
 		.build()
 		.lang("Block of Zinc")
 		.register();
-	
+
 	public static final BlockEntry<Block> ANDESITE_ALLOY_BLOCK = REGISTRATE.block("andesite_alloy_block", Block::new)
 		.initialProperties(() -> Blocks.ANDESITE)
 		.properties(p -> p.color(MaterialColor.STONE))
@@ -2243,7 +2269,7 @@ public class AllBlocks {
 		.build()
 		.lang("Block of Andesite Alloy")
 		.register();
-	
+
 	public static final BlockEntry<Block> INDUSTRIAL_IRON_BLOCK = REGISTRATE.block("industrial_iron_block", Block::new)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.color(MaterialColor.COLOR_GRAY))

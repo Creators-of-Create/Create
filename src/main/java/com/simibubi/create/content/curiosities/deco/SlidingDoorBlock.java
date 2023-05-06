@@ -38,19 +38,8 @@ import net.minecraftforge.eventbus.api.Event.Result;
 
 public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<SlidingDoorBlockEntity> {
 
-	protected static final VoxelShape SE_AABB = Block.box(0.0D, 0.0D, -13.0D, 3.0D, 16.0D, 3.0D);
-	protected static final VoxelShape ES_AABB = Block.box(-13.0D, 0.0D, 0.0D, 3.0D, 16.0D, 3.0D);
-
-	protected static final VoxelShape NW_AABB = Block.box(13.0D, 0.0D, 13.0D, 16.0D, 16.0D, 29.0D);
-	protected static final VoxelShape WN_AABB = Block.box(13.0D, 0.0D, 13.0D, 29.0D, 16.0D, 16.0D);
-
-	protected static final VoxelShape SW_AABB = Block.box(13.0D, 0.0D, -13.0D, 16.0D, 16.0D, 3.0D);
-	protected static final VoxelShape WS_AABB = Block.box(13.0D, 0.0D, 0.0D, 29.0D, 16.0D, 3.0D);
-
-	protected static final VoxelShape NE_AABB = Block.box(0.0D, 0.0D, 13.0D, 3.0D, 16.0D, 29.0D);
-	protected static final VoxelShape EN_AABB = Block.box(-13.0D, 0.0D, 13.0D, 3.0D, 16.0D, 16.0D);
-
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
+	private boolean folds;
 
 	@Deprecated // Remove in 1.19 - Fixes incompatibility with Quarks double door module
 	public static void stopItQuark(PlayerInteractEvent.RightClickBlock event) {
@@ -64,14 +53,19 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		BlockPos pos = event.getPos();
 		BlockState blockState = world.getBlockState(pos);
 
-		if (blockState.getBlock()instanceof SlidingDoorBlock sdb) {
+		if (blockState.getBlock() instanceof SlidingDoorBlock sdb) {
 			event.setCanceled(true);
 			event.setCancellationResult(blockState.use(world, player, event.getHand(), event.getHitVec()));
 		}
 	}
 
-	public SlidingDoorBlock(Properties p_52737_) {
+	public SlidingDoorBlock(Properties p_52737_, boolean folds) {
 		super(p_52737_);
+		this.folds = folds;
+	}
+
+	public boolean isFoldingDoor() {
+		return folds;
 	}
 
 	@Override
@@ -86,13 +80,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 
 		Direction direction = pState.getValue(FACING);
 		boolean hinge = pState.getValue(HINGE) == DoorHingeSide.RIGHT;
-
-		return switch (direction) {
-		case SOUTH -> (hinge ? ES_AABB : WS_AABB);
-		case WEST -> (hinge ? SW_AABB : NW_AABB);
-		case NORTH -> (hinge ? WN_AABB : EN_AABB);
-		default -> (hinge ? NE_AABB : SE_AABB);
-		};
+		return SlidingDoorShapes.get(direction, hinge, isFoldingDoor());
 	}
 
 	@Override

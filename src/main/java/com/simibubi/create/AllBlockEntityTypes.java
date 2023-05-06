@@ -852,11 +852,12 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
 	
-	public static final BlockEntityEntry<SlidingDoorBlockEntity> SLIDING_DOOR = REGISTRATE
-		.blockEntity("sliding_door", SlidingDoorBlockEntity::new)
-		.renderer(() -> SlidingDoorRenderer::new)
-		.validBlocks(AllBlocks.TRAIN_DOOR, AllBlocks.FRAMED_GLASS_DOOR)
-		.register();
+	public static final BlockEntityEntry<SlidingDoorBlockEntity> SLIDING_DOOR =
+		REGISTRATE.blockEntity("sliding_door", SlidingDoorBlockEntity::new)
+			.renderer(() -> SlidingDoorRenderer::new)
+			.validBlocks(AllBlocks.TRAIN_DOOR, AllBlocks.FRAMED_GLASS_DOOR, AllBlocks.ANDESITE_DOOR,
+				AllBlocks.BRASS_DOOR, AllBlocks.COPPER_DOOR)
+			.register();
 
 	public static final BlockEntityEntry<CopycatBlockEntity> COPYCAT = REGISTRATE
 		.blockEntity("copycat", CopycatBlockEntity::new)

@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
+    "create:andesite_door",
+    "create:brass_door",
+    "create:copper_door",
     "create:train_door",
     "create:framed_glass_door"
   ]

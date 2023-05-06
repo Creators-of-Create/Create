@@ -8,10 +8,12 @@ import java.util.Map;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
 public class AllPartialModels {
@@ -65,7 +67,7 @@ public class AllPartialModels {
 		CUCKOO_PIG = block("cuckoo_clock/pig"), CUCKOO_CREEPER = block("cuckoo_clock/creeper"),
 
 		GANTRY_COGS = block("gantry_carriage/wheels"),
-
+		
 		ROPE_COIL = block("rope_pulley/rope_coil"), ROPE_HALF = block("rope_pulley/rope_half"),
 		ROPE_HALF_MAGNET = block("rope_pulley/rope_half_magnet"),
 
@@ -188,6 +190,7 @@ public class AllPartialModels {
 
 	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
+	public static final Map<ResourceLocation, Couple<PartialModel>> FOLDING_DOORS = new HashMap<>();
 	public static final List<PartialModel> CONTRAPTION_CONTROLS_INDICATOR = new ArrayList<>();
 
 	static {
@@ -205,6 +208,14 @@ public class AllPartialModels {
 			METAL_GIRDER_BRACKETS.put(d, block("metal_girder/bracket_" + Lang.asId(d.name())));
 		for (int i = 0; i < 8; i++)
 			CONTRAPTION_CONTROLS_INDICATOR.add(block("contraption_controls/indicator_" + i));
+		
+		putFoldingDoor("andesite_door");
+		putFoldingDoor("copper_door");
+	}
+
+	private static void putFoldingDoor(String path) {
+		FOLDING_DOORS.put(Create.asResource(path),
+			Couple.create(block(path + "/fold_left"), block(path + "/fold_right")));
 	}
 
 	private static PartialModel block(String path) {

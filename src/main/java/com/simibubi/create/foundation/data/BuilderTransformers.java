@@ -227,8 +227,9 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> ladder(String name,
-		Supplier<DataIngredient> ingredient) {
+		Supplier<DataIngredient> ingredient, MaterialColor color) {
 		return b -> b.initialProperties(() -> Blocks.LADDER)
+			.properties(p -> p.color(color))
 			.addLayer(() -> RenderType::cutout)
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
 				.withExistingParent(c.getName(), p.modLoc("block/ladder"))
@@ -245,10 +246,11 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> scaffold(String name,
-		Supplier<DataIngredient> ingredient, CTSpriteShiftEntry scaffoldShift, CTSpriteShiftEntry scaffoldInsideShift,
-		CTSpriteShiftEntry casingShift) {
+		Supplier<DataIngredient> ingredient, MaterialColor color, CTSpriteShiftEntry scaffoldShift,
+		CTSpriteShiftEntry scaffoldInsideShift, CTSpriteShiftEntry casingShift) {
 		return b -> b.initialProperties(() -> Blocks.SCAFFOLDING)
-			.properties(p -> p.sound(SoundType.COPPER))
+			.properties(p -> p.sound(SoundType.COPPER)
+				.color(color))
 			.addLayer(() -> RenderType::cutout)
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(s -> {
