@@ -37,7 +37,7 @@ public class ChassisRangeDisplay {
 			timer = DISPLAY_TIME;
 			CreateClient.OUTLINER.showCluster(getOutlineKey(), createSelection(te))
 					.colored(0xFFFFFF)
-					.disableLineNormals()
+					.disableNormals()
 					.lineWidth(1 / 16f)
 					.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
 		}

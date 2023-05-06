@@ -1350,7 +1350,7 @@ public class AllBlocks {
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 			})
-			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> TooltipHelper.referTo(v, "block.create.seat"))
+			.onRegisterAfter(Registry.ITEM_REGISTRY, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
 			.tag(AllBlockTags.SEATS.tag)
 			.item()
 			.tag(AllItemTags.SEATS.tag)
