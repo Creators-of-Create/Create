@@ -393,14 +393,15 @@ public class TrackGraph {
 		return connectionsFrom.get(nodes.getSecond());
 	}
 
-	public void connectNodes(LevelAccessor reader, TrackNodeLocation location, TrackNodeLocation location2,
+	public void connectNodes(LevelAccessor reader, DiscoveredLocation location, DiscoveredLocation location2,
 		@Nullable BezierConnection turn) {
 		TrackNode node1 = nodes.get(location);
 		TrackNode node2 = nodes.get(location2);
 
 		boolean bezier = turn != null;
-		TrackEdge edge = new TrackEdge(node1, node2, turn);
-		TrackEdge edge2 = new TrackEdge(node2, node1, bezier ? turn.secondary() : null);
+		TrackMaterial material = bezier ? turn.getMaterial() : location2.materialA;
+		TrackEdge edge = new TrackEdge(node1, node2, turn, material);
+		TrackEdge edge2 = new TrackEdge(node2, node1, bezier ? turn.secondary() : null, material);
 
 		for (TrackGraph graph : Create.RAILWAYS.trackNetworks.values()) {
 			for (TrackNode otherNode1 : graph.nodes.values()) {

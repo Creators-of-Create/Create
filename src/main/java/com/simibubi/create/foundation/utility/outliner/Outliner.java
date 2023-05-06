@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -79,6 +80,13 @@ public class Outliner {
 		outlines.put(slot, entry);
 		return entry.getOutline()
 			.getParams();
+	}
+
+	public OutlineParams showItem(Object slot, Vec3 pos, ItemStack stack) {
+		ItemOutline outline = new ItemOutline(pos, stack);
+		OutlineEntry entry = new OutlineEntry(outline);
+		outlines.put(slot, entry);
+		return entry.getOutline().getParams();
 	}
 
 	public void keep(Object slot) {
