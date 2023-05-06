@@ -30,9 +30,9 @@ public class ContraptionControlsBlock extends ControlsBlock implements IBE<Contr
 		BlockHitResult pHit) {
 		return onBlockEntityUse(pLevel, pPos, cte -> {
 			cte.pressButton();
-			cte.disabled = !cte.disabled;
-			cte.notifyUpdate();
 			if (!pLevel.isClientSide()) {
+				cte.disabled = !cte.disabled;
+				cte.notifyUpdate();
 				ContraptionControlsBlockEntity.sendStatus(pPlayer, cte.filtering.getFilter(), !cte.disabled);
 				AllSoundEvents.CONTROLLER_CLICK.play(cte.getLevel(), null, cte.getBlockPos(), 1,
 					cte.disabled ? 0.8f : 1.5f);

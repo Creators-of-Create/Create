@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -50,6 +51,7 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(filtering = new FilteringBehaviour(this, new ControlsSlot()));
 		filtering.setLabel(Lang.translateDirect("contraptions.contoller.target"));
+		filtering.withPredicate(AllItemTags.CONTRAPTION_CONTROLLED::matches);
 	}
 
 	public void pressButton() {
@@ -140,7 +142,7 @@ public class ContraptionControlsBlockEntity extends SmartBlockEntity {
 
 		@Override
 		public float getScale() {
-			return .5f;
+			return .508f;
 		}
 
 		@Override

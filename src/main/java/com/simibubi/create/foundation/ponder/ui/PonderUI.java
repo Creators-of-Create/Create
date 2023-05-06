@@ -433,7 +433,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	protected void renderScene(PoseStack ms, int mouseX, int mouseY, int i, float partialTicks) {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
-		PonderScene story = scenes.get(i);
+		PonderScene scene = scenes.get(i);
 		double value = lazyIndex.getValue(minecraft.getFrameTime());
 		double diff = i - value;
 		double slide = Mth.lerp(diff * diff, 200, 600) * diff;
@@ -449,24 +449,29 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		ms.pushPose();
 		ms.translate(0, 0, -800);
-		story.getTransform()
+		
+		scene.getTransform()
 			.updateScreenParams(width, height, slide);
-		story.getTransform()
+		scene.getTransform()
 			.apply(ms, partialTicks);
-		story.getTransform()
+
+//		ms.translate(-story.getBasePlateOffsetX() * .5, 0, -story.getBasePlateOffsetZ() * .5);
+
+		scene.getTransform()
 			.updateSceneRVE(partialTicks);
-		story.renderScene(buffer, ms, partialTicks);
+		
+		scene.renderScene(buffer, ms, partialTicks);
 		buffer.draw();
 
-		BoundingBox bounds = story.getBounds();
+		BoundingBox bounds = scene.getBounds();
 		ms.pushPose();
 
 		// kool shadow fx
-		{
+		if (!scene.shouldHidePlatformShadow()) {
 			RenderSystem.enableCull();
 			RenderSystem.enableDepthTest();
 			ms.pushPose();
-			ms.translate(story.getBasePlateOffsetX(), 0, story.getBasePlateOffsetZ());
+			ms.translate(scene.getBasePlateOffsetX(), 0, scene.getBasePlateOffsetZ());
 			UIRenderHelper.flipForGuiRender(ms);
 
 			float flash = finishingFlash.getValue(partialTicks) * .9f;
@@ -477,21 +482,21 @@ public class PonderUI extends NavigatableSimiScreen {
 			flash = 1 - flash;
 
 			for (int f = 0; f < 4; f++) {
-				ms.translate(story.getBasePlateSize(), 0, 0);
+				ms.translate(scene.getBasePlateSize(), 0, 0);
 				ms.pushPose();
 				ms.translate(0, 0, -1 / 1024f);
 				if (flash > 0) {
 					ms.pushPose();
 					ms.scale(1, .5f + flash * .75f, 1);
 					GuiUtils.drawGradientRect(ms.last()
-						.pose(), 0, 0, -1, -story.getBasePlateSize(), 0, 0x00_c6ffc9,
+						.pose(), 0, 0, -1, -scene.getBasePlateSize(), 0, 0x00_c6ffc9,
 						new Color(0xaa_c6ffc9).scaleAlpha(alpha)
 							.getRGB());
 					ms.popPose();
 				}
 				ms.translate(0, 0, 2 / 1024f);
 				GuiUtils.drawGradientRect(ms.last()
-					.pose(), 0, 0, 0, -story.getBasePlateSize(), 4, 0x66_000000, 0x00_000000);
+					.pose(), 0, 0, 0, -scene.getBasePlateSize(), 4, 0x66_000000, 0x00_000000);
 				ms.popPose();
 				ms.mulPose(Vector3f.YP.rotationDegrees(-90));
 			}

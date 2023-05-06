@@ -1023,6 +1023,7 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(movementBehaviour(new PortableStorageInterfaceMovement()))
 			.item()
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.transform(customItemModel())
 			.register();
 
@@ -1310,6 +1311,7 @@ public class AllBlocks {
 		.transform(BlockStressDefaults.setImpact(4.0))
 		.onRegister(movementBehaviour(new DrillMovementBehaviour()))
 		.item()
+		.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 		.transform(customItemModel())
 		.register();
 
@@ -1323,6 +1325,7 @@ public class AllBlocks {
 		.onRegister(movementBehaviour(new SawMovementBehaviour()))
 		.addLayer(() -> RenderType::cutoutMipped)
 		.item()
+		.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 		.transform(customItemModel())
 		.register();
 
@@ -1335,6 +1338,7 @@ public class AllBlocks {
 		.onRegister(movementBehaviour(new DeployerMovementBehaviour()))
 		.onRegister(interactionBehaviour(new DeployerMovingInteraction()))
 		.item(AssemblyOperatorBlockItem::new)
+		.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 		.transform(customItemModel())
 		.register();
 
@@ -1346,6 +1350,7 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(movementBehaviour(new PortableStorageInterfaceMovement()))
 			.item()
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.transform(customItemModel())
 			.register();
 
@@ -1357,6 +1362,7 @@ public class AllBlocks {
 			.onRegister(movementBehaviour(new ContactMovementBehaviour()))
 			.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
 			.item(RedstoneContactItem::new)
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.transform(customItemModel("_", "block"))
 			.register();
 
@@ -1387,6 +1393,7 @@ public class AllBlocks {
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.transform(customItemModel())
 			.register();
 
@@ -1397,7 +1404,9 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.onRegister(movementBehaviour(new PloughMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(false))
-			.simpleItem()
+			.item()
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
+			.build()
 			.register();
 
 	public static final BlockEntry<RollerBlock> MECHANICAL_ROLLER =
@@ -1410,6 +1419,7 @@ public class AllBlocks {
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.item(RollerBlockItem::new)
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.transform(customItemModel())
 			.register();
 
@@ -1759,6 +1769,7 @@ public class AllBlocks {
 			.onRegister(movementBehaviour(FunnelMovementBehaviour.andesite()))
 			.blockstate(new FunnelGenerator("andesite", false)::generate)
 			.item(FunnelItem::new)
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.model(FunnelGenerator.itemModel("andesite"))
 			.build()
 			.register();
@@ -1784,6 +1795,7 @@ public class AllBlocks {
 			.onRegister(movementBehaviour(FunnelMovementBehaviour.brass()))
 			.blockstate(new FunnelGenerator("brass", true)::generate)
 			.item(FunnelItem::new)
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.model(FunnelGenerator.itemModel("brass"))
 			.build()
 			.register();

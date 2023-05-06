@@ -160,6 +160,7 @@ public class BuilderTransformers {
 			.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
 			.item()
 			.tag(ItemTags.DOORS)
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.model((c, p) -> p.blockSprite(c, p.modLoc("item/" + type + "_door")))
 			.build();
 	}
@@ -455,6 +456,7 @@ public class BuilderTransformers {
 			}))
 			.item()
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + c.getName())))
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.build();
 	}
 

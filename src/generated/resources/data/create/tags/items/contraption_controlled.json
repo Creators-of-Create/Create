@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "create:portable_fluid_interface",
+    "create:mechanical_drill",
+    "create:mechanical_saw",
+    "create:deployer",
+    "create:portable_storage_interface",
+    "create:redstone_contact",
+    "create:mechanical_harvester",
+    "create:mechanical_plough",
+    "create:mechanical_roller",
+    "create:train_door",
+    "create:framed_glass_door",
+    "create:andesite_funnel",
+    "create:brass_funnel",
+    "create:peculiar_bell",
+    "create:haunted_bell",
+    "minecraft:bell",
+    "minecraft:campfire",
+    "minecraft:soul_campfire",
+    "minecraft:dispenser",
+    "minecraft:dropper"
+  ]
+}

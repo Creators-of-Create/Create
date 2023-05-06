@@ -165,7 +165,7 @@ public class PulleyScenes {
 		scene.world.showSection(util.select.position(flowerPos), Direction.DOWN);
 		scene.overlay.showCenteredScrollInput(pulleyPos, Direction.UP, 60);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(pulleyPos), Pointing.DOWN).rightClick(),
-			60);	
+			60);
 		scene.overlay.showText(70)
 			.pointAt(util.vector.topOf(pulleyPos))
 			.placeNearTarget()
@@ -239,6 +239,92 @@ public class PulleyScenes {
 			.placeNearTarget()
 			.text("Mind that pulleys are only movable while stopped");
 		scene.idle(50);
+	}
+
+	public static void multiRope(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("rope_pulley_multi_rope", "Synchronised Pulley Movement");
+		scene.configureBasePlate(0, 0, 5);
+		scene.setSceneOffsetY(-1);
+		scene.scaleSceneView(.95f);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(5);
+
+		Selection contraption = util.select.fromTo(3, 1, 1, 1, 1, 3);
+		BlockPos crankPos = util.grid.at(3, 4, 0);
+		BlockPos pulley1 = util.grid.at(3, 4, 1);
+		BlockPos pulley2 = util.grid.at(3, 4, 3);
+		BlockPos pulley3 = util.grid.at(1, 4, 3);
+		Selection kinetics = util.select.fromTo(3, 4, 0, 3, 4, 1);
+
+		ElementLink<WorldSectionElement> planksLink = scene.world.showIndependentSection(contraption, Direction.DOWN);
+		scene.idle(10);
+		scene.world.showSection(util.select.position(pulley1), Direction.DOWN);
+		scene.idle(4);
+		scene.world.showSection(util.select.position(pulley2), Direction.DOWN);
+		scene.idle(4);
+		scene.world.showSection(util.select.position(pulley3), Direction.DOWN);
+		scene.idle(4);
+		scene.world.showSection(util.select.position(crankPos), Direction.SOUTH);
+		scene.idle(15);
+
+		scene.world.setKineticSpeed(kinetics, 32);
+		scene.world.movePulley(pulley1, 2, 20);
+		scene.idle(20);
+
+		scene.world.setKineticSpeed(kinetics, 0);
+		scene.overlay.showText(60)
+			.pointAt(util.vector.topOf(util.grid.at(3, 1, 1)))
+			.placeNearTarget()
+			.text("Whenever a pulley assembles a contraption...");
+		scene.idle(70);
+
+		scene.world.movePulley(pulley2, 2, 0);
+		scene.world.movePulley(pulley3, 2, 0);
+		scene.idle(1);
+		scene.world.setKineticSpeed(kinetics, -32);
+		scene.world.movePulley(pulley1, -2, 20);
+		scene.world.movePulley(pulley2, -2, 20);
+		scene.world.movePulley(pulley3, -2, 20);
+		scene.world.moveSection(planksLink, util.vector.of(0, 2, 0), 20);
+		scene.idle(20);
+		scene.world.setKineticSpeed(kinetics, 0);
+
+		scene.overlay.showText(80)
+			.pointAt(util.vector.blockSurface(util.grid.at(1, 4, 3), Direction.WEST))
+			.placeNearTarget()
+			.text("...other pulleys on the same layer will connect to the structure");
+		scene.idle(60);
+
+		scene.world.setKineticSpeed(kinetics, 32);
+		scene.world.movePulley(pulley1, 2, 20);
+		scene.world.movePulley(pulley2, 2, 20);
+		scene.world.movePulley(pulley3, 2, 20);
+		scene.world.moveSection(planksLink, util.vector.of(0, -2, 0), 20);
+		scene.idle(20);
+		scene.world.setKineticSpeed(kinetics, 0);
+
+		scene.idle(20);
+		scene.world.setKineticSpeed(kinetics, 32);
+		scene.world.movePulley(pulley1, -2, 20);
+		scene.world.movePulley(pulley2, -2, 20);
+		scene.world.movePulley(pulley3, -2, 20);
+		scene.world.moveSection(planksLink, util.vector.of(0, 2, 0), 20);
+		scene.idle(20);
+		scene.world.setKineticSpeed(kinetics, 0);
+
+		scene.overlay.showText(80)
+			.pointAt(util.vector.blockSurface(util.grid.at(1, 4, 3), Direction.WEST))
+			.placeNearTarget()
+			.text("They do not require to be powered, the effect is purely cosmetic");
+		scene.idle(60);
+
+		scene.world.setKineticSpeed(kinetics, 32);
+		scene.world.movePulley(pulley1, 2, 20);
+		scene.world.movePulley(pulley2, 2, 20);
+		scene.world.movePulley(pulley3, 2, 20);
+		scene.world.moveSection(planksLink, util.vector.of(0, -2, 0), 20);
+		scene.idle(20);
+		scene.world.setKineticSpeed(kinetics, 0);
 	}
 
 }

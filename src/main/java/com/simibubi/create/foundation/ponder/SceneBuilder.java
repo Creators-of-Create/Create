@@ -180,6 +180,13 @@ public class SceneBuilder {
 	public void scaleSceneView(float factor) {
 		scene.scaleFactor = factor;
 	}
+	
+	/**
+	 * Use this to disable the base plates' shadow for this scene
+	 */
+	public void removeShadow() {
+		scene.hidePlatformShadow = true;
+	}
 
 	/**
 	 * Use this in case you are not happy with the vertical alignment of the scene

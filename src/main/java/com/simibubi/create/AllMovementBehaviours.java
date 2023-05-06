@@ -60,6 +60,7 @@ public class AllMovementBehaviours {
 	static void registerDefaults() {
 		registerBehaviour(Blocks.BELL, new BellMovementBehaviour());
 		registerBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());
+		registerBehaviour(Blocks.SOUL_CAMPFIRE, new CampfireMovementBehaviour());
 
 		DispenserMovementBehaviour.gatherMovedDispenseItemBehaviours();
 		registerBehaviour(Blocks.DISPENSER, new DispenserMovementBehaviour());

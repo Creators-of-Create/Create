@@ -814,8 +814,8 @@
 	"create.train_assembly.bogeys_too_close": "Bogeys %1$s and %2$s are too close to each other",
 	"create.train_assembly.single_bogey_carriage": "This Bogey type cannot support a carriage on its own",
 	"create.train_assembly.nothing_attached": "No structure attached to Bogey %1$s",
-	"create.train_assembly.no_controls": "At least one forward-facing controls block needs to be mounted on the train",
-	"create.train_assembly.sideways_controls": "A mounted controls block is facing sideways",
+	"create.train_assembly.no_controls": "Attach at least one forward-facing Train Controls block (Are you missing Super Glue?)",
+	"create.train_assembly.sideways_controls": "Train Controls cannot face sideways",
 	"create.train_assembly.bogey_created": "Bogey created. Click again to cycle type",
 	"create.train_assembly.requires_casing": "Use Railway Casing to create bogeys on tracks",
 
