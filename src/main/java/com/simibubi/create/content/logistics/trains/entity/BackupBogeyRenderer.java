@@ -19,9 +19,4 @@ public class BackupBogeyRenderer extends BogeyRenderer.CommonRenderer {
 	public void initialiseContraptionModelData(MaterialManager materialManager) {
 
 	}
-
-	@Override
-	public CommonRenderer createNewInstance() {
-		return new BackupBogeyRenderer();
-	}
 }

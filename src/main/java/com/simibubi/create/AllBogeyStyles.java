@@ -64,7 +64,7 @@ public class AllBogeyStyles {
 		protected CompoundTag defaultData = new CompoundTag();
 		protected ParticleOptions contactParticle = ParticleTypes.CRIT;
 		protected ParticleOptions smokeParticle = ParticleTypes.POOF;
-		protected Optional<CommonRenderer> commonRenderer = Optional.empty();
+		protected Optional<Supplier<? extends CommonRenderer>> commonRenderer = Optional.empty();
 
 		public BogeyStyleBuilder(ResourceLocation name, ResourceLocation cycleGroup) {
 			this.name = name;
@@ -94,7 +94,7 @@ public class AllBogeyStyles {
 
 		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<? extends BogeyRenderer> renderer,
 									   ResourceLocation location) {
-			this.sizes.put(size, new BogeyStyle.SizeData(location, renderer.get()));
+			this.sizes.put(size, new BogeyStyle.SizeData(location, renderer, renderer.get()));
 			return this;
 		}
 
@@ -109,7 +109,7 @@ public class AllBogeyStyles {
 		}
 
 		public BogeyStyleBuilder commonRenderer(Supplier<? extends CommonRenderer> commonRenderer) {
-			this.commonRenderer = Optional.of(commonRenderer.get());
+			this.commonRenderer = Optional.of(commonRenderer);
 			return this;
 		}
 
