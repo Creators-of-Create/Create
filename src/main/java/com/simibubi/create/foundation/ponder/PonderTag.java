@@ -79,6 +79,11 @@ public class PonderTag implements ScreenElement {
 			.defaultLang("Railway Equipment", "Components used in the construction or management of Train Contraptions")
 			.addToIndex(),
 
+		RECENTLY_UPDATED = create("recently_updated").item(AllBlocks.CLIPBOARD.get())
+			.defaultLang("Recent Changes",
+				"Components that have been added or changed significantly in the latest versions of Create")
+			.addToIndex(),
+
 		DISPLAY_SOURCES = create("display_sources").item(AllBlocks.DISPLAY_LINK.get(), true, false)
 			.item(AllBlocks.DISPLAY_LINK.get(), false, true)
 			.defaultLang("Sources for Display Links",
@@ -166,8 +171,8 @@ public class PonderTag implements ScreenElement {
 			ms.scale(0.25f, 0.25f, 1);
 			GuiComponent.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
-			ms.translate(-4, -4, 0);
-			ms.scale(1.5f, 1.5f, 1.5f);
+			ms.translate(-2, -2, 0);
+			ms.scale(1.25f, 1.25f, 1.25f);
 			GuiGameElement.of(itemIcon)
 				.render(ms);
 		}

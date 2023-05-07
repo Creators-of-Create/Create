@@ -24,8 +24,8 @@ public class BracketedKineticBlockEntityRenderer extends KineticBlockEntityRende
 	}
 
 	@Override
-	protected void renderSafe(BracketedKineticBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-		int light, int overlay) {
+	protected void renderSafe(BracketedKineticBlockEntity be, float partialTicks, PoseStack ms,
+		MultiBufferSource buffer, int light, int overlay) {
 
 		if (Backend.canUseInstancing(be.getLevel()))
 			return;
@@ -39,22 +39,25 @@ public class BracketedKineticBlockEntityRenderer extends KineticBlockEntityRende
 		// mesh properly
 
 		Axis axis = getRotationAxisOf(be);
-		BlockPos pos = be.getBlockPos();
-
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		renderRotatingBuffer(be,
 			CachedBufferer.partialFacingVertical(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, be.getBlockState(), facing),
 			ms, buffer.getBuffer(RenderType.solid()), light);
 
-		float offset = getShaftAngleOffset(axis, pos);
-		float time = AnimationTickHolder.getRenderTime(be.getLevel());
-		float angle = ((time * be.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
-
+		float angle = getAngleForLargeCogShaft(be, axis);
 		SuperByteBuffer shaft =
 			CachedBufferer.partialFacingVertical(AllPartialModels.COGWHEEL_SHAFT, be.getBlockState(), facing);
 		kineticRotationTransform(shaft, be, axis, angle, light);
 		shaft.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
+	}
+
+	public static float getAngleForLargeCogShaft(SimpleKineticBlockEntity be, Axis axis) {
+		BlockPos pos = be.getBlockPos();
+		float offset = getShaftAngleOffset(axis, pos);
+		float time = AnimationTickHolder.getRenderTime(be.getLevel());
+		float angle = ((time * be.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
+		return angle;
 	}
 
 	public static float getShaftAngleOffset(Axis axis, BlockPos pos) {

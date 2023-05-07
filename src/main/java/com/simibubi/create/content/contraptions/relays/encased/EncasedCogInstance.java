@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.Direction;
@@ -60,6 +61,8 @@ public class EncasedCogInstance extends KineticBlockEntityInstance<KineticBlockE
 				continue;
 			RotatingData data = setup(getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, blockState, d)
 				.createInstance());
+			if (large)
+				data.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos));
 			if (d.getAxisDirection() == AxisDirection.POSITIVE)
 				rotatingTopShaft = Optional.of(data);
 			else

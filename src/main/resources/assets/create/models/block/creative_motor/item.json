@@ -5,8 +5,8 @@
 		"5": "create:block/creative_casing",
 		"6": "create:block/creative_motor",
 		"7": "create:block/flap_display_front",
-		"1_1": "create:block/axis_top",
 		"particle": "create:block/creative_casing",
+		"1_1": "create:block/axis_top",
 		"1_0": "create:block/axis"
 	},
 	"elements": [
@@ -176,6 +176,10 @@
 		"gui": {
 			"rotation": [30, 45, 0],
 			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [0, -90, 0],
+			"scale": [0.5, 0.5, 0.5]
 		}
 	},
 	"groups": [

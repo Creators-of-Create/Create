@@ -368,6 +368,19 @@ public class PonderIndex {
 	public static void registerTags() {
 		// Add items to tags here
 
+		PonderRegistry.TAGS.forTag(PonderTag.RECENTLY_UPDATED)
+			.add(AllBlocks.WATER_WHEEL)
+			.add(AllBlocks.LARGE_WATER_WHEEL)
+			.add(AllBlocks.ELEVATOR_PULLEY)
+			.add(AllBlocks.CONTRAPTION_CONTROLS)
+			.add(AllBlocks.MECHANICAL_ROLLER)
+			.add(AllBlocks.MECHANICAL_PUMP)
+			.add(AllBlocks.SMART_OBSERVER)
+			.add(AllBlocks.THRESHOLD_SWITCH)
+			.add(AllItems.NETHERITE_BACKTANK)
+			.add(AllBlocks.COPYCAT_PANEL)
+			.add(AllBlocks.COPYCAT_STEP);
+
 		PonderRegistry.TAGS.forTag(PonderTag.KINETIC_RELAYS)
 			.add(AllBlocks.SHAFT)
 			.add(AllBlocks.COGWHEEL)

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticBlockEntity;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -13,7 +14,9 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,11 +51,17 @@ public class EncasedCogRenderer extends KineticBlockEntityRenderer<SimpleKinetic
 			return;
 		IRotate def = (IRotate) block;
 
+		Axis axis = getRotationAxisOf(be);
+		BlockPos pos = be.getBlockPos();
+		float angle = large ? BracketedKineticBlockEntityRenderer.getAngleForLargeCogShaft(be, axis)
+			: getAngleForTe(be, pos, axis);
+
 		for (Direction d : Iterate.directionsInAxis(getRotationAxisOf(be))) {
 			if (!def.hasShaftTowards(be.getLevel(), be.getBlockPos(), blockState, d))
 				continue;
-			renderRotatingBuffer(be, CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), d),
-				ms, buffer.getBuffer(RenderType.solid()), light);
+			SuperByteBuffer shaft = CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), d);
+			kineticRotationTransform(shaft, be, axis, angle, light);
+			shaft.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}
 	}
 
