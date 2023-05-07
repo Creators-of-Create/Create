@@ -28,21 +28,23 @@ import static com.simibubi.create.Create.LOGGER;
 
 public class AllBogeyStyles {
 	public static final Map<ResourceLocation, BogeyStyle> BOGEY_STYLES = new HashMap<>();
-	public static final Map<ResourceLocation, Map<ResourceLocation, BogeyStyle>> STYLE_GROUPS = new HashMap<>(); // each set of styles that should be cycled through
+	public static final Map<ResourceLocation, Map<ResourceLocation, BogeyStyle>> CYCLE_GROUPS = new HashMap<>(); // each set of styles that should be cycled through
 	private static final Map<ResourceLocation, BogeyStyle> EMPTY_GROUP = ImmutableMap.of();
 
 	public static Map<ResourceLocation, BogeyStyle> getCycleGroup(ResourceLocation cycleGroup) {
-		return STYLE_GROUPS.getOrDefault(cycleGroup, EMPTY_GROUP);
+		return CYCLE_GROUPS.getOrDefault(cycleGroup, EMPTY_GROUP);
 	}
 
-	public static BogeyStyle STANDARD = create("standard", "standard")
+	public static final String STANDARD_CYCLE_GROUP = "standard";
+
+	public static BogeyStyle STANDARD = create("standard", STANDARD_CYCLE_GROUP)
 			.commonRenderer(CommonStandardBogeyRenderer::new)
 			.displayName(Components.translatable("create.bogey.style.standard"))
 			.size(BogeySizes.SMALL, SmallStandardBogeyRenderer::new, AllBlocks.SMALL_BOGEY)
 			.size(BogeySizes.LARGE, LargeStandardBogeyRenderer::new, AllBlocks.LARGE_BOGEY)
 			.build();
 
-	public static BogeyStyleBuilder create(String name, String cycleGroup) {
+	private static BogeyStyleBuilder create(String name, String cycleGroup) {
 		return create(Create.asResource(name), Create.asResource(cycleGroup));
 	}
 
@@ -117,7 +119,7 @@ public class AllBogeyStyles {
 			BogeyStyle entry =
 					new BogeyStyle(name, cycleGroup, displayName, soundType, contactParticle, smokeParticle, defaultData, sizes, commonRenderer);
 			BOGEY_STYLES.put(name, entry);
-			STYLE_GROUPS.computeIfAbsent(cycleGroup, l -> new HashMap<>()).put(name, entry);
+			CYCLE_GROUPS.computeIfAbsent(cycleGroup, l -> new HashMap<>()).put(name, entry);
 			return entry;
 		}
 	}

@@ -39,7 +39,7 @@ public class BogeyStyle {
 	public final CompoundTag defaultData;
 
 	public BogeyStyle(ResourceLocation name, ResourceLocation cycleGroup, Component displayName, ResourceLocation soundType, ParticleOptions contactParticle, ParticleOptions smokeParticle,
-					  CompoundTag defaultData, Map<BogeySizes.BogeySize, SizeData> sizes, Optional<CommonRenderer> commonRenderer) {
+					  CompoundTag defaultData, Map<BogeySizes.BogeySize, SizeData> sizes, Optional<Supplier<? extends CommonRenderer>> commonRenderer) {
 		this.name = name;
 		this.cycleGroup = cycleGroup;
 		this.displayName = displayName;
