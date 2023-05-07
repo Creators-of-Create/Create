@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -18,6 +19,9 @@ import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
+import com.simibubi.create.content.logistics.trains.entity.Carriage;
+import com.simibubi.create.content.logistics.trains.entity.CarriageBogey;
+import com.simibubi.create.content.logistics.trains.entity.TravellingPoint;
 import com.simibubi.create.content.logistics.trains.track.AbstractBogeyTileEntity;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
@@ -68,6 +72,18 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyTileEntity> exte
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 		this.size = size;
 	}
+
+	public boolean isOnIncompatibleTrack(Carriage carriage, boolean leading) {
+		TravellingPoint point = leading ? carriage.getLeadingPoint() : carriage.getTrailingPoint();
+		CarriageBogey bogey = leading ? carriage.leadingBogey() : carriage.trailingBogey();
+		return point.edge.getTrackMaterial().trackType != getTrackType(bogey.getStyle());
+	}
+
+	public Set<TrackMaterial.TrackType> getValidPathfindingTypes(BogeyStyle style) {
+		return ImmutableSet.of(getTrackType(style));
+	}
+
+	public abstract TrackMaterial.TrackType getTrackType(BogeyStyle style);
 
 	/**
 	 * Only for internal Create use. If you have your own style set, do not call this method

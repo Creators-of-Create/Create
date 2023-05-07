@@ -85,6 +85,11 @@ public class Carriage {
 			bogey2.carriage = this;
 	}
 
+	public boolean isOnIncompatibleTrack() {
+		return leadingBogey().type.isOnIncompatibleTrack(this, true)
+				|| trailingBogey().type.isOnIncompatibleTrack(this, false);
+	}
+
 	public void setTrain(Train train) {
 		this.train = train;
 	}

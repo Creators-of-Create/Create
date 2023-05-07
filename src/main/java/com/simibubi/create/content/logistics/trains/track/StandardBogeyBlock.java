@@ -5,6 +5,7 @@ import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.BogeySizes;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
@@ -24,6 +25,11 @@ public class StandardBogeyBlock extends AbstractBogeyBlock<StandardBogeyTileEnti
 	public StandardBogeyBlock(Properties props, BogeySizes.BogeySize size) {
 		super(props, size);
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
+	}
+
+	@Override
+	public TrackMaterial.TrackType getTrackType(BogeyStyle style) {
+		return TrackMaterial.TrackType.STANDARD;
 	}
 
 	@Override

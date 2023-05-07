@@ -37,7 +37,7 @@ public class CarriageBogey {
 
 	public CompoundTag bogeyData;
 
-	AbstractBogeyBlock type;
+	AbstractBogeyBlock<?> type;
 	boolean upsideDown;
 	Couple<TravellingPoint> points;
 
@@ -49,7 +49,7 @@ public class CarriageBogey {
 
 	int derailAngle;
 
-	public CarriageBogey(AbstractBogeyBlock type, boolean upsideDown, CompoundTag bogeyData, TravellingPoint point, TravellingPoint point2) {
+	public CarriageBogey(AbstractBogeyBlock<?> type, boolean upsideDown, CompoundTag bogeyData, TravellingPoint point, TravellingPoint point2) {
 		this.type = type;
 		if (bogeyData == null || bogeyData.isEmpty())
 			bogeyData = this.createBogeyData(); // Prevent Crash When Updating

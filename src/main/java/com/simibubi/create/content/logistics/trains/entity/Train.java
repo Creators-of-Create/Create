@@ -385,7 +385,7 @@ public class Train {
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
 			double actualDistance =
 				carriage.travel(level, graph, distance + totalStress, toFollowForward, toFollowBackward, carriageType);
-			blocked |= carriage.blocked;
+			blocked |= carriage.blocked || carriage.isOnIncompatibleTrack();
 
 			boolean onTwoBogeys = carriage.isOnTwoBogeys();
 			maxStress = Math.max(maxStress, onTwoBogeys ? carriage.bogeySpacing - carriage.getAnchorDiff() : 0);
