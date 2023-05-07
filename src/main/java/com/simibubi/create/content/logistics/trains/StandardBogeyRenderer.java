@@ -31,10 +31,10 @@ public class StandardBogeyRenderer {
 		}
 
 		@Override
-		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb) {
-			boolean inContraption = vb == null;
+		public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+			boolean inInstancedContraption = vb == null;
 			Transform<?>[] shafts = getTransformsFromBlockState(AllBlocks.SHAFT.getDefaultState()
-					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), ms, inContraption, 2);
+					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), ms, inInstancedContraption, 2);
 			for (int i : Iterate.zeroAndOne) {
 				shafts[i].translate(-.5f, .25f, i * -1)
 						.centre()
@@ -60,20 +60,20 @@ public class StandardBogeyRenderer {
 		}
 
 		@Override
-		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb) {
-			boolean inContraption = vb == null;
-			Transform<?> transform = getTransformFromPartial(BOGEY_FRAME, ms, inContraption);
+		public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+			boolean inInstancedContraption = vb == null;
+			Transform<?> transform = getTransformFromPartial(BOGEY_FRAME, ms, inInstancedContraption);
 			finalize(transform, ms, light, vb);
 
-			Transform<?>[] wheels = getTransformsFromPartial(SMALL_BOGEY_WHEELS, ms, inContraption, 2);
+			Transform<?>[] wheels = getTransformsFromPartial(SMALL_BOGEY_WHEELS, ms, inInstancedContraption, 2);
 			for (int side : Iterate.positiveAndNegative) {
-				if (!inContraption)
+				if (!inInstancedContraption)
 					ms.pushPose();
 				Transform<?> wheel = wheels[(side + 1)/2];
 				wheel.translate(0, 12 / 16f, side)
 						.rotateX(wheelAngle);
 				finalize(wheel, ms, light, vb);
-				if (!inContraption)
+				if (!inInstancedContraption)
 					ms.popPose();
 			}
 		}
@@ -93,11 +93,11 @@ public class StandardBogeyRenderer {
 		}
 
 		@Override
-		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb) {
-			boolean inContraption = vb == null;
+		public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+			boolean inInstancedContraption = vb == null;
 
 			Transform<?>[] secondaryShafts = getTransformsFromBlockState(AllBlocks.SHAFT.getDefaultState()
-					.setValue(ShaftBlock.AXIS, Direction.Axis.X), ms, inContraption, 2);
+					.setValue(ShaftBlock.AXIS, Direction.Axis.X), ms, inInstancedContraption, 2);
 
 			for (int i : Iterate.zeroAndOne) {
 				Transform<?> secondShaft = secondaryShafts[i];
@@ -108,29 +108,29 @@ public class StandardBogeyRenderer {
 				finalize(secondShaft, ms, light, vb);
 			}
 
-			Transform<?> bogeyDrive = getTransformFromPartial(BOGEY_DRIVE, ms, inContraption);
+			Transform<?> bogeyDrive = getTransformFromPartial(BOGEY_DRIVE, ms, inInstancedContraption);
 			finalize(bogeyDrive, ms, light, vb);
 
-			Transform<?> bogeyPiston = getTransformFromPartial(BOGEY_PISTON, ms, inContraption)
+			Transform<?> bogeyPiston = getTransformFromPartial(BOGEY_PISTON, ms, inInstancedContraption)
 					.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)));
 			finalize(bogeyPiston, ms, light, vb);
 
-			if (!inContraption)
+			if (!inInstancedContraption)
 				ms.pushPose();
 
-			Transform<?> bogeyWheels = getTransformFromPartial(LARGE_BOGEY_WHEELS, ms, inContraption)
+			Transform<?> bogeyWheels = getTransformFromPartial(LARGE_BOGEY_WHEELS, ms, inInstancedContraption)
 					.translate(0, 1, 0)
 					.rotateX(wheelAngle);
 			finalize(bogeyWheels, ms, light, vb);
 
-			Transform<?> bogeyPin = getTransformFromPartial(BOGEY_PIN, ms, inContraption)
+			Transform<?> bogeyPin = getTransformFromPartial(BOGEY_PIN, ms, inInstancedContraption)
 					.translate(0, 1, 0)
 					.rotateX(wheelAngle)
 					.translate(0, 1 / 4f, 0)
 					.rotateX(-wheelAngle);
 			finalize(bogeyPin, ms, light, vb);
 
-			if (!inContraption)
+			if (!inInstancedContraption)
 				ms.popPose();
 		}
 	}

@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -32,7 +33,7 @@ public class Outliner {
 	public OutlineParams showLine(Object slot, Vec3 start, Vec3 end) {
 		if (!outlines.containsKey(slot)) {
 			LineOutline outline = new LineOutline();
-			addOutline(slot, outline);
+			outlines.put(slot, new OutlineEntry(outline));
 		}
 		OutlineEntry entry = outlines.get(slot);
 		entry.ticksTillRemoval = 1;
@@ -43,7 +44,7 @@ public class Outliner {
 	public OutlineParams endChasingLine(Object slot, Vec3 start, Vec3 end, float chasingProgress, boolean lockStart) {
 		if (!outlines.containsKey(slot)) {
 			EndChasingLineOutline outline = new EndChasingLineOutline(lockStart);
-			addOutline(slot, outline);
+			outlines.put(slot, new OutlineEntry(outline));
 		}
 		OutlineEntry entry = outlines.get(slot);
 		entry.ticksTillRemoval = 1;
@@ -75,11 +76,18 @@ public class Outliner {
 
 	public OutlineParams showCluster(Object slot, Iterable<BlockPos> selection) {
 		BlockClusterOutline outline = new BlockClusterOutline(selection);
-		addOutline(slot, outline);
-		return outline.getParams();
+		OutlineEntry entry = new OutlineEntry(outline);
+		outlines.put(slot, entry);
+		return entry.getOutline()
+			.getParams();
 	}
 
-	//
+	public OutlineParams showItem(Object slot, Vec3 pos, ItemStack stack) {
+		ItemOutline outline = new ItemOutline(pos, stack);
+		OutlineEntry entry = new OutlineEntry(outline);
+		outlines.put(slot, entry);
+		return entry.getOutline().getParams();
+	}
 
 	public void keep(Object slot) {
 		if (outlines.containsKey(slot))
@@ -105,19 +113,17 @@ public class Outliner {
 
 	// Utility
 
-	private void addOutline(Object slot, Outline outline) {
-		outlines.put(slot, new OutlineEntry(outline));
-	}
-
 	private void createAABBOutlineIfMissing(Object slot, AABB bb) {
 		if (!outlines.containsKey(slot) || !(outlines.get(slot).outline instanceof AABBOutline)) {
 			ChasingAABBOutline outline = new ChasingAABBOutline(bb);
-			addOutline(slot, outline);
+			outlines.put(slot, new OutlineEntry(outline));
 		}
 	}
 
 	private ChasingAABBOutline getAndRefreshAABB(Object slot) {
-		return getAndRefreshAABB(slot, 1);
+		OutlineEntry entry = outlines.get(slot);
+		entry.ticksTillRemoval = 1;
+		return (ChasingAABBOutline) entry.getOutline();
 	}
 
 	private ChasingAABBOutline getAndRefreshAABB(Object slot, int ttl) {
@@ -146,7 +152,7 @@ public class Outliner {
 			params.alpha = 1;
 			if (entry.isFading()) {
 				int prevTicks = entry.ticksTillRemoval + 1;
-				float fadeticks = OutlineEntry.FADE_TICKS;
+				float fadeticks = OutlineEntry.fadeTicks;
 				float lastAlpha = prevTicks >= 0 ? 1 : 1 + (prevTicks / fadeticks);
 				float currentAlpha = 1 + (entry.ticksTillRemoval / fadeticks);
 				float alpha = Mth.lerp(pt, lastAlpha, currentAlpha);
@@ -160,35 +166,33 @@ public class Outliner {
 	}
 
 	public static class OutlineEntry {
-		public static final int FADE_TICKS = 8;
 
-		private final Outline outline;
-		private int ticksTillRemoval = 1;
+		static final int fadeTicks = 8;
+		private Outline outline;
+		private int ticksTillRemoval;
 
 		public OutlineEntry(Outline outline) {
 			this.outline = outline;
-		}
-
-		public Outline getOutline() {
-			return outline;
-		}
-
-		public int getTicksTillRemoval() {
-			return ticksTillRemoval;
-		}
-
-		public boolean isAlive() {
-			return ticksTillRemoval >= -FADE_TICKS;
-		}
-
-		public boolean isFading() {
-			return ticksTillRemoval < 0;
+			ticksTillRemoval = 1;
 		}
 
 		public void tick() {
 			ticksTillRemoval--;
 			outline.tick();
 		}
+
+		public boolean isAlive() {
+			return ticksTillRemoval >= -fadeTicks;
+		}
+
+		public boolean isFading() {
+			return ticksTillRemoval < 0;
+		}
+
+		public Outline getOutline() {
+			return outline;
+		}
+
 	}
 
 }

@@ -37,12 +37,12 @@ public abstract class BogeyRenderer {
 	 *
 	 * @param model The key for the model data to instantiate or retrieve
 	 * @param ms The posestack used for contraption model data
-	 * @param inContraption The type of model needed
+	 * @param inInstancedContraption The type of model needed
 	 * @param size The amount of models needed
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?>[] getTransformsFromPartial(PartialModel model, PoseStack ms, boolean inContraption, int size) {
-		return (inContraption) ? transformContraptionModelData(keyFromModel(model), ms) : createModelData(model, size);
+	public Transform<?>[] getTransformsFromPartial(PartialModel model, PoseStack ms, boolean inInstancedContraption, int size) {
+		return (inInstancedContraption) ? transformContraptionModelData(keyFromModel(model), ms) : createModelData(model, size);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public abstract class BogeyRenderer {
 	 * @param vb (Optional) Vertex Consumer used for in-world rendering
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public abstract void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb);
+	public abstract void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption);
 
 	/**
 	 * Used for calling in-contraption rendering ensuring that falsey data is handled correctly
@@ -79,8 +79,8 @@ public abstract class BogeyRenderer {
 	 * @param ms The posestack to render to
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms) {
-		this.render(bogeyData, wheelAngle, ms, 0, null);
+	public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms) {
+		this.render(upsideDown, bogeyData, wheelAngle, ms, 0, null, true);
 	}
 
 	public abstract BogeySizes.BogeySize getSize();
@@ -147,12 +147,12 @@ public abstract class BogeyRenderer {
 	 *
  	 * @param model The key of the model to be collected or instantiated
 	 * @param ms Posestack to bind the model to if it is within a contraption
-	 * @param inContraption Type of rendering required
+	 * @param inInstancedContraption Type of rendering required
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?> getTransformFromPartial(PartialModel model, PoseStack ms, boolean inContraption) {
+	public Transform<?> getTransformFromPartial(PartialModel model, PoseStack ms, boolean inInstancedContraption) {
 		BlockState air = Blocks.AIR.defaultBlockState();
-		return inContraption ? contraptionModelData.get(keyFromModel(model))[0].setTransform(ms)
+		return inInstancedContraption ? contraptionModelData.get(keyFromModel(model))[0].setTransform(ms)
 				: CachedBufferer.partial(model, air);
 	}
 

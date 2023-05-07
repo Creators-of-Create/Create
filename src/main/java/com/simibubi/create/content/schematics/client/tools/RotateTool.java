@@ -32,7 +32,7 @@ public class RotateTool extends PlacementToolBase {
 
 		line.getParams()
 			.disableCull()
-			.disableLineNormals()
+			.disableNormals()
 			.colored(0xdddddd)
 			.lineWidth(1 / 16f);
 		line.set(start, end)

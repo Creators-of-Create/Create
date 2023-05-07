@@ -391,7 +391,7 @@ public class TrackBlock extends Block
 						(d, b) -> axis.scale(b ? 0 : fromCenter ? -d : d)
 							.add(center),
 						b -> shape.getNormal(), b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, axis,
-						null);
+						null, (b, v) -> ITrackBlock.getMaterialSimple(world, v));
 		} else
 			list = ITrackBlock.super.getConnected(world, pos, state, linear, connectedTo);
 
@@ -407,7 +407,7 @@ public class TrackBlock extends Block
 		Map<BlockPos, BezierConnection> connections = trackTE.getConnections();
 		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
 			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get,
-			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, null, bc));
+			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, null, bc, (b, v) -> ITrackBlock.getMaterialSimple(world, v, bc.getMaterial())));
 
 		if (trackTE.boundLocation == null || !(world instanceof ServerLevel level))
 			return list;
@@ -433,7 +433,7 @@ public class TrackBlock extends Block
 		getTrackAxes(world, pos, state).forEach(axis -> {
 			ITrackBlock.addToListIfConnected(connectedTo, list, (d, b) -> (b ? axis : boundAxis).scale(d)
 				.add(b ? center : boundCenter), b -> (b ? shape : boundShape).getNormal(),
-				b -> b ? level.dimension() : otherLevel.dimension(), axis, null);
+				b -> b ? level.dimension() : otherLevel.dimension(), axis, null, (b, v) -> ITrackBlock.getMaterialSimple(b ? level : otherLevel, v));
 		});
 
 		return list;

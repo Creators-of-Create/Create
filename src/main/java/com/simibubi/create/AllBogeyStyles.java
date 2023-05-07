@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.google.common.collect.ImmutableMap;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.content.logistics.trains.BogeyRenderer.CommonRenderer;
@@ -7,6 +8,7 @@ import com.simibubi.create.content.logistics.trains.BogeySizes;
 import com.simibubi.create.content.logistics.trains.StandardBogeyRenderer.*;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
 
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -26,20 +28,26 @@ import static com.simibubi.create.Create.LOGGER;
 
 public class AllBogeyStyles {
 	public static final Map<ResourceLocation, BogeyStyle> BOGEY_STYLES = new HashMap<>();
+	public static final Map<ResourceLocation, Map<ResourceLocation, BogeyStyle>> STYLE_GROUPS = new HashMap<>(); // each set of styles that should be cycled through
+	private static final Map<ResourceLocation, BogeyStyle> EMPTY_GROUP = ImmutableMap.of();
 
-	public static BogeyStyle STANDARD = create("standard")
+	public static Map<ResourceLocation, BogeyStyle> getCycleGroup(ResourceLocation cycleGroup) {
+		return STYLE_GROUPS.getOrDefault(cycleGroup, EMPTY_GROUP);
+	}
+
+	public static BogeyStyle STANDARD = create("standard", "standard")
 			.commonRenderer(CommonStandardBogeyRenderer::new)
-			.displayName(Lang.translateDirect("create.bogeys.styles.standard"))
+			.displayName(Components.translatable("create.bogey.style.standard"))
 			.size(BogeySizes.SMALL, SmallStandardBogeyRenderer::new, AllBlocks.SMALL_BOGEY)
 			.size(BogeySizes.LARGE, LargeStandardBogeyRenderer::new, AllBlocks.LARGE_BOGEY)
 			.build();
 
-	public static BogeyStyleBuilder create(String name) {
-		return create(Create.asResource(name));
+	public static BogeyStyleBuilder create(String name, String cycleGroup) {
+		return create(Create.asResource(name), Create.asResource(cycleGroup));
 	}
 
-	public static BogeyStyleBuilder create(ResourceLocation name) {
-		return new BogeyStyleBuilder(name);
+	public static BogeyStyleBuilder create(ResourceLocation name, ResourceLocation cycleGroup) {
+		return new BogeyStyleBuilder(name, cycleGroup);
 	}
 
 	public static void register() {
@@ -49,16 +57,18 @@ public class AllBogeyStyles {
 	public static class BogeyStyleBuilder {
 		protected final Map<BogeySizes.BogeySize, BogeyStyle.SizeData> sizes = new HashMap<>();
 		protected final ResourceLocation name;
+		protected final ResourceLocation cycleGroup;
 
-		protected Component displayName = Lang.translateDirect("create.bogeys.invalid");
+		protected Component displayName = Lang.translateDirect("bogey.style.invalid");
 		protected ResourceLocation soundType = AllSoundEvents.TRAIN2.getId();
 		protected CompoundTag defaultData = new CompoundTag();
 		protected ParticleOptions contactParticle = ParticleTypes.CRIT;
 		protected ParticleOptions smokeParticle = ParticleTypes.POOF;
 		protected Optional<Supplier<? extends CommonRenderer>> commonRenderer = Optional.empty();
 
-		public BogeyStyleBuilder(ResourceLocation name) {
+		public BogeyStyleBuilder(ResourceLocation name, ResourceLocation cycleGroup) {
 			this.name = name;
+			this.cycleGroup = cycleGroup;
 		}
 
 		public BogeyStyleBuilder displayName(Component displayName) {
@@ -105,8 +115,9 @@ public class AllBogeyStyles {
 
 		public BogeyStyle build() {
 			BogeyStyle entry =
-					new BogeyStyle(name, displayName, soundType, contactParticle, smokeParticle, defaultData, sizes, commonRenderer);
+					new BogeyStyle(name, cycleGroup, displayName, soundType, contactParticle, smokeParticle, defaultData, sizes, commonRenderer);
 			BOGEY_STYLES.put(name, entry);
+			STYLE_GROUPS.computeIfAbsent(cycleGroup, l -> new HashMap<>()).put(name, entry);
 			return entry;
 		}
 	}

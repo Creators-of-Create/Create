@@ -87,6 +87,9 @@ public class ValueBox extends ChasingAABBOutline {
 		ms.translate(pos.getX(), pos.getY(), pos.getZ());
 		if (hasTransform)
 			transform.transform(blockState, ms);
+		transformNormals = ms.last()
+			.normal()
+			.copy();
 		params.colored(isPassive ? passiveColor : highlightColor);
 		super.render(ms, buffer, pt);
 

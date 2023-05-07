@@ -7,8 +7,6 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionEntityRenderer;
 
-import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
-
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -68,10 +66,9 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
 
 				int light = getBogeyLightCoords(entity, bogey, partialTicks);
-				BlockEntity be = entity.getContraption().presentTileEntities.get(bogeyPos);
 
-				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
-					overlay, (StandardBogeyTileEntity) be);
+				bogey.type.render(null, bogey.isUpsideDown(), bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
+					overlay, bogey.getStyle(), bogey.bogeyData);
 
 				ms.popPose();
 			}
@@ -85,6 +82,8 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 
 	public static void translateBogey(PoseStack ms, CarriageBogey bogey, int bogeySpacing, float viewYRot,
 		float viewXRot, float partialTicks) {
+		boolean selfUpsideDown = bogey.isUpsideDown();
+		boolean leadingUpsideDown = bogey.carriage.leadingBogey().isUpsideDown();
 		TransformStack.cast(ms)
 			.rotateY(viewYRot + 90)
 			.rotateX(-viewXRot)
@@ -95,7 +94,9 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			.rotateY(-viewYRot - 90)
 			.rotateY(bogey.yaw.getValue(partialTicks))
 			.rotateX(bogey.pitch.getValue(partialTicks))
-			.translate(0, .5f, 0);
+			.translate(0, .5f, 0)
+			.rotateZ(selfUpsideDown ? 180 : 0)
+			.translateY(selfUpsideDown != leadingUpsideDown ? 2 : 0);
 	}
 
 	public static int getBogeyLightCoords(CarriageContraptionEntity entity, CarriageBogey bogey, float partialTicks) {

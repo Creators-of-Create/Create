@@ -11,7 +11,7 @@ public class BackupBogeyRenderer extends BogeyRenderer.CommonRenderer {
 	public static BackupBogeyRenderer INSTANCE = new BackupBogeyRenderer();
 
 	@Override
-	public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb) {
+	public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
 
 	}
 

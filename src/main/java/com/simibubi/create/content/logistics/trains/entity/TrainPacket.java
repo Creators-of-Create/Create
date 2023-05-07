@@ -49,8 +49,9 @@ public class TrainPacket extends SimplePacketBase {
 				if (!isFirst && !buffer.readBoolean())
 					continue;
 				AbstractBogeyBlock type = (AbstractBogeyBlock) ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
+				boolean upsideDown = buffer.readBoolean();
 				CompoundTag data = buffer.readNbt();
-				bogies.set(isFirst, new CarriageBogey(type, data, new TravellingPoint(), new TravellingPoint()));
+				bogies.set(isFirst, new CarriageBogey(type, upsideDown, data, new TravellingPoint(), new TravellingPoint()));
 			}
 			int spacing = buffer.readVarInt();
 			carriages.add(new Carriage(bogies.getFirst(), bogies.getSecond(), spacing));
@@ -88,6 +89,7 @@ public class TrainPacket extends SimplePacketBase {
 				}
 				CarriageBogey bogey = carriage.bogeys.get(first);
 				buffer.writeResourceLocation(RegisteredObjects.getKeyOrThrow((Block) bogey.type));
+				buffer.writeBoolean(bogey.upsideDown);
 				buffer.writeNbt(bogey.bogeyData);
 			}
 			buffer.writeVarInt(carriage.bogeySpacing);

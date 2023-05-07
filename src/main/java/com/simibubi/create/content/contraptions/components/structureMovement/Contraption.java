@@ -342,7 +342,7 @@ public abstract class Contraption {
 		}
 
 		// Bogeys tend to have sticky sides
-		if (state.getBlock()instanceof AbstractBogeyBlock bogey)
+		if (state.getBlock()instanceof AbstractBogeyBlock<?> bogey)
 			for (Direction d : bogey.getStickySurfaces(world, pos, state))
 				if (!visited.contains(pos.relative(d)))
 					frontier.add(pos.relative(d));

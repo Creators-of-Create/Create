@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.trains;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.logistics.trains.track.StandardBogeyTileEntity;
+import com.simibubi.create.content.logistics.trains.track.AbstractBogeyTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,10 +17,10 @@ public class BogeyTileEntityRenderer<T extends BlockEntity> extends SafeTileEnti
 	protected void renderSafe(T te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		BlockState blockState = te.getBlockState();
-		if (te instanceof StandardBogeyTileEntity sbte) {
+		if (te instanceof AbstractBogeyTileEntity sbte) {
 			float angle = sbte.getVirtualAngle(partialTicks);
-			if (blockState.getBlock() instanceof AbstractBogeyBlock bogey)
-				bogey.render(blockState, angle, ms, partialTicks, buffer, light, overlay, sbte);
+			if (blockState.getBlock() instanceof AbstractBogeyBlock<?> bogey)
+				bogey.render(blockState, bogey.isUpsideDown(blockState), angle, ms, partialTicks, buffer, light, overlay, sbte.getStyle(), sbte.getBogeyData());
 		}
 	}
 
