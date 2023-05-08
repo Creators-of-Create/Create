@@ -30,7 +30,7 @@ public interface IAirCurrentSource {
 
 	default float getMaxDistance() {
 		float speed = Math.abs(this.getSpeed());
-		CKinetics config = AllConfigs.SERVER.kinetics;
+		CKinetics config = AllConfigs.server().kinetics;
 		float distanceFactor = Math.min(speed / config.fanRotationArgmax.get(), 1);
 		float pushDistance = Mth.lerp(distanceFactor, 3, config.fanPushDistance.get());
 		float pullDistance = Mth.lerp(distanceFactor, 3f, config.fanPullDistance.get());

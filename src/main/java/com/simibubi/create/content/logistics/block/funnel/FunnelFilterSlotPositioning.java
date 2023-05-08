@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.funnel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -15,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		Direction side = getSide();
 		float horizontalAngle = AngleHelper.horizontalAngle(side);
 		Direction funnelFacing = FunnelBlock.getFunnelFacing(state);
@@ -28,7 +28,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 15.5f, 13), stateAngle, Axis.Y);
 			case PULLING:
 			case PUSHING:
-				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.1, 8.7f), horizontalAngle, Axis.Y);
+				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.0f, 8.675f), horizontalAngle, Axis.Y);
 			default:
 			case RETRACTED:
 				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 13, 7.5f), horizontalAngle, Axis.Y);
@@ -41,11 +41,11 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 			return VecHelper.rotateCentered(southLocation, horizontalAngle, Axis.Y);
 		}
 
-		return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.1, 8.7f), horizontalAngle, Axis.Y);
+		return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 12.2, 8.55f), horizontalAngle, Axis.Y);
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		Direction facing = FunnelBlock.getFunnelFacing(state);
 
 		if (facing.getAxis()

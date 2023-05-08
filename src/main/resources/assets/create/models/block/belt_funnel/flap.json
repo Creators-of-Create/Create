@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"4": "create:block/brass_funnel_back"
+		"4": "create:block/funnel/brass_funnel"
 	},
 	"elements": [
 		{
@@ -10,12 +10,12 @@
 			"to": [14, 10, 10],
 			"rotation": {"angle": 0, "axis": "y", "origin": [-24.5, -7.5, 9]},
 			"faces": {
-				"north": {"uv": [14, 8.5, 12.5, 15], "texture": "#4"},
-				"east": {"uv": [13.5, 8.5, 14, 15], "texture": "#4"},
-				"south": {"uv": [12.5, 8.5, 14, 15], "texture": "#4"},
-				"west": {"uv": [12.5, 8.5, 13, 15], "texture": "#4"},
-				"up": {"uv": [12.5, 8.5, 14, 9], "texture": "#4"},
-				"down": {"uv": [12.5, 14.5, 14, 15], "texture": "#4"}
+				"north": {"uv": [6, 8, 7.5, 14.5], "texture": "#4"},
+				"east": {"uv": [6, 8, 6.5, 14.5], "texture": "#4"},
+				"south": {"uv": [7.5, 8, 6, 14.5], "texture": "#4"},
+				"west": {"uv": [7, 8, 7.5, 14.5], "texture": "#4"},
+				"up": {"uv": [6, 8, 7.5, 8.5], "rotation": 180, "texture": "#4"},
+				"down": {"uv": [6, 14, 7.5, 14.5], "rotation": 180, "texture": "#4"}
 			}
 		}
 	]

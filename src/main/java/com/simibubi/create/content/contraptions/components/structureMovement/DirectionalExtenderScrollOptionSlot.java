@@ -4,7 +4,7 @@ import java.util.function.BiPredicate;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.core.Direction;
@@ -19,13 +19,13 @@ public class DirectionalExtenderScrollOptionSlot extends CenteredSideValueBoxTra
 	}
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		return super.getLocalOffset(state)
 				.add(Vec3.atLowerCornerOf(state.getValue(BlockStateProperties.FACING).getNormal()).scale(-2 / 16f));
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		if (!getSide().getAxis().isHorizontal())
 			TransformStack.cast(ms)
 					.rotateY(AngleHelper.horizontalAngle(state.getValue(BlockStateProperties.FACING)) + 180);

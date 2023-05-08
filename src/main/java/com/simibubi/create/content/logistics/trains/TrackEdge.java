@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -48,7 +50,7 @@ public class TrackEdge {
 	}
 
 	public Vec3 getDirection(boolean fromFirst) {
-		return getPosition(fromFirst ? 0.25f : 1).subtract(getPosition(fromFirst ? 0 : 0.75f))
+		return getPosition(null, fromFirst ? 0.25f : 1).subtract(getPosition(null, fromFirst ? 0 : 0.75f))
 			.normalize();
 	}
 
@@ -56,8 +58,8 @@ public class TrackEdge {
 		double length = getLength();
 		double step = .5f / length;
 		t /= length;
-		Vec3 ahead = getPosition(Math.min(1, t + step));
-		Vec3 behind = getPosition(Math.max(0, t - step));
+		Vec3 ahead = getPosition(null, Math.min(1, t + step));
+		Vec3 behind = getPosition(null, Math.max(0, t - step));
 		return ahead.subtract(behind)
 			.normalize();
 	}
@@ -83,9 +85,60 @@ public class TrackEdge {
 		return !tooFar && isTurn() ? turn.incrementT(currentT, distance) : currentT + distance;
 	}
 
-	public Vec3 getPosition(double t) {
-		return isTurn() ? turn.getPosition(Mth.clamp(t, 0, 1))
-			: VecHelper.lerp((float) t, node1.location.getLocation(), node2.location.getLocation());
+	public Vec3 getPosition(@Nullable TrackGraph trackGraph, double t) {
+		if (isTurn())
+			return turn.getPosition(Mth.clamp(t, 0, 1));
+		if (trackGraph != null && (node1.location.yOffsetPixels != 0 || node2.location.yOffsetPixels != 0)) {
+			Vec3 positionSmoothed = getPositionSmoothed(trackGraph, t);
+			if (positionSmoothed != null)
+				return positionSmoothed;
+		}
+		return VecHelper.lerp((float) t, node1.location.getLocation(), node2.location.getLocation());
+	}
+
+	public Vec3 getNormal(@Nullable TrackGraph trackGraph, double t) {
+		if (isTurn())
+			return turn.getNormal(Mth.clamp(t, 0, 1));
+		if (trackGraph != null && (node1.location.yOffsetPixels != 0 || node2.location.yOffsetPixels != 0)) {
+			Vec3 normalSmoothed = getNormalSmoothed(trackGraph, t);
+			if (normalSmoothed != null)
+				return normalSmoothed;
+		}
+		return node1.getNormal();
+	}
+
+	@Nullable
+	public Vec3 getPositionSmoothed(TrackGraph trackGraph, double t) {
+		Vec3 node1Location = null;
+		Vec3 node2Location = null;
+		for (TrackEdge trackEdge : trackGraph.getConnectionsFrom(node1)
+			.values())
+			if (trackEdge.isTurn())
+				node1Location = trackEdge.getPosition(trackGraph, 0);
+		for (TrackEdge trackEdge : trackGraph.getConnectionsFrom(node2)
+			.values())
+			if (trackEdge.isTurn())
+				node2Location = trackEdge.getPosition(trackGraph, 0);
+		if (node1Location == null || node2Location == null)
+			return null;
+		return VecHelper.lerp((float) t, node1Location, node2Location);
+	}
+
+	@Nullable
+	public Vec3 getNormalSmoothed(TrackGraph trackGraph, double t) {
+		Vec3 node1Normal = null;
+		Vec3 node2Normal = null;
+		for (TrackEdge trackEdge : trackGraph.getConnectionsFrom(node1)
+			.values())
+			if (trackEdge.isTurn())
+				node1Normal = trackEdge.getNormal(trackGraph, 0);
+		for (TrackEdge trackEdge : trackGraph.getConnectionsFrom(node2)
+			.values())
+			if (trackEdge.isTurn())
+				node2Normal = trackEdge.getNormal(trackGraph, 0);
+		if (node1Normal == null || node2Normal == null)
+			return null;
+		return VecHelper.lerp(0.5f, node1Normal, node2Normal);
 	}
 
 	public Collection<double[]> getIntersection(TrackNode node1, TrackNode node2, TrackEdge other, TrackNode other1,
@@ -123,7 +176,7 @@ public class TrackEdge {
 			for (int i = 0; i < turn.getSegmentCount(); i++) {
 				double tOffset = t;
 				t += .5;
-				seg2 = getPosition(t / getLength());
+				seg2 = getPosition(null, t / getLength());
 				double[] intersection = VecHelper.intersectRanged(seg1, w1, seg2, w2, Axis.Y);
 				seg1 = seg2;
 				if (intersection == null)
@@ -146,7 +199,7 @@ public class TrackEdge {
 		for (int i = 0; i < turn.getSegmentCount(); i++) {
 			double tOffset = t;
 			t += .5;
-			seg2 = getPosition(t / getLength());
+			seg2 = getPosition(null, t / getLength());
 
 			Vec3 otherSeg1 = w1;
 			Vec3 otherSeg2 = null;
@@ -155,7 +208,7 @@ public class TrackEdge {
 			for (int j = 0; j < other.turn.getSegmentCount(); j++) {
 				double uOffset = u;
 				u += .5;
-				otherSeg2 = other.getPosition(u / other.getLength());
+				otherSeg2 = other.getPosition(null, u / other.getLength());
 
 				double[] intersection = VecHelper.intersectRanged(seg1, otherSeg1, seg2, otherSeg2, Axis.Y);
 				otherSeg1 = otherSeg2;
@@ -172,10 +225,6 @@ public class TrackEdge {
 		}
 
 		return intersections;
-	}
-
-	public Vec3 getNormal(TrackNode node1, TrackNode node2, double t) {
-		return isTurn() ? turn.getNormal(Mth.clamp(t, 0, 1)) : node1.getNormal();
 	}
 
 	public CompoundTag write(DimensionPalette dimensions) {

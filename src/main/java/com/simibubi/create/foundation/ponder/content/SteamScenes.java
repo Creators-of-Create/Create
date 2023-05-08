@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock;
+import com.simibubi.create.content.contraptions.fluids.PumpBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
@@ -220,7 +221,11 @@ public class SteamScenes {
 		Selection pump1 = util.select.fromTo(5, 2, 2, 4, 1, 1);
 		Selection pump2 = util.select.fromTo(5, 2, 7, 4, 1, 6);
 		Selection pump3 = util.select.fromTo(2, 3, 7, 1, 1, 6);
-
+		
+		scene.world.modifyBlock(util.grid.at(4, 2, 7), s -> s.setValue(PumpBlock.FACING, Direction.SOUTH), false);
+		scene.world.modifyBlock(util.grid.at(1, 2, 7), s -> s.setValue(PumpBlock.FACING, Direction.SOUTH), false);
+		scene.world.modifyBlock(util.grid.at(2, 3, 7), s -> s.setValue(PumpBlock.FACING, Direction.SOUTH), false);
+		
 		scene.idle(15);
 		ElementLink<WorldSectionElement> tankElement = scene.world.showIndependentSection(tank, Direction.DOWN);
 		scene.world.moveSection(tankElement, util.vector.of(0, -1, 0), 0);

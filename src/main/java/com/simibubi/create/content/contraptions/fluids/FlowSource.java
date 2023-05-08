@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.fluids;
 import java.lang.ref.WeakReference;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 
 import net.minecraft.world.level.Level;
@@ -70,9 +70,9 @@ public abstract class FlowSource {
 		public void manageSource(Level world) {
 			if (fluidHandler.isPresent() && world.getGameTime() % 20 != 0)
 				return;
-			BlockEntity tileEntity = world.getBlockEntity(location.getConnectedPos());
-			if (tileEntity != null)
-				fluidHandler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+			BlockEntity blockEntity = world.getBlockEntity(location.getConnectedPos());
+			if (blockEntity != null)
+				fluidHandler = blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
 					location.getOppositeFace());
 		}
 
@@ -96,11 +96,11 @@ public abstract class FlowSource {
 
 		@Override
 		public void manageSource(Level world) {
-			if (cached != null && cached.get() != null && !cached.get().tileEntity.isRemoved())
+			if (cached != null && cached.get() != null && !cached.get().blockEntity.isRemoved())
 				return;
 			cached = null;
 			FluidTransportBehaviour fluidTransportBehaviour =
-				TileEntityBehaviour.get(world, location.getConnectedPos(), FluidTransportBehaviour.TYPE);
+				BlockEntityBehaviour.get(world, location.getConnectedPos(), FluidTransportBehaviour.TYPE);
 			if (fluidTransportBehaviour != null)
 				cached = new WeakReference<>(fluidTransportBehaviour);
 		}

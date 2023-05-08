@@ -1,32 +1,36 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
-    "textures": {
-        "translation_chassis_side": "create:block/cart_assembler_side"
-    },
-    "elements": [
-        {
-            "name": "Top",
-            "from": [ 0, 12, 0 ], 
-            "to": [ 16, 16, 16 ], 
-            "faces": {
-                "north": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 4 ] },
-                "east": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 4, 16 ], "rotation": 90 },
-                "south": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 4 ] },
-                "west": { "texture": "#translation_chassis_side", "uv": [ 12, 0, 16, 16 ], "rotation": 270 },
-                "up": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 16 ] },
-                "down": { "texture": "#translation_chassis_side", "uv": [ 0, 0, 16, 16 ] }
-            }
-        },
-        {
-            "name": "Inner",
-            "from": [ 4, 4, 4 ], 
-            "to": [ 12, 12, 12 ], 
-            "faces": {
-                "north": { "texture": "#translation_chassis_side", "uv": [ 4, 8, 12, 16 ] },
-                "east": { "texture": "#translation_chassis_side", "uv": [ 4, 8, 12, 16 ] },
-                "south": { "texture": "#translation_chassis_side", "uv": [ 4, 8, 12, 16 ] },
-                "west": { "texture": "#translation_chassis_side", "uv": [ 4, 8, 12, 16 ] }
-            }
-        }
-    ]
+	"credit": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"textures": {
+		"1": "create:block/linear_chassis_side",
+		"4": "create:block/andesite_casing",
+		"5": "create:block/secondary_linear_chassis_side",
+		"6": "create:block/andesite_block",
+		"particle": "create:block/linear_chassis_side"
+	},
+	"elements": [
+		{
+			"name": "Top",
+			"from": [1, 12, 1],
+			"to": [15, 16, 15],
+			"faces": {
+				"north": {"uv": [1, 12, 15, 16], "texture": "#1"},
+				"east": {"uv": [1, 12, 15, 16], "texture": "#1"},
+				"south": {"uv": [1, 12, 15, 16], "texture": "#1"},
+				"west": {"uv": [1, 12, 15, 16], "texture": "#1"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#6"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#4"}
+			}
+		},
+		{
+			"name": "Inner",
+			"from": [4, 4, 4],
+			"to": [12, 12, 12],
+			"faces": {
+				"north": {"uv": [4, 8, 12, 16], "texture": "#5"},
+				"east": {"uv": [4, 8, 12, 16], "texture": "#5"},
+				"south": {"uv": [4, 8, 12, 16], "texture": "#5"},
+				"west": {"uv": [4, 8, 12, 16], "texture": "#5"}
+			}
+		}
+	]
 }

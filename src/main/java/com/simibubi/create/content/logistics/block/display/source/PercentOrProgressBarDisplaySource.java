@@ -6,8 +6,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.network.chat.MutableComponent;
@@ -30,9 +30,9 @@ public abstract class PercentOrProgressBarDisplaySource extends NumericSingleLin
 		int labelSize = label.isEmpty() ? 0 : label.length() + 1;
 		int length = Math.min(stats.maxColumns() - labelSize, 128);
 
-		if (context.getTargetTE() instanceof SignBlockEntity)
+		if (context.getTargetBlockEntity() instanceof SignBlockEntity)
 			length = (int) (length * 6f / 9f);
-		if (context.getTargetTE() instanceof FlapDisplayTileEntity)
+		if (context.getTargetBlockEntity() instanceof FlapDisplayBlockEntity)
 			length = sizeForWideChars(length);
 
 		int filledLength = (int) (currentLevel * length);

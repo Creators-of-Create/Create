@@ -3,23 +3,9 @@
 	"textures": {
 		"bearing_top": "create:block/bearing_top",
 		"particle": "create:block/mechanical_bearing_side",
-		"bearing_side": "create:block/mechanical_bearing_side",
-		"brass_casing": "create:block/brass_casing"
+		"bearing_side": "create:block/mechanical_bearing_side"
 	},
 	"elements": [
-		{
-			"name": "Cube",
-			"from": [6, 12, 16],
-			"to": [10, 14, 17],
-			"faces": {
-				"north": {"uv": [3, 0, 7, 2], "texture": "#brass_casing"},
-				"east": {"uv": [7, 0, 8, 2], "texture": "#brass_casing"},
-				"south": {"uv": [6, 0, 10, 2], "texture": "#brass_casing"},
-				"west": {"uv": [8, 0, 9, 2], "texture": "#brass_casing"},
-				"up": {"uv": [6, 0, 10, 1], "texture": "#brass_casing"},
-				"down": {"uv": [6, 1, 10, 2], "texture": "#brass_casing"}
-			}
-		},
 		{
 			"name": "Top",
 			"from": [0, 12, 0],

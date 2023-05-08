@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.trains;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -26,19 +24,16 @@ public class TrackGraphRequestPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
 				for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) {
-					if (trackGraph.netId == netId) {
-						Create.RAILWAYS.sync.sendFullGraphTo(trackGraph, context.get()
-							.getSender());
-						break;
-					}
+				if (trackGraph.netId == netId) {
+					Create.RAILWAYS.sync.sendFullGraphTo(trackGraph, context.getSender());
+					break;
 				}
-			});
-		context.get()
-			.setPacketHandled(true);
+			}
+		});
+		return true;
 	}
 
 }

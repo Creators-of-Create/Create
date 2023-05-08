@@ -17,6 +17,7 @@ public class CustomItemModels {
 
 	private final Multimap<ResourceLocation, NonNullFunction<BakedModel, ? extends BakedModel>> modelFuncs = MultimapBuilder.hashKeys().arrayListValues().build();
 	private final Map<Item, NonNullFunction<BakedModel, ? extends BakedModel>> finalModelFuncs = new IdentityHashMap<>();
+	private boolean funcsLoaded = false;
 
 	public void register(ResourceLocation item, NonNullFunction<BakedModel, ? extends BakedModel> func) {
 		modelFuncs.put(item, func);
@@ -28,8 +29,10 @@ public class CustomItemModels {
 	}
 
 	private void loadEntriesIfMissing() {
-		if (finalModelFuncs.isEmpty())
+		if (!funcsLoaded) {
 			loadEntries();
+			funcsLoaded = true;
+		}
 	}
 
 	private void loadEntries() {

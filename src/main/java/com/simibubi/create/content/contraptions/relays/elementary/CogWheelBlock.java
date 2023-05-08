@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.relays.elementary;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllCreativeModeTabs;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
@@ -14,10 +16,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -58,6 +62,14 @@ public class CogWheelBlock extends AbstractSimpleShaftBlock implements ICogWheel
 	@Override
 	public boolean isSmallCog() {
 		return !isLarge;
+	}
+
+	@Override
+	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {
+		super.fillItemCategory(pTab, pItems);
+		// Ensure the belt item is added after large cogwheels in the creative tab
+		if (AllBlocks.LARGE_COGWHEEL.is(this) && pTab == AllCreativeModeTabs.BASE_CREATIVE_TAB)
+			pItems.add(AllItems.BELT_CONNECTOR.asStack());
 	}
 
 	@Override

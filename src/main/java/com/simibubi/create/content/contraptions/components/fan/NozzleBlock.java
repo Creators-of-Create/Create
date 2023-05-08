@@ -2,9 +2,9 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -26,7 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class NozzleBlock extends WrenchableDirectionalBlock implements ITE<NozzleTileEntity> {
+public class NozzleBlock extends WrenchableDirectionalBlock implements IBE<NozzleBlockEntity> {
 
 	public NozzleBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
@@ -63,9 +63,9 @@ public class NozzleBlock extends WrenchableDirectionalBlock implements ITE<Nozzl
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
 		Direction towardsFan = state.getValue(FACING).getOpposite();
-		BlockEntity te = worldIn.getBlockEntity(pos.relative(towardsFan));
-		return te instanceof IAirCurrentSource
-				&& ((IAirCurrentSource) te).getAirflowOriginSide() == towardsFan.getOpposite();
+		BlockEntity be = worldIn.getBlockEntity(pos.relative(towardsFan));
+		return be instanceof IAirCurrentSource
+				&& ((IAirCurrentSource) be).getAirflowOriginSide() == towardsFan.getOpposite();
 	}
 	
 	@Override
@@ -74,13 +74,13 @@ public class NozzleBlock extends WrenchableDirectionalBlock implements ITE<Nozzl
 	}
 
 	@Override
-	public Class<NozzleTileEntity> getTileEntityClass() {
-		return NozzleTileEntity.class;
+	public Class<NozzleBlockEntity> getBlockEntityClass() {
+		return NozzleBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends NozzleTileEntity> getTileEntityType() {
-		return AllTileEntities.NOZZLE.get();
+	public BlockEntityType<? extends NozzleBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.NOZZLE.get();
 	}
 
 }

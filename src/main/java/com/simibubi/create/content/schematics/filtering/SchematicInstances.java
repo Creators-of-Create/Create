@@ -6,23 +6,26 @@ import javax.annotation.Nullable;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class SchematicInstances {
 
-	public static WorldAttached<Cache<Integer, SchematicWorld>> loadedSchematics;
+	public static final WorldAttached<Cache<Integer, SchematicWorld>> loadedSchematics;
 
 	static {
 		loadedSchematics = new WorldAttached<>($ -> CacheBuilder.newBuilder()
@@ -65,6 +68,11 @@ public class SchematicInstances {
 		StructurePlaceSettings settings = SchematicItem.getSettings(schematic);
 		activeTemplate.placeInWorld(world, anchor, anchor, settings, wrapped.getRandom(), Block.UPDATE_CLIENTS);
 
+		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
+			settings.getRotation(), settings.getMirror());
+		for (BlockEntity be : world.getBlockEntities())
+			transform.apply(be);
+		
 		return world;
 	}
 

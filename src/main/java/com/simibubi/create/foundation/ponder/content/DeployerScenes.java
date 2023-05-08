@@ -1,7 +1,8 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerBlockEntity;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -109,8 +110,8 @@ public class DeployerScenes {
 		scene.overlay.showControls(new InputWindowElement(frontVec, Pointing.DOWN).rightClick()
 			.withItem(pot), 40);
 		scene.idle(7);
-		Class<DeployerTileEntity> teType = DeployerTileEntity.class;
-		scene.world.modifyTileNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", pot.serializeNBT()));
+		Class<DeployerBlockEntity> teType = DeployerBlockEntity.class;
+		scene.world.modifyBlockEntityNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", pot.serializeNBT()));
 		scene.idle(10);
 
 		scene.overlay.showText(40)
@@ -122,7 +123,7 @@ public class DeployerScenes {
 		scene.world.moveDeployer(deployerPos, 1, 25);
 		scene.idle(26);
 		scene.world.restoreBlocks(util.select.position(potPosition));
-		scene.world.modifyTileNBT(deployerSelection, teType,
+		scene.world.modifyBlockEntityNBT(deployerSelection, teType,
 			nbt -> nbt.put("HeldItem", ItemStack.EMPTY.serializeNBT()));
 		scene.world.moveDeployer(deployerPos, -1, 25);
 		scene.idle(20);
@@ -136,7 +137,7 @@ public class DeployerScenes {
 			scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), tulip);
 		scene.idle(17);
 		scene.world.modifyEntity(entity1, Entity::discard);
-		scene.world.modifyTileNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", tulip.serializeNBT()));
+		scene.world.modifyBlockEntityNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", tulip.serializeNBT()));
 		scene.idle(10);
 		scene.overlay.showText(40)
 			.placeNearTarget()
@@ -146,7 +147,7 @@ public class DeployerScenes {
 		scene.world.moveDeployer(deployerPos, 1, 25);
 		scene.idle(26);
 		scene.world.setBlock(potPosition, Blocks.POTTED_RED_TULIP.defaultBlockState(), false);
-		scene.world.modifyTileNBT(deployerSelection, teType,
+		scene.world.modifyBlockEntityNBT(deployerSelection, teType,
 			nbt -> nbt.put("HeldItem", ItemStack.EMPTY.serializeNBT()));
 		scene.world.moveDeployer(deployerPos, -1, 25);
 		scene.idle(25);
@@ -154,8 +155,9 @@ public class DeployerScenes {
 		scene.world.hideSection(util.select.position(deployerPos.above()), Direction.EAST);
 		scene.idle(20);
 
-		Vec3 filterSlot = frontVec.add(0.375, 0.25, 0);
-		scene.overlay.showFilterSlotInput(filterSlot, 80);
+		Vec3 filterSlot = util.vector.topOf(deployerPos)
+			.add(2 / 16f, 0, 0);
+		scene.overlay.showFilterSlotInput(filterSlot, Direction.UP, 80);
 		scene.overlay.showText(40)
 			.attachKeyFrame()
 			.placeNearTarget()
@@ -195,7 +197,7 @@ public class DeployerScenes {
 		entity1 = scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), shears);
 		scene.idle(17);
 		scene.world.modifyEntity(entity1, Entity::discard);
-		scene.world.modifyTileNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", shears.serializeNBT()));
+		scene.world.modifyBlockEntityNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", shears.serializeNBT()));
 		scene.idle(10);
 
 		scene.overlay.showText(60)
@@ -257,7 +259,7 @@ public class DeployerScenes {
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(deployerPos), Pointing.DOWN).withItem(tool),
 			30);
 		scene.idle(7);
-		scene.world.modifyTileNBT(deployerSelection, DeployerTileEntity.class,
+		scene.world.modifyBlockEntityNBT(deployerSelection, DeployerBlockEntity.class,
 			nbt -> nbt.put("HeldItem", tool.serializeNBT()));
 		scene.idle(45);
 
@@ -279,7 +281,8 @@ public class DeployerScenes {
 		scene.overlay.showControls(new InputWindowElement(frontVec, Pointing.LEFT).rightClick()
 			.withWrench(), 40);
 		scene.idle(7);
-		scene.world.modifyTileNBT(deployerSelection, DeployerTileEntity.class, nbt -> nbt.putString("Mode", "PUNCH"));
+		scene.world.modifyBlockEntityNBT(deployerSelection, DeployerBlockEntity.class,
+			nbt -> nbt.putString("Mode", "PUNCH"));
 		scene.idle(45);
 
 		scene.overlay.showText(60)
@@ -338,7 +341,8 @@ public class DeployerScenes {
 		scene.overlay.showControls(new InputWindowElement(util.vector.blockSurface(pressPos.below(), Direction.EAST)
 			.add(0, 0.15, 0), Pointing.RIGHT).withItem(tool), 30);
 		scene.idle(7);
-		scene.world.modifyTileNBT(pressS, DeployerTileEntity.class, nbt -> nbt.put("HeldItem", tool.serializeNBT()));
+		scene.world.modifyBlockEntityNBT(pressS, DeployerBlockEntity.class,
+			nbt -> nbt.put("HeldItem", tool.serializeNBT()));
 		scene.idle(25);
 
 		Vec3 pressSide = util.vector.blockSurface(pressPos, Direction.WEST);
@@ -500,6 +504,8 @@ public class DeployerScenes {
 		BlockPos deployerPos = util.grid.at(4, 1, 3);
 		Selection deployerSelection = util.select.position(deployerPos);
 
+		scene.world.cycleBlockProperty(deployerPos, DeployerBlock.AXIS_ALONG_FIRST_COORDINATE);
+
 		scene.world.showSection(util.select.layer(0)
 			.add(flowers), Direction.UP);
 		scene.idle(5);
@@ -546,10 +552,9 @@ public class DeployerScenes {
 		scene.world.replaceBlocks(flowers, Blocks.AIR.defaultBlockState(), false);
 		scene.world.showSection(flowers, Direction.UP);
 
-		Vec3 frontVec = util.vector.blockSurface(deployerPos.west(3), Direction.NORTH)
-			.add(0, 0, -.125);
-		Vec3 filterSlot = frontVec.add(0, 0.25, 0.375);
-		scene.overlay.showFilterSlotInput(filterSlot, 80);
+		Vec3 filterSlot = util.vector.blockSurface(deployerPos.west(3), Direction.WEST)
+			.add(0, 0, 2 / 16f);
+		scene.overlay.showFilterSlotInput(filterSlot, Direction.WEST, 80);
 		scene.overlay.showText(60)
 			.attachKeyFrame()
 			.placeNearTarget()
@@ -560,7 +565,7 @@ public class DeployerScenes {
 		ItemStack poppy = new ItemStack(Items.POPPY);
 		scene.overlay.showControls(new InputWindowElement(filterSlot, Pointing.DOWN).withItem(poppy), 30);
 		scene.idle(7);
-		scene.world.setFilterData(deployerSelection, DeployerTileEntity.class, poppy);
+		scene.world.setFilterData(deployerSelection, DeployerBlockEntity.class, poppy);
 		scene.idle(25);
 
 		scene.world.setKineticSpeed(util.select.position(4, 0, 6), 8);

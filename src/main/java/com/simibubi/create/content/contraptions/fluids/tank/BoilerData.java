@@ -11,7 +11,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
-import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleTileEntity;
+import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlockEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -66,7 +66,7 @@ public class BoilerData {
 
 	public LerpedFloat gauge = LerpedFloat.linear();
 
-	public void tick(FluidTankTileEntity controller) {
+	public void tick(FluidTankBlockEntity controller) {
 		if (!isActive())
 			return;
 		if (controller.getLevel().isClientSide) {
@@ -96,8 +96,8 @@ public class BoilerData {
 			for (float i : supplyOverTime)
 				waterSupply = Math.max(i, waterSupply);
 		}
-		
-		if (controller instanceof CreativeFluidTankTileEntity)
+
+		if (controller instanceof CreativeFluidTankBlockEntity)
 			waterSupply = waterSupplyPerLevel * 20;
 
 		if (getActualHeat(controller.getTotalTankSize()) == 18)
@@ -170,6 +170,22 @@ public class BoilerData {
 			* BlockStressValues.getCapacity(AllBlocks.STEAM_ENGINE.get());
 
 		tooltip.add(Components.immutableEmpty());
+
+		if (attachedEngines > 0 && maxHeatForSize > 0 && maxHeatForWater == 0 && (passiveHeat ? 1 : activeHeat) > 0) {
+			Lang.translate("boiler.water_input_rate")
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
+			Lang.number(waterSupply)
+				.style(ChatFormatting.BLUE)
+				.add(Lang.translate("generic.unit.millibuckets"))
+				.add(Lang.text(" / ")
+					.style(ChatFormatting.GRAY))
+				.add(Lang.translate("boiler.per_tick", Lang.number(waterSupplyPerLevel)
+					.add(Lang.translate("generic.unit.millibuckets")))
+					.style(ChatFormatting.DARK_GRAY))
+				.forGoggles(tooltip, 1);
+			return true;
+		}
 
 		Lang.translate("tooltip.capacityProvided")
 			.style(ChatFormatting.GRAY)
@@ -250,10 +266,11 @@ public class BoilerData {
 	}
 
 	private MutableComponent bars(int level, ChatFormatting format) {
-		return Components.literal(Strings.repeat('|', level)).withStyle(format);
+		return Components.literal(Strings.repeat('|', level))
+			.withStyle(format);
 	}
 
-	public boolean evaluate(FluidTankTileEntity controller) {
+	public boolean evaluate(FluidTankBlockEntity controller) {
 		BlockPos controllerPos = controller.getBlockPos();
 		Level level = controller.getLevel();
 		int prevEngines = attachedEngines;
@@ -287,7 +304,7 @@ public class BoilerData {
 		return prevEngines != attachedEngines || prevWhistles != attachedWhistles;
 	}
 
-	public void checkPipeOrganAdvancement(FluidTankTileEntity controller) {
+	public void checkPipeOrganAdvancement(FluidTankBlockEntity controller) {
 		if (!controller.getBehaviour(AdvancementBehaviour.TYPE)
 			.isOwnerPresent())
 			return;
@@ -310,7 +327,7 @@ public class BoilerData {
 						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
 							&& WhistleBlock.getAttachedDirection(attachedState)
 								.getOpposite() == d) {
-							if (level.getBlockEntity(attachedPos)instanceof WhistleTileEntity wte)
+							if (level.getBlockEntity(attachedPos)instanceof WhistleBlockEntity wte)
 								whistlePitches.add(wte.getPitchId());
 						}
 					}
@@ -322,7 +339,7 @@ public class BoilerData {
 			controller.award(AllAdvancements.PIPE_ORGAN);
 	}
 
-	public boolean updateTemperature(FluidTankTileEntity controller) {
+	public boolean updateTemperature(FluidTankBlockEntity controller) {
 		BlockPos controllerPos = controller.getBlockPos();
 		Level level = controller.getLevel();
 		needsHeatLevelUpdate = false;

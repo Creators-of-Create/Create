@@ -3,14 +3,14 @@ package com.simibubi.create;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.CampfireMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.dispenser.DispenserMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.dispenser.DropperMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.foundation.utility.CreateRegistry;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllMovementBehaviours {
-	private static final CreateRegistry<Block, MovementBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
+	private static final AttachedRegistry<Block, MovementBehaviour> BLOCK_BEHAVIOURS = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
 	public static void registerBehaviour(ResourceLocation block, MovementBehaviour behaviour) {
@@ -60,6 +60,7 @@ public class AllMovementBehaviours {
 	static void registerDefaults() {
 		registerBehaviour(Blocks.BELL, new BellMovementBehaviour());
 		registerBehaviour(Blocks.CAMPFIRE, new CampfireMovementBehaviour());
+		registerBehaviour(Blocks.SOUL_CAMPFIRE, new CampfireMovementBehaviour());
 
 		DispenserMovementBehaviour.gatherMovedDispenseItemBehaviours();
 		registerBehaviour(Blocks.DISPENSER, new DispenserMovementBehaviour());

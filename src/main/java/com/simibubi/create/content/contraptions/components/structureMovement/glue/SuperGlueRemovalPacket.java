@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -33,10 +31,9 @@ public class SuperGlueRemovalPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			Entity entity = player.level.getEntity(entityId);
 			if (!(entity instanceof SuperGlueEntity superGlue))
 				return;
@@ -47,7 +44,7 @@ public class SuperGlueRemovalPacket extends SimplePacketBase {
 			superGlue.spawnParticles();
 			entity.discard();
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

@@ -177,10 +177,10 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 
 		public Particle createParticle(AirFlowParticleData data, ClientLevel worldIn, double x, double y, double z,
 									   double xSpeed, double ySpeed, double zSpeed) {
-			BlockEntity te = worldIn.getBlockEntity(new BlockPos(data.posX, data.posY, data.posZ));
-			if (!(te instanceof IAirCurrentSource))
-				te = null;
-			return new AirFlowParticle(worldIn, (IAirCurrentSource) te, x, y, z, this.spriteSet);
+			BlockEntity be = worldIn.getBlockEntity(new BlockPos(data.posX, data.posY, data.posZ));
+			if (!(be instanceof IAirCurrentSource))
+				be = null;
+			return new AirFlowParticle(worldIn, (IAirCurrentSource) be, x, y, z, this.spriteSet);
 		}
 	}
 

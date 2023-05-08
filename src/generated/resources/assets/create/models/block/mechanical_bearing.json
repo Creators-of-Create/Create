@@ -2,7 +2,6 @@
   "parent": "create:block/bearing/block",
   "textures": {
     "back": "create:block/gearbox",
-    "nook": "create:block/brass_casing",
     "side": "create:block/mechanical_bearing_side"
   }
 }

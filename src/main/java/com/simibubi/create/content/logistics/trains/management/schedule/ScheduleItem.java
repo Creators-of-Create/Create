@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.trains.management.schedule;
 
 import java.util.List;
 
-import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
@@ -161,7 +161,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 	@Override
 	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		ItemStack heldItem = player.getMainHandItem();
-		return new ScheduleContainer(AllContainerTypes.SCHEDULE.get(), id, inv, heldItem);
+		return new ScheduleMenu(AllMenuTypes.SCHEDULE.get(), id, inv, heldItem);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -12,15 +12,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
-public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer<SandPaperItemRenderer.SandPaperModel> {
+public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer {
 
 	@Override
-	protected void render(ItemStack stack, SandPaperModel model, PartialItemModelRenderer renderer,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
 		TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		LocalPlayer player = Minecraft.getInstance().player;
@@ -77,19 +76,6 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer<SandP
 		itemRenderer.render(stack, TransformType.NONE, false, ms, buffer, light, overlay, model.getOriginalModel());
 
 		ms.popPose();
-	}
-
-	@Override
-	public SandPaperModel createModel(BakedModel originalModel) {
-		return new SandPaperModel(originalModel);
-	}
-
-	public static class SandPaperModel extends CreateCustomRenderedItemModel {
-
-		public SandPaperModel(BakedModel template) {
-			super(template, "");
-		}
-
 	}
 
 }

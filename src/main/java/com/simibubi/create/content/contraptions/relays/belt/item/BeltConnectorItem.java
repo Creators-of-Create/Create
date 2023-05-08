@@ -6,14 +6,15 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.AllCreativeModeTabs;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -47,14 +48,14 @@ public class BeltConnectorItem extends BlockItem {
 	public String getDescriptionId() {
 		return getOrCreateDescriptionId();
 	}
-
+	
 	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (p_150895_1_ == Create.BASE_CREATIVE_TAB)
-			return;
-		super.fillItemCategory(p_150895_1_, p_150895_2_);
+	public void fillItemCategory(CreativeModeTab pGroup, NonNullList<ItemStack> pItems) {
+		// See CogWheelBlock.fillItemCategory()
+		if (pGroup != AllCreativeModeTabs.BASE_CREATIVE_TAB)
+			super.fillItemCategory(pGroup, pItems);
 	}
-
+	
 	@Nonnull
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
@@ -155,9 +156,10 @@ public class BeltConnectorItem extends BlockItem {
 					.isReplaceable())
 				world.destroyBlock(pos, false);
 
-			KineticTileEntity.switchToBlockState(world, pos, beltBlock.setValue(BeltBlock.SLOPE, slope)
-				.setValue(BeltBlock.PART, part)
-				.setValue(BeltBlock.HORIZONTAL_FACING, facing));
+			KineticBlockEntity.switchToBlockState(world, pos,
+				ProperWaterloggedBlock.withWater(world, beltBlock.setValue(BeltBlock.SLOPE, slope)
+					.setValue(BeltBlock.PART, part)
+					.setValue(BeltBlock.HORIZONTAL_FACING, facing), pos));
 		}
 
 		if (!failed)
@@ -243,16 +245,16 @@ public class BeltConnectorItem extends BlockItem {
 		if (shaftAxis == Axis.Y && x != 0 && z != 0)
 			return false;
 
-		BlockEntity tileEntity = world.getBlockEntity(first);
-		BlockEntity tileEntity2 = world.getBlockEntity(second);
+		BlockEntity blockEntity = world.getBlockEntity(first);
+		BlockEntity blockEntity2 = world.getBlockEntity(second);
 
-		if (!(tileEntity instanceof KineticTileEntity))
+		if (!(blockEntity instanceof KineticBlockEntity))
 			return false;
-		if (!(tileEntity2 instanceof KineticTileEntity))
+		if (!(blockEntity2 instanceof KineticBlockEntity))
 			return false;
 
-		float speed1 = ((KineticTileEntity) tileEntity).getTheoreticalSpeed();
-		float speed2 = ((KineticTileEntity) tileEntity2).getTheoreticalSpeed();
+		float speed1 = ((KineticBlockEntity) blockEntity).getTheoreticalSpeed();
+		float speed2 = ((KineticBlockEntity) blockEntity2).getTheoreticalSpeed();
 		if (Math.signum(speed1) != Math.signum(speed2) && speed1 != 0 && speed2 != 0)
 			return false;
 
@@ -273,7 +275,7 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	public static Integer maxLength() {
-		return AllConfigs.SERVER.kinetics.maxBeltLength.get();
+		return AllConfigs.server().kinetics.maxBeltLength.get();
 	}
 
 	public static boolean validateAxis(Level world, BlockPos pos) {

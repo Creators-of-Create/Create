@@ -5,8 +5,8 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
+public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> extends KineticBlockEntityRenderer<T> {
 
 	private PartialModel halfRope;
 	private PartialModel halfMagnet;
@@ -36,34 +36,34 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticTileEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(T p_188185_1_) {
 		return true;
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(te.getLevel()))
+		if (Backend.canUseInstancing(be.getLevel()))
 			return;
 
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
-		float offset = getOffset(te, partialTicks);
-		boolean running = isRunning(te);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
+		float offset = getOffset(be, partialTicks);
+		boolean running = isRunning(be);
 
-		Axis rotationAxis = ((IRotate) te.getBlockState()
-			.getBlock()).getRotationAxis(te.getBlockState());
-		kineticRotationTransform(getRotatedCoil(te), te, rotationAxis, AngleHelper.rad(offset * 180), light)
+		Axis rotationAxis = ((IRotate) be.getBlockState()
+			.getBlock()).getRotationAxis(be.getBlockState());
+		kineticRotationTransform(getRotatedCoil(be), be, rotationAxis, AngleHelper.rad(offset * 180), light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-		Level world = te.getLevel();
-		BlockState blockState = te.getBlockState();
-		BlockPos pos = te.getBlockPos();
+		Level world = be.getLevel();
+		BlockState blockState = be.getBlockState();
+		BlockPos pos = be.getBlockPos();
 
 		SuperByteBuffer halfMagnet = CachedBufferer.partial(this.halfMagnet, blockState);
 		SuperByteBuffer halfRope = CachedBufferer.partial(this.halfRope, blockState);
-		SuperByteBuffer magnet = renderMagnet(te);
-		SuperByteBuffer rope = renderRope(te);
+		SuperByteBuffer magnet = renderMagnet(be);
+		SuperByteBuffer rope = renderRope(be);
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		if (running || offset == 0)
@@ -80,8 +80,8 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 			renderAt(world, rope, offset - i - 1, pos, ms, vb);
 	}
 
-	private void renderAt(LevelAccessor world, SuperByteBuffer partial, float offset, BlockPos pulleyPos, PoseStack ms,
-		VertexConsumer buffer) {
+	public static void renderAt(LevelAccessor world, SuperByteBuffer partial, float offset, BlockPos pulleyPos,
+		PoseStack ms, VertexConsumer buffer) {
 		BlockPos actualPos = pulleyPos.below((int) offset);
 		int light = LevelRenderer.getLightColor(world, world.getBlockState(actualPos), actualPos);
 		partial.translate(0, -offset, 0)
@@ -89,27 +89,27 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 			.renderInto(ms, buffer);
 	}
 
-	protected abstract Axis getShaftAxis(KineticTileEntity te);
+	protected abstract Axis getShaftAxis(T be);
 
 	protected abstract PartialModel getCoil();
 
-	protected abstract SuperByteBuffer renderRope(KineticTileEntity te);
+	protected abstract SuperByteBuffer renderRope(T be);
 
-	protected abstract SuperByteBuffer renderMagnet(KineticTileEntity te);
+	protected abstract SuperByteBuffer renderMagnet(T be);
 
-	protected abstract float getOffset(KineticTileEntity te, float partialTicks);
+	protected abstract float getOffset(T be, float partialTicks);
 
-	protected abstract boolean isRunning(KineticTileEntity te);
+	protected abstract boolean isRunning(T be);
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return shaft(getShaftAxis(te));
+	protected BlockState getRenderedBlockState(T be) {
+		return shaft(getShaftAxis(be));
 	}
 
-	protected SuperByteBuffer getRotatedCoil(KineticTileEntity te) {
-		BlockState blockState = te.getBlockState();
+	protected SuperByteBuffer getRotatedCoil(T be) {
+		BlockState blockState = be.getBlockState();
 		return CachedBufferer.partialFacing(getCoil(), blockState,
-			Direction.get(AxisDirection.POSITIVE, getShaftAxis(te)));
+			Direction.get(AxisDirection.POSITIVE, getShaftAxis(be)));
 	}
 
 	@Override

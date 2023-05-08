@@ -1,14 +1,15 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.signal;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.OverlayState;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlockEntity.OverlayState;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlockEntity.SignalState;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,30 +20,30 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SignalRenderer extends SafeTileEntityRenderer<SignalTileEntity> {
+public class SignalRenderer extends SafeBlockEntityRenderer<SignalBlockEntity> {
 
 	public SignalRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(SignalTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(SignalBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		BlockState blockState = te.getBlockState();
-		SignalState signalState = te.getState();
-		OverlayState overlayState = te.getOverlay();
+		BlockState blockState = be.getBlockState();
+		SignalState signalState = be.getState();
+		OverlayState overlayState = be.getOverlay();
 
-		float renderTime = AnimationTickHolder.getRenderTime(te.getLevel());
+		float renderTime = AnimationTickHolder.getRenderTime(be.getLevel());
 		if (signalState.isRedLight(renderTime))
-			CachedBufferer.partial(AllBlockPartials.SIGNAL_ON, blockState)
+			CachedBufferer.partial(AllPartialModels.SIGNAL_ON, blockState)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		else
-			CachedBufferer.partial(AllBlockPartials.SIGNAL_OFF, blockState)
+			CachedBufferer.partial(AllPartialModels.SIGNAL_OFF, blockState)
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-		BlockPos pos = te.getBlockPos();
-		TrackTargetingBehaviour<SignalBoundary> target = te.edgePoint;
+		BlockPos pos = be.getBlockPos();
+		TrackTargetingBehaviour<SignalBoundary> target = be.edgePoint;
 		BlockPos targetPosition = target.getGlobalPosition();
-		Level level = te.getLevel();
+		Level level = be.getLevel();
 		BlockState trackState = level.getBlockState(targetPosition);
 		Block block = trackState.getBlock();
 
@@ -52,7 +53,8 @@ public class SignalRenderer extends SafeTileEntityRenderer<SignalTileEntity> {
 			return;
 
 		ms.pushPose();
-		ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
+		TransformStack.cast(ms)
+			.translate(targetPosition.subtract(pos));
 		RenderedTrackOverlayType type =
 			overlayState == OverlayState.DUAL ? RenderedTrackOverlayType.DUAL_SIGNAL : RenderedTrackOverlayType.SIGNAL;
 		TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), target.getTargetBezier(), ms,

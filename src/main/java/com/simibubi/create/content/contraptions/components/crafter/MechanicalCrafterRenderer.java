@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.crafter;
 
 import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
-import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.standardKineticRotationTransform;
+import static com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer.standardKineticRotationTransform;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
@@ -9,13 +9,13 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity.Phase;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pointing;
@@ -32,25 +32,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
+public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<MechanicalCrafterBlockEntity> {
 
 	public MechanicalCrafterRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	protected void renderSafe(MechanicalCrafterTileEntity te, float partialTicks, PoseStack ms,
+	protected void renderSafe(MechanicalCrafterBlockEntity be, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
 		ms.pushPose();
-		Direction facing = te.getBlockState()
+		Direction facing = be.getBlockState()
 			.getValue(HORIZONTAL_FACING);
 		Vec3 vec = Vec3.atLowerCornerOf(facing.getNormal())
 			.scale(.58)
 			.add(.5, .5, .5);
 
-		if (te.phase == Phase.EXPORTING) {
-			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(te.getBlockState());
+		if (be.phase == Phase.EXPORTING) {
+			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(be.getBlockState());
 			float progress =
-				Mth.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
+				Mth.clamp((1000 - be.countDown + be.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
 			vec = vec.add(Vec3.atLowerCornerOf(targetDirection.getNormal())
 				.scale(progress * .75f));
 		}
@@ -59,16 +59,16 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		ms.scale(1 / 2f, 1 / 2f, 1 / 2f);
 		float yRot = AngleHelper.horizontalAngle(facing);
 		ms.mulPose(Vector3f.YP.rotationDegrees(yRot));
-		renderItems(te, partialTicks, ms, buffer, light, overlay);
+		renderItems(be, partialTicks, ms, buffer, light, overlay);
 		ms.popPose();
 
-		renderFast(te, partialTicks, ms, buffer, light);
+		renderFast(be, partialTicks, ms, buffer, light);
 	}
 
-	public void renderItems(MechanicalCrafterTileEntity te, float partialTicks, PoseStack ms,
+	public void renderItems(MechanicalCrafterBlockEntity be, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-		if (te.phase == Phase.IDLE) {
-			ItemStack stack = te.getInventory()
+		if (be.phase == Phase.IDLE) {
+			ItemStack stack = be.getInventory()
 				.getItem(0);
 			if (!stack.isEmpty()) {
 				ms.pushPose();
@@ -81,16 +81,16 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 			}
 		} else {
 			// render grouped items
-			GroupedItems items = te.groupedItems;
+			GroupedItems items = be.groupedItems;
 			float distance = .5f;
 
 			ms.pushPose();
 
-			if (te.phase == Phase.CRAFTING) {
-				items = te.groupedItemsBeforeCraft;
+			if (be.phase == Phase.CRAFTING) {
+				items = be.groupedItemsBeforeCraft;
 				items.calcStats();
 				float progress =
-					Mth.clamp((2000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
+					Mth.clamp((2000 - be.countDown + be.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
 				float earlyProgress = Mth.clamp(progress * 2, 0, 1);
 				float lateProgress = Mth.clamp(progress * 2 - 1, 0, 1);
 
@@ -102,7 +102,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				distance += (-4 * (progress - .5f) * (progress - .5f) + 1) * .25f;
 			}
 
-			boolean onlyRenderFirst = te.phase == Phase.INSERTING || te.phase == Phase.CRAFTING && te.countDown < 1000;
+			boolean onlyRenderFirst = be.phase == Phase.INSERTING || be.phase == Phase.CRAFTING && be.countDown < 1000;
 			final float spacing = distance;
 			items.grid.forEach((pair, stack) -> {
 				if (onlyRenderFirst && (pair.getLeft()
@@ -117,8 +117,8 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				ms.translate(x * spacing, y * spacing, 0);
 
 				int offset = 0;
-				if (te.phase == Phase.EXPORTING && te.getBlockState().hasProperty(MechanicalCrafterBlock.POINTING)) {
-					Pointing value = te.getBlockState().getValue(MechanicalCrafterBlock.POINTING);
+				if (be.phase == Phase.EXPORTING && be.getBlockState().hasProperty(MechanicalCrafterBlock.POINTING)) {
+					Pointing value = be.getBlockState().getValue(MechanicalCrafterBlock.POINTING);
 					offset = value == Pointing.UP ? -1 : value == Pointing.LEFT ? 2 : value == Pointing.RIGHT ? -2 : 1;
 				}
 
@@ -133,10 +133,10 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 
 			ms.popPose();
 
-			if (te.phase == Phase.CRAFTING) {
-				items = te.groupedItems;
+			if (be.phase == Phase.CRAFTING) {
+				items = be.groupedItems;
 				float progress =
-					Mth.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
+					Mth.clamp((1000 - be.countDown + be.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
 				float earlyProgress = Mth.clamp(progress * 2, 0, 1);
 				float lateProgress = Mth.clamp(progress * 2 - 1, 0, 1);
 
@@ -164,14 +164,14 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		}
 	}
 
-	public void renderFast(MechanicalCrafterTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	public void renderFast(MechanicalCrafterBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light) {
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		if (!Backend.canUseInstancing(te.getLevel())) {
-			SuperByteBuffer superBuffer = CachedBufferer.partial(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
-			standardKineticRotationTransform(superBuffer, te, light);
+		if (!Backend.canUseInstancing(be.getLevel())) {
+			SuperByteBuffer superBuffer = CachedBufferer.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
+			standardKineticRotationTransform(superBuffer, be, light);
 			superBuffer.rotateCentered(Direction.UP, (float) (blockState.getValue(HORIZONTAL_FACING)
 				.getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));
 			superBuffer.rotateCentered(Direction.EAST, (float) (Math.PI / 2));
@@ -179,21 +179,21 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		}
 
 		Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(blockState);
-		BlockPos pos = te.getBlockPos();
+		BlockPos pos = be.getBlockPos();
 
-		if ((te.covered || te.phase != Phase.IDLE) && te.phase != Phase.CRAFTING && te.phase != Phase.INSERTING) {
-			SuperByteBuffer lidBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_LID, blockState);
+		if ((be.covered || be.phase != Phase.IDLE) && be.phase != Phase.CRAFTING && be.phase != Phase.INSERTING) {
+			SuperByteBuffer lidBuffer = renderAndTransform(AllPartialModels.MECHANICAL_CRAFTER_LID, blockState);
 			lidBuffer.light(light)
 				.renderInto(ms, vb);
 		}
 
-		if (MechanicalCrafterBlock.isValidTarget(te.getLevel(), pos.relative(targetDirection), blockState)) {
-			SuperByteBuffer beltBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_BELT, blockState);
+		if (MechanicalCrafterBlock.isValidTarget(be.getLevel(), pos.relative(targetDirection), blockState)) {
+			SuperByteBuffer beltBuffer = renderAndTransform(AllPartialModels.MECHANICAL_CRAFTER_BELT, blockState);
 			SuperByteBuffer beltFrameBuffer =
-				renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_BELT_FRAME, blockState);
+				renderAndTransform(AllPartialModels.MECHANICAL_CRAFTER_BELT_FRAME, blockState);
 
-			if (te.phase == Phase.EXPORTING) {
-				int textureIndex = (int) ((te.getCountDownSpeed() / 128f * AnimationTickHolder.getTicks()));
+			if (be.phase == Phase.EXPORTING) {
+				int textureIndex = (int) ((be.getCountDownSpeed() / 128f * AnimationTickHolder.getTicks()));
 				beltBuffer.shiftUVtoSheet(AllSpriteShifts.CRAFTER_THINGIES, (textureIndex % 4) / 4f, 0, 1);
 			}
 
@@ -203,7 +203,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				.renderInto(ms, vb);
 
 		} else {
-			SuperByteBuffer arrowBuffer = renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_ARROW, blockState);
+			SuperByteBuffer arrowBuffer = renderAndTransform(AllPartialModels.MECHANICAL_CRAFTER_ARROW, blockState);
 			arrowBuffer.light(light)
 				.renderInto(ms, vb);
 		}

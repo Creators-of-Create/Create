@@ -21,7 +21,7 @@ public class OverlayConfigCommand {
 						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayReset.performAction(""));
 
 						DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
-								AllPackets.channel.send(
+								AllPackets.getChannel().send(
 										PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource().getEntity()),
 										new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), "")));
 
@@ -35,7 +35,7 @@ public class OverlayConfigCommand {
 					DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayScreen.performAction(""));
 
 					DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
-							AllPackets.channel.send(
+							AllPackets.getChannel().send(
 									PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource().getEntity()),
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), "")));
 

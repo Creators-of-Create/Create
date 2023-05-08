@@ -3,9 +3,10 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -18,15 +19,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
 public class HarvesterActorInstance extends ActorInstance {
-    static double oneOverRadius = 16.0 / 6.5;
     static float originOffset = 1 / 16f;
     static Vec3 rotOffset = new Vec3(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
-
 
     ModelData harvester;
     private Direction facing;
 
-    private float horizontalAngle;
+    protected float horizontalAngle;
 
     private double rotation;
     private double previousRotation;
@@ -41,34 +40,47 @@ public class HarvesterActorInstance extends ActorInstance {
 
         facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
-        harvester = material.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
+        harvester = material.getModel(getRollingPartial(), state).createInstance();
 
         horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
-        harvester.setBlockLight(localBlockLight());
-    }
+		harvester.setBlockLight(localBlockLight());
+	}
 
-    @Override
-    public void tick() {
-        super.tick();
+	protected PartialModel getRollingPartial() {
+		return AllPartialModels.HARVESTER_BLADE;
+	}
+	
+	protected Vec3 getRotationOffset() {
+		return rotOffset;
+	}
+	
+	protected double getRadius() {
+		return 6.5;
+	}
 
-        previousRotation = rotation;
+	@Override
+	public void tick() {
+		super.tick();
 
-        if (context.contraption.stalled || VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite()))
-            return;
+		previousRotation = rotation;
 
-        double arcLength = context.motion.length();
+		if (context.contraption.stalled || context.disabled
+			|| VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite()))
+			return;
 
-        double radians = arcLength * oneOverRadius;
+		double arcLength = context.motion.length();
 
-        float deg = AngleHelper.deg(radians);
+		double radians = arcLength * 16 / getRadius();
 
-        deg = (float) (((int) (deg * 3000)) / 3000);
+		float deg = AngleHelper.deg(radians);
 
-        rotation += deg * 1.25;
+		deg = (float) (((int) (deg * 3000)) / 3000);
 
-        rotation %= 360;
-    }
+		rotation += deg * 1.25;
+
+		rotation %= 360;
+	}
 
     @Override
     public void beginFrame() {
@@ -77,12 +89,12 @@ public class HarvesterActorInstance extends ActorInstance {
 				.centre()
 				.rotateY(horizontalAngle)
 				.unCentre()
-				.translate(rotOffset)
+				.translate(getRotationOffset())
 				.rotateX(getRotation())
-				.translateBack(rotOffset);
+				.translateBack(getRotationOffset());
 	}
 
-    private double getRotation() {
+    protected double getRotation() {
         return AngleHelper.angleLerp(AnimationTickHolder.getPartialTicks(), previousRotation, rotation);
     }
 }

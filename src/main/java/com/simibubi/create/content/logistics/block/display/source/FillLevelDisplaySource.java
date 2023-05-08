@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.ThresholdSwitchBlockEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -13,8 +13,8 @@ public class FillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 
 	@Override
 	protected Float getProgress(DisplayLinkContext context) {
-		BlockEntity te = context.getSourceTE();
-		if (!(te instanceof StockpileSwitchTileEntity sste))
+		BlockEntity be = context.getSourceBlockEntity();
+		if (!(be instanceof ThresholdSwitchBlockEntity sste))
 			return null;
 		return sste.currentLevel;
 	}

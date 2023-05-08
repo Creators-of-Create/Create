@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlock;
 import com.simibubi.create.content.curiosities.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -81,7 +81,7 @@ public class ShaftBlock extends AbstractSimpleShaftBlock implements EncasableBlo
 			return result;
 
 		if (AllBlocks.METAL_GIRDER.isIn(heldItem) && state.getValue(AXIS) != Axis.Y) {
-			KineticTileEntity.switchToBlockState(world, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
+			KineticBlockEntity.switchToBlockState(world, pos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
 				.setValue(WATERLOGGED, state.getValue(WATERLOGGED))
 				.setValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS, state.getValue(AXIS) == Axis.Z ? Axis.Z : Axis.X));
 			if (!world.isClientSide && !player.isCreative()) {

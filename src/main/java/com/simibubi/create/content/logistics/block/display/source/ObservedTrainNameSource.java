@@ -7,7 +7,7 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserver;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverBlockEntity;
 
 import net.minecraft.network.chat.MutableComponent;
 
@@ -15,7 +15,7 @@ public class ObservedTrainNameSource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceTE() instanceof TrackObserverTileEntity observerTE))
+		if (!(context.getSourceBlockEntity() instanceof TrackObserverBlockEntity observerTE))
 			return EMPTY_LINE;
 		TrackObserver observer = observerTE.getObserver();
 		if (observer == null)

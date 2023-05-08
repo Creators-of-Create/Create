@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE<RedstoneLinkTileEntity> {
+public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE<RedstoneLinkBlockEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty RECEIVER = BooleanProperty.create("receiver");
@@ -84,7 +84,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 
 		int transmit = power;
-		withTileEntityDo(worldIn, pos, te -> te.transmit(transmit));
+		withBlockEntityDo(worldIn, pos, be -> be.transmit(transmit));
 	}
 
 	private int getPower(Level worldIn, BlockPos pos) {
@@ -112,7 +112,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	public int getSignal(BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		if (!state.getValue(RECEIVER))
 			return 0;
-		return getTileEntityOptional(blockAccess, pos).map(RedstoneLinkTileEntity::getReceivedSignal)
+		return getBlockEntityOptional(blockAccess, pos).map(RedstoneLinkBlockEntity::getReceivedSignal)
 				.orElse(0);
 	}
 
@@ -134,12 +134,12 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
 
-		return onTileEntityUse(worldIn, pos, te -> {
+		return onBlockEntityUse(worldIn, pos, be -> {
 			Boolean wasReceiver = state.getValue(RECEIVER);
 			boolean blockPowered = worldIn.hasNeighborSignal(pos);
 			worldIn.setBlock(pos, state.cycle(RECEIVER)
 					.setValue(POWERED, blockPowered), 3);
-			te.transmit(wasReceiver ? 0 : getPower(worldIn, pos));
+			be.transmit(wasReceiver ? 0 : getPower(worldIn, pos));
 			return InteractionResult.SUCCESS;
 		});
 	}
@@ -188,13 +188,13 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public Class<RedstoneLinkTileEntity> getTileEntityClass() {
-		return RedstoneLinkTileEntity.class;
+	public Class<RedstoneLinkBlockEntity> getBlockEntityClass() {
+		return RedstoneLinkBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends RedstoneLinkTileEntity> getTileEntityType() {
-		return AllTileEntities.REDSTONE_LINK.get();
+	public BlockEntityType<? extends RedstoneLinkBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.REDSTONE_LINK.get();
 	}
 
 }

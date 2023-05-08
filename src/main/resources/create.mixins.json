@@ -7,7 +7,12 @@
   "mixins": [
     "ClientboundMapItemDataPacketMixin",
     "ContraptionDriverInteractMixin",
+    "WaterWheelFluidSpreadMixin",
     "CustomItemUseEffectsMixin",
+    "EnchantmentHelperMixin",
+    "EnchantmentMixin",
+    "EntityMixin",
+    "LavaSwimmingMixin",
     "MapItemSavedDataMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
@@ -23,12 +28,14 @@
     "FixNormalScalingMixin",
     "GameRendererMixin",
     "HeavyBootsOnPlayerMixin",
+    "HumanoidArmorLayerMixin",
     "LevelRendererMixin",
     "MapRendererMapInstanceMixin",
     "PlayerRendererMixin",
     "WindowResizeMixin",
     "accessor.AgeableListModelAccessor",
     "accessor.GameRendererAccessor",
+    "accessor.HumanoidArmorLayerAccessor",
     "accessor.ParticleEngineAccessor"
   ],
   "injectors": {

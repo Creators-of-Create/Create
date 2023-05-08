@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
 import java.util.Collection;
-import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -47,26 +46,22 @@ public class ArmPlacementPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer player = context.get()
-					.getSender();
-				if (player == null)
-					return;
-				Level world = player.level;
-				if (world == null || !world.isLoaded(pos))
-					return;
-				BlockEntity tileEntity = world.getBlockEntity(pos);
-				if (!(tileEntity instanceof ArmTileEntity))
-					return;
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			Level world = player.level;
+			if (world == null || !world.isLoaded(pos))
+				return;
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (!(blockEntity instanceof ArmBlockEntity))
+				return;
 
-				ArmTileEntity arm = (ArmTileEntity) tileEntity;
-				arm.interactionPointTag = receivedTag;
-			});
-		context.get()
-			.setPacketHandled(true);
-
+			ArmBlockEntity arm = (ArmBlockEntity) blockEntity;
+			arm.interactionPointTag = receivedTag;
+		});
+		return true;
 	}
 
 	public static class ClientBoundRequest extends SimplePacketBase {
@@ -87,12 +82,10 @@ public class ArmPlacementPacket extends SimplePacketBase {
 		}
 
 		@Override
-		public void handle(Supplier<Context> context) {
-			context.get()
-				.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-					() -> () -> ArmInteractionPointHandler.flushSettings(pos)));
-			context.get()
-				.setPacketHandled(true);
+		public boolean handle(Context context) {
+			context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+				() -> () -> ArmInteractionPointHandler.flushSettings(pos)));
+			return true;
 		}
 
 	}

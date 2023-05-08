@@ -54,7 +54,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		var restoreState = GlStateTracker.getRestoreState();
 		buildLayers();
 		if (ContraptionRenderDispatcher.canInstance()) {
-			buildInstancedTiles();
+			buildInstancedBlockEntities();
 			buildActors();
 		}
 		restoreState.restore();
@@ -95,7 +95,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 
 		if (!isVisible()) return;
 
-		instanceWorld.tileInstanceManager.beginFrame(SerialTaskEngine.INSTANCE, event.getCamera());
+		instanceWorld.blockEntityInstanceManager.beginFrame(SerialTaskEngine.INSTANCE, event.getCamera());
 
 		Vec3 cameraPos = event.getCameraPos();
 
@@ -150,21 +150,21 @@ public class FlwContraption extends ContraptionRenderInfo {
 		}
 	}
 
-	private void buildInstancedTiles() {
-		for (BlockEntity te : contraption.maybeInstancedTileEntities) {
-			if (!InstancedRenderRegistry.canInstance(te.getType())) {
+	private void buildInstancedBlockEntities() {
+		for (BlockEntity be : contraption.maybeInstancedBlockEntities) {
+			if (!InstancedRenderRegistry.canInstance(be.getType())) {
 				continue;
 			}
 
-			Level world = te.getLevel();
-			te.setLevel(renderWorld);
-			instanceWorld.tileInstanceManager.add(te);
-			te.setLevel(world);
+			Level world = be.getLevel();
+			be.setLevel(renderWorld);
+			instanceWorld.blockEntityInstanceManager.add(be);
+			be.setLevel(world);
 		}
 	}
 
 	private void buildActors() {
-		contraption.getActors().forEach(instanceWorld.tileInstanceManager::createActor);
+		contraption.getActors().forEach(instanceWorld.blockEntityInstanceManager::createActor);
 	}
 
 	public static void setupModelViewPartial(Matrix4f matrix, Matrix4f modelMatrix, AbstractContraptionEntity entity, double camX, double camY, double camZ, float pt) {
@@ -176,13 +176,13 @@ public class FlwContraption extends ContraptionRenderInfo {
 	}
 
 	public void tick() {
-		instanceWorld.tileInstanceManager.tick();
+		instanceWorld.blockEntityInstanceManager.tick();
 	}
 
 	public static class ContraptionInstanceWorld {
 
 		private final Engine engine;
-		private final ContraptionInstanceManager tileInstanceManager;
+		private final ContraptionInstanceManager blockEntityInstanceManager;
 
 		public ContraptionInstanceWorld(FlwContraption parent) {
 			switch (Backend.getBackendType()) {
@@ -191,14 +191,14 @@ public class FlwContraption extends ContraptionRenderInfo {
 						.setGroupFactory(ContraptionGroup.forContraption(parent))
 						.setIgnoreOriginCoordinate(true)
 						.build();
-				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld, parent.contraption);
-				engine.addListener(tileInstanceManager);
+				blockEntityInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld, parent.contraption);
+				engine.addListener(blockEntityInstanceManager);
 
 				this.engine = engine;
 			}
 			case BATCHING -> {
 				engine = new BatchingEngine();
-				tileInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld, parent.contraption);
+				blockEntityInstanceManager = new ContraptionInstanceManager(engine, parent.renderWorld, parent.contraption);
 			}
 			default -> throw new IllegalArgumentException("Unknown engine type");
 			}
@@ -206,7 +206,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 
 		public void delete() {
 			engine.delete();
-			tileInstanceManager.invalidate();
+			blockEntityInstanceManager.invalidate();
 		}
 	}
 }

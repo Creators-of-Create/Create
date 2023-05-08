@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -36,10 +34,9 @@ public class TrainCollisionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			Level level = player.level;
 
 			Entity entity = level.getEntity(contraptionEntityId);
@@ -50,7 +47,7 @@ public class TrainCollisionPacket extends SimplePacketBase {
 			player.level.playSound(player, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL,
 				1, .75f);
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

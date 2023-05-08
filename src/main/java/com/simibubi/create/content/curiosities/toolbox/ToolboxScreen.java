@@ -7,12 +7,12 @@ import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -25,7 +25,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
-public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer> {
+public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 
 	protected static final AllGuiTextures BG = AllGuiTextures.TOOLBOX;
 	protected static final AllGuiTextures PLAYER = AllGuiTextures.PLAYER_INVENTORY;
@@ -37,8 +37,8 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 	private List<Rect2i> extraAreas = Collections.emptyList();
 
-	public ToolboxScreen(ToolboxContainer container, Inventory inv, Component title) {
-		super(container, inv, title);
+	public ToolboxScreen(ToolboxMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title);
 		init();
 	}
 
@@ -58,7 +58,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 		disposeButton = new IconButton(leftPos + 30 + 81, topPos + 69, AllIcons.I_TOOLBOX);
 		disposeButton.withCallback(() -> {
-			AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
+			AllPackets.getChannel().sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
 		});
 		disposeButton.setToolTip(Lang.translateDirect("toolbox.depositBox"));
 		addRenderableWidget(disposeButton);
@@ -81,7 +81,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		int y = topPos;
 
 		BG.render(ms, x, y, this);
-		font.draw(ms, title, x + 15, y + 4, 0x442000);
+		font.draw(ms, title, x + 15, y + 4, 0x592424);
 
 		int invX = leftPos;
 		int invY = topPos + imageHeight - PLAYER.height;
@@ -141,7 +141,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 			.translate(0, -6 / 16f, 12 / 16f)
 			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))
 			.translate(0, 6 / 16f, -12 / 16f);
-		GuiGameElement.of(AllBlockPartials.TOOLBOX_LIDS.get(color))
+		GuiGameElement.of(AllPartialModels.TOOLBOX_LIDS.get(color))
 			.render(ms);
 		ms.popPose();
 
@@ -149,7 +149,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 			ms.pushPose();
 			ms.translate(0, -offset * 1 / 8f,
 				menu.contentHolder.drawers.getValue(partialTicks) * -.175f * (2 - offset));
-			GuiGameElement.of(AllBlockPartials.TOOLBOX_DRAWER)
+			GuiGameElement.of(AllPartialModels.TOOLBOX_DRAWER)
 				.render(ms);
 			ms.popPose();
 		}

@@ -10,11 +10,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemDrainItemHandler implements IItemHandler {
 
-	private ItemDrainTileEntity te;
+	private ItemDrainBlockEntity blockEntity;
 	private Direction side;
 
-	public ItemDrainItemHandler(ItemDrainTileEntity te, Direction side) {
-		this.te = te;
+	public ItemDrainItemHandler(ItemDrainBlockEntity be, Direction side) {
+		this.blockEntity = be;
 		this.side = side;
 	}
 
@@ -25,17 +25,17 @@ public class ItemDrainItemHandler implements IItemHandler {
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return te.getHeldItemStack();
+		return blockEntity.getHeldItemStack();
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (!te.getHeldItemStack()
+		if (!blockEntity.getHeldItemStack()
 			.isEmpty())
 			return stack;
 		
 		ItemStack returned = ItemStack.EMPTY;
-		if (stack.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(te.getLevel(), stack)) {
+		if (stack.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(blockEntity.getLevel(), stack)) {
 			returned = ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
 			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
 		}
@@ -43,8 +43,8 @@ public class ItemDrainItemHandler implements IItemHandler {
 		if (!simulate) {
 			TransportedItemStack heldItem = new TransportedItemStack(stack);
 			heldItem.prevBeltPosition = 0;
-			te.setHeldItem(heldItem, side.getOpposite());
-			te.notifyUpdate();
+			blockEntity.setHeldItem(heldItem, side.getOpposite());
+			blockEntity.notifyUpdate();
 		}
 		
 		return returned;
@@ -52,17 +52,17 @@ public class ItemDrainItemHandler implements IItemHandler {
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		TransportedItemStack held = te.heldItem;
+		TransportedItemStack held = blockEntity.heldItem;
 		if (held == null)
 			return ItemStack.EMPTY;
 
 		ItemStack stack = held.stack.copy();
 		ItemStack extracted = stack.split(amount);
 		if (!simulate) {
-			te.heldItem.stack = stack;
+			blockEntity.heldItem.stack = stack;
 			if (stack.isEmpty())
-				te.heldItem = null;
-			te.notifyUpdate();
+				blockEntity.heldItem = null;
+			blockEntity.notifyUpdate();
 		}
 		return extracted;
 	}

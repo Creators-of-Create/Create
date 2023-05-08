@@ -2,10 +2,8 @@ package com.simibubi.create.foundation.config;
 
 public class CLogistics extends ConfigBase {
 
-	public final ConfigInt defaultExtractionLimit =
-		i(64, 1, 64, "defaultExtractionLimit", Comments.defaultExtractionLimit);
 	public final ConfigInt defaultExtractionTimer = i(8, 1, "defaultExtractionTimer", Comments.defaultExtractionTimer);
-	public final ConfigInt psiTimeout = i(20, 1, "psiTimeout", Comments.psiTimeout);
+	public final ConfigInt psiTimeout = i(60, 1, "psiTimeout", Comments.psiTimeout);
 	public final ConfigInt mechanicalArmRange = i(5, 1, "mechanicalArmRange", Comments.mechanicalArmRange);
 	public final ConfigInt linkRange = i(256, 1, "linkRange", Comments.linkRange);
 	public final ConfigInt displayLinkRange = i(64, 1, "displayLinkRange", Comments.displayLinkRange);
@@ -17,8 +15,6 @@ public class CLogistics extends ConfigBase {
 	}
 
 	private static class Comments {
-		static String defaultExtractionLimit =
-			"The maximum amount of items a funnel pulls at a time without an applied filter.";
 		static String defaultExtractionTimer =
 			"The amount of ticks a funnel waits between item transferrals, when it is not re-activated by redstone.";
 		static String linkRange = "Maximum possible range in blocks of redstone link connections.";

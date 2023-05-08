@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,17 +12,20 @@ public class GantryContraptionUpdatePacket extends SimplePacketBase {
 	int entityID;
 	double coord;
 	double motion;
+	double sequenceLimit;
 
-	public GantryContraptionUpdatePacket(int entityID, double coord, double motion) {
+	public GantryContraptionUpdatePacket(int entityID, double coord, double motion, double sequenceLimit) {
 		this.entityID = entityID;
 		this.coord = coord;
 		this.motion = motion;
+		this.sequenceLimit = sequenceLimit;
 	}
 
 	public GantryContraptionUpdatePacket(FriendlyByteBuf buffer) {
 		entityID = buffer.readInt();
 		coord = buffer.readFloat();
 		motion = buffer.readFloat();
+		sequenceLimit = buffer.readFloat();
 	}
 
 	@Override
@@ -32,15 +33,14 @@ public class GantryContraptionUpdatePacket extends SimplePacketBase {
 		buffer.writeInt(entityID);
 		buffer.writeFloat((float) coord);
 		buffer.writeFloat((float) motion);
+		buffer.writeFloat((float) sequenceLimit);
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(
-				() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> GantryContraptionEntity.handlePacket(this)));
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(
+			() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> GantryContraptionEntity.handlePacket(this)));
+		return true;
 	}
 
 }

@@ -10,7 +10,6 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
-import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -63,10 +62,9 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 				.getCompound("BlockUsed"))
 				.getBlock()
 				.getName();
-			ItemDescription.add(tooltip,
-				Lang.translateDirect("terrainzapper.usingBlock",
-					usedBlock.withStyle(ChatFormatting.GRAY))
-						.withStyle(ChatFormatting.DARK_GRAY));
+			tooltip.add(Lang.translateDirect("terrainzapper.usingBlock",
+				usedBlock.withStyle(ChatFormatting.GRAY))
+					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 
@@ -232,17 +230,17 @@ public abstract class ZapperItem extends Item implements CustomArmPoseItem {
 		NBTHelper.writeEnum(nbt, "Pattern", pattern);
 	}
 
-	public static void setTileData(Level world, BlockPos pos, BlockState state, CompoundTag data, Player player) {
+	public static void setBlockEntityData(Level world, BlockPos pos, BlockState state, CompoundTag data, Player player) {
 		if (data != null && AllBlockTags.SAFE_NBT.matches(state)) {
-			BlockEntity tile = world.getBlockEntity(pos);
-			if (tile != null) {
-				data = NBTProcessors.process(tile, data, !player.isCreative());
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (blockEntity != null) {
+				data = NBTProcessors.process(blockEntity, data, !player.isCreative());
 				if (data == null)
 					return;
 				data.putInt("x", pos.getX());
 				data.putInt("y", pos.getY());
 				data.putInt("z", pos.getZ());
-				tile.load(data);
+				blockEntity.load(data);
 			}
 		}
 	}

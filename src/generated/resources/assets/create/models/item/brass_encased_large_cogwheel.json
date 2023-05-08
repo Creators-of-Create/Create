@@ -3,6 +3,7 @@
   "textures": {
     "1": "minecraft:block/stripped_dark_oak_log_top",
     "casing": "create:block/brass_casing",
+    "particle": "create:block/brass_casing",
     "side": "create:block/brass_encased_cogwheel_side_connected"
   }
 }

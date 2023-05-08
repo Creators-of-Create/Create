@@ -8,11 +8,17 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionDisableActorPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionBlockChangedPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionColliderLockPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionColliderLockPacket.ContraptionColliderLockPacketRequest;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionStallPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.TrainCollisionPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContactEditPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorFloorListPacket;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorTargetFloorPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionUpdatePacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.GlueEffectPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRemovalPacket;
@@ -31,7 +37,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeObservedPacket;
+import com.simibubi.create.content.curiosities.armor.NetheriteDivingHandler;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardEditPacket;
 import com.simibubi.create.content.curiosities.symmetry.ConfigureSymmetryWandPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxDisposeAllPacket;
@@ -74,14 +82,13 @@ import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
 import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
+import com.simibubi.create.foundation.blockEntity.RemoveBlockEntityPacket;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsPacket;
 import com.simibubi.create.foundation.command.HighlightPacket;
 import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
-import com.simibubi.create.foundation.gui.container.ClearContainerPacket;
-import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
-import com.simibubi.create.foundation.tileEntity.RemoveTileEntityPacket;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
+import com.simibubi.create.foundation.gui.menu.ClearMenuPacket;
+import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
 import net.minecraft.core.BlockPos;
@@ -104,10 +111,8 @@ public enum AllPackets {
 		PLAY_TO_SERVER),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new, PLAY_TO_SERVER),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new, PLAY_TO_SERVER),
-	CLEAR_CONTAINER(ClearContainerPacket.class, ClearContainerPacket::new, PLAY_TO_SERVER),
+	CLEAR_CONTAINER(ClearMenuPacket.class, ClearMenuPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FILTER(FilterScreenPacket.class, FilterScreenPacket::new, PLAY_TO_SERVER),
-	CONFIGURE_FILTERING_AMOUNT(FilteringCountUpdatePacket.class, FilteringCountUpdatePacket::new, PLAY_TO_SERVER),
-	CONFIGURE_SCROLLABLE(ScrollValueUpdatePacket.class, ScrollValueUpdatePacket::new, PLAY_TO_SERVER),
 	EXTENDO_INTERACT(ExtendoGripInteractionPacket.class, ExtendoGripInteractionPacket::new, PLAY_TO_SERVER),
 	CONTRAPTION_INTERACT(ContraptionInteractionPacket.class, ContraptionInteractionPacket::new, PLAY_TO_SERVER),
 	CLIENT_MOTION(ClientMotionPacket.class, ClientMotionPacket::new, PLAY_TO_SERVER),
@@ -148,6 +153,14 @@ public enum AllPackets {
 	OBSERVER_STRESSOMETER(GaugeObservedPacket.class, GaugeObservedPacket::new, PLAY_TO_SERVER),
 	EJECTOR_AWARD(EjectorAwardPacket.class, EjectorAwardPacket::new, PLAY_TO_SERVER),
 	TRACK_GRAPH_REQUEST(TrackGraphRequestPacket.class, TrackGraphRequestPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_ELEVATOR_CONTACT(ElevatorContactEditPacket.class, ElevatorContactEditPacket::new, PLAY_TO_SERVER),
+	REQUEST_FLOOR_LIST(ElevatorFloorListPacket.RequestFloorList.class, ElevatorFloorListPacket.RequestFloorList::new,
+		PLAY_TO_SERVER),
+	ELEVATOR_SET_FLOOR(ElevatorTargetFloorPacket.class, ElevatorTargetFloorPacket::new, PLAY_TO_SERVER),
+	VALUE_SETTINGS(ValueSettingsPacket.class, ValueSettingsPacket::new, PLAY_TO_SERVER),
+	CLIPBOARD_EDIT(ClipboardEditPacket.class, ClipboardEditPacket::new, PLAY_TO_SERVER),
+	CONTRAPTION_COLLIDER_LOCK_REQUEST(ContraptionColliderLockPacketRequest.class,
+		ContraptionColliderLockPacketRequest::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
@@ -176,7 +189,7 @@ public enum AllPackets {
 	SYNC_RAIL_GRAPH(TrackGraphSyncPacket.class, TrackGraphSyncPacket::new, PLAY_TO_CLIENT),
 	SYNC_EDGE_GROUP(SignalEdgeGroupPacket.class, SignalEdgeGroupPacket::new, PLAY_TO_CLIENT),
 	SYNC_TRAIN(TrainPacket.class, TrainPacket::new, PLAY_TO_CLIENT),
-	REMOVE_TE(RemoveTileEntityPacket.class, RemoveTileEntityPacket::new, PLAY_TO_CLIENT),
+	REMOVE_TE(RemoveBlockEntityPacket.class, RemoveBlockEntityPacket::new, PLAY_TO_CLIENT),
 	S_CONFIGURE_TRAIN(TrainEditReturnPacket.class, TrainEditReturnPacket::new, PLAY_TO_CLIENT),
 	CONTROLS_ABORT(ControlsStopControllingPacket.class, ControlsStopControllingPacket::new, PLAY_TO_CLIENT),
 	S_TRAIN_HUD(TrainHUDUpdatePacket.class, TrainHUDUpdatePacket::new, PLAY_TO_CLIENT),
@@ -188,19 +201,24 @@ public enum AllPackets {
 		PLAY_TO_CLIENT),
 	S_PLACE_ARM(EjectorPlacementPacket.ClientBoundRequest.class, EjectorPlacementPacket.ClientBoundRequest::new,
 		PLAY_TO_CLIENT),
+	UPDATE_ELEVATOR_FLOORS(ElevatorFloorListPacket.class, ElevatorFloorListPacket::new, PLAY_TO_CLIENT),
+	CONTRAPTION_ACTOR_TOGGLE(ContraptionDisableActorPacket.class, ContraptionDisableActorPacket::new, PLAY_TO_CLIENT),
+	SET_FIRE_IMMUNE(NetheriteDivingHandler.SetFireImmunePacket.class, NetheriteDivingHandler.SetFireImmunePacket::new,
+		PLAY_TO_CLIENT),
+	CONTRAPTION_COLLIDER_LOCK(ContraptionColliderLockPacket.class, ContraptionColliderLockPacket::new, PLAY_TO_CLIENT),
 
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
 	public static final int NETWORK_VERSION = 2;
 	public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
-	public static SimpleChannel channel;
+	private static SimpleChannel channel;
 
-	private LoadedPacket<?> packet;
+	private PacketType<?> packetType;
 
 	<T extends SimplePacketBase> AllPackets(Class<T> type, Function<FriendlyByteBuf, T> factory,
 		NetworkDirection direction) {
-		packet = new LoadedPacket<>(type, factory, direction);
+		packetType = new PacketType<>(type, factory, direction);
 	}
 
 	public static void registerPackets() {
@@ -209,17 +227,22 @@ public enum AllPackets {
 			.clientAcceptedVersions(NETWORK_VERSION_STR::equals)
 			.networkProtocolVersion(() -> NETWORK_VERSION_STR)
 			.simpleChannel();
+
 		for (AllPackets packet : values())
-			packet.packet.register();
+			packet.packetType.register();
+	}
+
+	public static SimpleChannel getChannel() {
+		return channel;
 	}
 
 	public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
-		channel.send(
+		getChannel().send(
 			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())),
 			message);
 	}
 
-	private static class LoadedPacket<T extends SimplePacketBase> {
+	private static class PacketType<T extends SimplePacketBase> {
 		private static int index = 0;
 
 		private BiConsumer<T, FriendlyByteBuf> encoder;
@@ -228,16 +251,21 @@ public enum AllPackets {
 		private Class<T> type;
 		private NetworkDirection direction;
 
-		private LoadedPacket(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
+		private PacketType(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
 			encoder = T::write;
 			decoder = factory;
-			handler = T::handle;
+			handler = (packet, contextSupplier) -> {
+				Context context = contextSupplier.get();
+				if (packet.handle(context)) {
+					context.setPacketHandled(true);
+				}
+			};
 			this.type = type;
 			this.direction = direction;
 		}
 
 		private void register() {
-			channel.messageBuilder(type, index++, direction)
+			getChannel().messageBuilder(type, index++, direction)
 				.encoder(encoder)
 				.decoder(decoder)
 				.consumerNetworkThread(handler)

@@ -124,6 +124,7 @@
 			"translation": [0, 8.5, -2.25]
 		},
 		"fixed": {
+			"translation": [0, 0, -1.75],
 			"scale": [0.5, 0.5, 0.5]
 		}
 	}

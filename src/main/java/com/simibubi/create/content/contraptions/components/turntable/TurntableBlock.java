@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.components.turntable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEntity> {
+public class TurntableBlock extends KineticBlock implements IBE<TurntableBlockEntity> {
 
 	public TurntableBlock(Properties properties) {
 		super(properties);
@@ -50,8 +50,8 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 		if (e.getY() < pos.getY() + .5f)
 			return;
 
-		withTileEntityDo(worldIn, pos, te -> {
-			float speed = ((KineticTileEntity) te).getSpeed() * 3 / 10;
+		withBlockEntityDo(worldIn, pos, be -> {
+			float speed = ((KineticBlockEntity) be).getSpeed() * 3 / 10;
 			if (speed == 0)
 				return;
 
@@ -99,13 +99,13 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 
 	@Override
-	public Class<TurntableTileEntity> getTileEntityClass() {
-		return TurntableTileEntity.class;
+	public Class<TurntableBlockEntity> getBlockEntityClass() {
+		return TurntableBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends TurntableTileEntity> getTileEntityType() {
-		return AllTileEntities.TURNTABLE.get();
+	public BlockEntityType<? extends TurntableBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.TURNTABLE.get();
 	}
 	
 	@Override

@@ -5,17 +5,17 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
-import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedBlockEntityBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.EncasableBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -51,7 +51,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class FluidPipeBlock extends PipeBlock
-	implements SimpleWaterloggedBlock, IWrenchableWithBracket, ITE<FluidPipeTileEntity>, EncasableBlock {
+	implements SimpleWaterloggedBlock, IWrenchableWithBracket, IBE<FluidPipeBlockEntity>, EncasableBlock {
 
 	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
 
@@ -91,7 +91,7 @@ public class FluidPipeBlock extends PipeBlock
 		if (clickedFace.getAxis() == axis)
 			return InteractionResult.PASS;
 		if (!world.isClientSide) {
-			withTileEntityDo(world, pos, fpte -> fpte.getBehaviour(FluidTransportBehaviour.TYPE).interfaces.values()
+			withBlockEntityDo(world, pos, fpte -> fpte.getBehaviour(FluidTransportBehaviour.TYPE).interfaces.values()
 				.stream()
 				.filter(pc -> pc != null && pc.hasFlow())
 				.findAny()
@@ -181,9 +181,9 @@ public class FluidPipeBlock extends PipeBlock
 			return true;
 		if (VanillaFluidTargets.shouldPipesConnectTo(neighbour))
 			return true;
-		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, neighbourPos, FluidTransportBehaviour.TYPE);
-		BracketedTileEntityBehaviour bracket =
-			TileEntityBehaviour.get(world, neighbourPos, BracketedTileEntityBehaviour.TYPE);
+		FluidTransportBehaviour transport = BlockEntityBehaviour.get(world, neighbourPos, FluidTransportBehaviour.TYPE);
+		BracketedBlockEntityBehaviour bracket =
+			BlockEntityBehaviour.get(world, neighbourPos, BracketedBlockEntityBehaviour.TYPE);
 		if (isPipe(neighbour))
 			return bracket == null || !bracket.isBracketPresent()
 				|| FluidPropagator.getStraightPipeAxis(neighbour) == direction.getAxis();
@@ -255,7 +255,7 @@ public class FluidPipeBlock extends PipeBlock
 	public BlockState updateBlockState(BlockState state, Direction preferredDirection, @Nullable Direction ignore,
 		BlockAndTintGetter world, BlockPos pos) {
 
-		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		BracketedBlockEntityBehaviour bracket = BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 		if (bracket != null && bracket.isBracketPresent())
 			return state;
 
@@ -303,8 +303,8 @@ public class FluidPipeBlock extends PipeBlock
 
 	@Override
 	public Optional<ItemStack> removeBracket(BlockGetter world, BlockPos pos, boolean inOnReplacedContext) {
-		BracketedTileEntityBehaviour behaviour =
-			BracketedTileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		BracketedBlockEntityBehaviour behaviour =
+			BracketedBlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
 		BlockState bracket = behaviour.removeBracket(inOnReplacedContext);
@@ -319,13 +319,13 @@ public class FluidPipeBlock extends PipeBlock
 	}
 
 	@Override
-	public Class<FluidPipeTileEntity> getTileEntityClass() {
-		return FluidPipeTileEntity.class;
+	public Class<FluidPipeBlockEntity> getBlockEntityClass() {
+		return FluidPipeBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends FluidPipeTileEntity> getTileEntityType() {
-		return AllTileEntities.FLUID_PIPE.get();
+	public BlockEntityType<? extends FluidPipeBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.FLUID_PIPE.get();
 	}
 
 	@Override

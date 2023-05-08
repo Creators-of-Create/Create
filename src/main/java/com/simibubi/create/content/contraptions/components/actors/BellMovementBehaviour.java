@@ -15,13 +15,13 @@ import net.minecraft.world.phys.Vec3;
 public class BellMovementBehaviour implements MovementBehaviour {
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 	
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !(context.contraption instanceof CarriageContraption);
+		return MovementBehaviour.super.isActive(context) && !(context.contraption instanceof CarriageContraption);
 	}
 
 	@Override

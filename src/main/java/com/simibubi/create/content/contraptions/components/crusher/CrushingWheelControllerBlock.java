@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -37,7 +37,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CrushingWheelControllerBlock extends DirectionalBlock implements ITE<CrushingWheelControllerTileEntity> {
+public class CrushingWheelControllerBlock extends DirectionalBlock implements IBE<CrushingWheelControllerBlockEntity> {
 
 	public CrushingWheelControllerBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -71,8 +71,8 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 
 		checkEntityForProcessing(worldIn, pos, entityIn);
 
-		withTileEntityDo(worldIn, pos, te -> {
-			if (te.processingEntity == entityIn)
+		withBlockEntityDo(worldIn, pos, be -> {
+			if (be.processingEntity == entityIn)
 
 				entityIn.makeStuckInBlock(state, new Vec3(axis == Axis.X ? (double) 0.05F : 0.25D,
 					axis == Axis.Y ? (double) 0.05F : 0.25D, axis == Axis.Z ? (double) 0.05F : 0.25D));
@@ -80,10 +80,10 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 	}
 
 	public void checkEntityForProcessing(Level worldIn, BlockPos pos, Entity entityIn) {
-		CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
-		if (te == null)
+		CrushingWheelControllerBlockEntity be = getBlockEntity(worldIn, pos);
+		if (be == null)
 			return;
-		if (te.crushingspeed == 0)
+		if (be.crushingspeed == 0)
 			return;
 //		if (entityIn instanceof ItemEntity)
 //			((ItemEntity) entityIn).setPickUpDelay(10);
@@ -92,7 +92,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 			if (pos.equals(NbtUtils.readBlockPos(data.getCompound("BypassCrushingWheel"))))
 				return;
 		}
-		if (te.isOccupied())
+		if (be.isOccupied())
 			return;
 		boolean isPlayer = entityIn instanceof Player;
 		if (isPlayer && ((Player) entityIn).isCreative())
@@ -100,7 +100,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 		if (isPlayer && entityIn.level.getDifficulty() == Difficulty.PEACEFUL)
 			return;
 
-		te.startCrushing(entityIn);
+		be.startCrushing(entityIn);
 	}
 
 	@Override
@@ -129,11 +129,11 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 	}
 
 	public void updateSpeed(BlockState state, LevelAccessor world, BlockPos pos) {
-		withTileEntityDo(world, pos, te -> {
+		withBlockEntityDo(world, pos, be -> {
 			if (!state.getValue(VALID)) {
-				if (te.crushingspeed != 0) {
-					te.crushingspeed = 0;
-					te.sendData();
+				if (be.crushingspeed != 0) {
+					be.crushingspeed = 0;
+					be.sendData();
 				}
 				return;
 			}
@@ -144,11 +144,11 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 					continue;
 				if (neighbour.getValue(BlockStateProperties.AXIS) == d.getAxis())
 					continue;
-				BlockEntity adjTe = world.getBlockEntity(pos.relative(d));
-				if (!(adjTe instanceof CrushingWheelTileEntity cwte))
+				BlockEntity adjBE = world.getBlockEntity(pos.relative(d));
+				if (!(adjBE instanceof CrushingWheelBlockEntity cwte))
 					continue;
-				te.crushingspeed = Math.abs(cwte.getSpeed() / 50f);
-				te.sendData();
+				be.crushingspeed = Math.abs(cwte.getSpeed() / 50f);
+				be.sendData();
 				
 				cwte.award(AllAdvancements.CRUSHING_WHEEL);
 				if (cwte.getSpeed() > 255) 
@@ -178,8 +178,8 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 															// than falling back through.
 					return Shapes.empty();
 
-		CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
-		if (te != null && te.processingEntity == entity)
+		CrushingWheelControllerBlockEntity be = getBlockEntity(worldIn, pos);
+		if (be != null && be.processingEntity == entity)
 			return Shapes.empty();
 
 		return standardShape;
@@ -190,18 +190,18 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
 
-		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
+		withBlockEntityDo(worldIn, pos, be -> ItemHelper.dropContents(worldIn, pos, be.inventory));
 		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override
-	public Class<CrushingWheelControllerTileEntity> getTileEntityClass() {
-		return CrushingWheelControllerTileEntity.class;
+	public Class<CrushingWheelControllerBlockEntity> getBlockEntityClass() {
+		return CrushingWheelControllerBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends CrushingWheelControllerTileEntity> getTileEntityType() {
-		return AllTileEntities.CRUSHING_WHEEL_CONTROLLER.get();
+	public BlockEntityType<? extends CrushingWheelControllerBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CRUSHING_WHEEL_CONTROLLER.get();
 	}
 
 	@Override

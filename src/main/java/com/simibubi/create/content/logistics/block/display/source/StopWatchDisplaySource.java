@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
-import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity;
+import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
@@ -12,7 +12,7 @@ public class StopWatchDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceTE()instanceof CuckooClockTileEntity ccte))
+		if (!(context.getSourceBlockEntity()instanceof CuckooClockBlockEntity ccte))
 			return TimeOfDayDisplaySource.EMPTY_TIME;
 		if (ccte.getSpeed() == 0)
 			return TimeOfDayDisplaySource.EMPTY_TIME;
@@ -23,7 +23,7 @@ public class StopWatchDisplaySource extends SingleLineDisplaySource {
 
 		long started = context.sourceConfig()
 			.getLong("StartTime");
-		long current = context.te()
+		long current = context.blockEntity()
 			.getLevel()
 			.getGameTime();
 
@@ -41,7 +41,7 @@ public class StopWatchDisplaySource extends SingleLineDisplaySource {
 	@Override
 	public void onSignalReset(DisplayLinkContext context) {
 		context.sourceConfig()
-			.putLong("StartTime", context.te()
+			.putLong("StartTime", context.blockEntity()
 				.getLevel()
 				.getGameTime());
 	}

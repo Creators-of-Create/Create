@@ -23,8 +23,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionWorld;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -106,7 +106,7 @@ public class ContraptionRenderDispatcher {
 
 		VirtualRenderWorld renderWorld = renderInfo.renderWorld;
 
-		renderTileEntities(world, renderWorld, contraption, matrices, buffers);
+		renderBlockEntities(world, renderWorld, contraption, matrices, buffers);
 
 		if (buffers instanceof MultiBufferSource.BufferSource)
 			((MultiBufferSource.BufferSource) buffers).endBatch();
@@ -127,7 +127,7 @@ public class ContraptionRenderDispatcher {
 			}
 		};
 
-		renderWorld.setBlockEntities(c.presentTileEntities.values());
+		renderWorld.setBlockEntities(c.presentBlockEntities.values());
 		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()
 			.values())
 			// Skip individual lighting updates to prevent lag with large contraptions
@@ -137,9 +137,9 @@ public class ContraptionRenderDispatcher {
 		return renderWorld;
 	}
 
-	public static void renderTileEntities(Level world, VirtualRenderWorld renderWorld, Contraption c,
+	public static void renderBlockEntities(Level world, VirtualRenderWorld renderWorld, Contraption c,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.getSpecialRenderedTEs(),
+		BlockEntityRenderHelper.renderBlockEntities(world, renderWorld, c.getSpecialRenderedTEs(),
 			matrices.getModelViewProjection(), matrices.getLight(), buffer);
 	}
 

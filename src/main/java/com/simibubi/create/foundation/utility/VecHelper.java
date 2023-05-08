@@ -206,6 +206,14 @@ public class VecHelper {
 		return new Vec3(Mth.clamp(vec.x, -maxLength, maxLength), Mth.clamp(vec.y, -maxLength, maxLength),
 			Mth.clamp(vec.z, -maxLength, maxLength));
 	}
+	
+	public static Vec3 componentMin(Vec3 vec1, Vec3 vec2) {
+		return new Vec3(Math.min(vec1.x, vec2.x), Math.min(vec1.y, vec2.y), Math.min(vec1.z, vec2.z));
+	}
+	
+	public static Vec3 componentMax(Vec3 vec1, Vec3 vec2) {
+		return new Vec3(Math.max(vec1.x, vec2.x), Math.max(vec1.y, vec2.y), Math.max(vec1.z, vec2.z));
+	}
 
 	public static Vec3 project(Vec3 vec, Vec3 ontoVec) {
 		if (ontoVec.equals(Vec3.ZERO))

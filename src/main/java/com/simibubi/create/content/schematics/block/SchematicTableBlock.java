@@ -1,8 +1,8 @@
 package com.simibubi.create.content.schematics.block;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 
-public class SchematicTableBlock extends HorizontalDirectionalBlock implements ITE<SchematicTableTileEntity> {
+public class SchematicTableBlock extends HorizontalDirectionalBlock implements IBE<SchematicTableBlockEntity> {
 
 	public SchematicTableBlock(Properties properties) {
 		super(properties);
@@ -63,9 +63,8 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 			BlockHitResult hit) {
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
-
-		withTileEntityDo(worldIn, pos,
-				te -> NetworkHooks.openScreen((ServerPlayer) player, te, te::sendToContainer));
+		withBlockEntityDo(worldIn, pos,
+				be -> NetworkHooks.openScreen((ServerPlayer) player, be, be::sendToMenu));
 		return InteractionResult.SUCCESS;
 	}
 
@@ -74,18 +73,18 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
 
-		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
+		withBlockEntityDo(worldIn, pos, be -> ItemHelper.dropContents(worldIn, pos, be.inventory));
 		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override
-	public Class<SchematicTableTileEntity> getTileEntityClass() {
-		return SchematicTableTileEntity.class;
+	public Class<SchematicTableBlockEntity> getBlockEntityClass() {
+		return SchematicTableBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends SchematicTableTileEntity> getTileEntityType() {
-		return AllTileEntities.SCHEMATIC_TABLE.get();
+	public BlockEntityType<? extends SchematicTableBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.SCHEMATIC_TABLE.get();
 	}
 	
 	@Override

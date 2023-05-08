@@ -13,6 +13,7 @@
     "create:small_limestone_brick_stairs",
     "create:small_limestone_brick_wall",
     "create:layered_limestone",
-    "create:limestone_pillar"
+    "create:limestone_pillar",
+    "create:limestone"
   ]
 }

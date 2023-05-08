@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
@@ -36,7 +36,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
-	implements ITE<SmartFluidPipeTileEntity>, IAxisPipe, IWrenchable, ProperWaterloggedBlock {
+	implements IBE<SmartFluidPipeBlockEntity>, IAxisPipe, IWrenchable, ProperWaterloggedBlock {
 
 	public SmartFluidPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
@@ -174,13 +174,13 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	}
 
 	@Override
-	public Class<SmartFluidPipeTileEntity> getTileEntityClass() {
-		return SmartFluidPipeTileEntity.class;
+	public Class<SmartFluidPipeBlockEntity> getBlockEntityClass() {
+		return SmartFluidPipeBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends SmartFluidPipeTileEntity> getTileEntityType() {
-		return  AllTileEntities.SMART_FLUID_PIPE.get();
+	public BlockEntityType<? extends SmartFluidPipeBlockEntity> getBlockEntityType() {
+		return  AllBlockEntityTypes.SMART_FLUID_PIPE.get();
 	}
 
 }

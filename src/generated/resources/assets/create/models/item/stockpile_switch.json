@@ -1,3 +1,3 @@
 {
-  "parent": "create:block/stockpile_switch"
+  "parent": "create:block/threshold_switch/block_wall"
 }

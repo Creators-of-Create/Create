@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.motor;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<CreativeMotorTileEntity> {
+public class CreativeMotorBlock extends DirectionalKineticBlock implements IBE<CreativeMotorBlockEntity> {
 
 	public CreativeMotorBlock(Properties properties) {
 		super(properties);
@@ -61,13 +61,13 @@ public class CreativeMotorBlock extends DirectionalKineticBlock implements ITE<C
 	}
 
 	@Override
-	public Class<CreativeMotorTileEntity> getTileEntityClass() {
-		return CreativeMotorTileEntity.class;
+	public Class<CreativeMotorBlockEntity> getBlockEntityClass() {
+		return CreativeMotorBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends CreativeMotorTileEntity> getTileEntityType() {
-		return AllTileEntities.MOTOR.get();
+	public BlockEntityType<? extends CreativeMotorBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.MOTOR.get();
 	}
 	
 }

@@ -4,13 +4,14 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,18 +30,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 
-public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTileEntity>, IWrenchable {
+public abstract class AbstractFunnelBlock extends Block
+	implements IBE<FunnelBlockEntity>, IWrenchable, ProperWaterloggedBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	protected AbstractFunnelBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
-		registerDefaultState(defaultBlockState().setValue(POWERED, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false)
+			.setValue(WATERLOGGED, false));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -49,10 +54,22 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(POWERED, context.getLevel()
-			.hasNeighborSignal(context.getClickedPos()));
+		return withWater(defaultBlockState().setValue(POWERED, context.getLevel()
+			.hasNeighborSignal(context.getClickedPos())), context);
+	}
+	
+	@Override
+	public FluidState getFluidState(BlockState pState) {
+		return fluidState(pState);
 	}
 
+	@Override
+	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
+		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		updateWater(pLevel, pState, pCurrentPos);
+		return pState;
+	}
+	
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
@@ -60,7 +77,7 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder.add(POWERED));
+		super.createBlockStateDefinition(builder.add(POWERED, WATERLOGGED));
 	}
 
 	@Override
@@ -68,7 +85,7 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		boolean isMoving) {
 		if (worldIn.isClientSide)
 			return;
-		InvManipulationBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		InvManipulationBehaviour behaviour = BlockEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);
 		if (!worldIn.getBlockTicks()
@@ -84,8 +101,8 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	}
 
 	public static ItemStack tryInsert(Level worldIn, BlockPos pos, ItemStack toInsert, boolean simulate) {
-		FilteringBehaviour filter = TileEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
-		InvManipulationBehaviour inserter = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
+		FilteringBehaviour filter = BlockEntityBehaviour.get(worldIn, pos, FilteringBehaviour.TYPE);
+		InvManipulationBehaviour inserter = BlockEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (inserter == null)
 			return toInsert;
 		if (filter != null && !filter.test(toInsert))
@@ -95,12 +112,12 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		ItemStack insert = inserter.insert(toInsert);
 
 		if (!simulate && insert.getCount() != toInsert.getCount()) {
-			BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-			if (tileEntity instanceof FunnelTileEntity) {
-				FunnelTileEntity funnelTileEntity = (FunnelTileEntity) tileEntity;
-				funnelTileEntity.onTransfer(toInsert);
-				if (funnelTileEntity.hasFlap())
-					funnelTileEntity.flap(true);
+			BlockEntity blockEntity = worldIn.getBlockEntity(pos);
+			if (blockEntity instanceof FunnelBlockEntity) {
+				FunnelBlockEntity funnelBlockEntity = (FunnelBlockEntity) blockEntity;
+				funnelBlockEntity.onTransfer(toInsert);
+				if (funnelBlockEntity.hasFlap())
+					funnelBlockEntity.flap(true);
 			}
 		}
 		return insert;
@@ -129,16 +146,17 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		ITE.onRemove(state, world, pos, newState);
+		if (state.getBlock() != newState.getBlock() && !isFunnel(newState) || !newState.hasBlockEntity())
+			IBE.onRemove(state, world, pos, newState);
 	}
 
 	@Override
-	public Class<FunnelTileEntity> getTileEntityClass() {
-		return FunnelTileEntity.class;
+	public Class<FunnelBlockEntity> getBlockEntityClass() {
+		return FunnelBlockEntity.class;
 	}
 
-	public BlockEntityType<? extends FunnelTileEntity> getTileEntityType() {
-		return AllTileEntities.FUNNEL.get();
+	public BlockEntityType<? extends FunnelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.FUNNEL.get();
 	};
 
 }

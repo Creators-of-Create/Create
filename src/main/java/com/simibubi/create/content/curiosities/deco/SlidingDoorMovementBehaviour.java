@@ -1,27 +1,47 @@
 package com.simibubi.create.content.curiosities.deco;
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 
+import com.simibubi.create.content.contraptions.components.actors.DoorControl;
+import com.simibubi.create.content.contraptions.components.actors.DoorControlBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorColumn;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorColumn.ColumnCoords;
+import com.simibubi.create.content.contraptions.components.structureMovement.elevator.ElevatorContraption;
+import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
-import com.simibubi.create.content.logistics.trains.entity.CarriageSyncData;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.phys.Vec3;
 
 public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
+		return true;
+	}
+
+	@Override
+	public boolean mustTickWhileDisabled() {
 		return true;
 	}
 
@@ -31,13 +51,13 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 			.get(context.localPos);
 		if (structureBlockInfo == null)
 			return;
-		boolean open = SlidingDoorTileEntity.isOpen(structureBlockInfo.state);
+		boolean open = SlidingDoorBlockEntity.isOpen(structureBlockInfo.state);
 
 		if (!context.world.isClientSide())
 			tickOpen(context, open);
 
-		Map<BlockPos, BlockEntity> tes = context.contraption.presentTileEntities;
-		if (!(tes.get(context.localPos) instanceof SlidingDoorTileEntity doorTE))
+		Map<BlockPos, BlockEntity> tes = context.contraption.presentBlockEntities;
+		if (!(tes.get(context.localPos)instanceof SlidingDoorBlockEntity doorTE))
 			return;
 		boolean wasSettled = doorTE.animation.settled();
 		doorTE.animation.chase(open ? 1 : 0, .15f, Chaser.LINEAR);
@@ -97,12 +117,92 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 	}
 
 	protected boolean shouldOpen(MovementContext context) {
-		if (context.contraption.entity instanceof CarriageContraptionEntity cce) {
-			CarriageSyncData carriageData = cce.getCarriageData();
-			if (Math.abs(carriageData.distanceToDestination) > 1)
-				return false;
+		if (context.disabled)
+			return false;
+		Contraption contraption = context.contraption;
+		boolean canOpen = context.motion.length() < 1 / 128f && !contraption.entity.isStalled()
+			|| contraption instanceof ElevatorContraption ec && ec.arrived;
+
+		if (!canOpen) {
+			context.temporaryData = null;
+			return false;
 		}
-		return context.motion.length() < 1 / 128f && !context.contraption.entity.isStalled();
+
+		if (context.temporaryData instanceof WeakReference<?> wr && wr.get()instanceof DoorControlBehaviour dcb)
+			if (dcb.blockEntity != null && !dcb.blockEntity.isRemoved())
+				return shouldOpenAt(dcb, context);
+
+		context.temporaryData = null;
+		DoorControlBehaviour doorControls = null;
+
+		if (contraption instanceof ElevatorContraption ec)
+			doorControls = getElevatorDoorControl(ec, context);
+		if (context.contraption.entity instanceof CarriageContraptionEntity cce)
+			doorControls = getTrainStationDoorControl(cce, context);
+
+		if (doorControls == null)
+			return false;
+
+		context.temporaryData = new WeakReference<>(doorControls);
+		return shouldOpenAt(doorControls, context);
+	}
+
+	protected boolean shouldOpenAt(DoorControlBehaviour controller, MovementContext context) {
+		if (controller.mode == DoorControl.ALL)
+			return true;
+		if (controller.mode == DoorControl.NONE)
+			return false;
+		return controller.mode.matches(getDoorFacing(context));
+	}
+
+	protected DoorControlBehaviour getElevatorDoorControl(ElevatorContraption ec, MovementContext context) {
+		Integer currentTargetY = ec.getCurrentTargetY(context.world);
+		if (currentTargetY == null)
+			return null;
+		ColumnCoords columnCoords = ec.getGlobalColumn();
+		if (columnCoords == null)
+			return null;
+		ElevatorColumn elevatorColumn = ElevatorColumn.get(context.world, columnCoords);
+		if (elevatorColumn == null)
+			return null;
+		return BlockEntityBehaviour.get(context.world, elevatorColumn.contactAt(currentTargetY),
+			DoorControlBehaviour.TYPE);
+	}
+
+	protected DoorControlBehaviour getTrainStationDoorControl(CarriageContraptionEntity cce, MovementContext context) {
+		Carriage carriage = cce.getCarriage();
+		if (carriage == null || carriage.train == null)
+			return null;
+		GlobalStation currentStation = carriage.train.getCurrentStation();
+		if (currentStation == null)
+			return null;
+
+		BlockPos stationPos = currentStation.getBlockEntityPos();
+		ResourceKey<Level> stationDim = currentStation.getBlockEntityDimension();
+		MinecraftServer server = context.world.getServer();
+		if (server == null)
+			return null;
+		ServerLevel stationLevel = server.getLevel(stationDim);
+		if (stationLevel == null || !stationLevel.isLoaded(stationPos))
+			return null;
+		return BlockEntityBehaviour.get(stationLevel, stationPos, DoorControlBehaviour.TYPE);
+	}
+
+	protected Direction getDoorFacing(MovementContext context) {
+		Direction stateFacing = context.state.getValue(DoorBlock.FACING);
+		Direction originalFacing = Direction.get(AxisDirection.POSITIVE, stateFacing.getAxis());
+		Vec3 centerOfContraption = context.contraption.bounds.getCenter();
+		Vec3 diff = Vec3.atCenterOf(context.localPos)
+			.add(Vec3.atLowerCornerOf(stateFacing.getNormal())
+				.scale(-.45f))
+			.subtract(centerOfContraption);
+		if (originalFacing.getAxis()
+			.choose(diff.x, diff.y, diff.z) < 0)
+			originalFacing = originalFacing.getOpposite();
+
+		Vec3 directionVec = Vec3.atLowerCornerOf(originalFacing.getNormal());
+		directionVec = context.rotation.apply(directionVec);
+		return Direction.getNearest(directionVec.x, directionVec.y, directionVec.z);
 	}
 
 }

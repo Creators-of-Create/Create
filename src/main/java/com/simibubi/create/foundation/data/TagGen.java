@@ -73,9 +73,9 @@ public class TagGen {
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
 			.addTag(BlockTags.BEDS)
 			.addTag(BlockTags.DOORS);
-		
+
 		prov.tag(AllBlockTags.MOVABLE_EMPTY_COLLIDER.tag)
-			.add(Blocks.COBWEB, Blocks.POWDER_SNOW)
+			.add(Blocks.COBWEB, Blocks.POWDER_SNOW, Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK)
 			.addTag(BlockTags.FENCE_GATES);
 
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)
@@ -111,6 +111,13 @@ public class TagGen {
 			.addTag(BlockTags.PRESSURE_PLATES)
 			.addTag(BlockTags.RAILS);
 
+		prov.tag(AllBlockTags.COPYCAT_ALLOW.tag)
+			.add(Blocks.BARREL);
+		prov.tag(AllBlockTags.COPYCAT_DENY.tag)
+			.addTag(BlockTags.CAULDRONS)
+			.addTag(BlockTags.SAPLINGS)
+			.addTag(BlockTags.CLIMBABLE);
+
 		// COMPAT
 
 		addOptional(prov.tag(AllBlockTags.NON_MOVABLE.tag), Mods.IE,
@@ -145,6 +152,9 @@ public class TagGen {
 		prov.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 			.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
 					Items.HONEY_BOTTLE, Items.CAKE);
+
+		prov.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
+			.add(Items.BELL, Items.CAMPFIRE, Items.SOUL_CAMPFIRE, Items.DISPENSER, Items.DROPPER);
 
 		prov.tag(AllItemTags.VANILLA_STRIPPED_LOGS.tag)
 			.add(Items.STRIPPED_ACACIA_LOG, Items.STRIPPED_BIRCH_LOG, Items.STRIPPED_CRIMSON_STEM,

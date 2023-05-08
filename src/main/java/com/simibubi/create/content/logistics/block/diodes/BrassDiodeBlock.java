@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class BrassDiodeBlock extends AbstractDiodeBlock implements ITE<BrassDiodeTileEntity> {
+public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiodeBlockEntity> {
 
 	public static final BooleanProperty POWERING = BooleanProperty.create("powering");
 	public static final BooleanProperty INVERTED = BooleanProperty.create("inverted");
@@ -36,6 +36,11 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements ITE<BrassDiod
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player player, InteractionHand pHand,
 		BlockHitResult pHit) {
+		return toggle(pLevel, pPos, pState, player, pHand);
+	}
+
+	public InteractionResult toggle(Level pLevel, BlockPos pPos, BlockState pState, Player player,
+		InteractionHand pHand) {
 		if (!player.mayBuild())
 			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
@@ -80,14 +85,14 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements ITE<BrassDiod
 	}
 
 	@Override
-	public Class<BrassDiodeTileEntity> getTileEntityClass() {
-		return BrassDiodeTileEntity.class;
+	public Class<BrassDiodeBlockEntity> getBlockEntityClass() {
+		return BrassDiodeBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends BrassDiodeTileEntity> getTileEntityType() {
-		return AllBlocks.PULSE_EXTENDER.is(this) ? AllTileEntities.PULSE_EXTENDER.get()
-			: AllTileEntities.PULSE_REPEATER.get();
+	public BlockEntityType<? extends BrassDiodeBlockEntity> getBlockEntityType() {
+		return AllBlocks.PULSE_EXTENDER.is(this) ? AllBlockEntityTypes.PULSE_EXTENDER.get()
+			: AllBlockEntityTypes.PULSE_REPEATER.get();
 	}
 
 }

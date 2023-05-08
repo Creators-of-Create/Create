@@ -78,9 +78,9 @@ public class ZapperInteractionHandler {
 			newState = newState.setValue(BlockStateProperties.WATERLOGGED, false);
 
 		CompoundTag data = null;
-		BlockEntity tile = player.level.getBlockEntity(pos);
-		if (tile != null) {
-			data = tile.saveWithFullMetadata();
+		BlockEntity blockEntity = player.level.getBlockEntity(pos);
+		if (blockEntity != null) {
+			data = blockEntity.saveWithFullMetadata();
 			data.remove("x");
 			data.remove("y");
 			data.remove("z");

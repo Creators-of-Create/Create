@@ -34,20 +34,20 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class RecipeGridHandler {
 
-	public static List<MechanicalCrafterTileEntity> getAllCraftersOfChain(MechanicalCrafterTileEntity root) {
+	public static List<MechanicalCrafterBlockEntity> getAllCraftersOfChain(MechanicalCrafterBlockEntity root) {
 		return getAllCraftersOfChainIf(root, Predicates.alwaysTrue());
 	}
 
-	public static List<MechanicalCrafterTileEntity> getAllCraftersOfChainIf(MechanicalCrafterTileEntity root,
-		Predicate<MechanicalCrafterTileEntity> test) {
+	public static List<MechanicalCrafterBlockEntity> getAllCraftersOfChainIf(MechanicalCrafterBlockEntity root,
+		Predicate<MechanicalCrafterBlockEntity> test) {
 		return getAllCraftersOfChainIf(root, test, false);
 	}
 
-	public static List<MechanicalCrafterTileEntity> getAllCraftersOfChainIf(MechanicalCrafterTileEntity root,
-		Predicate<MechanicalCrafterTileEntity> test, boolean poweredStart) {
-		List<MechanicalCrafterTileEntity> crafters = new ArrayList<>();
-		List<Pair<MechanicalCrafterTileEntity, MechanicalCrafterTileEntity>> frontier = new ArrayList<>();
-		Set<MechanicalCrafterTileEntity> visited = new HashSet<>();
+	public static List<MechanicalCrafterBlockEntity> getAllCraftersOfChainIf(MechanicalCrafterBlockEntity root,
+		Predicate<MechanicalCrafterBlockEntity> test, boolean poweredStart) {
+		List<MechanicalCrafterBlockEntity> crafters = new ArrayList<>();
+		List<Pair<MechanicalCrafterBlockEntity, MechanicalCrafterBlockEntity>> frontier = new ArrayList<>();
+		Set<MechanicalCrafterBlockEntity> visited = new HashSet<>();
 		frontier.add(Pair.of(root, null));
 
 		boolean powered = false;
@@ -55,9 +55,9 @@ public class RecipeGridHandler {
 		boolean allEmpty = true;
 
 		while (!frontier.isEmpty()) {
-			Pair<MechanicalCrafterTileEntity, MechanicalCrafterTileEntity> pair = frontier.remove(0);
-			MechanicalCrafterTileEntity current = pair.getKey();
-			MechanicalCrafterTileEntity last = pair.getValue();
+			Pair<MechanicalCrafterBlockEntity, MechanicalCrafterBlockEntity> pair = frontier.remove(0);
+			MechanicalCrafterBlockEntity current = pair.getKey();
+			MechanicalCrafterBlockEntity last = pair.getValue();
 
 			if (visited.contains(current))
 				return null;
@@ -72,10 +72,10 @@ public class RecipeGridHandler {
 			crafters.add(current);
 			visited.add(current);
 
-			MechanicalCrafterTileEntity target = getTargetingCrafter(current);
+			MechanicalCrafterBlockEntity target = getTargetingCrafter(current);
 			if (target != last && target != null)
 				frontier.add(Pair.of(target, current));
-			for (MechanicalCrafterTileEntity preceding : getPrecedingCrafters(current))
+			for (MechanicalCrafterBlockEntity preceding : getPrecedingCrafters(current))
 				if (preceding != last)
 					frontier.add(Pair.of(preceding, current));
 		}
@@ -83,29 +83,29 @@ public class RecipeGridHandler {
 		return empty && !powered || allEmpty ? null : crafters;
 	}
 
-	public static MechanicalCrafterTileEntity getTargetingCrafter(MechanicalCrafterTileEntity crafter) {
+	public static MechanicalCrafterBlockEntity getTargetingCrafter(MechanicalCrafterBlockEntity crafter) {
 		BlockState state = crafter.getBlockState();
 		if (!isCrafter(state))
 			return null;
 
 		BlockPos targetPos = crafter.getBlockPos()
 			.relative(MechanicalCrafterBlock.getTargetDirection(state));
-		MechanicalCrafterTileEntity targetTE = CrafterHelper.getCrafter(crafter.getLevel(), targetPos);
-		if (targetTE == null)
+		MechanicalCrafterBlockEntity targetBE = CrafterHelper.getCrafter(crafter.getLevel(), targetPos);
+		if (targetBE == null)
 			return null;
 
-		BlockState targetState = targetTE.getBlockState();
+		BlockState targetState = targetBE.getBlockState();
 		if (!isCrafter(targetState))
 			return null;
 		if (state.getValue(HORIZONTAL_FACING) != targetState.getValue(HORIZONTAL_FACING))
 			return null;
-		return targetTE;
+		return targetBE;
 	}
 
-	public static List<MechanicalCrafterTileEntity> getPrecedingCrafters(MechanicalCrafterTileEntity crafter) {
+	public static List<MechanicalCrafterBlockEntity> getPrecedingCrafters(MechanicalCrafterBlockEntity crafter) {
 		BlockPos pos = crafter.getBlockPos();
 		Level world = crafter.getLevel();
-		List<MechanicalCrafterTileEntity> crafters = new ArrayList<>();
+		List<MechanicalCrafterBlockEntity> crafters = new ArrayList<>();
 		BlockState blockState = crafter.getBlockState();
 		if (!isCrafter(blockState))
 			return crafters;
@@ -126,11 +126,11 @@ public class RecipeGridHandler {
 				continue;
 			if (blockFacing != neighbourState.getValue(HORIZONTAL_FACING))
 				continue;
-			MechanicalCrafterTileEntity te = CrafterHelper.getCrafter(world, neighbourPos);
-			if (te == null)
+			MechanicalCrafterBlockEntity be = CrafterHelper.getCrafter(world, neighbourPos);
+			if (be == null)
 				continue;
 
-			crafters.add(te);
+			crafters.add(be);
 		}
 
 		return crafters;
@@ -144,7 +144,7 @@ public class RecipeGridHandler {
 		items.calcStats();
 		CraftingContainer craftinginventory = new MechanicalCraftingInventory(items);
 		ItemStack result = null;
-		if (AllConfigs.SERVER.recipes.allowRegularCraftingInCrafter.get())
+		if (AllConfigs.server().recipes.allowRegularCraftingInCrafter.get())
 			result = world.getRecipeManager()
 				.getRecipeFor(RecipeType.CRAFTING, craftinginventory, world)
 				.filter(r -> isRecipeAllowed(r, craftinginventory))
@@ -165,7 +165,7 @@ public class RecipeGridHandler {
 					numItems++;
 				}
 			}
-			if (numItems > AllConfigs.SERVER.recipes.maxFireworkIngredientsInCrafter.get()) {
+			if (numItems > AllConfigs.server().recipes.maxFireworkIngredientsInCrafter.get()) {
 				return false;
 			}
 		}

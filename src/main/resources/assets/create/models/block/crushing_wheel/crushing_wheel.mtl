@@ -1,0 +1,17 @@
+# Blender 3.4.1 MTL File: 'crushing wheel.blend'
+# www.blender.org
+
+newmtl crushing_wheel_insert
+map_Kd #insert
+
+newmtl crushing_wheel_plates
+map_Kd #plates
+
+newmtl m_axis
+map_Kd #axis
+
+newmtl m_axis_top
+map_Kd #axis_top
+
+newmtl m_spruce_log_top
+map_Kd #spruce_log_top

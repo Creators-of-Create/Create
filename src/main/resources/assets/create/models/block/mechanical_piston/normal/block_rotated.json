@@ -1,71 +1,70 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
-    "textures": {
-		"particle": "create:block/gearbox_top",
-        "0": "create:block/gearbox_top",
-        "1": "create:block/piston_bottom",
-        "2": "create:block/gearbox",
-        "3": "create:block/piston_inner",
-        "4": "block/piston_side",
-        "5": "block/piston_top"
-    },
-    "elements": [
-        {
-            "name": "Bottom",
-            "from": [ 0.0, 0.0, 0.0 ], 
-            "to": [ 16.0, 2.0, 16.0 ], 
-            "faces": {
-                "north": { "texture": "#0", "uv": [ 0.0, 14.0, 16.0, 16.0 ] },
-                "east": { "texture": "#0", "uv": [ 0.0, 14.0, 16.0, 16.0 ] },
-                "south": { "texture": "#0", "uv": [ 0.0, 14.0, 16.0, 16.0 ] },
-                "west": { "texture": "#0", "uv": [ 0.0, 14.0, 16.0, 16.0 ] },
-                "up": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "down": { "texture": "#1", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
-            }
-        },
-        {
-            "name": "Inner",
-            "from": [ 1.0, 2.0, 2.0 ], 
-            "to": [ 15.0, 12.0, 14.0 ], 
-            "faces": {
-                "east": { "texture": "#2", "uv": [ 2.0, 4.0, 14.0, 14.0 ] },
-                "west": { "texture": "#2", "uv": [ 2.0, 4.0, 14.0, 14.0 ] }
-            }
-        },
-        {
-            "name": "Side",
-            "from": [ 0.0, 2.0, 0.0 ], 
-            "to": [ 16.0, 12.0, 2.0 ], 
-            "faces": {
-                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 9.0 ] },
-                "east": { "texture": "#0", "uv": [ 14.0, 0.0, 16.0, 10.0 ] },
-                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 10.0 ] },
-                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 10.0 ] }
-            }
-        },
-        {
-            "name": "Side2",
-            "from": [ 0.0, 2.0, 14.0 ], 
-            "to": [ 16.0, 12.0, 16.0 ], 
-            "faces": {
-                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 10.0 ] },
-                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 10.0 ] },
-                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 10.0 ] },
-                "west": { "texture": "#0", "uv": [ 14.0, 0.0, 16.0, 10.0 ] }
-            }
-        },
-        {
-            "name": "Top",
-            "from": [ 0.0, 12.0, 0.0 ], 
-            "to": [ 16.0, 16.0, 16.0 ], 
-            "faces": {
-                "north": { "texture": "#4", "uv": [ 0.0, 0.0, 16.0, 4.0 ] },
-                "east": { "texture": "#4", "uv": [ 0.0, 0.0, 16.0, 4.0 ] },
-                "south": { "texture": "#4", "uv": [ 0.0, 0.0, 16.0, 4.0 ] },
-                "west": { "texture": "#4", "uv": [ 0.0, 0.0, 16.0, 4.0 ] },
-                "up": { "texture": "#5", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
-                "down": { "texture": "#3", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
-            }
-        }
-    ]
+	"credit": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+	"textures": {
+		"0": "create:block/andesite_casing_piston",
+		"1": "create:block/piston_bottom",
+		"2": "create:block/gearbox",
+		"4": "block/piston_side",
+		"5": "block/piston_top",
+		"particle": "create:block/andesite_casing_piston"
+	},
+	"elements": [
+		{
+			"name": "Bottom",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#0"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#0"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Inner",
+			"from": [1, 2, 2],
+			"to": [15, 12, 14],
+			"faces": {
+				"east": {"uv": [2, 4, 14, 14], "texture": "#2"},
+				"west": {"uv": [2, 4, 14, 14], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [0, 2, 0],
+			"to": [16, 12, 2],
+			"faces": {
+				"north": {"uv": [0, 4, 16, 14], "texture": "#0"},
+				"east": {"uv": [14, 4, 16, 14], "texture": "#0"},
+				"south": {"uv": [0, 4, 16, 14], "texture": "#0"},
+				"west": {"uv": [0, 4, 2, 14], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Side2",
+			"from": [0, 2, 14],
+			"to": [16, 12, 16],
+			"faces": {
+				"north": {"uv": [0, 4, 16, 14], "texture": "#0"},
+				"east": {"uv": [16, 4, 14, 14], "texture": "#0"},
+				"south": {"uv": [0, 4, 16, 14], "texture": "#0"},
+				"west": {"uv": [14, 4, 16, 14], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [0, 12, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 4], "texture": "#4"},
+				"east": {"uv": [0, 0, 16, 4], "texture": "#4"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#4"},
+				"west": {"uv": [0, 0, 16, 4], "texture": "#4"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#5"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#2"}
+			}
+		}
+	]
 }

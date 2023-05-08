@@ -2,9 +2,9 @@ package com.simibubi.create.content.schematics.block;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 
-public class SchematicannonBlock extends Block implements ITE<SchematicannonTileEntity> {
+public class SchematicannonBlock extends Block implements IBE<SchematicannonBlockEntity> {
 
 	public SchematicannonBlock(Properties properties) {
 		super(properties);
@@ -39,7 +39,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	@Override
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
 		if (entity != null) {
-			withTileEntityDo(level, pos, be -> {
+			withBlockEntityDo(level, pos, be -> {
 				be.defaultYaw = (-Mth.floor((entity.getYRot() + (entity.isShiftKeyDown() ? 180.0F : 0.0F)) * 16.0F / 360.0F + 0.5F) & 15) * 360.0F / 16.0F;
 			});
 		}
@@ -50,15 +50,15 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 			BlockHitResult hit) {
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
-		withTileEntityDo(worldIn, pos,
-				te -> NetworkHooks.openScreen((ServerPlayer) player, te, te::sendToContainer));
+		withBlockEntityDo(worldIn, pos,
+				be -> NetworkHooks.openScreen((ServerPlayer) player, be, be::sendToMenu));
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
-		withTileEntityDo(worldIn, pos, te -> te.neighbourCheckCooldown = 0);
+		withBlockEntityDo(worldIn, pos, be -> be.neighbourCheckCooldown = 0);
 	}
 
 	@Override
@@ -66,18 +66,18 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
 
-		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
+		withBlockEntityDo(worldIn, pos, be -> ItemHelper.dropContents(worldIn, pos, be.inventory));
 		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override
-	public Class<SchematicannonTileEntity> getTileEntityClass() {
-		return SchematicannonTileEntity.class;
+	public Class<SchematicannonBlockEntity> getBlockEntityClass() {
+		return SchematicannonBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends SchematicannonTileEntity> getTileEntityType() {
-		return AllTileEntities.SCHEMATICANNON.get();
+	public BlockEntityType<? extends SchematicannonBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.SCHEMATICANNON.get();
 	}
 
 }

@@ -86,6 +86,7 @@
 		{
 			"name": "ItemCollector",
 			"origin": [8, 8, 24],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5]
 		}
 	]

@@ -333,12 +333,14 @@ public class Carriage {
 
 			} else {
 				if (dimension.equals(otherDimension)) {
-					dce.rotationAnchors = leadingBogey.points.map(TravellingPoint::getPosition);
+					dce.rotationAnchors = leadingBogey.points.map(tp -> tp.getPosition(train.graph));
 				} else {
-					dce.rotationAnchors.setFirst(leadingBogey.points.getFirst() == point ? point.getPosition()
-						: pivoted(dce, dimension, point, leadingWheelSpacing));
-					dce.rotationAnchors.setSecond(leadingBogey.points.getSecond() == point ? point.getPosition()
-						: pivoted(dce, dimension, point, leadingWheelSpacing));
+					dce.rotationAnchors
+						.setFirst(leadingBogey.points.getFirst() == point ? point.getPosition(train.graph)
+							: pivoted(dce, dimension, point, leadingWheelSpacing));
+					dce.rotationAnchors
+						.setSecond(leadingBogey.points.getSecond() == point ? point.getPosition(train.graph)
+							: pivoted(dce, dimension, point, leadingWheelSpacing));
 				}
 			}
 
@@ -362,7 +364,7 @@ public class Carriage {
 		TrackNodeLocation pivot = dce.findPivot(dimension, start == getLeadingPoint());
 		if (pivot == null)
 			return null;
-		Vec3 startVec = start.getPosition();
+		Vec3 startVec = start.getPosition(train.graph);
 		Vec3 portalVec = pivot.getLocation()
 			.add(0, 1, 0);
 		return VecHelper.lerp((float) (offset / startVec.distanceTo(portalVec)), startVec, portalVec);

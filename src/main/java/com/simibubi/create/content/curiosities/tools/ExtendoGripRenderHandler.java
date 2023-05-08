@@ -4,8 +4,8 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
@@ -30,13 +30,13 @@ public class ExtendoGripRenderHandler {
 
 	public static float mainHandAnimation;
 	public static float lastMainHandAnimation;
-	public static PartialModel pose = AllBlockPartials.DEPLOYER_HAND_PUNCHING;
+	public static PartialModel pose = AllPartialModels.DEPLOYER_HAND_PUNCHING;
 
 	public static void tick() {
 		lastMainHandAnimation = mainHandAnimation;
 		mainHandAnimation *= Mth.clamp(mainHandAnimation, 0.8f, 0.99f);
 
-		pose = AllBlockPartials.DEPLOYER_HAND_PUNCHING;
+		pose = AllPartialModels.DEPLOYER_HAND_PUNCHING;
 		if (!AllItems.EXTENDO_GRIP.isIn(getRenderedOffHandStack()))
 			return;
 		ItemStack main = getRenderedMainHandStack();
@@ -49,7 +49,7 @@ public class ExtendoGripRenderHandler {
 			.getModel(main, null, null, 0)
 			.isGui3d())
 			return;
-		pose = AllBlockPartials.DEPLOYER_HAND_HOLDING;
+		pose = AllPartialModels.DEPLOYER_HAND_HOLDING;
 	}
 
 	@SubscribeEvent

@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.RotationPropagator;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.ticks.TickPriority;
 
-public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<SplitShaftTileEntity> {
+public class GearshiftBlock extends AbstractEncasedShaftBlock implements IBE<SplitShaftBlockEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -54,20 +54,20 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 	}
 
 	@Override
-	public Class<SplitShaftTileEntity> getTileEntityClass() {
-		return SplitShaftTileEntity.class;
+	public Class<SplitShaftBlockEntity> getBlockEntityClass() {
+		return SplitShaftBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends SplitShaftTileEntity> getTileEntityType() {
-		return AllTileEntities.GEARSHIFT.get();
+	public BlockEntityType<? extends SplitShaftBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.GEARSHIFT.get();
 	}
 
 	public void detachKinetics(Level worldIn, BlockPos pos, boolean reAttachNextTick) {
-		BlockEntity te = worldIn.getBlockEntity(pos);
-		if (te == null || !(te instanceof KineticTileEntity))
+		BlockEntity be = worldIn.getBlockEntity(pos);
+		if (be == null || !(be instanceof KineticBlockEntity))
 			return;
-		RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) te);
+		RotationPropagator.handleRemoved(worldIn, pos, (KineticBlockEntity) be);
 
 		// Re-attach next tick
 		if (reAttachNextTick)
@@ -76,10 +76,10 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Spl
 
 	@Override
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
-		BlockEntity te = worldIn.getBlockEntity(pos);
-		if (te == null || !(te instanceof KineticTileEntity))
+		BlockEntity be = worldIn.getBlockEntity(pos);
+		if (be == null || !(be instanceof KineticBlockEntity))
 			return;
-		KineticTileEntity kte = (KineticTileEntity) te;
+		KineticBlockEntity kte = (KineticBlockEntity) be;
 		RotationPropagator.handleAdded(worldIn, pos, kte);
 	}
 }

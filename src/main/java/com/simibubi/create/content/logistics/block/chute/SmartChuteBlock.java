@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.chute;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -55,8 +55,8 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	}
 	
 	@Override
-	public BlockEntityType<? extends ChuteTileEntity> getTileEntityType() {
-		return AllTileEntities.SMART_CHUTE.get();
+	public BlockEntityType<? extends ChuteBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.SMART_CHUTE.get();
 	}
 
 	@Override

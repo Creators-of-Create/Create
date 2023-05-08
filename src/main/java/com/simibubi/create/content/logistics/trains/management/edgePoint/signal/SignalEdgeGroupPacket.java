@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.CreateClient;
@@ -51,26 +50,24 @@ public class SignalEdgeGroupPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				Map<UUID, SignalEdgeGroup> signalEdgeGroups = CreateClient.RAILWAYS.signalEdgeGroups;
-				int i = 0;
-				for (UUID id : ids) {
-					if (!add) {
-						signalEdgeGroups.remove(id);
-						continue;
-					}
-
-					SignalEdgeGroup group = new SignalEdgeGroup(id);
-					signalEdgeGroups.put(id, group);
-					if (colors.size() > i)
-						group.color = colors.get(i);
-					i++;
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			Map<UUID, SignalEdgeGroup> signalEdgeGroups = CreateClient.RAILWAYS.signalEdgeGroups;
+			int i = 0;
+			for (UUID id : ids) {
+				if (!add) {
+					signalEdgeGroups.remove(id);
+					continue;
 				}
-			});
-		context.get()
-			.setPacketHandled(true);
+
+				SignalEdgeGroup group = new SignalEdgeGroup(id);
+				signalEdgeGroups.put(id, group);
+				if (colors.size() > i)
+					group.color = colors.get(i);
+				i++;
+			}
+		});
+		return true;
 	}
 
 }

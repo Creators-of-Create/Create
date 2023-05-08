@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.LeverMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
-import com.simibubi.create.foundation.utility.CreateRegistry;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllInteractionBehaviours {
-	private static final CreateRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
+	private static final AttachedRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
 	public static void registerBehaviour(ResourceLocation block, MovingInteractionBehaviour provider) {

@@ -6,8 +6,8 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -91,14 +91,14 @@ public sealed class BogeyInstance {
 
 			frame = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.BOGEY_FRAME)
+				.getModel(AllPartialModels.BOGEY_FRAME)
 				.createInstance();
 
 			wheels = new ModelData[2];
 
 			materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.SMALL_BOGEY_WHEELS)
+				.getModel(AllPartialModels.SMALL_BOGEY_WHEELS)
 				.createInstances(wheels);
 		}
 
@@ -160,13 +160,13 @@ public sealed class BogeyInstance {
 				.setValue(ShaftBlock.AXIS, Direction.Axis.X))
 				.createInstances(secondShaft);
 
-			drive = mat.getModel(AllBlockPartials.BOGEY_DRIVE)
+			drive = mat.getModel(AllPartialModels.BOGEY_DRIVE)
 				.createInstance();
-			piston = mat.getModel(AllBlockPartials.BOGEY_PISTON)
+			piston = mat.getModel(AllPartialModels.BOGEY_PISTON)
 				.createInstance();
-			wheels = mat.getModel(AllBlockPartials.LARGE_BOGEY_WHEELS)
+			wheels = mat.getModel(AllPartialModels.LARGE_BOGEY_WHEELS)
 				.createInstance();
-			pin = mat.getModel(AllBlockPartials.BOGEY_PIN)
+			pin = mat.getModel(AllPartialModels.BOGEY_PIN)
 				.createInstance();
 		}
 

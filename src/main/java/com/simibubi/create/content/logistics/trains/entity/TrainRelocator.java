@@ -121,14 +121,14 @@ public class TrainRelocator {
 				Vec3 vec2 = toVisualise.get(i + 1);
 				CreateClient.OUTLINER.showLine(Pair.of(relocating, i), vec1.add(0, -.925f, 0), vec2.add(0, -.925f, 0))
 					.colored(lastHoveredResult || i != toVisualise.size() - 2 ? 0x95CD41 : 0xEA5C2B)
-					.disableNormals()
+					.disableLineNormals()
 					.lineWidth(i % 2 == 1 ? 1 / 6f : 1 / 4f);
 			}
 		}
 
 		BezierPointSelection bezierSelection = TrackBlockOutline.result;
 		if (bezierSelection != null) {
-			blockPos = bezierSelection.te()
+			blockPos = bezierSelection.blockEntity()
 				.getBlockPos();
 			hoveredBezier = bezierSelection.loc();
 		}
@@ -151,7 +151,7 @@ public class TrainRelocator {
 		boolean result = relocate(relocating, mc.level, blockPos, hoveredBezier, direction, lookAngle, true);
 		if (!simulate && result) {
 			relocating.carriages.forEach(c -> c.forEachPresentEntity(e -> e.nonDamageTicks = 10));			
-			AllPackets.channel.sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, hoveredBezier,
+			AllPackets.getChannel().sendToServer(new TrainRelocationPacket(relocatingTrain, blockPos, hoveredBezier,
 				direction, lookAngle, relocatingEntityId));
 		}
 
@@ -189,7 +189,7 @@ public class TrainRelocator {
 		List<Vec3> recordedVecs = new ArrayList<>();
 		Consumer<TravellingPoint> recorder = tp -> {
 			recordedLocations.add(Pair.of(Couple.create(tp.node1, tp.node2), tp.position));
-			recordedVecs.add(tp.getPosition());
+			recordedVecs.add(tp.getPosition(graph));
 		};
 		ITrackSelector steer = probe.steer(SteerDirection.NONE, track.getUpNormal(level, pos, blockState));
 		MutableBoolean blocked = new MutableBoolean(false);
@@ -269,7 +269,7 @@ public class TrainRelocator {
 	public static void visualise(Train train, int i, Vec3 v1, Vec3 v2, boolean valid) {
 		CreateClient.OUTLINER.showLine(Pair.of(train, i), v1.add(0, -.825f, 0), v2.add(0, -.825f, 0))
 			.colored(valid ? 0x95CD41 : 0xEA5C2B)
-			.disableNormals()
+			.disableLineNormals()
 			.lineWidth(i % 2 == 1 ? 1 / 6f : 1 / 4f);
 	}
 

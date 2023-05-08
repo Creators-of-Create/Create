@@ -5,10 +5,10 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class HorizontalHalfShaftInstance extends HalfShaftInstance {
+public class HorizontalHalfShaftInstance<T extends KineticBlockEntity> extends HalfShaftInstance<T> {
 
-    public HorizontalHalfShaftInstance(MaterialManager modelManager, KineticTileEntity tile) {
-        super(modelManager, tile);
+    public HorizontalHalfShaftInstance(MaterialManager materialManager, T blockEntity) {
+        super(materialManager, blockEntity);
     }
 
     @Override

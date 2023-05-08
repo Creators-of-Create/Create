@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -45,39 +44,35 @@ public class TrackGraphRollCallPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			GlobalRailwayManager manager = Create.RAILWAYS.sided(null);
+			Set<UUID> unusedIds = new HashSet<>(manager.trackNetworks.keySet());
+			List<Integer> failedIds = new ArrayList<>();
+			Map<Integer, UUID> idByNetId = new HashMap<>();
+			manager.trackNetworks.forEach((uuid, g) -> idByNetId.put(g.netId, uuid));
 
-				GlobalRailwayManager manager = Create.RAILWAYS.sided(null);
-				Set<UUID> unusedIds = new HashSet<>(manager.trackNetworks.keySet());
-				List<Integer> failedIds = new ArrayList<>();
-				Map<Integer, UUID> idByNetId = new HashMap<>();
-				manager.trackNetworks.forEach((uuid, g) -> idByNetId.put(g.netId, uuid));
-
-				for (int i = 0; i < ints.length; i += 2) {
-					UUID uuid = idByNetId.get(ints[i]);
-					if (uuid == null) {
-						failedIds.add(ints[i]);
-						continue;
-					}
-					unusedIds.remove(uuid);
-					TrackGraph trackGraph = manager.trackNetworks.get(uuid);
-					if (trackGraph.getChecksum() == ints[i + 1])
-						continue;
-					Create.LOGGER.warn("Track network: " + uuid.toString()
-						.substring(0, 6) + " failed its checksum; Requesting refresh");
+			for (int i = 0; i < ints.length; i += 2) {
+				UUID uuid = idByNetId.get(ints[i]);
+				if (uuid == null) {
 					failedIds.add(ints[i]);
+					continue;
 				}
+				unusedIds.remove(uuid);
+				TrackGraph trackGraph = manager.trackNetworks.get(uuid);
+				if (trackGraph.getChecksum() == ints[i + 1])
+					continue;
+				Create.LOGGER.warn("Track network: " + uuid.toString()
+					.substring(0, 6) + " failed its checksum; Requesting refresh");
+				failedIds.add(ints[i]);
+			}
 
-				for (Integer failed : failedIds)
-					AllPackets.channel.sendToServer(new TrackGraphRequestPacket(failed));
-				for (UUID unused : unusedIds)
-					manager.trackNetworks.remove(unused);
-
-			});
-		context.get()
-			.setPacketHandled(true);
+			for (Integer failed : failedIds)
+				AllPackets.getChannel().sendToServer(new TrackGraphRequestPacket(failed));
+			for (UUID unused : unusedIds)
+				manager.trackNetworks.remove(unused);
+		});
+		return true;
 	}
 
 }

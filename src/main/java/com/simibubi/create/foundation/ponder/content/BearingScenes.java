@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.HarvesterBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -123,7 +123,8 @@ public class BearingScenes {
 		scene.rotateCameraY(-90);
 		scene.idle(20);
 
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(windmill), Pointing.DOWN).rightClick(), 60);
+		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(windmill)
+			.subtract(.5, 0, 0), Pointing.DOWN).rightClick(), 60);
 		scene.idle(7);
 		scene.world.rotateBearing(windmill, 360, 200);
 		scene.world.rotateSection(structure, 0, 0, 360, 200);
@@ -135,7 +136,8 @@ public class BearingScenes {
 		scene.idle(10);
 
 		scene.overlay.showText(60)
-			.pointAt(util.vector.topOf(windmill))
+			.pointAt(util.vector.topOf(windmill)
+				.subtract(.5, 0, 0))
 			.placeNearTarget()
 			.attachKeyFrame()
 			.text("Activated with Right-Click, the Windmill Bearing will start providing Rotational Force");
@@ -148,15 +150,15 @@ public class BearingScenes {
 			.text("The Amount of Sail Blocks determine its Rotation Speed");
 		scene.idle(90);
 
-		Vec3 surface = util.vector.blockSurface(windmill, Direction.WEST);
-		scene.overlay.showControls(new InputWindowElement(surface, Pointing.DOWN).scroll()
-			.withWrench(), 60);
-		scene.overlay.showCenteredScrollInput(windmill, Direction.WEST, 50);
+		Vec3 surface = util.vector.blockSurface(windmill, Direction.WEST)
+			.add(0, 0, 2 / 16f);
+		scene.overlay.showControls(new InputWindowElement(surface, Pointing.DOWN).rightClick(), 60);
+		scene.overlay.showFilterSlotInput(surface, Direction.WEST, 50);
 		scene.overlay.showText(60)
 			.pointAt(surface)
 			.attachKeyFrame()
 			.placeNearTarget()
-			.text("Use a Wrench to configure its rotation direction");
+			.text("Use the value panel to configure its rotation direction");
 		scene.idle(36);
 
 		scene.world.rotateBearing(windmill, -90 - 45, 75);
@@ -166,7 +168,8 @@ public class BearingScenes {
 		scene.effects.rotationDirectionIndicator(windmill.south());
 		scene.idle(69);
 
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(windmill), Pointing.DOWN).rightClick(), 60);
+		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(windmill)
+			.subtract(.5, 0, 0), Pointing.DOWN).rightClick(), 60);
 		scene.idle(7);
 		scene.world.rotateBearing(windmill, -45, 0);
 		scene.world.rotateSection(structure, 0, 0, -45, 0);
@@ -174,7 +177,8 @@ public class BearingScenes {
 		scene.world.setKineticSpeed(kinetics, 0);
 		scene.idle(10);
 		scene.overlay.showText(60)
-			.pointAt(util.vector.topOf(windmill))
+			.pointAt(util.vector.topOf(windmill)
+				.subtract(.5, 0, 0))
 			.placeNearTarget()
 			.text("Right-click the Bearing anytime to stop and edit the Structure again");
 		scene.idle(30);
@@ -226,10 +230,11 @@ public class BearingScenes {
 		scene.markAsFinished();
 		scene.world.rotateBearing(bearingPos, -720, 400);
 		scene.world.rotateSection(contraption, 0, -720, 0, 400);
-		scene.world.modifyTileEntity(util.grid.at(2, 1, 5), HarvesterTileEntity.class,
+		scene.world.modifyBlockEntity(util.grid.at(2, 1, 5), HarvesterBlockEntity.class,
 			hte -> hte.setAnimatedSpeed(-150));
 		scene.idle(400);
-		scene.world.modifyTileEntity(util.grid.at(2, 1, 5), HarvesterTileEntity.class, hte -> hte.setAnimatedSpeed(0));
+		scene.world.modifyBlockEntity(util.grid.at(2, 1, 5), HarvesterBlockEntity.class,
+			hte -> hte.setAnimatedSpeed(0));
 	}
 
 	public static void mechanicalBearing(SceneBuilder scene, SceneBuildingUtil util) {
@@ -372,24 +377,24 @@ public class BearingScenes {
 		scene.idle(50);
 
 		scene.overlay.showText(100)
-			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
+			.pointAt(util.vector.topOf(util.grid.at(5, 0, 4)))
 			.placeNearTarget()
 			.colored(PonderPalette.RED)
 			.attachKeyFrame()
 			.text("When Stopped, the Bearing will place the structure at the nearest grid-aligned Angle");
 		scene.idle(110);
 
-		scene.overlay.showCenteredScrollInput(bearingPos, Direction.NORTH, 60);
-		scene.overlay.showControls(
-			new InputWindowElement(util.vector.blockSurface(bearingPos, Direction.NORTH), Pointing.DOWN).scroll()
-				.withWrench(),
-			60);
+		Vec3 blockSurface = util.vector.blockSurface(bearingPos, Direction.NORTH)
+			.add(0, 2 / 16f, 0);
+		scene.overlay.showFilterSlotInput(blockSurface, Direction.NORTH, 60);
+		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).scroll()
+			.withWrench(), 60);
 		scene.idle(10);
 		scene.overlay.showText(60)
-			.pointAt(util.vector.blockSurface(bearingPos, Direction.WEST))
+			.pointAt(blockSurface)
 			.placeNearTarget()
 			.attachKeyFrame()
-			.sharedText("behaviour_modify_wrench");
+			.sharedText("behaviour_modify_value_panel");
 		scene.idle(70);
 
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);

@@ -1,13 +1,10 @@
 {
   "parent": "create:block/belt_funnel/block_pushing",
   "textures": {
-    "2": "create:block/brass_funnel_neutral",
-    "2_1": "create:block/brass_funnel_push",
-    "2_2": "create:block/brass_funnel_pull",
-    "3": "create:block/brass_funnel_back",
-    "5": "create:block/brass_funnel_tall_powered",
-    "6": "create:block/brass_funnel_powered",
-    "7": "create:block/brass_funnel_plating",
-    "particle": "create:block/brass_block"
+    "base": "create:block/funnel/brass_funnel",
+    "block": "create:block/brass_block",
+    "direction": "create:block/funnel/brass_funnel_push",
+    "particle": "create:block/brass_block",
+    "redstone": "create:block/funnel/brass_funnel_powered"
   }
 }

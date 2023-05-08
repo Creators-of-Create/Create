@@ -39,8 +39,9 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(HarvesterBlock.FACING)
-			.getOpposite());
+		return MovementBehaviour.super.isActive(context)
+			&& !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(HarvesterBlock.FACING)
+				.getOpposite());
 	}
 
 	@Override
@@ -96,7 +97,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		MutableBoolean seedSubtracted = new MutableBoolean(notCropButCuttable);
 		BlockState state = stateVisited;
 		BlockHelper.destroyBlockAs(world, pos, null, item, effectChance, stack -> {
-			if (AllConfigs.SERVER.kinetics.harvesterReplants.get() && !seedSubtracted.getValue()
+			if (AllConfigs.server().kinetics.harvesterReplants.get() && !seedSubtracted.getValue()
 				&& stack.sameItem(new ItemStack(state.getBlock()))) {
 				stack.shrink(1);
 				seedSubtracted.setTrue();
@@ -109,8 +110,8 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 	}
 
 	public boolean isValidCrop(Level world, BlockPos pos, BlockState state) {
-		boolean harvestPartial = AllConfigs.SERVER.kinetics.harvestPartiallyGrown.get();
-		boolean replant = AllConfigs.SERVER.kinetics.harvesterReplants.get();
+		boolean harvestPartial = AllConfigs.server().kinetics.harvestPartiallyGrown.get();
+		boolean replant = AllConfigs.server().kinetics.harvesterReplants.get();
 
 		if (state.getBlock() instanceof CropBlock) {
 			CropBlock crop = (CropBlock) state.getBlock();
@@ -174,7 +175,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 	}
 
 	private BlockState cutCrop(Level world, BlockPos pos, BlockState state) {
-		if (!AllConfigs.SERVER.kinetics.harvesterReplants.get()) {
+		if (!AllConfigs.server().kinetics.harvesterReplants.get()) {
 			if (state.getFluidState()
 				.isEmpty())
 				return Blocks.AIR.defaultBlockState();

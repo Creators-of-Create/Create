@@ -11,14 +11,14 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class DeployerRecipeSearchEvent extends Event {
-	private final DeployerTileEntity tileEntity;
+	private final DeployerBlockEntity blockEntity;
 	private final RecipeWrapper inventory;
 	@Nullable
 	Recipe<? extends Container> recipe = null;
 	private int maxPriority = 0;
 
-	public DeployerRecipeSearchEvent(DeployerTileEntity tileEntity, RecipeWrapper inventory) {
-		this.tileEntity = tileEntity;
+	public DeployerRecipeSearchEvent(DeployerBlockEntity blockEntity, RecipeWrapper inventory) {
+		this.blockEntity = blockEntity;
 		this.inventory = inventory;
 	}
 
@@ -27,8 +27,8 @@ public class DeployerRecipeSearchEvent extends Event {
 		return true;
 	}
 
-	public DeployerTileEntity getTileEntity() {
-		return tileEntity;
+	public DeployerBlockEntity getBlockEntity() {
+		return blockEntity;
 	}
 
 	public RecipeWrapper getInventory() {

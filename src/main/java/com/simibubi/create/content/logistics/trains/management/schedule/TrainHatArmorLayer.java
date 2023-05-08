@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.trains.management.schedule;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraption;
 import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
@@ -124,7 +124,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			ms.translate(0, -2.25f / 16f, 0);
 			msr.rotateX(-8.5f);
 			BlockState air = Blocks.AIR.defaultBlockState();
-			CachedBufferer.partial(AllBlockPartials.TRAIN_HAT, air)
+			CachedBufferer.partial(AllPartialModels.TRAIN_HAT, air)
 				.forEntityRender()
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(renderType));

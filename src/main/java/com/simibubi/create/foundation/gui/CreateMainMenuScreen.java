@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Components;
@@ -179,8 +180,8 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				return;
 			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)
 				return;
-			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), ChatFormatting.GRAY,
-				ChatFormatting.GRAY), mouseX, mouseY);
+			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), Palette.ALL_GRAY),
+					mouseX, mouseY);
 		}
 	}
 

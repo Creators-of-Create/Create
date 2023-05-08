@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.item;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -41,17 +39,17 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
 
 			if (inLectern()) {
-				BlockEntity te = player.level.getBlockEntity(lecternPos);
-				if (!(te instanceof LecternControllerTileEntity))
+				BlockEntity be = player.level.getBlockEntity(lecternPos);
+				if (!(be instanceof LecternControllerBlockEntity))
 					return;
-				handleLectern(player, (LecternControllerTileEntity) te);
+				handleLectern(player, (LecternControllerBlockEntity) be);
 			} else {
 				ItemStack controller = player.getMainHandItem();
 				if (!AllItems.LINKED_CONTROLLER.isIn(controller)) {
@@ -62,11 +60,10 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 				handleItem(player, controller);
 			}
 		});
-
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 	protected abstract void handleItem(ServerPlayer player, ItemStack heldItem);
-	protected abstract void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern);
+	protected abstract void handleLectern(ServerPlayer player, LecternControllerBlockEntity lectern);
 
 }

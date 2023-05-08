@@ -8,7 +8,9 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.components.actors.DoorControl;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainIconType;
@@ -16,9 +18,12 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.gui.widget.Label;
+import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.ChatFormatting;
@@ -37,16 +42,18 @@ public class StationScreen extends AbstractStationScreen {
 
 	private int leavingAnimation;
 	private LerpedFloat trainPosition;
+	private DoorControl doorControl;
 
 	private boolean switchingToAssemblyMode;
 
-	public StationScreen(StationTileEntity te, GlobalStation station) {
-		super(te, station);
+	public StationScreen(StationBlockEntity be, GlobalStation station) {
+		super(be, station);
 		background = AllGuiTextures.STATION;
 		leavingAnimation = 0;
 		trainPosition = LerpedFloat.linear()
 			.startWithValue(0);
 		switchingToAssemblyMode = false;
+		doorControl = be.doorControls.mode;
 	}
 
 	@Override
@@ -62,7 +69,7 @@ public class StationScreen extends AbstractStationScreen {
 			Components.literal(station.name));
 		nameBox.setBordered(false);
 		nameBox.setMaxLength(25);
-		nameBox.setTextColor(0x442000);
+		nameBox.setTextColor(0x592424);
 		nameBox.setValue(station.name);
 		nameBox.changeFocus(false);
 		nameBox.mouseClicked(0, 0, 0);
@@ -72,7 +79,7 @@ public class StationScreen extends AbstractStationScreen {
 
 		Runnable assemblyCallback = () -> {
 			switchingToAssemblyMode = true;
-			minecraft.setScreen(new AssemblyScreen(te, station));
+			minecraft.setScreen(new AssemblyScreen(blockEntity, station));
 		};
 
 		newTrainButton = new WideIconButton(x + 84, y + 65, AllGuiTextures.I_NEW_TRAIN);
@@ -88,8 +95,8 @@ public class StationScreen extends AbstractStationScreen {
 		dropScheduleButton = new IconButton(x + 73, y + 65, AllIcons.I_VIEW_SCHEDULE);
 		dropScheduleButton.active = false;
 		dropScheduleButton.visible = false;
-		dropScheduleButton
-			.withCallback(() -> AllPackets.channel.sendToServer(StationEditPacket.dropSchedule(te.getBlockPos())));
+		dropScheduleButton.withCallback(() -> AllPackets.getChannel()
+			.sendToServer(StationEditPacket.dropSchedule(blockEntity.getBlockPos())));
 		addRenderableWidget(dropScheduleButton);
 
 		onTextChanged = s -> trainNameBox.x = nameBoxX(s, trainNameBox);
@@ -103,6 +110,11 @@ public class StationScreen extends AbstractStationScreen {
 		trainNameBox.active = false;
 
 		tickTrainDisplay();
+
+		Pair<ScrollInput, Label> doorControlWidgets =
+			DoorControl.createWidget(x + 35, y + 102, mode -> doorControl = mode, doorControl);
+		addRenderableWidget(doorControlWidgets.getFirst());
+		addRenderableWidget(doorControlWidgets.getSecond());
 	}
 
 	@Override
@@ -121,9 +133,9 @@ public class StationScreen extends AbstractStationScreen {
 
 		super.tick();
 
-		updateAssemblyTooltip(te.edgePoint.isOnCurve() ? "no_assembly_curve"
-			: !te.edgePoint.isOrthogonal() ? "no_assembly_diagonal"
-				: trainPresent() && !te.trainCanDisassemble ? "train_not_aligned" : null);
+		updateAssemblyTooltip(blockEntity.edgePoint.isOnCurve() ? "no_assembly_curve"
+			: !blockEntity.edgePoint.isOrthogonal() ? "no_assembly_diagonal"
+				: trainPresent() && !blockEntity.trainCanDisassemble ? "train_not_aligned" : null);
 	}
 
 	private void tickTrainDisplay() {
@@ -136,7 +148,7 @@ public class StationScreen extends AbstractStationScreen {
 			}
 
 			leavingAnimation = 0;
-			newTrainButton.active = te.edgePoint.isOrthogonal();
+			newTrainButton.active = blockEntity.edgePoint.isOrthogonal();
 			newTrainButton.visible = true;
 			Train imminentTrain = getImminent();
 
@@ -146,7 +158,7 @@ public class StationScreen extends AbstractStationScreen {
 				newTrainButton.visible = false;
 				disassembleTrainButton.active = false;
 				disassembleTrainButton.visible = true;
-				dropScheduleButton.active = te.trainHasSchedule;
+				dropScheduleButton.active = blockEntity.trainHasSchedule;
 				dropScheduleButton.visible = true;
 
 				trainNameBox.active = true;
@@ -192,12 +204,13 @@ public class StationScreen extends AbstractStationScreen {
 		}
 
 		boolean trainAtStation = trainPresent();
-		disassembleTrainButton.active = trainAtStation && te.trainCanDisassemble && te.edgePoint.isOrthogonal();
-		dropScheduleButton.active = te.trainHasSchedule;
+		disassembleTrainButton.active =
+			trainAtStation && blockEntity.trainCanDisassemble && blockEntity.edgePoint.isOrthogonal();
+		dropScheduleButton.active = blockEntity.trainHasSchedule;
 
-		if (te.trainHasSchedule)
-			dropScheduleButton.setToolTip(
-				Lang.translateDirect(te.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
+		if (blockEntity.trainHasSchedule)
+			dropScheduleButton.setToolTip(Lang.translateDirect(
+				blockEntity.trainHasAutoSchedule ? "station.remove_auto_schedule" : "station.remove_schedule"));
 		else
 			dropScheduleButton.getToolTip()
 				.clear();
@@ -237,6 +250,8 @@ public class StationScreen extends AbstractStationScreen {
 		if (!nameBox.isFocused())
 			AllGuiTextures.STATION_EDIT_NAME.render(ms, nameBoxX(text, nameBox) + font.width(text) + 5, y + 1);
 
+		itemRenderer.renderGuiItem(AllBlocks.TRAIN_DOOR.asStack(), x + 14, y + 103);
+		
 		Train train = displayedTrain.get();
 		if (train == null) {
 			MutableComponent header = Lang.translateDirect("station.idle");
@@ -256,11 +271,7 @@ public class StationScreen extends AbstractStationScreen {
 		for (int i = carriages.size() - 1; i > 0; i--) {
 			RenderSystem.setShaderColor(1, 1, 1, Math.min(1f,
 				Math.min((position + offset - 10) / 30f, (background.width - 40 - position - offset) / 30f)));
-//			if (i == carriages.size() - 1 && train.doubleEnded) {
-//				offset += icon.render(TrainIconType.FLIPPED_ENGINE, ms, x + offset, y + 20) + 1;
-//				continue;
-//			}
-			Carriage carriage = carriages.get(te.trainBackwards ? carriages.size() - i - 1 : i);
+			Carriage carriage = carriages.get(blockEntity.trainBackwards ? carriages.size() - i - 1 : i);
 			offset += icon.render(carriage.bogeySpacing, ms, x + offset, y + 20) + 1;
 		}
 
@@ -272,8 +283,8 @@ public class StationScreen extends AbstractStationScreen {
 
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 
-		UIRenderHelper.drawStretched(ms, x + 21, y + 43, 150, 46, -100, AllGuiTextures.STATION_TEXTBOX_MIDDLE);
 		AllGuiTextures.STATION_TEXTBOX_TOP.render(ms, x + 21, y + 42);
+		UIRenderHelper.drawStretched(ms, x + 21, y + 60, 150, 26, 0, AllGuiTextures.STATION_TEXTBOX_MIDDLE);
 		AllGuiTextures.STATION_TEXTBOX_BOTTOM.render(ms, x + 21, y + 86);
 
 		ms.pushPose();
@@ -333,32 +344,38 @@ public class StationScreen extends AbstractStationScreen {
 		Train train = displayedTrain.get();
 		if (train != null && !trainNameBox.getValue()
 			.equals(train.name.getString()))
-			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
+			AllPackets.getChannel()
+				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
 	}
 
 	private void syncStationName() {
 		if (!nameBox.getValue()
 			.equals(station.name))
-			AllPackets.channel.sendToServer(StationEditPacket.configure(te.getBlockPos(), false, nameBox.getValue()));
+			AllPackets.getChannel()
+				.sendToServer(
+					StationEditPacket.configure(blockEntity.getBlockPos(), false, nameBox.getValue(), doorControl));
 	}
 
 	@Override
 	public void removed() {
 		super.removed();
-		AllPackets.channel
-			.sendToServer(StationEditPacket.configure(te.getBlockPos(), switchingToAssemblyMode, nameBox.getValue()));
+		AllPackets.getChannel()
+			.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode,
+				nameBox.getValue(), doorControl));
 		Train train = displayedTrain.get();
 		if (train == null)
 			return;
 		if (!switchingToAssemblyMode)
-			AllPackets.channel.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
+			AllPackets.getChannel()
+				.sendToServer(new TrainEditPacket(train.id, trainNameBox.getValue(), train.icon.getId()));
 		else
-			te.imminentTrain = null;
+			blockEntity.imminentTrain = null;
 	}
 
 	@Override
 	protected PartialModel getFlag(float partialTicks) {
-		return te.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF;
+		return blockEntity.flag.getValue(partialTicks) > 0.75f ? AllPartialModels.STATION_ON
+			: AllPartialModels.STATION_OFF;
 	}
 
 }

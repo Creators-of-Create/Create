@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
+import com.simibubi.create.content.contraptions.components.saw.SawBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -36,7 +36,7 @@ public class MechanicalSawScenes {
 
 		BlockPos sawPos = util.grid.at(2, 1, 2);
 		Selection sawSelect = util.select.position(sawPos);
-		scene.world.modifyTileNBT(sawSelect, SawTileEntity.class, nbt -> nbt.putInt("RecipeIndex", 0));
+		scene.world.modifyBlockEntityNBT(sawSelect, SawBlockEntity.class, nbt -> nbt.putInt("RecipeIndex", 0));
 
 		scene.idle(5);
 		scene.world.showSection(util.select.fromTo(2, 1, 3, 2, 1, 5), Direction.DOWN);
@@ -109,6 +109,8 @@ public class MechanicalSawScenes {
 		scene.idle(3);
 		scene.addKeyframe();
 
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), .5f);
+		
 		ElementLink<WorldSectionElement> beltSection = scene.world.showIndependentSection(belt, Direction.EAST);
 		scene.world.moveSection(beltSection, util.vector.of(0, 100, 0), 0);
 		scene.idle(1);
@@ -132,24 +134,16 @@ public class MechanicalSawScenes {
 
 		ItemStack stone = new ItemStack(Blocks.STONE);
 		BlockPos firstBelt = util.grid.at(0, 1, 2);
-		scene.world.createItemOnBelt(firstBelt, Direction.WEST, stone);
 		scene.overlay.showText(60)
 			.text("Saws can work in-line with Mechanical Belts")
 			.pointAt(util.vector.blockSurface(firstBelt, Direction.WEST))
 			.placeNearTarget();
-		scene.idle(60);
-		scene.rotateCameraY(-90);
-		scene.idle(20);
+		scene.idle(40);
+		scene.world.createItemOnBelt(firstBelt, Direction.WEST, stone);
 
-		Vec3 filter = util.vector.of(2.5, 1 + 13 / 16f, 2.75);
-		scene.overlay.showFilterSlotInput(filter, 80);
-		ItemStack bricks = new ItemStack(Blocks.STONE_BRICKS);
-		scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).withItem(bricks), 80);
-		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
-		scene.idle(7);
-		scene.world.setFilterData(util.select.position(sawPos), SawTileEntity.class, bricks);
-		scene.idle(10);
-
+		scene.idle(40);
+		Vec3 filter = util.vector.of(2.5, 1 + 13 / 16f, 2 + 5 / 16f);
+		scene.overlay.showFilterSlotInput(filter, Direction.UP, 80);
 		scene.overlay.showText(80)
 			.attachKeyFrame()
 			.text("When an ingredient has multiple possible outcomes, the filter slot can specify it")
@@ -157,9 +151,14 @@ public class MechanicalSawScenes {
 			.placeNearTarget();
 		scene.idle(90);
 
-		scene.rotateCameraY(90);
+		ItemStack bricks = new ItemStack(Blocks.STONE_BRICKS);
+		scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).withItem(bricks), 30);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
+		scene.idle(7);
+		scene.world.setFilterData(util.select.position(sawPos), SawBlockEntity.class, bricks);
+		scene.idle(10);
 		scene.world.createItemOnBelt(firstBelt, Direction.WEST, stone);
-		scene.idle(20);
+		scene.idle(50);
 
 		scene.markAsFinished();
 		scene.overlay.showText(100)
@@ -251,7 +250,8 @@ public class MechanicalSawScenes {
 		}
 
 		for (int i = 0; i < 30; i++) {
-			scene.world.replaceBlocks(util.select.fromTo(2, i + 1, 2, 1, i + 1, 3), Blocks.AIR.defaultBlockState(), true);
+			scene.world.replaceBlocks(util.select.fromTo(2, i + 1, 2, 1, i + 1, 3), Blocks.AIR.defaultBlockState(),
+				true);
 			for (int x = 1; x <= 2; x++) {
 				for (int z = 2; z <= 3; z++) {
 					Vec3 dropPos = util.vector.centerOf(x, i + 1, z);

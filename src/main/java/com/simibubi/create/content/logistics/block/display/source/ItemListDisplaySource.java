@@ -3,10 +3,10 @@ package com.simibubi.create.content.logistics.block.display.source;
 import java.util.stream.Stream;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.item.CountedItemStackList;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.IntAttached;
 
 import net.minecraft.network.chat.MutableComponent;
@@ -17,12 +17,12 @@ public class ItemListDisplaySource extends ValueListDisplaySource {
 
 	@Override
 	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
-		BlockEntity sourceTE = context.getSourceTE();
-		if (!(sourceTE instanceof ContentObserverTileEntity cote))
+		BlockEntity sourceBE = context.getSourceBlockEntity();
+		if (!(sourceBE instanceof SmartObserverBlockEntity cobe))
 			return Stream.empty();
 
-		InvManipulationBehaviour invManipulationBehaviour = cote.getBehaviour(InvManipulationBehaviour.TYPE);
-		FilteringBehaviour filteringBehaviour = cote.getBehaviour(FilteringBehaviour.TYPE);
+		InvManipulationBehaviour invManipulationBehaviour = cobe.getBehaviour(InvManipulationBehaviour.TYPE);
+		FilteringBehaviour filteringBehaviour = cobe.getBehaviour(FilteringBehaviour.TYPE);
 		IItemHandler handler = invManipulationBehaviour.getInventory();
 
 		if (handler == null)

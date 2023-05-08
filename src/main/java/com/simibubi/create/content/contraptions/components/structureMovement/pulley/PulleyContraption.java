@@ -14,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class PulleyContraption extends TranslatingContraption {
 
 	int initialOffset;
-
+	
 	@Override
 	protected ContraptionType getType() {
 		return ContraptionType.PULLEY;
@@ -61,5 +61,9 @@ public class PulleyContraption extends TranslatingContraption {
 	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new PulleyLighter(this);
+	}
+
+	public int getInitialOffset() {
+		return initialOffset;
 	}
 }

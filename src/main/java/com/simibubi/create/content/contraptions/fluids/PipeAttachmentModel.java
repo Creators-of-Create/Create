@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes.ComponentPartials;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
-import com.simibubi.create.foundation.block.connected.BakedModelWrapperWithData;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedBlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
@@ -39,10 +39,11 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
+	protected ModelData.Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+		ModelData blockEntityData) {
 		PipeModelData data = new PipeModelData();
-		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
-		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
+		FluidTransportBehaviour transport = BlockEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+		BracketedBlockEntityBehaviour bracket = BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
 
 		if (transport != null)
 			for (Direction d : Iterate.directions)
@@ -84,14 +85,14 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		for (Direction d : Iterate.directions) {
 			AttachmentTypes type = pipeData.getAttachment(d);
 			for (ComponentPartials partial : type.partials) {
-				quads.addAll(AllBlockPartials.PIPE_ATTACHMENTS.get(partial)
+				quads.addAll(AllPartialModels.PIPE_ATTACHMENTS.get(partial)
 					.get(d)
 					.get()
 					.getQuads(state, side, rand, data, renderType));
 			}
 		}
 		if (pipeData.isEncased())
-			quads.addAll(AllBlockPartials.FLUID_PIPE_CASING.get()
+			quads.addAll(AllPartialModels.FLUID_PIPE_CASING.get()
 				.getQuads(state, side, rand, data, renderType));
 	}
 

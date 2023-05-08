@@ -18,12 +18,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class CachedBufferer {
 
-	public static final Compartment<BlockState> GENERIC_TILE = new Compartment<>();
+	public static final Compartment<BlockState> GENERIC_BLOCK = new Compartment<>();
 	public static final Compartment<PartialModel> PARTIAL = new Compartment<>();
 	public static final Compartment<Pair<Direction, PartialModel>> DIRECTIONAL_PARTIAL = new Compartment<>();
 
 	public static SuperByteBuffer block(BlockState toRender) {
-		return block(GENERIC_TILE, toRender);
+		return block(GENERIC_BLOCK, toRender);
 	}
 
 	public static SuperByteBuffer block(Compartment<BlockState> compartment, BlockState toRender) {

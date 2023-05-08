@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.chute;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -13,26 +13,26 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
+public class ChuteRenderer extends SafeBlockEntityRenderer<ChuteBlockEntity> {
 
 	public ChuteRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(ChuteTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
+	protected void renderSafe(ChuteBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
-		if (te.item.isEmpty())
+		if (be.item.isEmpty())
 			return;
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		if (blockState.getValue(ChuteBlock.FACING) != Direction.DOWN)
 			return;
 		if (blockState.getValue(ChuteBlock.SHAPE) != Shape.WINDOW
-			&& (te.bottomPullDistance == 0 || te.itemPosition.getValue(partialTicks) > .5f))
+			&& (be.bottomPullDistance == 0 || be.itemPosition.getValue(partialTicks) > .5f))
 			return;
 
-		renderItem(te, partialTicks, ms, buffer, light, overlay);
+		renderItem(be, partialTicks, ms, buffer, light, overlay);
 	}
 
-	public static void renderItem(ChuteTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	public static void renderItem(ChuteBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
@@ -40,12 +40,12 @@ public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 		ms.pushPose();
 		msr.centre();
 		float itemScale = .5f;
-		float itemPosition = te.itemPosition.getValue(partialTicks);
+		float itemPosition = be.itemPosition.getValue(partialTicks);
 		ms.translate(0, -.5 + itemPosition, 0);
 		ms.scale(itemScale, itemScale, itemScale);
 		msr.rotateX(itemPosition * 180);
 		msr.rotateY(itemPosition * 180);
-		itemRenderer.renderStatic(te.item, TransformType.FIXED, light, overlay, ms, buffer, 0);
+		itemRenderer.renderStatic(be.item, TransformType.FIXED, light, overlay, ms, buffer, 0);
 		ms.popPose();
 	}
 

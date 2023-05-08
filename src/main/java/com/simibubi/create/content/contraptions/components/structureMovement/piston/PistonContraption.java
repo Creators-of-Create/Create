@@ -160,7 +160,7 @@ public class PistonContraption extends TranslatingContraption {
 		boolean retracting = direction != orientation;
 		if (retracting && !sticky)
 			return true;
-		for (int offset = 0; offset <= AllConfigs.SERVER.kinetics.maxChassisRange.get(); offset++) {
+		for (int offset = 0; offset <= AllConfigs.server().kinetics.maxChassisRange.get(); offset++) {
 			if (offset == 1 && retracting)
 				return true;
 			BlockPos currentPos = pos.relative(orientation, offset + initialExtensionProgress);
@@ -204,9 +204,9 @@ public class PistonContraption extends TranslatingContraption {
 	protected boolean customBlockPlacement(LevelAccessor world, BlockPos pos, BlockState state) {
 		BlockPos pistonPos = anchor.relative(orientation, -1);
 		BlockState pistonState = world.getBlockState(pistonPos);
-		BlockEntity te = world.getBlockEntity(pistonPos);
+		BlockEntity be = world.getBlockEntity(pistonPos);
 		if (pos.equals(pistonPos)) {
-			if (te == null || te.isRemoved())
+			if (be == null || be.isRemoved())
 				return true;
 			if (!isExtensionPole(state) && isPiston(pistonState))
 				world.setBlock(pistonPos, pistonState.setValue(MechanicalPistonBlock.STATE, PistonState.RETRACTED),

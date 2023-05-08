@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.steam;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -15,32 +15,41 @@ import net.minecraft.world.phys.Vec3;
 public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 
 	@Override
-	protected boolean isSideActive(BlockState state, Direction direction) {
-		return SteamEngineBlock.getFacing(state)
-			.getAxis() != direction.getAxis();
+	protected boolean isSideActive(BlockState state, Direction side) {
+		Direction engineFacing = SteamEngineBlock.getFacing(state);
+		if (engineFacing.getAxis() == side.getAxis())
+			return false;
+
+		float roll = 0;
+		for (Pointing p : Pointing.values())
+			if (p.getCombinedDirection(engineFacing) == side)
+				roll = p.getXRotation();
+		if (engineFacing == Direction.UP)
+			roll += 180;
+
+		boolean recessed = roll % 180 == 0;
+		if (engineFacing.getAxis() == Axis.Y)
+			recessed ^= state.getValue(SteamEngineBlock.FACING)
+				.getAxis() == Axis.X;
+
+		return !recessed;
 	}
 
 	@Override
-	protected Vec3 getLocalOffset(BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		Direction side = getSide();
 		Direction engineFacing = SteamEngineBlock.getFacing(state);
 
 		float roll = 0;
-		for (Pointing p : Pointing.values()) {
+		for (Pointing p : Pointing.values())
 			if (p.getCombinedDirection(engineFacing) == side)
 				roll = p.getXRotation();
-		}
 		if (engineFacing == Direction.UP)
 			roll += 180;
 
 		float horizontalAngle = AngleHelper.horizontalAngle(engineFacing);
 		float verticalAngle = AngleHelper.verticalAngle(engineFacing);
-
-		boolean recessed = roll % 180 == 0;
-		if (engineFacing.getAxis() == Axis.Y)
-			recessed ^= state.getValue(SteamEngineBlock.FACING).getAxis() == Axis.X;
-
-		Vec3 local = VecHelper.voxelSpace(8, recessed ? 13 : 15, 9);
+		Vec3 local = VecHelper.voxelSpace(8, 14.5, 9);
 
 		local = VecHelper.rotateCentered(local, roll, Axis.Z);
 		local = VecHelper.rotateCentered(local, horizontalAngle, Axis.Y);
@@ -50,7 +59,7 @@ public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected void rotate(BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		Direction facing = SteamEngineBlock.getFacing(state);
 
 		if (facing.getAxis() == Axis.Y) {
@@ -59,10 +68,9 @@ public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 		}
 
 		float roll = 0;
-		for (Pointing p : Pointing.values()) {
+		for (Pointing p : Pointing.values())
 			if (p.getCombinedDirection(facing) == getSide())
 				roll = p.getXRotation();
-		}
 
 		float yRot = AngleHelper.horizontalAngle(facing) + (facing == Direction.DOWN ? 180 : 0);
 		TransformStack.cast(ms)

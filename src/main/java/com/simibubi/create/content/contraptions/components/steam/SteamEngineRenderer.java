@@ -4,11 +4,11 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,28 +19,28 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SteamEngineRenderer extends SafeTileEntityRenderer<SteamEngineTileEntity> {
+public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBlockEntity> {
 
 	public SteamEngineRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(SteamEngineTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(SteamEngineBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		if (Backend.canUseInstancing(te.getLevel()))
+		if (Backend.canUseInstancing(be.getLevel()))
 			return;
 
-		Float angle = te.getTargetAngle();
+		Float angle = be.getTargetAngle();
 		if (angle == null)
 			return;
 
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		Direction facing = SteamEngineBlock.getFacing(blockState);
 		Axis facingAxis = facing.getAxis();
 		Axis axis = Axis.Y;
 
-		PoweredShaftTileEntity shaft = te.getShaft();
+		PoweredShaftBlockEntity shaft = be.getShaft();
 		if (shaft != null)
-			axis = KineticTileEntityRenderer.getRotationAxisOf(shaft);
+			axis = KineticBlockEntityRenderer.getRotationAxisOf(shaft);
 
 		boolean roll90 = facingAxis.isHorizontal() && axis == Axis.Y || facingAxis.isVertical() && axis == Axis.Z;
 		float sine = Mth.sin(angle);
@@ -49,12 +49,12 @@ public class SteamEngineRenderer extends SafeTileEntityRenderer<SteamEngineTileE
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		transformed(AllBlockPartials.ENGINE_PISTON, blockState, facing, roll90)
+		transformed(AllPartialModels.ENGINE_PISTON, blockState, facing, roll90)
 			.translate(0, piston, 0)
 			.light(light)
 			.renderInto(ms, vb);
 
-		transformed(AllBlockPartials.ENGINE_LINKAGE, blockState, facing, roll90)
+		transformed(AllPartialModels.ENGINE_LINKAGE, blockState, facing, roll90)
 			.centre()
 			.translate(0, 1, 0)
 			.unCentre()
@@ -65,7 +65,7 @@ public class SteamEngineRenderer extends SafeTileEntityRenderer<SteamEngineTileE
 			.light(light)
 			.renderInto(ms, vb);
 
-		transformed(AllBlockPartials.ENGINE_CONNECTOR, blockState, facing, roll90)
+		transformed(AllPartialModels.ENGINE_CONNECTOR, blockState, facing, roll90)
 			.translate(0, 2, 0)
 			.centre()
 			.rotateXRadians(-angle + Mth.HALF_PI)

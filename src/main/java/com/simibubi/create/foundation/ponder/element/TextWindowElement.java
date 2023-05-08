@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.PonderScene;
+import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Color;
 
@@ -94,35 +95,44 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			bakedText = textGetter.get();
 		if (fade < 1 / 16f)
 			return;
-		Vec2 sceneToScreen = vec != null ? scene.getTransform()
-			.sceneToScreen(vec, partialTicks) : new Vec2(screen.width / 2, (screen.height - 200) / 2 + y - 8);
+		SceneTransform transform = scene.getTransform();
+		Vec2 sceneToScreen = vec != null ? transform.sceneToScreen(vec, partialTicks)
+			: new Vec2(screen.width / 2, (screen.height - 200) / 2 + y - 8);
 
+		boolean settled = transform.xRotation.settled() && transform.yRotation.settled();
+		float pY = settled ? (int) sceneToScreen.y : sceneToScreen.y;
+		
 		float yDiff = (screen.height / 2f - sceneToScreen.y - 10) / 100f;
-		int targetX = (int) (screen.width * Mth.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
+		float targetX = (screen.width * Mth.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
 
 		if (nearScene)
-			targetX = (int) Math.min(targetX, sceneToScreen.x + 50);
+			targetX = Math.min(targetX, sceneToScreen.x + 50);
+		
+		if (settled)
+			targetX = (int) targetX;
 
-		int textWidth = Math.min(screen.width - targetX, 180);
+		int textWidth = (int) Math.min(screen.width - targetX, 180);
 
-		List<FormattedText> lines = screen.getFontRenderer().getSplitter().splitLines(bakedText, textWidth, Style.EMPTY);
+		List<FormattedText> lines = screen.getFontRenderer()
+			.getSplitter()
+			.splitLines(bakedText, textWidth, Style.EMPTY);
 
 		int boxWidth = 0;
 		for (FormattedText line : lines)
-			boxWidth = Math.max(boxWidth, screen.getFontRenderer().width(line));
+			boxWidth = Math.max(boxWidth, screen.getFontRenderer()
+				.width(line));
 
 		int boxHeight = screen.getFontRenderer()
 			.wordWrapHeight(bakedText, boxWidth);
 
 		ms.pushPose();
-		ms.translate(0, sceneToScreen.y, 400);
+		ms.translate(0, pY, 400);
 
-		new BoxElement()
-				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
-				.gradientBorder(Theme.p(Theme.Key.TEXT_WINDOW_BORDER))
-				.at(targetX - 10, 3, 100)
-				.withBounds(boxWidth, boxHeight - 1)
-				.render(ms);
+		new BoxElement().withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+			.gradientBorder(Theme.p(Theme.Key.TEXT_WINDOW_BORDER))
+			.at(targetX - 10, 3, 100)
+			.withBounds(boxWidth, boxHeight - 1)
+			.render(ms);
 
 		//PonderUI.renderBox(ms, targetX - 10, 3, boxWidth, boxHeight - 1, 0xaa000000, 0x30eebb00, 0x10eebb00);
 
@@ -133,7 +143,8 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			ms.translate(sceneToScreen.x, 0, 0);
 			double lineTarget = (targetX - sceneToScreen.x) * fade;
 			ms.scale((float) lineTarget, 1, 1);
-			Matrix4f model = ms.last().pose();
+			Matrix4f model = ms.last()
+				.pose();
 			ScreenUtils.drawGradientRect(model, -100, 0, 0, 1, 1, brighterColor, brighterColor);
 			ScreenUtils.drawGradientRect(model, -100, 0, 1, 1, 2, 0xFF494949, 0xFF393939);
 			ms.popPose();
@@ -143,7 +154,9 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		for (int i = 0; i < lines.size(); i++) {
 			screen.getFontRenderer()
 				.draw(ms, lines.get(i)
-					.getString(), targetX - 10, 3 + 9 * i, new Color(brighterColor).scaleAlpha(fade).getRGB());
+					.getString(), targetX - 10, 3 + 9 * i,
+					new Color(brighterColor).scaleAlpha(fade)
+						.getRGB());
 		}
 		ms.popPose();
 	}

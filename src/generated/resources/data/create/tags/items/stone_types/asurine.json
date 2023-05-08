@@ -13,6 +13,7 @@
     "create:small_asurine_brick_stairs",
     "create:small_asurine_brick_wall",
     "create:layered_asurine",
-    "create:asurine_pillar"
+    "create:asurine_pillar",
+    "create:asurine"
   ]
 }

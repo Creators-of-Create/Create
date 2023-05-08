@@ -10,11 +10,12 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing.Type;
+import com.simibubi.create.content.curiosities.frames.CopycatBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -69,7 +70,7 @@ public class AirCurrent {
 			Vec3 pos = VecHelper.getCenterOf(source.getAirCurrentPos())
 				.add(Vec3.atLowerCornerOf(facing.getNormal())
 					.scale(offset));
-			if (world.random.nextFloat() < AllConfigs.CLIENT.fanParticleDensity.get())
+			if (world.random.nextFloat() < AllConfigs.client().fanParticleDensity.get())
 				world.addParticle(new AirFlowParticleData(source.getAirCurrentPos()), pos.x, pos.y, pos.z, 0, 0, 0);
 		}
 
@@ -122,7 +123,7 @@ public class AirCurrent {
 				}
 				if (InWorldProcessing.canProcess(itemEntity, processingType))
 					if (InWorldProcessing.applyProcessing(itemEntity, processingType)
-						&& source instanceof EncasedFanTileEntity fan)
+						&& source instanceof EncasedFanBlockEntity fan)
 						fan.award(AllAdvancements.FAN_PROCESSING);
 				continue;
 			}
@@ -214,7 +215,8 @@ public class AirCurrent {
 			if (!world.isLoaded(currentPos))
 				break;
 			BlockState state = world.getBlockState(currentPos);
-			if (shouldAlwaysPass(state))
+			BlockState copycatState = CopycatBlock.getMaterial(world, currentPos);
+			if (shouldAlwaysPass(copycatState.isAir() ? state : copycatState))
 				continue;
 			VoxelShape voxelshape = state.getCollisionShape(world, currentPos, CollisionContext.empty());
 			if (voxelshape.isEmpty())
@@ -265,7 +267,7 @@ public class AirCurrent {
 				BlockPos pos = start.relative(direction, i)
 					.below(offset);
 				TransportedItemStackHandlerBehaviour behaviour =
-					TileEntityBehaviour.get(world, pos, TransportedItemStackHandlerBehaviour.TYPE);
+					BlockEntityBehaviour.get(world, pos, TransportedItemStackHandlerBehaviour.TYPE);
 				if (behaviour != null)
 					affectedItemHandlers.add(Pair.of(behaviour, type));
 				if (direction.getAxis()
@@ -288,7 +290,7 @@ public class AirCurrent {
 					return TransportedResult.doNothing();
 				}
 				TransportedResult applyProcessing = InWorldProcessing.applyProcessing(transported, world, processingType);
-				if (!applyProcessing.doesNothing() && source instanceof EncasedFanTileEntity fan)
+				if (!applyProcessing.doesNothing() && source instanceof EncasedFanBlockEntity fan)
 					fan.award(AllAdvancements.FAN_PROCESSING);
 				return applyProcessing;
 			});

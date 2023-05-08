@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HosePulleyTileEntity> {
+public class HosePulleyBlock extends HorizontalKineticBlock implements IBE<HosePulleyBlockEntity> {
 
 	public HosePulleyBlock(Properties properties) {
 		super(properties);
@@ -71,13 +71,13 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 	}
 	
 	@Override
-	public Class<HosePulleyTileEntity> getTileEntityClass() {
-		return HosePulleyTileEntity.class;
+	public Class<HosePulleyBlockEntity> getBlockEntityClass() {
+		return HosePulleyBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends HosePulleyTileEntity> getTileEntityType() {
-		return AllTileEntities.HOSE_PULLEY.get();
+	public BlockEntityType<? extends HosePulleyBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.HOSE_PULLEY.get();
 	}
 
 }

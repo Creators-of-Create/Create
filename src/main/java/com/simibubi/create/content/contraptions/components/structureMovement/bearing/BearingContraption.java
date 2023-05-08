@@ -2,11 +2,13 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
+import com.simibubi.create.content.curiosities.frames.CopycatBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
@@ -14,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,7 +42,7 @@ public class BearingContraption extends Contraption {
 			return false;
 		startMoving(world);
 		expandBoundsAroundAxis(facing.getAxis());
-		if (isWindmill && sailBlocks < AllConfigs.SERVER.kinetics.minimumWindmillSails.get())
+		if (isWindmill && sailBlocks < AllConfigs.server().kinetics.minimumWindmillSails.get())
 			throw AssemblyException.notEnoughSails(sailBlocks);
 		if (blocks.isEmpty())
 			return false;
@@ -59,9 +62,16 @@ public class BearingContraption extends Contraption {
 	@Override
 	public void addBlock(BlockPos pos, Pair<StructureBlockInfo, BlockEntity> capture) {
 		BlockPos localPos = pos.subtract(anchor);
-		if (!getBlocks().containsKey(localPos) && AllBlockTags.WINDMILL_SAILS.matches(capture.getKey().state))
+		if (!getBlocks().containsKey(localPos) && AllBlockTags.WINDMILL_SAILS.matches(getSailBlock(capture)))
 			sailBlocks++;
 		super.addBlock(pos, capture);
+	}
+
+	private BlockState getSailBlock(Pair<StructureBlockInfo, BlockEntity> capture) {
+		BlockState state = capture.getKey().state;
+		if (AllBlocks.COPYCAT_PANEL.has(state) && capture.getRight()instanceof CopycatBlockEntity cte)
+			return cte.getMaterial();
+		return state;
 	}
 
 	@Override

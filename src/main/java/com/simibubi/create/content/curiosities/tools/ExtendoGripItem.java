@@ -8,7 +8,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.curiosities.armor.BackTankUtil;
+import com.simibubi.create.content.curiosities.armor.BacktankUtil;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
@@ -205,27 +205,27 @@ public class ExtendoGripItem extends Item {
 		if (!AllItems.EXTENDO_GRIP.isIn(extendo))
 			return;
 		final InteractionHand h = hand;
-		if (!BackTankUtil.canAbsorbDamage(player, maxUses()))
+		if (!BacktankUtil.canAbsorbDamage(player, maxUses()))
 			extendo.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(h));
 	}
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		return BackTankUtil.isBarVisible(stack, maxUses());
+		return BacktankUtil.isBarVisible(stack, maxUses());
 	}
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		return BackTankUtil.getBarWidth(stack, maxUses());
+		return BacktankUtil.getBarWidth(stack, maxUses());
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return BackTankUtil.getBarColor(stack, maxUses());
+		return BacktankUtil.getBarColor(stack, maxUses());
 	}
 
 	private static int maxUses() {
-		return AllConfigs.SERVER.curiosities.maxExtendoGripActions.get();
+		return AllConfigs.server().curiosities.maxExtendoGripActions.get();
 	}
 
 	@SubscribeEvent
@@ -274,7 +274,7 @@ public class ExtendoGripItem extends Item {
 			return;
 		Player player = (Player) entity;
 		if (isHoldingExtendoGrip(player))
-			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target));
+			AllPackets.getChannel().sendToServer(new ExtendoGripInteractionPacket(target));
 	}
 
 	@SubscribeEvent
@@ -286,7 +286,7 @@ public class ExtendoGripItem extends Item {
 			return;
 		Player player = (Player) entity;
 		if (isHoldingExtendoGrip(player))
-			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
+			AllPackets.getChannel().sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
 	}
 
 	@SubscribeEvent
@@ -298,7 +298,7 @@ public class ExtendoGripItem extends Item {
 			return;
 		Player player = (Player) entity;
 		if (isHoldingExtendoGrip(player))
-			AllPackets.channel
+			AllPackets.getChannel()
 				.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand(), event.getLocalPos()));
 	}
 

@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
+import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SpoutBlock extends Block implements IWrenchable, ITE<SpoutTileEntity> {
+public class SpoutBlock extends Block implements IWrenchable, IBE<SpoutBlockEntity> {
 
 	public SpoutBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -53,13 +53,13 @@ public class SpoutBlock extends Block implements IWrenchable, ITE<SpoutTileEntit
 	}
 
 	@Override
-	public Class<SpoutTileEntity> getTileEntityClass() {
-		return SpoutTileEntity.class;
+	public Class<SpoutBlockEntity> getBlockEntityClass() {
+		return SpoutBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends SpoutTileEntity> getTileEntityType() {
-		return AllTileEntities.SPOUT.get();
+	public BlockEntityType<? extends SpoutBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.SPOUT.get();
 	}
 
 }

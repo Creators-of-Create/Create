@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.content.trains;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlock;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity.SignalState;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalBlockEntity.SignalState;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -539,7 +539,7 @@ public class TrainSignalScenes {
 			.pointAt(util.vector.blockSurface(util.grid.at(3, 2, 3), Direction.WEST))
 			.attachKeyFrame()
 			.placeNearTarget()
-			.text("Reversely, red signals emit a comparator output");
+			.text("Conversely, red signals emit a comparator output");
 		scene.idle(40);
 
 		scene.world.toggleControls(util.grid.at(6, 3, 5));

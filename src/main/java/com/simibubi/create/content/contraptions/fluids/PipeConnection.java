@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -179,7 +179,7 @@ public class PipeConnection {
 		}
 
 		FluidTransportBehaviour behaviour =
-			TileEntityBehaviour.get(world, relative, FluidTransportBehaviour.TYPE);
+			BlockEntityBehaviour.get(world, relative, FluidTransportBehaviour.TYPE);
 		source = Optional.of(behaviour == null ? new FlowSource.Blocked(location) : new FlowSource.OtherPipe(location));
 		return true;
 	}
@@ -201,7 +201,7 @@ public class PipeConnection {
 			particleSplashNextTick = false;
 		}
 
-		float flowSpeed = 1 / 32f + Mth.clamp(pressure.get(flow.inbound) / 512f, 0, 1) * 31 / 32f;
+		float flowSpeed = 1 / 32f + Mth.clamp(pressure.get(flow.inbound) / 128f, 0, 1) * 31 / 32f;
 		flow.progress.setValue(Math.min(flow.progress.getValue() + flowSpeed, 1));
 		if (flow.progress.getValue() >= 1) 
 			flow.complete = true;
@@ -237,7 +237,7 @@ public class PipeConnection {
 		return source.orElse(null) instanceof OpenEndedPipe;
 	}
 
-	public void deserializeNBT(CompoundTag tag, BlockPos tilePos, boolean clientPacket) {
+	public void deserializeNBT(CompoundTag tag, BlockPos blockEntityPos, boolean clientPacket) {
 		CompoundTag connectionData = tag.getCompound(side.getName());
 
 		if (connectionData.contains("Pressure")) {
@@ -248,7 +248,7 @@ public class PipeConnection {
 
 		source = Optional.empty();
 		if (connectionData.contains("OpenEnd"))
-			source = Optional.of(OpenEndedPipe.fromNBT(connectionData.getCompound("OpenEnd"), tilePos));
+			source = Optional.of(OpenEndedPipe.fromNBT(connectionData.getCompound("OpenEnd"), blockEntityPos));
 
 		if (connectionData.contains("Flow")) {
 			CompoundTag flowData = connectionData.getCompound("Flow");

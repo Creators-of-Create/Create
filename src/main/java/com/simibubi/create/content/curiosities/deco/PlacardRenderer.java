@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.deco;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.Minecraft;
@@ -16,18 +16,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
-public class PlacardRenderer extends SafeTileEntityRenderer<PlacardTileEntity> {
+public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity> {
 
 	public PlacardRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(PlacardTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(PlacardBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		ItemStack heldItem = te.getHeldItem();
+		ItemStack heldItem = be.getHeldItem();
 		if (heldItem.isEmpty())
 			return;
 
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		Direction facing = blockState.getValue(PlacardBlock.FACING);
 		AttachFace face = blockState.getValue(PlacardBlock.FACE);
 

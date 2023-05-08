@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -28,8 +28,8 @@ public class ClutchBlock extends GearshiftBlock {
 	}
 	
 	@Override
-	public BlockEntityType<? extends SplitShaftTileEntity> getTileEntityType() {
-		return AllTileEntities.CLUTCH.get();
+	public BlockEntityType<? extends SplitShaftBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CLUTCH.get();
 	}
 
 }

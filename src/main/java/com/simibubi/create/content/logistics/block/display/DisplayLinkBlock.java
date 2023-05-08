@@ -3,13 +3,13 @@ package com.simibubi.create.content.logistics.block.display;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.RedstonePowerDisplaySource;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -42,7 +42,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<DisplayLinkTileEntity> {
+public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<DisplayLinkBlockEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -65,12 +65,12 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 	}
 
 	public static void notifyGatherers(LevelAccessor level, BlockPos pos) {
-		forEachAttachedGatherer(level, pos, DisplayLinkTileEntity::updateGatheredData);
+		forEachAttachedGatherer(level, pos, DisplayLinkBlockEntity::updateGatheredData);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T extends DisplaySource> void sendToGatherers(LevelAccessor level, BlockPos pos,
-		BiConsumer<DisplayLinkTileEntity, T> callback, Class<T> type) {
+		BiConsumer<DisplayLinkBlockEntity, T> callback, Class<T> type) {
 		forEachAttachedGatherer(level, pos, dgte -> {
 			if (type.isInstance(dgte.activeSource))
 				callback.accept(dgte, (T) dgte.activeSource);
@@ -78,7 +78,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 	}
 
 	private static void forEachAttachedGatherer(LevelAccessor level, BlockPos pos,
-		Consumer<DisplayLinkTileEntity> callback) {
+		Consumer<DisplayLinkBlockEntity> callback) {
 		for (Direction d : Iterate.directions) {
 			BlockPos offsetPos = pos.relative(d);
 			BlockState blockState = level.getBlockState(offsetPos);
@@ -86,7 +86,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 				continue;
 
 			BlockEntity blockEntity = level.getBlockEntity(offsetPos);
-			if (!(blockEntity instanceof DisplayLinkTileEntity dgte))
+			if (!(blockEntity instanceof DisplayLinkBlockEntity dgte))
 				continue;
 			if (dgte.activeSource == null)
 				continue;
@@ -112,7 +112,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 		if (previouslyPowered != powered) {
 			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 			if (!powered)
-				withTileEntityDo(worldIn, pos, DisplayLinkTileEntity::onNoLongerPowered);
+				withBlockEntityDo(worldIn, pos, DisplayLinkBlockEntity::onNoLongerPowered);
 		}
 	}
 
@@ -142,19 +142,19 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 		if (pPlayer.isSteppingCarefully())
 			return InteractionResult.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> withTileEntityDo(pLevel, pPos, te -> this.displayScreen(te, pPlayer)));
+			() -> () -> withBlockEntityDo(pLevel, pPos, be -> this.displayScreen(be, pPlayer)));
 		return InteractionResult.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(DisplayLinkTileEntity te, Player player) {
+	protected void displayScreen(DisplayLinkBlockEntity be, Player player) {
 		if (!(player instanceof LocalPlayer))
 			return;
-		if (te.targetOffset.equals(BlockPos.ZERO)) {
+		if (be.targetOffset.equals(BlockPos.ZERO)) {
 			player.displayClientMessage(Lang.translateDirect("display_link.invalid"), true);
 			return;
 		}
-		ScreenOpener.open(new DisplayLinkScreen(te));
+		ScreenOpener.open(new DisplayLinkScreen(be));
 	}
 
 	@Override
@@ -168,13 +168,13 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements ITE<
 	}
 
 	@Override
-	public Class<DisplayLinkTileEntity> getTileEntityClass() {
-		return DisplayLinkTileEntity.class;
+	public Class<DisplayLinkBlockEntity> getBlockEntityClass() {
+		return DisplayLinkBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends DisplayLinkTileEntity> getTileEntityType() {
-		return AllTileEntities.DISPLAY_LINK.get();
+	public BlockEntityType<? extends DisplayLinkBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.DISPLAY_LINK.get();
 	}
 
 }

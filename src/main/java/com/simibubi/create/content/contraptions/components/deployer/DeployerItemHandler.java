@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -9,22 +9,22 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class DeployerItemHandler implements IItemHandlerModifiable {
 
-	private DeployerTileEntity te;
+	private DeployerBlockEntity be;
 	private DeployerFakePlayer player;
 
-	public DeployerItemHandler(DeployerTileEntity te) {
-		this.te = te;
-		this.player = te.player;
+	public DeployerItemHandler(DeployerBlockEntity be) {
+		this.be = be;
+		this.player = be.player;
 	}
 
 	@Override
 	public int getSlots() {
-		return 1 + te.overflowItems.size();
+		return 1 + be.overflowItems.size();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return slot >= te.overflowItems.size() ? getHeld() : te.overflowItems.get(slot);
+		return slot >= be.overflowItems.size() ? getHeld() : be.overflowItems.get(slot);
 	}
 
 	public ItemStack getHeld() {
@@ -36,16 +36,16 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 	public void set(ItemStack stack) {
 		if (player == null)
 			return;
-		if (te.getLevel().isClientSide)
+		if (be.getLevel().isClientSide)
 			return;
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-		te.setChanged();
-		te.sendData();
+		be.setChanged();
+		be.sendData();
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (slot < te.overflowItems.size())
+		if (slot < be.overflowItems.size())
 			return stack;
 		if (!isItemValid(slot, stack))
 			return stack;
@@ -80,31 +80,31 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 		if (amount == 0)
 			return ItemStack.EMPTY;
 
-		if (slot < te.overflowItems.size()) {
-			ItemStack itemStack = te.overflowItems.get(slot);
+		if (slot < be.overflowItems.size()) {
+			ItemStack itemStack = be.overflowItems.get(slot);
 			int toExtract = Math.min(amount, itemStack.getCount());
 			ItemStack extracted = simulate ? itemStack.copy() : itemStack.split(toExtract);
 			extracted.setCount(toExtract);
 			if (!simulate && itemStack.isEmpty())
-				te.overflowItems.remove(slot);
+				be.overflowItems.remove(slot);
 			if (!simulate && !extracted.isEmpty())
-				te.setChanged();
+				be.setChanged();
 			return extracted;
 		}
 
 		ItemStack held = getHeld();
 		if (amount == 0 || held.isEmpty())
 			return ItemStack.EMPTY;
-		if (!te.filtering.getFilter()
-			.isEmpty() && te.filtering.test(held))
+		if (!be.filtering.getFilter()
+			.isEmpty() && be.filtering.test(held))
 			return ItemStack.EMPTY;
 		if (simulate)
 			return held.copy()
 				.split(amount);
 
 		ItemStack toReturn = held.split(amount);
-		te.setChanged();
-		te.sendData();
+		be.setChanged();
+		be.sendData();
 		return toReturn;
 	}
 
@@ -115,14 +115,14 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		FilteringBehaviour filteringBehaviour = te.getBehaviour(FilteringBehaviour.TYPE);
+		FilteringBehaviour filteringBehaviour = be.getBehaviour(FilteringBehaviour.TYPE);
 		return filteringBehaviour == null || filteringBehaviour.test(stack);
 	}
 
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
-		if (slot < te.overflowItems.size()) {
-			te.overflowItems.set(slot, stack);
+		if (slot < be.overflowItems.size()) {
+			be.overflowItems.set(slot, stack);
 			return;
 		}
 		set(stack);

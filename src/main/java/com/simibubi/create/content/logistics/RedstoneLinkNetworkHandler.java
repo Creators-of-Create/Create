@@ -9,8 +9,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.blockEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.WorldHelper;
 
@@ -138,7 +138,7 @@ public class RedstoneLinkNetworkHandler {
 		if (from == to)
 			return true;
 		return from.getLocation()
-			.closerThan(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());
+			.closerThan(to.getLocation(), AllConfigs.server().logistics.linkRange.get());
 	}
 
 	public Map<Couple<Frequency>, Set<IRedstoneLinkable>> networksIn(LevelAccessor world) {

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
-import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
+import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
@@ -14,12 +14,12 @@ public class KineticSpeedDisplaySource extends NumericSingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceTE() instanceof SpeedGaugeTileEntity gaugeTile))
+		if (!(context.getSourceBlockEntity() instanceof SpeedGaugeBlockEntity speedGauge))
 			return ZERO.copy();
 
 		boolean absoluteValue = context.sourceConfig()
 			.getInt("Directional") == 0;
-		float speed = absoluteValue ? Math.abs(gaugeTile.getSpeed()) : gaugeTile.getSpeed();
+		float speed = absoluteValue ? Math.abs(speedGauge.getSpeed()) : speedGauge.getSpeed();
 		return Lang.number(speed)
 			.space()
 			.translate("generic.unit.rpm")

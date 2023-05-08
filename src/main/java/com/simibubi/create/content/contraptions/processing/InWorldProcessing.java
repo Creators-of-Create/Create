@@ -16,9 +16,9 @@ import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -40,6 +40,7 @@ import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -125,7 +126,7 @@ public class InWorldProcessing {
 			transported.processedBy = type;
 			int timeModifierForStackSize = ((transported.stack.getCount() - 1) / 16) + 1;
 			int processingTime =
-				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+				(int) (AllConfigs.server().kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			transported.processingTime = processingTime;
 			if (!type.canProcess(transported.stack, world))
 				transported.processingTime = -1;
@@ -170,20 +171,22 @@ public class InWorldProcessing {
 			.getRecipeFor(RecipeType.SMOKING, RECIPE_WRAPPER, world);
 
 		if (type == Type.BLASTING) {
-			if (!smokingRecipe.isPresent()) {
+			RECIPE_WRAPPER.setItem(0, stack);
+			Optional<? extends AbstractCookingRecipe> smeltingRecipe = world.getRecipeManager()
+				.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, world);
+			if (!smeltingRecipe.isPresent()) {
 				RECIPE_WRAPPER.setItem(0, stack);
-				Optional<SmeltingRecipe> smeltingRecipe = world.getRecipeManager()
-					.getRecipeFor(RecipeType.SMELTING, RECIPE_WRAPPER, world);
-
-				if (smeltingRecipe.isPresent())
-					return applyRecipeOn(stack, smeltingRecipe.get());
-
-				RECIPE_WRAPPER.setItem(0, stack);
-				Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
+				smeltingRecipe = world.getRecipeManager()
 					.getRecipeFor(RecipeType.BLASTING, RECIPE_WRAPPER, world);
+			}
 
-				if (blastingRecipe.isPresent())
-					return applyRecipeOn(stack, blastingRecipe.get());
+			if (smeltingRecipe.isPresent()) {
+				if (!smokingRecipe.isPresent() || !ItemStack.isSame(smokingRecipe.get()
+					.getResultItem(),
+					smeltingRecipe.get()
+						.getResultItem())) {
+					return applyRecipeOn(stack, smeltingRecipe.get());
+				}
 			}
 
 			return Collections.emptyList();
@@ -211,7 +214,7 @@ public class InWorldProcessing {
 			int timeModifierForStackSize = ((entity.getItem()
 				.getCount() - 1) / 16) + 1;
 			int processingTime =
-				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+				(int) (AllConfigs.server().kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			processing.putInt("Time", processingTime);
 		}
 

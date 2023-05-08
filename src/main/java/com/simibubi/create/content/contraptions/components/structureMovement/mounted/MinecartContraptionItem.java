@@ -70,7 +70,7 @@ public class MinecartContraptionItem extends Item {
 	
 	@Override
 	public boolean canFitInsideContainerItems() {
-		return AllConfigs.SERVER.kinetics.minecartContraptionInContainers.get();
+		return AllConfigs.server().kinetics.minecartContraptionInContainers.get();
 	}
 
 	private MinecartContraptionItem(Type minecartTypeIn, Properties builder) {
@@ -209,7 +209,7 @@ public class MinecartContraptionItem extends Item {
 		Player player = event.getEntity();
 		if (player == null || entity == null)
 			return;
-		if (!AllConfigs.SERVER.kinetics.survivalContraptionPickup.get() && !player.isCreative())
+		if (!AllConfigs.server().kinetics.survivalContraptionPickup.get() && !player.isCreative())
 			return;
 
 		ItemStack wrench = player.getItemInHand(event.getHand());

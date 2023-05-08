@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.depot;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -45,26 +43,22 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer player = context.get()
-					.getSender();
-				if (player == null)
-					return;
-				Level world = player.level;
-				if (world == null || !world.isLoaded(pos))
-					return;
-				BlockEntity tileEntity = world.getBlockEntity(pos);
-				BlockState state = world.getBlockState(pos);
-				if (tileEntity instanceof EjectorTileEntity)
-					((EjectorTileEntity) tileEntity).setTarget(h, v);
-				if (AllBlocks.WEIGHTED_EJECTOR.has(state))
-					world.setBlockAndUpdate(pos, state.setValue(EjectorBlock.HORIZONTAL_FACING, facing));
-			});
-		context.get()
-			.setPacketHandled(true);
-
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			Level world = player.level;
+			if (world == null || !world.isLoaded(pos))
+				return;
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			BlockState state = world.getBlockState(pos);
+			if (blockEntity instanceof EjectorBlockEntity)
+				((EjectorBlockEntity) blockEntity).setTarget(h, v);
+			if (AllBlocks.WEIGHTED_EJECTOR.has(state))
+				world.setBlockAndUpdate(pos, state.setValue(EjectorBlock.HORIZONTAL_FACING, facing));
+		});
+		return true;
 	}
 
 	public static class ClientBoundRequest extends SimplePacketBase {
@@ -85,12 +79,10 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 		}
 
 		@Override
-		public void handle(Supplier<Context> context) {
-			context.get()
-				.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-					() -> () -> EjectorTargetHandler.flushSettings(pos)));
-			context.get()
-				.setPacketHandled(true);
+		public boolean handle(Context context) {
+			context.enqueueWork(
+				() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> EjectorTargetHandler.flushSettings(pos)));
+			return true;
 		}
 
 	}

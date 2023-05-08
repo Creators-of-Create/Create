@@ -1,5 +1,6 @@
 {
   "values": [
-    "create:copper_backtank"
+    "create:copper_backtank",
+    "create:netherite_backtank"
   ]
 }

@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -38,7 +38,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 
         topInstance = materialManager.defaultSolid()
                 .material(Materials.ORIENTED)
-                .getModel(AllBlockPartials.BEARING_TOP, blockState)
+                .getModel(AllPartialModels.BEARING_TOP, blockState)
 				.createInstance();
 
 		int blockLight = localBlockLight();
@@ -48,7 +48,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 
 		shaft = materialManager.defaultSolid()
 				.material(AllMaterialSpecs.ROTATING)
-				.getModel(AllBlockPartials.SHAFT_HALF, blockState, blockState.getValue(BlockStateProperties.FACING).getOpposite())
+				.getModel(AllPartialModels.SHAFT_HALF, blockState, blockState.getValue(BlockStateProperties.FACING).getOpposite())
 				.createInstance();
 
 		// not rotating so no need to set speed, axis, etc.

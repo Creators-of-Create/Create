@@ -7,11 +7,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BasinInventory extends SmartInventory {
 
-	private BasinTileEntity te;
+	private BasinBlockEntity blockEntity;
 
-	public BasinInventory(int slots, BasinTileEntity te) {
-		super(slots, te, 16, true);
-		this.te = te;
+	public BasinInventory(int slots, BasinBlockEntity be) {
+		super(slots, be, 16, true);
+		this.blockEntity = be;
 	}
 	
 	@Override
@@ -27,7 +27,7 @@ public class BasinInventory extends SmartInventory {
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		ItemStack extractItem = super.extractItem(slot, amount, simulate);
 		if (!simulate && !extractItem.isEmpty())
-			te.notifyChangeOfContents();
+			blockEntity.notifyChangeOfContents();
 		return extractItem;
 	}
 

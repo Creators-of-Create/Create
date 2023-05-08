@@ -24,23 +24,24 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllMovementBehaviours;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
-import com.simibubi.create.content.contraptions.components.steam.PoweredShaftTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionControlsMovement;
+import com.simibubi.create.content.contraptions.components.steam.PoweredShaftBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryCarriageBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
@@ -52,21 +53,21 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.RopeBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.EmptyLighter;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
-import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
+import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlockEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
-import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BBHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -87,6 +88,7 @@ import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -137,6 +139,8 @@ public abstract class Contraption {
 	protected Map<BlockPos, StructureBlockInfo> blocks;
 	protected List<MutablePair<StructureBlockInfo, MovementContext>> actors;
 	protected Map<BlockPos, MovingInteractionBehaviour> interactors;
+	protected List<ItemStack> disabledActors;
+
 	protected List<AABB> superglue;
 	protected List<BlockPos> seats;
 	protected Map<UUID, Integer> seatMapping;
@@ -151,9 +155,9 @@ public abstract class Contraption {
 
 	// Client
 	public Map<BlockPos, ModelData> modelData;
-	public Map<BlockPos, BlockEntity> presentTileEntities;
-	public List<BlockEntity> maybeInstancedTileEntities;
-	public List<BlockEntity> specialRenderedTileEntities;
+	public Map<BlockPos, BlockEntity> presentBlockEntities;
+	public List<BlockEntity> maybeInstancedBlockEntities;
+	public List<BlockEntity> specialRenderedBlockEntities;
 
 	protected ContraptionWorld world;
 	public boolean deferInvalidate;
@@ -162,15 +166,16 @@ public abstract class Contraption {
 		blocks = new HashMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
+		disabledActors = new ArrayList<>();
 		modelData = new HashMap<>();
 		interactors = new HashMap<>();
 		superglue = new ArrayList<>();
 		seatMapping = new HashMap<>();
 		glueToRemove = new HashSet<>();
 		initialPassengers = new HashMap<>();
-		presentTileEntities = new HashMap<>();
-		maybeInstancedTileEntities = new ArrayList<>();
-		specialRenderedTileEntities = new ArrayList<>();
+		presentBlockEntities = new HashMap<>();
+		maybeInstancedBlockEntities = new ArrayList<>();
+		specialRenderedBlockEntities = new ArrayList<>();
 		pendingSubContraptions = new ArrayList<>();
 		stabilizedSubContraptions = new HashMap<>();
 		simplifiedEntityColliders = Optional.empty();
@@ -315,7 +320,7 @@ public abstract class Contraption {
 		if (AllBlocks.BELT.has(state))
 			moveBelt(pos, frontier, visited, state);
 
-		if (AllBlocks.WINDMILL_BEARING.has(state) && world.getBlockEntity(pos)instanceof WindmillBearingTileEntity wbte)
+		if (AllBlocks.WINDMILL_BEARING.has(state) && world.getBlockEntity(pos)instanceof WindmillBearingBlockEntity wbte)
 			wbte.disassembleForMovement();
 
 		if (AllBlocks.GANTRY_CARRIAGE.has(state))
@@ -415,7 +420,7 @@ public abstract class Contraption {
 		}
 
 		addBlock(pos, capture(world, pos));
-		if (blocks.size() <= AllConfigs.SERVER.kinetics.maxBlocksMoved.get())
+		if (blocks.size() <= AllConfigs.server().kinetics.maxBlocksMoved.get())
 			return true;
 		else
 			throw AssemblyException.structureTooLarge();
@@ -540,7 +545,7 @@ public abstract class Contraption {
 	}
 
 	private void movePulley(Level world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited) {
-		int limit = AllConfigs.SERVER.kinetics.maxRopeLength.get();
+		int limit = AllConfigs.server().kinetics.maxRopeLength.get();
 		BlockPos ropePos = pos;
 		while (limit-- >= 0) {
 			ropePos = ropePos.below();
@@ -583,10 +588,10 @@ public abstract class Contraption {
 
 	private boolean moveChassis(Level world, BlockPos pos, Direction movementDirection, Queue<BlockPos> frontier,
 		Set<BlockPos> visited) {
-		BlockEntity te = world.getBlockEntity(pos);
-		if (!(te instanceof ChassisTileEntity))
+		BlockEntity be = world.getBlockEntity(pos);
+		if (!(be instanceof ChassisBlockEntity))
 			return false;
-		ChassisTileEntity chassis = (ChassisTileEntity) te;
+		ChassisBlockEntity chassis = (ChassisBlockEntity) be;
 		chassis.addAttachedChasses(frontier, visited);
 		List<BlockPos> includedBlockPositions = chassis.getIncludedBlockPositions(movementDirection, false);
 		if (includedBlockPositions == null)
@@ -603,7 +608,7 @@ public abstract class Contraption {
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
 		if (AllBlocks.POWERED_SHAFT.has(blockstate))
 			blockstate = BlockHelper.copyProperties(blockstate, AllBlocks.SHAFT.getDefaultState());
-		if (AllBlocks.CONTROLS.has(blockstate))
+		if (blockstate.getBlock() instanceof ControlsBlock)
 			blockstate = blockstate.setValue(ControlsBlock.OPEN, true);
 		if (blockstate.hasProperty(SlidingDoorBlock.VISIBLE))
 			blockstate = blockstate.setValue(SlidingDoorBlock.VISIBLE, false);
@@ -615,11 +620,11 @@ public abstract class Contraption {
 			blockstate = blockstate.setValue(PressurePlateBlock.POWERED, false);
 			world.scheduleTick(pos, blockstate.getBlock(), -1);
 		}
-		CompoundTag compoundnbt = getTileEntityNBT(world, pos);
-		BlockEntity tileentity = world.getBlockEntity(pos);
-		if (tileentity instanceof PoweredShaftTileEntity)
-			tileentity = AllTileEntities.BRACKETED_KINETIC.create(pos, blockstate);
-		return Pair.of(new StructureBlockInfo(pos, blockstate, compoundnbt), tileentity);
+		CompoundTag compoundnbt = getBlockEntityNBT(world, pos);
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity instanceof PoweredShaftBlockEntity)
+			blockEntity = AllBlockEntityTypes.BRACKETED_KINETIC.create(pos, blockstate);
+		return Pair.of(new StructureBlockInfo(pos, blockstate, compoundnbt), blockEntity);
 	}
 
 	protected void addBlock(BlockPos pos, Pair<StructureBlockInfo, BlockEntity> pair) {
@@ -631,8 +636,8 @@ public abstract class Contraption {
 			return;
 		bounds = bounds.minmax(new AABB(localPos));
 
-		BlockEntity te = pair.getValue();
-		storage.addBlock(localPos, te);
+		BlockEntity be = pair.getValue();
+		storage.addBlock(localPos, be);
 
 		if (AllMovementBehaviours.getBehaviour(captured.state) != null)
 			actors.add(MutablePair.of(structureBlockInfo, null));
@@ -641,24 +646,24 @@ public abstract class Contraption {
 		if (interactionBehaviour != null)
 			interactors.put(localPos, interactionBehaviour);
 
-		if (te instanceof CreativeCrateTileEntity
-			&& ((CreativeCrateTileEntity) te).getBehaviour(FilteringBehaviour.TYPE)
+		if (be instanceof CreativeCrateBlockEntity
+			&& ((CreativeCrateBlockEntity) be).getBehaviour(FilteringBehaviour.TYPE)
 				.getFilter()
 				.isEmpty())
 			hasUniversalCreativeCrate = true;
 	}
 
 	@Nullable
-	protected CompoundTag getTileEntityNBT(Level world, BlockPos pos) {
-		BlockEntity tileentity = world.getBlockEntity(pos);
-		if (tileentity == null)
+	protected CompoundTag getBlockEntityNBT(Level world, BlockPos pos) {
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity == null)
 			return null;
-		CompoundTag nbt = tileentity.saveWithFullMetadata();
+		CompoundTag nbt = blockEntity.saveWithFullMetadata();
 		nbt.remove("x");
 		nbt.remove("y");
 		nbt.remove("z");
 
-		if ((tileentity instanceof FluidTankTileEntity || tileentity instanceof ItemVaultTileEntity)
+		if ((blockEntity instanceof FluidTankBlockEntity || blockEntity instanceof ItemVaultBlockEntity)
 			&& nbt.contains("Controller"))
 			nbt.put("Controller",
 				NbtUtils.writeBlockPos(toLocalPos(NbtUtils.readBlockPos(nbt.getCompound("Controller")))));
@@ -680,8 +685,8 @@ public abstract class Contraption {
 
 	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
 		blocks.clear();
-		presentTileEntities.clear();
-		specialRenderedTileEntities.clear();
+		presentBlockEntities.clear();
+		specialRenderedBlockEntities.clear();
 
 		Tag blocks = nbt.get("Blocks");
 		// used to differentiate between the 'old' and the paletted serialization
@@ -699,6 +704,10 @@ public abstract class Contraption {
 				MovementContext context = MovementContext.readNBT(world, info, comp, this);
 				getActors().add(MutablePair.of(info, context));
 			});
+
+		disabledActors = NBTHelper.readItemList(nbt.getList("DisabledActors", Tag.TAG_COMPOUND));
+		for (ItemStack stack : disabledActors)
+			setActorsActive(stack, false);
 
 		superglue.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Superglue", Tag.TAG_COMPOUND),
@@ -726,7 +735,7 @@ public abstract class Contraption {
 				interactors.put(pos, behaviour);
 		});
 
-		storage.read(nbt, presentTileEntities, spawnData);
+		storage.read(nbt, presentBlockEntities, spawnData);
 
 		if (nbt.contains("BoundsFront"))
 			bounds = NBTHelper.readAABB(nbt.getList("BoundsFront", 5));
@@ -753,6 +762,8 @@ public abstract class Contraption {
 			actor.right.writeToNBT(compound);
 			actorsNBT.add(compound);
 		}
+
+		ListTag disabledActorsNBT = NBTHelper.writeItemList(disabledActors);
 
 		ListTag superglueNBT = new ListTag();
 		if (!spawnPacket) {
@@ -790,6 +801,7 @@ public abstract class Contraption {
 
 		nbt.put("Blocks", blocksNBT);
 		nbt.put("Actors", actorsNBT);
+		nbt.put("DisabledActors", disabledActorsNBT);
 		nbt.put("Interactors", interactorNBT);
 		nbt.put("Superglue", superglueNBT);
 		nbt.put("Anchor", NbtUtils.writeBlockPos(anchor));
@@ -874,24 +886,24 @@ public abstract class Contraption {
 			tag.putInt("y", info.pos.getY());
 			tag.putInt("z", info.pos.getZ());
 
-			BlockEntity te = BlockEntity.loadStatic(info.pos, info.state, tag);
-			if (te == null)
+			BlockEntity be = BlockEntity.loadStatic(info.pos, info.state, tag);
+			if (be == null)
 				return;
-			te.setLevel(world);
-			modelData.put(info.pos, te.getModelData());
-			if (te instanceof KineticTileEntity kte)
+			be.setLevel(world);
+			modelData.put(info.pos, be.getModelData());
+			if (be instanceof KineticBlockEntity kte)
 				kte.setSpeed(0);
-			te.getBlockState();
+			be.getBlockState();
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(info.state);
 			if (movementBehaviour == null || !movementBehaviour.hasSpecialInstancedRendering())
-				maybeInstancedTileEntities.add(te);
+				maybeInstancedBlockEntities.add(be);
 
-			if (movementBehaviour != null && !movementBehaviour.renderAsNormalTileEntity())
+			if (movementBehaviour != null && !movementBehaviour.renderAsNormalBlockEntity())
 				return;
 
-			presentTileEntities.put(info.pos, te);
-			specialRenderedTileEntities.add(te);
+			presentBlockEntities.put(info.pos, be);
+			specialRenderedBlockEntities.add(be);
 		});
 	}
 
@@ -1006,7 +1018,7 @@ public abstract class Contraption {
 		if (disassembled)
 			return;
 		disassembled = true;
-		
+
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (StructureBlockInfo block : blocks.values()) {
 				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
@@ -1053,33 +1065,34 @@ public abstract class Contraption {
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
 				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
 				if (verticalRotation) {
-					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock || state.getBlock() instanceof DoorBlock)
+					if (state.getBlock() instanceof RopeBlock || state.getBlock() instanceof MagnetBlock
+						|| state.getBlock() instanceof DoorBlock)
 						world.destroyBlock(targetPos, true);
 				}
 
-				BlockEntity tileEntity = world.getBlockEntity(targetPos);
+				BlockEntity blockEntity = world.getBlockEntity(targetPos);
 
 				CompoundTag tag = block.nbt;
-				if (tileEntity != null)
-					tag = NBTProcessors.process(tileEntity, tag, false);
-				if (tileEntity != null && tag != null) {
+				if (blockEntity != null)
+					tag = NBTProcessors.process(blockEntity, tag, false);
+				if (blockEntity != null && tag != null) {
 					tag.putInt("x", targetPos.getX());
 					tag.putInt("y", targetPos.getY());
 					tag.putInt("z", targetPos.getZ());
 
-					if (verticalRotation && tileEntity instanceof PulleyTileEntity) {
+					if (verticalRotation && blockEntity instanceof PulleyBlockEntity) {
 						tag.remove("Offset");
 						tag.remove("InitialOffset");
 					}
 
-					if (tileEntity instanceof IMultiTileContainer && tag.contains("LastKnownPos"))
+					if (blockEntity instanceof IMultiBlockEntityContainer && tag.contains("LastKnownPos"))
 						tag.put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below(Integer.MAX_VALUE - 1)));
 
-					tileEntity.load(tag);
-					storage.addStorageToWorld(block, tileEntity);
+					blockEntity.load(tag);
+					storage.addStorageToWorld(block, blockEntity);
 				}
 
-				transform.apply(tileEntity);
+				transform.apply(blockEntity);
 			}
 		}
 
@@ -1120,13 +1133,56 @@ public abstract class Contraption {
 	}
 
 	public void startMoving(Level world) {
+		disabledActors.clear();
+
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : actors) {
 			MovementContext context = new MovementContext(world, pair.left, this);
 			MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.left.state);
 			if (behaviour != null)
 				behaviour.startMoving(context);
 			pair.setRight(context);
+			if (behaviour instanceof ContraptionControlsMovement) 
+				disableActorOnStart(context);
 		}
+
+		for (ItemStack stack : disabledActors)
+			setActorsActive(stack, false);
+	}
+	
+	protected void disableActorOnStart(MovementContext context) {
+		if (!ContraptionControlsMovement.isDisabledInitially(context))
+			return;
+		ItemStack filter = ContraptionControlsMovement.getFilter(context);
+		if (filter == null)
+			return;
+		if (isActorTypeDisabled(filter))
+			return;
+		disabledActors.add(filter);
+	}
+
+	public boolean isActorTypeDisabled(ItemStack filter) {
+		return disabledActors.stream()
+			.anyMatch(i -> ContraptionControlsMovement.isSameFilter(i, filter));
+	}
+
+	public void setActorsActive(ItemStack referenceStack, boolean enable) {
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : actors) {
+			MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.left.state);
+			if (behaviour == null)
+				continue;
+			ItemStack behaviourStack = behaviour.canBeDisabledVia(pair.right);
+			if (behaviourStack == null)
+				continue;
+			if (!referenceStack.isEmpty() && !ContraptionControlsMovement.isSameFilter(referenceStack, behaviourStack))
+				continue;
+			pair.right.disabled = !enable;
+			if (!enable)
+				behaviour.onDisabledByControls(pair.right);
+		}
+	}
+
+	public List<ItemStack> getDisabledActors() {
+		return disabledActors;
 	}
 
 	public void stop(Level world) {
@@ -1219,6 +1275,14 @@ public abstract class Contraption {
 		return actors;
 	}
 
+	@Nullable
+	public MutablePair<StructureBlockInfo, MovementContext> getActorAt(BlockPos localPos) {
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : actors)
+			if (localPos.equals(pair.left.pos))
+				return pair;
+		return null;
+	}
+
 	public Map<BlockPos, MovingInteractionBehaviour> getInteractors() {
 		return interactors;
 	}
@@ -1301,7 +1365,7 @@ public abstract class Contraption {
 	}
 
 	public Collection<BlockEntity> getSpecialRenderedTEs() {
-		return specialRenderedTileEntities;
+		return specialRenderedBlockEntities;
 	}
 
 	public boolean isHiddenInPortal(BlockPos localPos) {

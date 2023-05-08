@@ -1,8 +1,9 @@
 package com.simibubi.create.foundation.ponder.content.fluid;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceBlockEntity;
+import com.simibubi.create.content.contraptions.fluids.PumpBlock;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -43,12 +44,14 @@ public class FluidMovementActorScenes {
 		BlockPos ct2 = util.grid.at(6, 3, 2);
 		BlockPos st = util.grid.at(0, 1, 5);
 		Capability<IFluidHandler> fhc = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
-		Class<FluidTankTileEntity> type = FluidTankTileEntity.class;
+		Class<FluidTankBlockEntity> type = FluidTankBlockEntity.class;
 		ItemStack bucket = AllFluids.CHOCOLATE.get()
 			.getFluidType()
 			.getBucket(chocolate);
+		
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.NORTH), false);
 
-		scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
+		scene.world.modifyBlockEntity(st, type, be -> be.getCapability(fhc)
 			.ifPresent(ifh -> ifh.fill(FluidHelper.copyStackWithAmount(chocolate, 10000), FluidAction.EXECUTE)));
 
 		BlockPos bearing = util.grid.at(5, 1, 2);
@@ -98,17 +101,17 @@ public class FluidMovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.of(3, 3, 2.5))
 			.text("Whenever they pass by each other, they will engage in a connection");
-		scene.idle(35);
+		scene.idle(38);
 
 		Selection both = util.select.fromTo(2, 2, 2, 4, 2, 2);
-		Class<PortableFluidInterfaceTileEntity> psiClass = PortableFluidInterfaceTileEntity.class;
+		Class<PortableFluidInterfaceBlockEntity> psiClass = PortableFluidInterfaceBlockEntity.class;
 
-		scene.world.modifyTileNBT(both, psiClass, nbt -> {
+		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);
-			nbt.putFloat("Timer", 40);
+			nbt.putFloat("Timer", 14);
 		});
 
-		scene.idle(20);
+		scene.idle(17);
 		scene.overlay.showOutline(PonderPalette.GREEN, psi, util.select.fromTo(5, 3, 2, 6, 4, 2), 80);
 		scene.idle(10);
 
@@ -140,16 +143,16 @@ public class FluidMovementActorScenes {
 				scene.overlay
 					.showControls(new InputWindowElement(util.vector.blockSurface(util.grid.at(5, 3, 2), Direction.WEST)
 						.add(0, 0.5, 0), Pointing.LEFT).withItem(bucket), 30);
-			scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
+			scene.world.modifyBlockEntity(st, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
-			scene.world.modifyTileEntity(ct1, type, te -> te.getCapability(fhc)
+			scene.world.modifyBlockEntity(ct1, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
 			scene.idle(2);
 		}
 		for (int i = 0; i < 8; i++) {
-			scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
+			scene.world.modifyBlockEntity(st, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
-			scene.world.modifyTileEntity(ct2, type, te -> te.getCapability(fhc)
+			scene.world.modifyBlockEntity(ct2, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
 			scene.idle(2);
 		}
@@ -160,26 +163,26 @@ public class FluidMovementActorScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(pumpPos))
 			.text("...or extracted from the contraption");
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), -1);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.SOUTH), true);
 		scene.world.propagatePipeChange(pumpPos);
 		scene.idle(30);
 
 		for (int i = 0; i < 8; i++) {
-			scene.world.modifyTileEntity(ct2, type, te -> te.getCapability(fhc)
+			scene.world.modifyBlockEntity(ct2, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
-			scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
+			scene.world.modifyBlockEntity(st, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
 			scene.idle(2);
 		}
 		for (int i = 0; i < 16; i++) {
-			scene.world.modifyTileEntity(ct1, type, te -> te.getCapability(fhc)
+			scene.world.modifyBlockEntity(ct1, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
-			scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
+			scene.world.modifyBlockEntity(st, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
 			scene.idle(2);
 		}
 
-		scene.world.modifyTileEntity(util.grid.at(2, 2, 3), type, te -> te.getCapability(fhc)
+		scene.world.modifyBlockEntity(util.grid.at(2, 2, 3), type, be -> be.getCapability(fhc)
 			.ifPresent(ifh -> ifh.drain(8000, FluidAction.EXECUTE)));
 		scene.idle(50);
 
@@ -188,7 +191,7 @@ public class FluidMovementActorScenes {
 			.attachKeyFrame()
 			.pointAt(util.vector.topOf(psi2))
 			.text("After no contents have been exchanged for a while, the contraption will continue on its way");
-		scene.world.modifyTileNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 9));
+		scene.world.modifyBlockEntityNBT(both, psiClass, nbt -> nbt.putFloat("Timer", 2));
 
 		scene.idle(15);
 		scene.world.rotateBearing(bearing, 270, 120);

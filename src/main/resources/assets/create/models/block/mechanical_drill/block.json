@@ -2,11 +2,11 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
+		"4": "create:block/mechanical_drill_top",
 		"10": "create:block/andesite_casing_very_short",
 		"gearbox_top": "create:block/gearbox_top",
 		"particle": "create:block/gearbox",
-		"gearbox": "create:block/gearbox",
-		"andesite_casing_short": "create:block/andesite_casing_short"
+		"gearbox": "create:block/gearbox"
 	},
 	"elements": [
 		{
@@ -14,7 +14,7 @@
 			"from": [2, 1, 2],
 			"to": [14, 9, 14],
 			"faces": {
-				"up": {"uv": [2, 2, 14, 14], "texture": "#gearbox"},
+				"up": {"uv": [2, 2, 14, 14], "texture": "#4"},
 				"down": {"uv": [2, 2, 14, 14], "rotation": 180, "texture": "#gearbox"}
 			}
 		},
@@ -23,11 +23,11 @@
 			"from": [0, 0, 14],
 			"to": [16, 10, 16],
 			"faces": {
-				"north": {"uv": [0, 4, 16, 16], "rotation": 180, "texture": "#andesite_casing_short"},
-				"east": {"uv": [14, 6, 16, 16], "rotation": 180, "texture": "#10"},
+				"north": {"uv": [0, 6, 16, 16], "texture": "#10"},
+				"east": {"uv": [0, 6, 2, 16], "texture": "#10"},
 				"south": {"uv": [0, 6, 16, 16], "texture": "#10"},
 				"west": {"uv": [14, 6, 16, 16], "texture": "#10"},
-				"up": {"uv": [0, 14, 16, 16], "texture": "#gearbox_top"},
+				"up": {"uv": [0, 14, 16, 16], "texture": "#4"},
 				"down": {"uv": [0, 14, 16, 16], "rotation": 180, "texture": "#gearbox_top"}
 			}
 		},
@@ -36,11 +36,11 @@
 			"from": [0, 0, 0],
 			"to": [16, 10, 2],
 			"faces": {
-				"north": {"uv": [0, 6, 16, 16], "rotation": 180, "texture": "#10"},
-				"east": {"uv": [0, 6, 2, 16], "rotation": 180, "texture": "#10"},
-				"south": {"uv": [0, 4, 16, 16], "texture": "#andesite_casing_short"},
+				"north": {"uv": [0, 6, 16, 16], "texture": "#10"},
+				"east": {"uv": [2, 6, 0, 16], "texture": "#10"},
+				"south": {"uv": [0, 6, 16, 16], "texture": "#10"},
 				"west": {"uv": [0, 6, 2, 16], "texture": "#10"},
-				"up": {"uv": [0, 0, 16, 2], "texture": "#gearbox_top"},
+				"up": {"uv": [0, 0, 16, 2], "texture": "#4"},
 				"down": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#gearbox_top"}
 			}
 		},
@@ -49,9 +49,9 @@
 			"from": [0, 0, 2],
 			"to": [2, 10, 14],
 			"faces": {
-				"east": {"uv": [2, 4, 14, 16], "rotation": 180, "texture": "#andesite_casing_short"},
+				"east": {"uv": [2, 6, 14, 16], "texture": "#10"},
 				"west": {"uv": [2, 6, 14, 16], "texture": "#10"},
-				"up": {"uv": [0, 2, 2, 14], "texture": "#gearbox_top"},
+				"up": {"uv": [0, 2, 2, 14], "texture": "#4"},
 				"down": {"uv": [14, 2, 16, 14], "rotation": 180, "texture": "#gearbox_top"}
 			}
 		},
@@ -60,9 +60,9 @@
 			"from": [14, 0, 2],
 			"to": [16, 10, 14],
 			"faces": {
-				"east": {"uv": [2, 6, 14, 16], "rotation": 180, "texture": "#10"},
-				"west": {"uv": [2, 4, 14, 16], "rotation": 180, "texture": "#andesite_casing_short"},
-				"up": {"uv": [14, 2, 16, 14], "texture": "#gearbox_top"},
+				"east": {"uv": [2, 6, 14, 16], "texture": "#10"},
+				"west": {"uv": [2, 6, 14, 16], "texture": "#10"},
+				"up": {"uv": [14, 2, 16, 14], "texture": "#4"},
 				"down": {"uv": [0, 2, 2, 14], "rotation": 180, "texture": "#gearbox_top"}
 			}
 		}
@@ -71,6 +71,7 @@
 		{
 			"name": "casing",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4]
 		}
 	]

@@ -10,8 +10,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
@@ -22,7 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedControllerContainer> {
+public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedControllerMenu> {
 
 	protected AllGuiTextures background;
 	private List<Rect2i> extraAreas = Collections.emptyList();
@@ -30,8 +30,8 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	private IconButton resetButton;
 	private IconButton confirmButton;
 
-	public LinkedControllerScreen(LinkedControllerContainer container, Inventory inv, Component title) {
-		super(container, inv, title);
+	public LinkedControllerScreen(LinkedControllerMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title);
 		this.background = AllGuiTextures.LINKED_CONTROLLER;
 	}
 
@@ -70,7 +70,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		int y = topPos;
 
 		background.render(ms, x, y, this);
-		font.draw(ms, title, x + 15, y + 4, 0x442000);
+		font.draw(ms, title, x + 15, y + 4, 0x592424);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.width - 4, y + background.height - 56, -200)

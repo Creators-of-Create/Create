@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -22,18 +22,20 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class ConnectedGirderModel extends CTModel {
 
-	protected static ModelProperty<ConnectionData> CONNECTION_PROPERTY = new ModelProperty<>();
+	protected static final ModelProperty<ConnectionData> CONNECTION_PROPERTY = new ModelProperty<>();
 
 	public ConnectedGirderModel(BakedModel originalModel) {
 		super(originalModel, new GirderCTBehaviour());
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
+	protected ModelData.Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+		ModelData blockEntityData) {
+		super.gatherModelData(builder, world, pos, state, blockEntityData);
 		ConnectionData connectionData = new ConnectionData();
 		for (Direction d : Iterate.horizontalDirections)
 			connectionData.setConnected(d, GirderBlock.isConnected(world, pos, state, d));
-		return super.gatherModelData(builder, world, pos, state).with(CONNECTION_PROPERTY, connectionData);
+		return builder.with(CONNECTION_PROPERTY, connectionData);
 	}
 
 	@Override
@@ -45,13 +47,13 @@ public class ConnectedGirderModel extends CTModel {
 		ConnectionData data = extraData.get(CONNECTION_PROPERTY);
 		for (Direction d : Iterate.horizontalDirections)
 			if (data.isConnected(d))
-				quads.addAll(AllBlockPartials.METAL_GIRDER_BRACKETS.get(d)
+				quads.addAll(AllPartialModels.METAL_GIRDER_BRACKETS.get(d)
 					.get()
 					.getQuads(state, side, rand, extraData, renderType));
 		return quads;
 	}
 
-	private class ConnectionData {
+	private static class ConnectionData {
 		boolean[] connectedFaces;
 
 		public ConnectionData() {

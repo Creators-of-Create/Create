@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.sy
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -52,29 +51,27 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
-				if (!(entityByID instanceof AbstractContraptionEntity))
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
+			if (!(entityByID instanceof AbstractContraptionEntity))
+				return;
+			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
+			
+			if (dismountedID != -1) {
+				Entity dismountedByID = Minecraft.getInstance().level.getEntity(dismountedID);
+				if (Minecraft.getInstance().player != dismountedByID)
 					return;
-				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-				
-				if (dismountedID != -1) {
-					Entity dismountedByID = Minecraft.getInstance().level.getEntity(dismountedID);
-					if (Minecraft.getInstance().player != dismountedByID)
-						return;
-					Vec3 transformedVector = contraptionEntity.getPassengerPosition(dismountedByID, 1);
-					if (transformedVector != null)
-						dismountedByID.getPersistentData()
-							.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
-				}
-				
-				contraptionEntity.getContraption()
-					.setSeatMapping(mapping);
-			});
-		context.get()
-			.setPacketHandled(true);
+				Vec3 transformedVector = contraptionEntity.getPassengerPosition(dismountedByID, 1);
+				if (transformedVector != null)
+					dismountedByID.getPersistentData()
+						.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
+			}
+			
+			contraptionEntity.getContraption()
+				.setSeatMapping(mapping);
+		});
+		return true;
 	}
 
 }

@@ -107,5 +107,15 @@ public class NBTHelper {
 			return inbt;
 		return new CompoundTag();
 	}
+	
+	public static CompoundTag intToCompound(int i) {
+		CompoundTag compoundTag = new CompoundTag();
+		compoundTag.putInt("V", i);
+		return compoundTag;
+	}
+	
+	public static int intFromCompound(CompoundTag compoundTag) {
+		return compoundTag.getInt("V");
+	}
 
 }

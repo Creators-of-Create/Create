@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions;
 
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -26,34 +26,34 @@ public class KineticDebugger {
 
 	public static void tick() {
 		if (!isActive()) {
-			if (KineticTileEntityRenderer.rainbowMode) {
-				KineticTileEntityRenderer.rainbowMode = false;
+			if (KineticBlockEntityRenderer.rainbowMode) {
+				KineticBlockEntityRenderer.rainbowMode = false;
 				CreateClient.BUFFER_CACHE.invalidate();
 			}
 			return;
 		}
 
-		KineticTileEntity te = getSelectedTE();
-		if (te == null)
+		KineticBlockEntity be = getSelectedBE();
+		if (be == null)
 			return;
 
 		Level world = Minecraft.getInstance().level;
-		BlockPos toOutline = te.hasSource() ? te.source : te.getBlockPos();
-		BlockState state = te.getBlockState();
+		BlockPos toOutline = be.hasSource() ? be.source : be.getBlockPos();
+		BlockState state = be.getBlockState();
 		VoxelShape shape = world.getBlockState(toOutline)
 			.getBlockSupportShape(world, toOutline);
 
-		if (te.getTheoreticalSpeed() != 0 && !shape.isEmpty())
+		if (be.getTheoreticalSpeed() != 0 && !shape.isEmpty())
 			CreateClient.OUTLINER.chaseAABB("kineticSource", shape.bounds()
 					.move(toOutline))
 					.lineWidth(1 / 16f)
-					.colored(te.hasSource() ? Color.generateFromLong(te.network).getRGB() : 0xffcc00);
+					.colored(be.hasSource() ? Color.generateFromLong(be.network).getRGB() : 0xffcc00);
 
 		if (state.getBlock() instanceof IRotate) {
 			Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
 			Vec3 vec = Vec3.atLowerCornerOf(Direction.get(AxisDirection.POSITIVE, axis)
 					.getNormal());
-			Vec3 center = VecHelper.getCenterOf(te.getBlockPos());
+			Vec3 center = VecHelper.getCenterOf(be.getBlockPos());
 			CreateClient.OUTLINER.showLine("rotationAxis", center.add(vec), center.subtract(vec))
 					.lineWidth(1 / 16f);
 		}
@@ -61,14 +61,14 @@ public class KineticDebugger {
 	}
 
 	public static boolean isActive() {
-		return isF3DebugModeActive() && AllConfigs.CLIENT.rainbowDebug.get();
+		return isF3DebugModeActive() && AllConfigs.client().rainbowDebug.get();
 	}
 
 	public static boolean isF3DebugModeActive() {
 		return Minecraft.getInstance().options.renderDebug;
 	}
 
-	public static KineticTileEntity getSelectedTE() {
+	public static KineticBlockEntity getSelectedBE() {
 		HitResult obj = Minecraft.getInstance().hitResult;
 		ClientLevel world = Minecraft.getInstance().level;
 		if (obj == null)
@@ -79,11 +79,11 @@ public class KineticDebugger {
 			return null;
 
 		BlockHitResult ray = (BlockHitResult) obj;
-		BlockEntity te = world.getBlockEntity(ray.getBlockPos());
-		if (!(te instanceof KineticTileEntity))
+		BlockEntity be = world.getBlockEntity(ray.getBlockPos());
+		if (!(be instanceof KineticBlockEntity))
 			return null;
 
-		return (KineticTileEntity) te;
+		return (KineticBlockEntity) be;
 	}
 
 }

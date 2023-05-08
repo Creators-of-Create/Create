@@ -3,9 +3,10 @@ package com.simibubi.create.content.contraptions.relays.belt.transport;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -58,13 +59,13 @@ public class BeltFunnelInteractionHandler {
 				else
 					continue;
 
-			BlockEntity te = world.getBlockEntity(funnelPos);
-			if (!(te instanceof FunnelTileEntity))
+			BlockEntity be = world.getBlockEntity(funnelPos);
+			if (!(be instanceof FunnelBlockEntity))
 				return true;
 
-			FunnelTileEntity funnelTE = (FunnelTileEntity) te;
-			InvManipulationBehaviour inserting = funnelTE.getBehaviour(InvManipulationBehaviour.TYPE);
-			FilteringBehaviour filtering = funnelTE.getBehaviour(FilteringBehaviour.TYPE);
+			FunnelBlockEntity funnelBE = (FunnelBlockEntity) be;
+			InvManipulationBehaviour inserting = funnelBE.getBehaviour(InvManipulationBehaviour.TYPE);
+			FilteringBehaviour filtering = funnelBE.getBehaviour(FilteringBehaviour.TYPE);
 
 			if (inserting == null || filtering != null && !filtering.test(currentItem.stack))
 				if (blocking)
@@ -72,17 +73,20 @@ public class BeltFunnelInteractionHandler {
 				else
 					continue;
 
-			int amountToExtract = funnelTE.getAmountToExtract();
+			int amountToExtract = funnelBE.getAmountToExtract();
+			ExtractionCountMode modeToExtract = funnelBE.getModeToExtract();
+			
 			ItemStack toInsert = currentItem.stack.copy();
-			if (amountToExtract > toInsert.getCount())
+			if (amountToExtract > toInsert.getCount() && modeToExtract != ExtractionCountMode.UPTO)
 				if (blocking)
 					return true;
 				else
 					continue;
 
-			if (amountToExtract != -1) {
-				toInsert.setCount(amountToExtract);
-				ItemStack remainder = inserting.simulate().insert(toInsert);
+			if (amountToExtract != -1 && modeToExtract != ExtractionCountMode.UPTO) {
+				toInsert.setCount(Math.min(amountToExtract, toInsert.getCount()));
+				ItemStack remainder = inserting.simulate()
+					.insert(toInsert);
 				if (!remainder.isEmpty())
 					if (blocking)
 						return true;
@@ -103,8 +107,8 @@ public class BeltFunnelInteractionHandler {
 			} else if (notFilled > 0)
 				remainder = ItemHandlerHelper.copyStackWithSize(currentItem.stack, notFilled);
 
-			funnelTE.flap(true);
-			funnelTE.onTransfer(toInsert);
+			funnelBE.flap(true);
+			funnelBE.onTransfer(toInsert);
 			currentItem.stack = remainder;
 			beltInventory.belt.sendData();
 			if (blocking)

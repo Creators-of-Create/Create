@@ -9,12 +9,12 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverBlockEntity;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.TankManipulationBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FluidFormatter;
@@ -31,12 +31,12 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 
 	@Override
 	protected Stream<IntAttached<MutableComponent>> provideEntries(DisplayLinkContext context, int maxRows) {
-		BlockEntity sourceTE = context.getSourceTE();
-		if (!(sourceTE instanceof ContentObserverTileEntity cote))
+		BlockEntity sourceBE = context.getSourceBlockEntity();
+		if (!(sourceBE instanceof SmartObserverBlockEntity cobe))
 			return Stream.empty();
 
-		TankManipulationBehaviour tankManipulationBehaviour = cote.getBehaviour(TankManipulationBehaviour.OBSERVE);
-		FilteringBehaviour filteringBehaviour = cote.getBehaviour(FilteringBehaviour.TYPE);
+		TankManipulationBehaviour tankManipulationBehaviour = cobe.getBehaviour(TankManipulationBehaviour.OBSERVE);
+		FilteringBehaviour filteringBehaviour = cobe.getBehaviour(FilteringBehaviour.TYPE);
 		IFluidHandler handler = tankManipulationBehaviour.getInventory();
 
 		if (handler == null)
@@ -78,7 +78,7 @@ public class FluidListDisplaySource extends ValueListDisplaySource {
 	}
 
 	@Override
-	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay, FlapDisplayLayout layout) {
+	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayBlockEntity flapDisplay, FlapDisplayLayout layout) {
 		Integer max = ((MutableInt) context.flapDisplayContext).getValue();
 		boolean shorten = shortenNumbers(context);
 		int length = FluidFormatter.asString(max, shorten).length();

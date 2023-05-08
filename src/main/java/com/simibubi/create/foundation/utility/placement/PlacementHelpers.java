@@ -207,7 +207,7 @@ public class PlacementHelpers {
 
 		float length = 10;
 
-		CClient.PlacementIndicatorSetting mode = AllConfigs.CLIENT.placementIndicator.get();
+		CClient.PlacementIndicatorSetting mode = AllConfigs.client().placementIndicator.get();
 		if (mode == CClient.PlacementIndicatorSetting.TRIANGLE)
 			fadedArrow(ms, centerX, centerY, r, g, b, a, length, snappedAngle);
 		else if (mode == CClient.PlacementIndicatorSetting.TEXTURE)
@@ -225,7 +225,7 @@ public class PlacementHelpers {
 		ms.translate(centerX, centerY, 5);
 		ms.mulPose(Vector3f.ZP.rotationDegrees(angle.getValue(0)));
 		// RenderSystem.rotatef(snappedAngle, 0, 0, 1);
-		double scale = AllConfigs.CLIENT.indicatorScale.get();
+		double scale = AllConfigs.client().indicatorScale.get();
 		ms.scale((float) scale, (float) scale, 1);
 
 		Tesselator tessellator = Tesselator.getInstance();
@@ -278,7 +278,7 @@ public class PlacementHelpers {
 
 		ms.pushPose();
 		ms.translate(centerX, centerY, 50);
-		float scale = AllConfigs.CLIENT.indicatorScale.get()
+		float scale = AllConfigs.client().indicatorScale.get()
 			.floatValue() * .75f;
 		ms.scale(scale, scale, 1);
 		ms.scale(12, 12, 1);

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "create:scorchia"
-  },
-  "result": "create:cut_scorchia_stairs"
-}

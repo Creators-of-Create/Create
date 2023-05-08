@@ -36,9 +36,9 @@ public abstract class BearingBlock extends DirectionalKineticBlock {
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		InteractionResult resultType = super.onWrenched(state, context);
 		if (!context.getLevel().isClientSide && resultType.consumesAction()) {
-			BlockEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
-			if (te instanceof MechanicalBearingTileEntity) {
-				((MechanicalBearingTileEntity) te).disassemble();
+			BlockEntity be = context.getLevel().getBlockEntity(context.getClickedPos());
+			if (be instanceof MechanicalBearingBlockEntity) {
+				((MechanicalBearingBlockEntity) be).disassemble();
 			}
 		}
 		return resultType;

@@ -8,16 +8,15 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.content.contraptions.components.actors.AttachedActorBlock;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
-import com.simibubi.create.content.contraptions.components.actors.PloughBlock;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceBlock;
 import com.simibubi.create.content.contraptions.components.crank.HandCrankBlock;
 import com.simibubi.create.content.contraptions.components.fan.NozzleBlock;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.SailBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
@@ -25,7 +24,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
@@ -174,13 +173,15 @@ public class BlockMovementChecks {
 	private static boolean isMovementNecessaryFallback(BlockState state, Level world, BlockPos pos) {
 		if (isBrittle(state))
 			return true;
-		if (!state.getMaterial()
-			.isReplaceable())
+		if (AllBlockTags.MOVABLE_EMPTY_COLLIDER.matches(state))
 			return true;
-		if (!state.getCollisionShape(world, pos)
+		if (state.getCollisionShape(world, pos)
 			.isEmpty())
-			return true;
-		return AllBlockTags.MOVABLE_EMPTY_COLLIDER.matches(state);
+			return false;
+		if (state.getMaterial()
+			.isReplaceable())
+			return false;
+		return true;
 	}
 
 	private static boolean isMovementAllowedFallback(BlockState state, Level world, BlockPos pos) {
@@ -200,19 +201,19 @@ public class BlockMovementChecks {
 		if (block instanceof MechanicalPistonBlock && state.getValue(MechanicalPistonBlock.STATE) != PistonState.MOVING)
 			return true;
 		if (block instanceof MechanicalBearingBlock) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te instanceof MechanicalBearingTileEntity)
-				return !((MechanicalBearingTileEntity) te).isRunning();
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be instanceof MechanicalBearingBlockEntity)
+				return !((MechanicalBearingBlockEntity) be).isRunning();
 		}
 		if (block instanceof ClockworkBearingBlock) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te instanceof ClockworkBearingTileEntity)
-				return !((ClockworkBearingTileEntity) te).isRunning();
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be instanceof ClockworkBearingBlockEntity)
+				return !((ClockworkBearingBlockEntity) be).isRunning();
 		}
 		if (block instanceof PulleyBlock) {
-			BlockEntity te = world.getBlockEntity(pos);
-			if (te instanceof PulleyTileEntity)
-				return !((PulleyTileEntity) te).running;
+			BlockEntity be = world.getBlockEntity(pos);
+			if (be instanceof PulleyBlockEntity)
+				return !((PulleyBlockEntity) be).running;
 		}
 
 		if (AllBlocks.BELT.has(state))
@@ -353,10 +354,6 @@ public class BlockMovementChecks {
 			return state.getValue(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
 			return state.getValue(BlockStateProperties.FACING) == facing;
-		if (AllBlocks.MECHANICAL_HARVESTER.has(state))
-			return state.getValue(HarvesterBlock.FACING) == facing;
-		if (AllBlocks.MECHANICAL_PLOUGH.has(state))
-			return state.getValue(PloughBlock.FACING) == facing;
 
 		if (AllBlocks.CART_ASSEMBLER.has(state))
 			return Direction.DOWN == facing;
@@ -364,7 +361,7 @@ public class BlockMovementChecks {
 			return state.getValue(BlockStateProperties.FACING) == facing;
 		if (AllBlocks.PORTABLE_STORAGE_INTERFACE.has(state))
 			return state.getValue(PortableStorageInterfaceBlock.FACING) == facing;
-		if (state.getBlock() instanceof AttachedActorBlock)
+		if (state.getBlock() instanceof AttachedActorBlock && !AllBlocks.MECHANICAL_ROLLER.has(state))
 			return state.getValue(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		if (AllBlocks.ROPE_PULLEY.has(state))
 			return facing == Direction.DOWN;

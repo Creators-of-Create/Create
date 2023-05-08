@@ -66,6 +66,13 @@ public class TrackBlockItem extends BlockItem {
 						.withStyle(ChatFormatting.RED), true);
 				return InteractionResult.SUCCESS;
 			}
+			
+			if (level.getBlockEntity(pos) instanceof TrackBlockEntity tbe && tbe.isTilted()) {
+				if (!level.isClientSide)
+					player.displayClientMessage(Lang.translateDirect("track.turn_start")
+						.withStyle(ChatFormatting.RED), true);
+				return InteractionResult.SUCCESS;
+			}
 
 			if (select(level, pos, lookAngle, stack)) {
 				level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
@@ -157,7 +164,7 @@ public class TrackBlockItem extends BlockItem {
 		if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())
 			return;
 		if (Minecraft.getInstance().options.keySprint.isDown())
-			AllPackets.channel
+			AllPackets.getChannel()
 				.sendToServer(new PlaceExtendedCurvePacket(event.getHand() == InteractionHand.MAIN_HAND, true));
 	}
 

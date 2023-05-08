@@ -11,7 +11,7 @@ import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.curiosities.armor.BackTankUtil;
+import com.simibubi.create.content.curiosities.armor.BacktankUtil;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.CustomArmPoseItem;
@@ -86,21 +86,21 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		return BackTankUtil.isBarVisible(stack, maxUses());
+		return BacktankUtil.isBarVisible(stack, maxUses());
 	}
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		return BackTankUtil.getBarWidth(stack, maxUses());
+		return BacktankUtil.getBarWidth(stack, maxUses());
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return BackTankUtil.getBarColor(stack, maxUses());
+		return BacktankUtil.getBarColor(stack, maxUses());
 	}
 
 	private int maxUses() {
-		return AllConfigs.SERVER.curiosities.maxPotatoCannonShots.get();
+		return AllConfigs.server().curiosities.maxPotatoCannonShots.get();
 	}
 
 	public boolean isCannon(ItemStack stack) {
@@ -168,7 +168,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements CustomArmP
 					player.getInventory().removeItem(itemStack);
 			}
 
-			if (!BackTankUtil.canAbsorbDamage(player, maxUses()))
+			if (!BacktankUtil.canAbsorbDamage(player, maxUses()))
 				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
 
 			Integer cooldown =

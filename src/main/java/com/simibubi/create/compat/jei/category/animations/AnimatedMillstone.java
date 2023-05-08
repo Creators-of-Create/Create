@@ -1,8 +1,8 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 public class AnimatedMillstone extends AnimatedKinetics {
@@ -15,7 +15,7 @@ public class AnimatedMillstone extends AnimatedKinetics {
 		matrixStack.translate(-2, 18, 0);
 		int scale = 22;
 
-		blockElement(AllBlockPartials.MILLSTONE_COG)
+		blockElement(AllPartialModels.MILLSTONE_COG)
 			.rotateBlock(22.5, getCurrentAngle() * 2, 0)
 			.scale(scale)
 			.render(matrixStack);

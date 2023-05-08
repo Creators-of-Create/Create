@@ -1,8 +1,8 @@
 package com.simibubi.create.content.curiosities.bell;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,20 +17,20 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity> {
+public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellBlockEntity> {
 
 	public PeculiarBellBlock(Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public BlockEntityType<? extends PeculiarBellTileEntity> getTileEntityType() {
-		return AllTileEntities.PECULIAR_BELL.get();
+	public BlockEntityType<? extends PeculiarBellBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.PECULIAR_BELL.get();
 	}
 
 	@Override
-	public Class<PeculiarBellTileEntity> getTileEntityClass() {
-		return PeculiarBellTileEntity.class;
+	public Class<PeculiarBellBlockEntity> getBlockEntityClass() {
+		return PeculiarBellBlockEntity.class;
 	}
 
 	@Override

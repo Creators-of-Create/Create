@@ -33,7 +33,7 @@ public class TrackGraphSync {
 			for (TrackGraphPacket packet : queuedPackets) {
 				if (!packet.packetDeletesGraph && !Create.RAILWAYS.trackNetworks.containsKey(packet.graphId))
 					continue;
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), packet);
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), packet);
 				rollCallIn = 3;
 			}
 
@@ -106,16 +106,16 @@ public class TrackGraphSync {
 	//
 
 	public void sendEdgeGroups(List<UUID> ids, List<EdgeGroupColor> colors, ServerPlayer player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player),
+		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> player),
 			new SignalEdgeGroupPacket(ids, colors, true));
 	}
 
 	public void edgeGroupCreated(UUID id, EdgeGroupColor color) {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(id, color));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new SignalEdgeGroupPacket(id, color));
 	}
 
 	public void edgeGroupRemoved(UUID id) {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(),
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(),
 			new SignalEdgeGroupPacket(ImmutableList.of(id), Collections.emptyList(), false));
 	}
 
@@ -184,11 +184,11 @@ public class TrackGraphSync {
 	}
 
 	private void sendRollCall() {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrackGraphRollCallPacket());
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrackGraphRollCallPacket());
 	}
 
 	private TrackGraphSyncPacket flushAndCreateNew(TrackGraph graph, ServerPlayer player, TrackGraphSyncPacket packet) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), packet);
+		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> player), packet);
 		packet = new TrackGraphSyncPacket(graph.id, graph.netId);
 		return packet;
 	}

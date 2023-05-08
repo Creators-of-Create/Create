@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.block.display.source;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.block.display.target.NixieTubeDisplayTarget;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
 
 import net.minecraft.network.chat.MutableComponent;
@@ -18,11 +18,11 @@ public class NixieTubeDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		BlockEntity sourceTE = context.getSourceTE();
-		if (!(sourceTE instanceof NixieTubeTileEntity nte))
+		BlockEntity sourceBE = context.getSourceBlockEntity();
+		if (!(sourceBE instanceof NixieTubeBlockEntity nbe))
 			return EMPTY_LINE;
 		
-		MutableComponent text = nte.getFullText();
+		MutableComponent text = nbe.getFullText();
 
 		try {
 			String line = text.getString();
@@ -36,7 +36,7 @@ public class NixieTubeDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected boolean allowsLabeling(DisplayLinkContext context) {
-		return !(context.te().activeTarget instanceof NixieTubeDisplayTarget);
+		return !(context.blockEntity().activeTarget instanceof NixieTubeDisplayTarget);
 	}
 
 	@Override

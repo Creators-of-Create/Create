@@ -31,7 +31,7 @@ import net.minecraft.util.GsonHelper;
 
 public class LangMerger implements DataProvider {
 
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
+	static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
 	private static final String CATEGORY_HEADER = "\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
@@ -200,24 +200,6 @@ public class LangMerger implements DataProvider {
 		builder.append("\t\"_\": \"Thank you for translating ").append(displayName).append("!\"\n\n");
 		builder.append("}");
 		return builder.toString();
-	}
-
-	private class LangEntry {
-		static final String ENTRY_FORMAT = "\t\"%s\": %s,\n";
-
-		private String key;
-		private String value;
-
-		LangEntry(String key, String value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return String.format(ENTRY_FORMAT, key, GSON.toJson(value, String.class));
-		}
-
 	}
 
 }

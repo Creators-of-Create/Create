@@ -100,7 +100,7 @@ public class SuperGlueSelectionHandler {
 				CreateClient.OUTLINER.showAABB(glueEntity, glueEntity.getBoundingBox())
 					.colored(h ? HIGHLIGHT : PASSIVE)
 					.withFaceTextures(faceTex, faceTex)
-					.disableNormals()
+					.disableLineNormals()
 					.lineWidth(h ? 1 / 16f : 1 / 64f);
 			}
 		}
@@ -155,12 +155,12 @@ public class SuperGlueSelectionHandler {
 					CreateClient.OUTLINER.showAABB(bbOutlineSlot, currentSelectionBox)
 						.colored(canReach && canAfford && !cancel ? HIGHLIGHT : FAIL)
 						.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.GLUE)
-						.disableNormals()
+						.disableLineNormals()
 						.lineWidth(1 / 16f);
 
 				CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
 					.colored(0x4D9162)
-					.disableNormals()
+					.disableLineNormals()
 					.lineWidth(1 / 64f);
 			}
 
@@ -193,7 +193,7 @@ public class SuperGlueSelectionHandler {
 		if (attack) {
 			if (selected == null)
 				return false;
-			AllPackets.channel.sendToServer(new SuperGlueRemovalPacket(selected.getId(), soundSourceForRemoval));
+			AllPackets.getChannel().sendToServer(new SuperGlueRemovalPacket(selected.getId(), soundSourceForRemoval));
 			selected = null;
 			clusterCooldown = 0;
 			return true;
@@ -251,7 +251,7 @@ public class SuperGlueSelectionHandler {
 
 	public void confirm() {
 		LocalPlayer player = Minecraft.getInstance().player;
-		AllPackets.channel.sendToServer(new SuperGlueSelectionPacket(firstPos, hoveredPos));
+		AllPackets.getChannel().sendToServer(new SuperGlueSelectionPacket(firstPos, hoveredPos));
 		AllSoundEvents.SLIME_ADDED.playAt(player.level, hoveredPos, 0.5F, 0.95F, false);
 		player.level.playSound(player, hoveredPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
 
@@ -259,7 +259,7 @@ public class SuperGlueSelectionHandler {
 			CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)
 				.colored(0xB5F2C6)
 				.withFaceTextures(AllSpecialTextures.GLUE, AllSpecialTextures.HIGHLIGHT_CHECKERED)
-				.disableNormals()
+				.disableLineNormals()
 				.lineWidth(1 / 24f);
 
 		discard();

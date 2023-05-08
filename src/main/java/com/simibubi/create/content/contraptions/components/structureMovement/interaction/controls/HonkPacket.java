@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.entity.Train;
@@ -38,10 +37,9 @@ public class HonkPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context c = context.get();
-		c.enqueueWork(() -> {
-			ServerPlayer sender = c.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
 			boolean clientSide = sender == null;
 			Train train = Create.RAILWAYS.sided(clientSide ? null : sender.level).trains.get(trainId);
 			if (train == null)
@@ -54,11 +52,11 @@ public class HonkPacket extends SimplePacketBase {
 					train.honkTicks = train.honkTicks > 5 ? 6 : 0;
 			} else {
 				AllAdvancements.TRAIN_WHISTLE.awardTo(sender);
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new HonkPacket(train, isHonk));
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new HonkPacket(train, isHonk));
 			}
 
 		});
-		c.setPacketHandled(true);
+		return true;
 	}
 
 	public static class Serverbound extends HonkPacket {

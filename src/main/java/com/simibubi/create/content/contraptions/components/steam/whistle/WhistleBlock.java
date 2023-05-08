@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.components.steam.whistle;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock.WhistleExtenderShape;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWrenchable {
+public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWrenchable {
 
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final BooleanProperty WALL = BooleanProperty.create("wall");
@@ -180,7 +180,7 @@ public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWren
 
 	@Override
 	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
-		withTileEntityDo(pLevel, pPos, WhistleTileEntity::updatePitch);
+		withBlockEntityDo(pLevel, pPos, WhistleBlockEntity::updatePitch);
 	}
 
 	@Override
@@ -192,7 +192,7 @@ public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWren
 
 	@Override
 	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		ITE.onRemove(pState, pLevel, pPos, pNewState);
+		IBE.onRemove(pState, pLevel, pPos, pNewState);
 		FluidTankBlock.updateBoilerState(pState, pLevel, pPos.relative(getAttachedDirection(pState)));
 	}
 
@@ -234,13 +234,13 @@ public class WhistleBlock extends Block implements ITE<WhistleTileEntity>, IWren
 	}
 
 	@Override
-	public Class<WhistleTileEntity> getTileEntityClass() {
-		return WhistleTileEntity.class;
+	public Class<WhistleBlockEntity> getBlockEntityClass() {
+		return WhistleBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends WhistleTileEntity> getTileEntityType() {
-		return AllTileEntities.STEAM_WHISTLE.get();
+	public BlockEntityType<? extends WhistleBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.STEAM_WHISTLE.get();
 	}
 
 	@Override

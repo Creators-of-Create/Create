@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -53,33 +51,30 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer sender = context.get()
-					.getSender();
-				if (sender == null)
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
+			if (sender == null)
+				return;
+			Entity entityByID = sender.getLevel()
+				.getEntity(target);
+			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
+				double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get())
+					.getValue();
+				if (!sender.hasLineOfSight(entityByID))
+					d -= 3;
+				d *= d;
+				if (sender.distanceToSqr(entityByID) > d)
 					return;
-				Entity entityByID = sender.getLevel()
-					.getEntity(target);
-				if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
-					double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get())
-						.getValue();
-					if (!sender.hasLineOfSight(entityByID))
-						d -= 3;
-					d *= d;
-					if (sender.distanceToSqr(entityByID) > d)
-						return;
-					if (interactionHand == null)
-						sender.attack(entityByID);
-					else if (specificPoint == null)
-						sender.interactOn(entityByID, interactionHand);
-					else
-						entityByID.interactAt(sender, specificPoint, interactionHand);
-				}
-			});
-		context.get()
-			.setPacketHandled(true);
+				if (interactionHand == null)
+					sender.attack(entityByID);
+				else if (specificPoint == null)
+					sender.interactOn(entityByID, interactionHand);
+				else
+					entityByID.interactAt(sender, specificPoint, interactionHand);
+			}
+		});
+		return true;
 	}
 
 }

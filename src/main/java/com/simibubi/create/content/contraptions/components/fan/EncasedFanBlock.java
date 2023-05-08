@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.core.BlockPos;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<EncasedFanTileEntity> {
+public class EncasedFanBlock extends DirectionalKineticBlock implements IBE<EncasedFanBlockEntity> {
 
 	public EncasedFanBlock(Properties properties) {
 		super(properties);
@@ -65,11 +65,11 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	protected void blockUpdate(BlockState state, LevelAccessor worldIn, BlockPos pos) {
 		if (worldIn instanceof WrappedWorld)
 			return;
-		notifyFanTile(worldIn, pos);
+		notifyFanBlockEntity(worldIn, pos);
 	}
 
-	protected void notifyFanTile(LevelAccessor world, BlockPos pos) {
-		withTileEntityDo(world, pos, EncasedFanTileEntity::blockInFrontChanged);
+	protected void notifyFanBlockEntity(LevelAccessor world, BlockPos pos) {
+		withBlockEntityDo(world, pos, EncasedFanBlockEntity::blockInFrontChanged);
 	}
 
 	@Override
@@ -91,13 +91,13 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	}
 
 	@Override
-	public Class<EncasedFanTileEntity> getTileEntityClass() {
-		return EncasedFanTileEntity.class;
+	public Class<EncasedFanBlockEntity> getBlockEntityClass() {
+		return EncasedFanBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends EncasedFanTileEntity> getTileEntityType() {
-		return AllTileEntities.ENCASED_FAN.get();
+	public BlockEntityType<? extends EncasedFanBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ENCASED_FAN.get();
 	}
 
 }

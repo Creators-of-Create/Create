@@ -73,7 +73,7 @@ public class ClientSchematicLoader {
 
 			in = Files.newInputStream(path, StandardOpenOption.READ);
 			activeUploads.put(schematic, in);
-			AllPackets.channel.sendToServer(SchematicUploadPacket.begin(schematic, size));
+			AllPackets.getChannel().sendToServer(SchematicUploadPacket.begin(schematic, size));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -82,7 +82,7 @@ public class ClientSchematicLoader {
 	public static boolean validateSizeLimitation(long size) {
 		if (Minecraft.getInstance().hasSingleplayerServer())
 			return true;
-		Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
+		Integer maxSize = AllConfigs.server().schematics.maxTotalSchematicSize.get();
 		if (size > maxSize * 1000) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
@@ -96,7 +96,7 @@ public class ClientSchematicLoader {
 
 	private void continueUpload(String schematic) {
 		if (activeUploads.containsKey(schematic)) {
-			Integer maxPacketSize = AllConfigs.SERVER.schematics.maxSchematicPacketSize.get();
+			Integer maxPacketSize = AllConfigs.server().schematics.maxSchematicPacketSize.get();
 			byte[] data = new byte[maxPacketSize];
 			try {
 				int status = activeUploads.get(schematic).read(data);
@@ -105,7 +105,7 @@ public class ClientSchematicLoader {
 					if (status < maxPacketSize)
 						data = Arrays.copyOf(data, status);
 					if (Minecraft.getInstance().level != null)
-						AllPackets.channel.sendToServer(SchematicUploadPacket.write(schematic, data));
+						AllPackets.getChannel().sendToServer(SchematicUploadPacket.write(schematic, data));
 					else {
 						activeUploads.remove(schematic);
 						return;
@@ -122,7 +122,7 @@ public class ClientSchematicLoader {
 
 	private void finishUpload(String schematic) {
 		if (activeUploads.containsKey(schematic)) {
-			AllPackets.channel.sendToServer(SchematicUploadPacket.finish(schematic));
+			AllPackets.getChannel().sendToServer(SchematicUploadPacket.finish(schematic));
 			activeUploads.remove(schematic);
 		}
 	}

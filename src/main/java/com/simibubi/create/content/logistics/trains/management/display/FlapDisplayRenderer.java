@@ -8,9 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -34,34 +33,31 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class FlapDisplayRenderer extends KineticTileEntityRenderer {
+public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayBlockEntity> {
 
 	public FlapDisplayRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(FlapDisplayBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
 		Font fontRenderer = Minecraft.getInstance().font;
 		FontSet fontSet = fontRenderer.getFontSet(Style.DEFAULT_FONT);
 
 		float scale = 1 / 32f;
 
-		if (!(te instanceof FlapDisplayTileEntity flapTe))
+		if (!be.isController)
 			return;
 
-		if (!flapTe.isController)
-			return;
-
-		List<FlapDisplayLayout> lines = flapTe.getLines();
+		List<FlapDisplayLayout> lines = be.getLines();
 
 		ms.pushPose();
 		TransformStack.cast(ms)
 			.centre()
-			.rotateY(AngleHelper.horizontalAngle(te.getBlockState()
+			.rotateY(AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(FlapDisplayBlock.HORIZONTAL_FACING)))
 			.unCentre()
 			.translate(0, 0, -3 / 16f);
@@ -74,22 +70,22 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 		for (int j = 0; j < lines.size(); j++) {
 			List<FlapDisplaySection> line = lines.get(j)
 				.getSections();
-			int color = flapTe.getLineColor(j);
+			int color = be.getLineColor(j);
 			ms.pushPose();
 
 			float w = 0;
 			for (FlapDisplaySection section : line)
 				w += section.getSize() + (section.hasGap ? 8 : 1);
-			ms.translate(flapTe.xSize * 16 - w / 2 + 1, 4.5f, 0);
+			ms.translate(be.xSize * 16 - w / 2 + 1, 4.5f, 0);
 
 			Pose transform = ms.last();
 			FlapDisplayRenderOutput renderOutput = new FlapDisplayRenderOutput(buffer, color, transform.pose(), light,
-				j, !te.isSpeedRequirementFulfilled(), te.getLevel(), flapTe.isLineGlowing(j));
+				j, !be.isSpeedRequirementFulfilled(), be.getLevel(), be.isLineGlowing(j));
 
 			for (int i = 0; i < line.size(); i++) {
 				FlapDisplaySection section = line.get(i);
 				renderOutput.nextSection(section);
-				int ticks = AnimationTickHolder.getTicks(te.getLevel());
+				int ticks = AnimationTickHolder.getTicks(be.getLevel());
 				String text = section.renderCharsIndividually() || !section.spinning[0] ? section.text
 					: section.cyclingOptions[((ticks / 3) + i * 13) % section.cyclingOptions.length];
 				StringDecomposer.iterateFormatted(text, Style.EMPTY, renderOutput);
@@ -231,14 +227,14 @@ public class FlapDisplayRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected SuperByteBuffer getRotatedModel(KineticTileEntity te, BlockState state) {
-		return CachedBufferer.partialFacingVertical(AllBlockPartials.SHAFTLESS_COGWHEEL, state,
+	protected SuperByteBuffer getRotatedModel(FlapDisplayBlockEntity be, BlockState state) {
+		return CachedBufferer.partialFacingVertical(AllPartialModels.SHAFTLESS_COGWHEEL, state,
 			state.getValue(FlapDisplayBlock.HORIZONTAL_FACING));
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticTileEntity pBlockEntity) {
-		return ((FlapDisplayTileEntity) pBlockEntity).isController;
+	public boolean shouldRenderOffScreen(FlapDisplayBlockEntity be) {
+		return be.isController;
 	}
 
 }

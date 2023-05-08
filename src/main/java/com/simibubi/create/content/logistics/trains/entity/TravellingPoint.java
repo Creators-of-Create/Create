@@ -358,7 +358,7 @@ public class TravellingPoint {
 		return traveled;
 	}
 
-	private Double edgeTraversedFrom(TrackGraph graph, boolean forward, IEdgePointListener edgePointListener,
+	protected Double edgeTraversedFrom(TrackGraph graph, boolean forward, IEdgePointListener edgePointListener,
 		ITurnListener turnListener, double prevPos, double totalDistance) {
 		if (edge.isTurn())
 			turnListener.accept(Math.max(0, totalDistance), edge);
@@ -394,15 +394,14 @@ public class TravellingPoint {
 			.get(node2);
 	}
 
-	public Vec3 getPosition() {
-		return getPositionWithOffset(0);
+	public Vec3 getPosition(@Nullable TrackGraph trackGraph) {
+		return getPositionWithOffset(trackGraph, 0);
 	}
 
-	public Vec3 getPositionWithOffset(double offset) {
+	public Vec3 getPositionWithOffset(@Nullable TrackGraph trackGraph, double offset) {
 		double t = (position + offset) / edge.getLength();
-		return edge.getPosition(t)
-			.add(edge.getNormal(node1, node2, t)
-				.scale(1));
+		return edge.getPosition(trackGraph, t)
+			.add(edge.getNormal(trackGraph, t));
 	}
 
 	public void migrateTo(List<GraphLocation> locations) {

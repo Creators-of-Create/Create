@@ -4,10 +4,10 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 import java.util.Optional;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.network.NetworkHooks;
 
-public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, ITE<ToolboxTileEntity> {
+public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, IBE<ToolboxBlockEntity> {
 
 	protected final DyeColor color;
 
@@ -78,13 +78,13 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 			return;
 		if (stack == null)
 			return;
-		withTileEntityDo(worldIn, pos, te -> {
+		withBlockEntityDo(worldIn, pos, be -> {
 			CompoundTag orCreateTag = stack.getOrCreateTag();
-			te.readInventory(orCreateTag.getCompound("Inventory"));
+			be.readInventory(orCreateTag.getCompound("Inventory"));
 			if (orCreateTag.contains("UniqueId"))
-				te.setUniqueId(orCreateTag.getUUID("UniqueId"));
+				be.setUniqueId(orCreateTag.getUUID("UniqueId"));
 			if (stack.hasCustomHoverName())
-				te.setCustomName(stack.getHoverName());
+				be.setCustomName(stack.getHoverName());
 		});
 	}
 
@@ -100,7 +100,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 			return;
 		if (world.isClientSide)
 			return;
-		withTileEntityDo(world, pos, ToolboxTileEntity::unequipTracked);
+		withBlockEntityDo(world, pos, ToolboxBlockEntity::unequipTracked);
 		if (world instanceof ServerLevel) {
 			ItemStack cloneItemStack = getCloneItemStack(world, pos, state);
 			world.destroyBlock(pos, false);
@@ -112,16 +112,16 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 	@Override
 	public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state) {
 		ItemStack item = new ItemStack(this);
-		Optional<ToolboxTileEntity> tileEntityOptional = getTileEntityOptional(world, pos);
+		Optional<ToolboxBlockEntity> blockEntityOptional = getBlockEntityOptional(world, pos);
 		CompoundTag tag = item.getOrCreateTag();
 
-		CompoundTag inv = tileEntityOptional.map(tb -> tb.inventory.serializeNBT())
+		CompoundTag inv = blockEntityOptional.map(tb -> tb.inventory.serializeNBT())
 			.orElse(new CompoundTag());
 		tag.put("Inventory", inv);
 
-		tileEntityOptional.map(tb -> tb.getUniqueId())
+		blockEntityOptional.map(tb -> tb.getUniqueId())
 			.ifPresent(uid -> tag.putUUID("UniqueId", uid));
-		tileEntityOptional.map(ToolboxTileEntity::getCustomName)
+		blockEntityOptional.map(ToolboxBlockEntity::getCustomName)
 			.ifPresent(item::setHoverName);
 		return item;
 	}
@@ -162,8 +162,8 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
 
-		withTileEntityDo(world, pos,
-			toolbox -> NetworkHooks.openScreen((ServerPlayer) player, toolbox, toolbox::sendToContainer));
+		withBlockEntityDo(world, pos,
+			toolbox -> NetworkHooks.openScreen((ServerPlayer) player, toolbox, toolbox::sendToMenu));
 		return InteractionResult.SUCCESS;
 	}
 
@@ -177,13 +177,13 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 	}
 
 	@Override
-	public Class<ToolboxTileEntity> getTileEntityClass() {
-		return ToolboxTileEntity.class;
+	public Class<ToolboxBlockEntity> getBlockEntityClass() {
+		return ToolboxBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends ToolboxTileEntity> getTileEntityType() {
-		return AllTileEntities.TOOLBOX.get();
+	public BlockEntityType<? extends ToolboxBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.TOOLBOX.get();
 	}
 
 	public DyeColor getColor() {

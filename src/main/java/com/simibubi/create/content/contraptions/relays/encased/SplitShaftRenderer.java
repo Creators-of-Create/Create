@@ -2,10 +2,9 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -19,41 +18,38 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 
-public class SplitShaftRenderer extends KineticTileEntityRenderer {
+public class SplitShaftRenderer extends KineticBlockEntityRenderer<SplitShaftBlockEntity> {
 
 	public SplitShaftRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(SplitShaftBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 			int light, int overlay) {
-		if (Backend.canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(be.getLevel())) return;
 
-		Block block = te.getBlockState().getBlock();
-		final Axis boxAxis = ((IRotate) block).getRotationAxis(te.getBlockState());
-		final BlockPos pos = te.getBlockPos();
-		float time = AnimationTickHolder.getRenderTime(te.getLevel());
+		Block block = be.getBlockState().getBlock();
+		final Axis boxAxis = ((IRotate) block).getRotationAxis(be.getBlockState());
+		final BlockPos pos = be.getBlockPos();
+		float time = AnimationTickHolder.getRenderTime(be.getLevel());
 
 		for (Direction direction : Iterate.directions) {
 			Axis axis = direction.getAxis();
 			if (boxAxis != axis)
 				continue;
 
-			float offset = getRotationOffsetForPosition(te, pos, axis);
-			float angle = (time * te.getSpeed() * 3f / 10) % 360;
-			float modifier = 1;
-
-			if (te instanceof SplitShaftTileEntity)
-				modifier = ((SplitShaftTileEntity) te).getRotationSpeedModifier(direction);
+			float offset = getRotationOffsetForPosition(be, pos, axis);
+			float angle = (time * be.getSpeed() * 3f / 10) % 360;
+			float modifier = be.getRotationSpeedModifier(direction);
 
 			angle *= modifier;
 			angle += offset;
 			angle = angle / 180f * (float) Math.PI;
 
 			SuperByteBuffer superByteBuffer =
-					CachedBufferer.partialFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), direction);
-			kineticRotationTransform(superByteBuffer, te, axis, angle, light);
+					CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
+			kineticRotationTransform(superByteBuffer, be, axis, angle, light);
 			superByteBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}
 	}

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.trains.management.schedule;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -29,28 +27,25 @@ public class ScheduleEditPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer sender = context.get()
-					.getSender();
-				ItemStack mainHandItem = sender.getMainHandItem();
-				if (!AllItems.SCHEDULE.isIn(mainHandItem))
-					return;
-				
-				CompoundTag tag = mainHandItem.getOrCreateTag();
-				if (schedule.entries.isEmpty()) {
-					tag.remove("Schedule");
-					if (tag.isEmpty())
-						mainHandItem.setTag(null);
-				} else
-					tag.put("Schedule", schedule.write());
-				
-				sender.getCooldowns()
-					.addCooldown(mainHandItem.getItem(), 5);
-			});
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
+			ItemStack mainHandItem = sender.getMainHandItem();
+			if (!AllItems.SCHEDULE.isIn(mainHandItem))
+				return;
+			
+			CompoundTag tag = mainHandItem.getOrCreateTag();
+			if (schedule.entries.isEmpty()) {
+				tag.remove("Schedule");
+				if (tag.isEmpty())
+					mainHandItem.setTag(null);
+			} else
+				tag.put("Schedule", schedule.write());
+			
+			sender.getCooldowns()
+				.addCooldown(mainHandItem.getItem(), 5);
+		});
+		return true;
 	}
 
 }

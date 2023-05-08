@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
+import com.simibubi.create.content.contraptions.components.saw.SawBlockEntity;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
-import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
@@ -30,8 +30,9 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(SawBlock.FACING)
-			.getOpposite());
+		return super.isActive(context)
+			&& !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(SawBlock.FACING)
+				.getOpposite());
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(Level world, BlockPos breakingPos, BlockState state) {
-		return super.canBreak(world, breakingPos, state) && SawTileEntity.isSawable(state);
+		return super.canBreak(world, breakingPos, state) && SawBlockEntity.isSawable(state);
 	}
 
 	@Override

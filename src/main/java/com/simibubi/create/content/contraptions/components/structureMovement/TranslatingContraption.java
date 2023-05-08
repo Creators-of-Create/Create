@@ -14,27 +14,30 @@ public abstract class TranslatingContraption extends Contraption {
 	protected Set<BlockPos> cachedColliders;
 	protected Direction cachedColliderDirection;
 
-	public Set<BlockPos> getColliders(Level world, Direction movementDirection) {
+	public Set<BlockPos> getOrCreateColliders(Level world, Direction movementDirection) {
 		if (getBlocks() == null)
 			return Collections.emptySet();
 		if (cachedColliders == null || cachedColliderDirection != movementDirection) {
-			cachedColliders = new HashSet<>();
 			cachedColliderDirection = movementDirection;
-
-			for (StructureBlockInfo info : getBlocks().values()) {
-				BlockPos offsetPos = info.pos.relative(movementDirection);
-				if (info.state.getCollisionShape(world, offsetPos)
-					.isEmpty())
-					continue;
-				if (getBlocks().containsKey(offsetPos)
-					&& !getBlocks().get(offsetPos).state.getCollisionShape(world, offsetPos)
-						.isEmpty())
-					continue;
-				cachedColliders.add(info.pos);
-			}
-
+			cachedColliders= createColliders(world, movementDirection);
 		}
 		return cachedColliders;
+	}
+
+	public Set<BlockPos> createColliders(Level world, Direction movementDirection) {
+		Set<BlockPos> colliders = new HashSet<>();
+		for (StructureBlockInfo info : getBlocks().values()) {
+			BlockPos offsetPos = info.pos.relative(movementDirection);
+			if (info.state.getCollisionShape(world, offsetPos)
+				.isEmpty())
+				continue;
+			if (getBlocks().containsKey(offsetPos)
+				&& !getBlocks().get(offsetPos).state.getCollisionShape(world, offsetPos)
+					.isEmpty())
+				continue;
+			colliders.add(info.pos);
+		}
+		return colliders;
 	}
 
 	@Override

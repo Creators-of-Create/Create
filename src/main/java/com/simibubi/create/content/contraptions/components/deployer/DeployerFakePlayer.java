@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -48,20 +51,21 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class DeployerFakePlayer extends FakePlayer {
 
 	private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
-	public static final GameProfile DEPLOYER_PROFILE =
-		new GameProfile(UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d"), "Deployer");
+	public static final UUID fallbackID = UUID.fromString("9e2faded-cafe-4ec2-c314-dad129ae971d");
 	Pair<BlockPos, Float> blockBreakingProgress;
 	ItemStack spawnedItemEffects;
 	public boolean placedTracks;
 	public boolean onMinecartContraption;
+	private UUID owner;
 
-	public DeployerFakePlayer(ServerLevel world) {
-		super(world, DEPLOYER_PROFILE);
+	public DeployerFakePlayer(ServerLevel world, @Nullable UUID owner) {
+		super(world, new DeployerGameProfile(fallbackID, "Deployer", owner));
 		connection = new FakePlayNetHandler(world.getServer(), this);
+		this.owner = owner;
 	}
 
 	@Override
-	public OptionalInt openMenu(MenuProvider container) {
+	public OptionalInt openMenu(MenuProvider menuProvider) {
 		return OptionalInt.empty();
 	}
 
@@ -97,6 +101,16 @@ public class DeployerFakePlayer extends FakePlayer {
 		return stack;
 	}
 
+	@Override
+	public boolean canBeAffected(MobEffectInstance pEffectInstance) {
+		return false;
+	}
+
+	@Override
+	public UUID getUUID() {
+		return owner == null ? super.getUUID() : owner;
+	}
+	
 	@SubscribeEvent
 	public static void deployerHasEyesOnHisFeet(EntityEvent.Size event) {
 		if (event.getEntity() instanceof DeployerFakePlayer)
@@ -148,7 +162,7 @@ public class DeployerFakePlayer extends FakePlayer {
 			return;
 		Mob mob = (Mob) entityLiving;
 
-		CKinetics.DeployerAggroSetting setting = AllConfigs.SERVER.kinetics.ignoreDeployerAttacks.get();
+		CKinetics.DeployerAggroSetting setting = AllConfigs.server().kinetics.ignoreDeployerAttacks.get();
 
 		switch (setting) {
 		case ALL:
@@ -160,6 +174,49 @@ public class DeployerFakePlayer extends FakePlayer {
 			break;
 		case NONE:
 		default:
+		}
+	}
+
+	// Credit to Mekanism for this approach. Helps fake players get past claims and
+	// protection by other mods
+	private static class DeployerGameProfile extends GameProfile {
+
+		private UUID owner;
+
+		public DeployerGameProfile(UUID id, String name, UUID owner) {
+			super(id, name);
+			this.owner = owner;
+		}
+
+		@Override
+		public UUID getId() {
+			return owner == null ? super.getId() : owner;
+		}
+
+		@Override
+		public String getName() {
+			if (owner == null)
+				return super.getName();
+			String lastKnownUsername = UsernameCache.getLastKnownUsername(owner);
+			return lastKnownUsername == null ? super.getName() : lastKnownUsername;
+		}
+
+		@Override
+		public boolean equals(final Object o) {
+			if (this == o)
+				return true;
+			if (!(o instanceof GameProfile otherProfile))
+				return false;
+			return Objects.equals(getId(), otherProfile.getId()) && Objects.equals(getName(), otherProfile.getName());
+		}
+
+		@Override
+		public int hashCode() {
+			UUID id = getId();
+			String name = getName();
+			int result = id == null ? 0 : id.hashCode();
+			result = 31 * result + (name == null ? 0 : name.hashCode());
+			return result;
 		}
 	}
 

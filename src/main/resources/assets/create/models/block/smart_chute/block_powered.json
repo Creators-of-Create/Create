@@ -1,6 +1,9 @@
 {
+	"credit": "Made with Blockbench",
 	"parent": "create:block/smart_chute/block",
 	"textures": {
-		"5": "create:block/brass_funnel_tall_powered"
+		"8": "create:block/funnel/funnel_closed",
+		"7": "create:block/chute_smart_powered",
+		"particle": "create:block/chute_smart_powered"
 	}
 }

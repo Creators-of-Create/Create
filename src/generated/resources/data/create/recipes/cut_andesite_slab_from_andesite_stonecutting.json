@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 2,
-  "ingredient": {
-    "item": "minecraft:andesite"
-  },
-  "result": "create:cut_andesite_slab"
-}

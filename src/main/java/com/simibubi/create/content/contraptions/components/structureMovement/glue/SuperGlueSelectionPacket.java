@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -36,10 +35,9 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 
 			double range = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
 				.getValue() + 2;
@@ -64,7 +62,7 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 			
 			AllAdvancements.SUPER_GLUE.awardTo(player);
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

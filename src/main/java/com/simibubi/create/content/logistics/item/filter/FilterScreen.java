@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 
-public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
+public class FilterScreen extends AbstractFilterScreen<FilterMenu> {
 
 	private static final String PREFIX = "gui.filter.";
 
@@ -34,8 +34,8 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 	private Indicator whitelistIndicator, blacklistIndicator;
 	private Indicator respectNBTIndicator, ignoreNBTIndicator;
 
-	public FilterScreen(FilterContainer container, Inventory inv, Component title) {
-		super(container, inv, title, AllGuiTextures.FILTER);
+	public FilterScreen(FilterMenu menu, Inventory inv, Component title) {
+		super(menu, inv, title, AllGuiTextures.FILTER);
 	}
 
 	@Override
@@ -46,36 +46,36 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 		int x = leftPos;
 		int y = topPos;
 
-		blacklist = new IconButton(x + 18, y + 73, AllIcons.I_BLACKLIST);
+		blacklist = new IconButton(x + 18, y + 75, AllIcons.I_BLACKLIST);
 		blacklist.withCallback(() -> {
 			menu.blacklist = true;
 			sendOptionUpdate(Option.BLACKLIST);
 		});
 		blacklist.setToolTip(denyN);
-		whitelist = new IconButton(x + 36, y + 73, AllIcons.I_WHITELIST);
+		whitelist = new IconButton(x + 36, y + 75, AllIcons.I_WHITELIST);
 		whitelist.withCallback(() -> {
 			menu.blacklist = false;
 			sendOptionUpdate(Option.WHITELIST);
 		});
 		whitelist.setToolTip(allowN);
-		blacklistIndicator = new Indicator(x + 18, y + 67, Components.immutableEmpty());
-		whitelistIndicator = new Indicator(x + 36, y + 67, Components.immutableEmpty());
+		blacklistIndicator = new Indicator(x + 18, y + 69, Components.immutableEmpty());
+		whitelistIndicator = new Indicator(x + 36, y + 69, Components.immutableEmpty());
 		addRenderableWidgets(blacklist, whitelist, blacklistIndicator, whitelistIndicator);
 
-		respectNBT = new IconButton(x + 60, y + 73, AllIcons.I_RESPECT_NBT);
+		respectNBT = new IconButton(x + 60, y + 75, AllIcons.I_RESPECT_NBT);
 		respectNBT.withCallback(() -> {
 			menu.respectNBT = true;
 			sendOptionUpdate(Option.RESPECT_DATA);
 		});
 		respectNBT.setToolTip(respectDataN);
-		ignoreNBT = new IconButton(x + 78, y + 73, AllIcons.I_IGNORE_NBT);
+		ignoreNBT = new IconButton(x + 78, y + 75, AllIcons.I_IGNORE_NBT);
 		ignoreNBT.withCallback(() -> {
 			menu.respectNBT = false;
 			sendOptionUpdate(Option.IGNORE_DATA);
 		});
 		ignoreNBT.setToolTip(ignoreDataN);
-		respectNBTIndicator = new Indicator(x + 60, y + 67, Components.immutableEmpty());
-		ignoreNBTIndicator = new Indicator(x + 78, y + 67, Components.immutableEmpty());
+		respectNBTIndicator = new Indicator(x + 60, y + 69, Components.immutableEmpty());
+		ignoreNBTIndicator = new Indicator(x + 78, y + 69, Components.immutableEmpty());
 		addRenderableWidgets(respectNBT, ignoreNBT, respectNBTIndicator, ignoreNBTIndicator);
 
 		handleIndicators();

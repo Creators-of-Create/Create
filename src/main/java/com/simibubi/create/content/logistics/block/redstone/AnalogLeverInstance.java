@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.Translate;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.utility.Color;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
-public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverTileEntity> implements DynamicInstance {
+public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverBlockEntity> implements DynamicInstance {
 
 	protected final ModelData handle;
 	protected final ModelData indicator;
@@ -23,14 +23,14 @@ public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverTileEnti
 	final float rX;
 	final float rY;
 
-	public AnalogLeverInstance(MaterialManager modelManager, AnalogLeverTileEntity tile) {
-		super(modelManager, tile);
+	public AnalogLeverInstance(MaterialManager materialManager, AnalogLeverBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 
 		Material<ModelData> mat = getTransformMaterial();
 
-		handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState)
+		handle = mat.getModel(AllPartialModels.ANALOG_LEVER_HANDLE, blockState)
 			.createInstance();
-		indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState)
+		indicator = mat.getModel(AllPartialModels.ANALOG_LEVER_INDICATOR, blockState)
 			.createInstance();
 
 		transform(indicator);

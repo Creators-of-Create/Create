@@ -20,9 +20,9 @@ public class KineticEffectHandler {
 	int overStressedTime;
 	float overStressedEffect;
 	int particleSpawnCountdown;
-	KineticTileEntity kte;
+	KineticBlockEntity kte;
 
-	public KineticEffectHandler(KineticTileEntity kte) {
+	public KineticEffectHandler(KineticBlockEntity kte) {
 		this.kte = kte;
 	}
 

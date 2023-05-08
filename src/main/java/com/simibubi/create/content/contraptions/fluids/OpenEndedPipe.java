@@ -120,9 +120,9 @@ public class OpenEndedPipe extends FlowSource {
 		return compound;
 	}
 
-	public static OpenEndedPipe fromNBT(CompoundTag compound, BlockPos tilePos) {
+	public static OpenEndedPipe fromNBT(CompoundTag compound, BlockPos blockEntityPos) {
 		BlockFace fromNBT = BlockFace.fromNBT(compound.getCompound("Location"));
-		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(tilePos, fromNBT.getFace()));
+		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(blockEntityPos, fromNBT.getFace()));
 		oep.fluidHandler.readFromNBT(compound);
 		oep.wasPulling = compound.getBoolean("Pulling");
 		return oep;
@@ -217,7 +217,7 @@ public class OpenEndedPipe extends FlowSource {
 			return true;
 		}
 
-		if (!AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get())
+		if (!AllConfigs.server().fluids.placeFluidSourceBlocks.get())
 			return true;
 
 		world.setBlock(outputPos, fluid.getFluid()

@@ -27,7 +27,7 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 		GlobalStation currentStation = train.getCurrentStation();
 		if (currentStation == null)
 			return false;
-		ResourceKey<Level> stationDim = currentStation.getTileDimension();
+		ResourceKey<Level> stationDim = currentStation.getBlockEntityDimension();
 		MinecraftServer server = level.getServer();
 		if (server == null)
 			return false;
@@ -35,7 +35,7 @@ public class StationUnloadedCondition extends ScheduleWaitCondition {
 		if (stationLevel == null) {
 			return false;
 		}
-		return !stationLevel.isPositionEntityTicking(currentStation.getTilePos());
+		return !stationLevel.isPositionEntityTicking(currentStation.getBlockEntityPos());
 	}
 
 	@Override

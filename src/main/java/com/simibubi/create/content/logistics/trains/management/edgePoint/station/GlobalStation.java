@@ -7,14 +7,14 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SingleTileEdgePoint;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SingleBlockEntityEdgePoint;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GlobalStation extends SingleTileEdgePoint {
+public class GlobalStation extends SingleBlockEntityEdgePoint {
 
 	public String name;
 	public WeakReference<Train> nearestTrain;
@@ -26,9 +26,9 @@ public class GlobalStation extends SingleTileEdgePoint {
 	}
 
 	@Override
-	public void tileAdded(BlockEntity tile, boolean front) {
-		super.tileAdded(tile, front);
-		BlockState state = tile.getBlockState();
+	public void blockEntityAdded(BlockEntity blockEntity, boolean front) {
+		super.blockEntityAdded(blockEntity, front);
+		BlockState state = blockEntity.getBlockState();
 		assembling =
 			state != null && state.hasProperty(StationBlock.ASSEMBLING) && state.getValue(StationBlock.ASSEMBLING);
 	}
@@ -47,7 +47,7 @@ public class GlobalStation extends SingleTileEdgePoint {
 		name = buffer.readUtf();
 		assembling = buffer.readBoolean();
 		if (buffer.readBoolean())
-			tilePos = buffer.readBlockPos();
+			blockEntityPos = buffer.readBlockPos();
 	}
 
 	@Override
@@ -62,9 +62,9 @@ public class GlobalStation extends SingleTileEdgePoint {
 		super.write(buffer, dimensions);
 		buffer.writeUtf(name);
 		buffer.writeBoolean(assembling);
-		buffer.writeBoolean(tilePos != null);
-		if (tilePos != null)
-			buffer.writeBlockPos(tilePos);
+		buffer.writeBoolean(blockEntityPos != null);
+		if (blockEntityPos != null)
+			buffer.writeBlockPos(blockEntityPos);
 	}
 
 	public boolean canApproachFrom(TrackNode side) {

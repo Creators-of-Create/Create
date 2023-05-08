@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.particle;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
+import com.simibubi.create.content.contraptions.processing.BasinBlockEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Camera;
@@ -61,9 +61,9 @@ public class BasinFluidParticle extends FluidStackParticle {
 				return;
 			}
 
-			BlockEntity tileEntity = level.getBlockEntity(basinPos);
-			if (tileEntity instanceof BasinTileEntity) {
-				float totalUnits = ((BasinTileEntity) tileEntity).getTotalFluidUnits(0);
+			BlockEntity blockEntity = level.getBlockEntity(basinPos);
+			if (blockEntity instanceof BasinBlockEntity) {
+				float totalUnits = ((BasinBlockEntity) blockEntity).getTotalFluidUnits(0);
 				if (totalUnits < 1)
 					totalUnits = 0;
 				float fluidLevel = Mth.clamp(totalUnits / 2000, 0, 1);

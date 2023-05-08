@@ -50,7 +50,7 @@ public class SuperGlueHandler {
 			BlockPos relative = pos.relative(direction);
 			if (SuperGlueEntity.isGlued(world, pos, direction, cached)
 				&& BlockMovementChecks.isMovementNecessary(world.getBlockState(relative), entity.level, relative))
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
+				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
 					new GlueEffectPacket(pos, direction, true));
 		}
 
@@ -101,7 +101,7 @@ public class SuperGlueHandler {
 		if (SuperGlueEntity.isValidFace(world, gluePos, face)) {
 			if (!world.isClientSide) {
 				world.addFreshEntity(entity);
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
 					new GlueEffectPacket(gluePos, face, true));
 			}
 			itemstack.hurtAndBreak(1, placer, SuperGlueItem::onBroken);

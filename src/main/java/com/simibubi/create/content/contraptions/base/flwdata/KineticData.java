@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.base.flwdata;
 
 import com.jozufozu.flywheel.core.materials.BasicData;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.BlockPos;
@@ -38,9 +38,9 @@ public class KineticData extends BasicData {
         return this;
     }
 
-    public KineticData setColor(KineticTileEntity te) {
-        if (te.hasNetwork()) {
-            setColor(Color.generateFromLong(te.network));
+    public KineticData setColor(KineticBlockEntity blockEntity) {
+        if (blockEntity.hasNetwork()) {
+            setColor(Color.generateFromLong(blockEntity.network));
         }else {
             setColor(0xFF, 0xFF, 0xFF);
         }

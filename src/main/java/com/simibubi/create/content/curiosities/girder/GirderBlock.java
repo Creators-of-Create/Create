@@ -6,9 +6,9 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedBlockEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.curiosities.deco.PlacardBlock;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
@@ -16,7 +16,7 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.content.logistics.trains.track.TrackShape;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -102,7 +102,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 
 		ItemStack itemInHand = pPlayer.getItemInHand(pHand);
 		if (AllBlocks.SHAFT.isIn(itemInHand)) {
-			KineticTileEntity.switchToBlockState(pLevel, pPos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
+			KineticBlockEntity.switchToBlockState(pLevel, pPos, AllBlocks.METAL_GIRDER_ENCASED_SHAFT.getDefaultState()
 				.setValue(WATERLOGGED, pState.getValue(WATERLOGGED))
 				.setValue(TOP, pState.getValue(TOP))
 				.setValue(BOTTOM, pState.getValue(BOTTOM))
@@ -235,9 +235,9 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 
 	public static boolean isFacingBracket(BlockAndTintGetter level, BlockPos pos, Direction d) {
 		BlockEntity blockEntity = level.getBlockEntity(pos.relative(d));
-		if (!(blockEntity instanceof SmartTileEntity ste))
+		if (!(blockEntity instanceof SmartBlockEntity ste))
 			return false;
-		BracketedTileEntityBehaviour behaviour = ste.getBehaviour(BracketedTileEntityBehaviour.TYPE);
+		BracketedBlockEntityBehaviour behaviour = ste.getBehaviour(BracketedBlockEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return false;
 		BlockState bracket = behaviour.getBracket();

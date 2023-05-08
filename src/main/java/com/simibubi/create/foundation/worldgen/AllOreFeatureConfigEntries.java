@@ -30,7 +30,7 @@ public class AllOreFeatureConfigEntries {
 			.parent();
 
 	public static final OreFeatureConfigEntry STRIATED_ORES_OVERWORLD =
-		create("striated_ores_overworld", 32, 1 / 12f, -30, 70)
+		create("striated_ores_overworld", 32, 1 / 18f, -30, 70)
 			.layeredDatagenExt()
 			.withLayerPattern(AllLayerPatterns.SCORIA)
 			.withLayerPattern(AllLayerPatterns.CINNABAR)
@@ -42,7 +42,7 @@ public class AllOreFeatureConfigEntries {
 			.parent();
 
 	public static final OreFeatureConfigEntry STRIATED_ORES_NETHER =
-		create("striated_ores_nether", 32, 1 / 12f, 40, 90)
+		create("striated_ores_nether", 32, 1 / 18f, 40, 90)
 			.layeredDatagenExt()
 			.withLayerPattern(AllLayerPatterns.SCORIA_NETHER)
 			.withLayerPattern(AllLayerPatterns.SCORCHIA_NETHER)

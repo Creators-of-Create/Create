@@ -268,7 +268,7 @@ public class AllAdvancements implements DataProvider {
 			.description("Create a Copper Backtank and make it accumulate air pressure")
 			.after(STEAM_WHISTLE)),
 
-		DIVING_SUIT = create("diving_suit", b -> b.icon(AllItems.DIVING_HELMET)
+		DIVING_SUIT = create("diving_suit", b -> b.icon(AllItems.COPPER_DIVING_HELMET)
 			.title("Ready for the Depths")
 			.description("Equip a Diving Helmet and a Copper Backtank, then jump into water")
 			.after(BACKTANK)),
@@ -329,7 +329,7 @@ public class AllAdvancements implements DataProvider {
 
 		// Copper - Hidden
 
-		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.DIVING_HELMET)
+		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.COPPER_DIVING_HELMET)
 			.title("Swimming with the Striders")
 			.description("Attempt to take a dive in lava with your diving gear")
 			.after(BACKTANK)
@@ -563,16 +563,10 @@ public class AllAdvancements implements DataProvider {
 			.after(STURDY_SHEET)
 			.special(EXPERT)),
 
-		LONG_BEND = create("long_bend", b -> b.icon(AllBlocks.TRACK)
-			.title("The Longest Bend")
-			.description("Create a curved track section that spans more than 30 blocks in length")
-			.after(TRACK_CRAFTING)
-			.special(EXPERT)),
-
 		LONG_TRAIN = create("long_train", b -> b.icon(Items.MINECART)
 			.title("Ambitious Endeavours")
 			.description("Create a Train with at least 6 carriages")
-			.after(LONG_BEND)
+			.after(TRACK_CRAFTING)
 			.special(EXPERT)),
 
 		LONG_TRAVEL = create("long_travel", b -> b.icon(AllBlocks.SEATS.get(DyeColor.GREEN))

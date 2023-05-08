@@ -35,8 +35,8 @@ public class ArmItem extends BlockItem {
 	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player player, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
 		if (!world.isClientSide && player instanceof ServerPlayer sp)
-			AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> sp),
-				new ArmPlacementPacket.ClientBoundRequest(pos));
+			AllPackets.getChannel()
+				.send(PacketDistributor.PLAYER.with(() -> sp), new ArmPlacementPacket.ClientBoundRequest(pos));
 		return super.updateCustomBlockEntityTag(pos, world, player, p_195943_4_, p_195943_5_);
 	}
 

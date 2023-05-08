@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -27,23 +25,20 @@ public class BlueprintAssignCompleteRecipePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-				.enqueueWork(() -> {
-					ServerPlayer player = context.get()
-							.getSender();
-					if (player == null)
-						return;
-					if (player.containerMenu instanceof BlueprintContainer) {
-						BlueprintContainer c = (BlueprintContainer) player.containerMenu;
-						player.getLevel()
-								.getRecipeManager()
-								.byKey(recipeID)
-								.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.ghostInventory, r));
-					}
-				});
-		context.get()
-				.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			if (player.containerMenu instanceof BlueprintMenu) {
+				BlueprintMenu c = (BlueprintMenu) player.containerMenu;
+				player.getLevel()
+						.getRecipeManager()
+						.byKey(recipeID)
+						.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.ghostInventory, r));
+			}
+		});
+		return true;
 	}
 
 }

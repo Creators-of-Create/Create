@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.world.phys.Vec3;
 
 public class PistonScenes {
 
@@ -270,14 +271,15 @@ public class PistonScenes {
 		scene.world.setBlock(util.grid.at(0, 2, 2), Blocks.ROSE_BUSH.defaultBlockState()
 			.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), false);
 		scene.world.showIndependentSection(rose, Direction.DOWN);
-		scene.overlay.showCenteredScrollInput(piston, Direction.UP, 60);
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(piston), Pointing.DOWN).scroll()
-			.withWrench(), 60);
+		Vec3 filter = util.vector.topOf(piston)
+			.add(.125, 0, 0);
+		scene.overlay.showFilterSlotInput(filter, Direction.UP, 60);
+		scene.overlay.showControls(new InputWindowElement(filter.add(0, .125, 0), Pointing.DOWN).rightClick(), 60);
 		scene.overlay.showText(70)
-			.pointAt(util.vector.topOf(piston))
+			.pointAt(filter.add(-.125, 0, 0))
 			.placeNearTarget()
 			.attachKeyFrame()
-			.sharedText("behaviour_modify_wrench");
+			.sharedText("behaviour_modify_value_panel");
 		scene.idle(80);
 
 		scene.effects.indicateRedstone(leverPos);

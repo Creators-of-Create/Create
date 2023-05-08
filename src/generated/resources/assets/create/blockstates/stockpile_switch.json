@@ -1,108 +1,273 @@
 {
   "variants": {
-    "facing=east,indicator=0": {
-      "model": "create:block/stockpile_switch_0",
+    "facing=east,level=0,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_0",
       "y": 90
     },
-    "facing=east,indicator=1": {
-      "model": "create:block/stockpile_switch_1",
+    "facing=east,level=0,target=floor": {
+      "model": "create:threshold_switch/block_floor_0",
       "y": 90
     },
-    "facing=east,indicator=2": {
-      "model": "create:block/stockpile_switch_2",
+    "facing=east,level=0,target=wall": {
+      "model": "create:threshold_switch/block_wall_0",
       "y": 90
     },
-    "facing=east,indicator=3": {
-      "model": "create:block/stockpile_switch_3",
+    "facing=east,level=1,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_1",
       "y": 90
     },
-    "facing=east,indicator=4": {
-      "model": "create:block/stockpile_switch_4",
+    "facing=east,level=1,target=floor": {
+      "model": "create:threshold_switch/block_floor_1",
       "y": 90
     },
-    "facing=east,indicator=5": {
-      "model": "create:block/stockpile_switch_5",
+    "facing=east,level=1,target=wall": {
+      "model": "create:threshold_switch/block_wall_1",
       "y": 90
     },
-    "facing=east,indicator=6": {
-      "model": "create:block/stockpile_switch_6",
+    "facing=east,level=2,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_2",
       "y": 90
     },
-    "facing=north,indicator=0": {
-      "model": "create:block/stockpile_switch_0"
+    "facing=east,level=2,target=floor": {
+      "model": "create:threshold_switch/block_floor_2",
+      "y": 90
     },
-    "facing=north,indicator=1": {
-      "model": "create:block/stockpile_switch_1"
+    "facing=east,level=2,target=wall": {
+      "model": "create:threshold_switch/block_wall_2",
+      "y": 90
     },
-    "facing=north,indicator=2": {
-      "model": "create:block/stockpile_switch_2"
+    "facing=east,level=3,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_3",
+      "y": 90
     },
-    "facing=north,indicator=3": {
-      "model": "create:block/stockpile_switch_3"
+    "facing=east,level=3,target=floor": {
+      "model": "create:threshold_switch/block_floor_3",
+      "y": 90
     },
-    "facing=north,indicator=4": {
-      "model": "create:block/stockpile_switch_4"
+    "facing=east,level=3,target=wall": {
+      "model": "create:threshold_switch/block_wall_3",
+      "y": 90
     },
-    "facing=north,indicator=5": {
-      "model": "create:block/stockpile_switch_5"
+    "facing=east,level=4,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_4",
+      "y": 90
     },
-    "facing=north,indicator=6": {
-      "model": "create:block/stockpile_switch_6"
+    "facing=east,level=4,target=floor": {
+      "model": "create:threshold_switch/block_floor_4",
+      "y": 90
     },
-    "facing=south,indicator=0": {
-      "model": "create:block/stockpile_switch_0",
+    "facing=east,level=4,target=wall": {
+      "model": "create:threshold_switch/block_wall_4",
+      "y": 90
+    },
+    "facing=east,level=5,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_5",
+      "y": 90
+    },
+    "facing=east,level=5,target=floor": {
+      "model": "create:threshold_switch/block_floor_5",
+      "y": 90
+    },
+    "facing=east,level=5,target=wall": {
+      "model": "create:threshold_switch/block_wall_5",
+      "y": 90
+    },
+    "facing=north,level=0,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_0"
+    },
+    "facing=north,level=0,target=floor": {
+      "model": "create:threshold_switch/block_floor_0"
+    },
+    "facing=north,level=0,target=wall": {
+      "model": "create:threshold_switch/block_wall_0"
+    },
+    "facing=north,level=1,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_1"
+    },
+    "facing=north,level=1,target=floor": {
+      "model": "create:threshold_switch/block_floor_1"
+    },
+    "facing=north,level=1,target=wall": {
+      "model": "create:threshold_switch/block_wall_1"
+    },
+    "facing=north,level=2,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_2"
+    },
+    "facing=north,level=2,target=floor": {
+      "model": "create:threshold_switch/block_floor_2"
+    },
+    "facing=north,level=2,target=wall": {
+      "model": "create:threshold_switch/block_wall_2"
+    },
+    "facing=north,level=3,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_3"
+    },
+    "facing=north,level=3,target=floor": {
+      "model": "create:threshold_switch/block_floor_3"
+    },
+    "facing=north,level=3,target=wall": {
+      "model": "create:threshold_switch/block_wall_3"
+    },
+    "facing=north,level=4,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_4"
+    },
+    "facing=north,level=4,target=floor": {
+      "model": "create:threshold_switch/block_floor_4"
+    },
+    "facing=north,level=4,target=wall": {
+      "model": "create:threshold_switch/block_wall_4"
+    },
+    "facing=north,level=5,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_5"
+    },
+    "facing=north,level=5,target=floor": {
+      "model": "create:threshold_switch/block_floor_5"
+    },
+    "facing=north,level=5,target=wall": {
+      "model": "create:threshold_switch/block_wall_5"
+    },
+    "facing=south,level=0,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_0",
       "y": 180
     },
-    "facing=south,indicator=1": {
-      "model": "create:block/stockpile_switch_1",
+    "facing=south,level=0,target=floor": {
+      "model": "create:threshold_switch/block_floor_0",
       "y": 180
     },
-    "facing=south,indicator=2": {
-      "model": "create:block/stockpile_switch_2",
+    "facing=south,level=0,target=wall": {
+      "model": "create:threshold_switch/block_wall_0",
       "y": 180
     },
-    "facing=south,indicator=3": {
-      "model": "create:block/stockpile_switch_3",
+    "facing=south,level=1,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_1",
       "y": 180
     },
-    "facing=south,indicator=4": {
-      "model": "create:block/stockpile_switch_4",
+    "facing=south,level=1,target=floor": {
+      "model": "create:threshold_switch/block_floor_1",
       "y": 180
     },
-    "facing=south,indicator=5": {
-      "model": "create:block/stockpile_switch_5",
+    "facing=south,level=1,target=wall": {
+      "model": "create:threshold_switch/block_wall_1",
       "y": 180
     },
-    "facing=south,indicator=6": {
-      "model": "create:block/stockpile_switch_6",
+    "facing=south,level=2,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_2",
       "y": 180
     },
-    "facing=west,indicator=0": {
-      "model": "create:block/stockpile_switch_0",
+    "facing=south,level=2,target=floor": {
+      "model": "create:threshold_switch/block_floor_2",
+      "y": 180
+    },
+    "facing=south,level=2,target=wall": {
+      "model": "create:threshold_switch/block_wall_2",
+      "y": 180
+    },
+    "facing=south,level=3,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_3",
+      "y": 180
+    },
+    "facing=south,level=3,target=floor": {
+      "model": "create:threshold_switch/block_floor_3",
+      "y": 180
+    },
+    "facing=south,level=3,target=wall": {
+      "model": "create:threshold_switch/block_wall_3",
+      "y": 180
+    },
+    "facing=south,level=4,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_4",
+      "y": 180
+    },
+    "facing=south,level=4,target=floor": {
+      "model": "create:threshold_switch/block_floor_4",
+      "y": 180
+    },
+    "facing=south,level=4,target=wall": {
+      "model": "create:threshold_switch/block_wall_4",
+      "y": 180
+    },
+    "facing=south,level=5,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_5",
+      "y": 180
+    },
+    "facing=south,level=5,target=floor": {
+      "model": "create:threshold_switch/block_floor_5",
+      "y": 180
+    },
+    "facing=south,level=5,target=wall": {
+      "model": "create:threshold_switch/block_wall_5",
+      "y": 180
+    },
+    "facing=west,level=0,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_0",
       "y": 270
     },
-    "facing=west,indicator=1": {
-      "model": "create:block/stockpile_switch_1",
+    "facing=west,level=0,target=floor": {
+      "model": "create:threshold_switch/block_floor_0",
       "y": 270
     },
-    "facing=west,indicator=2": {
-      "model": "create:block/stockpile_switch_2",
+    "facing=west,level=0,target=wall": {
+      "model": "create:threshold_switch/block_wall_0",
       "y": 270
     },
-    "facing=west,indicator=3": {
-      "model": "create:block/stockpile_switch_3",
+    "facing=west,level=1,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_1",
       "y": 270
     },
-    "facing=west,indicator=4": {
-      "model": "create:block/stockpile_switch_4",
+    "facing=west,level=1,target=floor": {
+      "model": "create:threshold_switch/block_floor_1",
       "y": 270
     },
-    "facing=west,indicator=5": {
-      "model": "create:block/stockpile_switch_5",
+    "facing=west,level=1,target=wall": {
+      "model": "create:threshold_switch/block_wall_1",
       "y": 270
     },
-    "facing=west,indicator=6": {
-      "model": "create:block/stockpile_switch_6",
+    "facing=west,level=2,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_2",
+      "y": 270
+    },
+    "facing=west,level=2,target=floor": {
+      "model": "create:threshold_switch/block_floor_2",
+      "y": 270
+    },
+    "facing=west,level=2,target=wall": {
+      "model": "create:threshold_switch/block_wall_2",
+      "y": 270
+    },
+    "facing=west,level=3,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_3",
+      "y": 270
+    },
+    "facing=west,level=3,target=floor": {
+      "model": "create:threshold_switch/block_floor_3",
+      "y": 270
+    },
+    "facing=west,level=3,target=wall": {
+      "model": "create:threshold_switch/block_wall_3",
+      "y": 270
+    },
+    "facing=west,level=4,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_4",
+      "y": 270
+    },
+    "facing=west,level=4,target=floor": {
+      "model": "create:threshold_switch/block_floor_4",
+      "y": 270
+    },
+    "facing=west,level=4,target=wall": {
+      "model": "create:threshold_switch/block_wall_4",
+      "y": 270
+    },
+    "facing=west,level=5,target=ceiling": {
+      "model": "create:threshold_switch/block_ceiling_5",
+      "y": 270
+    },
+    "facing=west,level=5,target=floor": {
+      "model": "create:threshold_switch/block_floor_5",
+      "y": 270
+    },
+    "facing=west,level=5,target=wall": {
+      "model": "create:threshold_switch/block_wall_5",
       "y": 270
     }
   }

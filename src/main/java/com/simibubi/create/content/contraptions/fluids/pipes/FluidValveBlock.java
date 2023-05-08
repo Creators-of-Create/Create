@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import javax.annotation.Nonnull;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -33,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
 public class FluidValveBlock extends DirectionalAxisKineticBlock
-	implements IAxisPipe, ITE<FluidValveTileEntity>, ProperWaterloggedBlock {
+	implements IAxisPipe, IBE<FluidValveBlockEntity>, ProperWaterloggedBlock {
 
 	public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
@@ -136,13 +136,13 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock
 	}
 
 	@Override
-	public Class<FluidValveTileEntity> getTileEntityClass() {
-		return FluidValveTileEntity.class;
+	public Class<FluidValveBlockEntity> getBlockEntityClass() {
+		return FluidValveBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends FluidValveTileEntity> getTileEntityType() {
-		return AllTileEntities.FLUID_VALVE.get();
+	public BlockEntityType<? extends FluidValveBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.FLUID_VALVE.get();
 	}
 
 	@Override

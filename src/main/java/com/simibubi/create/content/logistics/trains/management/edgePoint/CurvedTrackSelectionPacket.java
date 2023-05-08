@@ -6,8 +6,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBlockItem.OverlapResult;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
-import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
-import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockEntity;
+import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -18,7 +18,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public class CurvedTrackSelectionPacket extends TileEntityConfigurationPacket<TrackTileEntity> {
+public class CurvedTrackSelectionPacket extends BlockEntityConfigurationPacket<TrackBlockEntity> {
 
 	private BlockPos targetPos;
 	private boolean front;
@@ -54,7 +54,7 @@ public class CurvedTrackSelectionPacket extends TileEntityConfigurationPacket<Tr
 	}
 
 	@Override
-	protected void applySettings(ServerPlayer player, TrackTileEntity te) {
+	protected void applySettings(ServerPlayer player, TrackBlockEntity be) {
 		if (player.getInventory().selected != slot)
 			return;
 		ItemStack stack = player.getInventory()
@@ -101,6 +101,6 @@ public class CurvedTrackSelectionPacket extends TileEntityConfigurationPacket<Tr
 	}
 
 	@Override
-	protected void applySettings(TrackTileEntity te) {}
+	protected void applySettings(TrackBlockEntity be) {}
 
 }

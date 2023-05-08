@@ -77,6 +77,9 @@ public class PonderIndex {
 			.addStoryBoard("creative_motor_mojang", KineticsScenes::creativeMotorMojang);
 		HELPER.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
 			PonderTag.KINETIC_SOURCES);
+		HELPER.addStoryBoard(AllBlocks.LARGE_WATER_WHEEL, "large_water_wheel", KineticsScenes::largeWaterWheel,
+			PonderTag.KINETIC_SOURCES);
+		
 		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, PonderTag.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
@@ -179,12 +182,16 @@ public class PonderIndex {
 		HELPER.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 			.addStoryBoard("mechanical_piston/modes", PistonScenes::movementModes);
 
-		// Windmill Bearing
+		// Pulleys
 		HELPER.forComponents(AllBlocks.ROPE_PULLEY)
 			.addStoryBoard("rope_pulley/anchor", PulleyScenes::movement, PonderTag.KINETIC_APPLIANCES,
 				PonderTag.MOVEMENT_ANCHOR)
 			.addStoryBoard("rope_pulley/modes", PulleyScenes::movementModes)
+			.addStoryBoard("rope_pulley/multi_rope", PulleyScenes::multiRope)
 			.addStoryBoard("rope_pulley/attachment", PulleyScenes::attachment);
+		HELPER.forComponents(AllBlocks.ELEVATOR_PULLEY)
+			.addStoryBoard("elevator_pulley/elevator", ElevatorScenes::elevator)
+			.addStoryBoard("elevator_pulley/multi_rope", ElevatorScenes::multiRope);
 
 		// Windmill Bearing
 		HELPER.forComponents(AllBlocks.WINDMILL_BEARING)
@@ -249,6 +256,11 @@ public class PonderIndex {
 			.addStoryBoard("harvester", MovementActorScenes::harvester);
 		HELPER.forComponents(AllBlocks.MECHANICAL_PLOUGH)
 			.addStoryBoard("plough", MovementActorScenes::plough);
+		HELPER.forComponents(AllBlocks.CONTRAPTION_CONTROLS)
+			.addStoryBoard("contraption_controls", MovementActorScenes::contraptionControls);
+		HELPER.forComponents(AllBlocks.MECHANICAL_ROLLER)
+			.addStoryBoard("mechanical_roller/clear_and_pave", RollerScenes::clearAndPave)
+			.addStoryBoard("mechanical_roller/fill", RollerScenes::fill);
 
 		// Fluids
 		HELPER.forComponents(AllBlocks.FLUID_PIPE)
@@ -302,6 +314,11 @@ public class PonderIndex {
 		HELPER.forComponents(AllBlocks.ROSE_QUARTZ_LAMP)
 			.addStoryBoard("rose_quartz_lamp", RedstoneScenes2::roseQuartzLamp);
 
+		HELPER.forComponents(AllBlocks.SMART_OBSERVER)
+			.addStoryBoard("smart_observer", DetectorScenes::smartObserver);
+		HELPER.forComponents(AllBlocks.THRESHOLD_SWITCH)
+			.addStoryBoard("threshold_switch", DetectorScenes::thresholdSwitch);
+
 		// Trains
 		HELPER.forComponents(AllBlocks.TRACK)
 			.addStoryBoard("train_track/placement", TrackScenes::placement)
@@ -320,7 +337,7 @@ public class PonderIndex {
 		HELPER.forComponents(AllItems.SCHEDULE)
 			.addStoryBoard("train_schedule", TrainScenes::schedule);
 
-		HELPER.forComponents(AllBlocks.CONTROLS)
+		HELPER.forComponents(AllBlocks.TRAIN_CONTROLS)
 			.addStoryBoard("train_controls", TrainScenes::controls);
 
 		HELPER.forComponents(AllBlocks.TRACK_OBSERVER)
@@ -345,11 +362,24 @@ public class PonderIndex {
 	}
 
 	public static boolean editingModeActive() {
-		return AllConfigs.CLIENT.editingMode.get();
+		return AllConfigs.client().editingMode.get();
 	}
 
 	public static void registerTags() {
 		// Add items to tags here
+
+		PonderRegistry.TAGS.forTag(PonderTag.RECENTLY_UPDATED)
+			.add(AllBlocks.WATER_WHEEL)
+			.add(AllBlocks.LARGE_WATER_WHEEL)
+			.add(AllBlocks.ELEVATOR_PULLEY)
+			.add(AllBlocks.CONTRAPTION_CONTROLS)
+			.add(AllBlocks.MECHANICAL_ROLLER)
+			.add(AllBlocks.MECHANICAL_PUMP)
+			.add(AllBlocks.SMART_OBSERVER)
+			.add(AllBlocks.THRESHOLD_SWITCH)
+			.add(AllItems.NETHERITE_BACKTANK)
+			.add(AllBlocks.COPYCAT_PANEL)
+			.add(AllBlocks.COPYCAT_STEP);
 
 		PonderRegistry.TAGS.forTag(PonderTag.KINETIC_RELAYS)
 			.add(AllBlocks.SHAFT)
@@ -368,6 +398,7 @@ public class PonderIndex {
 			.add(AllBlocks.HAND_CRANK)
 			.add(AllBlocks.COPPER_VALVE_HANDLE)
 			.add(AllBlocks.WATER_WHEEL)
+			.add(AllBlocks.LARGE_WATER_WHEEL)
 			.add(AllBlocks.WINDMILL_BEARING)
 			.add(AllBlocks.STEAM_ENGINE)
 			.add(AllBlocks.CREATIVE_MOTOR);
@@ -377,7 +408,7 @@ public class PonderIndex {
 			.add(AllBlocks.TRACK_STATION)
 			.add(AllBlocks.TRACK_SIGNAL)
 			.add(AllBlocks.TRACK_OBSERVER)
-			.add(AllBlocks.CONTROLS)
+			.add(AllBlocks.TRAIN_CONTROLS)
 			.add(AllItems.SCHEDULE)
 			.add(AllBlocks.TRAIN_DOOR)
 			.add(AllBlocks.TRAIN_TRAPDOOR)
@@ -398,6 +429,7 @@ public class PonderIndex {
 			.add(AllBlocks.MECHANICAL_ARM)
 			.add(AllBlocks.MECHANICAL_PISTON)
 			.add(AllBlocks.ROPE_PULLEY)
+			.add(AllBlocks.ELEVATOR_PULLEY)
 			.add(AllBlocks.MECHANICAL_BEARING)
 			.add(AllBlocks.GANTRY_SHAFT)
 			.add(AllBlocks.GANTRY_CARRIAGE)
@@ -453,8 +485,8 @@ public class PonderIndex {
 			.add(AllBlocks.BRASS_FUNNEL)
 			.add(AllBlocks.ANDESITE_TUNNEL)
 			.add(AllBlocks.BRASS_TUNNEL)
-			.add(AllBlocks.CONTENT_OBSERVER)
-			.add(AllBlocks.STOCKPILE_SWITCH)
+			.add(AllBlocks.SMART_OBSERVER)
+			.add(AllBlocks.THRESHOLD_SWITCH)
 			.add(AllBlocks.CREATIVE_CRATE)
 			.add(AllBlocks.PORTABLE_STORAGE_INTERFACE);
 
@@ -481,6 +513,8 @@ public class PonderIndex {
 			.add(Blocks.WHITE_WOOL);
 
 		PonderRegistry.TAGS.forTag(PonderTag.REDSTONE)
+			.add(AllBlocks.SMART_OBSERVER)
+			.add(AllBlocks.THRESHOLD_SWITCH)
 			.add(AllBlocks.ORANGE_NIXIE_TUBE)
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(AllBlocks.ANALOG_LEVER)
@@ -497,6 +531,7 @@ public class PonderIndex {
 			.add(AllBlocks.MECHANICAL_BEARING)
 			.add(AllBlocks.CLOCKWORK_BEARING)
 			.add(AllBlocks.ROPE_PULLEY)
+			.add(AllBlocks.ELEVATOR_PULLEY)
 			.add(AllBlocks.GANTRY_CARRIAGE)
 			.add(AllBlocks.CART_ASSEMBLER)
 			.add(AllBlocks.TRACK_STATION);
@@ -522,7 +557,8 @@ public class PonderIndex {
 			.add(AllBlocks.ANDESITE_FUNNEL)
 			.add(AllBlocks.BRASS_FUNNEL)
 			.add(AllBlocks.SEATS.get(DyeColor.WHITE))
-			.add(AllBlocks.CONTROLS)
+			.add(AllBlocks.TRAIN_CONTROLS)
+			.add(AllBlocks.CONTRAPTION_CONTROLS)
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)
@@ -531,8 +567,8 @@ public class PonderIndex {
 		PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES)
 			.add(AllBlocks.SEATS.get(DyeColor.WHITE))
 			.add(AllBlocks.ORANGE_NIXIE_TUBE)
-			.add(AllBlocks.STOCKPILE_SWITCH)
-			.add(AllBlocks.CONTENT_OBSERVER)
+			.add(AllBlocks.THRESHOLD_SWITCH)
+			.add(AllBlocks.SMART_OBSERVER)
 			.add(AllBlocks.ANDESITE_TUNNEL)
 			.add(AllBlocks.TRACK_OBSERVER)
 			.add(AllBlocks.TRACK_STATION)

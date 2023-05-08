@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.block.depot;
 
-import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
+import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class EjectorTriggerPacket extends TileEntityConfigurationPacket<EjectorTileEntity> {
+public class EjectorTriggerPacket extends BlockEntityConfigurationPacket<EjectorBlockEntity> {
 
 	public EjectorTriggerPacket(BlockPos pos) {
 		super(pos);
@@ -22,8 +22,8 @@ public class EjectorTriggerPacket extends TileEntityConfigurationPacket<EjectorT
 	protected void readSettings(FriendlyByteBuf buffer) {}
 
 	@Override
-	protected void applySettings(EjectorTileEntity te) {
-		te.activate();
+	protected void applySettings(EjectorBlockEntity be) {
+		be.activate();
 	}
 
 }

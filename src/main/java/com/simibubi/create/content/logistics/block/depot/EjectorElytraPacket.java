@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.depot;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -29,23 +27,19 @@ public class EjectorElytraPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer player = context.get()
-					.getSender();
-				if (player == null)
-					return;
-				Level world = player.level;
-				if (world == null || !world.isLoaded(pos))
-					return;
-				BlockEntity tileEntity = world.getBlockEntity(pos);
-				if (tileEntity instanceof EjectorTileEntity)
-					((EjectorTileEntity) tileEntity).deployElytra(player);
-			});
-		context.get()
-			.setPacketHandled(true);
-
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			Level world = player.level;
+			if (world == null || !world.isLoaded(pos))
+				return;
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (blockEntity instanceof EjectorBlockEntity)
+				((EjectorBlockEntity) blockEntity).deployElytra(player);
+		});
+		return true;
 	}
 
 }

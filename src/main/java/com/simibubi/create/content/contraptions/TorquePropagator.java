@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.WorldHelper;
 
 import net.minecraft.world.level.LevelAccessor;
@@ -23,16 +23,16 @@ public class TorquePropagator {
 		Create.LOGGER.debug("Removed Kinetic Network Space for " + WorldHelper.getDimensionID(world));
 	}
 
-	public KineticNetwork getOrCreateNetworkFor(KineticTileEntity te) {
-		Long id = te.network;
+	public KineticNetwork getOrCreateNetworkFor(KineticBlockEntity be) {
+		Long id = be.network;
 		KineticNetwork network;
-		Map<Long, KineticNetwork> map = networks.computeIfAbsent(te.getLevel(), $ -> new HashMap<>());
+		Map<Long, KineticNetwork> map = networks.computeIfAbsent(be.getLevel(), $ -> new HashMap<>());
 		if (id == null)
 			return null;
 
 		if (!map.containsKey(id)) {
 			network = new KineticNetwork();
-			network.id = te.network;
+			network.id = be.network;
 			map.put(id, network);
 		}
 		network = map.get(id);

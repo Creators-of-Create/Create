@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"1": "block/stripped_spruce_log_top",
-		"3": "create:block/gearbox",
+		"4": "create:block/gearbox",
 		"particle": "create:block/andesite_casing",
 		"casing": "create:block/andesite_casing",
 		"side": "create:block/andesite_encased_cogwheel_side_connected"
@@ -17,7 +17,7 @@
 				"south": {"uv": [8, 13, 16, 15.5], "texture": "#side"},
 				"west": {"uv": [8, 13, 16, 15.5], "texture": "#side"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#3"}
+				"down": {"uv": [0, 0, 16, 16], "texture": "#4"}
 			}
 		},
 		{

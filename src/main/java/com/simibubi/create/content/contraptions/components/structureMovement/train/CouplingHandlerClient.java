@@ -44,7 +44,7 @@ public class CouplingHandlerClient {
 			return;
 		}
 		spawnSelectionParticles(entity.getBoundingBox(), true);
-		AllPackets.channel.sendToServer(new CouplingCreationPacket(selectedCart, entity));
+		AllPackets.getChannel().sendToServer(new CouplingCreationPacket(selectedCart, entity));
 		selectedCart = null;
 	}
 

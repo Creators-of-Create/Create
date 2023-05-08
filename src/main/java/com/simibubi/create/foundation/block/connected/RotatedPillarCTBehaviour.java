@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.block.connected;
 
+import com.simibubi.create.content.curiosities.frames.CopycatBlock;
 import com.simibubi.create.content.palettes.ConnectedPillarBlock;
 import com.simibubi.create.content.palettes.LayeredBlock;
 
@@ -27,6 +28,10 @@ public class RotatedPillarCTBehaviour extends HorizontalCTBehaviour {
 			return false;
 		if (isBeingBlocked(state, reader, pos, otherPos, face))
 			return false;
+		if (reader.getBlockState(pos).getBlock() instanceof CopycatBlock)
+			return true;
+		if (reader.getBlockState(otherPos).getBlock() instanceof CopycatBlock)
+			return true;
 		if (primaryOffset != null && primaryOffset.getAxis() != stateAxis
 			&& !ConnectedPillarBlock.getConnection(state, primaryOffset))
 			return false;

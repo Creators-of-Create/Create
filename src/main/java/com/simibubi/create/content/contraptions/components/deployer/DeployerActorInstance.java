@@ -11,9 +11,9 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -50,7 +50,7 @@ public class DeployerActorInstance extends ActorInstance {
 				.material(Materials.TRANSFORMED);
 
         BlockState state = context.state;
-        DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);
+        DeployerBlockEntity.Mode mode = NBTHelper.readEnum(context.blockEntityData, "Mode", DeployerBlockEntity.Mode.class);
         PartialModel handPose = DeployerRenderer.getHandPose(mode);
 
         stationaryTimer = context.data.contains("StationaryTimer");
@@ -61,13 +61,13 @@ public class DeployerActorInstance extends ActorInstance {
         xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRot = rotatePole ? 90 : 0;
 
-        pole = mat.getModel(AllBlockPartials.DEPLOYER_POLE, state).createInstance();
+        pole = mat.getModel(AllPartialModels.DEPLOYER_POLE, state).createInstance();
         hand = mat.getModel(handPose, state).createInstance();
 
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
         shaft = materialManager.defaultSolid()
                 .material(AllMaterialSpecs.ROTATING)
-				.getModel(KineticTileInstance.shaft(axis))
+				.getModel(KineticBlockEntityInstance.shaft(axis))
 				.createInstance();
 
         int blockLight = localBlockLight();
@@ -83,7 +83,9 @@ public class DeployerActorInstance extends ActorInstance {
     @Override
     public void beginFrame() {
         double factor;
-        if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
+        if (context.disabled) {
+        	factor = 0;
+        } else if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
             factor = Mth.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
         } else {
         	Vec3 center = VecHelper.getCenterOf(new BlockPos(context.position));

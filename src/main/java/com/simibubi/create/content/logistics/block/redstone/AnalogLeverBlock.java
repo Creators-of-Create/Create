@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements ITE<AnalogLeverTileEntity> {
+public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<AnalogLeverBlockEntity> {
 
 	public AnalogLeverBlock(Properties p_i48402_1_) {
 		super(p_i48402_1_);
@@ -43,10 +43,10 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 			return InteractionResult.SUCCESS;
 		}
 
-		return onTileEntityUse(worldIn, pos, te -> {
+		return onBlockEntityUse(worldIn, pos, be -> {
 			boolean sneak = player.isShiftKeyDown();
-			te.changeState(sneak);
-			float f = .25f + ((te.state + 5) / 15f) * .5f;
+			be.changeState(sneak);
+			float f = .25f + ((be.state + 5) / 15f) * .5f;
 			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.2F, f);
 			return InteractionResult.SUCCESS;
 		});
@@ -54,7 +54,7 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 
 	@Override
 	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		return getTileEntityOptional(blockAccess, pos).map(al -> al.state)
+		return getBlockEntityOptional(blockAccess, pos).map(al -> al.state)
 			.orElse(0);
 	}
 
@@ -71,8 +71,8 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
-		withTileEntityDo(worldIn, pos, te -> {
-			if (te.state != 0 && rand.nextFloat() < 0.25F)
+		withBlockEntityDo(worldIn, pos, be -> {
+			if (be.state != 0 && rand.nextFloat() < 0.25F)
 				addParticles(stateIn, worldIn, pos, 0.5F);
 		});
 	}
@@ -81,8 +81,8 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (isMoving || state.getBlock() == newState.getBlock())
 			return;
-		withTileEntityDo(worldIn, pos, te -> {
-			if (te.state != 0)
+		withBlockEntityDo(worldIn, pos, be -> {
+			if (be.state != 0)
 				updateNeighbors(state, worldIn, pos);
 			worldIn.removeBlockEntity(pos);
 		});
@@ -119,13 +119,13 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 	}
 
 	@Override
-	public Class<AnalogLeverTileEntity> getTileEntityClass() {
-		return AnalogLeverTileEntity.class;
+	public Class<AnalogLeverBlockEntity> getBlockEntityClass() {
+		return AnalogLeverBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends AnalogLeverTileEntity> getTileEntityType() {
-		return AllTileEntities.ANALOG_LEVER.get();
+	public BlockEntityType<? extends AnalogLeverBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ANALOG_LEVER.get();
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class ToggleDebugCommand extends ConfigureConfigCommand {
 
 	@Override
 	protected void sendPacket(ServerPlayer player, String option) {
-		AllPackets.channel.send(
+		AllPackets.getChannel().send(
 				PacketDistributor.PLAYER.with(() -> player),
 				new SConfigureConfigPacket(SConfigureConfigPacket.Actions.rainbowDebug.name(), option)
 		);

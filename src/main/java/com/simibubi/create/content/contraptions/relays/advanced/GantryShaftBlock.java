@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -47,7 +47,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<GantryShaftTileEntity> {
+public class GantryShaftBlock extends DirectionalKineticBlock implements IBE<GantryShaftBlockEntity> {
 
 	public static final Property<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -180,9 +180,9 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 		if (!worldIn.isClientSide() && oldState.is(AllBlocks.GANTRY_SHAFT.get())) {
 			Part oldPart = oldState.getValue(PART), part = state.getValue(PART);
 			if ((oldPart != Part.MIDDLE && part == Part.MIDDLE) || (oldPart == Part.SINGLE && part != Part.SINGLE)) {
-				BlockEntity te = worldIn.getBlockEntity(pos);
-				if (te instanceof GantryShaftTileEntity)
-					((GantryShaftTileEntity) te).checkAttachedCarriageBlocks();
+				BlockEntity be = worldIn.getBlockEntity(pos);
+				if (be instanceof GantryShaftBlockEntity)
+					((GantryShaftBlockEntity) be).checkAttachedCarriageBlocks();
 			}
 		}
 	}
@@ -229,9 +229,9 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 		toUpdate.add(pos);
 		for (BlockPos blockPos : toUpdate) {
 			BlockState blockState = worldIn.getBlockState(blockPos);
-			BlockEntity te = worldIn.getBlockEntity(blockPos);
-			if (te instanceof KineticTileEntity)
-				((KineticTileEntity) te).detachKinetics();
+			BlockEntity be = worldIn.getBlockEntity(blockPos);
+			if (be instanceof KineticBlockEntity)
+				((KineticBlockEntity) be).detachKinetics();
 			if (blockState.getBlock() instanceof GantryShaftBlock)
 				worldIn.setBlock(blockPos, blockState.setValue(POWERED, shouldPower), 2);
 		}
@@ -312,13 +312,13 @@ public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<Gan
 	}
 
 	@Override
-	public Class<GantryShaftTileEntity> getTileEntityClass() {
-		return GantryShaftTileEntity.class;
+	public Class<GantryShaftBlockEntity> getBlockEntityClass() {
+		return GantryShaftBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends GantryShaftTileEntity> getTileEntityType() {
-		return AllTileEntities.GANTRY_SHAFT.get();
+	public BlockEntityType<? extends GantryShaftBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.GANTRY_SHAFT.get();
 	}
 
 }

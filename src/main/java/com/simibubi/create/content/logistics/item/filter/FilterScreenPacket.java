@@ -1,8 +1,6 @@
 package com.simibubi.create.content.logistics.item.filter;
 
-import java.util.function.Supplier;
-
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
+import com.simibubi.create.content.logistics.item.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.nbt.CompoundTag;
@@ -40,14 +38,14 @@ public class FilterScreenPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
 
-			if (player.containerMenu instanceof FilterContainer) {
-				FilterContainer c = (FilterContainer) player.containerMenu;
+			if (player.containerMenu instanceof FilterMenu) {
+				FilterMenu c = (FilterMenu) player.containerMenu;
 				if (option == Option.WHITELIST)
 					c.blacklist = false;
 				if (option == Option.BLACKLIST)
@@ -62,8 +60,8 @@ public class FilterScreenPacket extends SimplePacketBase {
 							net.minecraft.world.item.ItemStack.of(data.getCompound("Item")));
 			}
 
-			if (player.containerMenu instanceof AttributeFilterContainer) {
-				AttributeFilterContainer c = (AttributeFilterContainer) player.containerMenu;
+			if (player.containerMenu instanceof AttributeFilterMenu) {
+				AttributeFilterMenu c = (AttributeFilterMenu) player.containerMenu;
 				if (option == Option.WHITELIST)
 					c.whitelistMode = WhitelistMode.WHITELIST_DISJ;
 				if (option == Option.WHITELIST2)
@@ -77,7 +75,7 @@ public class FilterScreenPacket extends SimplePacketBase {
 			}
 
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

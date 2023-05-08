@@ -93,10 +93,10 @@ public class ArmInteractionPoint {
 	@Nullable
 	protected IItemHandler getHandler() {
 		if (!cachedHandler.isPresent()) {
-			BlockEntity te = level.getBlockEntity(pos);
-			if (te == null)
+			BlockEntity be = level.getBlockEntity(pos);
+			if (be == null)
 				return null;
-			cachedHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP);
+			cachedHandler = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP);
 		}
 		return cachedHandler.orElse(null);
 	}

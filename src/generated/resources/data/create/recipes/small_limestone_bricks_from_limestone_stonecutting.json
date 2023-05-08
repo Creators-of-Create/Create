@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "create:limestone"
-  },
-  "result": "create:small_limestone_bricks"
-}

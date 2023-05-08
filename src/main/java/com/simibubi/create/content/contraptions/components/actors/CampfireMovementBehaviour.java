@@ -9,17 +9,17 @@ import net.minecraft.world.level.block.CampfireBlock;
 
 public class CampfireMovementBehaviour implements MovementBehaviour {
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 
 	@Override
 	public void tick(MovementContext context) {
 		if (context.world == null || !context.world.isClientSide || context.position == null
-			|| !context.state.getValue(CampfireBlock.LIT))
+			|| !context.state.getValue(CampfireBlock.LIT) || context.disabled)
 			return;
 
-		// Mostly copied from CampfireBlock and CampfireTileEntity
+		// Mostly copied from CampfireBlock and CampfireBlockEntity
 		RandomSource random = context.world.random;
 		if (random.nextFloat() < 0.11F) {
 			for (int i = 0; i < random.nextInt(2) + 2; ++i) {

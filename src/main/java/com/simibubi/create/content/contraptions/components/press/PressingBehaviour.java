@@ -6,10 +6,10 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.BeltProcessingBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -59,9 +59,9 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		public float getKineticSpeed();
 	}
 
-	public <T extends SmartTileEntity & PressingBehaviourSpecifics> PressingBehaviour(T te) {
-		super(te);
-		this.specifics = te;
+	public <T extends SmartBlockEntity & PressingBehaviourSpecifics> PressingBehaviour(T be) {
+		super(be);
+		this.specifics = be;
 		mode = Mode.WORLD;
 		entityScanCooldown = ENTITY_SCAN;
 		whenItemEnters((s, i) -> BeltPressingCallbacks.onItemReceived(s, i, this));
@@ -113,7 +113,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		prevRunningTicks = 0;
 		runningTicks = 0;
 		particleItems.clear();
-		tileEntity.sendData();
+		blockEntity.sendData();
 	}
 
 	public boolean inWorld() {
@@ -141,7 +141,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 				if (entityScanCooldown <= 0) {
 					entityScanCooldown = ENTITY_SCAN;
 
-					if (TileEntityBehaviour.get(level, worldPosition.below(2),
+					if (BlockEntityBehaviour.get(level, worldPosition.below(2),
 						TransportedItemStackHandlerBehaviour.TYPE) != null)
 						return;
 					if (AllBlocks.BASIN.has(level.getBlockState(worldPosition.below(2))))
@@ -181,7 +181,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 					.75f + (Math.abs(specifics.getKineticSpeed()) / 1024f));
 
 			if (!level.isClientSide)
-				tileEntity.sendData();
+				blockEntity.sendData();
 		}
 
 		if (!level.isClientSide && runningTicks > CYCLE) {
@@ -189,7 +189,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 			running = false;
 			particleItems.clear();
 			specifics.onPressingCompleted();
-			tileEntity.sendData();
+			blockEntity.sendData();
 			return;
 		}
 
@@ -198,7 +198,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		if (prevRunningTicks < CYCLE / 2 && runningTicks >= CYCLE / 2) {
 			runningTicks = CYCLE / 2;
 			// Pause the ticks until a packet is received
-			if (level.isClientSide && !tileEntity.isVirtual())
+			if (level.isClientSide && !blockEntity.isVirtual())
 				runningTicks = -(CYCLE / 2);
 		}
 	}
@@ -209,7 +209,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 			return;
 		particleItems.clear();
 		if (specifics.tryProcessInBasin(false))
-			tileEntity.sendData();
+			blockEntity.sendData();
 	}
 
 	protected void applyInWorld() {
@@ -231,7 +231,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 
 			entityScanCooldown = 0;
 			if (specifics.tryProcessInWorld(itemEntity, false))
-				tileEntity.sendData();
+				blockEntity.sendData();
 			if (!bulk)
 				break;
 		}

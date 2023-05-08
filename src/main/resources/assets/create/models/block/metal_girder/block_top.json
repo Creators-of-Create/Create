@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "create:block/girder",
-		"particle": "create:block/chute_block"
+		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [
 		{

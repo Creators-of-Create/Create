@@ -3,15 +3,16 @@ package com.simibubi.create.foundation.ponder.content.fluid;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.PumpBlock;
-import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.AxisPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeTileEntity;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
-import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
+import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeBlockEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
+import com.simibubi.create.content.contraptions.processing.BasinBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
@@ -20,7 +21,6 @@ import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
@@ -69,7 +69,7 @@ public class PipeScenes {
 		scene.idle(5);
 		scene.world.showSection(tank2, Direction.DOWN);
 		FluidStack content = new FluidStack(Fluids.LAVA, 10000);
-		scene.world.modifyTileEntity(util.grid.at(4, 1, 2), FluidTankTileEntity.class, te -> te.getTankInventory()
+		scene.world.modifyBlockEntity(util.grid.at(4, 1, 2), FluidTankBlockEntity.class, be -> be.getTankInventory()
 			.fill(content, FluidAction.EXECUTE));
 		scene.idle(10);
 
@@ -138,7 +138,8 @@ public class PipeScenes {
 		scene.world.showSection(largeCog, Direction.UP);
 		scene.world.showSection(kinetics, Direction.SOUTH);
 		scene.idle(10);
-		scene.world.setKineticSpeed(util.select.position(pumpPos), 32);
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), 0.25f);
+		scene.world.setKineticSpeed(util.select.position(pumpPos), 8);
 		scene.world.propagatePipeChange(pumpPos);
 
 		scene.overlay.showText(70)
@@ -151,7 +152,7 @@ public class PipeScenes {
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.text("No fluid is being extracted at first");
-		scene.idle(90);
+		scene.idle(70);
 
 		scene.overlay.showOutline(PonderPalette.GREEN, new Object(), tank, 100);
 		scene.idle(5);
@@ -216,10 +217,11 @@ public class PipeScenes {
 		scene.idle(5);
 		scene.world.showSection(kinetics, Direction.NORTH);
 		scene.idle(10);
-		scene.world.setKineticSpeed(util.select.position(pumpPos), 64);
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), 0.5f);
+		scene.world.setKineticSpeed(util.select.position(pumpPos), 32);
 		BlockPos drainPos = util.grid.at(1, 1, 2);
-		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class,
-			te -> te.getBehaviour(SmartFluidTankBehaviour.TYPE)
+		scene.world.modifyBlockEntity(drainPos, ItemDrainBlockEntity.class,
+			be -> be.getBehaviour(SmartFluidTankBehaviour.TYPE)
 				.allowInsertion()
 				.getPrimaryHandler()
 				.fill(new FluidStack(Fluids.WATER, 1500), FluidAction.EXECUTE));
@@ -253,7 +255,7 @@ public class PipeScenes {
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
 			.setValue(AxisPipeBlock.AXIS, Axis.Z), false);
 		scene.idle(10);
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), 2);
+//		scene.world.multiplyKineticSpeed(util.select.everywhere(), 2);
 		scene.world.propagatePipeChange(pumpPos);
 		ElementLink<WorldSectionElement> water = scene.world.showIndependentSection(waterSourceS, Direction.DOWN);
 		scene.world.moveSection(water, util.vector.of(0, 0, 1), 0);
@@ -427,13 +429,15 @@ public class PipeScenes {
 			.attachKeyFrame()
 			.pointAt(util.vector.topOf(valvePos));
 		scene.idle(60);
-		scene.world.showSection(util.select.position(handlePos), Direction.DOWN);
+		ElementLink<WorldSectionElement> handleLink =
+			scene.world.showIndependentSection(util.select.position(handlePos), Direction.DOWN);
 		scene.idle(15);
 
 		Selection valveKinetics = util.select.fromTo(2, 1, 1, 2, 2, 1);
 		scene.world.setKineticSpeed(valveKinetics, 16);
+		scene.world.rotateSection(handleLink, 0, 90, 0, 22);
 		scene.effects.rotationSpeedIndicator(handlePos);
-		scene.world.modifyTileEntity(valvePos, FluidValveTileEntity.class, te -> te.onSpeedChanged(0));
+		scene.world.modifyBlockEntity(valvePos, FluidValveBlockEntity.class, be -> be.onSpeedChanged(0));
 		scene.idle(22);
 		scene.world.modifyBlock(valvePos, s -> s.setValue(FluidValveBlock.ENABLED, true), false);
 		scene.effects.indicateSuccess(valvePos);
@@ -455,8 +459,9 @@ public class PipeScenes {
 		scene.idle(40);
 
 		scene.world.setKineticSpeed(valveKinetics, -16);
+		scene.world.rotateSection(handleLink, 0, -90, 0, 22);
 		scene.effects.rotationSpeedIndicator(handlePos);
-		scene.world.modifyTileEntity(valvePos, FluidValveTileEntity.class, te -> te.onSpeedChanged(0));
+		scene.world.modifyBlockEntity(valvePos, FluidValveBlockEntity.class, be -> be.onSpeedChanged(0));
 		scene.idle(22);
 		scene.world.modifyBlock(valvePos, s -> s.setValue(FluidValveBlock.ENABLED, false), false);
 		scene.effects.indicateRedstone(valvePos);
@@ -483,9 +488,9 @@ public class PipeScenes {
 		Selection basin = util.select.position(basinPos);
 		BlockPos smartPos = util.grid.at(3, 1, 1);
 		
-		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), FluidAction.EXECUTE)));
+		scene.world.modifyBlockEntity(basinPos, BasinBlockEntity.class,
+			be -> be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+				.ifPresent(fh -> fh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), FluidAction.EXECUTE)));
 
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.FLUID_PIPE.get()
 			.getAxisState(Axis.X), false);
@@ -513,7 +518,6 @@ public class PipeScenes {
 		scene.overlay.showText(50)
 			.placeNearTarget()
 			.text("Smart pipes can help control flows by fluid type")
-			.attachKeyFrame()
 			.pointAt(filterVec);
 		scene.idle(60);
 
@@ -533,7 +537,7 @@ public class PipeScenes {
 		scene.overlay.showControls(new InputWindowElement(filterVec, Pointing.DOWN).rightClick()
 			.withItem(bucket), 80);
 		scene.idle(7);
-		scene.world.setFilterData(util.select.position(3, 1, 1), SmartFluidPipeTileEntity.class, bucket);
+		scene.world.setFilterData(util.select.position(3, 1, 1), SmartFluidPipeBlockEntity.class, bucket);
 		scene.idle(10);
 		scene.overlay.showText(60)
 			.placeNearTarget()
@@ -543,17 +547,16 @@ public class PipeScenes {
 		scene.idle(50);
 
 		scene.world.showSection(kinetics2, Direction.WEST);
-		scene.world.setKineticSpeed(kinetics2, 64);
+		scene.world.setKineticSpeed(kinetics2, 24);
 		scene.idle(5);
 		scene.world.showSection(kinetics1, Direction.EAST);
-		scene.world.setKineticSpeed(kinetics1, -64);
+		scene.world.setKineticSpeed(kinetics1, -24);
 		scene.idle(10);
-		scene.world.setKineticSpeed(pump, 128);
+		scene.world.setKineticSpeed(pump, 48);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.idle(120);
+		scene.idle(100);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.effects.rotationSpeedIndicator(pumpPos);
 		scene.idle(15);
 		scene.world.showSection(tank2, Direction.DOWN);
 		scene.world.showSection(additionalPipes, Direction.NORTH);
@@ -567,9 +570,9 @@ public class PipeScenes {
 			scene.idle(2);
 		}
 		scene.idle(15);
-		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
+		scene.world.modifyBlockEntity(basinPos, BasinBlockEntity.class,
+			be -> be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+				.ifPresent(fh -> fh.fill(chocolate, FluidAction.EXECUTE)));
 		scene.idle(10);
 
 		scene.overlay.showText(80)
@@ -583,18 +586,18 @@ public class PipeScenes {
 		scene.overlay.showControls(new InputWindowElement(filterVec.add(-1, 0, 3), Pointing.DOWN).rightClick()
 			.withItem(milkBucket), 30);
 		scene.idle(7);
-		scene.world.setFilterData(util.select.position(2, 1, 4), SmartFluidPipeTileEntity.class, milkBucket);
+		scene.world.setFilterData(util.select.position(2, 1, 4), SmartFluidPipeBlockEntity.class, milkBucket);
 		scene.idle(30);
 
 		scene.overlay.showControls(new InputWindowElement(filterVec.add(-1, 0, 2), Pointing.DOWN).rightClick()
 			.withItem(bucket), 30);
 		scene.idle(7);
-		scene.world.setFilterData(util.select.position(2, 1, 3), SmartFluidPipeTileEntity.class, bucket);
+		scene.world.setFilterData(util.select.position(2, 1, 3), SmartFluidPipeBlockEntity.class, bucket);
 		scene.idle(30);
 
-		scene.world.setKineticSpeed(kinetics2, 64);
-		scene.world.setKineticSpeed(kinetics1, -64);
-		scene.world.setKineticSpeed(pump, 128);
+		scene.world.setKineticSpeed(kinetics2, 24);
+		scene.world.setKineticSpeed(kinetics1, -24);
+		scene.world.setKineticSpeed(pump, 48);
 		scene.world.propagatePipeChange(pumpPos);
 		scene.effects.rotationSpeedIndicator(pumpPos);
 		scene.idle(40);

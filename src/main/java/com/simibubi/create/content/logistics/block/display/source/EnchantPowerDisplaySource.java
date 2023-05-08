@@ -21,7 +21,7 @@ public class EnchantPowerDisplaySource extends NumericSingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceTE() instanceof EnchantmentTableBlockEntity enchantmentTile))
+		if (!(context.getSourceBlockEntity() instanceof EnchantmentTableBlockEntity))
 			return ZERO.copy();
 
 		BlockPos pos = context.getSourcePos();

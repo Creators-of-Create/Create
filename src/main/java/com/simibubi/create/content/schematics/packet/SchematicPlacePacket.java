@@ -1,7 +1,5 @@
 package com.simibubi.create.content.schematics.packet;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.schematics.SchematicPrinter;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -26,13 +24,15 @@ public class SchematicPlacePacket extends SimplePacketBase {
 		stack = buffer.readItem();
 	}
 
+	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeItem(stack);
 	}
 
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	@Override
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
 
@@ -42,25 +42,25 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			if (!printer.isLoaded() || printer.isErrored())
 				return;
 			
-			boolean includeAir = AllConfigs.SERVER.schematics.creativePrintIncludesAir.get();
+			boolean includeAir = AllConfigs.server().schematics.creativePrintIncludesAir.get();
 
 			while (printer.advanceCurrentPos()) {
 				if (!printer.shouldPlaceCurrent(world))
 					continue;
 
-				printer.handleCurrentTarget((pos, state, tile) -> {
+				printer.handleCurrentTarget((pos, state, blockEntity) -> {
 					boolean placingAir = state.isAir();
 					if (placingAir && !includeAir)
 						return;
 					
-					CompoundTag tileData = tile != null ? tile.saveWithFullMetadata() : null;
-					BlockHelper.placeSchematicBlock(world, state, pos, null, tileData);
+					CompoundTag data = blockEntity != null ? blockEntity.saveWithFullMetadata() : null;
+					BlockHelper.placeSchematicBlock(world, state, pos, null, data);
 				}, (pos, entity) -> {
 					world.addFreshEntity(entity);
 				});
 			}
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

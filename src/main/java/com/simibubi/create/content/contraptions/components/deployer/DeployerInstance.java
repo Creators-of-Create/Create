@@ -9,8 +9,7 @@ import com.jozufozu.flywheel.api.instance.TickableInstance;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.mojang.math.Quaternion;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -20,9 +19,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 
-public class DeployerInstance extends ShaftInstance implements DynamicInstance, TickableInstance {
+public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> implements DynamicInstance, TickableInstance {
 
-    final DeployerTileEntity tile;
     final Direction facing;
     final float yRot;
     final float xRot;
@@ -35,10 +33,9 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
     PartialModel currentHand;
     float progress;
 
-    public DeployerInstance(MaterialManager dispatcher, KineticTileEntity tile) {
-        super(dispatcher, tile);
+    public DeployerInstance(MaterialManager materialManager, DeployerBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
 
-        this.tile = (DeployerTileEntity) super.blockEntity;
         facing = blockState.getValue(FACING);
 
         boolean rotatePole = blockState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
@@ -47,9 +44,9 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
         xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRot = rotatePole ? 90 : 0;
 
-        pole = getOrientedMaterial().getModel(AllBlockPartials.DEPLOYER_POLE, blockState).createInstance();
+        pole = getOrientedMaterial().getModel(AllPartialModels.DEPLOYER_POLE, blockState).createInstance();
 
-		currentHand = this.tile.getHandPose();
+		currentHand = this.blockEntity.getHandPose();
 
 		hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
 
@@ -60,7 +57,7 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
 
     @Override
     public void tick() {
-		PartialModel handPose = tile.getHandPose();
+		PartialModel handPose = blockEntity.getHandPose();
 
 		if (currentHand != handPose) {
 			currentHand = handPose;
@@ -95,21 +92,21 @@ public class DeployerInstance extends ShaftInstance implements DynamicInstance, 
     }
 
 	private float getProgress(float partialTicks) {
-        if (tile.state == DeployerTileEntity.State.EXPANDING) {
-			float f = 1 - (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
-			if (tile.fistBump)
+        if (blockEntity.state == DeployerBlockEntity.State.EXPANDING) {
+			float f = 1 - (blockEntity.timer - partialTicks * blockEntity.getTimerSpeed()) / 1000f;
+			if (blockEntity.fistBump)
 				f *= f;
 			return f;
 		}
-        if (tile.state == DeployerTileEntity.State.RETRACTING)
-            return (tile.timer - partialTicks * tile.getTimerSpeed()) / 1000f;
+        if (blockEntity.state == DeployerBlockEntity.State.RETRACTING)
+            return (blockEntity.timer - partialTicks * blockEntity.getTimerSpeed()) / 1000f;
         return 0;
     }
 
     private void updatePosition() {
-        float handLength = currentHand == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
-                : currentHand == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
-        float distance = Math.min(Mth.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
+        float handLength = currentHand == AllPartialModels.DEPLOYER_HAND_POINTING ? 0
+                : currentHand == AllPartialModels.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
+        float distance = Math.min(Mth.clamp(progress, 0, 1) * (blockEntity.reach + handLength), 21 / 16f);
         Vec3i facingVec = facing.getNormal();
         BlockPos blockPos = getInstancePosition();
 

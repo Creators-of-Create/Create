@@ -13,10 +13,10 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity.InterfaceFluidHandler;
+import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceBlockEntity.InterfaceFluidHandler;
 import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
@@ -314,10 +314,10 @@ public class FluidNetwork {
 	private FluidTransportBehaviour getFluidTransfer(BlockPos pos) {
 		WeakReference<FluidTransportBehaviour> weakReference = cache.get(pos);
 		FluidTransportBehaviour behaviour = weakReference != null ? weakReference.get() : null;
-		if (behaviour != null && behaviour.tileEntity.isRemoved())
+		if (behaviour != null && behaviour.blockEntity.isRemoved())
 			behaviour = null;
 		if (behaviour == null) {
-			behaviour = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+			behaviour = BlockEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
 			if (behaviour != null)
 				cache.put(pos, new WeakReference<>(behaviour));
 		}

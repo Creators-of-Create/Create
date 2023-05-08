@@ -63,7 +63,7 @@ public class GlobalRailwayManager {
 					.toList(),
 				serverPlayer);
 			for (Train train : trains.values())
-				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+				AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> serverPlayer),
 					new TrainPacket(train, true));
 		}
 	}
@@ -228,7 +228,7 @@ public class GlobalRailwayManager {
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
 				continue;
 			}
 
@@ -244,7 +244,7 @@ public class GlobalRailwayManager {
 			if (train.invalid) {
 				iterator.remove();
 				trains.remove(train.id);
-				AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
+				AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainPacket(train, false));
 				continue;
 			}
 
@@ -269,7 +269,7 @@ public class GlobalRailwayManager {
 	}
 	
 	private static boolean isTrackGraphDebugActive() {
-		return KineticDebugger.isF3DebugModeActive() && AllConfigs.CLIENT.showTrackGraphOnF3.get();
+		return KineticDebugger.isF3DebugModeActive() && AllConfigs.client().showTrackGraphOnF3.get();
 	}
 
 	public GlobalRailwayManager sided(LevelAccessor level) {

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "create:asurine"
-  },
-  "result": "create:cut_asurine_bricks"
-}

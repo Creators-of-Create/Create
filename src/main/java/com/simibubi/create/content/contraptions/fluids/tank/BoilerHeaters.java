@@ -9,7 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.utility.CreateRegistry;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BoilerHeaters {
-	private static final CreateRegistry<Block, Heater> BLOCK_HEATERS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
+	private static final AttachedRegistry<Block, Heater> BLOCK_HEATERS = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
 	private static final List<HeaterProvider> GLOBAL_HEATERS = new ArrayList<>();
 
 	public static void registerHeater(ResourceLocation block, Heater heater) {

@@ -11,9 +11,9 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
@@ -33,7 +33,7 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 
 	@Override
 	public List<MutableComponent> provideText(DisplayLinkContext context, DisplayTargetStats stats) {
-		boolean isBook = context.getTargetTE() instanceof LecternBlockEntity;
+		boolean isBook = context.getTargetBlockEntity() instanceof LecternBlockEntity;
 
 		List<MutableComponent> list = provideEntries(context, stats.maxRows() * (isBook ? ENTRIES_PER_PAGE : 1))
 			.map(e -> createComponentsFromEntry(context, e))
@@ -104,7 +104,7 @@ public abstract class ValueListDisplaySource extends DisplaySource {
 	}
 
 	@Override
-	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay,
+	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayBlockEntity flapDisplay,
 		FlapDisplayLayout layout) {
 
 		boolean valueFirst = valueFirst();

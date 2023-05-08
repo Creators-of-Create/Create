@@ -6,14 +6,14 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
+import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlockEntity;
 import com.simibubi.create.content.contraptions.components.press.PressingBehaviour.Mode;
-import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlockEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlockEntity.Phase;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -160,7 +160,7 @@ public class BeltScenes {
 			.showControls(new InputWindowElement(util.vector.topOf(shaftLocation.east()), Pointing.DOWN).rightClick()
 				.withItem(new ItemStack(Items.BLUE_DYE)), 50);
 		scene.idle(7);
-		scene.world.modifyTileNBT(util.select.fromTo(0, 1, 2, 4, 1, 2), BeltTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.fromTo(0, 1, 2, 4, 1, 2), BeltBlockEntity.class,
 			nbt -> NBTHelper.writeEnum(nbt, "Dye", DyeColor.BLUE));
 		scene.idle(20);
 		scene.overlay.showText(80)
@@ -422,8 +422,8 @@ public class BeltScenes {
 			.withItem(andesiteCasingItem), 20);
 		scene.idle(7);
 		scene.world.modifyBlock(beltPos2, s -> s.setValue(BeltBlock.CASING, true), true);
-		scene.world.modifyTileNBT(util.select.position(beltPos2), BeltTileEntity.class, nbt -> {
-			NBTHelper.writeEnum(nbt, "Casing", BeltTileEntity.CasingType.ANDESITE);
+		scene.world.modifyBlockEntityNBT(util.select.position(beltPos2), BeltBlockEntity.class, nbt -> {
+			NBTHelper.writeEnum(nbt, "Casing", BeltBlockEntity.CasingType.ANDESITE);
 		});
 		scene.idle(20);
 
@@ -459,8 +459,8 @@ public class BeltScenes {
 		for (BlockPos pos : andesiteBelts) {
 			scene.idle(4);
 			scene.world.modifyBlock(pos, s -> s.setValue(BeltBlock.CASING, true), true);
-			scene.world.modifyTileNBT(util.select.position(pos), BeltTileEntity.class, nbt -> {
-				NBTHelper.writeEnum(nbt, "Casing", BeltTileEntity.CasingType.ANDESITE);
+			scene.world.modifyBlockEntityNBT(util.select.position(pos), BeltBlockEntity.class, nbt -> {
+				NBTHelper.writeEnum(nbt, "Casing", BeltBlockEntity.CasingType.ANDESITE);
 			});
 		}
 		for (BlockPos pos : brassBelts) {
@@ -525,12 +525,12 @@ public class BeltScenes {
 		ItemStack bottle = new ItemStack(Items.BUCKET);
 		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, bottle);
 		scene.idle(20);
-		scene.world.modifyTileNBT(util.select.position(depotPos.above(2)), SpoutTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(depotPos.above(2)), SpoutBlockEntity.class,
 			nbt -> nbt.putInt("ProcessingTicks", 20));
 		scene.idle(20);
 		scene.world.removeItemsFromBelt(depotPos);
 		scene.world.createItemOnBeltLike(depotPos, Direction.UP, new ItemStack(Items.WATER_BUCKET));
-		scene.world.modifyTileNBT(util.select.position(depotPos.above(2)), SpoutTileEntity.class,
+		scene.world.modifyBlockEntityNBT(util.select.position(depotPos.above(2)), SpoutBlockEntity.class,
 			nbt -> nbt.putBoolean("Splash", true));
 		scene.idle(30);
 		scene.world.removeItemsFromBelt(depotPos);
@@ -548,11 +548,11 @@ public class BeltScenes {
 		Vec3 depotCenter = util.vector.centerOf(depotPos);
 		scene.idle(10);
 
-		Class<MechanicalPressTileEntity> type = MechanicalPressTileEntity.class;
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+		Class<MechanicalPressBlockEntity> type = MechanicalPressBlockEntity.class;
+		scene.world.modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.start(Mode.BELT));
 		scene.idle(15);
-		scene.world.modifyTileEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+		scene.world.modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
 		scene.world.removeItemsFromBelt(depotPos);
 		ItemStack sheet = AllItems.COPPER_SHEET.asStack();

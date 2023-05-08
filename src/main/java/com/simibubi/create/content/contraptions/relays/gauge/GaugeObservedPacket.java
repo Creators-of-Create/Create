@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.relays.gauge;
 
-import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
+import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class GaugeObservedPacket extends TileEntityConfigurationPacket<StressGaugeTileEntity> {
+public class GaugeObservedPacket extends BlockEntityConfigurationPacket<StressGaugeBlockEntity> {
 
 	public GaugeObservedPacket(BlockPos pos) {
 		super(pos);
@@ -22,8 +22,8 @@ public class GaugeObservedPacket extends TileEntityConfigurationPacket<StressGau
 	protected void readSettings(FriendlyByteBuf buffer) {}
 
 	@Override
-	protected void applySettings(StressGaugeTileEntity te) {
-		te.onObserved();
+	protected void applySettings(StressGaugeBlockEntity be) {
+		be.onObserved();
 	}
 	
 	@Override

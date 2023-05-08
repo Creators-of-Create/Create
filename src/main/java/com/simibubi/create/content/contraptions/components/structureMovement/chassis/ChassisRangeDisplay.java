@@ -29,24 +29,24 @@ public class ChassisRangeDisplay {
 	private static GroupEntry lastHoveredGroup = null;
 
 	private static class Entry {
-		ChassisTileEntity te;
+		ChassisBlockEntity be;
 		int timer;
 
-		public Entry(ChassisTileEntity te) {
-			this.te = te;
+		public Entry(ChassisBlockEntity be) {
+			this.be = be;
 			timer = DISPLAY_TIME;
-			CreateClient.OUTLINER.showCluster(getOutlineKey(), createSelection(te))
-					.colored(0xFFFFFF)
-					.disableNormals()
-					.lineWidth(1 / 16f)
-					.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
+			CreateClient.OUTLINER.showCluster(getOutlineKey(), createSelection(be))
+				.colored(0xFFFFFF)
+				.disableLineNormals()
+				.lineWidth(1 / 16f)
+				.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
 		}
 
 		protected Object getOutlineKey() {
-			return Pair.of(te.getBlockPos(), 1);
+			return Pair.of(be.getBlockPos(), 1);
 		}
 
-		protected Set<BlockPos> createSelection(ChassisTileEntity chassis) {
+		protected Set<BlockPos> createSelection(ChassisBlockEntity chassis) {
 			Set<BlockPos> positions = new HashSet<>();
 			List<BlockPos> includedBlockPositions = chassis.getIncludedBlockPositions(null, true);
 			if (includedBlockPositions == null)
@@ -59,10 +59,10 @@ public class ChassisRangeDisplay {
 
 	private static class GroupEntry extends Entry {
 
-		List<ChassisTileEntity> includedTEs;
+		List<ChassisBlockEntity> includedBEs;
 
-		public GroupEntry(ChassisTileEntity te) {
-			super(te);
+		public GroupEntry(ChassisBlockEntity be) {
+			super(be);
 		}
 
 		@Override
@@ -71,13 +71,13 @@ public class ChassisRangeDisplay {
 		}
 
 		@Override
-		protected Set<BlockPos> createSelection(ChassisTileEntity chassis) {
+		protected Set<BlockPos> createSelection(ChassisBlockEntity chassis) {
 			Set<BlockPos> list = new HashSet<>();
-			includedTEs = te.collectChassisGroup();
-			if (includedTEs == null)
+			includedBEs = be.collectChassisGroup();
+			if (includedBEs == null)
 				return list;
-			for (ChassisTileEntity chassisTileEntity : includedTEs)
-				list.addAll(super.createSelection(chassisTileEntity));
+			for (ChassisBlockEntity chassisBlockEntity : includedBEs)
+				list.addAll(super.createSelection(chassisBlockEntity));
 			return list;
 		}
 
@@ -118,19 +118,19 @@ public class ChassisRangeDisplay {
 			return;
 		BlockHitResult ray = (BlockHitResult) over;
 		BlockPos pos = ray.getBlockPos();
-		BlockEntity tileEntity = world.getBlockEntity(pos);
-		if (tileEntity == null || tileEntity.isRemoved())
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity == null || blockEntity.isRemoved())
 			return;
-		if (!(tileEntity instanceof ChassisTileEntity))
+		if (!(blockEntity instanceof ChassisBlockEntity))
 			return;
 
 		boolean ctrl = AllKeys.ctrlDown();
-		ChassisTileEntity chassisTileEntity = (ChassisTileEntity) tileEntity;
+		ChassisBlockEntity chassisBlockEntity = (ChassisBlockEntity) blockEntity;
 
 		if (ctrl) {
 			GroupEntry existingGroupForPos = getExistingGroupForPos(pos);
 			if (existingGroupForPos != null) {
-				for (ChassisTileEntity included : existingGroupForPos.includedTEs)
+				for (ChassisBlockEntity included : existingGroupForPos.includedBEs)
 					entries.remove(included.getBlockPos());
 				existingGroupForPos.timer = DISPLAY_TIME;
 				return;
@@ -138,7 +138,7 @@ public class ChassisRangeDisplay {
 		}
 
 		if (!entries.containsKey(pos) || ctrl)
-			display(chassisTileEntity);
+			display(chassisBlockEntity);
 		else {
 			if (!ctrl)
 				entries.get(pos).timer = DISPLAY_TIME;
@@ -146,12 +146,12 @@ public class ChassisRangeDisplay {
 	}
 
 	private static boolean tickEntry(Entry entry, boolean hasWrench) {
-		ChassisTileEntity chassisTileEntity = entry.te;
-		Level teWorld = chassisTileEntity.getLevel();
+		ChassisBlockEntity chassisBlockEntity = entry.be;
+		Level beWorld = chassisBlockEntity.getLevel();
 		Level world = Minecraft.getInstance().level;
 
-		if (chassisTileEntity.isRemoved() || teWorld == null || teWorld != world
-			|| !world.isLoaded(chassisTileEntity.getBlockPos())) {
+		if (chassisBlockEntity.isRemoved() || beWorld == null || beWorld != world
+			|| !world.isLoaded(chassisBlockEntity.getBlockPos())) {
 			return true;
 		}
 
@@ -166,14 +166,14 @@ public class ChassisRangeDisplay {
 		return false;
 	}
 
-	public static void display(ChassisTileEntity chassis) {
+	public static void display(ChassisBlockEntity chassis) {
 
 		// Display a group and kill any selections of its contained chassis blocks
 		if (AllKeys.ctrlDown()) {
 			GroupEntry hoveredGroup = new GroupEntry(chassis);
 
-			for (ChassisTileEntity included : hoveredGroup.includedTEs)
-				CreateClient.OUTLINER.remove(included.getBlockPos());
+			for (ChassisBlockEntity included : hoveredGroup.includedBEs)
+				CreateClient.OUTLINER.remove(Pair.of(included.getBlockPos(), 1));
 
 			groupEntries.forEach(entry -> CreateClient.OUTLINER.remove(entry.getOutlineKey()));
 			groupEntries.clear();
@@ -196,7 +196,7 @@ public class ChassisRangeDisplay {
 
 	private static GroupEntry getExistingGroupForPos(BlockPos pos) {
 		for (GroupEntry groupEntry : groupEntries)
-			for (ChassisTileEntity chassis : groupEntry.includedTEs)
+			for (ChassisBlockEntity chassis : groupEntry.includedBEs)
 				if (pos.equals(chassis.getBlockPos()))
 					return groupEntry;
 		return null;

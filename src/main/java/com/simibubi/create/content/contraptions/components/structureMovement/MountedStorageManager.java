@@ -6,27 +6,38 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class MountedStorageManager {
 
@@ -71,14 +82,14 @@ public class MountedStorageManager {
 		return new CombinedTankWrapper(Arrays.copyOf(list.toArray(), list.size(), IFluidHandler[].class));
 	}
 
-	public void addBlock(BlockPos localPos, BlockEntity te) {
-		if (te != null && MountedStorage.canUseAsStorage(te))
-			storage.put(localPos, new MountedStorage(te));
-		if (te != null && MountedFluidStorage.canUseAsStorage(te))
-			fluidStorage.put(localPos, new MountedFluidStorage(te));
+	public void addBlock(BlockPos localPos, BlockEntity be) {
+		if (be != null && MountedStorage.canUseAsStorage(be))
+			storage.put(localPos, new MountedStorage(be));
+		if (be != null && MountedFluidStorage.canUseAsStorage(be))
+			fluidStorage.put(localPos, new MountedFluidStorage(be));
 	}
 
-	public void read(CompoundTag nbt, Map<BlockPos, BlockEntity> presentTileEntities, boolean clientPacket) {
+	public void read(CompoundTag nbt, Map<BlockPos, BlockEntity> presentBlockEntities, boolean clientPacket) {
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", Tag.TAG_COMPOUND), c -> storage
 			.put(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data"))));
@@ -87,8 +98,8 @@ public class MountedStorageManager {
 		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", Tag.TAG_COMPOUND), c -> fluidStorage
 			.put(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedFluidStorage.deserialize(c.getCompound("Data"))));
 
-		if (clientPacket && presentTileEntities != null)
-			bindTanks(presentTileEntities);
+		if (clientPacket && presentBlockEntities != null)
+			bindTanks(presentBlockEntities);
 
 		List<IItemHandlerModifiable> handlers = new ArrayList<>();
 		List<IItemHandlerModifiable> fuelHandlers = new ArrayList<>();
@@ -107,18 +118,18 @@ public class MountedStorageManager {
 			.toList());
 	}
 
-	public void bindTanks(Map<BlockPos, BlockEntity> presentTileEntities) {
+	public void bindTanks(Map<BlockPos, BlockEntity> presentBlockEntities) {
 		fluidStorage.forEach((pos, mfs) -> {
-			BlockEntity tileEntity = presentTileEntities.get(pos);
-			if (!(tileEntity instanceof FluidTankTileEntity))
+			BlockEntity blockEntity = presentBlockEntities.get(pos);
+			if (!(blockEntity instanceof FluidTankBlockEntity))
 				return;
-			FluidTankTileEntity tank = (FluidTankTileEntity) tileEntity;
+			FluidTankBlockEntity tank = (FluidTankBlockEntity) blockEntity;
 			IFluidTank tankInventory = tank.getTankInventory();
 			if (tankInventory instanceof FluidTank)
 				((FluidTank) tankInventory).setFluid(mfs.tank.getFluid());
 			tank.getFluidLevel()
 				.startWithValue(tank.getFillState());
-			mfs.assignTileEntity(tank);
+			mfs.assignBlockEntity(tank);
 		});
 	}
 
@@ -157,17 +168,17 @@ public class MountedStorageManager {
 			.forEach(MountedFluidStorage::removeStorageFromWorld);
 	}
 
-	public void addStorageToWorld(StructureBlockInfo block, BlockEntity tileEntity) {
+	public void addStorageToWorld(StructureBlockInfo block, BlockEntity blockEntity) {
 		if (storage.containsKey(block.pos)) {
 			MountedStorage mountedStorage = storage.get(block.pos);
 			if (mountedStorage.isValid())
-				mountedStorage.addStorageToWorld(tileEntity);
+				mountedStorage.addStorageToWorld(blockEntity);
 		}
 
 		if (fluidStorage.containsKey(block.pos)) {
 			MountedFluidStorage mountedStorage = fluidStorage.get(block.pos);
 			if (mountedStorage.isValid())
-				mountedStorage.addStorageToWorld(tileEntity);
+				mountedStorage.addStorageToWorld(blockEntity);
 		}
 	}
 
@@ -200,6 +211,52 @@ public class MountedStorageManager {
 
 	public IFluidHandler getFluids() {
 		return fluidInventory;
+	}
+
+	public boolean handlePlayerStorageInteraction(Contraption contraption, Player player, BlockPos localPos) {
+		if (player.level.isClientSide()) {
+			BlockEntity localBE = contraption.presentBlockEntities.get(localPos);
+			return MountedStorage.canUseAsStorage(localBE);
+		}
+
+		MountedStorageManager storageManager = contraption.getStorageForSpawnPacket();
+		MountedStorage storage = storageManager.storage.get(localPos);
+		if (storage == null || storage.getItemHandler() == null)
+			return false;
+		IItemHandlerModifiable handler = storage.getItemHandler();
+
+		StructureBlockInfo info = contraption.getBlocks()
+			.get(localPos);
+		if (info != null && info.state.hasProperty(ChestBlock.TYPE)) {
+			ChestType chestType = info.state.getValue(ChestBlock.TYPE);
+			Direction facing = info.state.getOptionalValue(ChestBlock.FACING)
+				.orElse(Direction.SOUTH);
+			Direction connectedDirection =
+				chestType == ChestType.LEFT ? facing.getClockWise() : facing.getCounterClockWise();
+
+			if (chestType != ChestType.SINGLE) {
+				MountedStorage storage2 = storageManager.storage.get(localPos.relative(connectedDirection));
+				if (storage2 != null && storage2.getItemHandler() != null)
+					handler = chestType == ChestType.RIGHT ? new CombinedInvWrapper(handler, storage2.getItemHandler())
+						: new CombinedInvWrapper(storage2.getItemHandler(), handler);
+			}
+		}
+
+		int slotCount = handler.getSlots();
+		if (slotCount == 0)
+			return false;
+		if (slotCount % 9 != 0)
+			return false;
+
+		Supplier<Boolean> stillValid = () -> contraption.entity.isAlive()
+			&& player.distanceToSqr(contraption.entity.toGlobalVector(Vec3.atCenterOf(localPos), 0)) < 64;
+		Component name = info != null ? info.state.getBlock()
+			.getName() : Components.literal("Container");
+		player.openMenu(MountedStorageInteraction.createMenuProvider(name, handler, slotCount, stillValid));
+
+		Vec3 soundPos = contraption.entity.toGlobalVector(Vec3.atCenterOf(localPos), 0);
+		player.level.playSound(null, new BlockPos(soundPos), SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 0.75f, 1f);
+		return true;
 	}
 
 }

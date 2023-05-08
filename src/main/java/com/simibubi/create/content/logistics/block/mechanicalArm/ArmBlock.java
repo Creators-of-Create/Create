@@ -2,12 +2,13 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlockEntity.Phase;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWheel {
+public class ArmBlock extends KineticBlock implements IBE<ArmBlockEntity>, ICogWheel {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
 
@@ -56,13 +57,13 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, world, pos, oldState, isMoving);
-		withTileEntityDo(world, pos, ArmTileEntity::redstoneUpdate);
+		withBlockEntityDo(world, pos, ArmBlockEntity::redstoneUpdate);
 	}
 	
 	@Override
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_,
 		BlockPos p_220069_5_, boolean p_220069_6_) {
-		withTileEntityDo(world, pos, ArmTileEntity::redstoneUpdate);
+		withBlockEntityDo(world, pos, ArmBlockEntity::redstoneUpdate);
 	}
 	
 	@Override
@@ -71,30 +72,44 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 	}
 
 	@Override
-	public Class<ArmTileEntity> getTileEntityClass() {
-		return ArmTileEntity.class;
+	public Class<ArmBlockEntity> getBlockEntityClass() {
+		return ArmBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends ArmTileEntity> getTileEntityType() {
-		return AllTileEntities.MECHANICAL_ARM.get();
+	public BlockEntityType<? extends ArmBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.MECHANICAL_ARM.get();
 	}
 	
 	@Override
 	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player,
-		InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
+		InteractionHand hand, BlockHitResult p_225533_6_) {
+		ItemStack heldItem = player.getItemInHand(hand);
+
+		if (AllItems.GOGGLES.isIn(heldItem)) {
+			InteractionResult gogglesResult = onBlockEntityUse(world, pos, ate -> {
+				if (ate.goggles)
+					return InteractionResult.PASS;
+				ate.goggles = true;
+				ate.notifyUpdate();
+				return InteractionResult.SUCCESS;
+			});
+			if (gogglesResult.consumesAction())
+				return gogglesResult;
+		}
+
 		MutableBoolean success = new MutableBoolean(false);
-		withTileEntityDo(world, pos, te -> {
-			if (te.heldItem.isEmpty())
+		withBlockEntityDo(world, pos, be -> {
+			if (be.heldItem.isEmpty())
 				return;
 			success.setTrue();
 			if (world.isClientSide)
 				return;
-			player.getInventory().placeItemBackInInventory(te.heldItem);
-			te.heldItem = ItemStack.EMPTY;
-			te.phase = Phase.SEARCH_INPUTS;
-			te.setChanged();
-			te.sendData();
+			player.getInventory().placeItemBackInInventory(be.heldItem);
+			be.heldItem = ItemStack.EMPTY;
+			be.phase = Phase.SEARCH_INPUTS;
+			be.setChanged();
+			be.sendData();
 		});
 		
 		return success.booleanValue() ? InteractionResult.SUCCESS : InteractionResult.PASS;

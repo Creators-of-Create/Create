@@ -10,7 +10,7 @@ import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePointType;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
@@ -51,8 +51,8 @@ public abstract class TrackEdgePoint {
 
 	public abstract void invalidate(LevelAccessor level);
 
-	protected void invalidateAt(LevelAccessor level, BlockPos tilePos) {
-		TrackTargetingBehaviour<?> behaviour = TileEntityBehaviour.get(level, tilePos, TrackTargetingBehaviour.TYPE);
+	protected void invalidateAt(LevelAccessor level, BlockPos blockEntityPos) {
+		TrackTargetingBehaviour<?> behaviour = BlockEntityBehaviour.get(level, blockEntityPos, TrackTargetingBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		CompoundTag migrationData = new CompoundTag();
@@ -62,9 +62,9 @@ public abstract class TrackEdgePoint {
 		behaviour.invalidateEdgePoint(migrationData);
 	}
 
-	public abstract void tileAdded(BlockEntity tile, boolean front);
+	public abstract void blockEntityAdded(BlockEntity blockEntity, boolean front);
 
-	public abstract void tileRemoved(BlockPos tilePos, boolean front);
+	public abstract void blockEntityRemoved(BlockPos blockEntityPos, boolean front);
 
 	public void onRemoved(TrackGraph graph) {}
 

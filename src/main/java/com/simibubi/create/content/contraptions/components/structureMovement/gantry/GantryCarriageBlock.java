@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements ITE<GantryCarriageTileEntity> {
+public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements IBE<GantryCarriageBlockEntity> {
 
 	public GantryCarriageBlock(Properties properties) {
 		super(properties);
@@ -40,7 +40,7 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	@Override
 	public void updateIndirectNeighbourShapes(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, int flags, int count) {
 		super.updateIndirectNeighbourShapes(stateIn, worldIn, pos, flags, count);
-		withTileEntityDo(worldIn, pos, GantryCarriageTileEntity::checkValidGantryShaft);
+		withBlockEntityDo(worldIn, pos, GantryCarriageBlockEntity::checkValidGantryShaft);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 			return InteractionResult.PASS;
 		if (player.getItemInHand(handIn)
 			.isEmpty()) {
-			withTileEntityDo(worldIn, pos, te -> te.checkValidGantryShaft());
+			withBlockEntityDo(worldIn, pos, be -> be.checkValidGantryShaft());
 			return InteractionResult.SUCCESS;
 		}
 		return InteractionResult.PASS;
@@ -130,13 +130,13 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	}
 
 	@Override
-	public Class<GantryCarriageTileEntity> getTileEntityClass() {
-		return GantryCarriageTileEntity.class;
+	public Class<GantryCarriageBlockEntity> getBlockEntityClass() {
+		return GantryCarriageBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends GantryCarriageTileEntity> getTileEntityType() {
-		return AllTileEntities.GANTRY_PINION.get();
+	public BlockEntityType<? extends GantryCarriageBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.GANTRY_PINION.get();
 	}
 	
 }

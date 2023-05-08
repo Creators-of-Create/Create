@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -22,6 +22,7 @@ public class ScrollInput extends AbstractSimiWidget {
 	protected Component title = Lang.translateDirect("gui.scrollInput.defaultTitle");
 	protected final Component scrollToModify = Lang.translateDirect("gui.scrollInput.scrollToModify");
 	protected final Component shiftScrollsFaster = Lang.translateDirect("gui.scrollInput.shiftScrollsFaster");
+	protected Component hint = null;
 	protected Label displayLabel;
 	protected boolean inverted;
 	protected Function<Integer, Component> formatter;
@@ -72,6 +73,12 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	public ScrollInput titled(MutableComponent title) {
 		this.title = title;
+		updateTooltip();
+		return this;
+	}
+
+	public ScrollInput addHint(MutableComponent hint) {
+		this.hint = hint;
 		updateTooltip();
 		return this;
 	}
@@ -128,7 +135,10 @@ public class ScrollInput extends AbstractSimiWidget {
 		clampState();
 
 		if (priorState != state) {
-			Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(AllSoundEvents.SCROLL_VALUE.getMainEvent(), 1.5f + 0.1f * (state-min)/(max-min)));
+			Minecraft.getInstance()
+				.getSoundManager()
+				.play(SimpleSoundInstance.forUI(AllSoundEvents.SCROLL_VALUE.getMainEvent(),
+					1.5f + 0.1f * (state - min) / (max - min)));
 			onChanged();
 		}
 
@@ -160,6 +170,9 @@ public class ScrollInput extends AbstractSimiWidget {
 			return;
 		toolTip.add(title.plainCopy()
 			.withStyle(s -> s.withColor(HEADER_RGB)));
+		if (hint != null)
+			toolTip.add(hint.plainCopy()
+				.withStyle(s -> s.withColor(HINT_RGB)));
 		toolTip.add(scrollToModify.plainCopy()
 			.withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
 		toolTip.add(shiftScrollsFaster.plainCopy()

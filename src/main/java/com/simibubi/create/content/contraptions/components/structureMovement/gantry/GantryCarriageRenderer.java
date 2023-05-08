@@ -2,9 +2,9 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ga
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -20,27 +20,27 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GantryCarriageRenderer extends KineticTileEntityRenderer {
+public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCarriageBlockEntity> {
 
 	public GantryCarriageRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(GantryCarriageBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(be.getLevel())) return;
 
-		BlockState state = te.getBlockState();
+		BlockState state = be.getBlockState();
 		Direction facing = state.getValue(GantryCarriageBlock.FACING);
 		Boolean alongFirst = state.getValue(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
-		Axis rotationAxis = getRotationAxisOf(te);
-		BlockPos visualPos = facing.getAxisDirection() == AxisDirection.POSITIVE ? te.getBlockPos()
-				: te.getBlockPos()
+		Axis rotationAxis = getRotationAxisOf(be);
+		BlockPos visualPos = facing.getAxisDirection() == AxisDirection.POSITIVE ? be.getBlockPos()
+				: be.getBlockPos()
 				.relative(facing.getOpposite());
-		float angleForTe = getAngleForTe(te, visualPos, rotationAxis);
+		float angleForBE = getAngleForBE(be, visualPos, rotationAxis);
 
 		Axis gantryAxis = Axis.X;
 		for (Axis axis : Iterate.axes)
@@ -49,18 +49,18 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 
 		if (gantryAxis == Axis.X)
 			if (facing == Direction.UP)
-				angleForTe *= -1;
+				angleForBE *= -1;
 		if (gantryAxis == Axis.Y)
 			if (facing == Direction.NORTH || facing == Direction.EAST)
-				angleForTe *= -1;
+				angleForBE *= -1;
 
-		SuperByteBuffer cogs = CachedBufferer.partial(AllBlockPartials.GANTRY_COGS, state);
+		SuperByteBuffer cogs = CachedBufferer.partial(AllPartialModels.GANTRY_COGS, state);
 		cogs.centre()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 				.rotateY(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
-				.rotateX(-angleForTe)
+				.rotateX(-angleForBE)
 				.translate(0, 9 / 16f, 0)
 				.unCentre();
 
@@ -69,15 +69,15 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 
 	}
 
-	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
-		float time = AnimationTickHolder.getRenderTime(te.getLevel());
-		float offset = getRotationOffsetForPosition(te, pos, axis);
-		return (time * te.getSpeed() * 3f / 20 + offset) % 360;
+	public static float getAngleForBE(KineticBlockEntity be, final BlockPos pos, Axis axis) {
+		float time = AnimationTickHolder.getRenderTime(be.getLevel());
+		float offset = getRotationOffsetForPosition(be, pos, axis);
+		return (time * be.getSpeed() * 3f / 20 + offset) % 360;
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return shaft(getRotationAxisOf(te));
+	protected BlockState getRenderedBlockState(GantryCarriageBlockEntity be) {
+		return shaft(getRotationAxisOf(be));
 	}
 
 }

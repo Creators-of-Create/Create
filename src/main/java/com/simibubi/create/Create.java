@@ -10,7 +10,6 @@ import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.curios.Curios;
-import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
@@ -19,7 +18,6 @@ import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
 import com.simibubi.create.content.logistics.block.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
-import com.simibubi.create.content.palettes.PalettesItemGroup;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -36,8 +34,12 @@ import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
+import com.simibubi.create.foundation.item.ItemDescription;
+import com.simibubi.create.foundation.item.KineticStats;
+import com.simibubi.create.foundation.item.TooltipHelper.Palette;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.CreateRegistry;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.foundation.worldgen.AllFeatures;
 import com.simibubi.create.foundation.worldgen.AllOreFeatureConfigEntries;
 import com.simibubi.create.foundation.worldgen.AllPlacementModifiers;
@@ -46,7 +48,6 @@ import com.simibubi.create.foundation.worldgen.BuiltinRegistration;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
@@ -65,7 +66,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5j";
+	public static final String VERSION = "0.5.1-unstable";
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -79,8 +80,12 @@ public class Create {
 
 	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
 
-	public static final CreativeModeTab BASE_CREATIVE_TAB = new CreateItemGroup();
-	public static final CreativeModeTab PALETTES_CREATIVE_TAB = new PalettesItemGroup();
+	static {
+		REGISTRATE.setTooltipModifierFactory(item -> {
+			return new ItemDescription.Modifier(item, Palette.STANDARD_CREATE)
+				.andThen(TooltipModifier.mapNull(KineticStats.create(item)));
+		});
+	}
 
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
 	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
@@ -103,13 +108,14 @@ public class Create {
 
 		AllSoundEvents.prepare();
 		AllTags.init();
+		AllCreativeModeTabs.init();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
 		AllPaletteBlocks.register();
-		AllContainerTypes.register();
+		AllMenuTypes.register();
 		AllEntityTypes.register();
-		AllTileEntities.register();
+		AllBlockEntityTypes.register();
 		AllEnchantments.register();
 		AllRecipeTypes.register(modEventBus);
 		AllParticleTypes.register(modEventBus);
@@ -142,12 +148,12 @@ public class Create {
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
-		CreateRegistry.unwrapAll();
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
 
 		event.enqueueWork(() -> {
+			AttachedRegistry.unwrapAll();
 			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
@@ -159,7 +165,7 @@ public class Create {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
 		if (event.includeClient()) {
-			gen.addProvider(true, new LangMerger(gen, ID, "Create", AllLangPartials.values()));
+			gen.addProvider(true, new LangMerger(gen, ID, NAME, AllLangPartials.values()));
 			gen.addProvider(true, AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {

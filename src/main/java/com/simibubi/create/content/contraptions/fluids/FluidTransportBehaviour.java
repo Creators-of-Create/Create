@@ -10,9 +10,9 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
@@ -25,7 +25,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
+public abstract class FluidTransportBehaviour extends BlockEntityBehaviour {
 
 	public static final BehaviourType<FluidTransportBehaviour> TYPE = new BehaviourType<>();
 
@@ -38,8 +38,8 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 	public Map<Direction, PipeConnection> interfaces;
 	public UpdatePhase phase;
 
-	public FluidTransportBehaviour(SmartTileEntity te) {
-		super(te);
+	public FluidTransportBehaviour(SmartBlockEntity be) {
+		super(be);
 		phase = UpdatePhase.WAIT_FOR_PUMPS;
 	}
 
@@ -60,7 +60,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		super.tick();
 		Level world = getWorld();
 		BlockPos pos = getPos();
-		boolean onServer = !world.isClientSide || tileEntity.isVirtual();
+		boolean onServer = !world.isClientSide || blockEntity.isVirtual();
 
 		if (interfaces == null)
 			return;
@@ -88,7 +88,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 				connection.manageSource(world, pos);
 			}
 			if (sendUpdate)
-				tileEntity.notifyUpdate();
+				blockEntity.notifyUpdate();
 		}
 
 		if (phase == UpdatePhase.FLIP_FLOWS) {
@@ -127,12 +127,12 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 			for (PipeConnection connection : connections) {
 				FluidStack internalFluid = singleSource != connection ? availableFlow : FluidStack.EMPTY;
 				Predicate<FluidStack> extractionPredicate =
-					extracted -> canPullFluidFrom(extracted, tileEntity.getBlockState(), connection.side);
+					extracted -> canPullFluidFrom(extracted, blockEntity.getBlockState(), connection.side);
 				sendUpdate |= connection.manageFlows(world, pos, internalFluid, extractionPredicate);
 			}
 
 			if (sendUpdate)
-				tileEntity.notifyUpdate();
+				blockEntity.notifyUpdate();
 		}
 
 		for (PipeConnection connection : connections)
@@ -155,7 +155,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		}
 
 		interfaces.values()
-			.forEach(connection -> connection.deserializeNBT(nbt, tileEntity.getBlockPos(), clientPacket));
+			.forEach(connection -> connection.deserializeNBT(nbt, blockEntity.getBlockPos(), clientPacket));
 	}
 
 	@Override
@@ -206,13 +206,13 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 			return;
 		interfaces.get(side)
 			.addPressure(inbound, pressure);
-		tileEntity.sendData();
+		blockEntity.sendData();
 	}
 
 	public void wipePressure() {
 		if (interfaces != null)
 			for (Direction d : Iterate.directions) {
-				if (!canHaveFlowToward(tileEntity.getBlockState(), d))
+				if (!canHaveFlowToward(blockEntity.getBlockState(), d))
 					interfaces.remove(d);
 				else
 					interfaces.computeIfAbsent(d, PipeConnection::new);
@@ -221,7 +221,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		createConnectionData();
 		interfaces.values()
 			.forEach(PipeConnection::wipePressure);
-		tileEntity.sendData();
+		blockEntity.sendData();
 	}
 
 	private void createConnectionData() {
@@ -229,7 +229,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 			return;
 		interfaces = new IdentityHashMap<>();
 		for (Direction d : Iterate.directions)
-			if (canHaveFlowToward(tileEntity.getBlockState(), d))
+			if (canHaveFlowToward(blockEntity.getBlockState(), d))
 				interfaces.put(d, new PipeConnection(d));
 	}
 
@@ -294,14 +294,14 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		new WorldAttached<>($ -> new HashMap<>());
 
 	public static void cacheFlows(LevelAccessor world, BlockPos pos) {
-		FluidTransportBehaviour pipe = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+		FluidTransportBehaviour pipe = BlockEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
 		if (pipe != null)
 			interfaceTransfer.get(world)
 				.put(pos, pipe.interfaces);
 	}
 
 	public static void loadFlows(LevelAccessor world, BlockPos pos) {
-		FluidTransportBehaviour newPipe = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+		FluidTransportBehaviour newPipe = BlockEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
 		if (newPipe != null)
 			newPipe.interfaces = interfaceTransfer.get(world)
 				.remove(pos);

@@ -5,12 +5,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.simibubi.create.content.contraptions.fluids.tank.BoilerData;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -41,7 +41,7 @@ public class BoilerDisplaySource extends DisplaySource {
 		else if (stats.maxRows() < 4)
 			return notEnoughSpaceDouble;
 
-		boolean isBook = context.getTargetTE() instanceof LecternBlockEntity;
+		boolean isBook = context.getTargetBlockEntity() instanceof LecternBlockEntity;
 
 		if (isBook) {
 			Stream<MutableComponent> componentList = getComponents(context, false).map(components -> {
@@ -84,7 +84,7 @@ public class BoilerDisplaySource extends DisplaySource {
 	}
 
 	@Override
-	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay,
+	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayBlockEntity flapDisplay,
 		FlapDisplayLayout layout, int lineIndex) {
 		if (lineIndex == 0 || context.flapDisplayContext instanceof Boolean b && !b) {
 			if (layout.isLayout("Default"))
@@ -107,17 +107,17 @@ public class BoilerDisplaySource extends DisplaySource {
 	}
 
 	private Stream<List<MutableComponent>> getComponents(DisplayLinkContext context, boolean forFlapDisplay) {
-		BlockEntity sourceTE = context.getSourceTE();
-		if (!(sourceTE instanceof FluidTankTileEntity tankTile))
+		BlockEntity sourceBE = context.getSourceBlockEntity();
+		if (!(sourceBE instanceof FluidTankBlockEntity tankBlockEntity))
 			return Stream.of(EMPTY);
 
-		tankTile = tankTile.getControllerTE();
-		if (tankTile == null)
+		tankBlockEntity = tankBlockEntity.getControllerBE();
+		if (tankBlockEntity == null)
 			return Stream.of(EMPTY);
 
-		BoilerData boiler = tankTile.boiler;
+		BoilerData boiler = tankBlockEntity.boiler;
 
-		int totalTankSize = tankTile.getTotalTankSize();
+		int totalTankSize = tankBlockEntity.getTotalTankSize();
 
 		boiler.calcMinMaxForSize(totalTankSize);
 
@@ -134,9 +134,9 @@ public class BoilerDisplaySource extends DisplaySource {
 		}
 
 		return Stream.of(List.of(Lang.translateDirect(label, boiler.getHeatLevelTextComponent())),
-			List.of(size, boiler.getSizeComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.BLACK)),
-			List.of(water, boiler.getWaterComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.BLACK)),
-			List.of(heat, boiler.getHeatComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.BLACK)));
+			List.of(size, boiler.getSizeComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.RESET)),
+			List.of(water, boiler.getWaterComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.RESET)),
+			List.of(heat, boiler.getHeatComponent(!forFlapDisplay, forFlapDisplay, ChatFormatting.RESET)));
 	}
 
 	private int labelWidth() {

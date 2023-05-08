@@ -9,11 +9,12 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.Direction;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class EncasedCogInstance extends KineticTileInstance<KineticTileEntity> {
+public class EncasedCogInstance extends KineticBlockEntityInstance<KineticBlockEntity> {
 
 	private boolean large;
 
@@ -30,16 +31,16 @@ public class EncasedCogInstance extends KineticTileInstance<KineticTileEntity> {
 	protected Optional<RotatingData> rotatingTopShaft;
 	protected Optional<RotatingData> rotatingBottomShaft;
 
-	public static EncasedCogInstance small(MaterialManager modelManager, KineticTileEntity tile) {
-		return new EncasedCogInstance(modelManager, tile, false);
+	public static EncasedCogInstance small(MaterialManager modelManager, KineticBlockEntity blockEntity) {
+		return new EncasedCogInstance(modelManager, blockEntity, false);
 	}
 
-	public static EncasedCogInstance large(MaterialManager modelManager, KineticTileEntity tile) {
-		return new EncasedCogInstance(modelManager, tile, true);
+	public static EncasedCogInstance large(MaterialManager modelManager, KineticBlockEntity blockEntity) {
+		return new EncasedCogInstance(modelManager, blockEntity, true);
 	}
 
-	public EncasedCogInstance(MaterialManager modelManager, KineticTileEntity tile, boolean large) {
-		super(modelManager, tile);
+	public EncasedCogInstance(MaterialManager modelManager, KineticBlockEntity blockEntity, boolean large) {
+		super(modelManager, blockEntity);
 		this.large = large;
 	}
 
@@ -58,8 +59,10 @@ public class EncasedCogInstance extends KineticTileInstance<KineticTileEntity> {
 		for (Direction d : Iterate.directionsInAxis(axis)) {
 			if (!def.hasShaftTowards(blockEntity.getLevel(), blockEntity.getBlockPos(), blockState, d))
 				continue;
-			RotatingData data = setup(getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, d)
+			RotatingData data = setup(getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, blockState, d)
 				.createInstance());
+			if (large)
+				data.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos));
 			if (d.getAxisDirection() == AxisDirection.POSITIVE)
 				rotatingTopShaft = Optional.of(data);
 			else
@@ -92,7 +95,7 @@ public class EncasedCogInstance extends KineticTileInstance<KineticTileEntity> {
 		BlockState referenceState = blockEntity.getBlockState();
 		Direction facing =
 			Direction.fromAxisAndDirection(referenceState.getValue(BlockStateProperties.AXIS), AxisDirection.POSITIVE);
-		PartialModel partial = large ? AllBlockPartials.SHAFTLESS_LARGE_COGWHEEL : AllBlockPartials.SHAFTLESS_COGWHEEL;
+		PartialModel partial = large ? AllPartialModels.SHAFTLESS_LARGE_COGWHEEL : AllPartialModels.SHAFTLESS_COGWHEEL;
 
 		return getRotatingMaterial().getModel(partial, referenceState, facing, () -> {
 			PoseStack poseStack = new PoseStack();

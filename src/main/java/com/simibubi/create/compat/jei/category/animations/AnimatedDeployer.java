@@ -2,8 +2,8 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -37,11 +37,11 @@ public class AnimatedDeployer extends AnimatedKinetics {
 		matrixStack.pushPose();
 
 		matrixStack.translate(0, offset * 17, 0);
-		blockElement(AllBlockPartials.DEPLOYER_POLE)
+		blockElement(AllPartialModels.DEPLOYER_POLE)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
 			.render(matrixStack);
-		blockElement(AllBlockPartials.DEPLOYER_HAND_HOLDING)
+		blockElement(AllPartialModels.DEPLOYER_HAND_HOLDING)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
 			.render(matrixStack);

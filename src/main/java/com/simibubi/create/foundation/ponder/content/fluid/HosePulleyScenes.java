@@ -4,8 +4,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.fluids.PumpBlock;
+import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyBlockEntity;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyFluidHandler;
-import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -120,14 +122,15 @@ public class HosePulleyScenes {
 			scene.idle(3);
 		}
 
-		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.modifyTileEntity(util.grid.at(1, 5, 1), HosePulleyTileEntity.class, te -> te
+		scene.world.modifyBlockEntity(util.grid.at(1, 5, 1), HosePulleyBlockEntity.class, be -> be
 			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			.ifPresent(
 				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
-		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
-		scene.idle(40);
+		scene.idle(20);
+		scene.world.modifyBlock(util.grid.at(3, 2, 1), s -> s.setValue(PumpBlock.FACING, Direction.DOWN), true);
+		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
+		scene.idle(20);
 		scene.world.setKineticSpeed(kinetics, 32);
 		scene.idle(16);
 		scene.world.setKineticSpeed(kinetics, 0);
@@ -206,6 +209,7 @@ public class HosePulleyScenes {
 			.pointAt(util.vector.blockSurface(hosePos.below(), Direction.UP));
 		scene.idle(55);
 
+		scene.world.modifyBlock(util.grid.at(3, 2, 1), s -> s.setValue(PumpBlock.FACING, Direction.DOWN), false);
 		Selection kinetics = util.select.fromTo(1, 6, 1, 0, 6, 1);
 		scene.world.setKineticSpeed(kinetics, 32);
 		scene.idle(50);
@@ -220,11 +224,10 @@ public class HosePulleyScenes {
 
 		scene.world.showSectionAndMerge(cogs, Direction.NORTH, hoselink);
 		scene.world.showSectionAndMerge(pipes, Direction.WEST, hoselink);
-		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.modifyTileEntity(util.grid.at(1, 6, 1), HosePulleyTileEntity.class, te -> te
-			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
+		scene.world.modifyBlockEntity(util.grid.at(1, 6, 1), HosePulleyBlockEntity.class,
+			be -> be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+				.ifPresent(
+					fh -> ((HosePulleyFluidHandler) fh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		Vec3 surface = util.vector.topOf(1, 3, 1)
@@ -252,9 +255,6 @@ public class HosePulleyScenes {
 			.pointAt(util.vector.of(0, 2 - 1 / 8f, 1.5f));
 		scene.idle(30);
 
-		scene.idle(10);
-		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 		scene.idle(30);
 		scene.world.hideSection(water, Direction.SOUTH);
 		scene.idle(15);
@@ -263,6 +263,8 @@ public class HosePulleyScenes {
 		scene.world.showSection(water, Direction.UP);
 		scene.idle(15);
 		scene.world.setKineticSpeed(kinetics, -32);
+		scene.world.modifyBlock(util.grid.at(3, 2, 1), s -> s.setValue(PumpBlock.FACING, Direction.UP), true);
+		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 		scene.idle(16);
 		scene.world.setKineticSpeed(kinetics, 0);
 
@@ -313,6 +315,9 @@ public class HosePulleyScenes {
 		Selection hose = util.select.fromTo(1, 3, 2, 0, 3, 2);
 		BlockPos pumpPos = util.grid.at(3, 2, 2);
 
+		scene.world.multiplyKineticSpeed(kinetics, 0.25f);
+		scene.world.multiplyKineticSpeed(util.select.position(pumpPos), 0.25f);
+
 		scene.world.showSection(hose, Direction.UP);
 		scene.idle(5);
 		scene.world.showSection(tank, Direction.DOWN);
@@ -333,10 +338,13 @@ public class HosePulleyScenes {
 			.pointAt(entryPoint);
 
 		scene.idle(40);
+		scene.world.modifyBlockEntity(util.grid.at(1, 3, 2), HosePulleyBlockEntity.class,
+			be -> be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+				.ifPresent(
+					fh -> ((HosePulleyFluidHandler) fh).fill(new FluidStack(Fluids.WATER, 1000), FluidAction.EXECUTE)));
 		scene.world.setKineticSpeed(hose, 0);
-		scene.world.multiplyKineticSpeed(util.select.everywhere(), -1);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.DOWN), true);
 		scene.world.propagatePipeChange(pumpPos);
-		scene.effects.rotationDirectionIndicator(pumpPos);
 		scene.idle(30);
 
 		Selection pulleyPos = util.select.position(1, 3, 2);
@@ -347,7 +355,13 @@ public class HosePulleyScenes {
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(util.grid.at(1, 3, 2)));
 
-		scene.idle(80);
+		scene.idle(60);
+		
+		scene.world.modifyBlockEntity(util.grid.at(4, 1, 1), FluidTankBlockEntity.class, be -> be.getTankInventory()
+			.fill(new FluidStack(Fluids.WATER, 24000), FluidAction.EXECUTE));
+		
+		scene.idle(20);
+		
 		scene.overlay.showText(60)
 			.text("Pipe networks can limitlessly take fluids from/to such pulleys")
 			.attachKeyFrame()

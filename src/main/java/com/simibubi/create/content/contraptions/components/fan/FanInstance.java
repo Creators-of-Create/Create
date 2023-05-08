@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.fan;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
@@ -12,23 +12,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
+public class FanInstance extends KineticBlockEntityInstance<EncasedFanBlockEntity> {
 
     protected final RotatingData shaft;
     protected final RotatingData fan;
     final Direction direction;
     private final Direction opposite;
 
-    public FanInstance(MaterialManager modelManager, EncasedFanTileEntity tile) {
-		super(modelManager, tile);
+    public FanInstance(MaterialManager materialManager, EncasedFanBlockEntity blockEntity) {
+		super(materialManager, blockEntity);
 
 		direction = blockState.getValue(FACING);
 
 		opposite = direction.getOpposite();
-		shaft = getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite).createInstance();
-		fan = modelManager.defaultCutout()
+		shaft = getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, blockState, opposite).createInstance();
+		fan = materialManager.defaultCutout()
 				.material(AllMaterialSpecs.ROTATING)
-				.getModel(AllBlockPartials.ENCASED_FAN_INNER, blockState, opposite)
+				.getModel(AllPartialModels.ENCASED_FAN_INNER, blockState, opposite)
 				.createInstance();
 
 		setup(shaft);

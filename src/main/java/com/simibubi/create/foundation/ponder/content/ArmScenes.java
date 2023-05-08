@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlockEntity;
+import com.simibubi.create.content.logistics.block.mechanicalArm.ArmBlockEntity.Phase;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -56,7 +56,8 @@ public class ArmScenes {
 		scene.overlay.showControls(new InputWindowElement(depotSurface, Pointing.RIGHT).rightClick()
 			.withItem(armItem), 50);
 		scene.idle(7);
-		AABB depotBounds = AllShapes.DEPOT.bounds();
+		AABB depotBounds = AllShapes.CASING_13PX.get(Direction.UP)
+			.bounds();
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, new Object(), depotBounds.move(4, 2, 1), 400);
 
 		scene.overlay.showText(70)
@@ -122,12 +123,12 @@ public class ArmScenes {
 
 		scene.world.setKineticSpeed(armSel, -48);
 		scene.idle(20);
-		scene.world.instructArm(armPos, Phase.MOVE_TO_INPUT, ItemStack.EMPTY, 0);
+		scene.world.instructArm(armPos, Phase.MOVE_TO_INPUT, ItemStack.EMPTY, 1);
 		scene.idle(24);
 		scene.world.removeItemsFromBelt(inputDepot);
 		scene.world.instructArm(armPos, Phase.SEARCH_OUTPUTS, copper, -1);
 		scene.idle(20);
-		scene.world.instructArm(armPos, Phase.MOVE_TO_OUTPUT, copper, 0);
+		scene.world.instructArm(armPos, Phase.MOVE_TO_OUTPUT, copper, 1);
 		scene.idle(24);
 		scene.world.createItemOnBeltLike(outputDepot, Direction.UP, copper);
 		scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, ItemStack.EMPTY, -1);
@@ -165,7 +166,7 @@ public class ArmScenes {
 		scene.world.removeItemsFromBelt(inputDepot);
 		scene.world.instructArm(armPos, Phase.SEARCH_OUTPUTS, copper, -1);
 		scene.idle(20);
-		scene.world.instructArm(armPos, Phase.MOVE_TO_OUTPUT, copper, 2);
+		scene.world.instructArm(armPos, Phase.MOVE_TO_OUTPUT, copper, 0);
 		scene.idle(24);
 		scene.world.createItemOnBeltLike(outputDepot, Direction.UP, copper);
 		scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, ItemStack.EMPTY, -1);
@@ -225,12 +226,12 @@ public class ArmScenes {
 		scene.world.createItemOnBeltLike(inputDepot, Direction.SOUTH, sword);
 
 		scene.idle(20);
-		scene.world.instructArm(armPos, Phase.MOVE_TO_INPUT, ItemStack.EMPTY, 1);
+		scene.world.instructArm(armPos, Phase.MOVE_TO_INPUT, ItemStack.EMPTY, 0);
 		scene.idle(24);
 		scene.world.removeItemsFromBelt(inputDepot);
 		scene.world.instructArm(armPos, Phase.SEARCH_OUTPUTS, sword, -1);
 		scene.idle(20);
-		scene.world.instructArm(armPos, Phase.MOVE_TO_OUTPUT, sword, 1);
+		scene.world.instructArm(armPos, Phase.MOVE_TO_OUTPUT, sword, 2);
 		scene.idle(24);
 		scene.world.flapFunnel(util.grid.at(0, 2, 2), false);
 		scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, ItemStack.EMPTY, -1);
@@ -305,7 +306,7 @@ public class ArmScenes {
 		}
 
 		Vec3 filterSlot = util.vector.of(3.5, 3.75, 2.6);
-		scene.overlay.showFilterSlotInput(filterSlot, 80);
+		scene.overlay.showFilterSlotInput(filterSlot, Direction.NORTH, 80);
 		scene.idle(10);
 		scene.overlay.showText(80)
 			.attachKeyFrame()
@@ -322,7 +323,7 @@ public class ArmScenes {
 					.showControls(new InputWindowElement(filterSlot.add(2 - x, -y, 0), Pointing.LEFT).rightClick()
 						.withItem(item), 5);
 				scene.idle(7);
-				scene.world.setFilterData(util.select.position(5 - x, 3 - y, 2), FunnelTileEntity.class, item);
+				scene.world.setFilterData(util.select.position(5 - x, 3 - y, 2), FunnelBlockEntity.class, item);
 				scene.idle(4);
 			}
 		}
@@ -352,7 +353,7 @@ public class ArmScenes {
 			BlockPos funnelPos = util.grid.at(5 - index % 3, 1 + index / 3, 2);
 			scene.world.flapFunnel(funnelPos, false);
 			scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, i == 3 ? ItemStack.EMPTY : sand, -1);
-			scene.world.modifyTileEntity(funnelPos.north(), MechanicalCrafterTileEntity.class, mct -> mct.getInventory()
+			scene.world.modifyBlockEntity(funnelPos.north(), MechanicalCrafterBlockEntity.class, mct -> mct.getInventory()
 				.insertItem(0, sand.copy(), false));
 			scene.idle(10);
 		}
@@ -372,7 +373,7 @@ public class ArmScenes {
 			BlockPos funnelPos = util.grid.at(3 + index % 3, 1 + index / 3, 2);
 			scene.world.flapFunnel(funnelPos, false);
 			scene.world.instructArm(armPos, Phase.SEARCH_INPUTS, i == 4 ? ItemStack.EMPTY : sulphur, -1);
-			scene.world.modifyTileEntity(funnelPos.north(), MechanicalCrafterTileEntity.class, mct -> mct.getInventory()
+			scene.world.modifyBlockEntity(funnelPos.north(), MechanicalCrafterBlockEntity.class, mct -> mct.getInventory()
 				.insertItem(0, sulphur.copy(), false));
 			scene.idle(10);
 		}
@@ -394,7 +395,8 @@ public class ArmScenes {
 		scene.world.showSection(util.select.fromTo(1, 1, 1, 5, 1, 2), Direction.SOUTH);
 		scene.idle(10);
 
-		AABB depotBox = AllShapes.DEPOT.bounds();
+		AABB depotBox = AllShapes.CASING_13PX.get(Direction.UP)
+			.bounds();
 		AABB beltBox = depotBox.contract(0, -3 / 16f, 0)
 			.inflate(1, 0, 0);
 		BlockPos depotPos = util.grid.at(1, 1, 4);
@@ -426,19 +428,18 @@ public class ArmScenes {
 			.colored(PonderPalette.OUTPUT);
 		scene.idle(70);
 
-		Vec3 scrollSlot = util.vector.of(3.5, 1.25, 4);
-		scene.overlay.showFilterSlotInput(scrollSlot, 120);
+		Vec3 scrollSlot = util.vector.of(3.5, 1 + 3 / 16f, 4);
+		scene.overlay.showFilterSlotInput(scrollSlot, Direction.NORTH, 120);
 		scene.overlay.showText(50)
 			.text("...it will act according to its setting")
 			.pointAt(scrollSlot)
 			.placeNearTarget();
 		scene.idle(60);
 
-		scene.overlay.showControls(new InputWindowElement(scrollSlot, Pointing.RIGHT).scroll()
-			.withWrench(), 40);
+		scene.overlay.showControls(new InputWindowElement(scrollSlot, Pointing.RIGHT).rightClick(), 40);
 		scene.idle(10);
 		scene.overlay.showText(50)
-			.text("Scrolling with a Wrench will allow you to configure it")
+			.text("The value panel will allow you to configure it")
 			.pointAt(scrollSlot)
 			.placeNearTarget();
 		scene.idle(60);
@@ -559,7 +560,7 @@ public class ArmScenes {
 				scene.overlay.showText(60)
 					.colored(PonderPalette.RED)
 					.attachKeyFrame()
-					.pointAt(util.vector.topOf(armPos.above()))
+					.pointAt(util.vector.topOf(armPos))
 					.placeNearTarget()
 					.text("When powered by Redstone, Mechanical Arms will not activate");
 				scene.idle(70);
@@ -584,7 +585,7 @@ public class ArmScenes {
 				scene.world.toggleRedstonePower(redstone);
 				scene.effects.indicateRedstone(leverPos);
 				scene.overlay.showText(60)
-					.pointAt(util.vector.topOf(armPos.above()))
+					.pointAt(util.vector.topOf(armPos))
 					.placeNearTarget()
 					.text("Before stopping, it will finish any started cycles");
 			}
@@ -595,7 +596,7 @@ public class ArmScenes {
 				scene.overlay.showText(100)
 					.colored(PonderPalette.GREEN)
 					.attachKeyFrame()
-					.pointAt(util.vector.topOf(armPos.above()))
+					.pointAt(util.vector.topOf(armPos))
 					.placeNearTarget()
 					.text("Thus, a negative pulse can be used to trigger exactly one activation cycle");
 			}

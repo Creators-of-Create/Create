@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,11 +15,9 @@ public class ControlsStopControllingPacket extends SimplePacketBase {
 	public void write(FriendlyByteBuf buffer) {}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(ControlsHandler::stopControlling);
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(ControlsHandler::stopControlling);
+		return true;
 	}
 
 }

@@ -117,7 +117,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 	public void removed() {
 		ConfigureZapperPacket packet = getConfigurationPacket();
 		packet.configureZapper(zapper);
-		AllPackets.channel.sendToServer(packet);
+		AllPackets.getChannel().sendToServer(packet);
 	}
 
 	protected void renderZapper(PoseStack ms, int x, int y) {

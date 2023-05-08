@@ -18,6 +18,7 @@ import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.DimensionPalette;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -200,6 +201,20 @@ public class Navigation {
 						return false;
 
 					}, (distance, edge) -> {
+						BezierConnection turn = edge.getTurn();
+						double vDistance = Math.abs(turn.starts.getFirst().y - turn.starts.getSecond().y);
+
+						// ignore turn if its a straight & mild slope
+						if (turn != null && vDistance > 1 / 16f) {
+							if (turn.axes.getFirst()
+								.multiply(1, 0, 1)
+								.distanceTo(turn.axes.getSecond()
+									.multiply(1, 0, 1)
+									.scale(-1)) < 1 / 64f
+								&& vDistance / turn.getLength() < .225f)
+								return;
+						}
+
 						float current = curveDistanceTracker.floatValue();
 						if (current == -1 || distance < current)
 							curveDistanceTracker.setValue(distance);
@@ -251,7 +266,7 @@ public class Navigation {
 				return;
 			}
 		}
-		
+
 		topSpeed *= train.throttle;
 		double turnTopSpeed = Math.min(topSpeed, train.maxTurnSpeed());
 
@@ -579,7 +594,7 @@ public class Navigation {
 			.get(initialNode2);
 		if (initialEdge == null)
 			return;
-		
+
 		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
 		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));

@@ -6,12 +6,12 @@ import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
+public class SingleRotatingInstance<T extends KineticBlockEntity> extends KineticBlockEntityInstance<T> {
 
 	protected RotatingData rotatingModel;
 
-	public SingleRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
-		super(modelManager, tile);
+	public SingleRotatingInstance(MaterialManager materialManager, T blockEntity) {
+		super(materialManager, blockEntity);
 	}
 
 	@Override

@@ -112,8 +112,7 @@ public class SymmetryHandler {
 
 			PoseStack ms = event.getPoseStack();
 			ms.pushPose();
-			ms.translate(-view.x(), -view.y(), -view.z());
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			ms.translate(pos.getX() - view.x(), pos.getY() - view.y(), pos.getZ() - view.z());
 			ms.translate(0, yShift + .2f, 0);
 			mirror.applyModelTransform(ms);
 			BakedModel model = mirror.getModel()

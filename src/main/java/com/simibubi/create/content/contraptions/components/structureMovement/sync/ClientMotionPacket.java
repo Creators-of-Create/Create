@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.sync;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -40,26 +38,23 @@ public class ClientMotionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer sender = context.get()
-					.getSender();
-				if (sender == null)
-					return;
-				sender.setDeltaMovement(motion);
-				sender.setOnGround(onGround);
-				if (onGround) {
-					sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
-					sender.fallDistance = 0;
-					sender.connection.aboveGroundTickCount = 0;
-					sender.connection.aboveGroundVehicleTickCount = 0;
-				}
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> sender),
-					new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing));
-			});
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
+			if (sender == null)
+				return;
+			sender.setDeltaMovement(motion);
+			sender.setOnGround(onGround);
+			if (onGround) {
+				sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
+				sender.fallDistance = 0;
+				sender.connection.aboveGroundTickCount = 0;
+				sender.connection.aboveGroundVehicleTickCount = 0;
+			}
+			AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> sender),
+				new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing));
+		});
+		return true;
 	}
 
 }

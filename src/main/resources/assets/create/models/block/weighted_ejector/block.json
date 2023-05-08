@@ -81,11 +81,11 @@
 			"from": [12, 9.5, -0.5],
 			"to": [14, 12.5, 2.5],
 			"faces": {
-				"north": {"uv": [8, 0, 9, 1.5], "texture": "#3"},
+				"north": {"uv": [9, 0, 8, 1.5], "texture": "#3"},
 				"east": {"uv": [14, 0, 15.5, 1.5], "texture": "#3"},
-				"south": {"uv": [8, 0, 9, 1.5], "rotation": 180, "texture": "#3"},
+				"south": {"uv": [9, 0, 8, 1.5], "rotation": 180, "texture": "#3"},
 				"west": {"uv": [14, 0, 15.5, 1.5], "texture": "#3"},
-				"up": {"uv": [8, 0, 9, 1.5], "rotation": 180, "texture": "#3"},
+				"up": {"uv": [8, 0, 9, 1.5], "texture": "#3"},
 				"down": {"uv": [8, 0, 9, 1.5], "rotation": 180, "texture": "#3"}
 			}
 		},
@@ -106,6 +106,7 @@
 		{
 			"name": "casing",
 			"origin": [0, 0, 0],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6, 7]
 		}
 	]

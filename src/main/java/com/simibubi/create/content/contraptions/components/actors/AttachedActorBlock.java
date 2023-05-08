@@ -4,6 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -13,21 +14,25 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class AttachedActorBlock extends HorizontalDirectionalBlock implements IWrenchable {
+public abstract class AttachedActorBlock extends HorizontalDirectionalBlock
+	implements IWrenchable, ProperWaterloggedBlock {
 
 	protected AttachedActorBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -43,7 +48,7 @@ public abstract class AttachedActorBlock extends HorizontalDirectionalBlock impl
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(FACING);
+		builder.add(FACING, WATERLOGGED);
 		super.createBlockStateDefinition(builder);
 	}
 
@@ -57,22 +62,39 @@ public abstract class AttachedActorBlock extends HorizontalDirectionalBlock impl
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction facing;
-		if (context.getClickedFace().getAxis().isVertical())
-			facing = context.getHorizontalDirection().getOpposite();
+		if (context.getClickedFace()
+			.getAxis()
+			.isVertical())
+			facing = context.getHorizontalDirection()
+				.getOpposite();
 		else {
-			BlockState blockState =
-				context.getLevel().getBlockState(context.getClickedPos().relative(context.getClickedFace().getOpposite()));
+			BlockState blockState = context.getLevel()
+				.getBlockState(context.getClickedPos()
+					.relative(context.getClickedFace()
+						.getOpposite()));
 			if (blockState.getBlock() instanceof AttachedActorBlock)
 				facing = blockState.getValue(FACING);
 			else
 				facing = context.getClickedFace();
 		}
-		return defaultBlockState().setValue(FACING, facing);
+		return withWater(defaultBlockState().setValue(FACING, facing), context);
+	}
+
+	@Override
+	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
+		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+		updateWater(pLevel, pState, pCurrentPos);
+		return pState;
 	}
 
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
-	
+
+	@Override
+	public FluidState getFluidState(BlockState pState) {
+		return fluidState(pState);
+	}
+
 }

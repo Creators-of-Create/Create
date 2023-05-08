@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -32,7 +32,7 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 		if (oldState.getBlock() == state.getBlock())
 			return;
-		withTileEntityDo(worldIn, pos, kte -> ((AdjustablePulleyTileEntity) kte).neighbourChanged());
+		withBlockEntityDo(worldIn, pos, kte -> ((AdjustablePulleyBlockEntity) kte).neighbourChanged());
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock {
 		if (worldIn.isClientSide)
 			return;
 
-		withTileEntityDo(worldIn, pos, kte -> ((AdjustablePulleyTileEntity) kte).neighbourChanged());
+		withBlockEntityDo(worldIn, pos, kte -> ((AdjustablePulleyBlockEntity) kte).neighbourChanged());
 
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
@@ -61,8 +61,8 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock {
 	}
 
 	@Override
-	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
-		return AllTileEntities.ADJUSTABLE_PULLEY.get();
+	public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ADJUSTABLE_PULLEY.get();
 	}
 
 }

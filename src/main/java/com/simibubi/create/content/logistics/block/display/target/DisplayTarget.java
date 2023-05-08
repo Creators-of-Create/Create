@@ -41,7 +41,7 @@ public abstract class DisplayTarget extends DisplayBehaviour {
 
 		CompoundTag tag = target.getPersistentData();
 		CompoundTag compound = tag.getCompound("DisplayLink");
-		compound.putLong("Line" + line, context.te()
+		compound.putLong("Line" + line, context.blockEntity()
 			.getBlockPos()
 			.asLong());
 		tag.put("DisplayLink", compound);
@@ -57,7 +57,7 @@ public abstract class DisplayTarget extends DisplayBehaviour {
 		long l = compound.getLong("Line" + line);
 		BlockPos reserved = BlockPos.of(l);
 
-		if (!reserved.equals(context.te()
+		if (!reserved.equals(context.blockEntity()
 			.getBlockPos()) && AllBlocks.DISPLAY_LINK.has(target.getLevel()
 				.getBlockState(reserved)))
 			return true;

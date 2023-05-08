@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -27,6 +28,11 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 		LerpedFloat equipAnimation = LerpedFloat.linear();
 	}
 
+	@Override
+	public ItemStack canBeDisabledVia(MovementContext context) {
+		return null;
+	}
+	
 	@Override
 	public void stopMoving(MovementContext context) {
 		context.contraption.entity.stopControlling(context.localPos);

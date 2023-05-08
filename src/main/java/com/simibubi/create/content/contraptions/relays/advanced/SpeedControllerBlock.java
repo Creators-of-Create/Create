@@ -4,13 +4,13 @@ import java.util.function.Predicate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
@@ -35,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements ITE<SpeedControllerTileEntity> {
+public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements IBE<SpeedControllerBlockEntity> {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
@@ -58,7 +58,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos neighbourPos,
 		boolean p_220069_6_) {
 		if (neighbourPos.equals(pos.above()))
-			withTileEntityDo(world, pos, SpeedControllerTileEntity::updateBracket);
+			withBlockEntityDo(world, pos, SpeedControllerBlockEntity::updateBracket);
 	}
 
 	@Override
@@ -108,12 +108,12 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	}
 
 	@Override
-	public Class<SpeedControllerTileEntity> getTileEntityClass() {
-		return SpeedControllerTileEntity.class;
+	public Class<SpeedControllerBlockEntity> getBlockEntityClass() {
+		return SpeedControllerBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends SpeedControllerTileEntity> getTileEntityType() {
-		return AllTileEntities.ROTATION_SPEED_CONTROLLER.get();
+	public BlockEntityType<? extends SpeedControllerBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.ROTATION_SPEED_CONTROLLER.get();
 	}
 }

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.bell;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.core.BlockPos;
@@ -11,15 +11,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
+public class HauntedBellBlock extends AbstractBellBlock<HauntedBellBlockEntity> {
 
 	public HauntedBellBlock(Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public BlockEntityType<? extends HauntedBellTileEntity> getTileEntityType() {
-		return AllTileEntities.HAUNTED_BELL.get();
+	public BlockEntityType<? extends HauntedBellBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.HAUNTED_BELL.get();
 	}
 	
 	@Override
@@ -31,8 +31,8 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 	}
 
 	@Override
-	public Class<HauntedBellTileEntity> getTileEntityClass() {
-		return HauntedBellTileEntity.class;
+	public Class<HauntedBellBlockEntity> getBlockEntityClass() {
+		return HauntedBellBlockEntity.class;
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (oldState.getBlock() != this && !world.isClientSide)
-			withTileEntityDo(world, pos, hbte -> {
-				hbte.effectTicks = HauntedBellTileEntity.EFFECT_TICKS;
+			withBlockEntityDo(world, pos, hbte -> {
+				hbte.effectTicks = HauntedBellBlockEntity.EFFECT_TICKS;
 				hbte.sendData();
 			});
 	}

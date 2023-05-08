@@ -74,6 +74,16 @@ public class BlockStressValues {
 		return BlockStressDefaults.DEFAULT_CAPACITIES.containsKey(blockId);
 	}
 
+	@Nullable
+	public static Couple<Integer> getGeneratedRPM(Block block) {
+		ResourceLocation blockId = RegisteredObjects.getKeyOrThrow(block);
+		IStressValueProvider provider = getProvider(blockId.getNamespace());
+		if (provider != null) {
+			return provider.getGeneratedRPM(block);
+		}
+		return null;
+	}
+
 	public interface IStressValueProvider {
 		/**
 		 * Gets the stress impact of a block.

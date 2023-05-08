@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
-import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockEntity;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
@@ -67,6 +67,7 @@ public class TrackGraphHelper {
 		TrackNode frontNode = null;
 		TrackNode backNode = null;
 		double position = 0;
+		boolean singleTrackPiece = true;
 
 		for (DiscoveredLocation current : ends) {
 			Vec3 offset = current.getLocation()
@@ -74,14 +75,19 @@ public class TrackGraphHelper {
 				.normalize()
 				.scale(length);
 
-			boolean forward = offset.distanceToSqr(axis.scale(-1)) < 1 / 4096f;
-			boolean backwards = offset.distanceToSqr(axis) < 1 / 4096f;
+			Vec3 compareOffset = offset.multiply(1, 0, 1)
+				.normalize();
+			boolean forward = compareOffset.distanceToSqr(axis.multiply(-1, 0, -1)
+				.normalize()) < 1 / 4096f;
+			boolean backwards = compareOffset.distanceToSqr(axis.multiply(1, 0, 1)
+				.normalize()) < 1 / 4096f;
 
 			if (!forward && !backwards)
 				continue;
 
 			DiscoveredLocation previous = null;
 			double distance = 0;
+
 			for (int i = 0; i < 100 && distance < 32; i++) {
 				DiscoveredLocation loc = current;
 				if (graph == null)
@@ -89,6 +95,7 @@ public class TrackGraphHelper {
 						.getGraph(level, loc);
 
 				if (graph == null || graph.locateNode(loc) == null) {
+					singleTrackPiece = false;
 					Collection<DiscoveredLocation> list = ITrackBlock.walkConnectedTracks(level, loc, true);
 					for (DiscoveredLocation discoveredLocation : list) {
 						if (discoveredLocation == previous)
@@ -121,6 +128,13 @@ public class TrackGraphHelper {
 		if (frontNode == null || backNode == null)
 			return null;
 
+		if (singleTrackPiece)
+			position = frontNode.getLocation()
+				.getLocation()
+				.distanceTo(backNode.getLocation()
+					.getLocation())
+				/ 2.0;
+
 		GraphLocation graphLocation = new GraphLocation();
 		graphLocation.edge = Couple.create(backNode.getLocation(), frontNode.getLocation());
 		graphLocation.position = position;
@@ -135,7 +149,7 @@ public class TrackGraphHelper {
 
 		if (!(state.getBlock()instanceof ITrackBlock track))
 			return null;
-		if (!(level.getBlockEntity(pos)instanceof TrackTileEntity trackTE))
+		if (!(level.getBlockEntity(pos)instanceof TrackBlockEntity trackTE))
 			return null;
 		BezierConnection bc = trackTE.getConnections()
 			.get(targetBezier.curveTarget());
@@ -143,6 +157,9 @@ public class TrackGraphHelper {
 			return null;
 
 		TrackNodeLocation targetLoc = new TrackNodeLocation(bc.starts.getSecond()).in(level);
+		if (bc.smoothing != null)
+			targetLoc.yOffsetPixels = bc.smoothing.getSecond();
+
 		for (DiscoveredLocation location : track.getConnected(level, pos, state, true, null)) {
 			TrackGraph graph = Create.RAILWAYS.sided(level)
 				.getGraph(level, location);

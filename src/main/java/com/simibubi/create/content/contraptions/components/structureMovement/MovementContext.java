@@ -22,9 +22,10 @@ public class MovementContext {
 	public Level world;
 	public BlockState state;
 	public BlockPos localPos;
-	public CompoundTag tileData;
+	public CompoundTag blockEntityData;
 
 	public boolean stall;
+	public boolean disabled;
 	public boolean firstMovement;
 	public CompoundTag data;
 	public Contraption contraption;
@@ -33,10 +34,11 @@ public class MovementContext {
 	public MovementContext(Level world, StructureBlockInfo info, Contraption contraption) {
 		this.world = world;
 		this.state = info.state;
-		this.tileData = info.nbt;
+		this.blockEntityData = info.nbt;
 		this.contraption = contraption;
 		localPos = info.pos;
 
+		disabled = false;
 		firstMovement = true;
 		motion = Vec3.ZERO;
 		relativeMotion = Vec3.ZERO;
@@ -49,6 +51,8 @@ public class MovementContext {
 	public float getAnimationSpeed() {
 		int modifier = 1000;
 		double length = -motion.length();
+		if (disabled)
+			return 0;
 		if (world.isClientSide && contraption.stalled)
 			return 700;
 		if (Math.abs(length) < 1 / 512f)

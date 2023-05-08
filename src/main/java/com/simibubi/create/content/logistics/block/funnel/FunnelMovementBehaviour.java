@@ -5,7 +5,6 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import net.minecraft.core.BlockPos;
@@ -73,12 +72,14 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 			return;
 
 		ItemStack filter = getFilter(context);
-		int filterAmount = context.tileData.getInt("FilterAmount");
+		int filterAmount = context.blockEntityData.getInt("FilterAmount");
+		boolean upTo = context.blockEntityData.getBoolean("UpTo");
 		if (filterAmount <= 0)
-			filterAmount = hasFilter ? AllConfigs.SERVER.logistics.defaultExtractionLimit.get() : 1;
+			filterAmount = hasFilter ? 64 : 1;
 
 		ItemStack extract = ItemHelper.extract(context.contraption.getSharedInventory(),
-			s -> FilterItem.test(world, s, filter), ItemHelper.ExtractionCountMode.UPTO, filterAmount, false);
+			s -> FilterItem.test(world, s, filter),
+			upTo ? ItemHelper.ExtractionCountMode.UPTO : ItemHelper.ExtractionCountMode.EXACTLY, filterAmount, false);
 
 		if (extract.isEmpty())
 			return;
@@ -119,12 +120,12 @@ public class FunnelMovementBehaviour implements MovementBehaviour {
 	}
 
 	@Override
-	public boolean renderAsNormalTileEntity() {
+	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
 
 	private ItemStack getFilter(MovementContext context) {
-		return hasFilter ? ItemStack.of(context.tileData.getCompound("Filter")) : ItemStack.EMPTY;
+		return hasFilter ? ItemStack.of(context.blockEntityData.getCompound("Filter")) : ItemStack.EMPTY;
 	}
 
 }

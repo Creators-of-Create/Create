@@ -8,9 +8,9 @@ import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalPropagator;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SingleTileEdgePoint;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SingleBlockEntityEdgePoint;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class TrackObserver extends SingleTileEdgePoint {
+public class TrackObserver extends SingleBlockEntityEdgePoint {
 
 	private int activated;
 	private ItemStack filter;
@@ -31,11 +31,11 @@ public class TrackObserver extends SingleTileEdgePoint {
 	}
 
 	@Override
-	public void tileAdded(BlockEntity tile, boolean front) {
-		super.tileAdded(tile, front);
-		FilteringBehaviour filteringBehaviour = TileEntityBehaviour.get(tile, FilteringBehaviour.TYPE);
+	public void blockEntityAdded(BlockEntity blockEntity, boolean front) {
+		super.blockEntityAdded(blockEntity, front);
+		FilteringBehaviour filteringBehaviour = BlockEntityBehaviour.get(blockEntity, FilteringBehaviour.TYPE);
 		if (filteringBehaviour != null)
-			setFilterAndNotify(tile.getLevel(), filteringBehaviour.getFilter());
+			setFilterAndNotify(blockEntity.getLevel(), filteringBehaviour.getFilter());
 	}
 
 	@Override

@@ -11,6 +11,8 @@
 	"death.attack.create.fan_lava.player": "%1$s was thrown into a smelter by %2$s",
 	"death.attack.create.mechanical_drill": "%1$s was impaled by a Mechanical Drill",
 	"death.attack.create.mechanical_drill.player": "%1$s was thrown in front of a Drill by %2$s",
+	"death.attack.create.mechanical_roller": "%1$s was flattened by a Mechanical Roller",
+	"death.attack.create.mechanical_roller.player": "%1$s was thrown in front of a Mechanical Roller by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s got cut in half by a Mechanical Saw",
 	"death.attack.create.mechanical_saw.player": "%1$s was thrown into a Saw by %2$s",
 	"death.attack.create.potato_cannon": "%1$s was shot by %2$s's Potato Cannon",
@@ -82,6 +84,7 @@
 	"create.generic.length": "Length",
 	"create.generic.speed": "Speed",
 	"create.generic.delay": "Delay",
+	"create.generic.angle": "Angle",
 	"create.generic.duration": "Duration",
 	"create.generic.timeUnit": "Time Unit",
 	"create.generic.unit.ticks": "Ticks",
@@ -172,11 +175,15 @@
 	"create.terrainzapper.usingBlock": "Using: %1$s",
 	"create.terrainzapper.leftClickToSet": "Left-Click a Block to set Material",
 
+	"create.large_water_wheel.not_enough_space": "Clear Blocks for Placement",
+	
 	"create.minecart_coupling.two_couplings_max": "Minecarts cannot have more than two couplings each",
 	"create.minecart_coupling.unloaded": "Parts of your train seem to be in unloaded chunks",
 	"create.minecart_coupling.no_loops": "Couplings cannot form a loop",
 	"create.minecart_coupling.removed": "Removed all couplings from minecart",
 	"create.minecart_coupling.too_far": "Minecarts are too far apart",
+
+	"create.contraptions.moving_container": "Moving %1$s",
 
 	"create.contraptions.movement_mode": "Movement Mode",
 	"create.contraptions.movement_mode.move_place": "Always Place when Stopped",
@@ -189,27 +196,62 @@
 	"create.contraptions.cart_movement_mode.rotate": "Always face toward motion",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Pause actors while rotating",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lock rotation",
+	"create.contraptions.roller_mode": "Roller Mode",
+	"create.contraptions.roller_mode.tunnel_pave": "Clear Blocks and Pave",
+	"create.contraptions.roller_mode.straight_fill": "Straight Fill Below",
+	"create.contraptions.roller_mode.wide_fill": "Sloped Fill Below",
 
 	"create.contraptions.windmill.rotation_direction": "Rotation Direction",
-	"create.contraptions.clockwork.clock_hands": "Clock Hands",
+	"create.contraptions.clockwork.clock_hands": "Clock Hand Arrangement",
 	"create.contraptions.clockwork.hour_first": "Hour hand first",
 	"create.contraptions.clockwork.minute_first": "Minute hand first",
 	"create.contraptions.clockwork.hour_first_24": "24-Hour hand first",
 
+	"create.logistics.crafter.connected": "Connected Crafters",
+	"create.logistics.crafter.click_to_merge": "Click to merge Inventories",
+	"create.logistics.crafter.click_to_separate": "Click to separate Inventories",
+
 	"create.logistics.filter": "Filter",
 	"create.logistics.recipe_filter": "Recipe Filter",
 	"create.logistics.fluid_filter": "Fluid Filter",
-	"create.logistics.firstFrequency": "Freq. #1",
-	"create.logistics.secondFrequency": "Freq. #2",
+	"create.logistics.firstFrequency": "Frequency #1",
+	"create.logistics.secondFrequency": "Frequency #2",
+	
+	"create.logistics.filter.click_to_set": "Click with item to set",
+	"create.logistics.filter.click_to_replace": "Click with item to replace",
+	"create.logistics.filter.hold_to_set_amount": "Click and hold for amount",
+	"create.logistics.filter.invalid_item": "Cannot use this item here.",
 
-	"create.logistics.filter.apply": "Applied filter to %1$s.",
-	"create.logistics.filter.apply_click_again": "Applied filter to %1$s, click again to copy the amount.",
-	"create.logistics.filter.apply_count": "Applied extraction count to filter.",
-
+	"create.logistics.filter.extracted_amount": "Extracted Amount",
+	"create.logistics.filter.any_amount_short": "Any",
+	"create.logistics.filter.up_to": "Up to",
+	"create.logistics.filter.exactly": "Exactly",
+	"create.logistics.filter.requires_item_in_inventory": "Requires %1$s item in Inventory",
+	
+	"create.logistics.creative_crate.supply": "Infinite Supply",
+	"create.logistics.train_observer.cargo_filter": "Cargo Filter",
+	
+	"create.kinetics.creative_motor.rotation_speed": "Generated Speed in RPM",
+	"create.kinetics.speed_controller.rotation_speed": "Targeted Speed in RPM",
+	"create.kinetics.valve_handle.rotated_angle": "Rotation when used",
+	
+	"create.logistics.redstone_interval": "Redstone Interval",
+	
+	"create.contraptions.contoller.target": "Targeted Component",
+	"create.contraptions.mechanical_roller.pave_material": "Paving Material",
+	
+	"create.contraptions.chassis.radius": "Radius when Sticky",
+	"create.contraptions.chassis.range": "Range of Sticky Sides",
+	"create.contraptions.chassis.distance": "Distance",
+	
+	"create.gui.value_settings.hold_to_edit": "Click and hold to edit",
+	"create.gui.value_settings.release_to_confirm": "Release %1$s to Confirm",
+	
 	"create.gui.goggles.generator_stats": "Generator Stats:",
 	"create.gui.goggles.kinetic_stats": "Kinetic Stats:",
 	"create.gui.goggles.at_current_speed": "at current speed",
 	"create.gui.goggles.pole_length": "Pole Length:",
+	"create.gui.goggles.basin_contents": "Basin Contents:",
 	"create.gui.goggles.fluid_container": "Fluid Container Info:",
 	"create.gui.goggles.fluid_container.capacity": "Capacity: ",
 
@@ -220,6 +262,9 @@
 	"create.gui.assembly.exception.tooManyPistonPoles": "There are too many extension Poles attached to this Piston.\nThe configured maximum is: %1$s",
 	"create.gui.assembly.exception.noPistonPoles": "The Piston is missing some extension Poles",
 	"create.gui.assembly.exception.not_enough_sails": "Attached structure does not include enough sail-like blocks: %1$s\nA minimum of %2$s are required",
+	"create.gui.assembly.exception.no_contacts": "Elevators require a horizontal _Redstone_ _Contact_ attached to the structure",
+	"create.gui.assembly.exception.too_many_contacts": "Cannot attach more than one _Redstone_ _Contact_ to Elevators",
+	"create.gui.assembly.exception.column_conflict": "Another Elevator is already targeting this column of contacts",
 
 	"create.gui.gauge.info_header": "Gauge Information:",
 	"create.gui.speedometer.title": "Rotation Speed",
@@ -234,10 +279,10 @@
 	"create.gui.adjustable_crate.title": "Adjustable Crate",
 	"create.gui.adjustable_crate.storageSpace": "Storage Space",
 
-	"create.gui.stockpile_switch.title": "Stockpile Switch",
-	"create.gui.stockpile_switch.invert_signal": "Invert Signal",
-	"create.gui.stockpile_switch.move_to_lower_at": "Move to lower lane at %1$s%%",
-	"create.gui.stockpile_switch.move_to_upper_at": "Move to upper lane at %1$s%%",
+	"create.gui.threshold_switch.title": "Threshold Switch",
+	"create.gui.threshold_switch.invert_signal": "Invert Signal",
+	"create.gui.threshold_switch.move_to_lower_at": "Move to lower lane at %1$s%%",
+	"create.gui.threshold_switch.move_to_upper_at": "Move to upper lane at %1$s%%",
 
 	"create.gui.sequenced_gearshift.title": "Sequenced Gearshift",
 	"create.gui.sequenced_gearshift.instruction": "Instruction",
@@ -259,6 +304,14 @@
 	"create.gui.sequenced_gearshift.speed.forward_fast": "Double speed, Forwards",
 	"create.gui.sequenced_gearshift.speed.back": "Input speed, Reversed",
 	"create.gui.sequenced_gearshift.speed.back_fast": "Double speed, Reversed",
+
+	"create.gui.clipboard.erase_checked": "Erase checked items",
+	
+	"create.clipboard.actions": "Clipboard Actions",
+	"create.clipboard.to_copy": "%1$s to Copy settings",
+	"create.clipboard.to_paste": "%1$s to Paste settings",
+	"create.clipboard.copied_from": "Copying settings from %1$s",
+	"create.clipboard.pasted_to": "Applied settings to %1$s",
 
 	"create.schematicAndQuill.dimensions": "Schematic Size: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "First position set.",
@@ -340,14 +393,14 @@
 	"create.gui.schematicannon.option.replaceWithAny": "Replace Solid with Any",
 	"create.gui.schematicannon.option.replaceWithEmpty": "Replace Solid with Empty",
 	"create.gui.schematicannon.option.skipMissing": "Skip missing Blocks",
-	"create.gui.schematicannon.option.skipTileEntities": "Protect Tile Entities",
+	"create.gui.schematicannon.option.skipBlockEntities": "Protect Block Entities",
 
 	"create.gui.schematicannon.slot.gunpowder": "Add gunpowder to fuel the cannon",
-	"create.gui.schematicannon.slot.listPrinter": "Place books here to print a Checklist for your Schematic",
+	"create.gui.schematicannon.slot.listPrinter": "Place a Clipboard or Book here to print a Checklist for your Schematic",
 	"create.gui.schematicannon.slot.schematic": "Add your Schematic here. Make sure it is deployed at a specific location.",
 
 	"create.gui.schematicannon.option.skipMissing.description": "If the cannon cannot find a required Block for placement, it will continue at the next Location.",
-	"create.gui.schematicannon.option.skipTileEntities.description": "The cannon will avoid replacing data holding blocks such as Chests.",
+	"create.gui.schematicannon.option.skipBlockEntities.description": "The cannon will avoid replacing data holding blocks such as Chests.",
 	"create.gui.schematicannon.option.dontReplaceSolid.description": "The cannon will never replace any Solid blocks in its working area, only non-Solid and Air.",
 	"create.gui.schematicannon.option.replaceWithSolid.description": "The cannon will only replace Solid blocks in its working area if the Schematic contains a solid Block at the Location.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "The cannon will replace Solid blocks in its working area if the Schematic contains any Block at the Location.",
@@ -510,7 +563,7 @@
 	"create.weighted_ejector.targeting": "Ejecting to [%1$s,%2$s,%3$s]",
 	"create.weighted_ejector.stack_size": "Ejected Stack Size",
 
-	"create.logistics.when_multiple_outputs_available": "When Multiple Outputs Available",
+	"create.logistics.when_multiple_outputs_available": "Distribution Method",
 
 	"create.mechanical_arm.selection_mode.round_robin": "Round Robin",
 	"create.mechanical_arm.selection_mode.forced_round_robin": "Forced Round Robin",
@@ -567,7 +620,7 @@
 	"create.hint.mechanical_arm_no_targets": "It appears this _Mechanical_ _Arm_ has not been assigned any _targets._ Select belts, depots, funnels and other blocks by _right-clicking_ them while _holding_ the _Mechanical_ _Arm_ in your _hand_.",
 	"create.hint.empty_bearing.title": "Update Bearing",
 	"create.hint.empty_bearing": "_Right-click_ the bearing with an _empty_ _hand_ to _attach_ the structure you just built in front of it.",
-	"create.hint.full_deployer.title": "Deployer Item Overflow",
+	"create.hint.full_deployer.title": "Deployer cannot activate",
 	"create.hint.full_deployer": "It appears this _Deployer_ contains _excess_ _items_ that need to be _extracted._ Use a _hopper,_ _funnel_ or other means to free it from its overflow.",
 
 	"create.backtank.low": "Backtank pressure low",
@@ -590,6 +643,12 @@
 	"create.boiler.heat_dots": "...... ",
 	"create.boiler.via_one_engine": "via 1 engine",
 	"create.boiler.via_engines": "via %1$s engines",
+	"create.boiler.water_input_rate": "Water input rate",
+	"create.boiler.per_tick": "%1$s per Tick",
+
+	"create.elevator_contact.title": "Elevator Contact",
+	"create.elevator_contact.floor_identifier": "Floor Identifier",
+	"create.elevator_contact.floor_description": "Floor Description",
 
 	"create.gui.schedule.lmb_edit": "Left-Click to Edit",
 	"create.gui.schedule.rmb_remove": "Right-Click to Remove",
@@ -716,6 +775,7 @@
 	"create.track.turn_start": "Cannot start connection from a Turn",
 	"create.track.not_enough_tracks": "Not holding enough tracks",
 	"create.track.not_enough_pavement": "Not holding enough pavement blocks",
+	"create.track.hold_for_smooth_curve": "Hold %1$s for maximized turn",
 
 	"create.portal_track.failed": "Cannot place portal track:",
 	"create.portal_track.missing": "Target portal not generated yet",
@@ -754,8 +814,8 @@
 	"create.train_assembly.bogeys_too_close": "Bogeys %1$s and %2$s are too close to each other",
 	"create.train_assembly.single_bogey_carriage": "This Bogey type cannot support a carriage on its own",
 	"create.train_assembly.nothing_attached": "No structure attached to Bogey %1$s",
-	"create.train_assembly.no_controls": "At least one forward-facing controls block needs to be mounted on the train",
-	"create.train_assembly.sideways_controls": "A mounted controls block is facing sideways",
+	"create.train_assembly.no_controls": "Attach at least one forward-facing Train Controls block (Are you missing Super Glue?)",
+	"create.train_assembly.sideways_controls": "Train Controls cannot face sideways",
 	"create.train_assembly.bogey_created": "Bogey created. Click again to cycle type",
 	"create.train_assembly.requires_casing": "Use Railway Casing to create bogeys on tracks",
 
@@ -801,6 +861,27 @@
 	"create.contraption.controls.start_controlling": "Now controlling: %1$s",
 	"create.contraption.controls.stop_controlling": "Stopped controlling contraption",
 	"create.contraption.controls.approach_station": "Hold %1$s to approach %2$s",
+
+	"create.contraption.controls.specific_actor_toggle": "%1$s Actors: %2$s",
+	"create.contraption.controls.all_actor_toggle": "All Actors: %1$s",
+	"create.contraption.controls.actor_toggle.on": "On",
+	"create.contraption.controls.actor_toggle.off": "Off",
+	"create.contraption.controls.floor_unreachable": "Unreachable",
+	
+	"create.contraption.door_control": "Onboard Door Control",
+	"create.contraption.door_control.all": "Open All Doors",
+	"create.contraption.door_control.all.short": "Open All",
+	"create.contraption.door_control.north": "North Side Only",
+	"create.contraption.door_control.north.short": "North",
+	"create.contraption.door_control.east": "East Side Only",
+	"create.contraption.door_control.east.short": "East",
+	"create.contraption.door_control.south": "South Side Only",
+	"create.contraption.door_control.south.short": "South",
+	"create.contraption.door_control.west": "West Side Only",
+	"create.contraption.door_control.west.short": "West",
+	"create.contraption.door_control.none": "Keep Doors Closed",
+	"create.contraption.door_control.none.short": "None",
+	"create.contraption.door_control.player_facing": "You are facing: %1$s",
 
 	"create.display_link.set": "Targeted position selected",
 	"create.display_link.success": "Successfully bound to targeted position",
@@ -863,6 +944,7 @@
 	"create.display_source.max_enchant_level": "Max Enchanting Cost",
 	"create.display_source.boiler_status": "Boiler Status",
 	"create.display_source.entity_name": "Entity Name",
+	"create.display_source.current_floor": "Elevator Location",
 	"create.display_source.kinetic_speed": "Rotation Speed (RPM)",
 	"create.display_source.kinetic_speed.absolute": "Ignore Direction",
 	"create.display_source.kinetic_speed.directional": "Include Direction",

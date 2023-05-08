@@ -13,8 +13,8 @@ import com.simibubi.create.content.logistics.trains.TrackGraphHelper;
 import com.simibubi.create.content.logistics.trains.TrackNode;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.TrackEdgePoint;
 import com.simibubi.create.content.logistics.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.content.logistics.trains.track.TrackBlockEntity;
 import com.simibubi.create.content.logistics.trains.track.TrackBlockOutline.BezierPointSelection;
-import com.simibubi.create.content.logistics.trains.track.TrackTileEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Couple;
@@ -156,12 +156,12 @@ public class TrackTargetingBlockItem extends BlockItem {
 	public boolean useOnCurve(BezierPointSelection selection, ItemStack stack) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
-		TrackTileEntity te = selection.te();
+		TrackBlockEntity be = selection.blockEntity();
 		BezierTrackPointLocation loc = selection.loc();
 		boolean front = player.getLookAngle()
 			.dot(selection.direction()) < 0;
 
-		AllPackets.channel.sendToServer(new CurvedTrackSelectionPacket(te.getBlockPos(), loc.curveTarget(),
+		AllPackets.getChannel().sendToServer(new CurvedTrackSelectionPacket(be.getBlockPos(), loc.curveTarget(),
 			loc.segment(), front, player.getInventory().selected));
 		return true;
 	}

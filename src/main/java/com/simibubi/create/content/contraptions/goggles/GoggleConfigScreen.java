@@ -57,14 +57,14 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 		this.height = minecraft.getWindow()
 			.getGuiScaledHeight();
 
-		offsetX = AllConfigs.CLIENT.overlayOffsetX.get();
-		offsetY = AllConfigs.CLIENT.overlayOffsetY.get();
+		offsetX = AllConfigs.client().overlayOffsetX.get();
+		offsetY = AllConfigs.client().overlayOffsetY.get();
 	}
 
 	@Override
 	public void removed() {
-		AllConfigs.CLIENT.overlayOffsetX.set(offsetX);
-		AllConfigs.CLIENT.overlayOffsetY.set(offsetY);
+		AllConfigs.client().overlayOffsetX.set(offsetX);
+		AllConfigs.client().overlayOffsetY.set(offsetY);
 	}
 
 	@Override

@@ -82,7 +82,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 		BlockPos placedPos = pos.relative(pContext.getClickedFace(), state.getMaterial()
 			.isReplaceable() ? 0 : 1);
 
-		if (!selectedPos.closerThan(placedPos, AllConfigs.SERVER.logistics.displayLinkRange.get())) {
+		if (!selectedPos.closerThan(placedPos, AllConfigs.server().logistics.displayLinkRange.get())) {
 			player.displayClientMessage(Lang.translateDirect("display_link.too_far")
 				.withStyle(ChatFormatting.RED), true);
 			return InteractionResult.FAIL;

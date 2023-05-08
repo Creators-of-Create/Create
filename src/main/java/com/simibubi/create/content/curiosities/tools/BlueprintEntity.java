@@ -543,7 +543,7 @@ public class BlueprintEntity extends HangingEntity
 
 		@Override
 		public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-			return BlueprintContainer.create(id, inv, this);
+			return BlueprintMenu.create(id, inv, this);
 		}
 
 		@Override

@@ -5,34 +5,34 @@ import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 
-public class SteamEngineInstance extends BlockEntityInstance<SteamEngineTileEntity> implements DynamicInstance {
+public class SteamEngineInstance extends BlockEntityInstance<SteamEngineBlockEntity> implements DynamicInstance {
 
 	protected final ModelData piston;
 	protected final ModelData linkage;
 	protected final ModelData connector;
 
-	public SteamEngineInstance(MaterialManager materialManager, SteamEngineTileEntity blockEntity) {
+	public SteamEngineInstance(MaterialManager materialManager, SteamEngineBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
 		piston = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.ENGINE_PISTON, blockState)
+				.getModel(AllPartialModels.ENGINE_PISTON, blockState)
 				.createInstance();
 		linkage = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.ENGINE_LINKAGE, blockState)
+				.getModel(AllPartialModels.ENGINE_LINKAGE, blockState)
 				.createInstance();
 		connector = materialManager.defaultSolid()
 				.material(Materials.TRANSFORMED)
-				.getModel(AllBlockPartials.ENGINE_CONNECTOR, blockState)
+				.getModel(AllPartialModels.ENGINE_CONNECTOR, blockState)
 				.createInstance();
 	}
 
@@ -50,9 +50,9 @@ public class SteamEngineInstance extends BlockEntityInstance<SteamEngineTileEnti
 		Axis facingAxis = facing.getAxis();
 		Axis axis = Axis.Y;
 
-		PoweredShaftTileEntity shaft = blockEntity.getShaft();
+		PoweredShaftBlockEntity shaft = blockEntity.getShaft();
 		if (shaft != null)
-			axis = KineticTileEntityRenderer.getRotationAxisOf(shaft);
+			axis = KineticBlockEntityRenderer.getRotationAxisOf(shaft);
 
 		boolean roll90 = facingAxis.isHorizontal() && axis == Axis.Y || facingAxis.isVertical() && axis == Axis.Z;
 		float sine = Mth.sin(angle);

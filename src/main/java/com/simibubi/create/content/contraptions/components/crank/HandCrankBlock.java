@@ -1,12 +1,11 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Couple;
@@ -32,11 +31,9 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HandCrankBlock extends DirectionalKineticBlock
-	implements ITE<HandCrankTileEntity>, ProperWaterloggedBlock {
+	implements IBE<HandCrankBlockEntity>, ProperWaterloggedBlock {
 
 	public HandCrankBlock(Properties properties) {
 		super(properties);
@@ -51,11 +48,6 @@ public class HandCrankBlock extends DirectionalKineticBlock
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder.add(WATERLOGGED));
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public PartialModel getRenderedHandle() {
-		return AllBlockPartials.HAND_CRANK_HANDLE;
 	}
 
 	public int getRotationSpeed() {
@@ -73,8 +65,10 @@ public class HandCrankBlock extends DirectionalKineticBlock
 		if (player.isSpectator())
 			return InteractionResult.PASS;
 
-		withTileEntityDo(worldIn, pos, te -> te.turn(player.isShiftKeyDown()));
-		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
+		withBlockEntityDo(worldIn, pos, be -> be.turn(player.isShiftKeyDown()));
+		if (!player.getItemInHand(handIn)
+			.is(AllItems.EXTENDO_GRIP.get()))
+			player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.server().kinetics.crankHungerMultiplier.getF());
 
 		if (player.getFoodData()
 			.getFoodLevel() == 0)
@@ -117,14 +111,14 @@ public class HandCrankBlock extends DirectionalKineticBlock
 			}
 		}
 	}
-	
+
 	@Override
 	public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
 		updateWater(pLevel, pState, pCurrentPos);
 		return pState;
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState pState) {
 		return fluidState(pState);
@@ -143,13 +137,13 @@ public class HandCrankBlock extends DirectionalKineticBlock
 	}
 
 	@Override
-	public Class<HandCrankTileEntity> getTileEntityClass() {
-		return HandCrankTileEntity.class;
+	public Class<HandCrankBlockEntity> getBlockEntityClass() {
+		return HandCrankBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends HandCrankTileEntity> getTileEntityType() {
-		return AllTileEntities.HAND_CRANK.get();
+	public BlockEntityType<? extends HandCrankBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.HAND_CRANK.get();
 	}
 
 	@Override

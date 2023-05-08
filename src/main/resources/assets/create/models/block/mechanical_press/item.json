@@ -5,13 +5,13 @@
 		"0": "create:block/axis",
 		"1": "create:block/axis_top",
 		"8": "create:block/mechanical_press_side",
+		"particle": "create:block/mechanical_press_side",
 		"mechanical_press_head": "create:block/mechanical_press_head",
 		"gearbox_top": "create:block/gearbox_top",
 		"mechanical_press_pole": "create:block/mechanical_press_pole",
 		"gearbox": "create:block/gearbox",
 		"mechanical_press_top": "create:block/mechanical_press_top",
-		"mechanical_press_bottom": "create:block/mechanical_press_bottom",
-		"particle": "create:block/mechanical_press_side"
+		"mechanical_press_bottom": "create:block/mechanical_press_bottom"
 	},
 	"elements": [
 		{
@@ -44,7 +44,7 @@
 			"faces": {
 				"north": {"uv": [0, 2, 2, 14], "texture": "#gearbox_top"},
 				"east": {"uv": [0, 2, 16, 14], "texture": "#8"},
-				"south": {"uv": [14, 2, 16, 14], "texture": "#gearbox_top"},
+				"south": {"uv": [14, 4, 16, 16], "texture": "#gearbox_top"},
 				"west": {"uv": [0, 2, 16, 14], "texture": "#8"},
 				"down": {"uv": [0, 0, 2, 16], "rotation": 180, "texture": "#gearbox_top"}
 			}
@@ -54,9 +54,9 @@
 			"from": [0, 6, 0],
 			"to": [2, 18, 16],
 			"faces": {
-				"north": {"uv": [14, 2, 16, 14], "texture": "#gearbox_top"},
+				"north": {"uv": [14, 4, 16, 16], "texture": "#gearbox_top"},
 				"east": {"uv": [0, 2, 16, 14], "texture": "#8"},
-				"south": {"uv": [0, 2, 2, 14], "texture": "#gearbox_top"},
+				"south": {"uv": [0, 4, 2, 16], "texture": "#gearbox_top"},
 				"west": {"uv": [0, 2, 16, 14], "texture": "#8"},
 				"down": {"uv": [14, 0, 16, 16], "rotation": 180, "texture": "#gearbox_top"}
 			}
@@ -164,10 +164,22 @@
 			"scale": [0.5, 0.5, 0.5]
 		}
 	},
-	"groups": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+	"groups": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10,
 		{
 			"name": "shaft",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [11]
 		}
 	]

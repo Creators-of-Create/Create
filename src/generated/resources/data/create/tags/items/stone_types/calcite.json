@@ -13,6 +13,7 @@
     "create:small_calcite_brick_stairs",
     "create:small_calcite_brick_wall",
     "create:layered_calcite",
-    "create:calcite_pillar"
+    "create:calcite_pillar",
+    "minecraft:calcite"
   ]
 }

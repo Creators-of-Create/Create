@@ -5,14 +5,16 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.content.curiosities.clipboard.ClipboardEntry;
+import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -26,6 +28,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -57,7 +60,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 
 public class FlapDisplayBlock extends HorizontalKineticBlock
-	implements ITE<FlapDisplayTileEntity>, IWrenchable, ICogWheel, SimpleWaterloggedBlock {
+	implements IBE<FlapDisplayBlockEntity>, IWrenchable, ICogWheel, SimpleWaterloggedBlock {
 
 	public static final BooleanProperty UP = BooleanProperty.create("up");
 	public static final BooleanProperty DOWN = BooleanProperty.create("down");
@@ -127,12 +130,12 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 			return placementHelper.getOffset(player, world, state, pos, ray)
 				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
-		FlapDisplayTileEntity flapTe = getTileEntity(world, pos);
+		FlapDisplayBlockEntity flapBE = getBlockEntity(world, pos);
 
-		if (flapTe == null)
+		if (flapBE == null)
 			return InteractionResult.PASS;
-		flapTe = flapTe.getController();
-		if (flapTe == null)
+		flapBE = flapBE.getController();
+		if (flapBE == null)
 			return InteractionResult.PASS;
 
 		double yCoord = ray.getLocation()
@@ -141,29 +144,30 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 				.getNormal())
 				.scale(.125f)).y;
 
-		int lineIndex = flapTe.getLineIndexAt(yCoord);
+		int lineIndex = flapBE.getLineIndexAt(yCoord);
 
 		if (heldItem.isEmpty()) {
-			if (!flapTe.isSpeedRequirementFulfilled())
+			if (!flapBE.isSpeedRequirementFulfilled())
 				return InteractionResult.PASS;
-			flapTe.applyTextManually(lineIndex, null);
+			flapBE.applyTextManually(lineIndex, null);
 			return InteractionResult.SUCCESS;
 		}
 
 		if (heldItem.getItem() == Items.GLOW_INK_SAC) {
 			if (!world.isClientSide) {
 				world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-				flapTe.setGlowing(lineIndex);
+				flapBE.setGlowing(lineIndex);
 			}
 			return InteractionResult.SUCCESS;
 		}
 
-		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
+		boolean display =
+			heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName() || AllBlocks.CLIPBOARD.isIn(heldItem);
 		DyeColor dye = DyeColor.getColor(heldItem);
 
 		if (!display && dye == null)
 			return InteractionResult.PASS;
-		if (dye == null && !flapTe.isSpeedRequirementFulfilled())
+		if (dye == null && !flapBE.isSpeedRequirementFulfilled())
 			return InteractionResult.PASS;
 		if (world.isClientSide)
 			return InteractionResult.SUCCESS;
@@ -171,11 +175,23 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 		CompoundTag tag = heldItem.getTagElement("display");
 		String tagElement = tag != null && tag.contains("Name", Tag.TAG_STRING) ? tag.getString("Name") : null;
 
-		if (display)
-			flapTe.applyTextManually(lineIndex, tagElement);
+		if (display) {
+			if (AllBlocks.CLIPBOARD.isIn(heldItem)) {
+				List<ClipboardEntry> entries = ClipboardEntry.getLastViewedEntries(heldItem);
+				int line = lineIndex;
+				for (int i = 0; i < entries.size(); i++) {
+					for (String string : entries.get(i).text.getString()
+						.split("\n"))
+						flapBE.applyTextManually(line++, Component.Serializer.toJson(Components.literal(string)));
+				}
+				return InteractionResult.SUCCESS;
+			}
+
+			flapBE.applyTextManually(lineIndex, tagElement);
+		}
 		if (dye != null) {
 			world.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-			flapTe.setColour(lineIndex, dye);
+			flapBE.setColour(lineIndex, dye);
 		}
 
 		return InteractionResult.SUCCESS;
@@ -187,13 +203,13 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public Class<FlapDisplayTileEntity> getTileEntityClass() {
-		return FlapDisplayTileEntity.class;
+	public Class<FlapDisplayBlockEntity> getBlockEntityClass() {
+		return FlapDisplayBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends FlapDisplayTileEntity> getTileEntityType() {
-		return AllTileEntities.FLAP_DISPLAY.get();
+	public BlockEntityType<? extends FlapDisplayBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.FLAP_DISPLAY.get();
 	}
 
 	@Override
@@ -257,8 +273,8 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 			pPos.relative(Direction.fromAxisAndDirection(getConnectionAxis(pState), AxisDirection.NEGATIVE));
 		BlockState belowState = pLevel.getBlockState(belowPos);
 		if (!canConnect(pState, belowState))
-			KineticTileEntity.switchToBlockState(pLevel, pPos, updateColumn(pLevel, pPos, pState, true));
-		withTileEntityDo(pLevel, pPos, FlapDisplayTileEntity::updateControllerStatus);
+			KineticBlockEntity.switchToBlockState(pLevel, pPos, updateColumn(pLevel, pPos, pState, true));
+		withBlockEntityDo(pLevel, pPos, FlapDisplayBlockEntity::updateControllerStatus);
 	}
 
 	@Override
@@ -315,7 +331,8 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 			BlockPos relative = pPos.relative(d);
 			BlockState adjacent = pLevel.getBlockState(relative);
 			if (canConnect(pState, adjacent))
-				KineticTileEntity.switchToBlockState(pLevel, relative, updateColumn(pLevel, relative, adjacent, false));
+				KineticBlockEntity.switchToBlockState(pLevel, relative,
+					updateColumn(pLevel, relative, adjacent, false));
 		}
 	}
 

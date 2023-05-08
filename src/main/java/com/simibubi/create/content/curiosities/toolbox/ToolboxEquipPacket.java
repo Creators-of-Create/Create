@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -44,10 +42,9 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			Level world = player.level;
 
 			if (toolboxPos == null) {
@@ -62,7 +59,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			if (player.distanceToSqr(toolboxPos.getX() + 0.5, toolboxPos.getY(), toolboxPos.getZ() + 0.5) > maxRange
 				* maxRange)
 				return;
-			if (!(blockEntity instanceof ToolboxTileEntity))
+			if (!(blockEntity instanceof ToolboxBlockEntity))
 				return;
 
 			ToolboxHandler.unequip(player, hotbarSlot, false);
@@ -72,12 +69,12 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 				return;
 			}
 
-			ToolboxTileEntity toolboxTileEntity = (ToolboxTileEntity) blockEntity;
+			ToolboxBlockEntity toolboxBlockEntity = (ToolboxBlockEntity) blockEntity;
 
 			ItemStack playerStack = player.getInventory().getItem(hotbarSlot);
 			if (!playerStack.isEmpty() && !ToolboxInventory.canItemsShareCompartment(playerStack,
-				toolboxTileEntity.inventory.filters.get(slot))) {
-				toolboxTileEntity.inventory.inLimitedMode(inventory -> {
+				toolboxBlockEntity.inventory.filters.get(slot))) {
+				toolboxBlockEntity.inventory.inLimitedMode(inventory -> {
 					ItemStack remainder = ItemHandlerHelper.insertItemStacked(inventory, playerStack, false);
 					if (!remainder.isEmpty())
 						remainder = ItemHandlerHelper.insertItemStacked(new ItemReturnInvWrapper(player.getInventory()),
@@ -99,10 +96,10 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			player.getPersistentData()
 				.put("CreateToolboxData", compound);
 
-			toolboxTileEntity.connectPlayer(slot, player, hotbarSlot);
+			toolboxBlockEntity.connectPlayer(slot, player, hotbarSlot);
 			ToolboxHandler.syncData(player);
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

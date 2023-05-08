@@ -45,10 +45,11 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-public class SchematicHandler {
+public class SchematicHandler implements IGuiOverlay {
 
 	private String displayedSchematic;
 	private SchematicTransformation transformation;
@@ -66,8 +67,6 @@ public class SchematicHandler {
 	private Vector<SchematicRenderer> renderers;
 	private SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
-
-	private final IGuiOverlay overlayRenderer = this::renderOverlay;
 
 	public SchematicHandler() {
 		renderers = new Vector<>(3);
@@ -174,16 +173,16 @@ public class SchematicHandler {
 		schematic.placeInWorld(wMirroredFB, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
 			placementSettings.getMirror());
-		for (BlockEntity te : wMirroredFB.getRenderedTileEntities())
-			transform.apply(te);
+		for (BlockEntity be : wMirroredFB.getRenderedBlockEntities())
+			transform.apply(be);
 
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
 		pos = BlockPos.ZERO.south(size.getZ() - 1);
 		schematic.placeInWorld(wMirroredLR, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
 			placementSettings.getMirror());
-		for (BlockEntity te : wMirroredLR.getRenderedTileEntities())
-			transform.apply(te);
+		for (BlockEntity be : wMirroredLR.getRenderedBlockEntities())
+			transform.apply(be);
 
 		renderers.get(0)
 			.display(w);
@@ -193,7 +192,7 @@ public class SchematicHandler {
 			.display(wMirroredLR);
 	}
 
-	public void render(PoseStack ms, SuperRenderTypeBuffer buffer) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
 		boolean present = activeSchematicItem != null;
 		if (!active && !present)
 			return;
@@ -201,12 +200,12 @@ public class SchematicHandler {
 		if (active) {
 			ms.pushPose();
 			currentTool.getTool()
-				.renderTool(ms, buffer);
+				.renderTool(ms, buffer, camera);
 			ms.popPose();
 		}
 
 		ms.pushPose();
-		transformation.applyGLTransformations(ms);
+		transformation.applyTransformations(ms, camera);
 
 		if (!renderers.isEmpty()) {
 			float pt = AnimationTickHolder.getPartialTicks();
@@ -239,11 +238,8 @@ public class SchematicHandler {
 		}
 	}
 
-	public IGuiOverlay getOverlayRenderer() {
-		return overlayRenderer;
-	}
-
-	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	@Override
+	public void render(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		if (Minecraft.getInstance().options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)
@@ -334,7 +330,7 @@ public class SchematicHandler {
 	public void sync() {
 		if (activeSchematicItem == null)
 			return;
-		AllPackets.channel.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
+		AllPackets.getChannel().sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
 			transformation.getAnchor(), deployed));
 	}
 
@@ -377,7 +373,7 @@ public class SchematicHandler {
 	}
 
 	public void printInstantly() {
-		AllPackets.channel.sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
+		AllPackets.getChannel().sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
 		CompoundTag nbt = activeSchematicItem.getTag();
 		nbt.putBoolean("Deployed", false);
 		activeSchematicItem.setTag(nbt);

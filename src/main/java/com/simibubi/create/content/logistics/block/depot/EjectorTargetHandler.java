@@ -117,7 +117,7 @@ public class EjectorTargetHandler {
 		h = Math.abs(diff.getX() + diff.getZ());
 		v = -diff.getY();
 
-		AllPackets.channel.sendToServer(new EjectorPlacementPacket(h, v, pos, validTargetDirection));
+		AllPackets.getChannel().sendToServer(new EjectorPlacementPacket(h, v, pos, validTargetDirection));
 		currentSelection = null;
 		currentItem = null;
 
@@ -131,7 +131,7 @@ public class EjectorTargetHandler {
 
 		int xDiff = currentSelection.getX() - pos.getX();
 		int zDiff = currentSelection.getZ() - pos.getZ();
-		int max = AllConfigs.SERVER.kinetics.maxEjectorDistance.get();
+		int max = AllConfigs.server().kinetics.maxEjectorDistance.get();
 
 		if (Math.abs(xDiff) > max || Math.abs(zDiff) > max)
 			return null;
@@ -231,15 +231,15 @@ public class EjectorTargetHandler {
 		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		BlockPos pos = result.getBlockPos();
 
-		BlockEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
-		if (!(te instanceof EjectorTileEntity)) {
+		BlockEntity be = Minecraft.getInstance().level.getBlockEntity(pos);
+		if (!(be instanceof EjectorBlockEntity)) {
 			lastHoveredBlockPos = -1;
 			currentSelection = null;
 			return;
 		}
 
 		if (lastHoveredBlockPos == -1 || lastHoveredBlockPos != pos.asLong()) {
-			EjectorTileEntity ejector = (EjectorTileEntity) te;
+			EjectorBlockEntity ejector = (EjectorBlockEntity) be;
 			if (!ejector.getTargetPosition()
 				.equals(ejector.getBlockPos()))
 				currentSelection = ejector.getTargetPosition();

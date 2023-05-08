@@ -1,9 +1,9 @@
 package com.simibubi.create.content.curiosities.bell;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,21 +15,21 @@ import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 
-public class BellRenderer<TE extends AbstractBellTileEntity> extends SafeTileEntityRenderer<TE> {
+public class BellRenderer<BE extends AbstractBellBlockEntity> extends SafeBlockEntityRenderer<BE> {
 
 	public BellRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
-	protected void renderSafe(TE te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		BlockState state = te.getBlockState();
+	protected void renderSafe(BE be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+		BlockState state = be.getBlockState();
 		Direction facing = state.getValue(BellBlock.FACING);
 		BellAttachType attachment = state.getValue(BellBlock.ATTACHMENT);
 
-		SuperByteBuffer bell = CachedBufferer.partial(te.getBellModel(), state);
+		SuperByteBuffer bell = CachedBufferer.partial(be.getBellModel(), state);
 
-		if (te.isRinging)
-			bell.rotateCentered(te.ringDirection.getCounterClockWise(), getSwingAngle(te.ringingTicks + partialTicks));
+		if (be.isRinging)
+			bell.rotateCentered(be.ringDirection.getCounterClockWise(), getSwingAngle(be.ringingTicks + partialTicks));
 
 		float rY = AngleHelper.horizontalAngle(facing);
 		if (attachment == BellAttachType.SINGLE_WALL || attachment == BellAttachType.DOUBLE_WALL)

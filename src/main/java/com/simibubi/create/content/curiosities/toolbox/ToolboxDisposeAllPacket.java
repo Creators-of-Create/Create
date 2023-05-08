@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import java.util.function.Supplier;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -35,10 +33,9 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer player = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			Level world = player.level;
 			BlockEntity blockEntity = world.getBlockEntity(toolboxPos);
 
@@ -46,9 +43,9 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 			if (player.distanceToSqr(toolboxPos.getX() + 0.5, toolboxPos.getY(), toolboxPos.getZ() + 0.5) > maxRange
 				* maxRange)
 				return;
-			if (!(blockEntity instanceof ToolboxTileEntity))
+			if (!(blockEntity instanceof ToolboxBlockEntity))
 				return;
-			ToolboxTileEntity toolbox = (ToolboxTileEntity) blockEntity;
+			ToolboxBlockEntity toolbox = (ToolboxBlockEntity) blockEntity;
 
 			CompoundTag compound = player.getPersistentData()
 				.getCompound("CreateToolboxData");
@@ -73,9 +70,8 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 			
 			if (sendData.booleanValue())
 				ToolboxHandler.syncData(player);
-
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

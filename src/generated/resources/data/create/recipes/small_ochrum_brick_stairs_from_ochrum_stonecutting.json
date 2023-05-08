@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "create:ochrum"
-  },
-  "result": "create:small_ochrum_brick_stairs"
-}

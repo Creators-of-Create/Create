@@ -121,7 +121,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	}
 
 	@Override
-	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer) {}
+	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {}
 
 	@Override
 	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {}
@@ -143,7 +143,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 			.colored(0x6886c5)
 			.withFaceTexture(AllSpecialTextures.CHECKERED)
 			.lineWidth(1 / 16f);
-		outline.render(ms, buffer, AnimationTickHolder.getPartialTicks());
+		outline.render(ms, buffer, Vec3.ZERO, AnimationTickHolder.getPartialTicks());
 		outline.getParams()
 			.clearTextures();
 		ms.popPose();

@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.tileEntity.IMergeableTE;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -161,7 +161,7 @@ public class BlockHelper {
 		
 		if (world.random.nextFloat() < effectChance)
 			world.levelEvent(2001, pos, Block.getId(state));
-		BlockEntity tileentity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
+		BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
 		
 		if (player != null) {
 			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
@@ -180,7 +180,7 @@ public class BlockHelper {
 		if (world instanceof ServerLevel && world.getGameRules()
 			.getBoolean(GameRules.RULE_DOBLOCKDROPS) && !world.restoringBlockSnapshots
 			&& (player == null || !player.isCreative())) {
-			for (ItemStack itemStack : Block.getDrops(state, (ServerLevel) world, pos, tileentity, player, usedTool))
+			for (ItemStack itemStack : Block.getDrops(state, (ServerLevel) world, pos, blockEntity, player, usedTool))
 				droppedItemCallback.accept(itemStack);
 
 			// Simulating IceBlock#playerDestroy. Not calling method directly as it would drop item
@@ -235,7 +235,7 @@ public class BlockHelper {
 
 	public static void placeSchematicBlock(Level world, BlockState state, BlockPos target, ItemStack stack,
 		@Nullable CompoundTag data) {
-		BlockEntity existingTile = world.getBlockEntity(target);
+		BlockEntity existingBlockEntity = world.getBlockEntity(target);
 
 		// Piston
 		if (state.hasProperty(BlockStateProperties.EXTENDED))
@@ -243,10 +243,7 @@ public class BlockHelper {
 		if (state.hasProperty(BlockStateProperties.WATERLOGGED))
 			state = state.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
-		if (AllBlocks.BELT.has(state)) {
-			world.setBlock(target, state, 2);
-			return;
-		} else if (state.getBlock() == Blocks.COMPOSTER)
+		if (state.getBlock() == Blocks.COMPOSTER)
 			state = Blocks.COMPOSTER.defaultBlockState();
 		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
 			state = ((IPlantable) state.getBlock()).getPlant(world, target);
@@ -271,27 +268,29 @@ public class BlockHelper {
 
 		if (state.getBlock() instanceof BaseRailBlock) {
 			placeRailWithoutUpdate(world, state, target);
+		} else if (AllBlocks.BELT.has(state)) {
+			world.setBlock(target, state, 2);
 		} else {
 			world.setBlock(target, state, 18);
 		}
 
 		if (data != null) {
-			if (existingTile instanceof IMergeableTE mergeable) {
+			if (existingBlockEntity instanceof IMergeableBE mergeable) {
 				BlockEntity loaded = BlockEntity.loadStatic(target, state, data);
-				if (existingTile.getType()
+				if (existingBlockEntity.getType()
 					.equals(loaded.getType())) {
 					mergeable.accept(loaded);
 					return;
 				}
 			}
-			BlockEntity tile = world.getBlockEntity(target);
-			if (tile != null) {
+			BlockEntity blockEntity = world.getBlockEntity(target);
+			if (blockEntity != null) {
 				data.putInt("x", target.getX());
 				data.putInt("y", target.getY());
 				data.putInt("z", target.getZ());
-				if (tile instanceof KineticTileEntity)
-					((KineticTileEntity) tile).warnOfMovement();
-				tile.load(data);
+				if (blockEntity instanceof KineticBlockEntity)
+					((KineticBlockEntity) blockEntity).warnOfMovement();
+				blockEntity.load(data);
 			}
 		}
 

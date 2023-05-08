@@ -1,8 +1,10 @@
 {
   "parent": "create:block/belt_tunnel/item",
   "textures": {
-    "1": "create:block/andesite_tunnel_top",
-    "2": "create:block/andesite_tunnel",
-    "particle": "minecraft:block/polished_andesite"
+    "direction": "create:block/funnel/andesite_funnel_neutral",
+    "frame": "create:block/funnel/andesite_funnel_frame",
+    "particle": "minecraft:block/polished_andesite",
+    "top": "create:block/tunnel/andesite_tunnel_top",
+    "tunnel": "create:block/tunnel/andesite_tunnel"
   }
 }

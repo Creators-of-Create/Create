@@ -21,18 +21,18 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 public abstract class AbstractStationScreen extends AbstractSimiScreen {
 
 	protected AllGuiTextures background;
-	protected StationTileEntity te;
+	protected StationBlockEntity blockEntity;
 	protected GlobalStation station;
 
 	protected WeakReference<Train> displayedTrain;
 
 	private IconButton confirmButton;
 
-	public AbstractStationScreen(StationTileEntity te, GlobalStation station) {
-		super(te.getBlockState()
+	public AbstractStationScreen(StationBlockEntity be, GlobalStation station) {
+		super(be.getBlockState()
 			.getBlock()
 			.getName());
-		this.te = te;
+		this.blockEntity = be;
 		this.station = station;
 		displayedTrain = new WeakReference<>(null);
 	}
@@ -85,13 +85,13 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 			.scale(40)
 			.rotateX(-22)
 			.rotateY(63);
-		GuiGameElement.of(te.getBlockState()
+		GuiGameElement.of(blockEntity.getBlockState()
 			.setValue(BlockStateProperties.WATERLOGGED, false))
 			.render(ms);
 
-		if (te.resolveFlagAngle()) {
+		if (blockEntity.resolveFlagAngle()) {
 			msr.translate(1 / 16f, -19 / 16f, -12 / 16f);
-			StationRenderer.transformFlag(msr, te, partialTicks, 180, false);
+			StationRenderer.transformFlag(msr, blockEntity, partialTicks, 180, false);
 			GuiGameElement.of(getFlag(partialTicks))
 				.render(ms);
 		}
@@ -102,11 +102,11 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 	protected abstract PartialModel getFlag(float partialTicks);
 
 	protected Train getImminent() {
-		return te.imminentTrain == null ? null : CreateClient.RAILWAYS.trains.get(te.imminentTrain);
+		return blockEntity.imminentTrain == null ? null : CreateClient.RAILWAYS.trains.get(blockEntity.imminentTrain);
 	}
 
 	protected boolean trainPresent() {
-		return te.trainPresent;
+		return blockEntity.trainPresent;
 	}
 
 }

@@ -8,9 +8,9 @@ import static com.simibubi.create.foundation.data.WindowGen.framedGlassPane;
 import static com.simibubi.create.foundation.data.WindowGen.woodenWindowBlock;
 import static com.simibubi.create.foundation.data.WindowGen.woodenWindowPane;
 
+import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.SimpleCTBehaviour;
 import com.simibubi.create.foundation.data.BlockStateGen;
@@ -31,9 +31,7 @@ import net.minecraftforge.common.Tags;
 public class AllPaletteBlocks {
 
 	static {
-		REGISTRATE
-			.creativeModeTab(() -> Create.PALETTES_CREATIVE_TAB)
-			.startSection(AllSections.PALETTES);
+		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.PALETTES_CREATIVE_TAB);
 	}
 
 	// Windows and Glass

@@ -1,0 +1,53 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"inside": "create:block/scaffold/brass_scaffold_inside",
+		"particle": "create:block/scaffold/brass_scaffold",
+		"side": "create:block/scaffold/brass_scaffold",
+		"casing": "create:block/brass_casing"
+	},
+	"elements": [
+		{
+			"name": "top",
+			"from": [0, 13.05, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [16, 0, 0, 2.95], "texture": "#side", "cullface": "north"},
+				"east": {"uv": [16, 0, 0, 2.95], "texture": "#side", "cullface": "east"},
+				"south": {"uv": [16, 0, 0, 2.95], "texture": "#side", "cullface": "south"},
+				"west": {"uv": [16, 0, 0, 2.95], "texture": "#side", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#casing"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#casing"}
+			}
+		},
+		{
+			"name": "outside",
+			"from": [0, 8, 0],
+			"to": [16, 13.05, 16],
+			"faces": {
+				"north": {"uv": [16, 2.95, 0, 7.95], "texture": "#side", "cullface": "north"},
+				"east": {"uv": [16, 2.95, 0, 7.95], "texture": "#side", "cullface": "east"},
+				"south": {"uv": [16, 2.95, 0, 7.95], "texture": "#side", "cullface": "south"},
+				"west": {"uv": [16, 2.95, 0, 7.95], "texture": "#side", "cullface": "west"}
+			}
+		},
+		{
+			"name": "inside",
+			"from": [15.95, 8, 0],
+			"to": [0.05, 13.05, 16],
+			"faces": {
+				"east": {"uv": [16, 3, 0, 8], "texture": "#inside", "cullface": "west"},
+				"west": {"uv": [16, 3, 0, 8], "texture": "#inside", "cullface": "east"}
+			}
+		},
+		{
+			"name": "inside",
+			"from": [16, 8, 0.05],
+			"to": [0, 13.05, 15.95],
+			"faces": {
+				"north": {"uv": [16, 3, 0, 8], "texture": "#inside", "cullface": "north"},
+				"south": {"uv": [16, 2.95, 0, 7.95], "texture": "#inside", "cullface": "south"}
+			}
+		}
+	]
+}

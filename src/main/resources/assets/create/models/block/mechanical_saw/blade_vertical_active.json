@@ -1,18 +1,17 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
-    "textures": {
-        "stonecutter_saw": "minecraft:block/stonecutter_saw",
-        "stonecutter_saw_reversed" : "create:block/saw_reversed"
-    },
-    "elements": [
-        {
-            "name": "Saw",
-            "from": [ 0, 8, 11 ],
-            "to": [ 16, 8, 19 ],
-            "faces": {
-                "up": { "texture": "#stonecutter_saw", "uv": [ 0, 8, 16, 16 ], "rotation": 180 },
-                "down": { "texture": "#stonecutter_saw_reversed", "uv": [ 0, 8, 16, 16 ] }
-            }
-        }
-    ]
+	"credit": "Made with Blockbench",
+	"textures": {
+		"stonecutter_saw": "block/stonecutter_saw"
+	},
+	"elements": [
+		{
+			"name": "Saw",
+			"from": [0, 8, 11],
+			"to": [16, 8, 19],
+			"faces": {
+				"up": {"uv": [0, 8, 16, 16], "rotation": 180, "texture": "#stonecutter_saw"},
+				"down": {"uv": [16, 8, 0, 16], "texture": "#stonecutter_saw"}
+			}
+		}
+	]
 }

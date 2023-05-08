@@ -30,6 +30,7 @@ import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import com.tterrag.registrate.util.nullness.NonnullType;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -333,6 +334,21 @@ public class BlockStateGen {
 		};
 	}
 
+	public static <P extends Block> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> naturalStoneTypeBlock(
+		String type) {
+		return (c, p) -> {
+			ConfiguredModel[] variants = new ConfiguredModel[4];
+			for (int i = 0; i < variants.length; i++)
+				variants[i] = ConfiguredModel.builder()
+					.modelFile(p.models()
+						.cubeAll(type + "_natural_" + i, p.modLoc("block/palettes/stone_types/natural/" + type + "_" + i)))
+					.buildLast();
+			p.getVariantBuilder(c.get())
+				.partialState()
+				.setModels(variants);
+		};
+	}
+
 	public static <P extends EncasedPipeBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> encasedPipe() {
 		return (c, p) -> {
 			ModelFile open = AssetLookup.partialBaseModel(c, p, "open");
@@ -520,6 +536,13 @@ public class BlockStateGen {
 			.condition(propertyMap.get(rightD), right)
 			.condition(propertyMap.get(downD), down)
 			.end();
+	}
+
+	public static Function<BlockState, ConfiguredModel[]> mapToAir(@NonnullType RegistrateBlockstateProvider p) {
+		return state -> ConfiguredModel.builder()
+			.modelFile(p.models()
+				.getExistingFile(p.mcLoc("block/air")))
+			.build();
 	}
 
 }

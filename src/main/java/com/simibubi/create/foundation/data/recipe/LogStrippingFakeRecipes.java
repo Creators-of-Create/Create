@@ -29,7 +29,7 @@ public class LogStrippingFakeRecipes {
 
 	public static List<ManualApplicationRecipe> createRecipes() {
 		List<ManualApplicationRecipe> recipes = new ArrayList<>();
-		if (!AllConfigs.SERVER.recipes.displayLogStrippingRecipes.get())
+		if (!AllConfigs.server().recipes.displayLogStrippingRecipes.get())
 			return recipes;
 
 		ItemStack axe = new ItemStack(Items.IRON_AXE);

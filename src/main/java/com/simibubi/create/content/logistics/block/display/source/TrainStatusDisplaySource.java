@@ -4,7 +4,7 @@ import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
@@ -15,7 +15,7 @@ public class TrainStatusDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceTE() instanceof StationTileEntity observerTE))
+		if (!(context.getSourceBlockEntity() instanceof StationBlockEntity observerTE))
 			return EMPTY_LINE;
 		GlobalStation observer = observerTE.getStation();
 		if (observer == null)

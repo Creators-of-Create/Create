@@ -13,7 +13,7 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
 
 	@Override
 	public boolean tickLightListener() {
-		if (getVolume().volume() > AllConfigs.CLIENT.maxContraptionLightVolume.get())
+		if (getVolume().volume() > AllConfigs.client().maxContraptionLightVolume.get())
 			return false;
 
 		ImmutableBox contraptionBounds = getContraptionBounds();

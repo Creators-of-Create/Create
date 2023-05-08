@@ -86,9 +86,13 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
-		if (placementHelper.matchesItem(heldItem))
-			return placementHelper.getOffset(player, world, state, pos, ray)
-				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+		if (!player.isShiftKeyDown() && player.mayBuild()) {
+			if (placementHelper.matchesItem(heldItem)) {
+				placementHelper.getOffset(player, world, state, pos, ray)
+					.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+				return InteractionResult.SUCCESS;
+			}
+		}
 
 		if (heldItem.getItem() instanceof ShearsItem) {
 			if (!world.isClientSide)
@@ -123,7 +127,8 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		}
 
 		// Dye all adjacent
-		List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, hit, state.getValue(FACING).getAxis());
+		List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, hit, state.getValue(FACING)
+			.getAxis());
 		for (Direction d : directions) {
 			BlockPos offset = pos.relative(d);
 			BlockState adjacentState = world.getBlockState(offset);
@@ -186,7 +191,8 @@ public class SailBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+		Player player) {
 		ItemStack pickBlock = super.getCloneItemStack(state, target, world, pos, player);
 		if (pickBlock.isEmpty())
 			return AllBlocks.SAIL.get()

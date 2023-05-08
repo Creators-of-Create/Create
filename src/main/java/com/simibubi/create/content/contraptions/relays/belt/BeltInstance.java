@@ -10,9 +10,9 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.contraptions.base.flwdata.BeltData;
 import com.simibubi.create.content.contraptions.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
@@ -23,7 +23,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.LightLayer;
 
-public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
+public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
 
     boolean upward;
     boolean diagonal;
@@ -36,8 +36,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     protected ArrayList<BeltData> keys;
     protected RotatingData pulleyKey;
 
-    public BeltInstance(MaterialManager materialManager, BeltTileEntity tile) {
-        super(materialManager, tile);
+    public BeltInstance(MaterialManager materialManager, BeltBlockEntity blockEntity) {
+        super(materialManager, blockEntity);
 
         if (!AllBlocks.BELT.has(blockState))
             return;
@@ -56,7 +56,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         BeltPart part = blockState.getValue(BeltBlock.PART);
         boolean start = part == BeltPart.START;
         boolean end = part == BeltPart.END;
-        DyeColor color = tile.color.orElse(null);
+        DyeColor color = blockEntity.color.orElse(null);
 
         for (boolean bottom : Iterate.trueAndFalse) {
             PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
@@ -71,7 +71,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             if (diagonal) break;
         }
 
-        if (tile.hasPulley()) {
+        if (blockEntity.hasPulley()) {
             Instancer<RotatingData> pulleyModel = getPulleyModel();
 
             pulleyKey = setup(pulleyModel.createInstance());
@@ -143,7 +143,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
             return modelTransform;
         };
 
-        return getRotatingMaterial().getModel(AllBlockPartials.BELT_PULLEY, blockState, dir, ms);
+        return getRotatingMaterial().getModel(AllPartialModels.BELT_PULLEY, blockState, dir, ms);
     }
 
     private Direction getOrientation() {

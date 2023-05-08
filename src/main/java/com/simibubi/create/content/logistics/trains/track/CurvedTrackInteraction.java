@@ -44,7 +44,7 @@ public class CurvedTrackInteraction {
 			return;
 
 		if (mc.options.keyAttack.isDown() && result != null) {
-			breakPos = result.te()
+			breakPos = result.blockEntity()
 				.getBlockPos();
 			BlockState blockState = level.getBlockState(breakPos);
 			if (blockState.isAir()) {
@@ -74,7 +74,7 @@ public class CurvedTrackInteraction {
 			player.swing(InteractionHand.MAIN_HAND);
 
 			if (breakProgress >= 1) {
-				AllPackets.channel.sendToServer(new CurvedTrackDestroyPacket(breakPos, result.loc()
+				AllPackets.getChannel().sendToServer(new CurvedTrackDestroyPacket(breakPos, result.loc()
 					.curveTarget(), new BlockPos(result.vec()), false));
 				resetBreakProgress();
 			}
@@ -128,7 +128,7 @@ public class CurvedTrackInteraction {
 				return true;
 			}
 			if (AllItems.WRENCH.isIn(heldItem) && player.isSteppingCarefully()) {
-				AllPackets.channel.sendToServer(new CurvedTrackDestroyPacket(result.te()
+				AllPackets.getChannel().sendToServer(new CurvedTrackDestroyPacket(result.blockEntity()
 					.getBlockPos(),
 					result.loc()
 						.curveTarget(),

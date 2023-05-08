@@ -47,7 +47,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 	private static final ItemStack FALLBACK = new ItemStack(Items.BARRIER);
 
 	private AllGuiTextures background;
-	private DisplayLinkTileEntity te;
+	private DisplayLinkBlockEntity blockEntity;
 	private IconButton confirmButton;
 
 	BlockState sourceState;
@@ -64,9 +64,9 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 	Couple<ModularGuiLine> configWidgets;
 
-	public DisplayLinkScreen(DisplayLinkTileEntity te) {
+	public DisplayLinkScreen(DisplayLinkBlockEntity be) {
 		this.background = AllGuiTextures.DATA_GATHERER;
-		this.te = te;
+		this.blockEntity = be;
 		sources = Collections.emptyList();
 		configWidgets = Couple.create(ModularGuiLine::new);
 		target = null;
@@ -92,9 +92,9 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 	@Override
 	public void tick() {
 		super.tick();
-		if (sourceState != null && sourceState.getBlock() != minecraft.level.getBlockState(te.getSourcePosition())
+		if (sourceState != null && sourceState.getBlock() != minecraft.level.getBlockState(blockEntity.getSourcePosition())
 				.getBlock()
-				|| targetState != null && targetState.getBlock() != minecraft.level.getBlockState(te.getTargetPosition())
+				|| targetState != null && targetState.getBlock() != minecraft.level.getBlockState(blockEntity.getTargetPosition())
 				.getBlock())
 			initGathererOptions();
 	}
@@ -102,8 +102,8 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 	@SuppressWarnings("deprecation")
 	private void initGathererOptions() {
 		ClientLevel level = minecraft.level;
-		sourceState = level.getBlockState(te.getSourcePosition());
-		targetState = level.getBlockState(te.getTargetPosition());
+		sourceState = level.getBlockState(blockEntity.getSourcePosition());
+		targetState = level.getBlockState(blockEntity.getTargetPosition());
 
 		ItemStack asItem;
 		int x = guiLeft;
@@ -112,13 +112,13 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		Block sourceBlock = sourceState.getBlock();
 		Block targetBlock = targetState.getBlock();
 
-		asItem = sourceBlock.getCloneItemStack(level, te.getSourcePosition(), sourceState);
+		asItem = sourceBlock.getCloneItemStack(level, blockEntity.getSourcePosition(), sourceState);
 		ItemStack sourceIcon = asItem == null || asItem.isEmpty() ? FALLBACK : asItem;
-		asItem = targetBlock.getCloneItemStack(level, te.getTargetPosition(), targetState);
+		asItem = targetBlock.getCloneItemStack(level, blockEntity.getTargetPosition(), targetState);
 		ItemStack targetIcon = asItem == null || asItem.isEmpty() ? FALLBACK : asItem;
 
-		sources = AllDisplayBehaviours.sourcesOf(level, te.getSourcePosition());
-		target = AllDisplayBehaviours.targetOf(level, te.getTargetPosition());
+		sources = AllDisplayBehaviours.sourcesOf(level, blockEntity.getSourcePosition());
+		target = AllDisplayBehaviours.targetOf(level, blockEntity.getTargetPosition());
 
 		removeWidget(targetLineSelector);
 		removeWidget(targetLineLabel);
@@ -133,9 +133,9 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		sourceTypeSelector = null;
 
 		if (target != null) {
-			DisplayTargetStats stats = target.provideStats(new DisplayLinkContext(level, te));
+			DisplayTargetStats stats = target.provideStats(new DisplayLinkContext(level, blockEntity));
 			int rows = stats.maxRows();
-			int startIndex = Math.min(te.targetLine, rows);
+			int startIndex = Math.min(blockEntity.targetLine, rows);
 
 			targetLineLabel = new Label(x + 65, y + 109, Components.immutableEmpty()).withShadow();
 			targetLineLabel.text = target.getLineOptionText(startIndex);
@@ -187,7 +187,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		addRenderableWidget(targetWidget);
 
 		if (!sources.isEmpty()) {
-			int startIndex = Math.max(sources.indexOf(te.activeSource), 0);
+			int startIndex = Math.max(sources.indexOf(blockEntity.activeSource), 0);
 
 			sourceTypeLabel = new Label(x + 65, y + 30, Components.immutableEmpty()).withShadow();
 			sourceTypeLabel.text = sources.get(startIndex)
@@ -214,7 +214,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 	private void initGathererSourceSubOptions(int i) {
 		DisplaySource source = sources.get(i);
-		source.populateData(new DisplayLinkContext(te.getLevel(), te));
+		source.populateData(new DisplayLinkContext(blockEntity.getLevel(), blockEntity));
 
 		if (targetLineSelector != null)
 			targetLineSelector
@@ -226,11 +226,11 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 			s.clear();
 		});
 
-		DisplayLinkContext context = new DisplayLinkContext(minecraft.level, te);
+		DisplayLinkContext context = new DisplayLinkContext(minecraft.level, blockEntity);
 		configWidgets.forEachWithContext((s, first) -> source.initConfigurationWidgets(context,
 				new ModularGuiLineBuilder(font, s, guiLeft + 60, guiTop + (first ? 51 : 72)), first));
 		configWidgets
-				.forEach(s -> s.loadValues(te.getSourceConfig(), this::addRenderableWidget, this::addRenderableOnly));
+				.forEach(s -> s.loadValues(blockEntity.getSourceConfig(), this::addRenderableWidget, this::addRenderableOnly));
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 			configWidgets.forEach(s -> s.saveValues(sourceData));
 		}
 
-		AllPackets.channel.sendToServer(new DisplayLinkConfigurationPacket(te.getBlockPos(), sourceData,
+		AllPackets.getChannel().sendToServer(new DisplayLinkConfigurationPacket(blockEntity.getBlockPos(), sourceData,
 				targetLineSelector == null ? 0 : targetLineSelector.getState()));
 	}
 
@@ -255,7 +255,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 
 		background.render(ms, x, y, this);
 		MutableComponent header = Lang.translateDirect("display_link.title");
-		font.draw(ms, header, x + background.width / 2 - font.width(header) / 2, y + 4, 0x442000);
+		font.draw(ms, header, x + background.width / 2 - font.width(header) / 2, y + 4, 0x592424);
 
 		if (sources.isEmpty())
 			font.drawShadow(ms, Lang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
@@ -278,7 +278,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 				.scale(40)
 				.rotateX(-22)
 				.rotateY(63);
-		GuiGameElement.of(te.getBlockState()
+		GuiGameElement.of(blockEntity.getBlockState()
 						.setValue(DisplayLinkBlock.FACING, Direction.UP))
 				.render(ms);
 		ms.popPose();

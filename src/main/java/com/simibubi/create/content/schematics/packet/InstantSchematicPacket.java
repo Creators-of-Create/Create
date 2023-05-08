@@ -1,7 +1,5 @@
 package com.simibubi.create.content.schematics.packet;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -36,17 +34,14 @@ public class InstantSchematicPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer player = context.get()
-						.getSender();
-				if (player == null)
-					return;
-				Create.SCHEMATIC_RECEIVER.handleInstantSchematic(player, name, player.level, origin, bounds);
-			});
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			Create.SCHEMATIC_RECEIVER.handleInstantSchematic(player, name, player.level, origin, bounds);
+		});
+		return true;
 	}
 
 }

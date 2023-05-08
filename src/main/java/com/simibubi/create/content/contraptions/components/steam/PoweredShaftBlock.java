@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.steam;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -41,8 +41,8 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 	}
 
 	@Override
-	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
-		return AllTileEntities.POWERED_SHAFT.get();
+	public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.POWERED_SHAFT.get();
 	}
 
 	@Override

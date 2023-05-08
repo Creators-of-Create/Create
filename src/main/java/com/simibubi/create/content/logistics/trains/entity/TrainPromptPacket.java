@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -34,11 +32,9 @@ public class TrainPromptPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::apply));
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::apply));
+		return true;
 	}
 
 	@OnlyIn(Dist.CLIENT)

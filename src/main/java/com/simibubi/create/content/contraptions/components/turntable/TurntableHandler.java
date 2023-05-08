@@ -23,11 +23,11 @@ public class TurntableHandler {
 		if (mc.isPaused())
 			return;
 
-		BlockEntity tileEntity = mc.level.getBlockEntity(pos);
-		if (!(tileEntity instanceof TurntableTileEntity))
+		BlockEntity blockEntity = mc.level.getBlockEntity(pos);
+		if (!(blockEntity instanceof TurntableBlockEntity))
 			return;
 		
-		TurntableTileEntity turnTable = (TurntableTileEntity) tileEntity;
+		TurntableBlockEntity turnTable = (TurntableBlockEntity) blockEntity;
 		float speed = turnTable.getSpeed() * 3/10;
 
 		if (speed == 0)

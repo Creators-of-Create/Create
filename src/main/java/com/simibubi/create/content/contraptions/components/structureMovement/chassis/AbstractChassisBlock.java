@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -28,7 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 
-public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable, ITE<ChassisTileEntity>, ITransformableBlock {
+public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable, IBE<ChassisBlockEntity>, ITransformableBlock {
 
 	public AbstractChassisBlock(Properties properties) {
 		super(properties);
@@ -179,13 +179,13 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 	}
 
 	@Override
-	public Class<ChassisTileEntity> getTileEntityClass() {
-		return ChassisTileEntity.class;
+	public Class<ChassisBlockEntity> getBlockEntityClass() {
+		return ChassisBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends ChassisTileEntity> getTileEntityType() {
-		return AllTileEntities.CHASSIS.get();
+	public BlockEntityType<? extends ChassisBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CHASSIS.get();
 	}
 
 }

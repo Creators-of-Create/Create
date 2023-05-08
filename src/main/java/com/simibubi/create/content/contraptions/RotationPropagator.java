@@ -7,15 +7,15 @@ import java.util.List;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
-import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlockEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.content.contraptions.relays.encased.DirectionalShaftHalvesTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.DirectionalShaftHalvesBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
-import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
-import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.SplitShaftBlockEntity;
+import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlockEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -41,7 +41,7 @@ public class RotationPropagator {
 	 * @param to
 	 * @return
 	 */
-	private static float getRotationSpeedModifier(KineticTileEntity from, KineticTileEntity to) {
+	private static float getRotationSpeedModifier(KineticBlockEntity from, KineticBlockEntity to) {
 		final BlockState stateFrom = from.getBlockState();
 		final BlockState stateTo = to.getBlockState();
 
@@ -121,17 +121,17 @@ public class RotationPropagator {
 		return 0;
 	}
 
-	private static float getConveyedSpeed(KineticTileEntity from, KineticTileEntity to) {
+	private static float getConveyedSpeed(KineticBlockEntity from, KineticBlockEntity to) {
 		final BlockState stateFrom = from.getBlockState();
 		final BlockState stateTo = to.getBlockState();
 
 		// Rotation Speed Controller <-> Large Gear
 		if (isLargeCogToSpeedController(stateFrom, stateTo, to.getBlockPos()
 			.subtract(from.getBlockPos())))
-			return SpeedControllerTileEntity.getConveyedSpeed(from, to, true);
+			return SpeedControllerBlockEntity.getConveyedSpeed(from, to, true);
 		if (isLargeCogToSpeedController(stateTo, stateFrom, from.getBlockPos()
 			.subtract(to.getBlockPos())))
-			return SpeedControllerTileEntity.getConveyedSpeed(to, from, false);
+			return SpeedControllerBlockEntity.getConveyedSpeed(to, from, false);
 
 		float rotationSpeedModifier = getRotationSpeedModifier(from, to);
 		return from.getTheoreticalSpeed() * rotationSpeedModifier;
@@ -156,17 +156,17 @@ public class RotationPropagator {
 		return true;
 	}
 
-	private static float getAxisModifier(KineticTileEntity te, Direction direction) {
-		if (!(te.hasSource()||te.isSource()) || !(te instanceof DirectionalShaftHalvesTileEntity))
+	private static float getAxisModifier(KineticBlockEntity be, Direction direction) {
+		if (!(be.hasSource()||be.isSource()) || !(be instanceof DirectionalShaftHalvesBlockEntity))
 			return 1;
-		Direction source = ((DirectionalShaftHalvesTileEntity) te).getSourceFacing();
+		Direction source = ((DirectionalShaftHalvesBlockEntity) be).getSourceFacing();
 
-		if (te instanceof GearboxTileEntity)
+		if (be instanceof GearboxBlockEntity)
 			return direction.getAxis() == source.getAxis() ? direction == source ? 1 : -1
 				: direction.getAxisDirection() == source.getAxisDirection() ? -1 : 1;
 
-		if (te instanceof SplitShaftTileEntity)
-			return ((SplitShaftTileEntity) te).getRotationSpeedModifier(direction);
+		if (be instanceof SplitShaftBlockEntity)
+			return ((SplitShaftBlockEntity) be).getRotationSpeedModifier(direction);
 
 		return 1;
 	}
@@ -205,7 +205,7 @@ public class RotationPropagator {
 	 * @param worldIn
 	 * @param pos
 	 */
-	public static void handleAdded(Level worldIn, BlockPos pos, KineticTileEntity addedTE) {
+	public static void handleAdded(Level worldIn, BlockPos pos, KineticBlockEntity addedTE) {
 		if (worldIn.isClientSide)
 			return;
 		if (!worldIn.isLoaded(pos))
@@ -218,11 +218,11 @@ public class RotationPropagator {
 	 *
 	 * @param currentTE
 	 */
-	private static void propagateNewSource(KineticTileEntity currentTE) {
+	private static void propagateNewSource(KineticBlockEntity currentTE) {
 		BlockPos pos = currentTE.getBlockPos();
 		Level world = currentTE.getLevel();
 
-		for (KineticTileEntity neighbourTE : getConnectedNeighbours(currentTE)) {
+		for (KineticBlockEntity neighbourTE : getConnectedNeighbours(currentTE)) {
 			float speedOfCurrent = currentTE.getTheoreticalSpeed();
 			float speedOfNeighbour = neighbourTE.getTheoreticalSpeed();
 			float newSpeed = getConveyedSpeed(currentTE, neighbourTE);
@@ -234,8 +234,8 @@ public class RotationPropagator {
 			boolean incompatible =
 				Math.signum(newSpeed) != Math.signum(speedOfNeighbour) && (newSpeed != 0 && speedOfNeighbour != 0);
 
-			boolean tooFast = Math.abs(newSpeed) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get()
-					|| Math.abs(oppositeSpeed) > AllConfigs.SERVER.kinetics.maxRotationSpeed.get();
+			boolean tooFast = Math.abs(newSpeed) > AllConfigs.server().kinetics.maxRotationSpeed.get()
+					|| Math.abs(oppositeSpeed) > AllConfigs.server().kinetics.maxRotationSpeed.get();
 			// Check for both the new speed and the opposite speed, just in case
 
 			boolean speedChangedTooOften = currentTE.getFlickerScore() > MAX_FLICKER_SCORE;
@@ -306,29 +306,29 @@ public class RotationPropagator {
 	 *
 	 * @param worldIn
 	 * @param pos
-	 * @param removedTE
+	 * @param removedBE
 	 */
-	public static void handleRemoved(Level worldIn, BlockPos pos, KineticTileEntity removedTE) {
+	public static void handleRemoved(Level worldIn, BlockPos pos, KineticBlockEntity removedBE) {
 		if (worldIn.isClientSide)
 			return;
-		if (removedTE == null)
+		if (removedBE == null)
 			return;
-		if (removedTE.getTheoreticalSpeed() == 0)
+		if (removedBE.getTheoreticalSpeed() == 0)
 			return;
 
-		for (BlockPos neighbourPos : getPotentialNeighbourLocations(removedTE)) {
+		for (BlockPos neighbourPos : getPotentialNeighbourLocations(removedBE)) {
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			if (!(neighbourState.getBlock() instanceof IRotate))
 				continue;
-			BlockEntity tileEntity = worldIn.getBlockEntity(neighbourPos);
-			if (!(tileEntity instanceof KineticTileEntity))
+			BlockEntity blockEntity = worldIn.getBlockEntity(neighbourPos);
+			if (!(blockEntity instanceof KineticBlockEntity))
 				continue;
 
-			final KineticTileEntity neighbourTE = (KineticTileEntity) tileEntity;
-			if (!neighbourTE.hasSource() || !neighbourTE.source.equals(pos))
+			final KineticBlockEntity neighbourBE = (KineticBlockEntity) blockEntity;
+			if (!neighbourBE.hasSource() || !neighbourBE.source.equals(pos))
 				continue;
 
-			propagateMissingSource(neighbourTE);
+			propagateMissingSource(neighbourBE);
 		}
 
 	}
@@ -339,44 +339,44 @@ public class RotationPropagator {
 	 *
 	 * @param updateTE
 	 */
-	private static void propagateMissingSource(KineticTileEntity updateTE) {
+	private static void propagateMissingSource(KineticBlockEntity updateTE) {
 		final Level world = updateTE.getLevel();
 
-		List<KineticTileEntity> potentialNewSources = new LinkedList<>();
+		List<KineticBlockEntity> potentialNewSources = new LinkedList<>();
 		List<BlockPos> frontier = new LinkedList<>();
 		frontier.add(updateTE.getBlockPos());
 		BlockPos missingSource = updateTE.hasSource() ? updateTE.source : null;
 
 		while (!frontier.isEmpty()) {
 			final BlockPos pos = frontier.remove(0);
-			BlockEntity tileEntity = world.getBlockEntity(pos);
-			if (!(tileEntity instanceof KineticTileEntity))
+			BlockEntity blockEntity = world.getBlockEntity(pos);
+			if (!(blockEntity instanceof KineticBlockEntity))
 				continue;
-			final KineticTileEntity currentTE = (KineticTileEntity) tileEntity;
+			final KineticBlockEntity currentBE = (KineticBlockEntity) blockEntity;
 
-			currentTE.removeSource();
-			currentTE.sendData();
+			currentBE.removeSource();
+			currentBE.sendData();
 
-			for (KineticTileEntity neighbourTE : getConnectedNeighbours(currentTE)) {
-				if (neighbourTE.getBlockPos()
+			for (KineticBlockEntity neighbourBE : getConnectedNeighbours(currentBE)) {
+				if (neighbourBE.getBlockPos()
 					.equals(missingSource))
 					continue;
-				if (!neighbourTE.hasSource())
+				if (!neighbourBE.hasSource())
 					continue;
 
-				if (!neighbourTE.source.equals(pos)) {
-					potentialNewSources.add(neighbourTE);
+				if (!neighbourBE.source.equals(pos)) {
+					potentialNewSources.add(neighbourBE);
 					continue;
 				}
 
-				if (neighbourTE.isSource())
-					potentialNewSources.add(neighbourTE);
+				if (neighbourBE.isSource())
+					potentialNewSources.add(neighbourBE);
 
-				frontier.add(neighbourTE.getBlockPos());
+				frontier.add(neighbourBE.getBlockPos());
 			}
 		}
 
-		for (KineticTileEntity newSource : potentialNewSources) {
+		for (KineticBlockEntity newSource : potentialNewSources) {
 			if (newSource.hasSource() || newSource.isSource()) {
 				propagateNewSource(newSource);
 				return;
@@ -384,27 +384,27 @@ public class RotationPropagator {
 		}
 	}
 
-	private static KineticTileEntity findConnectedNeighbour(KineticTileEntity currentTE, BlockPos neighbourPos) {
+	private static KineticBlockEntity findConnectedNeighbour(KineticBlockEntity currentTE, BlockPos neighbourPos) {
 		BlockState neighbourState = currentTE.getLevel()
 			.getBlockState(neighbourPos);
 		if (!(neighbourState.getBlock() instanceof IRotate))
 			return null;
 		if (!neighbourState.hasBlockEntity())
 			return null;
-		BlockEntity neighbourTE = currentTE.getLevel()
+		BlockEntity neighbourBE = currentTE.getLevel()
 			.getBlockEntity(neighbourPos);
-		if (!(neighbourTE instanceof KineticTileEntity))
+		if (!(neighbourBE instanceof KineticBlockEntity))
 			return null;
-		KineticTileEntity neighbourKTE = (KineticTileEntity) neighbourTE;
-		if (!(neighbourKTE.getBlockState()
+		KineticBlockEntity neighbourKBE = (KineticBlockEntity) neighbourBE;
+		if (!(neighbourKBE.getBlockState()
 			.getBlock() instanceof IRotate))
 			return null;
-		if (!isConnected(currentTE, neighbourKTE) && !isConnected(neighbourKTE, currentTE))
+		if (!isConnected(currentTE, neighbourKBE) && !isConnected(neighbourKBE, currentTE))
 			return null;
-		return neighbourKTE;
+		return neighbourKBE;
 	}
 
-	public static boolean isConnected(KineticTileEntity from, KineticTileEntity to) {
+	public static boolean isConnected(KineticBlockEntity from, KineticBlockEntity to) {
 		final BlockState stateFrom = from.getBlockState();
 		final BlockState stateTo = to.getBlockState();
 		return isLargeCogToSpeedController(stateFrom, stateTo, to.getBlockPos()
@@ -412,34 +412,37 @@ public class RotationPropagator {
 			|| from.isCustomConnection(to, stateFrom, stateTo);
 	}
 
-	private static List<KineticTileEntity> getConnectedNeighbours(KineticTileEntity te) {
-		List<KineticTileEntity> neighbours = new LinkedList<>();
-		for (BlockPos neighbourPos : getPotentialNeighbourLocations(te)) {
-			final KineticTileEntity neighbourTE = findConnectedNeighbour(te, neighbourPos);
-			if (neighbourTE == null)
+	private static List<KineticBlockEntity> getConnectedNeighbours(KineticBlockEntity be) {
+		List<KineticBlockEntity> neighbours = new LinkedList<>();
+		for (BlockPos neighbourPos : getPotentialNeighbourLocations(be)) {
+			final KineticBlockEntity neighbourBE = findConnectedNeighbour(be, neighbourPos);
+			if (neighbourBE == null)
 				continue;
 
-			neighbours.add(neighbourTE);
+			neighbours.add(neighbourBE);
 		}
 		return neighbours;
 	}
 
-	private static List<BlockPos> getPotentialNeighbourLocations(KineticTileEntity te) {
+	private static List<BlockPos> getPotentialNeighbourLocations(KineticBlockEntity be) {
 		List<BlockPos> neighbours = new LinkedList<>();
+		BlockPos blockPos = be.getBlockPos();
+		Level level = be.getLevel();
 
-		if (!te.getLevel()
-			.isAreaLoaded(te.getBlockPos(), 1))
+		if (!level.isLoaded(blockPos))
 			return neighbours;
 
-		for (Direction facing : Iterate.directions)
-			neighbours.add(te.getBlockPos()
-				.relative(facing));
+		for (Direction facing : Iterate.directions) {
+			BlockPos relative = blockPos.relative(facing);
+			if (level.isLoaded(relative))
+				neighbours.add(relative);
+		}
 
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		if (!(blockState.getBlock() instanceof IRotate))
 			return neighbours;
 		IRotate block = (IRotate) blockState.getBlock();
-		return te.addPropagationLocations(block, blockState, neighbours);
+		return be.addPropagationLocations(block, blockState, neighbours);
 	}
 
 }

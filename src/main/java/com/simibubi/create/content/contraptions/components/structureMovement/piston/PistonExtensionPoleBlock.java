@@ -98,11 +98,11 @@ public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock impleme
 			worldIn.setBlockAndUpdate(basePos, worldIn.getBlockState(basePos)
 					.setValue(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
 
-			BlockEntity te = worldIn.getBlockEntity(basePos);
-			if (te instanceof MechanicalPistonTileEntity) {
-				MechanicalPistonTileEntity baseTE = (MechanicalPistonTileEntity) te;
-				baseTE.offset = 0;
-				baseTE.onLengthBroken();
+			BlockEntity be = worldIn.getBlockEntity(basePos);
+			if (be instanceof MechanicalPistonBlockEntity) {
+				MechanicalPistonBlockEntity baseBE = (MechanicalPistonBlockEntity) be;
+				baseBE.offset = 0;
+				baseBE.onLengthBroken();
 			}
 		}
 

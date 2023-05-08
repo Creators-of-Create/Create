@@ -13,6 +13,7 @@
     "create:small_deepslate_brick_stairs",
     "create:small_deepslate_brick_wall",
     "create:layered_deepslate",
-    "create:deepslate_pillar"
+    "create:deepslate_pillar",
+    "minecraft:deepslate"
   ]
 }

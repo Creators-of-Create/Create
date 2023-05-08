@@ -5,14 +5,14 @@ import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBelt;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
+import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,43 +27,43 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
+public class SchematicannonRenderer extends SafeBlockEntityRenderer<SchematicannonBlockEntity> {
 
 	public SchematicannonRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
-	protected void renderSafe(SchematicannonTileEntity tileEntity, float partialTicks, PoseStack ms,
+	protected void renderSafe(SchematicannonBlockEntity blockEntity, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
 
-		boolean blocksLaunching = !tileEntity.flyingBlocks.isEmpty();
+		boolean blocksLaunching = !blockEntity.flyingBlocks.isEmpty();
 		if (blocksLaunching)
-			renderLaunchedBlocks(tileEntity, partialTicks, ms, buffer, light, overlay);
+			renderLaunchedBlocks(blockEntity, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(tileEntity.getLevel()))
+		if (Backend.canUseInstancing(blockEntity.getLevel()))
 			return;
 
-		BlockPos pos = tileEntity.getBlockPos();
-		BlockState state = tileEntity.getBlockState();
+		BlockPos pos = blockEntity.getBlockPos();
+		BlockState state = blockEntity.getBlockState();
 
-		double[] cannonAngles = getCannonAngles(tileEntity, pos, partialTicks);
+		double[] cannonAngles = getCannonAngles(blockEntity, pos, partialTicks);
 
 		double yaw = cannonAngles[0];
 		double pitch = cannonAngles[1];
 
-		double recoil = getRecoil(tileEntity, partialTicks);
+		double recoil = getRecoil(blockEntity, partialTicks);
 
 		ms.pushPose();
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		SuperByteBuffer connector = CachedBufferer.partial(AllBlockPartials.SCHEMATICANNON_CONNECTOR, state);
+		SuperByteBuffer connector = CachedBufferer.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR, state);
 		connector.translate(.5f, 0, .5f);
 		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		connector.translate(-.5f, 0, -.5f);
 		connector.light(light)
 			.renderInto(ms, vb);
 
-		SuperByteBuffer pipe = CachedBufferer.partial(AllBlockPartials.SCHEMATICANNON_PIPE, state);
+		SuperByteBuffer pipe = CachedBufferer.partial(AllPartialModels.SCHEMATICANNON_PIPE, state);
 		pipe.translate(.5f, 15 / 16f, .5f);
 		pipe.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));
@@ -75,18 +75,18 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		ms.popPose();
 	}
 
-	public static double[] getCannonAngles(SchematicannonTileEntity tile, BlockPos pos, float partialTicks) {
+	public static double[] getCannonAngles(SchematicannonBlockEntity blockEntity, BlockPos pos, float partialTicks) {
 		double yaw;
 		double pitch;
 
-		BlockPos target = tile.printer.getCurrentTarget();
+		BlockPos target = blockEntity.printer.getCurrentTarget();
 		if (target != null) {
 
 			// Calculate Angle of Cannon
 			Vec3 diff = Vec3.atLowerCornerOf(target.subtract(pos));
-			if (tile.previousTarget != null) {
-				diff = (Vec3.atLowerCornerOf(tile.previousTarget)
-					.add(Vec3.atLowerCornerOf(target.subtract(tile.previousTarget))
+			if (blockEntity.previousTarget != null) {
+				diff = (Vec3.atLowerCornerOf(blockEntity.previousTarget)
+					.add(Vec3.atLowerCornerOf(target.subtract(blockEntity.previousTarget))
 						.scale(partialTicks))).subtract(Vec3.atLowerCornerOf(pos));
 			}
 
@@ -101,17 +101,17 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			pitch = pitch / Math.PI * 180 + 10;
 
 		} else {
-			yaw = tile.defaultYaw;
+			yaw = blockEntity.defaultYaw;
 			pitch = 40;
 		}
 
 		return new double[] { yaw, pitch };
 	}
 
-	public static double getRecoil(SchematicannonTileEntity tileEntityIn, float partialTicks) {
+	public static double getRecoil(SchematicannonBlockEntity blockEntity, float partialTicks) {
 		double recoil = 0;
 
-		for (LaunchedItem launched : tileEntityIn.flyingBlocks) {
+		for (LaunchedItem launched : blockEntity.flyingBlocks) {
 
 			if (launched.ticksRemaining == 0)
 				continue;
@@ -124,15 +124,15 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		return recoil;
 	}
 
-	private static void renderLaunchedBlocks(SchematicannonTileEntity tileEntityIn, float partialTicks, PoseStack ms,
+	private static void renderLaunchedBlocks(SchematicannonBlockEntity blockEntity, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-		for (LaunchedItem launched : tileEntityIn.flyingBlocks) {
+		for (LaunchedItem launched : blockEntity.flyingBlocks) {
 
 			if (launched.ticksRemaining == 0)
 				continue;
 
 			// Calculate position of flying block
-			Vec3 start = Vec3.atCenterOf(tileEntityIn.getBlockPos()
+			Vec3 start = Vec3.atCenterOf(blockEntity.getBlockPos()
 				.above());
 			Vec3 target = Vec3.atCenterOf(launched.target);
 			Vec3 distance = target.subtract(start);
@@ -193,11 +193,11 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			ms.popPose();
 
 			// Render particles for launch
-			if (launched.ticksRemaining == launched.totalTicks && tileEntityIn.firstRenderTick) {
+			if (launched.ticksRemaining == launched.totalTicks && blockEntity.firstRenderTick) {
 				start = start.subtract(.5, .5, .5);
-				tileEntityIn.firstRenderTick = false;
+				blockEntity.firstRenderTick = false;
 				for (int i = 0; i < 10; i++) {
-					RandomSource r = tileEntityIn.getLevel()
+					RandomSource r = blockEntity.getLevel()
 						.getRandom();
 					double sX = cannonOffset.x * .01f;
 					double sY = (cannonOffset.y + 1) * .01f;
@@ -205,7 +205,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 					double rX = r.nextFloat() - sX * 40;
 					double rY = r.nextFloat() - sY * 40;
 					double rZ = r.nextFloat() - sZ * 40;
-					tileEntityIn.getLevel()
+					blockEntity.getLevel()
 						.addParticle(ParticleTypes.CLOUD, start.x + rX, start.y + rY, start.z + rZ, sX, sY, sZ);
 				}
 			}
@@ -214,7 +214,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(SchematicannonTileEntity tileEntity) {
+	public boolean shouldRenderOffScreen(SchematicannonBlockEntity blockEntity) {
 		return true;
 	}
 

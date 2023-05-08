@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.trains.track;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -34,10 +32,9 @@ public class PlaceExtendedCurvePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer sender = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
 			ItemStack stack = sender.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
 			if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())
 				return;
@@ -45,7 +42,7 @@ public class PlaceExtendedCurvePacket extends SimplePacketBase {
 			tag.putBoolean("ExtendCurve", true);
 			stack.setTag(tag);
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

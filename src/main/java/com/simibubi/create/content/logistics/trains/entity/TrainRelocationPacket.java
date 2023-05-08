@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.trains.entity;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
@@ -65,10 +64,9 @@ public class TrainRelocationPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		Context ctx = context.get();
-		ctx.enqueueWork(() -> {
-			ServerPlayer sender = ctx.getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
 			Train train = Create.RAILWAYS.trains.get(trainId);
 			Entity entity = sender.level.getEntity(entityId);
 
@@ -84,7 +82,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 			if (!train.id.equals(cce.trainId))
 				return;
 
-			int verifyDistance = AllConfigs.SERVER.trains.maxTrackPlacementLength.get() * 2;
+			int verifyDistance = AllConfigs.server().trains.maxTrackPlacementLength.get() * 2;
 			if (!sender.position()
 				.closerThan(Vec3.atCenterOf(pos), verifyDistance)) {
 				Create.LOGGER.warn(messagePrefix + train.name.getString() + ": player too far from clicked pos");
@@ -102,16 +100,15 @@ public class TrainRelocationPacket extends SimplePacketBase {
 					.withStyle(ChatFormatting.GREEN), true);
 				train.carriages.forEach(c -> c.forEachPresentEntity(e -> {
 					e.nonDamageTicks = 10;
-					AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> e),
+					AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> e),
 						new ContraptionRelocationPacket(e.getId()));
 				}));
 				return;
 			}
 
 			Create.LOGGER.warn(messagePrefix + train.name.getString() + ": relocation failed server-side");
-
 		});
-		ctx.setPacketHandled(true);
+		return true;
 	}
 
 }

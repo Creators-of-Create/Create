@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class ClockworkBearingBlock extends BearingBlock implements ITE<ClockworkBearingTileEntity> {
+public class ClockworkBearingBlock extends BearingBlock implements IBE<ClockworkBearingBlockEntity> {
 
 	public ClockworkBearingBlock(Properties properties) {
 		super(properties);
@@ -28,12 +28,12 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 			return InteractionResult.FAIL;
 		if (player.getItemInHand(handIn).isEmpty()) {
 			if (!worldIn.isClientSide) {
-				withTileEntityDo(worldIn, pos, te -> {
-					if (te.running) {
-						te.disassemble();
+				withBlockEntityDo(worldIn, pos, be -> {
+					if (be.running) {
+						be.disassemble();
 						return;
 					}
-					te.assembleNextTick = true;
+					be.assembleNextTick = true;
 				});
 			}
 			return InteractionResult.SUCCESS;
@@ -42,21 +42,21 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 	}
 
 	@Override
-	public Class<ClockworkBearingTileEntity> getTileEntityClass() {
-		return ClockworkBearingTileEntity.class;
+	public Class<ClockworkBearingBlockEntity> getBlockEntityClass() {
+		return ClockworkBearingBlockEntity.class;
 	}
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		InteractionResult resultType = super.onWrenched(state, context);
 		if (!context.getLevel().isClientSide && resultType.consumesAction())
-			withTileEntityDo(context.getLevel(), context.getClickedPos(), ClockworkBearingTileEntity::disassemble);
+			withBlockEntityDo(context.getLevel(), context.getClickedPos(), ClockworkBearingBlockEntity::disassemble);
 		return resultType;
 	}
 
 	@Override
-	public BlockEntityType<? extends ClockworkBearingTileEntity> getTileEntityType() {
-		return AllTileEntities.CLOCKWORK_BEARING.get();
+	public BlockEntityType<? extends ClockworkBearingBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.CLOCKWORK_BEARING.get();
 	}
 
 }

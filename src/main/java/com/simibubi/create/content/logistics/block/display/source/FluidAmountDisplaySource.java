@@ -2,9 +2,9 @@ package com.simibubi.create.content.logistics.block.display.source;
 
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
-import com.simibubi.create.content.logistics.block.redstone.ContentObserverTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.content.logistics.block.redstone.SmartObserverBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.TankManipulationBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.FluidFormatter;
 
@@ -17,12 +17,12 @@ public class FluidAmountDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		BlockEntity sourceTE = context.getSourceTE();
-		if (!(sourceTE instanceof ContentObserverTileEntity cote))
+		BlockEntity sourceBE = context.getSourceBlockEntity();
+		if (!(sourceBE instanceof SmartObserverBlockEntity cobe))
 			return EMPTY_LINE;
 
-		TankManipulationBehaviour tankManipulationBehaviour = cote.getBehaviour(TankManipulationBehaviour.OBSERVE);
-		FilteringBehaviour filteringBehaviour = cote.getBehaviour(FilteringBehaviour.TYPE);
+		TankManipulationBehaviour tankManipulationBehaviour = cobe.getBehaviour(TankManipulationBehaviour.OBSERVE);
+		FilteringBehaviour filteringBehaviour = cobe.getBehaviour(FilteringBehaviour.TYPE);
 		IFluidHandler handler = tankManipulationBehaviour.getInventory();
 
 		if (handler == null)

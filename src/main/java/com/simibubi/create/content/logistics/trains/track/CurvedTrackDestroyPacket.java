@@ -5,7 +5,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.TrackPropagator;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
+import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<TrackTileEntity> {
+public class CurvedTrackDestroyPacket extends BlockEntityConfigurationPacket<TrackBlockEntity> {
 
 	private BlockPos targetPos;
 	private BlockPos soundSource;
@@ -47,23 +47,23 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 	}
 
 	@Override
-	protected void applySettings(ServerPlayer player, TrackTileEntity te) {
-		int verifyDistance = AllConfigs.SERVER.trains.maxTrackPlacementLength.get() * 4;
-		if (!te.getBlockPos()
+	protected void applySettings(ServerPlayer player, TrackBlockEntity be) {
+		int verifyDistance = AllConfigs.server().trains.maxTrackPlacementLength.get() * 4;
+		if (!be.getBlockPos()
 			.closerThan(player.blockPosition(), verifyDistance)) {
 			Create.LOGGER.warn(player.getScoreboardName() + " too far away from destroyed Curve track");
 			return;
 		}
 
-		Level level = te.getLevel();
-		BezierConnection bezierConnection = te.getConnections()
+		Level level = be.getLevel();
+		BezierConnection bezierConnection = be.getConnections()
 			.get(targetPos);
 
-		te.removeConnection(targetPos);
-		if (level.getBlockEntity(targetPos)instanceof TrackTileEntity other)
+		be.removeConnection(targetPos);
+		if (level.getBlockEntity(targetPos)instanceof TrackBlockEntity other)
 			other.removeConnection(pos);
 
-		BlockState blockState = te.getBlockState();
+		BlockState blockState = be.getBlockState();
 		TrackPropagator.onRailRemoved(level, pos, blockState);
 
 		if (wrench) {
@@ -89,6 +89,6 @@ public class CurvedTrackDestroyPacket extends TileEntityConfigurationPacket<Trac
 	}
 
 	@Override
-	protected void applySettings(TrackTileEntity te) {}
+	protected void applySettings(TrackBlockEntity be) {}
 
 }

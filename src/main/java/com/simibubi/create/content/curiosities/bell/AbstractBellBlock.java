@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.bell;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +23,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> extends BellBlock implements ITE<TE> {
+public abstract class AbstractBellBlock<BE extends AbstractBellBlockEntity> extends BellBlock implements IBE<BE> {
 
 	public AbstractBellBlock(Properties properties) {
 		super(properties);
@@ -76,10 +76,10 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 	}
 
 	protected boolean ring(Level world, BlockPos pos, Direction direction, Player player) {
-		TE te = getTileEntity(world, pos);
+		BE be = getBlockEntity(world, pos);
 		if (world.isClientSide)
 			return true;
-		if (te == null || !te.ring(world, pos, direction))
+		if (be == null || !be.ring(world, pos, direction))
 			return false;
 		playSound(world, pos);
 		if (player != null)
@@ -109,13 +109,13 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 
 	@Nullable
 	public BlockEntity newBlockEntity(BlockPos p_152198_, BlockState p_152199_) {
-		return ITE.super.newBlockEntity(p_152198_, p_152199_);
+		return IBE.super.newBlockEntity(p_152198_, p_152199_);
 	}
 
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_152194_, BlockState p_152195_,
 		BlockEntityType<T> p_152196_) {
-		return ITE.super.getTicker(p_152194_, p_152195_, p_152196_);
+		return IBE.super.getTicker(p_152194_, p_152195_, p_152196_);
 	}
 
 	public abstract void playSound(Level world, BlockPos pos);

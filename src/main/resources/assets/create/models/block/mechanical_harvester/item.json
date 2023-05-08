@@ -1,161 +1,168 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"credit": "Made with Blockbench",
 	"parent": "create:block/block",
-    "textures": {
-        "harvester": "create:block/harvester",
-        "anvil": "minecraft:block/anvil",
-        "andesite_casing_short": "create:block/andesite_casing_short",
-		"particle": "create:block/andesite_casing_short"
-    },
-    "elements": [
-        {
-            "name": "Core",
-            "from": [ 0, 2, 0 ], 
-            "to": [ 16, 14, 2.9 ], 
-            "faces": {
-                "north": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 16 ] },
-                "east": { "texture": "#andesite_casing_short", "uv": [ 2, 0, 14, 3 ], "rotation": 270 },
-                "south": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 16 ] },
-                "west": { "texture": "#andesite_casing_short", "uv": [ 2, 0, 14, 3 ], "rotation": 90 },
-                "up": { "texture": "#andesite_casing_short", "uv": [ 0, 0, 16, 2.9 ], "rotation": 180 },
-                "down": { "texture": "#andesite_casing_short", "uv": [ 0, 0, 16, 2.9 ] }
-            }
-        },
-        {
-            "name": "Wheel",
-            "from": [ 1, 0, 3 ], 
-            "to": [ 1, 12, 15 ], 
-            "rotation": { "origin": [ 8, 6, 9 ], "axis": "x", "angle": -22.5 },
-            "faces": {
-                "east": { "texture": "#harvester", "uv": [ 0, 0, 12, 12 ] },
-                "west": { "texture": "#harvester", "uv": [ 0, 0, 12, 12 ] }
-            }
-        },
-        {
-            "name": "Trim",
-            "from": [ 0, 0, 11 ], 
-            "to": [ 16, 2, 12 ], 
-            "faces": {
-                "north": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] },
-                "east": { "texture": "#anvil", "uv": [ 0, 0, 1, 2 ] },
-                "south": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] },
-                "west": { "texture": "#anvil", "uv": [ 0, 0, 1, 2 ] },
-                "up": { "texture": "#anvil", "uv": [ 0, 0, 16, 1 ] },
-                "down": { "texture": "#anvil", "uv": [ 0, 0, 16, 1 ] }
-            }
-        },
-        {
-            "name": "Trim",
-            "from": [ 0, 10, 6 ], 
-            "to": [ 16, 12, 7 ], 
-            "faces": {
-                "north": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] },
-                "east": { "texture": "#anvil", "uv": [ 0, 0, 1, 2 ] },
-                "south": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] },
-                "west": { "texture": "#anvil", "uv": [ 0, 0, 1, 2 ] },
-                "up": { "texture": "#anvil", "uv": [ 0, 0, 16, 1 ] },
-                "down": { "texture": "#anvil", "uv": [ 0, 0, 16, 1 ] }
-            }
-        },
-        {
-            "name": "Trim",
-            "from": [ 0, 8, 13 ], 
-            "to": [ 16, 9, 15 ], 
-            "faces": {
-                "north": { "texture": "#anvil", "uv": [ 0, 9, 16, 10 ] },
-                "east": { "texture": "#anvil", "uv": [ 0, 0, 2, 1 ] },
-                "south": { "texture": "#anvil", "uv": [ 0, 0, 16, 1 ] },
-                "west": { "texture": "#anvil", "uv": [ 0, 0, 2, 1 ] },
-                "up": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] },
-                "down": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] }
-            }
-        },
-        {
-            "name": "Trim",
-            "from": [ 0, 3, 3 ], 
-            "to": [ 16, 4, 5 ], 
-            "faces": {
-                "north": { "texture": "#anvil", "uv": [ 0, 0, 16, 1 ] },
-                "east": { "texture": "#anvil", "uv": [ 0, 0, 2, 1 ] },
-                "south": { "texture": "#anvil", "uv": [ 0, 0, 16, 1 ] },
-                "west": { "texture": "#anvil", "uv": [ 0, 0, 2, 1 ] },
-                "up": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] },
-                "down": { "texture": "#anvil", "uv": [ 0, 0, 16, 2 ] }
-            }
-        },
-        {
-            "name": "Blade",
-            "from": [ 0, 6, 15 ], 
-            "to": [ 16, 8, 15 ], 
-            "faces": {
-                "north": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ], "rotation": 180 },
-                "south": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ], "rotation": 180 }
-            }
-        },
-        {
-            "name": "Wheel",
-            "from": [ 15, 0, 3 ], 
-            "to": [ 15, 12, 15 ], 
-            "rotation": { "origin": [ 8, 6, 9 ], "axis": "x", "angle": -22.5 },
-            "faces": {
-                "east": { "texture": "#harvester", "uv": [ 0, 0, 12, 12 ] },
-                "west": { "texture": "#harvester", "uv": [ 0, 0, 12, 12 ] }
-            }
-        },
-        {
-            "name": "Blade",
-            "from": [ 0, 4, 3 ], 
-            "to": [ 16, 6, 3 ], 
-            "faces": {
-                "north": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ] },
-                "south": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ] }
-            }
-        },
-        {
-            "name": "Blade",
-            "from": [ 0, 12, 7 ], 
-            "to": [ 16, 12, 9 ], 
-            "faces": {
-                "up": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ], "rotation": 180 },
-                "down": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ] }
-            }
-        },
-        {
-            "name": "Blade",
-            "from": [ 0, 0, 9 ], 
-            "to": [ 16, 0, 11 ], 
-            "faces": {
-                "up": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ] },
-                "down": { "texture": "#harvester", "uv": [ 0, 12, 16, 14 ], "rotation": 180 }
-            }
-        },
-        {
-            "name": "Attachment",
-            "from": [ 0.1, 7, 3 ], 
-            "to": [ 2, 10, 11 ], 
-            "rotation": { "origin": [ 0, 10, 3 ], "axis": "x", "angle": 22.5 },
-            "faces": {
-                "north": { "texture": "#andesite_casing_short", "uv": [ 0, 0, 1.9, 3 ] },
-                "east": { "texture": "#andesite_casing_short", "uv": [ 0, 0, 8, 3 ] },
-                "south": { "texture": "#andesite_casing_short", "uv": [ 0.1, 8, 2, 11 ] },
-                "west": { "texture": "#andesite_casing_short", "uv": [ 0, 0, 8, 3 ] },
-                "up": { "texture": "#andesite_casing_short", "uv": [ 0.1, 6, 2, 14 ] },
-                "down": { "texture": "#andesite_casing_short", "uv": [ 0.1, 6, 2, 14 ] }
-            }
-        },
-        {
-            "name": "Attachment",
-            "from": [ 14, 7, 3 ], 
-            "to": [ 15.9, 10, 11 ], 
-            "rotation": { "origin": [ 0, 10, 3 ], "axis": "x", "angle": 22.5 },
-            "faces": {
-                "north": { "texture": "#andesite_casing_short", "uv": [ 0, 0, 1.9, 3 ] },
-                "east": { "texture": "#andesite_casing_short", "uv": [ 0, 0, 8, 3 ] },
-                "south": { "texture": "#andesite_casing_short", "uv": [ 14, 8, 15.9, 11 ] },
-                "west": { "texture": "#andesite_casing_short", "uv": [ 0, 0, 8, 3 ] },
-                "up": { "texture": "#andesite_casing_short", "uv": [ 14, 6, 15.9, 14 ] },
-                "down": { "texture": "#andesite_casing_short", "uv": [ 14, 6, 15.9, 14 ] }
-            }
-        }
-    ]
+	"textures": {
+		"harvester": "create:block/harvester",
+		"anvil": "block/anvil",
+		"particle": "create:block/andesite_casing_short",
+		"andesite_casing_short": "create:block/andesite_casing_short"
+	},
+	"elements": [
+		{
+			"name": "Core",
+			"from": [0, 2, 0],
+			"to": [16, 14, 2.9],
+			"faces": {
+				"north": {"uv": [0, 4, 16, 16], "texture": "#andesite_casing_short"},
+				"east": {"uv": [2, 0, 14, 3], "rotation": 270, "texture": "#andesite_casing_short"},
+				"south": {"uv": [0, 4, 16, 16], "texture": "#andesite_casing_short"},
+				"west": {"uv": [2, 0, 14, 3], "rotation": 90, "texture": "#andesite_casing_short"},
+				"up": {"uv": [0, 0, 16, 2.9], "rotation": 180, "texture": "#andesite_casing_short"},
+				"down": {"uv": [0, 0, 16, 2.9], "texture": "#andesite_casing_short"}
+			}
+		},
+		{
+			"name": "Wheel",
+			"from": [1, 0, 3],
+			"to": [1, 12, 15],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 6, 9]},
+			"faces": {
+				"east": {"uv": [0, 0, 12, 12], "texture": "#harvester"},
+				"west": {"uv": [0, 0, 12, 12], "texture": "#harvester"}
+			}
+		},
+		{
+			"name": "Trim",
+			"from": [0, 0, 11],
+			"to": [16, 2, 12],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#anvil"},
+				"east": {"uv": [0, 0, 1, 2], "texture": "#anvil"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#anvil"},
+				"west": {"uv": [0, 0, 1, 2], "texture": "#anvil"},
+				"up": {"uv": [0, 0, 16, 1], "texture": "#anvil"},
+				"down": {"uv": [0, 0, 16, 1], "texture": "#anvil"}
+			}
+		},
+		{
+			"name": "Trim",
+			"from": [0, 10, 6],
+			"to": [16, 12, 7],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#anvil"},
+				"east": {"uv": [0, 0, 1, 2], "texture": "#anvil"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#anvil"},
+				"west": {"uv": [0, 0, 1, 2], "texture": "#anvil"},
+				"up": {"uv": [0, 0, 16, 1], "texture": "#anvil"},
+				"down": {"uv": [0, 0, 16, 1], "texture": "#anvil"}
+			}
+		},
+		{
+			"name": "Trim",
+			"from": [0, 8, 13],
+			"to": [16, 9, 15],
+			"faces": {
+				"north": {"uv": [0, 9, 16, 10], "texture": "#anvil"},
+				"east": {"uv": [0, 0, 2, 1], "texture": "#anvil"},
+				"south": {"uv": [0, 0, 16, 1], "texture": "#anvil"},
+				"west": {"uv": [0, 0, 2, 1], "texture": "#anvil"},
+				"up": {"uv": [0, 0, 16, 2], "texture": "#anvil"},
+				"down": {"uv": [0, 0, 16, 2], "texture": "#anvil"}
+			}
+		},
+		{
+			"name": "Trim",
+			"from": [0, 3, 3],
+			"to": [16, 4, 5],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 1], "texture": "#anvil"},
+				"east": {"uv": [0, 0, 2, 1], "texture": "#anvil"},
+				"south": {"uv": [0, 0, 16, 1], "texture": "#anvil"},
+				"west": {"uv": [0, 0, 2, 1], "texture": "#anvil"},
+				"up": {"uv": [0, 0, 16, 2], "texture": "#anvil"},
+				"down": {"uv": [0, 0, 16, 2], "texture": "#anvil"}
+			}
+		},
+		{
+			"name": "Blade",
+			"from": [0, 6, 15],
+			"to": [16, 8, 15],
+			"faces": {
+				"north": {"uv": [0, 12, 16, 14], "rotation": 180, "texture": "#harvester"},
+				"south": {"uv": [0, 12, 16, 14], "rotation": 180, "texture": "#harvester"}
+			}
+		},
+		{
+			"name": "Wheel",
+			"from": [15, 0, 3],
+			"to": [15, 12, 15],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 6, 9]},
+			"faces": {
+				"east": {"uv": [0, 0, 12, 12], "texture": "#harvester"},
+				"west": {"uv": [0, 0, 12, 12], "texture": "#harvester"}
+			}
+		},
+		{
+			"name": "Blade",
+			"from": [0, 4, 3],
+			"to": [16, 6, 3],
+			"faces": {
+				"north": {"uv": [0, 12, 16, 14], "texture": "#harvester"},
+				"south": {"uv": [0, 12, 16, 14], "texture": "#harvester"}
+			}
+		},
+		{
+			"name": "Blade",
+			"from": [0, 12, 7],
+			"to": [16, 12, 9],
+			"faces": {
+				"up": {"uv": [0, 12, 16, 14], "rotation": 180, "texture": "#harvester"},
+				"down": {"uv": [0, 12, 16, 14], "texture": "#harvester"}
+			}
+		},
+		{
+			"name": "Blade",
+			"from": [0, 0, 9],
+			"to": [16, 0, 11],
+			"faces": {
+				"up": {"uv": [0, 12, 16, 14], "texture": "#harvester"},
+				"down": {"uv": [0, 12, 16, 14], "rotation": 180, "texture": "#harvester"}
+			}
+		},
+		{
+			"name": "Attachment",
+			"from": [0.1, 7, 3],
+			"to": [2, 10, 11],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 10, 3]},
+			"faces": {
+				"north": {"uv": [0, 0, 1.9, 3], "texture": "#andesite_casing_short"},
+				"east": {"uv": [0, 0, 8, 3], "texture": "#andesite_casing_short"},
+				"south": {"uv": [0.1, 8, 2, 11], "texture": "#andesite_casing_short"},
+				"west": {"uv": [1, 0, 9, 3], "texture": "#andesite_casing_short"},
+				"up": {"uv": [0.1, 6, 2, 14], "texture": "#andesite_casing_short"},
+				"down": {"uv": [0.1, 6, 2, 14], "texture": "#andesite_casing_short"}
+			}
+		},
+		{
+			"name": "Attachment",
+			"from": [14, 7, 3],
+			"to": [15.9, 10, 11],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 10, 3]},
+			"faces": {
+				"north": {"uv": [0, 0, 1.9, 3], "texture": "#andesite_casing_short"},
+				"east": {"uv": [1, 0, 9, 3], "texture": "#andesite_casing_short"},
+				"south": {"uv": [14, 8, 15.9, 11], "texture": "#andesite_casing_short"},
+				"west": {"uv": [0, 0, 8, 3], "texture": "#andesite_casing_short"},
+				"up": {"uv": [14, 6, 15.9, 14], "texture": "#andesite_casing_short"},
+				"down": {"uv": [14, 6, 15.9, 14], "texture": "#andesite_casing_short"}
+			}
+		}
+	],
+	"display": {
+		"fixed": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 0.5, -4],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }

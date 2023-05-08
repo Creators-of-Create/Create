@@ -2,12 +2,12 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class GlassFluidPipeBlock extends AxisPipeBlock implements ITE<StraightPipeTileEntity>, SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
+public class GlassFluidPipeBlock extends AxisPipeBlock implements IBE<StraightPipeBlockEntity>, SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty ALT = BooleanProperty.create("alt");
 
@@ -74,8 +74,8 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements ITE<StraightPi
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState(), te);
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
+		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState(), be);
 	}
 
 	@Override
@@ -84,13 +84,13 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements ITE<StraightPi
 	}
 
 	@Override
-	public Class<StraightPipeTileEntity> getTileEntityClass() {
-		return StraightPipeTileEntity.class;
+	public Class<StraightPipeBlockEntity> getBlockEntityClass() {
+		return StraightPipeBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends StraightPipeTileEntity> getTileEntityType() {
-		return AllTileEntities.GLASS_FLUID_PIPE.get();
+	public BlockEntityType<? extends StraightPipeBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.GLASS_FLUID_PIPE.get();
 	}
 
 }

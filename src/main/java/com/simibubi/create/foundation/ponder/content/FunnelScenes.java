@@ -4,7 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
+import com.simibubi.create.content.logistics.block.funnel.FunnelBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -384,10 +384,11 @@ public class FunnelScenes {
 		scene.world.flapFunnel(andesiteFunnel, true);
 		scene.idle(60);
 
+		Vec3 filter = util.vector.topOf(brassFunnel);
 		scene.overlay.showText(60)
 			.text("Brass Funnels can extract up to a full stack.")
 			.attachKeyFrame()
-			.pointAt(util.vector.topOf(brassFunnel))
+			.pointAt(filter)
 			.placeNearTarget();
 		scene.idle(10);
 		scene.world.createItemOnBeltLike(brassFunnel.below()
@@ -395,15 +396,14 @@ public class FunnelScenes {
 		scene.world.flapFunnel(brassFunnel, true);
 		scene.idle(60);
 
-		AABB filterSlot = new AABB(brassFunnel).inflate(-.35, -.35, -.35)
-			.move(0, 0.2, 0);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, filterSlot, filterSlot, 80);
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(brassFunnel), Pointing.DOWN).scroll(), 60);
+		filter = filter.add(0, -5 / 16f, -1.5 / 16f);
+		scene.overlay.showFilterSlotInput(filter, Direction.NORTH, 80);
+		scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).rightClick(), 60);
 		scene.idle(10);
 		scene.overlay.showText(80)
-			.text("Scrolling on the filter slot allows for precise control over the extracted stack size.")
+			.text("The value panel allows for precise control over the extracted stack size.")
 			.attachKeyFrame()
-			.pointAt(filterSlot.getCenter())
+			.pointAt(filter)
 			.placeNearTarget();
 		scene.idle(90);
 
@@ -439,17 +439,16 @@ public class FunnelScenes {
 			});
 
 			if (i == 2) {
-				scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, filterSlot, filterSlot, 80);
-				scene.overlay
-					.showControls(new InputWindowElement(util.vector.topOf(brassFunnel), Pointing.DOWN).rightClick()
-						.withItem(emerald), 60);
+				scene.overlay.showFilterSlotInput(filter, Direction.NORTH, 40);
+				scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).rightClick()
+					.withItem(emerald), 60);
 				scene.idle(10);
 				scene.overlay.showText(80)
 					.text("Using items on the filter slot will restrict the funnel to only transfer matching stacks.")
 					.attachKeyFrame()
-					.pointAt(filterSlot.getCenter())
+					.pointAt(filter)
 					.placeNearTarget();
-				scene.world.setFilterData(util.select.position(brassFunnel), FunnelTileEntity.class, emerald);
+				scene.world.setFilterData(util.select.position(brassFunnel), FunnelBlockEntity.class, emerald);
 			} else
 				scene.idle(10);
 

@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.config;
 
-import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
 import com.simibubi.create.foundation.utility.ContraptionData;
 
 public class CKinetics extends ConfigBase {
@@ -8,9 +7,6 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool disableStress = b(false, "disableStress", Comments.disableStress);
 	public final ConfigInt maxBeltLength = i(20, 5, "maxBeltLength", Comments.maxBeltLength);
 	public final ConfigInt crushingDamage = i(4, 0, "crushingDamage", Comments.crushingDamage);
-	public final ConfigInt maxMotorSpeed = i(256, 64, "maxMotorSpeed", Comments.rpm, Comments.maxMotorSpeed, ConfigAnnotations.RequiresRestart.BOTH.asComment());
-	public final ConfigInt waterWheelBaseSpeed = i(4, 1, "waterWheelBaseSpeed", Comments.rpm, Comments.waterWheelBaseSpeed);
-	public final ConfigInt waterWheelFlowSpeed = i(4, 1, "waterWheelFlowSpeed", Comments.rpm, Comments.waterWheelFlowSpeed);
 	public final ConfigInt maxRotationSpeed = i(256, 64, "maxRotationSpeed", Comments.rpm, Comments.maxRotationSpeed);
 	public final ConfigEnum<DeployerAggroSetting> ignoreDeployerAttacks =
 		e(DeployerAggroSetting.CREEPERS, "ignoreDeployerAttacks", Comments.ignoreDeployerAttacks);
@@ -37,6 +33,7 @@ public class CKinetics extends ConfigBase {
 	public final ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public final ConfigInt maxRopeLength = i(256, 1, "maxRopeLength", Comments.maxRopeLength);
 	public final ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
+	public final ConfigInt rollerFillDepth = i(12, 1, "rollerFillDepth", Comments.rollerFillDepth);
 	public final ConfigBool survivalContraptionPickup = b(true, "survivalContraptionPickup", Comments.survivalContraptionPickup);
 	public final ConfigEnum<ContraptionMovementSetting> spawnerMovement =
 		e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
@@ -52,16 +49,16 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool minecartContraptionInContainers =
 		b(false, "minecartContraptionInContainers", Comments.minecartContraptionInContainers);
 
-	public final CStress stressValues = nested(1, CStress::new, Comments.stress);
-
-	public final ConfigGroup state = group(1, "stats", Comments.stats);
+	public final ConfigGroup stats = group(1, "stats", Comments.stats);
 	public final ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
 	public final ConfigFloat fastSpeed = f(100, 0, 65535, "fastSpeed", Comments.rpm, Comments.fastSpeed);
 	public final ConfigFloat mediumStressImpact =
 		f(4, 0, 4096, "mediumStressImpact", Comments.su, Comments.mediumStressImpact);
 	public final ConfigFloat highStressImpact = f(8, 0, 65535, "highStressImpact", Comments.su, Comments.highStressImpact);
-	public final ConfigFloat mediumCapacity = f(128, 0, 4096, "mediumCapacity", Comments.su, Comments.mediumCapacity);
+	public final ConfigFloat mediumCapacity = f(256, 0, 4096, "mediumCapacity", Comments.su, Comments.mediumCapacity);
 	public final ConfigFloat highCapacity = f(1024, 0, 65535, "highCapacity", Comments.su, Comments.highCapacity);
+
+	public final CStress stressValues = nested(1, CStress::new, Comments.stress);
 
 	@Override
 	public String getName() {
@@ -71,8 +68,7 @@ public class CKinetics extends ConfigBase {
 	private static class Comments {
 		static String maxBeltLength = "Maximum length in blocks of mechanical belts.";
 		static String crushingDamage = "Damage dealt by active Crushing Wheels.";
-		static String maxMotorSpeed = "Maximum allowed speed of a configurable motor.";
-		static String maxRotationSpeed = "Maximum allowed rotation speed for any Kinetic Tile.";
+		static String maxRotationSpeed = "Maximum allowed rotation speed for any Kinetic Block.";
 		static String fanPushDistance = "Maximum distance in blocks Fans can push entities.";
 		static String fanPullDistance = "Maximum distance in blocks from where Fans can pull entities.";
 		static String fanBlockCheckRate = "Game ticks between Fans checking for anything blocking their air flow.";
@@ -89,6 +85,7 @@ public class CKinetics extends ConfigBase {
 		static String maxPistonPoles = "Maximum amount of extension poles behind a Mechanical Piston.";
 		static String maxRopeLength = "Max length of rope available off a Rope Pulley.";
 		static String maxCartCouplingLength = "Maximum allowed distance of two coupled minecarts.";
+		static String rollerFillDepth = "Maximum depth of blocks filled in using a Mechanical Roller.";
 		static String moveItemsToStorage =
 			"Whether items mined or harvested by contraptions should be placed in their mounted storage.";
 		static String harvestPartiallyGrown = "Whether harvesters should break crops that aren't fully grown.";
@@ -105,9 +102,6 @@ public class CKinetics extends ConfigBase {
 		static String highCapacity = "Minimum added Capacity by sources to be considered 'high'";
 		static String stress = "Fine tune the kinetic stats of individual components";
 		static String ignoreDeployerAttacks = "Select what mobs should ignore Deployers when attacked by them.";
-		static String waterWheelBaseSpeed = "Added rotation speed by a water wheel when at least one flow is present.";
-		static String waterWheelFlowSpeed =
-			"Rotation speed gained by a water wheel for each side with running fluids. (halved if not against blades)";
 		static String disableStress = "Disable the Stress mechanic altogether.";
 		static String kineticValidationFrequency =
 			"Game ticks between Kinetic Blocks checking whether their source is still valid.";

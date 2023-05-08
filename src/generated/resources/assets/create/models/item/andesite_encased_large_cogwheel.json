@@ -3,6 +3,7 @@
   "textures": {
     "1": "minecraft:block/stripped_spruce_log_top",
     "casing": "create:block/andesite_casing",
+    "particle": "create:block/andesite_casing",
     "side": "create:block/andesite_encased_cogwheel_side_connected"
   }
 }

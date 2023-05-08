@@ -1,10 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
-import com.simibubi.create.content.logistics.block.vault.ItemVaultTileEntity;
+import com.simibubi.create.content.logistics.block.vault.ItemVaultBlockEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.NonNullList;
@@ -15,11 +16,13 @@ import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class MountedStorage {
 
@@ -29,46 +32,66 @@ public class MountedStorage {
 	boolean noFuel;
 	boolean valid;
 
-	private BlockEntity te;
+	private BlockEntity blockEntity;
 
-	public static boolean canUseAsStorage(BlockEntity te) {
-		if (te == null)
+	public static boolean canUseAsStorage(BlockEntity be) {
+		if (be == null)
 			return false;
-		if (te instanceof MechanicalCrafterTileEntity)
+		if (be instanceof MechanicalCrafterBlockEntity)
 			return false;
-		if (AllTileEntities.CREATIVE_CRATE.is(te))
+		if (AllBlockEntityTypes.CREATIVE_CRATE.is(be))
 			return true;
-		if (te instanceof ShulkerBoxBlockEntity)
+		if (be instanceof ShulkerBoxBlockEntity)
 			return true;
-		if (te instanceof ChestBlockEntity)
+		if (be instanceof ChestBlockEntity)
 			return true;
-		if (te instanceof BarrelBlockEntity)
+		if (be instanceof BarrelBlockEntity)
 			return true;
-		if (te instanceof ItemVaultTileEntity)
+		if (be instanceof ItemVaultBlockEntity)
 			return true;
 
-		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-		IItemHandler handler = capability.orElse(null);
-		return handler instanceof ItemStackHandler && !(handler instanceof ProcessingInventory);
+		try {
+			LazyOptional<IItemHandler> capability = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+			IItemHandler handler = capability.orElse(null);
+			if (handler instanceof ItemStackHandler)
+				return !(handler instanceof ProcessingInventory);
+			return canUseModdedInventory(be, handler);
+			
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
-	public MountedStorage(BlockEntity te) {
-		this.te = te;
+	public static boolean canUseModdedInventory(BlockEntity be, IItemHandler handler) {
+		if (!(handler instanceof IItemHandlerModifiable validItemHandler))
+			return false;
+		BlockState blockState = be.getBlockState();
+		if (AllBlockTags.CONTRAPTION_INVENTORY_DENY.matches(blockState))
+			return false;
+
+		// There doesn't appear to be much of a standard for tagging chests/barrels
+		String blockId = ForgeRegistries.BLOCKS.getKey(blockState.getBlock())
+			.getPath();
+		return blockId.endsWith("_chest") || blockId.endsWith("_barrel");
+	}
+
+	public MountedStorage(BlockEntity be) {
+		this.blockEntity = be;
 		handler = dummyHandler;
-		noFuel = te instanceof ItemVaultTileEntity;
+		noFuel = be instanceof ItemVaultBlockEntity;
 	}
 
 	public void removeStorageFromWorld() {
 		valid = false;
-		if (te == null)
+		if (blockEntity == null)
 			return;
 
-		if (te instanceof ChestBlockEntity) {
-			CompoundTag tag = te.saveWithFullMetadata();
+		if (blockEntity instanceof ChestBlockEntity) {
+			CompoundTag tag = blockEntity.saveWithFullMetadata();
 			if (tag.contains("LootTable", 8))
 				return;
 
-			handler = new ItemStackHandler(((ChestBlockEntity) te).getContainerSize());
+			handler = new ItemStackHandler(((ChestBlockEntity) blockEntity).getContainerSize());
 			NonNullList<ItemStack> items = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
 			ContainerHelper.loadAllItems(tag, items);
 			for (int i = 0; i < items.size(); i++)
@@ -77,29 +100,29 @@ public class MountedStorage {
 			return;
 		}
 
-		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		IItemHandler beHandler = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			.orElse(dummyHandler);
-		if (teHandler == dummyHandler)
+		if (beHandler == dummyHandler)
 			return;
 
 		// multiblock vaults need to provide individual invs
-		if (te instanceof ItemVaultTileEntity) {
-			handler = ((ItemVaultTileEntity) te).getInventoryOfBlock();
+		if (blockEntity instanceof ItemVaultBlockEntity) {
+			handler = ((ItemVaultBlockEntity) blockEntity).getInventoryOfBlock();
 			valid = true;
 			return;
 		}
 
-		// te uses ItemStackHandler
-		if (teHandler instanceof ItemStackHandler) {
-			handler = (ItemStackHandler) teHandler;
+		// be uses ItemStackHandler
+		if (beHandler instanceof ItemStackHandler) {
+			handler = (ItemStackHandler) beHandler;
 			valid = true;
 			return;
 		}
 
 		// serialization not accessible -> fill into a serializable handler
-		if (teHandler instanceof IItemHandlerModifiable) {
-			IItemHandlerModifiable inv = (IItemHandlerModifiable) teHandler;
-			handler = new ItemStackHandler(teHandler.getSlots());
+		if (beHandler instanceof IItemHandlerModifiable) {
+			IItemHandlerModifiable inv = (IItemHandlerModifiable) beHandler;
+			handler = new ItemStackHandler(beHandler.getSlots());
 			for (int slot = 0; slot < handler.getSlots(); slot++) {
 				handler.setStackInSlot(slot, inv.getStackInSlot(slot));
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
@@ -110,28 +133,28 @@ public class MountedStorage {
 
 	}
 
-	public void addStorageToWorld(BlockEntity te) {
+	public void addStorageToWorld(BlockEntity be) {
 		// FIXME: More dynamic mounted storage in .4
 		if (handler instanceof BottomlessItemHandler)
 			return;
 
-		if (te instanceof ChestBlockEntity) {
-			CompoundTag tag = te.saveWithFullMetadata();
+		if (be instanceof ChestBlockEntity) {
+			CompoundTag tag = be.saveWithFullMetadata();
 			tag.remove("Items");
 			NonNullList<ItemStack> items = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
 			for (int i = 0; i < items.size(); i++)
 				items.set(i, handler.getStackInSlot(i));
 			ContainerHelper.saveAllItems(tag, items);
-			te.load(tag);
+			be.load(tag);
 			return;
 		}
 
-		if (te instanceof ItemVaultTileEntity) {
-			((ItemVaultTileEntity) te).applyInventoryToBlock(handler);
+		if (be instanceof ItemVaultBlockEntity) {
+			((ItemVaultBlockEntity) be).applyInventoryToBlock(handler);
 			return;
 		}
 
-		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> capability = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 		IItemHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof IItemHandlerModifiable))
 			return;
@@ -182,7 +205,7 @@ public class MountedStorage {
 	public boolean isValid() {
 		return valid;
 	}
-	
+
 	public boolean canUseForFuel() {
 		return !noFuel;
 	}

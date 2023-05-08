@@ -28,35 +28,35 @@ public enum AllPaletteStoneTypes {
 	DEEPSLATE(VANILLA_RANGE, r -> () -> Blocks.DEEPSLATE),
 	TUFF(VANILLA_RANGE, r -> () -> Blocks.TUFF),
 
-	ASURINE(STANDARD_RANGE, r -> r.paletteStoneBlock("asurine", () -> Blocks.DEEPSLATE, true)
+	ASURINE(STANDARD_RANGE, r -> r.paletteStoneBlock("asurine", () -> Blocks.DEEPSLATE, true, true)
 		.properties(p -> p.destroyTime(1.25f)
 			.color(MaterialColor.COLOR_BLUE))
 		.register()),
 
-	CRIMSITE(STANDARD_RANGE, r -> r.paletteStoneBlock("crimsite", () -> Blocks.DEEPSLATE, true)
+	CRIMSITE(STANDARD_RANGE, r -> r.paletteStoneBlock("crimsite", () -> Blocks.DEEPSLATE, true, true)
 		.properties(p -> p.destroyTime(1.25f)
 			.color(MaterialColor.COLOR_RED))
 		.register()),
 
-	LIMESTONE(STANDARD_RANGE, r -> r.paletteStoneBlock("limestone", () -> Blocks.SANDSTONE, true)
+	LIMESTONE(STANDARD_RANGE, r -> r.paletteStoneBlock("limestone", () -> Blocks.SANDSTONE, true, false)
 		.properties(p -> p.destroyTime(1.25f)
 			.color(MaterialColor.SAND))
 		.register()),
 
-	OCHRUM(STANDARD_RANGE, r -> r.paletteStoneBlock("ochrum", () -> Blocks.CALCITE, true)
+	OCHRUM(STANDARD_RANGE, r -> r.paletteStoneBlock("ochrum", () -> Blocks.CALCITE, true, true)
 		.properties(p -> p.destroyTime(1.25f)
 			.color(MaterialColor.TERRACOTTA_YELLOW))
 		.register()),
 
-	SCORIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scoria", () -> Blocks.BLACKSTONE, true)
+	SCORIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scoria", () -> Blocks.BLACKSTONE, true, false)
 		.properties(p -> p.color(MaterialColor.COLOR_BROWN))
 		.register()),
 
-	SCORCHIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scorchia", () -> Blocks.BLACKSTONE, true)
+	SCORCHIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scorchia", () -> Blocks.BLACKSTONE, true, false)
 		.properties(p -> p.color(MaterialColor.TERRACOTTA_GRAY))
 		.register()),
 
-	VERIDIUM(STANDARD_RANGE, r -> r.paletteStoneBlock("veridium", () -> Blocks.TUFF, true)
+	VERIDIUM(STANDARD_RANGE, r -> r.paletteStoneBlock("veridium", () -> Blocks.TUFF, true, true)
 		.properties(p -> p.destroyTime(1.25f)
 			.color(MaterialColor.WARPED_NYLIUM))
 		.register())

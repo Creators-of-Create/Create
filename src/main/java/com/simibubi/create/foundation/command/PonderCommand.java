@@ -47,7 +47,7 @@ public class PonderCommand {
 			if (player instanceof FakePlayer)
 				continue;
 
-			AllPackets.channel.send(
+			AllPackets.getChannel().send(
 					PacketDistributor.PLAYER.with(() -> player),
 					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.openPonder.name(), sceneId));
 		}

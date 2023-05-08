@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.math.Quaternion;
-import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
@@ -23,12 +23,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
+	@Override
+	public ItemStack canBeDisabledVia(MovementContext context) {
+		return null;
+	}
+	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
@@ -37,7 +43,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 			return;
 
 		Direction facing = context.state.getValue(BlockStateProperties.FACING);
-		PartialModel top = AllBlockPartials.BEARING_TOP;
+		PartialModel top = AllPartialModels.BEARING_TOP;
 		SuperByteBuffer superBuffer = CachedBufferer.partial(top, context.state);
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 

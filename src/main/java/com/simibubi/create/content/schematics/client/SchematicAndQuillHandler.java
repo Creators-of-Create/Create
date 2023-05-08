@@ -259,7 +259,7 @@ public class SchematicAndQuillHandler {
 		try {
 			if (!ClientSchematicLoader.validateSizeLimitation(Files.size(path)))
 				return;
-			AllPackets.channel.sendToServer(new InstantSchematicPacket(filename, origin, bounds));
+			AllPackets.getChannel().sendToServer(new InstantSchematicPacket(filename, origin, bounds));
 
 		} catch (IOException e) {
 			Create.LOGGER.error("Error finding Schematic file: " + path.toString());

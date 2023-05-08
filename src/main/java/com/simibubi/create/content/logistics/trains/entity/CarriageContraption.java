@@ -126,7 +126,7 @@ public class CarriageContraption extends Contraption {
 		if (!blocks.containsKey(controlsPos))
 			return false;
 		StructureBlockInfo info = blocks.get(controlsPos);
-		if (!AllBlocks.CONTROLS.has(info.state))
+		if (!AllBlocks.TRAIN_CONTROLS.has(info.state))
 			return false;
 		return info.state.getValue(ControlsBlock.FACING) == direction.getOpposite();
 	}
@@ -173,7 +173,7 @@ public class CarriageContraption extends Contraption {
 			&& blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL) != HeatLevel.NONE)
 			assembledBlazeBurners.add(toLocalPos(pos));
 
-		if (AllBlocks.CONTROLS.has(blockState)) {
+		if (AllBlocks.TRAIN_CONTROLS.has(blockState)) {
 			Direction facing = blockState.getValue(ControlsBlock.FACING);
 			if (facing.getAxis() != assemblyDirection.getAxis())
 				sidewaysControls = true;
@@ -263,17 +263,17 @@ public class CarriageContraption extends Contraption {
 		return secondBogeyPos;
 	}
 
-	private Collection<BlockEntity> specialRenderedTEsOutsidePortal = new ArrayList<>();
+	private Collection<BlockEntity> specialRenderedBEsOutsidePortal = new ArrayList<>();
 
 	@Override
 	public Collection<StructureBlockInfo> getRenderedBlocks() {
 		if (notInPortal())
 			return super.getRenderedBlocks();
 
-		specialRenderedTEsOutsidePortal = new ArrayList<>();
-		specialRenderedTileEntities.stream()
-			.filter(te -> !isHiddenInPortal(te.getBlockPos()))
-			.forEach(specialRenderedTEsOutsidePortal::add);
+		specialRenderedBEsOutsidePortal = new ArrayList<>();
+		specialRenderedBlockEntities.stream()
+			.filter(be -> !isHiddenInPortal(be.getBlockPos()))
+			.forEach(specialRenderedBEsOutsidePortal::add);
 
 		Collection<StructureBlockInfo> values = new ArrayList<>();
 		for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
@@ -290,7 +290,7 @@ public class CarriageContraption extends Contraption {
 	public Collection<BlockEntity> getSpecialRenderedTEs() {
 		if (notInPortal())
 			return super.getSpecialRenderedTEs();
-		return specialRenderedTEsOutsidePortal;
+		return specialRenderedBEsOutsidePortal;
 	}
 
 	@Override

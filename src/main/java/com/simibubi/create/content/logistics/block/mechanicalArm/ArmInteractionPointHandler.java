@@ -96,7 +96,7 @@ public class ArmInteractionPointHandler {
 		for (Iterator<ArmInteractionPoint> iterator = currentSelection.iterator(); iterator.hasNext();) {
 			ArmInteractionPoint point = iterator.next();
 			if (point.getPos()
-				.closerThan(pos, ArmTileEntity.getRange()))
+				.closerThan(pos, ArmBlockEntity.getRange()))
 				continue;
 			iterator.remove();
 			removed++;
@@ -124,7 +124,7 @@ public class ArmInteractionPointHandler {
 					.sendStatus(player);
 		}
 
-		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));
+		AllPackets.getChannel().sendToServer(new ArmPlacementPacket(currentSelection, pos));
 		currentSelection.clear();
 		currentItem = null;
 	}
@@ -163,8 +163,8 @@ public class ArmInteractionPointHandler {
 		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		BlockPos pos = result.getBlockPos();
 
-		BlockEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
-		if (!(te instanceof ArmTileEntity)) {
+		BlockEntity be = Minecraft.getInstance().level.getBlockEntity(pos);
+		if (!(be instanceof ArmBlockEntity)) {
 			lastBlockPos = -1;
 			currentSelection.clear();
 			return;
@@ -172,7 +172,7 @@ public class ArmInteractionPointHandler {
 
 		if (lastBlockPos == -1 || lastBlockPos != pos.asLong()) {
 			currentSelection.clear();
-			ArmTileEntity arm = (ArmTileEntity) te;
+			ArmBlockEntity arm = (ArmBlockEntity) be;
 			arm.inputs.forEach(ArmInteractionPointHandler::put);
 			arm.outputs.forEach(ArmInteractionPointHandler::put);
 			lastBlockPos = pos.asLong();

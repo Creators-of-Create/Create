@@ -8,12 +8,12 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
 import com.simibubi.create.content.logistics.trains.management.display.GlobalTrainDisplayData;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
@@ -91,7 +91,7 @@ public class StationSummaryDisplaySource extends DisplaySource {
 			});
 
 		if (list.size() > 0)
-			context.te()
+			context.blockEntity()
 				.award(AllAdvancements.DISPLAY_BOARD);
 
 		int toPad = stats.maxRows() - list.size();
@@ -102,7 +102,7 @@ public class StationSummaryDisplaySource extends DisplaySource {
 	}
 
 	@Override
-	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayTileEntity flapDisplay,
+	public void loadFlapDisplayLayout(DisplayLinkContext context, FlapDisplayBlockEntity flapDisplay,
 		FlapDisplayLayout layout) {
 		CompoundTag conf = context.sourceConfig();
 		int columnWidth = conf.getInt("NameColumn");
@@ -172,7 +172,7 @@ public class StationSummaryDisplaySource extends DisplaySource {
 
 		if (conf.contains("Filter"))
 			return;
-		if (!(context.getSourceTE() instanceof StationTileEntity stationTe))
+		if (!(context.getSourceBlockEntity() instanceof StationBlockEntity stationTe))
 			return;
 		GlobalStation station = stationTe.getStation();
 		if (station == null)

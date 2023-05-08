@@ -1,0 +1,34 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "create:block/copper_door_side",
+		"2": "create:block/copper_door_top",
+		"3": "create:block/copper_door_bottom",
+		"particle": "create:block/copper_casing"
+	},
+	"elements": [
+		{
+			"from": [0, 16, 0],
+			"to": [3, 32, 8],
+			"faces": {
+				"north": {"uv": [0, 4, 16, 7], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [0, 0, 8, 16], "texture": "#2"},
+				"south": {"uv": [0, 4, 16, 7], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [8, 0, 16, 16], "texture": "#2"},
+				"up": {"uv": [8, 0, 16, 3], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 0, 0],
+			"to": [3, 16, 8],
+			"faces": {
+				"north": {"uv": [16, 4, 0, 7], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [0, 0, 8, 16], "texture": "#3"},
+				"south": {"uv": [16, 4, 0, 7], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [8, 0, 16, 16], "texture": "#3"},
+				"down": {"uv": [8, 8, 16, 11], "rotation": 270, "texture": "#0"}
+			}
+		}
+	]
+}

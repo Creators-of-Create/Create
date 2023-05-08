@@ -51,8 +51,8 @@ public class TrainCargoManager extends MountedStorageManager {
 	}
 
 	@Override
-	public void read(CompoundTag nbt, Map<BlockPos, BlockEntity> presentTileEntities, boolean clientPacket) {
-		super.read(nbt, presentTileEntities, clientPacket);
+	public void read(CompoundTag nbt, Map<BlockPos, BlockEntity> presentBlockEntities, boolean clientPacket) {
+		super.read(nbt, presentBlockEntities, clientPacket);
 		ticksSinceLastExchange = nbt.getInt("TicksSinceLastExchange");
 	}
 

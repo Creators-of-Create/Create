@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,15 +16,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class FlywheelBlock extends RotatedPillarKineticBlock implements ITE<FlywheelTileEntity> {
+public class FlywheelBlock extends RotatedPillarKineticBlock implements IBE<FlywheelBlockEntity> {
 
 	public FlywheelBlock(Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public Class<FlywheelTileEntity> getTileEntityClass() {
-		return FlywheelTileEntity.class;
+	public Class<FlywheelBlockEntity> getBlockEntityClass() {
+		return FlywheelBlockEntity.class;
 	}
 	
 	@Override
@@ -38,8 +38,8 @@ public class FlywheelBlock extends RotatedPillarKineticBlock implements ITE<Flyw
 	}
 
 	@Override
-	public BlockEntityType<? extends FlywheelTileEntity> getTileEntityType() {
-		return AllTileEntities.FLYWHEEL.get();
+	public BlockEntityType<? extends FlywheelBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.FLYWHEEL.get();
 	}
 	
 	@Override

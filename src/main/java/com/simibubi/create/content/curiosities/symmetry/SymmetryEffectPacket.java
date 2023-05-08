@@ -2,7 +2,6 @@ package com.simibubi.create.content.curiosities.symmetry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -43,14 +42,14 @@ public class SymmetryEffectPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> ctx) {
-		ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			if (Minecraft.getInstance().player.position().distanceTo(Vec3.atLowerCornerOf(mirror)) > 100)
 				return;
 			for (BlockPos to : positions)
 				SymmetryHandler.drawEffect(mirror, to);
 		}));
-		ctx.get().setPacketHandled(true);
+		return true;
 	}
 
 }

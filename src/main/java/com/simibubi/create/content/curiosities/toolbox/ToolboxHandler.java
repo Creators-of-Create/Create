@@ -24,17 +24,17 @@ import net.minecraftforge.network.PacketDistributor;
 
 public class ToolboxHandler {
 
-	public static final WorldAttached<WeakHashMap<BlockPos, ToolboxTileEntity>> toolboxes =
+	public static final WorldAttached<WeakHashMap<BlockPos, ToolboxBlockEntity>> toolboxes =
 		new WorldAttached<>(w -> new WeakHashMap<>());
 
-	public static void onLoad(ToolboxTileEntity te) {
-		toolboxes.get(te.getLevel())
-			.put(te.getBlockPos(), te);
+	public static void onLoad(ToolboxBlockEntity be) {
+		toolboxes.get(be.getLevel())
+			.put(be.getBlockPos(), be);
 	}
 
-	public static void onUnload(ToolboxTileEntity te) {
-		toolboxes.get(te.getLevel())
-			.remove(te.getBlockPos());
+	public static void onUnload(ToolboxBlockEntity be) {
+		toolboxes.get(be.getLevel())
+			.remove(be.getBlockPos());
 	}
 
 	static int validationTimer = 20;
@@ -76,8 +76,8 @@ public class ToolboxHandler {
 			}
 
 			BlockEntity prevBlockEntity = world.getBlockEntity(pos);
-			if (prevBlockEntity instanceof ToolboxTileEntity)
-				((ToolboxTileEntity) prevBlockEntity).connectPlayer(slot, player, i);
+			if (prevBlockEntity instanceof ToolboxBlockEntity)
+				((ToolboxBlockEntity) prevBlockEntity).connectPlayer(slot, player, i);
 		}
 
 		if (sendData)
@@ -97,11 +97,11 @@ public class ToolboxHandler {
 	}
 
 	public static void syncData(Player player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 			new PersistentDataPacket(player));
 	}
 
-	public static List<ToolboxTileEntity> getNearest(LevelAccessor world, Player player, int maxAmount) {
+	public static List<ToolboxBlockEntity> getNearest(LevelAccessor world, Player player, int maxAmount) {
 		Vec3 location = player.position();
 		double maxRange = getMaxRange(player);
 		return toolboxes.get(world)
@@ -111,7 +111,7 @@ public class ToolboxHandler {
 			.sorted((p1, p2) -> Double.compare(distance(location, p1), distance(location, p2)))
 			.limit(maxAmount)
 			.map(toolboxes.get(world)::get)
-			.filter(ToolboxTileEntity::isFullyInitialized)
+			.filter(ToolboxBlockEntity::isFullyInitialized)
 			.collect(Collectors.toList());
 	}
 
@@ -128,14 +128,14 @@ public class ToolboxHandler {
 		int prevSlot = prevData.getInt("Slot");
 
 		BlockEntity prevBlockEntity = world.getBlockEntity(prevPos);
-		if (prevBlockEntity instanceof ToolboxTileEntity) {
-			ToolboxTileEntity toolbox = (ToolboxTileEntity) prevBlockEntity;
+		if (prevBlockEntity instanceof ToolboxBlockEntity) {
+			ToolboxBlockEntity toolbox = (ToolboxBlockEntity) prevBlockEntity;
 			toolbox.unequip(prevSlot, player, hotbarSlot, keepItems || !ToolboxHandler.withinRange(player, toolbox));
 		}
 		compound.remove(key);
 	}
 
-	public static boolean withinRange(Player player, ToolboxTileEntity box) {
+	public static boolean withinRange(Player player, ToolboxBlockEntity box) {
 		if (player.level != box.getLevel())
 			return false;
 		double maxRange = getMaxRange(player);
@@ -147,7 +147,7 @@ public class ToolboxHandler {
 	}
 
 	public static double getMaxRange(Player player) {
-		return AllConfigs.SERVER.curiosities.toolboxRange.get()
+		return AllConfigs.server().curiosities.toolboxRange.get()
 			.doubleValue();
 	}
 

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.block.display.source;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity;
+import com.simibubi.create.content.contraptions.components.clock.CuckooClockBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
@@ -22,7 +22,7 @@ public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
 		if (!(context.level()instanceof ServerLevel sLevel))
 			return EMPTY_TIME;
-		if (!(context.getSourceTE() instanceof CuckooClockTileEntity ccte))
+		if (!(context.getSourceBlockEntity() instanceof CuckooClockBlockEntity ccte))
 			return EMPTY_TIME;
 		if (ccte.getSpeed() == 0)
 			return EMPTY_TIME;

@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
 import net.minecraft.client.player.LocalPlayer;
@@ -36,7 +36,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity>, ITransformableBlock {
+public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements IBE<SequencedGearshiftBlockEntity>, ITransformableBlock {
 
 	public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");
 	public static final IntegerProperty STATE = IntegerProperty.create("state", 0, 5);
@@ -69,7 +69,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource r) {
 		boolean previouslyPowered = state.getValue(STATE) != 0;
 		boolean isPowered = worldIn.hasNeighborSignal(pos);
-		withTileEntityDo(worldIn, pos, sgte -> sgte.onRedstoneUpdate(isPowered, previouslyPowered));
+		withBlockEntityDo(worldIn, pos, sgte -> sgte.onRedstoneUpdate(isPowered, previouslyPowered));
 	}
 
 	@Override
@@ -98,14 +98,14 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 		}
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
+			() -> () -> withBlockEntityDo(worldIn, pos, be -> this.displayScreen(be, player)));
 		return InteractionResult.SUCCESS;
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	protected void displayScreen(SequencedGearshiftTileEntity te, Player player) {
+	protected void displayScreen(SequencedGearshiftBlockEntity be, Player player) {
 		if (player instanceof LocalPlayer)
-			ScreenOpener.open(new SequencedGearshiftScreen(te));
+			ScreenOpener.open(new SequencedGearshiftScreen(be));
 	}
 
 	@Override
@@ -147,13 +147,13 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	@Override
-	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
-		return SequencedGearshiftTileEntity.class;
+	public Class<SequencedGearshiftBlockEntity> getBlockEntityClass() {
+		return SequencedGearshiftBlockEntity.class;
 	}
 	
 	@Override
-	public BlockEntityType<? extends SequencedGearshiftTileEntity> getTileEntityType() {
-		return AllTileEntities.SEQUENCED_GEARSHIFT.get();
+	public BlockEntityType<? extends SequencedGearshiftBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.SEQUENCED_GEARSHIFT.get();
 	}
 
 	@Override

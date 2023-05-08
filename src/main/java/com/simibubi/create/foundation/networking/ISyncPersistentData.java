@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.networking;
 
 import java.util.HashSet;
-import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +14,7 @@ public interface ISyncPersistentData {
 	void onPersistentDataUpdated();
 
 	default void syncPersistentDataWithTracking(Entity self) {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> self), new PersistentDataPacket(self));
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(() -> self), new PersistentDataPacket(self));
 	}
 
 	public static class PersistentDataPacket extends SimplePacketBase {
@@ -41,19 +40,17 @@ public interface ISyncPersistentData {
 		}
 
 		@Override
-		public void handle(Supplier<Context> context) {
-			context.get()
-				.enqueueWork(() -> {
-					Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-					CompoundTag data = entityByID.getPersistentData();
-					new HashSet<>(data.getAllKeys()).forEach(data::remove);
-					data.merge(readData);
-					if (!(entityByID instanceof ISyncPersistentData))
-						return;
-					((ISyncPersistentData) entityByID).onPersistentDataUpdated();
-				});
-			context.get()
-				.setPacketHandled(true);
+		public boolean handle(Context context) {
+			context.enqueueWork(() -> {
+				Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
+				CompoundTag data = entityByID.getPersistentData();
+				new HashSet<>(data.getAllKeys()).forEach(data::remove);
+				data.merge(readData);
+				if (!(entityByID instanceof ISyncPersistentData))
+					return;
+				((ISyncPersistentData) entityByID).onPersistentDataUpdated();
+			});
+			return true;
 		}
 
 	}

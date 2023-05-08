@@ -44,7 +44,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(Dist.CLIENT)
 public class TrackBlockOutline {
 
-	public static WorldAttached<Map<BlockPos, TrackTileEntity>> TRACKS_WITH_TURNS =
+	public static WorldAttached<Map<BlockPos, TrackBlockEntity>> TRACKS_WITH_TURNS =
 		new WorldAttached<>(w -> new HashMap<>());
 
 	public static BezierPointSelection result;
@@ -66,10 +66,10 @@ public class TrackBlockOutline {
 
 		AttributeInstance range = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
 		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range.getValue()) + 1, origin);
-		Map<BlockPos, TrackTileEntity> turns = TRACKS_WITH_TURNS.get(mc.level);
+		Map<BlockPos, TrackBlockEntity> turns = TRACKS_WITH_TURNS.get(mc.level);
 
-		for (TrackTileEntity te : turns.values()) {
-			for (BezierConnection bc : te.connections.values()) {
+		for (TrackBlockEntity be : turns.values()) {
+			for (BezierConnection bc : be.connections.values()) {
 				if (!bc.isPrimary())
 					continue;
 
@@ -125,7 +125,7 @@ public class TrackBlockOutline {
 						.distanceToSqr(0, 0.25f, 0);
 
 					BezierTrackPointLocation location = new BezierTrackPointLocation(bc.getKey(), i);
-					result = new BezierPointSelection(te, location, anchor, angles, diff.normalize());
+					result = new BezierPointSelection(be, location, anchor, angles, diff.normalize());
 				}
 
 				if (bestSegment != -1)
@@ -142,7 +142,7 @@ public class TrackBlockOutline {
 		}
 	}
 
-	public static void drawCurveSelection(PoseStack ms, MultiBufferSource buffer) {
+	public static void drawCurveSelection(PoseStack ms, MultiBufferSource buffer, Vec3 camera) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -152,7 +152,8 @@ public class TrackBlockOutline {
 			return;
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.lines());
-		Vec3 vec = result.vec();
+		Vec3 vec = result.vec()
+			.subtract(camera);
 		Vec3 angles = result.angles();
 		TransformStack.cast(ms)
 			.pushPose()
@@ -191,16 +192,18 @@ public class TrackBlockOutline {
 
 		boolean holdingTrack = AllBlocks.TRACK.isIn(Minecraft.getInstance().player.getMainHandItem());
 		TrackShape shape = blockstate.getValue(TrackBlock.SHAPE);
-		boolean isJunction = shape.isJunction();
+		boolean canConnectFrom = !shape.isJunction()
+			&& !(mc.level.getBlockEntity(pos)instanceof TrackBlockEntity tbe && tbe.isTilted());
+
 		walkShapes(shape, TransformStack.cast(ms), s -> {
-			renderShape(s, ms, vb, holdingTrack ? !isJunction : null);
+			renderShape(s, ms, vb, holdingTrack ? canConnectFrom : null);
 			event.setCanceled(true);
 		});
 
 		ms.popPose();
 	}
 
-	private static void renderShape(VoxelShape s, PoseStack ms, VertexConsumer vb, Boolean valid) {
+	public static void renderShape(VoxelShape s, PoseStack ms, VertexConsumer vb, Boolean valid) {
 		PoseStack.Pose transform = ms.last();
 		s.forAllEdges((x1, y1, z1, x2, y2, z2) -> {
 			float xDiff = (float) (x2 - x1);
@@ -288,8 +291,8 @@ public class TrackBlockOutline {
 		renderer.accept(LONG_ORTHO);
 	}
 
-	public static record BezierPointSelection(TrackTileEntity te, BezierTrackPointLocation loc, Vec3 vec, Vec3 angles,
-		Vec3 direction) {
+	public static record BezierPointSelection(TrackBlockEntity blockEntity, BezierTrackPointLocation loc, Vec3 vec,
+		Vec3 angles, Vec3 direction) {
 	}
 
 }

@@ -2,8 +2,10 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Couple;
 
@@ -15,13 +17,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @ParametersAreNonnullByDefault
+@EventBusSubscriber
 public class ValveHandleBlock extends HandCrankBlock {
 
 	private final DyeColor color;
@@ -42,19 +51,57 @@ public class ValveHandleBlock extends HandCrankBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-		BlockHitResult hit) {
+	public VoxelShape getShape(BlockState pState, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return AllShapes.VALVE_HANDLE.get(pState.getValue(FACING));
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOW)
+	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
+		BlockPos pos = event.getPos();
+		Level level = event.getLevel();
+		Player player = event.getEntity();
+		BlockState blockState = level.getBlockState(pos);
+
+		if (!(blockState.getBlock() instanceof ValveHandleBlock vhb))
+			return;
+		if (AllItems.WRENCH.isIn(player.getItemInHand(event.getHand())) && player.isSteppingCarefully())
+			return;
+
+		if (vhb.clicked(level, pos, blockState, player, event.getHand())) {
+			event.setCanceled(true);
+			event.setCancellationResult(InteractionResult.SUCCESS);
+		}
+	}
+
+	@Override
+	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+		if (!(pNewState.getBlock() instanceof ValveHandleBlock))
+			super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+	}
+
+	public boolean clicked(Level level, BlockPos pos, BlockState blockState, Player player, InteractionHand hand) {
 		ItemStack heldItem = player.getItemInHand(hand);
 		DyeColor color = DyeColor.getColor(heldItem);
+
 		if (color != null && color != this.color) {
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
-			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.DYED_VALVE_HANDLES.get(color).getDefaultState());
-			world.setBlockAndUpdate(pos, newState);
-			return InteractionResult.SUCCESS;
+			if (!level.isClientSide)
+				level.setBlockAndUpdate(pos,
+					BlockHelper.copyProperties(blockState, AllBlocks.DYED_VALVE_HANDLES.get(color)
+						.getDefaultState()));
+			return true;
 		}
 
-		return super.use(state, world, pos, player, hand, hit);
+		onBlockEntityUse(level, pos,
+			hcbe -> (hcbe instanceof ValveHandleBlockEntity vhbe) && vhbe.activate(player.isSteppingCarefully())
+				? InteractionResult.SUCCESS
+				: InteractionResult.PASS);
+		return true;
+	}
+
+	@Override
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult hit) {
+		return InteractionResult.PASS;
 	}
 
 	@Override
@@ -65,18 +112,17 @@ public class ValveHandleBlock extends HandCrankBlock {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public PartialModel getRenderedHandle() {
-		return null;
+	public BlockEntityType<? extends HandCrankBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.VALVE_HANDLE.get();
 	}
 
 	@Override
 	public int getRotationSpeed() {
-		return 16;
+		return 32;
 	}
-	
+
 	public static Couple<Integer> getSpeedRange() {
-		return Couple.create(16, 16);
+		return Couple.create(32, 32);
 	}
 
 }

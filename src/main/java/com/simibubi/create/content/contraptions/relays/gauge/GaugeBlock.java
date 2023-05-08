@@ -1,10 +1,10 @@
 package com.simibubi.create.content.contraptions.relays.gauge;
 
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -31,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<GaugeTileEntity> {
+public class GaugeBlock extends DirectionalAxisKineticBlock implements IBE<GaugeBlockEntity> {
 
 	public static final GaugeShaper GAUGE = GaugeShaper.make();
 	protected Type type;
@@ -119,13 +119,13 @@ public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<Gauge
 
 	@Override
 	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
-		BlockEntity te = worldIn.getBlockEntity(pos);
-		if (te == null || !(te instanceof GaugeTileEntity))
+		BlockEntity be = worldIn.getBlockEntity(pos);
+		if (be == null || !(be instanceof GaugeBlockEntity))
 			return;
-		GaugeTileEntity gaugeTE = (GaugeTileEntity) te;
-		if (gaugeTE.dialTarget == 0)
+		GaugeBlockEntity gaugeBE = (GaugeBlockEntity) be;
+		if (gaugeBE.dialTarget == 0)
 			return;
-		int color = gaugeTE.color;
+		int color = gaugeBE.color;
 
 		for (Direction face : Iterate.directions) {
 			if (!shouldRenderHeadOnFace(worldIn, pos, stateIn, face))
@@ -135,7 +135,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<Gauge
 			Vec3 faceVec = Vec3.atLowerCornerOf(face.getNormal());
 			Direction positiveFacing = Direction.get(AxisDirection.POSITIVE, face.getAxis());
 			Vec3 positiveFaceVec = Vec3.atLowerCornerOf(positiveFacing.getNormal());
-			int particleCount = gaugeTE.dialTarget > 1 ? 4 : 1;
+			int particleCount = gaugeBE.dialTarget > 1 ? 4 : 1;
 
 			if (particleCount == 1 && rand.nextFloat() > 1 / 4f)
 				continue;
@@ -167,10 +167,10 @@ public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<Gauge
 
 	@Override
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-		BlockEntity te = worldIn.getBlockEntity(pos);
-		if (te instanceof GaugeTileEntity) {
-			GaugeTileEntity gaugeTileEntity = (GaugeTileEntity) te;
-			return Mth.ceil(Mth.clamp(gaugeTileEntity.dialTarget * 14, 0, 15));
+		BlockEntity be = worldIn.getBlockEntity(pos);
+		if (be instanceof GaugeBlockEntity) {
+			GaugeBlockEntity gaugeBlockEntity = (GaugeBlockEntity) be;
+			return Mth.ceil(Mth.clamp(gaugeBlockEntity.dialTarget * 14, 0, 15));
 		}
 		return 0;
 	}
@@ -181,12 +181,12 @@ public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<Gauge
 	}
 
 	@Override
-	public Class<GaugeTileEntity> getTileEntityClass() {
-		return GaugeTileEntity.class;
+	public Class<GaugeBlockEntity> getBlockEntityClass() {
+		return GaugeBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends GaugeTileEntity> getTileEntityType() {
-		return type == Type.SPEED ? AllTileEntities.SPEEDOMETER.get() : AllTileEntities.STRESSOMETER.get();
+	public BlockEntityType<? extends GaugeBlockEntity> getBlockEntityType() {
+		return type == Type.SPEED ? AllBlockEntityTypes.SPEEDOMETER.get() : AllBlockEntityTypes.STRESSOMETER.get();
 	}
 }

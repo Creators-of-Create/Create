@@ -49,13 +49,13 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 		facingVec.normalize();
 
 		Direction closestToFacing = getClosestFacingDirection(facingVec);
-		Container iinventory = HopperBlockEntity.getContainerAt(context.world, pos.relative(closestToFacing));
-		if (iinventory == null) {
+		Container inventory = HopperBlockEntity.getContainerAt(context.world, pos.relative(closestToFacing));
+		if (inventory == null) {
 			this.playDispenseSound(context.world, pos);
 			this.spawnDispenseParticles(context.world, pos, closestToFacing);
 			return this.dispenseStack(itemStack, context, pos, facingVec);
 		} else {
-			if (HopperBlockEntity.addItem(null, iinventory, itemStack.copy()
+			if (HopperBlockEntity.addItem(null, inventory, itemStack.copy()
 				.split(1), closestToFacing.getOpposite())
 				.isEmpty())
 				itemStack.shrink(1);

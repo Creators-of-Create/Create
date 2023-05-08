@@ -2,9 +2,8 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.AllPartialModels;
+import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -17,29 +16,26 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FluidValveRenderer extends KineticTileEntityRenderer {
+public class FluidValveRenderer extends KineticBlockEntityRenderer<FluidValveBlockEntity> {
 
 	public FluidValveRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
+	protected void renderSafe(FluidValveBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(te.getLevel())) return;
+		if (Backend.canUseInstancing(be.getLevel())) return;
 
-		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
-		BlockState blockState = te.getBlockState();
-		SuperByteBuffer pointer = CachedBufferer.partial(AllBlockPartials.FLUID_VALVE_POINTER, blockState);
+		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
+		BlockState blockState = be.getBlockState();
+		SuperByteBuffer pointer = CachedBufferer.partial(AllPartialModels.FLUID_VALVE_POINTER, blockState);
 		Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
-		if (!(te instanceof FluidValveTileEntity valve))
-			return;
-
-		float pointerRotation = Mth.lerp(valve.pointer.getValue(partialTicks), 0, -90);
+		float pointerRotation = Mth.lerp(be.pointer.getValue(partialTicks), 0, -90);
 		Axis pipeAxis = FluidValveBlock.getPipeAxis(blockState);
-		Axis shaftAxis = KineticTileEntityRenderer.getRotationAxisOf(te);
+		Axis shaftAxis = getRotationAxisOf(be);
 
 		int pointerRotationOffset = 0;
 		if (pipeAxis.isHorizontal() && shaftAxis == Axis.X || pipeAxis.isVertical())
@@ -55,8 +51,8 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected BlockState getRenderedBlockState(KineticTileEntity te) {
-		return KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te));
+	protected BlockState getRenderedBlockState(FluidValveBlockEntity be) {
+		return shaft(getRotationAxisOf(be));
 	}
 
 }

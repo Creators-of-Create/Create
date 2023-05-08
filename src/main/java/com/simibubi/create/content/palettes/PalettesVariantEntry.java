@@ -5,9 +5,11 @@ import static com.simibubi.create.foundation.data.CreateRegistrate.connectedText
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -67,6 +69,12 @@ public class PalettesVariantEntry {
 				registeredPartials.add(partialBlock.create(name, pattern, block, paletteStoneVariants)
 					.register());
 		}
+
+		Create.REGISTRATE.addDataGenerator(ProviderType.RECIPE,
+			p -> p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), baseBlock));
+		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, p -> p.tag(paletteStoneVariants.materialTag)
+			.add(baseBlock.get()
+				.asItem()));
 
 		this.registeredBlocks = registeredBlocks.build();
 		this.registeredPartials = registeredPartials.build();

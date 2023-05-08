@@ -75,7 +75,7 @@ public class BeltConnectorHandler {
 				return;
 			if (!ShaftBlock.isShaft(world.getBlockState(selected)))
 				selected = selected.relative(((BlockHitResult) rayTrace).getDirection());
-			if (!selected.closerThan(first, AllConfigs.SERVER.kinetics.maxBeltLength.get()))
+			if (!selected.closerThan(first, AllConfigs.server().kinetics.maxBeltLength.get()))
 				return;
 
 			boolean canConnect =

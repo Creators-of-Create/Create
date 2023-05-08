@@ -25,6 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class GhostBlockRenderer {
 
@@ -40,12 +41,13 @@ public abstract class GhostBlockRenderer {
 		return TRANSPARENT;
 	}
 
-	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params);
+	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params);
 
 	private static class DefaultGhostBlockRenderer extends GhostBlockRenderer {
 
 		@Override
-		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
+		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params) {
+			ms.pushPose();
 			BlockRenderDispatcher dispatcher = Minecraft.getInstance()
 				.getBlockRenderer();
 			ModelBlockRenderer renderer = dispatcher.getModelRenderer();
@@ -56,7 +58,7 @@ public abstract class GhostBlockRenderer {
 			BakedModel model = dispatcher.getBlockModel(state);
 
 			ms.pushPose();
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 
 			for (RenderType layer : model.getRenderTypes(state, RandomSource.create(42L), ModelUtil.VIRTUAL_DATA)) {
 				VertexConsumer vb = buffer.getEarlyBuffer(layer);
@@ -72,7 +74,9 @@ public abstract class GhostBlockRenderer {
 	private static class TransparentGhostBlockRenderer extends GhostBlockRenderer {
 
 		@Override
-		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, GhostBlockParams params) {
+		public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, GhostBlockParams params) {
+			ms.pushPose();
+
 			Minecraft mc = Minecraft.getInstance();
 			BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
 
@@ -84,9 +88,7 @@ public abstract class GhostBlockRenderer {
 			RenderType layer = RenderType.translucent();
 			VertexConsumer vb = buffer.getEarlyBuffer(layer);
 
-			ms.pushPose();
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-
+			ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 			ms.translate(.5, .5, .5);
 			ms.scale(.85f, .85f, .85f);
 			ms.translate(-.5, -.5, -.5);

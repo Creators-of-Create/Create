@@ -79,7 +79,7 @@ public class GirderPlacementHelper implements IPlacementHelper {
 		List<Direction> directions =
 			IPlacementHelper.orderedByDistance(pos, ray.getLocation(), dir -> canExtendToward(state, dir));
 		for (Direction dir : directions) {
-			int range = AllConfigs.SERVER.curiosities.placementAssistRange.get();
+			int range = AllConfigs.server().curiosities.placementAssistRange.get();
 			if (player != null) {
 				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))

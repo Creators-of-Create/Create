@@ -61,7 +61,7 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 	public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 		List<Direction> directions = IPlacementHelper.orderedByDistance(pos, ray.getLocation(), dir -> dir.getAxis() == axisFunction.apply(state));
 		for (Direction dir : directions) {
-			int range = AllConfigs.SERVER.curiosities.placementAssistRange.get();
+			int range = AllConfigs.server().curiosities.placementAssistRange.get();
 			if (player != null) {
 				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))

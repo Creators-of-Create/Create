@@ -3,10 +3,10 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 import java.util.Arrays;
 import java.util.List;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.block.IBE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraft.world.phys.HitResult;
 
-public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<GearboxTileEntity> {
+public class GearboxBlock extends RotatedPillarKineticBlock implements IBE<GearboxBlockEntity> {
 
 	public GearboxBlock(Properties properties) {
 		super(properties);
@@ -75,12 +75,12 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<Gearb
 	}
 
 	@Override
-	public Class<GearboxTileEntity> getTileEntityClass() {
-		return GearboxTileEntity.class;
+	public Class<GearboxBlockEntity> getBlockEntityClass() {
+		return GearboxBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends GearboxTileEntity> getTileEntityType() {
-		return AllTileEntities.GEARBOX.get();
+	public BlockEntityType<? extends GearboxBlockEntity> getBlockEntityType() {
+		return AllBlockEntityTypes.GEARBOX.get();
 	}
 }

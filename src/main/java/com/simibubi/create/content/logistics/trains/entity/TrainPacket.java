@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.trains.IBogeyBlock;
@@ -99,17 +98,15 @@ public class TrainPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				Map<UUID, Train> trains = CreateClient.RAILWAYS.trains;
-				if (add)
-					trains.put(train.id, train);
-				else
-					trains.remove(trainId);
-			});
-		context.get()
-			.setPacketHandled(true);
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			Map<UUID, Train> trains = CreateClient.RAILWAYS.trains;
+			if (add)
+				trains.put(train.id, train);
+			else
+				trains.remove(trainId);
+		});
+		return true;
 	}
 
 }

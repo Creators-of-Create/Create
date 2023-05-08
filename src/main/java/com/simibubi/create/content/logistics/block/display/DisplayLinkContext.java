@@ -8,41 +8,41 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class DisplayLinkContext {
 
 	private Level level;
-	private DisplayLinkTileEntity te;
+	private DisplayLinkBlockEntity blockEntity;
 
 	public Object flapDisplayContext;
 
-	public DisplayLinkContext(Level level, DisplayLinkTileEntity te) {
+	public DisplayLinkContext(Level level, DisplayLinkBlockEntity blockEntity) {
 		this.level = level;
-		this.te = te;
+		this.blockEntity = blockEntity;
 	}
 
 	public Level level() {
 		return level;
 	}
 
-	public DisplayLinkTileEntity te() {
-		return te;
+	public DisplayLinkBlockEntity blockEntity() {
+		return blockEntity;
 	}
 
-	public BlockEntity getSourceTE() {
+	public BlockEntity getSourceBlockEntity() {
 		return level.getBlockEntity(getSourcePos());
 	}
 
 	public BlockPos getSourcePos() {
-		return te.getSourcePosition();
+		return blockEntity.getSourcePosition();
 	}
 
-	public BlockEntity getTargetTE() {
+	public BlockEntity getTargetBlockEntity() {
 		return level.getBlockEntity(getTargetPos());
 	}
 
 	public BlockPos getTargetPos() {
-		return te.getTargetPosition();
+		return blockEntity.getTargetPosition();
 	}
 
 	public CompoundTag sourceConfig() {
-		return te.getSourceConfig();
+		return blockEntity.getSourceConfig();
 	}
 
 }
