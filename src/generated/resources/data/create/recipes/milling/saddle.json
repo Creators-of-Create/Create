@@ -1,0 +1,20 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:saddle"
+    }
+  ],
+  "processingTime": 200,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:leather"
+    },
+    {
+      "chance": 0.5,
+      "count": 2,
+      "item": "minecraft:leather"
+    }
+  ]
+}

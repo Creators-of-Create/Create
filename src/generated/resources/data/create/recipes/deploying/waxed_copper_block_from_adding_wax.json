@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "minecraft:copper_block"
+    },
+    {
+      "item": "minecraft:honeycomb_block"
+    }
+  ],
+  "keepHeldItem": true,
+  "results": [
+    {
+      "item": "minecraft:waxed_copper_block"
+    }
+  ]
+}

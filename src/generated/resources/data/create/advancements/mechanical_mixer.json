@@ -1,0 +1,30 @@
+{
+  "parent": "create:chute",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:mechanical_mixer_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.mechanical_mixer.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:mechanical_mixer"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.mechanical_mixer"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

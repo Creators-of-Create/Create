@@ -1,0 +1,28 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:deepslate_gold_ore"
+    }
+  ],
+  "processingTime": 350,
+  "results": [
+    {
+      "count": 2,
+      "item": "create:crushed_gold_ore"
+    },
+    {
+      "chance": 0.25,
+      "item": "create:crushed_gold_ore"
+    },
+    {
+      "chance": 0.75,
+      "count": 2,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "minecraft:cobbled_deepslate"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:railway_casing"
+    },
+    {
+      "item": "minecraft:compass"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "item": "create:track_station"
+  }
+}

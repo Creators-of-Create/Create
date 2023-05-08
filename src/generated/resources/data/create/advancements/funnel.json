@@ -1,0 +1,30 @@
+{
+  "parent": "create:belt",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:funnel_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.funnel.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:andesite_funnel"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.funnel"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

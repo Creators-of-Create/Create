@@ -1,0 +1,20 @@
+{
+  "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "thermal"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "create:crushed_nickel_ore"
+    }
+  ],
+  "results": [
+    {
+      "count": 9,
+      "item": "thermal:nickel_nugget"
+    }
+  ]
+}

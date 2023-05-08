@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "blue_skies"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "blue_skies:lunar_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "blue_skies:stripped_lunar_log"
+    }
+  ]
+}

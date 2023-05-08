@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "tag": "forge:ingots/iron"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:iron_sheet"
+    }
+  ]
+}

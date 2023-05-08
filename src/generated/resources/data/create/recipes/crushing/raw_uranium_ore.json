@@ -1,0 +1,27 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:raw_materials/uranium"
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:raw_materials/uranium"
+    }
+  ],
+  "processingTime": 400,
+  "results": [
+    {
+      "item": "create:crushed_uranium_ore"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    }
+  ]
+}

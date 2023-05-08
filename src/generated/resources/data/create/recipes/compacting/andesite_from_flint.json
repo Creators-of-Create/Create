@@ -1,0 +1,24 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:gravel"
+    },
+    {
+      "amount": 100,
+      "fluid": "minecraft:lava",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:andesite"
+    }
+  ]
+}

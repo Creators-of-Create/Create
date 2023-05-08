@@ -1,0 +1,15 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "amount": 250,
+      "fluid": "create:chocolate",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "create:bar_of_chocolate"
+    }
+  ]
+}

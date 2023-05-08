@@ -1,0 +1,27 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:deepslate_diamond_ore"
+    }
+  ],
+  "processingTime": 450,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:diamond"
+    },
+    {
+      "chance": 0.25,
+      "item": "minecraft:diamond"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "minecraft:cobbled_deepslate"
+    }
+  ]
+}

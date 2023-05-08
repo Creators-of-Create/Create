@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smelting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "create:crushed_osmium_ore"
+  },
+  "result": "mekanism:ingot_osmium"
+}

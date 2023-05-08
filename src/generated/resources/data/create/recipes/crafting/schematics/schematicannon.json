@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": {
+      "item": "minecraft:dispenser"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "S": {
+      "item": "minecraft:smooth_stone"
+    }
+  },
+  "pattern": [
+    " I ",
+    "LIL",
+    "SDS"
+  ],
+  "result": {
+    "item": "create:schematicannon"
+  }
+}

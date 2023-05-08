@@ -1,0 +1,30 @@
+{
+  "parent": "create:cart_pickup",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:anvil_plough_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.anvil_plough.desc"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:chipped_anvil"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.anvil_plough"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

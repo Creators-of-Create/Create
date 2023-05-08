@@ -1,0 +1,26 @@
+{
+  "type": "create:mechanical_crafting",
+  "acceptMirrored": false,
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "tag": "forge:stone"
+    }
+  },
+  "pattern": [
+    " AAA ",
+    "AAPAA",
+    "APSPA",
+    "AAPAA",
+    " AAA "
+  ],
+  "result": {
+    "count": 2,
+    "item": "create:crushing_wheel"
+  }
+}

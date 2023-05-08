@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "create:copper_tile_slab"
+    },
+    {
+      "item": "minecraft:honeycomb_block"
+    }
+  ],
+  "keepHeldItem": true,
+  "results": [
+    {
+      "item": "create:waxed_copper_tile_slab"
+    }
+  ]
+}

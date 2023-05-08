@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "WS",
+    "SA"
+  ],
+  "result": {
+    "count": 2,
+    "item": "create:white_sail"
+  }
+}

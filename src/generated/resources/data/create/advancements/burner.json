@@ -1,0 +1,38 @@
+{
+  "parent": "create:mechanical_mixer",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:blaze_burner"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.burner.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:blaze_burner"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.burner"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

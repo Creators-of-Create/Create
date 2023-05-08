@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "create:brass_casing"
+    },
+    "C": {
+      "item": "minecraft:dried_kelp_block"
+    },
+    "I": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "pattern": [
+    "B",
+    "C",
+    "I"
+  ],
+  "result": {
+    "item": "create:elevator_pulley"
+  }
+}

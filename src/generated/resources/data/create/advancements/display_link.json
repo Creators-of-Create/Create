@@ -1,0 +1,30 @@
+{
+  "parent": "create:clockwork_bearing",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:display_link_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.display_link.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:display_link"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.display_link"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

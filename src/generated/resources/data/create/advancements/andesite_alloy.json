@@ -1,0 +1,38 @@
+{
+  "parent": "create:root",
+  "criteria": {
+    "0": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:andesite_alloy"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.andesite_alloy.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:andesite_alloy"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.andesite_alloy"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

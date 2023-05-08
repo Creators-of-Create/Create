@@ -1,0 +1,30 @@
+{
+  "parent": "create:mechanical_pump_0",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:glass_pipe_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.glass_pipe.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:fluid_pipe"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.glass_pipe"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

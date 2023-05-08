@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:andesite_alloy_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "create:andesite_alloy"
+  }
+}

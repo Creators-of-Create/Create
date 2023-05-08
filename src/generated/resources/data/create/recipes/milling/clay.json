@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:clay"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 3,
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "chance": 0.5,
+      "item": "minecraft:clay_ball"
+    }
+  ]
+}

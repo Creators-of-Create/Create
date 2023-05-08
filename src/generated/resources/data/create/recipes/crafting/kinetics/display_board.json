@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "create:electron_tube"
+    },
+    "P": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "pattern": [
+    "PAP"
+  ],
+  "result": {
+    "count": 2,
+    "item": "create:display_board"
+  }
+}

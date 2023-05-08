@@ -1,0 +1,30 @@
+{
+  "parent": "create:precision_mechanism",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:speed_controller_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.speed_controller.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:rotation_speed_controller"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.speed_controller"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

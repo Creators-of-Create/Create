@@ -1,0 +1,20 @@
+{
+  "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "immersiveengineering"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "create:crushed_aluminum_ore"
+    }
+  ],
+  "results": [
+    {
+      "count": 9,
+      "item": "immersiveengineering:nugget_aluminum"
+    }
+  ]
+}

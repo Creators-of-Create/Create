@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "create:textures/gui/advancements.png",
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.root.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:brass_hand"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.create.root"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

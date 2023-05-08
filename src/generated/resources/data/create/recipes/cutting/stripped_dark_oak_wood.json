@@ -1,0 +1,15 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:stripped_dark_oak_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "minecraft:dark_oak_planks"
+    }
+  ]
+}

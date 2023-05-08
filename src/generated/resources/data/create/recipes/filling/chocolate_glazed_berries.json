@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "minecraft:sweet_berries"
+    },
+    {
+      "amount": 250,
+      "fluid": "create:chocolate",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "create:chocolate_glazed_berries"
+    }
+  ]
+}

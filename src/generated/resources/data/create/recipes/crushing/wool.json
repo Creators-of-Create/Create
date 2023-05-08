@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "minecraft:wool"
+    }
+  ],
+  "processingTime": 100,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:string"
+    },
+    {
+      "chance": 0.5,
+      "item": "minecraft:string"
+    }
+  ]
+}

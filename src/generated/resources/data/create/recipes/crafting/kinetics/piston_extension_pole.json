@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "P",
+    "A",
+    "P"
+  ],
+  "result": {
+    "count": 8,
+    "item": "create:piston_extension_pole"
+  }
+}

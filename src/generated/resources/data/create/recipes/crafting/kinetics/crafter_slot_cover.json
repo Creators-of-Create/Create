@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:nuggets/brass"
+    }
+  },
+  "pattern": [
+    "AAA"
+  ],
+  "result": {
+    "item": "create:crafter_slot_cover"
+  }
+}

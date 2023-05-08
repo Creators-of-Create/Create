@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:dripstone_block"
+    }
+  ],
+  "processingTime": 250,
+  "results": [
+    {
+      "item": "minecraft:clay_ball"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:nuggets/brass"
+    },
+    "S": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "ASA"
+  ],
+  "result": {
+    "item": "create:attribute_filter"
+  }
+}

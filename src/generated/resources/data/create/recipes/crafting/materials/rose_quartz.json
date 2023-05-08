@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:gems/quartz"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    },
+    {
+      "tag": "forge:dusts/redstone"
+    }
+  ],
+  "result": {
+    "item": "create:rose_quartz"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "minecraft:weathered_cut_copper"
+    },
+    {
+      "item": "minecraft:honeycomb_block"
+    }
+  ],
+  "keepHeldItem": true,
+  "results": [
+    {
+      "item": "minecraft:waxed_weathered_cut_copper"
+    }
+  ]
+}

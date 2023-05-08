@@ -1,0 +1,31 @@
+{
+  "parent": "create:backtank",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:diving_suit_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.diving_suit.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:copper_diving_helmet",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.diving_suit"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

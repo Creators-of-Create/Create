@@ -1,0 +1,27 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:copper_ore"
+    }
+  ],
+  "processingTime": 250,
+  "results": [
+    {
+      "count": 5,
+      "item": "create:crushed_copper_ore"
+    },
+    {
+      "chance": 0.25,
+      "item": "create:crushed_copper_ore"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "minecraft:cobblestone"
+    }
+  ]
+}

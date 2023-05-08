@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "tag": "forge:flour/wheat"
+    },
+    {
+      "amount": 1000,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "create:dough"
+    }
+  ]
+}

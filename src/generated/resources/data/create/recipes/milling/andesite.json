@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:andesite"
+    }
+  ],
+  "processingTime": 200,
+  "results": [
+    {
+      "item": "minecraft:cobblestone"
+    }
+  ]
+}

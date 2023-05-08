@@ -1,0 +1,13 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "minecraft:brown_mushroom"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:warped_fungus"
+    }
+  ]
+}

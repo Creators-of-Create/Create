@@ -1,0 +1,30 @@
+{
+  "parent": "create:spout",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:drain_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.drain.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:item_drain"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.drain"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "create:oxidized_copper_shingles"
+    },
+    {
+      "item": "minecraft:honeycomb_block"
+    }
+  ],
+  "keepHeldItem": true,
+  "results": [
+    {
+      "item": "create:waxed_oxidized_copper_shingles"
+    }
+  ]
+}

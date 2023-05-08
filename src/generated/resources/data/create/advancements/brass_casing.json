@@ -1,0 +1,30 @@
+{
+  "parent": "create:brass",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:brass_casing_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.brass_casing.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:brass_casing"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.brass_casing"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

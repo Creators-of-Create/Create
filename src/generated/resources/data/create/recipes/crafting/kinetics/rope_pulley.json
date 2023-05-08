@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "create:andesite_casing"
+    },
+    "C": {
+      "tag": "minecraft:wool"
+    },
+    "I": {
+      "tag": "forge:plates/iron"
+    }
+  },
+  "pattern": [
+    "B",
+    "C",
+    "I"
+  ],
+  "result": {
+    "item": "create:rope_pulley"
+  }
+}

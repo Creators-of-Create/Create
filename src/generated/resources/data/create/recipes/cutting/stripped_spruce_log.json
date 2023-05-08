@@ -1,0 +1,15 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:stripped_spruce_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "minecraft:spruce_planks"
+    }
+  ]
+}

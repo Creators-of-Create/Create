@@ -1,0 +1,18 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "tag": "forge:gems/lapis"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.75,
+      "item": "minecraft:prismarine_shard"
+    },
+    {
+      "chance": 0.125,
+      "item": "minecraft:prismarine_crystals"
+    }
+  ]
+}

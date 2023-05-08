@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:blasting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "thermal"
+    }
+  ],
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "create:crushed_lead_ore"
+  },
+  "result": "thermal:lead_ingot"
+}

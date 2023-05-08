@@ -95,10 +95,10 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 		ModelData wrappedData = data.get(WRAPPED_DATA_PROPERTY);
 		if (wrappedData == null)
 			wrappedData = ModelData.EMPTY;
-		if (renderType != null && Minecraft.getInstance()
+		if (renderType != null && !Minecraft.getInstance()
 			.getBlockRenderer()
-			.getBlockModel(state)
-			.getRenderTypes(state, rand, wrappedData)
+			.getBlockModel(material)
+			.getRenderTypes(material, rand, wrappedData)
 			.contains(renderType))
 			return super.getQuads(state, side, rand, data, renderType);
 

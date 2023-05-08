@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "tag": "forge:plates/gold"
+    },
+    "P": {
+      "item": "create:cogwheel"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "pattern": [
+    "GG",
+    "GP",
+    " S"
+  ],
+  "result": {
+    "item": "create:wrench"
+  }
+}

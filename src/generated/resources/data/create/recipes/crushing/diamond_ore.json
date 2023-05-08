@@ -1,0 +1,26 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:diamond_ore"
+    }
+  ],
+  "processingTime": 350,
+  "results": [
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "chance": 0.75,
+      "item": "minecraft:diamond"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    },
+    {
+      "chance": 0.125,
+      "item": "minecraft:cobblestone"
+    }
+  ]
+}

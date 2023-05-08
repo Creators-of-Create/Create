@@ -1,0 +1,15 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:cornflower"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:blue_dye"
+    }
+  ]
+}

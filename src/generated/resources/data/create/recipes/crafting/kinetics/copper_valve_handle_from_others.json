@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "create:valve_handles"
+    }
+  ],
+  "result": {
+    "item": "create:copper_valve_handle"
+  }
+}

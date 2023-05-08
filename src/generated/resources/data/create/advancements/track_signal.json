@@ -1,0 +1,30 @@
+{
+  "parent": "create:conductor",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:track_signal_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.track_signal.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:track_signal"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.track_signal"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ecologics"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "ecologics:flowering_azalea_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "ecologics:stripped_azalea_wood"
+    }
+  ]
+}

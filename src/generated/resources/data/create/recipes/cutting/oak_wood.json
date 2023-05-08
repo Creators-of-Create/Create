@@ -1,0 +1,14 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:oak_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "item": "minecraft:stripped_oak_wood"
+    }
+  ]
+}

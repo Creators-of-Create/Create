@@ -1,0 +1,23 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:peony"
+    }
+  ],
+  "processingTime": 100,
+  "results": [
+    {
+      "count": 3,
+      "item": "minecraft:pink_dye"
+    },
+    {
+      "chance": 0.25,
+      "item": "minecraft:magenta_dye"
+    },
+    {
+      "chance": 0.25,
+      "item": "minecraft:pink_dye"
+    }
+  ]
+}

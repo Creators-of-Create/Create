@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:empty_schematic"
+    },
+    {
+      "tag": "forge:feathers"
+    }
+  ],
+  "result": {
+    "item": "create:schematic_and_quill"
+  }
+}

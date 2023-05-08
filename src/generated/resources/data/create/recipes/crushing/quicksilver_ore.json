@@ -1,0 +1,31 @@
+{
+  "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ores/quicksilver"
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "forge:ores/quicksilver"
+    }
+  ],
+  "processingTime": 400,
+  "results": [
+    {
+      "item": "create:crushed_quicksilver_ore"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:crushed_quicksilver_ore"
+    },
+    {
+      "chance": 0.75,
+      "item": "create:experience_nugget"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "twilightforest:stripped_time_wood"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "twilightforest:time_planks"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "minecraft:copper_ingot"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:copper_sheet"
+    }
+  ]
+}

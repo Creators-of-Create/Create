@@ -1,0 +1,31 @@
+{
+  "parent": "create:millstone",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:super_glue_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.super_glue.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:super_glue",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.super_glue"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

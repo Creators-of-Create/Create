@@ -1,0 +1,13 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "minecraft:gray_concrete_powder"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:gray_concrete"
+    }
+  ]
+}

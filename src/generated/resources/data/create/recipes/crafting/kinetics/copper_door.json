@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "minecraft:wooden_doors"
+    },
+    {
+      "item": "create:copper_casing"
+    }
+  ],
+  "result": {
+    "item": "create:copper_door"
+  }
+}

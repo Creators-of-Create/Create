@@ -1,0 +1,30 @@
+{
+  "parent": "create:funnel",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:chute_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.chute.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:chute"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.chute"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:andesite_casing"
+    },
+    {
+      "tag": "forge:nuggets/iron"
+    },
+    {
+      "tag": "forge:nuggets/iron"
+    },
+    {
+      "tag": "forge:nuggets/iron"
+    }
+  ],
+  "result": {
+    "item": "create:encased_chain_drive"
+  }
+}

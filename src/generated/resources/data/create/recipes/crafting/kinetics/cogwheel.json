@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:shaft"
+    },
+    {
+      "tag": "minecraft:planks"
+    }
+  ],
+  "result": {
+    "item": "create:cogwheel"
+  }
+}

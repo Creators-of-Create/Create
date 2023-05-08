@@ -1,0 +1,15 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:stripped_acacia_log"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 6,
+      "item": "minecraft:acacia_planks"
+    }
+  ]
+}

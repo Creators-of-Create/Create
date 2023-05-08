@@ -1,0 +1,13 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "minecraft:blue_concrete_powder"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:blue_concrete"
+    }
+  ]
+}

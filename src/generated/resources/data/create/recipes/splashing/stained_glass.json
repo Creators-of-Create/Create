@@ -1,0 +1,13 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "tag": "forge:stained_glass"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:glass"
+    }
+  ]
+}

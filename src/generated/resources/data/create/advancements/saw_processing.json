@@ -1,0 +1,30 @@
+{
+  "parent": "create:fan_processing",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:saw_processing_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.saw_processing.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:mechanical_saw"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.saw_processing"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "S": {
+      "item": "create:shaft"
+    }
+  },
+  "pattern": [
+    "P",
+    "S"
+  ],
+  "result": {
+    "item": "create:turntable"
+  }
+}

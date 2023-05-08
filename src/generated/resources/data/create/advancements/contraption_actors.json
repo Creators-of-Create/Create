@@ -1,0 +1,30 @@
+{
+  "parent": "create:super_glue",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:contraption_actors_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.contraption_actors.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:mechanical_harvester"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.contraption_actors"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

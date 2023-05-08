@@ -1,0 +1,18 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "minecraft:dirt"
+    },
+    {
+      "amount": 500,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:grass_block"
+    }
+  ]
+}

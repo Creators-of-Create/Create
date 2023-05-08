@@ -1,0 +1,30 @@
+{
+  "parent": "create:chocolate_bucket",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:honey_drain_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.honey_drain.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:beehive"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.honey_drain"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

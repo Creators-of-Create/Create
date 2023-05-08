@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": {
+      "item": "create:scoria"
+    },
+    "D": {
+      "tag": "forge:dyes/black"
+    }
+  },
+  "pattern": [
+    "###",
+    "#D#",
+    "###"
+  ],
+  "result": {
+    "count": 8,
+    "item": "create:scorchia"
+  }
+}

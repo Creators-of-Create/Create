@@ -1,0 +1,30 @@
+{
+  "parent": "create:speed_controller",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:mechanical_arm_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.mechanical_arm.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:mechanical_arm"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.mechanical_arm"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

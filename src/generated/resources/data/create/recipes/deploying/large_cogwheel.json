@@ -1,0 +1,16 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "create:cogwheel"
+    },
+    {
+      "tag": "minecraft:planks"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:large_cogwheel"
+    }
+  ]
+}

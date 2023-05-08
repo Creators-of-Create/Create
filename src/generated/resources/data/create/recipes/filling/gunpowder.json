@@ -1,0 +1,21 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    {
+      "item": "create:cinder_flour"
+    },
+    {
+      "amount": 25,
+      "fluid": "create:potion",
+      "nbt": {
+        "Bottle": "REGULAR",
+        "Potion": "minecraft:harming"
+      }
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:gunpowder"
+    }
+  ]
+}

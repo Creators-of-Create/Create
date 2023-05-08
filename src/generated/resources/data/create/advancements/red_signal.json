@@ -1,0 +1,30 @@
+{
+  "parent": "create:track_signal",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:red_signal_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.red_signal.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "create:track_signal"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.red_signal"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

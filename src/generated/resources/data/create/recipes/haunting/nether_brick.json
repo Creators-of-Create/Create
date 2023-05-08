@@ -1,0 +1,13 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "minecraft:brick"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:nether_brick"
+    }
+  ]
+}

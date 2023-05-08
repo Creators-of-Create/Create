@@ -1,0 +1,30 @@
+{
+  "parent": "create:water_wheel",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:windmill_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.windmill.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:sail_frame"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.windmill"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

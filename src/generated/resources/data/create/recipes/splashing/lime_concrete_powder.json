@@ -1,0 +1,13 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "minecraft:lime_concrete_powder"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:lime_concrete"
+    }
+  ]
+}

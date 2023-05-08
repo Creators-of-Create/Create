@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "minecraft:wooden_doors"
+    },
+    {
+      "item": "create:railway_casing"
+    }
+  ],
+  "result": {
+    "item": "create:train_door"
+  }
+}

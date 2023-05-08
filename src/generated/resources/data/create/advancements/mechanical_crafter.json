@@ -1,0 +1,30 @@
+{
+  "parent": "create:mechanical_arm",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:mechanical_crafter_builtin"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.mechanical_crafter.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:mechanical_crafter"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.mechanical_crafter"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

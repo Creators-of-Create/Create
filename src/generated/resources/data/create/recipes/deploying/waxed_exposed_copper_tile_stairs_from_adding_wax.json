@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "create:exposed_copper_tile_stairs"
+    },
+    {
+      "item": "minecraft:honeycomb_block"
+    }
+  ],
+  "keepHeldItem": true,
+  "results": [
+    {
+      "item": "create:waxed_exposed_copper_tile_stairs"
+    }
+  ]
+}

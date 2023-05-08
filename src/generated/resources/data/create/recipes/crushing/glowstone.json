@@ -1,0 +1,19 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "minecraft:glowstone"
+    }
+  ],
+  "processingTime": 150,
+  "results": [
+    {
+      "count": 3,
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "chance": 0.5,
+      "item": "minecraft:glowstone_dust"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "tag": "minecraft:wool"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:white_wool"
+    }
+  ]
+}

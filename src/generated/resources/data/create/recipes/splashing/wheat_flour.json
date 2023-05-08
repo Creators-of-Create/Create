@@ -1,0 +1,13 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "tag": "forge:flour/wheat"
+    }
+  ],
+  "results": [
+    {
+      "item": "create:dough"
+    }
+  ]
+}
