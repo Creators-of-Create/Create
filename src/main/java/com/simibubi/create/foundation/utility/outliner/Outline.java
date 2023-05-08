@@ -56,9 +56,11 @@ public abstract class Outline {
 
 		poseStack.pushPose();
 		TransformStack.cast(poseStack)
+			.translate(start)
 			.rotateY(hAngle)
 			.rotateX(vAngle);
-		bufferCuboidLine(poseStack.last(), consumer, start, Direction.NORTH, length, width, color, lightmap, disableNormals);
+		bufferCuboidLine(poseStack.last(), consumer, Vector3f.ZERO, Direction.SOUTH, length, width, color, lightmap,
+			disableNormals);
 		poseStack.popPose();
 	}
 
