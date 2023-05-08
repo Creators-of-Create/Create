@@ -735,13 +735,13 @@ public class TrackPlacement {
 					.showLine(Pair.of(key, i * 2), VecHelper.lerp(s, middle1, previous1),
 						VecHelper.lerp(s, middle1, rail1))
 					.colored(railcolor)
-					.disableNormals()
+					.disableLineNormals()
 					.lineWidth(lw);
 				CreateClient.OUTLINER
 					.showLine(Pair.of(key, i * 2 + 1), VecHelper.lerp(s, middle2, previous2),
 						VecHelper.lerp(s, middle2, rail2))
 					.colored(railcolor)
-					.disableNormals()
+					.disableLineNormals()
 					.lineWidth(lw);
 			}
 
@@ -762,7 +762,7 @@ public class TrackPlacement {
 		int color = Color.mixColors(0xEA5C2B, 0x95CD41, animation.getValue());
 		CreateClient.OUTLINER.showLine(Pair.of("start", id), v1.subtract(o1), v1.add(ex))
 			.lineWidth(1 / 8f)
-			.disableNormals()
+			.disableLineNormals()
 			.colored(color);
 	}
 

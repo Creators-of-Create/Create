@@ -90,7 +90,6 @@ public class CreateClient {
 
 		AllKeys.register();
 		AllPartialModels.init();
-		AllStitchedTextures.init();
 
 		PonderIndex.register();
 		PonderIndex.registerTags();

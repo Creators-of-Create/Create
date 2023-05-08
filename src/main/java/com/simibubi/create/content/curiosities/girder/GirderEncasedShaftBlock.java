@@ -44,6 +44,10 @@ public class GirderEncasedShaftBlock extends HorizontalAxisKineticBlock
 
 	public GirderEncasedShaftBlock(Properties properties) {
 		super(properties);
+		registerDefaultState(super.defaultBlockState()
+				.setValue(WATERLOGGED, false)
+				.setValue(TOP, false)
+				.setValue(BOTTOM, false));
 	}
 
 	@Override

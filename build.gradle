@@ -140,12 +140,12 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.18.2-1.1.3,)') {
-        jarJar.pin(it, project.registrate_version)
+    jarJar("com.tterrag.registrate:Registrate:${registrate_version}") {
+        jarJar.ranged(it, '[MC1.18.2-1.1.3,)')
     }
     // Uncomment once Forge fixes mixins for included jars
-    //jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.8,0.6.9)') {
-    //    jarJar.pin(it, project.flywheel_version)
+    //jarJar("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
+    //    jarJar.ranged(it, '[0.6.8,0.6.9)')
     //}
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
@@ -218,6 +218,7 @@ jar {
 }
 
 task jarJarRelease {
+    group = 'jarjar'
     doLast {
         tasks.jarJar {
             classifier = ''

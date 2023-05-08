@@ -25,10 +25,13 @@ public class Curios {
 					.get("head");
 				if (stacksHandler == null)
 					return false;
-				if (stacksHandler.getSlots() == 0)
-					return false;
-				return AllItems.GOGGLES.isIn(stacksHandler.getStacks()
-					.getStackInSlot(0));
+				int slots = stacksHandler.getSlots();
+				for (int slot = 0; slot < slots; slot++)
+					if (AllItems.GOGGLES.isIn(stacksHandler.getStacks()
+						.getStackInSlot(slot)))
+						return true;
+
+				return false;
 			})
 			.orElse(false));
 

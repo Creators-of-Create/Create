@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint.statio
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.Transform;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -54,7 +55,8 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 				be.flag.getValue(partialTicks) > 0.75f ? AllPartialModels.STATION_ON : AllPartialModels.STATION_OFF, be,
 				partialTicks, ms, buffer, light, overlay);
 			ms.pushPose();
-			ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
+			TransformStack.cast(ms)
+				.translate(targetPosition.subtract(pos));
 			TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), target.getTargetBezier(),
 				ms, buffer, light, overlay, RenderedTrackOverlayType.STATION, 1);
 			ms.popPose();

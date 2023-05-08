@@ -45,6 +45,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
 
@@ -193,7 +194,7 @@ public class SchematicHandler {
 			.display(wMirroredLR);
 	}
 
-	public void render(PoseStack ms, SuperRenderTypeBuffer buffer) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
 		boolean present = activeSchematicItem != null;
 		if (!active && !present)
 			return;
@@ -201,12 +202,12 @@ public class SchematicHandler {
 		if (active) {
 			ms.pushPose();
 			currentTool.getTool()
-				.renderTool(ms, buffer);
+				.renderTool(ms, buffer, camera);
 			ms.popPose();
 		}
 
 		ms.pushPose();
-		transformation.applyGLTransformations(ms);
+		transformation.applyTransformations(ms, camera);
 
 		if (!renderers.isEmpty()) {
 			float pt = AnimationTickHolder.getPartialTicks();

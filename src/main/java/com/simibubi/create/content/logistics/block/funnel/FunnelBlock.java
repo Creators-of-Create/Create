@@ -66,6 +66,13 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 	}
 	
 	@Override
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (newState.getBlock() instanceof BeltFunnelBlock bfb && bfb.isOfSameType(this))
+			return;
+		super.onRemove(state, world, pos, newState, isMoving);
+	}
+	
+	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
 		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);

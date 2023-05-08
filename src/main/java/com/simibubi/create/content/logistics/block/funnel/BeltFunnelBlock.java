@@ -72,6 +72,17 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 		super.createBlockStateDefinition(p_206840_1_.add(SHAPE));
 	}
 
+	public boolean isOfSameType(FunnelBlock otherFunnel) {
+		return parent.get() == otherFunnel;
+	}
+	
+	@Override
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (newState.getBlock() instanceof FunnelBlock fb && isOfSameType(fb))
+			return;
+		super.onRemove(state, world, pos, newState, isMoving);
+	}
+	
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
 		CollisionContext p_220053_4_) {

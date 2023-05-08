@@ -12,7 +12,7 @@ public class BrassFunnelBlock extends FunnelBlock {
 	public BrassFunnelBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 	}
-
+	
 	@Override
 	public BlockState getEquivalentBeltFunnel(BlockGetter world, BlockPos pos, BlockState state) {
 		Direction facing = getFacing(state);

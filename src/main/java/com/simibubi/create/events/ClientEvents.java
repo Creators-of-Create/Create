@@ -200,26 +200,23 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderLevelLastEvent event) {
-		Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera()
-			.getPosition();
-		float pt = AnimationTickHolder.getPartialTicks();
-
 		PoseStack ms = event.getPoseStack();
 		ms.pushPose();
-		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
+		float partialTicks = AnimationTickHolder.getPartialTicks();
+		Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera()
+			.getPosition();
 
-		TrackBlockOutline.drawCurveSelection(ms, buffer);
-		TrackTargetingClient.render(ms, buffer);
-		CouplingRenderer.renderAll(ms, buffer);
-		CarriageCouplingRenderer.renderAll(ms, buffer);
-		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer);
-		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer);
+		TrackBlockOutline.drawCurveSelection(ms, buffer, camera);
+		TrackTargetingClient.render(ms, buffer, camera);
+		CouplingRenderer.renderAll(ms, buffer, camera);
+		CarriageCouplingRenderer.renderAll(ms, buffer, camera);
+		CreateClient.SCHEMATIC_HANDLER.render(ms, buffer, camera);
+		CreateClient.GHOST_BLOCKS.renderAll(ms, buffer, camera);
+		CreateClient.OUTLINER.renderOutlines(ms, buffer, camera, partialTicks);
 
-		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
 		buffer.draw();
 		RenderSystem.enableCull();
-
 		ms.popPose();
 	}
 
@@ -298,14 +295,14 @@ public class ClientEvents {
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f/32f);
+			event.scaleFarPlaneDistance(1f / 32f);
 			event.setCanceled(true);
 			return;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f/8f);
+			event.scaleFarPlaneDistance(1f / 8f);
 			event.setCanceled(true);
 			return;
 		}

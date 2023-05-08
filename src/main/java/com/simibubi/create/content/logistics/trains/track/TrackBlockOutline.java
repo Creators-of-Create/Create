@@ -142,7 +142,7 @@ public class TrackBlockOutline {
 		}
 	}
 
-	public static void drawCurveSelection(PoseStack ms, MultiBufferSource buffer) {
+	public static void drawCurveSelection(PoseStack ms, MultiBufferSource buffer, Vec3 camera) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -152,7 +152,8 @@ public class TrackBlockOutline {
 			return;
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.lines());
-		Vec3 vec = result.vec();
+		Vec3 vec = result.vec()
+			.subtract(camera);
 		Vec3 angles = result.angles();
 		TransformStack.cast(ms)
 			.pushPose()

@@ -322,8 +322,6 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends BlockEnti
 			return;
 
 		ms.pushPose();
-		ms.translate(pos.getX(), pos.getY(), pos.getZ());
-
 		ITrackBlock track = (ITrackBlock) block;
 		PartialModel partial = track.prepareTrackOverlay(level, pos, trackState, bezier, direction, ms, type);
 		if (partial != null)
@@ -333,7 +331,6 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends BlockEnti
 				.translate(-.5, 0, -.5)
 				.light(LevelRenderer.getLightColor(level, pos))
 				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
-
 		ms.popPose();
 	}
 

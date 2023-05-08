@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.trains.management.edgePoint.signal;
 
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
@@ -52,7 +53,8 @@ public class SignalRenderer extends SafeBlockEntityRenderer<SignalBlockEntity> {
 			return;
 
 		ms.pushPose();
-		ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
+		TransformStack.cast(ms)
+			.translate(targetPosition.subtract(pos));
 		RenderedTrackOverlayType type =
 			overlayState == OverlayState.DUAL ? RenderedTrackOverlayType.DUAL_SIGNAL : RenderedTrackOverlayType.SIGNAL;
 		TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), target.getTargetBezier(), ms,

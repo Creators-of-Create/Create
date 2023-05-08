@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -65,7 +66,9 @@ public class HandCrankBlock extends DirectionalKineticBlock
 			return InteractionResult.PASS;
 
 		withBlockEntityDo(worldIn, pos, be -> be.turn(player.isShiftKeyDown()));
-		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.server().kinetics.crankHungerMultiplier.getF());
+		if (!player.getItemInHand(handIn)
+			.is(AllItems.EXTENDO_GRIP.get()))
+			player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.server().kinetics.crankHungerMultiplier.getF());
 
 		if (player.getFoodData()
 			.getFoodLevel() == 0)

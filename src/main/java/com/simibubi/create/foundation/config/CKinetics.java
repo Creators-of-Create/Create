@@ -44,7 +44,9 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool moveItemsToStorage = b(true, "moveItemsToStorage", Comments.moveItemsToStorage);
 	public final ConfigBool harvestPartiallyGrown = b(false, "harvestPartiallyGrown", Comments.harvestPartiallyGrown);
 	public final ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
-	
+	public final ConfigBool minecartContraptionInContainers =
+		b(false, "minecartContraptionInContainers", Comments.minecartContraptionInContainers);
+
 	public final ConfigGroup stats = group(1, "stats", Comments.stats);
 	public final ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
 	public final ConfigFloat fastSpeed = f(100, 0, 65535, "fastSpeed", Comments.rpm, Comments.fastSpeed);
@@ -111,6 +113,7 @@ public class CKinetics extends ConfigBase {
 		static String spawnerMovement = "Configure how Spawner blocks can be moved by contraptions.";
 		static String amethystMovement = "Configure how Budding Amethyst can be moved by contraptions.";
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
+		static String minecartContraptionInContainers = "Whether minecart contraptions can be placed into container items.";
 	}
 
 	public enum DeployerAggroSetting {

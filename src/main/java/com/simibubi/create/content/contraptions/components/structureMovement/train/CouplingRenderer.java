@@ -5,7 +5,6 @@ import static net.minecraft.util.Mth.lerp;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
@@ -32,13 +31,13 @@ import net.minecraft.world.phys.Vec3;
 
 public class CouplingRenderer {
 
-	public static void renderAll(PoseStack ms, MultiBufferSource buffer) {
-		CouplingHandler.forEachLoadedCoupling(Minecraft.getInstance().level,
-			c -> {
-				if (c.getFirst().hasContraptionCoupling(true))
-					return;
-				CouplingRenderer.renderCoupling(ms, buffer, c.map(MinecartController::cart));
-			});
+	public static void renderAll(PoseStack ms, MultiBufferSource buffer, Vec3 camera) {
+		CouplingHandler.forEachLoadedCoupling(Minecraft.getInstance().level, c -> {
+			if (c.getFirst()
+				.hasContraptionCoupling(true))
+				return;
+			CouplingRenderer.renderCoupling(ms, buffer, camera, c.map(MinecartController::cart));
+		});
 	}
 
 	public static void tickDebugModeRenders() {
@@ -46,21 +45,20 @@ public class CouplingRenderer {
 			CouplingHandler.forEachLoadedCoupling(Minecraft.getInstance().level, CouplingRenderer::doDebugRender);
 	}
 
-	public static void renderCoupling(PoseStack ms, MultiBufferSource buffer, Couple<AbstractMinecart> carts) {
+	public static void renderCoupling(PoseStack ms, MultiBufferSource buffer, Vec3 camera, Couple<AbstractMinecart> carts) {
 		ClientLevel world = Minecraft.getInstance().level;
 
 		if (carts.getFirst() == null || carts.getSecond() == null)
 			return;
 
-		Couple<Integer> lightValues =
-			carts.map(c -> LevelRenderer.getLightColor(world, new BlockPos(c.getBoundingBox()
-				.getCenter())));
+		Couple<Integer> lightValues = carts.map(c -> LevelRenderer.getLightColor(world, new BlockPos(c.getBoundingBox()
+			.getCenter())));
 
 		Vec3 center = carts.getFirst()
-				.position()
-				.add(carts.getSecond()
-						.position())
-				.scale(.5f);
+			.position()
+			.add(carts.getSecond()
+				.position())
+			.scale(.5f);
 
 		Couple<CartEndpoint> transforms = carts.map(c -> getSuitableCartEndpoint(c, center));
 
@@ -72,20 +70,20 @@ public class CouplingRenderer {
 
 		Vec3 zero = Vec3.ZERO;
 		Vec3 firstEndpoint = transforms.getFirst()
-				.apply(zero);
+			.apply(zero);
 		Vec3 secondEndpoint = transforms.getSecond()
-				.apply(zero);
+			.apply(zero);
 		Vec3 endPointDiff = secondEndpoint.subtract(firstEndpoint);
 		double connectorYaw = -Math.atan2(endPointDiff.z, endPointDiff.x) * 180.0D / Math.PI;
 		double connectorPitch = Math.atan2(endPointDiff.y, endPointDiff.multiply(1, 0, 1)
-				.length()) * 180 / Math.PI;
+			.length()) * 180 / Math.PI;
 
 		TransformStack msr = TransformStack.cast(ms);
 		carts.forEachWithContext((cart, isFirst) -> {
 			CartEndpoint cartTransform = transforms.get(isFirst);
 
 			ms.pushPose();
-			cartTransform.apply(ms);
+			cartTransform.apply(ms, camera);
 			attachment.light(lightValues.get(isFirst))
 				.renderInto(ms, builder);
 			msr.rotateY(connectorYaw - cartTransform.yaw);
@@ -100,7 +98,7 @@ public class CouplingRenderer {
 		int meanSkyLight = (((l1 >> 20) & 0xf) + ((l2 >> 20) & 0xf)) / 2;
 
 		ms.pushPose();
-		msr.translate(firstEndpoint)
+		msr.translate(firstEndpoint.subtract(camera))
 			.rotateY(connectorYaw)
 			.rotateZ(connectorPitch);
 		ms.scale((float) endPointDiff.length(), 1, 1);
@@ -113,9 +111,9 @@ public class CouplingRenderer {
 	private static CartEndpoint getSuitableCartEndpoint(AbstractMinecart cart, Vec3 centerOfCoupling) {
 		long i = cart.getId() * 493286711L;
 		i = i * i * 4392167121L + i * 98761L;
-		float x = (((float) (i >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
-		float y = (((float) (i >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F + 0.375F;
-		float z = (((float) (i >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		double x = (((float) (i >> 16 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
+		double y = (((float) (i >> 20 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F + 0.375F;
+		double z = (((float) (i >> 24 & 7L) + 0.5F) / 8.0F - 0.5F) * 0.004F;
 
 		float pt = AnimationTickHolder.getPartialTicks();
 
@@ -164,8 +162,7 @@ public class CouplingRenderer {
 		}
 
 		final float offsetMagnitude = 13 / 16f;
-		boolean isBackFaceCloser =
-			frontVec.distanceToSqr(centerOfCoupling) > backVec.distanceToSqr(centerOfCoupling);
+		boolean isBackFaceCloser = frontVec.distanceToSqr(centerOfCoupling) > backVec.distanceToSqr(centerOfCoupling);
 		flip = isBackFaceCloser;
 		float offset = isBackFaceCloser ? -offsetMagnitude : offsetMagnitude;
 
@@ -174,16 +171,16 @@ public class CouplingRenderer {
 
 	static class CartEndpoint {
 
-		float x;
-		float y;
-		float z;
+		double x;
+		double y;
+		double z;
 		float yaw;
 		float pitch;
 		float roll;
 		float offset;
 		boolean flip;
 
-		public CartEndpoint(float x, float y, float z, float yaw, float pitch, float roll, float offset, boolean flip) {
+		public CartEndpoint(double x, double y, double z, float yaw, float pitch, float roll, float offset, boolean flip) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
@@ -202,14 +199,15 @@ public class CouplingRenderer {
 			return vec.add(x, y, z);
 		}
 
-		public void apply(PoseStack ms) {
-			ms.translate(x, y, z);
-			ms.mulPose(Vector3f.YP.rotationDegrees(yaw));
-			ms.mulPose(Vector3f.ZP.rotationDegrees(pitch));
-			ms.mulPose(Vector3f.XP.rotationDegrees(roll));
-			ms.translate(offset, 0, 0);
-			if (flip)
-				ms.mulPose(Vector3f.YP.rotationDegrees(180));
+		public void apply(PoseStack ms, Vec3 camera) {
+			TransformStack.cast(ms)
+				.translate(camera.scale(-1)
+					.add(x, y, z))
+				.rotateY(yaw)
+				.rotateZ(pitch)
+				.rotateX(roll)
+				.translate(offset, 0, 0)
+				.rotateY(flip ? 180 : 0);
 		}
 
 	}
@@ -219,24 +217,24 @@ public class CouplingRenderer {
 		MinecartController first = c.getFirst();
 		AbstractMinecart mainCart = first.cart();
 		Vec3 mainCenter = mainCart.position()
-				.add(0, yOffset, 0);
+			.add(0, yOffset, 0);
 		Vec3 connectedCenter = c.getSecond()
-				.cart()
-				.position()
-				.add(0, yOffset, 0);
+			.cart()
+			.position()
+			.add(0, yOffset, 0);
 
 		int color = Color.mixColors(0xabf0e9, 0xee8572, (float) Mth
-				.clamp(Math.abs(first.getCouplingLength(true) - connectedCenter.distanceTo(mainCenter)) * 8, 0, 1));
+			.clamp(Math.abs(first.getCouplingLength(true) - connectedCenter.distanceTo(mainCenter)) * 8, 0, 1));
 
 		CreateClient.OUTLINER.showLine(mainCart.getId() + "", mainCenter, connectedCenter)
-				.colored(color)
-				.lineWidth(1 / 8f);
+			.colored(color)
+			.lineWidth(1 / 8f);
 
 		Vec3 point = mainCart.position()
-				.add(0, yOffset, 0);
+			.add(0, yOffset, 0);
 		CreateClient.OUTLINER.showLine(mainCart.getId() + "_dot", point, point.add(0, 1 / 128f, 0))
-				.colored(0xffffff)
-				.lineWidth(1 / 4f);
+			.colored(0xffffff)
+			.lineWidth(1 / 4f);
 	}
 
 }

@@ -252,7 +252,7 @@ public class PonderScene {
 		camera.set(transform.xRotation.getValue(pt) + 90, transform.yRotation.getValue(pt) + 180);
 		world.renderEntities(ms, buffer, camera, pt);
 		world.renderParticles(ms, buffer, camera, pt);
-		outliner.renderOutlines(ms, buffer, pt);
+		outliner.renderOutlines(ms, buffer, Vec3.ZERO, pt);
 
 		ms.popPose();
 		ForcedDiffuseState.popCalculator();
