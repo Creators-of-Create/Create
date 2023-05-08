@@ -2186,7 +2186,7 @@
 	"create.ponder.tag.redstone.description": "Components which help with redstone engineering",
 	"create.ponder.tag.contraption_assembly": "Block Attachment Utility",
 	"create.ponder.tag.contraption_assembly.description": "Tools and Components used to assemble structures moved as an animated Contraption",
-	"create.ponder.tag.recently_updated": "Recently Updated",
+	"create.ponder.tag.recently_updated": "Recent Changes",
 	"create.ponder.tag.recently_updated.description": "Components that have been added or changed significantly in the latest versions of Create",
 	"create.ponder.tag.fluids": "Fluid Manipulators",
 	"create.ponder.tag.fluids.description": "Components which help relaying and making use of Fluids",

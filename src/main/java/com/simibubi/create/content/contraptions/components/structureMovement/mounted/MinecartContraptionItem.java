@@ -70,7 +70,7 @@ public class MinecartContraptionItem extends Item {
 	
 	@Override
 	public boolean canFitInsideContainerItems() {
-		return AllConfigs.SERVER.kinetics.minecartContraptionInContainers.get();
+		return AllConfigs.server().kinetics.minecartContraptionInContainers.get();
 	}
 
 	private MinecartContraptionItem(Type minecartTypeIn, Properties builder) {
