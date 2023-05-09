@@ -24,13 +24,19 @@ public class TrackEdge {
 	BezierConnection turn;
 	EdgeData edgeData;
 	boolean interDimensional;
+	TrackMaterial trackMaterial;
 
-	public TrackEdge(TrackNode node1, TrackNode node2, BezierConnection turn) {
+	public TrackEdge(TrackNode node1, TrackNode node2, BezierConnection turn, TrackMaterial trackMaterial) {
 		this.interDimensional = !node1.location.dimension.equals(node2.location.dimension);
 		this.edgeData = new EdgeData(this);
 		this.node1 = node1;
 		this.node2 = node2;
 		this.turn = turn;
+		this.trackMaterial = trackMaterial;
+	}
+
+	public TrackMaterial getTrackMaterial() {
+		return trackMaterial;
 	}
 
 	public boolean isTurn() {
@@ -230,13 +236,15 @@ public class TrackEdge {
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag baseCompound = isTurn() ? turn.write(BlockPos.ZERO) : new CompoundTag();
 		baseCompound.put("Signals", edgeData.write(dimensions));
+		baseCompound.putString("Material", getTrackMaterial().id.toString());
 		return baseCompound;
 	}
 
 	public static TrackEdge read(TrackNode node1, TrackNode node2, CompoundTag tag, TrackGraph graph,
 		DimensionPalette dimensions) {
 		TrackEdge trackEdge =
-			new TrackEdge(node1, node2, tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null);
+			new TrackEdge(node1, node2, tag.contains("Positions") ? new BezierConnection(tag, BlockPos.ZERO) : null,
+					TrackMaterial.deserialize(tag.getString("Material")));
 		trackEdge.edgeData = EdgeData.read(tag.getCompound("Signals"), trackEdge, graph, dimensions);
 		return trackEdge;
 	}

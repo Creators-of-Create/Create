@@ -7,7 +7,7 @@ import java.util.function.Function;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.IBearingBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlockEntity;
-import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlockEntity;
+import com.simibubi.create.content.logistics.trains.track.AbstractBogeyBlockEntity;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 
@@ -34,7 +34,7 @@ public class AnimateBlockEntityInstruction extends TickingInstruction {
 	public static AnimateBlockEntityInstruction bogey(BlockPos location, float totalDelta, int ticks) {
 		float movedPerTick = totalDelta / ticks;
 		return new AnimateBlockEntityInstruction(location, totalDelta, ticks,
-			(w, f) -> castIfPresent(w, location, StandardBogeyBlockEntity.class)
+			(w, f) -> castIfPresent(w, location, AbstractBogeyBlockEntity.class)
 				.ifPresent(bte -> bte.animate(f.equals(totalDelta) ? 0 : movedPerTick)),
 			(w) -> 0f);
 	}

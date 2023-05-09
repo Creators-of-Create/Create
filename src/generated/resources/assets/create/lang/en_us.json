@@ -1852,6 +1852,12 @@
 	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
 	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused.",
 
+	"create.bogey.style.updated_style": "Updated style",
+	"create.bogey.style.updated_style_and_size": "Updated style and size",
+	"create.bogey.style.no_other_sizes": "No other sizes",
+	"create.bogey.style.invalid": "Unnamed style",
+	"create.bogey.style.standard": "Standard",
+
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 

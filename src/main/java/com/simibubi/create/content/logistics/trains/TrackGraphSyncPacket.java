@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 public class TrackGraphSyncPacket extends TrackGraphPacket {
 
 	Map<Integer, Pair<TrackNodeLocation, Vec3>> addedNodes;
-	List<Pair<Couple<Integer>, BezierConnection>> addedEdges;
+	List<Pair<Pair<Couple<Integer>, TrackMaterial>, BezierConnection>> addedEdges;
 	List<Integer> removedNodes;
 	List<TrackEdgePoint> addedEdgePoints;
 	List<UUID> removedEdgePoints;
@@ -79,7 +79,7 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
 			addedEdges.add(
-				Pair.of(Couple.create(buffer::readVarInt), buffer.readBoolean() ? new BezierConnection(buffer) : null));
+				Pair.of(Pair.of(Couple.create(buffer::readVarInt), TrackMaterial.deserialize(buffer.readUtf())), buffer.readBoolean() ? new BezierConnection(buffer) : null));
 
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
@@ -134,8 +134,9 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 
 		buffer.writeVarInt(addedEdges.size());
 		addedEdges.forEach(pair -> {
-			pair.getFirst()
+			pair.getFirst().getFirst()
 				.forEach(buffer::writeVarInt);
+			buffer.writeUtf(pair.getFirst().getSecond().id.toString());
 			BezierConnection turn = pair.getSecond();
 			buffer.writeBoolean(turn != null);
 			if (turn != null)
@@ -192,13 +193,13 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 			graph.loadNode(nodeLocation.getFirst(), nodeId, nodeLocation.getSecond());
 		}
 
-		for (Pair<Couple<Integer>, BezierConnection> pair : addedEdges) {
-			Couple<TrackNode> nodes = pair.getFirst()
+		for (Pair<Pair<Couple<Integer>, TrackMaterial>, BezierConnection> pair : addedEdges) {
+			Couple<TrackNode> nodes = pair.getFirst().getFirst()
 				.map(graph::getNode);
 			TrackNode node1 = nodes.getFirst();
 			TrackNode node2 = nodes.getSecond();
 			if (node1 != null && node2 != null)
-				graph.putConnection(node1, node2, new TrackEdge(node1, node2, pair.getSecond()));
+				graph.putConnection(node1, node2, new TrackEdge(node1, node2, pair.getSecond(), pair.getFirst().getSecond()));
 		}
 
 		for (TrackEdgePoint edgePoint : addedEdgePoints)

@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -213,7 +214,7 @@ public class TrackGraphVisualizer {
 		}
 	}
 
-	public static void debugViewGraph(TrackGraph graph) {
+	public static void debugViewGraph(TrackGraph graph, boolean extended) {
 		Minecraft mc = Minecraft.getInstance();
 		Entity cameraEntity = mc.cameraEntity;
 		if (cameraEntity == null)
@@ -266,6 +267,17 @@ public class TrackGraphVisualizer {
 
 				yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
 				if (!edge.isTurn()) {
+					if (extended) {
+						Vec3 materialPos = edge.getPosition(graph, 0.5)
+							.add(0, 1, 0);
+						CreateClient.OUTLINER.showItem(Pair.of(edge, edge.edgeData), materialPos,
+							new ItemStack(edge.getTrackMaterial().trackBlock.get()
+								.get()));
+						CreateClient.OUTLINER.showAABB(edge.edgeData, AABB.ofSize(materialPos, .25, 0, .25)
+							.move(0, -0.5, 0))
+							.lineWidth(1 / 16f)
+							.colored(graph.color);
+					}
 					CreateClient.OUTLINER.showLine(edge, edge.getPosition(graph, 0)
 						.add(yOffset),
 						edge.getPosition(graph, 1)
@@ -277,6 +289,17 @@ public class TrackGraphVisualizer {
 
 				Vec3 previous = null;
 				BezierConnection turn = edge.getTurn();
+				if (extended) {
+					Vec3 materialPos = edge.getPosition(graph, 0.5)
+						.add(0, 1, 0);
+					CreateClient.OUTLINER.showItem(Pair.of(edge, edge.edgeData), materialPos,
+						new ItemStack(edge.getTrackMaterial().trackBlock.get()
+							.get()));
+					CreateClient.OUTLINER.showAABB(edge.edgeData, AABB.ofSize(materialPos, .25, 0, .25)
+						.move(0, -0.5, 0))
+						.lineWidth(1 / 16f)
+						.colored(graph.color);
+				}
 				for (int i = 0; i <= turn.getSegmentCount(); i++) {
 					Vec3 current = edge.getPosition(graph, i * 1f / turn.getSegmentCount());
 					if (previous != null)

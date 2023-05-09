@@ -851,7 +851,7 @@ public class AllBlockEntityTypes {
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
-	
+
 	public static final BlockEntityEntry<SlidingDoorBlockEntity> SLIDING_DOOR =
 		REGISTRATE.blockEntity("sliding_door", SlidingDoorBlockEntity::new)
 			.renderer(() -> SlidingDoorRenderer::new)
@@ -859,10 +859,10 @@ public class AllBlockEntityTypes {
 				AllBlocks.BRASS_DOOR, AllBlocks.COPPER_DOOR)
 			.register();
 
-	public static final BlockEntityEntry<CopycatBlockEntity> COPYCAT = REGISTRATE
-		.blockEntity("copycat", CopycatBlockEntity::new)
-		.validBlocks(AllBlocks.COPYCAT_PANEL, AllBlocks.COPYCAT_STEP)
-		.register();
+	public static final BlockEntityEntry<CopycatBlockEntity> COPYCAT =
+		REGISTRATE.blockEntity("copycat", CopycatBlockEntity::new)
+			.validBlocks(AllBlocks.COPYCAT_PANEL, AllBlocks.COPYCAT_STEP)
+			.register();
 
 	public static final BlockEntityEntry<FlapDisplayBlockEntity> FLAP_DISPLAY = REGISTRATE
 		.blockEntity("flap_display", FlapDisplayBlockEntity::new)

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
@@ -125,6 +126,9 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 	}
 
 	public void addConnection(BezierConnection connection) {
+		// don't replace existing connections with different materials
+		if (connections.containsKey(connection.getKey()) && connection.equalsSansMaterial(connections.get(connection.getKey())))
+			return;
 		connections.put(connection.getKey(), connection);
 		level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
 		notifyUpdate();
@@ -326,7 +330,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 				.getLevel(boundLocation.getFirst());
 			if (otherLevel == null)
 				return;
-			if (AllBlocks.TRACK.has(otherLevel.getBlockState(boundLocation.getSecond())))
+			if (AllTags.AllBlockTags.TRACKS.matches(otherLevel.getBlockState(boundLocation.getSecond())))
 				otherLevel.destroyBlock(boundLocation.getSecond(), false);
 		}
 	}

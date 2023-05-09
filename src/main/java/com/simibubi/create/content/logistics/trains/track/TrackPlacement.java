@@ -6,16 +6,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.simibubi.create.AllBlocks;
+import com.jozufozu.flywheel.util.Color;
 import com.simibubi.create.AllSpecialTextures;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -46,6 +47,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
@@ -57,6 +59,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class TrackPlacement {
 
 	public static class PlacementInfo {
+
+		public PlacementInfo(TrackMaterial material) {
+			this.trackMaterial = material;
+		}
+
 		BezierConnection curve = null;
 		boolean valid = false;
 		int end1Extent = 0;
@@ -68,6 +75,7 @@ public class TrackPlacement {
 
 		public int requiredPavement = 0;
 		public boolean hasRequiredPavement = false;
+		public final TrackMaterial trackMaterial;
 
 		// for visualisation
 		Vec3 end1;
@@ -109,7 +117,7 @@ public class TrackPlacement {
 			&& hoveringMaxed == maximiseTurn && lookAngle == hoveringAngle)
 			return cached;
 
-		PlacementInfo info = new PlacementInfo();
+		PlacementInfo info = new PlacementInfo(TrackMaterial.fromItem(stack.getItem()));
 		hoveringMaxed = maximiseTurn;
 		hoveringAngle = lookAngle;
 		hoveringPos = pos2;
@@ -195,7 +203,7 @@ public class TrackPlacement {
 			BlockPos targetPos2 = pos2.offset(offset2.x, offset2.y, offset2.z);
 			info.curve = new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), true, girder);
+				Couple.create(normal1, normal2), true, girder, TrackMaterial.fromItem(stack.getItem()));
 		}
 
 		// S curve or Straight
@@ -355,7 +363,7 @@ public class TrackPlacement {
 		info.curve = skipCurve ? null
 			: new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
-				Couple.create(normal1, normal2), true, girder);
+				Couple.create(normal1, normal2), true, girder, TrackMaterial.fromItem(stack.getItem()));
 
 		info.valid = true;
 
@@ -400,7 +408,7 @@ public class TrackPlacement {
 						continue;
 
 					ItemStack stackInSlot = (offhand ? inv.offhand : inv.items).get(i);
-					boolean isTrack = AllBlocks.TRACK.isIn(stackInSlot);
+					boolean isTrack = AllTags.AllBlockTags.TRACKS.matches(stackInSlot) && stackInSlot.is(stack.getItem());
 					if (!isTrack && (!shouldPave || offhandItem.getItem() != stackInSlot.getItem()))
 						continue;
 					if (isTrack ? foundTracks >= tracks : foundPavement >= pavement)
@@ -473,6 +481,18 @@ public class TrackPlacement {
 			info.requiredPavement += TrackPaver.paveCurve(level, info.curve, block, simulate, visited);
 	}
 
+	private static BlockState copyProperties(BlockState from, BlockState onto) {
+		for (Property property : onto.getProperties()) {
+			if (from.hasProperty(property))
+				onto = onto.setValue(property, from.getValue(property));
+		}
+		return onto;
+	}
+
+	private static BlockState copyProperties(BlockState from, BlockState onto, boolean keepFrom) {
+		return keepFrom ? from : copyProperties(from, onto);
+	}
+
 	private static PlacementInfo placeTracks(Level level, PlacementInfo info, BlockState state1, BlockState state2,
 		BlockPos targetPos1, BlockPos targetPos2, boolean simulate) {
 		info.requiredTracks = 0;
@@ -500,7 +520,8 @@ public class TrackPlacement {
 				Vec3 offset = axis.scale(i);
 				BlockPos offsetPos = pos.offset(offset.x, offset.y, offset.z);
 				BlockState stateAtPos = level.getBlockState(offsetPos);
-				BlockState toPlace = state;
+				// copy over all shared properties from the shaped state to the correct track material block
+				BlockState toPlace = copyProperties(state, info.trackMaterial.getTrackBlock().get().defaultBlockState());
 
 				boolean canPlace = stateAtPos.getMaterial()
 					.isReplaceable();
@@ -523,15 +544,16 @@ public class TrackPlacement {
 			return info;
 
 		if (!simulate) {
+			BlockState onto = info.trackMaterial.getTrackBlock().get().defaultBlockState();
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
-				(stateAtPos.getBlock() == state1.getBlock() ? stateAtPos : state1).setValue(TrackBlock.HAS_BE, true),
-				targetPos1), 3);
+					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state1, onto))
+							.setValue(TrackBlock.HAS_BE, true), targetPos1), 3);
 
 			stateAtPos = level.getBlockState(targetPos2);
 			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
-				(stateAtPos.getBlock() == state2.getBlock() ? stateAtPos : state2).setValue(TrackBlock.HAS_BE, true),
-				targetPos2), 3);
+					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state2, onto))
+							.setValue(TrackBlock.HAS_BE, true), targetPos2), 3);
 		}
 
 		BlockEntity te1 = level.getBlockEntity(targetPos1);
@@ -582,10 +604,10 @@ public class TrackPlacement {
 			return;
 
 		InteractionHand hand = InteractionHand.MAIN_HAND;
-		if (!AllBlocks.TRACK.isIn(stack)) {
+		if (!AllTags.AllBlockTags.TRACKS.matches(stack)) {
 			stack = player.getOffhandItem();
 			hand = InteractionHand.OFF_HAND;
-			if (!AllBlocks.TRACK.isIn(stack))
+			if (!AllTags.AllBlockTags.TRACKS.matches(stack))
 				return;
 		}
 

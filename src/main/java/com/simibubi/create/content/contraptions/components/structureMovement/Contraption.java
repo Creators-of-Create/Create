@@ -64,7 +64,7 @@ import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateBlockEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.vault.ItemVaultBlockEntity;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -347,7 +347,7 @@ public abstract class Contraption {
 		}
 
 		// Bogeys tend to have sticky sides
-		if (state.getBlock()instanceof IBogeyBlock bogey)
+		if (state.getBlock()instanceof AbstractBogeyBlock<?> bogey)
 			for (Direction d : bogey.getStickySurfaces(world, pos, state))
 				if (!visited.contains(pos.relative(d)))
 					frontier.add(pos.relative(d));

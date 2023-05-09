@@ -81,6 +81,8 @@ public class AllTags {
 		SAFE_NBT,
 		SEATS,
 		TOOLBOXES,
+		TRACKS,
+		GIRDABLE_TRACKS,
 		TREE_ATTACHMENTS,
 		VALVE_HANDLES,
 		WINDMILL_SAILS,
@@ -130,6 +132,10 @@ public class AllTags {
 		public boolean matches(Block block) {
 			return block.builtInRegistryHolder()
 				.is(tag);
+		}
+
+		public boolean matches(ItemStack stack) {
+			return stack != null && stack.getItem() instanceof BlockItem blockItem && matches(blockItem.getBlock());
 		}
 
 		public boolean matches(BlockState state) {

@@ -265,11 +265,15 @@ public class GlobalRailwayManager {
 	public void clientTick() {
 		if (isTrackGraphDebugActive())
 			for (TrackGraph trackGraph : trackNetworks.values())
-				TrackGraphVisualizer.debugViewGraph(trackGraph);
+				TrackGraphVisualizer.debugViewGraph(trackGraph, isTrackGraphDebugExtended());
 	}
-	
+
 	private static boolean isTrackGraphDebugActive() {
 		return KineticDebugger.isF3DebugModeActive() && AllConfigs.client().showTrackGraphOnF3.get();
+	}
+
+	private static boolean isTrackGraphDebugExtended() {
+		return AllConfigs.CLIENT.showExtendedTrackGraphOnF3.get();
 	}
 
 	public GlobalRailwayManager sided(LevelAccessor level) {

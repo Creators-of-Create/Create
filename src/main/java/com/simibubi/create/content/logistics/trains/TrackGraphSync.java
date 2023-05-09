@@ -60,7 +60,7 @@ public class TrackGraphSync {
 	public void edgeAdded(TrackGraph graph, TrackNode node1, TrackNode node2, TrackEdge edge) {
 		flushGraphPacket(graph);
 		currentGraphSyncPacket.addedEdges
-			.add(Pair.of(Couple.create(node1.getNetId(), node2.getNetId()), edge.getTurn()));
+			.add(Pair.of(Pair.of(Couple.create(node1.getNetId(), node2.getNetId()), edge.getTrackMaterial()), edge.getTurn()));
 		currentPayload++;
 	}
 
@@ -82,7 +82,7 @@ public class TrackGraphSync {
 		if (currentGraphSyncPacket.addedNodes.remove(nodeId) == null)
 			currentGraphSyncPacket.removedNodes.add(nodeId);
 		currentGraphSyncPacket.addedEdges.removeIf(pair -> {
-			Couple<Integer> ids = pair.getFirst();
+			Couple<Integer> ids = pair.getFirst().getFirst();
 			return ids.getFirst()
 				.intValue() == nodeId
 				|| ids.getSecond()
@@ -156,7 +156,7 @@ public class TrackGraphSync {
 			graph.connectionsByNode.get(node)
 				.forEach((node2, edge) -> {
 					Couple<Integer> key = Couple.create(node.getNetId(), node2.getNetId());
-					currentPacket.addedEdges.add(Pair.of(key, edge.getTurn()));
+					currentPacket.addedEdges.add(Pair.of(Pair.of(key, edge.getTrackMaterial()), edge.getTurn()));
 					currentPacket.syncEdgeData(node, node2, edge);
 				});
 
