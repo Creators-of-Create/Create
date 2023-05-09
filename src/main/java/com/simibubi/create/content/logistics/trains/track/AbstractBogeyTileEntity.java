@@ -104,7 +104,7 @@ public abstract class AbstractBogeyTileEntity extends CachedRenderBBTileEntity {
 
 	public void animate(float distanceMoved) {
 		BlockState blockState = getBlockState();
-		if (!(blockState.getBlock() instanceof AbstractBogeyBlock type))
+		if (!(blockState.getBlock() instanceof AbstractBogeyBlock<?> type))
 			return;
 		double angleDiff = 360 * distanceMoved / (Math.PI * 2 * type.getWheelRadius());
 		double newWheelAngle = (virtualAnimation.getValue() - angleDiff) % 360;

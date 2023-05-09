@@ -89,7 +89,7 @@ public class AllBogeyStyles {
 		}
 
 		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<? extends BogeyRenderer> renderer,
-									   BlockEntry<? extends AbstractBogeyBlock> blockEntry) {
+									   BlockEntry<? extends AbstractBogeyBlock<?>> blockEntry) {
 			this.size(size, renderer, blockEntry.getId());
 			return this;
 		}

@@ -67,7 +67,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 
 				int light = getBogeyLightCoords(entity, bogey, partialTicks);
 
-				bogey.type.render(null, bogey.isUpsideDown(), bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
+				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
 					overlay, bogey.getStyle(), bogey.bogeyData);
 
 				ms.popPose();

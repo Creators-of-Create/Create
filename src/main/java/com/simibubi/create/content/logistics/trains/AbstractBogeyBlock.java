@@ -145,7 +145,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyTileEntity> exte
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void render(@Nullable BlockState state, boolean upsideDown, float wheelAngle, PoseStack ms, float partialTicks,
+	public void render(@Nullable BlockState state, float wheelAngle, PoseStack ms, float partialTicks,
 		MultiBufferSource buffers, int light, int overlay, BogeyStyle style, CompoundTag bogeyData) {
 		if (style == null)
 			style = getDefaultStyle();
