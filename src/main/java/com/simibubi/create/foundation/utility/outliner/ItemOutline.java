@@ -34,12 +34,12 @@ public class ItemOutline extends Outline {
 	}
 
 	@Override
-	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, float pt) {
 		Minecraft mc = Minecraft.getInstance();
 		ms.pushPose();
 
 		TransformStack.cast(ms)
-			.translate(pos)
+			.translate(pos.x - camera.x, pos.y - camera.y, pos.z - camera.z)
 			.scale(params.alpha);
 
 		mc.getItemRenderer().render(stack, ItemTransforms.TransformType.FIXED, false, ms,
