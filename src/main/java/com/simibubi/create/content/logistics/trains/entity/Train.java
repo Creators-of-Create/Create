@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.logistics.trains.track.AbstractBogeyTileEntity;
+import com.simibubi.create.content.logistics.trains.track.AbstractBogeyBlockEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -741,7 +741,7 @@ public class Train {
 				Vec3 bogeyPosition = bogey.getAnchorPosition();
 				if (bogeyPosition == null) continue;
 				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
-				if (!(be instanceof AbstractBogeyTileEntity sbte))
+				if (!(be instanceof AbstractBogeyBlockEntity sbte))
 					continue;
 				sbte.setBogeyData(bogey.bogeyData);
 			}

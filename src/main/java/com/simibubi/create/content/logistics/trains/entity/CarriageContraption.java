@@ -167,7 +167,7 @@ public class CarriageContraption extends Contraption {
 			bogeys++;
 			if (bogeys == 2)
 				secondBogeyPos = pos;
-			return Pair.of(new StructureBlockInfo(pos, blockState, captureTE ? getTileEntityNBT(world, pos) : null),
+			return Pair.of(new StructureBlockInfo(pos, blockState, captureTE ? getBlockEntityNBT(world, pos) : null),
 				captureTE ? world.getBlockEntity(pos) : null);
 		}
 

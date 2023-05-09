@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
@@ -139,6 +139,7 @@ public class TrackMaterial {
 
 	@OnlyIn(Dist.CLIENT)
 	public record TrackModelHolder(PartialModel tie, PartialModel segment_left, PartialModel segment_right) {
-		static final TrackModelHolder DEFAULT = new TrackModelHolder(AllBlockPartials.TRACK_TIE, AllBlockPartials.TRACK_SEGMENT_LEFT, AllBlockPartials.TRACK_SEGMENT_RIGHT);
+		static final TrackModelHolder DEFAULT = new TrackModelHolder(AllPartialModels.TRACK_TIE,
+			AllPartialModels.TRACK_SEGMENT_LEFT, AllPartialModels.TRACK_SEGMENT_RIGHT);
 	}
 }

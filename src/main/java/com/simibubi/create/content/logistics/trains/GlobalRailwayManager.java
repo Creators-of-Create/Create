@@ -273,7 +273,7 @@ public class GlobalRailwayManager {
 	}
 
 	private static boolean isTrackGraphDebugExtended() {
-		return AllConfigs.CLIENT.showExtendedTrackGraphOnF3.get();
+		return AllConfigs.client().showExtendedTrackGraphOnF3.get();
 	}
 
 	public GlobalRailwayManager sided(LevelAccessor level) {

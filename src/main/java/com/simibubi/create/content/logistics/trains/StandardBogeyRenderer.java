@@ -1,10 +1,16 @@
 package com.simibubi.create.content.logistics.trains;
 
+import static com.simibubi.create.AllPartialModels.BOGEY_DRIVE;
+import static com.simibubi.create.AllPartialModels.BOGEY_FRAME;
+import static com.simibubi.create.AllPartialModels.BOGEY_PIN;
+import static com.simibubi.create.AllPartialModels.BOGEY_PISTON;
+import static com.simibubi.create.AllPartialModels.LARGE_BOGEY_WHEELS;
+import static com.simibubi.create.AllPartialModels.SMALL_BOGEY_WHEELS;
+
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -12,15 +18,6 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-
-import org.jetbrains.annotations.Nullable;
-
-import static com.simibubi.create.AllBlockPartials.LARGE_BOGEY_WHEELS;
-import static com.simibubi.create.AllBlockPartials.BOGEY_PIN;
-import static com.simibubi.create.AllBlockPartials.BOGEY_DRIVE;
-import static com.simibubi.create.AllBlockPartials.BOGEY_PISTON;
-import static com.simibubi.create.AllBlockPartials.SMALL_BOGEY_WHEELS;
-import static com.simibubi.create.AllBlockPartials.BOGEY_FRAME;
 
 public class StandardBogeyRenderer {
 	public static class CommonStandardBogeyRenderer extends BogeyRenderer.CommonRenderer {

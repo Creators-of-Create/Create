@@ -1,9 +1,13 @@
 package com.simibubi.create.content.logistics.trains.track;
 
+import static com.simibubi.create.content.logistics.trains.entity.CarriageBogey.UPSIDE_DOWN_KEY;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.content.logistics.trains.entity.BogeyStyle;
-import com.simibubi.create.foundation.tileEntity.CachedRenderBBTileEntity;
+import com.simibubi.create.foundation.blockEntity.CachedRenderBBBlockEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
@@ -14,17 +18,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 
-import static com.simibubi.create.content.logistics.trains.entity.CarriageBogey.UPSIDE_DOWN_KEY;
-
-public abstract class AbstractBogeyTileEntity extends CachedRenderBBTileEntity {
+public abstract class AbstractBogeyBlockEntity extends CachedRenderBBBlockEntity {
 	public static final String BOGEY_STYLE_KEY = "BogeyStyle";
 	public static final String BOGEY_DATA_KEY = "BogeyData";
 
 	private CompoundTag bogeyData;
 
-	public AbstractBogeyTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	public AbstractBogeyBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
