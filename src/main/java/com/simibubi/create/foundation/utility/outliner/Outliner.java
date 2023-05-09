@@ -147,7 +147,7 @@ public class Outliner {
 		}
 	}
 
-	public void renderOutlines(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void renderOutlines(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, float pt) {
 		outlines.forEach((key, entry) -> {
 			Outline outline = entry.getOutline();
 			OutlineParams params = outline.getParams();
@@ -163,7 +163,7 @@ public class Outliner {
 				if (params.alpha < 1 / 8f)
 					return;
 			}
-			outline.render(ms, buffer, pt);
+			outline.render(ms, buffer, camera, pt);
 		});
 	}
 

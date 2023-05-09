@@ -10,7 +10,6 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
@@ -44,24 +43,23 @@ public class AABBOutline extends Outline {
 	}
 
 	@Override
-	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, float pt) {
 		params.loadColor(colorTemp);
 		Vector4f color = colorTemp;
 		int lightmap = params.lightmap;
 		boolean disableLineNormals = params.disableLineNormals;
-
-		renderBox(ms, buffer, bb, color, lightmap, disableLineNormals);
+		renderBox(ms, buffer, camera, bb, color, lightmap, disableLineNormals);
 	}
 
-	protected void renderBox(PoseStack ms, SuperRenderTypeBuffer buffer, AABB box, Vector4f color, int lightmap, boolean disableLineNormals) {
+	protected void renderBox(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, AABB box, Vector4f color, int lightmap, boolean disableLineNormals) {
 		Vector3f minPos = minPosTemp1;
 		Vector3f maxPos = maxPosTemp1;
 
-		Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera()
-			.getPosition();
-		boolean cameraInside = box.contains(cameraPos);
+		boolean cameraInside = box.contains(camera);
 		boolean cull = !cameraInside && !params.disableCull;
 		float inflate = cameraInside ? -1 / 128f : 1 / 128f;
+		
+		box = box.move(camera.scale(-1));
 		minPos.set((float) box.minX - inflate, (float) box.minY - inflate, (float) box.minZ - inflate);
 		maxPos.set((float) box.maxX + inflate, (float) box.maxY + inflate, (float) box.maxZ + inflate);
 

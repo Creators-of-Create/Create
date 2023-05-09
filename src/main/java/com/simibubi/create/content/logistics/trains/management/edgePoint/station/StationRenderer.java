@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.trains.management.edgePoint.statio
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.Transform;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
@@ -48,13 +49,14 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 		GlobalStation station = te.getStation();
 		boolean isAssembling = te.getBlockState()
 			.getValue(StationBlock.ASSEMBLING);
-		
+
 		if (!isAssembling || (station == null || station.getPresentTrain() != null) && !te.isVirtual()) {
 			renderFlag(
 				te.flag.getValue(partialTicks) > 0.75f ? AllBlockPartials.STATION_ON : AllBlockPartials.STATION_OFF, te,
 				partialTicks, ms, buffer, light, overlay);
 			ms.pushPose();
-			ms.translate(-pos.getX(), -pos.getY(), -pos.getZ());
+			TransformStack.cast(ms)
+				.translate(targetPosition.subtract(pos));
 			TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), target.getTargetBezier(),
 				ms, buffer, light, overlay, RenderedTrackOverlayType.STATION, 1);
 			ms.popPose();
@@ -68,7 +70,7 @@ public class StationRenderer extends SafeTileEntityRenderer<StationTileEntity> {
 
 		if (te.isVirtual() && te.bogeyLocations == null)
 			te.refreshAssemblyInfo();
-		
+
 		if (direction == null || te.assemblyLength == 0 || te.bogeyLocations == null)
 			return;
 

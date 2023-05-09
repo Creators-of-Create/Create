@@ -399,7 +399,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			.lineWidth(1 / 64f)
 			.colored(0xefefef)
 			.disableLineNormals();
-		aabbOutline.render(ms, (SuperRenderTypeBuffer) buffer, pt);
+		aabbOutline.render(ms, (SuperRenderTypeBuffer) buffer, Vec3.ZERO, pt);
 
 		ms.popPose();
 	}

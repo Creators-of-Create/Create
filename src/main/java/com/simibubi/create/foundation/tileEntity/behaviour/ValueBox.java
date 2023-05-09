@@ -76,7 +76,7 @@ public class ValueBox extends ChasingAABBOutline {
 	}
 
 	@Override
-	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, float pt) {
 		boolean hasTransform = transform != null;
 		if (transform instanceof Sided && params.getHighlightedFace() != null)
 			((Sided) transform).fromSide(params.getHighlightedFace());
@@ -84,11 +84,11 @@ public class ValueBox extends ChasingAABBOutline {
 			return;
 
 		ms.pushPose();
-		ms.translate(pos.getX(), pos.getY(), pos.getZ());
+		ms.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
 		if (hasTransform)
 			transform.transform(blockState, ms);
 		params.colored(isPassive ? passiveColor : highlightColor);
-		super.render(ms, buffer, pt);
+		super.render(ms, buffer, Vec3.ZERO, pt);
 
 		float fontScale = hasTransform ? -transform.getFontScale() : -1 / 64f;
 		ms.scale(fontScale, fontScale, fontScale);

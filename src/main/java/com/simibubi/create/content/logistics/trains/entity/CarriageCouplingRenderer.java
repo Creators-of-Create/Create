@@ -26,17 +26,12 @@ import net.minecraft.world.phys.Vec3;
 
 public class CarriageCouplingRenderer {
 
-	public static void renderAll(PoseStack ms, MultiBufferSource buffer) {
+	public static void renderAll(PoseStack ms, MultiBufferSource buffer, Vec3 camera) {
 		Collection<Train> trains = CreateClient.RAILWAYS.trains.values();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		BlockState air = Blocks.AIR.defaultBlockState();
 		float partialTicks = AnimationTickHolder.getPartialTicks();
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		if (cameraEntity == null)
-			return;
-
-		Vec3 camera = cameraEntity.getPosition(partialTicks);
-		Level level = cameraEntity.level;
+		Level level = Minecraft.getInstance().level;
 
 		for (Train train : trains) {
 			List<Carriage> carriages = train.carriages;
@@ -72,42 +67,48 @@ public class CarriageCouplingRenderer {
 				Vec3 position2 = entity2.getPosition(partialTicks);
 
 				ms.pushPose();
-				ms.pushPose();
-				ms.translate(anchor.x, anchor.y, anchor.z);
-				CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
-					.rotateY(-yRot)
-					.rotateX(xRot)
-					.light(lightCoords)
-					.renderInto(ms, vb);
 
-				float margin = 3 / 16f;
-				double couplingDistance = train.carriageSpacing.get(i) - 2 * margin
-					- bogey1.type.getConnectorAnchorOffset(bogey1.isUpsideDown()).z - bogey2.type.getConnectorAnchorOffset(bogey2.isUpsideDown()).z;
-				int couplingSegments = (int) Math.round(couplingDistance * 4);
-				double stretch = ((anchor2.distanceTo(anchor) - 2 * margin) * 4) / couplingSegments;
-				for (int j = 0; j < couplingSegments; j++) {
-					CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_CABLE, air)
-						.rotateY(-yRot + 180)
-						.rotateX(-xRot)
-						.translate(0, 0, margin + 2 / 16f)
-						.scale(1, 1, (float) stretch)
-						.translate(0, 0, j / 4f)
+				{
+					ms.pushPose();
+					ms.translate(anchor.x - camera.x, anchor.y - camera.y, anchor.z - camera.z);
+					CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
+						.rotateY(-yRot)
+						.rotateX(xRot)
 						.light(lightCoords)
 						.renderInto(ms, vb);
+
+					float margin = 3 / 16f;
+					double couplingDistance = train.carriageSpacing.get(i) - 2 * margin
+						- bogey1.type.getConnectorAnchorOffset(bogey1.isUpsideDown()).z - bogey2.type.getConnectorAnchorOffset(bogey2.isUpsideDown()).z;
+					int couplingSegments = (int) Math.round(couplingDistance * 4);
+					double stretch = ((anchor2.distanceTo(anchor) - 2 * margin) * 4) / couplingSegments;
+					for (int j = 0; j < couplingSegments; j++) {
+						CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_CABLE, air)
+							.rotateY(-yRot + 180)
+							.rotateX(-xRot)
+							.translate(0, 0, margin + 2 / 16f)
+							.scale(1, 1, (float) stretch)
+							.translate(0, 0, j / 4f)
+							.light(lightCoords)
+							.renderInto(ms, vb);
+					}
+					ms.popPose();
 				}
 
-				ms.popPose();
+				{
+					ms.pushPose();
+					Vec3 translation = position2.subtract(position)
+						.add(anchor2)
+						.subtract(camera);
+					ms.translate(translation.x, translation.y, translation.z);
+					CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
+						.rotateY(-yRot + 180)
+						.rotateX(-xRot)
+						.light(lightCoords2)
+						.renderInto(ms, vb);
+					ms.popPose();
+				}
 
-				ms.pushPose();
-				ms.translate(-position.x, -position.y, -position.z);
-				ms.translate(position2.x, position2.y, position2.z);
-				ms.translate(anchor2.x, anchor2.y, anchor2.z);
-				CachedBufferer.partial(AllBlockPartials.TRAIN_COUPLING_HEAD, air)
-					.rotateY(-yRot + 180)
-					.rotateX(-xRot)
-					.light(lightCoords2)
-					.renderInto(ms, vb);
-				ms.popPose();
 				ms.popPose();
 
 			}

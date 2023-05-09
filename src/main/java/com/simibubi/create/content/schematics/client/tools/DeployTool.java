@@ -36,8 +36,8 @@ public class DeployTool extends PlacementToolBase {
 	}
 
 	@Override
-	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer) {
-		super.renderTool(ms, buffer);
+	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
+		super.renderTool(ms, buffer, camera);
 
 		if (selectedPos == null)
 			return;
@@ -58,7 +58,7 @@ public class DeployTool extends PlacementToolBase {
 		double zOrigin = bounds.getZsize() / 2f;
 		Vec3 origin = new Vec3(xOrigin, 0, zOrigin);
 
-		ms.translate(x - centerX, y, z - centerZ);
+		ms.translate(x - centerX - camera.x, y - camera.y, z - centerZ - camera.z);
 		TransformStack.cast(ms)
 			.translate(origin)
 			.translate(rotationOffset)
@@ -67,7 +67,7 @@ public class DeployTool extends PlacementToolBase {
 			.translateBack(origin);
 
 		AABBOutline outline = schematicHandler.getOutline();
-		outline.render(ms, buffer, pt);
+		outline.render(ms, buffer, Vec3.ZERO, pt);
 		outline.getParams()
 			.clearTextures();
 		ms.popPose();

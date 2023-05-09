@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import com.simibubi.create.AllSpecialTextures;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class Outline {
 
@@ -40,14 +42,14 @@ public abstract class Outline {
 		return params;
 	}
 
-	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt);
+	public abstract void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera, float pt);
 
 	public void tick() {}
 
-	public void bufferCuboidLine(PoseStack poseStack, VertexConsumer consumer, Vector3f start, Vector3f end, float width, Vector4f color, int lightmap, boolean disableNormals) {
+	public void bufferCuboidLine(PoseStack poseStack, VertexConsumer consumer, Vec3 camera, Vector3d start, Vector3d end,
+		float width, Vector4f color, int lightmap, boolean disableNormals) {
 		Vector3f diff = this.diffPosTemp;
-		diff.load(end);
-		diff.sub(start);
+		diff.set((float) (end.x - start.x), (float) (end.y - start.y), (float) (end.z - start.z));
 
 		float length = Mth.sqrt(diff.x() * diff.x() + diff.y() * diff.y() + diff.z() * diff.z());
 		float hAngle = AngleHelper.deg(Mth.atan2(diff.x(), diff.z()));
@@ -56,13 +58,16 @@ public abstract class Outline {
 
 		poseStack.pushPose();
 		TransformStack.cast(poseStack)
+			.translate(start.x - camera.x, start.y - camera.y, start.z - camera.z)
 			.rotateY(hAngle)
 			.rotateX(vAngle);
-		bufferCuboidLine(poseStack.last(), consumer, start, Direction.NORTH, length, width, color, lightmap, disableNormals);
+		bufferCuboidLine(poseStack.last(), consumer, Vector3f.ZERO, Direction.SOUTH, length, width, color, lightmap,
+			disableNormals);
 		poseStack.popPose();
 	}
 
-	public void bufferCuboidLine(PoseStack.Pose pose, VertexConsumer consumer, Vector3f origin, Direction direction, float length, float width, Vector4f color, int lightmap, boolean disableNormals) {
+	public void bufferCuboidLine(PoseStack.Pose pose, VertexConsumer consumer, Vector3f origin, Direction direction,
+		float length, float width, Vector4f color, int lightmap, boolean disableNormals) {
 		Vector3f minPos = minPosTemp;
 		Vector3f maxPos = maxPosTemp;
 
@@ -94,7 +99,8 @@ public abstract class Outline {
 		bufferCuboid(pose, consumer, minPos, maxPos, color, lightmap, disableNormals);
 	}
 
-	public void bufferCuboid(PoseStack.Pose pose, VertexConsumer consumer, Vector3f minPos, Vector3f maxPos, Vector4f color, int lightmap, boolean disableNormals) {
+	public void bufferCuboid(PoseStack.Pose pose, VertexConsumer consumer, Vector3f minPos, Vector3f maxPos,
+		Vector4f color, int lightmap, boolean disableNormals) {
 		Vector4f posTransformTemp = this.posTransformTemp;
 		Vector3f normalTransformTemp = this.normalTransformTemp;
 
@@ -423,11 +429,13 @@ public abstract class Outline {
 			.endVertex();
 	}
 
-	public void bufferQuad(PoseStack.Pose pose, VertexConsumer consumer, Vector3f pos0, Vector3f pos1, Vector3f pos2, Vector3f pos3, Vector4f color, int lightmap, Vector3f normal) {
+	public void bufferQuad(PoseStack.Pose pose, VertexConsumer consumer, Vector3f pos0, Vector3f pos1, Vector3f pos2,
+		Vector3f pos3, Vector4f color, int lightmap, Vector3f normal) {
 		bufferQuad(pose, consumer, pos0, pos1, pos2, pos3, color, 0, 0, 1, 1, lightmap, normal);
 	}
 
-	public void bufferQuad(PoseStack.Pose pose, VertexConsumer consumer, Vector3f pos0, Vector3f pos1, Vector3f pos2, Vector3f pos3, Vector4f color, float minU, float minV, float maxU, float maxV, int lightmap, Vector3f normal) {
+	public void bufferQuad(PoseStack.Pose pose, VertexConsumer consumer, Vector3f pos0, Vector3f pos1, Vector3f pos2,
+		Vector3f pos3, Vector4f color, float minU, float minV, float maxU, float maxV, int lightmap, Vector3f normal) {
 		Vector4f posTransformTemp = this.posTransformTemp;
 		Vector3f normalTransformTemp = this.normalTransformTemp;
 
