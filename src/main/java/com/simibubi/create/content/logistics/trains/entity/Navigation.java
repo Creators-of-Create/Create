@@ -14,7 +14,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.railwayteam.railways.Railways;
 import com.simibubi.create.content.logistics.trains.TrackMaterial;
 
 import org.apache.commons.lang3.mutable.MutableDouble;

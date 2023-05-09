@@ -151,7 +151,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyTileEntity> exte
 			style = getDefaultStyle();
 
 		final Optional<BogeyRenderer.CommonRenderer> commonRenderer
-				= style.getNewCommonRenderInstance();
+				= style.getInWorldCommonRenderInstance();
 		final BogeyRenderer renderer = style.getInWorldRenderInstance(this.getSize());
 		if (state != null) {
 			ms.translate(.5f, .5f, .5f);

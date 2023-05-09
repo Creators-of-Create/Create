@@ -278,21 +278,10 @@ public abstract class BogeyRenderer {
 		return state.toString();
 	}
 
-	/**
-	 * Used for rendering in contraptions allowing for individual instances of models for each component
-	 *
-	 * @return new Instance of renderer
-	 */
-	public abstract BogeyRenderer createNewInstance();
-
-
 	public static abstract class CommonRenderer extends BogeyRenderer {
 		@Override
 		public BogeySizes.BogeySize getSize() {
 			return null;
 		}
-
-		@Override
-		public abstract CommonRenderer createNewInstance();
 	}
 }

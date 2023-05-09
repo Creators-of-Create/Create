@@ -31,11 +31,6 @@ public class StandardBogeyRenderer {
 		}
 
 		@Override
-		public CommonStandardBogeyRenderer createNewInstance() {
-			return new CommonStandardBogeyRenderer();
-		}
-
-		@Override
 		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
 			boolean inInstancedContraption = vb == null;
 			Transform<?>[] shafts = getTransformsFromBlockState(AllBlocks.SHAFT.getDefaultState()
@@ -58,10 +53,6 @@ public class StandardBogeyRenderer {
 			createModelInstances(materialManager, BOGEY_FRAME);
 		}
 
-		@Override
-		public BogeyRenderer createNewInstance() {
-			return new SmallStandardBogeyRenderer();
-		}
 
 		@Override
 		public BogeySizes.BogeySize getSize() {
@@ -94,11 +85,6 @@ public class StandardBogeyRenderer {
 			createModelInstances(materialManager, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
 			createModelInstances(materialManager, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.X), 2);
-		}
-
-		@Override
-		public BogeyRenderer createNewInstance() {
-			return new LargeStandardBogeyRenderer();
 		}
 
 		@Override
