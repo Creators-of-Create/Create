@@ -44,13 +44,17 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 
 		builder.with(MATERIAL_PROPERTY, material);
 
-		OcclusionData occlusionData = new OcclusionData();
-		if (state.getBlock() instanceof CopycatBlock copycatBlock) {
-			gatherOcclusionData(world, pos, state, material, occlusionData, copycatBlock);
-			builder.with(OCCLUSION_PROPERTY, occlusionData);
-		}
+		if (!(state.getBlock() instanceof CopycatBlock copycatBlock))
+			return builder;
 
-		ModelData wrappedData = getModelOf(material).getModelData(world, pos, material, ModelData.EMPTY);
+		OcclusionData occlusionData = new OcclusionData();
+		gatherOcclusionData(world, pos, state, material, occlusionData, copycatBlock);
+		builder.with(OCCLUSION_PROPERTY, occlusionData);
+
+		ModelData wrappedData = getModelOf(material).getModelData(
+			new FilteredBlockAndTintGetter(world,
+				targetPos -> copycatBlock.canConnectTexturesToward(world, pos, targetPos, state)),
+			pos, material, ModelData.EMPTY);
 		return builder.with(WRAPPED_DATA_PROPERTY, wrappedData);
 	}
 
