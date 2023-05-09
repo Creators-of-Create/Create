@@ -28,9 +28,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import static com.simibubi.create.content.logistics.trains.track.AbstractBogeyTileEntity.BOGEY_DATA_KEY;
 import static com.simibubi.create.content.logistics.trains.track.AbstractBogeyTileEntity.BOGEY_STYLE_KEY;
 
 public class CarriageBogey {
+
+	public static final String UPSIDE_DOWN_KEY = "UpsideDown";
 
 	public Carriage carriage;
 	boolean isLeading;
@@ -51,12 +54,13 @@ public class CarriageBogey {
 
 	public CarriageBogey(AbstractBogeyBlock<?> type, boolean upsideDown, CompoundTag bogeyData, TravellingPoint point, TravellingPoint point2) {
 		this.type = type;
-		if (bogeyData == null || bogeyData.isEmpty())
-			bogeyData = this.createBogeyData(); // Prevent Crash When Updating
-		this.bogeyData = bogeyData;
 		this.upsideDown = type.canBeUpsideDown() && upsideDown;
 		point.upsideDown = this.upsideDown;
 		point2.upsideDown = this.upsideDown;
+		if (bogeyData == null || bogeyData.isEmpty())
+			bogeyData = this.createBogeyData(); // Prevent Crash When Updating
+		bogeyData.putBoolean(UPSIDE_DOWN_KEY, upsideDown);
+		this.bogeyData = bogeyData;
 		points = Couple.create(point, point2);
 		wheelAngle = LerpedFloat.angular();
 		yaw = LerpedFloat.angular();
@@ -177,13 +181,15 @@ public class CarriageBogey {
 			.toString());
 		tag.put("Points", points.serializeEach(tp -> tp.write(dimensions)));
 		tag.putBoolean("UpsideDown", upsideDown);
-		tag.put(BOGEY_STYLE_KEY, bogeyData);
+		bogeyData.putBoolean(UPSIDE_DOWN_KEY, upsideDown);
+		NBTHelper.writeResourceLocation(bogeyData, BOGEY_STYLE_KEY, getStyle().name);
+		tag.put(BOGEY_DATA_KEY, bogeyData);
 		return tag;
 	}
 
 	public static CarriageBogey read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		ResourceLocation location = new ResourceLocation(tag.getString("Type"));
-		AbstractBogeyBlock type = (AbstractBogeyBlock) ForgeRegistries.BLOCKS.getValue(location);
+		AbstractBogeyBlock<?> type = (AbstractBogeyBlock<?>) ForgeRegistries.BLOCKS.getValue(location);
 		boolean upsideDown = tag.getBoolean("UpsideDown");
 		Couple<TravellingPoint> points = Couple.deserializeEach(tag.getList("Points", Tag.TAG_COMPOUND),
 			c -> TravellingPoint.read(c, graph, dimensions));
@@ -197,12 +203,15 @@ public class CarriageBogey {
 
 	public BogeyStyle getStyle() {
 		ResourceLocation location = NBTHelper.readResourceLocation(this.bogeyData, BOGEY_STYLE_KEY);
-		return AllBogeyStyles.BOGEY_STYLES.get(location);
+		BogeyStyle style = AllBogeyStyles.BOGEY_STYLES.get(location);
+		return style != null ? style : AllBogeyStyles.STANDARD; // just for safety
 	}
 
 	private CompoundTag createBogeyData() {
-		CompoundTag nbt = new CompoundTag();
-		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, (type != null ? type.getDefaultStyle() : AllBogeyStyles.STANDARD).name);
+		BogeyStyle style = type != null ? type.getDefaultStyle() : AllBogeyStyles.STANDARD;
+		CompoundTag nbt = style.defaultData != null ? style.defaultData : new CompoundTag();
+		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, style.name);
+		nbt.putBoolean(UPSIDE_DOWN_KEY, isUpsideDown());
 		return nbt;
 	}
 

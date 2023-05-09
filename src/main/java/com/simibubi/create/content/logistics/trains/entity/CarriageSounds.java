@@ -41,7 +41,7 @@ public class CarriageSounds {
 	public CarriageSounds(CarriageContraptionEntity entity) {
 		this.entity = entity;
 		bogeySounds = entity.getCarriage().bogeys.map(bogey ->
-				bogey != null ? bogey.getStyle().getSoundType()
+				bogey != null && bogey.getStyle() != null ? bogey.getStyle().getSoundType()
 					: AllSoundEvents.TRAIN2.getMainEvent());
 		closestBogeySound = bogeySounds.getFirst();
 		distanceFactor = LerpedFloat.linear();

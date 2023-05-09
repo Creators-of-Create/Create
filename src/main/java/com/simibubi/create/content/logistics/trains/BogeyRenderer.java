@@ -69,7 +69,7 @@ public abstract class BogeyRenderer {
 	 * @param vb (Optional) Vertex Consumer used for in-world rendering
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public abstract void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption);
+	public abstract void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption);
 
 	/**
 	 * Used for calling in-contraption rendering ensuring that falsey data is handled correctly
@@ -79,8 +79,8 @@ public abstract class BogeyRenderer {
 	 * @param ms The posestack to render to
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms) {
-		this.render(upsideDown, bogeyData, wheelAngle, ms, 0, null, true);
+	public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms) {
+		this.render(bogeyData, wheelAngle, ms, 0, null, true);
 	}
 
 	public abstract BogeySizes.BogeySize getSize();

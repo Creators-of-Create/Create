@@ -48,7 +48,7 @@ public class TrainPacket extends SimplePacketBase {
 			for (boolean isFirst : Iterate.trueAndFalse) {
 				if (!isFirst && !buffer.readBoolean())
 					continue;
-				AbstractBogeyBlock type = (AbstractBogeyBlock) ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
+				AbstractBogeyBlock<?> type = (AbstractBogeyBlock<?>) ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
 				boolean upsideDown = buffer.readBoolean();
 				CompoundTag data = buffer.readNbt();
 				bogies.set(isFirst, new CarriageBogey(type, upsideDown, data, new TravellingPoint(), new TravellingPoint()));

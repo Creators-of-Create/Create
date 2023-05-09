@@ -162,10 +162,10 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyTileEntity> exte
 		VertexConsumer vb = buffers.getBuffer(RenderType.cutoutMipped());
 		if (bogeyData == null)
 			bogeyData = new CompoundTag();
-		renderer.render(upsideDown, bogeyData, wheelAngle, ms, light, vb, state == null);
+		renderer.render(bogeyData, wheelAngle, ms, light, vb, state == null);
 		CompoundTag finalBogeyData = bogeyData;
 		commonRenderer.ifPresent(common ->
-				common.render(upsideDown, finalBogeyData, wheelAngle, ms, light, vb, state == null));
+				common.render(finalBogeyData, wheelAngle, ms, light, vb, state == null));
 	}
 
 	public BogeySizes.BogeySize getSize() {

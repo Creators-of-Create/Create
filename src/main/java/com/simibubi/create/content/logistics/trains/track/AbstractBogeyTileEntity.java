@@ -17,6 +17,8 @@ import net.minecraft.world.phys.AABB;
 ;
 import org.jetbrains.annotations.NotNull;
 
+import static com.simibubi.create.content.logistics.trains.entity.CarriageBogey.UPSIDE_DOWN_KEY;
+
 public abstract class AbstractBogeyTileEntity extends CachedRenderBBTileEntity {
 	public static String BOGEY_STYLE_KEY = "BogeyStyle";
 	public static String BOGEY_DATA_KEY = "BogeyData";
@@ -81,6 +83,10 @@ public abstract class AbstractBogeyTileEntity extends CachedRenderBBTileEntity {
 	private CompoundTag createBogeyData() {
 		CompoundTag nbt = new CompoundTag();
 		NBTHelper.writeResourceLocation(nbt, BOGEY_STYLE_KEY, getDefaultStyle().name);
+		boolean upsideDown = false;
+		if (getBlockState().getBlock() instanceof AbstractBogeyBlock<?> bogeyBlock)
+			upsideDown = bogeyBlock.isUpsideDown(getBlockState());
+		nbt.putBoolean(UPSIDE_DOWN_KEY, upsideDown);
 		return nbt;
 	}
 

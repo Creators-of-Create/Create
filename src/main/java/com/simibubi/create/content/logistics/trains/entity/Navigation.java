@@ -558,8 +558,6 @@ public class Navigation {
 		if (validTypes.isEmpty()) // if there are no valid track types, a route can't be found
 			return;
 
-		Create.LOGGER.info("Valid types: "+validTypes);
-
 		Map<TrackEdge, Integer> penalties = new IdentityHashMap<>();
 		boolean costRelevant = maxCost >= 0;
 		if (costRelevant) {

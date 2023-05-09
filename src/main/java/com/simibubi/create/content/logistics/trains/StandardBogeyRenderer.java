@@ -36,7 +36,7 @@ public class StandardBogeyRenderer {
 		}
 
 		@Override
-		public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
 			boolean inInstancedContraption = vb == null;
 			Transform<?>[] shafts = getTransformsFromBlockState(AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), ms, inInstancedContraption, 2);
@@ -69,7 +69,7 @@ public class StandardBogeyRenderer {
 		}
 
 		@Override
-		public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
 			boolean inInstancedContraption = vb == null;
 			Transform<?> transform = getTransformFromPartial(BOGEY_FRAME, ms, inInstancedContraption);
 			finalize(transform, ms, light, vb);
@@ -107,7 +107,7 @@ public class StandardBogeyRenderer {
 		}
 
 		@Override
-		public void render(boolean upsideDown, CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
+		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
 			boolean inInstancedContraption = vb == null;
 
 			Transform<?>[] secondaryShafts = getTransformsFromBlockState(AllBlocks.SHAFT.getDefaultState()

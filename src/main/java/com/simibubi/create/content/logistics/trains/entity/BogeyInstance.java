@@ -46,8 +46,8 @@ public final class BogeyInstance {
 		}
 
 		commonRenderer.ifPresent(bogeyRenderer ->
-				bogeyRenderer.render(bogey.isUpsideDown(), bogey.bogeyData, wheelAngle, ms));
-		renderer.render(bogey.isUpsideDown(), bogey.bogeyData, wheelAngle, ms);
+				bogeyRenderer.render(bogey.bogeyData, wheelAngle, ms));
+		renderer.render(bogey.bogeyData, wheelAngle, ms);
 	}
 
 	public void updateLight(BlockAndTintGetter world, CarriageContraptionEntity entity) {
