@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.trains.track;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +16,7 @@ public class PlaceExtendedCurvePacket extends SimplePacketBase {
 
 	boolean mainHand;
 	boolean ctrlDown;
-	
+
 	public PlaceExtendedCurvePacket(boolean mainHand, boolean ctrlDown) {
 		this.mainHand = mainHand;
 		this.ctrlDown = ctrlDown;
@@ -39,7 +39,7 @@ public class PlaceExtendedCurvePacket extends SimplePacketBase {
 		ctx.enqueueWork(() -> {
 			ServerPlayer sender = ctx.getSender();
 			ItemStack stack = sender.getItemInHand(mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
-			if (!AllBlocks.TRACK.isIn(stack) || !stack.hasTag())
+			if (!AllTags.AllBlockTags.TRACKS.matches(stack) || !stack.hasTag())
 				return;
 			CompoundTag tag = stack.getTag();
 			tag.putBoolean("ExtendCurve", true);

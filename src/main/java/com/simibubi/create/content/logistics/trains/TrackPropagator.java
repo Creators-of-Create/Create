@@ -234,10 +234,12 @@ public class TrackPropagator {
 			return true;
 		if (location.shouldForceNode())
 			return true;
+		if (location.differentMaterials())
+			return true;
 		if (next.stream()
 			.anyMatch(DiscoveredLocation::shouldForceNode))
 			return true;
-		
+
 		Vec3 direction = location.direction;
 		if (direction != null && next.stream()
 			.anyMatch(dl -> dl.notInLineWith(direction)))

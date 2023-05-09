@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.content.logistics.trains.BogeySizes;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -121,6 +123,8 @@ public class Create {
 		AllFeatures.register(modEventBus);
 		AllPlacementModifiers.register(modEventBus);
 		BuiltinRegistration.register(modEventBus);
+		BogeySizes.init();
+		AllBogeyStyles.register();
 
 		AllConfigs.register(modLoadingContext);
 

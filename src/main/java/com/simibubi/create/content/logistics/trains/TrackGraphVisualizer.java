@@ -5,6 +5,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
+
+import net.minecraft.world.item.Items;
+
+import net.minecraft.world.level.block.Blocks;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.simibubi.create.AllKeys;
@@ -209,7 +218,7 @@ public class TrackGraphVisualizer {
 		}
 	}
 
-	public static void debugViewGraph(TrackGraph graph) {
+	public static void debugViewGraph(TrackGraph graph, boolean extended) {
 		Minecraft mc = Minecraft.getInstance();
 		Entity cameraEntity = mc.cameraEntity;
 		if (cameraEntity == null)
@@ -262,6 +271,13 @@ public class TrackGraphVisualizer {
 
 				yOffset = new Vec3(0, (other.hashCode() > hashCode ? 6 : 4) / 16f, 0);
 				if (!edge.isTurn()) {
+					if (extended) {
+						Vec3 materialPos = edge.getPosition(0.5).add(0, 1, 0);
+						CreateClient.OUTLINER.showItem(Pair.of(edge, edge.edgeData), materialPos,
+								new ItemStack(edge.getTrackMaterial().trackBlock.get().get()));
+						CreateClient.OUTLINER.showAABB(edge.edgeData, AABB.ofSize(materialPos, 1, 1, 1))
+								.colored(graph.color);
+					}
 					CreateClient.OUTLINER.showLine(edge, edge.getPosition(0)
 						.add(yOffset),
 						edge.getPosition(1)
@@ -273,6 +289,13 @@ public class TrackGraphVisualizer {
 
 				Vec3 previous = null;
 				BezierConnection turn = edge.getTurn();
+				if (extended) {
+					Vec3 materialPos = edge.getPosition(0.5).add(0, 1, 0);
+					CreateClient.OUTLINER.showItem(Pair.of(edge, edge.edgeData), materialPos,
+							new ItemStack(edge.getTrackMaterial().trackBlock.get().get()));
+					CreateClient.OUTLINER.showAABB(edge.edgeData, AABB.ofSize(materialPos, 1, 1, 1))
+							.colored(graph.color);
+				}
 				for (int i = 0; i <= turn.getSegmentCount(); i++) {
 					Vec3 current = edge.getPosition(i * 1f / turn.getSegmentCount());
 					if (previous != null)

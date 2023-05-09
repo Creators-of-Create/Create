@@ -7,12 +7,13 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
@@ -44,11 +45,13 @@ public class TrainPacket extends SimplePacketBase {
 		int size = buffer.readVarInt();
 		for (int i = 0; i < size; i++) {
 			Couple<CarriageBogey> bogies = Couple.create(null, null);
-			for (boolean first : Iterate.trueAndFalse) {
-				if (!first && !buffer.readBoolean())
+			for (boolean isFirst : Iterate.trueAndFalse) {
+				if (!isFirst && !buffer.readBoolean())
 					continue;
-				IBogeyBlock type = (IBogeyBlock) ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
-				bogies.set(first, new CarriageBogey(type, new TravellingPoint(), new TravellingPoint()));
+				AbstractBogeyBlock<?> type = (AbstractBogeyBlock<?>) ForgeRegistries.BLOCKS.getValue(buffer.readResourceLocation());
+				boolean upsideDown = buffer.readBoolean();
+				CompoundTag data = buffer.readNbt();
+				bogies.set(isFirst, new CarriageBogey(type, upsideDown, data, new TravellingPoint(), new TravellingPoint()));
 			}
 			int spacing = buffer.readVarInt();
 			carriages.add(new Carriage(bogies.getFirst(), bogies.getSecond(), spacing));
@@ -86,6 +89,8 @@ public class TrainPacket extends SimplePacketBase {
 				}
 				CarriageBogey bogey = carriage.bogeys.get(first);
 				buffer.writeResourceLocation(RegisteredObjects.getKeyOrThrow((Block) bogey.type));
+				buffer.writeBoolean(bogey.upsideDown);
+				buffer.writeNbt(bogey.bogeyData);
 			}
 			buffer.writeVarInt(carriage.bogeySpacing);
 		}

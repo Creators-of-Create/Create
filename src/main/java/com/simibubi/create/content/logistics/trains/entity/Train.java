@@ -17,6 +17,10 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.trains.track.AbstractBogeyTileEntity;
+
+import net.minecraft.world.level.block.entity.BlockEntity;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -124,7 +128,7 @@ public class Train {
 	public int honkPitch;
 
 	public float accumulatedSteamRelease;
-	
+
 	int tickOffset;
 	double[] stress;
 
@@ -277,7 +281,7 @@ public class Train {
 		int carriageCount = carriages.size();
 		boolean stalled = false;
 		double maxStress = 0;
-		
+
 		if (carriageWaitingForChunks != -1)
 			distance = 0;
 
@@ -313,11 +317,17 @@ public class Train {
 						if (leadingAnchor == null || trailingAnchor == null)
 							continue;
 
-						total += leadingAnchor.distanceTo(trailingAnchor);
+						double distanceTo = leadingAnchor.distanceToSqr(trailingAnchor);
+						if (carriage.leadingBogey().isUpsideDown() != previousCarriage.trailingBogey().isUpsideDown()) {
+							distanceTo = Math.sqrt(distanceTo - 4);
+						} else {
+							distanceTo = Math.sqrt(distanceTo);
+						}
+						total += distanceTo;
 						entries++;
 					}
 				}
-				
+
 
 				if (entries > 0)
 					actual = total / entries;
@@ -369,13 +379,13 @@ public class Train {
 					.getLeadingPoint();
 
 			double totalStress = derailed ? 0 : leadingStress + trailingStress;
-			
+
 			boolean first = i == 0;
 			boolean last = i == carriageCount - 1;
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
 			double actualDistance =
 				carriage.travel(level, graph, distance + totalStress, toFollowForward, toFollowBackward, carriageType);
-			blocked |= carriage.blocked;
+			blocked |= carriage.blocked || carriage.isOnIncompatibleTrack();
 
 			boolean onTwoBogeys = carriage.isOnTwoBogeys();
 			maxStress = Math.max(maxStress, onTwoBogeys ? carriage.bogeySpacing - carriage.getAnchorDiff() : 0);
@@ -722,8 +732,19 @@ public class Train {
 			if (entity.getContraption()instanceof CarriageContraption cc)
 				cc.returnStorageForDisassembly(carriage.storage);
 			entity.setPos(Vec3
-				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset)));
+				.atLowerCornerOf(pos.relative(assemblyDirection, backwards ? offset + carriage.bogeySpacing : offset).below(carriage.leadingBogey().isUpsideDown() ? 2 : 0)));
 			entity.disassemble();
+
+			for (CarriageBogey bogey : carriage.bogeys) {
+				if (bogey == null)
+					continue;
+				Vec3 bogeyPosition = bogey.getAnchorPosition();
+				if (bogeyPosition == null) continue;
+				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
+				if (!(be instanceof AbstractBogeyTileEntity sbte))
+					continue;
+				sbte.setBogeyData(bogey.bogeyData);
+			}
 
 			offset += carriage.bogeySpacing;
 
@@ -944,7 +965,7 @@ public class Train {
 		occupiedObservers.clear();
 		cachedObserverFiltering.clear();
 
-		TravellingPoint signalScout = new TravellingPoint(node1, node2, edge, position);
+		TravellingPoint signalScout = new TravellingPoint(node1, node2, edge, position, false);
 		Map<UUID, SignalEdgeGroup> allGroups = Create.RAILWAYS.signalEdgeGroups;
 		MutableObject<UUID> prevGroup = new MutableObject<>(null);
 

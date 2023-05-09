@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintCraftingInventory;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
@@ -106,7 +105,7 @@ public class BlueprintOverlayRenderer {
 
 		int tracks = info.requiredTracks;
 		while (tracks > 0) {
-			ingredients.add(Pair.of(AllBlocks.TRACK.asStack(Math.min(64, tracks)), info.hasRequiredTracks));
+			ingredients.add(Pair.of(new ItemStack(info.trackMaterial.getTrackBlock().get(), Math.min(64, tracks)), info.hasRequiredTracks));
 			tracks -= 64;
 		}
 

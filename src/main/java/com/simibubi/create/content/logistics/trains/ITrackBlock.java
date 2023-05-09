@@ -25,6 +25,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -74,22 +75,42 @@ public interface ITrackBlock {
 		getTrackAxes(world, pos, state).forEach(axis -> {
 			addToListIfConnected(connectedTo, list, (d, b) -> axis.scale(b ? d : -d)
 				.add(center), b -> shape.getNormal(), b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD,
-				axis, null);
+				axis, null, (b, v) -> getMaterialSimple(world, v));
 		});
 
 		return list;
 	}
 
+	public static TrackMaterial getMaterialSimple(BlockGetter world, Vec3 pos) {
+		return getMaterialSimple(world, pos, TrackMaterial.ANDESITE);
+	}
+
+	public static TrackMaterial getMaterialSimple(BlockGetter world, Vec3 pos, TrackMaterial defaultMaterial) {
+		if (defaultMaterial == null)
+			defaultMaterial = TrackMaterial.ANDESITE;
+		if (world != null) {
+			Block block = world.getBlockState(new BlockPos(pos)).getBlock();
+			if (block instanceof ITrackBlock track) {
+				return track.getMaterial();
+			}
+		}
+		return defaultMaterial;
+	}
+
 	public static void addToListIfConnected(@Nullable TrackNodeLocation fromEnd, Collection<DiscoveredLocation> list,
 		BiFunction<Double, Boolean, Vec3> offsetFactory, Function<Boolean, Vec3> normalFactory,
-		Function<Boolean, ResourceKey<Level>> dimensionFactory, Vec3 axis, BezierConnection viaTurn) {
+		Function<Boolean, ResourceKey<Level>> dimensionFactory, Vec3 axis, BezierConnection viaTurn, BiFunction<Boolean, Vec3, TrackMaterial> materialFactory) {
 
 		DiscoveredLocation firstLocation =
 			new DiscoveredLocation(dimensionFactory.apply(true), offsetFactory.apply(0.5d, true)).viaTurn(viaTurn)
+				.materialA(materialFactory.apply(true, offsetFactory.apply(0.0d, true)))
+				.materialB(materialFactory.apply(true, offsetFactory.apply(1.0d, true)))
 				.withNormal(normalFactory.apply(true))
 				.withDirection(axis);
 		DiscoveredLocation secondLocation =
 			new DiscoveredLocation(dimensionFactory.apply(false), offsetFactory.apply(0.5d, false)).viaTurn(viaTurn)
+				.materialA(materialFactory.apply(false, offsetFactory.apply(0.0d, false)))
+				.materialB(materialFactory.apply(false, offsetFactory.apply(1.0d, false)))
 				.withNormal(normalFactory.apply(false))
 				.withDirection(axis);
 
@@ -97,7 +118,7 @@ public interface ITrackBlock {
 			firstLocation.forceNode();
 			secondLocation.forceNode();
 		}
-		
+
 		boolean skipFirst = false;
 		boolean skipSecond = false;
 
@@ -151,5 +172,7 @@ public interface ITrackBlock {
 		return Pair.of(best, lookVec.dot(best.multiply(1, 0, 1)
 			.normalize()) < 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
 	}
+
+	TrackMaterial getMaterial();
 
 }

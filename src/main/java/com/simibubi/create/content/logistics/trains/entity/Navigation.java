@@ -14,6 +14,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -251,7 +253,7 @@ public class Navigation {
 				return;
 			}
 		}
-		
+
 		topSpeed *= train.throttle;
 		double turnTopSpeed = Math.min(topSpeed, train.maxTurnSpeed());
 
@@ -540,6 +542,21 @@ public class Navigation {
 		if (graph == null)
 			return;
 
+		// Cache the list of track types that the train can travel on
+		Set<TrackMaterial.TrackType> validTypes = new HashSet<>();
+		for (int i = 0; i < train.carriages.size(); i++) {
+			Carriage carriage = train.carriages.get(i);
+			if (i == 0) {
+				validTypes.addAll(carriage.leadingBogey().type.getValidPathfindingTypes(carriage.leadingBogey().getStyle()));
+			} else {
+				validTypes.retainAll(carriage.leadingBogey().type.getValidPathfindingTypes(carriage.leadingBogey().getStyle()));
+			}
+			if (carriage.isOnTwoBogeys())
+				validTypes.retainAll(carriage.trailingBogey().type.getValidPathfindingTypes(carriage.trailingBogey().getStyle()));
+		}
+		if (validTypes.isEmpty()) // if there are no valid track types, a route can't be found
+			return;
+
 		Map<TrackEdge, Integer> penalties = new IdentityHashMap<>();
 		boolean costRelevant = maxCost >= 0;
 		if (costRelevant) {
@@ -579,7 +596,7 @@ public class Navigation {
 			.get(initialNode2);
 		if (initialEdge == null)
 			return;
-		
+
 		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
 		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));
@@ -659,6 +676,8 @@ public class Navigation {
 				continue;
 
 			for (Entry<TrackNode, TrackEdge> target : validTargets) {
+				if (!validTypes.contains(target.getValue().getTrackMaterial().trackType))
+					continue;
 				TrackNode newNode = target.getKey();
 				TrackEdge newEdge = target.getValue();
 				double newDistance = newEdge.getLength() + distance;

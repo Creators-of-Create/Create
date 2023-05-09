@@ -19,6 +19,13 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.simibubi.create.AllTags;
+
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
+
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicates;
@@ -106,25 +113,30 @@ import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IBlockRenderProperties;
-
+//init
 public class TrackBlock extends Block
 	implements ITE<TrackTileEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
 
 	public static final EnumProperty<TrackShape> SHAPE = EnumProperty.create("shape", TrackShape.class);
 	public static final BooleanProperty HAS_TE = BooleanProperty.create("turn");
 
-	public TrackBlock(Properties p_49795_) {
+	protected final TrackMaterial material;
+
+	public TrackBlock(Properties p_49795_, TrackMaterial material) {
 		super(p_49795_);
 		registerDefaultState(defaultBlockState().setValue(SHAPE, TrackShape.ZO)
 			.setValue(HAS_TE, false)
 			.setValue(WATERLOGGED, false));
+		this.material = material;
 	}
+
+
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_49915_) {
 		super.createBlockStateDefinition(p_49915_.add(SHAPE, HAS_TE, WATERLOGGED));
 	}
-	
+
 	@Override
 	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
 		return BlockPathTypes.RAIL;
@@ -379,7 +391,7 @@ public class TrackBlock extends Block
 						(d, b) -> axis.scale(b ? 0 : fromCenter ? -d : d)
 							.add(center),
 						b -> shape.getNormal(), b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, axis,
-						null);
+						null, (b, v) -> ITrackBlock.getMaterialSimple(world, v));
 		} else
 			list = ITrackBlock.super.getConnected(world, pos, state, linear, connectedTo);
 
@@ -395,7 +407,7 @@ public class TrackBlock extends Block
 		Map<BlockPos, BezierConnection> connections = trackTE.getConnections();
 		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
 			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get,
-			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, null, bc));
+			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, null, bc, (b, v) -> ITrackBlock.getMaterialSimple(world, v, bc.getMaterial())));
 
 		if (trackTE.boundLocation == null || !(world instanceof ServerLevel level))
 			return list;
@@ -407,7 +419,7 @@ public class TrackBlock extends Block
 			return list;
 		BlockPos boundPos = trackTE.boundLocation.getSecond();
 		BlockState boundState = otherLevel.getBlockState(boundPos);
-		if (!AllBlocks.TRACK.has(boundState))
+		if (!AllTags.AllBlockTags.TRACKS.matches(boundState))
 			return list;
 
 		Vec3 center = Vec3.atBottomCenterOf(pos)
@@ -421,7 +433,7 @@ public class TrackBlock extends Block
 		getTrackAxes(world, pos, state).forEach(axis -> {
 			ITrackBlock.addToListIfConnected(connectedTo, list, (d, b) -> (b ? axis : boundAxis).scale(d)
 				.add(b ? center : boundCenter), b -> (b ? shape : boundShape).getNormal(),
-				b -> b ? level.dimension() : otherLevel.dimension(), axis, null);
+				b -> b ? level.dimension() : otherLevel.dimension(), axis, null, (b, v) -> ITrackBlock.getMaterialSimple(b ? level : otherLevel, v));
 		});
 
 		return list;
@@ -750,7 +762,8 @@ public class TrackBlock extends Block
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
-		int trackAmount = 1;
+		int sameTypeTrackAmount = 1;
+		Object2IntMap<TrackMaterial> otherTrackAmounts = new Object2IntArrayMap<>();
 		int girderAmount = 0;
 
 		if (te instanceof TrackTileEntity track) {
@@ -758,15 +771,27 @@ public class TrackBlock extends Block
 				.values()) {
 				if (!bezierConnection.isPrimary())
 					continue;
-				trackAmount += bezierConnection.getTrackItemCost();
+				TrackMaterial material = bezierConnection.getMaterial();
+				if (material == getMaterial()) {
+					sameTypeTrackAmount += bezierConnection.getTrackItemCost();
+				} else {
+					otherTrackAmounts.put(material, otherTrackAmounts.getOrDefault(material, 0) + 1);
+				}
 				girderAmount += bezierConnection.getGirderItemCost();
 			}
 		}
 
 		List<ItemStack> stacks = new ArrayList<>();
-		while (trackAmount > 0) {
-			stacks.add(AllBlocks.TRACK.asStack(Math.min(trackAmount, 64)));
-			trackAmount -= 64;
+		while (sameTypeTrackAmount > 0) {
+			stacks.add(new ItemStack(state.getBlock(), Math.min(sameTypeTrackAmount, 64)));
+			sameTypeTrackAmount -= 64;
+		}
+		for (TrackMaterial material : otherTrackAmounts.keySet()) {
+			int amt = otherTrackAmounts.getOrDefault(material, 0);
+			while (amt > 0) {
+				stacks.add(new ItemStack(material.getTrackBlock().get(), Math.min(amt, 64)));
+				amt -= 64;
+			}
 		}
 		while (girderAmount > 0) {
 			stacks.add(AllBlocks.METAL_GIRDER.asStack(Math.min(girderAmount, 64)));
@@ -774,6 +799,11 @@ public class TrackBlock extends Block
 		}
 
 		return new ItemRequirement(ItemUseType.CONSUME, stacks);
+	}
+
+	@Override
+	public TrackMaterial getMaterial() {
+		return material;
 	}
 
 	public static class RenderProperties extends ReducedDestroyEffects implements MultiPosDestructionHandler {

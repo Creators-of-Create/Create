@@ -3,9 +3,6 @@ package com.simibubi.create.content.logistics.trains.track;
 import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_BOTTOM;
 import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_MIDDLE;
 import static com.simibubi.create.AllBlockPartials.GIRDER_SEGMENT_TOP;
-import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_LEFT;
-import static com.simibubi.create.AllBlockPartials.TRACK_SEGMENT_RIGHT;
-import static com.simibubi.create.AllBlockPartials.TRACK_TIE;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.TransformStack;
@@ -15,6 +12,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -66,7 +64,9 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 			SegmentAngles segment = segments[i];
 			int light = LevelRenderer.getLightColor(level, segment.lightPosition.offset(tePosition));
 
-			CachedBufferer.partial(TRACK_TIE, air)
+			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
+
+			CachedBufferer.partial(modelHolder.tie(), air)
 				.mulPose(segment.tieTransform.pose())
 				.mulNormal(segment.tieTransform.normal())
 				.light(light)
@@ -74,7 +74,7 @@ public class TrackRenderer extends SafeTileEntityRenderer<TrackTileEntity> {
 
 			for (boolean first : Iterate.trueAndFalse) {
 				Pose transform = segment.railTransforms.get(first);
-				CachedBufferer.partial(first ? TRACK_SEGMENT_LEFT : TRACK_SEGMENT_RIGHT, air)
+				CachedBufferer.partial(first ? modelHolder.segment_left() : modelHolder.segment_right(), air)
 					.mulPose(transform.pose())
 					.mulNormal(transform.normal())
 					.light(light)
