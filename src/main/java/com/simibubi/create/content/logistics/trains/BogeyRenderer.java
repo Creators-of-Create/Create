@@ -56,7 +56,7 @@ public abstract class BogeyRenderer {
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
 	public Transform<?>[] getTransformsFromBlockState(BlockState state, PoseStack ms, boolean inContraption, int size) {
-		return (inContraption) ? transformContraptionModelData(keyFromModel(state), ms) : createModelData(state, size);
+		return inContraption ? transformContraptionModelData(keyFromModel(state), ms) : createModelData(state, size);
 	}
 
 	/**
@@ -156,6 +156,18 @@ public abstract class BogeyRenderer {
 				: CachedBufferer.partial(model, air);
 	}
 
+	/**
+	 * A common interface for getting transform data for blockstates, for a single model
+	 *
+	 * @param state The state of the model to be collected or instantiated
+	 * @param ms Posestack to bind the model to if it is within a contraption
+	 * @param inContraption Type of model required
+	 * @return A generic transform which can be used for both in-world and in-contraption models
+	 */
+	public Transform<?> getTransformFromBlockState(BlockState state, PoseStack ms, boolean inContraption) {
+		return (inContraption) ? contraptionModelData.get(keyFromModel(state))[0].setTransform(ms)
+				: CachedBufferer.block(state);
+	}
 
 	/**
 	 * Provides render implementations a point in setup to instantiate all model data to be needed
@@ -180,7 +192,7 @@ public abstract class BogeyRenderer {
 	}
 
 	/**
-	 * Creates instances of models for in-world rendering to a set length from a provided blockstate
+	 * Creates instances of models for in-contraption rendering to a set length from a provided blockstate
 	 *
 	 * @param materialManager The material manager
 	 * @param state Blockstate of the model to be created
@@ -191,6 +203,16 @@ public abstract class BogeyRenderer {
 		materialManager.defaultSolid().material(Materials.TRANSFORMED)
 				.getModel(state).createInstances(modelData);
 		contraptionModelData.put(keyFromModel(state), modelData);
+	}
+
+	/**
+	 * Creates a single instance of models for in-contraption rendering from a provided blockstate
+	 *
+	 * @param materialManager The material manager
+	 * @param state Blockstate of the model to be created
+	 */
+	public void createModelInstance(MaterialManager materialManager, BlockState state) {
+		this.createModelInstances(materialManager, state, 1);
 	}
 
 	/**
