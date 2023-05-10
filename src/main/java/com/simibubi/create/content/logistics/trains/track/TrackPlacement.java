@@ -522,7 +522,7 @@ public class TrackPlacement {
 				BlockPos offsetPos = pos.offset(offset.x, offset.y, offset.z);
 				BlockState stateAtPos = level.getBlockState(offsetPos);
 				// copy over all shared properties from the shaped state to the correct track material block
-				BlockState toPlace = copyProperties(state, info.trackMaterial.getTrackBlock().get().defaultBlockState());
+				BlockState toPlace = copyProperties(state, info.trackMaterial.getBlock().defaultBlockState());
 
 				boolean canPlace = stateAtPos.getMaterial()
 					.isReplaceable();
@@ -545,7 +545,7 @@ public class TrackPlacement {
 			return info;
 
 		if (!simulate) {
-			BlockState onto = info.trackMaterial.getTrackBlock().get().defaultBlockState();
+			BlockState onto = info.trackMaterial.getBlock().defaultBlockState();
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
 					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state1, onto))

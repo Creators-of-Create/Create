@@ -48,7 +48,7 @@ public class BogeySizes {
 		return BOGEY_SIZES.size();
 	}
 
-	public record BogeySize(ResourceLocation location, Float wheelRadius) {
+	public record BogeySize(ResourceLocation location, float wheelRadius) {
 		public BogeySize(String modId, String name, float wheelRadius) {
 			this(new ResourceLocation(modId, name), wheelRadius);
 		}
