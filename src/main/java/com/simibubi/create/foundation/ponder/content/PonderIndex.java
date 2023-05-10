@@ -21,16 +21,12 @@ import com.simibubi.create.foundation.ponder.content.trains.TrackScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrainScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrainSignalScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrainStationScenes;
-
 import com.tterrag.registrate.util.entry.BlockEntry;
-import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.stream.Collectors;
 
 public class PonderIndex {
 
@@ -329,12 +325,14 @@ public class PonderIndex {
 			.addStoryBoard("threshold_switch", DetectorScenes::thresholdSwitch);
 
 		// Trains
-		HELPER.forComponents(TrackMaterial.allBlocks().stream()
-						.map((trackSupplier) -> new BlockEntry<TrackBlock>(
-			// note: these blocks probably WON'T be in the Create Registrate, but a simple code trace reveals the Entry's registrate isn't used
-								Create.REGISTRATE,
-								RegistryObject.create(trackSupplier.get().getRegistryName(), ForgeRegistries.BLOCKS)))
-						.toList())
+		HELPER.forComponents(TrackMaterial.allBlocks()
+			.stream()
+			.map((trackSupplier) -> new BlockEntry<TrackBlock>(
+				// note: these blocks probably WON'T be in the Create Registrate, but a simple
+				// code trace reveals the Entry's registrate isn't used
+				Create.REGISTRATE, RegistryObject.create(trackSupplier.get()
+					.getRegistryName(), ForgeRegistries.BLOCKS)))
+			.toList())
 			.addStoryBoard("train_track/placement", TrackScenes::placement)
 			.addStoryBoard("train_track/portal", TrackScenes::portal)
 			.addStoryBoard("train_track/chunks", TrackScenes::chunks);

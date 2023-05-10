@@ -808,8 +808,7 @@ public class TrackBlock extends Block
 		for (TrackMaterial material : otherTrackAmounts.keySet()) {
 			int amt = otherTrackAmounts.getOrDefault(material, 0);
 			while (amt > 0) {
-				stacks.add(new ItemStack(material.getTrackBlock()
-					.get(), Math.min(amt, 64)));
+				stacks.add(material.asStack(Math.min(amt, 64)));
 				amt -= 64;
 			}
 		}

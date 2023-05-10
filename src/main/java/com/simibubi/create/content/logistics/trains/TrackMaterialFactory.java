@@ -1,9 +1,13 @@
 package com.simibubi.create.content.logistics.trains;
 
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.logistics.trains.track.TrackBlock;
-
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.resources.ResourceLocation;
@@ -13,9 +17,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-
 public class TrackMaterialFactory {
 	private final ResourceLocation id;
 	private String langName;
@@ -24,6 +25,9 @@ public class TrackMaterialFactory {
 	private Ingredient railsIngredient = Ingredient.fromValues(Stream.of(new Ingredient.TagValue(AllTags.forgeItemTag("nuggets/iron")), new Ingredient.TagValue(AllTags.forgeItemTag("nuggets/zinc"))));
 	private ResourceLocation particle;
 	private TrackMaterial.TrackType trackType = TrackMaterial.TrackType.STANDARD;
+
+	@Nullable
+	private TrackMaterial.TrackType.TrackBlockFactory customFactory = null;
 
 	@OnlyIn(Dist.CLIENT)
 	private TrackMaterial.TrackModelHolder modelHolder;
@@ -113,6 +117,11 @@ public class TrackMaterialFactory {
 		return this;
 	}
 
+	public TrackMaterialFactory customBlockFactory(TrackMaterial.TrackType.TrackBlockFactory factory) {
+		this.customFactory = factory;
+		return this;
+	}
+
 	public TrackMaterial build() {
 		assert trackBlock != null;
 		assert langName != null;
@@ -128,6 +137,6 @@ public class TrackMaterialFactory {
 				modelHolder = new TrackMaterial.TrackModelHolder(tieModel, leftSegmentModel, rightSegmentModel);
 			}
 		});
-		return new TrackMaterial(id, langName, trackBlock, particle, sleeperIngredient, railsIngredient, trackType, () -> () -> modelHolder);
+		return new TrackMaterial(id, langName, trackBlock, particle, sleeperIngredient, railsIngredient, trackType, () -> () -> modelHolder, customFactory);
 	}
 }

@@ -105,7 +105,7 @@ public class BlueprintOverlayRenderer {
 
 		int tracks = info.requiredTracks;
 		while (tracks > 0) {
-			ingredients.add(Pair.of(new ItemStack(info.trackMaterial.getTrackBlock().get(), Math.min(64, tracks)), info.hasRequiredTracks));
+			ingredients.add(Pair.of(new ItemStack(info.trackMaterial.getBlock(), Math.min(64, tracks)), info.hasRequiredTracks));
 			tracks -= 64;
 		}
 

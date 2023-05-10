@@ -195,6 +195,7 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerBlockEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
 import com.simibubi.create.content.logistics.trains.BogeyBlockEntityRenderer;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayRenderer;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverBlockEntity;
@@ -831,8 +832,8 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<TrackBlockEntity> TRACK = REGISTRATE
 		.blockEntity("track", TrackBlockEntity::new)
 		.instance(() -> TrackInstance::new)
+		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
-		.validBlocks(AllBlocks.TRACK)
 		.register();
 	
 	public static final BlockEntityEntry<FakeTrackBlockEntity> FAKE_TRACK = REGISTRATE

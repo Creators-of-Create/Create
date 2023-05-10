@@ -20,7 +20,6 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -38,7 +37,6 @@ public class TrackGraphVisualizer {
 
 		Vec3 camera = cameraEntity.getEyePosition();
 		Outliner outliner = CreateClient.OUTLINER;
-		boolean ctrl = false; // AllKeys.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL);
 		Map<UUID, SignalEdgeGroup> allGroups = Create.RAILWAYS.sided(null).signalEdgeGroups;
 		float width = 1 / 8f;
 
@@ -271,8 +269,8 @@ public class TrackGraphVisualizer {
 						Vec3 materialPos = edge.getPosition(graph, 0.5)
 							.add(0, 1, 0);
 						CreateClient.OUTLINER.showItem(Pair.of(edge, edge.edgeData), materialPos,
-							new ItemStack(edge.getTrackMaterial().trackBlock.get()
-								.get()));
+							edge.getTrackMaterial()
+								.asStack());
 						CreateClient.OUTLINER.showAABB(edge.edgeData, AABB.ofSize(materialPos, .25, 0, .25)
 							.move(0, -0.5, 0))
 							.lineWidth(1 / 16f)
@@ -292,9 +290,8 @@ public class TrackGraphVisualizer {
 				if (extended) {
 					Vec3 materialPos = edge.getPosition(graph, 0.5)
 						.add(0, 1, 0);
-					CreateClient.OUTLINER.showItem(Pair.of(edge, edge.edgeData), materialPos,
-						new ItemStack(edge.getTrackMaterial().trackBlock.get()
-							.get()));
+					CreateClient.OUTLINER.showItem(Pair.of(edge, edge.edgeData), materialPos, edge.getTrackMaterial()
+						.asStack());
 					CreateClient.OUTLINER.showAABB(edge.edgeData, AABB.ofSize(materialPos, .25, 0, .25)
 						.move(0, -0.5, 0))
 						.lineWidth(1 / 16f)
