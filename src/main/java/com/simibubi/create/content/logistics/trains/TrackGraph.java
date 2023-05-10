@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.api.event.TrackGraphMergeEvent;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgeData;
@@ -41,6 +42,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 
 public class TrackGraph {
 
@@ -247,6 +249,7 @@ public class TrackGraph {
 	}
 
 	public void transferAll(TrackGraph toOther) {
+		MinecraftForge.EVENT_BUS.post(new TrackGraphMergeEvent(this, toOther));
 		nodes.forEach((loc, node) -> {
 			if (toOther.addNodeIfAbsent(node))
 				Create.RAILWAYS.sync.nodeAdded(toOther, node);
