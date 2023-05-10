@@ -3,8 +3,8 @@
 | [`setCursorPos(x, y)`](#setCursorPos) | Sets the cursor position                             |
 | [`getCursorPos()`](#getCursorPos)     | Gets the current cursor position                     |
 | [`getSize()`](#getSize)               | Gets the display size of the connected target        |
-| [`isColor()`](#isColor)               | Whether the connected display target colors          |
-| [`isColour()`](#isColour)             | Whether the connected display target supports colours |
+| [`isColor()`](#isColor)               | Whether the connected display target supports color  |
+| [`isColour()`](#isColour)             | Whether the connected display target supports colour |
 | [`write(text)`](#writetext)           | Writes text at the current cursor position           |
 | [`clearLine()`](#clearLine)           | Clears the line at the current cursor position       |
 | [`clear()`](#clear)                   | Clears the whole display                             |
@@ -15,49 +15,49 @@
 Sets the cursor position. Can be outside the bounds of the connected display.
 
 **Parameters**
-- _x:_ `number` The cursor x position
-- _y:_ `number` The cursor y position
+- _x:_ `number` The cursor x position.
+- _y:_ `number` The cursor y position.
 
 ---
 ### `getCursorPos()`
 Gets the current cursor position.
 
 **Returns**
-- `number` The cursor x position
-- `number` The cursor y position
+- `number` The cursor x position.
+- `number` The cursor y position.
 
 ---
 ### `getSize()`
-Gets the size of the connected display target
+Gets the size of the connected display target.
 
 **Returns**
-- `number` The width of the display
-- `number` The height of the display
+- `number` The width of the display.
+- `number` The height of the display.
 
 ---
 ### `isColor()`
-Checks whether the connected display target supports color
+Checks whether the connected display target supports color.
 
 **Returns**
-- `boolean` Whether the display support color
+- `boolean` Whether the display supports color.
 
 ---
 ### `isColour()`
-Checks whether the connected display target supports colour
+Checks whether the connected display target supports colour.
 
 **Returns**
-- `boolean` Whether the display support colour
+- `boolean` Whether the display supports colour.
 
 ---
 ### `write(text)`
 Writes text at the current cursor position, moving the cursor to the end of the text.
 This only writes to an internal buffer. For the changes to show up on the display [`update()`](#update) must be used.
-If the cursor is outside the bounds of the connected display the text will not show up on the display.
+If the cursor is outside the bounds of the connected display, the text will not show up on the display.
 
-This will overwrite any text currently at cursor position.
+This will overwrite any text currently at the cursor position.
 
 **Parameters**
-- _text:_ `string` Text to write.
+- _text:_ `string` The text to write.
 
 **See also**
 - [`update()`](#update) To push the changes to the display target.

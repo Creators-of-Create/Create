@@ -5,14 +5,14 @@
 
 ---
 ### `getStress()`
-Gets the connected network's current stress level
+Gets the connected network's current stress level.
 
 **Returns**
-- `number` The current stress level
+- `number` The current stress level in SU.
 
 ---
 ### `getStressCapacity()`
-Gets the connected network's total stress capacity
+Gets the connected network's total stress capacity.
 
 **Returns**
-- `number` The total stress capacity
+- `number` The total stress capacity in SU.
