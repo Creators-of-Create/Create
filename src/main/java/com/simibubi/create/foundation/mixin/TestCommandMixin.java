@@ -29,7 +29,7 @@ public class TestCommandMixin {
 					value = "INVOKE",
 					target = "Lnet/minecraft/gametest/framework/GameTestRegistry;getTestFunction(Ljava/lang/String;)Lnet/minecraft/gametest/framework/TestFunction;"
 			),
-			require = 0 // don't crash if this fails
+			require = 0 // don't crash if this fails. non-critical
 	)
 	private static TestFunction create$getCorrectTestFunction(String testName,
 															  ServerLevel level, BlockPos pos, @Nullable MultipleTestTracker tracker) {

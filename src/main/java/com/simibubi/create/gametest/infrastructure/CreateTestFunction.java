@@ -30,14 +30,24 @@ import java.util.stream.Stream;
  * To use, create a {@link GameTestGenerator} that provides tests using {@link #getTestsFrom(Class[])}.
  */
 public class CreateTestFunction extends TestFunction {
+	// for structure blocks and /test runthis
 	public static final Map<String, CreateTestFunction> NAMES_TO_FUNCTIONS = new HashMap<>();
 
-	public final String fullyQualifiedName;
+	public final String fullName;
+	public final String simpleName;
 
-	protected CreateTestFunction(String fullyQualifiedName, String pBatchName, String pTestName, String pStructureName, Rotation pRotation, int pMaxTicks, long pSetupTicks, boolean pRequired, int pRequiredSuccesses, int pMaxAttempts, Consumer<GameTestHelper> pFunction) {
+	protected CreateTestFunction(String fullName, String simpleName, String pBatchName, String pTestName,
+								 String pStructureName, Rotation pRotation, int pMaxTicks, long pSetupTicks,
+								 boolean pRequired, int pRequiredSuccesses, int pMaxAttempts, Consumer<GameTestHelper> pFunction) {
 		super(pBatchName, pTestName, pStructureName, pRotation, pMaxTicks, pSetupTicks, pRequired, pRequiredSuccesses, pMaxAttempts, pFunction);
-		this.fullyQualifiedName = fullyQualifiedName;
-		NAMES_TO_FUNCTIONS.put(fullyQualifiedName, this);
+		this.fullName = fullName;
+		this.simpleName = simpleName;
+		NAMES_TO_FUNCTIONS.put(fullName, this);
+	}
+
+	@Override
+	public String getTestName() {
+		return simpleName;
 	}
 
 	/**
@@ -61,32 +71,32 @@ public class CreateTestFunction extends TestFunction {
 			return null;
 		Class<?> owner = method.getDeclaringClass();
 		GameTestGroup group = owner.getAnnotation(GameTestGroup.class);
-		String qualifiedName = owner.getSimpleName() + "." + method.getName();
-		validateTestMethod(method, gt, owner, group, qualifiedName);
+		String simpleName = owner.getSimpleName() + '.' + method.getName();
+		validateTestMethod(method, gt, owner, group, simpleName);
 
 		String structure = "%s:gametest/%s/%s".formatted(group.namespace(), group.path(), gt.template());
 		Rotation rotation = StructureUtils.getRotationForRotationSteps(gt.rotationSteps());
 
-		String fullyQualifiedName = owner.getName() + "." + method.getName();
+		String fullName = owner.getName() + "." + method.getName();
 		return new CreateTestFunction(
 				// use structure for test name since that's what MC fills structure blocks with for some reason
-				fullyQualifiedName, gt.batch(), structure, structure, rotation, gt.timeoutTicks(), gt.setupTicks(),
+				fullName, simpleName, gt.batch(), structure, structure, rotation, gt.timeoutTicks(), gt.setupTicks(),
 				gt.required(), gt.requiredSuccesses(), gt.attempts(), asConsumer(method)
 		);
 	}
 
-	private static void validateTestMethod(Method method, GameTest gt, Class<?> owner, GameTestGroup group, String qualifiedName) {
+	private static void validateTestMethod(Method method, GameTest gt, Class<?> owner, GameTestGroup group, String simpleName) {
 		if (gt.template().isEmpty())
-			throw new IllegalArgumentException(qualifiedName + " must provide a template structure");
+			throw new IllegalArgumentException(simpleName + " must provide a template structure");
 
 		if (!Modifier.isStatic(method.getModifiers()))
-			throw new IllegalArgumentException(qualifiedName + " must be static");
+			throw new IllegalArgumentException(simpleName + " must be static");
 
 		if (method.getReturnType() != void.class)
-			throw new IllegalArgumentException(qualifiedName + " must return void");
+			throw new IllegalArgumentException(simpleName + " must return void");
 
 		if (method.getParameterCount() != 1 || method.getParameterTypes()[0] != CreateGameTestHelper.class)
-			throw new IllegalArgumentException(qualifiedName + " must take 1 parameter of type CreateGameTestHelper");
+			throw new IllegalArgumentException(simpleName + " must take 1 parameter of type CreateGameTestHelper");
 
 		if (group == null)
 			throw new IllegalArgumentException(owner.getName() + " must be annotated with @GameTestGroup");
@@ -106,7 +116,7 @@ public class CreateTestFunction extends TestFunction {
 	public void run(@NotNull GameTestHelper helper) {
 		// give structure block test info
 		StructureBlockEntity be = (StructureBlockEntity) helper.getBlockEntity(BlockPos.ZERO);
-		be.getTileData().putString("CreateTestFunction", fullyQualifiedName);
+		be.getTileData().putString("CreateTestFunction", fullName);
 		super.run(CreateGameTestHelper.of(helper));
 	}
 }
