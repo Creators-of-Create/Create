@@ -103,7 +103,7 @@ public class Carriage {
 
 		DimensionalCarriageEntity dimensional = getDimensional(level);
 		dimensional.alignEntity(entity);
-		dimensional.removeAndSaveEntity(entity, false);
+		dimensional.removeAndSaveEntity(entity, true);
 	}
 
 	public DimensionalCarriageEntity getDimensional(Level level) {
@@ -723,8 +723,8 @@ public class Carriage {
 
 		}
 
-		private void dismountPlayer(ServerLevel sLevel, ServerPlayer sp, Integer seat, boolean portal) {
-			if (!portal) {
+		private void dismountPlayer(ServerLevel sLevel, ServerPlayer sp, Integer seat, boolean capture) {
+			if (!capture) {
 				sp.stopRiding();
 				return;
 			}
