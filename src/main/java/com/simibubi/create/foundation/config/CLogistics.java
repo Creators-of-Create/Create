@@ -10,7 +10,7 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt linkRange = i(256, 1, "linkRange", Comments.linkRange);
 	public final ConfigInt displayLinkRange = i(64, 1, "displayLinkRange", Comments.displayLinkRange);
 	public final ConfigInt vaultCapacity = i(20, 1, "vaultCapacity", Comments.vaultCapacity);
-
+	public final ConfigInt brassTunnelTimer = i(10,1,10, "brassTunnelTimer",Comments.brassTunnelTimer);
 	@Override
 	public String getName() {
 		return "logistics";
@@ -28,6 +28,7 @@ public class CLogistics extends ConfigBase {
 			"The amount of ticks a portable storage interface waits for transfers until letting contraptions move along.";
 		static String mechanicalArmRange = "Maximum distance in blocks a Mechanical Arm can reach across.";
 		static String vaultCapacity = "The total amount of stacks a vault can hold per block in size.";
+		static String brassTunnelTimer = "The amount of ticks a brass tunnel waits between distributions";
 	}
 
 }

@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.config.AllConfigs;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -66,7 +68,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 
 	ItemStack stackToDistribute;
 	Direction stackEnteredFrom;
-	
+
 	float distributionProgress;
 	int distributionDistanceLeft;
 	int distributionDistanceRight;
@@ -174,7 +176,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 				return;
 
 			if (selectionMode.get() != SelectionMode.SYNCHRONIZE || syncedOutputActive) {
-				distributionProgress = 10;
+				distributionProgress = AllConfigs.SERVER.logistics.brassTunnelTimer.get();
 				sendData();
 			}
 			return;
@@ -528,7 +530,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 					continue;
 				if (!tunnelTE.sides.contains(direction))
 					continue;
-				
+
 				BlockPos offset = tunnelTE.worldPosition.below()
 					.relative(direction);
 
@@ -579,11 +581,11 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		compound.putBoolean("SyncedOutput", syncedOutputActive);
 		compound.putBoolean("ConnectedLeft", connectedLeft);
 		compound.putBoolean("ConnectedRight", connectedRight);
-		
+
 		compound.put("StackToDistribute", stackToDistribute.serializeNBT());
 		if (stackEnteredFrom != null)
 			NBTHelper.writeEnum(compound, "StackEnteredFrom", stackEnteredFrom);
-		
+
 		compound.putFloat("DistributionProgress", distributionProgress);
 		compound.putInt("PreviousIndex", previousOutputIndex);
 		compound.putInt("DistanceLeft", distributionDistanceLeft);
@@ -611,7 +613,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		syncedOutputActive = compound.getBoolean("SyncedOutput");
 		connectedLeft = compound.getBoolean("ConnectedLeft");
 		connectedRight = compound.getBoolean("ConnectedRight");
-		
+
 		stackToDistribute = ItemStack.of(compound.getCompound("StackToDistribute"));
 		stackEnteredFrom =
 			compound.contains("StackEnteredFrom") ? NBTHelper.readEnum(compound, "StackEnteredFrom", Direction.class)
@@ -719,7 +721,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		super.invalidate();
 		tunnelCapability.invalidate();
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -782,7 +784,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		List<ItemStack> allStacks = grabAllStacksOfGroup(true);
 		if (allStacks.isEmpty())
 			return false;
-		
+
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translateDirect("tooltip.brass_tunnel.contains"))
 			.withStyle(ChatFormatting.WHITE));
@@ -795,7 +797,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translateDirect("tooltip.brass_tunnel.retrieve"))
 			.withStyle(ChatFormatting.DARK_GRAY));
-		
+
 		return true;
 	}
 
