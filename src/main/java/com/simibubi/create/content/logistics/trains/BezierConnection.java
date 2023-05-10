@@ -322,7 +322,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		Inventory inv = player.getInventory();
 		int tracks = getTrackItemCost();
 		while (tracks > 0) {
-			inv.placeItemBackInInventory(new ItemStack(getMaterial().getTrackBlock().get(), Math.min(64, tracks)));
+			inv.placeItemBackInInventory(new ItemStack(getMaterial().getBlock(), Math.min(64, tracks)));
 			tracks -= 64;
 		}
 		int girders = getGirderItemCost();
@@ -350,7 +350,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				continue;
 			Vec3 v = VecHelper.offsetRandomly(segment.position, level.random, .125f)
 				.add(origin);
-			ItemEntity entity = new ItemEntity(level, v.x, v.y, v.z, new ItemStack(getMaterial().getTrackBlock().get()));
+			ItemEntity entity = new ItemEntity(level, v.x, v.y, v.z, getMaterial().asStack());
 			entity.setDefaultPickUpDelay();
 			level.addFreshEntity(entity);
 			if (!hasGirder)
@@ -364,7 +364,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 	}
 
 	public void spawnDestroyParticles(Level level) {
-		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, getMaterial().getTrackBlock().get().defaultBlockState());
+		BlockParticleOption data = new BlockParticleOption(ParticleTypes.BLOCK, getMaterial().getBlock().defaultBlockState());
 		BlockParticleOption girderData =
 			new BlockParticleOption(ParticleTypes.BLOCK, AllBlocks.METAL_GIRDER.getDefaultState());
 		if (!(level instanceof ServerLevel slevel))

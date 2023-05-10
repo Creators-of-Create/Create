@@ -785,8 +785,8 @@ public class AllTileEntities {
 	public static final BlockEntityEntry<TrackTileEntity> TRACK = REGISTRATE
 		.tileEntity("track", TrackTileEntity::new)
 		.instance(() -> TrackInstance::new)
+		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
-		.validBlocks((NonNullSupplier<? extends TrackBlock>[]) TrackMaterial.allBlocks().toArray(new NonNullSupplier[0]))
 		.register();
 
 	public static final BlockEntityEntry<FakeTrackTileEntity> FAKE_TRACK = REGISTRATE

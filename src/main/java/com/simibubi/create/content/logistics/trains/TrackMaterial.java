@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -18,7 +20,9 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -42,6 +46,9 @@ public class TrackMaterial {
 	public final ResourceLocation particle;
 	public final TrackType trackType;
 
+	@Nullable
+	private final TrackMaterial.TrackType.TrackBlockFactory customFactory;
+
 	@OnlyIn(Dist.CLIENT)
 	protected TrackModelHolder modelHolder;
 
@@ -53,6 +60,13 @@ public class TrackMaterial {
 	public TrackMaterial(ResourceLocation id, String langName, NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock,
 						 ResourceLocation particle, Ingredient sleeperIngredient, Ingredient railsIngredient,
 						 TrackType trackType, Supplier<Supplier<TrackModelHolder>> modelHolder) {
+		this(id, langName, trackBlock, particle, sleeperIngredient, railsIngredient, trackType, modelHolder, null);
+	}
+
+	public TrackMaterial(ResourceLocation id, String langName, NonNullSupplier<NonNullSupplier<? extends TrackBlock>> trackBlock,
+						 ResourceLocation particle, Ingredient sleeperIngredient, Ingredient railsIngredient,
+						 TrackType trackType, Supplier<Supplier<TrackModelHolder>> modelHolder,
+						 @Nullable TrackType.TrackBlockFactory customFactory) {
 		this.id = id;
 		this.langName = langName;
 		this.trackBlock = trackBlock;
@@ -60,38 +74,52 @@ public class TrackMaterial {
 		this.railsIngredient = railsIngredient;
 		this.particle = particle;
 		this.trackType = trackType;
+		this.customFactory = customFactory;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.modelHolder = modelHolder.get().get());
 		ALL.put(this.id, this);
 	}
 
-	public NonNullSupplier<? extends TrackBlock> getTrackBlock() {
+	public NonNullSupplier<? extends TrackBlock> getBlockSupplier() {
 		return this.trackBlock.get();
 	}
 
-	public TrackBlock createBlock(BlockBehaviour.Properties properties) {
-		return this.trackType.factory.create(properties, this);
+	public TrackBlock getBlock() {
+		return getBlockSupplier().get();
 	}
 
-	public boolean isCustom(String modId) {
+	public ItemStack asStack() {
+		return asStack(1);
+	}
+
+	public ItemStack asStack(int count) {
+		return new ItemStack(getBlock(), count);
+	}
+
+	public TrackBlock createBlock(BlockBehaviour.Properties properties) {
+		return (this.customFactory != null ? this.customFactory : this.trackType.factory)
+				.create(properties, this);
+	}
+
+	public boolean isFromMod(String modId) {
 		return this.id.getNamespace().equals(modId);
 	}
 
-	public static TrackMaterial[] allCustom(String modid) {
-		return ALL.values().stream().filter(tm -> tm.isCustom(modid)).toArray(TrackMaterial[]::new);
+	public static List<TrackMaterial> allFromMod(String modid) {
+		return ALL.values().stream().filter(tm -> tm.isFromMod(modid)).toList();
 	}
 
-	public static List<NonNullSupplier<? extends TrackBlock>> allCustomBlocks(String modid) {
-		List<NonNullSupplier<? extends TrackBlock>> list = new ArrayList<>();
-		for (TrackMaterial material : allCustom(modid)) {
-			list.add(material.getTrackBlock());
+	public static List<NonNullSupplier<? extends Block>> allBlocksFromMod(String modid) {
+		List<NonNullSupplier<? extends Block>> list = new ArrayList<>();
+		for (TrackMaterial material : allFromMod(modid)) {
+			list.add(material.getBlockSupplier());
 		}
 		return list;
 	}
 
-	public static List<NonNullSupplier<? extends TrackBlock>> allBlocks() {
-		List<NonNullSupplier<? extends TrackBlock>> list = new ArrayList<>();
+	public static List<NonNullSupplier<? extends Block>> allBlocks() {
+		List<NonNullSupplier<? extends Block>> list = new ArrayList<>();
 		for (TrackMaterial material : ALL.values()) {
-			list.add(material.getTrackBlock());
+			list.add(material.getBlockSupplier());
 		}
 		return list;
 	}
@@ -105,10 +133,8 @@ public class TrackMaterial {
 			return ANDESITE;
 
 		ResourceLocation id = ResourceLocation.tryParse(serializedName);
-		if (id != null)
-			for (TrackMaterial material : ALL.values())
-				if (material.id.equals(id))
-					return material;
+		if (ALL.containsKey(id))
+			return ALL.get(id);
 
 		Create.LOGGER.error("Failed to locate serialized track material: " + serializedName);
 		return ANDESITE;
@@ -116,7 +142,7 @@ public class TrackMaterial {
 
 	public static class TrackType {
 		@FunctionalInterface
-		protected interface TrackBlockFactory {
+		public interface TrackBlockFactory {
 			TrackBlock create(BlockBehaviour.Properties properties, TrackMaterial material);
 		}
 
