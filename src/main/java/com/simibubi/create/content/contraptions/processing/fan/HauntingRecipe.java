@@ -1,24 +1,24 @@
-package com.simibubi.create.content.contraptions.components.fan;
+package com.simibubi.create.content.contraptions.processing.fan;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
-import com.simibubi.create.content.contraptions.processing.InWorldProcessing.SplashingWrapper;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 @ParametersAreNonnullByDefault
-public class SplashingRecipe extends ProcessingRecipe<InWorldProcessing.SplashingWrapper> {
+public class HauntingRecipe extends ProcessingRecipe<RecipeWrapper> {
 
-	public SplashingRecipe(ProcessingRecipeParams params) {
-		super(AllRecipeTypes.SPLASHING, params);
+	public HauntingRecipe(ProcessingRecipeParams params) {
+		super(AllRecipeTypes.HAUNTING, params);
 	}
 
 	@Override
-	public boolean matches(SplashingWrapper inv, Level worldIn) {
+	public boolean matches(RecipeWrapper inv, Level worldIn) {
 		if (inv.isEmpty())
 			return false;
 		return ingredients.get(0)

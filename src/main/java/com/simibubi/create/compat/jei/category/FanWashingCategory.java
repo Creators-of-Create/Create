@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import net.minecraft.world.level.material.Fluids;
@@ -16,7 +16,7 @@ public class FanWashingCategory extends ProcessingViaFanCategory.MultiOutput<Spl
 	}
 
 	@Override
-	protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
+	public void renderAttachedBlock(@NotNull PoseStack matrixStack, SplashingRecipe recipe) {
 		GuiGameElement.of(Fluids.WATER)
 			.scale(SCALE)
 			.atLocal(0, 0, 2)

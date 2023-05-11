@@ -896,6 +896,8 @@
 	"create.recipe.fan_haunting.fan": "Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "Bulk Blasting",
 	"create.recipe.fan_blasting.fan": "Fan behind Lava",
+	"create.recipe.custom_fan": "Custom Fan Recipe from Datapack",
+	"create.recipe.custom_fan.fan": "Fan behind some block",
 	"create.recipe.pressing": "Pressing",
 	"create.recipe.mixing": "Mixing",
 	"create.recipe.deploying": "Deploying",

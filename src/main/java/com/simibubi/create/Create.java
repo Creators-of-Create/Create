@@ -130,6 +130,7 @@ public class Create {
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
 		BlockSpoutingBehaviour.registerDefaults();
+		AllFanProcessingTypes.register();
 
 		ForgeMod.enableMilkFluid();
 		CopperRegistries.inject();

@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingPhysics;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanNetworkManager;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandler;
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
@@ -90,7 +91,7 @@ public class CommonEvents {
 		ToolboxHandler.playerLogin(player);
 		Create.RAILWAYS.playerLogin(player);
 	}
-	
+
 	@SubscribeEvent
 	public static void playerLoggedOut(PlayerLoggedOutEvent event) {
 		Player player = event.getPlayer();
@@ -166,11 +167,13 @@ public class CommonEvents {
 	public static void onEntityEnterSection(EntityEvent.EnteringSection event) {
 		CarriageEntityHandler.onEntityEnterSection(event);
 	}
-	
+
 	@SubscribeEvent
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
+		event.addListener(CustomFanNetworkManager.FAN_TYPE);
+		event.addListener(CustomFanNetworkManager.TRANSFORM_TYPE);
 	}
 
 	@SubscribeEvent
@@ -181,6 +184,7 @@ public class CommonEvents {
 		} else {
 			PotatoProjectileTypeManager.syncToAll();
 		}
+		CustomFanNetworkManager.onDatapackSync(event);
 	}
 
 	@SubscribeEvent

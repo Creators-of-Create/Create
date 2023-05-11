@@ -68,7 +68,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 			.scale(SCALE)
 			.render(matrixStack);
 
-		renderAttachedBlock(matrixStack);
+		renderAttachedBlock(matrixStack, recipe);
 		matrixStack.popPose();
 	}
 
@@ -86,7 +86,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		matrixStack.translate(56, 33, 0);
 	}
 
-	protected abstract void renderAttachedBlock(PoseStack matrixStack);
+	public abstract void renderAttachedBlock(PoseStack matrixStack, T recipe);
 
 	public static abstract class MultiOutput<T extends ProcessingRecipe<?>> extends ProcessingViaFanCategory<T> {
 

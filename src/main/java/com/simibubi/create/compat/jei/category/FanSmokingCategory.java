@@ -22,7 +22,7 @@ public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> 
 	}
 
 	@Override
-	protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
+	public void renderAttachedBlock(@NotNull PoseStack matrixStack, SmokingRecipe recipe) {
 		GuiGameElement.of(Blocks.FIRE.defaultBlockState())
 			.scale(SCALE)
 			.atLocal(0, 0, 2)

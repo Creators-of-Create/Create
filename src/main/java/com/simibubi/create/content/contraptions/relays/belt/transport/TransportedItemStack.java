@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.relays.belt.transport;
 import java.util.Random;
 
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.fan.AbstractFanProcessingType;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 
 import net.minecraft.core.Direction;
@@ -25,7 +26,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 	public float prevBeltPosition;
 	public float prevSideOffset;
 
-	public InWorldProcessing.Type processedBy;
+	public AbstractFanProcessingType processedBy;
 	public int processingTime;
 
 	public TransportedItemStack(ItemStack stack) {

@@ -39,6 +39,8 @@
  	"create.recipe.fan_haunting.fan": "Fan behind Soul Fire",
 	"create.recipe.fan_blasting": "Bulk Blasting",
 	"create.recipe.fan_blasting.fan": "Fan behind Lava",
+  "create.recipe.custom_fan": "Custom Fan Recipe from Datapack",
+  "create.recipe.custom_fan.fan": "Fan behind some block",
 	"create.recipe.pressing": "Pressing",
 	"create.recipe.mixing": "Mixing",
 	"create.recipe.deploying": "Deploying",
@@ -920,7 +922,7 @@
 
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
 	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
-	
+
 	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
   	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused."
 

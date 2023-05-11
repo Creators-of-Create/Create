@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
@@ -22,7 +22,7 @@ public class FanHauntingCategory extends ProcessingViaFanCategory.MultiOutput<Ha
 	}
 
 	@Override
-	protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
+	public void renderAttachedBlock(@NotNull PoseStack matrixStack, HauntingRecipe recipe) {
 		GuiGameElement.of(Blocks.SOUL_FIRE.defaultBlockState())
 			.scale(SCALE)
 			.atLocal(0, 0, 2)

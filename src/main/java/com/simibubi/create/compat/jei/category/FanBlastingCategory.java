@@ -22,7 +22,7 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 	}
 
 	@Override
-	protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
+	public void renderAttachedBlock(@NotNull PoseStack matrixStack, AbstractCookingRecipe recipe) {
 		GuiGameElement.of(Fluids.LAVA)
 			.scale(SCALE)
 			.atLocal(0, 0, 2)

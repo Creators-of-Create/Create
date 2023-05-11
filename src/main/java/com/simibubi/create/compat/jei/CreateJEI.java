@@ -22,6 +22,7 @@ import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.CrushingCategory;
+import com.simibubi.create.compat.jei.category.CustomFanCategory;
 import com.simibubi.create.compat.jei.category.DeployingCategory;
 import com.simibubi.create.compat.jei.category.FanBlastingCategory;
 import com.simibubi.create.compat.jei.category.FanHauntingCategory;
@@ -44,8 +45,8 @@ import com.simibubi.create.content.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
-import com.simibubi.create.content.contraptions.components.fan.HauntingRecipe;
-import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.HauntingRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
@@ -57,6 +58,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRe
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
+import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanProcessingRecipe;
 import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
@@ -163,6 +165,12 @@ public class CreateJEI implements IModPlugin {
 				.doubleItemIcon(AllItems.PROPELLER.get(), Items.SOUL_CAMPFIRE)
 				.emptyBackground(178, 72)
 				.build("fan_haunting", FanHauntingCategory::new),
+
+		customFan = builder(CustomFanProcessingRecipe.class).addTypedRecipes(AllRecipeTypes.CUSTOM_FAN)
+				.catalystStack(ProcessingViaFanCategory.getFan("custom_fan"))
+				.doubleItemIcon(AllItems.PROPELLER.get(), Items.BARRIER)
+				.emptyBackground(178, 72)
+				.build("custom_fan", CustomFanCategory::new),
 
 		mixing = builder(BasinRecipe.class)
 				.addTypedRecipes(AllRecipeTypes.MIXING)

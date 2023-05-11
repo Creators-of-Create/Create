@@ -29,6 +29,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.syn
 import com.simibubi.create.content.contraptions.components.structureMovement.train.CouplingCreationPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartControllerUpdatePacket;
 import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
+import com.simibubi.create.content.contraptions.processing.fan.custom.CustomFanNetworkManager;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeObservedPacket;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
@@ -184,6 +185,7 @@ public enum AllPackets {
 	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_RELOCATION(ContraptionRelocationPacket.class, ContraptionRelocationPacket::new, PLAY_TO_CLIENT),
 	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket::new, PLAY_TO_CLIENT),
+	CUSTOM_FAN_DATA(CustomFanNetworkManager.SyncPacket.class, CustomFanNetworkManager.SyncPacket::new, PLAY_TO_CLIENT),
 
 	;
 
