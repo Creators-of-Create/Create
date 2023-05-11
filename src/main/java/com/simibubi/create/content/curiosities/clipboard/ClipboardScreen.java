@@ -442,7 +442,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 				if (currentEntries.get(editingIndex).text.getString()
 					.isEmpty() && currentEntries.size() > 1) {
 					currentEntries.remove(editingIndex);
-					editingIndex -= 1;
+					editingIndex = Math.max(0, editingIndex - 1);
 					editContext.setCursorToEnd();
 					return true;
 				} else if (hasControlDown()) {

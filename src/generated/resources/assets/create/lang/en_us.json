@@ -2816,7 +2816,7 @@
 	"create.ponder.mechanical_roller_fill.text_5": "As opposed to 'clear & pave', neither of these modes will cause the rollers to break existing blocks",
 
 	"create.ponder.mechanical_roller_pave.header": "Clearing and Paving with the Roller",
-	"create.ponder.mechanical_roller_pave.text_1": "Mechanical rollers help to clean up long tracks or paths conveniently",
+	"create.ponder.mechanical_roller_pave.text_1": "Mechanical rollers help to clean up terrain around tracks or paths",
 	"create.ponder.mechanical_roller_pave.text_2": "In its default mode, without a material set, it will simply clear blocks like a Drill",
 	"create.ponder.mechanical_roller_pave.text_3": "While disassembled, a suitable paving material can be specified",
 	"create.ponder.mechanical_roller_pave.text_4": "Materials can be supplied via chests or barrels attached to the structure",

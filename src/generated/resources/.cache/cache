@@ -582,7 +582,7 @@ bf2b0310500213ff853c748c236eb5d01f61658e assets/create/blockstates/yellow_toolbo
 7f39521b211441f5c3e06d60c5978cebe16cacfb assets/create/blockstates/zinc_block.json
 b7181bcd8182b2f17088e5aa881f374c9c65470c assets/create/blockstates/zinc_ore.json
 fcaad84ac4ebdb1e6d9301b77245ce855dbde503 assets/create/lang/en_ud.json
-8c536f441c4515d44faf340cefb2c0247b49033a assets/create/lang/en_us.json
+a0e7d027d022330c5358d75165a76383d86ba122 assets/create/lang/en_us.json
 487a511a01b2a4531fb672f917922312db78f958 assets/create/models/block/acacia_window.json
 b48060cba1a382f373a05bf0039054053eccf076 assets/create/models/block/acacia_window_pane_noside.json
 3066db1bf03cffa1a9c7fbacf47ae586632f4eb3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -5321,7 +5321,7 @@ ad8fa04f7bbbafd70d0ce158af78a35e899301e2 data/create/tags/blocks/girdable_tracks
 6e5d3b2123fbb00e7f439c091623619502551bca data/create/tags/blocks/non_movable.json
 10781e8cfcbb3486327aace3aa00e437fb44b331 data/create/tags/blocks/ore_override_stone.json
 760adb521c2e475a6414f97291f46c02d294fa74 data/create/tags/blocks/passive_boiler_heaters.json
-af314e7ec90377e69387523a4c9af19e0056734e data/create/tags/blocks/safe_nbt.json
+57f49df02be3d3cacaecf0315da34ea3fb614b8d data/create/tags/blocks/safe_nbt.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/blocks/seats.json
 d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/blocks/toolboxes.json
 ad8fa04f7bbbafd70d0ce158af78a35e899301e2 data/create/tags/blocks/tracks.json

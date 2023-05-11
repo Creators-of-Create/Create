@@ -64,7 +64,7 @@ public class RollerScenes {
 		scene.overlay.showText(60)
 			.pointAt(util.vector.topOf(util.grid.at(6, 2, 4)))
 			.attachKeyFrame()
-			.text("Mechanical rollers help to clean up long tracks or paths conveniently")
+			.text("Mechanical rollers help to clean up terrain around tracks or paths")
 			.placeNearTarget();
 		scene.idle(70);
 
