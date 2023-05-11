@@ -109,5 +109,4 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getValue(), convertImmediately);
 		onClose();
 	}
-
 }

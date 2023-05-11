@@ -1,0 +1,23 @@
+name: gametest
+on: [ pull_request, push, workflow_dispatch ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+
+            - name: checkout repository
+              uses: actions/checkout@v3
+
+            - name: setup Java
+              uses: actions/setup-java@v3
+              with:
+                  distribution: temurin
+                  java-version: 17
+                  cache: gradle
+
+            - name: make gradle wrapper executable
+              run: chmod +x ./gradlew
+
+            - name: run gametests
+              run: ./gradlew prepareRunGameTestServer runGameTestServer --no-daemon

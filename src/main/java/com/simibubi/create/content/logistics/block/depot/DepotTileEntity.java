@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -32,5 +33,9 @@ public class DepotTileEntity extends SmartTileEntity {
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
 			return depotBehaviour.getItemCapability(cap, side);
 		return super.getCapability(cap, side);
+	}
+
+	public ItemStack getHeldItem() {
+		return depotBehaviour.getHeldItemStack();
 	}
 }

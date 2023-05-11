@@ -269,6 +269,8 @@
 	"create.schematicAndQuill.convert": "Save and Upload Immediately",
 	"create.schematicAndQuill.fallbackName": "My Schematic",
 	"create.schematicAndQuill.saved": "Saved as %1$s",
+  "create.schematicAndQuill.failed": "Failed to save schematic, check logs for details",
+  "create.schematicAndQuill.instant_failed": "Schematic instant-upload failed, check logs for details",
 
 	"create.schematic.invalid": "[!] Invalid Item - Use the Schematic Table instead",
 	"create.schematic.error": "Schematic failed to Load - Check Game Logs",
@@ -920,7 +922,7 @@
 
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
 	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
-	
+
 	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
   	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused."
 
