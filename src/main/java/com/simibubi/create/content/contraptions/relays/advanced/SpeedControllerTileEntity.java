@@ -2,6 +2,11 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
@@ -20,11 +25,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class SpeedControllerTileEntity extends KineticTileEntity {
 
 	public static final int DEFAULT_SPEED = 16;
-	protected ScrollValueBehaviour targetSpeed;
+	public ScrollValueBehaviour targetSpeed;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	boolean hasBracket;
 
@@ -53,7 +61,8 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(targetSpeed);
-		
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+
 		registerAwardables(behaviours, AllAdvancements.SPEED_CONTROLLER);
 	}
 
@@ -63,7 +72,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		RotationPropagator.handleRemoved(level, worldPosition, this);
 		removeSource();
 		attachKinetics();
-		
+
 		if (isCogwheelPresent() && getSpeed() != 0)
 			award(AllAdvancements.SPEED_CONTROLLER);
 	}
@@ -125,6 +134,20 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		BlockState stateAbove = level.getBlockState(worldPosition.above());
 		return ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
 			&& stateAbove.getValue(CogWheelBlock.AXIS).isHorizontal();
+	}
+
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {

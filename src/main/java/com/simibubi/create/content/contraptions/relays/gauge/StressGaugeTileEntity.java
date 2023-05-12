@@ -2,6 +2,11 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -13,14 +18,19 @@ import com.simibubi.create.foundation.utility.LangBuilder;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class StressGaugeTileEntity extends GaugeTileEntity {
 
+	public AbstractComputerBehaviour computerBehaviour;
+	
 	static BlockPos lastSent;
 
 	public StressGaugeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -30,6 +40,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 		registerAwardables(behaviours, AllAdvancements.STRESSOMETER, AllAdvancements.STRESSOMETER_MAXED);
 	}
 
@@ -139,6 +150,20 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		award(AllAdvancements.STRESSOMETER);
 		if (Mth.equal(dialTarget, 1))
 			award(AllAdvancements.STRESSOMETER_MAXED);
+	}
+
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 }

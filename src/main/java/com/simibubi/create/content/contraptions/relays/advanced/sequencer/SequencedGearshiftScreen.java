@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.compat.computercraft.ComputerScreen;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -15,7 +16,6 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -25,22 +25,26 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private final ItemStack renderedItem = AllBlocks.SEQUENCED_GEARSHIFT.asStack();
 	private final AllGuiTextures background = AllGuiTextures.SEQUENCER;
 	private IconButton confirmButton;
+	private SequencedGearshiftTileEntity te;
 
 	private ListTag compareTag;
 	private Vector<Instruction> instructions;
-	private BlockPos pos;
 
 	private Vector<Vector<ScrollInput>> inputs;
 
 	public SequencedGearshiftScreen(SequencedGearshiftTileEntity te) {
 		super(Lang.translateDirect("gui.sequenced_gearshift.title"));
 		this.instructions = te.instructions;
-		this.pos = te.getBlockPos();
+		this.te = te;
 		compareTag = Instruction.serializeAll(instructions);
 	}
 
 	@Override
 	protected void init() {
+		if (te.computerBehaviour.hasAttachedComputer())
+			minecraft.setScreen(new ComputerScreen(title, this::renderAdditional,
+					this, te.computerBehaviour::hasAttachedComputer));
+
 		setWindowSize(background.width, background.height);
 		setWindowOffset(-20, 0);
 		super.init();
@@ -128,11 +132,27 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+
+		if (te.computerBehaviour.hasAttachedComputer())
+			minecraft.setScreen(new ComputerScreen(title, this::renderAdditional,
+					this, te.computerBehaviour::hasAttachedComputer));
+	}
+
+	@Override
 	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
 		background.render(ms, x, y, this);
+
+		for (int row = 0; row < instructions.capacity(); row++) {
+			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
+			int yOffset = toDraw.height * row;
+
+			toDraw.render(ms, x, y + 14 + yOffset, this);
+		}
 
 		for (int row = 0; row < instructions.capacity(); row++) {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
@@ -156,10 +176,13 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				label(ms, 127, yOffset - 3, instruction.speedModifier.label);
 		}
 
+		renderAdditional(ms, mouseX, mouseY, partialTicks, x, y, background);
 		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+	}
 
+	private void renderAdditional(PoseStack ms, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
 		GuiGameElement.of(renderedItem)
-			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 56, -200)
+			.<GuiGameElement.GuiRenderBuilder>at(guiLeft + background.width + 6, guiTop + background.height - 56, 100)
 			.scale(5)
 			.render(ms);
 	}
@@ -172,7 +195,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		ListTag serialized = Instruction.serializeAll(instructions);
 		if (serialized.equals(compareTag))
 			return;
-		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));
+		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(te.getBlockPos(), serialized));
 	}
 
 	@Override

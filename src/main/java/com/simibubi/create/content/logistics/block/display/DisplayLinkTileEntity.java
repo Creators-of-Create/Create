@@ -2,6 +2,11 @@ package com.simibubi.create.content.logistics.block.display;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -18,6 +23,8 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class DisplayLinkTileEntity extends SmartTileEntity {
 
@@ -31,8 +38,10 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 
 	public LerpedFloat glow;
 	private boolean sendPulse;
-	
+
 	public int refreshTicks;
+
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public DisplayLinkTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -45,9 +54,15 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	}
 
 	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+		registerAwardables(behaviours, AllAdvancements.DISPLAY_LINK, AllAdvancements.DISPLAY_BOARD);
+	}
+
+	@Override
 	public void tick() {
 		super.tick();
-		
+
 		if (isVirtual()) {
 			glow.tickChaser();
 			return;
@@ -59,9 +74,9 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 			glow.tickChaser();
 			return;
 		}
-		
+
 		refreshTicks++;
-		if (refreshTicks < activeSource.getPassiveRefreshTicks())
+		if (refreshTicks < activeSource.getPassiveRefreshTicks() || !activeSource.shouldPassiveReset())
 			return;
 		tickSource();
 	}
@@ -114,13 +129,8 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 		activeSource.transferData(context, activeTarget, targetLine);
 		sendPulse = true;
 		sendData();
-		
-		award(AllAdvancements.DISPLAY_LINK);
-	}
 
-	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		registerAwardables(behaviours, AllAdvancements.DISPLAY_LINK, AllAdvancements.DISPLAY_BOARD);
+		award(AllAdvancements.DISPLAY_LINK);
 	}
 
 	@Override
@@ -133,7 +143,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
 		writeGatheredData(tag);
-		if (clientPacket && activeTarget != null) 
+		if (clientPacket && activeTarget != null)
 			tag.putString("TargetType", activeTarget.id.toString());
 		if (clientPacket && sendPulse) {
 			sendPulse = false;
@@ -171,6 +181,21 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 		sourceConfig = new CompoundTag();
 		if (activeSource != null)
 			sourceConfig = data.copy();
+	}
+
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 	public void target(BlockPos targetPosition) {

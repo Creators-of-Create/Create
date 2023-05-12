@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInformation {
+public abstract class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInformation {
 
 	public float dialTarget;
 	public float dialState;
@@ -52,4 +52,5 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 
 		return true;
 	}
+
 }

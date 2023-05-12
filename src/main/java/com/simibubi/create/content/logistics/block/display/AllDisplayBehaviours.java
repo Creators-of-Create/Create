@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.content.logistics.block.display.source.ComputerDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.DeathCounterDisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.source.EnchantPowerDisplaySource;
@@ -237,5 +239,14 @@ public class AllDisplayBehaviours {
 		assignTile(register(Create.asResource("scoreboard_display_source"), new ScoreboardDisplaySource()), BlockEntityType.COMMAND_BLOCK);
 		assignTile(register(Create.asResource("enchant_power_display_source"), new EnchantPowerDisplaySource()), BlockEntityType.ENCHANTING_TABLE);
 		assignBlock(register(Create.asResource("redstone_power_display_source"), new RedstonePowerDisplaySource()), Blocks.TARGET);
+
+		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
+			DisplayBehaviour computerDisplaySource = register(Create.asResource("computer_display_source"), new ComputerDisplaySource());
+
+			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "wired_modem_full"));
+			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_normal"));
+			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
+			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_command"));
+		});
 	}
 }

@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionDisassemblyPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionRelocationPacket;
@@ -184,7 +185,7 @@ public enum AllPackets {
 	S_TRAIN_PROMPT(TrainPromptPacket.class, TrainPromptPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_RELOCATION(ContraptionRelocationPacket.class, ContraptionRelocationPacket::new, PLAY_TO_CLIENT),
 	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket::new, PLAY_TO_CLIENT),
-
+	ATTACHED_COMPUTER(AttachedComputerPacket.class, AttachedComputerPacket::new, PLAY_TO_CLIENT),
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");

@@ -5,7 +5,10 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * For compatibility with and without another mod present, we have to define load conditions of the specific code
@@ -14,6 +17,8 @@ public enum Mods {
 	DYNAMICTREES,
 	TCONSTRUCT,
 	CURIOS,
+
+	COMPUTERCRAFT,
 	STORAGEDRAWERS,
 	XLPACKETS;
 
@@ -50,5 +55,9 @@ public enum Mods {
 		if (isLoaded()) {
 			toExecute.get().run();
 		}
+	}
+
+	public Block getBlock(String id) {
+		return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(asId(), id));
 	}
 }
