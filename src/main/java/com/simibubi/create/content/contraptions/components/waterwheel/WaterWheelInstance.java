@@ -42,7 +42,6 @@ public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutR
 		return getRotatingMaterial().model(key, () -> {
 			BakedModel model = WaterWheelRenderer.generateModel(key);
 			BlockState state = key.state();
-			// TODO waterwheels
 			Direction dir;
 			if (key.large()) {
 				dir = Direction.fromAxisAndDirection(state.getValue(LargeWaterWheelBlock.AXIS), AxisDirection.POSITIVE);

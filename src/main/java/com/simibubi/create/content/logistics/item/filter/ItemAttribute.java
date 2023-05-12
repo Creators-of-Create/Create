@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
@@ -78,6 +79,7 @@ public interface ItemAttribute {
 		return attributeType;
 	}
 
+	@Nullable
 	static ItemAttribute fromNBT(CompoundTag nbt) {
 		for (ItemAttribute itemAttribute : types)
 			if (itemAttribute.canRead(nbt))

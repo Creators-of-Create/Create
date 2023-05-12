@@ -127,6 +127,8 @@ public class FilterItem extends Item implements MenuProvider {
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
+				if (attribute == null)
+					continue;
 				boolean inverted = compound.getBoolean("Inverted");
 				if (count > 3) {
 					list.add(Components.literal("- ...")
@@ -194,14 +196,18 @@ public class FilterItem extends Item implements MenuProvider {
 		return test(world, stack, filter, true);
 	}
 
-	private static boolean test(Level world, ItemStack stack, ItemStack filter, boolean matchNBT) {
+	public static boolean test(Level world, ItemStack stack, ItemStack filter, boolean matchNBT) {
 		if (filter.isEmpty())
 			return true;
 
 		if (!(filter.getItem() instanceof FilterItem))
-			return (matchNBT ? ItemHandlerHelper.canItemStacksStack(filter, stack) : ItemStack.isSame(filter, stack));
+			return testDirect(filter, stack, matchNBT);
 
 		boolean defaults = !filter.hasTag();
+
+		if (defaults) {
+			return testDirect(filter, stack, matchNBT);
+		}
 
 		if (AllItems.FILTER.get() == filter.getItem()) {
 			ItemStackHandler filterItems = getFilterItems(filter);
@@ -211,24 +217,32 @@ public class FilterItem extends Item implements MenuProvider {
 			boolean blacklist = defaults ? false
 				: filter.getTag()
 					.getBoolean("Blacklist");
+			boolean isEmpty = true;
 			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
 				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
 					continue;
+				isEmpty = false;
 				boolean matches = test(world, stack, stackInSlot, respectNBT);
 				if (matches)
 					return !blacklist;
+			}
+			if (isEmpty) {
+				return testDirect(filter, stack, matchNBT);
 			}
 			return blacklist;
 		}
 
 		if (AllItems.ATTRIBUTE_FILTER.get() == filter.getItem()) {
-			WhitelistMode whitelistMode = WhitelistMode.values()[defaults ? 0
-				: filter.getTag()
-					.getInt("WhitelistMode")];
 			ListTag attributes = defaults ? new ListTag()
 				: filter.getTag()
 					.getList("MatchedAttributes", Tag.TAG_COMPOUND);
+			if (attributes.isEmpty()) {
+				return testDirect(filter, stack, matchNBT);
+			}
+			WhitelistMode whitelistMode = WhitelistMode.values()[defaults ? 0
+				: filter.getTag()
+					.getInt("WhitelistMode")];
 			for (Tag inbt : attributes) {
 				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
@@ -270,7 +284,7 @@ public class FilterItem extends Item implements MenuProvider {
 		return false;
 	}
 
-	private static boolean test(Level world, FluidStack stack, ItemStack filter, boolean matchNBT) {
+	public static boolean test(Level world, FluidStack stack, ItemStack filter, boolean matchNBT) {
 		if (filter.isEmpty())
 			return true;
 		if (stack.isEmpty())
@@ -311,6 +325,14 @@ public class FilterItem extends Item implements MenuProvider {
 			return blacklist;
 		}
 		return false;
+	}
+
+	private static boolean testDirect(ItemStack filter, ItemStack stack, boolean matchNBT) {
+		if (matchNBT) {
+			return ItemHandlerHelper.canItemStacksStack(filter, stack);
+		} else {
+			return ItemStack.isSame(filter, stack);
+		}
 	}
 
 }
