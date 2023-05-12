@@ -1059,6 +1059,10 @@ public abstract class Contraption {
 				if (state.hasProperty(SlidingDoorBlock.VISIBLE))
 					state = state.setValue(SlidingDoorBlock.VISIBLE, !state.getValue(SlidingDoorBlock.OPEN))
 						.setValue(SlidingDoorBlock.POWERED, false);
+				// Stop Sculk shriekers from getting "stuck" if moved mid-shriek.
+				if(state.is(Blocks.SCULK_SHRIEKER)){
+					state = Blocks.SCULK_SHRIEKER.defaultBlockState();
+				}
 
 				world.setBlock(targetPos, state, Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL);
 
@@ -1073,6 +1077,11 @@ public abstract class Contraption {
 				BlockEntity blockEntity = world.getBlockEntity(targetPos);
 
 				CompoundTag tag = block.nbt;
+
+				// Temporary fix: Calling load(CompoundTag tag) on a Sculk sensor causes it to not react to vibrations.
+				if(state.is(Blocks.SCULK_SENSOR) || state.is(Blocks.SCULK_SHRIEKER))
+					tag = null;
+
 				if (blockEntity != null)
 					tag = NBTProcessors.process(blockEntity, tag, false);
 				if (blockEntity != null && tag != null) {

@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-12T22:58:02.8475812	Create's Processing Recipes
+// 1.19.2	2023-05-12T23:16:42.6028413	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -235,8 +235,6 @@ a24ac854f3b3ebf57bea9ebd58fd9655fed8e922 data/create/recipes/cutting/compat/byg/
 d93f6deefd5bcf4d91242534d9b588fa2ab1a7de data/create/recipes/cutting/compat/byg/lament_wood.json
 6f3a120fae7fdcc98a416185107381a6caf739b0 data/create/recipes/cutting/compat/byg/mahogany_log.json
 19cf897802135c3ebdf68f6e2bc41f3cf8d0ddb0 data/create/recipes/cutting/compat/byg/mahogany_wood.json
-3a43eb5e02d1ac6f4ea95d4b376d5876a36f0b61 data/create/recipes/cutting/compat/byg/mangrove_log.json
-9660d7a107fecef2975f55aa4a221742abb6095f data/create/recipes/cutting/compat/byg/mangrove_wood.json
 d13e02245ca4acd0c4c4d38359eddf3b22fcff7f data/create/recipes/cutting/compat/byg/maple_log.json
 9c947dd9fb94709b481daa3ec5156b227b061cdd data/create/recipes/cutting/compat/byg/maple_wood.json
 f25cdfa7c0ff0d9c0bfb8fd4c678d1ad61d6f755 data/create/recipes/cutting/compat/byg/nightshade_log.json
@@ -283,8 +281,6 @@ b7647e89ee29a4e116c49c1ae419d3d053608017 data/create/recipes/cutting/compat/byg/
 0b4478eba4e2d9bd835d9ad91dcf2eccfc538f12 data/create/recipes/cutting/compat/byg/stripped_lament_wood.json
 3550d5eb7f8eab95f4dd840d72cc14dea7acdb67 data/create/recipes/cutting/compat/byg/stripped_mahogany_log.json
 d66b3e69b6bcf38a9d01fc9290b81778b46459f0 data/create/recipes/cutting/compat/byg/stripped_mahogany_wood.json
-e82ba4d10c33003e06c85bc4f21092453a3a8286 data/create/recipes/cutting/compat/byg/stripped_mangrove_log.json
-15fbb8520e495097186a1563fc185c0e14f06951 data/create/recipes/cutting/compat/byg/stripped_mangrove_wood.json
 4778e5d9e1b5a5d254483dedf9cf22cbda73ca2d data/create/recipes/cutting/compat/byg/stripped_maple_log.json
 18b5f67be3d28bc6c8764d2ad576f16745d95109 data/create/recipes/cutting/compat/byg/stripped_maple_wood.json
 1446329655130e0cf0f0da7c1c17f517bbfb9d79 data/create/recipes/cutting/compat/byg/stripped_nightshade_log.json
