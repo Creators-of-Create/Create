@@ -69,6 +69,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ForgeItemTagsProvider;
 
 public class AllItems {
 
@@ -251,12 +252,15 @@ public class AllItems {
 	COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new CopperBacktankItem(p, COPPER_BACKTANK_PLACEABLE))
 		.model(AssetLookup.customGenericItemModel("_", "item"))
 		.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
+			.tag(forgeItemTag("armors/chestplates"))
 		.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
+				.tag(forgeItemTag("armors/helmets"))
 			.register(),
 
 		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
+				.tag(forgeItemTag("armors/boots"))
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)

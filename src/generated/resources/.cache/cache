@@ -5669,6 +5669,9 @@ ff1900963bc4cd8ceffa78d58ef1952ceacb2fb7 data/forge/tags/blocks/storage_blocks/b
 6b73c57912934d09233ad2966110968a6109f2c9 data/forge/tags/fluids/chocolate.json
 391c9b2be5740aea943a8a5fe27eb327e2d973b0 data/forge/tags/fluids/honey.json
 d6a4e4fe1204b718010543a28a9b9ec4e0977bd7 data/forge/tags/fluids/tea.json
+58a0fbab3425558d993559e10fe14a1797b05eab data/forge/tags/items/armors/boots.json
+7973972edb524683ef365bc103fcfcde0858a854 data/forge/tags/items/armors/chestplates.json
+615e86e25fc29ead90e0901cdaee9d0ed9b3e4b3 data/forge/tags/items/armors/helmets.json
 5af3164b14c92d2d6e235b5d4eebd93cbee37c0a data/forge/tags/items/buckets/honey.json
 2f7cf5a2d485f25d451da9771ed466591cfa5204 data/forge/tags/items/dough.json
 2f7cf5a2d485f25d451da9771ed466591cfa5204 data/forge/tags/items/dough/wheat.json
