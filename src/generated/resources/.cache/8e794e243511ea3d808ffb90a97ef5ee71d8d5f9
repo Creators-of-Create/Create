@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-08T18:33:12.7571465	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2023-05-12T22:58:02.8146697	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4169,13 +4169,15 @@ f1a03ac86925e26cbec6aeeada2eafb40008fc8e data/create/recipes/weathered_copper_ti
 c7ec0dbc18e9c1b58e568ed925287b89df11a136 data/create/tags/blocks/copycat_allow.json
 876eb9210f4a14898a2fe6d225699c66b5bdfeef data/create/tags/blocks/copycat_deny.json
 6858173c670bb593664ac3c62ded726d57d581f1 data/create/tags/blocks/fan_transparent.json
+2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/blocks/girdable_tracks.json
 a1e21c22f32354fd1a82a1b0a59dd786c0deaba0 data/create/tags/blocks/movable_empty_collider.json
 4970078b49ddac1b1d500ed0469cedf42bdc3d35 data/create/tags/blocks/non_movable.json
 06e13efbb7b0d09ff7ecd1a7dc45a0760b91ad67 data/create/tags/blocks/ore_override_stone.json
 a5874f73c7dc0a3ae12999e6ae8abf45bc7fb9be data/create/tags/blocks/passive_boiler_heaters.json
-fcbbbcf25ccdc51889ec80825a9864e9e5a127cb data/create/tags/blocks/safe_nbt.json
+5944581660e37a1f6e83d600af6e920446124904 data/create/tags/blocks/safe_nbt.json
 79418bd729cef417b322cef9b491e7ae83317d61 data/create/tags/blocks/seats.json
 5def5088f7fd31b80e6f28c1c4ea146aa9d7d15b data/create/tags/blocks/toolboxes.json
+2589b135c0e96ad29076569e144528fe32ea5b39 data/create/tags/blocks/tracks.json
 1b6977d9a399cf6ee042e3f8f5e64e4d3cda5489 data/create/tags/blocks/tree_attachments.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/blocks/valve_handles.json
 72143286fb5cb372a0696550e2eac76ca50e6fbc data/create/tags/blocks/windmill_sails.json
@@ -4229,6 +4231,9 @@ bcd593714f43bc6a0aefbd714c24db3cf9e71250 data/forge/tags/blocks/storage_blocks/r
 8140415f1c16f09167f41eeee25c09706a944be0 data/forge/tags/fluids/chocolate.json
 0ccc9ff76001cdd7db1b79c1371f59d3283abe64 data/forge/tags/fluids/honey.json
 cca816b34ac2e9b7933df680aa9778ff2cfe9605 data/forge/tags/fluids/tea.json
+00c856dcfa4368cca671ee5d93c4900835991d68 data/forge/tags/items/armors/boots.json
+695d75b352fd190b303c724d1aaee9bb786a903b data/forge/tags/items/armors/chestplates.json
+3580dae058fc75b45fab4c4ebbd1b01573ba9e11 data/forge/tags/items/armors/helmets.json
 06ebf72e8f6c081862236d4b068b5dfb275a8385 data/forge/tags/items/buckets/honey.json
 801d097b0af7153e0c5c72a924d61f8afb4cf264 data/forge/tags/items/dough.json
 801d097b0af7153e0c5c72a924d61f8afb4cf264 data/forge/tags/items/dough/wheat.json

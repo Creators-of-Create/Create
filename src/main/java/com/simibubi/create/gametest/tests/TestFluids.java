@@ -15,8 +15,8 @@ import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RedstoneSide;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -78,7 +78,7 @@ public class TestFluids {
 		BlockPos pumpPos = new BlockPos(3, 2, 2);
 		BlockPos basinPos = pumpPos.east();
 		BlockPos waterPos = pumpPos.west();
-		FluidStack expectedResult = new FluidStack(Fluids.WATER, FluidAttributes.BUCKET_VOLUME);
+		FluidStack expectedResult = new FluidStack(Fluids.WATER, FluidType.BUCKET_VOLUME);
 		helper.flipBlock(pumpPos);
 		helper.succeedWhen(() -> {
 			helper.assertBlockPresent(Blocks.AIR, waterPos);
