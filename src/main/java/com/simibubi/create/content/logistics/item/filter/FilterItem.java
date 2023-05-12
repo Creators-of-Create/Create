@@ -201,7 +201,7 @@ public class FilterItem extends Item implements MenuProvider {
 			return true;
 
 		if (!(filter.getItem() instanceof FilterItem))
-			return testDirect(stack, filter, matchNBT);
+			return testDirect(filter, stack, matchNBT);
 
 		boolean defaults = !filter.hasTag();
 
