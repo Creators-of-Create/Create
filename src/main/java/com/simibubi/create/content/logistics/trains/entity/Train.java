@@ -17,10 +17,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.logistics.trains.track.AbstractBogeyBlockEntity;
-
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -46,6 +42,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.station
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleRuntime.State;
+import com.simibubi.create.content.logistics.trains.track.AbstractBogeyBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -70,6 +67,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidStack;
@@ -90,6 +88,7 @@ public class Train {
 	public boolean honk = false;
 
 	public UUID id;
+	@Nullable
 	public UUID owner;
 	public TrackGraph graph;
 	public Navigation navigation;
@@ -1108,7 +1107,8 @@ public class Train {
 	public CompoundTag write(DimensionPalette dimensions) {
 		CompoundTag tag = new CompoundTag();
 		tag.putUUID("Id", id);
-		tag.putUUID("Owner", owner);
+		if (owner != null)
+			tag.putUUID("Owner", owner);
 		if (graph != null)
 			tag.putUUID("Graph", graph.id);
 		tag.put("Carriages", NBTHelper.writeCompoundList(carriages, c -> c.write(dimensions)));
@@ -1154,7 +1154,7 @@ public class Train {
 
 	public static Train read(CompoundTag tag, Map<UUID, TrackGraph> trackNetworks, DimensionPalette dimensions) {
 		UUID id = tag.getUUID("Id");
-		UUID owner = tag.getUUID("Owner");
+		UUID owner = tag.contains("Owner") ? tag.getUUID("Owner") : null;
 		UUID graphId = tag.contains("Graph") ? tag.getUUID("Graph") : null;
 		TrackGraph graph = graphId == null ? null : trackNetworks.get(graphId);
 		List<Carriage> carriages = new ArrayList<>();

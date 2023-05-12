@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
 import com.simibubi.create.content.contraptions.components.actors.controls.ContraptionDisableActorPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionColliderLockPacket;
@@ -202,7 +203,8 @@ public enum AllPackets {
 	SET_FIRE_IMMUNE(NetheriteDivingHandler.SetFireImmunePacket.class, NetheriteDivingHandler.SetFireImmunePacket::new,
 		PLAY_TO_CLIENT),
 	CONTRAPTION_COLLIDER_LOCK(ContraptionColliderLockPacket.class, ContraptionColliderLockPacket::new, PLAY_TO_CLIENT),
-
+	ATTACHED_COMPUTER(AttachedComputerPacket.class, AttachedComputerPacket::new, PLAY_TO_CLIENT),
+	
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");

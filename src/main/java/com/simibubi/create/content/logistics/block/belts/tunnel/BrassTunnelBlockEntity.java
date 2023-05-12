@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.SidedFilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Components;
@@ -174,7 +175,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 				return;
 
 			if (selectionMode.get() != SelectionMode.SYNCHRONIZE || syncedOutputActive) {
-				distributionProgress = 10;
+				distributionProgress = AllConfigs.server().logistics.brassTunnelTimer.get();
 				sendData();
 			}
 			return;

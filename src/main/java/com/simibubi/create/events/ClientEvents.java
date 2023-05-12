@@ -295,14 +295,14 @@ public class ClientEvents {
 
 		if (AllFluids.CHOCOLATE.get()
 			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f / 32f);
+			event.scaleFarPlaneDistance(1f / 32f * AllConfigs.CLIENT.chocolateTransparencyMultiplier.getF());
 			event.setCanceled(true);
 			return;
 		}
 
 		if (AllFluids.HONEY.get()
 			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f / 8f);
+			event.scaleFarPlaneDistance(1f / 8f * AllConfigs.CLIENT.honeyTransparencyMultiplier.getF());
 			event.setCanceled(true);
 			return;
 		}

@@ -2,6 +2,11 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.components.motor.KineticScrollValueBehaviour;
@@ -20,11 +25,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class SpeedControllerBlockEntity extends KineticBlockEntity {
 
 	public static final int DEFAULT_SPEED = 16;
-	protected ScrollValueBehaviour targetSpeed;
+	public ScrollValueBehaviour targetSpeed;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	boolean hasBracket;
 
@@ -50,6 +58,7 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 		targetSpeed.value = DEFAULT_SPEED;
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		behaviours.add(targetSpeed);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 
 		registerAwardables(behaviours, AllAdvancements.SPEED_CONTROLLER);
 	}
@@ -123,6 +132,20 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 		return ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
 			&& stateAbove.getValue(CogWheelBlock.AXIS)
 				.isHorizontal();
+	}
+
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {

@@ -37,7 +37,10 @@ public class TrainPacket extends SimplePacketBase {
 		if (!add)
 			return;
 
-		UUID owner = buffer.readUUID();
+		UUID owner = null;
+		if (buffer.readBoolean())
+			owner = buffer.readUUID();
+
 		List<Carriage> carriages = new ArrayList<>();
 		List<Integer> carriageSpacing = new ArrayList<>();
 
@@ -75,7 +78,9 @@ public class TrainPacket extends SimplePacketBase {
 		if (!add)
 			return;
 
-		buffer.writeUUID(train.owner);
+		buffer.writeBoolean(train.owner != null);
+		if (train.owner != null)
+			buffer.writeUUID(train.owner);
 
 		buffer.writeVarInt(train.carriages.size());
 		for (Carriage carriage : train.carriages) {

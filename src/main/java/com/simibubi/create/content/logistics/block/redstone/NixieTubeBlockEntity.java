@@ -123,6 +123,10 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 		customText = Optional.empty();
 	}
 
+	public int getRedstoneStrength() {
+		return redstoneStrength;
+	}
+
 	//
 
 	@Override

@@ -9,13 +9,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.components.actors.DoorControlBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
@@ -23,6 +28,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Str
 import com.simibubi.create.content.logistics.block.depot.DepotBehaviour;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
 import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
+import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -49,6 +55,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -63,9 +70,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
@@ -90,6 +99,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
 	protected DepotBehaviour depotBehaviour;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	// for display
 	UUID imminentTrain;
@@ -122,6 +132,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		depotBehaviour.addSubBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS, AllAdvancements.TRAIN,
 			AllAdvancements.LONG_TRAIN, AllAdvancements.CONDUCTOR);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -343,6 +354,63 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		return true;
 	}
 
+	public boolean enterAssemblyMode(@Nullable ServerPlayer sender) {
+		if (isAssembling())
+			return false;
+
+		tryDisassembleTrain(sender);
+		if (!tryEnterAssemblyMode())
+			return false;
+
+		BlockState newState = getBlockState().setValue(StationBlock.ASSEMBLING, true);
+		level.setBlock(getBlockPos(), newState, 3);
+		refreshBlockState();
+		refreshAssemblyInfo();
+
+		updateStationState(station -> station.assembling = true);
+		GlobalStation station = getStation();
+		if (station != null) {
+			for (Train train : Create.RAILWAYS.sided(level).trains.values()) {
+				if (train.navigation.destination != station)
+					continue;
+
+				GlobalStation preferredDestination = train.runtime.startCurrentInstruction();
+				train.navigation.startNavigation(preferredDestination != null ? preferredDestination : station, Double.MAX_VALUE, false);
+			}
+		}
+
+		return true;
+	}
+
+	public boolean exitAssemblyMode() {
+		if (!isAssembling())
+			return false;
+
+		cancelAssembly();
+		BlockState newState = getBlockState().setValue(StationBlock.ASSEMBLING, false);
+		level.setBlock(getBlockPos(), newState, 3);
+		refreshBlockState();
+
+		return updateStationState(station -> station.assembling = false);
+	}
+
+	public boolean tryDisassembleTrain(@Nullable ServerPlayer sender) {
+		GlobalStation station = getStation();
+		if (station == null)
+			return false;
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			return false;
+
+		BlockPos trackPosition = edgePoint.getGlobalPosition();
+		if (!train.disassemble(getAssemblyDirection(), trackPosition.above()))
+			return false;
+
+		dropSchedule(sender);
+		return true;
+	}
+
 	public boolean isAssembling() {
 		BlockState state = getBlockState();
 		return state.hasProperty(StationBlock.ASSEMBLING) && state.getValue(StationBlock.ASSEMBLING);
@@ -367,6 +435,42 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 			axisFound = true;
 		}
 
+		return true;
+	}
+
+	public void dropSchedule(@Nullable ServerPlayer sender) {
+		GlobalStation station = getStation();
+		if (station == null)
+			return;
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			return;
+
+		ItemStack schedule = train.runtime.returnSchedule();
+		if (schedule.isEmpty())
+			return;
+		if (sender != null && sender.getMainHandItem().isEmpty()) {
+			sender.getInventory()
+					.placeItemBackInInventory(schedule);
+			return;
+		}
+
+		Vec3 v = VecHelper.getCenterOf(getBlockPos());
+		ItemEntity itemEntity = new ItemEntity(getLevel(), v.x, v.y, v.z, schedule);
+		itemEntity.setDeltaMovement(Vec3.ZERO);
+		getLevel().addFreshEntity(itemEntity);
+	}
+
+	private boolean updateStationState(Consumer<GlobalStation> updateState) {
+		GlobalStation station = getStation();
+		GraphLocation graphLocation = edgePoint.determineGraphLocation();
+		if (station == null || graphLocation == null)
+			return false;
+
+		updateState.accept(station);
+		Create.RAILWAYS.sync.pointAdded(graphLocation.graph, station);
+		Create.RAILWAYS.markTracksDirty();
 		return true;
 	}
 
@@ -448,6 +552,14 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		BlockPos startPosition = targetPosition.relative(assemblyDirection);
 		BlockPos trackEnd = startPosition.relative(assemblyDirection, assemblyLength - 1);
 		map.put(worldPosition, BoundingBox.fromCorners(startPosition, trackEnd));
+	}
+
+	public boolean updateName(String name) {
+		if (!updateStationState(station -> station.name = name))
+			return false;
+		notifyUpdate();
+
+		return true;
 	}
 
 	public boolean isValidBogeyOffset(int i) {
@@ -744,10 +856,18 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	}
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
 		if (isItemHandlerCap(cap))
 			return depotBehaviour.getItemCapability(cap, side);
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 	private void applyAutoSchedule() {

@@ -322,6 +322,8 @@
 	"create.schematicAndQuill.convert": "Save and Upload Immediately",
 	"create.schematicAndQuill.fallbackName": "My Schematic",
 	"create.schematicAndQuill.saved": "Saved as %1$s",
+  "create.schematicAndQuill.failed": "Failed to save schematic, check logs for details",
+  "create.schematicAndQuill.instant_failed": "Schematic instant-upload failed, check logs for details",
 
 	"create.schematic.invalid": "[!] Invalid Item - Use the Schematic Table instead",
 	"create.schematic.error": "Schematic failed to Load - Check Game Logs",
