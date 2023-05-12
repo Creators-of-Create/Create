@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "create:diving_helmet"
+    "create:copper_diving_helmet",
+    "create:netherite_diving_helmet"
   ]
 }
