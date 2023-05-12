@@ -5,8 +5,8 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.compat.computercraft.ComputerBehaviour;
-import com.simibubi.create.compat.computercraft.peripherals.SpeedControllerPeripheral;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.RotationPropagator;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorTileEntity;
@@ -31,8 +31,8 @@ import net.minecraftforge.common.util.LazyOptional;
 public class SpeedControllerTileEntity extends KineticTileEntity {
 
 	public static final int DEFAULT_SPEED = 16;
-	protected ScrollValueBehaviour targetSpeed;
-	ComputerBehaviour computerBehaviour;
+	public ScrollValueBehaviour targetSpeed;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	boolean hasBracket;
 
@@ -61,7 +61,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
 		behaviours.add(targetSpeed);
-		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new SpeedControllerPeripheral(this, targetSpeed)));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 
 		registerAwardables(behaviours, AllAdvancements.SPEED_CONTROLLER);
 	}
@@ -139,9 +139,8 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (ComputerBehaviour.isPeripheralCap(cap))
+		if (computerBehaviour.isPeripheralCap(cap))
 			return computerBehaviour.getPeripheralCapability();
-
 		return super.getCapability(cap, side);
 	}
 

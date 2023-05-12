@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.compat.curios.Curios;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
@@ -126,6 +127,7 @@ public class Create {
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
 		BlockSpoutingBehaviour.registerDefaults();
+		ComputerCraftProxy.register();
 
 		ForgeMod.enableMilkFluid();
 		CopperRegistries.inject();

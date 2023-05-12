@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.computercraft.peripherals;
+package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
-import com.simibubi.create.compat.computercraft.ComputerBehaviour;
+import com.simibubi.create.compat.computercraft.implementation.ComputerBehaviour;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 

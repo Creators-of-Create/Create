@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.computercraft.peripherals;
+package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import java.util.Map;
 
@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.simibubi.create.compat.computercraft.CreateLuaTable;
+import com.simibubi.create.compat.computercraft.implementation.CreateLuaTable;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;

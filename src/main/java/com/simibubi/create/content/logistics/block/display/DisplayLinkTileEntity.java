@@ -5,8 +5,8 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.compat.computercraft.ComputerBehaviour;
-import com.simibubi.create.compat.computercraft.peripherals.DisplayLinkPeripheral;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.block.display.source.DisplaySource;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -41,7 +41,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 
 	public int refreshTicks;
 
-	ComputerBehaviour computerBehaviour;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public DisplayLinkTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -55,8 +55,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new DisplayLinkPeripheral(this)));
-
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 		registerAwardables(behaviours, AllAdvancements.DISPLAY_LINK, AllAdvancements.DISPLAY_BOARD);
 	}
 
@@ -187,7 +186,7 @@ public class DisplayLinkTileEntity extends SmartTileEntity {
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (ComputerBehaviour.isPeripheralCap(cap))
+		if (computerBehaviour.isPeripheralCap(cap))
 			return computerBehaviour.getPeripheralCapability();
 
 		return super.getCapability(cap, side);

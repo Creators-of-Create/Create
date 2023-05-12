@@ -19,8 +19,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
-import com.simibubi.create.compat.computercraft.ComputerBehaviour;
-import com.simibubi.create.compat.computercraft.peripherals.StationPeripheral;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
@@ -94,7 +94,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
 	protected DepotBehaviour depotBehaviour;
-	ComputerBehaviour computerBehaviour;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	// for display
 	UUID imminentTrain;
@@ -126,7 +126,7 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 		depotBehaviour.addSubBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS, AllAdvancements.TRAIN,
 			AllAdvancements.LONG_TRAIN, AllAdvancements.CONDUCTOR);
-		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new StationPeripheral(this)));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -814,10 +814,8 @@ public class StationTileEntity extends SmartTileEntity implements ITransformable
 	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
 		if (isItemHandlerCap(cap))
 			return depotBehaviour.getItemCapability(cap, side);
-
-		if (ComputerBehaviour.isPeripheralCap(cap))
+		if (computerBehaviour.isPeripheralCap(cap))
 			return computerBehaviour.getPeripheralCapability();
-
 		return super.getCapability(cap, side);
 	}
 

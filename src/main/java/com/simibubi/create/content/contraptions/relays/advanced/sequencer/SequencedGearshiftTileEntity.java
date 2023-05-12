@@ -6,8 +6,8 @@ import java.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.compat.computercraft.ComputerBehaviour;
-import com.simibubi.create.compat.computercraft.peripherals.SequencedGearshiftPeripheral;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -29,7 +29,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	int timer;
 	boolean poweredPreviously;
 
-	ComputerBehaviour computerBehaviour;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public SequencedGearshiftTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -44,7 +44,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new SequencedGearshiftPeripheral(this)));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -178,9 +178,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (ComputerBehaviour.isPeripheralCap(cap))
+		if (computerBehaviour.isPeripheralCap(cap))
 			return computerBehaviour.getPeripheralCapability();
-
 		return super.getCapability(cap, side);
 	}
 

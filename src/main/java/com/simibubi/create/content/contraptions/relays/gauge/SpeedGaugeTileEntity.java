@@ -5,8 +5,8 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.compat.computercraft.ComputerBehaviour;
-import com.simibubi.create.compat.computercraft.peripherals.SpeedGaugePeripheral;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -25,7 +25,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity {
 
-	ComputerBehaviour computerBehaviour;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public SpeedGaugeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -34,7 +34,7 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		behaviours.add(computerBehaviour = new ComputerBehaviour(this, () -> new SpeedGaugePeripheral(this)));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -83,9 +83,8 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 	@NotNull
 	@Override
 	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-		if (ComputerBehaviour.isPeripheralCap(cap))
+		if (computerBehaviour.isPeripheralCap(cap))
 			return computerBehaviour.getPeripheralCapability();
-
 		return super.getCapability(cap, side);
 	}
 

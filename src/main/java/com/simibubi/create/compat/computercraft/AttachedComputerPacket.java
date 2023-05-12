@@ -29,7 +29,8 @@ public class AttachedComputerPacket extends TileEntityDataPacket<SyncedTileEntit
 	@Override
 	protected void handlePacket(SyncedTileEntity tile) {
 		if (tile instanceof SmartTileEntity smartTile) {
-			smartTile.getBehaviour(ComputerBehaviour.TYPE).setHasAttachedComputer(hasAttachedComputer);
+			smartTile.getBehaviour(AbstractComputerBehaviour.TYPE)
+				.setHasAttachedComputer(hasAttachedComputer);
 		}
 	}
 

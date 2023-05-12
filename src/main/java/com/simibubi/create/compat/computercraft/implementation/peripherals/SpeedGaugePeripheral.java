@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.computercraft.peripherals;
+package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import org.jetbrains.annotations.NotNull;
 
