@@ -1,7 +1,7 @@
 {
 	"parent": "create:block/water_wheel/textures",
 	"loader": "forge:obj",
-	"flip-v": true,
+	"flip_v": true,
 	"model": "create:models/block/water_wheel/water_wheel_item.obj",
 	"textures": {
 		"log": "block/spruce_log",

@@ -1,7 +1,7 @@
 {
 	"parent": "block/block",
 	"loader": "forge:obj",
-	"flip-v": true,
+	"flip_v": true,
 	"model": "create:models/block/mechanical_roller/item.obj",
 	"textures": {
 		"wheel": "create:block/roller_wheel",
