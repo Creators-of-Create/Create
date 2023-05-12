@@ -11,6 +11,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 public class AllCommands {
 
@@ -20,7 +22,7 @@ public class AllCommands {
 
 		LiteralCommandNode<CommandSourceStack> util = buildUtilityCommands();
 
-		LiteralCommandNode<CommandSourceStack> createRoot = dispatcher.register(Commands.literal("create")
+		LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("create")
 				.requires(cs -> cs.hasPermission(0))
 				// general purpose
 				.then(new ToggleDebugCommand().register())
@@ -38,8 +40,12 @@ public class AllCommands {
 				.then(GlueCommand.register())
 
 				// utility
-				.then(util)
-		);
+				.then(util);
+
+		if (!FMLLoader.isProduction() && FMLLoader.getDist() == Dist.CLIENT)
+			root.then(CreateTestCommand.register());
+
+		LiteralCommandNode<CommandSourceStack> createRoot = dispatcher.register(root);
 
 		createRoot.addChild(buildRedirect("u", util));
 
@@ -60,7 +66,8 @@ public class AllCommands {
 				.then(CameraDistanceCommand.register())
 				.then(CameraAngleCommand.register())
 				.then(FlySpeedCommand.register())
-				.then(KillTPSCommand.register())
+				//.then(DebugValueCommand.register())
+				//.then(KillTPSCommand.register())
 				.build();
 
 	}

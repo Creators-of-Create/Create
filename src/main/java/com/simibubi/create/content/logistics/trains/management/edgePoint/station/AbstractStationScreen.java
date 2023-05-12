@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.compat.computercraft.ComputerScreen;
 import com.simibubi.create.content.logistics.trains.entity.Carriage;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.entity.TrainIconType;
@@ -15,6 +16,7 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -39,6 +41,10 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
+		if (blockEntity.computerBehaviour.hasAttachedComputer())
+			minecraft.setScreen(new ComputerScreen(title, () -> Components.literal(station.name),
+					this::renderAdditional, this, blockEntity.computerBehaviour::hasAttachedComputer));
+
 		setWindowSize(background.width, background.height);
 		super.init();
 		clearWidgets();
@@ -72,16 +78,28 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+
+		if (blockEntity.computerBehaviour.hasAttachedComputer())
+			minecraft.setScreen(new ComputerScreen(title, () -> Components.literal(station.name),
+					this::renderAdditional, this, blockEntity.computerBehaviour::hasAttachedComputer));
+	}
+
+	@Override
 	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
 		background.render(ms, x, y, this);
+		renderAdditional(ms, mouseX, mouseY, partialTicks, x, y, background);
+	}
 
+	private void renderAdditional(PoseStack ms, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
 		ms.pushPose();
 		TransformStack msr = TransformStack.cast(ms);
 		msr.pushPose()
-			.translate(x + background.width + 4, y + background.height + 4, 100)
+			.translate(guiLeft + background.width + 4, guiTop + background.height + 4, 100)
 			.scale(40)
 			.rotateX(-22)
 			.rotateY(63);

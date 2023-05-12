@@ -44,7 +44,8 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	protected List<SequencedRecipe<?>> sequence;
 	protected int loops;
 	protected ProcessingOutput transitionalItem;
-	protected List<ProcessingOutput> resultPool;
+
+	public final List<ProcessingOutput> resultPool;
 
 	public SequencedAssemblyRecipe(ResourceLocation recipeId, SequencedAssemblyRecipeSerializer serializer) {
 		this.id = recipeId;
@@ -214,7 +215,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	public boolean isSpecial() {
 		return true;
 	}
-	
+
 	@Override
 	public RecipeType<?> getType() {
 		return AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();

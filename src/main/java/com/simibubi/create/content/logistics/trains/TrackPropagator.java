@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.api.event.TrackGraphMergeEvent;
 import com.simibubi.create.content.logistics.trains.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalPropagator;
 
@@ -16,6 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 
 public class TrackPropagator {
 
@@ -135,6 +137,7 @@ public class TrackPropagator {
 				if (graph == null)
 					graph = other;
 				else {
+					MinecraftForge.EVENT_BUS.post(new TrackGraphMergeEvent(other, graph));
 					other.transferAll(graph);
 					manager.removeGraphAndGroup(other);
 					sync.graphRemoved(other);
@@ -234,10 +237,12 @@ public class TrackPropagator {
 			return true;
 		if (location.shouldForceNode())
 			return true;
+		if (location.differentMaterials())
+			return true;
 		if (next.stream()
 			.anyMatch(DiscoveredLocation::shouldForceNode))
 			return true;
-		
+
 		Vec3 direction = location.direction;
 		if (direction != null && next.stream()
 			.anyMatch(dl -> dl.notInLineWith(direction)))

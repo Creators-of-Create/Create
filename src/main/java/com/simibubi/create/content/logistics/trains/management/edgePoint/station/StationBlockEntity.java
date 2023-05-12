@@ -9,20 +9,26 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.components.actors.DoorControlBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.block.depot.DepotBehaviour;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkBlock;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
+import com.simibubi.create.content.logistics.trains.AbstractBogeyBlock;
+import com.simibubi.create.content.logistics.trains.GraphLocation;
 import com.simibubi.create.content.logistics.trains.ITrackBlock;
 import com.simibubi.create.content.logistics.trains.TrackEdge;
 import com.simibubi.create.content.logistics.trains.TrackGraph;
@@ -39,6 +45,7 @@ import com.simibubi.create.content.logistics.trains.management.edgePoint.EdgePoi
 import com.simibubi.create.content.logistics.trains.management.edgePoint.TrackTargetingBehaviour;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
+import com.simibubi.create.content.logistics.trains.track.AbstractBogeyBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
@@ -48,10 +55,12 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -61,12 +70,15 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -87,6 +99,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
 	protected DepotBehaviour depotBehaviour;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	// for display
 	UUID imminentTrain;
@@ -119,6 +132,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		depotBehaviour.addSubBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS, AllAdvancements.TRAIN,
 			AllAdvancements.LONG_TRAIN, AllAdvancements.CONDUCTOR);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -192,7 +206,8 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	Direction assemblyDirection;
 	int assemblyLength;
 	int[] bogeyLocations;
-	IBogeyBlock[] bogeyTypes;
+	AbstractBogeyBlock<?>[] bogeyTypes;
+	boolean[] upsideDownBogeys;
 	int bogeyCount;
 
 	@Override
@@ -269,14 +284,30 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 			return false;
 
 		BlockPos up = new BlockPos(track.getUpNormal(level, pos, state));
+		BlockPos down = new BlockPos(track.getUpNormal(level, pos, state).scale(-1));
 		int bogeyOffset = pos.distManhattan(edgePoint.getGlobalPosition()) - 1;
+		
 		if (!isValidBogeyOffset(bogeyOffset)) {
-			for (int i = -1; i <= 1; i++) {
-				BlockPos bogeyPos = pos.relative(assemblyDirection, i)
-					.offset(up);
-				BlockState blockState = level.getBlockState(bogeyPos);
-				if (blockState.getBlock() instanceof IBogeyBlock bogey) {
-					level.setBlock(bogeyPos, bogey.getRotatedBlockState(blockState, Direction.DOWN), 3);
+			for (boolean upsideDown : Iterate.falseAndTrue) {
+				for (int i = -1; i <= 1; i++) {
+					BlockPos bogeyPos = pos.relative(assemblyDirection, i)
+						.offset(upsideDown ? down : up);
+					BlockState blockState = level.getBlockState(bogeyPos);
+					if (!(blockState.getBlock() instanceof AbstractBogeyBlock<?> bogey))
+						continue;
+					BlockEntity be = level.getBlockEntity(bogeyPos);
+					if (!(be instanceof AbstractBogeyBlockEntity oldTE))
+						continue;
+					CompoundTag oldData = oldTE.getBogeyData();
+					BlockState newBlock = bogey.getNextSize(oldTE);
+					if (newBlock.getBlock() == bogey)
+						player.displayClientMessage(Lang.translateDirect("bogey.style.no_other_sizes")
+							.withStyle(ChatFormatting.RED), true);
+					level.setBlock(bogeyPos, newBlock, 3);
+					BlockEntity newEntity = level.getBlockEntity(bogeyPos);
+					if (!(newEntity instanceof AbstractBogeyBlockEntity newTE))
+						continue;
+					newTE.setBogeyData(oldData);
 					bogey.playRotateSound(level, bogeyPos);
 					return true;
 				}
@@ -291,7 +322,9 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 			return false;
 		}
 
-		BlockPos targetPos = pos.offset(up);
+		boolean upsideDown = (player.getViewXRot(1.0F) < 0 && (track.getBogeyAnchor(level, pos, state)).getBlock() instanceof AbstractBogeyBlock<?> bogey && bogey.canBeUpsideDown());
+
+		BlockPos targetPos = upsideDown ? pos.offset(down) : pos.offset(up);
 		if (level.getBlockState(targetPos)
 			.getDestroySpeed(level, targetPos) == -1) {
 			return false;
@@ -299,7 +332,11 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 
 		level.destroyBlock(targetPos, true);
 
-		BlockState bogeyAnchor = ProperWaterloggedBlock.withWater(level, track.getBogeyAnchor(level, pos, state), pos);
+		BlockState bogeyAnchor = track.getBogeyAnchor(level, pos, state);
+		if (bogeyAnchor.getBlock() instanceof AbstractBogeyBlock<?> bogey) {
+			bogeyAnchor = bogey.getVersion(bogeyAnchor, upsideDown);
+		}
+		bogeyAnchor = ProperWaterloggedBlock.withWater(level, bogeyAnchor, pos);
 		level.setBlock(targetPos, bogeyAnchor, 3);
 		player.displayClientMessage(Lang.translateDirect("train_assembly.bogey_created"), true);
 		SoundType soundtype = bogeyAnchor.getBlock()
@@ -314,6 +351,63 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 				player.setItemInHand(hand, ItemStack.EMPTY);
 		}
 
+		return true;
+	}
+
+	public boolean enterAssemblyMode(@Nullable ServerPlayer sender) {
+		if (isAssembling())
+			return false;
+
+		tryDisassembleTrain(sender);
+		if (!tryEnterAssemblyMode())
+			return false;
+
+		BlockState newState = getBlockState().setValue(StationBlock.ASSEMBLING, true);
+		level.setBlock(getBlockPos(), newState, 3);
+		refreshBlockState();
+		refreshAssemblyInfo();
+
+		updateStationState(station -> station.assembling = true);
+		GlobalStation station = getStation();
+		if (station != null) {
+			for (Train train : Create.RAILWAYS.sided(level).trains.values()) {
+				if (train.navigation.destination != station)
+					continue;
+
+				GlobalStation preferredDestination = train.runtime.startCurrentInstruction();
+				train.navigation.startNavigation(preferredDestination != null ? preferredDestination : station, Double.MAX_VALUE, false);
+			}
+		}
+
+		return true;
+	}
+
+	public boolean exitAssemblyMode() {
+		if (!isAssembling())
+			return false;
+
+		cancelAssembly();
+		BlockState newState = getBlockState().setValue(StationBlock.ASSEMBLING, false);
+		level.setBlock(getBlockPos(), newState, 3);
+		refreshBlockState();
+
+		return updateStationState(station -> station.assembling = false);
+	}
+
+	public boolean tryDisassembleTrain(@Nullable ServerPlayer sender) {
+		GlobalStation station = getStation();
+		if (station == null)
+			return false;
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			return false;
+
+		BlockPos trackPosition = edgePoint.getGlobalPosition();
+		if (!train.disassemble(getAssemblyDirection(), trackPosition.above()))
+			return false;
+
+		dropSchedule(sender);
 		return true;
 	}
 
@@ -341,6 +435,42 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 			axisFound = true;
 		}
 
+		return true;
+	}
+
+	public void dropSchedule(@Nullable ServerPlayer sender) {
+		GlobalStation station = getStation();
+		if (station == null)
+			return;
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			return;
+
+		ItemStack schedule = train.runtime.returnSchedule();
+		if (schedule.isEmpty())
+			return;
+		if (sender != null && sender.getMainHandItem().isEmpty()) {
+			sender.getInventory()
+					.placeItemBackInInventory(schedule);
+			return;
+		}
+
+		Vec3 v = VecHelper.getCenterOf(getBlockPos());
+		ItemEntity itemEntity = new ItemEntity(getLevel(), v.x, v.y, v.z, schedule);
+		itemEntity.setDeltaMovement(Vec3.ZERO);
+		getLevel().addFreshEntity(itemEntity);
+	}
+
+	private boolean updateStationState(Consumer<GlobalStation> updateState) {
+		GlobalStation station = getStation();
+		GraphLocation graphLocation = edgePoint.determineGraphLocation();
+		if (station == null || graphLocation == null)
+			return false;
+
+		updateState.accept(station);
+		Create.RAILWAYS.sync.pointAdded(graphLocation.graph, station);
+		Create.RAILWAYS.markTracksDirty();
 		return true;
 	}
 
@@ -373,9 +503,12 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		if (bogeyLocations == null)
 			bogeyLocations = new int[maxBogeyCount];
 		if (bogeyTypes == null)
-			bogeyTypes = new IBogeyBlock[maxBogeyCount];
+			bogeyTypes = new AbstractBogeyBlock[maxBogeyCount];
+		if (upsideDownBogeys == null)
+			upsideDownBogeys = new boolean[maxBogeyCount];
 		Arrays.fill(bogeyLocations, -1);
 		Arrays.fill(bogeyTypes, null);
+		Arrays.fill(upsideDownBogeys, false);
 
 		for (int i = 0; i < MAX_LENGTH; i++) {
 			if (i == MAX_LENGTH - 1) {
@@ -388,10 +521,19 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 			}
 
 			BlockState potentialBogeyState = level.getBlockState(bogeyOffset.offset(currentPos));
-			if (potentialBogeyState.getBlock() instanceof IBogeyBlock bogey && bogeyIndex < bogeyLocations.length) {
-				bogeyTypes[bogeyIndex] = bogey;
-				bogeyLocations[bogeyIndex] = i;
-				bogeyIndex++;
+			BlockPos upsideDownBogeyOffset = new BlockPos(bogeyOffset.getX(), bogeyOffset.getY()*-1, bogeyOffset.getZ());
+			if (bogeyIndex < bogeyLocations.length) {
+				if (potentialBogeyState.getBlock() instanceof AbstractBogeyBlock<?> bogey && !bogey.isUpsideDown(potentialBogeyState)) {
+					bogeyTypes[bogeyIndex] = bogey;
+					bogeyLocations[bogeyIndex] = i;
+					upsideDownBogeys[bogeyIndex] = false;
+					bogeyIndex++;
+				} else if ((potentialBogeyState = level.getBlockState(upsideDownBogeyOffset.offset(currentPos))).getBlock() instanceof AbstractBogeyBlock<?> bogey && bogey.isUpsideDown(potentialBogeyState)) {
+					bogeyTypes[bogeyIndex] = bogey;
+					bogeyLocations[bogeyIndex] = i;
+					upsideDownBogeys[bogeyIndex] = true;
+					bogeyIndex++;
+				}
 			}
 
 			currentPos.move(assemblyDirection);
@@ -410,6 +552,14 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		BlockPos startPosition = targetPosition.relative(assemblyDirection);
 		BlockPos trackEnd = startPosition.relative(assemblyDirection, assemblyLength - 1);
 		map.put(worldPosition, BoundingBox.fromCorners(startPosition, trackEnd));
+	}
+
+	public boolean updateName(String name) {
+		if (!updateStationState(station -> station.name = name))
+			return false;
+		notifyUpdate();
+
+		return true;
 	}
 
 	public boolean isValidBogeyOffset(int i) {
@@ -551,7 +701,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 					return;
 				}
 
-				points.add(new TravellingPoint(node, secondNode, edge, positionOnEdge));
+				points.add(new TravellingPoint(node, secondNode, edge, positionOnEdge, false));
 			}
 
 			secondNode = node;
@@ -578,10 +728,11 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 				spacing.add(bogeyLocations[bogeyIndex] - bogeyLocations[bogeyIndex - 1]);
 			CarriageContraption contraption = new CarriageContraption(assemblyDirection);
 			BlockPos bogeyPosOffset = trackPosition.offset(bogeyOffset);
+			BlockPos upsideDownBogeyPosOffset = trackPosition.offset(new BlockPos(bogeyOffset.getX(), bogeyOffset.getY() * -1, bogeyOffset.getZ()));
 
 			try {
 				int offset = bogeyLocations[bogeyIndex] + 1;
-				boolean success = contraption.assemble(level, bogeyPosOffset.relative(assemblyDirection, offset));
+				boolean success = contraption.assemble(level, upsideDownBogeys[bogeyIndex] ? upsideDownBogeyPosOffset.relative(assemblyDirection, offset) : bogeyPosOffset.relative(assemblyDirection, offset));
 				atLeastOneForwardControls |= contraption.hasForwardControls();
 				contraption.setSoundQueueOffset(offset);
 				if (!success) {
@@ -594,24 +745,28 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 				return;
 			}
 
-			IBogeyBlock typeOfFirstBogey = bogeyTypes[bogeyIndex];
+			AbstractBogeyBlock<?> typeOfFirstBogey = bogeyTypes[bogeyIndex];
+			boolean firstBogeyIsUpsideDown = upsideDownBogeys[bogeyIndex];
+			BlockPos firstBogeyPos = contraption.anchor;
+			AbstractBogeyBlockEntity firstBogeyTileEntity = (AbstractBogeyBlockEntity) level.getBlockEntity(firstBogeyPos);
 			CarriageBogey firstBogey =
-				new CarriageBogey(typeOfFirstBogey, points.get(pointIndex), points.get(pointIndex + 1));
+				new CarriageBogey(typeOfFirstBogey, firstBogeyIsUpsideDown, firstBogeyTileEntity.getBogeyData(), points.get(pointIndex), points.get(pointIndex + 1));
 			CarriageBogey secondBogey = null;
 			BlockPos secondBogeyPos = contraption.getSecondBogeyPos();
 			int bogeySpacing = 0;
 
 			if (secondBogeyPos != null) {
 				if (bogeyIndex == bogeyCount - 1 || !secondBogeyPos
-					.equals(bogeyPosOffset.relative(assemblyDirection, bogeyLocations[bogeyIndex + 1] + 1))) {
+					.equals((upsideDownBogeys[bogeyIndex + 1] ? upsideDownBogeyPosOffset : bogeyPosOffset).relative(assemblyDirection, bogeyLocations[bogeyIndex + 1] + 1))) {
 					exception(new AssemblyException(Lang.translateDirect("train_assembly.not_connected_in_order")),
 						contraptions.size() + 1);
 					return;
 				}
-
+				AbstractBogeyBlockEntity secondBogeyTileEntity =
+						(AbstractBogeyBlockEntity) level.getBlockEntity(secondBogeyPos);
 				bogeySpacing = bogeyLocations[bogeyIndex + 1] - bogeyLocations[bogeyIndex];
-				secondBogey = new CarriageBogey(bogeyTypes[bogeyIndex + 1], points.get(pointIndex + 2),
-					points.get(pointIndex + 3));
+				secondBogey = new CarriageBogey(bogeyTypes[bogeyIndex + 1], upsideDownBogeys[bogeyIndex + 1], secondBogeyTileEntity.getBogeyData(),
+						points.get(pointIndex + 2), points.get(pointIndex + 3));
 				bogeyIndex++;
 
 			} else if (!typeOfFirstBogey.allowsSingleBogeyCarriage()) {
@@ -701,10 +856,18 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	}
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
 		if (isItemHandlerCap(cap))
 			return depotBehaviour.getItemCapability(cap, side);
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
 	}
 
 	private void applyAutoSchedule() {

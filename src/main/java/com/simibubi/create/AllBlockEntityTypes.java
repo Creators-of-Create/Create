@@ -195,6 +195,7 @@ import com.simibubi.create.content.logistics.block.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerBlockEntity;
 import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
 import com.simibubi.create.content.logistics.trains.BogeyBlockEntityRenderer;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayRenderer;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.observer.TrackObserverBlockEntity;
@@ -831,8 +832,8 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<TrackBlockEntity> TRACK = REGISTRATE
 		.blockEntity("track", TrackBlockEntity::new)
 		.instance(() -> TrackInstance::new)
+		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
-		.validBlocks(AllBlocks.TRACK)
 		.register();
 	
 	public static final BlockEntityEntry<FakeTrackBlockEntity> FAKE_TRACK = REGISTRATE
@@ -851,7 +852,7 @@ public class AllBlockEntityTypes {
 		.renderer(() -> StationRenderer::new)
 		.validBlocks(AllBlocks.TRACK_STATION)
 		.register();
-	
+
 	public static final BlockEntityEntry<SlidingDoorBlockEntity> SLIDING_DOOR =
 		REGISTRATE.blockEntity("sliding_door", SlidingDoorBlockEntity::new)
 			.renderer(() -> SlidingDoorRenderer::new)
@@ -859,10 +860,10 @@ public class AllBlockEntityTypes {
 				AllBlocks.BRASS_DOOR, AllBlocks.COPPER_DOOR)
 			.register();
 
-	public static final BlockEntityEntry<CopycatBlockEntity> COPYCAT = REGISTRATE
-		.blockEntity("copycat", CopycatBlockEntity::new)
-		.validBlocks(AllBlocks.COPYCAT_PANEL, AllBlocks.COPYCAT_STEP)
-		.register();
+	public static final BlockEntityEntry<CopycatBlockEntity> COPYCAT =
+		REGISTRATE.blockEntity("copycat", CopycatBlockEntity::new)
+			.validBlocks(AllBlocks.COPYCAT_PANEL, AllBlocks.COPYCAT_STEP)
+			.register();
 
 	public static final BlockEntityEntry<FlapDisplayBlockEntity> FLAP_DISPLAY = REGISTRATE
 		.blockEntity("flap_display", FlapDisplayBlockEntity::new)

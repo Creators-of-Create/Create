@@ -3,6 +3,9 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
+import com.simibubi.create.content.logistics.trains.track.TrackBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
@@ -19,9 +22,14 @@ import com.simibubi.create.foundation.ponder.content.trains.TrackScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrainScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrainSignalScenes;
 import com.simibubi.create.foundation.ponder.content.trains.TrainStationScenes;
+import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class PonderIndex {
 
@@ -320,7 +328,14 @@ public class PonderIndex {
 			.addStoryBoard("threshold_switch", DetectorScenes::thresholdSwitch);
 
 		// Trains
-		HELPER.forComponents(AllBlocks.TRACK)
+		HELPER.forComponents(TrackMaterial.allBlocks()
+			.stream()
+			.map((trackSupplier) -> new BlockEntry<TrackBlock>(
+				// note: these blocks probably WON'T be in the Create Registrate, but a simple
+				// code trace reveals the Entry's registrate isn't used
+				Create.REGISTRATE, RegistryObject.create(trackSupplier.get()
+					.getRegistryName(), ForgeRegistries.BLOCKS)))
+			.toList())
 			.addStoryBoard("train_track/placement", TrackScenes::placement)
 			.addStoryBoard("train_track/portal", TrackScenes::portal)
 			.addStoryBoard("train_track/chunks", TrackScenes::chunks);
@@ -583,6 +598,12 @@ public class PonderIndex {
 			.add(Blocks.RESPAWN_ANCHOR)
 			.add(Blocks.COMMAND_BLOCK)
 			.add(Blocks.TARGET);
+
+		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
+			Block computer = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
+			if (computer != null)
+				PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(computer);
+		});
 
 		PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS)
 			.add(AllBlocks.ORANGE_NIXIE_TUBE)

@@ -228,14 +228,16 @@ public class AllItems {
 	// wrapped by COPPER_BACKTANK for block placement uses.
 	// must be registered as of 1.18.2
 	public static final ItemEntry<BacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
-		.item("copper_backtank_placeable", p -> new BacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), AllItems.COPPER_BACKTANK::get, p))
+		.item("copper_backtank_placeable",
+			p -> new BacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), AllItems.COPPER_BACKTANK::get, p))
 		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
 		.register();
 
 	// wrapped by NETHERITE_BACKTANK for block placement uses.
 	// must be registered as of 1.18.2
 	public static final ItemEntry<BacktankBlockItem> NETHERITE_BACKTANK_PLACEABLE = REGISTRATE
-		.item("netherite_backtank_placeable", p -> new BacktankBlockItem(AllBlocks.NETHERITE_BACKTANK.get(), AllItems.NETHERITE_BACKTANK::get, p))
+		.item("netherite_backtank_placeable",
+			p -> new BacktankBlockItem(AllBlocks.NETHERITE_BACKTANK.get(), AllItems.NETHERITE_BACKTANK::get, p))
 		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
 		.register();
 
@@ -248,6 +250,7 @@ public class AllItems {
 					COPPER_BACKTANK_PLACEABLE))
 			.model(AssetLookup.customGenericItemModel("_", "item"))
 			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
+			.tag(forgeItemTag("armors/chestplates"))
 			.register(),
 
 		NETHERITE_BACKTANK = REGISTRATE
@@ -257,6 +260,7 @@ public class AllItems {
 			.model(AssetLookup.customGenericItemModel("_", "item"))
 			.properties(p -> p.fireResistant())
 			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
+			.tag(forgeItemTag("armors/chestplates"))
 			.register();
 
 	public static final ItemEntry<? extends DivingHelmetItem>
@@ -265,12 +269,14 @@ public class AllItems {
 		REGISTRATE
 			.item("copper_diving_helmet",
 				p -> new DivingHelmetItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
+			.tag(forgeItemTag("armors/helmets"))
 			.register(),
 
 		NETHERITE_DIVING_HELMET = REGISTRATE
 			.item("netherite_diving_helmet",
 				p -> new DivingHelmetItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.properties(p -> p.fireResistant())
+			.tag(forgeItemTag("armors/helmets"))
 			.register();
 
 	public static final ItemEntry<? extends DivingBootsItem>
@@ -279,12 +285,14 @@ public class AllItems {
 		REGISTRATE
 			.item("copper_diving_boots",
 				p -> new DivingBootsItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
+			.tag(forgeItemTag("armors/boots"))
 			.register(),
 
 		NETHERITE_DIVING_BOOTS = REGISTRATE
 			.item("netherite_diving_boots",
 				p -> new DivingBootsItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
 			.properties(p -> p.fireResistant())
+			.tag(forgeItemTag("armors/boots"))
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)

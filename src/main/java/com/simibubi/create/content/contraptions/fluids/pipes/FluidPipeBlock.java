@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedBlockEntityBehaviour;
@@ -36,7 +38,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,8 +54,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.TickPriority;
 
-public class FluidPipeBlock extends PipeBlock
-	implements SimpleWaterloggedBlock, IWrenchableWithBracket, IBE<FluidPipeBlockEntity>, EncasableBlock {
+public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock, IWrenchableWithBracket,
+	IBE<FluidPipeBlockEntity>, EncasableBlock, ITransformableBlock {
 
 	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
 
@@ -337,4 +341,20 @@ public class FluidPipeBlock extends PipeBlock
 	public VoxelShape getOcclusionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
 		return OCCLUSION_BOX;
 	}
+	
+	@Override
+	public BlockState rotate(BlockState pState, Rotation pRotation) {
+		return FluidPipeBlockRotation.rotate(pState, pRotation);
+	}
+	
+	@Override
+	public BlockState mirror(BlockState pState, Mirror pMirror) {
+		return FluidPipeBlockRotation.mirror(pState, pMirror);
+	}
+	
+	@Override
+	public BlockState transform(BlockState state, StructureTransform transform) {
+		return FluidPipeBlockRotation.transform(state, transform);
+	}
+	
 }

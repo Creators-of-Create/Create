@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer<CarriageContraptionEntity> {
@@ -37,7 +38,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 		MultiBufferSource buffers, int overlay) {
 		if (!entity.validForRender || entity.firstPositionUpdate)
 			return;
-		
+
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
 		Carriage carriage = entity.getCarriage();
@@ -65,8 +66,9 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);
 
 				int light = getBogeyLightCoords(entity, bogey, partialTicks);
+
 				bogey.type.render(null, bogey.wheelAngle.getValue(partialTicks), ms, partialTicks, buffers, light,
-					overlay);
+					overlay, bogey.getStyle(), bogey.bogeyData);
 
 				ms.popPose();
 			}
@@ -80,6 +82,8 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 
 	public static void translateBogey(PoseStack ms, CarriageBogey bogey, int bogeySpacing, float viewYRot,
 		float viewXRot, float partialTicks) {
+		boolean selfUpsideDown = bogey.isUpsideDown();
+		boolean leadingUpsideDown = bogey.carriage.leadingBogey().isUpsideDown();
 		TransformStack.cast(ms)
 			.rotateY(viewYRot + 90)
 			.rotateX(-viewXRot)
@@ -90,7 +94,9 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			.rotateY(-viewYRot - 90)
 			.rotateY(bogey.yaw.getValue(partialTicks))
 			.rotateX(bogey.pitch.getValue(partialTicks))
-			.translate(0, .5f, 0);
+			.translate(0, .5f, 0)
+			.rotateZ(selfUpsideDown ? 180 : 0)
+			.translateY(selfUpsideDown != leadingUpsideDown ? 2 : 0);
 	}
 
 	public static int getBogeyLightCoords(CarriageContraptionEntity entity, CarriageBogey bogey, float partialTicks) {

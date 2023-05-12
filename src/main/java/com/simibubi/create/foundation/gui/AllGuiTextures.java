@@ -177,7 +177,7 @@ public enum AllGuiTextures implements ScreenElement {
 
 	SPEECH_TOOLTIP_BACKGROUND("widgets", 0, 24, 8, 8),
 	SPEECH_TOOLTIP_COLOR("widgets", 8, 24, 8, 8),
-	
+
 	TRAIN_HUD_SPEED_BG("widgets", 0, 190, 182, 5),
 	TRAIN_HUD_SPEED("widgets", 0, 185, 182, 5),
 	TRAIN_HUD_THROTTLE("widgets", 0, 195, 182, 5),
@@ -189,7 +189,10 @@ public enum AllGuiTextures implements ScreenElement {
 	TRAIN_PROMPT("widgets", 0, 230, 256, 16),
 
 	// PlacementIndicator
-	PLACEMENT_INDICATOR_SHEET("placement_indicator", 0, 0, 16, 256);
+	PLACEMENT_INDICATOR_SHEET("placement_indicator", 0, 0, 16, 256),
+
+	// ComputerCraft
+	COMPUTER("computer", 200, 102);
 
 	;
 

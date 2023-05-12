@@ -20,6 +20,7 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.content.logistics.trains.BezierConnection.GirderAngles;
 import com.simibubi.create.content.logistics.trains.BezierConnection.SegmentAngles;
+import com.simibubi.create.content.logistics.trains.TrackMaterial;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -38,7 +39,7 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 
 	@Override
 	public void update() {
-		if (blockEntity.connections.isEmpty()) 
+		if (blockEntity.connections.isEmpty())
 			return;
 
 		remove();
@@ -110,11 +111,13 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 			leftLightPos = new BlockPos[segCount];
 			rightLightPos = new BlockPos[segCount];
 
-			mat.getModel(AllPartialModels.TRACK_TIE)
+			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
+
+			mat.getModel(modelHolder.tie())
 				.createInstances(ties);
-			mat.getModel(AllPartialModels.TRACK_SEGMENT_LEFT)
+			mat.getModel(modelHolder.segment_left())
 				.createInstances(left);
-			mat.getModel(AllPartialModels.TRACK_SEGMENT_RIGHT)
+			mat.getModel(modelHolder.segment_right())
 				.createInstances(right);
 
 			SegmentAngles[] segments = bc.getBakedSegments();

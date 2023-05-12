@@ -92,8 +92,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasBlockEntity()))
-			world.removeBlockEntity(pos);
+		IBE.onRemove(state, world, pos, newState);
 	}
 
 	@Override

@@ -30,10 +30,11 @@ public class GlobalTrainDisplayData {
 	}
 
 	public static List<TrainDeparturePrediction> prepare(String filter, int maxLines) {
+		String regex = filter.isBlank() ? filter : "\\Q" + filter.replace("*", "\\E.*\\Q") + "\\E";
 		return statusByDestination.entrySet()
 			.stream()
 			.filter(e -> e.getKey()
-				.matches(filter.replace("*", ".*")))
+				.matches(regex))
 			.flatMap(e -> e.getValue()
 				.stream())
 			.sorted()

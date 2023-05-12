@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import com.simibubi.create.content.logistics.trains.BogeyRenderer;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -31,7 +32,8 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 		if (carriage == null)
 			return;
 
-		bogeys = carriage.bogeys.mapNotNullWithParam(CarriageBogey::createInstance, materialManager);
+		bogeys = carriage.bogeys.mapNotNullWithParam((bogey, manager) ->
+				bogey.getStyle().createInstance(bogey, bogey.type.getSize(), manager), materialManager);
 		updateLight();
 	}
 
@@ -98,8 +100,10 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 			return;
 
 		bogeys.forEach(instance -> {
-			if (instance != null)
-				instance.remove();
+			if (instance != null) {
+				instance.commonRenderer.ifPresent(BogeyRenderer::remove);
+				instance.renderer.remove();
+			}
 		});
 	}
 

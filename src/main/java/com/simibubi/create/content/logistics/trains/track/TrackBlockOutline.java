@@ -8,8 +8,8 @@ import java.util.function.Consumer;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.logistics.trains.BezierConnection;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -162,7 +162,7 @@ public class TrackBlockOutline {
 			.rotateXRadians(angles.x)
 			.translate(-.5, -.125f, -.5);
 
-		boolean holdingTrack = AllBlocks.TRACK.isIn(Minecraft.getInstance().player.getMainHandItem());
+		boolean holdingTrack = AllTags.AllBlockTags.TRACKS.matches(Minecraft.getInstance().player.getMainHandItem());
 		renderShape(AllShapes.TRACK_ORTHO.get(Direction.SOUTH), ms, vb, holdingTrack ? false : null);
 		ms.popPose();
 	}
@@ -190,7 +190,7 @@ public class TrackBlockOutline {
 		ms.pushPose();
 		ms.translate(pos.getX() - camPos.x, pos.getY() - camPos.y, pos.getZ() - camPos.z);
 
-		boolean holdingTrack = AllBlocks.TRACK.isIn(Minecraft.getInstance().player.getMainHandItem());
+		boolean holdingTrack = AllTags.AllBlockTags.TRACKS.matches(Minecraft.getInstance().player.getMainHandItem());
 		TrackShape shape = blockstate.getValue(TrackBlock.SHAPE);
 		boolean canConnectFrom = !shape.isJunction()
 			&& !(mc.level.getBlockEntity(pos)instanceof TrackBlockEntity tbe && tbe.isTilted());

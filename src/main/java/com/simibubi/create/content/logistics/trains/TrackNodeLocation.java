@@ -25,8 +25,8 @@ public class TrackNodeLocation extends Vec3i {
 		this(vec.x, vec.y, vec.z);
 	}
 
-	public TrackNodeLocation(double p_121865_, double p_121866_, double p_121867_) {
-		super(Math.round(p_121865_ * 2), Math.floor(p_121866_) * 2, Math.round(p_121867_ * 2));
+	public TrackNodeLocation(double x, double y, double z) {
+		super(Math.round(x * 2), Math.floor(y) * 2, Math.round(z * 2));
 	}
 
 	public TrackNodeLocation in(Level level) {
@@ -122,9 +122,11 @@ public class TrackNodeLocation extends Vec3i {
 		boolean forceNode = false;
 		Vec3 direction;
 		Vec3 normal;
+		TrackMaterial materialA;
+		TrackMaterial materialB;
 
-		public DiscoveredLocation(Level level, double p_121865_, double p_121866_, double p_121867_) {
-			super(p_121865_, p_121866_, p_121867_);
+		public DiscoveredLocation(Level level, double x, double y, double z) {
+			super(x, y, z);
 			in(level);
 		}
 
@@ -135,6 +137,22 @@ public class TrackNodeLocation extends Vec3i {
 
 		public DiscoveredLocation(Level level, Vec3 vec) {
 			this(level.dimension(), vec);
+		}
+
+		public DiscoveredLocation materialA(TrackMaterial material) {
+			this.materialA = material;
+			return this;
+		}
+
+		public DiscoveredLocation materialB(TrackMaterial material) {
+			this.materialB = material;
+			return this;
+		}
+
+		public DiscoveredLocation materials(TrackMaterial materialA, TrackMaterial materialB) {
+			this.materialA = materialA;
+			this.materialB = materialB;
+			return this;
 		}
 
 		public DiscoveredLocation viaTurn(BezierConnection turn) {
@@ -174,6 +192,10 @@ public class TrackNodeLocation extends Vec3i {
 
 		public boolean shouldForceNode() {
 			return forceNode;
+		}
+
+		public boolean differentMaterials() {
+			return materialA != materialB;
 		}
 
 		public boolean notInLineWith(Vec3 direction) {

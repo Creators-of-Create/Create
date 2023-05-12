@@ -38,14 +38,24 @@ public class SpoutRenderer extends SafeBlockEntityRenderer<SpoutBlockEntity> {
 			.getValue(partialTicks);
 
 		if (!fluidStack.isEmpty() && level != 0) {
+			boolean top = fluidStack.getFluid()
+					.getAttributes()
+					.isLighterThanAir();
+
 			level = Math.max(level, 0.175f);
 			float min = 2.5f / 16f;
 			float max = min + (11 / 16f);
 			float yOffset = (11 / 16f) * level;
+
 			ms.pushPose();
-			ms.translate(0, yOffset, 0);
-			FluidRenderer.renderFluidBox(fluidStack, min, min - yOffset, min, max, min, max, buffer, ms, light,
-				false);
+			if (!top) ms.translate(0, yOffset, 0);
+			else ms.translate(0, max - min, 0);
+
+			FluidRenderer.renderFluidBox(fluidStack,
+					min, min - yOffset, min,
+					max, min, max,
+					buffer, ms, light, false);
+
 			ms.popPose();
 		}
 

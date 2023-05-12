@@ -359,6 +359,8 @@ public class StationScreen extends AbstractStationScreen {
 	@Override
 	public void removed() {
 		super.removed();
+		if (nameBox == null || trainNameBox == null)
+			return;
 		AllPackets.getChannel()
 			.sendToServer(StationEditPacket.configure(blockEntity.getBlockPos(), switchingToAssemblyMode,
 				nameBox.getValue(), doorControl));

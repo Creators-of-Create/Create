@@ -38,6 +38,7 @@ public class TravellingPoint {
 	public TrackEdge edge;
 	public double position;
 	public boolean blocked;
+	public boolean upsideDown;
 
 	public static enum SteerDirection {
 		NONE(0), LEFT(-1), RIGHT(1);
@@ -64,11 +65,12 @@ public class TravellingPoint {
 
 	public TravellingPoint() {}
 
-	public TravellingPoint(TrackNode node1, TrackNode node2, TrackEdge edge, double position) {
+	public TravellingPoint(TrackNode node1, TrackNode node2, TrackEdge edge, double position, boolean upsideDown) {
 		this.node1 = node1;
 		this.node2 = node2;
 		this.edge = edge;
 		this.position = position;
+		this.upsideDown = upsideDown;
 	}
 
 	public IEdgePointListener ignoreEdgePoints() {
@@ -395,13 +397,18 @@ public class TravellingPoint {
 	}
 
 	public Vec3 getPosition(@Nullable TrackGraph trackGraph) {
-		return getPositionWithOffset(trackGraph, 0);
+		return getPosition(trackGraph, false);
 	}
 
-	public Vec3 getPositionWithOffset(@Nullable TrackGraph trackGraph, double offset) {
+	public Vec3 getPosition(@Nullable TrackGraph trackGraph, boolean flipUpsideDown) {
+		return getPositionWithOffset(trackGraph, 0, flipUpsideDown);
+	}
+
+	public Vec3 getPositionWithOffset(@Nullable TrackGraph trackGraph, double offset, boolean flipUpsideDown) {
 		double t = (position + offset) / edge.getLength();
 		return edge.getPosition(trackGraph, t)
-			.add(edge.getNormal(trackGraph, t));
+			.add(edge.getNormal(trackGraph, t)
+				.scale(upsideDown ^ flipUpsideDown ? -1 : 1));
 	}
 
 	public void migrateTo(List<GraphLocation> locations) {
@@ -422,12 +429,13 @@ public class TravellingPoint {
 		tag.put("Nodes", nodes.map(TrackNode::getLocation)
 			.serializeEach(loc -> loc.write(dimensions)));
 		tag.putDouble("Position", position);
+		tag.putBoolean("UpsideDown", upsideDown);
 		return tag;
 	}
 
 	public static TravellingPoint read(CompoundTag tag, TrackGraph graph, DimensionPalette dimensions) {
 		if (graph == null)
-			return new TravellingPoint(null, null, null, 0);
+			return new TravellingPoint(null, null, null, 0, false);
 
 		Couple<TrackNode> locs = tag.contains("Nodes")
 			? Couple.deserializeEach(tag.getList("Nodes", Tag.TAG_COMPOUND), c -> TrackNodeLocation.read(c, dimensions))
@@ -435,11 +443,11 @@ public class TravellingPoint {
 			: Couple.create(null, null);
 
 		if (locs.either(Objects::isNull))
-			return new TravellingPoint(null, null, null, 0);
+			return new TravellingPoint(null, null, null, 0, false);
 
 		double position = tag.getDouble("Position");
 		return new TravellingPoint(locs.getFirst(), locs.getSecond(), graph.getConnectionsFrom(locs.getFirst())
-			.get(locs.getSecond()), position);
+			.get(locs.getSecond()), position, tag.getBoolean("UpsideDown"));
 	}
 
 }

@@ -19,8 +19,12 @@ public class Instruction {
 	}
 
 	public Instruction(SequencerInstructions instruction, int value) {
+		this(instruction, InstructionSpeedModifiers.FORWARD, value);
+	}
+
+	public Instruction(SequencerInstructions instruction, InstructionSpeedModifiers speedModifier, int value) {
 		this.instruction = instruction;
-		speedModifier = InstructionSpeedModifiers.FORWARD;
+		this.speedModifier = speedModifier;
 		this.value = value;
 	}
 

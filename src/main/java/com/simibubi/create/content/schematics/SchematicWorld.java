@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.BBHelper;
+import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.core.BlockPos;
@@ -18,6 +19,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
@@ -73,14 +75,12 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public boolean addFreshEntity(Entity entityIn) {
-		if (entityIn instanceof ItemFrame)
-			((ItemFrame) entityIn).getItem()
-				.setTag(null);
-		if (entityIn instanceof ArmorStand) {
-			ArmorStand armorStandEntity = (ArmorStand) entityIn;
-			armorStandEntity.getAllSlots()
-				.forEach(stack -> stack.setTag(null));
-		}
+		if (entityIn instanceof ItemFrame itemFrame)
+			itemFrame.setItem(NBTProcessors.withUnsafeNBTDiscarded(itemFrame.getItem()));
+		if (entityIn instanceof ArmorStand armorStand)
+			for (EquipmentSlot equipmentSlot : EquipmentSlot.values())
+				armorStand.setItemSlot(equipmentSlot,
+					NBTProcessors.withUnsafeNBTDiscarded(armorStand.getItemBySlot(equipmentSlot)));
 
 		return entities.add(entityIn);
 	}

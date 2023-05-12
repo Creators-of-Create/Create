@@ -1192,6 +1192,8 @@
 	"create.schematicAndQuill.convert": "Save and Upload Immediately",
 	"create.schematicAndQuill.fallbackName": "My Schematic",
 	"create.schematicAndQuill.saved": "Saved as %1$s",
+	"create.schematicAndQuill.failed": "Failed to save schematic, check logs for details",
+	"create.schematicAndQuill.instant_failed": "Schematic instant-upload failed, check logs for details",
 
 	"create.schematic.invalid": "[!] Invalid Item - Use the Schematic Table instead",
 	"create.schematic.error": "Schematic failed to Load - Check Game Logs",
@@ -1811,6 +1813,7 @@
 	"create.display_source.redstone_power.progress_bar": "Progress Bar",
 	"create.display_source.boiler.not_enough_space": "Not enough space ",
 	"create.display_source.boiler.for_boiler_status": "for Boiler Status",
+	"create.display_source.computer_display_source": "From Computer",
 
 	"create.display_target.line": "Line %1$s",
 	"create.display_target.page": "Page %1$s",
@@ -1833,6 +1836,8 @@
 	"create.super_glue.not_enough": "Not enough glue in inventory",
 	"create.super_glue.success": "Applying Glue...",
 
+	"create.gui.attached_computer.controlled": "This device is being controlled by a computer",
+	"create.gui.attached_computer.hint": "To use device manually, disconnect all computers and modems",
 	"create.gui.config.overlay1": "Hi :)",
 	"create.gui.config.overlay2": "This is a sample overlay",
 	"create.gui.config.overlay3": "Click or drag with your mouse",
@@ -1855,6 +1860,12 @@
 
 	"enchantment.create.capacity.desc": "Increases Backtank air capacity.",
 	"enchantment.create.potato_recovery.desc": "Potato Cannon projectiles have a chance to be reused.",
+
+	"create.bogey.style.updated_style": "Updated style",
+	"create.bogey.style.updated_style_and_size": "Updated style and size",
+	"create.bogey.style.no_other_sizes": "No other sizes",
+	"create.bogey.style.invalid": "Unnamed style",
+	"create.bogey.style.standard": "Standard",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
@@ -2814,7 +2825,7 @@
 	"create.ponder.mechanical_roller_fill.text_5": "As opposed to 'clear & pave', neither of these modes will cause the rollers to break existing blocks",
 
 	"create.ponder.mechanical_roller_pave.header": "Clearing and Paving with the Roller",
-	"create.ponder.mechanical_roller_pave.text_1": "Mechanical rollers help to clean up long tracks or paths conveniently",
+	"create.ponder.mechanical_roller_pave.text_1": "Mechanical rollers help to clean up terrain around tracks or paths",
 	"create.ponder.mechanical_roller_pave.text_2": "In its default mode, without a material set, it will simply clear blocks like a Drill",
 	"create.ponder.mechanical_roller_pave.text_3": "While disassembled, a suitable paving material can be specified",
 	"create.ponder.mechanical_roller_pave.text_4": "Materials can be supplied via chests or barrels attached to the structure",

@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.trains.entity;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllSoundEvents.SoundEntry;
 import com.simibubi.create.content.logistics.trains.entity.Carriage.DimensionalCarriageEntity;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
@@ -30,6 +31,9 @@ public class CarriageSounds {
 	LoopingSound sharedWheelSoundSeated;
 	LoopingSound sharedHonkSound;
 
+	Couple<SoundEvent> bogeySounds;
+	SoundEvent closestBogeySound;
+
 	boolean arrived;
 
 	int tick;
@@ -37,6 +41,10 @@ public class CarriageSounds {
 
 	public CarriageSounds(CarriageContraptionEntity entity) {
 		this.entity = entity;
+		bogeySounds = entity.getCarriage().bogeys.map(bogey ->
+				bogey != null && bogey.getStyle() != null ? bogey.getStyle().getSoundType()
+					: AllSoundEvents.TRAIN2.getMainEvent());
+		closestBogeySound = bogeySounds.getFirst();
 		distanceFactor = LerpedFloat.linear();
 		speedFactor = LerpedFloat.linear();
 		approachFactor = LerpedFloat.linear();
@@ -80,6 +88,15 @@ public class CarriageSounds {
 		double distance1 = toBogey1.length();
 		double distance2 = toBogey2.length();
 
+		Couple<CarriageBogey> bogeys = entity.getCarriage().bogeys;
+		CarriageBogey relevantBogey = bogeys.get(distance1 > distance2);
+		if (relevantBogey == null) {
+			relevantBogey = bogeys.getFirst();
+		}
+		if (relevantBogey != null) {
+			closestBogeySound = relevantBogey.getStyle().getSoundType();
+		}
+
 		Vec3 toCarriage = distance1 > distance2 ? toBogey2 : toBogey1;
 		double distance = Math.min(distance1, distance2);
 		Vec3 soundLocation = cam.add(toCarriage);
@@ -98,7 +115,7 @@ public class CarriageSounds {
 		seatCrossfade.tickChaser();
 
 		minecartEsqueSound = playIfMissing(mc, minecartEsqueSound, AllSoundEvents.TRAIN.getMainEvent());
-		sharedWheelSound = playIfMissing(mc, sharedWheelSound, AllSoundEvents.TRAIN2.getMainEvent());
+		sharedWheelSound = playIfMissing(mc, sharedWheelSound, closestBogeySound);
 		sharedWheelSoundSeated = playIfMissing(mc, sharedWheelSoundSeated, AllSoundEvents.TRAIN3.getMainEvent());
 
 		float volume = Math.min(Math.min(speedFactor.getValue(), distanceFactor.getValue() / 100),
@@ -206,7 +223,7 @@ public class CarriageSounds {
 	public void submitSharedSoundVolume(Vec3 location, float volume) {
 		Minecraft mc = Minecraft.getInstance();
 		minecartEsqueSound = playIfMissing(mc, minecartEsqueSound, AllSoundEvents.TRAIN.getMainEvent());
-		sharedWheelSound = playIfMissing(mc, sharedWheelSound, AllSoundEvents.TRAIN2.getMainEvent());
+		sharedWheelSound = playIfMissing(mc, sharedWheelSound, closestBogeySound);
 		sharedWheelSoundSeated = playIfMissing(mc, sharedWheelSoundSeated, AllSoundEvents.TRAIN3.getMainEvent());
 
 		boolean approach = true;

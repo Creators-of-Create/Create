@@ -1,9 +1,17 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
+import java.util.List;
 import java.util.Vector;
 
+import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
+
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftBlockEntity;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
@@ -12,6 +20,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 
@@ -21,6 +31,8 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 	float currentInstructionProgress;
 	int timer;
 	boolean poweredPreviously;
+	
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public record SequenceContext(SequencerInstructions instruction, double relativeValue) {
 
@@ -59,6 +71,12 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 		currentInstructionProgress = 0;
 		timer = 0;
 		poweredPreviously = false;
+	}
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -103,6 +121,8 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 	}
 
 	public void onRedstoneUpdate(boolean isPowered, boolean isRunning) {
+		if (computerBehaviour.hasAttachedComputer())
+			return;
 		if (!poweredPreviously && isPowered)
 			risingFlank();
 		poweredPreviously = isPowered;
@@ -136,7 +156,7 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 		}
 	}
 
-	protected void run(int instructionIndex) {
+	public void run(int instructionIndex) {
 		Instruction instruction = getInstruction(instructionIndex);
 		if (instruction == null || instruction.instruction == SequencerInstructions.END) {
 			if (getModifier() != 0)
@@ -193,6 +213,20 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 		super.read(compound, clientPacket);
 	}
 
+	@NotNull
+	@Override
+	public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+		if (computerBehaviour.isPeripheralCap(cap))
+			return computerBehaviour.getPeripheralCapability();
+		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public void invalidateCaps() {
+		super.invalidateCaps();
+		computerBehaviour.removePeripheral();
+	}
+
 	@Override
 	public float getRotationSpeedModifier(Direction face) {
 		if (isVirtual())
@@ -206,6 +240,10 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 		return isIdle() ? 0
 			: instructions.get(currentInstruction)
 				.getSpeedModifier();
+	}
+
+	public Vector<Instruction> getInstructions() {
+		return this.instructions;
 	}
 
 }

@@ -35,6 +35,9 @@ public class ConfigureSequencedGearshiftPacket extends BlockEntityConfigurationP
 
 	@Override
 	protected void applySettings(SequencedGearshiftBlockEntity be) {
+		if (be.computerBehaviour.hasAttachedComputer())
+			return;
+
 		be.run(-1);
 		be.instructions = Instruction.deserializeAll(instructions);
 		be.sendData();

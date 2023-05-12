@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -109,7 +108,7 @@ public class CarriageParticles {
 
 					m = m.add(contraptionMotion.scale(.75f));
 
-					level.addParticle(spark ? ParticleTypes.CRIT : ParticleTypes.POOF, v.x, v.y, v.z, m.x, m.y, m.z);
+					level.addParticle(spark ? bogey.getStyle().contactParticle : bogey.getStyle().smokeParticle, v.x, v.y, v.z, m.x, m.y, m.z);
 				}
 			}
 		}
