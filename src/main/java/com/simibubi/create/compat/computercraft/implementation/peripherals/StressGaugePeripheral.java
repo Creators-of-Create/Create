@@ -2,13 +2,13 @@ package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
+import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeBlockEntity;
 
 import dan200.computercraft.api.lua.LuaFunction;
 
-public class StressGaugePeripheral extends SyncedPeripheral<StressGaugeTileEntity> {
+public class StressGaugePeripheral extends SyncedPeripheral<StressGaugeBlockEntity> {
 
-	public StressGaugePeripheral(StressGaugeTileEntity tile) {
+	public StressGaugePeripheral(StressGaugeBlockEntity tile) {
 		super(tile);
 	}
 

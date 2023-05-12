@@ -1,10 +1,10 @@
 package com.simibubi.create.compat.computercraft;
 
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
 public class FallbackComputerBehaviour extends AbstractComputerBehaviour {
 
-	public FallbackComputerBehaviour(SmartTileEntity te) {
+	public FallbackComputerBehaviour(SmartBlockEntity te) {
 		super(te);
 	}
 

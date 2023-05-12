@@ -7,14 +7,14 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
 import com.simibubi.create.compat.computercraft.implementation.ComputerBehaviour;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraftforge.network.PacketDistributor;
 
-public abstract class SyncedPeripheral<T extends SmartTileEntity> implements IPeripheral {
+public abstract class SyncedPeripheral<T extends SmartBlockEntity> implements IPeripheral {
 
 	protected final T tile;
 	private final AtomicInteger computers = new AtomicInteger();
@@ -39,7 +39,7 @@ public abstract class SyncedPeripheral<T extends SmartTileEntity> implements IPe
 		boolean hasAttachedComputer = computers.get() > 0;
 
 		tile.getBehaviour(ComputerBehaviour.TYPE).setHasAttachedComputer(hasAttachedComputer);
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new AttachedComputerPacket(tile.getBlockPos(), hasAttachedComputer));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new AttachedComputerPacket(tile.getBlockPos(), hasAttachedComputer));
 	}
 
 	@Override

@@ -4,34 +4,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlockEntity.SelectionMode;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlockEntity;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.mixin.accessor.GameTestHelperAccessor;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LeverBlock;
-import net.minecraftforge.fluids.FluidStack;
-
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-
-import org.jetbrains.annotations.Contract;
-
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity.SelectionMode;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
-import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
-import com.simibubi.create.foundation.utility.RegisteredObjects;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -44,14 +33,21 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
-
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
  * A helper class expanding the functionality of {@link GameTestHelper}.
@@ -91,7 +87,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	}
 
 	public void assertNixiePower(BlockPos pos, int strength) {
-		NixieTubeTileEntity nixie = getBlockEntity(AllTileEntities.NIXIE_TUBE.get(), pos);
+		NixieTubeBlockEntity nixie = getBlockEntity(AllBlockEntityTypes.NIXIE_TUBE.get(), pos);
 		int actualStrength = nixie.getRedstoneStrength();
 		if (actualStrength != strength)
 			fail("Expected nixie tube at %s to have power of %s, got %s".formatted(pos, strength, actualStrength));
@@ -146,20 +142,20 @@ public class CreateGameTestHelper extends GameTestHelper {
 	}
 
 	/**
-	 * Given any segment of an {@link IMultiTileContainer}, get the controller for it.
+	 * Given any segment of an {@link IMultiBlockEntityContainer}, get the controller for it.
 	 */
-	public <T extends BlockEntity & IMultiTileContainer> T getControllerBlockEntity(BlockEntityType<T> type, BlockPos anySegment) {
-		T be = getBlockEntity(type, anySegment).getControllerTE();
+	public <T extends BlockEntity & IMultiBlockEntityContainer> T getControllerBlockEntity(BlockEntityType<T> type, BlockPos anySegment) {
+		T be = getBlockEntity(type, anySegment).getControllerBE();
 		if (be == null)
 			fail("Could not get block entity controller with type [%s] from pos [%s]".formatted(RegisteredObjects.getKeyOrThrow(type), anySegment));
 		return be;
 	}
 
 	/**
-	 * Get the expected {@link TileEntityBehaviour} from the given position, failing if not present.
+	 * Get the expected {@link BlockEntityBehaviour} from the given position, failing if not present.
 	 */
-	public <T extends TileEntityBehaviour> T getBehavior(BlockPos pos, BehaviourType<T> type) {
-		T behavior = TileEntityBehaviour.get(getLevel(), absolutePos(pos), type);
+	public <T extends BlockEntityBehaviour> T getBehavior(BlockPos pos, BehaviourType<T> type) {
+		T behavior = BlockEntityBehaviour.get(getLevel(), absolutePos(pos), type);
 		if (behavior == null)
 			fail("Behavior at " + pos + " missing, expected " + type.getName());
 		return behavior;

@@ -4,8 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockEntity;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
 
 import dan200.computercraft.api.lua.LuaFunction;
@@ -13,13 +13,13 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 
-public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkTileEntity> {
+public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkBlockEntity> {
 
 	public static final String TAG_KEY = "ComputerSourceList";
 	private final AtomicInteger cursorX = new AtomicInteger();
 	private final AtomicInteger cursorY = new AtomicInteger();
 
-	public DisplayLinkPeripheral(DisplayLinkTileEntity tile) {
+	public DisplayLinkPeripheral(DisplayLinkBlockEntity tile) {
 		super(tile);
 	}
 

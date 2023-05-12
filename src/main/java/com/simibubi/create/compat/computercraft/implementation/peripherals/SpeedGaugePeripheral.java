@@ -2,13 +2,13 @@ package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
+import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeBlockEntity;
 
 import dan200.computercraft.api.lua.LuaFunction;
 
-public class SpeedGaugePeripheral extends SyncedPeripheral<SpeedGaugeTileEntity> {
+public class SpeedGaugePeripheral extends SyncedPeripheral<SpeedGaugeBlockEntity> {
 
-	public SpeedGaugePeripheral(SpeedGaugeTileEntity tile) {
+	public SpeedGaugePeripheral(SpeedGaugeBlockEntity tile) {
 		super(tile);
 	}
 

@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.implementation.ComputerBehaviour;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
 public class ComputerCraftProxy {
 
@@ -18,13 +18,13 @@ public class ComputerCraftProxy {
 		computerFactory = ComputerBehaviour::new;
 	}
 
-	private static Function<SmartTileEntity, ? extends AbstractComputerBehaviour> fallbackFactory;
-	private static Function<SmartTileEntity, ? extends AbstractComputerBehaviour> computerFactory;
+	private static Function<SmartBlockEntity, ? extends AbstractComputerBehaviour> fallbackFactory;
+	private static Function<SmartBlockEntity, ? extends AbstractComputerBehaviour> computerFactory;
 
-	public static AbstractComputerBehaviour behaviour(SmartTileEntity ste) {
+	public static AbstractComputerBehaviour behaviour(SmartBlockEntity sbe) {
 		if (computerFactory == null)
-			return fallbackFactory.apply(ste);
-		return computerFactory.apply(ste);
+			return fallbackFactory.apply(sbe);
+		return computerFactory.apply(sbe);
 	}
 
 }

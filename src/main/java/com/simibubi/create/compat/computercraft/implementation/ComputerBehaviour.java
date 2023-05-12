@@ -7,13 +7,13 @@ import com.simibubi.create.compat.computercraft.implementation.peripherals.Speed
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SpeedGaugePeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.StationPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.StressGaugePeripheral;
-import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
-import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftTileEntity;
-import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
-import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlockEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlockEntity;
+import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeBlockEntity;
+import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeBlockEntity;
+import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraftforge.common.capabilities.Capability;
@@ -30,23 +30,23 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 	LazyOptional<IPeripheral> peripheral;
 	NonNullSupplier<IPeripheral> peripheralSupplier;
 
-	public ComputerBehaviour(SmartTileEntity te) {
+	public ComputerBehaviour(SmartBlockEntity te) {
 		super(te);
 		this.peripheralSupplier = getPeripheralFor(te);
 	}
 
-	public static NonNullSupplier<IPeripheral> getPeripheralFor(SmartTileEntity te) {
-		if (te instanceof SpeedControllerTileEntity scte)
+	public static NonNullSupplier<IPeripheral> getPeripheralFor(SmartBlockEntity te) {
+		if (te instanceof SpeedControllerBlockEntity scte)
 			return () -> new SpeedControllerPeripheral(scte, scte.targetSpeed);
-		if (te instanceof DisplayLinkTileEntity dlte)
+		if (te instanceof DisplayLinkBlockEntity dlte)
 			return () -> new DisplayLinkPeripheral(dlte);
-		if (te instanceof SequencedGearshiftTileEntity sgte)
+		if (te instanceof SequencedGearshiftBlockEntity sgte)
 			return () -> new SequencedGearshiftPeripheral(sgte);
-		if (te instanceof SpeedGaugeTileEntity sgte)
+		if (te instanceof SpeedGaugeBlockEntity sgte)
 			return () -> new SpeedGaugePeripheral(sgte);
-		if (te instanceof StressGaugeTileEntity sgte)
+		if (te instanceof StressGaugeBlockEntity sgte)
 			return () -> new StressGaugePeripheral(sgte);
-		if (te instanceof StationTileEntity ste)
+		if (te instanceof StationBlockEntity ste)
 			return () -> new StationPeripheral(ste);
 
 		throw new IllegalArgumentException("No peripheral available for " + te.getType()

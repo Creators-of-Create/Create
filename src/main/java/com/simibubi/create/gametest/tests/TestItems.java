@@ -5,18 +5,18 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity.SelectionMode;
-import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
+import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlockEntity.SelectionMode;
+import com.simibubi.create.content.logistics.block.depot.DepotBlockEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlockEntity;
+import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayLayout;
 import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
+import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.gametest.infrastructure.CreateGameTestHelper;
 import com.simibubi.create.gametest.infrastructure.GameTestGroup;
-import com.simibubi.create.foundation.utility.Components;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.Util;
@@ -53,9 +53,9 @@ public class TestItems {
 	public static void armPurgatory(CreateGameTestHelper helper) {
 		BlockPos lever = new BlockPos(2, 3, 2);
 		BlockPos depot1Pos = new BlockPos(3, 2, 1);
-		DepotTileEntity depot1 = helper.getBlockEntity(AllTileEntities.DEPOT.get(), depot1Pos);
+		DepotBlockEntity depot1 = helper.getBlockEntity(AllBlockEntityTypes.DEPOT.get(), depot1Pos);
 		BlockPos depot2Pos = new BlockPos(1, 2, 1);
-		DepotTileEntity depot2 = helper.getBlockEntity(AllTileEntities.DEPOT.get(), depot2Pos);
+		DepotBlockEntity depot2 = helper.getBlockEntity(AllBlockEntityTypes.DEPOT.get(), depot2Pos);
 		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
 			helper.assertSecondsPassed(5);
@@ -234,12 +234,12 @@ public class TestItems {
 		BlockPos chest = new BlockPos(3, 2, 1);
 		long totalChestItems = helper.getTotalItems(chest);
 		BlockPos chestNixiePos = new BlockPos(2, 3, 1);
-		NixieTubeTileEntity chestNixie = helper.getBlockEntity(AllTileEntities.NIXIE_TUBE.get(), chestNixiePos);
+		NixieTubeBlockEntity chestNixie = helper.getBlockEntity(AllBlockEntityTypes.NIXIE_TUBE.get(), chestNixiePos);
 
 		BlockPos doubleChest = new BlockPos(2, 2, 3);
 		long totalDoubleChestItems = helper.getTotalItems(doubleChest);
 		BlockPos doubleChestNixiePos = new BlockPos(1, 3, 3);
-		NixieTubeTileEntity doubleChestNixie = helper.getBlockEntity(AllTileEntities.NIXIE_TUBE.get(), doubleChestNixiePos);
+		NixieTubeBlockEntity doubleChestNixie = helper.getBlockEntity(AllBlockEntityTypes.NIXIE_TUBE.get(), doubleChestNixiePos);
 
 		helper.succeedWhen(() -> {
 			String chestNixieText = chestNixie.getFullText().getString();
@@ -256,16 +256,16 @@ public class TestItems {
 	@GameTest(template = "depot_display", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
 	public static void depotDisplay(CreateGameTestHelper helper) {
 		BlockPos displayPos = new BlockPos(5, 3, 1);
-		List<DepotTileEntity> depots = Stream.of(
+		List<DepotBlockEntity> depots = Stream.of(
 				new BlockPos(2, 2, 1),
 				new BlockPos(1, 2, 1)
-		).map(pos -> helper.getBlockEntity(AllTileEntities.DEPOT.get(), pos)).toList();
+		).map(pos -> helper.getBlockEntity(AllBlockEntityTypes.DEPOT.get(), pos)).toList();
 		List<BlockPos> levers = List.of(
 				new BlockPos(2, 5, 0),
 				new BlockPos(1, 5, 0)
 		);
 		levers.forEach(helper::pullLever);
-		FlapDisplayTileEntity display = helper.getBlockEntity(AllTileEntities.FLAP_DISPLAY.get(), displayPos).getController();
+		FlapDisplayBlockEntity display = helper.getBlockEntity(AllBlockEntityTypes.FLAP_DISPLAY.get(), displayPos).getController();
 		helper.succeedWhen(() -> {
 			for (int i = 0; i < 2; i++) {
 				FlapDisplayLayout line = display.getLines().get(i);
@@ -273,7 +273,7 @@ public class TestItems {
 				line.getSections().stream().map(FlapDisplaySection::getText).forEach(textComponent::append);
 				String text = textComponent.getString().toLowerCase(Locale.ROOT).trim();
 
-				DepotTileEntity depot = depots.get(i);
+				DepotBlockEntity depot = depots.get(i);
 				ItemStack item = depot.getHeldItem();
 				String name = Registry.ITEM.getKey(item.getItem()).getPath();
 

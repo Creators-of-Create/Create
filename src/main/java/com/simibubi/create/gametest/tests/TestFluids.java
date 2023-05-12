@@ -1,12 +1,10 @@
 package com.simibubi.create.gametest.tests;
 
-import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyFluidHandler;
-import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
-import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeTileEntity;
-
+import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeBlockEntity;
+import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.gametest.infrastructure.CreateGameTestHelper;
-
 import com.simibubi.create.gametest.infrastructure.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
@@ -95,8 +93,8 @@ public class TestFluids {
 		BlockPos stressometer = new BlockPos(5, 2, 5);
 		BlockPos speedometer = new BlockPos(4, 2, 5);
 		helper.succeedWhen(() -> {
-			StressGaugeTileEntity stress = helper.getBlockEntity(AllTileEntities.STRESSOMETER.get(), stressometer);
-			SpeedGaugeTileEntity speed = helper.getBlockEntity(AllTileEntities.SPEEDOMETER.get(), speedometer);
+			StressGaugeBlockEntity stress = helper.getBlockEntity(AllBlockEntityTypes.STRESSOMETER.get(), stressometer);
+			SpeedGaugeBlockEntity speed = helper.getBlockEntity(AllBlockEntityTypes.SPEEDOMETER.get(), speedometer);
 			float capacity = stress.getNetworkCapacity();
 			helper.assertCloseEnoughTo(capacity, 2048);
 			float rotationSpeed = Mth.abs(speed.getSpeed());

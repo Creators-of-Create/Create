@@ -2,16 +2,16 @@ package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 
 import dan200.computercraft.api.lua.LuaFunction;
 
-public class SpeedControllerPeripheral extends SyncedPeripheral<SpeedControllerTileEntity> {
+public class SpeedControllerPeripheral extends SyncedPeripheral<SpeedControllerBlockEntity> {
 
 	private final ScrollValueBehaviour targetSpeed;
 
-	public SpeedControllerPeripheral(SpeedControllerTileEntity tile, ScrollValueBehaviour targetSpeed) {
+	public SpeedControllerPeripheral(SpeedControllerBlockEntity tile, ScrollValueBehaviour targetSpeed) {
 		super(tile);
 		this.targetSpeed = targetSpeed;
 	}

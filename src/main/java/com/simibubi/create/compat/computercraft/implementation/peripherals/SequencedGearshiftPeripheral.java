@@ -4,16 +4,16 @@ import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Instruction;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.InstructionSpeedModifiers;
-import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftTileEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlockEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencerInstructions;
 
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 
-public class SequencedGearshiftPeripheral extends SyncedPeripheral<SequencedGearshiftTileEntity> {
+public class SequencedGearshiftPeripheral extends SyncedPeripheral<SequencedGearshiftBlockEntity> {
 
-	public SequencedGearshiftPeripheral(SequencedGearshiftTileEntity tile) {
+	public SequencedGearshiftPeripheral(SequencedGearshiftBlockEntity tile) {
 		super(tile);
 	}
 

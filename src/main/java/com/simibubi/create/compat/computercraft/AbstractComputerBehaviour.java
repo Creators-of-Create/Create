@@ -1,20 +1,20 @@
 package com.simibubi.create.compat.computercraft;
 
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class AbstractComputerBehaviour extends TileEntityBehaviour {
+public class AbstractComputerBehaviour extends BlockEntityBehaviour {
 
 	public static final BehaviourType<AbstractComputerBehaviour> TYPE = new BehaviourType<>();
 
 	boolean hasAttachedComputer;
 
-	public AbstractComputerBehaviour(SmartTileEntity te) {
+	public AbstractComputerBehaviour(SmartBlockEntity te) {
 		super(te);
 		this.hasAttachedComputer = false;
 	}

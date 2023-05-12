@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import com.simibubi.create.compat.computercraft.implementation.CreateLuaTable;
 import com.simibubi.create.content.logistics.trains.entity.Train;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
 import com.simibubi.create.content.logistics.trains.management.edgePoint.station.TrainEditPacket;
 import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -30,9 +30,9 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.network.PacketDistributor;
 
-public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
+public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
-	public StationPeripheral(StationTileEntity tile) {
+	public StationPeripheral(StationBlockEntity tile) {
 		super(tile);
 	}
 
@@ -129,7 +129,7 @@ public class StationPeripheral extends SyncedPeripheral<StationTileEntity> {
 	public final void setTrainName(String name) throws LuaException {
 		Train train = getTrainOrThrow();
 		train.name = Components.literal(name);
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new TrainEditPacket.TrainEditReturnPacket(train.id, name, train.icon.getId()));
+		AllPackets.getChannel().send(PacketDistributor.ALL.noArg(), new TrainEditPacket.TrainEditReturnPacket(train.id, name, train.icon.getId()));
 	}
 
 	@LuaFunction
