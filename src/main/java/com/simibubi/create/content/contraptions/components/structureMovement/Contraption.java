@@ -608,7 +608,7 @@ public abstract class Contraption {
 			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
 		if (AllBlocks.POWERED_SHAFT.has(blockstate))
 			blockstate = BlockHelper.copyProperties(blockstate, AllBlocks.SHAFT.getDefaultState());
-		if (blockstate.getBlock() instanceof ControlsBlock)
+		if (blockstate.getBlock() instanceof ControlsBlock && getType() == ContraptionType.CARRIAGE)
 			blockstate = blockstate.setValue(ControlsBlock.OPEN, true);
 		if (blockstate.hasProperty(SlidingDoorBlock.VISIBLE))
 			blockstate = blockstate.setValue(SlidingDoorBlock.VISIBLE, false);
