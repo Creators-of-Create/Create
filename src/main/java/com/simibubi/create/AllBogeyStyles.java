@@ -23,6 +23,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 public class AllBogeyStyles {
 	public static final Map<ResourceLocation, BogeyStyle> BOGEY_STYLES = new HashMap<>();
@@ -36,10 +38,10 @@ public class AllBogeyStyles {
 	public static final String STANDARD_CYCLE_GROUP = "standard";
 
 	public static final BogeyStyle STANDARD =
-		create("standard", STANDARD_CYCLE_GROUP).commonRenderer(CommonStandardBogeyRenderer::new)
+		create("standard", STANDARD_CYCLE_GROUP).commonRenderer(() -> CommonStandardBogeyRenderer::new)
 			.displayName(Components.translatable("create.bogey.style.standard"))
-			.size(BogeySizes.SMALL, SmallStandardBogeyRenderer::new, AllBlocks.SMALL_BOGEY)
-			.size(BogeySizes.LARGE, LargeStandardBogeyRenderer::new, AllBlocks.LARGE_BOGEY)
+			.size(BogeySizes.SMALL, () -> SmallStandardBogeyRenderer::new, AllBlocks.SMALL_BOGEY)
+			.size(BogeySizes.LARGE, () -> LargeStandardBogeyRenderer::new, AllBlocks.LARGE_BOGEY)
 			.build();
 
 	private static BogeyStyleBuilder create(String name, String cycleGroup) {
@@ -53,7 +55,7 @@ public class AllBogeyStyles {
 	public static void register() {}
 
 	public static class BogeyStyleBuilder {
-		protected final Map<BogeySizes.BogeySize, BogeyStyle.SizeData> sizes = new HashMap<>();
+		protected final Map<BogeySizes.BogeySize, Supplier<BogeyStyle.SizeData>> sizes = new HashMap<>();
 		protected final ResourceLocation name;
 		protected final ResourceLocation cycleGroup;
 
@@ -84,15 +86,18 @@ public class AllBogeyStyles {
 			return this;
 		}
 
-		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<? extends BogeyRenderer> renderer,
-									   BlockEntry<? extends AbstractBogeyBlock<?>> blockEntry) {
+		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<Supplier<? extends BogeyRenderer>> renderer,
+			BlockEntry<? extends AbstractBogeyBlock<?>> blockEntry) {
 			this.size(size, renderer, blockEntry.getId());
 			return this;
 		}
 
-		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<? extends BogeyRenderer> renderer,
-									   ResourceLocation location) {
-			this.sizes.put(size, new BogeyStyle.SizeData(location, renderer, renderer.get()));
+		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<Supplier<? extends BogeyRenderer>> renderer,
+			ResourceLocation location) {
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				this.sizes.put(size, () -> new BogeyStyle.SizeData(location, renderer.get(), renderer.get()
+					.get()));
+			});
 			return this;
 		}
 
@@ -106,16 +111,19 @@ public class AllBogeyStyles {
 			return this;
 		}
 
-		public BogeyStyleBuilder commonRenderer(Supplier<? extends CommonRenderer> commonRenderer) {
-			this.commonRenderer = Optional.of(commonRenderer);
+		public BogeyStyleBuilder commonRenderer(Supplier<Supplier<? extends CommonRenderer>> commonRenderer) {
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				this.commonRenderer = Optional.of(commonRenderer.get());
+			});
 			return this;
 		}
 
 		public BogeyStyle build() {
-			BogeyStyle entry =
-					new BogeyStyle(name, cycleGroup, displayName, soundType, contactParticle, smokeParticle, defaultData, sizes, commonRenderer);
+			BogeyStyle entry = new BogeyStyle(name, cycleGroup, displayName, soundType, contactParticle, smokeParticle,
+				defaultData, sizes, commonRenderer);
 			BOGEY_STYLES.put(name, entry);
-			CYCLE_GROUPS.computeIfAbsent(cycleGroup, l -> new HashMap<>()).put(name, entry);
+			CYCLE_GROUPS.computeIfAbsent(cycleGroup, l -> new HashMap<>())
+				.put(name, entry);
 			return entry;
 		}
 	}

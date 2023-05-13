@@ -1061,7 +1061,7 @@
 	"create.gui.sequenced_gearshift.instruction.turn_angle": "Tourner",
 	"create.gui.sequenced_gearshift.instruction.turn_angle.angle": "Angle",
 	"create.gui.sequenced_gearshift.instruction.turn_distance.descriptive": "Tourner pour bouger piston/poulie/portique",
-	"create.gui.sequenced_gearshift.instruction.turn_distance": "Piston/poulie/portique",
+	"create.gui.sequenced_gearshift.instruction.turn_distance": "Piston",
 	"create.gui.sequenced_gearshift.instruction.turn_distance.distance": "Distance",
 	"create.gui.sequenced_gearshift.instruction.delay.descriptive": "Délai programmé",
 	"create.gui.sequenced_gearshift.instruction.delay": "Délai",
