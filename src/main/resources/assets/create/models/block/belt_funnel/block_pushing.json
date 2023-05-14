@@ -73,8 +73,8 @@
 		},
 		{
 			"name": "Internal",
-			"from": [1.95, -3, 19],
-			"to": [14.05, 10, 13],
+			"from": [1.9, -3, 19],
+			"to": [14.1, 10.05, 13],
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [0, -3, 13]},
 			"faces": {
 				"east": {"uv": [13, 6, 16, 12.5], "rotation": 180, "texture": "#base"},

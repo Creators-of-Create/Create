@@ -51,6 +51,8 @@ public class BeltTunnelRenderer extends SmartBlockEntityRenderer<BeltTunnelBlock
 			msr.centre()
 				.rotateY(horizontalAngle)
 				.unCentre();
+			
+			ms.translate(0.075f / 16f, 0, 0);
 
 			for (int segment = 0; segment <= 3; segment++) {
 				ms.pushPose();
@@ -68,7 +70,7 @@ public class BeltTunnelRenderer extends SmartBlockEntityRenderer<BeltTunnelBlock
 					.renderInto(ms, vb);
 
 				ms.popPose();
-				ms.translate(-3 / 16f, 0, 0);
+				ms.translate(-3.05f / 16f, 0, 0);
 			}
 			ms.popPose();
 		}

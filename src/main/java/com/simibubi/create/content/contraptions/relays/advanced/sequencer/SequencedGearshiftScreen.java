@@ -150,7 +150,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 			int yOffset = toDraw.height * row;
 
-			toDraw.render(ms, x, y + 14 + yOffset, this);
+			toDraw.render(ms, x, y + 16 + yOffset, this);
 		}
 
 		for (int row = 0; row < instructions.capacity(); row++) {

@@ -22,8 +22,8 @@
 		},
 		{
 			"name": "inner X",
-			"from": [0, -5, 14],
-			"to": [16, 16, 2],
+			"from": [0, -5, 14.05],
+			"to": [16, 16, 1.95],
 			"faces": {
 				"north": {"uv": [0, 0, 8, 10.5], "texture": "#tunnel"},
 				"south": {"uv": [0, 0, 8, 10.5], "texture": "#tunnel"}
@@ -41,8 +41,8 @@
 		},
 		{
 			"name": "inner rim",
-			"from": [0, 10, 0],
-			"to": [16, 12, 16],
+			"from": [0, 10.05, 0],
+			"to": [16, 12.05, 16],
 			"faces": {
 				"down": {"uv": [0, 0, 16, 16], "texture": "#frame"}
 			}

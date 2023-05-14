@@ -73,7 +73,7 @@
 		},
 		{
 			"from": [1.9, 0, 18],
-			"to": [14.1, 10, 12],
+			"to": [14.1, 10.05, 12],
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 0, 12]},
 			"faces": {
 				"east": {"uv": [13, 6, 16, 11], "rotation": 180, "texture": "#base"},

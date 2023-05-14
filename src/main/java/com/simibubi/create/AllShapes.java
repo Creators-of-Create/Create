@@ -249,7 +249,7 @@ public class AllShapes {
 		BELT_COLLISION_MASK = cuboid(0, 0, 0, 16, 19, 16),
 		SCHEMATICANNON_SHAPE = shape(1, 0, 1, 15, 8, 15).add(0.5, 8, 0.5, 15.5, 11, 15.5)
 			.build(),
-		PULLEY_MAGNET = shape(3, 0, 3, 13, 2, 13).add(FOUR_VOXEL_POLE.get(UP))
+		PULLEY_MAGNET = shape(3, 0, 3, 13, 3, 13).add(FOUR_VOXEL_POLE.get(UP))
 			.build(),
 		SPOUT = shape(1, 2, 1, 15, 14, 15).add(2, 0, 2, 14, 16, 14)
 			.build(),
