@@ -2,16 +2,16 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_gold_ore"
+      "item": "create:crushed_raw_copper"
     }
   ],
   "results": [
     {
-      "item": "minecraft:gold_nugget",
+      "item": "create:copper_nugget",
       "count": 9
     },
     {
-      "item": "minecraft:quartz",
+      "item": "minecraft:clay_ball",
       "chance": 0.5
     }
   ]

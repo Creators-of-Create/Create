@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_aluminum_ore"
+      "item": "create:crushed_raw_lead"
     }
   ],
   "results": [
     {
-      "item": "immersiveengineering:nugget_aluminum",
+      "item": "immersiveengineering:nugget_lead",
       "count": 9
     }
   ],

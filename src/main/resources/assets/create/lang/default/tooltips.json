@@ -200,12 +200,12 @@
 	"item.create.copper_diving_boots.tooltip": "COPPER DIVING BOOTS",
 	"item.create.copper_diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
 	"item.create.copper_diving_boots.tooltip.condition1": "When Worn",
-	"item.create.copper_diving_boots.tooltip.behaviour1": "Wielder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
+	"item.create.copper_diving_boots.tooltip.behaviour1": "Wielder _descends_ more _quickly_ in liquids. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
 
 	"item.create.netherite_diving_boots.tooltip": "NETHERITE DIVING BOOTS",
 	"item.create.netherite_diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor, including Oceans made of Lava.",
 	"item.create.netherite_diving_boots.tooltip.condition1": "When Worn",
-	"item.create.netherite_diving_boots.tooltip.behaviour1": "Wielder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
+	"item.create.netherite_diving_boots.tooltip.behaviour1": "Wielder _descends_ more _quickly_ in liquids. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
 
 	"item.create.crafting_blueprint.tooltip": "CRAFTING BLUEPRINT",
 	"item.create.crafting_blueprint.tooltip.summary": "_Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",

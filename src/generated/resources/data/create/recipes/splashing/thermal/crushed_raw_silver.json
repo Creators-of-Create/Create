@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_tin_ore"
+      "item": "create:crushed_raw_silver"
     }
   ],
   "results": [
     {
-      "item": "thermal:tin_nugget",
+      "item": "thermal:silver_nugget",
       "count": 9
     }
   ],

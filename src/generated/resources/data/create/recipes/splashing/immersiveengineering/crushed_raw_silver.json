@@ -2,18 +2,18 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_silver_ore"
+      "item": "create:crushed_raw_silver"
     }
   ],
   "results": [
     {
-      "item": "thermal:silver_nugget",
+      "item": "immersiveengineering:nugget_silver",
       "count": 9
     }
   ],
   "conditions": [
     {
-      "modid": "thermal",
+      "modid": "immersiveengineering",
       "type": "forge:mod_loaded"
     }
   ]

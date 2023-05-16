@@ -7,10 +7,10 @@
   ],
   "results": [
     {
-      "item": "create:crushed_platinum_ore"
+      "item": "create:crushed_raw_platinum"
     },
     {
-      "item": "create:crushed_platinum_ore",
+      "item": "create:crushed_raw_platinum",
       "chance": 0.75
     },
     {

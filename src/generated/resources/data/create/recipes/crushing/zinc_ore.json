@@ -7,10 +7,10 @@
   ],
   "results": [
     {
-      "item": "create:crushed_zinc_ore"
+      "item": "create:crushed_raw_zinc"
     },
     {
-      "item": "create:crushed_zinc_ore",
+      "item": "create:crushed_raw_zinc",
       "chance": 0.75
     },
     {

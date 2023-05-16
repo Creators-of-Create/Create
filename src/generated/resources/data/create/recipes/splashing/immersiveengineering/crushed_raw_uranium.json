@@ -2,18 +2,18 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_tin_ore"
+      "item": "create:crushed_raw_uranium"
     }
   ],
   "results": [
     {
-      "item": "mekanism:nugget_tin",
+      "item": "immersiveengineering:nugget_uranium",
       "count": 9
     }
   ],
   "conditions": [
     {
-      "modid": "mekanism",
+      "modid": "immersiveengineering",
       "type": "forge:mod_loaded"
     }
   ]

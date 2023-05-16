@@ -7,10 +7,10 @@
   ],
   "results": [
     {
-      "item": "create:crushed_osmium_ore"
+      "item": "create:crushed_raw_osmium"
     },
     {
-      "item": "create:crushed_osmium_ore",
+      "item": "create:crushed_raw_osmium",
       "chance": 0.75
     },
     {

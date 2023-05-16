@@ -7,10 +7,10 @@
   ],
   "results": [
     {
-      "item": "create:crushed_quicksilver_ore"
+      "item": "create:crushed_raw_quicksilver"
     },
     {
-      "item": "create:crushed_quicksilver_ore",
+      "item": "create:crushed_raw_quicksilver",
       "chance": 0.75
     },
     {

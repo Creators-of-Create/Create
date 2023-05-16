@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "create:crushed_copper_ore"
+    "item": "create:crushed_raw_copper"
   },
   "result": "minecraft:copper_ingot",
   "experience": 0.1,

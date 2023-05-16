@@ -2,12 +2,12 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_lead_ore"
+      "item": "create:crushed_raw_tin"
     }
   ],
   "results": [
     {
-      "item": "mekanism:nugget_lead",
+      "item": "mekanism:nugget_tin",
       "count": 9
     }
   ],

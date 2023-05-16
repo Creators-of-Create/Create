@@ -2,18 +2,18 @@
   "type": "create:splashing",
   "ingredients": [
     {
-      "item": "create:crushed_lead_ore"
+      "item": "create:crushed_raw_osmium"
     }
   ],
   "results": [
     {
-      "item": "immersiveengineering:nugget_lead",
+      "item": "mekanism:nugget_osmium",
       "count": 9
     }
   ],
   "conditions": [
     {
-      "modid": "immersiveengineering",
+      "modid": "mekanism",
       "type": "forge:mod_loaded"
     }
   ]
