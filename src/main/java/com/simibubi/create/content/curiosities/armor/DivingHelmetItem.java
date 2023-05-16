@@ -1,5 +1,7 @@
 package com.simibubi.create.content.curiosities.armor;
 
+import java.util.Map;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -36,6 +38,21 @@ public class DivingHelmetItem extends BaseArmorItem {
 			return false;
 		}
 		return super.canApplyAtEnchantingTable(stack, enchantment);
+	}
+
+	@Override
+	public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+		if (enchantment == Enchantments.AQUA_AFFINITY) {
+			return 1;
+		}
+		return super.getEnchantmentLevel(stack, enchantment);
+	}
+
+	@Override
+	public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
+		Map<Enchantment, Integer> map = super.getAllEnchantments(stack);
+		map.put(Enchantments.AQUA_AFFINITY, 1);
+		return map;
 	}
 
 	public static boolean isWornBy(Entity entity, boolean fireproof) {

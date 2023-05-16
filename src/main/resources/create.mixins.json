@@ -9,7 +9,6 @@
     "ContraptionDriverInteractMixin",
     "WaterWheelFluidSpreadMixin",
     "CustomItemUseEffectsMixin",
-    "EnchantmentHelperMixin",
     "EntityMixin",
     "LavaSwimmingMixin",
     "MainMixin",

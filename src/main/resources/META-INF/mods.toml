@@ -19,7 +19,7 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="forge"
     mandatory=true
-    versionRange="[43.0.0,)"
+    versionRange="[43.2.3,)"
     ordering="NONE"
     side="BOTH"
 
