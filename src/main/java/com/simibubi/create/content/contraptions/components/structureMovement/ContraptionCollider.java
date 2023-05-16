@@ -575,15 +575,6 @@ public class ContraptionCollider {
 		return true;
 	}
 
-	public static Vec3 getWorldToLocalTranslation(Entity entity, AbstractContraptionEntity contraptionEntity) {
-		return getWorldToLocalTranslation(entity, contraptionEntity.getAnchorVec(),
-			contraptionEntity.getRotationState());
-	}
-
-	public static Vec3 getWorldToLocalTranslation(Entity entity, Vec3 anchorVec, ContraptionRotationState rotation) {
-		return getWorldToLocalTranslation(entity, anchorVec, rotation.asMatrix(), rotation.getYawOffset());
-	}
-
 	public static Vec3 getWorldToLocalTranslation(Entity entity, Vec3 anchorVec, Matrix3d rotationMatrix,
 		float yawOffset) {
 		Vec3 entityPosition = entity.position();
@@ -591,35 +582,29 @@ public class ContraptionCollider {
 			.getYsize() / 2, 0);
 		Vec3 position = entityPosition;
 		position = position.add(centerY);
-		position = position.subtract(VecHelper.CENTER_OF_ORIGIN);
-		position = position.subtract(anchorVec);
-		position = VecHelper.rotate(position, -yawOffset, Axis.Y);
-		position = rotationMatrix.transform(position);
-		position = position.add(VecHelper.CENTER_OF_ORIGIN);
+		position = worldToLocalPos(position, anchorVec, rotationMatrix, yawOffset);
 		position = position.subtract(centerY);
 		position = position.subtract(entityPosition);
 		return position;
 	}
 
-	public static Vec3 getWorldToLocalTranslation(Vec3 entity, AbstractContraptionEntity contraptionEntity) {
-		return getWorldToLocalTranslation(entity, contraptionEntity.getAnchorVec(),
+	public static Vec3 worldToLocalPos(Vec3 worldPos, AbstractContraptionEntity contraptionEntity) {
+		return worldToLocalPos(worldPos, contraptionEntity.getAnchorVec(),
 			contraptionEntity.getRotationState());
 	}
 
-	public static Vec3 getWorldToLocalTranslation(Vec3 inPos, Vec3 anchorVec, ContraptionRotationState rotation) {
-		return getWorldToLocalTranslation(inPos, anchorVec, rotation.asMatrix(), rotation.getYawOffset());
+	public static Vec3 worldToLocalPos(Vec3 worldPos, Vec3 anchorVec, ContraptionRotationState rotation) {
+		return worldToLocalPos(worldPos, anchorVec, rotation.asMatrix(), rotation.getYawOffset());
 	}
 
-	public static Vec3 getWorldToLocalTranslation(Vec3 inPos, Vec3 anchorVec, Matrix3d rotationMatrix,
-		float yawOffset) {
-		Vec3 position = inPos;
-		position = position.subtract(VecHelper.CENTER_OF_ORIGIN);
-		position = position.subtract(anchorVec);
-		position = VecHelper.rotate(position, -yawOffset, Axis.Y);
-		position = rotationMatrix.transform(position);
-		position = position.add(VecHelper.CENTER_OF_ORIGIN);
-		position = position.subtract(inPos);
-		return position;
+	public static Vec3 worldToLocalPos(Vec3 worldPos, Vec3 anchorVec, Matrix3d rotationMatrix, float yawOffset) {
+		Vec3 localPos = worldPos;
+		localPos = localPos.subtract(anchorVec);
+		localPos = localPos.subtract(VecHelper.CENTER_OF_ORIGIN);
+		localPos = VecHelper.rotate(localPos, -yawOffset, Axis.Y);
+		localPos = rotationMatrix.transform(localPos);
+		localPos = localPos.add(VecHelper.CENTER_OF_ORIGIN);
+		return localPos;
 	}
 
 	/** From Entity#collide **/

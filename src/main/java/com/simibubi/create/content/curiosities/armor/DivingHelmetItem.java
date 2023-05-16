@@ -14,6 +14,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
@@ -26,6 +28,14 @@ public class DivingHelmetItem extends BaseArmorItem {
 
 	public DivingHelmetItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
 		super(material, SLOT, properties, textureLoc);
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		if (enchantment == Enchantments.AQUA_AFFINITY) {
+			return false;
+		}
+		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
 	public static boolean isWornBy(Entity entity, boolean fireproof) {

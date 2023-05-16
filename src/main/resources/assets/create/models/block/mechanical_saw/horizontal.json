@@ -50,7 +50,7 @@
 		{
 			"name": "Inner",
 			"from": [0, 2, 2],
-			"to": [16, 14, 11],
+			"to": [16, 14, 11.025],
 			"faces": {
 				"east": {"uv": [2, 6, 14, 15], "rotation": 90, "texture": "#andesite_casing_short"},
 				"south": {"uv": [0, 2, 16, 14], "texture": "#slit"},
@@ -70,8 +70,8 @@
 		},
 		{
 			"name": "Back",
-			"from": [2, 2, 1],
-			"to": [14, 14, 2],
+			"from": [2, 2, 0.95],
+			"to": [14, 14, 1.95],
 			"faces": {
 				"north": {"uv": [2, 2, 14, 14], "texture": "#gearbox"}
 			}

@@ -2,14 +2,15 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
+		"1": "create:block/chute_large",
 		"6": "create:block/pulley_magnet",
 		"particle": "create:block/pulley_magnet"
 	},
 	"elements": [
 		{
 			"name": "rope",
-			"from": [6, 2, 6],
-			"to": [10, 8, 10],
+			"from": [5.95, 2, 5.95],
+			"to": [10.05, 8, 10.05],
 			"rotation": {"angle": 0, "axis": "y", "origin": [7.75, 0, 8]},
 			"faces": {
 				"north": {"uv": [12, 8, 16, 14], "texture": "#6"},
@@ -22,15 +23,28 @@
 		{
 			"name": "magnet",
 			"from": [3, 0, 3],
-			"to": [13, 2, 13],
+			"to": [13, 3, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 23, 8]},
 			"faces": {
-				"north": {"uv": [0, 10, 10, 12], "texture": "#6"},
-				"east": {"uv": [0, 10, 10, 12], "texture": "#6"},
-				"south": {"uv": [0, 10, 10, 12], "texture": "#6"},
-				"west": {"uv": [0, 10, 10, 12], "texture": "#6"},
+				"north": {"uv": [0, 10, 10, 13], "texture": "#6"},
+				"east": {"uv": [0, 10, 10, 13], "texture": "#6"},
+				"south": {"uv": [0, 10, 10, 13], "texture": "#6"},
+				"west": {"uv": [0, 10, 10, 13], "texture": "#6"},
 				"up": {"uv": [0, 0, 10, 10], "texture": "#6"},
 				"down": {"uv": [0, 0, 10, 10], "texture": "#6"}
+			}
+		},
+		{
+			"name": "magnet",
+			"from": [4.95, 3, 4.95],
+			"to": [11.05, 5, 11.05],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 23, 8]},
+			"faces": {
+				"north": {"uv": [0, 13, 6, 15], "texture": "#6"},
+				"east": {"uv": [0, 13, 6, 15], "texture": "#6"},
+				"south": {"uv": [0, 13, 6, 15], "texture": "#6"},
+				"west": {"uv": [0, 13, 6, 15], "texture": "#6"},
+				"up": {"uv": [10.5, 11, 13.5, 14], "texture": "#1"}
 			}
 		}
 	]

@@ -17,7 +17,6 @@ import net.minecraftforge.common.extensions.IForgeEntity;
 @Mixin(Entity.class)
 @Implements(@Interface(iface = IForgeEntity.class, prefix = "iForgeEntity$"))
 public abstract class ContraptionDriverInteractMixin extends CapabilityProvider<Entity> {
-	
 	private ContraptionDriverInteractMixin(Class<Entity> baseClass) {
 		super(baseClass);
 	}
@@ -30,5 +29,4 @@ public abstract class ContraptionDriverInteractMixin extends CapabilityProvider<
 	public boolean iForgeEntity$canRiderInteract() {
 		return getRootVehicle() instanceof AbstractContraptionEntity;
 	}
-	
 }

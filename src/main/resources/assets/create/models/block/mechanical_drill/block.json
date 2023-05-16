@@ -11,8 +11,8 @@
 	"elements": [
 		{
 			"name": "Body",
-			"from": [2, 1, 2],
-			"to": [14, 9, 14],
+			"from": [2, 0.95, 2],
+			"to": [14, 9.05, 14],
 			"faces": {
 				"up": {"uv": [2, 2, 14, 14], "texture": "#4"},
 				"down": {"uv": [2, 2, 14, 14], "rotation": 180, "texture": "#gearbox"}

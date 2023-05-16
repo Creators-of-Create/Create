@@ -48,7 +48,7 @@
 		},
 		{
 			"from": [1.95, -3, 6],
-			"to": [14.05, 10, 0],
+			"to": [14.05, 10.05, 0],
 			"faces": {
 				"east": {"uv": [13, 6, 16, 12.5], "rotation": 180, "texture": "#base"},
 				"west": {"uv": [13, 8.5, 16, 16], "texture": "#base"},
@@ -68,8 +68,8 @@
 		},
 		{
 			"name": "MidExtension",
-			"from": [2, -2, 6],
-			"to": [14, 14, 10],
+			"from": [1.95, -2, 6],
+			"to": [14.05, 14.05, 10],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, -8, 6]},
 			"faces": {
 				"north": {"uv": [0, 0, 8, 6], "rotation": 270, "texture": "#base"},

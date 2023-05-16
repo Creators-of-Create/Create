@@ -52,8 +52,8 @@
 		},
 		{
 			"name": "Core",
-			"from": [1, 1, 2],
-			"to": [15, 15, 12],
+			"from": [1, 0.95, 2],
+			"to": [15, 15.05, 12],
 			"faces": {
 				"north": {"uv": [0, 0, 0, 0], "rotation": 180, "texture": "#opening"},
 				"east": {"uv": [0, 0, 0, 0], "rotation": 270, "texture": "#opening"},

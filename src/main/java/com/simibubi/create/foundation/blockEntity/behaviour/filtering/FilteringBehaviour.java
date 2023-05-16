@@ -96,6 +96,13 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		filter = ItemStack.of(nbt.getCompound("Filter"));
 		count = nbt.getInt("FilterAmount");
 		upTo = nbt.getBoolean("UpTo");
+		
+		// Migrate from previous behaviour
+		if (count == 0) {
+			upTo = true;
+			count = filter.getMaxStackSize();
+		}
+		
 		super.read(nbt, clientPacket);
 	}
 

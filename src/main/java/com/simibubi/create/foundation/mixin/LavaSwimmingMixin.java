@@ -19,14 +19,14 @@ import net.minecraft.world.phys.Vec3;
 
 @Mixin(LivingEntity.class)
 public abstract class LavaSwimmingMixin extends Entity {
-	public LavaSwimmingMixin(EntityType<?> type, Level level) {
+	private LavaSwimmingMixin(EntityType<?> type, Level level) {
 		super(type, level);
 	}
 
 	@Inject(method = "travel(Lnet/minecraft/world/phys/Vec3;)V", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z")), at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", shift = Shift.AFTER, ordinal = 0))
-	private void onLavaTravel(Vec3 travelVector, CallbackInfo ci) {
+	private void create$onLavaTravel(Vec3 travelVector, CallbackInfo ci) {
 		ItemStack bootsStack = DivingBootsItem.getWornItem(this);
 		if (bootsStack != null && AllItems.NETHERITE_DIVING_BOOTS.isIn(bootsStack))
-			setDeltaMovement(getDeltaMovement().multiply(DivingBootsItem.getMovementMultiplier(this)));
+			setDeltaMovement(getDeltaMovement().multiply(DivingBootsItem.getMovementMultiplier((LivingEntity) (Object) this)));
 	}
 }

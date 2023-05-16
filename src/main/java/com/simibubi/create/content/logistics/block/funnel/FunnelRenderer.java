@@ -49,7 +49,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 		msr.centre()
 			.rotateY(horizontalAngle)
 			.unCentre();
-		ms.translate(0, 0, -be.getFlapOffset());
+		ms.translate(0.075f, 0, -be.getFlapOffset());
 
 		for (int segment = 0; segment <= 3; segment++) {
 			ms.pushPose();
@@ -68,7 +68,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 				.renderInto(ms, vb);
 
 			ms.popPose();
-			ms.translate(-3 / 16f, 0, 0);
+			ms.translate(-3.05f / 16f, 0, 0);
 		}
 		ms.popPose();
 	}

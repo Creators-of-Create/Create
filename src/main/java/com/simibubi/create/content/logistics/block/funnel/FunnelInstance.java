@@ -43,7 +43,7 @@ public class FunnelInstance extends BlockEntityInstance<FunnelBlockEntity> imple
 
         for (int segment = 0; segment <= 3; segment++) {
             float intensity = segment == 3 ? 1.5f : segment + 1;
-            float segmentOffset = -3 / 16f * segment;
+            float segmentOffset = -3.05f / 16f * segment + 0.075f / 16f;
 
             FlapData key = model.createInstance();
 

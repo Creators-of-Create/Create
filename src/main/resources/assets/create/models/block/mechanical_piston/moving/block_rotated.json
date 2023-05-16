@@ -6,6 +6,7 @@
 		"1": "create:block/piston_bottom",
 		"2": "create:block/gearbox",
 		"3": "create:block/piston_inner",
+		"4": "create:block/andesite_casing",
 		"particle": "create:block/andesite_casing_piston"
 	},
 	"elements": [
@@ -18,14 +19,14 @@
 				"east": {"uv": [0, 14, 16, 16], "texture": "#0"},
 				"south": {"uv": [0, 14, 16, 16], "texture": "#0"},
 				"west": {"uv": [0, 14, 16, 16], "texture": "#0"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#4"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
 			}
 		},
 		{
 			"name": "Inner",
-			"from": [1, 2, 2],
-			"to": [15, 12, 14],
+			"from": [0.95, 2, 2],
+			"to": [15.05, 12, 14],
 			"faces": {
 				"east": {"uv": [2, 4, 14, 14], "texture": "#2"},
 				"west": {"uv": [2, 4, 14, 14], "texture": "#2"},
@@ -40,7 +41,7 @@
 				"north": {"uv": [0, 4, 16, 14], "texture": "#0"},
 				"east": {"uv": [14, 4, 16, 14], "texture": "#0"},
 				"south": {"uv": [0, 4, 16, 14], "texture": "#0"},
-				"west": {"uv": [16, 4, 14, 14], "texture": "#0"},
+				"west": {"uv": [0, 4, 2, 14], "texture": "#0"},
 				"up": {"uv": [0, 2, 16, 0], "texture": "#0"}
 			}
 		},
@@ -50,7 +51,7 @@
 			"to": [16, 12, 16],
 			"faces": {
 				"north": {"uv": [0, 4, 16, 14], "texture": "#0"},
-				"east": {"uv": [16, 4, 14, 14], "texture": "#0"},
+				"east": {"uv": [0, 4, 2, 14], "texture": "#0"},
 				"south": {"uv": [0, 4, 16, 14], "texture": "#0"},
 				"west": {"uv": [14, 4, 16, 14], "texture": "#0"},
 				"up": {"uv": [0, 0, 16, 2], "texture": "#0"}

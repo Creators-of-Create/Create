@@ -85,12 +85,12 @@ public class DivingBootsItem extends BaseArmorItem {
 		return true;
 	}
 
-	public static Vec3 getMovementMultiplier(Entity entity) {
+	public static Vec3 getMovementMultiplier(LivingEntity entity) {
 		double yMotion = entity.getDeltaMovement().y;
 		double vMultiplier = yMotion < 0 ? Math.max(0, 2.5 - Math.abs(yMotion) * 2) : 1;
 
 		if (!entity.isOnGround()) {
-			if (entity instanceof LivingEntity le && le.jumping && entity.getPersistentData()
+			if (entity.jumping && entity.getPersistentData()
 				.contains("LavaGrounded")) {
 				vMultiplier = yMotion == 0 ? 0 : 1 / yMotion;
 			} else if (yMotion > 0)
@@ -101,9 +101,8 @@ public class DivingBootsItem extends BaseArmorItem {
 			return new Vec3(1.75, vMultiplier, 1.75);
 		}
 
-		if (entity instanceof LivingEntity)
-			entity.getPersistentData()
-				.putBoolean("LavaGrounded", true);
+		entity.getPersistentData()
+			.putBoolean("LavaGrounded", true);
 		double hMultiplier = entity.isSprinting() ? 1.85 : 1.75;
 		return new Vec3(hMultiplier, vMultiplier, hMultiplier);
 	}
