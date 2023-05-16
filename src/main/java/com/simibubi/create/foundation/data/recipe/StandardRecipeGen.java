@@ -102,6 +102,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("CCC")
 				.pattern("CCC")),
 
+		EXPERIENCE_FROM_BLOCK = create(AllItems.EXP_NUGGET).withSuffix("_from_block")
+			.returns(9)
+			.unlockedBy(AllItems.EXP_NUGGET::get)
+			.viaShapeless(b -> b.requires(AllBlocks.EXPERIENCE_BLOCK.get())),
+
+		EXPERIENCE_BLOCK = create(AllBlocks.EXPERIENCE_BLOCK).unlockedBy(AllItems.EXP_NUGGET::get)
+			.viaShaped(b -> b.define('C', AllItems.EXP_NUGGET.get())
+				.pattern("CCC")
+				.pattern("CCC")
+				.pattern("CCC")),
+
 		BRASS_COMPACTING =
 			metalCompacting(ImmutableList.of(AllItems.BRASS_NUGGET, AllItems.BRASS_INGOT, AllBlocks.BRASS_BLOCK),
 				ImmutableList.of(I::brassNugget, I::brass, I::brassBlock)),

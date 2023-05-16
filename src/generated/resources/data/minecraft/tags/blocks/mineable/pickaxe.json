@@ -186,6 +186,7 @@
     "create:rose_quartz_block",
     "create:rose_quartz_tiles",
     "create:small_rose_quartz_tiles",
+    "create:experience_block",
     "create:copper_shingles",
     "create:exposed_copper_shingles",
     "create:weathered_copper_shingles",

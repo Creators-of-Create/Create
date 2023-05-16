@@ -141,6 +141,7 @@ import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.content.curiosities.ExperienceBlock;
 import com.simibubi.create.content.curiosities.armor.BacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
@@ -275,6 +276,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
@@ -304,6 +306,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.ForgeSoundType;
 
 public class AllBlocks {
 
@@ -2301,6 +2304,25 @@ public class AllBlocks {
 		.build()
 		.lang("Block of Brass")
 		.register();
+
+	public static final BlockEntry<ExperienceBlock> EXPERIENCE_BLOCK =
+		REGISTRATE.block("experience_block", ExperienceBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.color(MaterialColor.PLANT))
+			.properties(p -> p.sound(new ForgeSoundType(1, .5f, () -> SoundEvents.AMETHYST_BLOCK_BREAK,
+				() -> SoundEvents.AMETHYST_BLOCK_STEP, () -> SoundEvents.AMETHYST_BLOCK_PLACE,
+				() -> SoundEvents.AMETHYST_BLOCK_HIT, () -> SoundEvents.AMETHYST_BLOCK_FALL)))
+			.properties(p -> p.requiresCorrectToolForDrops())
+			.properties(p -> p.lightLevel(s -> 13))
+			.transform(pickaxeOnly())
+			.lang("Block of Experience")
+			.tag(Tags.Blocks.STORAGE_BLOCKS)
+			.tag(BlockTags.BEACON_BASE_BLOCKS)
+			.item()
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
+			.tag(Tags.Items.STORAGE_BLOCKS)
+			.build()
+			.register();
 
 	public static final BlockEntry<RotatedPillarBlock> ROSE_QUARTZ_BLOCK =
 		REGISTRATE.block("rose_quartz_block", RotatedPillarBlock::new)
