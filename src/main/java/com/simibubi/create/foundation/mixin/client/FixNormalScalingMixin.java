@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.mixin;
+package com.simibubi.create.foundation.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ public class FixNormalScalingMixin {
 	 * same as in the beginning.
 	 */
 	@Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/math/Matrix3f;mul(F)V", shift = Shift.AFTER), method = "scale(FFF)V", cancellable = true)
-	private void returnAfterNegate(float x, float y, float z, CallbackInfo ci) {
+	private void create$returnAfterNegate(float x, float y, float z, CallbackInfo ci) {
 		ci.cancel();
 	}
 
@@ -30,7 +30,7 @@ public class FixNormalScalingMixin {
 	 * does not work for negative numbers.
 	 */
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;fastInvCubeRoot(F)F"), method = "scale(FFF)V")
-	private float absInvCbrtInput(float input) {
+	private float create$absInvCbrtInput(float input) {
 		return Math.abs(input);
 	}
 }

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.mixin;
+package com.simibubi.create.foundation.mixin.client;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,18 +11,15 @@ import com.mojang.blaze3d.platform.Window;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 @Mixin(Minecraft.class)
 public class WindowResizeMixin {
+	@Shadow
+	@Final
+	private Window window;
 
-	@Shadow @Final private Window window;
-
-	@Inject(at = @At("TAIL"), method = "resizeDisplay")
-	private void updateWindowSize(CallbackInfo ci) {
+	@Inject(method = "resizeDisplay()V", at = @At("TAIL"))
+	private void create$updateWindowSize(CallbackInfo ci) {
 		UIRenderHelper.updateWindowSize(window);
 	}
-
 }

@@ -20,9 +20,8 @@ import net.minecraft.world.level.material.FluidState;
 
 @Mixin(FlowingFluid.class)
 public class WaterWheelFluidSpreadMixin {
-
-	@Inject(at = @At("HEAD"), cancellable = true, method = "canPassThrough(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Z")
-	protected void canPassThroughOnWaterWheel(BlockGetter pLevel, Fluid pFluid, BlockPos pFromPos, BlockState p_75967_,
+	@Inject(method = "canPassThrough(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)Z", at = @At("HEAD"), cancellable = true)
+	protected void create$canPassThroughOnWaterWheel(BlockGetter pLevel, Fluid pFluid, BlockPos pFromPos, BlockState p_75967_,
 		Direction pDirection, BlockPos p_75969_, BlockState p_75970_, FluidState p_75971_,
 		CallbackInfoReturnable<Boolean> cir) {
 
@@ -43,5 +42,4 @@ public class WaterWheelFluidSpreadMixin {
 			&& irotate.getRotationAxis(belowState) == pDirection.getAxis())
 			cir.setReturnValue(false);
 	}
-
 }

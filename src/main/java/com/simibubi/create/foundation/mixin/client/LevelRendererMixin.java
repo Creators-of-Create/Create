@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.mixin;
+package com.simibubi.create.foundation.mixin.client;
 
 import java.util.Set;
 import java.util.SortedSet;
@@ -35,7 +35,7 @@ public class LevelRendererMixin {
 	private Long2ObjectMap<SortedSet<BlockDestructionProgress>> destructionProgress;
 
 	@Inject(method = "destroyBlockProgress(ILnet/minecraft/core/BlockPos;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/BlockDestructionProgress;updateTick(I)V", shift = Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void onDestroyBlockProgress(int breakerId, BlockPos pos, int progress, CallbackInfo ci, BlockDestructionProgress progressObj) {
+	private void create$onDestroyBlockProgress(int breakerId, BlockPos pos, int progress, CallbackInfo ci, BlockDestructionProgress progressObj) {
 		BlockState state = level.getBlockState(pos);
 		IBlockRenderProperties properties = RenderProperties.get(state);
 		if (properties instanceof MultiPosDestructionHandler handler) {
@@ -51,7 +51,7 @@ public class LevelRendererMixin {
 	}
 
 	@Inject(method = "removeProgress(Lnet/minecraft/server/level/BlockDestructionProgress;)V", at = @At("RETURN"))
-	private void onRemoveProgress(BlockDestructionProgress progress, CallbackInfo ci) {
+	private void create$onRemoveProgress(BlockDestructionProgress progress, CallbackInfo ci) {
 		Set<BlockPos> extraPositions = ((BlockDestructionProgressExtension) progress).getExtraPositions();
 		if (extraPositions != null) {
 			for (BlockPos extraPos : extraPositions) {

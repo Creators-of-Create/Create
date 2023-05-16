@@ -53,13 +53,13 @@ public class MapItemSavedDataMixin implements StationMapData {
 	private int trackedDecorationCount;
 
 	@Unique
-	private final Map<String, StationMarker> stationMarkers = Maps.newHashMap();
+	private final Map<String, StationMarker> create$stationMarkers = Maps.newHashMap();
 
 	@Inject(
 			method = "load(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;",
 			at = @At("RETURN")
 	)
-	private static void onLoad(CompoundTag compound, CallbackInfoReturnable<MapItemSavedData> cir) {
+	private static void create$onLoad(CompoundTag compound, CallbackInfoReturnable<MapItemSavedData> cir) {
 		MapItemSavedData mapData = cir.getReturnValue();
 		StationMapData stationMapData = (StationMapData) mapData;
 
@@ -74,9 +74,9 @@ public class MapItemSavedDataMixin implements StationMapData {
 			method = "save(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;",
 			at = @At("RETURN")
 	)
-	public void onSave(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
+	public void create$onSave(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
 		ListTag listTag = new ListTag();
-		for (StationMarker stationMarker : stationMarkers.values()) {
+		for (StationMarker stationMarker : create$stationMarkers.values()) {
 			listTag.add(stationMarker.save());
 		}
 		compound.put(STATION_MARKERS_KEY, listTag);
@@ -84,7 +84,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 
 	@Override
 	public void addStationMarker(StationMarker marker) {
-		stationMarkers.put(marker.getId(), marker);
+		create$stationMarkers.put(marker.getId(), marker);
 
 		int scaleMultiplier = 1 << scale;
 		float localX = (marker.getTarget().getX() - x) / (float) scaleMultiplier;
@@ -144,7 +144,7 @@ public class MapItemSavedDataMixin implements StationMapData {
 		if (marker == null)
 			return false;
 
-		if (stationMarkers.remove(marker.getId(), marker)) {
+		if (create$stationMarkers.remove(marker.getId(), marker)) {
 			removeDecoration(marker.getId());
 			return true;
 		}
@@ -161,12 +161,13 @@ public class MapItemSavedDataMixin implements StationMapData {
 			method = "checkBanners(Lnet/minecraft/world/level/BlockGetter;II)V",
 			at = @At("RETURN")
 	)
-	public void checkBanners(BlockGetter blockGetter, int x, int z, CallbackInfo ci) {
-		checkStations(blockGetter, x, z);
+	public void create$onCheckBanners(BlockGetter blockGetter, int x, int z, CallbackInfo ci) {
+		create$checkStations(blockGetter, x, z);
 	}
 
-	private void checkStations(BlockGetter blockGetter, int x, int z) {
-		Iterator<StationMarker> iterator = stationMarkers.values().iterator();
+	@Unique
+	private void create$checkStations(BlockGetter blockGetter, int x, int z) {
+		Iterator<StationMarker> iterator = create$stationMarkers.values().iterator();
 		List<StationMarker> newMarkers = new ArrayList<>();
 
 		while (iterator.hasNext()) {

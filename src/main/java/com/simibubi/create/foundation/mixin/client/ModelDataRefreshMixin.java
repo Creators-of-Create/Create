@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.mixin;
+package com.simibubi.create.foundation.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,20 +17,18 @@ import net.minecraftforge.client.model.ModelDataManager;
 @OnlyIn(Dist.CLIENT)
 @Mixin(ModelDataManager.class)
 public class ModelDataRefreshMixin {
-
 	/**
 	 * Normally ModelDataManager will throw an exception if a block entity tries
 	 * to refresh its model data from a world the client isn't currently in,
 	 * but we need that to not happen for block entities in fake schematic
 	 * worlds, so in those cases just do nothing instead.
 	 */
-	@Inject(at = @At("HEAD"), method = "requestModelDataRefresh", cancellable = true, remap = false)
-	private static void requestModelDataRefresh(BlockEntity be, CallbackInfo ci) {
+	@Inject(method = "requestModelDataRefresh", at = @At("HEAD"), cancellable = true, remap = false)
+	private static void create$requestModelDataRefresh(BlockEntity be, CallbackInfo ci) {
 		if (be != null) {
 			Level world = be.getLevel();
 			if (world != Minecraft.getInstance().level && world instanceof SchematicWorld)
 				ci.cancel();
 		}
 	}
-
 }

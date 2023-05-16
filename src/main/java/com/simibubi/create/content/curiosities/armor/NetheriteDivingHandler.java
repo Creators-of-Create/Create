@@ -1,25 +1,16 @@
 package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.network.NetworkEvent.Context;
-import net.minecraftforge.network.PacketDistributor;
 
 @EventBusSubscriber
 public final class NetheriteDivingHandler {
@@ -64,10 +55,14 @@ public final class NetheriteDivingHandler {
 	public static void setBit(LivingEntity entity, EquipmentSlot slot) {
 		CompoundTag nbt = entity.getPersistentData();
 		byte bits = nbt.getByte(NETHERITE_DIVING_BITS_KEY);
+		if ((bits & 0b1111) == 0b1111) {
+			return;
+		}
+
 		bits |= 1 << slot.getIndex();
 		nbt.putByte(NETHERITE_DIVING_BITS_KEY, bits);
 
-		if ((bits & 0xF) == 0xF) {
+		if ((bits & 0b1111) == 0b1111) {
 			setFireImmune(entity, true);
 		}
 	}
@@ -79,7 +74,7 @@ public final class NetheriteDivingHandler {
 		}
 
 		byte bits = nbt.getByte(NETHERITE_DIVING_BITS_KEY);
-		boolean prevFullSet = (bits & 0xF) == 0xF;
+		boolean prevFullSet = (bits & 0b1111) == 0b1111;
 		bits &= ~(1 << slot.getIndex());
 		nbt.putByte(NETHERITE_DIVING_BITS_KEY, bits);
 
@@ -88,59 +83,10 @@ public final class NetheriteDivingHandler {
 		}
 	}
 
+	// TODO: sync to the client
+	// The feature works without syncing because health and burning are calculated server-side and synced through vanilla code.
+	// This method will not be called when the entity is wearing a full diving set on creation because the NBT values are persistent.
 	public static void setFireImmune(LivingEntity entity, boolean fireImmune) {
 		entity.getPersistentData().putBoolean(FIRE_IMMUNE_KEY, fireImmune);
-		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), SetFireImmunePacket.create(entity));
-	}
-
-	@SubscribeEvent
-	public static void onStartTrackingEntity(PlayerEvent.StartTracking event) {
-		if (!(event.getPlayer() instanceof ServerPlayer player)) {
-			return;
-		}
-
-		if (!(event.getTarget() instanceof LivingEntity entity)) {
-			return;
-		}
-
-		AllPackets.getChannel().send(PacketDistributor.PLAYER.with(() -> player), SetFireImmunePacket.create(entity));
-	}
-
-	public static class SetFireImmunePacket extends SimplePacketBase {
-		private final int entityId;
-		private final boolean fireImmune;
-
-		public SetFireImmunePacket(int entityId, boolean fireImmune) {
-			this.entityId = entityId;
-			this.fireImmune = fireImmune;
-		}
-
-		public static SetFireImmunePacket create(Entity entity) {
-			int entityId = entity.getId();
-			boolean fireImmune = entity.getPersistentData().getBoolean(FIRE_IMMUNE_KEY);
-			return new SetFireImmunePacket(entityId, fireImmune);
-		}
-
-		public SetFireImmunePacket(FriendlyByteBuf buffer) {
-			entityId = buffer.readVarInt();
-			fireImmune = buffer.readBoolean();
-		}
-
-		@Override
-		public void write(FriendlyByteBuf buffer) {
-			buffer.writeVarInt(entityId);
-			buffer.writeBoolean(fireImmune);
-		}
-
-		@Override
-		public boolean handle(Context context) {
-			context.enqueueWork(() -> {
-				Entity entity = Minecraft.getInstance().level.getEntity(entityId);
-				if (entity != null) {
-					entity.getPersistentData().putBoolean(FIRE_IMMUNE_KEY, fireImmune);
-				}
-			});
-			return true;
-		}
 	}
 }

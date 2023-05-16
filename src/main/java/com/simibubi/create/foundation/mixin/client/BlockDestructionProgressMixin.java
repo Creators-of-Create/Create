@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.mixin;
+package com.simibubi.create.foundation.mixin.client;
 
 import java.util.Set;
 
@@ -13,15 +13,15 @@ import net.minecraft.server.level.BlockDestructionProgress;
 @Mixin(BlockDestructionProgress.class)
 public class BlockDestructionProgressMixin implements BlockDestructionProgressExtension {
 	@Unique
-	private Set<BlockPos> extraPositions;
+	private Set<BlockPos> create$extraPositions;
 
 	@Override
 	public Set<BlockPos> getExtraPositions() {
-		return extraPositions;
+		return create$extraPositions;
 	}
 
 	@Override
 	public void setExtraPositions(Set<BlockPos> positions) {
-		extraPositions = positions;
+		create$extraPositions = positions;
 	}
 }

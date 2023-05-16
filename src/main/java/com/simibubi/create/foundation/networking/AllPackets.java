@@ -38,7 +38,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeObservedPacket;
-import com.simibubi.create.content.curiosities.armor.NetheriteDivingHandler;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
 import com.simibubi.create.content.curiosities.clipboard.ClipboardEditPacket;
 import com.simibubi.create.content.curiosities.symmetry.ConfigureSymmetryWandPacket;
@@ -200,15 +199,13 @@ public enum AllPackets {
 	TRACK_GRAPH_ROLL_CALL(TrackGraphRollCallPacket.class, TrackGraphRollCallPacket::new, PLAY_TO_CLIENT),
 	UPDATE_ELEVATOR_FLOORS(ElevatorFloorListPacket.class, ElevatorFloorListPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_ACTOR_TOGGLE(ContraptionDisableActorPacket.class, ContraptionDisableActorPacket::new, PLAY_TO_CLIENT),
-	SET_FIRE_IMMUNE(NetheriteDivingHandler.SetFireImmunePacket.class, NetheriteDivingHandler.SetFireImmunePacket::new,
-		PLAY_TO_CLIENT),
 	CONTRAPTION_COLLIDER_LOCK(ContraptionColliderLockPacket.class, ContraptionColliderLockPacket::new, PLAY_TO_CLIENT),
 	ATTACHED_COMPUTER(AttachedComputerPacket.class, AttachedComputerPacket::new, PLAY_TO_CLIENT),
-	
+
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
-	public static final int NETWORK_VERSION = 2;
+	public static final int NETWORK_VERSION = 3;
 	public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
 	private static SimpleChannel channel;
 

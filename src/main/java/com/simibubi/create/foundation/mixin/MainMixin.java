@@ -19,7 +19,6 @@ import java.util.Collection;
 
 @Mixin(Main.class)
 public class MainMixin {
-
 	/**
 	 * Forge completely bypasses vanilla's
 	 * {@link GameTestServer#create(Thread, LevelStorageAccess, PackRepository, Collection, BlockPos)},
