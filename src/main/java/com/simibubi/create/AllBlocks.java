@@ -2313,7 +2313,8 @@ public class AllBlocks {
 				() -> SoundEvents.AMETHYST_BLOCK_STEP, () -> SoundEvents.AMETHYST_BLOCK_PLACE,
 				() -> SoundEvents.AMETHYST_BLOCK_HIT, () -> SoundEvents.AMETHYST_BLOCK_FALL)))
 			.properties(p -> p.requiresCorrectToolForDrops())
-			.properties(p -> p.lightLevel(s -> 13))
+			.properties(p -> p.lightLevel(s -> 15))
+			.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.standardModel(c, p)))
 			.transform(pickaxeOnly())
 			.lang("Block of Experience")
 			.tag(Tags.Blocks.STORAGE_BLOCKS)
