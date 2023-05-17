@@ -2,6 +2,7 @@ package com.simibubi.create.content.schematics.packet;
 
 import java.util.function.Supplier;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.SchematicPrinter;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
@@ -35,6 +36,11 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			ServerPlayer player = context.get().getSender();
 			if (player == null)
 				return;
+			if (!player.isCreative())
+			{
+				Create.LOGGER.warn(player.getName().getString() + " attempted to instant place while not in creative");
+				return;
+			}
 
 			Level world = player.getLevel();
 			SchematicPrinter printer = new SchematicPrinter();
