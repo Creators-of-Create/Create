@@ -35,6 +35,8 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
+			if (!player.isCreative())
+				return;
 
 			Level world = player.getLevel();
 			SchematicPrinter printer = new SchematicPrinter();
