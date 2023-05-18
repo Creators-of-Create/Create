@@ -8,7 +8,7 @@
       "item": "create:brass_casing"
     },
     "R": {
-      "item": "minecraft:crafting_table"
+      "tag": "forge:crafting_tables"
     }
   },
   "pattern": [

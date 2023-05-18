@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:crafting_table",
+    "#blue_skies:crafting_tables"
+  ]
+}
