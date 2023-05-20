@@ -107,38 +107,43 @@ minecraft {
 
 repositories {
     maven {
-        // Location of the maven that hosts JEI files (and TiC)
-        name 'Progwml6 maven'
-        url 'https://dvs1.progwml6.com/files/maven'
+        // location of the maven for Registrate and Flywheel
+        name = 'tterrag maven'
+        url = 'https://maven.tterrag.com'
+    }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        // location of the maven for Vazkii's mods
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
     }
     /*maven {
-        // Location of a maven mirror for JEI files, as a fallback
-        name 'ModMaven'
-        url 'https://modmaven.k-4u.nl'
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
     }*/
     maven {
-        // Location of the maven for vazkii's mods
-        name 'blamejared'
-        url 'https://maven.blamejared.com'
+        // location of the maven for Dynamic Trees
+        url = 'https://harleyoconnor.com/maven'
     }
     maven {
-        // Location of the maven for mixed mappings, Registrate, and Flywheel
-        name 'tterrag maven'
-        url 'https://maven.tterrag.com'
+        // location of the maven for Curios API
+        url = "https://maven.theillusivec4.top/"
     }
     maven {
-        url 'https://www.cursemaven.com'
+        // location of maven for CC: Tweaked
+        name = "squiddev"
+        url = "https://squiddev.cc/maven/"
+        content {
+            includeGroup "org.squiddev"
+        }
+    }
+
+    maven {
+        url = 'https://www.cursemaven.com'
         content {
             includeGroup "curse.maven"
         }
-    }
-    maven {
-        //location of the maven for dynamic trees
-        url 'https://harleyoconnor.com/maven'
-    }
-    maven {
-        //location of the maven for curios api
-        url = "https://maven.theillusivec4.top/"
     }
     maven {
         name = "Modrinth"
@@ -147,16 +152,9 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+
     flatDir {
         dirs 'libs'
-    }
-    maven {
-        // Location of maven for CC: Tweaked
-        name = "squiddev"
-        url = "https://squiddev.cc/maven/"
-        content {
-            includeGroup "org.squiddev"
-        }
     }
 }
 
