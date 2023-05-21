@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 

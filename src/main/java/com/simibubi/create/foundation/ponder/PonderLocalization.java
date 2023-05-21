@@ -6,12 +6,13 @@ import java.util.Map;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.ponder.content.PonderIndex;
-import com.simibubi.create.foundation.ponder.content.SharedText;
 import com.simibubi.create.foundation.ponder.ui.PonderTagIndexScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.infrastructure.ponder.AllPonderTags;
+import com.simibubi.create.infrastructure.ponder.PonderIndex;
+import com.simibubi.create.infrastructure.ponder.SharedText;
 import com.tterrag.registrate.AbstractRegistrate;
 
 import net.minecraft.client.resources.language.I18n;
@@ -156,7 +157,7 @@ public class PonderLocalization {
 	 */
 	public static JsonObject provideLangEntries() {
 		SharedText.gatherText();
-		PonderTag.register();
+		AllPonderTags.register();
 		PonderIndex.register();
 
 		generateSceneLang();

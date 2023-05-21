@@ -1,9 +1,9 @@
 package com.simibubi.create.content.schematics.packet;
 
 import com.simibubi.create.content.schematics.SchematicPrinter;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

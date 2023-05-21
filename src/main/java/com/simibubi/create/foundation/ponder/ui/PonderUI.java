@@ -15,7 +15,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -30,8 +29,6 @@ import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry;
 import com.simibubi.create.foundation.ponder.PonderTag;
 import com.simibubi.create.foundation.ponder.PonderWorld;
-import com.simibubi.create.foundation.ponder.content.DebugScenes;
-import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.element.TextWindowElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Color;
@@ -45,6 +42,9 @@ import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.ponder.DebugScenes;
+import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -655,7 +655,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	protected void renderPonderTags(PoseStack ms, int mouseX, int mouseY, float partialTicks, float fade, PonderScene activeScene) {
 		// Tags
 		List<PonderTag> sceneTags = activeScene.getTags();
-		boolean highlightAll = sceneTags.contains(PonderTag.Highlight.ALL);
+		boolean highlightAll = sceneTags.contains(PonderTag.HIGHLIGHT_ALL);
 		double s = Minecraft.getInstance()
 			.getWindow()
 			.getGuiScale();

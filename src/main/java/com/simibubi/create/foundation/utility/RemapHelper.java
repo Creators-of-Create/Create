@@ -35,20 +35,20 @@ import static com.simibubi.create.AllItems.WAND_OF_SYMMETRY;
 import static com.simibubi.create.AllItems.WHEAT_FLOUR;
 import static com.simibubi.create.AllItems.WORLDSHAPER;
 import static com.simibubi.create.Create.asResource;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.ACACIA_WINDOW;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.ACACIA_WINDOW_PANE;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.BIRCH_WINDOW;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.BIRCH_WINDOW_PANE;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.DARK_OAK_WINDOW;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.DARK_OAK_WINDOW_PANE;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.JUNGLE_WINDOW;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.JUNGLE_WINDOW_PANE;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.OAK_WINDOW;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.OAK_WINDOW_PANE;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.ORNATE_IRON_WINDOW;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.ORNATE_IRON_WINDOW_PANE;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.SPRUCE_WINDOW;
-import static com.simibubi.create.content.palettes.AllPaletteBlocks.SPRUCE_WINDOW_PANE;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.ACACIA_WINDOW;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.ACACIA_WINDOW_PANE;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.BIRCH_WINDOW;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.BIRCH_WINDOW_PANE;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.DARK_OAK_WINDOW;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.DARK_OAK_WINDOW_PANE;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.JUNGLE_WINDOW;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.JUNGLE_WINDOW_PANE;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.OAK_WINDOW;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.OAK_WINDOW_PANE;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.ORNATE_IRON_WINDOW;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.ORNATE_IRON_WINDOW_PANE;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.SPRUCE_WINDOW;
+import static com.simibubi.create.content.decoration.palettes.AllPaletteBlocks.SPRUCE_WINDOW_PANE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -296,6 +296,8 @@ public class RemapHelper {
 
 			if (path.equals("copper_backtank")) {
 				mapping.remap(AllBlockEntityTypes.BACKTANK.get());
+			} else if (path.equals("adjustable_pulley")) {
+				mapping.remap(AllBlockEntityTypes.ADJUSTABLE_CHAIN_GEARSHIFT.get());
 			}
 		}
 	}

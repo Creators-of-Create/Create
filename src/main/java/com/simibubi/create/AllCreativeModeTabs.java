@@ -1,7 +1,7 @@
 package com.simibubi.create;
 
-import com.simibubi.create.content.palettes.PalettesCreativeModeTab;
-import com.simibubi.create.foundation.item.BaseCreativeModeTab;
+import com.simibubi.create.content.decoration.palettes.PalettesCreativeModeTab;
+import com.simibubi.create.infrastructure.item.BaseCreativeModeTab;
 
 import net.minecraft.world.item.CreativeModeTab;
 

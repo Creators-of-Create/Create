@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.block.connected;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.content.curiosities.frames.CopycatBlock;
+import com.simibubi.create.content.decoration.copycat.CopycatBlock;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;

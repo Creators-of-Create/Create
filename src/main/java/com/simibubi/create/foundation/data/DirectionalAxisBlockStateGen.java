@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.data;
 
-import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
+import com.simibubi.create.content.kinetics.gauge.GaugeBlock;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 

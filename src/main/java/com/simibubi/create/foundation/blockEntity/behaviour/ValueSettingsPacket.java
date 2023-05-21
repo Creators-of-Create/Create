@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour.ValueSettings;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;

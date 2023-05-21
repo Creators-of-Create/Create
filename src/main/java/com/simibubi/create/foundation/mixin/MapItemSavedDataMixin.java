@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.Maps;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationMapData;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationMarker;
+import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.station.StationMapData;
+import com.simibubi.create.content.trains.station.StationMarker;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

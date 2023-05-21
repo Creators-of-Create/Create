@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform.Sided;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.INamedIconOptions;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.INamedIconOptions;
 import com.simibubi.create.foundation.gui.AllIcons;
+import com.simibubi.create.foundation.outliner.ChasingAABBOutline;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Components;
-import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

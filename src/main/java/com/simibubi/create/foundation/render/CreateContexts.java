@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.core.source.Resolver;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.util.ResourceUtil;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
+import com.simibubi.create.content.contraptions.render.ContraptionProgram;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;

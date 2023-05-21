@@ -1,21 +1,19 @@
 package com.simibubi.create.foundation.mixin;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTestRegistry;
-import net.minecraft.gametest.framework.GameTestRunner;
-import net.minecraft.gametest.framework.GameTestServer;
-import net.minecraft.server.Main;
-
-import net.minecraft.server.MinecraftServer;
-
-import net.minecraft.server.packs.repository.PackRepository;
-import net.minecraft.world.level.storage.LevelStorageSource.LevelStorageAccess;
+import java.util.Collection;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import java.util.Collection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestRegistry;
+import net.minecraft.gametest.framework.GameTestRunner;
+import net.minecraft.gametest.framework.GameTestServer;
+import net.minecraft.server.Main;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.world.level.storage.LevelStorageSource.LevelStorageAccess;
 
 @Mixin(Main.class)
 public class MainMixin {

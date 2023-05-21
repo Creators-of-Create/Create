@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.block.connected;
 
-import com.simibubi.create.content.curiosities.frames.CopycatBlock;
-import com.simibubi.create.content.palettes.ConnectedPillarBlock;
-import com.simibubi.create.content.palettes.LayeredBlock;
+import com.simibubi.create.content.decoration.copycat.CopycatBlock;
+import com.simibubi.create.content.decoration.palettes.ConnectedPillarBlock;
+import com.simibubi.create.content.decoration.palettes.LayeredBlock;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;

@@ -6,13 +6,13 @@ import javax.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.compat.computercraft.implementation.CreateLuaTable;
-import com.simibubi.create.content.logistics.trains.entity.Train;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.GlobalStation;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.TrainEditPacket;
-import com.simibubi.create.content.logistics.trains.management.schedule.Schedule;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.schedule.Schedule;
+import com.simibubi.create.content.trains.station.GlobalStation;
+import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.content.trains.station.TrainEditPacket;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.StringHelper;
 

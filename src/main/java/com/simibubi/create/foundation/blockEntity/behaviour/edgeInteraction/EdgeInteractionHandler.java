@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.RaycastHelper;

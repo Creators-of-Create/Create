@@ -11,9 +11,9 @@ import java.util.Set;
 import java.util.function.BiFunction;
 
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

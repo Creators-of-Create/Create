@@ -59,7 +59,7 @@ public class PonderStoryBoardEntry {
 	}
 
 	public PonderStoryBoardEntry highlightAllTags() {
-		tags.add(PonderTag.Highlight.ALL);
+		tags.add(PonderTag.HIGHLIGHT_ALL);
 		return this;
 	}
 

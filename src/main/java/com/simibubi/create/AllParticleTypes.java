@@ -2,16 +2,15 @@ package com.simibubi.create;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.contraptions.components.steam.SteamJetParticleData;
-import com.simibubi.create.content.contraptions.fluids.particle.FluidParticleData;
-import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
-import com.simibubi.create.content.contraptions.particle.AirParticleData;
-import com.simibubi.create.content.contraptions.particle.CubeParticleData;
-import com.simibubi.create.content.contraptions.particle.HeaterParticleData;
-import com.simibubi.create.content.contraptions.particle.ICustomParticleData;
-import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
-import com.simibubi.create.content.curiosities.bell.SoulBaseParticle;
-import com.simibubi.create.content.curiosities.bell.SoulParticle;
+import com.simibubi.create.content.equipment.bell.SoulBaseParticle;
+import com.simibubi.create.content.equipment.bell.SoulParticle;
+import com.simibubi.create.content.fluids.particle.FluidParticleData;
+import com.simibubi.create.content.kinetics.base.RotationIndicatorParticleData;
+import com.simibubi.create.content.kinetics.fan.AirFlowParticleData;
+import com.simibubi.create.content.kinetics.steamEngine.SteamJetParticleData;
+import com.simibubi.create.content.trains.CubeParticleData;
+import com.simibubi.create.foundation.particle.AirParticleData;
+import com.simibubi.create.foundation.particle.ICustomParticleData;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -32,7 +31,6 @@ public enum AllParticleTypes {
 	AIR_FLOW(AirFlowParticleData::new),
 	AIR(AirParticleData::new),
 	STEAM_JET(SteamJetParticleData::new),
-	HEATER_PARTICLE(HeaterParticleData::new),
 	CUBE(CubeParticleData::new),
 	FLUID_PARTICLE(FluidParticleData::new),
 	BASIN_FLUID(FluidParticleData::new),

@@ -4,9 +4,8 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.Minecraft;

@@ -2,8 +2,8 @@ package com.simibubi.create.compat.computercraft.implementation.peripherals;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlockEntity;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
 
 import dan200.computercraft.api.lua.LuaFunction;
 

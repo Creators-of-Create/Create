@@ -3,9 +3,9 @@ package com.simibubi.create.api.event;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.GenericEvent;

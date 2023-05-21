@@ -7,8 +7,8 @@ import static net.minecraft.core.Direction.UP;
 
 import java.util.function.BiFunction;
 
-import com.simibubi.create.content.logistics.block.chute.ChuteShapes;
-import com.simibubi.create.content.logistics.trains.track.TrackVoxelShapes;
+import com.simibubi.create.content.logistics.chute.ChuteShapes;
+import com.simibubi.create.content.trains.track.TrackVoxelShapes;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.core.Direction;

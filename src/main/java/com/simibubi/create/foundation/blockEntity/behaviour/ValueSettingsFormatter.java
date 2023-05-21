@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 import java.util.function.Function;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour.ValueSettings;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollvalue.INamedIconOptions;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.INamedIconOptions;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.Lang;
 

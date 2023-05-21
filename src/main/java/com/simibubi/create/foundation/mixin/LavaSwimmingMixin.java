@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
+import com.simibubi.create.content.equipment.armor.DivingBootsItem;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

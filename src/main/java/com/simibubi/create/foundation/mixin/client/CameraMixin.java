@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-import com.simibubi.create.content.logistics.trains.CameraDistanceModifier;
+import com.simibubi.create.content.trains.CameraDistanceModifier;
 
 import net.minecraft.client.Camera;
 
