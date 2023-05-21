@@ -1,11 +1,10 @@
 package com.simibubi.create.content.materials;
 
-import java.util.Random;
-
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +17,7 @@ public class ExperienceBlock extends Block {
 	}
 
 	@Override
-	public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, Random pRand) {
+	public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRand) {
 		if (pRand.nextInt(5) != 0)
 			return;
 		Vec3 vec3 = VecHelper.clampComponentWise(VecHelper.offsetRandomly(Vec3.ZERO, pRand, .75f), .55f)

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.mechanicalArm;
 
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.AllPackets;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

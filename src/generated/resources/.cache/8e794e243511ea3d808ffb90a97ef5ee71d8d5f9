@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-12T23:16:42.5320315	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2023-05-21T22:23:35.9903415	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -221,6 +221,7 @@ f7f5df9086c71688cbdb5d05c394dc5acb8fb338 assets/create/blockstates/elevator_cont
 2fa96f480365dcbd867635eaa665d1ad5936ca65 assets/create/blockstates/encased_chain_drive.json
 d47bc65703e9582cc710e6408fb565e16d3514a6 assets/create/blockstates/encased_fan.json
 651f9fdb11f56d887d131be8f936f508d0b2fc1d assets/create/blockstates/encased_fluid_pipe.json
+489ad4daeaed702d231a3f175f7b66846f5789a6 assets/create/blockstates/experience_block.json
 5f6c60a30889b043709066707e80a21081d98155 assets/create/blockstates/exposed_copper_shingles.json
 74c8a72db3dd3fa919e29baaa8c5865f13490461 assets/create/blockstates/exposed_copper_shingle_slab.json
 4e0b5a9be15f0c2861f5f6bd71bd9c2a4db2a21d assets/create/blockstates/exposed_copper_shingle_stairs.json
@@ -584,8 +585,8 @@ b0d8f08968763a5f74e5cd5644377a76a9f39753 assets/create/blockstates/yellow_toolbo
 fe8c497aacc641c2f01cec90bba9f19e59cc2ed2 assets/create/blockstates/yellow_valve_handle.json
 e819e93fdcbe9fd9c050a052d2718ff3b3539365 assets/create/blockstates/zinc_block.json
 64121dcb216381c83b4fe28aa361ea07c24c9ad0 assets/create/blockstates/zinc_ore.json
-4fbf6fad8444b526c35552e8cae76fac037dcb6a assets/create/lang/en_ud.json
-9c63efe509cff853228fd2626f0ec48085a206d5 assets/create/lang/en_us.json
+3a1e0c68a9f1d6a252f47b3f7311278711f2aae0 assets/create/lang/en_ud.json
+a0c0e4f23540bef4b1796ad9f4e4ace609d2919b assets/create/lang/en_us.json
 a97e1060e00ae701a02e39cd4ef8054cf345fac4 assets/create/models/block/acacia_window.json
 103e032c0b1a0a6a27c67da8c91179a564bd281c assets/create/models/block/acacia_window_pane_noside.json
 fb00b627abda76ad4fea867ca57dbfadd24fffa3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -1767,19 +1768,19 @@ ad620bd5eb32a41b0a8a130f49ab3dbb398907e5 assets/create/models/item/creative_moto
 e432e359b77e7129e18c1d4daf68d11c4a661110 assets/create/models/item/crimsite_pillar.json
 9c77e6d7d56310b34468a6d52080e477e893494d assets/create/models/item/crimson_window.json
 43625514f941a61cfbae339419d0de4b22db9662 assets/create/models/item/crimson_window_pane.json
-5ca45663ebe86fa950422dbb9b01466b7481fb61 assets/create/models/item/crushed_aluminum_ore.json
-2444b785037622848eba0e4c28a4b08e721d092c assets/create/models/item/crushed_copper_ore.json
-66ac146278a0f6fbd8786ef54973de43774938e9 assets/create/models/item/crushed_gold_ore.json
-1eb56f88fadc6e59ab2a99d4e695f4b6f0b45170 assets/create/models/item/crushed_iron_ore.json
-9d5a2184c2cd323ca2b85b7e20f306af4e57d855 assets/create/models/item/crushed_lead_ore.json
-9eb46a88b86076c907dadab3e3bfa1bacd721f90 assets/create/models/item/crushed_nickel_ore.json
-086bbb62b3d04cba493e6ea79283a6425bdfcd1c assets/create/models/item/crushed_osmium_ore.json
-dd716a4af46045021fe5ff8a7a497efc00277dc0 assets/create/models/item/crushed_platinum_ore.json
-392262ebebe5f36b14136df479f2a7e111888586 assets/create/models/item/crushed_quicksilver_ore.json
-fc1d202bb318061ae8d9f30993bc5aa84d428e66 assets/create/models/item/crushed_silver_ore.json
-5b6cb4201eb3af671e415f6b263f80e6d186c9e0 assets/create/models/item/crushed_tin_ore.json
-9659c432fdf348c81aaf39b8745eb796eca93c11 assets/create/models/item/crushed_uranium_ore.json
-1c5eb12c78687fa35c075845febddff1dadb1d4e assets/create/models/item/crushed_zinc_ore.json
+189ddf2f3c83608ddfe9e8d2fe88d8b4610ade13 assets/create/models/item/crushed_raw_aluminum.json
+4e74e066349d0311064e21fd72aa40e249e2e830 assets/create/models/item/crushed_raw_copper.json
+513ccb83879e523f8df66a4ad8aee0ecab1ba003 assets/create/models/item/crushed_raw_gold.json
+31c4057bbfd7b031f2af98372a18e9e56bbb0d47 assets/create/models/item/crushed_raw_iron.json
+f99ca9b4a25aba1ad42f5a704e70a698eb6503e8 assets/create/models/item/crushed_raw_lead.json
+22392367f1b654af8551c837b88fbe3e32d20a02 assets/create/models/item/crushed_raw_nickel.json
+71127952d026df479327d27c5e4cf8fb521627c2 assets/create/models/item/crushed_raw_osmium.json
+0a3e076dd93d08ab874407b542b144c202b75732 assets/create/models/item/crushed_raw_platinum.json
+def1684a021949093ab01c638e25cb914f0c085b assets/create/models/item/crushed_raw_quicksilver.json
+7af5c88e0218aa446bfb6bfd49fb4d50d79da841 assets/create/models/item/crushed_raw_silver.json
+aca5ad87a4e9e3d9518fb89f86c0174b96a7bdca assets/create/models/item/crushed_raw_tin.json
+06d5aa86789155cfd00dbd281f2ad281b28822b5 assets/create/models/item/crushed_raw_uranium.json
+b6acd86be9e6cac8b9ed2bc6297d27941ca05f46 assets/create/models/item/crushed_raw_zinc.json
 b67e95801010eab58de02f2b0160bff3f008bd18 assets/create/models/item/crushing_wheel.json
 af189b0c04482064520d84546d81af8154824292 assets/create/models/item/cuckoo_clock.json
 314fb287c7b16a6478fbefde0da80de8828b684e assets/create/models/item/cut_andesite.json
@@ -1915,6 +1916,7 @@ d6c1c5ff9506a60fbdde4580dad39d97fc1832d3 assets/create/models/item/elevator_pull
 badd4326fac0b0a1590a2e9bce7c2cdd4e4562f3 assets/create/models/item/empty_schematic.json
 5daa4b49db850923319916aaa9842c33f99e0a00 assets/create/models/item/encased_chain_drive.json
 7ec3ed4aaab72d76f6414447bbb3ad7887adf61f assets/create/models/item/encased_fan.json
+3e1fdcc80fd68199b1890bcc830f78c48e7c0e43 assets/create/models/item/experience_block.json
 9775e83414c0febb5c5b832437b0580e91bcbff3 assets/create/models/item/experience_nugget.json
 87add851ae3271d733c9e6888865c288b6716f3b assets/create/models/item/exposed_copper_shingles.json
 721c8ac46bf23abec2bbf4cff6dbfdf96cc569a6 assets/create/models/item/exposed_copper_shingle_slab.json
@@ -3162,6 +3164,7 @@ e46f3f710972d17bccb9244f22fb267082b2ec7c data/create/loot_tables/blocks/display_
 6df2d9239e5d8897033cb1d7b95b3094654af745 data/create/loot_tables/blocks/encased_chain_drive.json
 66008f776f345a3fa3f740790bbc0bf4013bdcd6 data/create/loot_tables/blocks/encased_fan.json
 3b11d74298e8f808207d85ce6426d597d51cceef data/create/loot_tables/blocks/encased_fluid_pipe.json
+d0278de519828539c2f55f8f1ec320cd620a52fd data/create/loot_tables/blocks/experience_block.json
 dad8f04e24e5da8b693d4de0e00e5cfafb64cf7b data/create/loot_tables/blocks/exposed_copper_shingles.json
 dcccb5082e6fbae664c00946402daa1b081c0748 data/create/loot_tables/blocks/exposed_copper_shingle_slab.json
 c1324ca2cf242708be48c211e411e56c8c3d7c78 data/create/loot_tables/blocks/exposed_copper_shingle_stairs.json
@@ -4189,7 +4192,7 @@ da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/blocks/valve_handles.j
 8b6c0b444b15f7fb2d55b9cbcb68537c1269f877 data/create/tags/items/casing.json
 f43cac8216e2a9347e48cf93a43de95dd810ca20 data/create/tags/items/contraption_controlled.json
 d371dfd35e49a7bef19f59c03e7f4ae20992f03d data/create/tags/items/create_ingots.json
-878b7281fa78d0ef5f873322281da8f5ebbb782c data/create/tags/items/crushed_ores.json
+910d0f5ccbc4c84b224eca1f1588b1695f41447b data/create/tags/items/crushed_raw_materials.json
 0fa526e7e742573b603ad26b09526cf724efa1dc data/create/tags/items/deployable_drink.json
 29ca12609f7c419c5c06338a86c7f4ba1fc7390e data/create/tags/items/modded_stripped_logs.json
 ae63f7dc5d9221890ee593ff03cd2aff8cd6a356 data/create/tags/items/modded_stripped_wood.json
@@ -4223,7 +4226,7 @@ de1fc89be6a52473d526d3efe0204b9b8489058c data/forge/tags/blocks/glass_panes.json
 e475ad1c52bffedfc544e5331a87c1f5c45149fd data/forge/tags/blocks/ores_in_ground/deepslate.json
 2f6068972e364599b6849dc46fcb0724d4219d53 data/forge/tags/blocks/ores_in_ground/stone.json
 2589b135c0e96ad29076569e144528fe32ea5b39 data/forge/tags/blocks/relocation_not_supported.json
-0ae6198b6bc54e9d7e5134e3a554d828e011badf data/forge/tags/blocks/storage_blocks.json
+b3af02a6fa3dc41bc3f4db933485f22b202deea3 data/forge/tags/blocks/storage_blocks.json
 7d10cdf9e46a79753d4437c7bb958e3ab8bf0c89 data/forge/tags/blocks/storage_blocks/andesite_alloy.json
 70bba470740dc7a77f51b4cb1747a105b62d4bde data/forge/tags/blocks/storage_blocks/brass.json
 bcd593714f43bc6a0aefbd714c24db3cf9e71250 data/forge/tags/blocks/storage_blocks/raw_zinc.json
@@ -4260,7 +4263,7 @@ ef5256892a9d4167bf7371c7138a933a107a123a data/forge/tags/items/plates/copper.jso
 07a6e69488ff6994a9ef1cca75b6e911bc3e3358 data/forge/tags/items/plates/obsidian.json
 30496416fffaf4f845052a264023e64e52894ee7 data/forge/tags/items/raw_materials.json
 30496416fffaf4f845052a264023e64e52894ee7 data/forge/tags/items/raw_materials/zinc.json
-0ae6198b6bc54e9d7e5134e3a554d828e011badf data/forge/tags/items/storage_blocks.json
+b3af02a6fa3dc41bc3f4db933485f22b202deea3 data/forge/tags/items/storage_blocks.json
 7d10cdf9e46a79753d4437c7bb958e3ab8bf0c89 data/forge/tags/items/storage_blocks/andesite_alloy.json
 70bba470740dc7a77f51b4cb1747a105b62d4bde data/forge/tags/items/storage_blocks/brass.json
 bcd593714f43bc6a0aefbd714c24db3cf9e71250 data/forge/tags/items/storage_blocks/raw_zinc.json
@@ -4269,14 +4272,14 @@ b69fcc7227d44fc000c8ab94524230f55b89aa27 data/forge/tags/items/stripped_logs.jso
 1ac851b8f78458339cf09ad498d14e783615eb3d data/forge/tags/items/stripped_wood.json
 c741ba83b562ae3459d7c4f2db69537f549ea411 data/forge/tags/items/tools/wrench.json
 515a1c773e617dd7e38aa1b893acc7db2dd30e08 data/minecraft/tags/blocks/azalea_root_replaceable.json
-4030577647f1d28385f7fca1426b43848263264d data/minecraft/tags/blocks/beacon_base_blocks.json
+529fa4332dd12a11ebb04e183121a2c63f866761 data/minecraft/tags/blocks/beacon_base_blocks.json
 82274e06b6a9f3bfd83c8b59be38dee4a15b8bf3 data/minecraft/tags/blocks/climbable.json
 71aef080a900d9e86818cf579438c3d826d6567e data/minecraft/tags/blocks/doors.json
 515a1c773e617dd7e38aa1b893acc7db2dd30e08 data/minecraft/tags/blocks/dripstone_replaceable_blocks.json
 e3321ff14704c031a2c16953b7e391f4f24dd70b data/minecraft/tags/blocks/impermeable.json
 515a1c773e617dd7e38aa1b893acc7db2dd30e08 data/minecraft/tags/blocks/lush_ground_replaceable.json
 5a030817b2322e363edc8f5376f7c9de73df8b48 data/minecraft/tags/blocks/mineable/axe.json
-e7d7eb2ad92056c587caf7e0dd691315241845e8 data/minecraft/tags/blocks/mineable/pickaxe.json
+ab62160b054ce4ac41d2643845f3760f2451618b data/minecraft/tags/blocks/mineable/pickaxe.json
 515a1c773e617dd7e38aa1b893acc7db2dd30e08 data/minecraft/tags/blocks/moss_replaceable.json
 0c13aae0eeb99e89febe8dbe5e002af2ff843a9e data/minecraft/tags/blocks/needs_iron_tool.json
 3cb2a92cbdf32ed5978f740dc378d363306c3e84 data/minecraft/tags/blocks/needs_stone_tool.json
@@ -4288,7 +4291,7 @@ dafa3bdb72fef5e6c0201c05846db3f2b214e587 data/minecraft/tags/blocks/stairs.json
 71aef080a900d9e86818cf579438c3d826d6567e data/minecraft/tags/blocks/wooden_doors.json
 01d32d3b7b033aff44c047bf289d696de0b0c715 data/minecraft/tags/items/beacon_payment_items.json
 71aef080a900d9e86818cf579438c3d826d6567e data/minecraft/tags/items/doors.json
-a4b539d506b2273020e043c895d7ecc8a2e1064e data/minecraft/tags/items/piglin_loved.json
+0fd9f0786777d613ba7186ec00f9f972d0317c3f data/minecraft/tags/items/piglin_loved.json
 1ac7c46815461cbec0d4d97f25c085fdc8375dab data/minecraft/tags/items/slabs.json
 dafa3bdb72fef5e6c0201c05846db3f2b214e587 data/minecraft/tags/items/stairs.json
 11427a72e181857e22ec37a22462bc652e127cc5 data/minecraft/tags/items/trapdoors.json
