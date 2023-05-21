@@ -82,7 +82,7 @@ public class ArmScenes {
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, second, depotBounds.move(0, 2, 1), 280);
 		scene.overlay.showText(70)
 			.colored(PonderPalette.OUTPUT)
-			.text("Right-Click again to toggle between Input (Blue) and Output (Orange)")
+			.text("Right-Click again to toggle between Input (Blue) and Output (Yellow)")
 			.pointAt(util.vector.blockSurface(outputDepot, Direction.WEST))
 			.placeNearTarget();
 

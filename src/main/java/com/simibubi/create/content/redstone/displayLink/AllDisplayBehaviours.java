@@ -62,11 +62,6 @@ public class AllDisplayBehaviours {
 			TARGETS_BY_BLOCK.register(block, target);
 		}
 	}
-
-	@Deprecated
-	public static void assignTile(DisplayBehaviour behaviour, ResourceLocation beType) {
-		assignBlockEntity(behaviour, beType);
-	}
 	
 	public static void assignBlockEntity(DisplayBehaviour behaviour, ResourceLocation beType) {
 		if (behaviour instanceof DisplaySource source) {
@@ -94,11 +89,6 @@ public class AllDisplayBehaviours {
 		if (behaviour instanceof DisplayTarget target) {
 			TARGETS_BY_BLOCK.register(block, target);
 		}
-	}
-
-	@Deprecated
-	public static void assignTile(DisplayBehaviour behaviour, BlockEntityType<?> beType) {
-		assignBlockEntity(behaviour, beType);
 	}
 	
 	public static void assignBlockEntity(DisplayBehaviour behaviour, BlockEntityType<?> beType) {
@@ -247,10 +237,10 @@ public class AllDisplayBehaviours {
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
 			DisplayBehaviour computerDisplaySource = register(Create.asResource("computer_display_source"), new ComputerDisplaySource());
 
-			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "wired_modem_full"));
-			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_normal"));
-			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
-			assignTile(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_command"));
+			assignBlockEntity(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "wired_modem_full"));
+			assignBlockEntity(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_normal"));
+			assignBlockEntity(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
+			assignBlockEntity(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_command"));
 		});
 	}
 }

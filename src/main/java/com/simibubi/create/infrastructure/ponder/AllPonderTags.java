@@ -99,6 +99,7 @@ public class AllPonderTags {
 		PonderRegistry.TAGS.forTag(RECENTLY_UPDATED)
 			.add(AllBlocks.WATER_WHEEL)
 			.add(AllBlocks.LARGE_WATER_WHEEL)
+			.add(AllBlocks.COPPER_VALVE_HANDLE)
 			.add(AllBlocks.ELEVATOR_PULLEY)
 			.add(AllBlocks.CONTRAPTION_CONTROLS)
 			.add(AllBlocks.MECHANICAL_ROLLER)
