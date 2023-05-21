@@ -106,9 +106,6 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 						continue Ingredients;
 					if (!simulate)
 						availableItems.extractItem(slot, 1, false);
-					else if (extracted.hasCraftingRemainingItem())
-						recipeOutputItems.add(extracted.getCraftingRemainingItem()
-							.copy());
 					extractedItemsFromSlot[slot]++;
 					continue Ingredients;
 				}
