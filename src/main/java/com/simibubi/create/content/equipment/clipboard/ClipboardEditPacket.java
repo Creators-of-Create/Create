@@ -43,26 +43,29 @@ public class ClipboardEditPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		ServerPlayer sender = context.getSender();
-		
-		if (targetedBlock != null) {
-			Level world = sender.level;
-			if (world == null || !world.isLoaded(targetedBlock))
-				return true;
-			if (!targetedBlock.closerThan(sender.blockPosition(), 20))
-				return true;
-			if (world.getBlockEntity(targetedBlock) instanceof ClipboardBlockEntity cbe) {
-				cbe.dataContainer.setTag(data.isEmpty() ? null : data);
-				cbe.onEditedBy(sender);
+		context.enqueueWork(() -> {
+			ServerPlayer sender = context.getSender();
+			
+			if (targetedBlock != null) {
+				Level world = sender.level;
+				if (world == null || !world.isLoaded(targetedBlock))
+					return;
+				if (!targetedBlock.closerThan(sender.blockPosition(), 20))
+					return;
+				if (world.getBlockEntity(targetedBlock) instanceof ClipboardBlockEntity cbe) {
+					cbe.dataContainer.setTag(data.isEmpty() ? null : data);
+					cbe.onEditedBy(sender);
+				}
+				return;
 			}
-			return true;
-		}
+			
+			ItemStack itemStack = sender.getInventory()
+				.getItem(hotbarSlot);
+			if (!AllBlocks.CLIPBOARD.isIn(itemStack))
+				return;
+			itemStack.setTag(data.isEmpty() ? null : data);
+		});
 		
-		ItemStack itemStack = sender.getInventory()
-			.getItem(hotbarSlot);
-		if (!AllBlocks.CLIPBOARD.isIn(itemStack))
-			return true;
-		itemStack.setTag(data.isEmpty() ? null : data);
 		return true;
 	}
 
