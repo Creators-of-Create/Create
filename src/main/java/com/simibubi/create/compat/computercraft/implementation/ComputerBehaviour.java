@@ -7,12 +7,12 @@ import com.simibubi.create.compat.computercraft.implementation.peripherals.Speed
 import com.simibubi.create.compat.computercraft.implementation.peripherals.SpeedGaugePeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.StationPeripheral;
 import com.simibubi.create.compat.computercraft.implementation.peripherals.StressGaugePeripheral;
-import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlockEntity;
-import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlockEntity;
-import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeBlockEntity;
-import com.simibubi.create.content.contraptions.relays.gauge.StressGaugeBlockEntity;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkBlockEntity;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationBlockEntity;
+import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
+import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
+import com.simibubi.create.content.kinetics.speedController.SpeedControllerBlockEntity;
+import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
+import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
 import dan200.computercraft.api.peripheral.IPeripheral;

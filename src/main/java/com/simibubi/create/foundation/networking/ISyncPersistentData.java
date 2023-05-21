@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.networking;
 
 import java.util.HashSet;
 
+import com.simibubi.create.AllPackets;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

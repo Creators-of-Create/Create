@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.ponder.element;
 
 import java.util.function.Function;
 
+import com.simibubi.create.foundation.outliner.Outline.OutlineParams;
+import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.ponder.PonderScene;
-import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
-import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 public class OutlinerElement extends AnimatedSceneElement {
 	

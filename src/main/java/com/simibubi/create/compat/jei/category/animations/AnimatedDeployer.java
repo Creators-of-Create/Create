@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
+import com.simibubi.create.content.kinetics.deployer.DeployerBlock;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;

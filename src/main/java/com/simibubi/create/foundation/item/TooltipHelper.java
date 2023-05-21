@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.base.Strings;
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;

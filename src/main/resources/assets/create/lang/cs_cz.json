@@ -1064,7 +1064,7 @@
 	"create.schematic.mirror.leftRight": "Doleva-Doprava",
 	"create.schematic.tool.deploy": "Umístit",
 	"create.schematic.tool.move": "Posunout po osách XZ",
-	"create.schematic.tool.movey": "Posunout po ose Y",
+	"create.schematic.tool.move_y": "Posunout po ose Y",
 	"create.schematic.tool.rotate": "Otočit",
 	"create.schematic.tool.print": "Tisk",
 	"create.schematic.tool.flip": "Zrcadlit",

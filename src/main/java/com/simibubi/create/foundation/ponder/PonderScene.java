@@ -24,7 +24,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.ponder.content.PonderIndex;
+import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.ponder.element.PonderElement;
 import com.simibubi.create.foundation.ponder.element.PonderOverlayElement;
 import com.simibubi.create.foundation.ponder.element.PonderSceneElement;
@@ -38,7 +38,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
-import com.simibubi.create.foundation.utility.outliner.Outliner;
+import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;

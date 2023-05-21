@@ -751,7 +751,7 @@
 	"create.schematic.mirror.leftRight": "Sol-Sağ",
 	"create.schematic.tool.deploy": "Pozisyon",
 	"create.schematic.tool.move": "XZ Hareket ettir",
-	"create.schematic.tool.movey": "Y Hareket ettir",
+	"create.schematic.tool.move_y": "Y Hareket ettir",
 	"create.schematic.tool.rotate": "Döndür",
 	"create.schematic.tool.print": "Yazdır",
 	"create.schematic.tool.flip": "Ayna",

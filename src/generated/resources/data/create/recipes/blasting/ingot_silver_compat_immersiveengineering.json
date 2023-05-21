@@ -9,7 +9,7 @@
   "cookingtime": 100,
   "experience": 0.1,
   "ingredient": {
-    "item": "create:crushed_silver_ore"
+    "item": "create:crushed_raw_silver"
   },
   "result": "immersiveengineering:ingot_silver"
 }

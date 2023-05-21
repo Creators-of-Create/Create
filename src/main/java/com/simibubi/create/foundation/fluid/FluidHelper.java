@@ -7,9 +7,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity;
-import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
+import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
+import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
+import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
@@ -157,12 +157,12 @@ public class FluidHelper {
 		return stack;
 	}
 
-	public static boolean tryEmptyItemIntoTE(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
+	public static boolean tryEmptyItemIntoBE(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
 		SmartBlockEntity be) {
-		if (!EmptyingByBasin.canItemBeEmptied(worldIn, heldItem))
+		if (!GenericItemEmptying.canItemBeEmptied(worldIn, heldItem))
 			return false;
 
-		Pair<FluidStack, ItemStack> emptyingResult = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
+		Pair<FluidStack, ItemStack> emptyingResult = GenericItemEmptying.emptyItem(worldIn, heldItem, true);
 		LazyOptional<IFluidHandler> capability = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
 		IFluidHandler tank = capability.orElse(null);
 		FluidStack fluidStack = emptyingResult.getFirst();
@@ -173,7 +173,7 @@ public class FluidHelper {
 			return true;
 
 		ItemStack copyOfHeld = heldItem.copy();
-		emptyingResult = EmptyingByBasin.emptyItem(worldIn, copyOfHeld, false);
+		emptyingResult = GenericItemEmptying.emptyItem(worldIn, copyOfHeld, false);
 		tank.fill(fluidStack, FluidAction.EXECUTE);
 
 		if (!player.isCreative() && !(be instanceof CreativeFluidTankBlockEntity)) {
@@ -188,7 +188,7 @@ public class FluidHelper {
 		return true;
 	}
 
-	public static boolean tryFillItemFromTE(Level world, Player player, InteractionHand handIn, ItemStack heldItem,
+	public static boolean tryFillItemFromBE(Level world, Player player, InteractionHand handIn, ItemStack heldItem,
 		SmartBlockEntity be) {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;

@@ -17,7 +17,7 @@
   "processingTime": 400,
   "results": [
     {
-      "item": "create:crushed_lead_ore"
+      "item": "create:crushed_raw_lead"
     },
     {
       "chance": 0.75,

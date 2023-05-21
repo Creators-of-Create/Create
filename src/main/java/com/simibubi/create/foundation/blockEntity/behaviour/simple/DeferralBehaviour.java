@@ -2,9 +2,9 @@ package com.simibubi.create.foundation.blockEntity.behaviour.simple;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.minecraft.nbt.CompoundTag;
 

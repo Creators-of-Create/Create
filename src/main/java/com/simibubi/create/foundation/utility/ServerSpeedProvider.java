@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.utility;
 
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;

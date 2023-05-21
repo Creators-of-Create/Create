@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelStructuralBlock;
+import com.simibubi.create.content.kinetics.base.IRotate;
+import com.simibubi.create.content.kinetics.waterwheel.WaterWheelStructuralBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

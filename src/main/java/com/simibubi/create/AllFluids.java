@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTags.AllFluidTags;
-import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.PotionFluidType;
-import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.content.fluids.VirtualFluid;
+import com.simibubi.create.content.fluids.potion.PotionFluid;
+import com.simibubi.create.content.fluids.potion.PotionFluid.PotionFluidType;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
 import net.minecraft.core.BlockPos;

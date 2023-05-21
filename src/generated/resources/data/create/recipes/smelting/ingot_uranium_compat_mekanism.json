@@ -9,7 +9,7 @@
   "cookingtime": 200,
   "experience": 0.1,
   "ingredient": {
-    "item": "create:crushed_uranium_ore"
+    "item": "create:crushed_raw_uranium"
   },
   "result": "mekanism:ingot_uranium"
 }

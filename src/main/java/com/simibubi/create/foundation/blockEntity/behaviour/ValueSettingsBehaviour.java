@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
-import com.simibubi.create.content.curiosities.clipboard.ClipboardCloneable;
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.Direction;

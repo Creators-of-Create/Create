@@ -1,7 +1,7 @@
 package com.simibubi.create.content.schematics.packet;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.schematics.filtering.SchematicInstances;
+import com.simibubi.create.content.schematics.SchematicInstances;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;

@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.curios;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.goggles.GogglesItem;
+import com.simibubi.create.content.equipment.goggles.GogglesItem;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;

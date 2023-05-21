@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.blockEntity.behaviour;
 
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
-
 public class BehaviourType<T extends BlockEntityBehaviour> {
 
 	private String name;

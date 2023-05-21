@@ -6,9 +6,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
-import com.simibubi.create.content.curiosities.tools.BlueprintMenu;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.content.equipment.blueprint.BlueprintAssignCompleteRecipePacket;
+import com.simibubi.create.content.equipment.blueprint.BlueprintMenu;
 
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;

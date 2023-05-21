@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.simibubi.create.content.curiosities.frames.CopycatBlock;
+import com.simibubi.create.content.decoration.copycat.CopycatBlock;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.model.BakedQuadHelper;

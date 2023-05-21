@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

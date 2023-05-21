@@ -4,8 +4,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
-import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 

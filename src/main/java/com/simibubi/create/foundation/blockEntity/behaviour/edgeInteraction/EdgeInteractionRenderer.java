@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.contraptions.components.crafter.CrafterHelper;
-import com.simibubi.create.foundation.blockEntity.BlockEntityBehaviour;
+import com.simibubi.create.content.kinetics.crafter.CrafterHelper;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.Components;

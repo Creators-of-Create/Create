@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix3f;
-import com.simibubi.create.content.contraptions.relays.elementary.AbstractSimpleShaftBlock;
+import com.simibubi.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

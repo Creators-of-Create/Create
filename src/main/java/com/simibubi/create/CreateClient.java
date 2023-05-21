@@ -1,23 +1,22 @@
 package com.simibubi.create;
 
-import com.simibubi.create.content.contraptions.base.KineticBlockEntityRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
-import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelRenderer;
-import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
-import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
-import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler;
-import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
-import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
-import com.simibubi.create.content.schematics.ClientSchematicLoader;
+import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
+import com.simibubi.create.content.contraptions.render.SBBContraptionManager;
+import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
+import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
+import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonRenderHandler;
+import com.simibubi.create.content.equipment.zapper.ZapperRenderHandler;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.kinetics.waterwheel.WaterWheelRenderer;
+import com.simibubi.create.content.schematics.client.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
+import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsClient;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.ponder.content.PonderIndex;
+import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.CreateContexts;
@@ -25,7 +24,9 @@ import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
-import com.simibubi.create.foundation.utility.outliner.Outliner;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.ponder.AllPonderTags;
+import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
@@ -81,8 +82,8 @@ public class CreateClient {
 
 		AllPartialModels.init();
 
+		AllPonderTags.register();
 		PonderIndex.register();
-		PonderIndex.registerTags();
 
 		UIRenderHelper.init();
 	}

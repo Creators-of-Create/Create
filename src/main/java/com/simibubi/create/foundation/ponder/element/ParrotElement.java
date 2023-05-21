@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.KineticBlockEntity;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;

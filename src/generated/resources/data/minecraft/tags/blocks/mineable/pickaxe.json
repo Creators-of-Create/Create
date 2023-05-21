@@ -182,6 +182,7 @@
     "create:andesite_alloy_block",
     "create:industrial_iron_block",
     "create:brass_block",
+    "create:experience_block",
     "create:rose_quartz_block",
     "create:rose_quartz_tiles",
     "create:small_rose_quartz_tiles",

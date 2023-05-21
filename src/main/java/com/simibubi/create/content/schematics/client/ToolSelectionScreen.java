@@ -7,7 +7,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.content.schematics.client.tools.Tools;
+import com.simibubi.create.content.schematics.client.tools.ToolType;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -22,8 +22,8 @@ public class ToolSelectionScreen extends Screen {
 		.getString();
 	public final String holdToFocus = "gui.toolmenu.focusKey";
 
-	protected List<Tools> tools;
-	protected Consumer<Tools> callback;
+	protected List<ToolType> tools;
+	protected Consumer<ToolType> callback;
 	public boolean focused;
 	private float yOffset;
 	protected int selection;
@@ -32,7 +32,7 @@ public class ToolSelectionScreen extends Screen {
 	protected int w;
 	protected int h;
 
-	public ToolSelectionScreen(List<Tools> tools, Consumer<Tools> callback) {
+	public ToolSelectionScreen(List<ToolType> tools, Consumer<ToolType> callback) {
 		super(Components.literal("Tool Selection"));
 		this.minecraft = Minecraft.getInstance();
 		this.tools = tools;
@@ -48,7 +48,7 @@ public class ToolSelectionScreen extends Screen {
 		h = 30;
 	}
 
-	public void setSelectedElement(Tools tool) {
+	public void setSelectedElement(ToolType tool) {
 		if (!tools.contains(tool))
 			return;
 		selection = tools.indexOf(tool);

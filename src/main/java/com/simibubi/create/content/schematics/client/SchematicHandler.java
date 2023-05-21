@@ -8,20 +8,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
+import com.simibubi.create.content.contraptions.StructureTransform;
+import com.simibubi.create.content.schematics.SchematicInstances;
+import com.simibubi.create.content.schematics.SchematicItem;
 import com.simibubi.create.content.schematics.SchematicWorld;
-import com.simibubi.create.content.schematics.client.tools.Tools;
-import com.simibubi.create.content.schematics.filtering.SchematicInstances;
-import com.simibubi.create.content.schematics.item.SchematicItem;
+import com.simibubi.create.content.schematics.client.tools.ToolType;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.outliner.AABBOutline;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -56,7 +56,7 @@ public class SchematicHandler implements IGuiOverlay {
 	private AABB bounds;
 	private boolean deployed;
 	private boolean active;
-	private Tools currentTool;
+	private ToolType currentTool;
 
 	private static final int SYNC_DELAY = 10;
 	private int syncCooldown;
@@ -74,8 +74,8 @@ public class SchematicHandler implements IGuiOverlay {
 			renderers.add(new SchematicRenderer());
 
 		overlay = new SchematicHotbarSlotOverlay();
-		currentTool = Tools.Deploy;
-		selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
+		currentTool = ToolType.DEPLOY;
+		selectionScreen = new ToolSelectionScreen(ImmutableList.of(ToolType.DEPLOY), this::equip);
 		transformation = new SchematicTransformation();
 	}
 
@@ -133,14 +133,14 @@ public class SchematicHandler implements IGuiOverlay {
 		active = true;
 		if (deployed) {
 			setupRenderer();
-			Tools toolBefore = currentTool;
-			selectionScreen = new ToolSelectionScreen(Tools.getTools(player.isCreative()), this::equip);
+			ToolType toolBefore = currentTool;
+			selectionScreen = new ToolSelectionScreen(ToolType.getTools(player.isCreative()), this::equip);
 			if (toolBefore != null) {
 				selectionScreen.setSelectedElement(toolBefore);
 				equip(toolBefore);
 			}
 		} else
-			selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
+			selectionScreen = new ToolSelectionScreen(ImmutableList.of(ToolType.DEPLOY), this::equip);
 	}
 
 	private void setupRenderer() {
@@ -334,7 +334,7 @@ public class SchematicHandler implements IGuiOverlay {
 			transformation.getAnchor(), deployed));
 	}
 
-	public void equip(Tools tool) {
+	public void equip(ToolType tool) {
 		this.currentTool = tool;
 		currentTool.getTool()
 			.init();
@@ -361,7 +361,7 @@ public class SchematicHandler implements IGuiOverlay {
 
 	public void deploy() {
 		if (!deployed) {
-			List<Tools> tools = Tools.getTools(Minecraft.getInstance().player.isCreative());
+			List<ToolType> tools = ToolType.getTools(Minecraft.getInstance().player.isCreative());
 			selectionScreen = new ToolSelectionScreen(tools, this::equip);
 		}
 		deployed = true;

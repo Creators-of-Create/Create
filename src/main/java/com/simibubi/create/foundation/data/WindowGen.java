@@ -8,10 +8,10 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.palettes.ConnectedGlassBlock;
-import com.simibubi.create.content.palettes.ConnectedGlassPaneBlock;
-import com.simibubi.create.content.palettes.GlassPaneBlock;
-import com.simibubi.create.content.palettes.WindowBlock;
+import com.simibubi.create.content.decoration.palettes.ConnectedGlassBlock;
+import com.simibubi.create.content.decoration.palettes.ConnectedGlassPaneBlock;
+import com.simibubi.create.content.decoration.palettes.GlassPaneBlock;
+import com.simibubi.create.content.decoration.palettes.WindowBlock;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.GlassPaneCTBehaviour;

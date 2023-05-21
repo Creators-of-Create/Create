@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;

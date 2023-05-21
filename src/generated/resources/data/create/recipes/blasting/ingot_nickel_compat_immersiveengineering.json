@@ -9,7 +9,7 @@
   "cookingtime": 100,
   "experience": 0.1,
   "ingredient": {
-    "item": "create:crushed_nickel_ore"
+    "item": "create:crushed_raw_nickel"
   },
   "result": "immersiveengineering:ingot_nickel"
 }

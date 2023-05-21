@@ -9,18 +9,18 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
-import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
-import com.simibubi.create.content.contraptions.components.steam.SteamEngineBlock;
-import com.simibubi.create.content.contraptions.goggles.GogglesItem;
-import com.simibubi.create.foundation.block.BlockStressValues;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CKinetics;
+import com.simibubi.create.content.equipment.goggles.GogglesItem;
+import com.simibubi.create.content.kinetics.BlockStressValues;
+import com.simibubi.create.content.kinetics.base.IRotate;
+import com.simibubi.create.content.kinetics.base.IRotate.StressImpact;
+import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
+import com.simibubi.create.content.kinetics.steamEngine.SteamEngineBlock;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.config.CKinetics;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

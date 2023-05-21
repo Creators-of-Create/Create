@@ -24,8 +24,8 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.palettes.AllPaletteBlocks;
-import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -98,6 +98,17 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		ANDESITE_ALLOY_BLOCK = create(AllBlocks.ANDESITE_ALLOY_BLOCK).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('C', I.andesite())
+				.pattern("CCC")
+				.pattern("CCC")
+				.pattern("CCC")),
+
+		EXPERIENCE_FROM_BLOCK = create(AllItems.EXP_NUGGET).withSuffix("_from_block")
+			.returns(9)
+			.unlockedBy(AllItems.EXP_NUGGET::get)
+			.viaShapeless(b -> b.requires(AllBlocks.EXPERIENCE_BLOCK.get())),
+
+		EXPERIENCE_BLOCK = create(AllBlocks.EXPERIENCE_BLOCK).unlockedBy(AllItems.EXP_NUGGET::get)
+			.viaShaped(b -> b.define('C', AllItems.EXP_NUGGET.get())
 				.pattern("CCC")
 				.pattern("CCC")
 				.pattern("CCC")),

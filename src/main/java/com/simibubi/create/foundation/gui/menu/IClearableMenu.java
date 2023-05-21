@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui.menu;
 
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.AllPackets;
 
 public interface IClearableMenu {
 

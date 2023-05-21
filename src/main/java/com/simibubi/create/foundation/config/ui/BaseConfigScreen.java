@@ -12,7 +12,6 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
@@ -23,6 +22,7 @@ import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.common.ForgeConfigSpec;

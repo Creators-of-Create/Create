@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionHandler;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.ContraptionCollider;
+import com.simibubi.create.content.contraptions.ContraptionHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;

@@ -17,7 +17,7 @@
   "processingTime": 400,
   "results": [
     {
-      "item": "create:crushed_silver_ore"
+      "item": "create:crushed_raw_silver"
     },
     {
       "chance": 0.75,

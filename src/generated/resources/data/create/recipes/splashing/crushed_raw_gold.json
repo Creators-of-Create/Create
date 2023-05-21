@@ -1,0 +1,18 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "create:crushed_raw_gold"
+    }
+  ],
+  "results": [
+    {
+      "count": 9,
+      "item": "minecraft:gold_nugget"
+    },
+    {
+      "chance": 0.5,
+      "item": "minecraft:quartz"
+    }
+  ]
+}

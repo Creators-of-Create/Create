@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankBlockEntity;
+import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.utility.Iterate;
 
