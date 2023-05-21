@@ -425,7 +425,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	// numbers
 
 	/**
-	 * Assert that a number is <1 away from its expected value
+	 * Assert that a number is less than 1 away from its expected value
 	 */
 	public void assertCloseEnoughTo(double value, double expected) {
 		assertInRange(value, expected - 1, expected + 1);
