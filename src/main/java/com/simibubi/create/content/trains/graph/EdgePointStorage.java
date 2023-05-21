@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.edgePoint;
+package com.simibubi.create.content.trains.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,8 +7,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.utility.NBTHelper;
 

@@ -18,10 +18,10 @@ import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.edgePoint.EdgeData;
-import com.simibubi.create.content.trains.edgePoint.EdgePointType;
 import com.simibubi.create.content.trains.entity.TravellingPoint.ITrackSelector;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
+import com.simibubi.create.content.trains.graph.EdgeData;
+import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;

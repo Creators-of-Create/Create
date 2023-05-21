@@ -19,12 +19,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.edgePoint.EdgeData;
-import com.simibubi.create.content.trains.edgePoint.EdgePointManager;
-import com.simibubi.create.content.trains.edgePoint.EdgePointStorage;
-import com.simibubi.create.content.trains.edgePoint.EdgePointType;
-import com.simibubi.create.content.trains.edgePoint.TrackEdgeIntersection;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation.DiscoveredLocation;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;

@@ -1,4 +1,4 @@
-package com.simibubi.create.content.schematics.item;
+package com.simibubi.create.content.schematics;
 
 import java.util.Iterator;
 

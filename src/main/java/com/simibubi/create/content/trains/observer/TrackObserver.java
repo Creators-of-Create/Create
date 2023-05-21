@@ -1,10 +1,10 @@
-package com.simibubi.create.content.trains.trackObserver;
+package com.simibubi.create.content.trains.observer;
 
 import java.util.UUID;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
 import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.signal.SignalPropagator;

@@ -18,7 +18,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.SchematicExport.SchematicExportResult;
-import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.content.schematics.table.SchematicTableBlockEntity;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.FilesHelper;

@@ -202,6 +202,8 @@ import com.simibubi.create.content.trains.bogey.BogeyBlockEntityRenderer;
 import com.simibubi.create.content.trains.bogey.StandardBogeyBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayRenderer;
+import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
+import com.simibubi.create.content.trains.observer.TrackObserverRenderer;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalRenderer;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
@@ -211,8 +213,6 @@ import com.simibubi.create.content.trains.track.TrackBlockEntity;
 import com.simibubi.create.content.trains.track.TrackInstance;
 import com.simibubi.create.content.trains.track.TrackMaterial;
 import com.simibubi.create.content.trains.track.TrackRenderer;
-import com.simibubi.create.content.trains.trackObserver.TrackObserverBlockEntity;
-import com.simibubi.create.content.trains.trackObserver.TrackObserverRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 

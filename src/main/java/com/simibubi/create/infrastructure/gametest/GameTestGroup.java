@@ -1,4 +1,4 @@
-package com.simibubi.create.infrastructure.gametest.infrastructure;
+package com.simibubi.create.infrastructure.gametest;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

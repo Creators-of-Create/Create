@@ -22,7 +22,7 @@ import com.simibubi.create.content.trains.entity.TravellingPoint.IEdgePointListe
 import com.simibubi.create.content.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.trains.entity.TravellingPoint.ITurnListener;
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
-import com.simibubi.create.content.trains.graph.GraphLocation;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackGraphHelper;
@@ -168,7 +168,7 @@ public class TrainRelocator {
 			return false;
 
 		Pair<Vec3, AxisDirection> nearestTrackAxis = track.getNearestTrackAxis(level, pos, blockState, lookAngle);
-		GraphLocation graphLocation = bezier != null
+		TrackGraphLocation graphLocation = bezier != null
 			? TrackGraphHelper.getBezierGraphLocationAt(level, pos,
 				bezierDirection ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE, bezier)
 			: TrackGraphHelper.getGraphLocationAt(level, pos, nearestTrackAxis.getSecond(),

@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.edgePoint.TrackTargetingBehaviour;
+import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.map.CustomRenderedMapDecoration;
 import com.simibubi.create.foundation.utility.Components;

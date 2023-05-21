@@ -9,10 +9,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
-import com.simibubi.create.content.trains.edgePoint.EdgeData;
-import com.simibubi.create.content.trains.edgePoint.EdgePointType;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.TrackMaterial;

@@ -20,9 +20,9 @@ import org.apache.commons.lang3.mutable.MutableDouble;
 
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.minecart.TrainCargoManager;
-import com.simibubi.create.content.trains.DimensionPalette;
 import com.simibubi.create.content.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.trains.entity.TravellingPoint.ITrackSelector;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.foundation.advancement.AllAdvancements;

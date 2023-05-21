@@ -1,10 +1,10 @@
-package com.simibubi.create.content.trains.trackObserver;
+package com.simibubi.create.content.trains.observer;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.trains.edgePoint.TrackTargetingBehaviour;
-import com.simibubi.create.content.trains.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.content.trains.track.ITrackBlock;
+import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
+import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 
 import net.minecraft.client.renderer.MultiBufferSource;

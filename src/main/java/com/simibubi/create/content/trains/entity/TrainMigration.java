@@ -2,8 +2,8 @@ package com.simibubi.create.content.trains.entity;
 
 import java.util.Map.Entry;
 
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.graph.GraphLocation;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
@@ -33,14 +33,14 @@ public class TrainMigration {
 		locations = Couple.create(point.node1.getLocation(), point.node2.getLocation());
 	}
 
-	public GraphLocation tryMigratingTo(TrackGraph graph) {
+	public TrackGraphLocation tryMigratingTo(TrackGraph graph) {
 		TrackNode node1 = graph.locateNode(locations.getFirst());
 		TrackNode node2 = graph.locateNode(locations.getSecond());
 		if (node1 != null && node2 != null) {
 			TrackEdge edge = graph.getConnectionsFrom(node1)
 				.get(node2);
 			if (edge != null) {
-				GraphLocation graphLocation = new GraphLocation();
+				TrackGraphLocation graphLocation = new TrackGraphLocation();
 				graphLocation.graph = graph;
 				graphLocation.edge = locations;
 				graphLocation.position = positionOnOldEdge;
@@ -88,7 +88,7 @@ public class TrainMigration {
 				if (position > edgeLength)
 					continue;
 
-				GraphLocation graphLocation = new GraphLocation();
+				TrackGraphLocation graphLocation = new TrackGraphLocation();
 				graphLocation.graph = graph;
 				graphLocation.edge = Couple.create(loc, newNode2.getLocation());
 				graphLocation.position = position;

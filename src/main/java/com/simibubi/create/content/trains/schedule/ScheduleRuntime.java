@@ -7,9 +7,9 @@ import java.util.Objects;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.trains.display.GlobalTrainDisplayData.TrainDeparturePrediction;
-import com.simibubi.create.content.trains.edgePoint.EdgePointType;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.trains.schedule.condition.ScheduledDelay;
 import com.simibubi.create.content.trains.schedule.destination.ChangeThrottleInstruction;

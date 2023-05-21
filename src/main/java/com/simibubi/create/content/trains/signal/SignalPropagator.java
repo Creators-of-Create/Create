@@ -12,9 +12,9 @@ import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.edgePoint.EdgeData;
-import com.simibubi.create.content.trains.edgePoint.EdgePointType;
 import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.graph.EdgeData;
+import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackGraphSync;

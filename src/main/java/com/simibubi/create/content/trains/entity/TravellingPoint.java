@@ -16,9 +16,9 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.edgePoint.EdgeData;
-import com.simibubi.create.content.trains.graph.GraphLocation;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
+import com.simibubi.create.content.trains.graph.EdgeData;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
@@ -411,8 +411,8 @@ public class TravellingPoint {
 				.scale(upsideDown ^ flipUpsideDown ? -1 : 1));
 	}
 
-	public void migrateTo(List<GraphLocation> locations) {
-		GraphLocation location = locations.remove(0);
+	public void migrateTo(List<TrackGraphLocation> locations) {
+		TrackGraphLocation location = locations.remove(0);
 		TrackGraph graph = location.graph;
 		node1 = graph.locateNode(location.edge.getFirst());
 		node2 = graph.locateNode(location.edge.getSecond());

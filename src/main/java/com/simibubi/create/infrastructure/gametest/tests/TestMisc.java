@@ -1,14 +1,14 @@
 package com.simibubi.create.infrastructure.gametest.tests;
 
-import static com.simibubi.create.infrastructure.gametest.infrastructure.CreateGameTestHelper.FIFTEEN_SECONDS;
+import static com.simibubi.create.infrastructure.gametest.CreateGameTestHelper.FIFTEEN_SECONDS;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.schematics.SchematicExport;
+import com.simibubi.create.content.schematics.SchematicItem;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.State;
-import com.simibubi.create.content.schematics.item.SchematicItem;
-import com.simibubi.create.infrastructure.gametest.infrastructure.CreateGameTestHelper;
-import com.simibubi.create.infrastructure.gametest.infrastructure.GameTestGroup;
+import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
+import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;

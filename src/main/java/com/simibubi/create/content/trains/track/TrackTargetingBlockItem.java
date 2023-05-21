@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.edgePoint;
+package com.simibubi.create.content.trains.track;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -7,14 +7,13 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.trains.graph.GraphLocation;
+import com.simibubi.create.content.trains.graph.EdgeData;
+import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraphHelper;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
-import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
-import com.simibubi.create.content.trains.track.ITrackBlock;
-import com.simibubi.create.content.trains.track.TrackBlockEntity;
 import com.simibubi.create.content.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Couple;
@@ -185,7 +184,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 
 	public static void withGraphLocation(Level level, BlockPos pos, boolean front,
 		BezierTrackPointLocation targetBezier, EdgePointType<?> type,
-		BiConsumer<OverlapResult, GraphLocation> callback) {
+		BiConsumer<OverlapResult, TrackGraphLocation> callback) {
 
 		BlockState state = level.getBlockState(pos);
 
@@ -201,7 +200,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		}
 
 		AxisDirection targetDirection = front ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE;
-		GraphLocation location =
+		TrackGraphLocation location =
 			targetBezier != null ? TrackGraphHelper.getBezierGraphLocationAt(level, pos, targetDirection, targetBezier)
 				: TrackGraphHelper.getGraphLocationAt(level, pos, targetDirection, trackAxes.get(0));
 

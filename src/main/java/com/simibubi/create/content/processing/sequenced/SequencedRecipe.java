@@ -1,4 +1,4 @@
-package com.simibubi.create.content.processing.itemAssembly;
+package com.simibubi.create.content.processing.sequenced;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;

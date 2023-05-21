@@ -1,7 +1,7 @@
 package com.simibubi.create.infrastructure.ponder.scenes.trains;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.trains.trackObserver.TrackObserverBlockEntity;
+import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.SceneBuilder;

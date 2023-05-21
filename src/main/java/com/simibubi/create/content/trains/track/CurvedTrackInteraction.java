@@ -3,7 +3,6 @@ package com.simibubi.create.content.trains.track;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.trains.edgePoint.TrackTargetingBlockItem;
 import com.simibubi.create.content.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;

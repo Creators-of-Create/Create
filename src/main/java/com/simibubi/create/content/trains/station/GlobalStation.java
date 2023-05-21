@@ -4,8 +4,8 @@ import java.lang.ref.WeakReference;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.trains.DimensionPalette;
 import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
 

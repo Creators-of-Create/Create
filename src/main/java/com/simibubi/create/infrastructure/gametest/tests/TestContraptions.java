@@ -2,8 +2,8 @@ package com.simibubi.create.infrastructure.gametest.tests;
 
 import java.util.List;
 
-import com.simibubi.create.infrastructure.gametest.infrastructure.CreateGameTestHelper;
-import com.simibubi.create.infrastructure.gametest.infrastructure.GameTestGroup;
+import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
+import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.core.BlockPos;

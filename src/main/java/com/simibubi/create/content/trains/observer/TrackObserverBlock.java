@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.trackObserver;
+package com.simibubi.create.content.trains.observer;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;

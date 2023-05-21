@@ -23,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 public class TrackGraphHelper {
 
 	@Nullable
-	public static GraphLocation getGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection,
+	public static TrackGraphLocation getGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection,
 		Vec3 targetAxis) {
 		BlockState trackBlockState = level.getBlockState(pos);
 		if (!(trackBlockState.getBlock()instanceof ITrackBlock track))
@@ -51,7 +51,7 @@ public class TrackGraphHelper {
 						.distanceToSqr(axis.scale(-1)) > 1 / 4096f)
 						continue;
 
-					GraphLocation graphLocation = new GraphLocation();
+					TrackGraphLocation graphLocation = new TrackGraphLocation();
 					graphLocation.edge = Couple.create(node.getLocation(), backNode.getLocation());
 					graphLocation.position = 0;
 					graphLocation.graph = graph;
@@ -137,7 +137,7 @@ public class TrackGraphHelper {
 					.getLocation())
 				/ 2.0;
 
-		GraphLocation graphLocation = new GraphLocation();
+		TrackGraphLocation graphLocation = new TrackGraphLocation();
 		graphLocation.edge = Couple.create(backNode.getLocation(), frontNode.getLocation());
 		graphLocation.position = position;
 		graphLocation.graph = graph;
@@ -145,7 +145,7 @@ public class TrackGraphHelper {
 	}
 
 	@Nullable
-	public static GraphLocation getBezierGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection,
+	public static TrackGraphLocation getBezierGraphLocationAt(Level level, BlockPos pos, AxisDirection targetDirection,
 		BezierTrackPointLocation targetBezier) {
 		BlockState state = level.getBlockState(pos);
 
@@ -176,7 +176,7 @@ public class TrackGraphHelper {
 			if (edge == null)
 				continue;
 
-			GraphLocation graphLocation = new GraphLocation();
+			TrackGraphLocation graphLocation = new TrackGraphLocation();
 			graphLocation.graph = graph;
 			graphLocation.edge = Couple.create(location, targetLoc);
 			graphLocation.position = (targetBezier.segment() + 1) / 2f;

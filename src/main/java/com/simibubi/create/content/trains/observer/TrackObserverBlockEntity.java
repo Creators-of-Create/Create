@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.trackObserver;
+package com.simibubi.create.content.trains.observer;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
-import com.simibubi.create.content.trains.edgePoint.EdgePointType;
-import com.simibubi.create.content.trains.edgePoint.TrackTargetingBehaviour;
+import com.simibubi.create.content.trains.graph.EdgePointType;
+import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;

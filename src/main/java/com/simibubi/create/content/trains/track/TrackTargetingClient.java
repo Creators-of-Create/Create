@@ -1,16 +1,14 @@
-package com.simibubi.create.content.trains.edgePoint;
+package com.simibubi.create.content.trains.track;
 
 import com.google.common.base.Objects;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.edgePoint.TrackTargetingBehaviour.RenderedTrackOverlayType;
-import com.simibubi.create.content.trains.edgePoint.TrackTargetingBlockItem.OverlapResult;
-import com.simibubi.create.content.trains.graph.GraphLocation;
-import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
-import com.simibubi.create.content.trains.track.ITrackBlock;
-import com.simibubi.create.content.trains.track.TrackBlockOutline;
+import com.simibubi.create.content.trains.graph.EdgePointType;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.track.TrackBlockOutline.BezierPointSelection;
+import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.RenderedTrackOverlayType;
+import com.simibubi.create.content.trains.track.TrackTargetingBlockItem.OverlapResult;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.client.Minecraft;
@@ -36,7 +34,7 @@ public class TrackTargetingClient {
 	static BezierTrackPointLocation lastHoveredBezierSegment;
 
 	static OverlapResult lastResult;
-	static GraphLocation lastLocation;
+	static TrackGraphLocation lastLocation;
 
 	public static void clientTick() {
 		Minecraft mc = Minecraft.getInstance();

@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.edgePoint;
+package com.simibubi.create.content.trains.track;
 
 import java.util.List;
 import java.util.UUID;
@@ -10,18 +10,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.schematics.SchematicWorld;
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.graph.GraphLocation;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
+import com.simibubi.create.content.trains.graph.EdgeData;
+import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackGraphHelper;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
-import com.simibubi.create.content.trains.track.BezierConnection;
-import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
-import com.simibubi.create.content.trains.track.ITrackBlock;
-import com.simibubi.create.content.trains.track.TrackBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -159,7 +157,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends BlockEnti
 			return null;
 		if (!hasValidTrack())
 			return null;
-		GraphLocation loc = determineGraphLocation();
+		TrackGraphLocation loc = determineGraphLocation();
 		if (loc == null)
 			return null;
 
@@ -292,7 +290,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends BlockEnti
 		return targetBezier;
 	}
 
-	public GraphLocation determineGraphLocation() {
+	public TrackGraphLocation determineGraphLocation() {
 		Level level = getWorld();
 		BlockPos pos = getGlobalPosition();
 		BlockState state = getTrackBlockState();

@@ -1,12 +1,11 @@
-package com.simibubi.create.content.trains.edgePoint;
+package com.simibubi.create.content.trains.track;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.trains.edgePoint.TrackTargetingBlockItem.OverlapResult;
-import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
-import com.simibubi.create.content.trains.track.TrackBlockEntity;
+import com.simibubi.create.content.trains.graph.EdgePointType;
+import com.simibubi.create.content.trains.track.TrackTargetingBlockItem.OverlapResult;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 import com.simibubi.create.foundation.utility.Lang;
 

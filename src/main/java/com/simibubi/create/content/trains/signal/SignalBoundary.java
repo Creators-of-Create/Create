@@ -7,8 +7,8 @@ import java.util.UUID;
 
 import com.google.common.base.Objects;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.edgePoint.EdgePointType;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
+import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SignalBlock.SignalType;

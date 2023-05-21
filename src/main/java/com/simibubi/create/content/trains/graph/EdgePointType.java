@@ -1,15 +1,14 @@
-package com.simibubi.create.content.trains.edgePoint;
+package com.simibubi.create.content.trains.graph;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
+import com.simibubi.create.content.trains.observer.TrackObserver;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 import com.simibubi.create.content.trains.station.GlobalStation;
-import com.simibubi.create.content.trains.trackObserver.TrackObserver;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

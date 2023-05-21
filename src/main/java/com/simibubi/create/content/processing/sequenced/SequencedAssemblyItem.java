@@ -1,4 +1,4 @@
-package com.simibubi.create.content.processing.itemAssembly;
+package com.simibubi.create.content.processing.sequenced;
 
 import com.simibubi.create.foundation.utility.Color;
 

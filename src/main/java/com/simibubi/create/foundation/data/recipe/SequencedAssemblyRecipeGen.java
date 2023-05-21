@@ -10,7 +10,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
-import com.simibubi.create.content.processing.itemAssembly.SequencedAssemblyRecipeBuilder;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;

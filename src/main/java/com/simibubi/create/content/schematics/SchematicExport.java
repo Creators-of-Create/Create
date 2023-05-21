@@ -9,7 +9,6 @@ import java.nio.file.StandardOpenOption;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 

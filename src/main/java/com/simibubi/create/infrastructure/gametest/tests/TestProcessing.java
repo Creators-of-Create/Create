@@ -5,11 +5,11 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.processing.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.infrastructure.gametest.infrastructure.CreateGameTestHelper;
-import com.simibubi.create.infrastructure.gametest.infrastructure.GameTestGroup;
+import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
+import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;

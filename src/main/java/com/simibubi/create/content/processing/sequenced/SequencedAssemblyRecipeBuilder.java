@@ -1,4 +1,4 @@
-package com.simibubi.create.content.processing.itemAssembly;
+package com.simibubi.create.content.processing.sequenced;
 
 import java.util.ArrayList;
 import java.util.List;

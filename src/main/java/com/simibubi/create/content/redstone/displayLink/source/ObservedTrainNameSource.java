@@ -6,8 +6,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.content.trains.entity.Train;
-import com.simibubi.create.content.trains.trackObserver.TrackObserver;
-import com.simibubi.create.content.trains.trackObserver.TrackObserverBlockEntity;
+import com.simibubi.create.content.trains.observer.TrackObserver;
+import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
 
 import net.minecraft.network.chat.MutableComponent;
 

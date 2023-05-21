@@ -1,9 +1,7 @@
-package com.simibubi.create.content.trains.edgePoint;
+package com.simibubi.create.content.trains.graph;
 
 import java.util.UUID;
 
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.nbt.CompoundTag;

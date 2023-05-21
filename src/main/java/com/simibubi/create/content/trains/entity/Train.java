@@ -25,17 +25,18 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.logistics.filter.FilterItem;
-import com.simibubi.create.content.trains.DimensionPalette;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
-import com.simibubi.create.content.trains.edgePoint.EdgeData;
-import com.simibubi.create.content.trains.edgePoint.EdgePointType;
 import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
-import com.simibubi.create.content.trains.graph.GraphLocation;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
+import com.simibubi.create.content.trains.graph.DimensionPalette;
+import com.simibubi.create.content.trains.graph.EdgeData;
+import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackNode;
+import com.simibubi.create.content.trains.observer.TrackObserver;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime.State;
 import com.simibubi.create.content.trains.signal.SignalBlock.SignalType;
@@ -43,7 +44,6 @@ import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
-import com.simibubi.create.content.trains.trackObserver.TrackObserver;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -843,11 +843,11 @@ public class Train {
 		}
 
 		Set<Entry<UUID, TrackGraph>> entrySet = new HashSet<>(Create.RAILWAYS.trackNetworks.entrySet());
-		Map<UUID, List<GraphLocation>> successfulMigrations = new HashMap<>();
+		Map<UUID, List<TrackGraphLocation>> successfulMigrations = new HashMap<>();
 		for (TrainMigration md : migratingPoints) {
 			for (Iterator<Entry<UUID, TrackGraph>> iterator = entrySet.iterator(); iterator.hasNext();) {
 				Entry<UUID, TrackGraph> entry = iterator.next();
-				GraphLocation gl = md.tryMigratingTo(entry.getValue());
+				TrackGraphLocation gl = md.tryMigratingTo(entry.getValue());
 				if (gl == null) {
 					iterator.remove();
 					continue;
@@ -866,7 +866,7 @@ public class Train {
 
 		for (Entry<UUID, TrackGraph> entry : entrySet) {
 			graph = entry.getValue();
-			List<GraphLocation> locations = successfulMigrations.get(entry.getKey());
+			List<TrackGraphLocation> locations = successfulMigrations.get(entry.getKey());
 			forEachTravellingPoint(tp -> tp.migrateTo(locations));
 			migratingPoints.clear();
 			if (derailed)

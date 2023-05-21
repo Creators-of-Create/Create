@@ -2,7 +2,6 @@ package com.simibubi.create.infrastructure.gametest;
 
 import java.util.Collection;
 
-import com.simibubi.create.infrastructure.gametest.infrastructure.CreateTestFunction;
 import com.simibubi.create.infrastructure.gametest.tests.TestContraptions;
 import com.simibubi.create.infrastructure.gametest.tests.TestFluids;
 import com.simibubi.create.infrastructure.gametest.tests.TestItems;

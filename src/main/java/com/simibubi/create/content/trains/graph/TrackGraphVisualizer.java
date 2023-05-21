@@ -10,7 +10,6 @@ import org.lwjgl.glfw.GLFW;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.trains.edgePoint.EdgeData;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;

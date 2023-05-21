@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains;
+package com.simibubi.create.content.trains.graph;
 
 import java.util.ArrayList;
 import java.util.List;

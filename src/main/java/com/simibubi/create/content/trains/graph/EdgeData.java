@@ -1,4 +1,4 @@
-package com.simibubi.create.content.trains.edgePoint;
+package com.simibubi.create.content.trains.graph;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,11 +10,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.DimensionPalette;
-import com.simibubi.create.content.trains.graph.TrackEdge;
-import com.simibubi.create.content.trains.graph.TrackGraph;
-import com.simibubi.create.content.trains.graph.TrackNode;
-import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.signal.SignalBoundary;
 import com.simibubi.create.content.trains.signal.SignalEdgeGroup;
 import com.simibubi.create.content.trains.signal.TrackEdgePoint;

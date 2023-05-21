@@ -1,4 +1,4 @@
-package com.simibubi.create.infrastructure.gametest.infrastructure;
+package com.simibubi.create.infrastructure.gametest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
