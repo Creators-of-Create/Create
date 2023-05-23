@@ -2991,7 +2991,7 @@
 	"create.ponder.smart_chute.text_4": "Redstone power will prevent Smart Chutes from acting.",
 
 	"create.ponder.smart_observer.header": "Advanced detection with Smart Observers",
-	"create.ponder.smart_observer.text_1": "Smart Observers can be used detect a variety of events",
+	"create.ponder.smart_observer.text_1": "Smart Observers can be used to detect a variety of events",
 	"create.ponder.smart_observer.text_2": "It can detect items or fluids inside of generic containers",
 	"create.ponder.smart_observer.text_3": "The filter slot can be used to look for specific contents only",
 	"create.ponder.smart_observer.text_4": "It also activates when the block itself matches the filter",

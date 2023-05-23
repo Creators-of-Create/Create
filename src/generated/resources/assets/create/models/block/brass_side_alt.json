@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/iron_bars_side_alt",
+  "parent": "create:block/bars/side_alt",
   "textures": {
     "bars": "create:block/bars/brass_bars",
     "particle": "create:block/bars/brass_bars",

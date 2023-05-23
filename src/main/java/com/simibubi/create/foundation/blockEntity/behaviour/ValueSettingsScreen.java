@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllKeys;
@@ -222,7 +223,7 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 			.format(closest);
 
 		AllIcons cursorIcon = null;
-		if (board.formatter()instanceof ScrollOptionSettingsFormatter sosf)
+		if (board.formatter() instanceof ScrollOptionSettingsFormatter sosf)
 			cursorIcon = sosf.getIcon(closest);
 
 		int cursorWidth = ((cursorIcon != null ? 16 : font.width(cursorText)) / 2) * 2 + 3;
@@ -294,17 +295,33 @@ public class ValueSettingsScreen extends AbstractSimiScreen {
 	}
 
 	@Override
+	public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
+		if (minecraft.options.keyUse.matches(pKeyCode, pScanCode)) {
+			Window window = minecraft.getWindow();
+			double x = minecraft.mouseHandler.xpos() * window.getGuiScaledWidth() / window.getScreenWidth();
+			double y = minecraft.mouseHandler.ypos() * window.getGuiScaledHeight() / window.getScreenHeight();
+			saveAndClose(x, y);
+			return true;
+		}
+		return super.keyReleased(pKeyCode, pScanCode, pModifiers);
+	}
+
+	@Override
 	public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
-		if (pButton == 1) {
-			ValueSettings closest = getClosestCoordinate((int) pMouseX, (int) pMouseY);
-			// FIXME: value settings may be face-sensitive on future components
-			AllPackets.getChannel()
-				.sendToServer(new ValueSettingsPacket(pos, closest.row(), closest.value(), null, Direction.UP,
-					AllKeys.ctrlDown()));
-			onClose();
+		if (minecraft.options.keyUse.matchesMouse(pButton)) {
+			saveAndClose(pMouseX, pMouseY);
 			return true;
 		}
 		return super.mouseReleased(pMouseX, pMouseY, pButton);
+	}
+
+	protected void saveAndClose(double pMouseX, double pMouseY) {
+		ValueSettings closest = getClosestCoordinate((int) pMouseX, (int) pMouseY);
+		// FIXME: value settings may be face-sensitive on future components
+		AllPackets.getChannel()
+			.sendToServer(new ValueSettingsPacket(pos, closest.row(), closest.value(), null, Direction.UP,
+				AllKeys.ctrlDown()));
+		onClose();
 	}
 
 	@Override

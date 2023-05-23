@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/iron_bars_post_ends",
+  "parent": "create:block/bars/post_ends",
   "textures": {
     "bars": "create:block/bars/andesite_bars",
     "particle": "create:block/bars/andesite_bars",

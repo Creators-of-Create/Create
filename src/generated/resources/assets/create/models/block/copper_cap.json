@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/iron_bars_cap",
+  "parent": "create:block/bars/cap",
   "textures": {
     "bars": "create:block/bars/copper_bars",
     "particle": "create:block/bars/copper_bars",

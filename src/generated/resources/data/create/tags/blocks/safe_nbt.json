@@ -24,8 +24,6 @@
     "create:pulse_repeater",
     "create:pulse_extender",
     "create:clipboard",
-    "create:copycat_step",
-    "create:copycat_panel",
     "#minecraft:banners",
     "#minecraft:signs"
   ]

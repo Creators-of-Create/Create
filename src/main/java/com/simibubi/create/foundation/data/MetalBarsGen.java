@@ -31,12 +31,12 @@ public class MetalBarsGen {
 		String name, boolean specialEdge) {
 		return (c, p) -> {
 
-			ModelFile post_ends = barsSubModel(p, name, "_post_ends", specialEdge);
-			ModelFile post = barsSubModel(p, name, "_post", specialEdge);
-			ModelFile cap = barsSubModel(p, name, "_cap", specialEdge);
-			ModelFile cap_alt = barsSubModel(p, name, "_cap_alt", specialEdge);
-			ModelFile side = barsSubModel(p, name, "_side", specialEdge);
-			ModelFile side_alt = barsSubModel(p, name, "_side_alt", specialEdge);
+			ModelFile post_ends = barsSubModel(p, name, "post_ends", specialEdge);
+			ModelFile post = barsSubModel(p, name, "post", specialEdge);
+			ModelFile cap = barsSubModel(p, name, "cap", specialEdge);
+			ModelFile cap_alt = barsSubModel(p, name, "cap_alt", specialEdge);
+			ModelFile side = barsSubModel(p, name, "side", specialEdge);
+			ModelFile side_alt = barsSubModel(p, name, "side_alt", specialEdge);
 
 			p.getMultipartBuilder(c.get())
 				.part()
@@ -115,7 +115,7 @@ public class MetalBarsGen {
 		ResourceLocation barsTexture = p.modLoc("block/bars/" + name + "_bars");
 		ResourceLocation edgeTexture = specialEdge ? p.modLoc("block/bars/" + name + "_bars_edge") : barsTexture;
 		return p.models()
-			.withExistingParent(name + suffix, p.mcLoc("block/iron_bars" + suffix))
+			.withExistingParent(name + "_" + suffix, p.modLoc("block/bars/" + suffix))
 			.texture("bars", barsTexture)
 			.texture("particle", barsTexture)
 			.texture("edge", edgeTexture);

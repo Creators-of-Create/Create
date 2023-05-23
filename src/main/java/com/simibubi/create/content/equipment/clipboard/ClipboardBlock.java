@@ -60,6 +60,8 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 		BlockState stateForPlacement = super.getStateForPlacement(pContext);
+		if (stateForPlacement == null)
+			return null;
 		if (stateForPlacement.getValue(FACE) != AttachFace.WALL)
 			stateForPlacement = stateForPlacement.setValue(FACING, stateForPlacement.getValue(FACING)
 				.getOpposite());

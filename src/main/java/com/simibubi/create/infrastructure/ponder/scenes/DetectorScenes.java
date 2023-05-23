@@ -44,7 +44,7 @@ public class DetectorScenes {
 		scene.idle(10);
 
 		scene.overlay.showText(60)
-			.text("Smart Observers can be used detect a variety of events")
+			.text("Smart Observers can be used to detect a variety of events")
 			.pointAt(util.vector.blockSurface(observerPos, Direction.WEST))
 			.placeNearTarget();
 		scene.idle(50);
