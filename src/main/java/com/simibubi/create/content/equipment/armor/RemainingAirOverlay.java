@@ -33,7 +33,7 @@ public class RemainingAirOverlay implements IIngameOverlay {
 		if (!player.getPersistentData()
 			.contains("VisualBacktankAir"))
 			return;
-		if (!player.isEyeInFluid(FluidTags.WATER) && !player.isEyeInFluid(FluidTags.LAVA))
+		if (!player.isEyeInFluid(FluidTags.WATER) && !player.isInLava())
 			return;
 
 		int timeLeft = player.getPersistentData()

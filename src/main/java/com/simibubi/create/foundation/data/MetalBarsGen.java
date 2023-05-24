@@ -130,6 +130,7 @@ public class MetalBarsGen {
 				.color(color))
 			.tag(AllBlockTags.WRENCH_PICKUP.tag)
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag)
+			.transform(TagGen.pickaxeOnly())
 			.blockstate(barsBlockState(name, specialEdge))
 			.item()
 			.model((c, p) -> {

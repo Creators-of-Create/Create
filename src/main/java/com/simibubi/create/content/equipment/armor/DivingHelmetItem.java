@@ -67,7 +67,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 			entity.getPersistentData()
 				.remove("VisualBacktankAir");
 
-		boolean lavaDiving = entity.isEyeInFluid(FluidTags.LAVA);
+		boolean lavaDiving = entity.isInLava();
 		if (!isWornBy(entity, lavaDiving))
 			return;
 		if (!entity.isEyeInFluid(FluidTags.WATER) && !lavaDiving)

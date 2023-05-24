@@ -35,8 +35,9 @@ public class TrackPaverV2 {
 		Vec3 direction = VecHelper.clampComponentWise(diff, 1);
 		int extent = (int) Math.round((to - from) / direction.length());
 		double length = edge.getLength();
+
 		BlockPos pos = new BlockPos(edge.getPosition(graph, Mth.clamp(from, 1 / 16f, length - 1 / 16f) / length)
-			.subtract(0, 0.5, 0));
+			.subtract(0, diff.y != 0 ? 1 : 0.5, 0));
 
 		paveStraight(task, pos, direction, extent);
 	}

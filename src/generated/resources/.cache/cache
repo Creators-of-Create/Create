@@ -583,7 +583,7 @@ bf2b0310500213ff853c748c236eb5d01f61658e assets/create/blockstates/yellow_toolbo
 7f39521b211441f5c3e06d60c5978cebe16cacfb assets/create/blockstates/zinc_block.json
 b7181bcd8182b2f17088e5aa881f374c9c65470c assets/create/blockstates/zinc_ore.json
 4fd8347dfb20e6e5752b8b905850762a88c88c02 assets/create/lang/en_ud.json
-2ffe0a94afbddd820110f78943dc5938edc9cb34 assets/create/lang/en_us.json
+7b1b4e904fb4008cbe412a91f55e232ea51303b1 assets/create/lang/en_us.json
 487a511a01b2a4531fb672f917922312db78f958 assets/create/models/block/acacia_window.json
 b48060cba1a382f373a05bf0039054053eccf076 assets/create/models/block/acacia_window_pane_noside.json
 3066db1bf03cffa1a9c7fbacf47ae586632f4eb3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -5430,7 +5430,7 @@ cf71d9ad48f109da3a8b22a8d2d1a68d4eac99c0 data/minecraft/tags/blocks/climbable.js
 69f596fcb065e26b02ce246760432b5174191b76 data/minecraft/tags/blocks/impermeable.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/lush_ground_replaceable.json
 b68d565b4befb7b1c542d69eaa81309cc5304327 data/minecraft/tags/blocks/mineable/axe.json
-71b63805d1e152e6e0a99ec0cb535279643dc5ee data/minecraft/tags/blocks/mineable/pickaxe.json
+ed5bf69c56339703aadb5e6a9cb40d5938dfb2f8 data/minecraft/tags/blocks/mineable/pickaxe.json
 2db7759fe036160c14c6ed19a68604ca16f4de60 data/minecraft/tags/blocks/moss_replaceable.json
 e157c1d3af30e409e34bbefbe15a037e6e1c8daa data/minecraft/tags/blocks/needs_iron_tool.json
 a08f67865337f62601c5e333b4011382d10020e4 data/minecraft/tags/blocks/needs_stone_tool.json

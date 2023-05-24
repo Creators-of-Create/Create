@@ -263,7 +263,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	public MutableComponent formatValue(ValueSettings value) {
 		if (value.row() == 0 && value.value() == filter.getMaxStackSize())
-			return Components.literal("Any");
+			return Lang.translateDirect("logistics.filter.any_amount_short");
 		return Components.literal(((value.row() == 0) ? "\u2264" : "=") + Math.max(1, value.value()));
 	}
 
