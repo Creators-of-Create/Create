@@ -2526,7 +2526,7 @@
 
 	"create.ponder.encased_fluid_pipe.header": "Encasing Fluid Pipes",
 	"create.ponder.encased_fluid_pipe.text_1": "Copper Casing can be used to decorate Fluid Pipes",
-	"create.ponder.encased_fluid_pipe.text_2": "Aside from being conceiled, Encased Pipes are locked into their connectivity state",
+	"create.ponder.encased_fluid_pipe.text_2": "Aside from being concealed, Encased Pipes are locked into their connectivity state",
 	"create.ponder.encased_fluid_pipe.text_3": "It will no longer react to any neighbouring blocks being added or removed",
 
 	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
