@@ -36,10 +36,10 @@ import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.entity.TrainPacket;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
-import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation.DiscoveredLocation;
@@ -296,18 +296,18 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 					if (!(blockState.getBlock() instanceof AbstractBogeyBlock<?> bogey))
 						continue;
 					BlockEntity be = level.getBlockEntity(bogeyPos);
-					if (!(be instanceof AbstractBogeyBlockEntity oldTE))
+					if (!(be instanceof AbstractBogeyBlockEntity oldBE))
 						continue;
-					CompoundTag oldData = oldTE.getBogeyData();
-					BlockState newBlock = bogey.getNextSize(oldTE);
+					CompoundTag oldData = oldBE.getBogeyData();
+					BlockState newBlock = bogey.getNextSize(oldBE);
 					if (newBlock.getBlock() == bogey)
 						player.displayClientMessage(Lang.translateDirect("bogey.style.no_other_sizes")
 							.withStyle(ChatFormatting.RED), true);
 					level.setBlock(bogeyPos, newBlock, 3);
 					BlockEntity newEntity = level.getBlockEntity(bogeyPos);
-					if (!(newEntity instanceof AbstractBogeyBlockEntity newTE))
+					if (!(newEntity instanceof AbstractBogeyBlockEntity newBE))
 						continue;
-					newTE.setBogeyData(oldData);
+					newBE.setBogeyData(oldData);
 					bogey.playRotateSound(level, bogeyPos);
 					return true;
 				}
@@ -748,9 +748,9 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 			AbstractBogeyBlock<?> typeOfFirstBogey = bogeyTypes[bogeyIndex];
 			boolean firstBogeyIsUpsideDown = upsideDownBogeys[bogeyIndex];
 			BlockPos firstBogeyPos = contraption.anchor;
-			AbstractBogeyBlockEntity firstBogeyTileEntity = (AbstractBogeyBlockEntity) level.getBlockEntity(firstBogeyPos);
+			AbstractBogeyBlockEntity firstBogeyBlockEntity = (AbstractBogeyBlockEntity) level.getBlockEntity(firstBogeyPos);
 			CarriageBogey firstBogey =
-				new CarriageBogey(typeOfFirstBogey, firstBogeyIsUpsideDown, firstBogeyTileEntity.getBogeyData(), points.get(pointIndex), points.get(pointIndex + 1));
+				new CarriageBogey(typeOfFirstBogey, firstBogeyIsUpsideDown, firstBogeyBlockEntity.getBogeyData(), points.get(pointIndex), points.get(pointIndex + 1));
 			CarriageBogey secondBogey = null;
 			BlockPos secondBogeyPos = contraption.getSecondBogeyPos();
 			int bogeySpacing = 0;
@@ -762,10 +762,10 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 						contraptions.size() + 1);
 					return;
 				}
-				AbstractBogeyBlockEntity secondBogeyTileEntity =
+				AbstractBogeyBlockEntity secondBogeyBlockEntity =
 						(AbstractBogeyBlockEntity) level.getBlockEntity(secondBogeyPos);
 				bogeySpacing = bogeyLocations[bogeyIndex + 1] - bogeyLocations[bogeyIndex];
-				secondBogey = new CarriageBogey(bogeyTypes[bogeyIndex + 1], upsideDownBogeys[bogeyIndex + 1], secondBogeyTileEntity.getBogeyData(),
+				secondBogey = new CarriageBogey(bogeyTypes[bogeyIndex + 1], upsideDownBogeys[bogeyIndex + 1], secondBogeyBlockEntity.getBogeyData(),
 						points.get(pointIndex + 2), points.get(pointIndex + 3));
 				bogeyIndex++;
 

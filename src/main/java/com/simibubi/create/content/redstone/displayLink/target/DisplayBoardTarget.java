@@ -90,10 +90,10 @@ public class DisplayBoardTarget extends DisplayTarget {
 		AABB baseShape = super.getMultiblockBounds(level, pos);
 		BlockEntity be = level.getBlockEntity(pos);
 
-		if (!(be instanceof FlapDisplayBlockEntity fdte))
+		if (!(be instanceof FlapDisplayBlockEntity fdbe))
 			return baseShape;
 
-		FlapDisplayBlockEntity controller = fdte.getController();
+		FlapDisplayBlockEntity controller = fdbe.getController();
 		if (controller == null)
 			return baseShape;
 

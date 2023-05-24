@@ -103,8 +103,8 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		msr.rotate(Direction.WEST, AngleHelper.rad(67.5f));
 
 		float buttondepth = -.25f;
-		if (ctx.contraption.presentBlockEntities.get(ctx.localPos)instanceof ContraptionControlsBlockEntity cte)
-			buttondepth += -1 / 24f * cte.button.getValue(AnimationTickHolder.getPartialTicks(renderWorld));
+		if (ctx.contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
+			buttondepth += -1 / 24f * cbe.button.getValue(AnimationTickHolder.getPartialTicks(renderWorld));
 
 		if (!text.isBlank() && playerDistance < 100) {
 			int actualWidth = fontRenderer.width(text);

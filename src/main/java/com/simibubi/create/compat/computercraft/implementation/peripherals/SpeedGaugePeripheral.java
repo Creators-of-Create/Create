@@ -8,13 +8,13 @@ import dan200.computercraft.api.lua.LuaFunction;
 
 public class SpeedGaugePeripheral extends SyncedPeripheral<SpeedGaugeBlockEntity> {
 
-	public SpeedGaugePeripheral(SpeedGaugeBlockEntity tile) {
-		super(tile);
+	public SpeedGaugePeripheral(SpeedGaugeBlockEntity blockEntity) {
+		super(blockEntity);
 	}
 
 	@LuaFunction
 	public final float getSpeed() {
-		return this.tile.getSpeed();
+		return this.blockEntity.getSpeed();
 	}
 
 	@NotNull

@@ -11,9 +11,9 @@ public class CurrentFloorDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceBlockEntity() instanceof ElevatorContactBlockEntity ecte))
+		if (!(context.getSourceBlockEntity() instanceof ElevatorContactBlockEntity ecbe))
 			return EMPTY_LINE;
-		return Components.literal(ecte.lastReportedCurrentFloor);
+		return Components.literal(ecbe.lastReportedCurrentFloor);
 	}
 	
 	@Override

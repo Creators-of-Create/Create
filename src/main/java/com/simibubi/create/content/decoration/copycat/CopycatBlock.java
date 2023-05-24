@@ -272,8 +272,8 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	}
 
 	public static BlockState getMaterial(BlockGetter reader, BlockPos targetPos) {
-		if (reader.getBlockEntity(targetPos)instanceof CopycatBlockEntity ufte)
-			return ufte.getMaterial();
+		if (reader.getBlockEntity(targetPos) instanceof CopycatBlockEntity cbe)
+			return cbe.getMaterial();
 		return Blocks.AIR.defaultBlockState();
 	}
 

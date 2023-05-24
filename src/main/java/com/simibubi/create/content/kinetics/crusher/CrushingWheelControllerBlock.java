@@ -146,15 +146,15 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 				if (neighbour.getValue(BlockStateProperties.AXIS) == d.getAxis())
 					continue;
 				BlockEntity adjBE = world.getBlockEntity(pos.relative(d));
-				if (!(adjBE instanceof CrushingWheelBlockEntity cwte))
+				if (!(adjBE instanceof CrushingWheelBlockEntity cwbe))
 					continue;
-				be.crushingspeed = Math.abs(cwte.getSpeed() / 50f);
+				be.crushingspeed = Math.abs(cwbe.getSpeed() / 50f);
 				be.sendData();
-				
-				cwte.award(AllAdvancements.CRUSHING_WHEEL);
-				if (cwte.getSpeed() > 255) 
-					cwte.award(AllAdvancements.CRUSHER_MAXED);
-				
+
+				cwbe.award(AllAdvancements.CRUSHING_WHEEL);
+				if (cwbe.getSpeed() > 255)
+					cwbe.award(AllAdvancements.CRUSHER_MAXED);
+
 				break;
 			}
 		});

@@ -279,8 +279,8 @@ public class TrackBlock extends Block
 			level.setBlock(pos, state.setValue(SHAPE, TrackShape.asPortal(d))
 				.setValue(HAS_BE, true), 3);
 			BlockEntity be = level.getBlockEntity(pos);
-			if (be instanceof TrackBlockEntity tte)
-				tte.bind(otherLevel.dimension(), otherTrackPos);
+			if (be instanceof TrackBlockEntity tbe)
+				tbe.bind(otherLevel.dimension(), otherTrackPos);
 
 			otherLevel.setBlock(otherTrackPos, state.setValue(SHAPE, TrackShape.asPortal(otherTrack.getFace()))
 				.setValue(HAS_BE, true), 3);
@@ -401,24 +401,24 @@ public class TrackBlock extends Block
 			return list;
 
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (!(blockEntity instanceof TrackBlockEntity trackTE))
+		if (!(blockEntity instanceof TrackBlockEntity trackBE))
 			return list;
 
-		Map<BlockPos, BezierConnection> connections = trackTE.getConnections();
+		Map<BlockPos, BezierConnection> connections = trackBE.getConnections();
 		connections.forEach((connectedPos, bc) -> ITrackBlock.addToListIfConnected(connectedTo, list,
 			(d, b) -> d == 1 ? Vec3.atLowerCornerOf(bc.tePositions.get(b)) : bc.starts.get(b), bc.normals::get,
 			b -> world instanceof Level l ? l.dimension() : Level.OVERWORLD, bc::yOffsetAt, null, bc,
 			(b, v) -> ITrackBlock.getMaterialSimple(world, v, bc.getMaterial())));
 
-		if (trackTE.boundLocation == null || !(world instanceof ServerLevel level))
+		if (trackBE.boundLocation == null || !(world instanceof ServerLevel level))
 			return list;
 
-		ResourceKey<Level> otherDim = trackTE.boundLocation.getFirst();
+		ResourceKey<Level> otherDim = trackBE.boundLocation.getFirst();
 		ServerLevel otherLevel = level.getServer()
 			.getLevel(otherDim);
 		if (otherLevel == null)
 			return list;
-		BlockPos boundPos = trackTE.boundLocation.getSecond();
+		BlockPos boundPos = trackBE.boundLocation.getSecond();
 		BlockState boundState = otherLevel.getBlockState(boundPos);
 		if (!AllTags.AllBlockTags.TRACKS.matches(boundState))
 			return list;
@@ -626,9 +626,9 @@ public class TrackBlock extends Block
 		Level level = context.getLevel();
 		if (!level.isClientSide && !player.isCreative() && state.getValue(HAS_BE)) {
 			BlockEntity blockEntity = level.getBlockEntity(context.getClickedPos());
-			if (blockEntity instanceof TrackBlockEntity trackTE) {
-				trackTE.cancelDrops = true;
-				trackTE.connections.values()
+			if (blockEntity instanceof TrackBlockEntity trackBE) {
+				trackBE.cancelDrops = true;
+				trackBE.connections.values()
 					.forEach(bc -> bc.addItemsToPlayer(player));
 			}
 		}
@@ -705,8 +705,8 @@ public class TrackBlock extends Block
 		Vec3 normal = null;
 		Vec3 offset = null;
 
-		if (bezierPoint != null && world.getBlockEntity(pos) instanceof TrackBlockEntity trackTE) {
-			BezierConnection bc = trackTE.connections.get(bezierPoint.curveTarget());
+		if (bezierPoint != null && world.getBlockEntity(pos) instanceof TrackBlockEntity trackBE) {
+			BezierConnection bc = trackBE.connections.get(bezierPoint.curveTarget());
 			if (bc != null) {
 				double length = Mth.floor(bc.getLength() * 2);
 				int seg = bezierPoint.segment() + 1;

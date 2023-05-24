@@ -59,7 +59,7 @@ public class TrackBlockItem extends BlockItem {
 		Vec3 lookAngle = player.getLookAngle();
 
 		if (!isFoil(stack)) {
-			if (state.getBlock()instanceof TrackBlock track && track.getTrackAxes(level, pos, state)
+			if (state.getBlock() instanceof TrackBlock track && track.getTrackAxes(level, pos, state)
 				.size() > 1) {
 				if (!level.isClientSide)
 					player.displayClientMessage(Lang.translateDirect("track.junction_start")

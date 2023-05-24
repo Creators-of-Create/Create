@@ -172,9 +172,9 @@ public class StationSummaryDisplaySource extends DisplaySource {
 
 		if (conf.contains("Filter"))
 			return;
-		if (!(context.getSourceBlockEntity() instanceof StationBlockEntity stationTe))
+		if (!(context.getSourceBlockEntity() instanceof StationBlockEntity stationBe))
 			return;
-		GlobalStation station = stationTe.getStation();
+		GlobalStation station = stationBe.getStation();
 		if (station == null)
 			return;
 		conf.putString("Filter", station.name);

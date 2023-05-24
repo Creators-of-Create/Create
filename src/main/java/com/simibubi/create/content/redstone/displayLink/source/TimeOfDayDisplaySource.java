@@ -22,9 +22,9 @@ public class TimeOfDayDisplaySource extends SingleLineDisplaySource {
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
 		if (!(context.level()instanceof ServerLevel sLevel))
 			return EMPTY_TIME;
-		if (!(context.getSourceBlockEntity() instanceof CuckooClockBlockEntity ccte))
+		if (!(context.getSourceBlockEntity() instanceof CuckooClockBlockEntity ccbe))
 			return EMPTY_TIME;
-		if (ccte.getSpeed() == 0)
+		if (ccbe.getSpeed() == 0)
 			return EMPTY_TIME;
 
 		boolean c12 = context.sourceConfig()

@@ -44,8 +44,8 @@ public interface IBE<T extends BlockEntity> extends EntityBlock {
 		if (blockState.is(newBlockState.getBlock()) && newBlockState.hasBlockEntity())
 			return;
 		BlockEntity blockEntity = level.getBlockEntity(pos);
-		if (blockEntity instanceof SmartBlockEntity ste)
-			ste.destroy();
+		if (blockEntity instanceof SmartBlockEntity sbe)
+			sbe.destroy();
 		level.removeBlockEntity(pos);
 	}
 

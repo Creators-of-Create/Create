@@ -108,14 +108,14 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 				}
 
 			BlockEntity blockEntity = level.getBlockEntity(key);
-			if (!(blockEntity instanceof TrackBlockEntity trackTE) || blockEntity.isRemoved()) {
+			if (!(blockEntity instanceof TrackBlockEntity trackBE) || blockEntity.isRemoved()) {
 				invalid.add(key);
 				continue;
 			}
 
-			if (!trackTE.connections.containsKey(worldPosition)) {
-				trackTE.addConnection(bc.secondary());
-				trackTE.tilt.tryApplySmoothing();
+			if (!trackBE.connections.containsKey(worldPosition)) {
+				trackBE.addConnection(bc.secondary());
+				trackBE.tilt.tryApplySmoothing();
 			}
 		}
 

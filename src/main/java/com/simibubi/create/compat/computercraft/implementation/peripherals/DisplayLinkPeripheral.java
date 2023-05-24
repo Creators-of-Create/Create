@@ -19,8 +19,8 @@ public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkBlockEnti
 	private final AtomicInteger cursorX = new AtomicInteger();
 	private final AtomicInteger cursorY = new AtomicInteger();
 
-	public DisplayLinkPeripheral(DisplayLinkBlockEntity tile) {
-		super(tile);
+	public DisplayLinkPeripheral(DisplayLinkBlockEntity blockEntity) {
+		super(blockEntity);
 	}
 
 	@LuaFunction
@@ -36,7 +36,7 @@ public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkBlockEnti
 
 	@LuaFunction(mainThread = true)
 	public final Object[] getSize() {
-		DisplayTargetStats stats = tile.activeTarget.provideStats(new DisplayLinkContext(tile.getLevel(), tile));
+		DisplayTargetStats stats = blockEntity.activeTarget.provideStats(new DisplayLinkContext(blockEntity.getLevel(), blockEntity));
 		return new Object[]{stats.maxRows(), stats.maxColumns()};
 	}
 
@@ -52,7 +52,7 @@ public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkBlockEnti
 
 	@LuaFunction
 	public final void write(String text) {
-		ListTag tag = tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
+		ListTag tag = blockEntity.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
 
 		int x = cursorX.get();
 		int y = cursorY.get();
@@ -68,8 +68,8 @@ public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkBlockEnti
 
 		tag.set(y, StringTag.valueOf(builder.toString()));
 
-		synchronized (tile) {
-			tile.getSourceConfig().put(TAG_KEY, tag);
+		synchronized (blockEntity) {
+			blockEntity.getSourceConfig().put(TAG_KEY, tag);
 		}
 
 		cursorX.set(x + text.length());
@@ -77,26 +77,26 @@ public class DisplayLinkPeripheral extends SyncedPeripheral<DisplayLinkBlockEnti
 
 	@LuaFunction
 	public final void clearLine() {
-		ListTag tag = tile.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
+		ListTag tag = blockEntity.getSourceConfig().getList(TAG_KEY, Tag.TAG_STRING);
 
 		if (tag.size() > cursorY.get())
 			tag.set(cursorY.get(), StringTag.valueOf(""));
 
-		synchronized (tile) {
-			tile.getSourceConfig().put(TAG_KEY, tag);
+		synchronized (blockEntity) {
+			blockEntity.getSourceConfig().put(TAG_KEY, tag);
 		}
 	}
 
 	@LuaFunction
 	public final void clear() {
-		synchronized (tile) {
-			tile.getSourceConfig().put(TAG_KEY, new ListTag());
+		synchronized (blockEntity) {
+			blockEntity.getSourceConfig().put(TAG_KEY, new ListTag());
 		}
 	}
 
 	@LuaFunction(mainThread = true)
 	public final void update() {
-		tile.tickSource();
+		blockEntity.tickSource();
 	}
 
 	@NotNull

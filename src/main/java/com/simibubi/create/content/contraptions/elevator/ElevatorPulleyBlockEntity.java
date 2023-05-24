@@ -290,8 +290,8 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 						continue;
 					pos = pos.offset(anchor);
 					if (level.getBlockEntity(new BlockPos(pos.getX(), worldPosition.getY(),
-						pos.getZ()))instanceof ElevatorPulleyBlockEntity pte)
-						pte.startMirroringOther(worldPosition);
+						pos.getZ())) instanceof ElevatorPulleyBlockEntity pbe)
+						pbe.startMirroringOther(worldPosition);
 				}
 
 				ElevatorColumn column = ElevatorColumn.getOrCreate(level, contraption.getGlobalColumn());

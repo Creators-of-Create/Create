@@ -163,12 +163,12 @@ public class CarriageContraption extends Contraption {
 		}
 
 		if (blockState.getBlock() instanceof AbstractBogeyBlock<?> bogey) {
-			boolean captureTE = bogey.captureTileEntityForTrain();
+			boolean captureBE = bogey.captureBlockEntityForTrain();
 			bogeys++;
 			if (bogeys == 2)
 				secondBogeyPos = pos;
-			return Pair.of(new StructureBlockInfo(pos, blockState, captureTE ? getBlockEntityNBT(world, pos) : null),
-				captureTE ? world.getBlockEntity(pos) : null);
+			return Pair.of(new StructureBlockInfo(pos, blockState, captureBE ? getBlockEntityNBT(world, pos) : null),
+				captureBE ? world.getBlockEntity(pos) : null);
 		}
 
 		if (AllBlocks.BLAZE_BURNER.has(blockState)

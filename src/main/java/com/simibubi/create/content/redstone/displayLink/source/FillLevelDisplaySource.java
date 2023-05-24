@@ -14,9 +14,9 @@ public class FillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 	@Override
 	protected Float getProgress(DisplayLinkContext context) {
 		BlockEntity be = context.getSourceBlockEntity();
-		if (!(be instanceof ThresholdSwitchBlockEntity sste))
+		if (!(be instanceof ThresholdSwitchBlockEntity tsbe))
 			return null;
-		return sste.currentLevel;
+		return tsbe.currentLevel;
 	}
 	
 	@Override

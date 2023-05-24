@@ -15,9 +15,9 @@ public class TrainStatusDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceBlockEntity() instanceof StationBlockEntity observerTE))
+		if (!(context.getSourceBlockEntity() instanceof StationBlockEntity observerBE))
 			return EMPTY_LINE;
-		GlobalStation observer = observerTE.getStation();
+		GlobalStation observer = observerBE.getStation();
 		if (observer == null)
 			return EMPTY_LINE;
 		Train currentTrain = observer.getPresentTrain();

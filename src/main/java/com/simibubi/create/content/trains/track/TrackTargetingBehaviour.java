@@ -269,8 +269,8 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends BlockEnti
 
 	public BlockPos getPositionForMapMarker() {
 		BlockPos target = targetTrack.offset(blockEntity.getBlockPos());
-		if (targetBezier != null && getWorld().getBlockEntity(target) instanceof TrackBlockEntity tte) {
-			BezierConnection bc = tte.getConnections()
+		if (targetBezier != null && getWorld().getBlockEntity(target) instanceof TrackBlockEntity tbe) {
+			BezierConnection bc = tbe.getConnections()
 				.get(targetBezier.curveTarget());
 			if (bc == null)
 				return target;
