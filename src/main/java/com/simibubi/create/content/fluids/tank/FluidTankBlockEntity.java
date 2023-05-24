@@ -315,8 +315,8 @@ public class FluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggl
 				for (int xOffset = 0; xOffset < width; xOffset++)
 					for (int zOffset = 0; zOffset < width; zOffset++)
 						if (level.getBlockEntity(
-							worldPosition.offset(xOffset, yOffset, zOffset)) instanceof FluidTankBlockEntity fte)
-							fte.refreshCapability();
+							worldPosition.offset(xOffset, yOffset, zOffset)) instanceof FluidTankBlockEntity fbe)
+							fbe.refreshCapability();
 		}
 
 		if (changed) {

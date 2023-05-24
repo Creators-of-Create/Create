@@ -2,10 +2,10 @@ package com.simibubi.create.content.trains.entity;
 
 import java.util.Map.Entry;
 
-import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.graph.TrackNodeLocation;
 import com.simibubi.create.foundation.utility.Couple;

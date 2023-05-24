@@ -11,8 +11,8 @@ public class SpeedControllerPeripheral extends SyncedPeripheral<SpeedControllerB
 
 	private final ScrollValueBehaviour targetSpeed;
 
-	public SpeedControllerPeripheral(SpeedControllerBlockEntity tile, ScrollValueBehaviour targetSpeed) {
-		super(tile);
+	public SpeedControllerPeripheral(SpeedControllerBlockEntity blockEntity, ScrollValueBehaviour targetSpeed) {
+		super(blockEntity);
 		this.targetSpeed = targetSpeed;
 	}
 

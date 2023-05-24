@@ -214,7 +214,7 @@ public class SchematicAndQuillHandler {
 			return;
 		}
 		Path file = result.file();
-		Lang.translate("schematicAndQuill.saved", file)
+		Lang.translate("schematicAndQuill.saved", file.getFileName())
 				.sendStatus(player);
 		firstPos = null;
 		secondPos = null;

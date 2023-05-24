@@ -32,54 +32,54 @@ import net.minecraftforge.network.PacketDistributor;
 
 public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
-	public StationPeripheral(StationBlockEntity tile) {
-		super(tile);
+	public StationPeripheral(StationBlockEntity blockEntity) {
+		super(blockEntity);
 	}
 
 	@LuaFunction(mainThread = true)
 	public final void assemble() throws LuaException {
-		if (!tile.isAssembling())
+		if (!blockEntity.isAssembling())
 			throw new LuaException("station must be in assembly mode");
 
-		tile.assemble(null);
+		blockEntity.assemble(null);
 
-		if (tile.getStation() == null || tile.getStation().getPresentTrain() == null)
+		if (blockEntity.getStation() == null || blockEntity.getStation().getPresentTrain() == null)
 			throw new LuaException("failed to assemble train");
 
-		if (!tile.exitAssemblyMode())
+		if (!blockEntity.exitAssemblyMode())
 			throw new LuaException("failed to exit assembly mode");
 	}
 
 	@LuaFunction(mainThread = true)
 	public final void disassemble() throws LuaException {
-		if (tile.isAssembling())
+		if (blockEntity.isAssembling())
 			throw new LuaException("station must not be in assembly mode");
 
 		getTrainOrThrow();
 
-		if (!tile.enterAssemblyMode(null))
+		if (!blockEntity.enterAssemblyMode(null))
 			throw new LuaException("could not disassemble train");
 	}
 
 	@LuaFunction(mainThread = true)
 	public final void setAssemblyMode(boolean assemblyMode) throws LuaException {
 		if (assemblyMode) {
-			if (!tile.enterAssemblyMode(null))
+			if (!blockEntity.enterAssemblyMode(null))
 				throw new LuaException("failed to enter assembly mode");
 		} else {
-			if (!tile.exitAssemblyMode())
+			if (!blockEntity.exitAssemblyMode())
 				throw new LuaException("failed to exit assembly mode");
 		}
 	}
 
 	@LuaFunction
 	public final boolean isInAssemblyMode() {
-		return tile.isAssembling();
+		return blockEntity.isAssembling();
 	}
 
 	@LuaFunction
 	public final String getStationName() throws LuaException {
-		GlobalStation station = tile.getStation();
+		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
@@ -88,13 +88,13 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
 	@LuaFunction(mainThread = true)
 	public final void setStationName(String name) throws LuaException {
-		if (!tile.updateName(name))
+		if (!blockEntity.updateName(name))
 			throw new LuaException("could not set station name");
 	}
 
 	@LuaFunction
 	public final boolean isTrainPresent() throws LuaException {
-		GlobalStation station = tile.getStation();
+		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
@@ -103,7 +103,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
 	@LuaFunction
 	public final boolean isTrainImminent() throws LuaException {
-		GlobalStation station = tile.getStation();
+		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
@@ -112,7 +112,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 
 	@LuaFunction
 	public final boolean isTrainEnroute() throws LuaException {
-		GlobalStation station = tile.getStation();
+		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 
@@ -158,7 +158,7 @@ public class StationPeripheral extends SyncedPeripheral<StationBlockEntity> {
 	}
 
 	private @NotNull Train getTrainOrThrow() throws LuaException {
-		GlobalStation station = tile.getStation();
+		GlobalStation station = blockEntity.getStation();
 		if (station == null)
 			throw new LuaException("station is not connected to a track");
 

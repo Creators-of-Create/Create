@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 
@@ -231,6 +232,21 @@ public class BlockHelper {
 		world.setBlock(target, state, 82);
 		world.neighborChanged(target, world.getBlockState(target.below())
 			.getBlock(), target.below());
+	}
+
+	public static CompoundTag prepareBlockEntityData(BlockState blockState, BlockEntity blockEntity) {
+		CompoundTag data = null;
+		if (blockEntity == null)
+			return data;
+		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
+			data = blockEntity.saveWithFullMetadata();
+			data = NBTProcessors.process(blockEntity, data, true);
+		} else if (blockEntity instanceof IPartialSafeNBT) {
+			data = new CompoundTag();
+			((IPartialSafeNBT) blockEntity).writeSafe(data);
+			data = NBTProcessors.process(blockEntity, data, true);
+		}
+		return data;
 	}
 
 	public static void placeSchematicBlock(Level world, BlockState state, BlockPos target, ItemStack stack,

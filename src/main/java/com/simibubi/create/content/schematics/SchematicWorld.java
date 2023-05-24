@@ -124,7 +124,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 		BlockPos pos = globalPos.subtract(anchor);
 
 		if (pos.getY() - bounds.minY() == -1 && !renderMode)
-			return Blocks.GRASS_BLOCK.defaultBlockState();
+			return Blocks.DIRT.defaultBlockState();
 		if (getBounds().isInside(pos) && blocks.containsKey(pos))
 			return processBlockStateForPrinting(blocks.get(pos));
 		return Blocks.AIR.defaultBlockState();

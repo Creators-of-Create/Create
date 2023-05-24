@@ -29,12 +29,12 @@ import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
 import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
-import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.EdgeData;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.observer.TrackObserver;
 import com.simibubi.create.content.trains.schedule.ScheduleRuntime;
@@ -740,9 +740,9 @@ public class Train {
 				Vec3 bogeyPosition = bogey.getAnchorPosition();
 				if (bogeyPosition == null) continue;
 				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
-				if (!(be instanceof AbstractBogeyBlockEntity sbte))
+				if (!(be instanceof AbstractBogeyBlockEntity sbbe))
 					continue;
-				sbte.setBogeyData(bogey.bogeyData);
+				sbbe.setBogeyData(bogey.bogeyData);
 			}
 
 			offset += carriage.bogeySpacing;
@@ -755,8 +755,8 @@ public class Train {
 		if (currentStation != null) {
 			currentStation.cancelReservation(this);
 			BlockPos blockEntityPos = currentStation.getBlockEntityPos();
-			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity ste)
-				ste.lastDisassembledTrainName = name.copy();
+			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity sbe)
+				sbe.lastDisassembledTrainName = name.copy();
 		}
 
 		Create.RAILWAYS.removeTrain(id);

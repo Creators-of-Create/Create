@@ -166,8 +166,8 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 				source = new WeakReference<>(null);
 			Direction facing = SteamEngineBlock.getFacing(getBlockState());
 			BlockEntity be = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
-			if (be instanceof FluidTankBlockEntity tankTe)
-				source = new WeakReference<>(tank = tankTe);
+			if (be instanceof FluidTankBlockEntity tankBe)
+				source = new WeakReference<>(tank = tankBe);
 		}
 		if (tank == null)
 			return null;

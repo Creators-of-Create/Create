@@ -782,7 +782,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	//
 	// @Override
 	// public Direction getAirflowOriginSide() {
-	// return world != null && !(world.getTileEntity(pos.down()) instanceof
+	// return world != null && !(world.getBlockEntity(pos.down()) instanceof
 	// IAirCurrentSource)
 	// && getBlockState().get(ChuteBlock.FACING) == Direction.DOWN ? Direction.DOWN
 	// : Direction.UP;

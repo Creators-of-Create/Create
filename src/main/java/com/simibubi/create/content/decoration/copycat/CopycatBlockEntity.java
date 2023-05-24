@@ -11,6 +11,7 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -26,7 +27,7 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CopycatBlockEntity extends SmartBlockEntity
-	implements ISpecialBlockEntityItemRequirement, ITransformableBlockEntity {
+	implements ISpecialBlockEntityItemRequirement, ITransformableBlockEntity, IPartialSafeNBT {
 
 	private BlockState material;
 	private ItemStack consumedItem;
@@ -138,19 +139,49 @@ public class CopycatBlockEntity extends SmartBlockEntity
 		consumedItem = ItemStack.of(tag.getCompound("Item"));
 
 		BlockState prevMaterial = material;
-		if (!tag.contains("Material"))
+		if (!tag.contains("Material")) {
+			consumedItem = ItemStack.EMPTY;
 			return;
+		}
 
 		material = NbtUtils.readBlockState(tag.getCompound("Material"));
+
+		// Validate Material
+		if (material != null && !clientPacket) {
+			BlockState blockState = getBlockState();
+			if (blockState == null)
+				return;
+			if (!(blockState.getBlock() instanceof CopycatBlock cb))
+				return;
+			BlockState acceptedBlockState = cb.getAcceptedBlockState(level, worldPosition, consumedItem, null);
+			if (acceptedBlockState != null && material.is(acceptedBlockState.getBlock()))
+				return;
+			consumedItem = ItemStack.EMPTY;
+			material = AllBlocks.COPYCAT_BASE.getDefaultState();
+		}
 
 		if (clientPacket && prevMaterial != material)
 			redraw();
 	}
 
 	@Override
+	public void writeSafe(CompoundTag tag) {
+		super.writeSafe(tag);
+		
+		ItemStack stackWithoutNBT = consumedItem.copy();
+		stackWithoutNBT.setTag(null);
+		
+		write(tag, stackWithoutNBT, material);
+	}
+	
+	@Override
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
-		tag.put("Item", consumedItem.serializeNBT());
+		write(tag, consumedItem, material);
+	}
+	
+	protected void write(CompoundTag tag, ItemStack stack, BlockState material) {
+		tag.put("Item", stack.serializeNBT());
 		tag.put("Material", NbtUtils.writeBlockState(material));
 	}
 

@@ -81,13 +81,19 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 			return;
 
 		double y = movedContraption.getY();
-		int targetLevel = Mth.floor(0.5f + y);
+		int targetLevel = Mth.floor(0.5f + y) + ec.contactYOffset;
+		
+		Integer ecCurrentTargetY = ec.getCurrentTargetY(level);
+		if (ecCurrentTargetY != null)
+			targetLevel = ecCurrentTargetY;
+		if (level.isClientSide())
+			targetLevel = ec.clientYTarget;
 		if (!wasArrived && !level.isClientSide()) {
 			triggerContact(ec, targetLevel);
 			AllSoundEvents.CONTRAPTION_DISASSEMBLE.play(level, null, worldPosition.below((int) offset), 0.75f, 0.8f);
 		}
 
-		double diff = targetLevel - y;
+		double diff = targetLevel - y - ec.contactYOffset;
 		if (Math.abs(diff) > 1f / 128)
 			diff *= 0.25f;
 		movedContraption.setPos(movedContraption.position()
@@ -284,8 +290,8 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 						continue;
 					pos = pos.offset(anchor);
 					if (level.getBlockEntity(new BlockPos(pos.getX(), worldPosition.getY(),
-						pos.getZ()))instanceof ElevatorPulleyBlockEntity pte)
-						pte.startMirroringOther(worldPosition);
+						pos.getZ())) instanceof ElevatorPulleyBlockEntity pbe)
+						pbe.startMirroringOther(worldPosition);
 				}
 
 				ElevatorColumn column = ElevatorColumn.getOrCreate(level, contraption.getGlobalColumn());

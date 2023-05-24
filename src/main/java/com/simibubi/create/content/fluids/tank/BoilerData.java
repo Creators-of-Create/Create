@@ -327,8 +327,8 @@ public class BoilerData {
 						if (AllBlocks.STEAM_WHISTLE.has(attachedState)
 							&& WhistleBlock.getAttachedDirection(attachedState)
 								.getOpposite() == d) {
-							if (level.getBlockEntity(attachedPos)instanceof WhistleBlockEntity wte)
-								whistlePitches.add(wte.getPitchId());
+							if (level.getBlockEntity(attachedPos) instanceof WhistleBlockEntity wbe)
+								whistlePitches.add(wbe.getPitchId());
 						}
 					}
 				}

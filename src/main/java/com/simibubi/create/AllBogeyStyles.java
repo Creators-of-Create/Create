@@ -55,7 +55,8 @@ public class AllBogeyStyles {
 	public static void register() {}
 
 	public static class BogeyStyleBuilder {
-		protected final Map<BogeySizes.BogeySize, Supplier<BogeyStyle.SizeData>> sizes = new HashMap<>();
+		protected final Map<BogeySizes.BogeySize, Supplier<BogeyStyle.SizeRenderData>> sizeRenderers = new HashMap<>();
+		protected final Map<BogeySizes.BogeySize, ResourceLocation> sizes = new HashMap<>();
 		protected final ResourceLocation name;
 		protected final ResourceLocation cycleGroup;
 
@@ -94,8 +95,9 @@ public class AllBogeyStyles {
 
 		public BogeyStyleBuilder size(BogeySizes.BogeySize size, Supplier<Supplier<? extends BogeyRenderer>> renderer,
 			ResourceLocation location) {
+			this.sizes.put(size, location);
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				this.sizes.put(size, () -> new BogeyStyle.SizeData(location, renderer.get(), renderer.get()
+				this.sizeRenderers.put(size, () -> new BogeyStyle.SizeRenderData(renderer.get(), renderer.get()
 					.get()));
 			});
 			return this;
@@ -120,7 +122,7 @@ public class AllBogeyStyles {
 
 		public BogeyStyle build() {
 			BogeyStyle entry = new BogeyStyle(name, cycleGroup, displayName, soundType, contactParticle, smokeParticle,
-				defaultData, sizes, commonRenderer);
+				defaultData, sizes, sizeRenderers, commonRenderer);
 			BOGEY_STYLES.put(name, entry);
 			CYCLE_GROUPS.computeIfAbsent(cycleGroup, l -> new HashMap<>())
 				.put(name, entry);

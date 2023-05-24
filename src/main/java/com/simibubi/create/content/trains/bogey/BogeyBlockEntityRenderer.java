@@ -16,10 +16,10 @@ public class BogeyBlockEntityRenderer<T extends BlockEntity> extends SafeBlockEn
 	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		BlockState blockState = be.getBlockState();
-		if (be instanceof AbstractBogeyBlockEntity sbte) {
-			float angle = sbte.getVirtualAngle(partialTicks);
+		if (be instanceof AbstractBogeyBlockEntity sbbe) {
+			float angle = sbbe.getVirtualAngle(partialTicks);
 			if (blockState.getBlock() instanceof AbstractBogeyBlock<?> bogey)
-				bogey.render(blockState, angle, ms, partialTicks, buffer, light, overlay, sbte.getStyle(), sbte.getBogeyData());
+				bogey.render(blockState, angle, ms, partialTicks, buffer, light, overlay, sbbe.getStyle(), sbbe.getBogeyData());
 		}
 	}
 

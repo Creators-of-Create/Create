@@ -13,8 +13,8 @@ import dan200.computercraft.api.lua.LuaFunction;
 
 public class SequencedGearshiftPeripheral extends SyncedPeripheral<SequencedGearshiftBlockEntity> {
 
-	public SequencedGearshiftPeripheral(SequencedGearshiftBlockEntity tile) {
-		super(tile);
+	public SequencedGearshiftPeripheral(SequencedGearshiftBlockEntity blockEntity) {
+		super(blockEntity);
 	}
 
 	@LuaFunction(mainThread = true)
@@ -29,20 +29,20 @@ public class SequencedGearshiftPeripheral extends SyncedPeripheral<SequencedGear
 
 	@LuaFunction
 	public final boolean isRunning() {
-		return !this.tile.isIdle();
+		return !this.blockEntity.isIdle();
 	}
 
 	private void runInstruction(IArguments arguments, SequencerInstructions instructionType) throws LuaException {
 		int speedModifier = arguments.count() > 1 ? arguments.getInt(1) : 1;
-		this.tile.getInstructions().clear();
+		this.blockEntity.getInstructions().clear();
 
-		this.tile.getInstructions().add(new Instruction(
+		this.blockEntity.getInstructions().add(new Instruction(
 				instructionType,
 				InstructionSpeedModifiers.getByModifier(speedModifier),
 				Math.abs(arguments.getInt(0))));
-		this.tile.getInstructions().add(new Instruction(SequencerInstructions.END));
+		this.blockEntity.getInstructions().add(new Instruction(SequencerInstructions.END));
 
-		this.tile.run(0);
+		this.blockEntity.run(0);
 	}
 
 	@NotNull

@@ -3,6 +3,9 @@
 	"itemGroup.create.base": "Create",
 	"itemGroup.create.palettes": "Create's Building Blocks",
 
+	"block.create.mangrove_window": "Mangrove Window",
+	"block.create.mangrove_window_pane": "Mangrove Window Pane",
+
 	"death.attack.create.crush": "%1$s was processed by Crushing Wheels",
 	"death.attack.create.crush.player": "%1$s was thrown into Crushing Wheels by %2$s",
 	"death.attack.create.fan_fire": "%1$s got smoked by an Encased Fan",

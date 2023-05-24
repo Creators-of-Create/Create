@@ -149,11 +149,11 @@ public class TrackGraphHelper {
 		BezierTrackPointLocation targetBezier) {
 		BlockState state = level.getBlockState(pos);
 
-		if (!(state.getBlock()instanceof ITrackBlock track))
+		if (!(state.getBlock() instanceof ITrackBlock track))
 			return null;
-		if (!(level.getBlockEntity(pos)instanceof TrackBlockEntity trackTE))
+		if (!(level.getBlockEntity(pos) instanceof TrackBlockEntity trackBE))
 			return null;
-		BezierConnection bc = trackTE.getConnections()
+		BezierConnection bc = trackBE.getConnections()
 			.get(targetBezier.curveTarget());
 		if (bc == null || !bc.isPrimary())
 			return null;

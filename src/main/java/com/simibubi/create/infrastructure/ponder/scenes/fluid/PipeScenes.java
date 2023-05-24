@@ -346,7 +346,7 @@ public class PipeScenes {
 		scene.idle(25);
 		scene.overlay.showText(60)
 			.placeNearTarget()
-			.text("Aside from being conceiled, Encased Pipes are locked into their connectivity state")
+			.text("Aside from being concealed, Encased Pipes are locked into their connectivity state")
 			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 1), Direction.WEST));
 
 		scene.idle(70);

@@ -25,6 +25,7 @@ public class ScrollInput extends AbstractSimiWidget {
 	protected Component hint = null;
 	protected Label displayLabel;
 	protected boolean inverted;
+	protected boolean soundPlayed;
 	protected Function<Integer, Component> formatter;
 
 	protected int min, max;
@@ -39,6 +40,7 @@ public class ScrollInput extends AbstractSimiWidget {
 		shiftStep = 5;
 		step = standardStep();
 		formatter = i -> Components.literal(String.valueOf(i));
+		soundPlayed = false;
 	}
 
 	public Function<StepContext, Integer> standardStep() {
@@ -94,6 +96,12 @@ public class ScrollInput extends AbstractSimiWidget {
 			writeToLabel();
 		return this;
 	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		soundPlayed = false;
+	}
 
 	public int getState() {
 		return state;
@@ -135,10 +143,12 @@ public class ScrollInput extends AbstractSimiWidget {
 		clampState();
 
 		if (priorState != state) {
-			Minecraft.getInstance()
-				.getSoundManager()
-				.play(SimpleSoundInstance.forUI(AllSoundEvents.SCROLL_VALUE.getMainEvent(),
-					1.5f + 0.1f * (state - min) / (max - min)));
+			if (!soundPlayed)
+				Minecraft.getInstance()
+					.getSoundManager()
+					.play(SimpleSoundInstance.forUI(AllSoundEvents.SCROLL_VALUE.getMainEvent(),
+						1.5f + 0.1f * (state - min) / (max - min)));
+			soundPlayed = true;
 			onChanged();
 		}
 

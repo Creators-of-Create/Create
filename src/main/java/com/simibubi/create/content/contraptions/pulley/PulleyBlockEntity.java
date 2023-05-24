@@ -158,8 +158,8 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 						continue;
 					pos = pos.offset(anchor);
 					if (level.getBlockEntity(
-						new BlockPos(pos.getX(), worldPosition.getY(), pos.getZ()))instanceof PulleyBlockEntity pte)
-						pte.startMirroringOther(worldPosition);
+						new BlockPos(pos.getX(), worldPosition.getY(), pos.getZ())) instanceof PulleyBlockEntity pbe)
+						pbe.startMirroringOther(worldPosition);
 				}
 			}
 		}
@@ -307,14 +307,14 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 	public void startMirroringOther(BlockPos parent) {
 		if (parent.equals(worldPosition))
 			return;
-		if (!(level.getBlockEntity(parent)instanceof PulleyBlockEntity pte))
+		if (!(level.getBlockEntity(parent) instanceof PulleyBlockEntity pbe))
 			return;
-		if (pte.getType() != getType())
+		if (pbe.getType() != getType())
 			return;
-		if (pte.mirrorChildren == null)
-			pte.mirrorChildren = new ArrayList<>();
-		pte.mirrorChildren.add(worldPosition);
-		pte.notifyUpdate();
+		if (pbe.mirrorChildren == null)
+			pbe.mirrorChildren = new ArrayList<>();
+		pbe.mirrorChildren.add(worldPosition);
+		pbe.notifyUpdate();
 
 		mirrorParent = parent;
 		try {
@@ -328,12 +328,12 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 		if (mirrorChildren == null)
 			return;
 		for (BlockPos blockPos : mirrorChildren) {
-			if (!(level.getBlockEntity(blockPos)instanceof PulleyBlockEntity pte))
+			if (!(level.getBlockEntity(blockPos) instanceof PulleyBlockEntity pbe))
 				continue;
-			pte.offset = offset;
-			pte.disassemble();
-			pte.mirrorParent = null;
-			pte.notifyUpdate();
+			pbe.offset = offset;
+			pbe.disassemble();
+			pbe.mirrorParent = null;
+			pbe.notifyUpdate();
 		}
 		mirrorChildren.clear();
 		notifyUpdate();

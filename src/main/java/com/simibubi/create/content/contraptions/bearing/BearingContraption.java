@@ -69,8 +69,8 @@ public class BearingContraption extends Contraption {
 
 	private BlockState getSailBlock(Pair<StructureBlockInfo, BlockEntity> capture) {
 		BlockState state = capture.getKey().state;
-		if (AllBlocks.COPYCAT_PANEL.has(state) && capture.getRight()instanceof CopycatBlockEntity cte)
-			return cte.getMaterial();
+		if (AllBlocks.COPYCAT_PANEL.has(state) && capture.getRight() instanceof CopycatBlockEntity cbe)
+			return cbe.getMaterial();
 		return state;
 	}
 

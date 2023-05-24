@@ -181,15 +181,17 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 			if (block instanceof StairBlock)
 				return null;
 
-			VoxelShape shape = appliedState.getShape(pLevel, pPos);
-			if (shape.isEmpty() || !shape.bounds()
-				.equals(Shapes.block()
-					.bounds()))
-				return null;
+			if (pLevel != null) {
+				VoxelShape shape = appliedState.getShape(pLevel, pPos);
+				if (shape.isEmpty() || !shape.bounds()
+					.equals(Shapes.block()
+						.bounds()))
+					return null;
 
-			VoxelShape collisionShape = appliedState.getCollisionShape(pLevel, pPos);
-			if (collisionShape.isEmpty())
-				return null;
+				VoxelShape collisionShape = appliedState.getCollisionShape(pLevel, pPos);
+				if (collisionShape.isEmpty())
+					return null;
+			}
 		}
 
 		if (face != null) {
@@ -270,8 +272,8 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	//
 
 	public static BlockState getMaterial(BlockGetter reader, BlockPos targetPos) {
-		if (reader.getBlockEntity(targetPos) instanceof CopycatBlockEntity ufte)
-			return ufte.getMaterial();
+		if (reader.getBlockEntity(targetPos) instanceof CopycatBlockEntity cbe)
+			return cbe.getMaterial();
 		return Blocks.AIR.defaultBlockState();
 	}
 
@@ -314,7 +316,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos,
 		Player player) {
 		BlockState material = getMaterial(level, pos);
-		if (AllBlocks.COPYCAT_BASE.has(material))
+		if (AllBlocks.COPYCAT_BASE.has(material) || player != null && player.isSteppingCarefully())
 			return new ItemStack(this);
 		return material.getCloneItemStack(target, level, pos, player);
 	}

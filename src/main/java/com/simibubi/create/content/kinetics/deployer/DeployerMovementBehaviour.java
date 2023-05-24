@@ -12,7 +12,6 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
@@ -33,7 +32,6 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -48,7 +46,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -155,15 +152,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 					ExtractionCountMode.EXACTLY, required.stack.getCount(), false);
 		}
 
-		CompoundTag data = null;
-		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-			BlockEntity blockEntity = schematicWorld.getBlockEntity(pos);
-			if (blockEntity != null) {
-				data = blockEntity.saveWithFullMetadata();
-				data = NBTProcessors.process(blockEntity, data, true);
-			}
-		}
-
+		CompoundTag data = BlockHelper.prepareBlockEntityData(blockState, schematicWorld.getBlockEntity(pos));
 		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, pos);
 		BlockHelper.placeSchematicBlock(world, blockState, pos, contextStack, data);
 		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))

@@ -236,9 +236,9 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 
 	public static boolean isFacingBracket(BlockAndTintGetter level, BlockPos pos, Direction d) {
 		BlockEntity blockEntity = level.getBlockEntity(pos.relative(d));
-		if (!(blockEntity instanceof SmartBlockEntity ste))
+		if (!(blockEntity instanceof SmartBlockEntity sbe))
 			return false;
-		BracketedBlockEntityBehaviour behaviour = ste.getBehaviour(BracketedBlockEntityBehaviour.TYPE);
+		BracketedBlockEntityBehaviour behaviour = sbe.getBehaviour(BracketedBlockEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return false;
 		BlockState bracket = behaviour.getBracket();

@@ -86,14 +86,14 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 				continue;
 
 			BlockEntity blockEntity = level.getBlockEntity(offsetPos);
-			if (!(blockEntity instanceof DisplayLinkBlockEntity dgte))
+			if (!(blockEntity instanceof DisplayLinkBlockEntity dlbe))
 				continue;
-			if (dgte.activeSource == null)
+			if (dlbe.activeSource == null)
 				continue;
-			if (dgte.getDirection() != d.getOpposite())
+			if (dlbe.getDirection() != d.getOpposite())
 				continue;
 
-			callback.accept(dgte);
+			callback.accept(dlbe);
 		}
 	}
 

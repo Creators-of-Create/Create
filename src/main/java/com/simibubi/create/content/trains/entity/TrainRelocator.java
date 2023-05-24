@@ -22,10 +22,10 @@ import com.simibubi.create.content.trains.entity.TravellingPoint.IEdgePointListe
 import com.simibubi.create.content.trains.entity.TravellingPoint.ITrackSelector;
 import com.simibubi.create.content.trains.entity.TravellingPoint.ITurnListener;
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
-import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.content.trains.graph.TrackGraphHelper;
+import com.simibubi.create.content.trains.graph.TrackGraphLocation;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.trains.track.ITrackBlock;

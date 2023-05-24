@@ -55,13 +55,13 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 			tickOpen(context, open);
 
 		Map<BlockPos, BlockEntity> tes = context.contraption.presentBlockEntities;
-		if (!(tes.get(context.localPos)instanceof SlidingDoorBlockEntity doorTE))
+		if (!(tes.get(context.localPos) instanceof SlidingDoorBlockEntity sdbe))
 			return;
-		boolean wasSettled = doorTE.animation.settled();
-		doorTE.animation.chase(open ? 1 : 0, .15f, Chaser.LINEAR);
-		doorTE.animation.tickChaser();
+		boolean wasSettled = sdbe.animation.settled();
+		sdbe.animation.chase(open ? 1 : 0, .15f, Chaser.LINEAR);
+		sdbe.animation.tickChaser();
 
-		if (!wasSettled && doorTE.animation.settled() && !open)
+		if (!wasSettled && sdbe.animation.settled() && !open)
 			context.world.playLocalSound(context.position.x, context.position.y, context.position.z,
 				SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, .125f, 1, false);
 	}

@@ -13,14 +13,18 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehavio
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
 import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueSettingsBehaviour {
 
@@ -173,6 +177,14 @@ public class ScrollValueBehaviour extends BlockEntityBehaviour implements ValueS
 	@Override
 	public boolean onlyVisibleWithWrench() {
 		return needsWrench;
+	}
+
+	@Override
+	public void onShortInteract(Player player, InteractionHand hand, Direction side) {
+		if (player instanceof FakePlayer)
+			blockEntity.getBlockState()
+				.use(getWorld(), player, hand,
+					new BlockHitResult(VecHelper.getCenterOf(getPos()), side, getPos(), true));
 	}
 
 }

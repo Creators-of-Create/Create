@@ -15,9 +15,9 @@ public class ObservedTrainNameSource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceBlockEntity() instanceof TrackObserverBlockEntity observerTE))
+		if (!(context.getSourceBlockEntity() instanceof TrackObserverBlockEntity observerBE))
 			return EMPTY_LINE;
-		TrackObserver observer = observerTE.getObserver();
+		TrackObserver observer = observerBE.getObserver();
 		if (observer == null)
 			return EMPTY_LINE;
 		UUID currentTrain = observer.getCurrentTrain();

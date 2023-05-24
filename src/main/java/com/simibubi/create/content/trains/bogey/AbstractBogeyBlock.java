@@ -137,9 +137,9 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 	public abstract BogeyStyle getDefaultStyle();
 
 	/**
-	 * Legacy system doesn't capture bogey tile entities when constructing a train
+	 * Legacy system doesn't capture bogey block entities when constructing a train
 	 */
-	public boolean captureTileEntityForTrain() {
+	public boolean captureBlockEntityForTrain() {
 		return false;
 	}
 
@@ -198,11 +198,11 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 
 			BlockEntity be = level.getBlockEntity(pos);
 
-			if (!(be instanceof AbstractBogeyBlockEntity sbte))
+			if (!(be instanceof AbstractBogeyBlockEntity sbbe))
 				return InteractionResult.FAIL;
 
 			player.getCooldowns().addCooldown(stack.getItem(), 20);
-			BogeyStyle currentStyle = sbte.getStyle();
+			BogeyStyle currentStyle = sbbe.getStyle();
 
 			BogeySizes.BogeySize size = getSize();
 
@@ -217,21 +217,21 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 				size = size.increment();
 			}
 
-			sbte.setBogeyStyle(style);
+			sbbe.setBogeyStyle(style);
 
 			CompoundTag defaultData = style.defaultData;
-			sbte.setBogeyData(sbte.getBogeyData().merge(defaultData));
+			sbbe.setBogeyData(sbbe.getBogeyData().merge(defaultData));
 
 			if (size == getSize()) {
 				player.displayClientMessage(Lang.translateDirect("bogey.style.updated_style")
 						.append(": ").append(style.displayName), true);
 			} else {
-				CompoundTag oldData = sbte.getBogeyData();
-				level.setBlock(pos, this.getStateOfSize(sbte, size), 3);
+				CompoundTag oldData = sbbe.getBogeyData();
+				level.setBlock(pos, this.getStateOfSize(sbbe, size), 3);
 				BlockEntity newBlockEntity = level.getBlockEntity(pos);
-				if (!(newBlockEntity instanceof AbstractBogeyBlockEntity newTileEntity))
+				if (!(newBlockEntity instanceof AbstractBogeyBlockEntity newBlockEntity1))
 					return InteractionResult.FAIL;
-				newTileEntity.setBogeyData(oldData);
+				newBlockEntity1.setBogeyData(oldData);
 				player.displayClientMessage(Lang.translateDirect("bogey.style.updated_style_and_size")
 						.append(": ").append(style.displayName), true);
 			}
@@ -276,9 +276,9 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 	}
 
 	public BlockState getNextSize(Level level, BlockPos pos) {
-		BlockEntity te = level.getBlockEntity(pos);
-		if (te instanceof AbstractBogeyBlockEntity sbte)
-			return this.getNextSize(sbte);
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be instanceof AbstractBogeyBlockEntity sbbe)
+			return this.getNextSize(sbbe);
 		return level.getBlockState(pos);
 	}
 
@@ -319,8 +319,8 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 
 	public BogeyStyle getNextStyle(Level level, BlockPos pos) {
 		BlockEntity te = level.getBlockEntity(pos);
-		if (te instanceof AbstractBogeyBlockEntity sbte)
-			return this.getNextStyle(sbte.getStyle());
+		if (te instanceof AbstractBogeyBlockEntity sbbe)
+			return this.getNextStyle(sbbe.getStyle());
 		return getDefaultStyle();
 	}
 

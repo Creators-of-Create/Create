@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/iron_bars_cap_alt",
+  "parent": "create:block/bars/cap_alt",
   "textures": {
     "bars": "create:block/bars/brass_bars",
     "edge": "create:block/bars/brass_bars_edge",

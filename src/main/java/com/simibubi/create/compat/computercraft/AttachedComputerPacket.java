@@ -11,8 +11,8 @@ public class AttachedComputerPacket extends BlockEntityDataPacket<SyncedBlockEnt
 
 	private final boolean hasAttachedComputer;
 
-	public AttachedComputerPacket(BlockPos tilePos, boolean hasAttachedComputer) {
-		super(tilePos);
+	public AttachedComputerPacket(BlockPos blockEntityPos, boolean hasAttachedComputer) {
+		super(blockEntityPos);
 		this.hasAttachedComputer = hasAttachedComputer;
 	}
 
@@ -27,9 +27,9 @@ public class AttachedComputerPacket extends BlockEntityDataPacket<SyncedBlockEnt
 	}
 
 	@Override
-	protected void handlePacket(SyncedBlockEntity tile) {
-		if (tile instanceof SmartBlockEntity smartTile) {
-			smartTile.getBehaviour(AbstractComputerBehaviour.TYPE)
+	protected void handlePacket(SyncedBlockEntity blockEntity) {
+		if (blockEntity instanceof SmartBlockEntity sbe) {
+			sbe.getBehaviour(AbstractComputerBehaviour.TYPE)
 				.setHasAttachedComputer(hasAttachedComputer);
 		}
 	}

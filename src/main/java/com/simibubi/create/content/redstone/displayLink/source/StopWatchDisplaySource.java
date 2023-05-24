@@ -12,9 +12,9 @@ public class StopWatchDisplaySource extends SingleLineDisplaySource {
 
 	@Override
 	protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-		if (!(context.getSourceBlockEntity()instanceof CuckooClockBlockEntity ccte))
+		if (!(context.getSourceBlockEntity() instanceof CuckooClockBlockEntity ccbe))
 			return TimeOfDayDisplaySource.EMPTY_TIME;
-		if (ccte.getSpeed() == 0)
+		if (ccbe.getSpeed() == 0)
 			return TimeOfDayDisplaySource.EMPTY_TIME;
 
 		if (!context.sourceConfig()

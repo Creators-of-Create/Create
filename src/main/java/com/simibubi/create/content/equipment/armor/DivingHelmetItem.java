@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -84,7 +83,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 			entity.getPersistentData()
 				.remove("VisualBacktankAir");
 
-		boolean lavaDiving = entity.isEyeInFluidType(ForgeMod.LAVA_TYPE.get());
+		boolean lavaDiving = entity.isInLava();
 		if (!isWornBy(entity, lavaDiving))
 			return;
 

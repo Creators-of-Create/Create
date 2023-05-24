@@ -55,7 +55,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 					if (placingAir && !includeAir)
 						return;
 					
-					CompoundTag data = blockEntity != null ? blockEntity.saveWithFullMetadata() : null;
+					CompoundTag data = BlockHelper.prepareBlockEntityData(state, blockEntity);
 					BlockHelper.placeSchematicBlock(world, state, pos, null, data);
 				}, (pos, entity) -> {
 					world.addFreshEntity(entity);

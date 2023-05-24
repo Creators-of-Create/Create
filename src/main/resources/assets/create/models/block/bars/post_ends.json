@@ -1,0 +1,23 @@
+{
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "block/iron_bars",
+        "edge": "block/iron_bars"
+    },
+    "elements": [
+        {   "from": [ 7, 0.05, 7 ],
+            "to": [ 9, 0.05, 9 ],
+            "faces": {
+                "down":  { "uv": [  7, 7,  9,  9 ], "texture": "#edge" },
+                "up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }
+            }
+        },
+        {   "from": [ 7, 15.95, 7 ],
+            "to": [ 9, 15.95, 9 ],
+            "faces": {
+                "down":  { "uv": [  7, 7,  9,  9 ], "texture": "#edge" },
+                "up":    { "uv": [  7, 7,  9,  9 ], "texture": "#edge" }
+            }
+        }
+    ]
+}
