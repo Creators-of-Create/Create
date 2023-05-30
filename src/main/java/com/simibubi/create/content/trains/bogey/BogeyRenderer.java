@@ -38,7 +38,7 @@ public abstract class BogeyRenderer {
 	 * @param size The amount of models needed
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?>[] getTransformsFromPartial(PartialModel model, PoseStack ms, boolean inInstancedContraption, int size) {
+	public Transform<?>[] getTransform(PartialModel model, PoseStack ms, boolean inInstancedContraption, int size) {
 		return (inInstancedContraption) ? transformContraptionModelData(keyFromModel(model), ms) : createModelData(model, size);
 	}
 
@@ -52,7 +52,7 @@ public abstract class BogeyRenderer {
 	 * @param size The amount of models needed
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?>[] getTransformsFromBlockState(BlockState state, PoseStack ms, boolean inContraption, int size) {
+	public Transform<?>[] getTranform(BlockState state, PoseStack ms, boolean inContraption, int size) {
 		return inContraption ? transformContraptionModelData(keyFromModel(state), ms) : createModelData(state, size);
 	}
 
@@ -65,7 +65,7 @@ public abstract class BogeyRenderer {
 	 * @param inInstancedContraption Type of rendering required
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?> getTransformFromPartial(PartialModel model, PoseStack ms, boolean inInstancedContraption) {
+	public Transform<?> getTranform(PartialModel model, PoseStack ms, boolean inInstancedContraption) {
 		BlockState air = Blocks.AIR.defaultBlockState();
 		return inInstancedContraption ? contraptionModelData.get(keyFromModel(model))[0].setTransform(ms)
 				: CachedBufferer.partial(model, air);
@@ -79,7 +79,7 @@ public abstract class BogeyRenderer {
 	 * @param inContraption Type of model required
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?> getTransformFromBlockState(BlockState state, PoseStack ms, boolean inContraption) {
+	public Transform<?> getTransform(BlockState state, PoseStack ms, boolean inContraption) {
 		return (inContraption) ? contraptionModelData.get(keyFromModel(state))[0].setTransform(ms)
 				: CachedBufferer.block(state);
 	}
