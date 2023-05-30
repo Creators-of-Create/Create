@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.simibubi.create.content.trains.entity.CarriageBogey;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.api.MaterialManager;
@@ -52,6 +54,34 @@ public abstract class BogeyRenderer {
 	 */
 	public Transform<?>[] getTransformsFromBlockState(BlockState state, PoseStack ms, boolean inContraption, int size) {
 		return inContraption ? transformContraptionModelData(keyFromModel(state), ms) : createModelData(state, size);
+	}
+
+	/**
+	 * Helper function to collect or create a single model from a partial model used for both in-world and
+	 * in-contraption rendering
+	 *
+	 * @param model The key of the model to be collected or instantiated
+	 * @param ms Posestack to bind the model to if it is within a contraption
+	 * @param inInstancedContraption Type of rendering required
+	 * @return A generic transform which can be used for both in-world and in-contraption models
+	 */
+	public Transform<?> getTransformFromPartial(PartialModel model, PoseStack ms, boolean inInstancedContraption) {
+		BlockState air = Blocks.AIR.defaultBlockState();
+		return inInstancedContraption ? contraptionModelData.get(keyFromModel(model))[0].setTransform(ms)
+				: CachedBufferer.partial(model, air);
+	}
+
+	/**
+	 * A common interface for getting transform data for blockstates, for a single model
+	 *
+	 * @param state The state of the model to be collected or instantiated
+	 * @param ms Posestack to bind the model to if it is within a contraption
+	 * @param inContraption Type of model required
+	 * @return A generic transform which can be used for both in-world and in-contraption models
+	 */
+	public Transform<?> getTransformFromBlockState(BlockState state, PoseStack ms, boolean inContraption) {
+		return (inContraption) ? contraptionModelData.get(keyFromModel(state))[0].setTransform(ms)
+				: CachedBufferer.block(state);
 	}
 
 	/**
@@ -137,40 +167,13 @@ public abstract class BogeyRenderer {
 	}
 
 	/**
-	 * Helper function to collect or create a single model from a partial model used for both in-world and
-	 * in-contraption rendering
-	 *
- 	 * @param model The key of the model to be collected or instantiated
-	 * @param ms Posestack to bind the model to if it is within a contraption
-	 * @param inInstancedContraption Type of rendering required
-	 * @return A generic transform which can be used for both in-world and in-contraption models
-	 */
-	public Transform<?> getTransformFromPartial(PartialModel model, PoseStack ms, boolean inInstancedContraption) {
-		BlockState air = Blocks.AIR.defaultBlockState();
-		return inInstancedContraption ? contraptionModelData.get(keyFromModel(model))[0].setTransform(ms)
-				: CachedBufferer.partial(model, air);
-	}
-
-	/**
-	 * A common interface for getting transform data for blockstates, for a single model
-	 *
-	 * @param state The state of the model to be collected or instantiated
-	 * @param ms Posestack to bind the model to if it is within a contraption
-	 * @param inContraption Type of model required
-	 * @return A generic transform which can be used for both in-world and in-contraption models
-	 */
-	public Transform<?> getTransformFromBlockState(BlockState state, PoseStack ms, boolean inContraption) {
-		return (inContraption) ? contraptionModelData.get(keyFromModel(state))[0].setTransform(ms)
-				: CachedBufferer.block(state);
-	}
-
-	/**
 	 * Provides render implementations a point in setup to instantiate all model data to be needed
 	 *
 	 * @param materialManager The material manager
+	 * @param carriageBogey The bogey to create data for
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public abstract void initialiseContraptionModelData(MaterialManager materialManager);
+	public abstract void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey);
 
 	/**
 	 * Creates instances of models for in-world rendering to a set length from a provided partial model
@@ -179,7 +182,7 @@ public abstract class BogeyRenderer {
 	 * @param model Partial model to be instanced
 	 * @param count Amount of models neeeded
 	 */
-	public void createModelInstances(MaterialManager materialManager, PartialModel model, int count) {
+	public void createModelInstance(MaterialManager materialManager, PartialModel model, int count) {
 		ModelData[] modelData = new ModelData[count];
 		materialManager.defaultSolid().material(Materials.TRANSFORMED)
 				.getModel(model).createInstances(modelData);
@@ -193,7 +196,7 @@ public abstract class BogeyRenderer {
 	 * @param state Blockstate of the model to be created
 	 * @param count Amount of models needed
 	 */
-	public void createModelInstances(MaterialManager materialManager, BlockState state, int count) {
+	public void createModelInstance(MaterialManager materialManager, BlockState state, int count) {
 		ModelData[] modelData = new ModelData[count];
 		materialManager.defaultSolid().material(Materials.TRANSFORMED)
 				.getModel(state).createInstances(modelData);
@@ -204,10 +207,11 @@ public abstract class BogeyRenderer {
 	 * Creates a single instance of models for in-contraption rendering from a provided blockstate
 	 *
 	 * @param materialManager The material manager
-	 * @param state Blockstate of the model to be created
+	 * @param states Blockstates of the models to be created
 	 */
-	public void createModelInstance(MaterialManager materialManager, BlockState state) {
-		this.createModelInstances(materialManager, state, 1);
+	public void createModelInstance(MaterialManager materialManager, BlockState... states) {
+		for (BlockState state : states)
+			this.createModelInstance(materialManager, state, 1);
 	}
 
 	/**
@@ -216,9 +220,9 @@ public abstract class BogeyRenderer {
 	 * @param materialManager The material manager
 	 * @param models The type of model to create instances of
 	 */
-	public void createModelInstances(MaterialManager materialManager, PartialModel... models) {
+	public void createModelInstance(MaterialManager materialManager, PartialModel... models) {
 		for (PartialModel model : models)
-			createModelInstances(materialManager, model, 1);
+			createModelInstance(materialManager, model, 1);
 	}
 
 	/**

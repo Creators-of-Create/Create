@@ -13,6 +13,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.simpleRelays.ShaftBlock;
+import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -22,8 +23,8 @@ import net.minecraft.nbt.CompoundTag;
 public class StandardBogeyRenderer {
 	public static class CommonStandardBogeyRenderer extends BogeyRenderer.CommonRenderer {
 		@Override
-		public void initialiseContraptionModelData(MaterialManager materialManager) {
-			createModelInstances(materialManager, AllBlocks.SHAFT.getDefaultState()
+		public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
+			createModelInstance(materialManager, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), 2);
 		}
 
@@ -45,9 +46,9 @@ public class StandardBogeyRenderer {
 
 	public static class SmallStandardBogeyRenderer extends BogeyRenderer {
 		@Override
-		public void initialiseContraptionModelData(MaterialManager materialManager) {
-			createModelInstances(materialManager, SMALL_BOGEY_WHEELS, 2);
-			createModelInstances(materialManager, BOGEY_FRAME);
+		public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
+			createModelInstance(materialManager, SMALL_BOGEY_WHEELS, 2);
+			createModelInstance(materialManager, BOGEY_FRAME);
 		}
 
 
@@ -78,9 +79,9 @@ public class StandardBogeyRenderer {
 
 	public static class LargeStandardBogeyRenderer extends BogeyRenderer {
 		@Override
-		public void initialiseContraptionModelData(MaterialManager materialManager) {
-			createModelInstances(materialManager, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
-			createModelInstances(materialManager, AllBlocks.SHAFT.getDefaultState()
+		public void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey) {
+			createModelInstance(materialManager, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
+			createModelInstance(materialManager, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.X), 2);
 		}
 
