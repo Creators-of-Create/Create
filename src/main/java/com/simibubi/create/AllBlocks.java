@@ -1869,6 +1869,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> p.horizontalFaceBlock(c.get(), AssetLookup.standardModel(c, p)))
+		.tag(AllBlockTags.MIRRORED_INTERACTION.tag)
 		.simpleItem()
 		.register();
 
@@ -2089,6 +2090,7 @@ public class AllBlocks {
 			.item()
 			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/zinc")), c::get, 4))
 			.transform(customItemModel("copycat_base", "step"))
+			.tag(AllBlockTags.MIRRORED_INTERACTION.tag)
 			.register();
 
 	public static final BlockEntry<CopycatPanelBlock> COPYCAT_PANEL =
@@ -2098,6 +2100,7 @@ public class AllBlocks {
 			.item()
 			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(AllTags.forgeItemTag("ingots/zinc")), c::get, 4))
 			.transform(customItemModel("copycat_base", "panel"))
+			.tag(AllBlockTags.MIRRORED_INTERACTION.tag)
 			.register();
 
 	public static final BlockEntry<WrenchableDirectionalBlock> COPYCAT_BARS =

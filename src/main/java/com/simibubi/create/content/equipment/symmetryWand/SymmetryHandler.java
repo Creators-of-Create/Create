@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -25,13 +26,16 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.ServerTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -43,6 +47,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 public class SymmetryHandler {
 
 	private static int tickCounter = 0;
+
+	private static int interactionCooldown = 0;
+	private static BlockPos lastInteractionPos;
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onBlockPlaced(EntityPlaceEvent event) {
@@ -76,6 +83,25 @@ public class SymmetryHandler {
 			if (!inv.getItem(i)
 				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
 				SymmetryWandItem.remove(player.level, inv.getItem(i), player, event.getPos());
+			}
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
+		if (event.getWorld().isClientSide() || (interactionCooldown > 0 && lastInteractionPos == event.getPos())
+			|| !AllTags.AllBlockTags.MIRRORED_INTERACTION.matches(event.getWorld().getBlockState(event.getHitVec().getBlockPos())))
+			return;
+
+		Player player = event.getPlayer();
+		Inventory inv = player.getInventory();
+		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+			if (!inv.getItem(i)
+					.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
+				BlockState state = event.getWorld().getBlockState(event.getPos());
+				SymmetryWandItem.interact(player.level, inv.getItem(i), player, event.getPos(), state, event.getHand(), event.getHitVec());
+				interactionCooldown = 20;
+				lastInteractionPos = event.getPos();
 			}
 		}
 	}
@@ -128,9 +154,18 @@ public class SymmetryHandler {
 		}
 	}
 
+	@OnlyIn(Dist.DEDICATED_SERVER)
+	@SubscribeEvent
+	public static void onClientTick(ServerTickEvent event) {
+		if (interactionCooldown > 0)
+			interactionCooldown--;
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void onClientTick(ClientTickEvent event) {
+		if (interactionCooldown > 0)
+			interactionCooldown--;
 		if (event.phase == Phase.START)
 			return;
 		Minecraft mc = Minecraft.getInstance();

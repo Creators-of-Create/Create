@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "create:placard",
+    "create:copycat_step",
+    "create:copycat_panel"
+  ]
+}

@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.CrossPlaneMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
@@ -21,6 +22,8 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import net.minecraft.client.Game;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -28,6 +31,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.MinecartTNT;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,6 +43,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.api.distmarker.Dist;
@@ -322,6 +327,38 @@ public class SymmetryWandItem extends Item {
 					Block.dropResources(blockstate, world, pos, blockEntity, player, player.getMainHandItem()); // Add fortune, silk touch and other loot modifiers
 				}
 			}
+		}
+
+		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+			new SymmetryEffectPacket(to, targets));
+	}
+
+	public static void interact(Level world, ItemStack wand, Player player, BlockPos pos, BlockState state, InteractionHand interactionHand, BlockHitResult hitResult) {
+		checkNBT(wand);
+		if (!isEnabled(wand))
+			return;
+
+		Map<BlockPos, BlockState> blockSet = new HashMap<>();
+		SymmetryMirror symmetry = SymmetryMirror.fromNBT(wand.getTag()
+			.getCompound(SYMMETRY));
+
+		blockSet.put(pos, state);
+
+		Vec3 mirrorPos = symmetry.getPosition();
+		if (mirrorPos.distanceTo(Vec3.atLowerCornerOf(pos)) > AllConfigs.server().equipment.maxSymmetryWandRange.get())
+			return;
+
+		symmetry.process(blockSet);
+
+		BlockPos to = new BlockPos(mirrorPos);
+		List<BlockPos> targets = new ArrayList<>();
+
+		targets.add(pos);
+		for (BlockPos position : blockSet.keySet()) {
+			if (position.equals(pos))
+				continue;
+			targets.add(position);
+			world.getBlockState(position).use(world, player, interactionHand, hitResult.withPosition(position));
 		}
 
 		AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
