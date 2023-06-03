@@ -11,6 +11,7 @@
         "languages_mapping": {
             "locale_with_underscore": {
                 "cs": "cs_cz",
+                "cy": "cy_gb",
                 "da": "da_dk",
                 "de": "de_de",
                 "eo": "eo_uy",
