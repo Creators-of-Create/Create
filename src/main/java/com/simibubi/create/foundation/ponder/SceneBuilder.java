@@ -296,7 +296,7 @@ public class SceneBuilder {
 			addInstruction(scene -> SuperGlueItem.spawnParticles(scene.getWorld(), pos, side, fullBlock));
 		}
 
-		private void rotationIndicator(BlockPos pos, boolean direction) {
+				private void rotationIndicator(BlockPos pos, boolean direction, BlockPos displayPos) {
 			addInstruction(scene -> {
 				BlockState blockState = scene.getWorld()
 					.getBlockState(pos);
@@ -318,7 +318,7 @@ public class SceneBuilder {
 				int particleSpeed = speedLevel.getParticleSpeed();
 				particleSpeed *= Math.signum(speed);
 
-				Vec3 location = VecHelper.getCenterOf(pos);
+				Vec3 location = VecHelper.getCenterOf(displayPos);
 				RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, particleSpeed,
 					kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis.name()
 						.charAt(0));
@@ -330,11 +330,19 @@ public class SceneBuilder {
 		}
 
 		public void rotationSpeedIndicator(BlockPos pos) {
-			rotationIndicator(pos, false);
+			rotationIndicator(pos, false, pos);
 		}
 
 		public void rotationDirectionIndicator(BlockPos pos) {
-			rotationIndicator(pos, true);
+			rotationIndicator(pos, true, pos);
+		}
+
+		public void rotationSpeedIndicator(BlockPos pos, BlockPos displayPos) {
+			rotationIndicator(pos, false, displayPos);
+		}
+
+		public void rotationDirectionIndicator(BlockPos pos, BlockPos displayPos) {
+			rotationIndicator(pos, true, displayPos);
 		}
 
 		public void indicateRedstone(BlockPos pos) {
