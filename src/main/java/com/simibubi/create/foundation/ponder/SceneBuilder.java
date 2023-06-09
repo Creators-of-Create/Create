@@ -523,6 +523,13 @@ public class SceneBuilder {
 			return instruction.createLink(scene);
 		}
 
+		public ElementLink<WorldSectionElement> showIndependentSection(Selection selection, Direction fadeInDirection, int duration) {
+			DisplayWorldSectionInstruction instruction =
+				new DisplayWorldSectionInstruction(duration, fadeInDirection, selection, Optional.empty());
+			addInstruction(instruction);
+			return instruction.createLink(scene);
+		}
+
 		public ElementLink<WorldSectionElement> showIndependentSectionImmediately(Selection selection) {
 			DisplayWorldSectionInstruction instruction =
 				new DisplayWorldSectionInstruction(0, Direction.DOWN, selection, Optional.empty());
@@ -548,6 +555,15 @@ public class SceneBuilder {
 		public void hideIndependentSection(ElementLink<WorldSectionElement> link, Direction fadeOutDirection) {
 			addInstruction(new FadeOutOfSceneInstruction<>(15, fadeOutDirection, link));
 		}
+
+		public void hideIndependentSection(ElementLink<WorldSectionElement> link, Direction fadeOutDirection, int duration) {
+			addInstruction(new FadeOutOfSceneInstruction<>(duration, fadeOutDirection, link));
+		}
+
+		public void hideIndependentSectionImmediately(ElementLink<WorldSectionElement> link) {
+			addInstruction(new FadeOutOfSceneInstruction<>(0, Direction.DOWN, link));
+		}
+		
 
 		public void restoreBlocks(Selection selection) {
 			addInstruction(scene -> scene.getWorld()
