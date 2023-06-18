@@ -105,7 +105,7 @@ public class TrackEdge {
 
 	public Vec3 getNormal(@Nullable TrackGraph trackGraph, double t) {
 		if (isTurn())
-			return turn.getNormal(Mth.clamp(t, 0, 1));
+			return turn.getFaceNormal(Mth.clamp(t, 0, 1));
 		if (trackGraph != null && (node1.location.yOffsetPixels != 0 || node2.location.yOffsetPixels != 0)) {
 			Vec3 normalSmoothed = getNormalSmoothed(trackGraph, t);
 			if (normalSmoothed != null)

@@ -715,7 +715,7 @@ public class TrackBlock extends Block
 				double tpost = (seg + 1) / length;
 
 				offset = bc.getPosition(t);
-				normal = bc.getNormal(t);
+				normal = bc.getFaceNormal(t);
 				diff = bc.getPosition(tpost)
 					.subtract(bc.getPosition(tpre))
 					.normalize();

@@ -735,10 +735,7 @@ public class TrackPlacement {
 		for (int i = 0; i <= segCount; i++) {
 			float t = i / (float) segCount;
 			Vec3 result = VecHelper.bezier(end1, end2, finish1, finish2, t);
-			Vec3 derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, t)
-				.normalize();
 			Vec3 normal = bc.getNormal(t)
-				.cross(derivative)
 				.scale(15 / 16f);
 			Vec3 rail1 = result.add(normal)
 				.add(up);

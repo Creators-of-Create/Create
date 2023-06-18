@@ -223,19 +223,32 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 		return bounds;
 	}
 
-	public Vec3 getNormal(double t) {
+	public Vec3 getFaceNormal(double t) {
 		resolve();
+		Vec3 end1 = starts.getFirst();
+		Vec3 end2 = starts.getSecond();
+
+		Vec3 derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, (float) t)
+				.normalize();
+		return derivative.cross(getNormal(t, false));
+	}
+
+	public Vec3 getNormal(double t) {
+		return getNormal(t, true);
+	}
+
+	public Vec3 getNormal(double t, boolean resolve) {
+		if (resolve)
+			resolve();
 		Vec3 end1 = starts.getFirst();
 		Vec3 end2 = starts.getSecond();
 		Vec3 fn1 = normals.getFirst();
 		Vec3 fn2 = normals.getSecond();
 
 		Vec3 derivative = VecHelper.bezierDerivative(end1, end2, finish1, finish2, (float) t)
-			.normalize();
+				.normalize();
 		Vec3 faceNormal = fn1.equals(fn2) ? fn1 : VecHelper.slerp((float) t, fn1, fn2);
-		Vec3 normal = faceNormal.cross(derivative)
-			.normalize();
-		return derivative.cross(normal);
+		return faceNormal.cross(derivative).normalize();
 	}
 
 	private void resolve() {
