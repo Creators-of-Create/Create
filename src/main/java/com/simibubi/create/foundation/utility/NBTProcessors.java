@@ -106,6 +106,8 @@ public final class NBTProcessors {
 			return false;
 		if (name.contains("Damage"))
 			return false;
+		if (name.equals("display"))
+			return false;
 		return true;
 	}
 
