@@ -7,7 +7,6 @@
   "mixins": [
     "ClientboundMapItemDataPacketMixin",
     "ContraptionDriverInteractMixin",
-    "WaterWheelFluidSpreadMixin",
     "CustomItemUseEffectsMixin",
     "EnchantmentHelperMixin",
     "EntityMixin",
@@ -15,15 +14,23 @@
     "MainMixin",
     "MapItemSavedDataMixin",
     "TestCommandMixin",
+    "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.GameTestHelperAccessor",
     "accessor.LivingEntityAccessor",
+    "accessor.ModContainerAcessor",
     "accessor.NbtAccounterAccessor",
-    "accessor.ServerLevelAccessor"
+    "accessor.ServerLevelAccessor",
+    "accessor.StairBlockAccessor"
   ],
   "client": [
+    "accessor.AgeableListModelAccessor",
+    "accessor.GameRendererAccessor",
+    "accessor.GuiAccessor",
+    "accessor.HumanoidArmorLayerAccessor",
+    "accessor.ParticleEngineAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",
@@ -35,11 +42,7 @@
     "client.MapRendererMapInstanceMixin",
     "client.ModelDataRefreshMixin",
     "client.PlayerRendererMixin",
-    "client.WindowResizeMixin",
-    "accessor.AgeableListModelAccessor",
-    "accessor.GameRendererAccessor",
-    "accessor.HumanoidArmorLayerAccessor",
-    "accessor.ParticleEngineAccessor"
+    "client.WindowResizeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

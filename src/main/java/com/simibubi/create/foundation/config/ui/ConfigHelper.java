@@ -19,6 +19,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.mixin.accessor.ModContainerAcessor;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -27,7 +28,6 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.config.IConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class ConfigHelper {
 
@@ -49,8 +49,7 @@ public class ConfigHelper {
 		ModContainer modContainer = ModList.get()
 			.getModContainerById(modID)
 			.orElseThrow(() -> new IllegalArgumentException("Unable to find ModContainer for id: " + modID));
-		EnumMap<ModConfig.Type, ModConfig> configs =
-			ObfuscationReflectionHelper.getPrivateValue(ModContainer.class, modContainer, "configs");
+		EnumMap<ModConfig.Type, ModConfig> configs = ((ModContainerAcessor)modContainer).getConfigs();
 		return Objects.requireNonNull(configs);
 	}
 
