@@ -31,14 +31,14 @@ public class StandardBogeyRenderer {
 		@Override
 		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
 			boolean inInstancedContraption = vb == null;
-			Transform<?>[] shafts = getTranform(AllBlocks.SHAFT.getDefaultState()
+			BogeyModelData[] shafts = getTransform(AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), ms, inInstancedContraption, 2);
 			for (int i : Iterate.zeroAndOne) {
 				shafts[i].translate(-.5f, .25f, i * -1)
 						.centre()
 						.rotateZ(wheelAngle)
-						.unCentre();
-				finalize(shafts[i], ms, light, vb);
+						.unCentre()
+						.render(ms, light, vb);
 			}
 		}
 	}
@@ -60,17 +60,17 @@ public class StandardBogeyRenderer {
 		@Override
 		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
 			boolean inInstancedContraption = vb == null;
-			Transform<?> transform = getTranform(BOGEY_FRAME, ms, inInstancedContraption);
-			finalize(transform, ms, light, vb);
+			getTransform(BOGEY_FRAME, ms, inInstancedContraption)
+					.render(ms, light, vb);
 
-			Transform<?>[] wheels = getTransform(SMALL_BOGEY_WHEELS, ms, inInstancedContraption, 2);
+			BogeyModelData[] wheels = getTransform(SMALL_BOGEY_WHEELS, ms, inInstancedContraption, 2);
 			for (int side : Iterate.positiveAndNegative) {
 				if (!inInstancedContraption)
 					ms.pushPose();
-				Transform<?> wheel = wheels[(side + 1)/2];
-				wheel.translate(0, 12 / 16f, side)
-						.rotateX(wheelAngle);
-				finalize(wheel, ms, light, vb);
+				wheels[(side + 1)/2]
+					.translate(0, 12 / 16f, side)
+					.rotateX(wheelAngle)
+					.render(ms, light, vb);
 				if (!inInstancedContraption)
 					ms.popPose();
 			}
@@ -94,39 +94,39 @@ public class StandardBogeyRenderer {
 		public void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption) {
 			boolean inInstancedContraption = vb == null;
 
-			Transform<?>[] secondaryShafts = getTranform(AllBlocks.SHAFT.getDefaultState()
+			BogeyModelData[] secondaryShafts = getTransform(AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.X), ms, inInstancedContraption, 2);
 
 			for (int i : Iterate.zeroAndOne) {
-				Transform<?> secondShaft = secondaryShafts[i];
-				secondShaft.translate(-.5f, .25f, .5f + i * -2)
+				secondaryShafts[i]
+						.translate(-.5f, .25f, .5f + i * -2)
 						.centre()
 						.rotateX(wheelAngle)
-						.unCentre();
-				finalize(secondShaft, ms, light, vb);
+						.unCentre()
+						.render(ms, light, vb);
 			}
 
-			Transform<?> bogeyDrive = getTranform(BOGEY_DRIVE, ms, inInstancedContraption);
-			finalize(bogeyDrive, ms, light, vb);
+			getTransform(BOGEY_DRIVE, ms, inInstancedContraption)
+					.render(ms, light, vb);
 
-			Transform<?> bogeyPiston = getTranform(BOGEY_PISTON, ms, inInstancedContraption)
-					.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)));
-			finalize(bogeyPiston, ms, light, vb);
+			getTransform(BOGEY_PISTON, ms, inInstancedContraption)
+					.translate(0, 0, 1 / 4f * Math.sin(AngleHelper.rad(wheelAngle)))
+					.render(ms, light, vb);
 
 			if (!inInstancedContraption)
 				ms.pushPose();
 
-			Transform<?> bogeyWheels = getTranform(LARGE_BOGEY_WHEELS, ms, inInstancedContraption)
+			getTransform(LARGE_BOGEY_WHEELS, ms, inInstancedContraption)
 					.translate(0, 1, 0)
-					.rotateX(wheelAngle);
-			finalize(bogeyWheels, ms, light, vb);
+					.rotateX(wheelAngle)
+					.render(ms, light, vb);
 
-			Transform<?> bogeyPin = getTranform(BOGEY_PIN, ms, inInstancedContraption)
+			getTransform(BOGEY_PIN, ms, inInstancedContraption)
 					.translate(0, 1, 0)
 					.rotateX(wheelAngle)
 					.translate(0, 1 / 4f, 0)
-					.rotateX(-wheelAngle);
-			finalize(bogeyPin, ms, light, vb);
+					.rotateX(-wheelAngle)
+					.render(ms, light, vb);
 
 			if (!inInstancedContraption)
 				ms.popPose();

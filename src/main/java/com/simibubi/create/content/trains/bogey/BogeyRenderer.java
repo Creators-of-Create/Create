@@ -4,7 +4,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 
 import org.jetbrains.annotations.Nullable;
@@ -25,8 +29,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+/**
+ * This is a port of the bogey api from Extended Bogeys, If you are looking to implement your own bogeys you can find some helpful resources below:
+ * <p>
+ * - <a href="https://github.com/Rabbitminers/Extended-Bogeys/tree/1.18/multiloader/dev/common/src/main/java/com/rabbitminers/extendedbogeys/bogeys/styles">Extended Bogeys (Examples)</a>
+ * - <a href="https://github.com/Rabbitminers/Extended-Bogeys/blob/1.18/multiloader/dev/API_DOCS.md">Extended Bogeys (API documentation)</a>
+ * - <a href="https://github.com/Layers-of-Railways/Railway/tree/93e318d1e922b1e992b89b0aceef85a2d545f370/common/src/main/java/com/railwayteam/railways/content/custom_bogeys">Steam n' Rails (Examples)</a>
+ */
 public abstract class BogeyRenderer {
-	Map<String, ModelData[]> contraptionModelData = new HashMap<>();
+	Map<String, BogeyModelData[]> contraptionModelData = new HashMap<>();
 
 	/**
 	 * A common interface for getting transform data for both in-world and in-contraption model data safely from a
@@ -38,7 +49,7 @@ public abstract class BogeyRenderer {
 	 * @param size The amount of models needed
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?>[] getTransform(PartialModel model, PoseStack ms, boolean inInstancedContraption, int size) {
+	public BogeyModelData[] getTransform(PartialModel model, PoseStack ms, boolean inInstancedContraption, int size) {
 		return (inInstancedContraption) ? transformContraptionModelData(keyFromModel(model), ms) : createModelData(model, size);
 	}
 
@@ -52,7 +63,7 @@ public abstract class BogeyRenderer {
 	 * @param size The amount of models needed
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?>[] getTranform(BlockState state, PoseStack ms, boolean inContraption, int size) {
+	public BogeyModelData[] getTransform(BlockState state, PoseStack ms, boolean inContraption, int size) {
 		return inContraption ? transformContraptionModelData(keyFromModel(state), ms) : createModelData(state, size);
 	}
 
@@ -65,10 +76,9 @@ public abstract class BogeyRenderer {
 	 * @param inInstancedContraption Type of rendering required
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?> getTranform(PartialModel model, PoseStack ms, boolean inInstancedContraption) {
-		BlockState air = Blocks.AIR.defaultBlockState();
+	public BogeyModelData getTransform(PartialModel model, PoseStack ms, boolean inInstancedContraption) {
 		return inInstancedContraption ? contraptionModelData.get(keyFromModel(model))[0].setTransform(ms)
-				: CachedBufferer.partial(model, air);
+				: BogeyModelData.from(model);
 	}
 
 	/**
@@ -79,9 +89,9 @@ public abstract class BogeyRenderer {
 	 * @param inContraption Type of model required
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	public Transform<?> getTransform(BlockState state, PoseStack ms, boolean inContraption) {
+	public BogeyModelData getTransform(BlockState state, PoseStack ms, boolean inContraption) {
 		return (inContraption) ? contraptionModelData.get(keyFromModel(state))[0].setTransform(ms)
-				: CachedBufferer.block(state);
+				: BogeyModelData.from(state);
 	}
 
 	/**
@@ -94,7 +104,8 @@ public abstract class BogeyRenderer {
 	 * @param vb (Optional) Vertex Consumer used for in-world rendering
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public abstract void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light, VertexConsumer vb, boolean inContraption);
+	public abstract void render(CompoundTag bogeyData, float wheelAngle, PoseStack ms, int light,
+								VertexConsumer vb, boolean inContraption);
 
 	/**
 	 * Used for calling in-contraption rendering ensuring that falsey data is handled correctly
@@ -118,8 +129,8 @@ public abstract class BogeyRenderer {
 	 * @param ms Posestack of the contraption to bind the model data to
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	private Transform<?>[] transformContraptionModelData(String key, PoseStack ms) {
-		ModelData[] modelData = contraptionModelData.get(key);
+	private BogeyModelData[] transformContraptionModelData(String key, PoseStack ms) {
+		BogeyModelData[] modelData = contraptionModelData.get(key);
 		Arrays.stream(modelData).forEach(modelDataElement -> modelDataElement.setTransform(ms));
 		return modelData;
 	}
@@ -133,9 +144,8 @@ public abstract class BogeyRenderer {
 	 * @param size The Amount of models needed
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	private Transform<?>[] createModelData(PartialModel model, int size) {
-		BlockState air = Blocks.AIR.defaultBlockState();
-		SuperByteBuffer[] data = { CachedBufferer.partial(model, air) };
+	private BogeyModelData[] createModelData(PartialModel model, int size) {
+		BogeyModelData[] data = { BogeyModelData.from(model) };
 		return expandArrayToLength(data, size);
 	}
 
@@ -147,8 +157,8 @@ public abstract class BogeyRenderer {
 	 * @param size Amount of models needed
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	private Transform<?>[] createModelData(BlockState state, int size) {
-		SuperByteBuffer[] data = { CachedBufferer.block(state) };
+	private BogeyModelData[] createModelData(BlockState state, int size) {
+		BogeyModelData[] data = { BogeyModelData.from(state) };
 		return expandArrayToLength(data, size);
 	}
 
@@ -160,10 +170,10 @@ public abstract class BogeyRenderer {
 	 * @param size Amount of models needed
 	 * @return A generic transform which can be used for both in-world and in-contraption models
 	 */
-	private Transform<?>[] expandArrayToLength(SuperByteBuffer[] data, int size) {
+	private BogeyModelData[] expandArrayToLength(BogeyModelData[] data, int size) {
 		return Arrays.stream(Collections.nCopies(size, data).toArray())
-				.flatMap(inner -> Arrays.stream((SuperByteBuffer[]) inner))
-				.toArray(SuperByteBuffer[]::new);
+				.flatMap(inner -> Arrays.stream((BogeyModelData[]) inner))
+				.toArray(BogeyModelData[]::new);
 	}
 
 	/**
@@ -183,9 +193,12 @@ public abstract class BogeyRenderer {
 	 * @param count Amount of models neeeded
 	 */
 	public void createModelInstance(MaterialManager materialManager, PartialModel model, int count) {
-		ModelData[] modelData = new ModelData[count];
-		materialManager.defaultSolid().material(Materials.TRANSFORMED)
-				.getModel(model).createInstances(modelData);
+		BogeyModelData[] modelData = IntStream.range(0, count)
+				.mapToObj(i -> materialManager.defaultSolid()
+						.material(Materials.TRANSFORMED)
+						.getModel(model).createInstance())
+				.map(BogeyModelData::new)
+				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(model), modelData);
 	}
 
@@ -197,9 +210,12 @@ public abstract class BogeyRenderer {
 	 * @param count Amount of models needed
 	 */
 	public void createModelInstance(MaterialManager materialManager, BlockState state, int count) {
-		ModelData[] modelData = new ModelData[count];
-		materialManager.defaultSolid().material(Materials.TRANSFORMED)
-				.getModel(state).createInstances(modelData);
+		BogeyModelData[] modelData = IntStream.range(0, count)
+				.mapToObj(i -> materialManager.defaultSolid()
+						.material(Materials.TRANSFORMED)
+						.getModel(state).createInstance())
+				.map(BogeyModelData::new)
+				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(state), modelData);
 	}
 
@@ -226,7 +242,8 @@ public abstract class BogeyRenderer {
 	}
 
 	/**
-	 * Handles scale for all model data and renders non contraption model data
+	 * This method is deprecated, use BogeyModelData#render instead, left in
+	 * to avoid existing usages from crashing
 	 *
 	 * @param b The model data itself
 	 * @param ms Pose stack to render to
@@ -235,6 +252,7 @@ public abstract class BogeyRenderer {
 	 * @param <B> Generic alias for both contraption and in-world model data
 	 */
 
+	@Deprecated
 	public static <B extends Transform<?>> void finalize(B b, PoseStack ms, int light, @Nullable VertexConsumer vb) {
 		b.scale(1 - 1/512f);
 		if (b instanceof SuperByteBuffer byteBuf && vb != null)
@@ -247,8 +265,8 @@ public abstract class BogeyRenderer {
 	 */
 
 	public void emptyTransforms() {
-		for (ModelData[] data : contraptionModelData.values())
-			for (ModelData model : data)
+		for (BogeyModelData[] data : contraptionModelData.values())
+			for (BogeyModelData model : data)
 				model.setEmptyTransform();
 	}
 
@@ -260,9 +278,9 @@ public abstract class BogeyRenderer {
 	 */
 
 	public void updateLight(int blockLight, int skyLight) {
-		for (ModelData[] data : contraptionModelData.values())
-			for (ModelData model : data)
-				model.setBlockLight(blockLight).setSkyLight(skyLight);
+		for (BogeyModelData[] data : contraptionModelData.values())
+			for (BogeyModelData model : data)
+				model.updateLight(blockLight, skyLight);
 	}
 
 	/**
@@ -271,8 +289,8 @@ public abstract class BogeyRenderer {
 	 */
 
 	public void remove() {
-		for (ModelData[] data : contraptionModelData.values())
-			for (ModelData model : data)
+		for (BogeyModelData[] data : contraptionModelData.values())
+			for (BogeyModelData model : data)
 				model.delete();
 		contraptionModelData.clear();
 	}
@@ -303,6 +321,75 @@ public abstract class BogeyRenderer {
 		@Override
 		public BogeySizes.BogeySize getSize() {
 			return null;
+		}
+	}
+
+	public record BogeyModelData(Transform<?> transform) implements Transform<BogeyModelData> {
+		public static BogeyModelData from(PartialModel model) {
+			BlockState air = Blocks.AIR.defaultBlockState();
+			return new BogeyModelData(CachedBufferer.partial(model, air));
+		}
+		public static BogeyModelData from(BlockState model) {
+			return new BogeyModelData(CachedBufferer.block(model));
+		}
+		public void render(PoseStack ms, int light, @Nullable VertexConsumer vb) {
+			transform.scale(1 - 1/512f);
+			if (transform instanceof SuperByteBuffer byteBuf && vb != null)
+				byteBuf.light(light).renderInto(ms, vb);
+		}
+
+		public BogeyModelData setTransform(PoseStack ms) {
+			if (this.transform instanceof ModelData model)
+				model.setTransform(ms);
+			return this;
+		}
+
+		public BogeyModelData setEmptyTransform() {
+			if (this.transform instanceof ModelData model)
+				model.setEmptyTransform();
+			return this;
+		}
+
+		public BogeyModelData delete() {
+			if (this.transform instanceof ModelData model)
+				model.delete();
+			return this;
+		}
+
+		public BogeyModelData updateLight(int blockLight, int skyLight) {
+			if (this.transform instanceof ModelData model)
+				model.setBlockLight(blockLight).setSkyLight(skyLight);
+			return this;
+		}
+
+		@Override
+		public BogeyModelData mulPose(Matrix4f pose) {
+			this.transform.mulPose(pose);
+			return this;
+		}
+
+		@Override
+		public BogeyModelData mulNormal(Matrix3f normal) {
+			this.transform.mulNormal(normal);
+			return this;
+		}
+
+		@Override
+		public BogeyModelData multiply(Quaternion quaternion) {
+			this.transform.multiply(quaternion);
+			return this;
+		}
+
+		@Override
+		public BogeyModelData scale(float factorX, float factorY, float factorZ) {
+			this.transform.scale(factorX, factorY, factorZ);
+			return this;
+		}
+
+		@Override
+		public BogeyModelData translate(double x, double y, double z) {
+			this.transform.translate(x, y, z);
+			return this;
 		}
 	}
 }
