@@ -19,15 +19,19 @@ import net.minecraft.world.phys.Vec3;
 
 public class SchematicTransformation {
 
-	private LerpedFloat x, y, z, scaleFrontBack, scaleLeftRight;
+	private Vec3 chasingPos;
+	private Vec3 prevChasingPos;
+	private BlockPos target;
+	
+	private LerpedFloat scaleFrontBack, scaleLeftRight;
 	private LerpedFloat rotation;
 	private double xOrigin;
 	private double zOrigin;
 
 	public SchematicTransformation() {
-		x = LerpedFloat.linear();
-		y = LerpedFloat.linear();
-		z = LerpedFloat.linear();
+		chasingPos = Vec3.ZERO;
+		prevChasingPos = Vec3.ZERO;
+		target = BlockPos.ZERO;
 		scaleFrontBack = LerpedFloat.linear();
 		scaleLeftRight = LerpedFloat.linear();
 		rotation = LerpedFloat.angular();
@@ -48,20 +52,18 @@ public class SchematicTransformation {
 		rotation.chase(0, 0.45f, Chaser.EXP)
 			.startWithValue(r);
 
-		Vec3 vec = fromAnchor(anchor);
-		x.chase(0, 0.45f, Chaser.EXP)
-			.startWithValue((float) vec.x);
-		y.chase(0, 0.45f, Chaser.EXP)
-			.startWithValue((float) vec.y);
-		z.chase(0, 0.45f, Chaser.EXP)
-			.startWithValue((float) vec.z);
+		target = fromAnchor(anchor);
+		chasingPos = Vec3.atLowerCornerOf(target);
+		prevChasingPos = chasingPos;
 	}
 
-	public void applyGLTransformations(PoseStack ms) {
+	public void applyTransformations(PoseStack ms, Vec3 camera) {
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		// Translation
-		ms.translate(x.getValue(pt), y.getValue(pt), z.getValue(pt));
+		TransformStack.cast(ms)
+			.translate(VecHelper.lerp(pt, prevChasingPos, chasingPos)
+				.subtract(camera));
 		Vec3 rotationOffset = getRotationOffset(true);
 
 		// Rotation & Mirror
@@ -101,7 +103,7 @@ public class SchematicTransformation {
 		float pt = AnimationTickHolder.getPartialTicks();
 		Vec3 rotationOffset = getRotationOffset(true);
 
-		vec = vec.subtract(x.getValue(pt), y.getValue(pt), z.getValue(pt));
+		vec = vec.subtract(VecHelper.lerp(pt, prevChasingPos, chasingPos));
 		vec = vec.subtract(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
 		vec = VecHelper.rotate(vec, -rotation.getValue(pt), Axis.Y);
 		vec = vec.add(rotationOffset.x, 0, rotationOffset.z);
@@ -157,12 +159,11 @@ public class SchematicTransformation {
 		vec = vec.multiply(getScaleFB().getChaseTarget(), 1, getScaleLR().getChaseTarget());
 		vec = VecHelper.rotate(vec, rotation.getChaseTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
-
-		vec = vec.add(x.getChaseTarget(), y.getChaseTarget(), z.getChaseTarget());
+		vec = vec.add(target.getX(), target.getY(), target.getZ());
 		return new BlockPos(vec.x, vec.y, vec.z);
 	}
 
-	public Vec3 fromAnchor(BlockPos pos) {
+	public BlockPos fromAnchor(BlockPos pos) {
 		Vec3 vec = Vec3.ZERO.add(.5, 0, .5);
 		Vec3 rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
@@ -170,8 +171,7 @@ public class SchematicTransformation {
 		vec = vec.multiply(getScaleFB().getChaseTarget(), 1, getScaleLR().getChaseTarget());
 		vec = VecHelper.rotate(vec, rotation.getChaseTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
-
-		return Vec3.atLowerCornerOf(pos.subtract(new BlockPos(vec.x, vec.y, vec.z)));
+		return pos.subtract(new BlockPos(vec.x, vec.y, vec.z));
 	}
 
 	public int getRotationTarget() {
@@ -190,9 +190,8 @@ public class SchematicTransformation {
 	}
 
 	public void tick() {
-		x.tickChaser();
-		y.tickChaser();
-		z.tickChaser();
+		prevChasingPos = chasingPos;
+		chasingPos = VecHelper.lerp(0.45f, chasingPos, Vec3.atLowerCornerOf(target));
 		getScaleLR().tickChaser();
 		getScaleFB().tickChaser();
 		rotation.tickChaser();
@@ -209,25 +208,22 @@ public class SchematicTransformation {
 		rotation.updateChaseTarget(rotation.getChaseTarget() + (clockwise ? -90 : 90));
 	}
 
-	public void move(float xIn, float yIn, float zIn) {
-		moveTo(x.getChaseTarget() + xIn, y.getChaseTarget() + yIn, z.getChaseTarget() + zIn);
+	public void move(int xIn, int yIn, int zIn) {
+		moveTo(target.offset(xIn, yIn, zIn));
 	}
 
 	public void startAt(BlockPos pos) {
-		x.startWithValue(pos.getX());
-		y.startWithValue(pos.getY() - 10);
-		z.startWithValue(pos.getZ());
+		chasingPos = Vec3.atLowerCornerOf(pos);
+		prevChasingPos = chasingPos;
 		moveTo(pos);
 	}
 
 	public void moveTo(BlockPos pos) {
-		moveTo(pos.getX(), pos.getY(), pos.getZ());
+		target = pos;
 	}
 
-	public void moveTo(float xIn, float yIn, float zIn) {
-		x.updateChaseTarget(xIn);
-		y.updateChaseTarget(yIn);
-		z.updateChaseTarget(zIn);
+	public void moveTo(int xIn, int yIn, int zIn) {
+		moveTo(new BlockPos(xIn, yIn, zIn));
 	}
 
 	public LerpedFloat getScaleFB() {

@@ -21,7 +21,7 @@ public abstract class ConfigBase {
 	protected List<CValue<?, ?>> allValues;
 	protected List<ConfigBase> children;
 
-	protected void registerAll(final ForgeConfigSpec.Builder builder) {
+	public void registerAll(final ForgeConfigSpec.Builder builder) {
 		for (CValue<?, ?> cValue : allValues)
 			cValue.register(builder);
 	}

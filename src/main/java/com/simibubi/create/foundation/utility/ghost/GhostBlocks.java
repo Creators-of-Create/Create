@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class GhostBlocks {
 
@@ -54,10 +55,10 @@ public class GhostBlocks {
 		ghosts.entrySet().removeIf(e -> !e.getValue().isAlive());
 	}
 
-	public void renderAll(PoseStack ms, SuperRenderTypeBuffer buffer) {
+	public void renderAll(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
 		ghosts.forEach((slot, entry) -> {
 			GhostBlockRenderer ghost = entry.ghost;
-			ghost.render(ms, buffer, entry.params);
+			ghost.render(ms, buffer, camera, entry.params);
 		});
 	}
 

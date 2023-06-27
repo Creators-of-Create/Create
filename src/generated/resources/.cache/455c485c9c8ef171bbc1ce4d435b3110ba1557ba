@@ -1,4 +1,4 @@
-// 1.19.3	2023-02-06T18:08:23.2183804	Create's Advancements
+// 1.19.3	2023-06-27T03:14:49.7357976	Create's Advancements
 2079ae09cf699108a8035ced7ca712fed4ab1577 data/create/advancements/andesite_alloy.json
 082d3987c5e074ed50be4a94a6fdc17120af241b data/create/advancements/andesite_casing.json
 4618109cfb4550fd8e19dc9d794ef24398b10a61 data/create/advancements/anvil_plough.json
@@ -28,8 +28,8 @@ e564c7aa283e81d5aa4c043b6de97b7328aa877d data/create/advancements/crushing_wheel
 f175d1f816f32e1c50891321331e475863ce1e89 data/create/advancements/deployer.json
 62ffffc6834c54ae1abca584522c577226f7f891 data/create/advancements/display_board_0.json
 68749521feb4832c8da666454c70f883129f9335 data/create/advancements/display_link.json
-02af5f59f671b59efb1419b67463326984a971fc data/create/advancements/diving_suit.json
-df385d36b345e919cca92ba212818bc39032fd02 data/create/advancements/diving_suit_lava.json
+dfa5e42ee372df8c810e1ccf8a6928e4f1299f37 data/create/advancements/diving_suit.json
+836e914e3139f8cbf4cdd78ae53bd9bdd041a693 data/create/advancements/diving_suit_lava.json
 2d19468ffed9345ebe8cecf220acc15651917082 data/create/advancements/drain.json
 492d8ebc5d10e7efd100570f1507413d78723782 data/create/advancements/ejector_maxed.json
 7e19fd15b675494d2a8d5ac3cef4a50cf58c203f data/create/advancements/encased_fan.json
@@ -47,8 +47,7 @@ b68f4baee272682b6f4c9a34089837fec2cd9c58 data/create/advancements/funnel.json
 c365ee5c1175fa4bf4627d78c7bdce6ca7a2defb data/create/advancements/hose_pulley_lava.json
 c0f0689a4497affe0feb20bc20d708aa0d8eb90e data/create/advancements/lava_wheel_00000.json
 2bef7aa7c863c9b149c67a506725ffa0fee3d977 data/create/advancements/linked_controller.json
-29a4c44e4f89cbb0f4d694c6c28a0e2c03dc64f3 data/create/advancements/long_bend.json
-74bc9d3d1df777980634861e0ea11b6343e3bbc5 data/create/advancements/long_train.json
+8d842135a5111786c0c656dfcac6be9c1d1a459d data/create/advancements/long_train.json
 333335c09683319ceaaa2974a9f746c0545bf425 data/create/advancements/long_travel.json
 1025b22c5ff39a4d54bb5857e04e35a5d806ceba data/create/advancements/mechanical_arm.json
 7703192ff1ccba4cc006bcfae349084756ae62d7 data/create/advancements/mechanical_crafter.json

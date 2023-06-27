@@ -15,7 +15,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -30,8 +29,6 @@ import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry;
 import com.simibubi.create.foundation.ponder.PonderTag;
 import com.simibubi.create.foundation.ponder.PonderWorld;
-import com.simibubi.create.foundation.ponder.content.DebugScenes;
-import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.element.TextWindowElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.Color;
@@ -45,6 +42,9 @@ import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.ponder.DebugScenes;
+import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -434,7 +434,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	protected void renderScene(PoseStack ms, int mouseX, int mouseY, int i, float partialTicks) {
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
-		PonderScene story = scenes.get(i);
+		PonderScene scene = scenes.get(i);
 		double value = lazyIndex.getValue(minecraft.getFrameTime());
 		double diff = i - value;
 		double slide = Mth.lerp(diff * diff, 200, 600) * diff;
@@ -450,24 +450,29 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		ms.pushPose();
 		ms.translate(0, 0, -800);
-		story.getTransform()
+		
+		scene.getTransform()
 			.updateScreenParams(width, height, slide);
-		story.getTransform()
+		scene.getTransform()
 			.apply(ms, partialTicks);
-		story.getTransform()
+
+//		ms.translate(-story.getBasePlateOffsetX() * .5, 0, -story.getBasePlateOffsetZ() * .5);
+
+		scene.getTransform()
 			.updateSceneRVE(partialTicks);
-		story.renderScene(buffer, ms, partialTicks);
+		
+		scene.renderScene(buffer, ms, partialTicks);
 		buffer.draw();
 
-		BoundingBox bounds = story.getBounds();
+		BoundingBox bounds = scene.getBounds();
 		ms.pushPose();
 
 		// kool shadow fx
-		{
+		if (!scene.shouldHidePlatformShadow()) {
 			RenderSystem.enableCull();
 			RenderSystem.enableDepthTest();
 			ms.pushPose();
-			ms.translate(story.getBasePlateOffsetX(), 0, story.getBasePlateOffsetZ());
+			ms.translate(scene.getBasePlateOffsetX(), 0, scene.getBasePlateOffsetZ());
 			UIRenderHelper.flipForGuiRender(ms);
 
 			float flash = finishingFlash.getValue(partialTicks) * .9f;
@@ -478,21 +483,21 @@ public class PonderUI extends NavigatableSimiScreen {
 			flash = 1 - flash;
 
 			for (int f = 0; f < 4; f++) {
-				ms.translate(story.getBasePlateSize(), 0, 0);
+				ms.translate(scene.getBasePlateSize(), 0, 0);
 				ms.pushPose();
 				ms.translate(0, 0, -1 / 1024f);
 				if (flash > 0) {
 					ms.pushPose();
 					ms.scale(1, .5f + flash * .75f, 1);
 					ScreenUtils.drawGradientRect(ms.last()
-						.pose(), 0, 0, -1, -story.getBasePlateSize(), 0, 0x00_c6ffc9,
+						.pose(), 0, 0, -1, -scene.getBasePlateSize(), 0, 0x00_c6ffc9,
 						new Color(0xaa_c6ffc9).scaleAlpha(alpha)
 							.getRGB());
 					ms.popPose();
 				}
 				ms.translate(0, 0, 2 / 1024f);
 				ScreenUtils.drawGradientRect(ms.last()
-					.pose(), 0, 0, 0, -story.getBasePlateSize(), 4, 0x66_000000, 0x00_000000);
+					.pose(), 0, 0, 0, -scene.getBasePlateSize(), 4, 0x66_000000, 0x00_000000);
 				ms.popPose();
 				ms.mulPose(Axis.YP.rotationDegrees(-90));
 			}
@@ -651,7 +656,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	protected void renderPonderTags(PoseStack ms, int mouseX, int mouseY, float partialTicks, float fade, PonderScene activeScene) {
 		// Tags
 		List<PonderTag> sceneTags = activeScene.getTags();
-		boolean highlightAll = sceneTags.contains(PonderTag.Highlight.ALL);
+		boolean highlightAll = sceneTags.contains(PonderTag.HIGHLIGHT_ALL);
 		double s = Minecraft.getInstance()
 			.getWindow()
 			.getGuiScale();
@@ -1025,11 +1030,11 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	public boolean isComfyReadingEnabled() {
-		return AllConfigs.CLIENT.comfyReading.get();
+		return AllConfigs.client().comfyReading.get();
 	}
 
 	public void setComfyReadingEnabled(boolean slowTextMode) {
-		AllConfigs.CLIENT.comfyReading.set(slowTextMode);
+		AllConfigs.client().comfyReading.set(slowTextMode);
 	}
 
 }

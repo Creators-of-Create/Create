@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "create:ochrum"
-  },
-  "result": "create:polished_cut_ochrum_wall"
-}

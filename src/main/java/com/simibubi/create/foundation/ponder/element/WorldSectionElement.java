@@ -17,17 +17,17 @@ import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.outliner.AABBOutline;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Selection;
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -64,8 +64,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
-	List<BlockEntity> renderedTileEntities;
-	List<Pair<BlockEntity, Consumer<Level>>> tickableTileEntities;
+	List<BlockEntity> renderedBlockEntities;
+	List<Pair<BlockEntity, Consumer<Level>>> tickableBlockEntities;
 	Selection section;
 	boolean redraw;
 
@@ -260,49 +260,49 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (!isVisible())
 			return;
 		loadTEsIfMissing(scene.getWorld());
-		renderedTileEntities.removeIf(te -> scene.getWorld()
-			.getBlockEntity(te.getBlockPos()) != te);
-		tickableTileEntities.removeIf(te -> scene.getWorld()
-			.getBlockEntity(te.getFirst()
-				.getBlockPos()) != te.getFirst());
-		tickableTileEntities.forEach(te -> te.getSecond()
+		renderedBlockEntities.removeIf(be -> scene.getWorld()
+			.getBlockEntity(be.getBlockPos()) != be);
+		tickableBlockEntities.removeIf(be -> scene.getWorld()
+			.getBlockEntity(be.getFirst()
+				.getBlockPos()) != be.getFirst());
+		tickableBlockEntities.forEach(be -> be.getSecond()
 			.accept(scene.getWorld()));
 	}
 
 	@Override
 	public void whileSkipping(PonderScene scene) {
 		if (redraw) {
-			renderedTileEntities = null;
-			tickableTileEntities = null;
+			renderedBlockEntities = null;
+			tickableBlockEntities = null;
 		}
 		redraw = false;
 	}
 
 	protected void loadTEsIfMissing(PonderWorld world) {
-		if (renderedTileEntities != null)
+		if (renderedBlockEntities != null)
 			return;
-		tickableTileEntities = new ArrayList<>();
-		renderedTileEntities = new ArrayList<>();
+		tickableBlockEntities = new ArrayList<>();
+		renderedBlockEntities = new ArrayList<>();
 		section.forEach(pos -> {
-			BlockEntity tileEntity = world.getBlockEntity(pos);
+			BlockEntity blockEntity = world.getBlockEntity(pos);
 			BlockState blockState = world.getBlockState(pos);
 			Block block = blockState.getBlock();
-			if (tileEntity == null)
+			if (blockEntity == null)
 				return;
 			if (!(block instanceof EntityBlock))
 				return;
-			tileEntity.setBlockState(world.getBlockState(pos));
-			BlockEntityTicker<?> ticker = ((EntityBlock) block).getTicker(world, blockState, tileEntity.getType());
+			blockEntity.setBlockState(world.getBlockState(pos));
+			BlockEntityTicker<?> ticker = ((EntityBlock) block).getTicker(world, blockState, blockEntity.getType());
 			if (ticker != null)
-				addTicker(tileEntity, ticker);
-			renderedTileEntities.add(tileEntity);
+				addTicker(blockEntity, ticker);
+			renderedBlockEntities.add(blockEntity);
 		});
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T extends BlockEntity> void addTicker(T tileEntity, BlockEntityTicker<?> ticker) {
-		tickableTileEntities.add(Pair.of(tileEntity, w -> ((BlockEntityTicker<T>) ticker).tick(w,
-			tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity)));
+	private <T extends BlockEntity> void addTicker(T blockEntity, BlockEntityTicker<?> ticker) {
+		tickableBlockEntities.add(Pair.of(blockEntity, w -> ((BlockEntityTicker<T>) ticker).tick(w,
+			blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity)));
 	}
 
 	@Override
@@ -311,14 +311,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (fade != 1)
 			light = (int) (Mth.lerp(fade, 5, 14));
 		if (redraw) {
-			renderedTileEntities = null;
-			tickableTileEntities = null;
+			renderedBlockEntities = null;
+			tickableBlockEntities = null;
 		}
 
 		ms.pushPose();
 		transformMS(ms, pt);
 		world.pushFakeLight(light);
-		renderTileEntities(world, ms, buffer, pt);
+		renderBlockEntities(world, ms, buffer, pt);
 		world.popLight();
 
 		Map<BlockPos, Integer> blockBreakingProgressions = world.getBlockBreakingProgressions();
@@ -400,15 +400,15 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		aabbOutline.getParams()
 			.lineWidth(1 / 64f)
 			.colored(0xefefef)
-			.disableNormals();
-		aabbOutline.render(ms, (SuperRenderTypeBuffer) buffer, pt);
+			.disableLineNormals();
+		aabbOutline.render(ms, (SuperRenderTypeBuffer) buffer, Vec3.ZERO, pt);
 
 		ms.popPose();
 	}
 
-	private void renderTileEntities(PonderWorld world, PoseStack ms, MultiBufferSource buffer, float pt) {
+	private void renderBlockEntities(PonderWorld world, PoseStack ms, MultiBufferSource buffer, float pt) {
 		loadTEsIfMissing(world);
-		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, buffer, pt);
+		BlockEntityRenderHelper.renderBlockEntities(world, renderedBlockEntities, ms, buffer, pt);
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
@@ -437,8 +437,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 			if (state.getRenderShape() == RenderShape.MODEL) {
 				BakedModel model = dispatcher.getBlockModel(state);
-				BlockEntity tileEntity = world.getBlockEntity(pos);
-				ModelData modelData = tileEntity != null ? tileEntity.getModelData() : ModelData.EMPTY;
+				BlockEntity blockEntity = world.getBlockEntity(pos);
+				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
 				long seed = state.getSeed(pos);
 				random.setSeed(seed);
 				if (model.getRenderTypes(state, random, modelData).contains(layer)) {

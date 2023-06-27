@@ -13,6 +13,7 @@ import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
@@ -106,6 +107,24 @@ public class NBTHelper {
 		if (inbt != null)
 			return inbt;
 		return new CompoundTag();
+	}
+	
+	public static CompoundTag intToCompound(int i) {
+		CompoundTag compoundTag = new CompoundTag();
+		compoundTag.putInt("V", i);
+		return compoundTag;
+	}
+	
+	public static int intFromCompound(CompoundTag compoundTag) {
+		return compoundTag.getInt("V");
+	}
+
+	public static void writeResourceLocation(CompoundTag nbt, String key, ResourceLocation location) {
+		nbt.putString(key, location.toString());
+	}
+
+	public static ResourceLocation readResourceLocation(CompoundTag nbt, String key) {
+		return new ResourceLocation(nbt.getString(key));
 	}
 
 }

@@ -10,7 +10,7 @@
   "cookingtime": 100,
   "experience": 0.1,
   "ingredient": {
-    "item": "create:crushed_aluminum_ore"
+    "item": "create:crushed_raw_aluminum"
   },
   "result": "immersiveengineering:ingot_aluminum"
 }

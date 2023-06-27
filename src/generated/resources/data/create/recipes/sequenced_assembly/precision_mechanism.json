@@ -31,7 +31,7 @@
     },
     {
       "chance": 2.0,
-      "item": "create:crushed_gold_ore"
+      "item": "create:crushed_raw_gold"
     },
     {
       "item": "minecraft:iron_ingot"

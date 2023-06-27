@@ -1,0 +1,124 @@
+{
+  "variants": {
+    "facing=east,open=false,virtual=false,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 90
+    },
+    "facing=east,open=false,virtual=false,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 90
+    },
+    "facing=east,open=false,virtual=true,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 90
+    },
+    "facing=east,open=false,virtual=true,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 90
+    },
+    "facing=east,open=true,virtual=false,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 90
+    },
+    "facing=east,open=true,virtual=false,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 90
+    },
+    "facing=east,open=true,virtual=true,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 90
+    },
+    "facing=east,open=true,virtual=true,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 90
+    },
+    "facing=north,open=false,virtual=false,waterlogged=false": {
+      "model": "create:block/contraption_controls/block"
+    },
+    "facing=north,open=false,virtual=false,waterlogged=true": {
+      "model": "create:block/contraption_controls/block"
+    },
+    "facing=north,open=false,virtual=true,waterlogged=false": {
+      "model": "create:block/contraption_controls/block"
+    },
+    "facing=north,open=false,virtual=true,waterlogged=true": {
+      "model": "create:block/contraption_controls/block"
+    },
+    "facing=north,open=true,virtual=false,waterlogged=false": {
+      "model": "create:block/contraption_controls/block"
+    },
+    "facing=north,open=true,virtual=false,waterlogged=true": {
+      "model": "create:block/contraption_controls/block"
+    },
+    "facing=north,open=true,virtual=true,waterlogged=false": {
+      "model": "create:block/contraption_controls/block"
+    },
+    "facing=north,open=true,virtual=true,waterlogged=true": {
+      "model": "create:block/contraption_controls/block"
+    },
+    "facing=south,open=false,virtual=false,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 180
+    },
+    "facing=south,open=false,virtual=false,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 180
+    },
+    "facing=south,open=false,virtual=true,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 180
+    },
+    "facing=south,open=false,virtual=true,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 180
+    },
+    "facing=south,open=true,virtual=false,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 180
+    },
+    "facing=south,open=true,virtual=false,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 180
+    },
+    "facing=south,open=true,virtual=true,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 180
+    },
+    "facing=south,open=true,virtual=true,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 180
+    },
+    "facing=west,open=false,virtual=false,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 270
+    },
+    "facing=west,open=false,virtual=false,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 270
+    },
+    "facing=west,open=false,virtual=true,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 270
+    },
+    "facing=west,open=false,virtual=true,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 270
+    },
+    "facing=west,open=true,virtual=false,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 270
+    },
+    "facing=west,open=true,virtual=false,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 270
+    },
+    "facing=west,open=true,virtual=true,waterlogged=false": {
+      "model": "create:block/contraption_controls/block",
+      "y": 270
+    },
+    "facing=west,open=true,virtual=true,waterlogged=true": {
+      "model": "create:block/contraption_controls/block",
+      "y": 270
+    }
+  }
+}

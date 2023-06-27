@@ -8,7 +8,7 @@
   "processingTime": 400,
   "results": [
     {
-      "item": "create:crushed_zinc_ore"
+      "item": "create:crushed_raw_zinc"
     },
     {
       "chance": 0.75,

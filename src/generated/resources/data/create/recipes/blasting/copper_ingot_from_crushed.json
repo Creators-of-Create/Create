@@ -4,7 +4,7 @@
   "cookingtime": 100,
   "experience": 0.1,
   "ingredient": {
-    "item": "create:crushed_copper_ore"
+    "item": "create:crushed_raw_copper"
   },
   "result": "minecraft:copper_ingot"
 }

@@ -6,8 +6,8 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -45,15 +45,15 @@ public class AnimatedSpout extends AnimatedKinetics {
 
 		matrixStack.pushPose();
 
-		blockElement(AllBlockPartials.SPOUT_TOP)
+		blockElement(AllPartialModels.SPOUT_TOP)
 			.scale(scale)
 			.render(matrixStack);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);
-		blockElement(AllBlockPartials.SPOUT_MIDDLE)
+		blockElement(AllPartialModels.SPOUT_MIDDLE)
 			.scale(scale)
 			.render(matrixStack);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);
-		blockElement(AllBlockPartials.SPOUT_BOTTOM)
+		blockElement(AllPartialModels.SPOUT_BOTTOM)
 			.scale(scale)
 			.render(matrixStack);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);

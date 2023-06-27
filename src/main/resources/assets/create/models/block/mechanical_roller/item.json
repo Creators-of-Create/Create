@@ -1,0 +1,47 @@
+{
+	"parent": "block/block",
+	"loader": "forge:obj",
+	"flip_v": true,
+	"model": "create:models/block/mechanical_roller/item.obj",
+	"textures": {
+		"wheel": "create:block/roller_wheel",
+		"metal": "create:block/roller_metal",
+		"casing": "create:block/roller_casing"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [-107.22, 0.99, -174.76],
+			"translation": [0, 2.25, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-107.22, 0.99, -174.76],
+			"translation": [0, 2.25, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -172, 0],
+			"translation": [0, 0, 3],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -172, 0],
+			"translation": [0, 0, 3],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [-1.5, 2.25, 0],
+			"scale": [0.44, 0.44, 0.44]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [-2, 1.75, 0],
+			"scale": [0.4, 0.4, 0.4]
+		}
+	}
+}

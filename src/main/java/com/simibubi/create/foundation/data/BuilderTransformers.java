@@ -18,24 +18,28 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.CasingBlock;
-import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
-import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
-import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedCogCTBehaviour;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
-import com.simibubi.create.content.curiosities.deco.SlidingDoorBlock;
-import com.simibubi.create.content.curiosities.deco.SlidingDoorMovementBehaviour;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
-import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
-import com.simibubi.create.content.logistics.trains.IBogeyBlock;
-import com.simibubi.create.content.logistics.trains.track.StandardBogeyBlock;
-import com.simibubi.create.foundation.block.BlockStressDefaults;
+import com.simibubi.create.content.contraptions.behaviour.DoorMovingInteraction;
+import com.simibubi.create.content.contraptions.behaviour.TrapdoorMovingInteraction;
+import com.simibubi.create.content.contraptions.piston.MechanicalPistonGenerator;
+import com.simibubi.create.content.decoration.MetalScaffoldingBlock;
+import com.simibubi.create.content.decoration.MetalScaffoldingBlockItem;
+import com.simibubi.create.content.decoration.MetalScaffoldingCTBehaviour;
+import com.simibubi.create.content.decoration.copycat.CopycatBlock;
+import com.simibubi.create.content.decoration.encasing.CasingBlock;
+import com.simibubi.create.content.decoration.encasing.EncasedCTBehaviour;
+import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
+import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorMovementBehaviour;
+import com.simibubi.create.content.kinetics.BlockStressDefaults;
+import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
+import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
+import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogCTBehaviour;
+import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedCogwheelBlock;
+import com.simibubi.create.content.kinetics.simpleRelays.encased.EncasedShaftBlock;
+import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlock;
+import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlock.Shape;
+import com.simibubi.create.content.logistics.tunnel.BeltTunnelItem;
+import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
+import com.simibubi.create.content.trains.bogey.StandardBogeyBlock;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
@@ -62,6 +66,17 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.LootTable.Builder;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 
@@ -80,6 +95,7 @@ public class BuilderTransformers {
 			.build();
 	}
 
+	@SuppressWarnings("deprecation")
 	public static <B extends StandardBogeyBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> bogey() {
 		return b -> b.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
@@ -88,7 +104,22 @@ public class BuilderTransformers {
 			.blockstate((c, p) -> BlockStateGen.horizontalAxisBlock(c, p, s -> p.models()
 				.getExistingFile(p.modLoc("block/track/bogey/top"))))
 			.loot((p, l) -> p.dropOther(l, AllBlocks.RAILWAY_CASING.get()))
-			.onRegister(block -> IBogeyBlock.register(RegisteredObjects.getKeyOrThrow(block)));
+			.onRegister(block -> AbstractBogeyBlock.registerStandardBogey(RegisteredObjects.getKeyOrThrow(block)));
+	}
+
+	public static <B extends CopycatBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> copycat() {
+		return b -> b.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
+				.getExistingFile(p.mcLoc("air"))))
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.noOcclusion()
+				.color(MaterialColor.NONE))
+			.addLayer(() -> RenderType::solid)
+			.addLayer(() -> RenderType::cutout)
+			.addLayer(() -> RenderType::cutoutMipped)
+			.addLayer(() -> RenderType::translucent)
+			.color(() -> CopycatBlock::wrappedColor)
+			.transform(TagGen.axeOrPickaxe());
 	}
 
 	public static <B extends TrapDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> trapdoor(boolean orientable) {
@@ -129,6 +160,7 @@ public class BuilderTransformers {
 			.loot((lr, block) -> lr.add(block, lr.createDoorTable(block)))
 			.item()
 			.tag(ItemTags.DOORS)
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.model((c, p) -> p.blockSprite(c, p.modLoc("item/" + type + "_door")))
 			.build();
 	}
@@ -149,6 +181,7 @@ public class BuilderTransformers {
 		String encasedSuffix = "_encased_cogwheel_side" + (large ? "_connected" : "");
 		String blockFolder = large ? "encased_large_cogwheel" : "encased_cogwheel";
 		String wood = casing.equals("brass") ? "dark_oak" : "spruce";
+		String gearbox = casing.equals("brass") ? "brass_gearbox" : "gearbox";
 		return encasedBase(b, drop).addLayer(() -> RenderType::cutoutMipped)
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift.get(),
 				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS)
@@ -161,12 +194,15 @@ public class BuilderTransformers {
 				return p.models()
 					.withExistingParent(modelName, p.modLoc("block/" + blockFolder + "/block" + suffix))
 					.texture("casing", Create.asResource("block/" + casing + "_casing"))
+					.texture("particle", Create.asResource("block/" + casing + "_casing"))
+					.texture("4", Create.asResource("block/" + gearbox))
 					.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
 					.texture("side", Create.asResource("block/" + casing + encasedSuffix));
 			}, false))
 			.item()
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + blockFolder + "/item"))
 				.texture("casing", Create.asResource("block/" + casing + "_casing"))
+				.texture("particle", Create.asResource("block/" + casing + "_casing"))
 				.texture("1", new ResourceLocation("block/stripped_" + wood + "_log_top"))
 				.texture("side", Create.asResource("block/" + casing + encasedSuffix)))
 			.build();
@@ -191,8 +227,9 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> ladder(String name,
-		Supplier<DataIngredient> ingredient) {
+		Supplier<DataIngredient> ingredient, MaterialColor color) {
 		return b -> b.initialProperties(() -> Blocks.LADDER)
+			.properties(p -> p.color(color))
 			.addLayer(() -> RenderType::cutout)
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
 				.withExistingParent(c.getName(), p.modLoc("block/ladder"))
@@ -203,12 +240,38 @@ public class BuilderTransformers {
 			.transform(pickaxeOnly())
 			.tag(BlockTags.CLIMBABLE)
 			.item()
-			.recipe((c, p) -> {
-				if (name.equals("andesite"))
-					return;
-				p.stonecutting(ingredient.get(), RecipeCategory.DECORATIONS, c::get, 2);
-			})
+			.recipe((c, p) -> p.stonecutting(ingredient.get(), RecipeCategory.DECORATIONS, c::get, 2))
 			.model((c, p) -> p.blockSprite(c::get, p.modLoc("block/ladder_" + name)))
+			.build();
+	}
+
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> scaffold(String name,
+		Supplier<DataIngredient> ingredient, MaterialColor color, CTSpriteShiftEntry scaffoldShift,
+		CTSpriteShiftEntry scaffoldInsideShift, CTSpriteShiftEntry casingShift) {
+		return b -> b.initialProperties(() -> Blocks.SCAFFOLDING)
+			.properties(p -> p.sound(SoundType.COPPER)
+				.color(color))
+			.addLayer(() -> RenderType::cutout)
+			.blockstate((c, p) -> p.getVariantBuilder(c.get())
+				.forAllStatesExcept(s -> {
+					String suffix = s.getValue(MetalScaffoldingBlock.BOTTOM) ? "_horizontal" : "";
+					return ConfiguredModel.builder()
+						.modelFile(p.models()
+							.withExistingParent(c.getName() + suffix, p.modLoc("block/scaffold/block" + suffix))
+							.texture("top", p.modLoc("block/funnel/" + name + "_funnel_frame"))
+							.texture("inside", p.modLoc("block/scaffold/" + name + "_scaffold_inside"))
+							.texture("side", p.modLoc("block/scaffold/" + name + "_scaffold"))
+							.texture("casing", p.modLoc("block/" + name + "_casing"))
+							.texture("particle", p.modLoc("block/scaffold/" + name + "_scaffold")))
+						.build();
+				}, MetalScaffoldingBlock.WATERLOGGED, MetalScaffoldingBlock.DISTANCE))
+			.onRegister(connectedTextures(
+				() -> new MetalScaffoldingCTBehaviour(scaffoldShift, scaffoldInsideShift, casingShift)))
+			.transform(pickaxeOnly())
+			.tag(BlockTags.CLIMBABLE)
+			.item(MetalScaffoldingBlockItem::new)
+			.recipe((c, p) -> p.stonecutting(ingredient.get(), RecipeCategory.DECORATIONS, c::get, 2))
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + c.getName())))
 			.build();
 	}
 
@@ -222,7 +285,6 @@ public class BuilderTransformers {
 					.texture("3", p.modLoc("block/valve_handle/valve_handle_" + variant)));
 			})
 			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.VALVE_HANDLES.tag)
-			.transform(BlockStressDefaults.setCapacity(8.0))
 			.transform(BlockStressDefaults.setGeneratorSpeed(ValveHandleBlock::getSpeedRange))
 			.onRegister(ItemUseOverrides::addBlock)
 			.item()
@@ -263,33 +325,37 @@ public class BuilderTransformers {
 
 	public static <B extends BeltTunnelBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> beltTunnel(
 		String type, ResourceLocation particleTexture) {
+		String prefix = "block/tunnel/" + type + "_tunnel";
+		String funnel_prefix = "block/funnel/" + type + "_funnel";
 		return b -> b.initialProperties(SharedProperties::stone)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.transform(pickaxeOnly())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStates(state -> {
-					String id = "block/" + type + "_tunnel";
 					Shape shape = state.getValue(BeltTunnelBlock.SHAPE);
+					String window = shape == Shape.WINDOW ? "_window" : "";
 					if (shape == BeltTunnelBlock.Shape.CLOSED)
 						shape = BeltTunnelBlock.Shape.STRAIGHT;
 					String shapeName = shape.getSerializedName();
 					return ConfiguredModel.builder()
 						.modelFile(p.models()
-							.withExistingParent(id + "/" + shapeName, p.modLoc("block/belt_tunnel/" + shapeName))
-							.texture("1", p.modLoc(id + "_top"))
-							.texture("2", p.modLoc(id))
-							.texture("3", p.modLoc(id + "_top_window"))
+							.withExistingParent(prefix + "/" + shapeName, p.modLoc("block/belt_tunnel/" + shapeName))
+							.texture("top", p.modLoc(prefix + "_top" + window))
+							.texture("tunnel", p.modLoc(prefix))
+							.texture("direction", p.modLoc(funnel_prefix + "_neutral"))
+							.texture("frame", p.modLoc(funnel_prefix + "_frame"))
 							.texture("particle", particleTexture))
 						.rotationY(state.getValue(BeltTunnelBlock.HORIZONTAL_AXIS) == Axis.X ? 0 : 90)
 						.build();
 				}))
 			.item(BeltTunnelItem::new)
 			.model((c, p) -> {
-				String id = type + "_tunnel";
-				p.withExistingParent("item/" + id, p.modLoc("block/belt_tunnel/item"))
-					.texture("1", p.modLoc("block/" + id + "_top"))
-					.texture("2", p.modLoc("block/" + id))
+				p.withExistingParent("item/" + type + "_tunnel", p.modLoc("block/belt_tunnel/item"))
+					.texture("top", p.modLoc(prefix + "_top"))
+					.texture("tunnel", p.modLoc(prefix))
+					.texture("direction", p.modLoc(funnel_prefix + "_neutral"))
+					.texture("frame", p.modLoc(funnel_prefix + "_frame"))
 					.texture("particle", particleTexture);
 			})
 			.build();
@@ -306,12 +372,10 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> bearing(String prefix,
-		String backTexture, boolean woodenTop) {
+		String backTexture) {
 		ResourceLocation baseBlockModelLocation = Create.asResource("block/bearing/block");
 		ResourceLocation baseItemModelLocation = Create.asResource("block/bearing/item");
-		ResourceLocation topTextureLocation = Create.asResource("block/bearing_top" + (woodenTop ? "_wooden" : ""));
-		ResourceLocation nookTextureLocation =
-			Create.asResource("block/" + (woodenTop ? "andesite" : "brass") + "_casing");
+		ResourceLocation topTextureLocation = Create.asResource("block/bearing_top");
 		ResourceLocation sideTextureLocation = Create.asResource("block/" + prefix + "_bearing_side");
 		ResourceLocation backTextureLocation = Create.asResource("block/" + backTexture);
 		return b -> b.initialProperties(SharedProperties::stone)
@@ -319,7 +383,6 @@ public class BuilderTransformers {
 			.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
 				.withExistingParent(c.getName(), baseBlockModelLocation)
 				.texture("side", sideTextureLocation)
-				.texture("nook", nookTextureLocation)
 				.texture("back", backTextureLocation)))
 			.item()
 			.model((c, p) -> p.withExistingParent(c.getName(), baseItemModelLocation)
@@ -360,6 +423,26 @@ public class BuilderTransformers {
 			.transform(ModelGen.customItemModel("crate", type, "single"));
 	}
 
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> backtank(Supplier<ItemLike> drop) {
+		return b -> b.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+			.transform(pickaxeOnly())
+			.addLayer(() -> RenderType::cutoutMipped)
+			.transform(BlockStressDefaults.setImpact(4.0))
+			.loot((lt, block) -> {
+				Builder builder = LootTable.lootTable();
+				LootItemCondition.Builder survivesExplosion = ExplosionCondition.survivesExplosion();
+				lt.add(block, builder.withPool(LootPool.lootPool()
+					.when(survivesExplosion)
+					.setRolls(ConstantValue.exactly(1))
+					.add(LootItem.lootTableItem(drop.get())
+						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+							.copy("Air", "Air"))
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+							.copy("Enchantments", "Enchantments")))));
+			});
+	}
+
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> bell() {
 		return b -> b.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.noOcclusion()
@@ -375,6 +458,7 @@ public class BuilderTransformers {
 			}))
 			.item()
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + c.getName())))
+			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
 			.build();
 	}
 

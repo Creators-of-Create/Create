@@ -1,0 +1,7 @@
+{
+  "parent": "create:item/bars",
+  "textures": {
+    "bars": "create:block/bars/brass_bars",
+    "edge": "create:block/bars/brass_bars_edge"
+  }
+}

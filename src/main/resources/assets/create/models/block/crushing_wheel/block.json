@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/crushing_wheel/textures",
+	"loader": "forge:obj",
+	"flip_v": true,
+	"model": "create:models/block/crushing_wheel/crushing_wheel.obj"
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "create:brass_casing"
+    },
+    "I": {
+      "item": "minecraft:comparator"
+    },
+    "R": {
+      "item": "create:electron_tube"
+    }
+  },
+  "pattern": [
+    "R",
+    "B",
+    "I"
+  ],
+  "result": {
+    "item": "create:stockpile_switch"
+  }
+}

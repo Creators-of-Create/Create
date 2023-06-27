@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"3": "create:block/brass_casing_belt",
+		"3": "create:block/belt/brass_belt_casing",
 		"particle": "create:block/brass_casing"
 	},
 	"elements": [
@@ -11,12 +11,12 @@
 			"from": [5, 0, 0],
 			"to": [11, 16, 16],
 			"faces": {
-				"north": {"uv": [8, 12.5, 16, 15.5], "rotation": 90, "texture": "#3"},
-				"east": {"uv": [0, 0, 8, 8], "rotation": 270, "texture": "#3"},
-				"south": {"uv": [8, 12.5, 16, 15.5], "rotation": 90, "texture": "#3"},
-				"west": {"uv": [0, 0, 8, 8], "texture": "#3"},
-				"up": {"uv": [8, 12.5, 16, 15.5], "rotation": 90, "texture": "#3"},
-				"down": {"uv": [8, 12.5, 16, 15.5], "rotation": 90, "texture": "#3"}
+				"north": {"uv": [0, 13.25, 4, 14.75], "rotation": 90, "texture": "#3"},
+				"east": {"uv": [4, 8, 8, 12], "texture": "#3"},
+				"south": {"uv": [0, 13.25, 4, 14.75], "rotation": 90, "texture": "#3"},
+				"west": {"uv": [4, 8, 8, 12], "texture": "#3"},
+				"up": {"uv": [0, 11.25, 4, 12.75], "rotation": 90, "texture": "#3"},
+				"down": {"uv": [0, 11.25, 4, 12.75], "rotation": 90, "texture": "#3"}
 			}
 		}
 	],
@@ -24,6 +24,7 @@
 		{
 			"name": "horizontal_middle",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0]
 		}
 	]

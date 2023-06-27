@@ -8,10 +8,11 @@
   "processingTime": 400,
   "results": [
     {
-      "item": "create:crushed_gold_ore"
+      "item": "create:crushed_raw_gold"
     },
     {
       "chance": 0.75,
+      "count": 2,
       "item": "create:experience_nugget"
     }
   ]

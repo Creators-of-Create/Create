@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/brass"
+            "items": [
+              "create:railway_casing"
+            ]
           }
         ]
       },

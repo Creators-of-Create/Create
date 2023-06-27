@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 import com.jozufozu.flywheel.core.shader.GameStateProvider;
 import com.jozufozu.flywheel.core.shader.ShaderConstants;
-import com.simibubi.create.content.contraptions.KineticDebugger;
+import com.simibubi.create.content.kinetics.KineticDebugger;
 
 public enum RainbowDebugStateProvider implements GameStateProvider {
 	INSTANCE;

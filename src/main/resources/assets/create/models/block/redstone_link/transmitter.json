@@ -46,18 +46,60 @@
 				"south": {"uv": [0, 0, 3, 10], "texture": "#redstone_antenna"},
 				"down": {"uv": [0, 9, 3, 10], "texture": "#redstone_antenna"}
 			}
+		},
+		{
+			"from": [6, 2.5, 3.5],
+			"to": [10, 3.5, 7.5],
+			"faces": {
+				"north": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
+				"east": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
+				"south": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
+				"west": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
+				"up": {"uv": [11, 0, 13, 2], "texture": "#redstone_bridge"}
+			}
+		},
+		{
+			"from": [6, 2.5, 8.5],
+			"to": [10, 3.5, 12.5],
+			"faces": {
+				"north": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
+				"east": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
+				"south": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
+				"west": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
+				"up": {"uv": [13, 0, 15, 2], "texture": "#redstone_bridge"}
+			}
 		}
 	],
 	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
 		"gui": {
-			"rotation": [30, 45, 0],
+			"rotation": [30, 225, 0],
 			"translation": [0, 2.5, 0],
 			"scale": [0.625, 0.625, 0.625]
 		},
-        "fixed": {
-            "rotation": [ 270, 0, 0 ],
-            "translation": [ 0, 0, -3],
-            "scale":[ 0.5, 0.5, 0.5 ]
-        }
-    }
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }

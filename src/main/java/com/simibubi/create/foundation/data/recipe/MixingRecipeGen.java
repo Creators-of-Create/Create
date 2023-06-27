@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.processing.HeatCondition;
-import com.simibubi.create.foundation.utility.recipe.BlockTagIngredient;
+import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.simibubi.create.foundation.recipe.BlockTagIngredient;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;

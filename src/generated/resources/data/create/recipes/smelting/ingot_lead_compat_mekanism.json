@@ -10,7 +10,7 @@
   "cookingtime": 200,
   "experience": 0.1,
   "ingredient": {
-    "item": "create:crushed_lead_ore"
+    "item": "create:crushed_raw_lead"
   },
   "result": "mekanism:ingot_lead"
 }

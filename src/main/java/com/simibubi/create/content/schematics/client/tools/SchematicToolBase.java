@@ -9,12 +9,12 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
+import com.simibubi.create.foundation.outliner.AABBOutline;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -121,7 +121,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	}
 
 	@Override
-	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer) {}
+	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {}
 
 	@Override
 	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {}
@@ -143,7 +143,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 			.colored(0x6886c5)
 			.withFaceTexture(AllSpecialTextures.CHECKERED)
 			.lineWidth(1 / 16f);
-		outline.render(ms, buffer, AnimationTickHolder.getPartialTicks());
+		outline.render(ms, buffer, Vec3.ZERO, AnimationTickHolder.getPartialTicks());
 		outline.getParams()
 			.clearTextures();
 		ms.popPose();

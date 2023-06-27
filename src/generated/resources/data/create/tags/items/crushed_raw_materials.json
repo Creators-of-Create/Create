@@ -1,0 +1,17 @@
+{
+  "values": [
+    "create:crushed_raw_iron",
+    "create:crushed_raw_gold",
+    "create:crushed_raw_copper",
+    "create:crushed_raw_zinc",
+    "create:crushed_raw_osmium",
+    "create:crushed_raw_platinum",
+    "create:crushed_raw_silver",
+    "create:crushed_raw_tin",
+    "create:crushed_raw_lead",
+    "create:crushed_raw_quicksilver",
+    "create:crushed_raw_aluminum",
+    "create:crushed_raw_uranium",
+    "create:crushed_raw_nickel"
+  ]
+}

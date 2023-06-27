@@ -5,38 +5,8 @@
     "layer_patterns": [
       [
         {
-          "max_size": 1,
-          "min_size": 1,
-          "targets": [
-            [
-              {
-                "state": {
-                  "Name": "minecraft:stone"
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:stone_ore_replaceables"
-                }
-              },
-              {
-                "state": {
-                  "Name": "minecraft:deepslate",
-                  "Properties": {
-                    "axis": "y"
-                  }
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:deepslate_ore_replaceables"
-                }
-              }
-            ]
-          ],
-          "weight": 1
-        },
-        {
-          "max_size": 3,
-          "min_size": 1,
+          "max_size": 5,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -62,8 +32,8 @@
           "weight": 2
         },
         {
-          "max_size": 2,
-          "min_size": 1,
+          "max_size": 3,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -109,8 +79,8 @@
           "weight": 2
         },
         {
-          "max_size": 1,
-          "min_size": 1,
+          "max_size": 2,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -136,7 +106,7 @@
           "weight": 1
         },
         {
-          "max_size": 1,
+          "max_size": 2,
           "min_size": 1,
           "targets": [
             [
@@ -165,38 +135,8 @@
       ],
       [
         {
-          "max_size": 1,
-          "min_size": 1,
-          "targets": [
-            [
-              {
-                "state": {
-                  "Name": "minecraft:stone"
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:stone_ore_replaceables"
-                }
-              },
-              {
-                "state": {
-                  "Name": "minecraft:deepslate",
-                  "Properties": {
-                    "axis": "y"
-                  }
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:deepslate_ore_replaceables"
-                }
-              }
-            ]
-          ],
-          "weight": 1
-        },
-        {
-          "max_size": 3,
-          "min_size": 1,
+          "max_size": 5,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -222,7 +162,7 @@
           "weight": 2
         },
         {
-          "max_size": 2,
+          "max_size": 3,
           "min_size": 2,
           "targets": [
             [
@@ -275,8 +215,8 @@
           "weight": 1
         },
         {
-          "max_size": 1,
-          "min_size": 1,
+          "max_size": 2,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -305,7 +245,7 @@
           "weight": 1
         },
         {
-          "max_size": 1,
+          "max_size": 2,
           "min_size": 1,
           "targets": [
             [
@@ -334,38 +274,8 @@
       ],
       [
         {
-          "max_size": 1,
-          "min_size": 1,
-          "targets": [
-            [
-              {
-                "state": {
-                  "Name": "minecraft:stone"
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:stone_ore_replaceables"
-                }
-              },
-              {
-                "state": {
-                  "Name": "minecraft:deepslate",
-                  "Properties": {
-                    "axis": "y"
-                  }
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:deepslate_ore_replaceables"
-                }
-              }
-            ]
-          ],
-          "weight": 1
-        },
-        {
-          "max_size": 3,
-          "min_size": 1,
+          "max_size": 5,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -391,8 +301,8 @@
           "weight": 2
         },
         {
-          "max_size": 2,
-          "min_size": 1,
+          "max_size": 3,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -444,8 +354,8 @@
           "weight": 1
         },
         {
-          "max_size": 1,
-          "min_size": 1,
+          "max_size": 2,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -474,7 +384,7 @@
           "weight": 1
         },
         {
-          "max_size": 1,
+          "max_size": 2,
           "min_size": 1,
           "targets": [
             [
@@ -503,38 +413,8 @@
       ],
       [
         {
-          "max_size": 1,
-          "min_size": 1,
-          "targets": [
-            [
-              {
-                "state": {
-                  "Name": "minecraft:stone"
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:stone_ore_replaceables"
-                }
-              },
-              {
-                "state": {
-                  "Name": "minecraft:deepslate",
-                  "Properties": {
-                    "axis": "y"
-                  }
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:deepslate_ore_replaceables"
-                }
-              }
-            ]
-          ],
-          "weight": 2
-        },
-        {
-          "max_size": 3,
-          "min_size": 1,
+          "max_size": 5,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -560,8 +440,8 @@
           "weight": 4
         },
         {
-          "max_size": 2,
-          "min_size": 1,
+          "max_size": 3,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -607,8 +487,8 @@
           "weight": 2
         },
         {
-          "max_size": 1,
-          "min_size": 1,
+          "max_size": 2,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -634,7 +514,7 @@
           "weight": 2
         },
         {
-          "max_size": 1,
+          "max_size": 2,
           "min_size": 1,
           "targets": [
             [
@@ -748,7 +628,7 @@
         },
         {
           "max_size": 4,
-          "min_size": 1,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -776,38 +656,8 @@
       ],
       [
         {
-          "max_size": 1,
-          "min_size": 1,
-          "targets": [
-            [
-              {
-                "state": {
-                  "Name": "minecraft:stone"
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:stone_ore_replaceables"
-                }
-              },
-              {
-                "state": {
-                  "Name": "minecraft:deepslate",
-                  "Properties": {
-                    "axis": "y"
-                  }
-                },
-                "target": {
-                  "predicate_type": "minecraft:tag_match",
-                  "tag": "minecraft:deepslate_ore_replaceables"
-                }
-              }
-            ]
-          ],
-          "weight": 1
-        },
-        {
-          "max_size": 3,
-          "min_size": 1,
+          "max_size": 5,
+          "min_size": 2,
           "targets": [
             [
               {
@@ -833,8 +683,8 @@
           "weight": 2
         },
         {
-          "max_size": 2,
-          "min_size": 1,
+          "max_size": 3,
+          "min_size": 2,
           "targets": [
             [
               {

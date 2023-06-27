@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "create:veridium"
-  },
-  "result": "create:polished_cut_veridium_stairs"
-}

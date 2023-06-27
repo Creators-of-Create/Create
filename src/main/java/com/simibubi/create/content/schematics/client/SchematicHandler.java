@@ -8,20 +8,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
+import com.simibubi.create.content.contraptions.StructureTransform;
+import com.simibubi.create.content.schematics.SchematicInstances;
+import com.simibubi.create.content.schematics.SchematicItem;
 import com.simibubi.create.content.schematics.SchematicWorld;
-import com.simibubi.create.content.schematics.client.tools.Tools;
-import com.simibubi.create.content.schematics.filtering.SchematicInstances;
-import com.simibubi.create.content.schematics.item.SchematicItem;
+import com.simibubi.create.content.schematics.client.tools.ToolType;
 import com.simibubi.create.content.schematics.packet.SchematicPlacePacket;
 import com.simibubi.create.content.schematics.packet.SchematicSyncPacket;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.outliner.AABBOutline;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -46,17 +46,18 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-public class SchematicHandler {
+public class SchematicHandler implements IGuiOverlay {
 
 	private String displayedSchematic;
 	private SchematicTransformation transformation;
 	private AABB bounds;
 	private boolean deployed;
 	private boolean active;
-	private Tools currentTool;
+	private ToolType currentTool;
 
 	private static final int SYNC_DELAY = 10;
 	private int syncCooldown;
@@ -68,16 +69,14 @@ public class SchematicHandler {
 	private SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
 
-	private final IGuiOverlay overlayRenderer = this::renderOverlay;
-
 	public SchematicHandler() {
 		renderers = new Vector<>(3);
 		for (int i = 0; i < renderers.capacity(); i++)
 			renderers.add(new SchematicRenderer());
 
 		overlay = new SchematicHotbarSlotOverlay();
-		currentTool = Tools.Deploy;
-		selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
+		currentTool = ToolType.DEPLOY;
+		selectionScreen = new ToolSelectionScreen(ImmutableList.of(ToolType.DEPLOY), this::equip);
 		transformation = new SchematicTransformation();
 	}
 
@@ -135,14 +134,14 @@ public class SchematicHandler {
 		active = true;
 		if (deployed) {
 			setupRenderer();
-			Tools toolBefore = currentTool;
-			selectionScreen = new ToolSelectionScreen(Tools.getTools(player.isCreative()), this::equip);
+			ToolType toolBefore = currentTool;
+			selectionScreen = new ToolSelectionScreen(ToolType.getTools(player.isCreative()), this::equip);
 			if (toolBefore != null) {
 				selectionScreen.setSelectedElement(toolBefore);
 				equip(toolBefore);
 			}
 		} else
-			selectionScreen = new ToolSelectionScreen(ImmutableList.of(Tools.Deploy), this::equip);
+			selectionScreen = new ToolSelectionScreen(ImmutableList.of(ToolType.DEPLOY), this::equip);
 	}
 
 	private void setupRenderer() {
@@ -176,16 +175,16 @@ public class SchematicHandler {
 		schematic.placeInWorld(wMirroredFB, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
 			placementSettings.getMirror());
-		for (BlockEntity te : wMirroredFB.getRenderedTileEntities())
-			transform.apply(te);
+		for (BlockEntity be : wMirroredFB.getRenderedBlockEntities())
+			transform.apply(be);
 
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
 		pos = BlockPos.ZERO.south(size.getZ() - 1);
 		schematic.placeInWorld(wMirroredLR, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		transform = new StructureTransform(placementSettings.getRotationPivot(), Axis.Y, Rotation.NONE,
 			placementSettings.getMirror());
-		for (BlockEntity te : wMirroredLR.getRenderedTileEntities())
-			transform.apply(te);
+		for (BlockEntity be : wMirroredLR.getRenderedBlockEntities())
+			transform.apply(be);
 
 		renderers.get(0)
 			.display(w);
@@ -195,7 +194,7 @@ public class SchematicHandler {
 			.display(wMirroredLR);
 	}
 
-	public void render(PoseStack ms, SuperRenderTypeBuffer buffer) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
 		boolean present = activeSchematicItem != null;
 		if (!active && !present)
 			return;
@@ -203,12 +202,12 @@ public class SchematicHandler {
 		if (active) {
 			ms.pushPose();
 			currentTool.getTool()
-				.renderTool(ms, buffer);
+				.renderTool(ms, buffer, camera);
 			ms.popPose();
 		}
 
 		ms.pushPose();
-		transformation.applyGLTransformations(ms);
+		transformation.applyTransformations(ms, camera);
 
 		if (!renderers.isEmpty()) {
 			float pt = AnimationTickHolder.getPartialTicks();
@@ -241,11 +240,8 @@ public class SchematicHandler {
 		}
 	}
 
-	public IGuiOverlay getOverlayRenderer() {
-		return overlayRenderer;
-	}
-
-	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	@Override
+	public void render(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		if (Minecraft.getInstance().options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)
@@ -336,11 +332,11 @@ public class SchematicHandler {
 	public void sync() {
 		if (activeSchematicItem == null)
 			return;
-		AllPackets.channel.sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
+		AllPackets.getChannel().sendToServer(new SchematicSyncPacket(activeHotbarSlot, transformation.toSettings(),
 			transformation.getAnchor(), deployed));
 	}
 
-	public void equip(Tools tool) {
+	public void equip(ToolType tool) {
 		this.currentTool = tool;
 		currentTool.getTool()
 			.init();
@@ -367,7 +363,7 @@ public class SchematicHandler {
 
 	public void deploy() {
 		if (!deployed) {
-			List<Tools> tools = Tools.getTools(Minecraft.getInstance().player.isCreative());
+			List<ToolType> tools = ToolType.getTools(Minecraft.getInstance().player.isCreative());
 			selectionScreen = new ToolSelectionScreen(tools, this::equip);
 		}
 		deployed = true;
@@ -379,7 +375,7 @@ public class SchematicHandler {
 	}
 
 	public void printInstantly() {
-		AllPackets.channel.sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
+		AllPackets.getChannel().sendToServer(new SchematicPlacePacket(activeSchematicItem.copy()));
 		CompoundTag nbt = activeSchematicItem.getTag();
 		nbt.putBoolean("Deployed", false);
 		activeSchematicItem.setTag(nbt);

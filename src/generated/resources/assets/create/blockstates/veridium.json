@@ -1,7 +1,18 @@
 {
   "variants": {
-    "": {
-      "model": "create:block/veridium"
-    }
+    "": [
+      {
+        "model": "create:block/veridium_natural_0"
+      },
+      {
+        "model": "create:block/veridium_natural_1"
+      },
+      {
+        "model": "create:block/veridium_natural_2"
+      },
+      {
+        "model": "create:block/veridium_natural_3"
+      }
+    ]
   }
 }

@@ -2,8 +2,6 @@ package com.simibubi.create.foundation.ponder;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.element.ScreenElement;
@@ -11,87 +9,13 @@ import com.simibubi.create.foundation.gui.element.ScreenElement;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PonderTag implements ScreenElement {
 
-	public static final PonderTag
-
-	KINETIC_RELAYS = create("kinetic_relays").item(AllBlocks.COGWHEEL.get(), true, false)
-		.defaultLang("Kinetic Blocks", "Components which help relaying Rotational Force elsewhere")
-		.addToIndex(),
-
-		KINETIC_SOURCES = create("kinetic_sources").item(AllBlocks.WATER_WHEEL.get(), true, false)
-			.defaultLang("Kinetic Sources", "Components which generate Rotational Force")
-			.addToIndex(),
-
-		KINETIC_APPLIANCES = create("kinetic_appliances").item(AllBlocks.MECHANICAL_PRESS.get(), true, false)
-			.defaultLang("Kinetic Appliances", "Components which make use of Rotational Force")
-			.addToIndex(),
-
-		FLUIDS = create("fluids").item(AllBlocks.FLUID_PIPE.get(), true, false)
-			.defaultLang("Fluid Manipulators", "Components which help relaying and making use of Fluids")
-			.addToIndex(),
-
-		LOGISTICS = create("logistics").item(Blocks.CHEST, true, false)
-			.defaultLang("Item Transportation", "Components which help moving items around")
-			.addToIndex(),
-
-		REDSTONE = create("redstone").item(Items.REDSTONE, true, false)
-			.defaultLang("Logic Components", "Components which help with redstone engineering")
-			.addToIndex(),
-
-		DECORATION = create("decoration").item(Items.ROSE_BUSH, true, false)
-			.defaultLang("Aesthetics", "Components used mostly for decorative purposes"),
-
-		CREATIVE = create("creative").item(AllBlocks.CREATIVE_CRATE.get(), true, false)
-			.defaultLang("Creative Mode", "Components not usually available for Survival Mode")
-			.addToIndex(),
-
-		MOVEMENT_ANCHOR = create("movement_anchor").item(AllBlocks.MECHANICAL_PISTON.get(), true, false)
-			.defaultLang("Movement Anchors",
-				"Components which allow the creation of moving contraptions, animating an attached structure in a variety of ways")
-			.addToIndex(),
-
-		CONTRAPTION_ACTOR = create("contraption_actor").item(AllBlocks.MECHANICAL_HARVESTER.get(), true, false)
-			.defaultLang("Contraption Actors",
-				"Components which expose special behaviour when attached to a moving contraption")
-			.addToIndex(),
-
-		CONTRAPTION_ASSEMBLY = create("contraption_assembly").item(AllItems.SUPER_GLUE.get(), true, false)
-			.defaultLang("Block Attachment Utility",
-				"Tools and Components used to assemble structures moved as an animated Contraption")
-			.addToIndex(),
-
-		SAILS = create("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get())
-			.defaultLang("Sails for Windmill Bearings",
-				"Blocks that count towards the strength of a Windmill Contraption when assembled. Each of these have equal efficiency in doing so."),
-
-		ARM_TARGETS = create("arm_targets").item(AllBlocks.MECHANICAL_ARM.get())
-			.defaultLang("Targets for Mechanical Arms",
-				"Components which can be selected as inputs or outputs to the Mechanical Arm"),
-
-		TRAIN_RELATED = create("train_related").item(AllBlocks.TRACK.get())
-			.defaultLang("Railway Equipment", "Components used in the construction or management of Train Contraptions")
-			.addToIndex(),
-
-		DISPLAY_SOURCES = create("display_sources").item(AllBlocks.DISPLAY_LINK.get(), true, false)
-			.item(AllBlocks.DISPLAY_LINK.get(), false, true)
-			.defaultLang("Sources for Display Links",
-				"Components or Blocks which offer some data that can be read with a Display Link"),
-
-		DISPLAY_TARGETS = create("display_targets").item(AllBlocks.DISPLAY_LINK.get(), true, false)
-			.item(AllBlocks.DISPLAY_LINK.get(), false, true)
-			.defaultLang("Targets for Display Links",
-				"Components or Blocks which can process and display the data received from a Display Link");
-
-	public static class Highlight {
-		public static final PonderTag ALL = create("_all");
-	}
+	public static final PonderTag HIGHLIGHT_ALL = new PonderTag(Create.asResource("_all"));
 
 	private final ResourceLocation id;
 	private ResourceLocation icon;
@@ -153,7 +77,7 @@ public class PonderTag implements ScreenElement {
 	}
 
 	public PonderTag item(ItemLike item) {
-		return this.item(item, true, true);
+		return this.item(item, true, false);
 	}
 
 	@Override
@@ -166,19 +90,12 @@ public class PonderTag implements ScreenElement {
 			ms.scale(0.25f, 0.25f, 1);
 			GuiComponent.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
-			ms.translate(-4, -4, 0);
-			ms.scale(1.5f, 1.5f, 1.5f);
+			ms.translate(-2, -2, 0);
+			ms.scale(1.25f, 1.25f, 1.25f);
 			GuiGameElement.of(itemIcon)
 				.render(ms);
 		}
 		ms.popPose();
 	}
-
-	private static PonderTag create(String id) {
-		return new PonderTag(Create.asResource(id));
-	}
-
-	// Load class
-	public static void register() {}
 
 }

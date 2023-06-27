@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "create:item/clipboard_0",
+      "predicate": {
+        "create:clipboard_type": 0.0
+      }
+    },
+    {
+      "model": "create:item/clipboard_1",
+      "predicate": {
+        "create:clipboard_type": 1.0
+      }
+    },
+    {
+      "model": "create:item/clipboard_2",
+      "predicate": {
+        "create:clipboard_type": 2.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "create:item/clipboard"
+  }
+}

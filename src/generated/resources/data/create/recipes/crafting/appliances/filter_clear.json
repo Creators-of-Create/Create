@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "create:filter"
+    }
+  ],
+  "result": {
+    "item": "create:filter"
+  }
+}

@@ -5,8 +5,7 @@
 		"3": "create:block/crafter_thingies",
 		"4": "create:block/crafter_side",
 		"5": "create:block/brass_casing",
-		"6": "create:block/crafter_top",
-		"7": "create:block/crafter_topunderside",
+		"7": "create:block/brass_block",
 		"8": "create:block/smooth_dark_log_top",
 		"particle": "create:block/brass_casing"
 	},
@@ -16,7 +15,7 @@
 			"from": [0, 0, 0],
 			"to": [16, 16, 6],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#6"},
+				"north": {"uv": [0, 0, 16, 16], "texture": "#5"},
 				"east": {"uv": [0, 0, 16, 6], "rotation": 90, "texture": "#4"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#7"},
 				"west": {"uv": [16, 0, 0, 6], "rotation": 270, "texture": "#4"},
@@ -31,7 +30,7 @@
 			"faces": {
 				"north": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#8"},
 				"east": {"uv": [0, 10, 16, 16], "rotation": 90, "texture": "#4"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#6"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#5"},
 				"west": {"uv": [16, 10, 0, 16], "rotation": 270, "texture": "#4"},
 				"up": {"uv": [0, 10, 16, 16], "texture": "#4"},
 				"down": {"uv": [0, 10, 16, 16], "rotation": 180, "texture": "#4"}

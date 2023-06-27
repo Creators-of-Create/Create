@@ -1,6 +1,5 @@
 package com.simibubi.create;
 
-import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +7,11 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.simibubi.create.content.AllSections;
-import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
-import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
-import com.simibubi.create.content.curiosities.armor.BackTankUtil;
-import com.simibubi.create.content.curiosities.toolbox.ToolboxBlock;
-import com.simibubi.create.content.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
+import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.equipment.armor.BacktankUtil;
+import com.simibubi.create.content.equipment.toolbox.ToolboxBlock;
+import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -34,10 +32,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
 import net.minecraft.world.item.CreativeModeTab.Output;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -58,16 +56,17 @@ public class AllCreativeModeTabs {
 
 	@SubscribeEvent
 	public static void onCreativeModeTabRegister(CreativeModeTabEvent.Register event) {
+		// FIXME: 1.19.3 this used to filter by AllSections.PALETTES
 		baseTab = event.registerCreativeModeTab(BASE_TAB_ID, List.of(PALETTES_TAB_ID), List.of(CreativeModeTabs.SPAWN_EGGS), builder -> {
 			builder.title(Component.translatable("itemGroup.create.base"))
 				.icon(() -> AllBlocks.COGWHEEL.asStack())
-				.displayItems(new RegistrateDisplayItemsGenerator(EnumSet.complementOf(EnumSet.of(AllSections.PALETTES)), true));
+				.displayItems(new RegistrateDisplayItemsGenerator(true));
 		});
 
 		palettesTab = event.registerCreativeModeTab(PALETTES_TAB_ID, List.of(), List.of(CreativeModeTabs.SPAWN_EGGS, BASE_TAB_ID), builder -> {
 			builder.title(Component.translatable("itemGroup.create.palettes"))
 				.icon(() -> AllPaletteBlocks.ORNATE_IRON_WINDOW.asStack())
-				.displayItems(new RegistrateDisplayItemsGenerator(EnumSet.of(AllSections.PALETTES), false));
+				.displayItems(new RegistrateDisplayItemsGenerator(false));
 		});
 	}
 
@@ -80,11 +79,11 @@ public class AllCreativeModeTabs {
 	}
 
 	private static class RegistrateDisplayItemsGenerator implements DisplayItemsGenerator {
-		private final EnumSet<AllSections> sections;
+//		private final EnumSet<AllSections> sections;
 		private final boolean addItems;
 
-		public RegistrateDisplayItemsGenerator(EnumSet<AllSections> sections, boolean addItems) {
-			this.sections = sections;
+		public RegistrateDisplayItemsGenerator(boolean addItems) {
+//			this.sections = sections;
 			this.addItems = addItems;
 		}
 		private static Predicate<Item> makeExclusionPredicate() {
@@ -168,7 +167,7 @@ public class AllCreativeModeTabs {
 			Map<ItemProviderEntry<?>, Function<Item, ItemStack>> simpleFactories = Map.of(
 					AllItems.COPPER_BACKTANK, item -> {
 						ItemStack stack = new ItemStack(item);
-						stack.getOrCreateTag().putInt("Air", BackTankUtil.maxAirWithoutEnchants());
+						stack.getOrCreateTag().putInt("Air", BacktankUtil.maxAirWithoutEnchants());
 						return stack;
 					}
 			);
@@ -250,8 +249,8 @@ public class AllCreativeModeTabs {
 
 		private List<Item> collectBlocks(Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
-			for (AllSections section : sections) {
-				for (RegistryEntry<Block> entry : Create.REGISTRATE.getAll(section, Registries.BLOCK)) {
+//			for (AllSections section : sections) {
+				for (RegistryEntry<Block> entry : Create.REGISTRATE.getAll(Registries.BLOCK)) {
 					Item item = entry.get().asItem();
 					if (item != Items.AIR) {
 						if (!exclusionPredicate.test(item)) {
@@ -259,15 +258,15 @@ public class AllCreativeModeTabs {
 						}
 					}
 				}
-			}
+//			}
 			items = new ReferenceArrayList<>(new ReferenceLinkedOpenHashSet<>(items));
 			return items;
 		}
 
 		private List<Item> collectItems(ItemRenderer itemRenderer, boolean special, Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
-			for (AllSections section : sections) {
-				for (RegistryEntry<Item> entry : Create.REGISTRATE.getAll(section, Registries.ITEM)) {
+//			for (AllSections section : sections) {
+				for (RegistryEntry<Item> entry : Create.REGISTRATE.getAll(Registries.ITEM)) {
 					Item item = entry.get();
 					if (!(item instanceof BlockItem)) {
 						BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
@@ -278,7 +277,7 @@ public class AllCreativeModeTabs {
 						}
 					}
 				}
-			}
+//			}
 			return items;
 		}
 

@@ -1,10 +1,10 @@
-// 1.19.3	2023-02-06T18:08:23.3300822	Create's Worldgen Data
+// 1.19.3	2023-06-27T03:14:49.7872831	Create's Worldgen Data
 f650826db97d0562230ae0bd965ccbad4c696eff data/create/forge/biome_modifier/striated_ores_nether.json
 d401f270f1ba0e5d6940aeb8f72ebb3a02dd055e data/create/forge/biome_modifier/striated_ores_overworld.json
 ed82e4fd3dba36cf2fd81a196cc6670ae0c6da9f data/create/forge/biome_modifier/zinc_ore.json
-e1614c8a64a300d8a02553e22812a7e4e157a8f2 data/create/worldgen/configured_feature/striated_ores_nether.json
-642faaa439921e0ddb0d0f28d0af0f0fa52d27dd data/create/worldgen/configured_feature/striated_ores_overworld.json
+ed83634a4af759ef80cfd1101f5715d38268620f data/create/worldgen/configured_feature/striated_ores_nether.json
+39576de9dc1368287a96a8627bbdef34954242e0 data/create/worldgen/configured_feature/striated_ores_overworld.json
 fbf6999fb922a0770cfbea3a8bddc11ba8b1552b data/create/worldgen/configured_feature/zinc_ore.json
-460db1f0c937bdd80be710de8df0a763ad5658a1 data/create/worldgen/placed_feature/striated_ores_nether.json
-62ce384c45affdc6c3722d7cbbb862237fcac131 data/create/worldgen/placed_feature/striated_ores_overworld.json
+176a1226e308874605a73ab7a627b8d0ef87f3ed data/create/worldgen/placed_feature/striated_ores_nether.json
+451e7dab2b989b4c481c1d7c38ab9daab70474f5 data/create/worldgen/placed_feature/striated_ores_overworld.json
 b3f6cb5cfd9fd10d4841480632474800b34055ad data/create/worldgen/placed_feature/zinc_ore.json

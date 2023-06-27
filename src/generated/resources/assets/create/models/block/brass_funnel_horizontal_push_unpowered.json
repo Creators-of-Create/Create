@@ -1,0 +1,10 @@
+{
+  "parent": "create:block/funnel/block_horizontal",
+  "textures": {
+    "base": "create:block/funnel/brass_funnel",
+    "block": "create:block/brass_block",
+    "direction": "create:block/funnel/brass_funnel_push",
+    "particle": "create:block/brass_block",
+    "redstone": "create:block/funnel/brass_funnel_unpowered"
+  }
+}

@@ -6,16 +6,16 @@
       "item": "create:brass_casing"
     },
     "I": {
-      "item": "minecraft:comparator"
+      "item": "minecraft:observer"
     },
     "R": {
       "item": "create:electron_tube"
     }
   },
   "pattern": [
-    "I",
+    "R",
     "B",
-    "R"
+    "I"
   ],
   "result": {
     "item": "create:content_observer"

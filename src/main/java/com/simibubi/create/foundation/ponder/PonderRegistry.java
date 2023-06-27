@@ -13,8 +13,8 @@ import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.ponder.content.PonderIndex;
-import com.simibubi.create.foundation.ponder.content.SharedText;
+import com.simibubi.create.infrastructure.ponder.PonderIndex;
+import com.simibubi.create.infrastructure.ponder.SharedText;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

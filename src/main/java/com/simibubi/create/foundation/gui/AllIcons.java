@@ -83,7 +83,7 @@ public class AllIcons implements ScreenElement {
 	public static final AllIcons
 		I_TOOL_DEPLOY = newRow(),
 		I_SKIP_MISSING = next(),
-		I_SKIP_TILES = next(),
+		I_SKIP_BLOCK_ENTITIES = next(),
 		I_DICE = next(),
 		I_TUNNEL_SPLIT = next(),
 		I_TUNNEL_FORCED_SPLIT = next(),
@@ -105,6 +105,10 @@ public class AllIcons implements ScreenElement {
 
 		I_ADD_INVERTED_ATTRIBUTE = next(),
 		I_FLIP = next(),
+		
+		I_ROLLER_PAVE = next(),
+		I_ROLLER_FILL = next(),
+		I_ROLLER_WIDE_FILL = next(),
 
 		I_PLAY = newRow(),
 		I_PAUSE = next(),
@@ -124,9 +128,14 @@ public class AllIcons implements ScreenElement {
 		I_PATTERN_CHANCE_75 = next(),
 		I_FOLLOW_DIAGONAL = next(),
 		I_FOLLOW_MATERIAL = next(),
+		
+		I_CLEAR_CHECKED = next(),
 
 		I_SCHEMATIC = newRow(),
 		I_SEQ_REPEAT = next(),
+		VALUE_BOX_HOVER_6PX = next(),
+		VALUE_BOX_HOVER_4PX = next(),
+		VALUE_BOX_HOVER_8PX = next(),
 
 		I_MTD_LEFT = newRow(),
 		I_MTD_CLOSE = next(),
@@ -188,7 +197,7 @@ public class AllIcons implements ScreenElement {
 
 	@OnlyIn(Dist.CLIENT)
 	public void render(PoseStack ms, MultiBufferSource buffer, int color) {
-		VertexConsumer builder = buffer.getBuffer(RenderType.textSeeThrough(ICON_ATLAS));
+		VertexConsumer builder = buffer.getBuffer(RenderType.text(ICON_ATLAS));
 		Matrix4f matrix = ms.last().pose();
 		Color rgb = new Color(color);
 		int light = LightTexture.FULL_BRIGHT;

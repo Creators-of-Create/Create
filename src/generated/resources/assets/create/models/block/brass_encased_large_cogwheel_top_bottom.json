@@ -2,7 +2,9 @@
   "parent": "create:block/encased_large_cogwheel/block_top_bottom",
   "textures": {
     "1": "minecraft:block/stripped_dark_oak_log_top",
+    "4": "create:block/brass_gearbox",
     "casing": "create:block/brass_casing",
+    "particle": "create:block/brass_casing",
     "side": "create:block/brass_encased_cogwheel_side_connected"
   }
 }

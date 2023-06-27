@@ -11,14 +11,14 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.kinetics.belt.BeltBlock;
+import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
+import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.mixin.accessor.ParticleEngineAccessor;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.tileEntity.IMultiTileContainer;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
@@ -55,7 +55,7 @@ public class PonderWorld extends SchematicWorld {
 	public PonderScene scene;
 
 	protected Map<BlockPos, BlockState> originalBlocks;
-	protected Map<BlockPos, CompoundTag> originalTileEntities;
+	protected Map<BlockPos, CompoundTag> originalBlockEntities;
 	protected Map<BlockPos, Integer> blockBreakingProgressions;
 	protected List<Entity> originalEntities;
 	private Supplier<ClientLevel> asClientWorld = Suppliers.memoize(() -> WrappedClientWorld.of(this));
@@ -69,7 +69,7 @@ public class PonderWorld extends SchematicWorld {
 	public PonderWorld(BlockPos anchor, Level original) {
 		super(anchor, original);
 		originalBlocks = new HashMap<>();
-		originalTileEntities = new HashMap<>();
+		originalBlockEntities = new HashMap<>();
 		blockBreakingProgressions = new HashMap<>();
 		originalEntities = new ArrayList<>();
 		particles = new PonderWorldParticles(this);
@@ -78,9 +78,9 @@ public class PonderWorld extends SchematicWorld {
 
 	public void createBackup() {
 		originalBlocks.clear();
-		originalTileEntities.clear();
+		originalBlockEntities.clear();
 		blocks.forEach((k, v) -> originalBlocks.put(k, v));
-		tileEntities.forEach((k, v) -> originalTileEntities.put(k, v.saveWithFullMetadata()));
+		blockEntities.forEach((k, v) -> originalBlockEntities.put(k, v.saveWithFullMetadata()));
 		entities.forEach(e -> EntityType.create(e.serializeNBT(), this)
 			.ifPresent(originalEntities::add));
 	}
@@ -88,30 +88,30 @@ public class PonderWorld extends SchematicWorld {
 	public void restore() {
 		entities.clear();
 		blocks.clear();
-		tileEntities.clear();
+		blockEntities.clear();
 		blockBreakingProgressions.clear();
-		renderedTileEntities.clear();
+		renderedBlockEntities.clear();
 		originalBlocks.forEach((k, v) -> blocks.put(k, v));
-		originalTileEntities.forEach((k, v) -> {
-			BlockEntity te = BlockEntity.loadStatic(k, originalBlocks.get(k), v);
-			onTEadded(te, te.getBlockPos());
-			tileEntities.put(k, te);
-			renderedTileEntities.add(te);
+		originalBlockEntities.forEach((k, v) -> {
+			BlockEntity blockEntity = BlockEntity.loadStatic(k, originalBlocks.get(k), v);
+			onBEadded(blockEntity, blockEntity.getBlockPos());
+			blockEntities.put(k, blockEntity);
+			renderedBlockEntities.add(blockEntity);
 		});
 		originalEntities.forEach(e -> EntityType.create(e.serializeNBT(), this)
 			.ifPresent(entities::add));
 		particles.clearEffects();
-		fixControllerTileEntities();
+		fixControllerBlockEntities();
 	}
 
 	public void restoreBlocks(Selection selection) {
 		selection.forEach(p -> {
 			if (originalBlocks.containsKey(p))
 				blocks.put(p, originalBlocks.get(p));
-			if (originalTileEntities.containsKey(p)) {
-				BlockEntity te = BlockEntity.loadStatic(p, originalBlocks.get(p), originalTileEntities.get(p));
-				onTEadded(te, te.getBlockPos());
-				tileEntities.put(p, te);
+			if (originalBlockEntities.containsKey(p)) {
+				BlockEntity blockEntity = BlockEntity.loadStatic(p, originalBlocks.get(p), originalBlockEntities.get(p));
+				onBEadded(blockEntity, blockEntity.getBlockPos());
+				blockEntities.put(p, blockEntity);
 			}
 		});
 		redraw();
@@ -244,43 +244,43 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	@Override
-	protected void onTEadded(BlockEntity tileEntity, BlockPos pos) {
-		super.onTEadded(tileEntity, pos);
-		if (!(tileEntity instanceof SmartTileEntity))
+	protected void onBEadded(BlockEntity blockEntity, BlockPos pos) {
+		super.onBEadded(blockEntity, pos);
+		if (!(blockEntity instanceof SmartBlockEntity))
 			return;
-		SmartTileEntity smartTileEntity = (SmartTileEntity) tileEntity;
-		smartTileEntity.markVirtual();
+		SmartBlockEntity smartBlockEntity = (SmartBlockEntity) blockEntity;
+		smartBlockEntity.markVirtual();
 	}
 
-	public void fixControllerTileEntities() {
-		for (BlockEntity tileEntity : tileEntities.values()) {
+	public void fixControllerBlockEntities() {
+		for (BlockEntity blockEntity : blockEntities.values()) {
 			
-			if (tileEntity instanceof BeltTileEntity) {
-				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
-				if (!beltTileEntity.isController())
+			if (blockEntity instanceof BeltBlockEntity) {
+				BeltBlockEntity beltBlockEntity = (BeltBlockEntity) blockEntity;
+				if (!beltBlockEntity.isController())
 					continue;
-				BlockPos controllerPos = tileEntity.getBlockPos();
+				BlockPos controllerPos = blockEntity.getBlockPos();
 				for (BlockPos blockPos : BeltBlock.getBeltChain(this, controllerPos)) {
-					BlockEntity tileEntity2 = getBlockEntity(blockPos);
-					if (!(tileEntity2 instanceof BeltTileEntity))
+					BlockEntity blockEntity2 = getBlockEntity(blockPos);
+					if (!(blockEntity2 instanceof BeltBlockEntity))
 						continue;
-					BeltTileEntity belt2 = (BeltTileEntity) tileEntity2;
+					BeltBlockEntity belt2 = (BeltBlockEntity) blockEntity2;
 					belt2.setController(controllerPos);
 				}
 			}
 			
-			if (tileEntity instanceof IMultiTileContainer) {
-				IMultiTileContainer multiTile = (IMultiTileContainer) tileEntity;
-				BlockPos lastKnown = multiTile.getLastKnownPos();
-				BlockPos current = tileEntity.getBlockPos();
+			if (blockEntity instanceof IMultiBlockEntityContainer) {
+				IMultiBlockEntityContainer multiBlockEntity = (IMultiBlockEntityContainer) blockEntity;
+				BlockPos lastKnown = multiBlockEntity.getLastKnownPos();
+				BlockPos current = blockEntity.getBlockPos();
 				if (lastKnown == null || current == null)
 					continue;
-				if (multiTile.isController())
+				if (multiBlockEntity.isController())
 					continue;
 				if (!lastKnown.equals(current)) {
-					BlockPos newControllerPos = multiTile.getController()
+					BlockPos newControllerPos = multiBlockEntity.getController()
 						.offset(current.subtract(lastKnown));
-					multiTile.setController(newControllerPos);
+					multiBlockEntity.setController(newControllerPos);
 				}
 			}
 

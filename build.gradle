@@ -90,43 +90,57 @@ minecraft {
                 }
             }
         }
+
+        gameTestServer {
+            workingDirectory project.file('run/gametest')
+            arg '-mixin.config=create.mixins.json'
+            property 'forge.logging.console.level', 'info'
+            mods {
+                create {
+                    source sourceSets.main
+                }
+            }
+            setForceExit false
+        }
     }
 }
 
 repositories {
     maven {
-        // Location of the maven that hosts JEI files (and TiC)
-        name 'Progwml6 maven'
-        url 'https://dvs1.progwml6.com/files/maven'
+        // location of the maven for Registrate and Flywheel
+        name = 'tterrag maven'
+        url = 'https://maven.tterrag.com'
+    }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        // location of the maven for Vazkii's mods
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
     }
     /*maven {
-        // Location of a maven mirror for JEI files, as a fallback
-        name 'ModMaven'
-        url 'https://modmaven.k-4u.nl'
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
     }*/
     maven {
-        // Location of the maven for vazkii's mods
-        name 'blamejared'
-        url 'https://maven.blamejared.com'
+        // location of the maven for Dynamic Trees
+        url = 'https://harleyoconnor.com/maven'
     }
     maven {
-        // Location of the maven for mixed mappings, Registrate, and Flywheel
-        name 'tterrag maven'
-        url 'https://maven.tterrag.com'
+        // location of the maven for Curios API
+        url = "https://maven.theillusivec4.top/"
     }
     maven {
-        url 'https://www.cursemaven.com'
+        // location of maven for CC: Tweaked
+        name = "squiddev"
+        url = "https://squiddev.cc/maven/"
+    }
+
+    maven {
+        url = 'https://www.cursemaven.com'
         content {
             includeGroup "curse.maven"
         }
-    }
-    maven {
-        //location of the maven for dynamic trees
-        url 'https://harleyoconnor.com/maven'
-    }
-    maven {
-        //location of the maven for curios api
-        url = "https://maven.theillusivec4.top/"
     }
     maven {
         name = "Modrinth"
@@ -134,6 +148,10 @@ repositories {
         content {
             includeGroup "maven.modrinth"
         }
+    }
+
+    flatDir {
+        dirs 'libs'
     }
 }
 
@@ -162,6 +180,11 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}")
 
+	if (cc_tweaked_enable.toBoolean()) {
+        compileOnly fg.deobf("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-forge-api:${cc_tweaked_version}:cc-tweaked-${cc_tweaked_minecraft_version}-forge-api-${cc_tweaked_version}")
+        runtimeOnly fg.deobf("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-forge:${cc_tweaked_version}:cc-tweaked-${cc_tweaked_minecraft_version}-forge-${cc_tweaked_version}")
+	}
+
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
     // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
     // runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
@@ -169,6 +192,7 @@ dependencies {
     // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
     // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252")
     // runtimeOnly fg.deobf("maven.modrinth:rubidium:0.5.3")
+    // implementation fg.deobf("com.railwayteam.railways:railways-1.18.2-1.1.1:all") { transitive = false }
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
@@ -176,6 +200,12 @@ dependencies {
     if (System.getProperty('idea.sync.active') != 'true') {
         annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
     }
+}
+
+sourceSets.main.java {
+	if (!cc_tweaked_enable.toBoolean()) {
+        exclude 'com/simibubi/create/compat/computercraft/implementation/**'
+	}
 }
 
 sourceSets.main.resources {

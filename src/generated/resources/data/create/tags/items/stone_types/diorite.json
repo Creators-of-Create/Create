@@ -13,6 +13,7 @@
     "create:small_diorite_brick_stairs",
     "create:small_diorite_brick_wall",
     "create:layered_diorite",
-    "create:diorite_pillar"
+    "create:diorite_pillar",
+    "minecraft:diorite"
   ]
 }

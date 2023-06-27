@@ -1,17 +1,32 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,waterlogged=false": {
       "model": "create:block/weighted_ejector/block",
       "y": 90
     },
-    "facing=north": {
+    "facing=east,waterlogged=true": {
+      "model": "create:block/weighted_ejector/block",
+      "y": 90
+    },
+    "facing=north,waterlogged=false": {
       "model": "create:block/weighted_ejector/block"
     },
-    "facing=south": {
+    "facing=north,waterlogged=true": {
+      "model": "create:block/weighted_ejector/block"
+    },
+    "facing=south,waterlogged=false": {
       "model": "create:block/weighted_ejector/block",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,waterlogged=true": {
+      "model": "create:block/weighted_ejector/block",
+      "y": 180
+    },
+    "facing=west,waterlogged=false": {
+      "model": "create:block/weighted_ejector/block",
+      "y": 270
+    },
+    "facing=west,waterlogged=true": {
       "model": "create:block/weighted_ejector/block",
       "y": 270
     }

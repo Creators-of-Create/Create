@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "minecraft:wooden_doors"
+    },
+    {
+      "item": "create:brass_casing"
+    }
+  ],
+  "result": {
+    "item": "create:brass_door"
+  }
+}

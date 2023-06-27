@@ -1,0 +1,118 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"1": "create:block/hat_test",
+		"5": "create:block/mechanical_arm",
+		"particle": "create:block/hat_test"
+	},
+	"elements": [
+		{
+			"name": "Joint 4",
+			"from": [-2.5, -3, -3],
+			"to": [2.5, 3, 3],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 4]},
+			"faces": {
+				"north": {"uv": [4, 3, 7, 5.5], "rotation": 90, "texture": "#5"},
+				"east": {"uv": [4, 0, 7, 3], "texture": "#5"},
+				"south": {"uv": [7, 3, 4, 5.5], "rotation": 90, "texture": "#5"},
+				"west": {"uv": [4, 0, 7, 3], "texture": "#5"},
+				"up": {"uv": [7, 3, 4, 5.5], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [4, 3, 7, 5.5], "rotation": 90, "texture": "#5"}
+			}
+		},
+		{
+			"from": [-3, -3, -5],
+			"to": [3, 3, -3],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 4]},
+			"faces": {
+				"north": {"uv": [7, 0, 10, 3], "texture": "#5"},
+				"east": {"uv": [10, 0, 11, 3], "texture": "#5"},
+				"south": {"uv": [7, 0, 10, 3], "texture": "#5"},
+				"west": {"uv": [11, 0, 10, 3], "texture": "#5"},
+				"up": {"uv": [11, 0, 10, 3], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [10, 0, 11, 3], "rotation": 90, "texture": "#5"}
+			}
+		},
+		{
+			"from": [-1, -4.5, -6],
+			"to": [1, 4.5, -4],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 4]},
+			"faces": {
+				"north": {"uv": [11.5, 0, 12.5, 4.5], "texture": "#5"},
+				"east": {"uv": [11.5, 0, 12.5, 4.5], "texture": "#5"},
+				"south": {"uv": [11.5, 0, 12.5, 4.5], "texture": "#5"},
+				"west": {"uv": [11.5, 0, 12.5, 4.5], "texture": "#5"},
+				"up": {"uv": [11.5, 4.5, 12.5, 5.5], "texture": "#5"},
+				"down": {"uv": [11.5, 4.5, 12.5, 5.5], "rotation": 90, "texture": "#5"}
+			}
+		},
+		{
+			"from": [-4, 0.5, -4.25],
+			"to": [4, 4.5, 3.75],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 3, 1]},
+			"faces": {
+				"north": {"uv": [8, 2, 16, 6], "texture": "#1"},
+				"east": {"uv": [0, 2, 8, 6], "texture": "#1"},
+				"south": {"uv": [8, 10, 16, 14], "texture": "#1"},
+				"west": {"uv": [8, 2, 0, 6], "texture": "#1"}
+			}
+		},
+		{
+			"from": [-4, 0.5, 3.75],
+			"to": [4, 4.5, -4.25],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 3, 1]},
+			"faces": {
+				"north": {"uv": [8, 10, 16, 14], "texture": "#1"},
+				"east": {"uv": [8, 2, 0, 6], "texture": "#1"},
+				"south": {"uv": [8, 2, 16, 6], "texture": "#1"},
+				"west": {"uv": [0, 2, 8, 6], "texture": "#1"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, -149, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, -149, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -55, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -55, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 1, 1.25],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"translation": [2.5, -0.5, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [0, 180, 0],
+			"translation": [0, 1.75, -4.5],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		0,
+		1,
+		2,
+		{
+			"name": "Goggles",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [3, 4]
+		}
+	]
+}

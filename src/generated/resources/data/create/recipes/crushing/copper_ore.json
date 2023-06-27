@@ -9,11 +9,11 @@
   "results": [
     {
       "count": 5,
-      "item": "create:crushed_copper_ore"
+      "item": "create:crushed_raw_copper"
     },
     {
       "chance": 0.25,
-      "item": "create:crushed_copper_ore"
+      "item": "create:crushed_raw_copper"
     },
     {
       "chance": 0.75,

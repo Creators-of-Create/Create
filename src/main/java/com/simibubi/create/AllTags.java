@@ -7,11 +7,7 @@ import static com.simibubi.create.AllTags.NameSpace.TIC;
 
 import java.util.Collections;
 
-import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.utility.Lang;
-import com.tterrag.registrate.builders.BlockBuilder;
-import com.tterrag.registrate.builders.ItemBuilder;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -51,27 +47,6 @@ public class AllTags {
 		return forgeTag(ForgeRegistries.FLUIDS, path);
 	}
 
-	@Deprecated(forRemoval = true)
-	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> axeOrPickaxe() {
-		return TagGen.axeOrPickaxe();
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> axeOnly() {
-		return TagGen.axeOnly();
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> pickaxeOnly() {
-		return TagGen.pickaxeOnly();
-	}
-
-	@Deprecated(forRemoval = true)
-	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
-		String... path) {
-		return TagGen.tagBlockAndItem(path);
-	}
-
 	public enum NameSpace {
 		MOD(Create.ID, false, true),
 		FORGE("forge"),
@@ -106,10 +81,15 @@ public class AllTags {
 		SAFE_NBT,
 		SEATS,
 		TOOLBOXES,
+		TRACKS,
+		GIRDABLE_TRACKS,
 		TREE_ATTACHMENTS,
 		VALVE_HANDLES,
 		WINDMILL_SAILS,
 		WRENCH_PICKUP,
+		COPYCAT_ALLOW,
+		COPYCAT_DENY,
+		CONTRAPTION_INVENTORY_DENY,
 
 		RELOCATION_NOT_SUPPORTED(FORGE),
 		WG_STONE(FORGE),
@@ -154,6 +134,10 @@ public class AllTags {
 				.is(tag);
 		}
 
+		public boolean matches(ItemStack stack) {
+			return stack != null && stack.getItem() instanceof BlockItem blockItem && matches(blockItem.getBlock());
+		}
+
 		public boolean matches(BlockState state) {
 			return state.is(tag);
 		}
@@ -167,7 +151,7 @@ public class AllTags {
 		BLAZE_BURNER_FUEL_SPECIAL(MOD, "blaze_burner_fuel/special"),
 		CASING,
 		CREATE_INGOTS,
-		CRUSHED_ORES,
+		CRUSHED_RAW_MATERIALS,
 		MODDED_STRIPPED_LOGS,
 		MODDED_STRIPPED_WOOD,
 		PRESSURIZED_AIR_SOURCES,
@@ -180,6 +164,7 @@ public class AllTags {
 		VANILLA_STRIPPED_LOGS,
 		VANILLA_STRIPPED_WOOD,
 		DEPLOYABLE_DRINK,
+		CONTRAPTION_CONTROLLED,
 
 		STRIPPED_LOGS(FORGE),
 		STRIPPED_WOOD(FORGE),

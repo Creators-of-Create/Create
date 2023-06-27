@@ -7,11 +7,11 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
+import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
-import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -71,11 +71,11 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		Supplier<ItemLike> singleIngredient, UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
 		ProcessingRecipeSerializer<T> serializer = getSerializer();
 		GeneratedRecipe generatedRecipe = c -> {
-			ItemLike iItemProvider = singleIngredient.get();
+			ItemLike itemLike = singleIngredient.get();
 			transform
 				.apply(new ProcessingRecipeBuilder<>(serializer.getFactory(),
-					new ResourceLocation(namespace, RegisteredObjects.getKeyOrThrow(iItemProvider.asItem())
-						.getPath())).withItemIngredients(Ingredient.of(iItemProvider)))
+					new ResourceLocation(namespace, RegisteredObjects.getKeyOrThrow(itemLike.asItem())
+						.getPath())).withItemIngredients(Ingredient.of(itemLike)))
 				.build(c);
 		};
 		all.add(generatedRecipe);

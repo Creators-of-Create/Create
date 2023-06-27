@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
@@ -216,11 +216,11 @@ public class ParrotElement extends AnimatedSceneElement {
 
 		@Override
 		void tick(PonderScene scene, Parrot entity, Vec3 location) {
-			BlockEntity tileEntity = scene.getWorld()
+			BlockEntity blockEntity = scene.getWorld()
 				.getBlockEntity(componentPos);
-			if (!(tileEntity instanceof KineticTileEntity))
+			if (!(blockEntity instanceof KineticBlockEntity))
 				return;
-			float rpm = ((KineticTileEntity) tileEntity).getSpeed();
+			float rpm = ((KineticBlockEntity) blockEntity).getSpeed();
 			entity.yRotO = entity.getYRot();
 			entity.setYRot(entity.getYRot() + (rpm * .3f));
 		}

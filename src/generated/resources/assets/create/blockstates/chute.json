@@ -1,56 +1,146 @@
 {
   "variants": {
-    "facing=down,shape=intersection": {
+    "facing=down,shape=encased,waterlogged=false": {
       "model": "create:block/chute/block_intersection"
     },
-    "facing=down,shape=normal": {
+    "facing=down,shape=encased,waterlogged=true": {
+      "model": "create:block/chute/block_intersection"
+    },
+    "facing=down,shape=intersection,waterlogged=false": {
+      "model": "create:block/chute/block_intersection"
+    },
+    "facing=down,shape=intersection,waterlogged=true": {
+      "model": "create:block/chute/block_intersection"
+    },
+    "facing=down,shape=normal,waterlogged=false": {
       "model": "create:block/chute/block"
     },
-    "facing=down,shape=window": {
+    "facing=down,shape=normal,waterlogged=true": {
+      "model": "create:block/chute/block"
+    },
+    "facing=down,shape=window,waterlogged=false": {
       "model": "create:block/chute/block_windowed"
     },
-    "facing=east,shape=intersection": {
+    "facing=down,shape=window,waterlogged=true": {
+      "model": "create:block/chute/block_windowed"
+    },
+    "facing=east,shape=encased,waterlogged=false": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 270
+    },
+    "facing=east,shape=encased,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 270
+    },
+    "facing=east,shape=intersection,waterlogged=false": {
       "model": "create:block/chute/block_diagonal_intersection",
       "y": 270
     },
-    "facing=east,shape=normal": {
+    "facing=east,shape=intersection,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal_intersection",
+      "y": 270
+    },
+    "facing=east,shape=normal,waterlogged=false": {
       "model": "create:block/chute/block_diagonal",
       "y": 270
     },
-    "facing=east,shape=window": {
+    "facing=east,shape=normal,waterlogged=true": {
       "model": "create:block/chute/block_diagonal",
       "y": 270
     },
-    "facing=north,shape=intersection": {
+    "facing=east,shape=window,waterlogged=false": {
+      "model": "create:block/chute/block_diagonal",
+      "y": 270
+    },
+    "facing=east,shape=window,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal",
+      "y": 270
+    },
+    "facing=north,shape=encased,waterlogged=false": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 180
+    },
+    "facing=north,shape=encased,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 180
+    },
+    "facing=north,shape=intersection,waterlogged=false": {
       "model": "create:block/chute/block_diagonal_intersection",
       "y": 180
     },
-    "facing=north,shape=normal": {
+    "facing=north,shape=intersection,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal_intersection",
+      "y": 180
+    },
+    "facing=north,shape=normal,waterlogged=false": {
       "model": "create:block/chute/block_diagonal",
       "y": 180
     },
-    "facing=north,shape=window": {
+    "facing=north,shape=normal,waterlogged=true": {
       "model": "create:block/chute/block_diagonal",
       "y": 180
     },
-    "facing=south,shape=intersection": {
+    "facing=north,shape=window,waterlogged=false": {
+      "model": "create:block/chute/block_diagonal",
+      "y": 180
+    },
+    "facing=north,shape=window,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal",
+      "y": 180
+    },
+    "facing=south,shape=encased,waterlogged=false": {
+      "model": "create:block/chute/block_diagonal_encased"
+    },
+    "facing=south,shape=encased,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal_encased"
+    },
+    "facing=south,shape=intersection,waterlogged=false": {
       "model": "create:block/chute/block_diagonal_intersection"
     },
-    "facing=south,shape=normal": {
+    "facing=south,shape=intersection,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal_intersection"
+    },
+    "facing=south,shape=normal,waterlogged=false": {
       "model": "create:block/chute/block_diagonal"
     },
-    "facing=south,shape=window": {
+    "facing=south,shape=normal,waterlogged=true": {
       "model": "create:block/chute/block_diagonal"
     },
-    "facing=west,shape=intersection": {
+    "facing=south,shape=window,waterlogged=false": {
+      "model": "create:block/chute/block_diagonal"
+    },
+    "facing=south,shape=window,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal"
+    },
+    "facing=west,shape=encased,waterlogged=false": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 90
+    },
+    "facing=west,shape=encased,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal_encased",
+      "y": 90
+    },
+    "facing=west,shape=intersection,waterlogged=false": {
       "model": "create:block/chute/block_diagonal_intersection",
       "y": 90
     },
-    "facing=west,shape=normal": {
+    "facing=west,shape=intersection,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal_intersection",
+      "y": 90
+    },
+    "facing=west,shape=normal,waterlogged=false": {
       "model": "create:block/chute/block_diagonal",
       "y": 90
     },
-    "facing=west,shape=window": {
+    "facing=west,shape=normal,waterlogged=true": {
+      "model": "create:block/chute/block_diagonal",
+      "y": 90
+    },
+    "facing=west,shape=window,waterlogged=false": {
+      "model": "create:block/chute/block_diagonal",
+      "y": 90
+    },
+    "facing=west,shape=window,waterlogged=true": {
       "model": "create:block/chute/block_diagonal",
       "y": 90
     }

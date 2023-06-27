@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"4": "create:block/mechanical_press_side",
-		"gearbox_top": "create:block/gearbox_top",
 		"particle": "create:block/mechanical_press_side",
+		"gearbox_top": "create:block/gearbox_top",
 		"gearbox": "create:block/gearbox",
 		"mechanical_press_top": "create:block/mechanical_press_top",
 		"mechanical_press_bottom": "create:block/mechanical_press_bottom"
@@ -24,8 +24,8 @@
 		},
 		{
 			"name": "Core",
-			"from": [2, 4, 1],
-			"to": [14, 14, 15],
+			"from": [2, 4, 0.95],
+			"to": [14, 14, 15.05],
 			"faces": {
 				"north": {"uv": [2, 2, 14, 12], "texture": "#gearbox"},
 				"south": {"uv": [2, 2, 14, 12], "texture": "#gearbox"},

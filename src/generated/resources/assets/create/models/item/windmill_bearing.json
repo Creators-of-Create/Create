@@ -3,6 +3,6 @@
   "textures": {
     "back": "create:block/gearbox",
     "side": "create:block/windmill_bearing_side",
-    "top": "create:block/bearing_top_wooden"
+    "top": "create:block/bearing_top"
   }
 }

@@ -1,4 +1,5 @@
 {
+	"credit": "Made with Blockbench",
 	"textures": {
 		"2": "create:block/gauge"
 	},
@@ -32,12 +33,12 @@
 			"to": [16, 13, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8, 8]},
 			"faces": {
-				"north": {"uv": [13, 5, 14, 10], "texture": "#2"},
+				"north": {"uv": [14, 5, 13, 10], "texture": "#2"},
 				"east": {"uv": [9, 5, 14, 10], "texture": "#2"},
-				"south": {"uv": [13, 5, 14, 10], "texture": "#2"},
+				"south": {"uv": [10, 5, 9, 10], "texture": "#2"},
 				"west": {"uv": [9, 5, 14, 10], "texture": "#2"},
-				"up": {"uv": [9, 5, 10, 10], "texture": "#2"},
-				"down": {"uv": [9, 5, 10, 10], "texture": "#2"}
+				"up": {"uv": [14, 5, 9, 6], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [9, 10, 14, 9], "rotation": 90, "texture": "#2"}
 			}
 		}
 	]

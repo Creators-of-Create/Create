@@ -64,7 +64,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		// Oh The Biomes You'll Go
 		BYG =
 			cuttingCompat(Mods.BYG, "aspen", "baobab", "blue_enchanted", "cherry", "cika", "cypress", "ebony", "ether",
-				"fir", "green_enchanted", "holly", "jacaranda", "lament", "mahogany", "mangrove", "maple", "nightshade",
+				"fir", "green_enchanted", "holly", "jacaranda", "lament", "mahogany", "maple", "nightshade",
 				"palm", "pine", "rainbow_eucalyptus", "redwood", "skyris", "willow", "witch_hazel", "zelkova"),
 		BYG_2 = stripAndMakePlanks(Mods.BYG, "bulbis_stem", "stripped_bulbis_stem", "bulbis_planks"),
 		BYG_3 = stripAndMakePlanks(Mods.BYG, "bulbis_wood", "stripped_bulbis_wood", "bulbis_planks"),

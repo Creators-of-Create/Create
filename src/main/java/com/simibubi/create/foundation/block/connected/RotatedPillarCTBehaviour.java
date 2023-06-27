@@ -1,7 +1,8 @@
 package com.simibubi.create.foundation.block.connected;
 
-import com.simibubi.create.content.palettes.ConnectedPillarBlock;
-import com.simibubi.create.content.palettes.LayeredBlock;
+import com.simibubi.create.content.decoration.copycat.CopycatBlock;
+import com.simibubi.create.content.decoration.palettes.ConnectedPillarBlock;
+import com.simibubi.create.content.decoration.palettes.LayeredBlock;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -27,6 +28,10 @@ public class RotatedPillarCTBehaviour extends HorizontalCTBehaviour {
 			return false;
 		if (isBeingBlocked(state, reader, pos, otherPos, face))
 			return false;
+		if (reader.getBlockState(pos).getBlock() instanceof CopycatBlock)
+			return true;
+		if (reader.getBlockState(otherPos).getBlock() instanceof CopycatBlock)
+			return true;
 		if (primaryOffset != null && primaryOffset.getAxis() != stateAxis
 			&& !ConnectedPillarBlock.getConnection(state, primaryOffset))
 			return false;

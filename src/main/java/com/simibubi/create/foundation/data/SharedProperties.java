@@ -15,6 +15,10 @@ public class SharedProperties {
 	public static final Material CRUSHING_WHEEL_CONTROLLER_MATERIAL =
 		new Material(MaterialColor.NONE, false, false, true, true, false, false, PushReaction.BLOCK);
 
+	public static Block wooden() {
+		return Blocks.STRIPPED_SPRUCE_WOOD;
+	}
+
 	public static Block stone() {
 		return Blocks.ANDESITE;
 	}
@@ -22,12 +26,12 @@ public class SharedProperties {
 	public static Block softMetal() {
 		return Blocks.GOLD_BLOCK;
 	}
-	
+
 	public static Block copperMetal() {
 		return Blocks.COPPER_BLOCK;
 	}
 
-	public static Block wooden() {
-		return Blocks.STRIPPED_SPRUCE_WOOD;
+	public static Block netheriteMetal() {
+		return Blocks.NETHERITE_BLOCK;
 	}
 }

@@ -2,8 +2,8 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
@@ -33,7 +33,7 @@ public class AnimatedPress extends AnimatedKinetics {
 				.scale(scale)
 				.render(matrixStack);
 
-		blockElement(AllBlockPartials.MECHANICAL_PRESS_HEAD)
+		blockElement(AllPartialModels.MECHANICAL_PRESS_HEAD)
 				.atLocal(0, -getAnimatedHeadOffset(), 0)
 				.scale(scale)
 				.render(matrixStack);

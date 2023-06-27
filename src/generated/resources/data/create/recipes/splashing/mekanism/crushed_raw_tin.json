@@ -1,0 +1,20 @@
+{
+  "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "create:crushed_raw_tin"
+    }
+  ],
+  "results": [
+    {
+      "count": 9,
+      "item": "mekanism:nugget_tin"
+    }
+  ]
+}

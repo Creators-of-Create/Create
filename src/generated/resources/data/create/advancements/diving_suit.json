@@ -15,7 +15,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "create:diving_helmet",
+      "item": "create:copper_diving_helmet",
       "nbt": "{Damage:0}"
     },
     "show_toast": true,

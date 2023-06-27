@@ -1,9 +1,7 @@
 package com.simibubi.create.content.schematics.packet;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.schematics.filtering.SchematicInstances;
+import com.simibubi.create.content.schematics.SchematicInstances;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -52,9 +50,9 @@ public class SchematicSyncPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer player = context.get().getSender();
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
 			ItemStack stack = ItemStack.EMPTY;
@@ -73,7 +71,7 @@ public class SchematicSyncPacket extends SimplePacketBase {
 			tag.putString("Mirror", mirror.name());
 			SchematicInstances.clearHash(stack);
 		});
-		context.get().setPacketHandled(true);
+		return true;
 	}
 
 }

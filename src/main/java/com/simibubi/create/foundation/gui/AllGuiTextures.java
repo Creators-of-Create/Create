@@ -40,20 +40,16 @@ public enum AllGuiTextures implements ScreenElement {
 	SCHEMATICANNON_FUEL("schematics_2", 28, 222, 47, 16),
 	SCHEMATICANNON_FUEL_CREATIVE("schematics_2", 28, 239, 47, 16),
 
-	STOCKSWITCH("logistics", 182, 93),
+	STOCKSWITCH("logistics", 182, 95),
 	STOCKSWITCH_ARROW_UP("logistics", 191, 0, 7, 24),
 	STOCKSWITCH_ARROW_DOWN("logistics", 198, 0, 7, 24),
 	STOCKSWITCH_CURSOR("logistics", 206, 0, 7, 16),
-	STOCKSWITCH_INTERVAL("logistics", 0, 93, 100, 18),
-	STOCKSWITCH_UNPOWERED_LANE("logistics", 36, 18, 102, 18),
-	STOCKSWITCH_POWERED_LANE("logistics", 36, 40, 102, 18),
+	STOCKSWITCH_INTERVAL("logistics", 0, 95, 100, 18),
+	STOCKSWITCH_UNPOWERED_LANE("logistics", 37, 20, 100, 18),
+	STOCKSWITCH_POWERED_LANE("logistics", 37, 42, 100, 18),
 
-	ADJUSTABLE_CRATE("logistics_2", 124, 127),
-	ADJUSTABLE_DOUBLE_CRATE("logistics_2", 0, 127, 196, 127),
-	ADJUSTABLE_CRATE_LOCKED_SLOT("logistics_2", 125, 109, 18, 18),
-
-	FILTER("filters", 214, 97),
-	ATTRIBUTE_FILTER("filters", 0, 97, 241, 83),
+	FILTER("filters", 214, 99),
+	ATTRIBUTE_FILTER("filters", 0, 99, 241, 85),
 
 	TOOLBOX("toolbox", 188, 171),
 	TOOLBELT_SLOT("minecraft", "widgets", 24, 23, 22, 22),
@@ -67,21 +63,17 @@ public enum AllGuiTextures implements ScreenElement {
 	TOOLBELT_SELECTED_OFF("widgets", 0, 155, 22, 22),
 	TOOLBELT_SELECTED_ON("widgets", 22, 155, 22, 22),
 
-	SEQUENCER("sequencer", 173, 159),
-	SEQUENCER_INSTRUCTION("sequencer", 0, 14, 162, 22),
-	SEQUENCER_DELAY("sequencer", 0, 58, 162, 22),
-	SEQUENCER_END("sequencer", 0, 80, 162, 22),
-	SEQUENCER_EMPTY("sequencer", 0, 102, 162, 22),
-	SEQUENCER_AWAIT("sequencer", 0, 160, 162, 22),
+	SEQUENCER("sequencer", 173, 161),
+	SEQUENCER_INSTRUCTION("sequencer", 0, 16, 162, 22),
+	SEQUENCER_DELAY("sequencer", 0, 60, 162, 22),
+	SEQUENCER_END("sequencer", 0, 82, 162, 22),
+	SEQUENCER_EMPTY("sequencer", 0, 104, 162, 22),
+	SEQUENCER_AWAIT("sequencer", 0, 162, 162, 22),
 
 	LINKED_CONTROLLER("curiosities_2", 179, 109),
 	BLUEPRINT("curiosities_2", 0, 109, 179, 109),
-
-	PROJECTOR("projector", 235, 185),
-	PROJECTOR_FILTER_STRENGTH("projector", 0, 14, 162, 22),
-	PROJECTOR_FILTER("projector", 0, 36, 162, 22),
-	PROJECTOR_END("projector", 0, 58, 162, 22),
-	PROJECTOR_EMPTY("projector", 0, 80, 162, 22),
+	
+	CLIPBOARD("clipboard", 0, 0, 256, 256),
 
 	DATA_GATHERER("display_link", 235, 162),
 	DATA_AREA_START("display_link", 0, 163, 2, 18),
@@ -131,7 +123,29 @@ public enum AllGuiTextures implements ScreenElement {
 	I_NEW_TRAIN("schedule_2", 14, 239, 24, 16),
 	I_DISASSEMBLE_TRAIN("schedule_2", 39, 239, 24, 16),
 	I_ASSEMBLE_TRAIN("schedule_2", 64, 239, 24, 16),
+	
+	ELEVATOR_CONTACT("display_link", 20, 172, 233, 82),
 
+	BRASS_FRAME_TL("value_settings", 65, 9, 4, 4),
+	BRASS_FRAME_TR("value_settings", 70, 9, 4, 4),
+	BRASS_FRAME_BL("value_settings", 65, 19, 4, 4),
+	BRASS_FRAME_BR("value_settings", 70, 19, 4, 4),
+	BRASS_FRAME_LEFT("value_settings", 65, 14, 3, 4),
+	BRASS_FRAME_RIGHT("value_settings", 71, 14, 3, 4),
+	BRASS_FRAME_TOP("value_settings", 0, 24, 256, 3),
+	BRASS_FRAME_BOTTOM("value_settings", 0, 27, 256, 3),
+	
+	VALUE_SETTINGS_MILESTONE("value_settings", 0, 0, 7, 8),
+	VALUE_SETTINGS_WIDE_MILESTONE("value_settings", 75, 14, 13, 8),
+	VALUE_SETTINGS_BAR("value_settings", 7, 0, 249, 8),
+	VALUE_SETTINGS_BAR_BG("value_settings", 75, 9, 1, 1),
+	VALUE_SETTINGS_OUTER_BG("value_settings", 80, 9, 1, 1),
+	VALUE_SETTINGS_CURSOR_LEFT("value_settings", 0, 9, 3, 14),
+	VALUE_SETTINGS_CURSOR("value_settings", 4, 9, 56, 14),
+	VALUE_SETTINGS_CURSOR_RIGHT("value_settings", 61, 9, 3, 14),
+	VALUE_SETTINGS_CURSOR_ICON("value_settings", 0, 44, 22, 20),
+	VALUE_SETTINGS_LABEL_BG("value_settings", 0, 31, 81, 11),
+	
 	// JEI
 	JEI_SLOT("jei/widgets", 18, 18),
 	JEI_CHANCE_SLOT("jei/widgets", 20, 156, 18, 18),
@@ -163,7 +177,7 @@ public enum AllGuiTextures implements ScreenElement {
 
 	SPEECH_TOOLTIP_BACKGROUND("widgets", 0, 24, 8, 8),
 	SPEECH_TOOLTIP_COLOR("widgets", 8, 24, 8, 8),
-	
+
 	TRAIN_HUD_SPEED_BG("widgets", 0, 190, 182, 5),
 	TRAIN_HUD_SPEED("widgets", 0, 185, 182, 5),
 	TRAIN_HUD_THROTTLE("widgets", 0, 195, 182, 5),
@@ -175,7 +189,10 @@ public enum AllGuiTextures implements ScreenElement {
 	TRAIN_PROMPT("widgets", 0, 230, 256, 16),
 
 	// PlacementIndicator
-	PLACEMENT_INDICATOR_SHEET("placement_indicator", 0, 0, 16, 256);
+	PLACEMENT_INDICATOR_SHEET("placement_indicator", 0, 0, 16, 256),
+
+	// ComputerCraft
+	COMPUTER("computer", 200, 102);
 
 	;
 

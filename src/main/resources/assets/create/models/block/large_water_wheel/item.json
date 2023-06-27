@@ -1,0 +1,41 @@
+{
+	"parent": "create:block/large_water_wheel/textures",
+	"loader": "forge:obj",
+	"flip_v": true,
+	"model": "create:models/block/large_water_wheel/waterwheel_large.obj",
+	"textures": {
+		"log": "block/spruce_log",
+		"planks": "block/spruce_planks",
+		"log_top": "block/spruce_log_top"
+	},
+	"display": {
+        "gui": {
+        	"rotation": [ 30, 225, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.25, 0.25, 0.25 ]
+        },
+		"fixed": {
+            "rotation": [ 90, 0, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.2, 0.2, 0.2 ]
+        },
+        "thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.2, 0.2, 0.2]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.2, 0.2, 0.2]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.2, 0.2, 0.2]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 225, 0],
+			"scale": [0.2, 0.2, 0.2]
+		}
+    }
+}

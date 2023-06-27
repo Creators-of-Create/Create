@@ -35,7 +35,7 @@ import net.minecraftforge.fml.LogicalSide;
 
 public class LangMerger implements RegistrateProvider {
 
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
+	static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
 	private static final String CATEGORY_HEADER =
@@ -216,24 +216,6 @@ public class LangMerger implements RegistrateProvider {
 			.append("!\"\n\n");
 		builder.append("}");
 		return builder.toString();
-	}
-
-	private class LangEntry {
-		static final String ENTRY_FORMAT = "\t\"%s\": %s,\n";
-
-		private String key;
-		private String value;
-
-		LangEntry(String key, String value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return String.format(ENTRY_FORMAT, key, GSON.toJson(value, String.class));
-		}
-
 	}
 
 	@Override

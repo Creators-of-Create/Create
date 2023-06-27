@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "minecraft:block/mangrove_planks",
+    "side": "create:block/palettes/mangrove_window"
+  }
+}

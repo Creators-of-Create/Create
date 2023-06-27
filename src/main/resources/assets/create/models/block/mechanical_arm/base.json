@@ -2,22 +2,34 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"5": "create:block/mechanical_arm",
-		"particle": "create:block/crafter_top"
+		"2": "create:block/elevator_pulley",
+		"3": "create:block/brass_block",
+		"5": "create:block/mechanical_arm"
 	},
 	"elements": [
 		{
-			"name": "Base",
+			"name": "Joint 1",
 			"from": [-5, -2, -5],
 			"to": [5, 2, 5],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0]},
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 2, 5]},
 			"faces": {
-				"north": {"uv": [5, 9.5, 7, 14.5], "rotation": 270, "texture": "#5"},
-				"east": {"uv": [5, 9.5, 7, 14.5], "rotation": 270, "texture": "#5"},
-				"south": {"uv": [5, 9.5, 7, 14.5], "rotation": 270, "texture": "#5"},
-				"west": {"uv": [5, 9.5, 7, 14.5], "rotation": 270, "texture": "#5"},
-				"up": {"uv": [0, 9.5, 5, 14.5], "texture": "#5"},
-				"down": {"uv": [0, 9.5, 5, 14.5], "texture": "#5"}
+				"north": {"uv": [5, 11, 7, 16], "rotation": 90, "texture": "#5"},
+				"east": {"uv": [7, 11, 9, 16], "rotation": 90, "texture": "#5"},
+				"south": {"uv": [5, 11, 7, 16], "rotation": 90, "texture": "#5"},
+				"west": {"uv": [7, 11, 9, 16], "rotation": 90, "texture": "#5"},
+				"up": {"uv": [0, 11, 5, 16], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [3, 3, 13, 13], "texture": "#3"}
+			}
+		},
+		{
+			"from": [-3, 2, -4],
+			"to": [3, 5, 4],
+			"faces": {
+				"north": {"uv": [12, 9, 15, 10.5], "texture": "#2"},
+				"east": {"uv": [10, 13, 14, 14.5], "texture": "#2"},
+				"south": {"uv": [12, 9, 15, 10.5], "texture": "#2"},
+				"west": {"uv": [10, 13, 14, 14.5], "texture": "#2"},
+				"up": {"uv": [6, 13, 10, 16], "rotation": 90, "texture": "#2"}
 			}
 		}
 	],
@@ -54,12 +66,5 @@
 			"translation": [0, 1.75, -4.5],
 			"scale": [0.5, 0.5, 0.5]
 		}
-	},
-	"groups": [
-		{
-			"name": "inserter",
-			"origin": [8, 8, 8],
-			"children": [0]
-		}
-	]
+	}
 }

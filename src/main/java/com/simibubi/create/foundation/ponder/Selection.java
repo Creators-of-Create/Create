@@ -5,8 +5,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
-import com.simibubi.create.foundation.utility.outliner.Outliner;
+import com.simibubi.create.foundation.outliner.Outline.OutlineParams;
+import com.simibubi.create.foundation.outliner.Outliner;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;

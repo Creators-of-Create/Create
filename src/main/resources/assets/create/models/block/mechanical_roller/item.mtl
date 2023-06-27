@@ -1,0 +1,11 @@
+# Blender 3.5.1 MTL File: 'roller.blend'
+# www.blender.org
+
+newmtl roller_casing
+map_Kd #casing
+
+newmtl roller_metal
+map_Kd #metal
+
+newmtl roller_wheel
+map_Kd #wheel

@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "create:large_cogwheel"
+      "item": "create:shaft"
     },
     "S": {
-      "tag": "minecraft:wooden_slabs"
+      "tag": "minecraft:planks"
     }
   },
   "pattern": [
