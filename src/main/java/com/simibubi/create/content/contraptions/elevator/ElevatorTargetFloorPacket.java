@@ -36,7 +36,7 @@ public class ElevatorTargetFloorPacket extends SimplePacketBase {
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer sender = context.getSender();
-			Entity entityByID = sender.getLevel()
+			Entity entityByID = sender.serverLevel()
 				.getEntity(entityId);
 			if (!(entityByID instanceof AbstractContraptionEntity ace))
 				return;
@@ -45,7 +45,7 @@ public class ElevatorTargetFloorPacket extends SimplePacketBase {
 			if (ace.distanceToSqr(sender) > 50 * 50)
 				return;
 
-			Level level = sender.level;
+			Level level = sender.level();
 			ElevatorColumn elevatorColumn = ElevatorColumn.get(level, ec.getGlobalColumn());
 			if (!elevatorColumn.contacts.contains(targetY))
 				return;

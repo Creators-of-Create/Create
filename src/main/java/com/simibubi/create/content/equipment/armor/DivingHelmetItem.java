@@ -75,7 +75,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 	@SubscribeEvent
 	public static void breatheUnderwater(LivingTickEvent event) {
 		LivingEntity entity = event.getEntity();
-		Level world = entity.level;
+		Level world = entity.level();
 		boolean second = world.getGameTime() % 20 == 0;
 		boolean drowning = entity.getAirSupply() == 0;
 

@@ -15,9 +15,9 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
@@ -58,7 +58,7 @@ public class GenericItemFilling {
 			return false;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return false;
@@ -79,7 +79,7 @@ public class GenericItemFilling {
 			return 1000;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return -1;
@@ -134,7 +134,7 @@ public class GenericItemFilling {
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
-			split.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			split.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return ItemStack.EMPTY;

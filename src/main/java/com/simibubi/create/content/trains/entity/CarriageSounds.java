@@ -124,20 +124,20 @@ public class CarriageSounds {
 		if (entity.carriageIndex == 0) {
 			float v = volume * (1 - seatCrossfade.getValue() * .35f) * .75f;
 			if ((3 + tick) % 4 == 0)
-				AllSoundEvents.STEAM.playAt(entity.level, soundLocation, v * ((tick + 7) % 8 == 0 ? 0.75f : .45f),
+				AllSoundEvents.STEAM.playAt(entity.level(), soundLocation, v * ((tick + 7) % 8 == 0 ? 0.75f : .45f),
 					1.17f, false);
 			if (tick % 16 == 0)
-				AllSoundEvents.STEAM.playAt(entity.level, soundLocation, v * 1.5f, .8f, false);
+				AllSoundEvents.STEAM.playAt(entity.level(), soundLocation, v * 1.5f, .8f, false);
 		}
 
 		if (!arrived && speedFactor.getValue() < .002f && train.accumulatedSteamRelease > 1) {
 			arrived = true;
 			float releaseVolume = train.accumulatedSteamRelease / 10f;
-			entity.level.playLocalSound(soundLocation.x, soundLocation.y, soundLocation.z, SoundEvents.LAVA_EXTINGUISH,
+			entity.level().playLocalSound(soundLocation.x, soundLocation.y, soundLocation.z, SoundEvents.LAVA_EXTINGUISH,
 				SoundSource.NEUTRAL, .25f * releaseVolume, .78f, false);
-			entity.level.playLocalSound(soundLocation.x, soundLocation.y, soundLocation.z,
+			entity.level().playLocalSound(soundLocation.x, soundLocation.y, soundLocation.z,
 				SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundSource.NEUTRAL, .2f * releaseVolume, 1.5f, false);
-			AllSoundEvents.STEAM.playAt(entity.level, soundLocation, .75f * releaseVolume, .5f, false);
+			AllSoundEvents.STEAM.playAt(entity.level(), soundLocation, .75f * releaseVolume, .5f, false);
 		}
 
 		float pitchModifier = ((entity.getId() * 10) % 13) / 36f;
@@ -152,7 +152,7 @@ public class CarriageSounds {
 		volume = Math.min(volume, distanceFactor.getValue() / 1000);
 
 		for (Carriage carriage : train.carriages) {
-			DimensionalCarriageEntity mainDCE = carriage.getDimensionalIfPresent(entity.level.dimension());
+			DimensionalCarriageEntity mainDCE = carriage.getDimensionalIfPresent(entity.level().dimension());
 			if (mainDCE == null)
 				continue;
 			CarriageContraptionEntity mainEntity = mainDCE.entity.get();
@@ -184,7 +184,7 @@ public class CarriageSounds {
 		}
 
 		train.honkTicks--;
-		train.determineHonk(entity.level);
+		train.determineHonk(entity.level());
 
 		if (train.lowHonk == null)
 			return;

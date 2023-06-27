@@ -93,7 +93,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		// Select location at distance
 		if (selectIgnoreBlocks) {
 			float pt = AnimationTickHolder.getPartialTicks();
-			selectedPos = new BlockPos(player.getEyePosition(pt)
+			selectedPos = BlockPos.containing(player.getEyePosition(pt)
 				.add(player.getLookAngle()
 					.scale(selectionRange)));
 			if (snap)
@@ -103,14 +103,14 @@ public abstract class SchematicToolBase implements ISchematicTool {
 
 		// Select targeted Block
 		selectedPos = null;
-		BlockHitResult trace = RaycastHelper.rayTraceRange(player.level, player, 75);
+		BlockHitResult trace = RaycastHelper.rayTraceRange(player.level(), player, 75);
 		if (trace == null || trace.getType() != Type.BLOCK)
 			return;
 
-		BlockPos hit = new BlockPos(trace.getLocation());
-		boolean replaceable = player.level.getBlockState(hit)
-			.getMaterial()
-			.isReplaceable();
+		BlockPos hit = BlockPos.containing(trace.getLocation());
+		boolean replaceable = player.level()
+			.getBlockState(hit)
+			.canBeReplaced();
 		if (trace.getDirection()
 			.getAxis()
 			.isVertical() && !replaceable)

@@ -15,7 +15,7 @@ public class TrapdoorMovingInteraction extends SimpleBlockMovingInteraction {
 	protected BlockState handle(Player player, Contraption contraption, BlockPos pos, BlockState currentState) {
 		SoundEvent sound = currentState.getValue(TrapDoorBlock.OPEN) ? SoundEvents.WOODEN_TRAPDOOR_CLOSE
 			: SoundEvents.WOODEN_TRAPDOOR_OPEN;
-		float pitch = player.level.random.nextFloat() * 0.1F + 0.9F;
+		float pitch = player.level().random.nextFloat() * 0.1F + 0.9F;
 		playSound(player, sound, pitch);
 		return currentState.cycle(TrapDoorBlock.OPEN);
 	}

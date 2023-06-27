@@ -63,7 +63,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			.rotateY(180)
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
-			.rotate(Direction.EAST, AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.level) % 360))
+			.rotate(Direction.EAST, AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.level()) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 
 		cogs.forEntityRender()

@@ -55,7 +55,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	@Override
 	public void setPos(double x, double y, double z) {
 		super.setPos(x, y, z);
-		if (!level.isClientSide())
+		if (!level().isClientSide())
 			return;
 		for (Entity entity : getPassengers())
 			positionRider(entity);
@@ -125,7 +125,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	public void setAngle(float angle) {
 		this.angle = angle;
 
-		if (!level.isClientSide())
+		if (!level().isClientSide())
 			return;
 		for (Entity entity : getPassengers())
 			positionRider(entity);
@@ -157,7 +157,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 
 		if (controllerPos == null)
 			return;
-		if (!level.isLoaded(controllerPos))
+		if (!level().isLoaded(controllerPos))
 			return;
 		IControlContraption controller = getController();
 		if (controller == null) {
@@ -166,7 +166,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		}
 		if (!controller.isAttachedTo(this)) {
 			controller.attach(this);
-			if (level.isClientSide)
+			if (level().isClientSide)
 				setPos(getX(), getY(), getZ());
 		}
 	}
@@ -186,7 +186,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		if (!activeAreaOffset.multiply(VecHelper.axisAlingedPlaneOf(Vec3.atLowerCornerOf(facing.getNormal())))
 			.equals(Vec3.ZERO))
 			return false;
-		if (!VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis()))
+		if (!VecHelper.onSameAxis(blockInfo.pos(), BlockPos.ZERO, facing.getAxis()))
 			return false;
 		context.motion = Vec3.atLowerCornerOf(facing.getNormal())
 			.scale(angleDelta / 360.0);
@@ -204,9 +204,9 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	protected IControlContraption getController() {
 		if (controllerPos == null)
 			return null;
-		if (!level.isLoaded(controllerPos))
+		if (!level().isLoaded(controllerPos))
 			return null;
-		BlockEntity be = level.getBlockEntity(controllerPos);
+		BlockEntity be = level().getBlockEntity(controllerPos);
 		if (!(be instanceof IControlContraption))
 			return null;
 		return (IControlContraption) be;
@@ -214,7 +214,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	protected StructureTransform makeStructureTransform() {
-		BlockPos offset = new BlockPos(getAnchorVec().add(.5, .5, .5));
+		BlockPos offset = BlockPos.containing(getAnchorVec().add(.5, .5, .5));
 		float xRot = rotationAxis == Axis.X ? angle : 0;
 		float yRot = rotationAxis == Axis.Y ? angle : 0;
 		float zRot = rotationAxis == Axis.Z ? angle : 0;

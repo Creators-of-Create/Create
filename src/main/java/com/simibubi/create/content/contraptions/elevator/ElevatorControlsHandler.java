@@ -91,10 +91,10 @@ public class ElevatorControlsHandler {
 
 			if (info == null)
 				continue;
-			if (!AllBlocks.CONTRAPTION_CONTROLS.has(info.state))
+			if (!AllBlocks.CONTRAPTION_CONTROLS.has(info.state()))
 				continue;
 
-			if (!slot.testHit(info.state, rayTraceResult.getLocation()
+			if (!slot.testHit(info.state(), rayTraceResult.getLocation()
 				.subtract(Vec3.atLowerCornerOf(pos))))
 				continue;
 
@@ -117,8 +117,8 @@ public class ElevatorControlsHandler {
 			if (prev != efs.currentIndex && !ec.namesList.isEmpty()) {
 				float pitch = (efs.currentIndex) / (float) (ec.namesList.size());
 				pitch = Mth.lerp(pitch, 1f, 1.5f);
-				AllSoundEvents.SCROLL_VALUE.play(mc.player.level, mc.player,
-					new BlockPos(contraptionEntity.toGlobalVector(rayTraceResult.getLocation(), 1)), 1, pitch);
+				AllSoundEvents.SCROLL_VALUE.play(mc.player.level(), mc.player,
+					BlockPos.containing(contraptionEntity.toGlobalVector(rayTraceResult.getLocation(), 1)), 1, pitch);
 			}
 
 			return true;

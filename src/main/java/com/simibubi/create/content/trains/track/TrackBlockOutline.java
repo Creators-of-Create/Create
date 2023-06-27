@@ -63,7 +63,7 @@ public class TrackBlockOutline {
 
 		result = null;
 
-		AttributeInstance range = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+		AttributeInstance range = player.getAttribute(ForgeMod.BLOCK_REACH.get());
 		Vec3 target = RaycastHelper.getTraceTarget(player, Math.min(maxRange, range.getValue()) + 1, origin);
 		Map<BlockPos, TrackBlockEntity> turns = TRACKS_WITH_TURNS.get(mc.level);
 
@@ -137,7 +137,7 @@ public class TrackBlockOutline {
 
 		if (mc.hitResult != null && mc.hitResult.getType() != Type.MISS) {
 			Vec3 priorLoc = mc.hitResult.getLocation();
-			mc.hitResult = BlockHitResult.miss(priorLoc, Direction.UP, new BlockPos(priorLoc));
+			mc.hitResult = BlockHitResult.miss(priorLoc, Direction.UP, BlockPos.containing(priorLoc));
 		}
 	}
 

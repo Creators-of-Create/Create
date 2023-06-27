@@ -191,9 +191,8 @@ public class BlockHelper {
 					.ultraWarm())
 					return;
 
-				Material material = world.getBlockState(pos.below())
-					.getMaterial();
-				if (material.blocksMotion() || material.isLiquid())
+				 BlockState blockstate = world.getBlockState(pos.below());
+		         if (blockstate.blocksMotion() || blockstate.liquid())
 					world.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
 				return;
 			}

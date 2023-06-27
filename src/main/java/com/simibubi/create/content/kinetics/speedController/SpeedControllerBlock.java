@@ -94,8 +94,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 			BlockPos newPos = pos.above();
 			if (!world.getBlockState(newPos)
-				.getMaterial()
-				.isReplaceable())
+				.canBeReplaced())
 				return PlacementOffset.fail();
 
 			Axis newAxis = state.getValue(HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X;

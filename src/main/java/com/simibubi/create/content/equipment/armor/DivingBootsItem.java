@@ -50,9 +50,9 @@ public class DivingBootsItem extends BaseArmorItem {
 
 		Vec3 motion = entity.getDeltaMovement();
 		boolean isJumping = entity.jumping;
-		entity.setOnGround(entity.isOnGround() || entity.verticalCollision);
+		entity.setOnGround(entity.onGround() || entity.verticalCollision);
 
-		if (isJumping && entity.isOnGround()) {
+		if (isJumping && entity.onGround()) {
 			motion = motion.add(0, .5f, 0);
 			entity.setOnGround(false);
 		} else {
@@ -90,7 +90,7 @@ public class DivingBootsItem extends BaseArmorItem {
 		double yMotion = entity.getDeltaMovement().y;
 		double vMultiplier = yMotion < 0 ? Math.max(0, 2.5 - Math.abs(yMotion) * 2) : 1;
 
-		if (!entity.isOnGround()) {
+		if (!entity.onGround()) {
 			if (entity.jumping && entity.getPersistentData()
 				.contains("LavaGrounded")) {
 				boolean eyeInFluid = entity.isEyeInFluid(FluidTags.LAVA);

@@ -49,7 +49,7 @@ public class SuperGlueHandler {
 		for (Direction direction : Iterate.directions) {
 			BlockPos relative = pos.relative(direction);
 			if (SuperGlueEntity.isGlued(world, pos, direction, cached)
-				&& BlockMovementChecks.isMovementNecessary(world.getBlockState(relative), entity.level, relative))
+				&& BlockMovementChecks.isMovementNecessary(world.getBlockState(relative), entity.level(), relative))
 				AllPackets.getChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
 					new GlueEffectPacket(pos, direction, true));
 		}
@@ -60,7 +60,7 @@ public class SuperGlueHandler {
 
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, Player placer) {
 		ItemStack itemstack = placer.getOffhandItem();
-		AttributeInstance reachAttribute = placer.getAttribute(ForgeMod.REACH_DISTANCE.get());
+		AttributeInstance reachAttribute = placer.getAttribute(ForgeMod.BLOCK_REACH.get());
 		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
 			return;
 		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))
@@ -72,7 +72,7 @@ public class SuperGlueHandler {
 		Vec3 start = placer.getEyePosition(1);
 		Vec3 look = placer.getViewVector(1);
 		Vec3 end = start.add(look.x * distance, look.y * distance, look.z * distance);
-		Level world = placer.level;
+		Level world = placer.level();
 
 		RayTraceWorld rayTraceWorld =
 			new RayTraceWorld(world, (p, state) -> p.equals(pos) ? Blocks.AIR.defaultBlockState() : state);

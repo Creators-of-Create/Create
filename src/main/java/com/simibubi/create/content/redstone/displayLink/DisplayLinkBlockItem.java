@@ -79,8 +79,7 @@ public class DisplayLinkBlockItem extends BlockItem {
 		CompoundTag teTag = new CompoundTag();
 
 		BlockPos selectedPos = NbtUtils.readBlockPos(tag.getCompound("SelectedPos"));
-		BlockPos placedPos = pos.relative(pContext.getClickedFace(), state.getMaterial()
-			.isReplaceable() ? 0 : 1);
+		BlockPos placedPos = pos.relative(pContext.getClickedFace(), state.canBeReplaced() ? 0 : 1);
 
 		if (!selectedPos.closerThan(placedPos, AllConfigs.server().logistics.displayLinkRange.get())) {
 			player.displayClientMessage(Lang.translateDirect("display_link.too_far")

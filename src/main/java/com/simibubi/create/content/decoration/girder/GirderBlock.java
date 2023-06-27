@@ -332,8 +332,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 		VoxelShape shape = blockState.getShape(world, relative);
 		if (shape.isEmpty())
 			return false;
-		if (Block.isFaceFull(shape, side.getOpposite()) && blockState.getMaterial()
-			.isSolidBlocking())
+		if (Block.isFaceFull(shape, side.getOpposite()) && blockState.isSolid())
 			return true;
 		return AbstractChuteBlock.getChuteFacing(blockState) == Direction.DOWN;
 	}

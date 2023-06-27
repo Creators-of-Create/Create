@@ -38,7 +38,7 @@ public class BellMovementBehaviour implements MovementBehaviour {
 
 	public static void playSound(MovementContext context) {
 		Level world = context.world;
-		BlockPos pos = new BlockPos(context.position);
+		BlockPos pos = BlockPos.containing(context.position);
 		Block block = context.state.getBlock();
 
 		if (block instanceof AbstractBellBlock) {

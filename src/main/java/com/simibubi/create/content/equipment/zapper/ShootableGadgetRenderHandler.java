@@ -9,11 +9,11 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -131,8 +131,8 @@ public abstract class ShootableGadgetRenderHandler {
 		ms.mulPose(Axis.ZP.rotationDegrees(flip * f5 * -20.0F));
 		transformTool(ms, flip, equipProgress, recoil, pt);
 		firstPersonRenderer.renderItem(mc.player, heldItem,
-			rightHand ? ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
-				: ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
+			rightHand ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND
+				: ItemDisplayContext.FIRST_PERSON_LEFT_HAND,
 			!rightHand, ms, buffer, light);
 		ms.popPose();
 

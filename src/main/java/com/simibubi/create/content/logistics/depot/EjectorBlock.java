@@ -124,7 +124,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 		if (ejectorBlockEntity.launcher.getHorizontalDistance() == 0)
 			return;
 
-		if (entityIn.isOnGround()) {
+		if (entityIn.onGround()) {
 			entityIn.setOnGround(false);
 			Vec3 center = VecHelper.getCenterOf(position)
 				.add(0, 7 / 16f, 0);
@@ -141,7 +141,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 
 		ejectorBlockEntity.activate();
 		ejectorBlockEntity.notifyUpdate();
-		if (entityIn.level.isClientSide)
+		if (entityIn.level().isClientSide)
 			AllPackets.getChannel().sendToServer(new EjectorTriggerPacket(ejectorBlockEntity.getBlockPos()));
 	}
 

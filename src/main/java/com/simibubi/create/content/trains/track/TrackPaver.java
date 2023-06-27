@@ -57,18 +57,18 @@ public class TrackPaver {
 		for (int i = 0; i < extent; i++) {
 			Vec3 offset = direction.scale(i);
 			Vec3 mainPos = start.add(offset.x, offset.y, offset.z);
-			toPlaceOn.add(new BlockPos(mainPos.add(mainNormal)));
-			toPlaceOn.add(new BlockPos(mainPos.subtract(mainNormal)));
+			toPlaceOn.add(BlockPos.containing(mainPos.add(mainNormal)));
+			toPlaceOn.add(BlockPos.containing(mainPos.subtract(mainNormal)));
 			if (wallLike)
 				continue;
-			toPlaceOn.add(new BlockPos(mainPos));
+			toPlaceOn.add(BlockPos.containing(mainPos));
 			if (i < extent - 1)
 				for (int x : Iterate.positiveAndNegative)
-					toPlaceOn.add(new BlockPos(mainPos.add(normalizedNormal.scale(x * diagFiller))
+					toPlaceOn.add(BlockPos.containing(mainPos.add(normalizedNormal.scale(x * diagFiller))
 						.add(normalizedDirection.scale(diagFiller))));
 			if (i > 0)
 				for (int x : Iterate.positiveAndNegative)
-					toPlaceOn.add(new BlockPos(mainPos.add(normalizedNormal.scale(x * diagFiller))
+					toPlaceOn.add(BlockPos.containing(mainPos.add(normalizedNormal.scale(x * diagFiller))
 						.add(normalizedDirection.scale(-diagFiller))));
 		}
 
@@ -140,7 +140,7 @@ public class TrackPaver {
 				.scale(.5);
 
 			for (Vec3 vec : new Vec3[] { rail1, rail2, railMiddle }) {
-				BlockPos pos = new BlockPos(vec);
+				BlockPos pos = BlockPos.containing(vec);
 				Pair<Integer, Integer> key = Pair.of(pos.getX(), pos.getZ());
 				if (!yLevels.containsKey(key) || yLevels.get(key) > vec.y)
 					yLevels.put(key, vec.y);
@@ -181,8 +181,7 @@ public class TrackPaver {
 
 	private static boolean placeBlockIfFree(Level level, BlockPos pos, BlockState state, boolean simulate) {
 		BlockState stateAtPos = level.getBlockState(pos);
-		if (stateAtPos.getBlock() != state.getBlock() && stateAtPos.getMaterial()
-			.isReplaceable()) {
+		if (stateAtPos.getBlock() != state.getBlock() && stateAtPos.canBeReplaced()) {
 			if (!simulate)
 				level.setBlock(pos, ProperWaterloggedBlock.withWater(level, state, pos), 3);
 			return true;

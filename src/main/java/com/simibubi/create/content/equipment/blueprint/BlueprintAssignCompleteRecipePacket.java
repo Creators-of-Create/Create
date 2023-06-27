@@ -32,7 +32,7 @@ public class BlueprintAssignCompleteRecipePacket extends SimplePacketBase {
 				return;
 			if (player.containerMenu instanceof BlueprintMenu) {
 				BlueprintMenu c = (BlueprintMenu) player.containerMenu;
-				player.getLevel()
+				player.level()
 						.getRecipeManager()
 						.byKey(recipeID)
 						.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.ghostInventory, r));

@@ -459,7 +459,7 @@ public class Train {
 
 			if ((runtime.getSchedule() == null || runtime.paused) && signalEdgeGroup.isOccupiedUnless(this))
 				carriages.forEach(c -> c.forEachPresentEntity(cce -> cce.getControllingPlayer()
-					.ifPresent(uuid -> AllAdvancements.RED_SIGNAL.awardTo(cce.level.getPlayerByUUID(uuid)))));
+					.ifPresent(uuid -> AllAdvancements.RED_SIGNAL.awardTo(cce.level().getPlayerByUUID(uuid)))));
 
 			signalEdgeGroup.reserved = signal;
 			occupy(groupId, signal.id);
@@ -475,7 +475,7 @@ public class Train {
 			c.forEachPresentEntity(cce -> cce.getContraption()
 				.getActors()
 				.forEach(pair -> {
-					MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.getKey().state);
+					MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.getKey().state());
 					if (behaviour != null)
 						behaviour.cancelStall(pair.getValue());
 				}));
@@ -726,7 +726,7 @@ public class Train {
 			CarriageContraptionEntity entity = carriage.anyAvailableEntity();
 			if (entity == null)
 				return false;
-			level = entity.level;
+			level = entity.level();
 
 			if (entity.getContraption()instanceof CarriageContraption cc)
 				cc.returnStorageForDisassembly(carriage.storage);
@@ -739,7 +739,7 @@ public class Train {
 					continue;
 				Vec3 bogeyPosition = bogey.getAnchorPosition();
 				if (bogeyPosition == null) continue;
-				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
+				BlockEntity be = level.getBlockEntity(BlockPos.containing(bogeyPosition));
 				if (!(be instanceof AbstractBogeyBlockEntity sbbe))
 					continue;
 				sbbe.setBogeyData(bogey.bogeyData);

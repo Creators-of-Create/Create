@@ -305,7 +305,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 		if (!setFilter(side, toApply)) {
 			player.displayClientMessage(Lang.translateDirect("logistics.filter.invalid_item"), true);
-			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+			AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 			return;
 		}
 
@@ -372,7 +372,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 					.withStyle(ChatFormatting.WHITE))
 				.style(ChatFormatting.RED)
 				.component(), true);
-			AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+			AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 			return false;
 		}
 

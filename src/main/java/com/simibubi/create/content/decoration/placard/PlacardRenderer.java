@@ -7,11 +7,11 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -46,7 +46,7 @@ public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity>
 			.translate(0, 0, 4.5 / 16f)
 			.scale(blockItem ? .5f : .375f);
 
-		itemRenderer.renderStatic(heldItem, TransformType.FIXED, light, overlay, ms, buffer, 0);
+		itemRenderer.renderStatic(heldItem, ItemDisplayContext.FIXED, light, overlay, ms, buffer, 0);
 		ms.popPose();
 	}
 

@@ -13,13 +13,13 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -135,7 +135,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 	protected void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack stack) {
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.renderStatic(stack, TransformType.GROUND, light, overlay, ms, buffer, 0);
+			.renderStatic(stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, 0);
 	}
 
 	protected float renderFluids(BasinBlockEntity basin, float partialTicks, PoseStack ms, MultiBufferSource buffer,

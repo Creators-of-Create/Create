@@ -105,7 +105,7 @@ public class CouplingPhysics {
 	        int y = Mth.floor(vec.y());
 	        int z = Mth.floor(vec.z());
 	        BlockPos pos = new BlockPos(x, y - 1, z);
-	        if (minecart.level.getBlockState(pos).is(BlockTags.RAILS)) pos = pos.below();
+	        if (minecart.level().getBlockState(pos).is(BlockTags.RAILS)) pos = pos.below();
 			BlockPos railPosition = pos;
 			BlockState railState = world.getBlockState(railPosition.above());
 			if (!(railState.getBlock() instanceof BaseRailBlock))

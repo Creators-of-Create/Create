@@ -7,7 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -58,7 +58,7 @@ public class TrainIconType {
 		int offset = getIconOffset(lengthOrEngine);
 		int width = getIconWidth(lengthOrEngine);
 		RenderSystem.setShaderTexture(0, sheet);
-		GuiComponent.blit(ms, x, y, 0, this.x + offset, this.y, width, 10, 256, 256);
+		GuiGraphics.blit(ms, x, y, 0, this.x + offset, this.y, width, 10, 256, 256);
 		return width;
 	}
 

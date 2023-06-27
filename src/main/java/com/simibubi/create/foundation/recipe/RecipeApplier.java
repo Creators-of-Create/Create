@@ -24,9 +24,9 @@ public class RecipeApplier {
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
-			ItemEntity entityIn = new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), additional);
+			ItemEntity entityIn = new ItemEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), additional);
 			entityIn.setDeltaMovement(entity.getDeltaMovement());
-			entity.level.addFreshEntity(entityIn);
+			entity.level().addFreshEntity(entityIn);
 		}
 	}
 

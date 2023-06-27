@@ -117,7 +117,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 		if (!(entity instanceof Blaze))
 			return InteractionResult.PASS;
 
-		Level world = player.level;
+		Level world = player.level();
 		spawnCaptureEffects(world, entity.position());
 		if (world.isClientSide)
 			return InteractionResult.FAIL;
@@ -152,7 +152,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			return;
 		}
 
-		BlockPos soundPos = new BlockPos(vec);
+		BlockPos soundPos = BlockPos.containing(vec);
 		world.playSound(null, soundPos, SoundEvents.BLAZE_HURT, SoundSource.HOSTILE, .25f, .75f);
 		world.playSound(null, soundPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, .5f, .75f);
 	}

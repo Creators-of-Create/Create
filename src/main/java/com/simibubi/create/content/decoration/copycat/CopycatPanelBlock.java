@@ -225,8 +225,7 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 				state.getValue(FACING)
 					.getAxis(),
 				dir -> world.getBlockState(pos.relative(dir))
-					.getMaterial()
-					.isReplaceable());
+					.canBeReplaced());
 
 			if (directions.isEmpty())
 				return PlacementOffset.fail();

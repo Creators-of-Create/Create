@@ -126,9 +126,9 @@ public class CarriageContraption extends Contraption {
 		if (!blocks.containsKey(controlsPos))
 			return false;
 		StructureBlockInfo info = blocks.get(controlsPos);
-		if (!AllBlocks.TRAIN_CONTROLS.has(info.state))
+		if (!AllBlocks.TRAIN_CONTROLS.has(info.state()))
 			return false;
-		return info.state.getValue(ControlsBlock.FACING) == direction.getOpposite();
+		return info.state().getValue(ControlsBlock.FACING) == direction.getOpposite();
 	}
 
 	public void swapStorageAfterAssembly(CarriageContraptionEntity cce) {
@@ -347,7 +347,7 @@ public class CarriageContraption extends Contraption {
 
 	@Override
 	public void tickStorage(AbstractContraptionEntity entity) {
-		if (entity.level.isClientSide)
+		if (entity.level().isClientSide)
 			storage.entityTick(entity);
 		else if (storageProxy != null)
 			storageProxy.entityTick(entity);

@@ -77,8 +77,8 @@ public class SchematicAndQuillHandler {
 		double maxZ = Math.max(bb.maxZ - z * axisDirection.getStep(), bb.minZ);
 		bb = new AABB(bb.minX, bb.minY, bb.minZ, maxX, maxY, maxZ);
 
-		firstPos = new BlockPos(bb.minX, bb.minY, bb.minZ);
-		secondPos = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
+		firstPos = BlockPos.containing(bb.minX, bb.minY, bb.minZ);
+		secondPos = BlockPos.containing(bb.maxX, bb.maxY, bb.maxZ);
 		LocalPlayer player = Minecraft.getInstance().player;
 		Lang.translate("schematicAndQuill.dimensions", (int) bb.getXsize() + 1, (int) bb.getYsize() + 1,
 			(int) bb.getZsize() + 1)
@@ -142,14 +142,14 @@ public class SchematicAndQuillHandler {
 			Vec3 targetVec = player.getEyePosition(pt)
 				.add(player.getLookAngle()
 					.scale(range));
-			selectedPos = new BlockPos(targetVec);
+			selectedPos = BlockPos.containing(targetVec);
 
 		} else {
-			BlockHitResult trace = RaycastHelper.rayTraceRange(player.level, player, 75);
+			BlockHitResult trace = RaycastHelper.rayTraceRange(player.level(), player, 75);
 			if (trace != null && trace.getType() == Type.BLOCK) {
 
 				BlockPos hit = trace.getBlockPos();
-				boolean replaceable = player.level.getBlockState(hit)
+				boolean replaceable = player.level().getBlockState(hit)
 					.canBeReplaced(new BlockPlaceContext(new UseOnContext(player, InteractionHand.MAIN_HAND, trace)));
 				if (trace.getDirection()
 					.getAxis()

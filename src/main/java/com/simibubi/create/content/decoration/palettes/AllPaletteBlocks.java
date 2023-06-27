@@ -25,7 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.common.Tags;
 
 public class AllPaletteBlocks {
@@ -73,7 +73,7 @@ public class AllPaletteBlocks {
 		WARPED_WINDOW = woodenWindowBlock(WoodType.WARPED, Blocks.WARPED_PLANKS),
 		ORNATE_IRON_WINDOW =
 			customWindowBlock("ornate_iron_window", () -> Items.IRON_NUGGET, () -> AllSpriteShifts.ORNATE_IRON_WINDOW,
-				() -> RenderType::cutout, false, () -> MaterialColor.TERRACOTTA_LIGHT_GRAY);
+				() -> RenderType::cutout, false, () -> MapColor.TERRACOTTA_LIGHT_GRAY);
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> OAK_WINDOW_PANE =
 		woodenWindowPane(WoodType.OAK, OAK_WINDOW),

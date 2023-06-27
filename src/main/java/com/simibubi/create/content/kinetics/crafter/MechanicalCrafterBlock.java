@@ -35,8 +35,8 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -193,7 +193,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 				}
 
 				LazyOptional<IItemHandler> capability =
-					crafter.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+					crafter.getCapability(ForgeCapabilities.ITEM_HANDLER);
 				if (!capability.isPresent())
 					return InteractionResult.PASS;
 				ItemStack remainder =

@@ -21,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
@@ -40,7 +41,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 			return false;
 		if (contraption instanceof ElevatorContraption ec)
 			return elevatorInteraction(localPos, contraptionEntity, ec, ctx);
-		if (contraptionEntity.level.isClientSide()) {
+		if (contraptionEntity.level().isClientSide()) {
 			if (contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
 				cbe.pressButton();
 			return true;
@@ -70,7 +71,7 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 
 		if (invert) {
 			for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors()) {
-				MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.left.state);
+				MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.left.state());
 				if (behaviour == null)
 					continue;
 				ItemStack behaviourStack = behaviour.canBeDisabledVia(pair.right);
@@ -94,8 +95,8 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 		ContraptionControlsBlockEntity.sendStatus(player, filter, !disable);
 		send(contraptionEntity, filter, disable);
 
-		AllSoundEvents.CONTROLLER_CLICK.play(player.level, null,
-			new BlockPos(contraptionEntity.toGlobalVector(Vec3.atCenterOf(localPos), 1)), 1, disable ? 0.8f : 1.5f);
+		AllSoundEvents.CONTROLLER_CLICK.play(player.level(), null,
+			BlockPos.containing(contraptionEntity.toGlobalVector(Vec3.atCenterOf(localPos), 1)), 1, disable ? 0.8f : 1.5f);
 
 		return true;
 	}
@@ -107,10 +108,11 @@ public class ContraptionControlsMovingInteraction extends MovingInteractionBehav
 
 	private boolean elevatorInteraction(BlockPos localPos, AbstractContraptionEntity contraptionEntity,
 		ElevatorContraption contraption, MovementContext ctx) {
-		if (!contraptionEntity.level.isClientSide()) {
-			BlockPos pos = new BlockPos(contraptionEntity.toGlobalVector(Vec3.atCenterOf(localPos), 1));
-			AllSoundEvents.CONTROLLER_CLICK.play(contraptionEntity.level, null, pos, 1, 1.5f);
-			AllSoundEvents.CONTRAPTION_ASSEMBLE.play(contraptionEntity.level, null, pos, 0.75f, 0.8f);
+		Level level = contraptionEntity.level();
+		if (!level.isClientSide()) {
+			BlockPos pos = BlockPos.containing(contraptionEntity.toGlobalVector(Vec3.atCenterOf(localPos), 1));
+			AllSoundEvents.CONTROLLER_CLICK.play(level, null, pos, 1, 1.5f);
+			AllSoundEvents.CONTRAPTION_ASSEMBLE.play(level, null, pos, 0.75f, 0.8f);
 			return true;
 		}
 		if (!(ctx.temporaryData instanceof ElevatorFloorSelection efs))

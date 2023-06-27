@@ -11,8 +11,8 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -28,12 +28,12 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 	private static final Vec3 COG_ROTATION_OFFSET = new Vec3(0, 1 / 16f, 0);
 
 	@Override
-	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, TransformType transformType,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		TransformStack stacker = TransformStack.cast(ms);
 		float animation = 0.25f;
-		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
-		boolean rightHand = transformType == TransformType.FIRST_PERSON_RIGHT_HAND;
+		boolean leftHand = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
+		boolean rightHand = transformType == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
 		if (leftHand || rightHand)
 			animation = Mth.lerp(AnimationTickHolder.getPartialTicks(),
 										ExtendoGripRenderHandler.lastMainHandAnimation,

@@ -209,7 +209,7 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public boolean survives() {
-		if (!level.noCollision(this))
+		if (!level().noCollision(this))
 			return false;
 
 		int i = Math.max(1, this.getWidth() / 16);
@@ -229,17 +229,16 @@ public class BlueprintEntity extends HangingEntity
 				blockpos$mutable.set(blockpos)
 					.move(newDirection, k + i1)
 					.move(upDirection, l + j1);
-				BlockState blockstate = this.level.getBlockState(blockpos$mutable);
-				if (Block.canSupportCenter(this.level, blockpos$mutable, this.direction))
+				BlockState blockstate = this.level().getBlockState(blockpos$mutable);
+				if (Block.canSupportCenter(this.level(), blockpos$mutable, this.direction))
 					continue;
-				if (!blockstate.getMaterial()
-					.isSolid() && !DiodeBlock.isDiode(blockstate)) {
+				if (!blockstate.isSolid() && !DiodeBlock.isDiode(blockstate)) {
 					return false;
 				}
 			}
 		}
 
-		return this.level.getEntities(this, this.getBoundingBox(), HANGING_ENTITY)
+		return this.level().getEntities(this, this.getBoundingBox(), HANGING_ENTITY)
 			.isEmpty();
 	}
 
@@ -255,11 +254,11 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public boolean skipAttackInteraction(Entity source) {
-		if (!(source instanceof Player) || level.isClientSide)
+		if (!(source instanceof Player) || level().isClientSide)
 			return super.skipAttackInteraction(source);
 
 		Player player = (Player) source;
-		double attrib = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+		double attrib = player.getAttribute(ForgeMod.BLOCK_REACH.get())
 			.getValue() + (player.isCreative() ? 0 : -0.5F);
 
 		Vec3 eyePos = source.getEyePosition(1);
@@ -285,7 +284,7 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public void dropItem(@Nullable Entity p_110128_1_) {
-		if (!level.getGameRules()
+		if (!level().getGameRules()
 			.getBoolean(GameRules.RULE_DOENTITYDROPS))
 			return;
 
@@ -324,7 +323,7 @@ public class BlueprintEntity extends HangingEntity
 	public void lerpTo(double p_180426_1_, double p_180426_3_, double p_180426_5_, float p_180426_7_, float p_180426_8_,
 		int p_180426_9_, boolean p_180426_10_) {
 		BlockPos blockpos =
-			this.pos.offset(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ());
+			this.pos.offset(BlockPos.containing(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ()));
 		this.setPos((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
 	}
 
@@ -351,7 +350,7 @@ public class BlueprintEntity extends HangingEntity
 		BlueprintSection section = getSectionAt(vec);
 		ItemStackHandler items = section.getItems();
 
-		if (!holdingWrench && !level.isClientSide && !items.getStackInSlot(9)
+		if (!holdingWrench && !level().isClientSide && !items.getStackInSlot(9)
 			.isEmpty()) {
 
 			IItemHandlerModifiable playerInv = new InvWrapper(player.getInventory());
@@ -373,7 +372,7 @@ public class BlueprintEntity extends HangingEntity
 					}
 
 					for (int slot = 0; slot < playerInv.getSlots(); slot++) {
-						if (!FilterItem.test(level, playerInv.getStackInSlot(slot), requestedItem))
+						if (!FilterItem.test(level(), playerInv.getStackInSlot(slot), requestedItem))
 							continue;
 						ItemStack currentItem = playerInv.extractItem(slot, 1, false);
 						if (stacksTaken.containsKey(slot))
@@ -393,9 +392,9 @@ public class BlueprintEntity extends HangingEntity
 					CraftingContainer craftingInventory = new BlueprintCraftingInventory(craftingGrid);
 
 					if (!recipe.isPresent())
-						recipe = level.getRecipeManager()
-							.getRecipeFor(RecipeType.CRAFTING, craftingInventory, level);
-					ItemStack result = recipe.filter(r -> r.matches(craftingInventory, level))
+						recipe = level().getRecipeManager()
+							.getRecipeFor(RecipeType.CRAFTING, craftingInventory, level());
+					ItemStack result = recipe.filter(r -> r.matches(craftingInventory, level()))
 						.map(r -> r.assemble(craftingInventory))
 						.orElse(ItemStack.EMPTY);
 
@@ -405,13 +404,13 @@ public class BlueprintEntity extends HangingEntity
 						success = false;
 					} else {
 						amountCrafted += result.getCount();
-						result.onCraftedBy(player.level, player, 1);
+						result.onCraftedBy(player.level(), player, 1);
 						ForgeEventFactory.firePlayerCraftingEvent(player, result, craftingInventory);
-						NonNullList<ItemStack> nonnulllist = level.getRecipeManager()
-							.getRemainingItemsFor(RecipeType.CRAFTING, craftingInventory, level);
+						NonNullList<ItemStack> nonnulllist = level().getRecipeManager()
+							.getRemainingItemsFor(RecipeType.CRAFTING, craftingInventory, level());
 
 						if (firstPass)
-							level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
+							level().playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
 								.2f, 1f + Create.RANDOM.nextFloat());
 						player.getInventory()
 							.placeItemBackInInventory(result);
@@ -434,7 +433,7 @@ public class BlueprintEntity extends HangingEntity
 		}
 
 		int i = section.index;
-		if (!level.isClientSide && player instanceof ServerPlayer) {
+		if (!level().isClientSide && player instanceof ServerPlayer) {
 			NetworkHooks.openScreen((ServerPlayer) player, section, buf -> {
 				buf.writeVarInt(getId());
 				buf.writeVarInt(i);
@@ -530,7 +529,7 @@ public class BlueprintEntity extends HangingEntity
 			list.put(index + "", inventory.serializeNBT());
 			list.putBoolean("InferredIcon", inferredIcon);
 			cachedDisplayItems = null;
-			if (!level.isClientSide)
+			if (!level().isClientSide)
 				syncPersistentDataWithTracking(BlueprintEntity.this);
 		}
 
@@ -539,7 +538,7 @@ public class BlueprintEntity extends HangingEntity
 		}
 
 		public Level getBlueprintWorld() {
-			return level;
+			return level();
 		}
 
 		@Override

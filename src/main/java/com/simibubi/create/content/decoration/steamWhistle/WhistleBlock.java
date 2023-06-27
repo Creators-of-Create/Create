@@ -156,8 +156,7 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 				continue;
 			}
 
-			if (!blockState.getMaterial()
-				.isReplaceable())
+			if (!blockState.canBeReplaced())
 				return;
 
 			pLevel.setBlock(currentPos, AllBlocks.STEAM_WHISTLE_EXTENSION.getDefaultState()

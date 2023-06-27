@@ -72,7 +72,7 @@ public class SoulParticle extends CustomRotationParticle {
 		animationStage.tick();
 		animationStage = animationStage.getNext();
 
-		BlockPos pos = new BlockPos(x, y, z);
+		BlockPos pos = BlockPos.containing(x, y, z);
 		if (animationStage == null)
 			remove();
 		if (!SoulPulseEffect.isDark(level, pos)) {

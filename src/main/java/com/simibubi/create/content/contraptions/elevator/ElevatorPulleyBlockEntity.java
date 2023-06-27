@@ -246,8 +246,7 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 			BlockState ropeState = level.getBlockState(ropePos);
 			if (!ropeState.getCollisionShape(level, ropePos)
 				.isEmpty()
-				&& !ropeState.getMaterial()
-					.isReplaceable()) {
+				&& !ropeState.canBeReplaced()) {
 				break;
 			}
 			++i;

@@ -52,8 +52,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -730,7 +730,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if (capability == ForgeCapabilities.ITEM_HANDLER)
 			return tunnelCapability.cast();
 		return super.getCapability(capability, side);
 	}
@@ -739,7 +739,7 @@ public class BrassTunnelBlockEntity extends BeltTunnelBlockEntity implements IHa
 		if (!beltCapability.isPresent()) {
 			BlockEntity blockEntity = level.getBlockEntity(worldPosition.below());
 			if (blockEntity != null)
-				beltCapability = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+				beltCapability = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
 		}
 		return beltCapability;
 	}

@@ -37,7 +37,7 @@ public class ContraptionWorld extends WrappedWorld {
         StructureTemplate.StructureBlockInfo blockInfo = contraption.getBlocks().get(pos);
 
         if (blockInfo != null)
-            return blockInfo.state;
+            return blockInfo.state();
 
         return Blocks.AIR.defaultBlockState();
     }

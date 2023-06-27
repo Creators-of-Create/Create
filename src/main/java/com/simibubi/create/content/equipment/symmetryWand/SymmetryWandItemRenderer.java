@@ -11,8 +11,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer {
@@ -22,7 +22,7 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer {
 	protected static final PartialModel CORE_GLOW = new PartialModel(Create.asResource("item/wand_of_symmetry/core_glow"));
 
 	@Override
-	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 		int maxLight = LightTexture.FULL_BRIGHT;

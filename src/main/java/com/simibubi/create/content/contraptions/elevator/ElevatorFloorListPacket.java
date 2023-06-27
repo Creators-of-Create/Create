@@ -81,7 +81,7 @@ public class ElevatorFloorListPacket extends SimplePacketBase {
 		public boolean handle(Context context) {
 			context.enqueueWork(() -> {
 				ServerPlayer sender = context.getSender();
-				Entity entityByID = sender.getLevel()
+				Entity entityByID = sender.level()
 					.getEntity(entityId);
 				if (!(entityByID instanceof AbstractContraptionEntity ace))
 					return;

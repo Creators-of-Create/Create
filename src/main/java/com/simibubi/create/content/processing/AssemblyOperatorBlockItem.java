@@ -30,8 +30,7 @@ public class AssemblyOperatorBlockItem extends BlockItem {
 		if (operatesOn(placedOnState) && context.getClickedFace() == Direction.UP) {
 			if (context.getLevel()
 				.getBlockState(placedOnPos.above(2))
-				.getMaterial()
-				.isReplaceable())
+				.canBeReplaced())
 				context = adjustContext(context, placedOnPos);
 			else
 				return InteractionResult.FAIL;

@@ -35,8 +35,7 @@ public class ChuteItem extends BlockItem {
 			.above();
 
 		BlockState blockState = world.getBlockState(correctPos);
-		if (blockState.getMaterial()
-			.isReplaceable())
+		if (blockState.canBeReplaced())
 			context = BlockPlaceContext.at(context, correctPos, face);
 		else {
 			if (!(blockState.getBlock() instanceof ChuteBlock) || world.isClientSide)

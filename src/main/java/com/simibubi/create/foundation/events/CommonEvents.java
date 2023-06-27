@@ -104,7 +104,7 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void onUpdateLivingEntity(LivingTickEvent event) {
 		LivingEntity entityLiving = event.getEntity();
-		Level world = entityLiving.level;
+		Level world = entityLiving.level();
 		if (world == null)
 			return;
 		ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(entityLiving, world);

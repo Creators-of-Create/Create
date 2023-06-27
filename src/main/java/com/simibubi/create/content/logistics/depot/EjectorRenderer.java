@@ -18,8 +18,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -71,7 +71,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
 				.getItemRenderer()
-				.renderStatic(intAttached.getValue(), TransformType.GROUND, light, overlay, ms, buffer, 0);
+				.renderStatic(intAttached.getValue(), ItemDisplayContext.GROUND, light, overlay, ms, buffer, 0);
 			ms.popPose();
 		}
 

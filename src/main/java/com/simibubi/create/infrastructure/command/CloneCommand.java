@@ -130,33 +130,33 @@ public class CloneCommand {
 		List<StructureTemplate.StructureBlockInfo> reverse = Lists.reverse(allBlocks);
 
 		for (StructureTemplate.StructureBlockInfo info : reverse) {
-			BlockEntity be = world.getBlockEntity(info.pos);
+			BlockEntity be = world.getBlockEntity(info.pos());
 			Clearable.tryClear(be);
-			world.setBlock(info.pos, Blocks.BARRIER.defaultBlockState(), 2);
+			world.setBlock(info.pos(), Blocks.BARRIER.defaultBlockState(), 2);
 		}
 
 		for (StructureTemplate.StructureBlockInfo info : allBlocks) {
-			if (world.setBlock(info.pos, info.state, 2))
+			if (world.setBlock(info.pos(), info.state(), 2))
 				blockPastes++;
 		}
 
 		for (StructureTemplate.StructureBlockInfo info : beBlocks) {
-			BlockEntity be = world.getBlockEntity(info.pos);
-			if (be != null && info.nbt != null) {
-				info.nbt.putInt("x", info.pos.getX());
-				info.nbt.putInt("y", info.pos.getY());
-				info.nbt.putInt("z", info.pos.getZ());
-				be.load(info.nbt);
+			BlockEntity be = world.getBlockEntity(info.pos());
+			if (be != null && info.nbt() != null) {
+				info.nbt().putInt("x", info.pos().getX());
+				info.nbt().putInt("y", info.pos().getY());
+				info.nbt().putInt("z", info.pos().getZ());
+				be.load(info.nbt());
 				be.setChanged();
 			}
 
 			// idk why the state is set twice for a be, but its done like this in the
 			// original clone command
-			world.setBlock(info.pos, info.state, 2);
+			world.setBlock(info.pos(), info.state(), 2);
 		}
 
 		for (StructureTemplate.StructureBlockInfo info : reverse) {
-			world.blockUpdated(info.pos, info.state.getBlock());
+			world.blockUpdated(info.pos(), info.state().getBlock());
 		}
 
 		world.getBlockTicks()

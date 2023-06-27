@@ -19,7 +19,7 @@ public class NoGravMagicalDohickyItem extends Item {
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-		Level world = entity.level;
+		Level world = entity.level();
 		Vec3 pos = entity.position();
 		CompoundTag persistentData = entity.getPersistentData();
 

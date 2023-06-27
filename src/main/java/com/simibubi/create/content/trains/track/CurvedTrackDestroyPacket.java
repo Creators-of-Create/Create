@@ -65,7 +65,7 @@ public class CurvedTrackDestroyPacket extends BlockEntityConfigurationPacket<Tra
 		TrackPropagator.onRailRemoved(level, pos, blockState);
 
 		if (wrench) {
-			AllSoundEvents.WRENCH_REMOVE.playOnServer(player.level, soundSource, 1,
+			AllSoundEvents.WRENCH_REMOVE.playOnServer(player.level(), soundSource, 1,
 				Create.RANDOM.nextFloat() * .5f + .5f);
 			if (!player.isCreative() && bezierConnection != null) 
 				bezierConnection.addItemsToPlayer(player);

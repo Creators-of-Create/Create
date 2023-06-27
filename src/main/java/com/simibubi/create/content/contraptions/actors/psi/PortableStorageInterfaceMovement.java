@@ -78,7 +78,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 			return;
 
 		if (context.world.isClientSide) {
-			BlockPos pos = new BlockPos(context.position);
+			BlockPos pos = BlockPos.containing(context.position);
 			if (!findInterface(context, pos))
 				reset(context);
 			return;

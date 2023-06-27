@@ -95,8 +95,7 @@ public class CogwheelBlockItem extends BlockItem {
 						continue;
 
 					if (!world.getBlockState(newPos)
-						.getMaterial()
-						.isReplaceable())
+						.canBeReplaced())
 						continue;
 
 					return PlacementOffset.success(newPos, s -> s.setValue(AXIS, axis));
@@ -137,8 +136,7 @@ public class CogwheelBlockItem extends BlockItem {
 						continue;
 
 					if (!world.getBlockState(newPos)
-						.getMaterial()
-						.isReplaceable())
+						.canBeReplaced())
 						continue;
 
 					return PlacementOffset.success(newPos, s -> s.setValue(AXIS, dir.getAxis()));
@@ -173,8 +171,7 @@ public class CogwheelBlockItem extends BlockItem {
 				BlockPos newPos = pos.relative(dir)
 					.relative(closest);
 				if (!world.getBlockState(newPos)
-					.getMaterial()
-					.isReplaceable())
+					.canBeReplaced())
 					continue;
 
 				if (!CogWheelBlock.isValidCogwheelPosition(ICogWheel.isLargeCog(state), world, newPos, axis))
@@ -237,8 +234,7 @@ public class CogwheelBlockItem extends BlockItem {
 					.relative(d);
 
 				if (!world.getBlockState(newPos)
-					.getMaterial()
-					.isReplaceable())
+					.canBeReplaced())
 					continue;
 
 				if (!CogWheelBlock.isValidCogwheelPosition(false, world, newPos, newAxis))
@@ -291,8 +287,7 @@ public class CogwheelBlockItem extends BlockItem {
 				BlockPos newPos = pos.relative(d);
 
 				if (!world.getBlockState(newPos)
-					.getMaterial()
-					.isReplaceable())
+					.canBeReplaced())
 					continue;
 
 				if (!CogWheelBlock.isValidCogwheelPosition(false, world, newPos, newAxis))

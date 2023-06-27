@@ -37,14 +37,14 @@ public class TrainCollisionPacket extends SimplePacketBase {
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
-			Level level = player.level;
+			Level level = player.level();
 
 			Entity entity = level.getEntity(contraptionEntityId);
 			if (!(entity instanceof CarriageContraptionEntity cce))
 				return;
 
 			player.hurt(new EntityDamageSource("create.run_over", cce), (int) damage);
-			player.level.playSound(player, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL,
+			player.level().playSound(player, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL,
 				1, .75f);
 		});
 		return true;

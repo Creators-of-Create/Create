@@ -64,10 +64,10 @@ public class ExtendoGripItem extends Item {
 
 	private static final Supplier<Multimap<Attribute, AttributeModifier>> rangeModifier = Suppliers.memoize(() ->
 	// Holding an ExtendoGrip
-	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), singleRangeAttributeModifier));
+	ImmutableMultimap.of(ForgeMod.BLOCK_REACH.get(), singleRangeAttributeModifier));
 	private static final Supplier<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = Suppliers.memoize(() ->
 	// Holding two ExtendoGrips o.O
-	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier));
+	ImmutableMultimap.of(ForgeMod.BLOCK_REACH.get(), doubleRangeAttributeModifier));
 
 	private static DamageSource lastActiveDamageSource;
 
@@ -148,7 +148,7 @@ public class ExtendoGripItem extends Item {
 			return;
 
 		// Modified version of GameRenderer#getMouseOver
-		double d0 = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+		double d0 = player.getAttribute(ForgeMod.BLOCK_REACH.get())
 			.getValue();
 		if (!player.isCreative())
 			d0 -= 0.5f;
@@ -194,7 +194,7 @@ public class ExtendoGripItem extends Item {
 	private static void findAndDamageExtendoGrip(Player player) {
 		if (player == null)
 			return;
-		if (player.level.isClientSide)
+		if (player.level().isClientSide)
 			return;
 		InteractionHand hand = InteractionHand.MAIN_HAND;
 		ItemStack extendo = player.getMainHandItem();
@@ -258,7 +258,7 @@ public class ExtendoGripItem extends Item {
 		// Server ignores entity interaction further than 6m
 		if (entity.distanceToSqr(target) < 36)
 			return false;
-		if (!entity.level.isClientSide)
+		if (!entity.level().isClientSide)
 			return false;
 		if (!(entity instanceof Player))
 			return false;

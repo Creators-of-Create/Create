@@ -35,7 +35,7 @@ public abstract class BlockEntityConfigurationPacket<BE extends SyncedBlockEntit
 			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
-			Level world = player.level;
+			Level world = player.level();
 			if (world == null || !world.isLoaded(pos))
 				return;
 			if (!pos.closerThan(player.blockPosition(), maxRange()))

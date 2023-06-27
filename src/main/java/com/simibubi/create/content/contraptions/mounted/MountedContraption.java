@@ -83,11 +83,11 @@ public class MountedContraption extends Contraption {
 	protected Pair<StructureBlockInfo, BlockEntity> capture(Level world, BlockPos pos) {
 		Pair<StructureBlockInfo, BlockEntity> pair = super.capture(world, pos);
 		StructureBlockInfo capture = pair.getKey();
-		if (!AllBlocks.CART_ASSEMBLER.has(capture.state))
+		if (!AllBlocks.CART_ASSEMBLER.has(capture.state()))
 			return pair;
 
 		Pair<StructureBlockInfo, BlockEntity> anchorSwap =
-			Pair.of(new StructureBlockInfo(pos, CartAssemblerBlock.createAnchor(capture.state), null), pair.getValue());
+			Pair.of(new StructureBlockInfo(pos, CartAssemblerBlock.createAnchor(capture.state()), null), pair.getValue());
 		if (pos.equals(anchor) || connectedCart != null)
 			return anchorSwap;
 

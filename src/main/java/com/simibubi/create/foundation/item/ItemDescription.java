@@ -15,7 +15,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.bridge.game.Language;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -221,7 +220,7 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 	public static class Modifier implements TooltipModifier {
 		protected final Item item;
 		protected final Palette palette;
-		protected Language cachedLanguage;
+		protected String cachedLanguage;
 		protected ItemDescription description;
 
 		public Modifier(Item item, Palette palette) {
@@ -241,10 +240,10 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 		}
 
 		protected boolean checkLocale() {
-			Language currentLanguage = Minecraft.getInstance()
+			String currentLanguage = Minecraft.getInstance()
 				.getLanguageManager()
 				.getSelected();
-			if (cachedLanguage != currentLanguage) {
+			if (!currentLanguage.equals(cachedLanguage)) {
 				cachedLanguage = currentLanguage;
 				return true;
 			}

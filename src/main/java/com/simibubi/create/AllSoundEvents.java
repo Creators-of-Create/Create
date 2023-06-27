@@ -332,7 +332,7 @@ public class AllSoundEvents {
 	}
 
 	public static void playItemPickup(Player player) {
-		player.level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
+		player.level().playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
 			1f + Create.RANDOM.nextFloat());
 	}
 
@@ -509,7 +509,7 @@ public class AllSoundEvents {
 
 		public void playFrom(Entity entity, float volume, float pitch) {
 			if (!entity.isSilent())
-				play(entity.level, null, entity.blockPosition(), volume, pitch);
+				play(entity.level(), null, entity.blockPosition(), volume, pitch);
 		}
 
 		public void play(Level world, Player entity, Vec3i pos, float volume, float pitch) {

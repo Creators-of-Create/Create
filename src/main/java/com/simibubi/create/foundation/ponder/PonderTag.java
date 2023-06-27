@@ -6,7 +6,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.element.ScreenElement;
 
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -88,7 +88,7 @@ public class PonderTag implements ScreenElement {
 		if (icon != null) {
 			RenderSystem.setShaderTexture(0, icon);
 			ms.scale(0.25f, 0.25f, 1);
-			GuiComponent.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
+			GuiGraphics.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
 			ms.translate(-2, -2, 0);
 			ms.scale(1.25f, 1.25f, 1.25f);

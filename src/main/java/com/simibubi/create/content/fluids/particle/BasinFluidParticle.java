@@ -34,7 +34,7 @@ public class BasinFluidParticle extends FluidStackParticle {
 		quadSize = 0;
 		lifetime = 60;
 		Vec3 currentPos = new Vec3(x, y, z);
-		basinPos = new BlockPos(currentPos);
+		basinPos = BlockPos.containing(currentPos);
 		centerOfBasin = VecHelper.getCenterOf(basinPos);
 
 		if (vx != 0) {

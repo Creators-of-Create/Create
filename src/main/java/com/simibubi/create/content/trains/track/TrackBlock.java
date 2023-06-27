@@ -183,7 +183,7 @@ public class TrackBlock extends Block
 		if (bestAxis.lengthSqr() == 1)
 			for (boolean neg : Iterate.trueAndFalse) {
 				BlockPos offset = ctx.getClickedPos()
-					.offset(new BlockPos(bestAxis.scale(neg ? -1 : 1)));
+					.offset(BlockPos.containing(bestAxis.scale(neg ? -1 : 1)));
 
 				if (level.getBlockState(offset)
 					.isFaceSturdy(level, offset, Direction.UP)
@@ -271,8 +271,7 @@ public class TrackBlock extends Block
 			BlockFace otherTrack = otherSide.getSecond();
 			BlockPos otherTrackPos = otherTrack.getPos();
 			BlockState existing = otherLevel.getBlockState(otherTrackPos);
-			if (!existing.getMaterial()
-				.isReplaceable()) {
+			if (!existing.canBeReplaced()) {
 				fail = "blocked";
 				failPos = otherTrackPos;
 				continue;
@@ -334,7 +333,7 @@ public class TrackBlock extends Block
 		if (portalinfo == null)
 			return null;
 
-		BlockPos otherPortalPos = new BlockPos(portalinfo.pos);
+		BlockPos otherPortalPos = BlockPos.containing(portalinfo.pos);
 		BlockState otherPortalState = otherLevel.getBlockState(otherPortalPos);
 		if (!(otherPortalState.getBlock() instanceof NetherPortalBlock))
 			return null;

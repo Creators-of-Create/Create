@@ -18,8 +18,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -43,7 +43,7 @@ public class FluidMovementActorScenes {
 		BlockPos ct1 = util.grid.at(5, 3, 2);
 		BlockPos ct2 = util.grid.at(6, 3, 2);
 		BlockPos st = util.grid.at(0, 1, 5);
-		Capability<IFluidHandler> fhc = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+		Capability<IFluidHandler> fhc = ForgeCapabilities.FLUID_HANDLER;
 		Class<FluidTankBlockEntity> type = FluidTankBlockEntity.class;
 		ItemStack bucket = AllFluids.CHOCOLATE.get()
 			.getFluidType()

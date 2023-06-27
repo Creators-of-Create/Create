@@ -85,7 +85,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlock extends HorizontalKineticBlock
@@ -209,7 +209,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				return;
 			withBlockEntityDo(worldIn, pos, be -> {
 				ItemEntity itemEntity = (ItemEntity) entityIn;
-				IItemHandler handler = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+				IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER)
 					.orElse(null);
 				if (handler == null)
 					return;

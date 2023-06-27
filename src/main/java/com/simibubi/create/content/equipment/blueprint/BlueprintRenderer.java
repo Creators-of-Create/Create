@@ -14,12 +14,12 @@ import com.simibubi.create.foundation.utility.Couple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 
@@ -106,7 +106,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 
 					Minecraft.getInstance()
 						.getItemRenderer()
-						.renderStatic(stack, TransformType.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer, 0);
+						.renderStatic(stack, ItemDisplayContext.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer, 0);
 					squashedMS.popPose();
 				});
 				squashedMS.popPose();

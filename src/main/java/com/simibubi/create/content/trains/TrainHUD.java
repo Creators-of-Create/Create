@@ -17,7 +17,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -138,7 +138,7 @@ public class TrainHUD {
 		int h = AllGuiTextures.TRAIN_HUD_SPEED.height;
 
 		AllGuiTextures.TRAIN_HUD_SPEED.bind();
-		GuiComponent.blit(poseStack, 0, 0, 0, AllGuiTextures.TRAIN_HUD_SPEED.startX,
+		GuiGraphics.blit(poseStack, 0, 0, 0, AllGuiTextures.TRAIN_HUD_SPEED.startX,
 			AllGuiTextures.TRAIN_HUD_SPEED.startY, w, h, 256, 256);
 
 		int promptSize = (int) displayedPromptSize.getValue(partialTicks);
@@ -149,7 +149,7 @@ public class TrainHUD {
 
 			AllGuiTextures.TRAIN_PROMPT_L.render(poseStack, -3, 0);
 			AllGuiTextures.TRAIN_PROMPT_R.render(poseStack, promptSize, 0);
-			GuiComponent.blit(poseStack, 0, 0, 0, AllGuiTextures.TRAIN_PROMPT.startX + (128 - promptSize / 2f),
+			GuiGraphics.blit(poseStack, 0, 0, 0, AllGuiTextures.TRAIN_PROMPT.startX + (128 - promptSize / 2f),
 				AllGuiTextures.TRAIN_PROMPT.startY, promptSize, AllGuiTextures.TRAIN_PROMPT.height, 256, 256);
 
 			poseStack.popPose();
@@ -171,7 +171,7 @@ public class TrainHUD {
 		w = (int) (AllGuiTextures.TRAIN_HUD_THROTTLE.width * (1 - displayedThrottle.getValue(partialTicks)));
 		AllGuiTextures.TRAIN_HUD_THROTTLE.bind();
 		int invW = AllGuiTextures.TRAIN_HUD_THROTTLE.width - w;
-		GuiComponent.blit(poseStack, invW, 0, 0, AllGuiTextures.TRAIN_HUD_THROTTLE.startX + invW,
+		GuiGraphics.blit(poseStack, invW, 0, 0, AllGuiTextures.TRAIN_HUD_THROTTLE.startX + invW,
 			AllGuiTextures.TRAIN_HUD_THROTTLE.startY, w, h, 256, 256);
 		AllGuiTextures.TRAIN_HUD_THROTTLE_POINTER.render(poseStack,
 			Math.max(1, AllGuiTextures.TRAIN_HUD_THROTTLE.width - w) - 3, -2);
@@ -184,8 +184,8 @@ public class TrainHUD {
 		Direction initialOrientation = cce.getInitialOrientation()
 			.getCounterClockWise();
 		boolean inverted = false;
-		if (info != null && info.state.hasProperty(ControlsBlock.FACING))
-			inverted = !info.state.getValue(ControlsBlock.FACING)
+		if (info != null && info.state().hasProperty(ControlsBlock.FACING))
+			inverted = !info.state().getValue(ControlsBlock.FACING)
 				.equals(initialOrientation);
 
 		boolean reversing = ControlsHandler.currentlyPressed.contains(1);

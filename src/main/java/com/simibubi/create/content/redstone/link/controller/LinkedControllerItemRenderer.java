@@ -17,11 +17,10 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class LinkedControllerItemRenderer extends CustomRenderedItemModelRenderer {
@@ -68,25 +67,25 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
-		ItemTransforms.TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light,
+		ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		renderNormal(stack, model, renderer, transformType, ms, light);
 	}
 
 	protected static void renderNormal(ItemStack stack, CustomRenderedItemModel model,
-	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
+	  	PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
   		int light) {
 		render(stack, model, renderer, transformType, ms, light, RenderType.NORMAL, false, false);
 	}
 
 	public static void renderInLectern(ItemStack stack, CustomRenderedItemModel model,
-	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
+	  	PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
   		int light, boolean active, boolean renderDepression) {
 		render(stack, model, renderer, transformType, ms, light, RenderType.LECTERN, active, renderDepression);
 	}
 
 	protected static void render(ItemStack stack, CustomRenderedItemModel model,
-	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
+	  	PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
   		int light, RenderType renderType, boolean active, boolean renderDepression) {
 		float pt = AnimationTickHolder.getPartialTicks();
 		TransformStack msr = TransformStack.cast(ms);
@@ -96,24 +95,24 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 		if (renderType == RenderType.NORMAL) {
 			Minecraft mc = Minecraft.getInstance();
 			boolean rightHanded = mc.options.mainHand().get() == HumanoidArm.RIGHT;
-			TransformType mainHand =
-					rightHanded ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
-			TransformType offHand =
-					rightHanded ? TransformType.FIRST_PERSON_LEFT_HAND : TransformType.FIRST_PERSON_RIGHT_HAND;
+			ItemDisplayContext mainHand =
+					rightHanded ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
+			ItemDisplayContext offHand =
+					rightHanded ? ItemDisplayContext.FIRST_PERSON_LEFT_HAND : ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
 
 			active = false;
 			boolean noControllerInMain = !AllItems.LINKED_CONTROLLER.isIn(mc.player.getMainHandItem());
 
 			if (transformType == mainHand || (transformType == offHand && noControllerInMain)) {
 				float equip = equipProgress.getValue(pt);
-				int handModifier = transformType == TransformType.FIRST_PERSON_LEFT_HAND ? -1 : 1;
+				int handModifier = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ? -1 : 1;
 				msr.translate(0, equip / 4, equip / 4 * handModifier);
 				msr.rotateY(equip * -30 * handModifier);
 				msr.rotateZ(equip * -30);
 				active = true;
 			}
 
-			if (transformType == TransformType.GUI) {
+			if (transformType == ItemDisplayContext.GUI) {
 				if (stack == mc.player.getMainHandItem())
 					active = true;
 				if (stack == mc.player.getOffhandItem() && noControllerInMain)

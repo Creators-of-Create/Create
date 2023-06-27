@@ -8,9 +8,9 @@ import com.simibubi.create.foundation.utility.BlockFace;
 
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -72,7 +72,7 @@ public abstract class FlowSource {
 				return;
 			BlockEntity blockEntity = world.getBlockEntity(location.getConnectedPos());
 			if (blockEntity != null)
-				fluidHandler = blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+				fluidHandler = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER,
 					location.getOppositeFace());
 		}
 

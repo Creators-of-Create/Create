@@ -87,8 +87,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 			if (newOffset < 0)
 				isMoving = false;
 			if (!level.getBlockState(worldPosition.below((int) Math.ceil(newOffset)))
-				.getMaterial()
-				.isReplaceable()) {
+				.canBeReplaced()) {
 				isMoving = false;
 			}
 			if (isMoving) {
@@ -114,8 +113,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 			isMoving = false;
 		}
 		if (!level.getBlockState(worldPosition.below((int) Math.ceil(newOffset)))
-			.getMaterial()
-			.isReplaceable()) {
+			.canBeReplaced()) {
 			newOffset = (int) newOffset;
 			isMoving = false;
 		}
@@ -136,8 +134,7 @@ public class HosePulleyBlockEntity extends KineticBlockEntity {
 
 		int ceil = (int) Math.ceil(offset.getValue() + getMovementSpeed());
 		if (getMovementSpeed() > 0 && level.getBlockState(worldPosition.below(ceil))
-			.getMaterial()
-			.isReplaceable()) {
+			.canBeReplaced()) {
 			isMoving = true;
 			drainer.reset();
 			filler.reset();

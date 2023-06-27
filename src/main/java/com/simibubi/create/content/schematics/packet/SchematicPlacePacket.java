@@ -38,7 +38,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			if (!player.isCreative())
 				return;
 
-			Level world = player.getLevel();
+			Level world = player.level();
 			SchematicPrinter printer = new SchematicPrinter();
 			printer.loadSchematic(stack, world, !player.canUseGameMasterBlocks());
 			if (!printer.isLoaded() || printer.isErrored())

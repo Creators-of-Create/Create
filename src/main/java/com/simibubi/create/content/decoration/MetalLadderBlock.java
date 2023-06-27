@@ -92,7 +92,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
 			int range = AllConfigs.server().equipment.placementAssistRange.get();
 			if (player != null) {
-				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+				AttributeInstance reach = player.getAttribute(ForgeMod.BLOCK_REACH.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))
 					range += 4;
 			}
@@ -107,8 +107,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 			if (!state.canSurvive(world, newPos))
 				return PlacementOffset.fail();
 
-			if (newState.getMaterial()
-				.isReplaceable())
+			if (newState.canBeReplaced())
 				return PlacementOffset.success(newPos, bState -> bState.setValue(FACING, state.getValue(FACING)));
 			return PlacementOffset.fail();
 		}

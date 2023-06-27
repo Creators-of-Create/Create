@@ -61,7 +61,7 @@ public class SymmetryHandler {
 				.isEmpty()
 				&& inv.getItem(i)
 					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
-				SymmetryWandItem.apply(player.level, inv.getItem(i), player, event.getPos(), event.getPlacedBlock());
+				SymmetryWandItem.apply(player.level(), inv.getItem(i), player, event.getPos(), event.getPlacedBlock());
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public class SymmetryHandler {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
 				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
-				SymmetryWandItem.remove(player.level, inv.getItem(i), player, event.getPos());
+				SymmetryWandItem.remove(player.level(), inv.getItem(i), player, event.getPos());
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public class SymmetryHandler {
 			if (mirror instanceof EmptyMirror)
 				continue;
 
-			BlockPos pos = new BlockPos(mirror.getPosition());
+			BlockPos pos = BlockPos.containing(mirror.getPosition());
 
 			float yShift = 0;
 			double speed = 1 / 16d;
@@ -122,7 +122,7 @@ public class SymmetryHandler {
 
 			mc.getBlockRenderer()
 				.getModelRenderer()
-				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
+				.tesselateBlock(player.level(), model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
 					random, Mth.getSeed(pos), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, RenderType.solid());
 
 			ms.popPose();

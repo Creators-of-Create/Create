@@ -31,10 +31,10 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.SoundActions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -163,7 +163,7 @@ public class FluidHelper {
 			return false;
 
 		Pair<FluidStack, ItemStack> emptyingResult = GenericItemEmptying.emptyItem(worldIn, heldItem, true);
-		LazyOptional<IFluidHandler> capability = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> capability = be.getCapability(ForgeCapabilities.FLUID_HANDLER);
 		IFluidHandler tank = capability.orElse(null);
 		FluidStack fluidStack = emptyingResult.getFirst();
 
@@ -193,7 +193,7 @@ public class FluidHelper {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;
 
-		LazyOptional<IFluidHandler> capability = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> capability = be.getCapability(ForgeCapabilities.FLUID_HANDLER);
 		IFluidHandler tank = capability.orElse(null);
 
 		if (tank == null)

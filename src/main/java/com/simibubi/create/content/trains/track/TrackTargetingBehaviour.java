@@ -277,7 +277,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends BlockEnti
 			double length = Mth.floor(bc.getLength() * 2);
 			int seg = targetBezier.segment() + 1;
 			double t = seg / length;
-			return new BlockPos(bc.getPosition(t));
+			return BlockPos.containing(bc.getPosition(t));
 		}
 		return target;
 	}

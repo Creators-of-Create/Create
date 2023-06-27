@@ -31,7 +31,6 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.BlockPos;
@@ -39,6 +38,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -87,7 +87,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 
-		TransformType transform = TransformType.NONE;
+		ItemDisplayContext transform = ItemDisplayContext.NONE;
 		boolean isBlockItem = (be.heldItem.getItem() instanceof BlockItem)
 			&& itemRenderer.getModel(be.heldItem, be.getLevel(), null, 0)
 				.isGui3d();
@@ -96,13 +96,13 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			float scale = isBlockItem ? 1.25f : 1;
 			ms.translate(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
 			ms.scale(scale, scale, scale);
-			transform = TransformType.GROUND;
+			transform = ItemDisplayContext.GROUND;
 			ms.mulPose(Axis.YP.rotationDegrees(AnimationTickHolder.getRenderTime(be.getLevel())));
 
 		} else {
 			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
 			ms.scale(scale, scale, scale);
-			transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
+			transform = punching ? ItemDisplayContext.THIRD_PERSON_RIGHT_HAND : ItemDisplayContext.FIXED;
 		}
 
 		itemRenderer.renderStatic(be.heldItem, transform, light, overlay, ms, buffer, 0);
@@ -173,7 +173,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
 			factor = Mth.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
 		} else {
-			Vec3 center = VecHelper.getCenterOf(new BlockPos(context.position));
+			Vec3 center = VecHelper.getCenterOf(BlockPos.containing(context.position));
 			double distance = context.position.distanceTo(center);
 			double nextDistance = context.position.add(context.motion)
 				.distanceTo(center);

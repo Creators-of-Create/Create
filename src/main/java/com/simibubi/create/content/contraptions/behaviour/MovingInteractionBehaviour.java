@@ -16,13 +16,13 @@ public abstract class MovingInteractionBehaviour {
 		StructureBlockInfo info, MovementContext ctx) {
 		contraptionEntity.getContraption().getActors().remove(index);
 		contraptionEntity.getContraption().getActors().add(index, MutablePair.of(info, ctx));
-		if (contraptionEntity.level.isClientSide)
+		if (contraptionEntity.level().isClientSide)
 			contraptionEntity.getContraption().deferInvalidate = true;
 	}
 
 	protected void setContraptionBlockData(AbstractContraptionEntity contraptionEntity, BlockPos pos,
 		StructureBlockInfo info) {
-		if (contraptionEntity.level.isClientSide())
+		if (contraptionEntity.level().isClientSide())
 			return;
 		contraptionEntity.setBlock(pos, info);
 	}

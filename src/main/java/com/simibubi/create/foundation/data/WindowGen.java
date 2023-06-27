@@ -39,7 +39,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 
@@ -67,7 +67,7 @@ public class WindowGen {
 
 	public static BlockEntry<WindowBlock> customWindowBlock(String name, Supplier<? extends ItemLike> ingredient,
 		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType, boolean translucent,
-		Supplier<MaterialColor> color) {
+		Supplier<MapColor> color) {
 		NonNullFunction<String, ResourceLocation> end_texture = n -> Create.asResource(palettesDir() + name + "_end");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
 		return windowBlock(name, ingredient, ct, renderType, translucent, end_texture, side_texture, color);
@@ -87,7 +87,7 @@ public class WindowGen {
 	public static BlockEntry<WindowBlock> windowBlock(String name, Supplier<? extends ItemLike> ingredient,
 		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType, boolean translucent,
 		NonNullFunction<String, ResourceLocation> endTexture, NonNullFunction<String, ResourceLocation> sideTexture,
-		Supplier<MaterialColor> color) {
+		Supplier<MapColor> color) {
 		return REGISTRATE.block(name, p -> new WindowBlock(p, translucent))
 			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get())))
 			.addLayer(renderType)

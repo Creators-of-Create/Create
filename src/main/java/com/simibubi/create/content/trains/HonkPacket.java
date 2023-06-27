@@ -41,7 +41,7 @@ public class HonkPacket extends SimplePacketBase {
 		context.enqueueWork(() -> {
 			ServerPlayer sender = context.getSender();
 			boolean clientSide = sender == null;
-			Train train = Create.RAILWAYS.sided(clientSide ? null : sender.level).trains.get(trainId);
+			Train train = Create.RAILWAYS.sided(clientSide ? null : sender.level()).trains.get(trainId);
 			if (train == null)
 				return;
 

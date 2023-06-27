@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllCreativeModeTabs.RegistrateDisplayItemsGenerator.ItemOrdering.Type;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;

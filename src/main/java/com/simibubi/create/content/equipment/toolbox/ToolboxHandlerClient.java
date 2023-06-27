@@ -28,7 +28,6 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -51,7 +50,7 @@ public class ToolboxHandlerClient {
 		LocalPlayer player = mc.player;
 		if (player == null)
 			return false;
-		Level level = player.level;
+		Level level = player.level();
 		HitResult hitResult = mc.hitResult;
 
 		if (hitResult == null || hitResult.getType() == HitResult.Type.MISS)
@@ -60,7 +59,7 @@ public class ToolboxHandlerClient {
 			return false;
 
 		ItemStack result = ItemStack.EMPTY;
-		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
+		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level(), player, 8);
 
 		if (toolboxes.isEmpty())
 			return false;
@@ -68,7 +67,7 @@ public class ToolboxHandlerClient {
 		if (hitResult.getType() == HitResult.Type.BLOCK) {
 			BlockPos pos = ((BlockHitResult) hitResult).getBlockPos();
 			BlockState state = level.getBlockState(pos);
-			if (state.getMaterial() == Material.AIR)
+			if (state.isAir())
 				return false;
 			result = state.getCloneItemStack(hitResult, level, pos, player);
 
@@ -113,9 +112,9 @@ public class ToolboxHandlerClient {
 		LocalPlayer player = mc.player;
 		if (player == null)
 			return;
-		Level level = player.level;
+		Level level = player.level();
 
-		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
+		List<ToolboxBlockEntity> toolboxes = ToolboxHandler.getNearest(player.level(), player, 8);
 		toolboxes.sort(Comparator.comparing(ToolboxBlockEntity::getUniqueId));
 
 		CompoundTag compound = player.getPersistentData()

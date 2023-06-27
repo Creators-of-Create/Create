@@ -139,9 +139,9 @@ public class PistonContraption extends TranslatingContraption {
 		bounds = new AABB(0, 0, 0, 0, 0, 0);
 
 		for (StructureBlockInfo pole : poles) {
-			BlockPos relPos = pole.pos.relative(direction, -extensionsInFront);
+			BlockPos relPos = pole.pos().relative(direction, -extensionsInFront);
 			BlockPos localPos = relPos.subtract(anchor);
-			getBlocks().put(localPos, new StructureBlockInfo(localPos, pole.state, null));
+			getBlocks().put(localPos, new StructureBlockInfo(localPos, pole.state(), null));
 			//pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AABB(localPos));
 		}
 

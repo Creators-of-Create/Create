@@ -75,14 +75,14 @@ public class FanProcessing {
 				CompoundTag processing = compound.getCompound("Processing");
 
 				if (Type.valueOf(processing.getString("Type")) != type)
-					return type.canProcess(entity.getItem(), entity.level);
+					return type.canProcess(entity.getItem(), entity.level());
 				else if (processing.getInt("Time") >= 0)
 					return true;
 				else if (processing.getInt("Time") == -1)
 					return false;
 			}
 		}
-		return type.canProcess(entity.getItem(), entity.level);
+		return type.canProcess(entity.getItem(), entity.level());
 	}
 
 	public static boolean isWashable(ItemStack stack, Level world) {
@@ -100,7 +100,7 @@ public class FanProcessing {
 	public static boolean applyProcessing(ItemEntity entity, Type type) {
 		if (decrementProcessingTime(entity, type) != 0)
 			return false;
-		List<ItemStack> stacks = process(entity.getItem(), type, entity.level);
+		List<ItemStack> stacks = process(entity.getItem(), type, entity.level());
 		if (stacks == null)
 			return false;
 		if (stacks.isEmpty()) {
@@ -109,9 +109,9 @@ public class FanProcessing {
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
-			ItemEntity entityIn = new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), additional);
+			ItemEntity entityIn = new ItemEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), additional);
 			entityIn.setDeltaMovement(entity.getDeltaMovement());
-			entity.level.addFreshEntity(entityIn);
+			entity.level().addFreshEntity(entityIn);
 		}
 		return true;
 	}

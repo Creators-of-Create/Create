@@ -32,7 +32,7 @@ public class CouplingCreationPacket extends SimplePacketBase {
 		context.enqueueWork(() -> {
 			ServerPlayer sender = context.getSender();
 			if (sender != null)
-				CouplingHandler.tryToCoupleCarts(sender, sender.level, id1, id2);
+				CouplingHandler.tryToCoupleCarts(sender, sender.level(), id1, id2);
 		});
 		return true;
 	}

@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -98,7 +99,7 @@ public class MountedFluidStorage {
 		if (blockEntity == null)
 			return;
 
-		IFluidHandler teHandler = blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		IFluidHandler teHandler = blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER)
 			.orElse(null);
 		if (!(teHandler instanceof SmartFluidTank))
 			return;
@@ -116,7 +117,7 @@ public class MountedFluidStorage {
 		if (tank instanceof CreativeSmartFluidTank)
 			return;
 
-		LazyOptional<IFluidHandler> capability = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> capability = be.getCapability(ForgeCapabilities.FLUID_HANDLER);
 		IFluidHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof SmartFluidTank))
 			return;

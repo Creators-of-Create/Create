@@ -79,7 +79,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (entity.getDeltaMovement()
 			.length() < 0.25f)
 			return;
-		entity.level.getEntitiesOfClass(Player.class, new AABB(entity.blockPosition()).inflate(32))
+		entity.level().getEntitiesOfClass(Player.class, new AABB(entity.blockPosition()).inflate(32))
 			.forEach(AllAdvancements.ANVIL_PLOUGH::awardTo);
 	}
 

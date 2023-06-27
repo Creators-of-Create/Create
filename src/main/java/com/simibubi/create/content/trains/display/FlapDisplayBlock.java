@@ -357,8 +357,7 @@ public class FlapDisplayBlock extends HorizontalKineticBlock
 				state.getValue(FlapDisplayBlock.HORIZONTAL_FACING)
 					.getAxis(),
 				dir -> world.getBlockState(pos.relative(dir))
-					.getMaterial()
-					.isReplaceable());
+					.canBeReplaced());
 
 			return directions.isEmpty() ? PlacementOffset.fail()
 				: PlacementOffset.success(pos.relative(directions.get(0)), s -> AllBlocks.DISPLAY_BOARD.get()

@@ -39,14 +39,14 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
 
-			double range = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+			double range = player.getAttribute(ForgeMod.BLOCK_REACH.get())
 				.getValue() + 2;
 			if (player.distanceToSqr(Vec3.atCenterOf(to)) > range * range)
 				return;
 			if (!to.closerThan(from, 25))
 				return;
 
-			Set<BlockPos> group = SuperGlueSelectionHelper.searchGlueGroup(player.level, from, to, false);
+			Set<BlockPos> group = SuperGlueSelectionHelper.searchGlueGroup(player.level(), from, to, false);
 			if (group == null)
 				return;
 			if (!group.contains(to))
@@ -56,8 +56,8 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 
 			AABB bb = SuperGlueEntity.span(from, to);
 			SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, false);
-			SuperGlueEntity entity = new SuperGlueEntity(player.level, bb);
-			player.level.addFreshEntity(entity);
+			SuperGlueEntity entity = new SuperGlueEntity(player.level(), bb);
+			player.level().addFreshEntity(entity);
 			entity.spawnParticles();
 			
 			AllAdvancements.SUPER_GLUE.awardTo(player);

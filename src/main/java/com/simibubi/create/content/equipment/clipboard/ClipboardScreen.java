@@ -34,7 +34,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
@@ -524,7 +524,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			return;
 		pCursorPos = convertLocalToScreen(pCursorPos);
 		if (!pIsEndOfText) {
-			GuiComponent.fill(pPoseStack, pCursorPos.x, pCursorPos.y - 1, pCursorPos.x + 1, pCursorPos.y + 9,
+			GuiGraphics.fill(pPoseStack, pCursorPos.x, pCursorPos.y - 1, pCursorPos.x + 1, pCursorPos.y + 9,
 				-16777216);
 		} else {
 			font.draw(pPoseStack, "_", (float) pCursorPos.x, (float) pCursorPos.y, 0);

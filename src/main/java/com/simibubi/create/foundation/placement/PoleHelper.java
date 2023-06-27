@@ -61,7 +61,7 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 		for (Direction dir : directions) {
 			int range = AllConfigs.server().equipment.placementAssistRange.get();
 			if (player != null) {
-				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+				AttributeInstance reach = player.getAttribute(ForgeMod.BLOCK_REACH.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))
 					range += 4;
 			}
@@ -72,7 +72,7 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 			BlockPos newPos = pos.relative(dir, poles + 1);
 			BlockState newState = world.getBlockState(newPos);
 
-			if (newState.getMaterial().isReplaceable())
+			if (newState.canBeReplaced())
 				return PlacementOffset.success(newPos, bState -> bState.setValue(property, state.getValue(property)));
 
 		}

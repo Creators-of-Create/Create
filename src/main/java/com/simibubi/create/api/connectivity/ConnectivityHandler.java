@@ -23,11 +23,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class ConnectivityHandler {
 
@@ -361,10 +360,10 @@ public class ConnectivityHandler {
 		}
 		
 		if (be instanceof IMultiBlockEntityContainer.Inventory inv && inv.hasInventory())
-			be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			be.getCapability(ForgeCapabilities.ITEM_HANDLER)
 				.invalidate();
 		if (be instanceof IMultiBlockEntityContainer.Fluid fluid && fluid.hasTank())
-			be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			be.getCapability(ForgeCapabilities.FLUID_HANDLER)
 				.invalidate();
 		
 		if (tryReconnect)

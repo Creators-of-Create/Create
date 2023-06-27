@@ -45,7 +45,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
-			Level world = player.level;
+			Level world = player.level();
 
 			if (toolboxPos == null) {
 				ToolboxHandler.unequip(player, hotbarSlot, false);

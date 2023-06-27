@@ -58,7 +58,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 				: BlockPos.ZERO.relative(entity.getInitialOrientation()
 					.getCounterClockWise(), bogeySpacing);
 
-			if (!Backend.canUseInstancing(entity.level) && !entity.getContraption()
+			if (!Backend.canUseInstancing(entity.level()) && !entity.getContraption()
 				.isHiddenInPortal(bogeyPos)) {
 
 				ms.pushPose();
@@ -100,11 +100,11 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 
 	public static int getBogeyLightCoords(CarriageContraptionEntity entity, CarriageBogey bogey, float partialTicks) {
 
-		var lightPos = new BlockPos(
+		var lightPos = BlockPos.containing(
 			Objects.requireNonNullElseGet(bogey.getAnchorPosition(), () -> entity.getLightProbePosition(partialTicks)));
 
-		return LightTexture.pack(entity.level.getBrightness(LightLayer.BLOCK, lightPos),
-			entity.level.getBrightness(LightLayer.SKY, lightPos));
+		return LightTexture.pack(entity.level().getBrightness(LightLayer.BLOCK, lightPos),
+			entity.level().getBrightness(LightLayer.SKY, lightPos));
 	}
 
 }

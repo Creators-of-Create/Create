@@ -156,7 +156,7 @@ public class ContraptionHandlerClient {
 					.get(pos);
 				if (blockInfo == null)
 					continue;
-				BlockState state = blockInfo.state;
+				BlockState state = blockInfo.state();
 				VoxelShape raytraceShape = state.getShape(contraption.getContraptionWorld(), BlockPos.ZERO.below());
 				if (raytraceShape.isEmpty())
 					continue;

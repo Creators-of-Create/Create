@@ -45,7 +45,7 @@ public class TrainEditPacket extends SimplePacketBase {
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer sender = context.getSender();
-			Level level = sender == null ? null : sender.level;
+			Level level = sender == null ? null : sender.level();
 			Train train = Create.RAILWAYS.sided(level).trains.get(id);
 			if (train == null)
 				return;

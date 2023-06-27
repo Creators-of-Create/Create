@@ -49,14 +49,14 @@ public class ZapperInteractionHandler {
 			.add(0, player.getEyeHeight(), 0);
 		Vec3 range = player.getLookAngle()
 			.scale(getRange(stack));
-		BlockHitResult raytrace = player.level
+		BlockHitResult raytrace = player.level()
 			.clip(new ClipContext(start, start.add(range), Block.OUTLINE, Fluid.NONE, player));
 		BlockPos pos = raytrace.getBlockPos();
 		if (pos == null)
 			return false;
 
-		player.level.destroyBlockProgress(player.getId(), pos, -1);
-		BlockState newState = player.level.getBlockState(pos);
+		player.level().destroyBlockProgress(player.getId(), pos, -1);
+		BlockState newState = player.level().getBlockState(pos);
 
 		if (BlockHelper.getRequiredItem(newState)
 			.isEmpty())
@@ -79,7 +79,7 @@ public class ZapperInteractionHandler {
 			newState = newState.setValue(BlockStateProperties.WATERLOGGED, false);
 
 		CompoundTag data = null;
-		BlockEntity blockEntity = player.level.getBlockEntity(pos);
+		BlockEntity blockEntity = player.level().getBlockEntity(pos);
 		if (blockEntity != null) {
 			data = blockEntity.saveWithFullMetadata();
 			data.remove("x");
@@ -88,7 +88,7 @@ public class ZapperInteractionHandler {
 			data.remove("id");
 		}
 		CompoundTag tag = stack.getOrCreateTag();
-		if (tag.contains("BlockUsed") && NbtUtils.readBlockState(player.level.holderLookup(Registries.BLOCK), stack.getTag()
+		if (tag.contains("BlockUsed") && NbtUtils.readBlockState(player.level().holderLookup(Registries.BLOCK), stack.getTag()
 			.getCompound("BlockUsed")) == newState && Objects.equals(data, tag.get("BlockData"))) {
 			return false;
 		}
@@ -99,7 +99,7 @@ public class ZapperInteractionHandler {
 		else
 			tag.put("BlockData", data);
 
-		AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition());
+		AllSoundEvents.CONFIRM.playOnServer(player.level(), player.blockPosition());
 		return true;
 	}
 

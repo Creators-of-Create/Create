@@ -67,7 +67,7 @@ public class ChromaticCompoundItem extends Item {
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-		Level world = entity.level;
+		Level world = entity.level();
 		CompoundTag itemData = entity.getItem()
 			.getOrCreateTag();
 		Vec3 positionVec = entity.position();
@@ -162,7 +162,7 @@ public class ChromaticCompoundItem extends Item {
 		if (r.nextFloat() > rate)
 			return false;
 
-		BlockPos randomOffset = new BlockPos(VecHelper.offsetRandomly(positionVec, r, range));
+		BlockPos randomOffset = BlockPos.containing(VecHelper.offsetRandomly(positionVec, r, range));
 		BlockState state = world.getBlockState(randomOffset);
 
 		TransportedItemStackHandlerBehaviour behaviour =

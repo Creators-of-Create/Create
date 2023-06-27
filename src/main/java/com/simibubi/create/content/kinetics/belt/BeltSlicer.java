@@ -67,7 +67,7 @@ public class BeltSlicer {
 		if (beltLength == 2)
 			return InteractionResult.FAIL;
 
-		BlockPos beltVector = new BlockPos(BeltHelper.getBeltVector(state));
+		BlockPos beltVector = BlockPos.containing(BeltHelper.getBeltVector(state));
 		BeltPart part = state.getValue(BeltBlock.PART);
 		List<BlockPos> beltChain = BeltBlock.getBeltChain(world, controllerBE.getBlockPos());
 		boolean creative = player.isCreative();
@@ -246,7 +246,7 @@ public class BeltSlicer {
 		if (beltLength == BeltConnectorItem.maxLength())
 			return InteractionResult.FAIL;
 
-		BlockPos beltVector = new BlockPos(BeltHelper.getBeltVector(state));
+		BlockPos beltVector = BlockPos.containing(BeltHelper.getBeltVector(state));
 		BeltPart part = state.getValue(BeltBlock.PART);
 		Direction facing = state.getValue(BeltBlock.HORIZONTAL_FACING);
 		List<BlockPos> beltChain = BeltBlock.getBeltChain(world, controllerBE.getBlockPos());
@@ -261,8 +261,7 @@ public class BeltSlicer {
 
 		// Merge Belts / Extend at End
 		BlockState nextState = world.getBlockState(next);
-		if (!nextState.getMaterial()
-			.isReplaceable()) {
+		if (!nextState.canBeReplaced()) {
 			if (!AllBlocks.BELT.has(nextState))
 				return InteractionResult.FAIL;
 			if (!beltStatesCompatible(state, nextState))

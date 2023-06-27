@@ -36,7 +36,7 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 	public boolean handle(Context context) {
 		context.enqueueWork(() -> {
 			ServerPlayer player = context.getSender();
-			Level world = player.level;
+			Level world = player.level();
 			BlockEntity blockEntity = world.getBlockEntity(toolboxPos);
 
 			double maxRange = ToolboxHandler.getMaxRange(player);

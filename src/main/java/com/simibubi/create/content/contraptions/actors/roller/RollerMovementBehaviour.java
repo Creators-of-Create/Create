@@ -200,7 +200,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (profileForTracks != null) {
 			for (Couple<Integer> coords : profileForTracks.keys()) {
 				float height = profileForTracks.get(coords);
-				BlockPos targetPosition = new BlockPos(coords.getFirst(), height, coords.getSecond());
+				BlockPos targetPosition = BlockPos.containing(coords.getFirst(), height, coords.getSecond());
 				boolean shouldPlaceSlab = height > Math.floor(height) + .45;
 				if (startingY == 1 && shouldPlaceSlab && context.world.getBlockState(targetPosition.above())
 					.getOptionalValue(SlabBlock.TYPE)
@@ -256,8 +256,8 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		Axis axis = Axis.X;
 		StructureBlockInfo info = context.contraption.getBlocks()
 			.get(BlockPos.ZERO);
-		if (info != null && info.state.hasProperty(StandardBogeyBlock.AXIS))
-			axis = info.state.getValue(StandardBogeyBlock.AXIS);
+		if (info != null && info.state().hasProperty(StandardBogeyBlock.AXIS))
+			axis = info.state().getValue(StandardBogeyBlock.AXIS);
 
 		Direction orientation = cce.getInitialOrientation();
 		Direction rollerFacing = context.state.getValue(RollerBlock.FACING);
@@ -308,7 +308,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			for (Couple<Integer> coords : profileForTracks.keys()) {
 				float height = profileForTracks.get(coords);
 				boolean shouldPlaceSlab = height > Math.floor(height) + .45;
-				BlockPos targetPosition = new BlockPos(coords.getFirst(), height, coords.getSecond());
+				BlockPos targetPosition = BlockPos.containing(coords.getFirst(), height, coords.getSecond());
 				paveSet.add(Pair.of(targetPosition, shouldPlaceSlab));
 			}
 
@@ -451,8 +451,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		BlockState existing = level.getBlockState(targetPos);
 		if (existing.is(toPlace.getBlock()))
 			return PaveResult.PASS;
-		if (!existing.is(BlockTags.LEAVES) && !existing.getMaterial()
-			.isReplaceable()
+		if (!existing.is(BlockTags.LEAVES) && !existing.canBeReplaced()
 			&& !existing.getCollisionShape(level, targetPos)
 				.isEmpty())
 			return PaveResult.FAIL;

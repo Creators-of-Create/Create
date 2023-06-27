@@ -71,8 +71,7 @@ public class BeltConnectorHandler {
 			BlockPos selected = ((BlockHitResult) rayTrace).getBlockPos();
 
 			if (world.getBlockState(selected)
-				.getMaterial()
-				.isReplaceable())
+				.canBeReplaced())
 				return;
 			if (!ShaftBlock.isShaft(world.getBlockState(selected)))
 				selected = selected.relative(((BlockHitResult) rayTrace).getDirection());

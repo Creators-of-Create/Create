@@ -49,10 +49,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankBlockEntity> {
@@ -159,7 +159,7 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 		if (be == null)
 			return InteractionResult.FAIL;
 
-		LazyOptional<IFluidHandler> tankCapability = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> tankCapability = be.getCapability(ForgeCapabilities.FLUID_HANDLER);
 		if (!tankCapability.isPresent())
 			return InteractionResult.PASS;
 		IFluidHandler fluidTank = tankCapability.orElse(null);

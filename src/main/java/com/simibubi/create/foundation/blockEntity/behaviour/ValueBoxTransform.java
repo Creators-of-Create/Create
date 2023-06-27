@@ -13,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class ValueBoxTransform {
@@ -41,7 +40,7 @@ public abstract class ValueBoxTransform {
 	}
 
 	public boolean shouldRender(BlockState state) {
-		return state.getMaterial() != Material.AIR && getLocalOffset(state) != null;
+		return !state.isAir() && getLocalOffset(state) != null;
 	}
 	
 	public int getOverrideColor() {

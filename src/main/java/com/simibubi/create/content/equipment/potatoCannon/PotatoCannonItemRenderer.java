@@ -14,11 +14,11 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
@@ -27,7 +27,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
-		TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+		ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 		renderer.render(model.getOriginalModel(), light);
@@ -53,7 +53,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 		renderer.render(COG.get(), light);
 		ms.popPose();
 
-		if (transformType == TransformType.GUI) {
+		if (transformType == ItemDisplayContext.GUI) {
 			PotatoCannonItem.getAmmoforPreview(stack)
 				.ifPresent(ammo -> {
 					PoseStack localMs = new PoseStack();
@@ -61,7 +61,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 					localMs.scale(.5f, .5f, .5f);
 					TransformStack.cast(localMs)
 						.rotateY(-34);
-					itemRenderer.renderStatic(ammo, TransformType.GUI, light, OverlayTexture.NO_OVERLAY, localMs, buffer, 0);
+					itemRenderer.renderStatic(ammo, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, localMs, buffer, 0);
 				});
 		}
 

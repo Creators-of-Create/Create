@@ -85,9 +85,9 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	@Override
 	public void tick() {
-		if (level.isClientSide)
+		if (level().isClientSide)
 			return;
-		boolean blockPresent = level.getBlockState(blockPosition())
+		boolean blockPresent = level().getBlockState(blockPosition())
 			.getBlock() instanceof SeatBlock;
 		if (isVehicle() && blockPresent)
 			return;

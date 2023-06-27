@@ -6,8 +6,8 @@ import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -30,7 +30,7 @@ public class ItemOutline extends Outline {
 			.translate(pos.x - camera.x, pos.y - camera.y, pos.z - camera.z)
 			.scale(params.alpha);
 
-		mc.getItemRenderer().render(stack, ItemTransforms.TransformType.FIXED, false, ms,
+		mc.getItemRenderer().render(stack, ItemDisplayContext.FIXED, false, ms,
 				buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
 				mc.getItemRenderer().getModel(stack, null, null, 0));
 

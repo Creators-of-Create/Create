@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.gui.element.ScreenElement;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -186,7 +187,7 @@ public class AllIcons implements ScreenElement {
 	@Override
 	public void render(PoseStack matrixStack, int x, int y) {
 		bind();
-		GuiComponent.blit(matrixStack, x, y, 0, iconX, iconY, 16, 16, 256, 256);
+		GuiGraphics.blit(matrixStack, x, y, 0, iconX, iconY, 16, 16, 256, 256);
 	}
 
 	@OnlyIn(Dist.CLIENT)

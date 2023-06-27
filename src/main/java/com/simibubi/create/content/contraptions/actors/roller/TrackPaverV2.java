@@ -36,7 +36,7 @@ public class TrackPaverV2 {
 		int extent = (int) Math.round((to - from) / direction.length());
 		double length = edge.getLength();
 
-		BlockPos pos = new BlockPos(edge.getPosition(graph, Mth.clamp(from, 1 / 16f, length - 1 / 16f) / length)
+		BlockPos pos = BlockPos.containing(edge.getPosition(graph, Mth.clamp(from, 1 / 16f, length - 1 / 16f) / length)
 			.subtract(0, diff.y != 0 ? 1 : 0.5, 0));
 
 		paveStraight(task, pos, direction, extent);
@@ -69,7 +69,7 @@ public class TrackPaverV2 {
 			Vec3 targetVec = mainPos.add(mainNormal.scale(flip * (int) (currentOffset / 2.0)));
 
 			if (!isDiagonalTrack) {
-				toPlaceOn.add(new BlockPos(targetVec));
+				toPlaceOn.add(BlockPos.containing(targetVec));
 				continue;
 			}
 
@@ -82,14 +82,14 @@ public class TrackPaverV2 {
 						.add(mainNormal.normalize()
 							.scale(flip))
 						.scale(.5);
-					toPlaceOn.add(new BlockPos(targetVec.add(sideOffset)));
+					toPlaceOn.add(BlockPos.containing(targetVec.add(sideOffset)));
 				}
 			}
 
 			if (placeRow) {
 				if (Math.abs(currentOffset % 2) == 1)
 					targetVec = mainPos.add(mainNormal.scale(flip * (int) ((currentOffset + 1) / 2.0)));
-				toPlaceOn.add(new BlockPos(targetVec));
+				toPlaceOn.add(BlockPos.containing(targetVec));
 			}
 
 		}

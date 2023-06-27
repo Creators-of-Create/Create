@@ -186,8 +186,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBloc
 				state.getValue(FACING)
 					.getAxis(),
 				dir -> world.getBlockState(pos.relative(dir))
-					.getMaterial()
-					.isReplaceable());
+					.canBeReplaced());
 
 			if (directions.isEmpty())
 				return PlacementOffset.fail();

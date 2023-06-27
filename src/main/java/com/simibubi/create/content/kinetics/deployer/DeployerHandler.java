@@ -64,7 +64,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -143,12 +142,12 @@ public class DeployerHandler {
 		Vec3 rayOrigin = vec.add(extensionVector.scale(3 / 2f + 1 / 64f));
 		Vec3 rayTarget = vec.add(extensionVector.scale(5 / 2f - 1 / 64f));
 		player.setPos(rayOrigin.x, rayOrigin.y, rayOrigin.z);
-		BlockPos pos = new BlockPos(vec);
+		BlockPos pos = BlockPos.containing(vec);
 		ItemStack stack = player.getMainHandItem();
 		Item item = stack.getItem();
 
 		// Check for entities
-		final ServerLevel world = player.getLevel();
+		final Level world = player.level();
 		List<Entity> entities = world.getEntitiesOfClass(Entity.class, new AABB(clickedPos))
 			.stream()
 			.filter(e -> !(e instanceof AbstractContraptionEntity))
@@ -310,7 +309,7 @@ public class DeployerHandler {
 			BlockPos newPos = result.getBlockPos();
 			if (!BaseFireBlock.canBePlacedAt(world, clickedPos, newFace))
 				newFace = Direction.UP;
-			if (clickedState.getMaterial() == Material.AIR)
+			if (clickedState.isAir())
 				newPos = newPos.relative(face.getOpposite());
 			result = new BlockHitResult(result.getLocation(), newFace, newPos, result.isInside());
 			itemusecontext = new UseOnContext(player, hand, result);
@@ -357,7 +356,7 @@ public class DeployerHandler {
 	public static boolean tryHarvestBlock(ServerPlayer player, ServerPlayerGameMode interactionManager, BlockPos pos) {
 		// <> PlayerInteractionManager#tryHarvestBlock
 
-		ServerLevel world = player.getLevel();
+		ServerLevel world = player.serverLevel();
 		BlockState blockstate = world.getBlockState(pos);
 		GameType gameType = interactionManager.getGameModeForPlayer();
 

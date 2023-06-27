@@ -44,8 +44,9 @@ public class BlazeBurnerHandler {
 			.getType() != HitResult.Type.BLOCK)
 			return;
 
-		BlockEntity blockEntity = projectile.level.getBlockEntity(new BlockPos(event.getRayTraceResult()
-			.getLocation()));
+		BlockEntity blockEntity = projectile.level()
+			.getBlockEntity(BlockPos.containing(event.getRayTraceResult()
+				.getLocation()));
 		if (!(blockEntity instanceof BlazeBurnerBlockEntity)) {
 			return;
 		}
@@ -54,7 +55,7 @@ public class BlazeBurnerHandler {
 		projectile.setDeltaMovement(Vec3.ZERO);
 		projectile.discard();
 
-		Level world = projectile.level;
+		Level world = projectile.level();
 		if (world.isClientSide)
 			return;
 
@@ -74,7 +75,7 @@ public class BlazeBurnerHandler {
 
 	public static void splashExtinguishesBurner(ProjectileImpactEvent event) {
 		Projectile projectile = event.getProjectile();
-		if (projectile.level.isClientSide)
+		if (projectile.level().isClientSide)
 			return;
 		if (!(projectile instanceof ThrownPotion))
 			return;
@@ -89,7 +90,7 @@ public class BlazeBurnerHandler {
 		if (potion == Potions.WATER && PotionUtils.getMobEffects(stack)
 			.isEmpty()) {
 			BlockHitResult result = (BlockHitResult) event.getRayTraceResult();
-			Level world = entity.level;
+			Level world = entity.level();
 			Direction face = result.getDirection();
 			BlockPos pos = result.getBlockPos()
 				.relative(face);

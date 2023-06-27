@@ -44,7 +44,6 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -103,7 +102,7 @@ public class MinecartContraptionItem extends Item {
 					d3 = 0.1D;
 				}
 			} else {
-				if (blockstate.getMaterial() != Material.AIR || !world.getBlockState(blockpos.below())
+				if (!blockstate.isAir() || !world.getBlockState(blockpos.below())
 					.is(BlockTags.RAILS)) {
 					return this.behaviourDefaultDispenseItem.dispense(source, stack);
 				}
@@ -244,7 +243,7 @@ public class MinecartContraptionItem extends Item {
 		contraption.stop(event.getLevel());
 
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors())
-			if (AllMovementBehaviours.getBehaviour(pair.left.state)instanceof PortableStorageInterfaceMovement psim)
+			if (AllMovementBehaviours.getBehaviour(pair.left.state())instanceof PortableStorageInterfaceMovement psim)
 				psim.reset(pair.right);
 
 		ItemStack generatedStack = create(type, oce).setHoverName(entity.getCustomName());

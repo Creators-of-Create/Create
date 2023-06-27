@@ -99,7 +99,7 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 		if (passengers.isEmpty() || !(passengers.get(0) instanceof AbstractContraptionEntity)) {
 			return;
 		}
-		Level world = cart.level;
+		Level world = cart.level();
 		int i = Mth.floor(cart.getX());
 		int j = Mth.floor(cart.getY());
 		int k = Mth.floor(cart.getZ());

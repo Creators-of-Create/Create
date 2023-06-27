@@ -172,7 +172,7 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 
 	public static boolean playerInRange(Player player, Level world, BlockPos pos) {
 		//double modifier = world.isRemote ? 0 : 1.0;
-		double reach = 0.4*player.getAttributeValue(ForgeMod.REACH_DISTANCE.get());// + modifier;
+		double reach = 0.4*player.getAttributeValue(ForgeMod.BLOCK_REACH.get());// + modifier;
 		return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach*reach;
 	}
 

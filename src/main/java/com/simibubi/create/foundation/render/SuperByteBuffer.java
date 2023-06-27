@@ -450,7 +450,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	private static int getLight(Level world, Vector4f lightPos) {
-		BlockPos pos = new BlockPos(lightPos.x(), lightPos.y(), lightPos.z());
+		BlockPos pos = BlockPos.containing(lightPos.x(), lightPos.y(), lightPos.z());
 		return WORLD_LIGHT_CACHE.computeIfAbsent(pos.asLong(), $ -> LevelRenderer.getLightColor(world, pos));
 	}
 

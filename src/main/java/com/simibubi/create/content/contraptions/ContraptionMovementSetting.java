@@ -39,7 +39,7 @@ public enum ContraptionMovementSetting {
 	}
 
 	public static boolean allAre(Collection<StructureTemplate.StructureBlockInfo> blocks, ContraptionMovementSetting are) {
-		return blocks.stream().anyMatch(b -> get(b.state.getBlock()) == are);
+		return blocks.stream().anyMatch(b -> get(b.state().getBlock()) == are);
 	}
 
 	public static boolean isNoPickup(Collection<StructureTemplate.StructureBlockInfo> blocks) {

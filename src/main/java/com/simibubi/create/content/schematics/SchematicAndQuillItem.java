@@ -58,7 +58,7 @@ public class SchematicAndQuillItem extends Item {
 			Vec3 vec3 = new Vec3(entity.getX() - aabb.minX, entity.getY() - aabb.minY, entity.getZ() - aabb.minZ);
 			CompoundTag compoundtag = new CompoundTag();
 			entity.save(compoundtag);
-			BlockPos blockpos = new BlockPos(vec3);
+			BlockPos blockpos = BlockPos.containing(vec3);
 
 			CompoundTag entityTag = new CompoundTag();
 			entityTag.put("pos", newDoubleList(vec3.x, vec3.y, vec3.z));

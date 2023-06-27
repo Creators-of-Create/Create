@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -107,7 +107,7 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 		float progress = (displayHr * 60f + intData("Minute")) / (24 * 60);
 		RenderSystem.setShaderTexture(0,
 			new ResourceLocation("textures/item/clock_" + twoDigits(Mth.clamp((int) (progress * 64), 0, 63)) + ".png"));
-		GuiComponent.blit(ms, x, y, 0, 0, 0, 16, 16, 16, 16);
+		GuiGraphics.blit(ms, x, y, 0, 0, 0, 16, 16, 16, 16);
 		return true;
 	}
 

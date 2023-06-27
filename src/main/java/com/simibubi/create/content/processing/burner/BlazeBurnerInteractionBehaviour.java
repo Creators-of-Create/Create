@@ -40,8 +40,8 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 
 		StructureBlockInfo info = carriageContraption.getBlocks()
 			.get(localPos);
-		if (info == null || !info.state.hasProperty(BlazeBurnerBlock.HEAT_LEVEL)
-			|| info.state.getValue(BlazeBurnerBlock.HEAT_LEVEL) == HeatLevel.NONE)
+		if (info == null || !info.state().hasProperty(BlazeBurnerBlock.HEAT_LEVEL)
+			|| info.state().getValue(BlazeBurnerBlock.HEAT_LEVEL) == HeatLevel.NONE)
 			return false;
 
 		Direction assemblyDirection = carriageContraption.getAssemblyDirection();
@@ -52,19 +52,19 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 			Train train = carriageEntity.getCarriage().train;
 			if (train == null)
 				return false;
-			if (player.level.isClientSide)
+			if (player.level().isClientSide)
 				return true;
 
 			if (train.runtime.getSchedule() != null) {
 				if (train.runtime.paused && !train.runtime.completed) {
 					train.runtime.paused = false;
-					AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
+					AllSoundEvents.CONFIRM.playOnServer(player.level(), player.blockPosition(), 1, 1);
 					player.displayClientMessage(Lang.translateDirect("schedule.continued"), true);
 					return true;
 				}
 
 				if (!itemInHand.isEmpty()) {
-					AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+					AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 					player.displayClientMessage(Lang.translateDirect("schedule.remove_with_empty_hand"), true);
 					return true;
 				}
@@ -85,14 +85,14 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 				return false;
 
 			if (schedule.entries.isEmpty()) {
-				AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+				AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 				player.displayClientMessage(Lang.translateDirect("schedule.no_stops"), true);
 				return true;
 			}
 
 			train.runtime.setSchedule(schedule, false);
 			AllAdvancements.CONDUCTOR.awardTo(player);
-			AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition(), 1, 1);
+			AllSoundEvents.CONFIRM.playOnServer(player.level(), player.blockPosition(), 1, 1);
 			player.displayClientMessage(Lang.translateDirect("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);
 			itemInHand.shrink(1);
@@ -101,7 +101,7 @@ public class BlazeBurnerInteractionBehaviour extends MovingInteractionBehaviour 
 		}
 
 		player.displayClientMessage(Lang.translateDirect("schedule.non_controlling_seat"), true);
-		AllSoundEvents.DENY.playOnServer(player.level, player.blockPosition(), 1, 1);
+		AllSoundEvents.DENY.playOnServer(player.level(), player.blockPosition(), 1, 1);
 		return true;
 	}
 

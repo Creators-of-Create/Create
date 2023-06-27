@@ -47,7 +47,7 @@ public class ClipboardEditPacket extends SimplePacketBase {
 			ServerPlayer sender = context.getSender();
 			
 			if (targetedBlock != null) {
-				Level world = sender.level;
+				Level world = sender.level();
 				if (world == null || !world.isLoaded(targetedBlock))
 					return;
 				if (!targetedBlock.closerThan(sender.blockPosition(), 20))

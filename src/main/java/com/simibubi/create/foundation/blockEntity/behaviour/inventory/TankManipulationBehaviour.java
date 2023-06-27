@@ -8,8 +8,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -58,7 +58,7 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 
 	@Override
 	protected Capability<IFluidHandler> capability() {
-		return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+		return ForgeCapabilities.FLUID_HANDLER;
 	}
 
 	@Override

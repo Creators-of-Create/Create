@@ -74,7 +74,7 @@ public class SuperGlueSelectionHandler {
 
 		selected = null;
 		if (firstPos == null) {
-			double range = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+			double range = player.getAttribute(ForgeMod.BLOCK_REACH.get())
 				.getValue() + 1;
 			Vec3 traceOrigin = RaycastHelper.getTraceOrigin(player);
 			Vec3 traceTarget = RaycastHelper.getTraceTarget(player, range, traceOrigin);
@@ -90,7 +90,7 @@ public class SuperGlueSelectionHandler {
 				if (distanceToSqr > bestDistance)
 					continue;
 				selected = glueEntity;
-				soundSourceForRemoval = new BlockPos(vec3);
+				soundSourceForRemoval = BlockPos.containing(vec3);
 				bestDistance = distanceToSqr;
 			}
 
@@ -252,8 +252,8 @@ public class SuperGlueSelectionHandler {
 	public void confirm() {
 		LocalPlayer player = Minecraft.getInstance().player;
 		AllPackets.getChannel().sendToServer(new SuperGlueSelectionPacket(firstPos, hoveredPos));
-		AllSoundEvents.SLIME_ADDED.playAt(player.level, hoveredPos, 0.5F, 0.95F, false);
-		player.level.playSound(player, hoveredPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
+		AllSoundEvents.SLIME_ADDED.playAt(player.level(), hoveredPos, 0.5F, 0.95F, false);
+		player.level().playSound(player, hoveredPos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.75f, 1);
 
 		if (currentCluster != null)
 			CreateClient.OUTLINER.showCluster(clusterOutlineSlot, currentCluster)

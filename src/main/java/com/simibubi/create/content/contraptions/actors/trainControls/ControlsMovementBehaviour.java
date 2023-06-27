@@ -68,8 +68,8 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 		Direction initialOrientation = cce.getInitialOrientation()
 			.getCounterClockWise();
 		boolean inverted = false;
-		if (info != null && info.state.hasProperty(ControlsBlock.FACING))
-			inverted = !info.state.getValue(ControlsBlock.FACING)
+		if (info != null && info.state().hasProperty(ControlsBlock.FACING))
+			inverted = !info.state().getValue(ControlsBlock.FACING)
 				.equals(initialOrientation);
 
 		if (ControlsHandler.getContraption() == entity && ControlsHandler.getControlsPos() != null

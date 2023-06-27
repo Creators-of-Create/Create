@@ -59,8 +59,7 @@ public class SmartChuteBlockEntity extends ChuteBlockEntity {
 		boolean up = getItemMotion() < 0;
 		BlockPos chutePos = worldPosition.relative(up ? Direction.UP : Direction.DOWN);
 		BlockState blockState = level.getBlockState(chutePos);
-		return !AbstractChuteBlock.isChute(blockState) && !blockState.getMaterial()
-			.isReplaceable();
+		return !AbstractChuteBlock.isChute(blockState) && !blockState.canBeReplaced();
 	}
 
 }

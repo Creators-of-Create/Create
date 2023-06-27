@@ -15,7 +15,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public enum AllPaletteStoneTypes {
@@ -30,35 +30,35 @@ public enum AllPaletteStoneTypes {
 
 	ASURINE(STANDARD_RANGE, r -> r.paletteStoneBlock("asurine", () -> Blocks.DEEPSLATE, true, true)
 		.properties(p -> p.destroyTime(1.25f)
-			.color(MaterialColor.COLOR_BLUE))
+			.mapColor(MapColor.COLOR_BLUE))
 		.register()),
 
 	CRIMSITE(STANDARD_RANGE, r -> r.paletteStoneBlock("crimsite", () -> Blocks.DEEPSLATE, true, true)
 		.properties(p -> p.destroyTime(1.25f)
-			.color(MaterialColor.COLOR_RED))
+			.mapColor(MapColor.COLOR_RED))
 		.register()),
 
 	LIMESTONE(STANDARD_RANGE, r -> r.paletteStoneBlock("limestone", () -> Blocks.SANDSTONE, true, false)
 		.properties(p -> p.destroyTime(1.25f)
-			.color(MaterialColor.SAND))
+			.mapColor(MapColor.SAND))
 		.register()),
 
 	OCHRUM(STANDARD_RANGE, r -> r.paletteStoneBlock("ochrum", () -> Blocks.CALCITE, true, true)
 		.properties(p -> p.destroyTime(1.25f)
-			.color(MaterialColor.TERRACOTTA_YELLOW))
+			.mapColor(MapColor.TERRACOTTA_YELLOW))
 		.register()),
 
 	SCORIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scoria", () -> Blocks.BLACKSTONE, true, false)
-		.properties(p -> p.color(MaterialColor.COLOR_BROWN))
+		.properties(p -> p.mapColor(MapColor.COLOR_BROWN))
 		.register()),
 
 	SCORCHIA(STANDARD_RANGE, r -> r.paletteStoneBlock("scorchia", () -> Blocks.BLACKSTONE, true, false)
-		.properties(p -> p.color(MaterialColor.TERRACOTTA_GRAY))
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_GRAY))
 		.register()),
 
 	VERIDIUM(STANDARD_RANGE, r -> r.paletteStoneBlock("veridium", () -> Blocks.TUFF, true, true)
 		.properties(p -> p.destroyTime(1.25f)
-			.color(MaterialColor.WARPED_NYLIUM))
+			.mapColor(MapColor.WARPED_NYLIUM))
 		.register())
 
 	;

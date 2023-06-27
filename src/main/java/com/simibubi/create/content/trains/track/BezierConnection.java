@@ -538,7 +538,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				.add(previousOffsets.getSecond())
 				.scale(.5);
 			Vec3 tieAngles = TrackRenderer.getModelAngles(segment.normal, railMiddle.subtract(prevMiddle));
-			angles.lightPosition = new BlockPos(railMiddle);
+			angles.lightPosition = BlockPos.containing(railMiddle);
 			angles.railTransforms = Couple.create(null, null);
 
 			PoseStack poseStack = new PoseStack();
@@ -602,7 +602,7 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			Vec3 leftBottom = leftTop.add(secondGirderOffset);
 			Vec3 rightBottom = rightTop.add(secondGirderOffset);
 
-			angles.lightPosition = new BlockPos(leftGirder.add(rightGirder)
+			angles.lightPosition = BlockPos.containing(leftGirder.add(rightGirder)
 				.scale(.5));
 
 			Couple<Couple<Vec3>> offsets =

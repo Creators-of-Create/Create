@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -44,7 +44,7 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 	
 	@Override
 	protected Capability<IItemHandler> capability() {
-		return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+		return ForgeCapabilities.ITEM_HANDLER;
 	}
 
 	public ItemStack extract() {

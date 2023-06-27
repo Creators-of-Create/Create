@@ -16,11 +16,11 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -102,7 +102,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 				.mul(msLocal.last()
 					.pose());
 
-			itemRenderer.renderStatic(item, TransformType.FIXED, light, overlay, ms, buffer, 0);
+			itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, light, overlay, ms, buffer, 0);
 			ms.popPose();
 		}
 

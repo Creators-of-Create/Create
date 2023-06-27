@@ -62,7 +62,7 @@ public class ElevatorContraption extends PulleyContraption {
 			return;
 
 		ColumnCoords coords = getGlobalColumn();
-		ElevatorColumn column = ElevatorColumn.get(entity.level, coords);
+		ElevatorColumn column = ElevatorColumn.get(entity.level(), coords);
 
 		if (column == null)
 			return;

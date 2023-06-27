@@ -59,7 +59,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 			return;
 
 		double prevAxisMotion = axisMotion;
-		if (level.isClientSide) {
+		if (level().isClientSide) {
 			clientOffsetDiff *= .75f;
 			updateClientMotion();
 		}
@@ -69,7 +69,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		Vec3 movementVec = getDeltaMovement();
 
 		if (ContraptionCollider.collideBlocks(this)) {
-			if (!level.isClientSide)
+			if (!level().isClientSide)
 				disassemble();
 			return;
 		}
@@ -83,8 +83,8 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		}
 
 		if (Math.signum(prevAxisMotion) != Math.signum(axisMotion) && prevAxisMotion != 0)
-			contraption.stop(level);
-		if (!level.isClientSide && (prevAxisMotion != axisMotion || tickCount % 3 == 0))
+			contraption.stop(level());
+		if (!level().isClientSide && (prevAxisMotion != axisMotion || tickCount % 3 == 0))
 			sendPacket();
 	}
 
@@ -98,11 +98,11 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		Vec3 movementVec;
 		Direction facing = ((GantryContraption) contraption).getFacing();
 		Vec3 currentPosition = getAnchorVec().add(.5, .5, .5);
-		BlockPos gantryShaftPos = new BlockPos(currentPosition).relative(facing.getOpposite());
+		BlockPos gantryShaftPos = BlockPos.containing(currentPosition).relative(facing.getOpposite());
 
-		BlockEntity be = level.getBlockEntity(gantryShaftPos);
+		BlockEntity be = level().getBlockEntity(gantryShaftPos);
 		if (!(be instanceof GantryShaftBlockEntity) || !AllBlocks.GANTRY_SHAFT.has(be.getBlockState())) {
-			if (!level.isClientSide) {
+			if (!level().isClientSide) {
 				setContraptionMotion(Vec3.ZERO);
 				disassemble();
 			}
@@ -116,7 +116,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		float pinionMovementSpeed = gantryShaftBlockEntity.getPinionMovementSpeed();
 		if (blockState.getValue(GantryShaftBlock.POWERED) || pinionMovementSpeed == 0) {
 			setContraptionMotion(Vec3.ZERO);
-			if (!level.isClientSide)
+			if (!level().isClientSide)
 				disassemble();
 			return;
 		}
@@ -136,12 +136,12 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 			.getStep() < 0)))
 			if (!gantryShaftBlockEntity.canAssembleOn()) {
 				setContraptionMotion(Vec3.ZERO);
-				if (!level.isClientSide)
+				if (!level().isClientSide)
 					disassemble();
 				return;
 			}
 
-		if (level.isClientSide)
+		if (level().isClientSide)
 			return;
 
 		axisMotion = pinionMovementSpeed;
@@ -175,7 +175,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	protected StructureTransform makeStructureTransform() {
-		return new StructureTransform(new BlockPos(getAnchorVec().add(.5, .5, .5)), 0, 0, 0);
+		return new StructureTransform(BlockPos.containing(getAnchorVec().add(.5, .5, .5)), 0, 0, 0);
 	}
 
 	@Override

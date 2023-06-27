@@ -98,7 +98,7 @@ public interface ITrackBlock {
 		if (defaultMaterial == null)
 			defaultMaterial = TrackMaterial.ANDESITE;
 		if (world != null) {
-			Block block = world.getBlockState(new BlockPos(pos)).getBlock();
+			Block block = world.getBlockState(BlockPos.containing(pos)).getBlock();
 			if (block instanceof ITrackBlock track) {
 				return track.getMaterial();
 			}

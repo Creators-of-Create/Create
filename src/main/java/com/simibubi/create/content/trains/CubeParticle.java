@@ -101,7 +101,9 @@ public class CubeParticle extends Particle {
 				billowing = true;
 				stoppedByCollision = false; // Prevent motion being ignored due to vertical collision
 				if (this.xd == 0 && this.zd == 0) {
-					Vec3 diff = Vec3.atLowerCornerOf(new BlockPos(x, y, z)).add(0.5, 0.5, 0.5).subtract(x, y, z);
+					Vec3 diff = Vec3.atLowerCornerOf(BlockPos.containing(x, y, z))
+						.add(0.5, 0.5, 0.5)
+						.subtract(x, y, z);
 					this.xd = -diff.x * 0.1;
 					this.zd = -diff.z * 0.1;
 				}

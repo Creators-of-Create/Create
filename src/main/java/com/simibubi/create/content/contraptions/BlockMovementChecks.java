@@ -177,8 +177,7 @@ public class BlockMovementChecks {
 		if (state.getCollisionShape(world, pos)
 			.isEmpty())
 			return false;
-		if (state.getMaterial()
-			.isReplaceable())
+		if (state.canBeReplaced())
 			return false;
 		return true;
 	}

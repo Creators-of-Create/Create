@@ -72,7 +72,7 @@ public class SymmetryWandItem extends Item {
 
 		// Shift -> open GUI
 		if (player.isShiftKeyDown()) {
-			if (player.level.isClientSide) {
+			if (player.level().isClientSide) {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 					openWandGUI(wand, context.getHand());
 				});
@@ -210,7 +210,7 @@ public class SymmetryWandItem extends Item {
 			return;
 
 		symmetry.process(blockSet);
-		BlockPos to = new BlockPos(mirrorPos);
+		BlockPos to = BlockPos.containing(mirrorPos);
 		List<BlockPos> targets = new ArrayList<>();
 		targets.add(pos);
 
@@ -231,8 +231,7 @@ public class SymmetryWandItem extends Item {
 				}
 
 				BlockState toReplace = world.getBlockState(position);
-				if (!toReplace.getMaterial()
-						.isReplaceable())
+				if (!toReplace.canBeReplaced())
 					continue;
 				if (toReplace.getDestroySpeed(world, position) == -1)
 					continue;
@@ -296,7 +295,7 @@ public class SymmetryWandItem extends Item {
 
 		symmetry.process(blockSet);
 
-		BlockPos to = new BlockPos(mirrorPos);
+		BlockPos to = BlockPos.containing(mirrorPos);
 		List<BlockPos> targets = new ArrayList<>();
 
 		targets.add(pos);
@@ -308,7 +307,7 @@ public class SymmetryWandItem extends Item {
 				continue;
 
 			BlockState blockstate = world.getBlockState(position);
-			if (blockstate.getMaterial() != Material.AIR) {
+			if (!blockstate.isAir()) {
 				targets.add(position);
 				world.levelEvent(2001, position, Block.getId(blockstate));
 				world.setBlock(position, air, 3);

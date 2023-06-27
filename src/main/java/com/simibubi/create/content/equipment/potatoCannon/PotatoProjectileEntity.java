@@ -208,7 +208,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (this.isOnFire() && !targetIsEnderman)
 			target.setSecondsOnFire(5);
 
-		boolean onServer = !level.isClientSide;
+		boolean onServer = !level().isClientSide;
 		if (onServer && !target.hurt(causePotatoDamage(), damage)) {
 			target.setRemainingFireTicks(k);
 			kill();
@@ -223,7 +223,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 				recoverItem();
 
 		if (!(target instanceof LivingEntity)) {
-			playHitSound(level, position());
+			playHitSound(level(), position());
 			kill();
 			return;
 		}
@@ -274,7 +274,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	public static void playHitSound(Level world, Vec3 location) {
-		AllSoundEvents.POTATO_HIT.playOnServer(world, new BlockPos(location));
+		AllSoundEvents.POTATO_HIT.playOnServer(world, BlockPos.containing(location));
 	}
 
 	public static void playLaunchSound(Level world, Vec3 location, float pitch) {
@@ -285,7 +285,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	protected void onHitBlock(BlockHitResult ray) {
 		Vec3 hit = ray.getLocation();
 		pop(hit);
-		if (!getProjectileType().onBlockHit(level, ray) && !level.isClientSide)
+		if (!getProjectileType().onBlockHit(level(), ray) && !level().isClientSide)
 			if (random.nextDouble() <= recoveryChance)
 				recoverItem();
 		super.onHitBlock(ray);
@@ -307,12 +307,12 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (!stack.isEmpty()) {
 			for (int i = 0; i < 7; i++) {
 				Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, this.random, .25f);
-				level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y,
+				level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y,
 					m.z);
 			}
 		}
-		if (!level.isClientSide)
-			playHitSound(level, position());
+		if (!level().isClientSide)
+			playHitSound(level(), position());
 	}
 
 	private DamageSource causePotatoDamage() {

@@ -118,7 +118,7 @@ public class ToolboxHandler {
 	public static void unequip(Player player, int hotbarSlot, boolean keepItems) {
 		CompoundTag compound = player.getPersistentData()
 			.getCompound("CreateToolboxData");
-		Level world = player.level;
+		Level world = player.level();
 		String key = String.valueOf(hotbarSlot);
 		if (!compound.contains(key))
 			return;
@@ -136,7 +136,7 @@ public class ToolboxHandler {
 	}
 
 	public static boolean withinRange(Player player, ToolboxBlockEntity box) {
-		if (player.level != box.getLevel())
+		if (player.level() != box.getLevel())
 			return false;
 		double maxRange = getMaxRange(player);
 		return distance(player.position(), box.getBlockPos()) < maxRange * maxRange;

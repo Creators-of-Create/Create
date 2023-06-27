@@ -146,7 +146,7 @@ public class ServerSchematicLoader {
 
 			// Open Stream
 			OutputStream writer = Files.newOutputStream(uploadPath);
-			activeUploads.put(playerSchematicId, new SchematicUploadEntry(writer, size, player.getLevel(), pos));
+			activeUploads.put(playerSchematicId, new SchematicUploadEntry(writer, size, player.level(), pos));
 
 			// Notify Block Entity
 			table.startUpload(schematic);

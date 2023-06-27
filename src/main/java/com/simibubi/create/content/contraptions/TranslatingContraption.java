@@ -27,15 +27,15 @@ public abstract class TranslatingContraption extends Contraption {
 	public Set<BlockPos> createColliders(Level world, Direction movementDirection) {
 		Set<BlockPos> colliders = new HashSet<>();
 		for (StructureBlockInfo info : getBlocks().values()) {
-			BlockPos offsetPos = info.pos.relative(movementDirection);
-			if (info.state.getCollisionShape(world, offsetPos)
+			BlockPos offsetPos = info.pos().relative(movementDirection);
+			if (info.state().getCollisionShape(world, offsetPos)
 				.isEmpty())
 				continue;
 			if (getBlocks().containsKey(offsetPos)
-				&& !getBlocks().get(offsetPos).state.getCollisionShape(world, offsetPos)
+				&& !getBlocks().get(offsetPos).state().getCollisionShape(world, offsetPos)
 					.isEmpty())
 				continue;
-			colliders.add(info.pos);
+			colliders.add(info.pos());
 		}
 		return colliders;
 	}

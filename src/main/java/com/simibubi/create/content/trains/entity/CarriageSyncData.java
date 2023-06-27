@@ -113,7 +113,7 @@ public class CarriageSyncData {
 	}
 
 	public void update(CarriageContraptionEntity entity, Carriage carriage) {
-		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level);
+		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level());
 
 		TrackGraph graph = carriage.train.graph;
 		if (graph == null) {
@@ -154,7 +154,7 @@ public class CarriageSyncData {
 	}
 
 	public void apply(CarriageContraptionEntity entity, Carriage carriage) {
-		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level);
+		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level());
 
 		fallbackPointSnapshot = null;
 		if (fallbackLocations != null) {
@@ -227,7 +227,7 @@ public class CarriageSyncData {
 	}
 
 	public void approach(CarriageContraptionEntity entity, Carriage carriage, float partialIn) {
-		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level);
+		DimensionalCarriageEntity dce = carriage.getDimensional(entity.level());
 		
 		int updateInterval = entity.getType()
 			.updateInterval();

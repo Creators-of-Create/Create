@@ -55,9 +55,9 @@ public class HauntedBellPulser {
 		} catch (ExecutionException e) {
 		}
 
-		long gameTime = player.level.getGameTime();
+		long gameTime = player.level().getGameTime();
 		if (firstPulse || gameTime % RECHARGE_TICKS != 0)
-			sendPulse(player.level, event.player.blockPosition(), DISTANCE, false);
+			sendPulse(player.level(), event.player.blockPosition(), DISTANCE, false);
 	}
 
 	public static void sendPulse(Level world, BlockPos pos, int distance, boolean canOverlap) {

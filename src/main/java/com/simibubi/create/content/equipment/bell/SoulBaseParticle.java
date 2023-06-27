@@ -31,7 +31,7 @@ public class SoulBaseParticle extends CustomRotationParticle {
 	public void tick() {
 		selectSpriteLoopingWithAge(animatedSprite);
 
-		BlockPos pos = new BlockPos(x, y, z);
+		BlockPos pos = BlockPos.containing(x, y, z);
 		if (age++ >= lifetime || !SoulPulseEffect.isDark(level, pos))
 			remove();
 	}

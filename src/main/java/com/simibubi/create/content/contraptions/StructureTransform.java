@@ -103,7 +103,7 @@ public class StructureTransform {
 	}
 
 	public BlockPos applyWithoutOffset(BlockPos localPos) {
-		return new BlockPos(applyWithoutOffset(VecHelper.getCenterOf(localPos)));
+		return BlockPos.containing(applyWithoutOffset(VecHelper.getCenterOf(localPos)));
 	}
 
 	public BlockPos apply(BlockPos localPos) {

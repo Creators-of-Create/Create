@@ -178,13 +178,13 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public void move(MoverType typeIn, Vec3 pos) {
-		if (!level.isClientSide && isAlive() && pos.lengthSqr() > 0.0D)
+		if (!level().isClientSide && isAlive() && pos.lengthSqr() > 0.0D)
 			discard();
 	}
 
 	@Override
 	public void push(double x, double y, double z) {
-		if (!level.isClientSide && isAlive() && x * x + y * y + z * z > 0.0D)
+		if (!level().isClientSide && isAlive() && x * x + y * y + z * z > 0.0D)
 			discard();
 	}
 
@@ -307,7 +307,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		Vec3 origin = new Vec3(bb.minX, bb.minY, bb.minZ);
 		Vec3 extents = new Vec3(bb.getXsize(), bb.getYsize(), bb.getZsize());
 
-		if (!(level instanceof ServerLevel slevel))
+		if (!(level() instanceof ServerLevel slevel))
 			return;
 
 		for (Axis axis : Iterate.axes) {

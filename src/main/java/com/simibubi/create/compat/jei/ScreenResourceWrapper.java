@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.gui.drawable.IDrawable;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class ScreenResourceWrapper implements IDrawable {
 
@@ -27,7 +27,7 @@ public class ScreenResourceWrapper implements IDrawable {
 	@Override
 	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		resource.bind();
-		GuiComponent.blit(matrixStack, xOffset, yOffset, 0, resource.startX, resource.startY, resource.width,
+		GuiGraphics.blit(matrixStack, xOffset, yOffset, 0, resource.startX, resource.startY, resource.width,
 			resource.height, 256, 256);
 	}
 

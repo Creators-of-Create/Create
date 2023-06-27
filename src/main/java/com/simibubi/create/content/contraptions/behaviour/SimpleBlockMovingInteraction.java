@@ -20,11 +20,11 @@ public abstract class SimpleBlockMovingInteraction extends MovingInteractionBeha
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(localPos);
 
-		BlockState newState = handle(player, contraption, localPos, info.state);
-		if (info.state == newState)
+		BlockState newState = handle(player, contraption, localPos, info.state());
+		if (info.state() == newState)
 			return false;
 
-		setContraptionBlockData(contraptionEntity, localPos, new StructureBlockInfo(info.pos, newState, info.nbt));
+		setContraptionBlockData(contraptionEntity, localPos, new StructureBlockInfo(info.pos(), newState, info.nbt()));
 		if (updateColliders())
 			contraption.invalidateColliders();
 		return true;
@@ -35,7 +35,7 @@ public abstract class SimpleBlockMovingInteraction extends MovingInteractionBeha
 	}
 
 	protected void playSound(Player player, SoundEvent sound, float pitch) {
-		player.level.playSound(player, player.blockPosition(), sound, SoundSource.BLOCKS, 0.3f, pitch);
+		player.level().playSound(player, player.blockPosition(), sound, SoundSource.BLOCKS, 0.3f, pitch);
 	}
 
 	protected abstract BlockState handle(Player player, Contraption contraption, BlockPos pos,

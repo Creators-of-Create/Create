@@ -27,7 +27,6 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
@@ -36,6 +35,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -288,7 +288,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				}
 
 				ms.scale(.5f, .5f, .5f);
-				itemRenderer.renderStatic(null, transported.stack, TransformType.FIXED, false, ms, buffer, be.getLevel(), stackLight, overlay, 0);
+				itemRenderer.renderStatic(null, transported.stack, ItemDisplayContext.FIXED, false, ms, buffer, be.getLevel(), stackLight, overlay, 0);
 				ms.popPose();
 
 				if (!renderUpright) {

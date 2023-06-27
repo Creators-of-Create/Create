@@ -32,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainBlockEntity> {
 
@@ -46,7 +46,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainB
 		ItemStack heldItem = player.getItemInHand(handIn);
 
 		if (heldItem.getItem() instanceof BlockItem
-			&& !heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+			&& !heldItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
 				.isPresent())
 			return InteractionResult.PASS;
 
@@ -77,7 +77,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, IBE<ItemDrainB
 			return;
 		if (!entityIn.isAlive())
 			return;
-		if (entityIn.level.isClientSide)
+		if (entityIn.level().isClientSide)
 			return;
 
 		ItemEntity itemEntity = (ItemEntity) entityIn;

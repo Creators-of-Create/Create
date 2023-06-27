@@ -3,8 +3,8 @@ package com.simibubi.create.content.equipment.goggles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraftforge.client.model.BakedModelWrapper;
 
 public class GogglesModel extends BakedModelWrapper<BakedModel> {
@@ -14,11 +14,11 @@ public class GogglesModel extends BakedModelWrapper<BakedModel> {
 	}
 
 	@Override
-	public BakedModel applyTransform(TransformType cameraTransformType, PoseStack mat, boolean leftHanded) {
-		if (cameraTransformType == TransformType.HEAD)
+	public BakedModel applyTransform(ItemDisplayContext cameraItemDisplayContext, PoseStack mat, boolean leftHanded) {
+		if (cameraItemDisplayContext == ItemDisplayContext.HEAD)
 			return AllPartialModels.GOGGLES.get()
-				.applyTransform(cameraTransformType, mat, leftHanded);
-		return super.applyTransform(cameraTransformType, mat, leftHanded);
+				.applyTransform(cameraItemDisplayContext, mat, leftHanded);
+		return super.applyTransform(cameraItemDisplayContext, mat, leftHanded);
 	}
 
 }

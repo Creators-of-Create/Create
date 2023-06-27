@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -51,7 +51,7 @@ public class MountedStorage {
 			return true;
 
 		try {
-			LazyOptional<IItemHandler> capability = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+			LazyOptional<IItemHandler> capability = be.getCapability(ForgeCapabilities.ITEM_HANDLER);
 			IItemHandler handler = capability.orElse(null);
 			if (handler instanceof ItemStackHandler)
 				return !(handler instanceof ProcessingInventory);
@@ -102,7 +102,7 @@ public class MountedStorage {
 			return;
 		}
 
-		IItemHandler beHandler = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		IItemHandler beHandler = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER)
 			.orElse(dummyHandler);
 		if (beHandler == dummyHandler)
 			return;
@@ -156,7 +156,7 @@ public class MountedStorage {
 			return;
 		}
 
-		LazyOptional<IItemHandler> capability = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> capability = be.getCapability(ForgeCapabilities.ITEM_HANDLER);
 		IItemHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof IItemHandlerModifiable))
 			return;

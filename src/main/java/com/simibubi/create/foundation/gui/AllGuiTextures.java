@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.gui.element.ScreenElement;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -231,7 +232,7 @@ public enum AllGuiTextures implements ScreenElement {
 	@Override
 	public void render(PoseStack ms, int x, int y) {
 		bind();
-		GuiComponent.blit(ms, x, y, 0, startX, startY, width, height, 256, 256);
+		GuiGraphics.blit(ms, x, y, 0, startX, startY, width, height, 256, 256);
 	}
 
 	@OnlyIn(Dist.CLIENT)
