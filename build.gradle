@@ -100,7 +100,7 @@ minecraft {
                     source sourceSets.main
                 }
             }
-            setForceExit false
+            // setForceExit false <- FIXME 1.20
         }
     }
 }
@@ -177,8 +177,8 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge:${jei_version}")
 
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${curios_minecraft_version}:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${curios_minecraft_version}")
 
 	if (cc_tweaked_enable.toBoolean()) {
         compileOnly fg.deobf("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-forge-api:${cc_tweaked_version}:cc-tweaked-${cc_tweaked_minecraft_version}-forge-api-${cc_tweaked_version}")
@@ -232,13 +232,13 @@ compileJava {
 }
 
 jar {
-    classifier = 'slim'
+    archiveClassifier = 'slim'
     manifest {
         attributes([
             'Specification-Title': 'create',
             'Specification-Vendor': 'simibubi',
             'Specification-Version': '1',
-            'Implementation-Title': project.jar.baseName,
+            'Implementation-Title': project.jar.archiveBaseName,
             'Implementation-Version': project.jar.archiveVersion,
             'Implementation-Vendor': 'simibubi',
             'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
@@ -251,7 +251,7 @@ task jarJarRelease {
     group = 'jarjar'
     doLast {
         tasks.jarJar {
-            classifier = ''
+            archiveClassifier = ''
         }
     }
     finalizedBy tasks.jarJar
