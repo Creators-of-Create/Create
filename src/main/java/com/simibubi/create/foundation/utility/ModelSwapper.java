@@ -32,7 +32,7 @@ public class ModelSwapper {
 		return customItemModels;
 	}
 
-	public void onModelBake(ModelEvent.BakingCompleted event) {
+	public void onModelBake(ModelEvent.ModifyBakingResult event) {
 		Map<ResourceLocation, BakedModel> modelRegistry = event.getModels();
 		customBlockModels.forEach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		customItemModels.forEach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
