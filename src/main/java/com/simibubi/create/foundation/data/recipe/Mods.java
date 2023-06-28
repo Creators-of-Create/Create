@@ -26,6 +26,8 @@ public enum Mods {
 	TF("twilightforest"),
 	ECO("ecologics"),
 
+	IC2("ic2", b -> b.reverseMetalPrefix())
+
 	;
 
 	private final String id;
@@ -63,7 +65,7 @@ public enum Mods {
 	public ResourceLocation asResource(String id) {
 		return new ResourceLocation(this.id, id);
 	}
-	
+
 	public String recipeId(String id) {
 		return "compat/" + this.id + "/" + id;
 	}
