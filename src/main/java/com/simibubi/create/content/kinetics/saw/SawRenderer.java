@@ -134,7 +134,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 				if (alongZ)
 					ms.mulPose(Axis.YP.rotationDegrees(90));
 				ms.mulPose(Axis.XP.rotationDegrees(90));
-				itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, 0);
+				itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 				break;
 			}
 

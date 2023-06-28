@@ -499,7 +499,7 @@ public class TrackBlock extends Block
 				continue;
 			for (int side : Iterate.positiveAndNegative) {
 				BlockPos girderPos = pPos.below()
-					.offset(vec3.z * side, 0, vec3.x * side);
+					.offset(BlockPos.containing(vec3.z * side, 0, vec3.x * side));
 				BlockState girderState = pLevel.getBlockState(girderPos);
 				if (girderState.getBlock() instanceof GirderBlock girderBlock
 					&& !blockTicks.hasScheduledTick(girderPos, girderBlock))

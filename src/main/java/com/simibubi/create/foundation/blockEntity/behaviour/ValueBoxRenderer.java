@@ -25,15 +25,16 @@ public class ValueBoxRenderer {
 
 	public static void renderItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		Minecraft mc = Minecraft.getInstance();
+		ItemRenderer itemRenderer = mc.getItemRenderer();
 		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
-		boolean blockItem = modelWithOverrides.isGui3d() && modelWithOverrides.getRenderPasses(filter, false).size() <= 1;
+		boolean blockItem =
+			modelWithOverrides.isGui3d() && modelWithOverrides.getRenderPasses(filter, false).size() <= 1;
 		float scale = (!blockItem ? .5f : 1f) + 1 / 64f;
 		float zOffset = (!blockItem ? -.15f : 0) + customZOffset(filter.getItem());
 		ms.scale(scale, scale, scale);
 		ms.translate(0, 0, zOffset);
-		itemRenderer.renderStatic(filter, ItemDisplayContext.FIXED, light, overlay, ms, buffer, 0);
+		itemRenderer.renderStatic(filter, ItemDisplayContext.FIXED, light, overlay, ms, buffer, mc.level, 0);
 	}
 
 	public static void renderFlatItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light,
@@ -67,9 +68,9 @@ public class ValueBoxRenderer {
 		squashedMS.last()
 			.normal()
 			.set(copy);
-		Minecraft.getInstance()
-			.getItemRenderer()
-			.renderStatic(filter, ItemDisplayContext.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer, 0);
+		Minecraft mc = Minecraft.getInstance();
+		mc.getItemRenderer()
+			.renderStatic(filter, ItemDisplayContext.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer, mc.level, 0);
 
 		ms.popPose();
 	}

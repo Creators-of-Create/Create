@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.base.Strings;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.ponder.ui.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Color;
@@ -111,7 +112,7 @@ public class PonderTooltipHandler {
 
 		if (inPonderUI) {
 			PonderUI ponderUI = (PonderUI) currentScreen;
-			if (stack.sameItem(ponderUI.getSubject()))
+			if (ItemHelper.sameItem(stack, ponderUI.getSubject()))
 				subject = true;
 		}
 
@@ -120,7 +121,7 @@ public class PonderTooltipHandler {
 		if (!PonderRegistry.ALL.containsKey(RegisteredObjects.getKeyOrThrow(stack.getItem())))
 			return;
 
-		if (prevStack.isEmpty() || !prevStack.sameItem(stack))
+		if (prevStack.isEmpty() || !ItemHelper.sameItem(prevStack, stack))
 			holdWProgress.startWithValue(0);
 
 		hoveredStack = stack;

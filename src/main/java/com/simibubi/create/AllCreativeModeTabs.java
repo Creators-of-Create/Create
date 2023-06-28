@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.simibubi.create.AllCreativeModeTabs.RegistrateDisplayItemsGenerator.ItemOrdering.Type;
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
@@ -30,10 +29,10 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
+import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.item.CreativeModeTab.Output;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -49,6 +48,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class AllCreativeModeTabs {
+	
 	public static final ResourceLocation BASE_TAB_ID = Create.asResource("base");
 	public static final ResourceLocation PALETTES_TAB_ID = Create.asResource("palettes");
 
@@ -225,7 +225,7 @@ public class AllCreativeModeTabs {
 		}
 
 		@Override
-		public void accept(FeatureFlagSet features, Output output, boolean isOperator) {
+		public void accept(ItemDisplayParameters pParameters, Output output) {
 			ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 			Predicate<Item> exclusionPredicate = makeExclusionPredicate();
 			List<ItemOrdering> orderings = makeOrderings();

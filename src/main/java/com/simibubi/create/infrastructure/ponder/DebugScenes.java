@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.kinetics.base.RotationIndicatorParticleData;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderPalette;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
@@ -420,14 +421,14 @@ public class DebugScenes {
 		scene.idle(20);
 
 		scene.world.modifyEntities(ItemEntity.class, entity -> {
-			if (copperItem.sameItem(entity.getItem()))
+			if (ItemHelper.sameItem(copperItem, entity.getItem()))
 				entity.setNoGravity(true);
 		});
 
 		scene.idle(20);
 
 		scene.world.modifyEntities(ItemEntity.class, entity -> {
-			if (brassItem.sameItem(entity.getItem()))
+			if (ItemHelper.sameItem(brassItem, entity.getItem()))
 				entity.setDeltaMovement(util.vector.of(-.15f, .5f, 0));
 		});
 

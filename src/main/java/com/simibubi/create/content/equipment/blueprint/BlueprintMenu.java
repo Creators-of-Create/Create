@@ -19,6 +19,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
@@ -60,7 +61,8 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 	}
 
 	public void onCraftMatrixChanged() {
-		if (contentHolder.getBlueprintWorld().isClientSide)
+		Level level = contentHolder.getBlueprintWorld();
+		if (level.isClientSide)
 			return;
 
 		ServerPlayer serverplayerentity = (ServerPlayer) player;
@@ -83,7 +85,7 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 		}
 
 		CraftingRecipe icraftingrecipe = optional.get();
-		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory);
+		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory, level.registryAccess());
 		ghostInventory.setStackInSlot(9, itemstack);
 		contentHolder.inferredIcon = true;
 		ItemStack toSend = itemstack.copy();

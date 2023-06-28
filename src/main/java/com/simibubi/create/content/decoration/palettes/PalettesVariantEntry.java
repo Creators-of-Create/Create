@@ -20,7 +20,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PalettesVariantEntry {
 
@@ -75,10 +74,9 @@ public class PalettesVariantEntry {
 		Create.REGISTRATE.addDataGenerator(ProviderType.RECIPE,
 			p -> p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), RecipeCategory.BUILDING_BLOCKS,
 				baseBlock));
-		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, p -> p.tag(paletteStoneVariants.materialTag)
-			.add(ForgeRegistries.ITEMS.getResourceKey(baseBlock.get()
-				.asItem())
-				.get()));
+		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, p -> p.addTag(paletteStoneVariants.materialTag)
+			.add(baseBlock.get()
+				.asItem()));
 
 		this.registeredBlocks = registeredBlocks.build();
 		this.registeredPartials = registeredPartials.build();

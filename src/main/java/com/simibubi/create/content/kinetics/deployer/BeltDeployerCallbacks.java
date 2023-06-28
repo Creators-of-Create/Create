@@ -96,7 +96,7 @@ public class BeltDeployerCallbacks {
 		DeployerBlockEntity blockEntity, Recipe<?> recipe) {
 		
 		List<TransportedItemStack> collect =
-			RecipeApplier.applyRecipeOn(ItemHandlerHelper.copyStackWithSize(transported.stack, 1), recipe)
+			RecipeApplier.applyRecipeOn(blockEntity.getLevel(), ItemHandlerHelper.copyStackWithSize(transported.stack, 1), recipe)
 				.stream()
 				.map(stack -> {
 					TransportedItemStack copy = transported.copy();

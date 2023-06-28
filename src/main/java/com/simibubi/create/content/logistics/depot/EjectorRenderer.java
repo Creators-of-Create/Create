@@ -71,7 +71,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
 				.getItemRenderer()
-				.renderStatic(intAttached.getValue(), ItemDisplayContext.GROUND, light, overlay, ms, buffer, 0);
+				.renderStatic(intAttached.getValue(), ItemDisplayContext.GROUND, light, overlay, ms, buffer, be.getLevel(), 0);
 			ms.popPose();
 		}
 

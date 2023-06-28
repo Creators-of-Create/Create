@@ -152,14 +152,14 @@ public class FanProcessing {
 			SPLASHING_WRAPPER.setItem(0, stack);
 			Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(SPLASHING_WRAPPER, world);
 			if (recipe.isPresent())
-				return RecipeApplier.applyRecipeOn(stack, recipe.get());
+				return RecipeApplier.applyRecipeOn(world, stack, recipe.get());
 			return null;
 		}
 		if (type == Type.HAUNTING) {
 			HAUNTING_WRAPPER.setItem(0, stack);
 			Optional<HauntingRecipe> recipe = AllRecipeTypes.HAUNTING.find(HAUNTING_WRAPPER, world);
 			if (recipe.isPresent())
-				return RecipeApplier.applyRecipeOn(stack, recipe.get());
+				return RecipeApplier.applyRecipeOn(world, stack, recipe.get());
 			return null;
 		}
 
@@ -183,7 +183,7 @@ public class FanProcessing {
 					.getResultItem(registryAccess),
 					smeltingRecipe.get()
 						.getResultItem(registryAccess))) {
-					return RecipeApplier.applyRecipeOn(stack, smeltingRecipe.get());
+					return RecipeApplier.applyRecipeOn(world, stack, smeltingRecipe.get());
 				}
 			}
 
@@ -191,7 +191,7 @@ public class FanProcessing {
 		}
 
 		if (type == Type.SMOKING && smokingRecipe.isPresent())
-			return RecipeApplier.applyRecipeOn(stack, smokingRecipe.get());
+			return RecipeApplier.applyRecipeOn(world, stack, smokingRecipe.get());
 
 		return null;
 	}

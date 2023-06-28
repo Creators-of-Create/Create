@@ -154,7 +154,8 @@ public class StationMarker {
 				poseStack.scale(0.8f, 0.8f, 1.0F);
 				poseStack.translate(-f6 / 2f + .5f, 0, 0);
 //				poseStack.scale(f7, f7, 1.0F);
-				font.drawInBatch(component, 0.0F, 0.0F, -1, false, poseStack.last().pose(), bufferSource, false, Integer.MIN_VALUE, 15728880);
+				font.drawInBatch(component, 0.0F, 0.0F, -1, false, poseStack.last()
+					.pose(), bufferSource, Font.DisplayMode.NORMAL, Integer.MIN_VALUE, packedLight);
 				poseStack.popPose();
 			}
 

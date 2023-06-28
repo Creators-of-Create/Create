@@ -80,7 +80,7 @@ public class RenderTypes extends RenderStateShard {
 
 	private static final RenderType ADDITIVE = RenderType.create(createLayerName("additive"), DefaultVertexFormat.BLOCK,
 		VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
-			.setShaderState(BLOCK_SHADER)
+			.setShaderState(RENDERTYPE_SOLID_SHADER)
 			.setTextureState(new RenderStateShard.TextureStateShard(InventoryMenu.BLOCK_ATLAS, false, false))
 			.setTransparencyState(ADDITIVE_TRANSPARENCY)
 			.setCullState(NO_CULL)

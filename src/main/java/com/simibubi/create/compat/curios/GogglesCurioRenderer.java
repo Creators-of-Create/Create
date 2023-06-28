@@ -60,7 +60,10 @@ public class GogglesCurioRenderer implements ICurioRenderer {
 		}
 
 		// Render
-		Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.HEAD, light, OverlayTexture.NO_OVERLAY, matrixStack, renderTypeBuffer, 0);
+		Minecraft mc = Minecraft.getInstance();
+		mc.getItemRenderer()
+			.renderStatic(stack, ItemDisplayContext.HEAD, light, OverlayTexture.NO_OVERLAY, matrixStack,
+				renderTypeBuffer, mc.level, 0);
 		matrixStack.popPose();
 	}
 

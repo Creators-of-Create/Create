@@ -38,7 +38,7 @@ public class FlySpeedCommand {
 		player.connection.send(packet);
 
 		ctx.getSource()
-			.sendSuccess(Components.literal("Temporarily set " + player.getName()
+			.sendSuccess(() -> Components.literal("Temporarily set " + player.getName()
 				.getString() + "'s Flying Speed to: " + speed), true);
 
 		return Command.SINGLE_SUCCESS;

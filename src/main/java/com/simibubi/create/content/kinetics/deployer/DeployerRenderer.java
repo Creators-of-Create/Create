@@ -105,7 +105,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			transform = punching ? ItemDisplayContext.THIRD_PERSON_RIGHT_HAND : ItemDisplayContext.FIXED;
 		}
 
-		itemRenderer.renderStatic(be.heldItem, transform, light, overlay, ms, buffer, 0);
+		itemRenderer.renderStatic(be.heldItem, transform, light, overlay, ms, buffer, be.getLevel(), 0);
 		ms.popPose();
 	}
 

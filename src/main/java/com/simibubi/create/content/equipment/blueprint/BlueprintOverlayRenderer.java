@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.google.j2objc.annotations.ReflectionSupport.Level;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintCraftingInventory;
@@ -186,7 +187,7 @@ public class BlueprintOverlayRenderer {
 					recipe = mc.level.getRecipeManager()
 						.getRecipeFor(RecipeType.CRAFTING, craftingInventory, mc.level);
 				ItemStack resultFromRecipe = recipe.filter(r -> r.matches(craftingInventory, mc.level))
-					.map(r -> r.assemble(craftingInventory))
+					.map(r -> r.assemble(craftingInventory, mc.level.registryAccess()))
 					.orElse(ItemStack.EMPTY);
 
 				if (resultFromRecipe.isEmpty()) {

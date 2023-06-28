@@ -232,7 +232,7 @@ public class ValueBox extends ChasingAABBOutline {
 	private static void drawString(PoseStack ms, MultiBufferSource buffer, Component text, float x, float y,
 		int color) {
 		Minecraft.getInstance().font.drawInBatch(text, x, y, color, false, ms.last()
-			.pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
+			.pose(), buffer, Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
 	}
 
 }

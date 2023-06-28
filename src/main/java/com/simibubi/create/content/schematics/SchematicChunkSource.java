@@ -12,7 +12,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.FullChunkStatus;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -31,6 +31,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LightChunk;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.entity.LevelEntityGetter;
@@ -56,7 +57,7 @@ public class SchematicChunkSource extends ChunkSource {
 
 	@Nullable
 	@Override
-	public BlockGetter getChunkForLighting(int x, int z) {
+	public LightChunk getChunkForLighting(int x, int z) {
 		return getChunk(x, z);
 	}
 
@@ -267,8 +268,8 @@ public class SchematicChunkSource extends ChunkSource {
 			return true;
 		}
 
-		public ChunkHolder.FullChunkStatus getFullStatus() {
-			return ChunkHolder.FullChunkStatus.BORDER;
+		public FullChunkStatus getFullStatus() {
+			return FullChunkStatus.FULL;
 		}
 	}
 }

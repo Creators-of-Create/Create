@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.ponder.PonderChapter;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderScene;
@@ -994,7 +995,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	@Override
 	public boolean isEquivalentTo(NavigatableSimiScreen other) {
 		if (other instanceof PonderUI)
-			return stack.sameItem(((PonderUI) other).stack);
+			return ItemHelper.sameItem(stack, ((PonderUI) other).stack);
 		return super.isEquivalentTo(other);
 	}
 

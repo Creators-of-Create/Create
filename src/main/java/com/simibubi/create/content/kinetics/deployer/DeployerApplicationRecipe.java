@@ -14,6 +14,7 @@ import com.simibubi.create.content.processing.sequenced.IAssemblyRecipe;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +43,7 @@ public class DeployerApplicationRecipe extends ItemApplicationRecipe implements 
 					.getPath() + "_using_deployer")).require(sandpaperRecipe.getIngredients()
 						.get(0))
 						.require(AllItemTags.SANDPAPER.tag)
-						.output(sandpaperRecipe.getResultItem())
+						.output(sandpaperRecipe.getResultItem(Minecraft.getInstance().level.registryAccess()))
 						.build();
 	}
 

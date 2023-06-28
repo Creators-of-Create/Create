@@ -36,8 +36,8 @@ public class DumpRailwaysCommand {
 			.executes(ctx -> {
 				CommandSourceStack source = ctx.getSource();
 				fillReport(source.getLevel(), source.getPosition(),
-					(s, f) -> source.sendSuccess(Components.literal(s).withStyle(st -> st.withColor(f)), false),
-					(c) -> source.sendSuccess(c, false));
+					(s, f) -> source.sendSuccess(() -> Components.literal(s).withStyle(st -> st.withColor(f)), false),
+					(c) -> source.sendSuccess(() -> c, false));
 				return 1;
 			});
 	}

@@ -37,7 +37,7 @@ public interface ICustomParticleDataWithSprite<T extends ParticleOptions> extend
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public default void register(ParticleType<T> type, RegisterParticleProvidersEvent event) {
-		event.register(type, getMetaFactory());
+		event.registerSpriteSet(type, getMetaFactory());
 	}
 	
 }

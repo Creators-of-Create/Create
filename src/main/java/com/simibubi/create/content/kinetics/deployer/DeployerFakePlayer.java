@@ -138,9 +138,6 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	protected void playEquipSound(ItemStack p_217042_) {}
-
-	@Override
 	public void remove(RemovalReason p_150097_) {
 		if (blockBreakingProgress != null && !level().isClientSide)
 			level().destroyBlockProgress(getId(), blockBreakingProgress.getKey(), -1);

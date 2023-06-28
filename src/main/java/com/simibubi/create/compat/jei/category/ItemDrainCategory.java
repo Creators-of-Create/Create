@@ -95,7 +95,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 27)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addItemStack(recipe.getResultItem());
+				.addItemStack(getResultItem(recipe));
 	}
 
 	@Override

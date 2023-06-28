@@ -26,7 +26,9 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -97,6 +99,13 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 			return BASIC_SLOT;
 
 		return CHANCE_SLOT;
+	}
+
+	public static ItemStack getResultItem(Recipe<?> recipe) {
+		ClientLevel level = Minecraft.getInstance().level;
+		if (level == null)
+			return ItemStack.EMPTY;
+		return recipe.getResultItem(level.registryAccess());
 	}
 
 	public static IRecipeSlotTooltipCallback addStochasticTooltip(ProcessingOutput output) {

@@ -106,7 +106,8 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 
 					Minecraft.getInstance()
 						.getItemRenderer()
-						.renderStatic(stack, ItemDisplayContext.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer, 0);
+						.renderStatic(stack, ItemDisplayContext.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS,
+							buffer, entity.level(), 0);
 					squashedMS.popPose();
 				});
 				squashedMS.popPose();

@@ -271,12 +271,12 @@ public class TagGen {
 		}
 
 		public CreateTagAppender<T> tag(TagKey<T> tag) {
-			TagBuilder tagbuilder = provider.getOrCreateRawBuilder(tag);
+			TagBuilder tagbuilder = getOrCreateRawBuilder(tag);
 			return new CreateTagAppender<>(tagbuilder, keyExtractor, Create.ID);
 		}
 
 		public TagBuilder getOrCreateRawBuilder(TagKey<T> tag) {
-			return provider.getOrCreateRawBuilder(tag);
+			return provider.addTag(tag).getInternalBuilder();
 		}
 
 	}

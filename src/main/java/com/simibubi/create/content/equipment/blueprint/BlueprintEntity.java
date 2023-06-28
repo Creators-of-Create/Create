@@ -395,7 +395,7 @@ public class BlueprintEntity extends HangingEntity
 						recipe = level().getRecipeManager()
 							.getRecipeFor(RecipeType.CRAFTING, craftingInventory, level());
 					ItemStack result = recipe.filter(r -> r.matches(craftingInventory, level()))
-						.map(r -> r.assemble(craftingInventory))
+						.map(r -> r.assemble(craftingInventory, level().registryAccess()))
 						.orElse(ItemStack.EMPTY);
 
 					if (result.isEmpty()) {

@@ -18,7 +18,7 @@ public class ClearBufferCacheCommand {
 			.executes(ctx -> {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClearBufferCacheCommand::execute);
 				ctx.getSource()
-					.sendSuccess(Components.literal("Cleared rendering buffers."), true);
+					.sendSuccess(() -> Components.literal("Cleared rendering buffers."), true);
 				return 1;
 			});
 	}

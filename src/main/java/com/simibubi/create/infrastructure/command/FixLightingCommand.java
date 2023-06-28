@@ -20,7 +20,7 @@ public class FixLightingCommand {
 					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.fixLighting.name(), String.valueOf(true)));
 
 				ctx.getSource()
-					.sendSuccess(
+					.sendSuccess(() -> 
 						Components.literal("Forge's experimental block rendering pipeline is now enabled."), true);
 
 				return 1;

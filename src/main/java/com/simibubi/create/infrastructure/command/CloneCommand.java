@@ -46,7 +46,7 @@ public class CloneCommand {
 							BlockPosArgument.getLoadedBlockPos(ctx, "destination"), true)))))
 			.executes(ctx -> {
 				ctx.getSource()
-					.sendSuccess(Components.literal(
+					.sendSuccess(() -> Components.literal(
 						"Clones all blocks as well as super glue from the specified area to the target destination"),
 						true);
 
@@ -77,9 +77,9 @@ public class CloneCommand {
 		int gluePastes = cloneGlue(sourceArea, world, diffToTarget);
 
 		if (cloneBlocks)
-			source.sendSuccess(Components.literal("Successfully cloned " + blockPastes + " Blocks"), true);
+			source.sendSuccess(() -> Components.literal("Successfully cloned " + blockPastes + " Blocks"), true);
 
-		source.sendSuccess(Components.literal("Successfully applied glue " + gluePastes + " times"), true);
+		source.sendSuccess(() -> Components.literal("Successfully applied glue " + gluePastes + " times"), true);
 		return blockPastes + gluePastes;
 
 	}

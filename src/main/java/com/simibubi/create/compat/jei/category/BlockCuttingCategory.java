@@ -98,23 +98,23 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 			return true;
 		}
 
-		public static List<CondensedBlockCuttingRecipe> condenseRecipes(List<Recipe<?>> stoneCuttingRecipes) {
-			List<CondensedBlockCuttingRecipe> condensed = new ArrayList<>();
-			Recipes: for (Recipe<?> recipe : stoneCuttingRecipes) {
-				Ingredient i1 = recipe.getIngredients().get(0);
-				for (CondensedBlockCuttingRecipe condensedRecipe : condensed) {
-					if (ItemHelper.matchIngredients(i1, condensedRecipe.getIngredients().get(0))) {
-						condensedRecipe.addOutput(recipe.getResultItem());
-						continue Recipes;
-					}
+	}
+	
+	public static List<CondensedBlockCuttingRecipe> condenseRecipes(List<Recipe<?>> stoneCuttingRecipes) {
+		List<CondensedBlockCuttingRecipe> condensed = new ArrayList<>();
+		Recipes: for (Recipe<?> recipe : stoneCuttingRecipes) {
+			Ingredient i1 = recipe.getIngredients().get(0);
+			for (CondensedBlockCuttingRecipe condensedRecipe : condensed) {
+				if (ItemHelper.matchIngredients(i1, condensedRecipe.getIngredients().get(0))) {
+					condensedRecipe.addOutput(getResultItem(recipe));
+					continue Recipes;
 				}
-				CondensedBlockCuttingRecipe cr = new CondensedBlockCuttingRecipe(i1);
-				cr.addOutput(recipe.getResultItem());
-				condensed.add(cr);
 			}
-			return condensed;
+			CondensedBlockCuttingRecipe cr = new CondensedBlockCuttingRecipe(i1);
+			cr.addOutput(getResultItem(recipe));
+			condensed.add(cr);
 		}
-
+		return condensed;
 	}
 
 }

@@ -209,7 +209,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity {
 			}
 		}
 
-		BlockPos nextPos = worldPosition.offset(itemMovement.x, itemMovement.y, itemMovement.z);
+		BlockPos nextPos = worldPosition.offset(BlockPos.containing(itemMovement));
 		DirectBeltInputBehaviour behaviour = BlockEntityBehaviour.get(level, nextPos, DirectBeltInputBehaviour.TYPE);
 		if (behaviour != null) {
 			boolean changed = false;
@@ -343,7 +343,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity {
 			if (recipe instanceof CuttingRecipe)
 				results = ((CuttingRecipe) recipe).rollResults();
 			else if (recipe instanceof StonecutterRecipe || recipe.getType() == woodcuttingRecipeType.get())
-				results.add(recipe.getResultItem()
+				results.add(recipe.getResultItem(level.registryAccess())
 					.copy());
 
 			for (int i = 0; i < results.size(); i++) {
@@ -362,7 +362,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity {
 		Optional<CuttingRecipe> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(level, inventory.getStackInSlot(0),
 			AllRecipeTypes.CUTTING.getType(), CuttingRecipe.class);
 		if (assemblyRecipe.isPresent() && filtering.test(assemblyRecipe.get()
-			.getResultItem()))
+			.getResultItem(level.registryAccess())))
 			return ImmutableList.of(assemblyRecipe.get());
 
 		Predicate<Recipe<?>> types = RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType(),

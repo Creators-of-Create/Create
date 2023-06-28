@@ -314,11 +314,7 @@ public class SchematicHandler implements IGuiOverlay {
 
 	private boolean itemLost(Player player) {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!player.getInventory()
-				.getItem(i)
-				.sameItem(activeSchematicItem))
-				continue;
-			if (!ItemStack.tagMatches(player.getInventory()
+			if (!ItemStack.matches(player.getInventory()
 				.getItem(i), activeSchematicItem))
 				continue;
 			return false;

@@ -133,9 +133,9 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 	}
 
 	protected void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack stack) {
-		Minecraft.getInstance()
-			.getItemRenderer()
-			.renderStatic(stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, 0);
+		Minecraft mc = Minecraft.getInstance();
+		mc.getItemRenderer()
+			.renderStatic(stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, mc.level, 0);
 	}
 
 	protected float renderFluids(BasinBlockEntity basin, float partialTicks, PoseStack ms, MultiBufferSource buffer,

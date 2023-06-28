@@ -17,8 +17,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -83,7 +83,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		private final StringSerializableTrigger<T> trigger;
 
 		public Instance(StringSerializableTrigger<T> trigger, @Nullable Set<T> entries) {
-			super(trigger.getId(), EntityPredicate.Composite.ANY);
+			super(trigger.getId(), ContextAwarePredicate.ANY);
 			this.trigger = trigger;
 			this.entries = entries;
 		}

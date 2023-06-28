@@ -59,10 +59,10 @@ public class ReplaceInCommandBlocksCommand {
 			});
 		int intValue = blocks.intValue();
 		if (intValue == 0) {
-			source.sendSuccess(Components.literal("Couldn't find \"" + toReplace + "\" anywhere."), true);
+			source.sendSuccess(() -> Components.literal("Couldn't find \"" + toReplace + "\" anywhere."), true);
 			return;
 		}
-		source.sendSuccess(Components.literal("Replaced occurrences in " + intValue + " blocks."), true);
+		source.sendSuccess(() -> Components.literal("Replaced occurrences in " + intValue + " blocks."), true);
 	}
 
 }

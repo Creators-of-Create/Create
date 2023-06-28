@@ -28,7 +28,7 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 
 	private static MechanicalCraftingRecipe fromShaped(ShapedRecipe recipe, boolean acceptMirrored) {
 		return new MechanicalCraftingRecipe(recipe.getId(), recipe.getGroup(), recipe.getWidth(), recipe.getHeight(),
-			recipe.getIngredients(), recipe.getResultItem(), acceptMirrored);
+			recipe.getIngredients(), recipe.getResultItem(null), acceptMirrored);
 	}
 
 	@Override

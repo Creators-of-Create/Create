@@ -131,7 +131,8 @@ public class ContraptionRenderDispatcher {
 		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()
 			.values())
 			// Skip individual lighting updates to prevent lag with large contraptions
-			renderWorld.setBlock(info.pos(), info.state(), Block.UPDATE_SUPPRESS_LIGHT);
+			// FIXME 1.20 this '0' used to be Block.UPDATE_SUPPRESS_LIGHT, yet VirtualRenderWorld didn't actually parse the flags at all
+			renderWorld.setBlock(info.pos(), info.state(), 0);
 
 		renderWorld.runLightingEngine();
 		return renderWorld;

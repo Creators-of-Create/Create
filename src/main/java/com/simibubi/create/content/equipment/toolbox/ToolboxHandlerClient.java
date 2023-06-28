@@ -88,7 +88,7 @@ public class ToolboxHandlerClient {
 					continue;
 				if (inSlot.getItem() != result.getItem())
 					continue;
-				if (!ItemStack.tagMatches(inSlot, result))
+				if (!ItemStack.matches(inSlot, result))
 					continue;
 
 				AllPackets.getChannel().sendToServer(

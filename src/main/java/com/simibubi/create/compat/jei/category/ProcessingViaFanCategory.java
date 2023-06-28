@@ -46,7 +46,7 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 141, 48)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addItemStack(recipe.getResultItem());
+				.addItemStack(getResultItem(recipe));
 	}
 
 	@Override

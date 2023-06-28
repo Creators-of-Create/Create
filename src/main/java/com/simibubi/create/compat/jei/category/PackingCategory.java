@@ -64,7 +64,7 @@ public class PackingCategory extends BasinCategory {
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 142, 51)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addItemStack(recipe.getResultItem());
+				.addItemStack(getResultItem(recipe));
 	}
 
 	@Override

@@ -23,6 +23,14 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemHelper {
 
+	public static boolean sameItem(ItemStack stack, ItemStack otherStack) {
+		return !otherStack.isEmpty() && stack.is(otherStack.getItem());
+	}
+	
+	public static Predicate<ItemStack> sameItemPredicate(ItemStack stack) {
+		return s -> sameItem(stack, s);
+	}
+
 	public static void dropContents(Level world, BlockPos pos, IItemHandler inv) {
 		for (int slot = 0; slot < inv.getSlots(); slot++)
 			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inv.getStackInSlot(slot));

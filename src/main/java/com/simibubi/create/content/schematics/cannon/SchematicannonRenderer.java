@@ -187,7 +187,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 				ms.scale(scale, scale, scale);
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(launched.stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, 0);
+					.renderStatic(launched.stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, blockEntity.getLevel(), 0);
 			}
 
 			ms.popPose();

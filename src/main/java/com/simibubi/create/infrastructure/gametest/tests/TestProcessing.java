@@ -64,7 +64,7 @@ public class TestProcessing {
 		SequencedAssemblyRecipe recipe = (SequencedAssemblyRecipe) helper.getLevel().getRecipeManager()
 				.byKey(Create.asResource("sequenced_assembly/precision_mechanism"))
 				.orElseThrow(() -> new GameTestAssertException("Precision Mechanism recipe not found"));
-		Item result = recipe.getResultItem().getItem();
+		Item result = recipe.getResultItem(helper.getLevel().registryAccess()).getItem();
 		Item[] possibleResults = recipe.resultPool.stream()
 				.map(ProcessingOutput::getStack)
 				.map(ItemStack::getItem)
@@ -103,7 +103,7 @@ public class TestProcessing {
 		helper.succeedWhen(() -> {
 			helper.assertContainerContains(output, expected);
 			IItemHandler handler = helper.itemStorageAt(output);
-			ItemHelper.extract(handler, stack -> stack.sameItem(expected), 6, false);
+			ItemHelper.extract(handler, ItemHelper.sameItemPredicate(expected), 6, false);
 			helper.assertContainerEmpty(output);
 		});
 	}

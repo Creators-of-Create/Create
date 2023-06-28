@@ -12,8 +12,8 @@ import net.minecraft.world.item.ItemStack;
 public class BaseArmorItem extends ArmorItem {
 	protected final ResourceLocation textureLoc;
 
-	public BaseArmorItem(ArmorMaterial armorMaterial, EquipmentSlot slot, Properties properties, ResourceLocation textureLoc) {
-		super(armorMaterial, slot, properties.stacksTo(1));
+	public BaseArmorItem(ArmorMaterial armorMaterial, ArmorItem.Type type, Properties properties, ResourceLocation textureLoc) {
+		super(armorMaterial, type, properties.stacksTo(1));
 		this.textureLoc = textureLoc;
 	}
 

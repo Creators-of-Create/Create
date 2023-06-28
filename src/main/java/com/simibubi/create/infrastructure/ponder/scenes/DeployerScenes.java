@@ -22,6 +22,7 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.WalkAnimationState;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -185,7 +186,9 @@ public class DeployerScenes {
 			entity.xo = p.x;
 			entity.yo = p.y;
 			entity.zo = p.z;
-			entity.animationPosition = 0;
+			WalkAnimationState animation = entity.walkAnimation;
+			animation.update(-animation.position(), 1);
+			animation.setSpeed(1);
 			entity.yRotO = 210;
 			entity.setYRot(210);
 			entity.yHeadRotO = 210;

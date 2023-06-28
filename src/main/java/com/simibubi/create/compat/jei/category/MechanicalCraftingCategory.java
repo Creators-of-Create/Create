@@ -45,7 +45,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, CraftingRecipe recipe, IFocusGroup focuses) {
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 134, 81)
-			.addItemStack(recipe.getResultItem());
+			.addItemStack(getResultItem(recipe));
 
 		int x = getXPadding(recipe);
 		int y = getYPadding(recipe);

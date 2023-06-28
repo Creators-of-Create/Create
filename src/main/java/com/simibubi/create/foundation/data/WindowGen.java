@@ -81,7 +81,7 @@ public class WindowGen {
 			$ -> new ResourceLocation("block/" + woodName + "_planks");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
 		return windowBlock(name, () -> planksBlock, () -> AllSpriteShifts.getWoodenWindow(woodType), renderType,
-			translucent, end_texture, side_texture, planksBlock::defaultMaterialColor);
+			translucent, end_texture, side_texture, planksBlock::defaultMapColor);
 	}
 
 	public static BlockEntry<WindowBlock> windowBlock(String name, Supplier<? extends ItemLike> ingredient,

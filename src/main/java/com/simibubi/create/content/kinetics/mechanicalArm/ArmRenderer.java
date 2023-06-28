@@ -102,7 +102,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 				.mul(msLocal.last()
 					.pose());
 
-			itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, light, overlay, ms, buffer, 0);
+			itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 			ms.popPose();
 		}
 

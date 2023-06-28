@@ -71,7 +71,7 @@ public class ConfigCommand {
 
 											try {
 												ConfigHelper.setConfigValue(configPath, value);
-												ctx.getSource().sendSuccess(Components.literal("Great Success!"), false);
+												ctx.getSource().sendSuccess(() -> Components.literal("Great Success!"), false);
 												return Command.SINGLE_SUCCESS;
 											} catch (ConfigHelper.InvalidValueException e) {
 												ctx.getSource().sendFailure(Components.literal("Config could not be set the the specified value!"));

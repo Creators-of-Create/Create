@@ -28,10 +28,10 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
 		ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		Minecraft mc = Minecraft.getInstance();
+		ItemRenderer itemRenderer = mc.getItemRenderer();
 		renderer.render(model.getOriginalModel(), light);
-		LocalPlayer player = Minecraft.getInstance().player;
+		LocalPlayer player = mc.player;
 		boolean mainHand = player.getMainHandItem() == stack;
 		boolean offHand = player.getOffhandItem() == stack;
 		boolean leftHanded = player.getMainArm() == HumanoidArm.LEFT;
@@ -61,7 +61,8 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 					localMs.scale(.5f, .5f, .5f);
 					TransformStack.cast(localMs)
 						.rotateY(-34);
-					itemRenderer.renderStatic(ammo, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, localMs, buffer, 0);
+					itemRenderer.renderStatic(ammo, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, localMs,
+						buffer, mc.level, 0);
 				});
 		}
 

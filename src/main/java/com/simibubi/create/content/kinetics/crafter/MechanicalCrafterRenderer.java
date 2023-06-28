@@ -76,7 +76,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 				ms.mulPose(Axis.YP.rotationDegrees(180));
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, 0);
+					.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 				ms.popPose();
 			}
 		} else {
@@ -127,7 +127,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, 0);
+					.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 				ms.popPose();
 			});
 
@@ -156,7 +156,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 					ms.mulPose(Axis.YP.rotationDegrees(180));
 					Minecraft.getInstance()
 						.getItemRenderer()
-						.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, 0);
+						.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 					ms.popPose();
 				});
 			}

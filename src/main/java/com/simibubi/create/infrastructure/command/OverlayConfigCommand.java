@@ -26,7 +26,7 @@ public class OverlayConfigCommand {
 										new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), "")));
 
 					ctx.getSource()
-						.sendSuccess(Components.literal("reset overlay offset"), true);
+						.sendSuccess(() -> Components.literal("reset overlay offset"), true);
 
 						return 1;
 					})
@@ -40,7 +40,7 @@ public class OverlayConfigCommand {
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), "")));
 
 					ctx.getSource()
-							.sendSuccess(Components.literal("window opened"), true);
+							.sendSuccess(() -> Components.literal("window opened"), true);
 
 				return 1;
 			});

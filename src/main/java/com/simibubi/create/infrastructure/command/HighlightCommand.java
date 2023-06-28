@@ -59,7 +59,7 @@ public class HighlightCommand {
 	}
 
 	private static void sendMissMessage(CommandSourceStack source) {
-		source.sendSuccess(
+		source.sendSuccess(() -> 
 			Components.literal("Try looking at a Block that has failed to assemble a Contraption and try again."),
 			true);
 	}
@@ -94,7 +94,7 @@ public class HighlightCommand {
 		}
 
 		if (!exception.hasPosition()) {
-			source.sendSuccess(Components.literal("Can't highlight a specific position for this issue"), true);
+			source.sendSuccess(() -> Components.literal("Can't highlight a specific position for this issue"), true);
 			return Command.SINGLE_SUCCESS;
 		}
 

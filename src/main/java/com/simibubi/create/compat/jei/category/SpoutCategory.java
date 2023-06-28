@@ -13,6 +13,7 @@ import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import mezz.jei.api.constants.VanillaTypes;
@@ -72,7 +73,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 						fluidCopy.setAmount(1000);
 						fhi.fill(fluidCopy, FluidAction.EXECUTE);
 						ItemStack container = fhi.getContainer();
-						if (container.sameItem(copy))
+						if (ItemHelper.sameItem(container, copy))
 							return;
 						if (container.isEmpty())
 							return;
@@ -106,7 +107,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 51)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addItemStack(recipe.getResultItem());
+				.addItemStack(getResultItem(recipe));
 	}
 
 	@Override
