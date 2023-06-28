@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.mixin.accessor.StairBlockAccessor;
 
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.simibubi.create.foundation.data.TagGen;
@@ -328,7 +330,8 @@ public class CopperBlockSet {
 						new WeatheringCopperStairBlock(state, Blocks.AIR.defaultBlockState(), p);
 					// WeatheringCopperStairBlock does not have a constructor that takes a Supplier,
 					// so setting the field directly is the easiest solution
-					((StairBlockAccessor)block).setStateSupplier(defaultStateSupplier);
+					//((StairBlockAccessor)block).setStateSupplier(defaultStateSupplier);
+					ObfuscationReflectionHelper.setPrivateValue(StairBlock.class, block, defaultStateSupplier, "stateSupplier");
 					return block;
 				};
 			}
