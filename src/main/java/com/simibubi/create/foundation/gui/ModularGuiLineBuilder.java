@@ -40,12 +40,12 @@ public class ModularGuiLineBuilder {
 		addScrollInput(input, inputTransform, dataKey);
 		return this;
 	}
-	
+
 	public ModularGuiLineBuilder customArea(int x, int width) {
 		target.customBoxes.add(Couple.create(x, width));
 		return this;
 	}
-	
+
 	public ModularGuiLineBuilder speechBubble() {
 		target.speechBubble = true;
 		return this;
@@ -79,7 +79,7 @@ public class ModularGuiLineBuilder {
 		EditBox input = new EditBox(font, x + this.x + 5, y, width - 9, 8, Components.immutableEmpty());
 		input.setBordered(false);
 		input.setTextColor(0xffffff);
-		input.changeFocus(false);
+		input.setFocused(false);
 		input.mouseClicked(0, 0, 0);
 		TooltipArea tooltipArea = new TooltipArea(this.x + x, y - 4, width, 18);
 		inputTransform.accept(input, tooltipArea);

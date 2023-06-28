@@ -43,7 +43,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.crafting.IShapedRecipe;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
@@ -98,7 +97,7 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 		super.addBehaviours(behaviours);
 		registerAwardables(behaviours, AllAdvancements.MIXER);
 	}
-	
+
 	@Override
 	protected AABB createRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -1.5, 0);
@@ -221,15 +220,15 @@ public class MechanicalMixerBlockEntity extends BasinOperatingBlockEntity {
 
 		if (!AllConfigs.server().recipes.allowBrewingInMixer.get())
 			return matchingRecipes;
-		
+
 		Optional<BasinBlockEntity> basin = getBasin();
 		if (!basin.isPresent())
 			return matchingRecipes;
-		
+
 		BasinBlockEntity basinBlockEntity = basin.get();
 		if (basin.isEmpty())
 			return matchingRecipes;
-		
+
 		IItemHandler availableItems = basinBlockEntity
 			.getCapability(ForgeCapabilities.ITEM_HANDLER)
 			.orElse(null);

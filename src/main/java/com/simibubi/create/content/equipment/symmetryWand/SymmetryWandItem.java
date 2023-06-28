@@ -38,7 +38,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.api.distmarker.Dist;
@@ -271,10 +270,7 @@ public class SymmetryWandItem extends Item {
 
 	private static boolean isHoldingBlock(Player player, BlockState block) {
 		ItemStack itemBlock = BlockHelper.getRequiredItem(block);
-		return player.getMainHandItem()
-			.sameItem(itemBlock)
-			|| player.getOffhandItem()
-				.sameItem(itemBlock);
+		return player.isHolding(itemBlock.getItem());
 	}
 
 	public static void remove(Level world, ItemStack wand, Player player, BlockPos pos) {

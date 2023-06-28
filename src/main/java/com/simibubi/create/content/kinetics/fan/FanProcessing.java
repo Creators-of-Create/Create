@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -177,10 +178,11 @@ public class FanProcessing {
 			}
 
 			if (smeltingRecipe.isPresent()) {
-				if (!smokingRecipe.isPresent() || !ItemStack.isSame(smokingRecipe.get()
-					.getResultItem(),
+				RegistryAccess registryAccess = world.registryAccess();
+				if (smokingRecipe.isEmpty() || !ItemStack.isSameItem(smokingRecipe.get()
+					.getResultItem(registryAccess),
 					smeltingRecipe.get()
-						.getResultItem())) {
+						.getResultItem(registryAccess))) {
 					return RecipeApplier.applyRecipeOn(stack, smeltingRecipe.get());
 				}
 			}
@@ -239,7 +241,7 @@ public class FanProcessing {
 
 				if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
 					|| entity.getType() == EntityType.BLAZE) {
-					entity.hurt(DamageSource.DROWN, 2);
+					entity.hurt(entity.damageSources().drown(), 2);
 				}
 				if (entity.isOnFire()) {
 					entity.clearFire();

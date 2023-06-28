@@ -546,8 +546,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			if (simulate)
 				return true;
 			for (ItemStack itemStack : outputItems) {
-				if (itemStack.hasCraftingRemainingItem() && itemStack.getCraftingRemainingItem()
-					.sameItem(itemStack))
+				if (itemStack.hasCraftingRemainingItem() && ItemStack.isSameItem(itemStack, itemStack.getCraftingRemainingItem()))
 					continue;
 				spoutputBuffer.add(itemStack.copy());
 			}
@@ -591,8 +590,7 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	private boolean acceptItemOutputsIntoBasin(List<ItemStack> outputItems, boolean simulate, IItemHandler targetInv) {
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
-			if (itemStack.hasCraftingRemainingItem() && itemStack.getCraftingRemainingItem()
-				.sameItem(itemStack))
+			if (itemStack.hasCraftingRemainingItem() && ItemStack.isSameItem(itemStack, itemStack.getCraftingRemainingItem()))
 				continue;
 			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
 				.isEmpty())

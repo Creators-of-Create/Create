@@ -156,7 +156,7 @@ public class LinkBehaviour extends BlockEntityBehaviour implements IRedstoneLink
 		stack = stack.copy();
 		stack.setCount(1);
 		ItemStack toCompare = first ? frequencyFirst.getStack() : frequencyLast.getStack();
-		boolean changed = !ItemStack.isSame(stack, toCompare) || !ItemStack.tagMatches(stack, toCompare);
+		boolean changed = !ItemStack.isSameItemSameTags(stack, toCompare);
 
 		if (changed)
 			getHandler().removeFromNetwork(getWorld(), this);

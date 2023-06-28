@@ -709,9 +709,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
-	protected void outOfWorld() {
+	protected void onBelowWorld() {
 		ejectPassengers();
-		super.outOfWorld();
+		super.onBelowWorld();
 	}
 
 	@Override

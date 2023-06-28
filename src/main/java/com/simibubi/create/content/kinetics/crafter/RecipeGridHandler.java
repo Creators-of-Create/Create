@@ -21,6 +21,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -144,15 +145,16 @@ public class RecipeGridHandler {
 		items.calcStats();
 		CraftingContainer craftinginventory = new MechanicalCraftingInventory(items);
 		ItemStack result = null;
+		RegistryAccess registryAccess = world.registryAccess();
 		if (AllConfigs.server().recipes.allowRegularCraftingInCrafter.get())
 			result = world.getRecipeManager()
 				.getRecipeFor(RecipeType.CRAFTING, craftinginventory, world)
 				.filter(r -> isRecipeAllowed(r, craftinginventory))
-				.map(r -> r.assemble(craftinginventory))
+				.map(r -> r.assemble(craftinginventory, registryAccess))
 				.orElse(null);
 		if (result == null)
 			result = AllRecipeTypes.MECHANICAL_CRAFTING.find(craftinginventory, world)
-				.map(r -> r.assemble(craftinginventory))
+				.map(r -> r.assemble(craftinginventory, registryAccess))
 				.orElse(null);
 		return result;
 	}

@@ -23,7 +23,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class HosePulleyScenes {
@@ -357,12 +356,12 @@ public class HosePulleyScenes {
 			.pointAt(util.vector.topOf(util.grid.at(1, 3, 2)));
 
 		scene.idle(60);
-		
+
 		scene.world.modifyBlockEntity(util.grid.at(4, 1, 1), FluidTankBlockEntity.class, be -> be.getTankInventory()
 			.fill(new FluidStack(Fluids.WATER, 24000), FluidAction.EXECUTE));
-		
+
 		scene.idle(20);
-		
+
 		scene.overlay.showText(60)
 			.text("Pipe networks can limitlessly take fluids from/to such pulleys")
 			.attachKeyFrame()

@@ -222,7 +222,7 @@ public class EjectorBlockEntity extends KineticBlockEntity {
 					;
 				else if (remainder.isEmpty())
 					iterator.remove();
-				else if (!remainder.sameItem(stack))
+				else if (!ItemStack.isSameItem(remainder, stack))
 					transportedItemStack.stack = remainder;
 			}
 

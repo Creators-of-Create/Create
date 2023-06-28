@@ -47,7 +47,7 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 		List<Recipe<SandPaperInv>> matchingRecipes = getMatchingRecipes(world, stack);
 		if (!matchingRecipes.isEmpty())
 			return matchingRecipes.get(0)
-				.assemble(new SandPaperInv(stack))
+				.assemble(new SandPaperInv(stack), world.registryAccess())
 				.copy();
 		return stack;
 	}

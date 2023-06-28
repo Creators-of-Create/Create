@@ -42,7 +42,7 @@ public class WrappedWorld extends Level {
 	protected LevelEntityGetter<Entity> entityGetter = new DummyLevelEntityGetter<>();
 
 	public WrappedWorld(Level world) {
-		super((WritableLevelData) world.getLevelData(), world.dimension(), world.dimensionTypeRegistration(),
+		super((WritableLevelData) world.getLevelData(), world.dimension(), world.registryAccess(), world.dimensionTypeRegistration(),
 			world::getProfiler, world.isClientSide, world.isDebug(), 0, 0);
 		this.world = world;
 	}
