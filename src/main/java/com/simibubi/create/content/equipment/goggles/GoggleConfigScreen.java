@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.Mth;
@@ -105,10 +106,10 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int posX = this.width / 2 + offsetX;
 		int posY = this.height / 2 + offsetY;
-		renderComponentTooltip(ms, tooltip, posX, posY);
+		graphics.renderComponentTooltip(font, tooltip, posX, posY);
 
 		// UIRenderHelper.breadcrumbArrow(ms, 50, 50, 100, 50, 20, 10, 0x80aa9999, 0x10aa9999);
 		// UIRenderHelper.breadcrumbArrow(ms, 100, 80, 0, -50, 20, -10, 0x80aa9999, 0x10aa9999);
@@ -116,7 +117,7 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item)
 			.at(posX + 10, posY - 16, 450)
-			.render(ms);
+			.render(graphics);
 		// GuiGameElement.of(item).at(0, 0, 450).render(ms);
 	}
 }

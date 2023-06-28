@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.config.ui.SubMenuConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -9,6 +8,7 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
@@ -33,13 +33,13 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 	}
 
 	@Override
-	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+	public void render(GuiGraphics graphics, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+		super.render(graphics, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
 		button.setX(x + width - 108);
 		button.setY(y + 10);
 		button.setHeight(height - 20);
-		button.render(ms, mouseX, mouseY, partialTicks);
+		button.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

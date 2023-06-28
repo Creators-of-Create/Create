@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.gui.element.TextStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -176,11 +177,12 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		textBackground.render(ms);
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		textBackground.render(graphics);
 		int offset = font.lineHeight + 1;
 		int lineY = y - offset;
 
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(0, 0, 200);
 
@@ -188,21 +190,21 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 			lineY += offset;
 			if (line == null)
 				continue;
-			font.draw(ms, line.getString(), x, lineY, 0xeaeaea);
+			graphics.drawString(font, line.getString(), x, lineY, 0xeaeaea, false);
 		}
 
 		ms.popPose();
 	}
 
 	@Override
-	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		endFrame();
 
-		source.render(ms, 0, 0, 10); // zero mouse coords to prevent further tooltips
+		source.render(graphics, 0, 0, 10); // zero mouse coords to prevent further tooltips
 
 		prepareFrame();
 
-		this.fillGradient(ms, 0, 0, this.width, this.height, 0x70101010, 0x80101010);
+		graphics.fillGradient(0, 0, this.width, this.height, 0x70101010, 0x80101010);
 	}
 
 

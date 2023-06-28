@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.NbtUtils;
@@ -80,7 +81,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			widget.setMaxLength(6);
 			widget.setBordered(false);
 			widget.setTextColor(0xFFFFFF);
-			widget.changeFocus(false);
+			widget.setFocused(false);
 			widget.mouseClicked(0, 0, 0);
 			widget.setFilter(s -> {
 				if (s.isEmpty() || s.equals("-"))
@@ -151,18 +152,18 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
+		background.render(graphics, x, y);
 		String title = handler.getCurrentSchematicName();
-		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		graphics.drawCenteredString(font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
 				.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 40, -200)
 				.scale(3)
-				.render(ms);
+				.render(graphics);
 	}
 
 	@Override

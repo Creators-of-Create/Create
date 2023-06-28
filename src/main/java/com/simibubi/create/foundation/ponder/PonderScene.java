@@ -44,6 +44,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -258,9 +259,10 @@ public class PonderScene {
 		ForcedDiffuseState.popCalculator();
 	}
 
-	public void renderOverlay(PonderUI screen, PoseStack ms, float partialTicks) {
+	public void renderOverlay(PonderUI screen, GuiGraphics graphics, float partialTicks) {
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
-		forEachVisible(PonderOverlayElement.class, e -> e.render(this, screen, ms, partialTicks));
+		forEachVisible(PonderOverlayElement.class, e -> e.render(this, screen, graphics, partialTicks));
 		ms.popPose();
 	}
 

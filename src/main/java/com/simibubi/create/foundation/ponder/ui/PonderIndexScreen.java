@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.ponder.PonderChapter;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.util.Mth;
@@ -152,16 +153,18 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = (int) (width * chapterXmult);
 		int y = (int) (height * chapterYmult);
 
+		PoseStack ms = graphics.pose();
+		
 		if (!chapters.isEmpty()) {
 			ms.pushPose();
 			ms.translate(x, y, 0);
 
-			UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220);
-			font.draw(ms, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, Theme.i(Theme.Key.TEXT));
+			UIRenderHelper.streak(graphics, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220);
+			graphics.drawString(font, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, Theme.i(Theme.Key.TEXT), false);
 
 			ms.popPose();
 		}
@@ -172,21 +175,22 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		ms.pushPose();
 		ms.translate(x, y, 0);
 
-		UIRenderHelper.streak(ms, 0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 220);
-		font.draw(ms, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, Theme.i(Theme.Key.TEXT));
+		UIRenderHelper.streak(graphics, 0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 220);
+		graphics.drawString(font, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, Theme.i(Theme.Key.TEXT), false);
 
 		ms.popPose();
 	}
 
 	@Override
-	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (hoveredItem.isEmpty())
 			return;
 
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(0, 0, 200);
 
-		renderTooltip(ms, hoveredItem, mouseX, mouseY);
+		graphics.renderTooltip(font, hoveredItem, mouseX, mouseY);
 
 		ms.popPose();
 	}

@@ -228,7 +228,7 @@ public class BuilderTransformers {
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> ladder(String name,
 		Supplier<DataIngredient> ingredient, MapColor color) {
 		return b -> b.initialProperties(() -> Blocks.LADDER)
-			.properties(p -> p.color(color))
+			.properties(p -> p.mapColor(color))
 			.addLayer(() -> RenderType::cutout)
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
 				.withExistingParent(c.getName(), p.modLoc("block/ladder"))
@@ -249,7 +249,7 @@ public class BuilderTransformers {
 		CTSpriteShiftEntry scaffoldInsideShift, CTSpriteShiftEntry casingShift) {
 		return b -> b.initialProperties(() -> Blocks.SCAFFOLDING)
 			.properties(p -> p.sound(SoundType.COPPER)
-				.color(color))
+				.mapColor(color))
 			.addLayer(() -> RenderType::cutout)
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(s -> {

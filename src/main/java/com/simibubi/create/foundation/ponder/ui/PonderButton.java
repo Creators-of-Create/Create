@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
@@ -74,8 +75,8 @@ public class PonderButton extends BoxWidget {
 	}
 
 	@Override
-	protected void beforeRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.beforeRender(ms, mouseX, mouseY, partialTicks);
+	protected void beforeRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.beforeRender(graphics, mouseX, mouseY, partialTicks);
 
 		float flashValue = flash.getValue(partialTicks);
 		if (flashValue > .1f) {
@@ -89,17 +90,21 @@ public class PonderButton extends BoxWidget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderButton(ms, mouseX, mouseY, partialTicks);
+	public void renderButton(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(graphics, mouseX, mouseY, partialTicks);
 		float fadeValue = fade.getValue();
 
 		if (fadeValue < .1f)
 			return;
 
 		if (shortcut != null) {
+			PoseStack ms = graphics.pose();
 			ms.pushPose();
 			ms.translate(0, 0, z + 10);
-			drawCenteredString(ms, Minecraft.getInstance().font, shortcut.getTranslatedKeyMessage(), getX() + width / 2 + 8, getY() + height - 6, Theme.c(Theme.Key.TEXT_DARKER).scaleAlpha(fadeValue).getRGB());
+			graphics.drawCenteredString(Minecraft.getInstance().font, shortcut.getTranslatedKeyMessage(),
+				getX() + width / 2 + 8, getY() + height - 6, Theme.c(Theme.Key.TEXT_DARKER)
+					.scaleAlpha(fadeValue)
+					.getRGB());
 			ms.popPose();
 		}
 	}

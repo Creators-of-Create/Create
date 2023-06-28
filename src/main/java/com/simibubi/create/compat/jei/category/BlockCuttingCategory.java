@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -16,6 +15,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -54,10 +54,10 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	}
 
 	@Override
-	public void draw(CondensedBlockCuttingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 31, 6);
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 33 - 17, 37 + 13);
-		saw.draw(matrixStack, 33, 37);
+	public void draw(CondensedBlockCuttingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 31, 6);
+		AllGuiTextures.JEI_SHADOW.render(graphics, 33 - 17, 37 + 13);
+		saw.draw(graphics, 33, 37);
 	}
 
 	public static class CondensedBlockCuttingRecipe extends StonecutterRecipe {

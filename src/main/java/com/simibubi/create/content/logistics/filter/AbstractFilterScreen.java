@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
@@ -20,6 +19,7 @@ import com.simibubi.create.foundation.gui.widget.Indicator.State;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -65,22 +65,22 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterMenu> extends
 	}
 
 	@Override
-	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
-		renderPlayerInventory(ms, invX, invY);
+		renderPlayerInventory(graphics, invX, invY);
 
 		int x = leftPos;
 		int y = topPos;
 
-		background.render(ms, x, y, this);
-		font.draw(ms, title, x + (background.width - 8) / 2 - font.width(title) / 2, y + 4,
-			AllItems.FILTER.isIn(menu.contentHolder) ? 0x303030 : 0x592424);
+		background.render(graphics, x, y);
+		graphics.drawString(font, title, x + (background.width - 8) / 2 - font.width(title) / 2, y + 4,
+			AllItems.FILTER.isIn(menu.contentHolder) ? 0x303030 : 0x592424, false);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.width + 8, y + background.height - 52, -200)
 			.scale(4)
-			.render(ms);
+			.render(graphics);
 	}
 
 	@Override

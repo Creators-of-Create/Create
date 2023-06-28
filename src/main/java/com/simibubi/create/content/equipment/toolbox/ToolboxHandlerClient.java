@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -154,7 +155,7 @@ public class ToolboxHandlerClient {
 			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_BOX, null));
 	}
 
-	public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
 			return;
@@ -174,6 +175,7 @@ public class ToolboxHandlerClient {
 		if (compound.isEmpty())
 			return;
 
+		PoseStack poseStack = graphics.pose();
 		poseStack.pushPose();
 		for (int slot = 0; slot < 9; slot++) {
 			String key = String.valueOf(slot);
@@ -187,7 +189,7 @@ public class ToolboxHandlerClient {
 			AllGuiTextures texture = ToolboxHandler.distance(player.position(), pos) < max * max
 				? selected ? TOOLBELT_SELECTED_ON : TOOLBELT_HOTBAR_ON
 				: selected ? TOOLBELT_SELECTED_OFF : TOOLBELT_HOTBAR_OFF;
-			texture.render(poseStack, x + 20 * slot - offset, y + offset);
+			texture.render(graphics, x + 20 * slot - offset, y + offset);
 		}
 		poseStack.popPose();
 	}

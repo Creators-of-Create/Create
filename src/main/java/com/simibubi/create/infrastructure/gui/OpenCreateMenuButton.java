@@ -6,13 +6,14 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -35,10 +36,10 @@ public class OpenCreateMenuButton extends Button {
 	}
 
 	@Override
-	public void renderBg(PoseStack mstack, Minecraft mc, int mouseX, int mouseY) {
-		Minecraft.getInstance().getItemRenderer().renderGuiItem(ICON, getX() + 2, getY() + 2);
+	public void renderString(GuiGraphics graphics, Font pFont, int pColor) {
+		graphics.renderItem(ICON, getX() + 2, getY() + 2);
 	}
-
+	
 	public static void click(Button b) {
 		ScreenOpener.open(new CreateMainMenuScreen(Minecraft.getInstance().screen));
 	}

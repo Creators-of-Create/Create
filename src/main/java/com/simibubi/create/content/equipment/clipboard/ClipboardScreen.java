@@ -15,7 +15,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllBlocks;
@@ -273,22 +272,22 @@ public class ClipboardScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop - 8;
 
-		AllGuiTextures.CLIPBOARD.render(ms, x, y);
-		font.draw(ms, Components.translatable("book.pageIndicator", currentPage + 1, getNumPages()), x + 150, y + 9,
-			0x43ffffff);
+		AllGuiTextures.CLIPBOARD.render(graphics, x, y);
+		graphics.drawString(font, Components.translatable("book.pageIndicator", currentPage + 1, getNumPages()), x + 150, y + 9,
+			0x43ffffff, false);
 
 		for (int i = 0; i < currentEntries.size(); i++) {
 			ClipboardEntry clipboardEntry = currentEntries.get(i);
 			boolean checked = clipboardEntry.checked;
 			int iconOffset = clipboardEntry.icon.isEmpty() ? 0 : 16;
 
-			font.draw(ms, "\u25A1", x + 45, y + 51, checked ? 0x668D7F6B : 0xff8D7F6B);
+			graphics.drawString(font, "\u25A1", x + 45, y + 51, checked ? 0x668D7F6B : 0xff8D7F6B, false);
 			if (checked)
-				font.draw(ms, "\u2714", x + 45, y + 50, 0x31B25D);
+				graphics.drawString(font, "\u2714", x + 45, y + 50, 0x31B25D, false);
 
 			List<FormattedCharSequence> split = font.split(clipboardEntry.text, 150 - iconOffset);
 			if (split.isEmpty()) {
@@ -297,11 +296,11 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			}
 
 			if (!clipboardEntry.icon.isEmpty())
-				itemRenderer.renderGuiItem(clipboardEntry.icon, x + 54, y + 50);
+				graphics.renderItem(clipboardEntry.icon, x + 54, y + 50);
 
 			for (FormattedCharSequence sequence : split) {
 				if (i != editingIndex)
-					font.draw(ms, sequence, x + 58 + iconOffset, y + 50, checked ? 0x31B25D : 0x311A00);
+					graphics.drawString(font, sequence, x + 58 + iconOffset, y + 50, checked ? 0x31B25D : 0x311A00, false);
 				y += 9;
 			}
 			y += 3;
@@ -316,10 +315,10 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		DisplayCache cache = getDisplayCache();
 
 		for (LineInfo line : cache.lines)
-			font.draw(ms, line.asComponent, line.x, line.y, checked ? 0x31B25D : 0x311A00);
+			graphics.drawString(font, line.asComponent, line.x, line.y, checked ? 0x31B25D : 0x311A00, false);
 
 		renderHighlight(cache.selection);
-		renderCursor(ms, cache.cursor, cache.cursorAtEnd);
+		renderCursor(graphics, cache.cursor, cache.cursorAtEnd);
 	}
 
 	@Override
@@ -519,15 +518,14 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		editContext.setCursorPos(j, Screen.hasShiftDown());
 	}
 
-	private void renderCursor(PoseStack pPoseStack, Pos2i pCursorPos, boolean pIsEndOfText) {
+	private void renderCursor(GuiGraphics graphics, Pos2i pCursorPos, boolean pIsEndOfText) {
 		if (frameTick / 6 % 2 != 0)
 			return;
 		pCursorPos = convertLocalToScreen(pCursorPos);
 		if (!pIsEndOfText) {
-			GuiGraphics.fill(pPoseStack, pCursorPos.x, pCursorPos.y - 1, pCursorPos.x + 1, pCursorPos.y + 9,
-				-16777216);
+			graphics.fill(pCursorPos.x, pCursorPos.y - 1, pCursorPos.x + 1, pCursorPos.y + 9, -16777216);
 		} else {
-			font.draw(pPoseStack, "_", (float) pCursorPos.x, (float) pCursorPos.y, 0);
+			graphics.drawString(font, "_", (float) pCursorPos.x, (float) pCursorPos.y, 0, false);
 		}
 	}
 
@@ -536,7 +534,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		BufferBuilder bufferbuilder = tesselator.getBuilder();
 		RenderSystem.setShader(GameRenderer::getPositionShader);
 		RenderSystem.setShaderColor(0.0F, 0.0F, 255.0F, 255.0F);
-		RenderSystem.disableTexture();
+//		RenderSystem.disableTexture();
 		RenderSystem.enableColorLogicOp();
 		RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
@@ -558,7 +556,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 
 		tesselator.end();
 		RenderSystem.disableColorLogicOp();
-		RenderSystem.enableTexture();
+//		RenderSystem.enableTexture();
 	}
 
 	private Pos2i convertScreenToLocal(Pos2i pScreenPos) {

@@ -6,7 +6,6 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigTextField;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
@@ -15,6 +14,7 @@ import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -146,26 +146,26 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	}
 
 	@Override
-	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+	public void render(GuiGraphics graphics, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+		super.render(graphics, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
 		textField.setX(x + width - 82 - resetWidth);
 		textField.setY(y + 8);
 		textField.setWidth(Math.min(width - getLabelWidth(width) - resetWidth - minOffset - maxOffset, 40));
 		textField.setHeight(20);
-		textField.render(ms, mouseX, mouseY, partialTicks);
+		textField.render(graphics, mouseX, mouseY, partialTicks);
 
 		if (minText != null)
 			minText
 					.at(textField.getX() - minOffset, textField.getY(), 0)
 					.withBounds(minOffset, textField.getHeight())
-					.render(ms);
+					.render(graphics);
 
 		if (maxText != null)
 			maxText
 					.at(textField.getX() + textField.getWidth(), textField.getY(), 0)
 					.withBounds(maxOffset, textField.getHeight())
-					.render(ms);
+					.render(graphics);
 	}
 
 	public static class IntegerEntry extends NumberEntry<Integer> {

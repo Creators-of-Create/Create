@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -67,14 +68,14 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (firstRenderTime == 0L)
 			this.firstRenderTime = Util.getMillis();
-		super.render(ms, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		float f = (float) (Util.getMillis() - this.firstRenderTime) / 1000.0F;
 		float alpha = Mth.clamp(f, 0.0F, 1.0F);
 		float elapsedPartials = minecraft.getDeltaFrameTime();
@@ -84,15 +85,16 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				vanillaPanorama.render(elapsedPartials, 1);
 			PANORAMA.render(elapsedPartials, alpha);
 
-			RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY_TEXTURES);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			blit(ms, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
+			graphics.blit(PANORAMA_OVERLAY_TEXTURES, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 		}
 
 		RenderSystem.enableDepthTest();
 
+		PoseStack ms = graphics.pose();
+		
 		for (int side : Iterate.positiveAndNegative) {
 			ms.pushPose();
 			ms.translate(width / 2, 60, 200);
@@ -102,11 +104,11 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				.rotateX(45);
 			GuiGameElement.of(AllBlocks.LARGE_COGWHEEL.getDefaultState())
 				.rotateBlock(0, Util.getMillis() / 32f * side, 0)
-				.render(ms);
+				.render(graphics);
 			ms.translate(-1, 0, -1);
 			GuiGameElement.of(AllBlocks.COGWHEEL.getDefaultState())
 				.rotateBlock(0, Util.getMillis() / -16f * side + 22.5f, 0)
-				.render(ms);
+				.render(graphics);
 			ms.popPose();
 		}
 
@@ -114,18 +116,18 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		ms.translate(width / 2 - 32, 32, -10);
 		ms.pushPose();
 		ms.scale(0.25f, 0.25f, 0.25f);
-		AllGuiTextures.LOGO.render(ms, 0, 0, this);
+		AllGuiTextures.LOGO.render(graphics, 0, 0);
 		ms.popPose();
 		new BoxElement().withBackground(0x88_000000)
 			.flatBorder(new Color(0x01_000000))
 			.at(-32, 56, 100)
 			.withBounds(128, 11)
-			.render(ms);
+			.render(graphics);
 		ms.popPose();
 
 		ms.pushPose();
 		ms.translate(0, 0, 200);
-		drawCenteredString(ms, font, Components.literal(Create.NAME).withStyle(ChatFormatting.BOLD)
+		graphics.drawCenteredString(font, Components.literal(Create.NAME).withStyle(ChatFormatting.BOLD)
 			.append(
 				Components.literal(" v" + Create.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
 			width / 2, 89, 0xFF_E4BB67);
@@ -178,17 +180,18 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
-		renderables.forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
+	protected void renderWindowForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWindowForeground(graphics, mouseX, mouseY, partialTicks);
+		renderables.forEach(w -> w.render(graphics, mouseX, mouseY, partialTicks));
 
 		if (parent instanceof TitleScreen) {
 			if (mouseX < gettingStarted.getX() || mouseX > gettingStarted.getX() + 98)
 				return;
 			if (mouseY < gettingStarted.getY() || mouseY > gettingStarted.getY() + 20)
 				return;
-			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), Palette.ALL_GRAY),
-					mouseX, mouseY);
+			graphics.renderComponentTooltip(font,
+				TooltipHelper.cutTextComponent(Lang.translateDirect("menu.only_ingame"), Palette.ALL_GRAY), mouseX,
+				mouseY);
 		}
 	}
 
@@ -224,11 +227,12 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		}
 
 		@Override
-		protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
+		protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pt) {
+			PoseStack pPoseStack = graphics.pose();
 			pPoseStack.pushPose();
 			pPoseStack.translate(getX() + width / 2 - (icon.width * scale) / 2, getY() + height / 2 - (icon.height * scale) / 2, 0);
 			pPoseStack.scale(scale, scale, 1);
-			icon.render(pPoseStack, 0, 0);
+			icon.render(graphics, 0, 0);
 			pPoseStack.popPose();
 		}
 	}

@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -71,7 +72,7 @@ public class StationScreen extends AbstractStationScreen {
 		nameBox.setMaxLength(25);
 		nameBox.setTextColor(0x592424);
 		nameBox.setValue(station.name);
-		nameBox.changeFocus(false);
+		nameBox.setFocused(false);
 		nameBox.mouseClicked(0, 0, 0);
 		nameBox.setResponder(onTextChanged);
 		nameBox.setX(nameBoxX(nameBox.getValue(), nameBox));
@@ -104,7 +105,7 @@ public class StationScreen extends AbstractStationScreen {
 		trainNameBox.setBordered(false);
 		trainNameBox.setMaxLength(35);
 		trainNameBox.setTextColor(0xC6C6C6);
-		trainNameBox.changeFocus(false);
+		trainNameBox.setFocused(false);
 		trainNameBox.mouseClicked(0, 0, 0);
 		trainNameBox.setResponder(onTextChanged);
 		trainNameBox.active = false;
@@ -240,27 +241,28 @@ public class StationScreen extends AbstractStationScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderWindow(ms, mouseX, mouseY, partialTicks);
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWindow(graphics, mouseX, mouseY, partialTicks);
 		int x = guiLeft;
 		int y = guiTop;
 
 		String text = nameBox.getValue();
 
 		if (!nameBox.isFocused())
-			AllGuiTextures.STATION_EDIT_NAME.render(ms, nameBoxX(text, nameBox) + font.width(text) + 5, y + 1);
+			AllGuiTextures.STATION_EDIT_NAME.render(graphics, nameBoxX(text, nameBox) + font.width(text) + 5, y + 1);
 
-		itemRenderer.renderGuiItem(AllBlocks.TRAIN_DOOR.asStack(), x + 14, y + 103);
+		graphics.renderItem(AllBlocks.TRAIN_DOOR.asStack(), x + 14, y + 103);
 		
 		Train train = displayedTrain.get();
 		if (train == null) {
 			MutableComponent header = Lang.translateDirect("station.idle");
-			font.draw(ms, header, x + 97 - font.width(header) / 2, y + 47, 0x7A7A7A);
+			graphics.drawString(font, header, x + 97 - font.width(header) / 2, y + 47, 0x7A7A7A, false);
 			return;
 		}
 
 		float position = trainPosition.getValue(partialTicks);
 
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		RenderSystem.enableBlend();
 		ms.translate(position, 0, 0);
@@ -272,32 +274,32 @@ public class StationScreen extends AbstractStationScreen {
 			RenderSystem.setShaderColor(1, 1, 1, Math.min(1f,
 				Math.min((position + offset - 10) / 30f, (background.width - 40 - position - offset) / 30f)));
 			Carriage carriage = carriages.get(blockEntity.trainBackwards ? carriages.size() - i - 1 : i);
-			offset += icon.render(carriage.bogeySpacing, ms, x + offset, y + 20) + 1;
+			offset += icon.render(carriage.bogeySpacing, graphics, x + offset, y + 20) + 1;
 		}
 
 		RenderSystem.setShaderColor(1, 1, 1,
 			Math.min(1f, Math.min((position + offset - 10) / 30f, (background.width - 40 - position - offset) / 30f)));
-		offset += icon.render(TrainIconType.ENGINE, ms, x + offset, y + 20);
+		offset += icon.render(TrainIconType.ENGINE, graphics, x + offset, y + 20);
 		RenderSystem.disableBlend();
 		ms.popPose();
 
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 
-		AllGuiTextures.STATION_TEXTBOX_TOP.render(ms, x + 21, y + 42);
-		UIRenderHelper.drawStretched(ms, x + 21, y + 60, 150, 26, 0, AllGuiTextures.STATION_TEXTBOX_MIDDLE);
-		AllGuiTextures.STATION_TEXTBOX_BOTTOM.render(ms, x + 21, y + 86);
+		AllGuiTextures.STATION_TEXTBOX_TOP.render(graphics, x + 21, y + 42);
+		UIRenderHelper.drawStretched(graphics, x + 21, y + 60, 150, 26, 0, AllGuiTextures.STATION_TEXTBOX_MIDDLE);
+		AllGuiTextures.STATION_TEXTBOX_BOTTOM.render(graphics, x + 21, y + 86);
 
 		ms.pushPose();
 		ms.translate(Mth.clamp(position + offset - 13, 25, 159), 0, 0);
-		AllGuiTextures.STATION_TEXTBOX_SPEECH.render(ms, x, y + 38);
+		AllGuiTextures.STATION_TEXTBOX_SPEECH.render(graphics, x, y + 38);
 		ms.popPose();
 
 		text = trainNameBox.getValue();
 		if (!trainNameBox.isFocused()) {
 			int buttonX = nameBoxX(text, trainNameBox) + font.width(text) + 5;
-			AllGuiTextures.STATION_EDIT_TRAIN_NAME.render(ms, Math.min(buttonX, guiLeft + 156), y + 44);
+			AllGuiTextures.STATION_EDIT_TRAIN_NAME.render(graphics, Math.min(buttonX, guiLeft + 156), y + 44);
 			if (font.width(text) > trainNameBox.getWidth())
-				font.drawShadow(ms, "...", guiLeft + 26, guiTop + 47, 0xa6a6a6);
+				graphics.drawString(font, "...", guiLeft + 26, guiTop + 47, 0xa6a6a6);
 		}
 	}
 
@@ -305,14 +307,14 @@ public class StationScreen extends AbstractStationScreen {
 	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
 		if (!nameBox.isFocused() && pMouseY > guiTop && pMouseY < guiTop + 14 && pMouseX > guiLeft
 			&& pMouseX < guiLeft + background.width) {
-			nameBox.setFocus(true);
+			nameBox.setFocused(true);
 			nameBox.setHighlightPos(0);
 			setFocused(nameBox);
 			return true;
 		}
 		if (trainNameBox.active && !trainNameBox.isFocused() && pMouseY > guiTop + 45 && pMouseY < guiTop + 58
 			&& pMouseX > guiLeft + 25 && pMouseX < guiLeft + 168) {
-			trainNameBox.setFocus(true);
+			trainNameBox.setFocused(true);
 			trainNameBox.setHighlightPos(0);
 			setFocused(trainNameBox);
 			return true;
@@ -326,13 +328,13 @@ public class StationScreen extends AbstractStationScreen {
 			&& (pKeyCode == InputConstants.KEY_RETURN || pKeyCode == InputConstants.KEY_NUMPADENTER);
 
 		if (hitEnter && nameBox.isFocused()) {
-			nameBox.setFocus(false);
+			nameBox.setFocused(false);
 			syncStationName();
 			return true;
 		}
 
 		if (hitEnter && trainNameBox.isFocused()) {
-			trainNameBox.setFocus(false);
+			trainNameBox.setFocused(false);
 			syncTrainName();
 			return true;
 		}

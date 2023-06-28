@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -100,41 +101,42 @@ public class ThresholdSwitchScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
+		background.render(graphics, x, y);
 
-		AllGuiTextures.STOCKSWITCH_POWERED_LANE.render(ms, x + 37, y + (blockEntity.isInverted() ? 20 : 42), this);
-		AllGuiTextures.STOCKSWITCH_UNPOWERED_LANE.render(ms, x + 37, y + (blockEntity.isInverted() ? 42 : 20), this);
-		font.draw(ms, title, x + (background.width - 8) / 2 - font.width(title) / 2, y + 4, 0x592424);
+		AllGuiTextures.STOCKSWITCH_POWERED_LANE.render(graphics, x + 37, y + (blockEntity.isInverted() ? 20 : 42));
+		AllGuiTextures.STOCKSWITCH_UNPOWERED_LANE.render(graphics, x + 37, y + (blockEntity.isInverted() ? 42 : 20));
+		graphics.drawString(font, title, x + (background.width - 8) / 2 - font.width(title) / 2, y + 4, 0x592424, false);
 
 		AllGuiTextures sprite = AllGuiTextures.STOCKSWITCH_INTERVAL;
 		float lowerBound = offBelow.getState();
 		float upperBound = onAbove.getState();
 
 		sprite.bind();
-		blit(ms, (int) (x + upperBound) + 37, y + 20, (int) (sprite.startX + upperBound), sprite.startY,
+		graphics.blit(sprite.location, (int) (x + upperBound) + 37, y + 20, (int) (sprite.startX + upperBound), sprite.startY,
 			(int) (sprite.width - upperBound), sprite.height);
-		blit(ms, x + 37, y + 42, sprite.startX, sprite.startY, (int) (lowerBound), sprite.height);
+		graphics.blit(sprite.location, x + 37, y + 42, sprite.startX, sprite.startY, (int) (lowerBound), sprite.height);
 
-		AllGuiTextures.STOCKSWITCH_ARROW_UP.render(ms, (int) (x + lowerBound + 36) - 2, y + 37, this);
-		AllGuiTextures.STOCKSWITCH_ARROW_DOWN.render(ms, (int) (x + upperBound + 36) - 3, y + 19, this);
+		AllGuiTextures.STOCKSWITCH_ARROW_UP.render(graphics, (int) (x + lowerBound + 36) - 2, y + 37);
+		AllGuiTextures.STOCKSWITCH_ARROW_DOWN.render(graphics, (int) (x + upperBound + 36) - 3, y + 19);
 
 		if (blockEntity.currentLevel != -1) {
 			AllGuiTextures cursor = AllGuiTextures.STOCKSWITCH_CURSOR;
+			PoseStack ms = graphics.pose();
 			ms.pushPose();
 			ms.translate(Math.min(99, this.cursor.getValue(partialTicks) * sprite.width),
 				cursorLane.getValue(partialTicks) * 22, 0);
-			cursor.render(ms, x + 34, y + 21, this);
+			cursor.render(graphics, x + 34, y + 21);
 			ms.popPose();
 		}
 
 		GuiGameElement.of(renderedItem).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 56, -200)
 			.scale(5)
-			.render(ms);
+			.render(graphics);
 	}
 
 	@Override

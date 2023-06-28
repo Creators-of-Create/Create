@@ -82,18 +82,18 @@ public class PonderTag implements ScreenElement {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void render(PoseStack ms, int x, int y) {
+	public void render(GuiGraphics graphics, int x, int y) {
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(x, y, 0);
 		if (icon != null) {
-			RenderSystem.setShaderTexture(0, icon);
 			ms.scale(0.25f, 0.25f, 1);
-			GuiGraphics.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
+			graphics.blit(icon, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
 			ms.translate(-2, -2, 0);
 			ms.scale(1.25f, 1.25f, 1.25f);
 			GuiGameElement.of(itemIcon)
-				.render(ms);
+				.render(graphics);
 		}
 		ms.popPose();
 	}

@@ -2,9 +2,6 @@ package com.simibubi.create.foundation.gui.widget;
 
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.Theme.Key;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
@@ -13,6 +10,8 @@ import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
+import net.minecraft.client.gui.GuiGraphics;
 
 public class BoxWidget extends ElementWidget {
 
@@ -99,8 +98,8 @@ public class BoxWidget extends ElementWidget {
 	}
 
 	@Override
-	protected void beforeRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.beforeRender(ms, mouseX, mouseY, partialTicks);
+	protected void beforeRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.beforeRender(graphics, mouseX, mouseY, partialTicks);
 
 		if (isHovered != wasHovered) {
 			startGradientAnimation(
@@ -122,7 +121,7 @@ public class BoxWidget extends ElementWidget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		float fadeValue = fade.getValue(partialTicks);
 		if (fadeValue < .1f)
 			return;
@@ -132,9 +131,9 @@ public class BoxWidget extends ElementWidget {
 				.gradientBorder(gradientColor1, gradientColor2)
 				.at(getX(), getY(), z)
 				.withBounds(width, height)
-				.render(ms);
+				.render(graphics);
 
-		super.renderButton(ms, mouseX, mouseY, partialTicks);
+		super.renderButton(graphics, mouseX, mouseY, partialTicks);
 
 		wasHovered = isHovered;
 	}

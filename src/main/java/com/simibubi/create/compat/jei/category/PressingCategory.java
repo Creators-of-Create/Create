@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
@@ -14,6 +13,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.minecraft.client.gui.GuiGraphics;
 
 @ParametersAreNonnullByDefault
 public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
@@ -43,11 +43,11 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 	}
 
 	@Override
-	public void draw(PressingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack,  double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 61, 41);
-		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52, 54);
+	public void draw(PressingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SHADOW.render(graphics, 61, 41);
+		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 54);
 
-		press.draw(matrixStack, getBackground().getWidth() / 2 - 17, 22);
+		press.draw(graphics, getBackground().getWidth() / 2 - 17, 22);
 	}
 
 }

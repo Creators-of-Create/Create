@@ -7,6 +7,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
@@ -22,7 +23,8 @@ public class AnimatedItemDrain extends AnimatedKinetics {
 	}
 
 	@Override
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 100);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
@@ -31,12 +33,12 @@ public class AnimatedItemDrain extends AnimatedKinetics {
 
 		blockElement(AllBlocks.ITEM_DRAIN.getDefaultState())
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 
 		BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance()
 			.getBuilder());
 		PoseStack ms = new PoseStack();
-		UIRenderHelper.flipForGuiRender(ms);
+		UIRenderHelper.flipForGuiRender(matrixStack);
 		ms.scale(scale, scale, scale);
 		float from = 2/16f;
 		float to = 1f - from;

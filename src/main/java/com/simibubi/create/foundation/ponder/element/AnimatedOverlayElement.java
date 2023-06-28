@@ -1,9 +1,10 @@
 package com.simibubi.create.foundation.ponder.element;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
+import net.minecraft.client.gui.GuiGraphics;
 
 public abstract class AnimatedOverlayElement extends PonderOverlayElement {
 
@@ -19,11 +20,11 @@ public abstract class AnimatedOverlayElement extends PonderOverlayElement {
 	}
 	
 	@Override
-	public final void render(PonderScene scene, PonderUI screen, PoseStack ms, float partialTicks) {
+	public final void render(PonderScene scene, PonderUI screen, GuiGraphics graphics, float partialTicks) {
 		float currentFade = fade.getValue(partialTicks);
-		render(scene, screen, ms, partialTicks, currentFade);
+		render(scene, screen, graphics, partialTicks, currentFade);
 	}
 
-	protected abstract void render(PonderScene scene, PonderUI screen, PoseStack ms, float partialTicks, float fade);
+	protected abstract void render(PonderScene scene, PonderUI screen, GuiGraphics graphics, float partialTicks, float fade);
 
 }

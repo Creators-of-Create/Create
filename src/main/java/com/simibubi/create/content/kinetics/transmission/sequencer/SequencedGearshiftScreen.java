@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -140,55 +141,55 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
+		background.render(graphics, x, y);
 
 		for (int row = 0; row < instructions.capacity(); row++) {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 			int yOffset = toDraw.height * row;
 
-			toDraw.render(ms, x, y + 16 + yOffset, this);
+			toDraw.render(graphics, x, y + 16 + yOffset);
 		}
 
 		for (int row = 0; row < instructions.capacity(); row++) {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 			int yOffset = toDraw.height * row;
 			if (row >= instructions.size()) {
-				toDraw.render(ms, x, y + 16 + yOffset, this);
+				toDraw.render(graphics, x, y + 16 + yOffset);
 				continue;
 			}
 
 			Instruction instruction = instructions.get(row);
 			SequencerInstructions def = instruction.instruction;
-			def.background.render(ms, x, y + 16 + yOffset, this);
+			def.background.render(graphics, x, y + 16 + yOffset);
 
-			label(ms, 36, yOffset - 1, Lang.translateDirect(def.translationKey));
+			label(graphics, 36, yOffset - 1, Lang.translateDirect(def.translationKey));
 			if (def.hasValueParameter) {
 				String text = def.formatValue(instruction.value);
 				int stringWidth = font.width(text);
-				label(ms, 90 + (12 - stringWidth / 2), yOffset - 1, Components.literal(text));
+				label(graphics, 90 + (12 - stringWidth / 2), yOffset - 1, Components.literal(text));
 			}
 			if (def.hasSpeedParameter)
-				label(ms, 127, yOffset - 1, instruction.speedModifier.label);
+				label(graphics, 127, yOffset - 1, instruction.speedModifier.label);
 		}
 
-		font.draw(ms, title, x + (background.width - 8) / 2 - font.width(title) / 2, y + 4, 0x592424);
-		renderAdditional(ms, mouseX, mouseY, partialTicks, x, y, background);
+		graphics.drawString(font, title, x + (background.width - 8) / 2 - font.width(title) / 2, y + 4, 0x592424, false);
+		renderAdditional(graphics, mouseX, mouseY, partialTicks, x, y, background);
 	}
 
-	private void renderAdditional(PoseStack ms, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop,
+	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop,
 		AllGuiTextures background) {
 		GuiGameElement.of(renderedItem).<GuiGameElement
 			.GuiRenderBuilder>at(guiLeft + background.width + 6, guiTop + background.height - 56, 100)
 			.scale(5)
-			.render(ms);
+			.render(graphics);
 	}
 
-	private void label(PoseStack ms, int x, int y, Component text) {
-		font.drawShadow(ms, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
+	private void label(GuiGraphics graphics, int x, int y, Component text) {
+		graphics.drawString(font, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
 	}
 
 	public void sendPacket() {

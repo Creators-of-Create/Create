@@ -2,7 +2,6 @@ package com.simibubi.create.compat.jei.category;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
@@ -13,6 +12,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -44,9 +44,9 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	}
 
 	@Override
-	public void draw(SandPaperPolishingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 61, 21);
-		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52, 32);
+	public void draw(SandPaperPolishingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SHADOW.render(graphics, 61, 21);
+		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 32);
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		ItemStack[] matchingStacks = ingredients.get(0)
@@ -61,7 +61,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 		GuiGameElement.of(renderedSandpaper)
 				.<GuiGameElement.GuiRenderBuilder>at(getBackground().getWidth() / 2 - 16, 0, 0)
 				.scale(2)
-				.render(matrixStack);
+				.render(graphics);
 	}
 
 }

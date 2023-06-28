@@ -1,13 +1,14 @@
 package com.simibubi.create.foundation.gui.element;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 
+import net.minecraft.client.gui.GuiGraphics;
+
 public class DelegatedStencilElement extends StencilElement {
 
-	protected static final ElementRenderer EMPTY_RENDERER = (ms, width, height, alpha) -> {};
-	protected static final ElementRenderer DEFAULT_ELEMENT = (ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, -3, 5, height+4, width+6, new Color(0xff_10dd10).scaleAlpha(alpha), new Color(0xff_1010dd).scaleAlpha(alpha));
+	protected static final ElementRenderer EMPTY_RENDERER = (graphics, width, height, alpha) -> {};
+	protected static final ElementRenderer DEFAULT_ELEMENT = (graphics, width, height, alpha) -> UIRenderHelper.angledGradient(graphics, 0, -3, 5, height+4, width+6, new Color(0xff_10dd10).scaleAlpha(alpha), new Color(0xff_1010dd).scaleAlpha(alpha));
 
 	protected ElementRenderer stencil;
 	protected ElementRenderer element;
@@ -35,18 +36,18 @@ public class DelegatedStencilElement extends StencilElement {
 	}
 
 	@Override
-	protected void renderStencil(PoseStack ms) {
-		stencil.render(ms, width, height, 1);
+	protected void renderStencil(GuiGraphics graphics) {
+		stencil.render(graphics, width, height, 1);
 	}
 
 	@Override
-	protected void renderElement(PoseStack ms) {
-		element.render(ms, width, height, alpha);
+	protected void renderElement(GuiGraphics graphics) {
+		element.render(graphics, width, height, alpha);
 	}
 
 	@FunctionalInterface
 	public interface ElementRenderer {
-		void render(PoseStack ms, int width, int height, float alpha);
+		void render(GuiGraphics graphics, int width, int height, float alpha);
 	}
 
 }

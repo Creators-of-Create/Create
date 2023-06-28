@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 
 public class BoxElement extends RenderElement {
@@ -66,8 +67,8 @@ public class BoxElement extends RenderElement {
 	}
 
 	@Override
-	public void render(PoseStack ms) {
-		renderBox(ms);
+	public void render(GuiGraphics graphics) {
+		renderBox(graphics.pose());
 	}
 
 	//total box width = 1 * 2 (outer border) + 1 * 2 (inner color border) + 2 * borderOffset + width
@@ -89,7 +90,7 @@ public class BoxElement extends RenderElement {
 		*         |_____________|
 		*
 		* */
-		RenderSystem.disableTexture();
+//		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
@@ -154,6 +155,6 @@ public class BoxElement extends RenderElement {
 		tessellator.end();
 
 		RenderSystem.disableBlend();
-		RenderSystem.enableTexture();
+//		RenderSystem.enableTexture();
 	}
 }

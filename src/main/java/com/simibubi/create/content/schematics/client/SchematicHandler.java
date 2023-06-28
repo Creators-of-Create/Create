@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -241,14 +242,14 @@ public class SchematicHandler implements IGuiOverlay {
 	}
 
 	@Override
-	public void render(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
 		if (Minecraft.getInstance().options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)
-			this.overlay.renderOn(poseStack, activeHotbarSlot);
+			this.overlay.renderOn(graphics, activeHotbarSlot);
 		currentTool.getTool()
-			.renderOverlay(gui, poseStack, partialTicks, width, height);
-		selectionScreen.renderPassive(poseStack, partialTicks);
+			.renderOverlay(gui, graphics, partialTicks, width, height);
+		selectionScreen.renderPassive(graphics, partialTicks);
 	}
 
 	public boolean onMouseInput(int button, boolean pressed) {

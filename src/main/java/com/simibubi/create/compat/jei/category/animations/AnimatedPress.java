@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
 
 public class AnimatedPress extends AnimatedKinetics {
@@ -17,7 +18,8 @@ public class AnimatedPress extends AnimatedKinetics {
 	}
 
 	@Override
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 200);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
@@ -27,22 +29,22 @@ public class AnimatedPress extends AnimatedKinetics {
 		blockElement(shaft(Direction.Axis.Z))
 				.rotateBlock(0, 0, getCurrentAngle())
 				.scale(scale)
-				.render(matrixStack);
+				.render(graphics);
 
 		blockElement(AllBlocks.MECHANICAL_PRESS.getDefaultState())
 				.scale(scale)
-				.render(matrixStack);
+				.render(graphics);
 
 		blockElement(AllPartialModels.MECHANICAL_PRESS_HEAD)
 				.atLocal(0, -getAnimatedHeadOffset(), 0)
 				.scale(scale)
-				.render(matrixStack);
+				.render(graphics);
 
 		if (basin)
 			blockElement(AllBlocks.BASIN.getDefaultState())
 					.atLocal(0, 1.65, 0)
 					.scale(scale)
-					.render(matrixStack);
+					.render(graphics);
 
 		matrixStack.popPose();
 	}

@@ -3,12 +3,12 @@ package com.simibubi.create.foundation.config.ui;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 
 public class HintableTextFieldWidget extends EditBox {
@@ -26,8 +26,8 @@ public class HintableTextFieldWidget extends EditBox {
 	}
 
 	@Override
-	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderButton(ms, mouseX, mouseY, partialTicks);
+	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidget(graphics, mouseX, mouseY, partialTicks);
 
 		if (hint == null || hint.isEmpty())
 			return;
@@ -35,7 +35,7 @@ public class HintableTextFieldWidget extends EditBox {
 		if (!getValue().isEmpty())
 			return;
 
-		font.draw(ms, hint, getX() + 5, this.getY() + (this.height - 8) / 2, Theme.c(Theme.Key.TEXT).scaleAlpha(.75f).getRGB());
+		graphics.drawString(font, hint, getX() + 5, this.getY() + (this.height - 8) / 2, Theme.c(Theme.Key.TEXT).scaleAlpha(.75f).getRGB(), false);
 	}
 
 	@Override

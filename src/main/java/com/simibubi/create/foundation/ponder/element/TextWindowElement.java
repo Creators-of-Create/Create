@@ -3,8 +3,6 @@ package com.simibubi.create.foundation.ponder.element;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.BoxElement;
@@ -15,13 +13,13 @@ import com.simibubi.create.foundation.ponder.PonderScene.SceneTransform;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 import com.simibubi.create.foundation.utility.Color;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.ScreenUtils;
 
 public class TextWindowElement extends AnimatedOverlayElement {
 
@@ -91,7 +89,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 	}
 
 	@Override
-	protected void render(PonderScene scene, PonderUI screen, PoseStack ms, float partialTicks, float fade) {
+	protected void render(PonderScene scene, PonderUI screen, GuiGraphics graphics, float partialTicks, float fade) {
 		if (bakedText == null)
 			bakedText = textGetter.get();
 		if (fade < 1 / 16f)
@@ -126,6 +124,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		int boxHeight = screen.getFontRenderer()
 			.wordWrapHeight(bakedText, boxWidth);
 
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(0, pY, 400);
 
@@ -133,7 +132,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			.gradientBorder(Theme.p(Theme.Key.TEXT_WINDOW_BORDER))
 			.at(targetX - 10, 3, 100)
 			.withBounds(boxWidth, boxHeight - 1)
-			.render(ms);
+			.render(graphics);
 
 		//PonderUI.renderBox(ms, targetX - 10, 3, boxWidth, boxHeight - 1, 0xaa000000, 0x30eebb00, 0x10eebb00);
 
@@ -144,20 +143,18 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			ms.translate(sceneToScreen.x, 0, 0);
 			double lineTarget = (targetX - sceneToScreen.x) * fade;
 			ms.scale((float) lineTarget, 1, 1);
-			Matrix4f model = ms.last()
-				.pose();
-			ScreenUtils.drawGradientRect(model, -100, 0, 0, 1, 1, brighterColor, brighterColor);
-			ScreenUtils.drawGradientRect(model, -100, 0, 1, 1, 2, 0xFF494949, 0xFF393939);
+			graphics.fillGradient(0, 0, 1, 1, -100, brighterColor, brighterColor);
+			graphics.fillGradient(0, 1, 1, 2, -100, 0xFF494949, 0xFF393939);
 			ms.popPose();
 		}
 
 		ms.translate(0, 0, 400);
 		for (int i = 0; i < lines.size(); i++) {
-			screen.getFontRenderer()
-				.draw(ms, lines.get(i)
-					.getString(), targetX - 10, 3 + 9 * i,
-					new Color(brighterColor).scaleAlpha(fade)
-						.getRGB());
+			graphics.drawString(screen.getFontRenderer(), lines.get(i)
+				.getString(), targetX - 10, 3 + 9 * i,
+				new Color(brighterColor).scaleAlpha(fade)
+					.getRGB(),
+				false);
 		}
 		ms.popPose();
 	}

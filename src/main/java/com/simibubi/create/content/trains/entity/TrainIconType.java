@@ -3,8 +3,6 @@ package com.simibubi.create.content.trains.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -54,11 +52,10 @@ public class TrainIconType {
 	public static final int FLIPPED_ENGINE = -2;
 
 	@OnlyIn(Dist.CLIENT)
-	public int render(int lengthOrEngine, PoseStack ms, int x, int y) {
+	public int render(int lengthOrEngine, GuiGraphics graphics, int x, int y) {
 		int offset = getIconOffset(lengthOrEngine);
 		int width = getIconWidth(lengthOrEngine);
-		RenderSystem.setShaderTexture(0, sheet);
-		GuiGraphics.blit(ms, x, y, 0, this.x + offset, this.y, width, 10, 256, 256);
+		graphics.blit(sheet, x, y, 0, this.x + offset, this.y, width, 10, 256, 256);
 		return width;
 	}
 

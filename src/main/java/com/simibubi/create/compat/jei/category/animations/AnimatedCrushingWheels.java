@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -14,7 +15,8 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 			.setValue(BlockStateProperties.AXIS, Direction.Axis.X);
 
 	@Override
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 100);
 		matrixStack.mulPose(Axis.YP.rotationDegrees(-22.5f));
@@ -23,13 +25,13 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 		blockElement(wheel)
 				.rotateBlock(0, 90, -getCurrentAngle())
 				.scale(scale)
-				.render(matrixStack);
+				.render(graphics);
 
 		blockElement(wheel)
 				.rotateBlock(0, 90, getCurrentAngle())
 				.atLocal(2, 0, 0)
 				.scale(scale)
-				.render(matrixStack);
+				.render(graphics);
 
 		matrixStack.popPose();
 	}

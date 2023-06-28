@@ -9,7 +9,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.joml.Matrix4f;
+import javax.annotation.Nullable;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -51,6 +52,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.renderer.Rect2i;
@@ -62,7 +64,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.ScreenUtils;
 
 public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 
@@ -360,24 +361,25 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		partialTicks = minecraft.getFrameTime();
 
 		if (menu.slotsActive)
-			super.render(matrixStack, mouseX, mouseY, partialTicks);
+			super.render(graphics, mouseX, mouseY, partialTicks);
 		else {
-			renderBackground(matrixStack);
-			renderBg(matrixStack, partialTicks, mouseX, mouseY);
+			renderBackground(graphics);
+			renderBg(graphics, partialTicks, mouseX, mouseY);
 			for (Renderable widget : this.renderables)
-				widget.render(matrixStack, mouseX, mouseY, partialTicks);
-			renderForeground(matrixStack, mouseX, mouseY, partialTicks);
+				widget.render(graphics, mouseX, mouseY, partialTicks);
+			renderForeground(graphics, mouseX, mouseY, partialTicks);
 		}
 	}
 
-	protected void renderSchedule(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderSchedule(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		PoseStack matrixStack = graphics.pose();
 		UIRenderHelper.swapAndBlitColor(minecraft.getMainRenderTarget(), UIRenderHelper.framebuffer);
-		UIRenderHelper.drawStretched(matrixStack, leftPos + 33, topPos + 16, 3, 173, -100,
-			AllGuiTextures.SCHEDULE_STRIP_DARK);
+
+		UIRenderHelper.drawStretched(graphics, leftPos + 33, topPos + 16, 3, 173, -100, AllGuiTextures.SCHEDULE_STRIP_DARK);
 
 		int yOffset = 25;
 		List<ScheduleEntry> entries = schedule.entries;
@@ -391,22 +393,22 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 				float actualY = Mth.clamp(expectedY, topPos + 18, topPos + 170);
 				matrixStack.translate(0, actualY, 0);
 				(expectedY == actualY ? AllGuiTextures.SCHEDULE_POINTER : AllGuiTextures.SCHEDULE_POINTER_OFFSCREEN)
-					.render(matrixStack, leftPos, 0);
+					.render(graphics, leftPos, 0);
 				matrixStack.popPose();
 			}
 
-			startStencil(matrixStack, leftPos + 16, topPos + 16, 220, 173);
+			startStencil(graphics, leftPos + 16, topPos + 16, 220, 173);
 			matrixStack.pushPose();
 			matrixStack.translate(0, scrollOffset, 0);
 			if (i == 0 || entries.size() == 0)
-				UIRenderHelper.drawStretched(matrixStack, leftPos + 33, topPos + 16, 3, 10, -100,
-					AllGuiTextures.SCHEDULE_STRIP_LIGHT);
+				UIRenderHelper.drawStretched(graphics, leftPos + 33, topPos + 16, 3, 10,
+					-100, AllGuiTextures.SCHEDULE_STRIP_LIGHT);
 
 			if (i == entries.size()) {
 				if (i > 0)
 					yOffset += 9;
-				AllGuiTextures.SCHEDULE_STRIP_END.render(matrixStack, leftPos + 29, topPos + yOffset);
-				AllGuiTextures.SCHEDULE_CARD_NEW.render(matrixStack, leftPos + 43, topPos + yOffset);
+				AllGuiTextures.SCHEDULE_STRIP_END.render(graphics, leftPos + 29, topPos + yOffset);
+				AllGuiTextures.SCHEDULE_CARD_NEW.render(graphics, leftPos + 43, topPos + yOffset);
 				matrixStack.popPose();
 				endStencil();
 				break;
@@ -414,11 +416,11 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 
 			ScheduleEntry scheduleEntry = entries.get(i);
 			int cardY = yOffset;
-			int cardHeight = renderScheduleEntry(matrixStack, scheduleEntry, cardY, mouseX, mouseY, partialTicks);
+			int cardHeight = renderScheduleEntry(graphics, scheduleEntry, cardY, mouseX, mouseY, partialTicks);
 			yOffset += cardHeight;
 
 			if (i + 1 < entries.size()) {
-				AllGuiTextures.SCHEDULE_STRIP_DOTTED.render(matrixStack, leftPos + 29, topPos + yOffset - 3);
+				AllGuiTextures.SCHEDULE_STRIP_DOTTED.render(graphics, leftPos + 29, topPos + yOffset - 3);
 				yOffset += 10;
 			}
 
@@ -442,40 +444,38 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 			if (h <= 0)
 				continue;
 
-			startStencil(matrixStack, leftPos + 43, topPos + y1, 161, h);
+			startStencil(graphics, leftPos + 43, topPos + y1, 161, h);
 			matrixStack.pushPose();
 			matrixStack.translate(0, scrollOffset, 0);
-			renderScheduleConditions(matrixStack, scheduleEntry, cardY, mouseX, mouseY, partialTicks, cardHeight, i);
+			renderScheduleConditions(graphics, scheduleEntry, cardY, mouseX, mouseY, partialTicks, cardHeight, i);
 			matrixStack.popPose();
 			endStencil();
 
 			if (isConditionAreaScrollable(scheduleEntry)) {
-				startStencil(matrixStack, leftPos + 16, topPos + 16, 220, 173);
+				startStencil(graphics, leftPos + 16, topPos + 16, 220, 173);
 				matrixStack.pushPose();
 				matrixStack.translate(0, scrollOffset, 0);
 				int center = (cardHeight - 8 + CARD_HEADER) / 2;
 				float chaseTarget = horizontalScrolls.get(i)
 					.getChaseTarget();
 				if (!Mth.equal(chaseTarget, 0))
-					AllGuiTextures.SCHEDULE_SCROLL_LEFT.render(matrixStack, leftPos + 40, topPos + cardY + center);
+					AllGuiTextures.SCHEDULE_SCROLL_LEFT.render(graphics, leftPos + 40, topPos + cardY + center);
 				if (!Mth.equal(chaseTarget, scheduleEntry.conditions.size() - 1))
-					AllGuiTextures.SCHEDULE_SCROLL_RIGHT.render(matrixStack, leftPos + 203, topPos + cardY + center);
+					AllGuiTextures.SCHEDULE_SCROLL_RIGHT.render(graphics, leftPos + 203, topPos + cardY + center);
 				matrixStack.popPose();
 				endStencil();
 			}
 		}
 
 		int zLevel = 200;
-		Matrix4f mat = matrixStack.last()
-			.pose();
-		ScreenUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 16, leftPos + 16 + 220, topPos + 16 + 10,
-			0x77000000, 0x00000000);
-		ScreenUtils.drawGradientRect(mat, zLevel, leftPos + 16, topPos + 179, leftPos + 16 + 220, topPos + 179 + 10,
-			0x00000000, 0x77000000);
+		graphics.fillGradient(leftPos + 16, topPos + 16, leftPos + 16 + 220, topPos + 16 + 10, zLevel, 0x77000000,
+			0x00000000);
+		graphics.fillGradient(leftPos + 16, topPos + 179, leftPos + 16 + 220, topPos + 179 + 10, zLevel, 0x00000000,
+			0x77000000);
 		UIRenderHelper.swapAndBlitColor(UIRenderHelper.framebuffer, minecraft.getMainRenderTarget());
 	}
 
-	public int renderScheduleEntry(PoseStack matrixStack, ScheduleEntry entry, int yOffset, int mouseX, int mouseY,
+	public int renderScheduleEntry(GuiGraphics graphics, ScheduleEntry entry, int yOffset, int mouseX, int mouseY,
 		float partialTicks) {
 		int zLevel = -100;
 
@@ -491,47 +491,49 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		boolean supportsConditions = entry.instruction.supportsConditions();
 		int cardHeight = cardHeader + (supportsConditions ? 24 + maxRows * 18 : 4);
 
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(leftPos + 25, topPos + yOffset, 0);
 
-		UIRenderHelper.drawStretched(matrixStack, 0, 1, cardWidth, cardHeight - 2, zLevel, light);
-		UIRenderHelper.drawStretched(matrixStack, 1, 0, cardWidth - 2, cardHeight, zLevel, light);
-		UIRenderHelper.drawStretched(matrixStack, 1, 1, cardWidth - 2, cardHeight - 2, zLevel, dark);
-		UIRenderHelper.drawStretched(matrixStack, 2, 2, cardWidth - 4, cardHeight - 4, zLevel, medium);
-		UIRenderHelper.drawStretched(matrixStack, 2, 2, cardWidth - 4, cardHeader, zLevel,
+		UIRenderHelper.drawStretched(graphics, 0, 1, cardWidth, cardHeight - 2, zLevel, light);
+		UIRenderHelper.drawStretched(graphics, 1, 0, cardWidth - 2, cardHeight, zLevel, light);
+		UIRenderHelper.drawStretched(graphics, 1, 1, cardWidth - 2, cardHeight - 2, zLevel, dark);
+		UIRenderHelper.drawStretched(graphics, 2, 2, cardWidth - 4, cardHeight - 4, zLevel, medium);
+		UIRenderHelper.drawStretched(graphics, 2, 2, cardWidth - 4, cardHeader, zLevel,
 			supportsConditions ? light : medium);
 
-		AllGuiTextures.SCHEDULE_CARD_REMOVE.render(matrixStack, cardWidth - 14, 2);
-		AllGuiTextures.SCHEDULE_CARD_DUPLICATE.render(matrixStack, cardWidth - 14, cardHeight - 14);
+		AllGuiTextures.SCHEDULE_CARD_REMOVE.render(graphics, cardWidth - 14, 2);
+		AllGuiTextures.SCHEDULE_CARD_DUPLICATE.render(graphics, cardWidth - 14, cardHeight - 14);
 
 		int i = schedule.entries.indexOf(entry);
 		if (i > 0)
-			AllGuiTextures.SCHEDULE_CARD_MOVE_UP.render(matrixStack, cardWidth, cardHeader - 14);
+			AllGuiTextures.SCHEDULE_CARD_MOVE_UP.render(graphics, cardWidth, cardHeader - 14);
 		if (i < schedule.entries.size() - 1)
-			AllGuiTextures.SCHEDULE_CARD_MOVE_DOWN.render(matrixStack, cardWidth, cardHeader);
+			AllGuiTextures.SCHEDULE_CARD_MOVE_DOWN.render(graphics, cardWidth, cardHeader);
 
-		UIRenderHelper.drawStretched(matrixStack, 8, 0, 3, cardHeight + 10, zLevel,
+		UIRenderHelper.drawStretched(graphics, 8, 0, 3, cardHeight + 10, zLevel,
 			AllGuiTextures.SCHEDULE_STRIP_LIGHT);
 		(supportsConditions ? AllGuiTextures.SCHEDULE_STRIP_TRAVEL : AllGuiTextures.SCHEDULE_STRIP_ACTION)
-			.render(matrixStack, 4, 6);
+			.render(graphics, 4, 6);
 
 		if (supportsConditions)
-			AllGuiTextures.SCHEDULE_STRIP_WAIT.render(matrixStack, 4, 28);
+			AllGuiTextures.SCHEDULE_STRIP_WAIT.render(graphics, 4, 28);
 
 		Pair<ItemStack, Component> destination = entry.instruction.getSummary();
-		renderInput(matrixStack, destination, 26, 5, false, 100);
-		entry.instruction.renderSpecialIcon(matrixStack, 30, 5);
+		renderInput(graphics, destination, 26, 5, false, 100);
+		entry.instruction.renderSpecialIcon(graphics, 30, 5);
 
 		matrixStack.popPose();
 
 		return cardHeight;
 	}
 
-	public void renderScheduleConditions(PoseStack matrixStack, ScheduleEntry entry, int yOffset, int mouseX,
+	public void renderScheduleConditions(GuiGraphics graphics, ScheduleEntry entry, int yOffset, int mouseX,
 		int mouseY, float partialTicks, int cardHeight, int entryIndex) {
 		int cardWidth = CARD_WIDTH;
 		int cardHeader = CARD_HEADER;
 
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(leftPos + 25, topPos + yOffset, 0);
 		int xOffset = 26;
@@ -544,27 +546,26 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 			int maxWidth = getConditionColumnWidth(list);
 			for (int i = 0; i < list.size(); i++) {
 				ScheduleWaitCondition scheduleWaitCondition = list.get(i);
-				Math.max(maxWidth, renderInput(matrixStack, scheduleWaitCondition.getSummary(), xOffset, 29 + i * 18,
+				Math.max(maxWidth, renderInput(graphics, scheduleWaitCondition.getSummary(), xOffset, 29 + i * 18,
 					i != 0, maxWidth));
-				scheduleWaitCondition.renderSpecialIcon(matrixStack, xOffset + 4, 29 + i * 18);
+				scheduleWaitCondition.renderSpecialIcon(graphics, xOffset + 4, 29 + i * 18);
 			}
 
-			AllGuiTextures.SCHEDULE_CONDITION_APPEND.render(matrixStack, xOffset + (maxWidth - 10) / 2,
+			AllGuiTextures.SCHEDULE_CONDITION_APPEND.render(graphics, xOffset + (maxWidth - 10) / 2,
 				29 + list.size() * 18);
 			xOffset += maxWidth + 10;
 		}
 
-		AllGuiTextures.SCHEDULE_CONDITION_NEW.render(matrixStack, xOffset - 3, 29);
+		AllGuiTextures.SCHEDULE_CONDITION_NEW.render(graphics, xOffset - 3, 29);
 		matrixStack.popPose();
 
 		if (xOffset + 16 > cardWidth - 26) {
 			TransformStack.cast(matrixStack)
 				.rotateZ(-90);
-			Matrix4f m = matrixStack.last()
-				.pose();
-			ScreenUtils.drawGradientRect(m, 200, -cardHeight + 2, 18, -2 - cardHeader, 28, 0x44000000, 0x00000000);
-			ScreenUtils.drawGradientRect(m, 200, -cardHeight + 2, cardWidth - 26, -2 - cardHeader, cardWidth - 16,
-				0x00000000, 0x44000000);
+			int zLevel = 200;
+			graphics.fillGradient(-cardHeight + 2, 18, -2 - cardHeader, 28, zLevel, 0x44000000, 0x00000000);
+			graphics.fillGradient(-cardHeight + 2, cardWidth - 26, -2 - cardHeader, cardWidth - 16, zLevel, 0x00000000,
+				0x44000000);
 		}
 
 		matrixStack.popPose();
@@ -597,12 +598,13 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		return maxWidth;
 	}
 
-	protected int renderInput(PoseStack matrixStack, Pair<ItemStack, Component> pair, int x, int y, boolean clean,
+	protected int renderInput(GuiGraphics graphics, Pair<ItemStack, Component> pair, int x, int y, boolean clean,
 		int minSize) {
 		ItemStack stack = pair.getFirst();
 		Component text = pair.getSecond();
 		boolean hasItem = !stack.isEmpty();
 		int fieldSize = Math.min(getFieldSize(minSize, pair), 150);
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 
 		AllGuiTextures left =
@@ -611,22 +613,21 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		AllGuiTextures item = AllGuiTextures.SCHEDULE_CONDITION_ITEM;
 		AllGuiTextures right = AllGuiTextures.SCHEDULE_CONDITION_RIGHT;
 
-		matrixStack.translate(x, y, 0);
-		UIRenderHelper.drawStretched(matrixStack, 0, 0, fieldSize, 16, -100, middle);
-		left.render(matrixStack, clean ? 0 : -3, 0);
-		right.render(matrixStack, fieldSize - 2, 0);
+		UIRenderHelper.drawStretched(graphics, 0, 0, fieldSize, 16, -100, middle);
+		left.render(graphics, clean ? 0 : -3, 0);
+		right.render(graphics, fieldSize - 2, 0);
 		if (hasItem)
-			item.render(matrixStack, 3, 0);
+			item.render(graphics, 3, 0);
 		if (hasItem) {
-			item.render(matrixStack, 3, 0);
+			item.render(graphics, 3, 0);
 			if (stack.getItem() != Items.STRUCTURE_VOID)
 				GuiGameElement.of(stack)
 					.at(4, 0)
-					.render(matrixStack);
+					.render(graphics);
 		}
 
 		if (text != null)
-			font.drawShadow(matrixStack, font.substrByWidth(text, 120)
+			graphics.drawString(font, font.substrByWidth(text, 120)
 				.getString(), hasItem ? 28 : 8, 4, 0xff_f2f2ee);
 
 		matrixStack.popPose();
@@ -638,7 +639,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 	private Component rClickToDelete = Lang.translateDirect("gui.schedule.rmb_remove")
 		.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC);
 
-	public boolean action(PoseStack ms, double mouseX, double mouseY, int click) {
+	public boolean action(@Nullable GuiGraphics graphics, double mouseX, double mouseY, int click) {
 		if (editingCondition != null || editingDestination != null)
 			return false;
 
@@ -675,7 +676,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 				components.addAll(entry.instruction.getTitleAs("instruction"));
 				components.add(empty);
 				components.add(clickToEdit);
-				renderTooltip(ms, components, Optional.empty(), mx, my);
+				renderActionTooltip(graphics, components, mx, my);
 				if (click == 0)
 					startEditing(entry.instruction, confirmed -> {
 						if (confirmed)
@@ -686,7 +687,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 
 			if (x > 180 && x <= 192) {
 				if (y > 0 && y <= 14) {
-					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.remove_entry")), Optional.empty(),
+					renderActionTooltip(graphics, ImmutableList.of(Lang.translateDirect("gui.schedule.remove_entry")),
 						mx, my);
 					if (click == 0) {
 						entries.remove(entry);
@@ -695,7 +696,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 					return true;
 				}
 				if (y > cardHeight - 14) {
-					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.duplicate")), Optional.empty(), mx,
+					renderActionTooltip(graphics, ImmutableList.of(Lang.translateDirect("gui.schedule.duplicate")), mx,
 						my);
 					if (click == 0) {
 						entries.add(entries.indexOf(entry), entry.clone());
@@ -707,7 +708,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 
 			if (x > 194) {
 				if (y > 7 && y <= 20 && i > 0) {
-					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.move_up")), Optional.empty(), mx,
+					renderActionTooltip(graphics, ImmutableList.of(Lang.translateDirect("gui.schedule.move_up")), mx,
 						my);
 					if (click == 0) {
 						entries.remove(entry);
@@ -717,7 +718,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 					return true;
 				}
 				if (y > 20 && y <= 33 && i < entries.size() - 1) {
-					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.move_down")), Optional.empty(), mx,
+					renderActionTooltip(graphics, ImmutableList.of(Lang.translateDirect("gui.schedule.move_down")), mx,
 						my);
 					if (click == 0) {
 						entries.remove(entry);
@@ -775,7 +776,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 					components.add(clickToEdit);
 					if (canRemove)
 						components.add(rClickToDelete);
-					renderTooltip(ms, components, Optional.empty(), mx, my);
+					renderActionTooltip(graphics, components, mx, my);
 					if (canRemove && click == 1) {
 						conditions.remove(row);
 						if (conditions.isEmpty())
@@ -795,8 +796,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 				}
 
 				if (y > 18 * conditions.size() && y <= 18 * conditions.size() + 10 && x >= w / 2 - 5 && x < w / 2 + 5) {
-					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.add_condition")), Optional.empty(),
-						mx, my);
+					renderActionTooltip(graphics, ImmutableList.of(Lang.translateDirect("gui.schedule.add_condition")), mx, my);
 					if (click == 0)
 						startEditing(new ScheduledDelay(), confirmed -> {
 							if (confirmed)
@@ -811,7 +811,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 			if (x < 0 || x > 15 || y > 20)
 				return false;
 
-			renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.alternative_condition")), Optional.empty(),
+			renderActionTooltip(graphics, ImmutableList.of(Lang.translateDirect("gui.schedule.alternative_condition")),
 				mx, my);
 			if (click == 0)
 				startEditing(new ScheduledDelay(), confirmed -> {
@@ -827,7 +827,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		if (x < 18 || x > 33 || y > 14)
 			return false;
 
-		renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.add_entry")), Optional.empty(), mx, my);
+		renderActionTooltip(graphics, ImmutableList.of(Lang.translateDirect("gui.schedule.add_entry")), mx, my);
 		if (click == 0)
 			startEditing(new DestinationInstruction(), confirmed -> {
 				if (!confirmed)
@@ -844,6 +844,11 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		return true;
 	}
 
+	private void renderActionTooltip(@Nullable GuiGraphics graphics, List<Component> tooltip, int mx, int my) {
+		if (graphics != null)
+			graphics.renderTooltip(font, tooltip, Optional.empty(), mx, my);
+	}
+
 	private int getFieldSize(int minSize, Pair<ItemStack, Component> pair) {
 		ItemStack stack = pair.getFirst();
 		Component text = pair.getSecond();
@@ -851,7 +856,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		return Math.max((text == null ? 0 : font.width(text)) + (hasItem ? 20 : 0) + 16, minSize);
 	}
 
-	protected void startStencil(PoseStack matrixStack, float x, float y, float w, float h) {
+	protected void startStencil(GuiGraphics graphics, float x, float y, float w, float h) {
 		RenderSystem.clear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
@@ -862,11 +867,11 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		RenderSystem.stencilMask(0xFF);
 		RenderSystem.stencilFunc(GL11.GL_NEVER, 1, 0xFF);
 
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(x, y, 0);
 		matrixStack.scale(w, h, 1);
-		ScreenUtils.drawGradientRect(matrixStack.last()
-			.pose(), -100, 0, 0, 1, 1, 0xff000000, 0xff000000);
+		graphics.fillGradient(0, 0, 1, 1, -100, 0xff000000, 0xff000000);
 		matrixStack.popPose();
 
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
@@ -893,7 +898,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 			stopEditing();
 			return true;
 		}
-		if (action(new PoseStack(), pMouseX, pMouseY, pButton))
+		if (action(null, pMouseX, pMouseY, pButton))
 			return true;
 
 		return super.mouseClicked(pMouseX, pMouseY, pButton);
@@ -983,22 +988,23 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 	}
 
 	@Override
-	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		PoseStack matrixStack = graphics.pose();
 		if (destinationSuggestions != null) {
 			matrixStack.pushPose();
 			matrixStack.translate(0, 0, 500);
-			destinationSuggestions.render(matrixStack, mouseX, mouseY);
+			destinationSuggestions.render(graphics, mouseX, mouseY);
 			matrixStack.popPose();
 		}
 
-		super.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
+		super.renderForeground(graphics, mouseX, mouseY, partialTicks);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(leftPos + AllGuiTextures.SCHEDULE.width, topPos + AllGuiTextures.SCHEDULE.height - 56,
 				-200)
 			.scale(3)
-			.render(matrixStack);
-		action(matrixStack, mouseX, mouseY, -1);
+			.render(graphics);
+		action(graphics, mouseX, mouseY, -1);
 
 		if (editingCondition == null && editingDestination == null)
 			return;
@@ -1015,55 +1021,56 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 			if (secondLineTooltip == null || (hoveredSlot != menu.getSlot(36 + i) || !hoveredSlot.getItem()
 				.isEmpty()))
 				continue;
-			renderTooltip(matrixStack, secondLineTooltip, Optional.empty(), mouseX, mouseY);
+			renderActionTooltip(graphics, secondLineTooltip, mouseX, mouseY);
 		}
 	}
 
 	@Override
-	protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
-		AllGuiTextures.SCHEDULE.render(pPoseStack, leftPos, topPos);
+	protected void renderBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
+		AllGuiTextures.SCHEDULE.render(graphics, leftPos, topPos);
 		FormattedCharSequence formattedcharsequence = title.getVisualOrderText();
 		int center = leftPos + (AllGuiTextures.SCHEDULE.width - 8) / 2;
-		font.draw(pPoseStack, formattedcharsequence, (float) (center - font.width(formattedcharsequence) / 2),
-			(float) topPos + 4, 0x505050);
-		renderSchedule(pPoseStack, pMouseX, pMouseY, pPartialTick);
+		graphics.drawString(font, formattedcharsequence, (float) (center - font.width(formattedcharsequence) / 2),
+			(float) topPos + 4, 0x505050, false);
+		renderSchedule(graphics, pMouseX, pMouseY, pPartialTick);
 
 		if (editingCondition == null && editingDestination == null)
 			return;
 
-		this.fillGradient(pPoseStack, 0, 0, this.width, this.height, -1072689136, -804253680);
-		AllGuiTextures.SCHEDULE_EDITOR.render(pPoseStack, leftPos - 2, topPos + 40);
-		AllGuiTextures.PLAYER_INVENTORY.render(pPoseStack, leftPos + 38, topPos + 122);
-		font.draw(pPoseStack, playerInventoryTitle, leftPos + 46, topPos + 128, 0x505050);
+		graphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
+		AllGuiTextures.SCHEDULE_EDITOR.render(graphics, leftPos - 2, topPos + 40);
+		AllGuiTextures.PLAYER_INVENTORY.render(graphics, leftPos + 38, topPos + 122);
+		graphics.drawString(font, playerInventoryTitle, leftPos + 46, topPos + 128, 0x505050, false);
 
 		formattedcharsequence = editingCondition == null ? Lang.translateDirect("schedule.instruction.editor")
 			.getVisualOrderText()
 			: Lang.translateDirect("schedule.condition.editor")
 				.getVisualOrderText();
-		font.draw(pPoseStack, formattedcharsequence, (float) (center - font.width(formattedcharsequence) / 2),
-			(float) topPos + 44, 0x505050);
+		graphics.drawString(font, formattedcharsequence, (float) (center - font.width(formattedcharsequence) / 2),
+			(float) topPos + 44, 0x505050, false);
 
 		IScheduleInput rendered = editingCondition == null ? editingDestination : editingCondition;
 
 		for (int i = 0; i < rendered.slotsTargeted(); i++)
-			AllGuiTextures.SCHEDULE_EDITOR_ADDITIONAL_SLOT.render(pPoseStack, leftPos + 53 + 20 * i, topPos + 87);
+			AllGuiTextures.SCHEDULE_EDITOR_ADDITIONAL_SLOT.render(graphics, leftPos + 53 + 20 * i, topPos + 87);
 
-		if (rendered.slotsTargeted() == 0 && !rendered.renderSpecialIcon(pPoseStack, leftPos + 54, topPos + 88)) {
+		if (rendered.slotsTargeted() == 0 && !rendered.renderSpecialIcon(graphics, leftPos + 54, topPos + 88)) {
 			Pair<ItemStack, Component> summary = rendered.getSummary();
 			ItemStack icon = summary.getFirst();
 			if (icon.isEmpty())
 				icon = rendered.getSecondLineIcon();
 			if (icon.isEmpty())
-				AllGuiTextures.SCHEDULE_EDITOR_INACTIVE_SLOT.render(pPoseStack, leftPos + 53, topPos + 87);
+				AllGuiTextures.SCHEDULE_EDITOR_INACTIVE_SLOT.render(graphics, leftPos + 53, topPos + 87);
 			else
 				GuiGameElement.of(icon)
 					.at(leftPos + 54, topPos + 88)
-					.render(pPoseStack);
+					.render(graphics);
 		}
 
+		PoseStack pPoseStack = graphics.pose();
 		pPoseStack.pushPose();
 		pPoseStack.translate(0, getGuiTop() + 87, 0);
-		editorSubWidgets.renderWidgetBG(getGuiLeft() + 77, pPoseStack);
+		editorSubWidgets.renderWidgetBG(getGuiLeft() + 77, graphics);
 		pPoseStack.popPose();
 	}
 

@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.element.RenderElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class BooleanEntry extends ValueEntry<Boolean> {
@@ -46,15 +46,15 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	}
 
 	@Override
-	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
+	public void render(GuiGraphics graphics, int index, int y, int x, int width, int height, int mouseX, int mouseY,
 		boolean p_230432_9_, float partialTicks) {
-		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+		super.render(graphics, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
 		button.setX(x + width - 80 - resetWidth);
 		button.setY(y + 10);
 		button.setWidth(35);
 		button.setHeight(height - 20);
-		button.render(ms, mouseX, mouseY, partialTicks);
+		button.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

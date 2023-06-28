@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.TickableGuiEventListener;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -93,26 +94,26 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		partialTicks = minecraft.getFrameTime();
 
-		renderBackground(matrixStack);
+		renderBackground(graphics);
 
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 
-		renderForeground(matrixStack, mouseX, mouseY, partialTicks);
+		renderForeground(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+	protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
 		// no-op to prevent screen- and inventory-title from being rendered at incorrect
 		// location
 		// could also set this.titleX/Y and this.playerInventoryTitleX/Y to the proper
 		// values instead
 	}
 
-	protected void renderForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		renderTooltip(ms, mouseX, mouseY);
+	protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		renderTooltip(graphics, mouseX, mouseY);
 		for (Renderable widget : renderables) {
 			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
 				List<Component> tooltip = simiWidget.getToolTip();
@@ -120,7 +121,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 					continue;
 				int ttx = simiWidget.lockedTooltipX == -1 ? mouseX : simiWidget.lockedTooltipX + simiWidget.getX();
 				int tty = simiWidget.lockedTooltipY == -1 ? mouseY : simiWidget.lockedTooltipY + simiWidget.getY();
-				renderComponentTooltip(ms, tooltip, ttx, tty);
+				graphics.renderComponentTooltip(font, tooltip, ttx, tty);
 			}
 		}
 	}
@@ -129,9 +130,9 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 		return leftPos - windowXOffset + (imageWidth - textureWidth) / 2;
 	}
 
-	public void renderPlayerInventory(PoseStack ms, int x, int y) {
-		AllGuiTextures.PLAYER_INVENTORY.render(ms, x, y, this);
-		font.draw(ms, playerInventoryTitle, x + 8, y + 6, 0x404040);
+	public void renderPlayerInventory(GuiGraphics graphics, int x, int y) {
+		AllGuiTextures.PLAYER_INVENTORY.render(graphics, x, y);
+		graphics.drawString(font, playerInventoryTitle, x + 8, y + 6, 0x404040, false);
 	}
 
 	@Override
@@ -162,14 +163,14 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	}
 
 	@Deprecated
-	protected void debugWindowArea(PoseStack matrixStack) {
-		fill(matrixStack, leftPos + imageWidth, topPos + imageHeight, leftPos, topPos, 0xD3D3D3D3);
+	protected void debugWindowArea(GuiGraphics graphics) {
+		graphics.fill(leftPos + imageWidth, topPos + imageHeight, leftPos, topPos, 0xD3D3D3D3);
 	}
 
 	@Deprecated
-	protected void debugExtraAreas(PoseStack matrixStack) {
+	protected void debugExtraAreas(GuiGraphics graphics) {
 		for (Rect2i area : getExtraAreas()) {
-			fill(matrixStack, area.getX() + area.getWidth(), area.getY() + area.getHeight(), area.getX(), area.getY(),
+			graphics.fill(area.getX() + area.getWidth(), area.getY() + area.getHeight(), area.getX(), area.getY(),
 				0xD3D3D3D3);
 		}
 	}

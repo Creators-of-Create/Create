@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -103,9 +104,10 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		renderItems(ms, mouseX, mouseY, partialTicks);
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		renderItems(graphics, mouseX, mouseY, partialTicks);
 
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(width / 2 - 120, height * mainYmult - 40, 0);
 
@@ -118,15 +120,15 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 			.getString();
 
 		int streakHeight = 35;
-		UIRenderHelper.streak(ms, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, 240);
+		UIRenderHelper.streak(graphics, 0, x - 4, y - 12 + streakHeight / 2, streakHeight, 240);
 		// PonderUI.renderBox(ms, 21, 21, 30, 30, false);
 		new BoxElement().withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 			.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 			.at(21, 21, 100)
 			.withBounds(30, 30)
-			.render(ms);
+			.render(graphics);
 
-		font.draw(ms, title, x + 8, y + 1, Theme.i(Theme.Key.TEXT));
+		graphics.drawString(font, title, x + 8, y + 1, Theme.i(Theme.Key.TEXT), false);
 //		y += 8;
 //		x += 0;
 //		ms.translate(x, y, 0);
@@ -140,7 +142,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		ms.translate(-4, -4, 0);
 		ms.scale(1.5f, 1.5f, 1.5f);
 		GuiGameElement.of(AllItems.WRENCH.asStack())
-			.render(ms);
+			.render(graphics);
 		ms.popPose();
 		ms.popPose();
 
@@ -158,14 +160,14 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 			.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 			.at(x - 3, y - 3, 90)
 			.withBounds(w + 6, h + 6)
-			.render(ms);
+			.render(graphics);
 
 		ms.translate(0, 0, 100);
 		FontHelper.drawSplitString(ms, font, desc, x, y, w, Theme.i(Theme.Key.TEXT));
 		ms.popPose();
 	}
 
-	protected void renderItems(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderItems(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		List<PonderTag> tags = PonderRegistry.TAGS.getListedTags();
 		if (tags.isEmpty())
 			return;
@@ -177,6 +179,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 			.getString();
 		int stringWidth = font.width(relatedTitle);
 
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(x, y, 0);
 		// PonderUI.renderBox(ms, (sWidth - stringWidth) / 2 - 5, itemArea.getY() - 21,
@@ -185,17 +188,17 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 			.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 			.at((windowWidth - stringWidth) / 2f - 5, itemArea.getY() - 21, 100)
 			.withBounds(stringWidth + 10, 10)
-			.render(ms);
+			.render(graphics);
 
 		ms.translate(0, 0, 200);
 
 //		UIRenderHelper.streak(0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 180, 0x101010);
-		drawCenteredString(ms, font, relatedTitle, windowWidth / 2, itemArea.getY() - 20, Theme.i(Theme.Key.TEXT));
+		graphics.drawCenteredString(font, relatedTitle, windowWidth / 2, itemArea.getY() - 20, Theme.i(Theme.Key.TEXT));
 
 		ms.translate(0, 0, -200);
 
-		UIRenderHelper.streak(ms, 0, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75);
-		UIRenderHelper.streak(ms, 180, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75);
+		UIRenderHelper.streak(graphics, 0, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75);
+		UIRenderHelper.streak(graphics, 180, 0, 0, itemArea.getHeight() + 10, itemArea.getWidth() / 2 + 75);
 
 		ms.popPose();
 
@@ -206,8 +209,9 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 	}
 
 	@Override
-	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.disableDepthTest();
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(0, 0, 200);
 
@@ -215,7 +219,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 			List<Component> list = TooltipHelper.cutStringTextComponent(hoveredItem.getDescription(),
 				Palette.ALL_GRAY);
 			list.add(0, Components.literal(hoveredItem.getTitle()));
-			renderComponentTooltip(ms, list, mouseX, mouseY);
+			graphics.renderComponentTooltip(font, list, mouseX, mouseY);
 		}
 
 		ms.popPose();

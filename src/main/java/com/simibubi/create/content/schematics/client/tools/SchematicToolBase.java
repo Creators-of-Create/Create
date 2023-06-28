@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -124,7 +125,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {}
 
 	@Override
-	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {}
+	public void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {}
 
 	@Override
 	public void renderOnSchematic(PoseStack ms, SuperRenderTypeBuffer buffer) {

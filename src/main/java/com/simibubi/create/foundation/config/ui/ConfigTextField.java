@@ -9,8 +9,8 @@ public class ConfigTextField extends HintableTextFieldWidget {
 	}
 
 	@Override
-	public void setFocus(boolean focus) {
-		super.setFocus(focus);
+	public void setFocused(boolean focus) {
+		super.setFocused(focus);
 
 		if (!focus) {
 			if (ConfigScreenList.currentText == this)
@@ -20,7 +20,7 @@ public class ConfigTextField extends HintableTextFieldWidget {
 		}
 
 		if (ConfigScreenList.currentText != null && ConfigScreenList.currentText != this)
-			ConfigScreenList.currentText.setFocus(false);
+			ConfigScreenList.currentText.setFocused(false);
 
 		ConfigScreenList.currentText = this;
 	}

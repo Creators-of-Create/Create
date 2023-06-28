@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Components;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public abstract class AbstractStationScreen extends AbstractSimiScreen {
@@ -87,15 +88,16 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
-		renderAdditional(ms, mouseX, mouseY, partialTicks, x, y, background);
+		background.render(graphics, x, y);
+		renderAdditional(graphics, mouseX, mouseY, partialTicks, x, y, background);
 	}
 
-	private void renderAdditional(PoseStack ms, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
+	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		TransformStack msr = TransformStack.cast(ms);
 		msr.pushPose()
@@ -105,13 +107,13 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 			.rotateY(63);
 		GuiGameElement.of(blockEntity.getBlockState()
 			.setValue(BlockStateProperties.WATERLOGGED, false))
-			.render(ms);
+			.render(graphics);
 
 		if (blockEntity.resolveFlagAngle()) {
 			msr.translate(1 / 16f, -19 / 16f, -12 / 16f);
 			StationRenderer.transformFlag(msr, blockEntity, partialTicks, 180, false);
 			GuiGameElement.of(getFlag(partialTicks))
-				.render(ms);
+				.render(graphics);
 		}
 
 		ms.popPose();

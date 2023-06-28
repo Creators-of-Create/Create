@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
@@ -28,7 +29,8 @@ public class AnimatedSpout extends AnimatedKinetics {
 	}
 
 	@Override
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 100);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
@@ -37,7 +39,7 @@ public class AnimatedSpout extends AnimatedKinetics {
 
 		blockElement(AllBlocks.SPOUT.getDefaultState())
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 
 		float cycle = (AnimationTickHolder.getRenderTime() - offset * 8) % 30;
 		float squeeze = cycle < 20 ? Mth.sin((float) (cycle / 20f * Math.PI)) : 0;
@@ -47,15 +49,15 @@ public class AnimatedSpout extends AnimatedKinetics {
 
 		blockElement(AllPartialModels.SPOUT_TOP)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);
 		blockElement(AllPartialModels.SPOUT_MIDDLE)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);
 		blockElement(AllPartialModels.SPOUT_BOTTOM)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);
 
 		matrixStack.popPose();
@@ -63,7 +65,7 @@ public class AnimatedSpout extends AnimatedKinetics {
 		blockElement(AllBlocks.DEPOT.getDefaultState())
 			.atLocal(0, 2, 0)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 
 		AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
 		BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance()

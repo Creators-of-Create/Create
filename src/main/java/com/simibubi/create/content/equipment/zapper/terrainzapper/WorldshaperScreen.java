@@ -3,7 +3,6 @@ package com.simibubi.create.content.equipment.zapper.terrainzapper;
 import java.util.List;
 import java.util.Vector;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.equipment.zapper.ConfigureZapperPacket;
 import com.simibubi.create.content.equipment.zapper.ZapperScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -18,6 +17,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -239,16 +239,16 @@ public class WorldshaperScreen extends ZapperScreen {
 	}
 
 	@Override
-	protected void drawOnBackground(PoseStack matrixStack, int x, int y) {
-		super.drawOnBackground(matrixStack, x, y);
+	protected void drawOnBackground(GuiGraphics graphics, int x, int y) {
+		super.drawOnBackground(graphics, x, y);
 
 		Brush currentBrush = this.currentBrush.get();
 		for (int index = 2; index >= currentBrush.amtParams; index--)
-			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.render(matrixStack, x + 56 + 20 * index, y + 40, this);
+			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.render(graphics, x + 56 + 20 * index, y + 40);
 
-		font.draw(matrixStack, toolSection, x + 7, y + 69, fontColor);
+		graphics.drawString(font, toolSection, x + 7, y + 69, fontColor, false);
 		if (currentBrush.hasPlacementOptions())
-			font.draw(matrixStack, placementSection, x + 136, y + 69, fontColor);
+			graphics.drawString(font, placementSection, x + 136, y + 69, fontColor, false);
 	}
 
 	@Override

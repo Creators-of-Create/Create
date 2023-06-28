@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import mezz.jei.api.gui.drawable.IDrawable;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemIcon implements IDrawable {
@@ -29,7 +30,8 @@ public class ItemIcon implements IDrawable {
 	}
 
 	@Override
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+		PoseStack matrixStack = graphics.pose();
 		if (stack == null) {
 			stack = supplier.get();
 		}
@@ -39,7 +41,7 @@ public class ItemIcon implements IDrawable {
 		matrixStack.translate(xOffset + 1, yOffset + 1, 0);
 
 		GuiGameElement.of(stack)
-			.render(matrixStack);
+			.render(graphics);
 
 		matrixStack.popPose();
 	}

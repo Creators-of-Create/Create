@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -164,7 +165,8 @@ public class GuiGameElement {
 		}
 
 		@Override
-		public void render(PoseStack matrixStack) {
+		public void render(GuiGraphics graphics) {
+			PoseStack matrixStack = graphics.pose();
 			prepareMatrix(matrixStack);
 
 			Minecraft mc = Minecraft.getInstance();
@@ -258,7 +260,8 @@ public class GuiGameElement {
 		}
 
 		@Override
-		public void render(PoseStack matrixStack) {
+		public void render(GuiGraphics graphics) {
+			PoseStack matrixStack = graphics.pose();
 			prepareMatrix(matrixStack);
 			transformMatrix(matrixStack);
 			renderItemIntoGUI(matrixStack, stack, customLighting == null);
@@ -275,7 +278,7 @@ public class GuiGameElement {
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			matrixStack.pushPose();
-			matrixStack.translate(0, 0, 100.0F + renderer.blitOffset);
+			matrixStack.translate(0, 0, 100.0F);
 			matrixStack.translate(8.0F, -8.0F, 0.0F);
 			matrixStack.scale(16.0F, 16.0F, 16.0F);
 			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();

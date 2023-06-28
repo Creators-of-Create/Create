@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.ConversionRecipe;
@@ -15,6 +14,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.minecraft.client.gui.GuiGraphics;
 
 @ParametersAreNonnullByDefault
 public class MysteriousItemConversionCategory extends CreateRecipeCategory<ConversionRecipe> {
@@ -45,9 +45,9 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 	}
 
 	@Override
-	public void draw(ConversionRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52, 20);
-		AllGuiTextures.JEI_QUESTION_MARK.render(matrixStack, 77, 5);
+	public void draw(ConversionRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52, 20);
+		AllGuiTextures.JEI_QUESTION_MARK.render(graphics, 77, 5);
 	}
 
 }

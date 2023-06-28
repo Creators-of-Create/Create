@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -69,25 +70,27 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 	}
 
 	@Override
-	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		menu.renderPass = true;
-		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 		menu.renderPass = false;
 	}
 
 	@Override
-	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int x = leftPos + imageWidth - BG.width;
 		int y = topPos;
 
-		BG.render(ms, x, y, this);
-		font.draw(ms, title, x + 15, y + 4, 0x592424);
+		BG.render(graphics, x, y);
+		graphics.drawString(font, title, x + 15, y + 4, 0x592424, false);
 
 		int invX = leftPos;
 		int invY = topPos + imageHeight - PLAYER.height;
-		renderPlayerInventory(ms, invX, invY);
+		renderPlayerInventory(graphics, invX, invY);
 
-		renderToolbox(ms, x + BG.width + 50, y + BG.height + 12, partialTicks);
+		renderToolbox(graphics, x + BG.width + 50, y + BG.height + 12, partialTicks);
+
+		PoseStack ms = graphics.pose();
 
 		hoveredToolboxSlot = null;
 		for (int compartment = 0; compartment < 8; compartment++) {
@@ -103,13 +106,12 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			if (!itemstack.isEmpty()) {
 				int count = menu.totalCountInCompartment(compartment);
 				String s = String.valueOf(count);
-				setBlitOffset(100);
-				itemRenderer.blitOffset = 100.0F;
+				ms.pushPose();
+				ms.translate(0, 0, 100);
 				RenderSystem.enableDepthTest();
-				itemRenderer.renderAndDecorateItem(minecraft.player, itemstack, i, j, 0);
-				itemRenderer.renderGuiItemDecorations(font, itemstack, i, j, s);
-				setBlitOffset(0);
-				itemRenderer.blitOffset = 0.0F;
+				graphics.renderItem(minecraft.player, itemstack, i, j, 0);
+				graphics.renderItemDecorations(font, itemstack, i, j, s);
+				ms.popPose();
 			}
 
 			if (isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY)) {
@@ -117,15 +119,16 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 				RenderSystem.disableDepthTest();
 				RenderSystem.colorMask(true, true, true, false);
 				int slotColor = this.getSlotColor(baseIndex);
-				fillGradient(ms, i, j, i + 16, j + 16, slotColor, slotColor);
+				graphics.fillGradient(i, j, i + 16, j + 16, slotColor, slotColor);
 				RenderSystem.colorMask(true, true, true, true);
 				RenderSystem.enableDepthTest();
 			}
 		}
 	}
 
-	private void renderToolbox(PoseStack ms, int x, int y, float partialTicks) {
-        TransformStack.cast(ms)
+	private void renderToolbox(GuiGraphics graphics, int x, int y, float partialTicks) {
+        PoseStack ms = graphics.pose();
+		TransformStack.cast(ms)
 			.pushPose()
 			.translate(x, y, 100)
 			.scale(50)
@@ -134,7 +137,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 
 		GuiGameElement.of(AllBlocks.TOOLBOXES.get(color)
 			.getDefaultState())
-			.render(ms);
+			.render(graphics);
 
         TransformStack.cast(ms)
 			.pushPose()
@@ -142,7 +145,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))
 			.translate(0, 6 / 16f, -12 / 16f);
 		GuiGameElement.of(AllPartialModels.TOOLBOX_LIDS.get(color))
-			.render(ms);
+			.render(graphics);
 		ms.popPose();
 
 		for (int offset : Iterate.zeroAndOne) {
@@ -150,17 +153,17 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			ms.translate(0, -offset * 1 / 8f,
 				menu.contentHolder.drawers.getValue(partialTicks) * -.175f * (2 - offset));
 			GuiGameElement.of(AllPartialModels.TOOLBOX_DRAWER)
-				.render(ms);
+				.render(graphics);
 			ms.popPose();
 		}
 		ms.popPose();
 	}
 
 	@Override
-	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (hoveredToolboxSlot != null)
 			hoveredSlot = hoveredToolboxSlot;
-		super.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
+		super.renderForeground(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

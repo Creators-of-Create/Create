@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.ponder.ui;
 
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.element.BoxElement;
@@ -11,8 +9,8 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraftforge.client.gui.ScreenUtils;
 
 public class PonderProgressBar extends AbstractSimiWidget {
 
@@ -85,8 +83,9 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-
+	public void renderButton(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		PoseStack ms = graphics.pose();
+		
 		isHovered = clicked(mouseX, mouseY);
 
 		new BoxElement()
@@ -94,7 +93,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
 				.at(getX(), getY(), 400)
 				.withBounds(width, height)
-				.render(ms);
+				.render(graphics);
 
 		ms.pushPose();
 		ms.translate(getX() - 2, getY() - 2, 100);
@@ -103,16 +102,16 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		ms.scale((width + 4) * progress.getValue(partialTicks), 1, 1);
 		int c1 = Theme.i(Theme.Key.PONDER_PROGRESSBAR, true);
 		int c2 = Theme.i(Theme.Key.PONDER_PROGRESSBAR, false);
-		ScreenUtils.drawGradientRect(ms.last().pose(), 310, 0, 3, 1, 4, c1, c1);
-		ScreenUtils.drawGradientRect(ms.last().pose(), 310, 0, 4, 1, 5, c2, c2);
+		graphics.fillGradient(0, 3, 1, 4, 310, c1, c1);
+		graphics.fillGradient(0, 4, 1, 5, 310, c2, c2);
 		ms.popPose();
 
-		renderKeyframes(ms, mouseX, partialTicks);
+		renderKeyframes(graphics, mouseX, partialTicks);
 
 		ms.popPose();
 	}
 
-	private void renderKeyframes(PoseStack ms, int mouseX, float partialTicks) {
+	private void renderKeyframes(GuiGraphics graphics, int mouseX, float partialTicks) {
 		PonderScene activeScene = ponder.getActiveScene();
 
 		int hoverStartColor = Theme.i(Theme.Key.PONDER_HOVER, true) | 0xa0_000000;
@@ -128,9 +127,9 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		}
 
 		if (hoverIndex == -1)
-			drawKeyframe(ms, activeScene, true, 0, 0, hoverStartColor, hoverEndColor, 8);
+			drawKeyframe(graphics, activeScene, true, 0, 0, hoverStartColor, hoverEndColor, 8);
 		else if (hoverIndex == activeScene.getKeyframeCount())
-			drawKeyframe(ms, activeScene, true, activeScene.getTotalTime(), width + 4, hoverStartColor, hoverEndColor, 8);
+			drawKeyframe(graphics, activeScene, true, activeScene.getTotalTime(), width + 4, hoverStartColor, hoverEndColor, 8);
 
 		for (int i = 0; i < activeScene.getKeyframeCount(); i++) {
 			int keyframeTime = activeScene.getKeyframeTime(i);
@@ -141,16 +140,17 @@ public class PonderProgressBar extends AbstractSimiWidget {
 			int endColor = selected ? hoverEndColor : idleEndColor;
 			int height = selected ? 8 : 4;
 
-			drawKeyframe(ms, activeScene, selected, keyframeTime, keyframePos, startColor, endColor, height);
+			drawKeyframe(graphics, activeScene, selected, keyframeTime, keyframePos, startColor, endColor, height);
 
 		}
 	}
 
-	private void drawKeyframe(PoseStack ms, PonderScene activeScene, boolean selected, int keyframeTime, int keyframePos, int startColor, int endColor, int height) {
+	private void drawKeyframe(GuiGraphics graphics, PonderScene activeScene, boolean selected, int keyframeTime,
+		int keyframePos, int startColor, int endColor, int height) {
+		PoseStack ms = graphics.pose();
 		if (selected) {
 			Font font = Minecraft.getInstance().font;
-			ScreenUtils.drawGradientRect(ms.last()
-					.pose(), 600, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
+			graphics.fillGradient(keyframePos, 10, keyframePos + 1, 10 + height, 600, endColor, startColor);
 			ms.pushPose();
 			ms.translate(0, 0, 200);
 			String text;
@@ -162,12 +162,11 @@ public class PonderProgressBar extends AbstractSimiWidget {
 				text = "<";
 				offset = 3;
 			}
-			font.draw(ms, text, keyframePos + offset, 10, endColor);
+			graphics.drawString(font, text, keyframePos + offset, 10, endColor, false);
 			ms.popPose();
 		}
 
-		ScreenUtils.drawGradientRect(ms.last()
-				.pose(), 400, keyframePos, -1, keyframePos + 1, 2 + height, startColor, endColor);
+		graphics.fillGradient(keyframePos, -1, keyframePos + 1, 2 + height, 400, startColor, endColor);
 	}
 
 	@Override

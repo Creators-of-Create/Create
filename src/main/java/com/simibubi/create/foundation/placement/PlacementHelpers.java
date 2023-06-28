@@ -23,6 +23,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
@@ -168,7 +169,7 @@ public class PlacementHelpers {
 			float screenX = res.getGuiScaledWidth() / 2f;
 			float progress = getCurrentAlpha();
 
-			drawDirectionIndicator(event.getPoseStack(), event.getPartialTick(), screenX, screenY, progress);
+			drawDirectionIndicator(event.getGuiGraphics(), event.getPartialTick(), screenX, screenY, progress);
 		}
 	}
 
@@ -177,7 +178,7 @@ public class PlacementHelpers {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void drawDirectionIndicator(PoseStack ms, float partialTicks, float centerX, float centerY,
+	private static void drawDirectionIndicator(GuiGraphics graphics, float partialTicks, float centerX, float centerY,
 		float progress) {
 		float r = .8f;
 		float g = .8f;
@@ -209,6 +210,7 @@ public class PlacementHelpers {
 		float length = 10;
 
 		CClient.PlacementIndicatorSetting mode = AllConfigs.client().placementIndicator.get();
+		PoseStack ms = graphics.pose();
 		if (mode == CClient.PlacementIndicatorSetting.TRIANGLE)
 			fadedArrow(ms, centerX, centerY, r, g, b, a, length, snappedAngle);
 		else if (mode == CClient.PlacementIndicatorSetting.TEXTURE)
@@ -217,7 +219,7 @@ public class PlacementHelpers {
 
 	private static void fadedArrow(PoseStack ms, float centerX, float centerY, float r, float g, float b, float a,
 		float length, float snappedAngle) {
-		RenderSystem.disableTexture();
+//		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
@@ -264,13 +266,13 @@ public class PlacementHelpers {
 
 		tessellator.end();
 		RenderSystem.disableBlend();
-		RenderSystem.enableTexture();
+//		RenderSystem.enableTexture();
 		ms.popPose();
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void textured(PoseStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
-		RenderSystem.enableTexture();
+//		RenderSystem.enableTexture();
 		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
 		RenderSystem.enableDepthTest();
 		RenderSystem.enableBlend();

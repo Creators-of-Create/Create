@@ -20,6 +20,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -62,9 +63,9 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 	}
 
 	@Override
-	public void draw(ItemApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 47);
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 74, 10);
+	public void draw(ItemApplicationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 47);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 74, 10);
 
 		Optional<ItemStack> displayedIngredient = recipeSlotsView.getSlotViews()
 			.get(0)
@@ -80,6 +81,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 		BlockState state = blockItem.getBlock()
 			.defaultBlockState();
 
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(74, 51, 100);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
@@ -89,7 +91,7 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 		GuiGameElement.of(state)
 			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 
 		matrixStack.popPose();
 	}

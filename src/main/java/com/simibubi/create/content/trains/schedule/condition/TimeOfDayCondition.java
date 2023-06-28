@@ -5,8 +5,6 @@ import java.util.List;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
@@ -102,12 +100,12 @@ public class TimeOfDayCondition extends ScheduleWaitCondition {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean renderSpecialIcon(PoseStack ms, int x, int y) {
+	public boolean renderSpecialIcon(GuiGraphics graphics, int x, int y) {
 		int displayHr = (intData("Hour") + 12) % 24;
 		float progress = (displayHr * 60f + intData("Minute")) / (24 * 60);
-		RenderSystem.setShaderTexture(0,
-			new ResourceLocation("textures/item/clock_" + twoDigits(Mth.clamp((int) (progress * 64), 0, 63)) + ".png"));
-		GuiGraphics.blit(ms, x, y, 0, 0, 0, 16, 16, 16, 16);
+		ResourceLocation location =
+			new ResourceLocation("textures/item/clock_" + twoDigits(Mth.clamp((int) (progress * 64), 0, 63)) + ".png");
+		graphics.blit(location, x, y, 0, 0, 0, 16, 16, 16, 16);
 		return true;
 	}
 

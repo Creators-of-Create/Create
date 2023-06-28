@@ -19,7 +19,6 @@ import org.lwjgl.glfw.GLFW;
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList.LabeledEntry;
 import com.simibubi.create.foundation.config.ui.entries.BooleanEntry;
@@ -44,6 +43,7 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.FormattedText;
@@ -345,16 +345,17 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderWindow(ms, mouseX, mouseY, partialTicks);
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWindow(graphics, mouseX, mouseY, partialTicks);
 
 		int x = width / 2;
-		drawCenteredString(ms, minecraft.font, ConfigScreen.modID + " > " + type.toString().toLowerCase(Locale.ROOT) + " > " + title, x, 15, Theme.i(Theme.Key.TEXT));
+		graphics.drawCenteredString(minecraft.font, ConfigScreen.modID + " > " + type.toString()
+			.toLowerCase(Locale.ROOT) + " > " + title, x, 15, Theme.i(Theme.Key.TEXT));
 	}
 
 	@Override
-	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
+	protected void renderWindowForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWindowForeground(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -380,7 +381,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 		if (Screen.hasControlDown()) {
 			if (keyCode == GLFW.GLFW_KEY_F) {
-				search.setFocus(true);
+				search.setFocused(true);
 			}
 		}
 

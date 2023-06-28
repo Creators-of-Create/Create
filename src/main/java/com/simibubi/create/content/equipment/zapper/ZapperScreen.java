@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -93,19 +94,19 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
-		drawOnBackground(ms, x, y);
+		background.render(graphics, x, y);
+		drawOnBackground(graphics, x, y);
 
-		renderBlock(ms, x, y);
-		renderZapper(ms, x, y);
+		renderBlock(graphics, x, y);
+		renderZapper(graphics, x, y);
 	}
 
-	protected void drawOnBackground(PoseStack ms, int x, int y) {
-		font.draw(ms, title, x + 11, y + 4, 0x54214F);
+	protected void drawOnBackground(GuiGraphics graphics, int x, int y) {
+		graphics.drawString(font, title, x + 11, y + 4, 0x54214F, false);
 	}
 
 	@Override
@@ -121,15 +122,16 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 		AllPackets.getChannel().sendToServer(packet);
 	}
 
-	protected void renderZapper(PoseStack ms, int x, int y) {
+	protected void renderZapper(GuiGraphics graphics, int x, int y) {
 		GuiGameElement.of(zapper)
 				.scale(4)
 				.at(x + background.width, y + background.height - 48, -200)
-				.render(ms);
+				.render(graphics);
 	}
 
 	@SuppressWarnings("deprecation")
-	protected void renderBlock(PoseStack ms, int x, int y) {
+	protected void renderBlock(GuiGraphics graphics, int x, int y) {
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(x + 32, y + 42, 120);
 		ms.mulPose(Axis.XP.rotationDegrees(-25f));
@@ -143,7 +145,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 				.getCompound("BlockUsed"));
 
 		GuiGameElement.of(state)
-			.render(ms);
+			.render(graphics);
 		ms.popPose();
 	}
 

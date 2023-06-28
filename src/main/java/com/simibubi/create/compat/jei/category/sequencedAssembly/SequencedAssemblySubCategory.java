@@ -17,6 +17,7 @@ import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 
 public abstract class SequencedAssemblySubCategory {
 
@@ -32,7 +33,7 @@ public abstract class SequencedAssemblySubCategory {
 
 	public void setRecipe(IRecipeLayoutBuilder builder, SequencedRecipe<?> recipe, IFocusGroup focuses, int x) {}
 
-	public abstract void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index);
+	public abstract void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index);
 
 	public static class AssemblyPressing extends SequencedAssemblySubCategory {
 
@@ -44,12 +45,13 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+			PoseStack ms = graphics.pose();
 			press.offset = index;
 			ms.pushPose();
 			ms.translate(-5, 50, 0);
 			ms.scale(.6f, .6f, .6f);
-			press.draw(ms, getWidth() / 2, 0);
+			press.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
 		}
 
@@ -78,7 +80,8 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+			PoseStack ms = graphics.pose();
 			spout.offset = index;
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
@@ -87,7 +90,7 @@ public abstract class SequencedAssemblySubCategory {
 				.getFluidIngredients()
 				.get(0)
 				.getMatchingFluidStacks())
-				.draw(ms, getWidth() / 2, 0);
+				.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
 		}
 
@@ -117,12 +120,13 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+			PoseStack ms = graphics.pose();
 			deployer.offset = index;
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
-			deployer.draw(ms, getWidth() / 2, 0);
+			deployer.draw(graphics, getWidth() / 2, 0);
 			ms.popPose();
 		}
 
@@ -138,11 +142,12 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, GuiGraphics graphics, double mouseX, double mouseY, int index) {
+			PoseStack ms = graphics.pose();
 			ms.pushPose();
 			ms.translate(0, 51.5f, 0);
 			ms.scale(.6f, .6f, .6f);
-			saw.draw(ms, getWidth() / 2, 30);
+			saw.draw(graphics, getWidth() / 2, 30);
 			ms.popPose();
 		}
 

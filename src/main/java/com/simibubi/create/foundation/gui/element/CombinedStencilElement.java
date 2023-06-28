@@ -4,6 +4,8 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
+
 public class CombinedStencilElement extends StencilElement {
 
 	private StencilElement element1;
@@ -43,26 +45,27 @@ public class CombinedStencilElement extends StencilElement {
 	}
 
 	@Override
-	protected void renderStencil(PoseStack ms) {
+	protected void renderStencil(GuiGraphics graphics) {
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		element1.transform(ms);
 		element1.withBounds(width, height);
-		element1.renderStencil(ms);
+		element1.renderStencil(graphics);
 		ms.popPose();
 		ms.pushPose();
 		element2.transform(ms);
 		element2.withBounds(width, height);
-		element2.renderStencil(ms);
+		element2.renderStencil(graphics);
 		ms.popPose();
 	}
 
 	@Override
-	protected void renderElement(PoseStack ms) {
+	protected void renderElement(GuiGraphics graphics) {
 		if (mode.rendersFirst())
-			element1.<StencilElement>withBounds(width, height).renderElement(ms);
+			element1.<StencilElement>withBounds(width, height).renderElement(graphics);
 
 		if (mode.rendersSecond())
-			element2.<StencilElement>withBounds(width, height).renderElement(ms);
+			element2.<StencilElement>withBounds(width, height).renderElement(graphics);
 	}
 
 	public enum ElementMode {

@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -59,7 +60,8 @@ public class ToolSelectionScreen extends Screen {
 		selection = (selection + tools.size()) % tools.size();
 	}
 
-	private void draw(PoseStack matrixStack, float partialTicks) {
+	private void draw(GuiGraphics graphics, float partialTicks) {
+		PoseStack matrixStack = graphics.pose();
 		Window mainWindow = minecraft.getWindow();
 		if (!initialized)
 			init(minecraft, mainWindow.getGuiScaledWidth(), mainWindow.getGuiScaledHeight());
@@ -74,8 +76,7 @@ public class ToolSelectionScreen extends Screen {
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderColor(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
 
-		RenderSystem.setShaderTexture(0, gray.location);
-		blit(matrixStack, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
+		graphics.blit(gray.location, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
 
 		float toolTipAlpha = yOffset / 10;
 		List<Component> toolTip = tools.get(selection)
@@ -84,17 +85,17 @@ public class ToolSelectionScreen extends Screen {
 
 		if (toolTipAlpha > 0.25f) {
 			RenderSystem.setShaderColor(.7f, .7f, .8f, toolTipAlpha);
-			blit(matrixStack, x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
+			graphics.blit(gray.location, x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
 			RenderSystem.setShaderColor(1, 1, 1, 1);
 
 			if (toolTip.size() > 0)
-				font.draw(matrixStack, toolTip.get(0), x - 10, y + 38, 0xEEEEEE + stringAlphaComponent);
+				graphics.drawString(font, toolTip.get(0), x - 10, y + 38, 0xEEEEEE + stringAlphaComponent, false);
 			if (toolTip.size() > 1)
-				font.draw(matrixStack, toolTip.get(1), x - 10, y + 50, 0xCCDDFF + stringAlphaComponent);
+				graphics.drawString(font, toolTip.get(1), x - 10, y + 50, 0xCCDDFF + stringAlphaComponent, false);
 			if (toolTip.size() > 2)
-				font.draw(matrixStack, toolTip.get(2), x - 10, y + 60, 0xCCDDFF + stringAlphaComponent);
+				graphics.drawString(font, toolTip.get(2), x - 10, y + 60, 0xCCDDFF + stringAlphaComponent, false);
 			if (toolTip.size() > 3)
-				font.draw(matrixStack, toolTip.get(3), x - 10, y + 72, 0xCCCCDD + stringAlphaComponent);
+				graphics.drawString(font, toolTip.get(3), x - 10, y + 72, 0xCCCCDD + stringAlphaComponent, false);
 		}
 
 		RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -103,10 +104,10 @@ public class ToolSelectionScreen extends Screen {
 			int width = minecraft.getWindow()
 				.getGuiScaledWidth();
 			if (!focused)
-				drawCenteredString(matrixStack, minecraft.font, Lang.translateDirect(holdToFocus, keyName), width / 2,
+				graphics.drawCenteredString(minecraft.font, Lang.translateDirect(holdToFocus, keyName), width / 2,
 					y - 10, 0xCCDDFF);
 			else
-				drawCenteredString(matrixStack, minecraft.font, scrollToCycle, width / 2, y - 10, 0xCCDDFF);
+				graphics.drawCenteredString(minecraft.font, scrollToCycle, width / 2, y - 10, 0xCCDDFF);
 		} else {
 			x += 65;
 		}
@@ -117,7 +118,7 @@ public class ToolSelectionScreen extends Screen {
 			float alpha = focused ? 1 : .2f;
 			if (i == selection) {
 				matrixStack.translate(0, -10, 0);
-				drawCenteredString(matrixStack, minecraft.font, tools.get(i)
+				graphics.drawCenteredString(minecraft.font, tools.get(i)
 					.getDisplayName()
 					.getString(), x + i * 50 + 24, y + 28, 0xCCDDFF);
 				alpha = 1;
@@ -125,11 +126,11 @@ public class ToolSelectionScreen extends Screen {
 			RenderSystem.setShaderColor(0, 0, 0, alpha);
 			tools.get(i)
 				.getIcon()
-				.render(matrixStack, x + i * 50 + 16, y + 12, this);
+				.render(graphics, x + i * 50 + 16, y + 12);
 			RenderSystem.setShaderColor(1, 1, 1, alpha);
 			tools.get(i)
 				.getIcon()
-				.render(matrixStack, x + i * 50 + 16, y + 11, this);
+				.render(graphics, x + i * 50 + 16, y + 11);
 
 			matrixStack.popPose();
 		}
@@ -145,8 +146,8 @@ public class ToolSelectionScreen extends Screen {
 			yOffset *= .9f;
 	}
 
-	public void renderPassive(PoseStack matrixStack, float partialTicks) {
-		draw(matrixStack, partialTicks);
+	public void renderPassive(GuiGraphics graphics, float partialTicks) {
+		draw(graphics, partialTicks);
 	}
 
 	@Override

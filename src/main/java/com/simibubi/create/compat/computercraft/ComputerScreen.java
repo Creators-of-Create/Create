@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -15,6 +14,7 @@ import com.simibubi.create.foundation.gui.widget.ElementWidget;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -73,23 +73,25 @@ public class ComputerScreen extends AbstractSimiScreen {
 
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
+		background.render(graphics, x, y);
 
-		font.draw(ms, displayTitle.get(), x + background.width / 2.0F - font.width(displayTitle.get()) / 2.0F, y + 4, 0x442000);
-		font.drawWordWrap(Lang.translate("gui.attached_computer.controlled").component(), x + 55, y + 32, 111, 0x7A7A7A);
+		graphics.drawString(font, displayTitle.get(),
+			Math.round(x + background.width / 2.0F - font.width(displayTitle.get()) / 2.0F), y + 4, 0x442000, false);
+		graphics.drawWordWrap(font, Lang.translate("gui.attached_computer.controlled")
+			.component(), x + 55, y + 32, 111, 0x7A7A7A);
 
 		if (additional != null)
-			additional.render(ms, mouseX, mouseY, partialTicks, x, y, background);
+			additional.render(graphics, mouseX, mouseY, partialTicks, x, y, background);
 	}
 
 	@FunctionalInterface
 	public interface RenderWindowFunction {
 
-		void render(PoseStack ms, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background);
+		void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background);
 
 	}
 

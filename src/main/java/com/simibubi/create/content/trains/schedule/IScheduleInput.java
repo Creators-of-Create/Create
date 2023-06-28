@@ -5,11 +5,11 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -56,7 +56,7 @@ public interface IScheduleInput {
 	public default void initConfigurationWidgets(ModularGuiLineBuilder builder) {};
 
 	@OnlyIn(Dist.CLIENT)
-	public default boolean renderSpecialIcon(PoseStack ms, int x, int y) {
+	public default boolean renderSpecialIcon(GuiGraphics graphics, int x, int y) {
 		return false;
 	}
 

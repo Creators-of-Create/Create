@@ -31,7 +31,8 @@ public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEnt
 
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.renderStatic(item, ItemDisplayContext.GROUND, light, OverlayTexture.NO_OVERLAY, ms, buffer, 0);
+			.renderStatic(item, ItemDisplayContext.GROUND, light, OverlayTexture.NO_OVERLAY, ms, buffer, entity.level(),
+				0);
 		ms.popPose();
 	}
 

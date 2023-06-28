@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
@@ -16,6 +15,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
 import com.simibubi.create.foundation.utility.Components;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
@@ -130,13 +130,13 @@ public class ConfigModListScreen extends ConfigScreen {
 		}
 
 		@Override
-		public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
-			super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+		public void render(GuiGraphics graphics, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+			super.render(graphics, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
 			button.setX(x + width - 108);
 			button.setY(y + 10);
 			button.setHeight(height - 20);
-			button.render(ms, mouseX, mouseY, partialTicks);
+			button.render(graphics, mouseX, mouseY, partialTicks);
 		}
 
 		@Override

@@ -6,7 +6,6 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.TickableGuiEventListener;
 import com.simibubi.create.foundation.utility.Components;
 

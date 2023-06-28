@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -17,6 +16,7 @@ import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -61,21 +61,21 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	}
 
 	@Override
-	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
-		renderPlayerInventory(ms, invX, invY);
+		renderPlayerInventory(graphics, invX, invY);
 
 		int x = leftPos;
 		int y = topPos;
 
-		background.render(ms, x, y, this);
-		font.draw(ms, title, x + 15, y + 4, 0x592424);
+		background.render(graphics, x, y);
+		graphics.drawString(font, title, x + 15, y + 4, 0x592424, false);
 
 		GuiGameElement.of(menu.contentHolder).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.width - 4, y + background.height - 56, -200)
 			.scale(5)
-			.render(ms);
+			.render(graphics);
 	}
 
 	@Override
@@ -88,14 +88,14 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	}
 
 	@Override
-	protected void renderTooltip(PoseStack ms, int x, int y) {
+	protected void renderTooltip(GuiGraphics graphics, int x, int y) {
 		if (!menu.getCarried()
 			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.hasItem()
 			|| hoveredSlot.container == menu.playerInventory) {
-			super.renderTooltip(ms, x, y);
+			super.renderTooltip(graphics, x, y);
 			return;
 		}
-		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex()), x, y, font);
+		graphics.renderComponentTooltip(font, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex()), x, y);
 	}
 
 	@Override

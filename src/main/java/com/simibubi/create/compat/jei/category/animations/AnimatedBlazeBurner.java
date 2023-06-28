@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,7 +29,8 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 		return this;
 	}
 
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 200);
 		matrixStack.mulPose(Axis.XP.rotationDegrees(-15.5f));
@@ -39,7 +41,7 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 
 		blockElement(AllBlocks.BLAZE_BURNER.getDefaultState()).atLocal(0, 1.65, 0)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 
 		PartialModel blaze =
 			heatLevel == HeatLevel.SEETHING ? AllPartialModels.BLAZE_SUPER : AllPartialModels.BLAZE_ACTIVE;
@@ -49,11 +51,11 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 		blockElement(blaze).atLocal(1, 1.8, 1)
 			.rotate(0, 180, 0)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 		blockElement(rods2).atLocal(1, 1.7 + offset, 1)
 			.rotate(0, 180, 0)
 			.scale(scale)
-			.render(matrixStack);
+			.render(graphics);
 
 		matrixStack.scale(scale, -scale, scale);
 		matrixStack.translate(0, -1.8, 0);
