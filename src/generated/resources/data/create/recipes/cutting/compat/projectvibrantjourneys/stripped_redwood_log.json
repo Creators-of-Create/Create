@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "projectvibrantjourneys:stripped_redwood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "projectvibrantjourneys:redwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "projectvibrantjourneys",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

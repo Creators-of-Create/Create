@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "druidcraft:stripped_darkwood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "druidcraft:darkwood_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "druidcraft",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

@@ -26,7 +26,20 @@ public enum Mods {
 	TF("twilightforest"),
 	ECO("ecologics"),
 
-	IC2("ic2", b -> b.reverseMetalPrefix())
+	IC2("ic2", b -> b.reverseMetalPrefix()),
+
+	ATMO("atmospheric"),
+
+	AUTUM("autumnity"),
+
+	DRUIDCRAFT("druidcraft"),
+	ENDER("endergetic"),
+	PVJ("projectvibrantjourneys"),
+
+	UA("upgrade_aquatic"),
+
+	BEF("betterendforge"),
+	ENV("environmental"),
 
 	;
 

@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "projectvibrantjourneys:stripped_maple_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "projectvibrantjourneys:maple_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "projectvibrantjourneys",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

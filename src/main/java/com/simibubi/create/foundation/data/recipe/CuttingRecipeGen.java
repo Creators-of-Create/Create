@@ -101,8 +101,27 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		// Blue Skies (crystallized does not have stripped variants)
 		BSK = cuttingCompat(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry"),
 		BSK_2 = stripAndMakePlanks(Mods.BSK, null, "crystallized_log", "crystallized_planks"),
-		BSK_3 = stripAndMakePlanks(Mods.BSK, null, "crystallized_wood", "crystallized_planks")
+		BSK_3 = stripAndMakePlanks(Mods.BSK, null, "crystallized_wood", "crystallized_planks"),
 
+		// Atmospheric
+
+		ATMO = cuttingCompatLogOnly(Mods.ATMO, "aspen", "grimwood", "kousa", "rosewood", "yucca" ),
+
+		// Autumnity
+		AUTUM = cuttingCompatLogOnly(Mods.AUTUM, "maple"),
+
+		// Druidcraft
+		DRUIDCRAFT = cuttingCompatLogOnly(Mods.DRUIDCRAFT, "darkwood", "elder"),
+
+		// Endergetic
+
+		ENDERGETIC = stripAndMakePlanks(Mods.ENDER, "poise_stem", "stripped_poise_stem", "poise_planks"),
+
+		// Project Vibrant Journeys
+		PVJ = cuttingCompatLogOnly(Mods.PVJ,"aspen", "baobab", "cottonwood", "fir", "juniper", "mangrove", "maple", "palm", "pine", "redwood", "willow"),
+
+		// Upgrade Aquatic
+		UA = cuttingCompatLogOnly(Mods.UA, "driftwood", "river")
 	;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
@@ -125,6 +144,16 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 			String wood = type + (mod.omitWoodSuffix ? "" : "_wood");
 			stripAndMakePlanks(mod, wood, strippedPre + wood + strippedPost, planks);
+		}
+		return null;
+	}
+
+	GeneratedRecipe cuttingCompatLogOnly(Mods mod, String... woodtypes) {
+		for (String type : woodtypes) {
+			String planks = type + "_planks";
+			String strippedPre = mod.strippedIsSuffix ? "" : "stripped_";
+			String strippedPost = mod.strippedIsSuffix ? "_stripped" : "";
+			stripAndMakePlanks(mod, type + "_log", strippedPre + type + "_log" + strippedPost, planks);
 		}
 		return null;
 	}
