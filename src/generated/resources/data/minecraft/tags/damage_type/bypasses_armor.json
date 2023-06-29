@@ -1,11 +1,11 @@
 {
   "values": [
     {
-      "id": "create:fan_lava",
+      "id": "create:fan_fire",
       "required": false
     },
     {
-      "id": "create:crush",
+      "id": "create:fan_lava",
       "required": false
     },
     {
@@ -13,11 +13,11 @@
       "required": false
     },
     {
-      "id": "create:fan_fire",
+      "id": "create:mechanical_saw",
       "required": false
     },
     {
-      "id": "create:mechanical_saw",
+      "id": "create:crush",
       "required": false
     }
   ]

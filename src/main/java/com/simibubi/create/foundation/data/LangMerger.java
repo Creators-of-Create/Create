@@ -11,29 +11,32 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import com.google.common.hash.Hashing;
-import com.google.common.hash.HashingOutputStream;
+import com.google.common.hash.HashCode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
-import com.tterrag.registrate.providers.RegistrateProvider;
+import com.tterrag.registrate.providers.RegistrateDataProvider;
 
 import net.minecraft.Util;
 import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
-public class LangMerger implements RegistrateProvider {
+public class LangMerger implements DataProvider {
 
 	static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
@@ -58,6 +61,18 @@ public class LangMerger implements RegistrateProvider {
 		this.mergedLangData = new ArrayList<>();
 		this.langIgnore = new ArrayList<>();
 		populateLangIgnore();
+	}
+
+	public static void attachToRegistrateProvider(DataGenerator gen, PackOutput output) {
+		Map<String, DataProvider> providers =
+			ObfuscationReflectionHelper.getPrivateValue(DataGenerator.class, gen, "providersToRun");
+		Entry<String, DataProvider> entryToReplace = null;
+		for (Entry<String, DataProvider> entry : providers.entrySet())
+			if (entry.getValue() instanceof RegistrateDataProvider rdp)
+				entryToReplace = entry;
+		if (entryToReplace != null)
+			providers.put(entryToReplace.getKey(), new ChainedDataProvider(entryToReplace.getValue(),
+				new LangMerger(output, Create.ID, Create.NAME, AllLangPartials.values())));
 	}
 
 	protected void populateLangIgnore() {
@@ -194,17 +209,14 @@ public class LangMerger implements RegistrateProvider {
 				.getAsJsonObject());
 	}
 
-	@SuppressWarnings("deprecation")
 	private void save(CachedOutput cache, List<Object> dataIn, Path target, String message) throws IOException {
-
 		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-		HashingOutputStream hashingoutputstream = new HashingOutputStream(Hashing.sha1(), bytearrayoutputstream);
-
-		Writer writer = new OutputStreamWriter(hashingoutputstream, StandardCharsets.UTF_8);
+		Writer writer = new OutputStreamWriter(bytearrayoutputstream, StandardCharsets.UTF_8);
 		writer.append(createString(dataIn));
 		writer.close();
 
-		cache.writeIfNeeded(target, bytearrayoutputstream.toByteArray(), hashingoutputstream.hash());
+		CachedOutput.NO_CACHE.writeIfNeeded(target, bytearrayoutputstream.toByteArray(), HashCode.fromInt(0));
+		Create.LOGGER.info(message);
 	}
 
 	protected String createString(List<Object> data) {
@@ -216,11 +228,6 @@ public class LangMerger implements RegistrateProvider {
 			.append("!\"\n\n");
 		builder.append("}");
 		return builder.toString();
-	}
-
-	@Override
-	public LogicalSide getSide() {
-		return LogicalSide.CLIENT;
 	}
 
 }

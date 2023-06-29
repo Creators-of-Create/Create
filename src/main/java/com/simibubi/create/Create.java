@@ -28,7 +28,6 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
 import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
-import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.TagGen;
@@ -46,8 +45,6 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
 import com.simibubi.create.infrastructure.worldgen.WorldgenDataProvider;
-import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -145,7 +142,7 @@ public class Create {
 		CopperRegistries.inject();
 
 		modEventBus.addListener(Create::init);
-		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
+		modEventBus.addListener(EventPriority.LOW, Create::gatherData);
 		modEventBus.addListener(AllSoundEvents::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
@@ -167,18 +164,16 @@ public class Create {
 		});
 	}
 
-	public static final ProviderType<LangMerger> LANG_MERGER =
-		ProviderType.register("lang_merger", (p, e) -> new LangMerger(e.getGenerator()
-			.getPackOutput(), ID, NAME, AllLangPartials.values()));
-
 	public static void gatherData(GatherDataEvent event) {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
 		PackOutput output = gen.getPackOutput();
+		
 		if (event.includeClient()) {
-			REGISTRATE.addDataGenerator(LANG_MERGER, NonNullConsumer.noop());
 			gen.addProvider(true, AllSoundEvents.provider(gen));
+			LangMerger.attachToRegistrateProvider(gen, output);
 		}
+		
 		if (event.includeServer()) {
 			gen.addProvider(true, new AllAdvancements(output));
 			gen.addProvider(true, new StandardRecipeGen(output));
