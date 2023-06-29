@@ -1,0 +1,19 @@
+{
+  "type": "create:pressing",
+  "ingredients": [
+    {
+      "item": "betterendforge:cave_moss"
+    }
+  ],
+  "results": [
+    {
+      "item": "betterendforge:cave_moss_path"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "betterendforge",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

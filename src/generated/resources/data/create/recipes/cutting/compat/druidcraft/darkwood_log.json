@@ -1,0 +1,20 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "druidcraft:darkwood_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "druidcraft:stripped_darkwood_log"
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "druidcraft",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

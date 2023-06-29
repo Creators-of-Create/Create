@@ -1,0 +1,21 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "projectvibrantjourneys:stripped_juniper_log"
+    }
+  ],
+  "results": [
+    {
+      "item": "projectvibrantjourneys:juniper_planks",
+      "count": 6
+    }
+  ],
+  "processingTime": 50,
+  "conditions": [
+    {
+      "modid": "projectvibrantjourneys",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}
