@@ -129,6 +129,7 @@ public class Create {
 		AllEntityDataSerializers.register(modEventBus);
 		AllFeatures.register(modEventBus);
 		AllPlacementModifiers.register(modEventBus);
+		AllCreativeModeTabs.register(modEventBus);
 		BogeySizes.init();
 		AllBogeyStyles.register();
 

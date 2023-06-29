@@ -38,8 +38,8 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
 import net.minecraft.data.recipes.SpecialRecipeBuilder;
-import net.minecraft.data.recipes.UpgradeRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -1111,18 +1111,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.requires(Items.BONE_MEAL)),
 
 		NETHERITE_DIVING_HELMET =
-			create(AllItems.NETHERITE_DIVING_HELMET).viaSmithing(AllItems.COPPER_DIVING_HELMET::get, I::netherite),
+			create(AllItems.NETHERITE_DIVING_HELMET).viaNetheriteSmithing(AllItems.COPPER_DIVING_HELMET::get, I::netherite),
 		NETHERITE_BACKTANK =
-			create(AllItems.NETHERITE_BACKTANK).viaSmithing(AllItems.COPPER_BACKTANK::get, I::netherite),
+			create(AllItems.NETHERITE_BACKTANK).viaNetheriteSmithing(AllItems.COPPER_BACKTANK::get, I::netherite),
 		NETHERITE_DIVING_BOOTS =
-			create(AllItems.NETHERITE_DIVING_BOOTS).viaSmithing(AllItems.COPPER_DIVING_BOOTS::get, I::netherite),
+			create(AllItems.NETHERITE_DIVING_BOOTS).viaNetheriteSmithing(AllItems.COPPER_DIVING_BOOTS::get, I::netherite),
 
 		NETHERITE_DIVING_HELMET_2 = create(AllItems.NETHERITE_DIVING_HELMET).withSuffix("_from_netherite")
-			.viaSmithing(() -> Items.NETHERITE_HELMET, () -> Ingredient.of(AllItems.COPPER_DIVING_HELMET.get())),
+			.viaNetheriteSmithing(() -> Items.NETHERITE_HELMET, () -> Ingredient.of(AllItems.COPPER_DIVING_HELMET.get())),
 		NETHERITE_BACKTANK_2 = create(AllItems.NETHERITE_BACKTANK).withSuffix("_from_netherite")
-			.viaSmithing(() -> Items.NETHERITE_CHESTPLATE, () -> Ingredient.of(AllItems.COPPER_BACKTANK.get())),
+			.viaNetheriteSmithing(() -> Items.NETHERITE_CHESTPLATE, () -> Ingredient.of(AllItems.COPPER_BACKTANK.get())),
 		NETHERITE_DIVING_BOOTS_2 = create(AllItems.NETHERITE_DIVING_BOOTS).withSuffix("_from_netherite")
-			.viaSmithing(() -> Items.NETHERITE_BOOTS, () -> Ingredient.of(AllItems.COPPER_DIVING_BOOTS.get()))
+			.viaNetheriteSmithing(() -> Items.NETHERITE_BOOTS, () -> Ingredient.of(AllItems.COPPER_DIVING_BOOTS.get()))
 
 	;
 
@@ -1367,11 +1367,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			});
 		}
 
-		GeneratedRecipe viaSmithing(Supplier<? extends Item> base, Supplier<Ingredient> upgradeMaterial) {
+		GeneratedRecipe viaNetheriteSmithing(Supplier<? extends Item> base, Supplier<Ingredient> upgradeMaterial) {
 			return register(consumer -> {
-				UpgradeRecipeBuilder b = UpgradeRecipeBuilder.smithing(Ingredient.of(base.get()), upgradeMaterial.get(),
-					RecipeCategory.COMBAT, result.get()
-						.asItem());
+				SmithingTransformRecipeBuilder b =
+					SmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+						Ingredient.of(base.get()), upgradeMaterial.get(), RecipeCategory.COMBAT, result.get()
+							.asItem());
 				b.unlocks("has_item", inventoryTrigger(ItemPredicate.Builder.item()
 					.of(base.get())
 					.build()));

@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket;
@@ -24,7 +23,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 
 public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintMenu> {
 
@@ -87,20 +85,16 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintMenu> 
 	@Override
 	protected void renderTooltip(GuiGraphics graphics, int x, int y) {
 		if (!menu.getCarried()
-			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.hasItem()
-			|| hoveredSlot.container == menu.playerInventory) {
+			.isEmpty() || this.hoveredSlot == null || hoveredSlot.container == menu.playerInventory) {
 			super.renderTooltip(graphics, x, y);
 			return;
 		}
-		graphics.renderComponentTooltip(font, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex(), true), x, y);
-	}
 
-	@Override
-	public List<Component> getTooltipFromItem(ItemStack stack) {
-		List<Component> list = super.getTooltipFromItem(stack);
-		if (hoveredSlot.container == menu.playerInventory)
-			return list;
-		return hoveredSlot != null ? addToTooltip(list, hoveredSlot.getSlotIndex(), false) : list;
+		List<Component> list = new LinkedList<>();
+		if (hoveredSlot.hasItem())
+			list = getTooltipFromContainerItem(hoveredSlot.getItem());
+
+		graphics.renderComponentTooltip(font, addToTooltip(list, hoveredSlot.getSlotIndex(), true), x, y);
 	}
 
 	private List<Component> addToTooltip(List<Component> list, int slot, boolean isEmptySlot) {

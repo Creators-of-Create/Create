@@ -56,7 +56,6 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	}
 
 	// TODO: Update once MinecraftForge#9163 is merged
-	@SuppressWarnings("removal")
 	@Override
 	public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
 		ChunkRenderTypeSet set = super.getRenderTypes(state, rand, data);

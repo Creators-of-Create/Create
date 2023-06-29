@@ -30,7 +30,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -84,7 +85,10 @@ public class SymmetryHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public static void render(RenderLevelLastEvent event) {
+	public static void onRenderWorld(RenderLevelStageEvent event) {
+		if (event.getStage() != Stage.AFTER_PARTICLES)
+			return;
+		
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		RandomSource random = RandomSource.create();

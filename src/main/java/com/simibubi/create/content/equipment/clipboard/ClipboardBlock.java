@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -139,11 +139,10 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
+	public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pBuilder) {
 		if (!(pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof ClipboardBlockEntity cbe))
 			return super.getDrops(pState, pBuilder);
-		pBuilder.withDynamicDrop(ShulkerBoxBlock.CONTENTS,
-			(p_56218_, p_56219_) -> p_56219_.accept(cbe.dataContainer.copy()));
+		pBuilder.withDynamicDrop(ShulkerBoxBlock.CONTENTS, p_56219_ -> p_56219_.accept(cbe.dataContainer.copy()));
 		return ImmutableList.of(cbe.dataContainer.copy());
 	}
 

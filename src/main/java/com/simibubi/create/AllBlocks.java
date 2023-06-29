@@ -2139,7 +2139,7 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<SlidingDoorBlock> ANDESITE_DOOR =
-		REGISTRATE.block("andesite_door", p -> new SlidingDoorBlock(p, true))
+		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.metal(p, true))
 			.transform(BuilderTransformers.slidingDoor("andesite"))
 			.properties(p -> p.mapColor(MapColor.STONE)
 				.sound(SoundType.STONE)
@@ -2147,7 +2147,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> BRASS_DOOR =
-		REGISTRATE.block("brass_door", p -> new SlidingDoorBlock(p, false))
+		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.metal(p, false))
 			.transform(BuilderTransformers.slidingDoor("brass"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW)
 				.sound(SoundType.STONE)
@@ -2155,7 +2155,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> COPPER_DOOR =
-		REGISTRATE.block("copper_door", p -> new SlidingDoorBlock(p, true))
+		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.metal(p, true))
 			.transform(BuilderTransformers.slidingDoor("copper"))
 			.properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
 				.sound(SoundType.STONE)
@@ -2163,7 +2163,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> TRAIN_DOOR =
-		REGISTRATE.block("train_door", p -> new SlidingDoorBlock(p, false))
+		REGISTRATE.block("train_door", p -> SlidingDoorBlock.metal(p, false))
 			.transform(BuilderTransformers.slidingDoor("train"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
 				.sound(SoundType.NETHERITE_BLOCK)
@@ -2179,7 +2179,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> FRAMED_GLASS_DOOR =
-		REGISTRATE.block("framed_glass_door", p -> new SlidingDoorBlock(p, false))
+		REGISTRATE.block("framed_glass_door", p -> SlidingDoorBlock.glass(p, false))
 			.transform(BuilderTransformers.slidingDoor("glass"))
 			.properties(p -> p.mapColor(MapColor.NONE)
 				.sound(SoundType.GLASS)

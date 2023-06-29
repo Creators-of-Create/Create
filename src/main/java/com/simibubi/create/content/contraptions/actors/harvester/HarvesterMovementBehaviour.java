@@ -117,7 +117,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		if (state.getBlock() instanceof CropBlock) {
 			CropBlock crop = (CropBlock) state.getBlock();
 			if (harvestPartial)
-				return state.getValue(crop.getAgeProperty()) != 0 || !replant;
+				return state != crop.getStateForAge(0) || !replant;
 			return crop.isMaxAge(state);
 		}
 

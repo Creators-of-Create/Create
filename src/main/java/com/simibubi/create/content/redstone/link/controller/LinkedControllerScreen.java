@@ -20,7 +20,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 
 public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedControllerMenu> {
 
@@ -90,20 +89,16 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	@Override
 	protected void renderTooltip(GuiGraphics graphics, int x, int y) {
 		if (!menu.getCarried()
-			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.hasItem()
-			|| hoveredSlot.container == menu.playerInventory) {
+			.isEmpty() || this.hoveredSlot == null || hoveredSlot.container == menu.playerInventory) {
 			super.renderTooltip(graphics, x, y);
 			return;
 		}
-		graphics.renderComponentTooltip(font, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex()), x, y);
-	}
 
-	@Override
-	public List<Component> getTooltipFromItem(ItemStack stack) {
-		List<Component> list = super.getTooltipFromItem(stack);
-		if (hoveredSlot.container == menu.playerInventory)
-			return list;
-		return hoveredSlot != null ? addToTooltip(list, hoveredSlot.getSlotIndex()) : list;
+		List<Component> list = new LinkedList<>();
+		if (hoveredSlot.hasItem())
+			list = getTooltipFromContainerItem(hoveredSlot.getItem());
+
+		graphics.renderComponentTooltip(font, addToTooltip(list, hoveredSlot.getSlotIndex()), x, y);
 	}
 
 	private List<Component> addToTooltip(List<Component> list, int slot) {

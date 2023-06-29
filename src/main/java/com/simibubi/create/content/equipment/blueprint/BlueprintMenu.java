@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -141,7 +142,7 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 		return contentHolder != null && contentHolder.canPlayerUse(player);
 	}
 
-	static class BlueprintCraftingInventory extends CraftingContainer {
+	static class BlueprintCraftingInventory extends TransientCraftingContainer {
 
 		public BlueprintCraftingInventory(AbstractContainerMenu menu, ItemStackHandler items) {
 			super(menu, 3, 3);

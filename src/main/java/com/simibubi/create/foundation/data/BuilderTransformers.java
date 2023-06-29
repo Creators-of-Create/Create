@@ -141,7 +141,7 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends SlidingDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> slidingDoor(String type) {
-		return b -> b.initialProperties(Material.NETHER_WOOD) // for villager AI. FIXME 1.20.1 consider a blocksettype?
+		return b -> b.initialProperties(() -> Blocks.IRON_DOOR)
 			.properties(p -> p.requiresCorrectToolForDrops()
 				.strength(3.0F, 6.0F))
 			.blockstate((c, p) -> {

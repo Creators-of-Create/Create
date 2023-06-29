@@ -177,7 +177,6 @@ public class DamageTypeData {
 		 *     <li>{@link DeathMessageType#INTENTIONAL_GAME_DESIGN}: "death.attack." + msgId, wrapped in brackets, linking to MCPE-28723</li>
 		 * </ul>
 		 */
-		@SuppressWarnings("JavadocReference")
 		public Builder deathMessageType(DeathMessageType type) {
 			this.deathMessageType = type;
 			return this;

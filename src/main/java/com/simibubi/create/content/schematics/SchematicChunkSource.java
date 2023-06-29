@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -97,19 +96,21 @@ public class SchematicChunkSource extends ChunkSource {
 	public static class EmptierChunk extends LevelChunk {
 
 		private static final class DummyLevel extends Level {
-			private final RegistryAccess access;
-
-			private DummyLevel(WritableLevelData p_46450_, ResourceKey<Level> p_46451_, Holder<DimensionType> p_46452_,
-				Supplier<ProfilerFiller> p_46453_, boolean p_46454_, boolean p_46455_, long p_46456_, int p_220359_,
-				RegistryAccess access) {
-				super(p_46450_, p_46451_, p_46452_, p_46453_, p_46454_, p_46455_, p_46456_, p_220359_);
-				this.access = access;
+			
+			private DummyLevel(WritableLevelData pLevelData, ResourceKey<Level> pDimension,
+				RegistryAccess pRegistryAccess, Holder<DimensionType> pDimensionTypeRegistration,
+				Supplier<ProfilerFiller> pProfiler, boolean pIsClientSide, boolean pIsDebug, long pBiomeZoomSeed,
+				int pMaxChainedNeighborUpdates) {
+				super(pLevelData, pDimension, pRegistryAccess, pDimensionTypeRegistration, pProfiler, pIsClientSide, pIsDebug,
+					pBiomeZoomSeed, pMaxChainedNeighborUpdates);
+				access = pRegistryAccess;
 			}
 
+			private final RegistryAccess access;
+			
 			private DummyLevel(RegistryAccess access) {
-				this(null, null, access
-						.registryOrThrow(Registries.DIMENSION_TYPE)
-						.getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD), null, false, false, 0, 0, access);
+				this(null, null, access, access.registryOrThrow(Registries.DIMENSION_TYPE)
+					.getHolderOrThrow(BuiltinDimensionTypes.OVERWORLD), null, false, false, 0, 0);
 			}
 
 			@Override

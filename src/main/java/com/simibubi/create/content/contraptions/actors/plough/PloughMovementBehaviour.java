@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -122,11 +122,10 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 		if (brokenState.getBlock() == Blocks.SNOW && context.world instanceof ServerLevel) {
 			ServerLevel world = (ServerLevel) context.world;
-			brokenState
-				.getDrops(new LootContext.Builder(world).withParameter(LootContextParams.BLOCK_STATE, brokenState)
-					.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
-					.withParameter(LootContextParams.THIS_ENTITY, getPlayer(context))
-					.withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_SHOVEL)))
+			brokenState.getDrops(new LootParams.Builder(world).withParameter(LootContextParams.BLOCK_STATE, brokenState)
+				.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
+				.withParameter(LootContextParams.THIS_ENTITY, getPlayer(context))
+				.withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_SHOVEL)))
 				.forEach(s -> dropItem(context, s));
 		}
 	}

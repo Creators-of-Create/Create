@@ -218,7 +218,7 @@ public class BlockHelper {
 		int idx = chunk.getSectionIndex(target.getY());
 		LevelChunkSection chunksection = chunk.getSection(idx);
 		if (chunksection == null) {
-			chunksection = new LevelChunkSection(chunk.getSectionYFromSectionIndex(idx), world.registryAccess()
+			chunksection = new LevelChunkSection(world.registryAccess()
 				.registryOrThrow(Registries.BIOME));
 			chunk.getSections()[idx] = chunksection;
 		}

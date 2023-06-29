@@ -28,58 +28,56 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.item.CreativeModeTab.Output;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.event.CreativeModeTabEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class AllCreativeModeTabs {
+
+	private static final DeferredRegister<CreativeModeTab> TAB_REGISTER =
+		DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Create.ID);
+
+	public static RegistryObject<CreativeModeTab> MAIN_TAB = TAB_REGISTER.register("base",
+		() -> CreativeModeTab.builder()
+			.title(Component.translatable("itemGroup.create.base"))
+			.icon(() -> AllBlocks.COGWHEEL.asStack())
+			.displayItems(new RegistrateDisplayItemsGenerator(true))
+			.build());
+
+	public static RegistryObject<CreativeModeTab> BUILDING_BLOCKS_TAB = TAB_REGISTER.register("palettes",
+		() -> CreativeModeTab.builder()
+			.title(Component.translatable("itemGroup.create.palettes"))
+			.icon(() -> AllPaletteBlocks.ORNATE_IRON_WINDOW.asStack())
+			.displayItems(new RegistrateDisplayItemsGenerator(false))
+			.build());
 	
-	public static final ResourceLocation BASE_TAB_ID = Create.asResource("base");
-	public static final ResourceLocation PALETTES_TAB_ID = Create.asResource("palettes");
-
-	private static CreativeModeTab baseTab;
-	private static CreativeModeTab palettesTab;
-
-	@SubscribeEvent
-	public static void onCreativeModeTabRegister(CreativeModeTabEvent.Register event) {
-		// FIXME: 1.19.3 this used to filter by AllSections.PALETTES
-		baseTab = event.registerCreativeModeTab(BASE_TAB_ID, List.of(PALETTES_TAB_ID), List.of(CreativeModeTabs.SPAWN_EGGS), builder -> {
-			builder.title(Component.translatable("itemGroup.create.base"))
-				.icon(() -> AllBlocks.COGWHEEL.asStack())
-				.displayItems(new RegistrateDisplayItemsGenerator(true));
-		});
-
-		palettesTab = event.registerCreativeModeTab(PALETTES_TAB_ID, List.of(), List.of(CreativeModeTabs.SPAWN_EGGS, BASE_TAB_ID), builder -> {
-			builder.title(Component.translatable("itemGroup.create.palettes"))
-				.icon(() -> AllPaletteBlocks.ORNATE_IRON_WINDOW.asStack())
-				.displayItems(new RegistrateDisplayItemsGenerator(false));
-		});
+	public static void register(IEventBus modEventBus) {
+		TAB_REGISTER.register(modEventBus);
 	}
 
 	public static CreativeModeTab getBaseTab() {
-		return baseTab;
+		return MAIN_TAB.get();
 	}
 
 	public static CreativeModeTab getPalettesTab() {
-		return palettesTab;
+		return BUILDING_BLOCKS_TAB.get();
 	}
 
-	private static class RegistrateDisplayItemsGenerator implements DisplayItemsGenerator {
+	public static class RegistrateDisplayItemsGenerator implements DisplayItemsGenerator {
 //		private final EnumSet<AllSections> sections;
 		private final boolean addItems;
 

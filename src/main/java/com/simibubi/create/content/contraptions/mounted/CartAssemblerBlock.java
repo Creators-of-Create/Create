@@ -50,7 +50,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -264,7 +264,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 	@Override
 	@SuppressWarnings("deprecation")
 	@Nonnull
-	public List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
 		List<ItemStack> drops = super.getDrops(state, builder);
 		drops.addAll(getRailBlock(state).getDrops(builder));
 		return drops;
@@ -273,11 +273,11 @@ public class CartAssemblerBlock extends BaseRailBlock
 	@SuppressWarnings("deprecation")
 	public List<ItemStack> getDropsNoRail(BlockState state, ServerLevel world, BlockPos pos,
 		@Nullable BlockEntity p_220077_3_, @Nullable Entity p_220077_4_, ItemStack p_220077_5_) {
-		return super.getDrops(state, (new LootContext.Builder(world)).withRandom(world.random)
-			.withParameter(LootContextParams.ORIGIN, Vec3.atLowerCornerOf(pos))
-			.withParameter(LootContextParams.TOOL, p_220077_5_)
-			.withOptionalParameter(LootContextParams.THIS_ENTITY, p_220077_4_)
-			.withOptionalParameter(LootContextParams.BLOCK_ENTITY, p_220077_3_));
+		return super.getDrops(state,
+			(new LootParams.Builder(world)).withParameter(LootContextParams.ORIGIN, Vec3.atLowerCornerOf(pos))
+				.withParameter(LootContextParams.TOOL, p_220077_5_)
+				.withOptionalParameter(LootContextParams.THIS_ENTITY, p_220077_4_)
+				.withOptionalParameter(LootContextParams.BLOCK_ENTITY, p_220077_3_));
 	}
 
 	@Override

@@ -85,7 +85,8 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -204,7 +205,10 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderWorld(RenderLevelLastEvent event) {
+	public static void onRenderWorld(RenderLevelStageEvent event) {
+		if (event.getStage() != Stage.AFTER_PARTICLES)
+			return;
+		
 		PoseStack ms = event.getPoseStack();
 		ms.pushPose();
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.decoration.slidingDoor;
 
+import java.util.function.Supplier;
+
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
@@ -24,10 +26,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -38,11 +42,31 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<SlidingDoorBlockEntity> {
 
+	public static final Supplier<BlockSetType> TRAIN_SET_TYPE =
+		() -> new BlockSetType("train", true, SoundType.NETHERITE_BLOCK, SoundEvents.IRON_DOOR_CLOSE,
+			SoundEvents.IRON_DOOR_OPEN, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundEvents.IRON_TRAPDOOR_OPEN,
+			SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+			SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+
+	public static final Supplier<BlockSetType> GLASS_SET_TYPE =
+		() -> new BlockSetType("train", true, SoundType.NETHERITE_BLOCK, SoundEvents.IRON_DOOR_CLOSE,
+			SoundEvents.IRON_DOOR_OPEN, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundEvents.IRON_TRAPDOOR_OPEN,
+			SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+			SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
 	private boolean folds;
 
-	public SlidingDoorBlock(Properties p_52737_, boolean folds) {
-		super(p_52737_, SoundEvents.IRON_DOOR_CLOSE, SoundEvents.IRON_DOOR_OPEN);
+	public static SlidingDoorBlock metal(Properties p_52737_, boolean folds) {
+		return new SlidingDoorBlock(p_52737_, TRAIN_SET_TYPE.get(), folds);
+	}
+	
+	public static SlidingDoorBlock glass(Properties p_52737_, boolean folds) {
+		return new SlidingDoorBlock(p_52737_, GLASS_SET_TYPE.get(), folds);
+	}
+	
+	public SlidingDoorBlock(Properties p_52737_, BlockSetType type, boolean folds) {
+		super(p_52737_, type);
 		this.folds = folds;
 	}
 

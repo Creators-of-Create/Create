@@ -19,7 +19,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
 
 public class GearboxBlock extends RotatedPillarKineticBlock implements IBE<GearboxBlockEntity> {
@@ -35,7 +35,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements IBE<Gearb
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<ItemStack> getDrops(BlockState state, Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
 		if (state.getValue(AXIS).isVertical())
 			return super.getDrops(state, builder);
 		return Arrays.asList(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));

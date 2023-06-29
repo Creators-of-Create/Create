@@ -40,9 +40,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -149,8 +149,8 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@SubscribeEvent
-	public static void entitiesDontRetaliate(LivingSetAttackTargetEvent event) {
-		if (!(event.getTarget() instanceof DeployerFakePlayer))
+	public static void entitiesDontRetaliate(LivingChangeTargetEvent event) {
+		if (!(event.getNewTarget() instanceof DeployerFakePlayer))
 			return;
 		LivingEntity entityLiving = event.getEntity();
 		if (!(entityLiving instanceof Mob))
