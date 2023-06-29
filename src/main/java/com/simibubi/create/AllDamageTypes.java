@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.damageTypes.DamageTypeData;
 
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageEffects;
 import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageType;
 
@@ -25,10 +26,12 @@ public class AllDamageTypes {
 			.build();
 	public static final DamageTypeData FAN_FIRE = DamageTypeData.builder()
 			.simpleId("fan_fire")
+			.effects(DamageEffects.BURNING)
 			.tag(DamageTypeTags.IS_FIRE, DamageTypeTags.BYPASSES_ARMOR)
 			.build();
 	public static final DamageTypeData FAN_LAVA = DamageTypeData.builder()
 			.simpleId("fan_lava")
+			.effects(DamageEffects.BURNING)
 			.tag(DamageTypeTags.IS_FIRE, DamageTypeTags.BYPASSES_ARMOR)
 			.build();
 	public static final DamageTypeData SAW = DamageTypeData.builder()
