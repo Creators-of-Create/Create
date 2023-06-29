@@ -88,7 +88,7 @@ public class WrenchItem extends Item {
 		if (player.isCreative())
 			return;
 		AbstractMinecart minecart = (AbstractMinecart) target;
-		minecart.hurt(DamageSource.playerAttack(player), 100);
+		minecart.hurt(minecart.damageSources().playerAttack(player), 100);
 	}
 
 	@Override

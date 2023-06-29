@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import com.simibubi.create.AllDamageTypes;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -50,7 +52,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -529,7 +531,7 @@ public class ContraptionCollider {
 		if (diffMotion.length() <= 0.35f || contraptionMotion.length() <= 0.35f)
 			return entityMotion;
 
-		EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
+		DamageSource source = AllDamageTypes.RUN_OVER.source(world, contraptionEntity);
 		double damage = diffMotion.length();
 		if (entity.getClassification(false) == MobCategory.MONSTER)
 			damage *= 2;
@@ -543,7 +545,7 @@ public class ContraptionCollider {
 			world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
 				SoundSource.NEUTRAL, 1, .75f);
 		} else {
-			entity.hurt(pSource, (int) (damage * 16));
+			entity.hurt(source, (int) (damage * 16));
 			world.playSound(null, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL, 1, .75f);
 			if (!entity.isAlive())
 				contraptionEntity.getControllingPlayer()

@@ -1,7 +1,6 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
-import javax.annotation.Nullable;
-
+import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -18,8 +17,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,6 +36,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
+
+import org.jetbrains.annotations.NotNull;
 
 public class PotatoProjectileEntity extends AbstractHurtingProjectile implements IEntityAdditionalSpawnData {
 
@@ -293,8 +294,8 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	@Override
-	public boolean hurt(DamageSource source, float amt) {
-		if (source == DamageSource.IN_FIRE || source == DamageSource.ON_FIRE)
+	public boolean hurt(@NotNull DamageSource source, float amt) {
+		if (source.is(DamageTypeTags.IS_FIRE))
 			return false;
 		if (this.isInvulnerableTo(source))
 			return false;
@@ -316,15 +317,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	private DamageSource causePotatoDamage() {
-		return new PotatoDamageSource(this, getOwner()).setProjectile();
-	}
-
-	public static class PotatoDamageSource extends IndirectEntityDamageSource {
-
-		public PotatoDamageSource(Entity source, @Nullable Entity trueSource) {
-			super("create.potato_cannon", source, trueSource);
-		}
-
+		return AllDamageTypes.POTATO_CANNON.source(level(), getOwner(), this);
 	}
 
 	@SuppressWarnings("unchecked")

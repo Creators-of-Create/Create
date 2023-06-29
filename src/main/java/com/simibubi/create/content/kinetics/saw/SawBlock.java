@@ -7,6 +7,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.kinetics.drill.DrillBlock;
@@ -49,8 +50,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBlockEntity> {
-	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").bypassArmor();
-
 	public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
@@ -163,7 +162,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 		withBlockEntityDo(worldIn, pos, be -> {
 			if (be.getSpeed() == 0)
 				return;
-			entityIn.hurt(damageSourceSaw, (float) DrillBlock.getDamage(be.getSpeed()));
+			entityIn.hurt(AllDamageTypes.SAW.source(worldIn), (float) DrillBlock.getDamage(be.getSpeed()));
 		});
 	}
 
@@ -252,7 +251,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 					.setValue(FLIPPED, state.getValue(FLIPPED)));
 			}
 		}
-		
+
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.processing.recipe.ProcessingInventory;
@@ -230,7 +231,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 					processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 				}
 			}
-			processingEntity.hurt(CrushingWheelBlockEntity.DAMAGE_SOURCE, crusherDamage);
+			processingEntity.hurt(AllDamageTypes.CRUSH.source(level), crusherDamage);
 			if (!processingEntity.isAlive()) {
 				processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 			}

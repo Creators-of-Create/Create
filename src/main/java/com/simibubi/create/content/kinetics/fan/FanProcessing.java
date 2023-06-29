@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.simibubi.create.AllDamageTypes;
+
 import org.joml.Vector3f;
 
 import com.simibubi.create.AllBlocks;
@@ -57,12 +59,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class FanProcessing {
-
-	private static final DamageSource FIRE_DAMAGE_SOURCE = new DamageSource("create.fan_fire").setScalesWithDifficulty()
-		.setIsFire();
-	private static final DamageSource LAVA_DAMAGE_SOURCE = new DamageSource("create.fan_lava").setScalesWithDifficulty()
-		.setIsFire();
-
 	private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 	private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();
 	private static final HauntingWrapper HAUNTING_WRAPPER = new HauntingWrapper();
@@ -270,7 +266,7 @@ public class FanProcessing {
 
 				if (!entity.fireImmune()) {
 					entity.setSecondsOnFire(2);
-					entity.hurt(FIRE_DAMAGE_SOURCE, 2);
+					entity.hurt(AllDamageTypes.FAN_FIRE.source(level), 2);
 				}
 			}
 
@@ -368,7 +364,7 @@ public class FanProcessing {
 
 				if (!entity.fireImmune()) {
 					entity.setSecondsOnFire(10);
-					entity.hurt(LAVA_DAMAGE_SOURCE, 4);
+					entity.hurt(AllDamageTypes.FAN_LAVA.source(level), 4);
 				}
 			}
 

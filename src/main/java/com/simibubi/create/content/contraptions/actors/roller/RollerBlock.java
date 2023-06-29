@@ -31,9 +31,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class RollerBlock extends AttachedActorBlock implements IBE<RollerBlockEntity> {
-
-	public static DamageSource damageSourceRoller = new DamageSource("create.mechanical_roller");
-
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
 	public RollerBlock(Properties p_i48377_1_) {

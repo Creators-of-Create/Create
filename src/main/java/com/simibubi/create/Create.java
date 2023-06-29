@@ -2,6 +2,10 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
+
+import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -183,6 +187,8 @@ public class Create {
 			gen.addProvider(true, new SequencedAssemblyRecipeGen(output));
 			ProcessingRecipeGen.registerAll(gen, output);
 			gen.addProvider(true, WorldgenDataProvider.makeFactory(event.getLookupProvider()));
+			gen.addProvider(true, DamageTypeDataProvider.makeFactory(event.getLookupProvider()));
+			gen.addProvider(true, new DamageTypeTagGen(output, event.getLookupProvider()));
 		}
 	}
 

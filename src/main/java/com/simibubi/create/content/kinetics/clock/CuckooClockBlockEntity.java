@@ -2,6 +2,7 @@ package com.simibubi.create.content.kinetics.clock;
 
 import java.util.List;
 
+import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -26,8 +27,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class CuckooClockBlockEntity extends KineticBlockEntity {
 
-	public static DamageSource CUCKOO_SURPRISE = new DamageSource("create.cuckoo_clock_explosion").setExplosion();
-
 	public LerpedFloat hourHand = LerpedFloat.angular();
 	public LerpedFloat minuteHand = LerpedFloat.angular();
 	public LerpedFloat animationProgress = LerpedFloat.linear();
@@ -42,7 +41,7 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 		super(type, pos, state);
 		animationType = Animation.NONE;
 	}
-	
+
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
@@ -105,7 +104,8 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 				if (animationType == Animation.SURPRISE && Mth.equal(animationProgress.getValue(), 50)) {
 					Vec3 center = VecHelper.getCenterOf(worldPosition);
 					level.destroyBlock(worldPosition, false);
-					level.explode(null, CUCKOO_SURPRISE, null, center.x, center.y, center.z, 3, false,
+					DamageSource damageSource = AllDamageTypes.CUCKOO_SURPRISE.source(level);
+					level.explode(null, damageSource, null, center.x, center.y, center.z, 3, false,
 						ExplosionInteraction.BLOCK);
 				}
 

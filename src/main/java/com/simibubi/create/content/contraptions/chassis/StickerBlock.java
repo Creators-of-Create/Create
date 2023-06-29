@@ -95,7 +95,7 @@ public class StickerBlock extends WrenchableDirectionalBlock implements IBE<Stic
 	public void fallOn(Level p_152426_, BlockState p_152427_, BlockPos p_152428_, Entity p_152429_, float p_152430_) {
 		if (!isUprightSticker(p_152426_, p_152428_) || p_152429_.isSuppressingBounce())
 			super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, p_152430_);
-		p_152429_.causeFallDamage(p_152430_, 1.0F, DamageSource.FALL);
+		p_152429_.causeFallDamage(p_152430_, 1.0F, p_152426_.damageSources().fall());
 	}
 
 	@Override

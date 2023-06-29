@@ -24,7 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -110,7 +110,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	public UUID getUUID() {
 		return owner == null ? super.getUUID() : owner;
 	}
-	
+
 	@SubscribeEvent
 	public static void deployerHasEyesOnHisFeet(EntityEvent.Size event) {
 		if (event.getEntity() instanceof DeployerFakePlayer)
@@ -119,9 +119,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void deployerCollectsDropsFromKilledEntities(LivingDropsEvent event) {
-		if (!(event.getSource() instanceof EntityDamageSource))
-			return;
-		EntityDamageSource source = (EntityDamageSource) event.getSource();
+		DamageSource source = event.getSource();
 		Entity trueSource = source.getEntity();
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;

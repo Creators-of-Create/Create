@@ -91,7 +91,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
-	protected boolean throwsEntities() {
+	protected boolean throwsEntities(Level level) {
 		return true;
 	}
 
