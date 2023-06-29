@@ -30,5 +30,6 @@
     "recipes": [
       "create:oxidized_copper_shingle_stairs"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

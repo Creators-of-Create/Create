@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:millstone"
-  }
+  },
+  "show_notification": true
 }

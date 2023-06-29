@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/portable_storage_interface"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

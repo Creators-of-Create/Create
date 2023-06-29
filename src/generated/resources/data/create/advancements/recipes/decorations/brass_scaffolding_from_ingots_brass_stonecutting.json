@@ -28,5 +28,6 @@
     "recipes": [
       "create:brass_scaffolding_from_ingots_brass_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

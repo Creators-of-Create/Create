@@ -30,5 +30,6 @@
     "recipes": [
       "create:small_diorite_brick_slab_recycling"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

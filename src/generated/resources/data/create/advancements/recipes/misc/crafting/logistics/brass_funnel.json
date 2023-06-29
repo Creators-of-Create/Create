@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/logistics/brass_funnel"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

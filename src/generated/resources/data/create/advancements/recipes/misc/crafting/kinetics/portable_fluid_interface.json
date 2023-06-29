@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/portable_fluid_interface"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

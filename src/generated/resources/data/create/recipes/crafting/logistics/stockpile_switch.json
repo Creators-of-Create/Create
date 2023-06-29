@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:stockpile_switch"
-  }
+  },
+  "show_notification": true
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/schematics/schematic_table"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

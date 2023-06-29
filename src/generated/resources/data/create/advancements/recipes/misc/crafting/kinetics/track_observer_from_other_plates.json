@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/track_observer_from_other_plates"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

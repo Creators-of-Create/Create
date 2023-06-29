@@ -30,5 +30,6 @@
     "recipes": [
       "create:polished_cut_tuff_wall"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

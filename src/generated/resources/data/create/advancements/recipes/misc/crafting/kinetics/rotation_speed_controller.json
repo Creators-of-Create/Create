@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/rotation_speed_controller"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

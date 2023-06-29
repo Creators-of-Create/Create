@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:analog_lever"
-  }
+  },
+  "show_notification": true
 }

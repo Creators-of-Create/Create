@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:flywheel"
-  }
+  },
+  "show_notification": true
 }

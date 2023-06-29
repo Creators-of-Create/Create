@@ -30,5 +30,6 @@
     "recipes": [
       "create:weathered_copper_shingle_stairs_from_weathered_copper_shingles_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

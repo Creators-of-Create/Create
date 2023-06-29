@@ -30,5 +30,6 @@
     "recipes": [
       "create:small_granite_brick_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

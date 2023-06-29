@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/materials/brass_ingot_from_compacting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/materials/andesite_alloy"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

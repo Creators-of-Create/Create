@@ -21,5 +21,6 @@
   ],
   "result": {
     "item": "create:sticker"
-  }
+  },
+  "show_notification": true
 }

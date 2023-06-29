@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:propeller"
-  }
+  },
+  "show_notification": true
 }

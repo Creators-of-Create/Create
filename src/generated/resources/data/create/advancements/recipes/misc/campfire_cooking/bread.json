@@ -30,5 +30,6 @@
     "recipes": [
       "create:campfire_cooking/bread"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

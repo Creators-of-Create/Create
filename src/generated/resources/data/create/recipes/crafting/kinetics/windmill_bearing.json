@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:windmill_bearing"
-  }
+  },
+  "show_notification": true
 }

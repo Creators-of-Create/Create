@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "create:raw_zinc_block"
-  }
+  },
+  "show_notification": true
 }

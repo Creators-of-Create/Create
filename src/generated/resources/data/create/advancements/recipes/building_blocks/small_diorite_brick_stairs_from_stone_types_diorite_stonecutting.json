@@ -28,5 +28,6 @@
     "recipes": [
       "create:small_diorite_brick_stairs_from_stone_types_diorite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

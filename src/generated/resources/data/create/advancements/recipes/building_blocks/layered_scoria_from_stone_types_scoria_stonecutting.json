@@ -28,5 +28,6 @@
     "recipes": [
       "create:layered_scoria_from_stone_types_scoria_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

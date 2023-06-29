@@ -22,5 +22,6 @@
   ],
   "result": {
     "item": "create:schematicannon"
-  }
+  },
+  "show_notification": true
 }

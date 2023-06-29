@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/materials/electron_tube"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

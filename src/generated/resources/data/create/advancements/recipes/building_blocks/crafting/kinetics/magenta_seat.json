@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/magenta_seat"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -22,5 +22,6 @@
   ],
   "result": {
     "item": "create:powered_latch"
-  }
+  },
+  "show_notification": true
 }

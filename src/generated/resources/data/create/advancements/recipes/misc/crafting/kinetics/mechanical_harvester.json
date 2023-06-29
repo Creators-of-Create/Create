@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/mechanical_harvester"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

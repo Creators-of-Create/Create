@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/propeller"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -28,5 +28,6 @@
     "recipes": [
       "create:cut_diorite_wall_from_stone_types_diorite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

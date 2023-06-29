@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:whisk"
-  }
+  },
+  "show_notification": true
 }

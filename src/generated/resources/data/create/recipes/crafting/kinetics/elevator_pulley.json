@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:elevator_pulley"
-  }
+  },
+  "show_notification": true
 }

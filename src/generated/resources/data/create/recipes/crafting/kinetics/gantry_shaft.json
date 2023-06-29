@@ -17,5 +17,6 @@
   "result": {
     "count": 8,
     "item": "create:gantry_shaft"
-  }
+  },
+  "show_notification": true
 }

@@ -28,5 +28,6 @@
     "recipes": [
       "create:small_andesite_brick_wall_from_stone_types_andesite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/large_cogwheel"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

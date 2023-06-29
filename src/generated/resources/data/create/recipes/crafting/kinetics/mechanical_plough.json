@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:mechanical_plough"
-  }
+  },
+  "show_notification": true
 }

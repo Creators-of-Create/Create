@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/appliances/copper_backtank"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

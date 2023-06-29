@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/schedule"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

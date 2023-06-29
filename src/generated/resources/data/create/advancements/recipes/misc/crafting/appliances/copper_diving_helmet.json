@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/appliances/copper_diving_helmet"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "create:smelting/glass_from_framed_glass"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

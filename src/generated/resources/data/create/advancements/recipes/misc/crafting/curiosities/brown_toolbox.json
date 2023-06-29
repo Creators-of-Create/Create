@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/curiosities/brown_toolbox"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

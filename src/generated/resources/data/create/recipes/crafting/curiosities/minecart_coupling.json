@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:minecart_coupling"
-  }
+  },
+  "show_notification": true
 }

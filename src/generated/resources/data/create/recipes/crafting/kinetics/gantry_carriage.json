@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:gantry_carriage"
-  }
+  },
+  "show_notification": true
 }

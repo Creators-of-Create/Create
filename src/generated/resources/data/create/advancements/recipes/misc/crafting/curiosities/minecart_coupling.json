@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/curiosities/minecart_coupling"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

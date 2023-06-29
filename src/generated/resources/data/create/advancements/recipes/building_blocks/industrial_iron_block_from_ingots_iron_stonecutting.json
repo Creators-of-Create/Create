@@ -28,5 +28,6 @@
     "recipes": [
       "create:industrial_iron_block_from_ingots_iron_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

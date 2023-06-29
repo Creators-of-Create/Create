@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:turntable"
-  }
+  },
+  "show_notification": true
 }

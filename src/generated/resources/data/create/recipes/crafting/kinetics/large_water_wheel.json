@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:large_water_wheel"
-  }
+  },
+  "show_notification": true
 }

@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:spout"
-  }
+  },
+  "show_notification": true
 }

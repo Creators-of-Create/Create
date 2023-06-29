@@ -13,5 +13,6 @@
   "result": {
     "count": 8,
     "item": "create:shaft"
-  }
+  },
+  "show_notification": true
 }

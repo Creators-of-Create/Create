@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/appliances/linked_controller"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

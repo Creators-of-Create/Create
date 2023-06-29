@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:controls"
-  }
+  },
+  "show_notification": true
 }

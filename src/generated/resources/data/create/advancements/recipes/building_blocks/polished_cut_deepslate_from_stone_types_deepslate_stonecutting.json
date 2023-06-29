@@ -28,5 +28,6 @@
     "recipes": [
       "create:polished_cut_deepslate_from_stone_types_deepslate_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

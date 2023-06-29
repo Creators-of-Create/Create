@@ -15,5 +15,6 @@
   "result": {
     "count": 4,
     "item": "create:cut_scoria_stairs"
-  }
+  },
+  "show_notification": true
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/windmill_bearing"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

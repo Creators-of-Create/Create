@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/brass_door"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

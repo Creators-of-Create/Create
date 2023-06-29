@@ -30,5 +30,6 @@
     "recipes": [
       "create:ornate_iron_window_pane"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

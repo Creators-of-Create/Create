@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/fluid_valve"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

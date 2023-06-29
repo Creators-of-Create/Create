@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:mechanical_mixer"
-  }
+  },
+  "show_notification": true
 }

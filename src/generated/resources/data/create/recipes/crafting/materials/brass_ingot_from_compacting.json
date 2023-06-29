@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "create:brass_ingot"
-  }
+  },
+  "show_notification": true
 }

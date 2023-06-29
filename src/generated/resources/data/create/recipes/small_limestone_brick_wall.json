@@ -13,5 +13,6 @@
   "result": {
     "count": 6,
     "item": "create:small_limestone_brick_wall"
-  }
+  },
+  "show_notification": true
 }

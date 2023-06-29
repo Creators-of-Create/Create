@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/lime_seat"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

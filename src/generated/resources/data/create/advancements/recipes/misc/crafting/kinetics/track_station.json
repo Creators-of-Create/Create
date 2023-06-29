@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/track_station"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

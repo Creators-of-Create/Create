@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/rose_quartz_lamp"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

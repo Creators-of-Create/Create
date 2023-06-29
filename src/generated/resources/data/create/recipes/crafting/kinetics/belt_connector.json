@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "create:belt_connector"
-  }
+  },
+  "show_notification": true
 }

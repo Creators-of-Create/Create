@@ -28,5 +28,6 @@
     "recipes": [
       "create:small_dripstone_brick_stairs_from_stone_types_dripstone_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

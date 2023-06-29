@@ -14,5 +14,6 @@
   ],
   "result": {
     "item": "create:attribute_filter"
-  }
+  },
+  "show_notification": true
 }

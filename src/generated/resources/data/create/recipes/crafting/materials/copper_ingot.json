@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "minecraft:copper_ingot"
-  }
+  },
+  "show_notification": true
 }

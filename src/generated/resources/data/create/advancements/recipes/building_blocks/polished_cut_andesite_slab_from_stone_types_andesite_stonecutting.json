@@ -28,5 +28,6 @@
     "recipes": [
       "create:polished_cut_andesite_slab_from_stone_types_andesite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

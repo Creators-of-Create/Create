@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/hand_crank"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

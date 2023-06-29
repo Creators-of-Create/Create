@@ -1,0 +1,10 @@
+// 1.20.1	2023-06-29T15:21:25.009674	Create's Damage Type Data
+030ede1044384c4117ac1e491bf5c78bbd2842f5 data/create/damage_type/crush.json
+92b0416950ffeb3ba68811e587177c2f8811c2c5 data/create/damage_type/cuckoo_surprise.json
+d2a4fdb64f4ba817e13a7b20c73fd1ca34b825fc data/create/damage_type/fan_fire.json
+d6f22959336e7dd19fc8593c5bad134462f51616 data/create/damage_type/fan_lava.json
+c884779ba4426b688795c97b01299db17b481fdc data/create/damage_type/mechanical_drill.json
+afdc8574e8e915dac5693f368e9c1260714ad111 data/create/damage_type/mechanical_roller.json
+43cfce97a9326a1a7ce95f91a052586610b9686c data/create/damage_type/mechanical_saw.json
+58ab7a8eed0841f05b4b1373ba159e3e6503b7c3 data/create/damage_type/potato_cannon.json
+4dae2c0fc9fe6749649ef06dd3b7baaa9bd5e807 data/create/damage_type/run_over.json

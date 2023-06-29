@@ -19,5 +19,6 @@
   "result": {
     "count": 4,
     "item": "create:metal_bracket"
-  }
+  },
+  "show_notification": true
 }

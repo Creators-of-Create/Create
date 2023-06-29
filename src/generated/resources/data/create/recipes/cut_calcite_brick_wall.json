@@ -13,5 +13,6 @@
   "result": {
     "count": 6,
     "item": "create:cut_calcite_brick_wall"
-  }
+  },
+  "show_notification": true
 }

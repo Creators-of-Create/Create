@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:peculiar_bell"
-  }
+  },
+  "show_notification": true
 }

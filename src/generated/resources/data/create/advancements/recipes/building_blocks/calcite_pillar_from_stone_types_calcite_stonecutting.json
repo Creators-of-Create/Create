@@ -28,5 +28,6 @@
     "recipes": [
       "create:calcite_pillar_from_stone_types_calcite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

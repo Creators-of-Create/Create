@@ -28,5 +28,6 @@
     "recipes": [
       "create:layered_diorite_from_stone_types_diorite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

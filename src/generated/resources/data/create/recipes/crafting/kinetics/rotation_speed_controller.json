@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:rotation_speed_controller"
-  }
+  },
+  "show_notification": true
 }

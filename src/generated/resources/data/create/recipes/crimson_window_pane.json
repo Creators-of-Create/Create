@@ -13,5 +13,6 @@
   "result": {
     "count": 16,
     "item": "create:crimson_window_pane"
-  }
+  },
+  "show_notification": true
 }

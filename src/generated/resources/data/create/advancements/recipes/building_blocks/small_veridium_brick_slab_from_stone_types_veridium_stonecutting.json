@@ -28,5 +28,6 @@
     "recipes": [
       "create:small_veridium_brick_slab_from_stone_types_veridium_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/crafter_slot_cover"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

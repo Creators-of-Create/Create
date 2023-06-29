@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/materials/andesite_alloy_from_zinc"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -28,5 +28,6 @@
     "recipes": [
       "create:brass_ladder_from_ingots_brass_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

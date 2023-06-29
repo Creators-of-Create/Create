@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "create:experience_block"
-  }
+  },
+  "show_notification": true
 }

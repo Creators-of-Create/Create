@@ -15,5 +15,6 @@
   "result": {
     "count": 4,
     "item": "create:polished_cut_deepslate_stairs"
-  }
+  },
+  "show_notification": true
 }

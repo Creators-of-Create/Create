@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "create:zinc_ingot"
-  }
+  },
+  "show_notification": true
 }

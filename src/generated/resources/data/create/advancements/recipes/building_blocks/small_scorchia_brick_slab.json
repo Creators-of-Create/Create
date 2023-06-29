@@ -30,5 +30,6 @@
     "recipes": [
       "create:small_scorchia_brick_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

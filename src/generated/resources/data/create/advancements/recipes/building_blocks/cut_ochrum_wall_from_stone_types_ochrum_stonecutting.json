@@ -28,5 +28,6 @@
     "recipes": [
       "create:cut_ochrum_wall_from_stone_types_ochrum_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

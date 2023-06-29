@@ -14,5 +14,6 @@
   "result": {
     "count": 4,
     "item": "create:oxidized_copper_tile_stairs"
-  }
+  },
+  "show_notification": true
 }

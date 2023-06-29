@@ -30,5 +30,6 @@
     "recipes": [
       "create:rose_quartz_block_from_rose_quartz_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

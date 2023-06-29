@@ -30,5 +30,6 @@
     "recipes": [
       "create:blasting/ingot_uranium_compat_immersiveengineering"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

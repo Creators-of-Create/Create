@@ -30,5 +30,6 @@
     "recipes": [
       "create:cut_ochrum_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

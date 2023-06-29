@@ -28,5 +28,6 @@
     "recipes": [
       "create:small_limestone_brick_wall_from_stone_types_limestone_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

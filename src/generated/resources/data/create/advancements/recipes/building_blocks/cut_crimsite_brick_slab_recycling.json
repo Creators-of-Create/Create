@@ -30,5 +30,6 @@
     "recipes": [
       "create:cut_crimsite_brick_slab_recycling"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

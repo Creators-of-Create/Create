@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:empty_blaze_burner"
-  }
+  },
+  "show_notification": true
 }

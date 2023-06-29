@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/pink_seat"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -20,5 +20,6 @@
   "result": {
     "count": 2,
     "item": "create:redstone_contact"
-  }
+  },
+  "show_notification": true
 }

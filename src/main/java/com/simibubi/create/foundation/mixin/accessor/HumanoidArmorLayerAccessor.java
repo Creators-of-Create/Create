@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 
 @Mixin(HumanoidArmorLayer.class)
 public interface HumanoidArmorLayerAccessor {
@@ -32,5 +33,5 @@ public interface HumanoidArmorLayerAccessor {
 	void create$callSetPartVisibility(HumanoidModel<?> model, EquipmentSlot slot);
 
 	@Invoker("renderModel")
-	void create$callRenderModel(PoseStack poseStack, MultiBufferSource bufferSource, int light, boolean glint, Model model, float red, float green, float blue, ResourceLocation armorResource);
+	void create$callRenderModel(PoseStack poseStack, MultiBufferSource bufferSource, int light, ArmorItem item, Model model, boolean glint, float red, float green, float blue, ResourceLocation armorResource);
 }

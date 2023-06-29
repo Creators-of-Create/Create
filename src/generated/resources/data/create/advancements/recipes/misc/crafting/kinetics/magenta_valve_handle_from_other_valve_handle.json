@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/magenta_valve_handle_from_other_valve_handle"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

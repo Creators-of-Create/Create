@@ -11,5 +11,6 @@
   ],
   "result": {
     "item": "create:crafter_slot_cover"
-  }
+  },
+  "show_notification": true
 }

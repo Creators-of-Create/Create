@@ -39,14 +39,14 @@ public interface LayeredArmorItem extends CustomRenderedArmorItem {
 		accessor.create$callSetPartVisibility(innerModel, slot);
 		String locationStr2 = getArmorTextureLocation(entity, slot, stack, 2);
 		ResourceLocation location2 = locationCache.computeIfAbsent(locationStr2, ResourceLocation::new);
-		accessor.create$callRenderModel(poseStack, bufferSource, light, glint, innerModel, 1.0F, 1.0F, 1.0F, location2);
+		accessor.create$callRenderModel(poseStack, bufferSource, light, item, innerModel, glint, 1.0F, 1.0F, 1.0F, location2);
 
 		HumanoidModel<?> outerModel = accessor.create$getOuterModel();
 		layer.getParentModel().copyPropertiesTo((HumanoidModel) outerModel);
 		accessor.create$callSetPartVisibility(outerModel, slot);
 		String locationStr1 = getArmorTextureLocation(entity, slot, stack, 1);
 		ResourceLocation location1 = locationCache.computeIfAbsent(locationStr1, ResourceLocation::new);
-		accessor.create$callRenderModel(poseStack, bufferSource, light, glint, outerModel, 1.0F, 1.0F, 1.0F, location1);
+		accessor.create$callRenderModel(poseStack, bufferSource, light, item, outerModel, glint, 1.0F, 1.0F, 1.0F, location1);
 	}
 
 	String getArmorTextureLocation(LivingEntity entity, EquipmentSlot slot, ItemStack stack, int layer);

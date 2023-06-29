@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/light_blue_seat"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

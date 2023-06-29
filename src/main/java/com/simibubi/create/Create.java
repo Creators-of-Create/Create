@@ -2,10 +2,6 @@ package com.simibubi.create;
 
 import java.util.Random;
 
-import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
-
-import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
-
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -30,6 +26,8 @@ import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
+import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
+import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
 import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
@@ -189,7 +187,8 @@ public class Create {
 			ProcessingRecipeGen.registerAll(gen, output);
 			gen.addProvider(true, WorldgenDataProvider.makeFactory(event.getLookupProvider()));
 			gen.addProvider(true, DamageTypeDataProvider.makeFactory(event.getLookupProvider()));
-			gen.addProvider(true, new DamageTypeTagGen(output, event.getLookupProvider()));
+			gen.addProvider(true,
+				new DamageTypeTagGen(output, event.getLookupProvider(), event.getExistingFileHelper()));
 		}
 	}
 

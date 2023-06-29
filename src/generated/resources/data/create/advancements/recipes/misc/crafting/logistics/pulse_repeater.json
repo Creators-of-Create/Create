@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/logistics/pulse_repeater"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:display_link"
-  }
+  },
+  "show_notification": true
 }

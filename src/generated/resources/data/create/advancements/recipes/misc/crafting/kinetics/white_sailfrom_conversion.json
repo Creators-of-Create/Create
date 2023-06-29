@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/white_sailfrom_conversion"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:brass_hand"
-  }
+  },
+  "show_notification": true
 }

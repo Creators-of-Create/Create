@@ -28,5 +28,6 @@
     "recipes": [
       "create:layered_tuff_from_stone_types_tuff_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -28,5 +28,6 @@
     "recipes": [
       "create:copper_scaffolding_from_ingots_copper_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

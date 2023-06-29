@@ -30,5 +30,6 @@
     "recipes": [
       "create:birch_window_pane"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

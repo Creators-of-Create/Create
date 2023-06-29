@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:encased_fan"
-  }
+  },
+  "show_notification": true
 }

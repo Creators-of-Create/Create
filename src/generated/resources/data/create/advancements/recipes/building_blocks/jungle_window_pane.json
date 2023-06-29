@@ -30,5 +30,6 @@
     "recipes": [
       "create:jungle_window_pane"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "create:horizontal_framed_glass_pane"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

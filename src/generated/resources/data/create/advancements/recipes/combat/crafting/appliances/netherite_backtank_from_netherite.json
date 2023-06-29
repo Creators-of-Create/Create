@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/appliances/netherite_backtank_from_netherite"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

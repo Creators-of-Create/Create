@@ -22,5 +22,6 @@
   ],
   "result": {
     "item": "create:mechanical_arm"
-  }
+  },
+  "show_notification": true
 }

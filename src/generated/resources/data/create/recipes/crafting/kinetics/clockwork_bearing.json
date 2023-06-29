@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:clockwork_bearing"
-  }
+  },
+  "show_notification": true
 }

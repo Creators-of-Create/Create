@@ -22,5 +22,6 @@
   ],
   "result": {
     "item": "create:brown_toolbox"
-  }
+  },
+  "show_notification": true
 }

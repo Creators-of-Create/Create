@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:cuckoo_clock"
-  }
+  },
+  "show_notification": true
 }

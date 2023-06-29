@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/purple_seat_from_other_seat"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

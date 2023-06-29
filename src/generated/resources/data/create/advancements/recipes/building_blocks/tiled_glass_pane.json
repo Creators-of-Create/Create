@@ -30,5 +30,6 @@
     "recipes": [
       "create:tiled_glass_pane"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

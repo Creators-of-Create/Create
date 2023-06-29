@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:sticky_mechanical_piston"
-  }
+  },
+  "show_notification": true
 }

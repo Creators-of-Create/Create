@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/copper/waxed_weathered_copper_shingle_stairs_from_honeycomb"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

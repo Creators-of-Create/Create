@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/vertical_gearboxfrom_conversion"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

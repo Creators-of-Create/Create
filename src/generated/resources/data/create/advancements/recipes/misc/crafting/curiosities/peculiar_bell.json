@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/curiosities/peculiar_bell"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

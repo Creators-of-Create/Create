@@ -30,5 +30,6 @@
     "recipes": [
       "create:smelting/zinc_ingot_from_crushed"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

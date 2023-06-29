@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:smithing",
+  "type": "minecraft:smithing_transform",
   "addition": {
     "item": "create:copper_diving_boots"
   },
@@ -8,5 +8,8 @@
   },
   "result": {
     "item": "create:netherite_diving_boots"
+  },
+  "template": {
+    "item": "minecraft:netherite_upgrade_smithing_template"
   }
 }

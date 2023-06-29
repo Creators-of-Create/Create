@@ -30,5 +30,6 @@
     "recipes": [
       "create:copper_tile_slab_from_copper_tiles_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

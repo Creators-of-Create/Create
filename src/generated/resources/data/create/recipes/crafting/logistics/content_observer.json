@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:content_observer"
-  }
+  },
+  "show_notification": true
 }

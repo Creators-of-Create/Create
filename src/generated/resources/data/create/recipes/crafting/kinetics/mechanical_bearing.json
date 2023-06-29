@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:mechanical_bearing"
-  }
+  },
+  "show_notification": true
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/schematics/schematic_and_quill"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

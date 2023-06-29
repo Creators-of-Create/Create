@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/curiosities/cake"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

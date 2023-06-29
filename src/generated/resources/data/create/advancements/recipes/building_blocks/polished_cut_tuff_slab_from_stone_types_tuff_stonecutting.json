@@ -28,5 +28,6 @@
     "recipes": [
       "create:polished_cut_tuff_slab_from_stone_types_tuff_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

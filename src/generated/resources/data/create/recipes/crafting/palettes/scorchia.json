@@ -17,5 +17,6 @@
   "result": {
     "count": 8,
     "item": "create:scorchia"
-  }
+  },
+  "show_notification": true
 }

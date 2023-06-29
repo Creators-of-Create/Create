@@ -30,5 +30,6 @@
     "recipes": [
       "create:polished_cut_granite_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

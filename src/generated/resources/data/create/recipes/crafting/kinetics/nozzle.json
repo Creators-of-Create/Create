@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:nozzle"
-  }
+  },
+  "show_notification": true
 }

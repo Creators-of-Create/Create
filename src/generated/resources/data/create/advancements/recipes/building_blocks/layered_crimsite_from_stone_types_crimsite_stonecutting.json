@@ -28,5 +28,6 @@
     "recipes": [
       "create:layered_crimsite_from_stone_types_crimsite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

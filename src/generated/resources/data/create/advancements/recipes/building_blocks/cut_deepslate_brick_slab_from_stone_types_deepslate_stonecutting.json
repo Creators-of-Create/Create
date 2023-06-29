@@ -28,5 +28,6 @@
     "recipes": [
       "create:cut_deepslate_brick_slab_from_stone_types_deepslate_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

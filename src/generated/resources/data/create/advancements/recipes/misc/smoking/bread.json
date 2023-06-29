@@ -30,5 +30,6 @@
     "recipes": [
       "create:smoking/bread"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

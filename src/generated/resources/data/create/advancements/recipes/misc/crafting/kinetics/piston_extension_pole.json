@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/piston_extension_pole"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

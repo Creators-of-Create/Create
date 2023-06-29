@@ -28,5 +28,6 @@
     "recipes": [
       "create:small_crimsite_brick_stairs_from_stone_types_crimsite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

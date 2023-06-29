@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:clipboard"
-  }
+  },
+  "show_notification": true
 }

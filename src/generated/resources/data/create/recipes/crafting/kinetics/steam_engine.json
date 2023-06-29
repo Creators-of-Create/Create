@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:steam_engine"
-  }
+  },
+  "show_notification": true
 }

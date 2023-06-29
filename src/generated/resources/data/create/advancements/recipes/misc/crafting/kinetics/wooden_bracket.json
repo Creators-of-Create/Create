@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/wooden_bracket"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

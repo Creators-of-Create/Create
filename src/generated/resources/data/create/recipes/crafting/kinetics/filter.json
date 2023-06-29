@@ -14,5 +14,6 @@
   ],
   "result": {
     "item": "create:filter"
-  }
+  },
+  "show_notification": true
 }

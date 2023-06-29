@@ -30,5 +30,6 @@
     "recipes": [
       "create:polished_cut_ochrum_slab_recycling"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

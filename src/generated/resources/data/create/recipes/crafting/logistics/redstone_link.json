@@ -16,5 +16,6 @@
   "result": {
     "count": 2,
     "item": "create:redstone_link"
-  }
+  },
+  "show_notification": true
 }

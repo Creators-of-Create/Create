@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:gearbox"
-  }
+  },
+  "show_notification": true
 }

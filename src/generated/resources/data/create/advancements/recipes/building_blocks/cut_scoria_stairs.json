@@ -30,5 +30,6 @@
     "recipes": [
       "create:cut_scoria_stairs"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

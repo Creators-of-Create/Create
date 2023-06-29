@@ -30,5 +30,6 @@
     "recipes": [
       "create:small_rose_quartz_tiles_from_polished_rose_quartz_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

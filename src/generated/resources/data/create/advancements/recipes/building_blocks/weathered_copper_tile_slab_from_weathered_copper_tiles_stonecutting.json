@@ -30,5 +30,6 @@
     "recipes": [
       "create:weathered_copper_tile_slab_from_weathered_copper_tiles_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

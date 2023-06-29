@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "create:brass_block"
-  }
+  },
+  "show_notification": true
 }

@@ -28,5 +28,6 @@
     "recipes": [
       "create:small_granite_brick_wall_from_stone_types_granite_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

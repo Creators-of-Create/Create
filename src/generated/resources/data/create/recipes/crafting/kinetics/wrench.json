@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:wrench"
-  }
+  },
+  "show_notification": true
 }

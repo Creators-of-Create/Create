@@ -30,5 +30,6 @@
     "recipes": [
       "create:small_scoria_brick_stairs"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

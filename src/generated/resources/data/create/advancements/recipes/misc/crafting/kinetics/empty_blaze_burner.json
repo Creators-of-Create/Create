@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/empty_blaze_burner"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

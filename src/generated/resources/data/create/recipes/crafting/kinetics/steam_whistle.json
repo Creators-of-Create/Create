@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:steam_whistle"
-  }
+  },
+  "show_notification": true
 }

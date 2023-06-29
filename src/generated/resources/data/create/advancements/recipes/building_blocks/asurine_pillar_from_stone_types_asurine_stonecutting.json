@@ -28,5 +28,6 @@
     "recipes": [
       "create:asurine_pillar_from_stone_types_asurine_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

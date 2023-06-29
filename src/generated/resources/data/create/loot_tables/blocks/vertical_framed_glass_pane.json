@@ -26,5 +26,6 @@
       ],
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "create:blocks/vertical_framed_glass_pane"
 }

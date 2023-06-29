@@ -12,5 +12,6 @@
   ],
   "result": {
     "item": "create:basin"
-  }
+  },
+  "show_notification": true
 }

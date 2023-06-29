@@ -28,5 +28,6 @@
     "recipes": [
       "create:cut_asurine_brick_wall_from_stone_types_asurine_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

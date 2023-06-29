@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/encased_fan"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

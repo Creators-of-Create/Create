@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/appliances/filter_clear"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

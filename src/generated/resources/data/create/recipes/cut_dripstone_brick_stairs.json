@@ -15,5 +15,6 @@
   "result": {
     "count": 4,
     "item": "create:cut_dripstone_brick_stairs"
-  }
+  },
+  "show_notification": true
 }

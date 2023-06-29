@@ -30,5 +30,6 @@
     "recipes": [
       "create:crafting/kinetics/large_water_wheel"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

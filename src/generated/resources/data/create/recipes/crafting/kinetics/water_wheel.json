@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "create:water_wheel"
-  }
+  },
+  "show_notification": true
 }

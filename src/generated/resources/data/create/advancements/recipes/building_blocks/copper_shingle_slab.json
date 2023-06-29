@@ -30,5 +30,6 @@
     "recipes": [
       "create:copper_shingle_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

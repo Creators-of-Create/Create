@@ -28,5 +28,6 @@
     "recipes": [
       "create:copycat_panel_from_ingots_zinc_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

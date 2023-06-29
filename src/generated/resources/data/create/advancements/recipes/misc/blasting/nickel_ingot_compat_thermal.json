@@ -30,5 +30,6 @@
     "recipes": [
       "create:blasting/nickel_ingot_compat_thermal"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

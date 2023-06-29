@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:copper_valve_handle"
-  }
+  },
+  "show_notification": true
 }

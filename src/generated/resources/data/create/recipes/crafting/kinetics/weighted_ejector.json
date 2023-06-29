@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "create:weighted_ejector"
-  }
+  },
+  "show_notification": true
 }

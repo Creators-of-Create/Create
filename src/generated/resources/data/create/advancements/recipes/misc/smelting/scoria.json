@@ -30,5 +30,6 @@
     "recipes": [
       "create:smelting/scoria"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

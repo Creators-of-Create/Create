@@ -30,5 +30,6 @@
     "recipes": [
       "create:polished_cut_deepslate_wall"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

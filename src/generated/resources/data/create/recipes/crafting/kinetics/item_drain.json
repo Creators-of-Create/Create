@@ -15,5 +15,6 @@
   ],
   "result": {
     "item": "create:item_drain"
-  }
+  },
+  "show_notification": true
 }

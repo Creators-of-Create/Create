@@ -14,5 +14,6 @@
   "result": {
     "count": 4,
     "item": "create:weathered_copper_shingle_stairs"
-  }
+  },
+  "show_notification": true
 }

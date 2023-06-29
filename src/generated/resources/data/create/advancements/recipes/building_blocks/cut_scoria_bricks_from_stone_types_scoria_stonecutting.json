@@ -28,5 +28,6 @@
     "recipes": [
       "create:cut_scoria_bricks_from_stone_types_scoria_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

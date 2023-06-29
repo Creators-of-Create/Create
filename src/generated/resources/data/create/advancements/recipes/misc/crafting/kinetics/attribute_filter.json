@@ -28,5 +28,6 @@
     "recipes": [
       "create:crafting/kinetics/attribute_filter"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
