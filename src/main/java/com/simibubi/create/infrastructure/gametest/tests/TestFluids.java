@@ -14,8 +14,6 @@ import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.tags.BlockTags;
@@ -254,7 +252,7 @@ public class TestFluids {
 		BlockPos lever = new BlockPos(3, 3, 1);
 		BlockPos output = new BlockPos(3, 4, 4);
 		BlockPos tankOutput = new BlockPos(1, 2, 4);
-		FluidStack expected = new FluidStack(Fluids.WATER, 2 * FluidAttributes.BUCKET_VOLUME);
+		FluidStack expected = new FluidStack(Fluids.WATER, 2 * FluidType.BUCKET_VOLUME);
 		helper.pullLever(lever);
 		helper.succeedWhen(() -> {
 			helper.assertFluidPresent(expected, tankOutput);
