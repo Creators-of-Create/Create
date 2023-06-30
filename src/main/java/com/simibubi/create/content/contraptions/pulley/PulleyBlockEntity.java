@@ -163,7 +163,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 				}
 			}
 		}
-		
+
 		if (mirrorParent != null)
 			removeRopes();
 
@@ -284,7 +284,7 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 			if (prevMirrorParent == null || !prevMirrorParent.equals(mirrorParent))
 				sharedMirrorContraption = null;
 		}
-		
+
 		if (compound.contains("MirrorChildren"))
 			mirrorChildren = NBTHelper.readCompoundList(compound.getList("MirrorChildren", Tag.TAG_COMPOUND),
 				NbtUtils::readBlockPos);
@@ -378,5 +378,9 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 		if (distance <= 0)
 			return 100;
 		return 100 * getInterpolatedOffset(.5f) / distance;
+	}
+
+	public BlockPos getMirrorParent() {
+		return mirrorParent;
 	}
 }

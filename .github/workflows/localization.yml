@@ -4,15 +4,17 @@
 name: Crowdin Action
 
 # Controls when the action will run.
-on:
+on: workflow_dispatch
     # Only run when started manually
-    workflow_dispatch:
-        inputs:
-            uploadTranslations:
-                description: "Set to true to upload (changed) translations to Crowdin"
-                type: boolean
-                required: true
-                default: false
+
+    #:
+    #    inputs:
+    #        uploadTranslations:
+    #            description: "Set to true to upload (changed) translations to Crowdin"
+    #            type: boolean
+    #            required: true
+    #            default: false
+
     #schedule:
         #- cron: '0 */6 * * *' # Every 6 hours - https://crontab.guru/#0_*/6_*_*_*
 
@@ -30,7 +32,7 @@ jobs:
                   # Upload sources to Crowdin
                   upload_sources: true
                   # Upload translations to Crowdin, only use true at initial run
-                  upload_translations: ${{ github.event.inputs.uploadTranslations }}
+                  upload_translations: false
                   # Make pull request of Crowdin translations
                   download_translations: true
                   # To download translations to the specified version branch
