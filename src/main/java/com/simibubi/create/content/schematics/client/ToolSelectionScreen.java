@@ -111,13 +111,16 @@ public class ToolSelectionScreen extends Screen {
 		} else {
 			x += 65;
 		}
+		
 
 		for (int i = 0; i < tools.size(); i++) {
+			RenderSystem.enableBlend();
 			matrixStack.pushPose();
 
 			float alpha = focused ? 1 : .2f;
 			if (i == selection) {
 				matrixStack.translate(0, -10, 0);
+				RenderSystem.setShaderColor(1, 1, 1, 1);
 				graphics.drawCenteredString(minecraft.font, tools.get(i)
 					.getDisplayName()
 					.getString(), x + i * 50 + 24, y + 28, 0xCCDDFF);

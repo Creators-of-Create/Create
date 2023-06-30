@@ -12,7 +12,7 @@ public class Indicator extends AbstractSimiWidget {
 
 	public Indicator(int x, int y, Component tooltip) {
 		super(x, y, AllGuiTextures.INDICATOR.width, AllGuiTextures.INDICATOR.height);
-		this.toolTip = ImmutableList.of(tooltip);
+		this.toolTip = toolTip.isEmpty() ? ImmutableList.of() : ImmutableList.of(tooltip);
 		this.state = State.OFF;
 	}
 

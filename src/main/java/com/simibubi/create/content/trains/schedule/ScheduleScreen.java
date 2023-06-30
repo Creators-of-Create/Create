@@ -379,7 +379,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		PoseStack matrixStack = graphics.pose();
 		UIRenderHelper.swapAndBlitColor(minecraft.getMainRenderTarget(), UIRenderHelper.framebuffer);
 
-		UIRenderHelper.drawStretched(graphics, leftPos + 33, topPos + 16, 3, 173, -100, AllGuiTextures.SCHEDULE_STRIP_DARK);
+		UIRenderHelper.drawStretched(graphics, leftPos + 33, topPos + 16, 3, 173, 200, AllGuiTextures.SCHEDULE_STRIP_DARK);
 
 		int yOffset = 25;
 		List<ScheduleEntry> entries = schedule.entries;
@@ -613,6 +613,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleMenu> {
 		AllGuiTextures item = AllGuiTextures.SCHEDULE_CONDITION_ITEM;
 		AllGuiTextures right = AllGuiTextures.SCHEDULE_CONDITION_RIGHT;
 
+		matrixStack.translate(x, y, 0);
 		UIRenderHelper.drawStretched(graphics, 0, 0, fieldSize, 16, -100, middle);
 		left.render(graphics, clean ? 0 : -3, 0);
 		right.render(graphics, fieldSize - 2, 0);

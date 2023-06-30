@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.data;
 
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -36,6 +38,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -75,6 +78,18 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	public CreateRegistrate registerEventListeners(IEventBus bus) {
 		return super.registerEventListeners(bus);
 	}
+	
+	private static Map<RegistryEntry<?>, RegistryObject<CreativeModeTab>> tabLookup = new IdentityHashMap<>();
+	private RegistryObject<CreativeModeTab> currentTab;
+
+	public CreateRegistrate useCreativeTab(RegistryObject<CreativeModeTab> tab) {
+		this.currentTab = tab;
+		return this;
+	}
+	
+	public boolean isInCreativeTab(RegistryEntry<?> entry, RegistryObject<CreativeModeTab> tab) {
+		return tabLookup.get(entry) == tab;
+	}
 
 	@Override
 	protected <R, T extends R> RegistryEntry<T> accept(String name, ResourceKey<? extends Registry<R>> type,
@@ -86,6 +101,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				TooltipModifier.REGISTRY.registerDeferred(entry.getId(), currentTooltipModifierFactory);
 			}
 		}
+		if (currentTab != null)
+			tabLookup.put(entry, currentTab);
 		return entry;
 	}
 

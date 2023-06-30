@@ -19,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.tags.BlockTags;
@@ -192,7 +191,7 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
 		if (!compound.contains("Material"))
 			return;
 
-		material = NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), compound.getCompound("Material"));
+		material = NbtUtils.readBlockState(blockHolderGetter(), compound.getCompound("Material"));
 		if (material.isAir())
 			material = Blocks.SPRUCE_PLANKS.defaultBlockState();
 

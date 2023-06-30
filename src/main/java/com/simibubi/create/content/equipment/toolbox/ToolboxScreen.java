@@ -48,6 +48,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 		setWindowSize(30 + BG.width, BG.height + PLAYER.height - 24);
 		setWindowOffset(-11, 0);
 		super.init();
+		clearWidgets();
 
 		color = menu.contentHolder.getColor();
 

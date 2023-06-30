@@ -439,6 +439,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				BakedModel model = dispatcher.getBlockModel(state);
 				BlockEntity blockEntity = world.getBlockEntity(pos);
 				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
+				modelData = model.getModelData(world, pos, state, modelData);
 				long seed = state.getSeed(pos);
 				random.setSeed(seed);
 				if (model.getRenderTypes(state, random, modelData).contains(layer)) {

@@ -310,6 +310,8 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.ForgeSoundType;
 
 public class AllBlocks {
+	
+	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.MAIN_TAB); }
 
 	// Schematics
 
@@ -1994,6 +1996,8 @@ public class AllBlocks {
 		.register();
 
 	// Materials
+	
+	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.BUILDING_BLOCKS_TAB); }
 
 	public static final BlockEntry<MetalLadderBlock> ANDESITE_LADDER =
 		REGISTRATE.block("andesite_ladder", MetalLadderBlock::new)

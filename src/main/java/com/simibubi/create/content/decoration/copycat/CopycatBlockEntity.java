@@ -145,7 +145,7 @@ public class CopycatBlockEntity extends SmartBlockEntity
 			return;
 		}
 
-		material = NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), tag.getCompound("Material"));
+		material = NbtUtils.readBlockState(blockHolderGetter(), tag.getCompound("Material"));
 
 		// Validate Material
 		if (material != null && !clientPacket) {

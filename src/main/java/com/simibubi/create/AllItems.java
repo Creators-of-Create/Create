@@ -66,6 +66,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.Tags;
 
 public class AllItems {
+	
+	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.MAIN_TAB); }
 
 	public static final ItemEntry<Item> WHEAT_FLOUR =
 		taggedIngredient("wheat_flour", forgeItemTag("flour/wheat"), forgeItemTag("flour")),

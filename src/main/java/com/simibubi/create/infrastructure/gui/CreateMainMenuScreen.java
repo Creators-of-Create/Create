@@ -228,6 +228,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 		@Override
 		protected void renderWidget(GuiGraphics graphics, int pMouseX, int pMouseY, float pt) {
+			super.renderWidget(graphics, pMouseX, pMouseY, pt);
 			PoseStack pPoseStack = graphics.pose();
 			pPoseStack.pushPose();
 			pPoseStack.translate(getX() + width / 2 - (icon.width * scale) / 2, getY() + height / 2 - (icon.height * scale) / 2, 0);

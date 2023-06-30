@@ -189,7 +189,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 		for (int i = 0; i < tagBlocks.size(); i++) {
 			CompoundTag c = tagBlocks.getCompound(i);
-			LaunchedItem launched = LaunchedItem.fromNBT(c);
+			LaunchedItem launched = LaunchedItem.fromNBT(c, blockHolderGetter());
 			BlockPos readBlockPos = launched.target;
 
 			// Always write to Server block entity

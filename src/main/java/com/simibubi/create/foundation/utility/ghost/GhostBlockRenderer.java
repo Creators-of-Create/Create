@@ -109,12 +109,12 @@ public abstract class GhostBlockRenderer {
 			for (Direction direction : Direction.values()) {
 				random.setSeed(42L);
 				renderQuadList(pose, consumer, red, green, blue, alpha,
-					model.getQuads(state, direction, random, modelData, renderType), packedLight, packedOverlay);
+					model.getQuads(state, direction, random, modelData, null), packedLight, packedOverlay);
 			}
 
 			random.setSeed(42L);
 			renderQuadList(pose, consumer, red, green, blue, alpha,
-				model.getQuads(state, null, random, modelData, renderType), packedLight, packedOverlay);
+				model.getQuads(state, null, random, modelData, null), packedLight, packedOverlay);
 		}
 
 		// ModelBlockRenderer

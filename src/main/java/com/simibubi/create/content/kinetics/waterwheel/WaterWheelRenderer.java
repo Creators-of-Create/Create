@@ -40,7 +40,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 	public static final StitchedSprite OAK_LOG_TEMPLATE = new StitchedSprite(new ResourceLocation("block/oak_log"));
 	public static final StitchedSprite OAK_LOG_TOP_TEMPLATE = new StitchedSprite(new ResourceLocation("block/oak_log_top"));
 
-	private static final String[] LOG_SUFFIXES = new String[] { "_log", "_stem" };
+	private static final String[] LOG_SUFFIXES = new String[] { "_log", "_stem", "_block" };
 
 	protected final boolean large;
 

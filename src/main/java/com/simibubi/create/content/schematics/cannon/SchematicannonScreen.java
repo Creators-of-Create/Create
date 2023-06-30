@@ -259,7 +259,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 	private void fillToolTip(IconButton button, Indicator indicator, String tooltipKey) {
-		if (!button.isHoveredOrFocused())
+		if (!button.isHovered())
 			return;
 		boolean enabled = indicator.state == State.ON;
 		List<Component> tip = button.getToolTip();

@@ -275,6 +275,7 @@ public class GuiGameElement {
 			renderer.textureManager.getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
 			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 			RenderSystem.enableBlend();
+			RenderSystem.enableCull();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			matrixStack.pushPose();
@@ -288,7 +289,9 @@ public class GuiGameElement {
 			}
 
 			renderer.render(stack, ItemDisplayContext.GUI, false, matrixStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, bakedModel);
+			RenderSystem.disableDepthTest();
 			buffer.endBatch();
+			
 			RenderSystem.enableDepthTest();
 			if (useDefaultLighting && flatLighting) {
 				Lighting.setupFor3DItems();

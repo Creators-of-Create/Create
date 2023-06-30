@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
@@ -124,7 +123,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour {
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
 		if (nbt.contains("Bracket"))
-			bracket = NbtUtils.readBlockState(getWorld().holderLookup(Registries.BLOCK), nbt.getCompound("Bracket"));
+			bracket = NbtUtils.readBlockState(blockEntity.blockHolderGetter(), nbt.getCompound("Bracket"));
 		if (clientPacket && nbt.contains("Redraw"))
 			getWorld().sendBlockUpdated(getPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), 16);
 		super.read(nbt, clientPacket);

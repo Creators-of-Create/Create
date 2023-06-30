@@ -574,7 +574,7 @@ public class ClipboardScreen extends AbstractSimiScreen {
 			return true;
 		if (pButton != 0)
 			return true;
-
+		
 		if (hoveredEntry != -1) {
 			if (hoveredCheck) {
 				editingIndex = -1;
@@ -601,6 +601,13 @@ public class ClipboardScreen extends AbstractSimiScreen {
 		if (editingIndex == -1)
 			return false;
 
+		if (pMouseX < guiLeft + 50 || pMouseX > guiLeft + 220 || pMouseY < guiTop + 30 || pMouseY > guiTop + 230) {
+			setFocused(null);
+			clearDisplayCache();
+			editingIndex = -1;
+			return false;
+		}
+		
 		long i = Util.getMillis();
 		DisplayCache cache = getDisplayCache();
 		int j = cache.getIndexAtPosition(font, convertScreenToLocal(new Pos2i((int) pMouseX, (int) pMouseY)));

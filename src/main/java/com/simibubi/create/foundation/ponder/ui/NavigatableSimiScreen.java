@@ -147,7 +147,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			ms.translate(0, 0, -1000);
 			UIRenderHelper.framebuffer.bindWrite(true);
 			PonderTooltipHandler.enable = false;
-			lastScreen.render(graphics, mouseX, mouseY, partialTicks);
+			// Using 0,0 for mouse coords to hide tooltips
+			lastScreen.render(graphics, 0, 0, partialTicks);
 			PonderTooltipHandler.enable = true;
 
 			ms.popPose();

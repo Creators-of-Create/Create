@@ -34,6 +34,7 @@ import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.item.CreativeModeTab.Output;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -51,16 +52,18 @@ public class AllCreativeModeTabs {
 	private static final DeferredRegister<CreativeModeTab> TAB_REGISTER =
 		DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Create.ID);
 
-	public static RegistryObject<CreativeModeTab> MAIN_TAB = TAB_REGISTER.register("base",
+	public static final RegistryObject<CreativeModeTab> MAIN_TAB = TAB_REGISTER.register("base",
 		() -> CreativeModeTab.builder()
 			.title(Component.translatable("itemGroup.create.base"))
+			.withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
 			.icon(() -> AllBlocks.COGWHEEL.asStack())
 			.displayItems(new RegistrateDisplayItemsGenerator(true))
 			.build());
 
-	public static RegistryObject<CreativeModeTab> BUILDING_BLOCKS_TAB = TAB_REGISTER.register("palettes",
+	public static final RegistryObject<CreativeModeTab> BUILDING_BLOCKS_TAB = TAB_REGISTER.register("palettes",
 		() -> CreativeModeTab.builder()
 			.title(Component.translatable("itemGroup.create.palettes"))
+			.withTabsBefore(MAIN_TAB.getKey())
 			.icon(() -> AllPaletteBlocks.ORNATE_IRON_WINDOW.asStack())
 			.displayItems(new RegistrateDisplayItemsGenerator(false))
 			.build());
@@ -78,12 +81,11 @@ public class AllCreativeModeTabs {
 	}
 
 	public static class RegistrateDisplayItemsGenerator implements DisplayItemsGenerator {
-//		private final EnumSet<AllSections> sections;
-		private final boolean addItems;
+		
+		private final boolean mainTab;
 
-		public RegistrateDisplayItemsGenerator(boolean addItems) {
-//			this.sections = sections;
-			this.addItems = addItems;
+		public RegistrateDisplayItemsGenerator(boolean mainTab) {
+			this.mainTab = mainTab;
 		}
 		private static Predicate<Item> makeExclusionPredicate() {
 			Set<Item> exclusions = new ReferenceOpenHashSet<>();
@@ -96,6 +98,7 @@ public class AllCreativeModeTabs {
 					AllItems.SHADOW_STEEL,
 					AllItems.REFINED_RADIANCE,
 					AllItems.COPPER_BACKTANK_PLACEABLE,
+					AllItems.NETHERITE_BACKTANK_PLACEABLE,
 					AllItems.MINECART_CONTRAPTION,
 					AllItems.FURNACE_MINECART_CONTRAPTION,
 					AllItems.CHEST_MINECART_CONTRAPTION,
@@ -107,6 +110,7 @@ public class AllCreativeModeTabs {
 					AllBlocks.ANDESITE_ENCASED_LARGE_COGWHEEL,
 					AllBlocks.BRASS_ENCASED_LARGE_COGWHEEL,
 					AllBlocks.MYSTERIOUS_CUCKOO_CLOCK,
+					AllBlocks.ELEVATOR_CONTACT,
 					AllBlocks.SHADOW_STEEL_CASING,
 					AllBlocks.REFINED_RADIANCE_CASING
 			);
@@ -165,6 +169,11 @@ public class AllCreativeModeTabs {
 
 			Map<ItemProviderEntry<?>, Function<Item, ItemStack>> simpleFactories = Map.of(
 					AllItems.COPPER_BACKTANK, item -> {
+						ItemStack stack = new ItemStack(item);
+						stack.getOrCreateTag().putInt("Air", BacktankUtil.maxAirWithoutEnchants());
+						return stack;
+					},
+					AllItems.NETHERITE_BACKTANK, item -> {
 						ItemStack stack = new ItemStack(item);
 						stack.getOrCreateTag().putInt("Air", BacktankUtil.maxAirWithoutEnchants());
 						return stack;
@@ -229,54 +238,52 @@ public class AllCreativeModeTabs {
 			List<ItemOrdering> orderings = makeOrderings();
 			Function<Item, ItemStack> stackFunc = makeStackFunc();
 			Function<Item, TabVisibility> visibilityFunc = makeVisibilityFunc();
+			RegistryObject<CreativeModeTab> tab = mainTab ? MAIN_TAB : BUILDING_BLOCKS_TAB;
 
 			List<Item> items = new LinkedList<>();
-
-			if (addItems) {
-				items.addAll(collectItems(itemRenderer, true, exclusionPredicate));
-			}
-
-			items.addAll(collectBlocks(exclusionPredicate));
-
-			if (addItems) {
-				items.addAll(collectItems(itemRenderer, false, exclusionPredicate));
-			}
+			items.addAll(collectItems(tab, itemRenderer, true, exclusionPredicate));
+			items.addAll(collectBlocks(tab, exclusionPredicate));
+			items.addAll(collectItems(tab, itemRenderer, false, exclusionPredicate));
 
 			applyOrderings(items, orderings);
 			outputAll(output, items, stackFunc, visibilityFunc);
 		}
 
-		private List<Item> collectBlocks(Predicate<Item> exclusionPredicate) {
+		private List<Item> collectBlocks(RegistryObject<CreativeModeTab> tab, Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
-//			for (AllSections section : sections) {
-				for (RegistryEntry<Block> entry : Create.REGISTRATE.getAll(Registries.BLOCK)) {
-					Item item = entry.get().asItem();
-					if (item != Items.AIR) {
-						if (!exclusionPredicate.test(item)) {
-							items.add(item);
-						}
-					}
-				}
-//			}
+			for (RegistryEntry<Block> entry : Create.REGISTRATE.getAll(Registries.BLOCK)) {
+				if (!Create.REGISTRATE.isInCreativeTab(entry, tab))
+					continue;
+				Item item = entry.get()
+					.asItem();
+				if (item == Items.AIR)
+					continue;
+				if (!exclusionPredicate.test(item))
+					items.add(item);
+			}
 			items = new ReferenceArrayList<>(new ReferenceLinkedOpenHashSet<>(items));
 			return items;
 		}
 
-		private List<Item> collectItems(ItemRenderer itemRenderer, boolean special, Predicate<Item> exclusionPredicate) {
+		private List<Item> collectItems(RegistryObject<CreativeModeTab> tab, ItemRenderer itemRenderer, boolean special,
+			Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
-//			for (AllSections section : sections) {
-				for (RegistryEntry<Item> entry : Create.REGISTRATE.getAll(Registries.ITEM)) {
-					Item item = entry.get();
-					if (!(item instanceof BlockItem)) {
-						BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
-						if (model.isGui3d() == special) {
-							if (!exclusionPredicate.test(item)) {
-								items.add(item);
-							}
-						}
-					}
-				}
-//			}
+
+			if (!mainTab)
+				return items;
+
+			for (RegistryEntry<Item> entry : Create.REGISTRATE.getAll(Registries.ITEM)) {
+				if (!Create.REGISTRATE.isInCreativeTab(entry, tab))
+					continue;
+				Item item = entry.get();
+				if (item instanceof BlockItem)
+					continue;
+				BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
+				if (model.isGui3d() != special)
+					continue;
+				if (!exclusionPredicate.test(item))
+					items.add(item);
+			}
 			return items;
 		}
 

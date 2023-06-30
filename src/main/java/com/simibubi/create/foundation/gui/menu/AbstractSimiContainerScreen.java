@@ -7,13 +7,13 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.TickableGuiEventListener;
 import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -115,7 +115,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		renderTooltip(graphics, mouseX, mouseY);
 		for (Renderable widget : renderables) {
-			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()) {
+			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isMouseOver(mouseX, mouseY)) {
 				List<Component> tooltip = simiWidget.getToolTip();
 				if (tooltip.isEmpty())
 					continue;
@@ -138,9 +138,16 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	@Override
 	public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
 		InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
-		if (getFocused() != null && this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey))
+		if (getFocused() instanceof EditBox && this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey))
 			return false;
 		return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+	}
+	
+	@Override
+	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+		if (getFocused() != null && !getFocused().isMouseOver(pMouseX, pMouseY))
+			setFocused(null);
+		return super.mouseClicked(pMouseX, pMouseY, pButton);
 	}
 	
 	@Override

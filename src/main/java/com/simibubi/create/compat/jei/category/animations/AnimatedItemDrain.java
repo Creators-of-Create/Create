@@ -37,12 +37,11 @@ public class AnimatedItemDrain extends AnimatedKinetics {
 
 		BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance()
 			.getBuilder());
-		PoseStack ms = new PoseStack();
 		UIRenderHelper.flipForGuiRender(matrixStack);
-		ms.scale(scale, scale, scale);
+		matrixStack.scale(scale, scale, scale);
 		float from = 2/16f;
 		float to = 1f - from;
-		FluidRenderer.renderFluidBox(fluid, from, from, from, to, 3/4f, to, buffer, ms, LightTexture.FULL_BRIGHT, false);
+		FluidRenderer.renderFluidBox(fluid, from, from, from, to, 3/4f, to, buffer, matrixStack, LightTexture.FULL_BRIGHT, false);
 		buffer.endBatch();
 
 		matrixStack.popPose();

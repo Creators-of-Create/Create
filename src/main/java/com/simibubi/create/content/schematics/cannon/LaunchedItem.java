@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class LaunchedItem {
@@ -71,16 +72,16 @@ public abstract class LaunchedItem {
 		return c;
 	}
 
-	public static LaunchedItem fromNBT(CompoundTag c) {
+	public static LaunchedItem fromNBT(CompoundTag c, HolderGetter<Block> holderGetter) {
 		LaunchedItem launched = c.contains("Length") ? new LaunchedItem.ForBelt()
 			: c.contains("BlockState") ? new LaunchedItem.ForBlockState() : new LaunchedItem.ForEntity();
-		launched.readNBT(c);
+		launched.readNBT(c, holderGetter);
 		return launched;
 	}
 
 	abstract void place(Level world);
 
-	void readNBT(CompoundTag c) {
+	void readNBT(CompoundTag c, HolderGetter<Block> holderGetter) {
 		target = NbtUtils.readBlockPos(c.getCompound("Target"));
 		ticksRemaining = c.getInt("TicksLeft");
 		totalTicks = c.getInt("TotalTicks");
@@ -113,11 +114,10 @@ public abstract class LaunchedItem {
 			return serializeNBT;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
-		void readNBT(CompoundTag nbt) {
-			super.readNBT(nbt);
-			state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), nbt.getCompound("BlockState"));
+		void readNBT(CompoundTag nbt, HolderGetter<Block> holderGetter) {
+			super.readNBT(nbt, holderGetter);
+			state = NbtUtils.readBlockState(holderGetter, nbt.getCompound("BlockState"));
 			if (nbt.contains("Data", Tag.TAG_COMPOUND)) {
 				data = nbt.getCompound("Data");
 			}
@@ -147,14 +147,14 @@ public abstract class LaunchedItem {
 		}
 
 		@Override
-		void readNBT(CompoundTag nbt) {
+		void readNBT(CompoundTag nbt, HolderGetter<Block> holderGetter) {
 			length = nbt.getInt("Length");
 			int[] intArray = nbt.getIntArray("Casing");
 			casings = new CasingType[length];
 			for (int i = 0; i < casings.length; i++)
 				casings[i] = i >= intArray.length ? CasingType.NONE
 					: CasingType.values()[Mth.clamp(intArray[i], 0, CasingType.values().length - 1)];
-			super.readNBT(nbt);
+			super.readNBT(nbt, holderGetter);
 		}
 
 		public ForBelt(BlockPos start, BlockPos target, ItemStack stack, BlockState state, CasingType[] casings) {
@@ -225,8 +225,8 @@ public abstract class LaunchedItem {
 		}
 
 		@Override
-		void readNBT(CompoundTag nbt) {
-			super.readNBT(nbt);
+		void readNBT(CompoundTag nbt, HolderGetter<Block> holderGetter) {
+			super.readNBT(nbt, holderGetter);
 			if (nbt.contains("Entity"))
 				deferredTag = nbt.getCompound("Entity");
 		}

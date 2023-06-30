@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.utility.Components;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
 
 public abstract class AbstractSimiWidget extends AbstractWidget implements TickableGuiEventListener {
@@ -37,6 +39,11 @@ public abstract class AbstractSimiWidget extends AbstractWidget implements Ticka
 
 	protected AbstractSimiWidget(int x, int y, int width, int height, Component message) {
 		super(x, y, width, height, message);
+	}
+	
+	@Override
+	protected ClientTooltipPositioner createTooltipPositioner() {
+		return DefaultTooltipPositioner.INSTANCE;
 	}
 
 	public <T extends AbstractSimiWidget> T withCallback(BiConsumer<Integer, Integer> cb) {

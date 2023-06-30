@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -67,6 +68,13 @@ public abstract class AbstractSimiScreen extends Screen {
 	}
 
 	@Override
+	public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+		if (getFocused() != null && !getFocused().isMouseOver(pMouseX, pMouseY))
+			setFocused(null);
+		return super.mouseClicked(pMouseX, pMouseY, pButton);
+	}
+	
+	@Override
 	public boolean isPauseScreen() {
 		return false;
 	}
@@ -118,7 +126,7 @@ public abstract class AbstractSimiScreen extends Screen {
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		boolean keyPressed = super.keyPressed(keyCode, scanCode, modifiers);
-		if (keyPressed || getFocused() != null)
+		if (keyPressed || getFocused() instanceof EditBox)
 			return keyPressed;
 
 		InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
@@ -140,7 +148,7 @@ public abstract class AbstractSimiScreen extends Screen {
 
 	protected void renderWindowForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		for (Renderable widget : renderables) {
-			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isHoveredOrFocused()
+			if (widget instanceof AbstractSimiWidget simiWidget && simiWidget.isMouseOver(mouseX, mouseY)
 				&& simiWidget.visible) {
 				List<Component> tooltip = simiWidget.getToolTip();
 				if (tooltip.isEmpty())

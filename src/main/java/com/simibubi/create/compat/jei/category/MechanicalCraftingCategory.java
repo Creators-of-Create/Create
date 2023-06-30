@@ -23,7 +23,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -152,13 +151,11 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			if (ingredient != null) {
 				PoseStack modelViewStack = RenderSystem.getModelViewStack();
 				modelViewStack.pushPose();
-				modelViewStack.mulPoseMatrix(matrixStack.last()
-					.pose());
 				RenderSystem.applyModelViewMatrix();
 				RenderSystem.enableDepthTest();
 				Minecraft minecraft = Minecraft.getInstance();
 				Font font = getFontRenderer(minecraft, ingredient);
-				graphics.renderFakeItem(ingredient, 0, 0);
+				graphics.renderItem(ingredient, 0, 0);
 				graphics.renderItemDecorations(font, ingredient, 0, 0, null);
 				RenderSystem.disableBlend();
 				modelViewStack.popPose();
