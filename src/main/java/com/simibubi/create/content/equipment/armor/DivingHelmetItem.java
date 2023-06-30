@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.armor;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.resources.ResourceLocation;
@@ -38,22 +36,19 @@ public class DivingHelmetItem extends BaseArmorItem {
 		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
-	public static boolean isWornBy(Entity entity, boolean fireproof) {
-		ItemStack stack = getWornItem(entity);
-		if (stack == null)
-			return false;
-		if (!stack.getItem()
-			.isFireResistant() && fireproof)
-			return false;
-		return stack.getItem() instanceof DivingHelmetItem;
+	public static boolean isWornBy(Entity entity) {
+		return !getWornItem(entity).isEmpty();
 	}
 
-	@Nullable
 	public static ItemStack getWornItem(Entity entity) {
 		if (!(entity instanceof LivingEntity livingEntity)) {
-			return null;
+			return ItemStack.EMPTY;
 		}
-		return livingEntity.getItemBySlot(SLOT);
+		ItemStack stack = livingEntity.getItemBySlot(SLOT);
+		if (!(stack.getItem() instanceof DivingHelmetItem)) {
+			return ItemStack.EMPTY;
+		}
+		return stack;
 	}
 
 	@SubscribeEvent
@@ -67,8 +62,13 @@ public class DivingHelmetItem extends BaseArmorItem {
 			entity.getPersistentData()
 				.remove("VisualBacktankAir");
 
+		ItemStack helmet = getWornItem(entity);
+		if (helmet.isEmpty())
+			return;
+
 		boolean lavaDiving = entity.isInLava();
-		if (!isWornBy(entity, lavaDiving))
+		if (!helmet.getItem()
+			.isFireResistant() && lavaDiving)
 			return;
 		if (!entity.isEyeInFluid(FluidTags.WATER) && !lavaDiving)
 			return;
