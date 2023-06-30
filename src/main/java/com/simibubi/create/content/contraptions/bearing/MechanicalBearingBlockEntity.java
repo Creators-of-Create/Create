@@ -353,4 +353,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 		angle = forcedAngle;
 	}
 
+	public ControlledContraptionEntity getMovedContraption() {
+		return movedContraption;
+	}
 }

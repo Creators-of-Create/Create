@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @GameTestGroup(path = "items")
 public class TestItems {
@@ -229,8 +230,35 @@ public class TestItems {
 		});
 	}
 
-	@GameTest(template = "content_observer_counting")
-	public static void contentObserverCounting(CreateGameTestHelper helper) {
+	@GameTest(template = "smart_observer_belt_and_funnel", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
+	public static void smartObserverBeltAndFunnel(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(6, 3, 2);
+		List<BlockPos> targets = List.of(
+				new BlockPos(5, 2, 1), // belt
+				new BlockPos(2, 4, 6) // funnel
+		);
+		List<BlockPos> overflows = List.of(
+				new BlockPos(6, 2, 1), // belt
+				new BlockPos(1, 3, 6) // funnel
+		);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> {
+			helper.assertSecondsPassed(9);
+			targets.forEach(pos -> helper.assertBlockPresent(Blocks.DIAMOND_BLOCK, pos));
+			overflows.forEach(pos -> helper.assertBlockPresent(Blocks.AIR, pos));
+		});
+	}
+
+	@GameTest(template = "smart_observer_chutes")
+	public static void smartObserverChutes(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(1, 5, 2);
+		BlockPos output = new BlockPos(1, 5, 3);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> helper.assertBlockPresent(Blocks.DIAMOND_BLOCK, output));
+	}
+
+	@GameTest(template = "smart_observer_counting")
+	public static void smartObserverCounting(CreateGameTestHelper helper) {
 		BlockPos chest = new BlockPos(3, 2, 1);
 		long totalChestItems = helper.getTotalItems(chest);
 		BlockPos chestNixiePos = new BlockPos(2, 3, 1);
@@ -251,6 +279,26 @@ public class TestItems {
 			if (doubleChestNixieReading != totalDoubleChestItems)
 				helper.fail("Double chest nixie detected %s, expected %s".formatted(doubleChestNixieReading, totalDoubleChestItems));
 		});
+	}
+
+	@GameTest(template = "smart_observer_filtered_storage")
+	public static void smartObserverFilteredStorage(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(2, 3, 1);
+		BlockPos leftLamp = new BlockPos(3, 2, 3);
+		BlockPos rightLamp = new BlockPos(1, 2, 3);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> {
+			helper.assertBlockProperty(leftLamp, RedstoneLampBlock.LIT, true);
+			helper.assertBlockProperty(rightLamp, RedstoneLampBlock.LIT, false);
+		});
+	}
+
+	@GameTest(template = "smart_observer_storage")
+	public static void smartObserverStorage(CreateGameTestHelper helper) {
+		BlockPos lever = new BlockPos(1, 3, 2);
+		BlockPos lamp = new BlockPos(1, 2, 3);
+		helper.pullLever(lever);
+		helper.succeedWhen(() -> helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, true));
 	}
 
 	@GameTest(template = "depot_display", timeoutTicks = CreateGameTestHelper.TEN_SECONDS)
@@ -275,7 +323,7 @@ public class TestItems {
 
 				DepotBlockEntity depot = depots.get(i);
 				ItemStack item = depot.getHeldItem();
-				String name = Registry.ITEM.getKey(item.getItem()).getPath();
+				String name = ForgeRegistries.ITEMS.getKey(item.getItem()).getPath();
 
 				if (!name.equals(text))
 					helper.fail("Text mismatch: wanted [" + name + "], got: " + text);
@@ -283,8 +331,8 @@ public class TestItems {
 		});
 	}
 
-	@GameTest(template = "stockpile_switch")
-	public static void stockpileSwitch(CreateGameTestHelper helper) {
+	@GameTest(template = "threshold_switch")
+	public static void thresholdSwitch(CreateGameTestHelper helper) {
 		BlockPos chest = new BlockPos(1, 2, 1);
 		BlockPos lamp = new BlockPos(2, 3, 1);
 		helper.assertBlockProperty(lamp, RedstoneLampBlock.LIT, false);
