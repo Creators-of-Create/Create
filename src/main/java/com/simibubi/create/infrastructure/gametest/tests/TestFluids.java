@@ -172,7 +172,7 @@ public class TestFluids {
 		List<BlockPos> edges = List.of(new BlockPos(3, 3, 1), new BlockPos(3, 3, 3));
 		BlockPos openLever = new BlockPos(2, 6, 1);
 		BlockPos leftLever = new BlockPos(4, 5, 1);
-		waterwheel(helper, wheel, 8, 128, leftEnd, rightEnd, edges, openLever, leftLever);
+		waterwheel(helper, wheel, 8, 256, leftEnd, rightEnd, edges, openLever, leftLever);
 	}
 
 	private static void waterwheel(CreateGameTestHelper helper,
