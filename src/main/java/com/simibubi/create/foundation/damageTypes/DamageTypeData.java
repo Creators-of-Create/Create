@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -28,7 +27,7 @@ import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DeathMessageType;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.LevelAccessor;
 
 /**
  * An extension of {@link DamageType} that contains extra data, functionality, and utility.
@@ -46,32 +45,29 @@ public class DamageTypeData {
 
 	private Holder<DamageType> holder;
 
-	private final Map<LevelReader, DamageSource> staticSourceCache = new WeakHashMap<>();
+	private final WorldAttached<DamageSource> staticSources;
 
 	protected DamageTypeData(ResourceKey<DamageType> key, DamageType type, Collection<TagKey<DamageType>> tags) {
 		this.key = key;
 		this.id = key.location();
 		this.type = type;
 		this.tags = tags;
+		this.staticSources = new WorldAttached<>(level -> new DamageSource(getHolder(level)));
 	}
 
-	public DamageSource source(LevelReader level) {
-		if (!staticSourceCache.containsKey(level)) {
-			Holder<DamageType> holder = getHolder(level);
-			staticSourceCache.put(level, new DamageSource(holder));
-		}
-		return staticSourceCache.get(level);
+	public DamageSource source(LevelAccessor level) {
+		return staticSources.get(level);
 	}
 
-	public DamageSource source(LevelReader level, @Nullable Entity entity) {
+	public DamageSource source(LevelAccessor level, @Nullable Entity entity) {
 		return new DamageSource(getHolder(level), entity);
 	}
 
-	public DamageSource source(LevelReader level, @Nullable Entity cause, @Nullable Entity direct) {
+	public DamageSource source(LevelAccessor level, @Nullable Entity cause, @Nullable Entity direct) {
 		return new DamageSource(getHolder(level), cause, direct);
 	}
 
-	private Holder<DamageType> getHolder(LevelReader level) {
+	private Holder<DamageType> getHolder(LevelAccessor level) {
 		if (this.holder == null) {
 			Registry<DamageType> registry = level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
 			this.holder = registry.getHolderOrThrow(key);
@@ -177,6 +173,7 @@ public class DamageTypeData {
 		 *     <li>{@link DeathMessageType#INTENTIONAL_GAME_DESIGN}: "death.attack." + msgId, wrapped in brackets, linking to MCPE-28723</li>
 		 * </ul>
 		 */
+		@SuppressWarnings("JavadocReference")
 		public Builder deathMessageType(DeathMessageType type) {
 			this.deathMessageType = type;
 			return this;
