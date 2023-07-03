@@ -735,6 +735,20 @@ public class Navigation {
 		CompoundTag tag = new CompoundTag();
 		if (destination == null)
 			return tag;
+
+		// Remove null values in train navigation fixing a rare crash that could occur
+		List<Couple<TrackNode>> toRemove = new ArrayList<>();
+		for (Couple<TrackNode> couple : currentPath) {
+			if (couple == null || couple.getFirst() == null || couple.getSecond() == null)
+				toRemove.add(couple);
+		}
+		if (toRemove.size() > 0) {
+			Create.LOGGER.error("Found null values in path of train with name: "+train.name.getString()+", id: "+train.id.toString());
+		}
+		for (Couple<TrackNode> brokenCouple : toRemove) {
+			currentPath.remove(brokenCouple);
+		}
+
 		tag.putUUID("Destination", destination.id);
 		tag.putDouble("DistanceToDestination", distanceToDestination);
 		tag.putDouble("DistanceStartedAt", distanceStartedAt);
