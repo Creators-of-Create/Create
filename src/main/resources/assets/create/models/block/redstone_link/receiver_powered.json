@@ -57,8 +57,8 @@
 			}
 		},
 		{
-			"from": [6.1, 2.5, 3.6],
-			"to": [9.9, 3.5, 7.4],
+			"from": [6, 2.5, 3.5],
+			"to": [10, 3.5, 7.5],
 			"faces": {
 				"north": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
 				"east": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
@@ -68,8 +68,8 @@
 			}
 		},
 		{
-			"from": [6.1, 2.5, 8.6],
-			"to": [9.9, 3.5, 12.4],
+			"from": [6, 2.5, 8.5],
+			"to": [10, 3.5, 12.5],
 			"faces": {
 				"north": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},
 				"east": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge"},

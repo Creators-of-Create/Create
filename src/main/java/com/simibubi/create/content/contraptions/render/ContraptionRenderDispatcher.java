@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.error.GlError;
 import com.jozufozu.flywheel.config.BackendType;
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.WorldModelBuilder;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
@@ -15,7 +16,6 @@ import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.jozufozu.flywheel.util.WorldAttached;
 import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -171,11 +171,13 @@ public class ContraptionRenderDispatcher {
 	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c,
 		RenderType layer) {
 		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
-		com.jozufozu.flywheel.util.Pair<RenderedBuffer, Integer> pair = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
+		ShadeSeparatedBufferedData data = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
 				.withBlocks(values)
 				.withModelData(c.modelData)
 				.build();
-		return new SuperByteBuffer(pair.first(), pair.second());
+		SuperByteBuffer sbb = new SuperByteBuffer(data);
+		data.release();
+		return sbb;
 	}
 
 	public static int getLight(Level world, float lx, float ly, float lz) {

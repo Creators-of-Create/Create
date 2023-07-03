@@ -186,7 +186,7 @@ public class VecHelper {
 	}
 
 	public static Vec3 clamp(Vec3 vec, float maxLength) {
-		return vec.length() > maxLength ? vec.normalize()
+		return vec.lengthSqr() > maxLength * maxLength ? vec.normalize()
 			.scale(maxLength) : vec;
 	}
 
@@ -225,7 +225,7 @@ public class VecHelper {
 	public static Vec3 intersectSphere(Vec3 origin, Vec3 lineDirection, Vec3 sphereCenter, double radius) {
 		if (lineDirection.equals(Vec3.ZERO))
 			return null;
-		if (lineDirection.length() != 1)
+		if (lineDirection.lengthSqr() != 1)
 			lineDirection = lineDirection.normalize();
 
 		Vec3 diff = origin.subtract(sphereCenter);
@@ -318,7 +318,7 @@ public class VecHelper {
 			return null;
 		if (intersect[0] < 0 || intersect[1] < 0)
 			return null;
-		if (intersect[0] > pDiff.length() || intersect[1] > qDiff.length())
+		if (intersect[0] * intersect[0] > pDiff.lengthSqr() || intersect[1] * intersect[1] > qDiff.lengthSqr())
 			return null;
 		return intersect;
 	}

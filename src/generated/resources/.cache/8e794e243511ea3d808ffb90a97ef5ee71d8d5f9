@@ -1,4 +1,4 @@
-// 1.19.2	2023-05-24T18:02:06.5272361	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2023-07-03T14:12:56.5498328	Registrate Provider for create [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4185,6 +4185,7 @@ a5874f73c7dc0a3ae12999e6ae8abf45bc7fb9be data/create/tags/blocks/passive_boiler_
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/blocks/valve_handles.json
 72143286fb5cb372a0696550e2eac76ca50e6fbc data/create/tags/blocks/windmill_sails.json
 58987ea71d488cc48192ceb00c00aa2903e51304 data/create/tags/blocks/wrench_pickup.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/entity_types/ignore_seat.json
 894e1e4fd1e32712abdda18ec64ab13750d3c039 data/create/tags/fluids/bottomless/allow.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/fluids/bottomless/deny.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create/tags/items/blaze_burner_fuel/regular.json

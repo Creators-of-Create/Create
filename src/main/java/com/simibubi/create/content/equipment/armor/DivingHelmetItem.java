@@ -21,6 +21,8 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import java.util.List;
+
 @EventBusSubscriber
 public class DivingHelmetItem extends BaseArmorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
@@ -92,17 +94,16 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;
 
-		ItemStack backtank = BacktankUtil.get(entity);
-		if (backtank.isEmpty())
-			return;
-		if (!BacktankUtil.hasAirRemaining(backtank))
+		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(entity);
+		if (backtanks.isEmpty())
 			return;
 
 		if (lavaDiving) {
 			if (entity instanceof ServerPlayer sp)
 				AllAdvancements.DIVING_SUIT_LAVA.awardTo(sp);
-			if (!backtank.getItem()
-				.isFireResistant())
+			if (backtanks.stream()
+				.noneMatch(backtank -> backtank.getItem()
+					.isFireResistant()))
 				return;
 		}
 
@@ -111,12 +112,14 @@ public class DivingHelmetItem extends BaseArmorItem {
 
 		if (world.isClientSide)
 			entity.getPersistentData()
-				.putInt("VisualBacktankAir", (int) BacktankUtil.getAir(backtank));
+				.putInt("VisualBacktankAir", Math.round(backtanks.stream()
+					.map(BacktankUtil::getAir)
+					.reduce(0f, Float::sum)));
 
 		if (!second)
 			return;
-		
-		BacktankUtil.consumeAir(entity, backtank, 1);
+
+		BacktankUtil.consumeAir(entity, backtanks.get(0), 1);
 
 		if (lavaDiving)
 			return;

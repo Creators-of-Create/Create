@@ -30,9 +30,9 @@ public class TrackPlacementOverlay implements IGuiOverlay {
 			return;
 		if (TrackPlacement.extraTipWarmup < 4)
 			return;
-	
+
 		if (ObfuscationReflectionHelper.getPrivateValue(Gui.class, gui,
-			"toolHighlightTimer") instanceof Integer toolHighlightTimer && toolHighlightTimer > 0)
+			"f_92993_") instanceof Integer toolHighlightTimer && toolHighlightTimer > 0)
 			return;
 	
 		boolean active = mc.options.keySprint.isDown();

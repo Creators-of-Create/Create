@@ -17,7 +17,8 @@ public class CFluids extends ConfigBase {
 	public final ConfigEnum<BottomlessFluidMode> bottomlessFluidMode = e(BottomlessFluidMode.ALLOW_BY_TAG, "bottomlessFluidMode",
 		Comments.bottomlessFluidMode);
 
-	public ConfigBool placeFluidSourceBlocks = b(true, "placeFluidSourceBlocks", Comments.placeFluidSourceBlocks);
+	public ConfigBool fluidFillPlaceFluidSourceBlocks = b(true, "fluidFillPlaceFluidSourceBlocks", Comments.fluidFillPlaceFluidSourceBlocks);
+	public ConfigBool pipesPlaceFluidSourceBlocks = b(true, "pipesPlaceFluidSourceBlocks", Comments.pipesPlaceFluidSourceBlocks);
 
 	@Override
 	public String getName() {
@@ -40,7 +41,8 @@ public class CFluids extends ConfigBase {
 		static String fillInfinite = "Whether hose pulleys should continue filling up above-threshold sources.";
 		static String bottomlessFluidMode = "Configure which fluids can be drained infinitely.";
 
-		static String placeFluidSourceBlocks = "Whether open-ended pipes and hose pulleys should be allowed to place fluid sources.";
+		static String fluidFillPlaceFluidSourceBlocks = "Whether hose pulleys should be allowed to place fluid sources.";
+		static String pipesPlaceFluidSourceBlocks = "Whether open-ended pipes should be allowed to place fluid sources.";
 	}
 
 }

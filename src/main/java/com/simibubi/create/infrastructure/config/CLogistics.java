@@ -11,6 +11,7 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt displayLinkRange = i(64, 1, "displayLinkRange", Comments.displayLinkRange);
 	public final ConfigInt vaultCapacity = i(20, 1, "vaultCapacity", Comments.vaultCapacity);
 	public final ConfigInt brassTunnelTimer = i(10, 1, 10, "brassTunnelTimer", Comments.brassTunnelTimer);
+	public final ConfigBool seatHostileMobs = b(true, "seatHostileMobs", Comments.seatHostileMobs);
 
 	@Override
 	public String getName() {
@@ -28,6 +29,7 @@ public class CLogistics extends ConfigBase {
 		static String mechanicalArmRange = "Maximum distance in blocks a Mechanical Arm can reach across.";
 		static String vaultCapacity = "The total amount of stacks a vault can hold per block in size.";
 		static String brassTunnelTimer = "The amount of ticks a brass tunnel waits between distributions.";
+		static String seatHostileMobs = "Whether hostile mobs walking near a seat will start riding it.";
 	}
 
 }
