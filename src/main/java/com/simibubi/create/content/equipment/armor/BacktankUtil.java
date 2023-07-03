@@ -29,6 +29,7 @@ import java.util.function.Function;
 public class BacktankUtil {
 
 	private static final List<Function<LivingEntity, List<ItemStack>>> BACKTANK_SUPPLIERS = new ArrayList<>();
+	
 	static {
 		addBacktankSupplier(entity -> {
 			List<ItemStack> stacks = new ArrayList<>();
@@ -76,6 +77,7 @@ public class BacktankUtil {
 
 		if (!(entity instanceof ServerPlayer player))
 			return;
+		
 		sendWarning(player, air, newAir, maxAir / 10f);
 		sendWarning(player, air, newAir, 1);
 	}
@@ -152,12 +154,15 @@ public class BacktankUtil {
 			return Math.round(13.0F - (float) stack.getDamageValue() / stack.getMaxDamage() * 13.0F);
 
 		if (backtanks.size() == 1)
-			return backtanks.get(0).getItem().getBarWidth(backtanks.get(0));
+			return backtanks.get(0)
+				.getItem()
+				.getBarWidth(backtanks.get(0));
 
 		// If there is more than one backtank, average the bar widths.
 		int sumBarWidth = backtanks.stream()
-				.map(backtank -> backtank.getItem().getBarWidth(backtank))
-				.reduce(0 , Integer::sum);
+			.map(backtank -> backtank.getItem()
+				.getBarWidth(backtank))
+			.reduce(0, Integer::sum);
 
 		return Math.round((float) sumBarWidth / backtanks.size());
 	}
@@ -171,7 +176,9 @@ public class BacktankUtil {
 		List<ItemStack> backtanks = getAllWithAir(player);
 
 		// Just return the "first" backtank for the bar color since that's the one we are consuming from
-		return backtanks.get(0).getItem().getBarColor(backtanks.get(0));
+		return backtanks.get(0)
+			.getItem()
+			.getBarColor(backtanks.get(0));
 	}
 
 	/**

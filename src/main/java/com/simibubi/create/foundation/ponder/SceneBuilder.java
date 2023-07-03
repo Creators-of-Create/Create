@@ -296,7 +296,7 @@ public class SceneBuilder {
 			addInstruction(scene -> SuperGlueItem.spawnParticles(scene.getWorld(), pos, side, fullBlock));
 		}
 
-				private void rotationIndicator(BlockPos pos, boolean direction, BlockPos displayPos) {
+		private void rotationIndicator(BlockPos pos, boolean direction, BlockPos displayPos) {
 			addInstruction(scene -> {
 				BlockState blockState = scene.getWorld()
 					.getBlockState(pos);
@@ -531,9 +531,10 @@ public class SceneBuilder {
 			return instruction.createLink(scene);
 		}
 
-		public ElementLink<WorldSectionElement> showIndependentSection(Selection selection, Direction fadeInDirection, int duration) {
+		public ElementLink<WorldSectionElement> showIndependentSection(Selection selection, Direction fadeInDirection,
+			int fadeInDuration) {
 			DisplayWorldSectionInstruction instruction =
-				new DisplayWorldSectionInstruction(duration, fadeInDirection, selection, Optional.empty());
+				new DisplayWorldSectionInstruction(fadeInDuration, fadeInDirection, selection, Optional.empty());
 			addInstruction(instruction);
 			return instruction.createLink(scene);
 		}
@@ -564,8 +565,9 @@ public class SceneBuilder {
 			addInstruction(new FadeOutOfSceneInstruction<>(15, fadeOutDirection, link));
 		}
 
-		public void hideIndependentSection(ElementLink<WorldSectionElement> link, Direction fadeOutDirection, int duration) {
-			addInstruction(new FadeOutOfSceneInstruction<>(duration, fadeOutDirection, link));
+		public void hideIndependentSection(ElementLink<WorldSectionElement> link, Direction fadeOutDirection,
+			int fadeOutDuration) {
+			addInstruction(new FadeOutOfSceneInstruction<>(fadeOutDuration, fadeOutDirection, link));
 		}
 
 		public void hideIndependentSectionImmediately(ElementLink<WorldSectionElement> link) {

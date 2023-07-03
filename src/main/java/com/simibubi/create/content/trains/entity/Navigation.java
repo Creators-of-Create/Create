@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -736,18 +737,7 @@ public class Navigation {
 		if (destination == null)
 			return tag;
 
-		// Remove null values in train navigation fixing a rare crash that could occur
-		List<Couple<TrackNode>> toRemove = new ArrayList<>();
-		for (Couple<TrackNode> couple : currentPath) {
-			if (couple == null || couple.getFirst() == null || couple.getSecond() == null)
-				toRemove.add(couple);
-		}
-		if (toRemove.size() > 0) {
-			Create.LOGGER.error("Found null values in path of train with name: "+train.name.getString()+", id: "+train.id.toString());
-		}
-		for (Couple<TrackNode> brokenCouple : toRemove) {
-			currentPath.remove(brokenCouple);
-		}
+		removeBrokenPathEntries();
 
 		tag.putUUID("Destination", destination.id);
 		tag.putDouble("DistanceToDestination", distanceToDestination);
@@ -786,6 +776,9 @@ public class Navigation {
 			c -> currentPath.add(Couple
 				.deserializeEach(c.getList("Nodes", Tag.TAG_COMPOUND), c2 -> TrackNodeLocation.read(c2, dimensions))
 				.map(graph::locateNode)));
+		
+		removeBrokenPathEntries();
+		
 		waitingForSignal = tag.contains("BlockingSignal")
 			? Pair.of(tag.getUUID("BlockingSignal"), tag.getBoolean("BlockingSignalSide"))
 			: null;
@@ -793,6 +786,27 @@ public class Navigation {
 			return;
 		distanceToSignal = tag.getDouble("DistanceToSignal");
 		ticksWaitingForSignal = tag.getInt("TicksWaitingForSignal");
+	}
+
+	private void removeBrokenPathEntries() {
+		/*
+		 * Trains might load or save with null entries in their path, this method avoids
+		 * that anomaly from causing NPEs. The underlying issue has not been found.
+		 */
+		
+		boolean nullEntriesPresent = false;
+
+		for (Iterator<Couple<TrackNode>> iterator = currentPath.iterator(); iterator.hasNext();) {
+			Couple<TrackNode> couple = iterator.next();
+			if (couple == null || couple.getFirst() == null || couple.getSecond() == null) {
+				iterator.remove();
+				nullEntriesPresent = true;
+			}
+		}
+
+		if (nullEntriesPresent)
+			Create.LOGGER.error("Found null values in path of train with name: " + train.name.getString() + ", id: "
+				+ train.id.toString());
 	}
 
 }

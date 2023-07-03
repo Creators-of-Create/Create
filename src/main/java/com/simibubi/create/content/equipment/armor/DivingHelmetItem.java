@@ -84,7 +84,9 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (lavaDiving) {
 			if (entity instanceof ServerPlayer sp)
 				AllAdvancements.DIVING_SUIT_LAVA.awardTo(sp);
-			if (backtanks.stream().noneMatch(backtank -> backtank.getItem().isFireResistant()))
+			if (backtanks.stream()
+				.noneMatch(backtank -> backtank.getItem()
+					.isFireResistant()))
 				return;
 		}
 
@@ -93,7 +95,9 @@ public class DivingHelmetItem extends BaseArmorItem {
 
 		if (world.isClientSide)
 			entity.getPersistentData()
-					.putInt("VisualBacktankAir", Math.round(backtanks.stream().map(BacktankUtil::getAir).reduce(0f, Float::sum)));
+				.putInt("VisualBacktankAir", Math.round(backtanks.stream()
+					.map(BacktankUtil::getAir)
+					.reduce(0f, Float::sum)));
 
 		if (!second)
 			return;
