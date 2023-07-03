@@ -187,7 +187,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
+	public final InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
 								 BlockHitResult hit) {
 		if (level.isClientSide)
 			return InteractionResult.PASS;
@@ -239,6 +239,12 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 			return InteractionResult.CONSUME;
 		}
 
+		return onInteractWithBogey(state, level, pos, player, hand, hit);
+	}
+
+	// Allows for custom interactions with bogey block to be added simply
+	protected InteractionResult onInteractWithBogey(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
+													BlockHitResult hit) {
 		return InteractionResult.PASS;
 	}
 
@@ -248,7 +254,6 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 	protected List<ResourceLocation> getBogeyBlockCycle() {
 		return BOGEYS;
 	}
-
 
 	@Override
 	public BlockState getRotatedBlockState(BlockState state, Direction targetedFace) {
