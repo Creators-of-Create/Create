@@ -80,7 +80,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			setLongValidationTimer();
 			return;
 		}
-		
+
 		int maxBlocks = maxBlocks();
 
 		if (infinityCheckVisited.size() > maxBlocks && maxBlocks != -1 && !fillInfinite()) {
@@ -137,7 +137,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		int maxBlocks = maxBlocks();
 		boolean evaporate = world.dimensionType()
 			.ultraWarm() && FluidHelper.isTag(fluid, FluidTags.WATER);
-		boolean canPlaceSources = AllConfigs.server().fluids.placeFluidSourceBlocks.get();
+		boolean canPlaceSources = AllConfigs.server().fluids.fluidFillPlaceFluidSourceBlocks.get();
 
 		if ((!fillInfinite() && infinite) || evaporate || !canPlaceSources) {
 			FluidState fluidState = world.getFluidState(rootPos);
