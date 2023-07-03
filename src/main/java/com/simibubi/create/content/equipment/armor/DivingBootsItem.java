@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.armor;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.resources.ResourceLocation;
@@ -27,19 +25,18 @@ public class DivingBootsItem extends BaseArmorItem {
 	}
 
 	public static boolean isWornBy(Entity entity) {
-		ItemStack stack = getWornItem(entity);
-		if (stack == null) {
-			return false;
-		}
-		return stack.getItem() instanceof DivingBootsItem;
+		return !getWornItem(entity).isEmpty();
 	}
 
-	@Nullable
 	public static ItemStack getWornItem(Entity entity) {
 		if (!(entity instanceof LivingEntity livingEntity)) {
-			return null;
+			return ItemStack.EMPTY;
 		}
-		return livingEntity.getItemBySlot(SLOT);
+		ItemStack stack = livingEntity.getItemBySlot(SLOT);
+		if (!(stack.getItem() instanceof DivingBootsItem)) {
+			return ItemStack.EMPTY;
+		}
+		return stack;
 	}
 
 	@SubscribeEvent

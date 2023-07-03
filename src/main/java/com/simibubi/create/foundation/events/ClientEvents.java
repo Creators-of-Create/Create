@@ -316,7 +316,7 @@ public class ClientEvents {
 			return;
 
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
-		if (divingHelmet != null) {
+		if (!divingHelmet.isEmpty()) {
 			if (FluidHelper.isWater(fluid)) {
 				event.scaleFarPlaneDistance(6.25f);
 				event.setCanceled(true);

@@ -7,7 +7,7 @@ buildscript {
         maven { url = 'https://maven.parchmentmc.org' }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: "${forgegradle_version}", changing: false
+        classpath "net.minecraftforge.gradle:ForgeGradle:${forgegradle_version}"
         classpath "org.spongepowered:mixingradle:${mixingradle_version}"
         classpath "org.parchmentmc:librarian:${librarian_version}"
     }
@@ -37,9 +37,15 @@ version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : '')
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + ' (' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+    if (Boolean.parseBoolean(project.use_parchment)) {
+        mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+    } else {
+        mappings channel: 'official', version: "${minecraft_version}"
+    }
+
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -165,7 +171,7 @@ dependencies {
         jarJar.ranged(it, '[MC1.19-1.1.5,)')
     }
     jarJar("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
-        jarJar.ranged(it, '[0.6.8,0.6.9)')
+        jarJar.ranged(it, '[0.6.9,0.6.10)')
     }
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
@@ -200,7 +206,7 @@ dependencies {
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
     // This allows 'Settings > Build, Execution, and Deployment > Build Tools > Gradle > Build and run using' set to IntelliJ to work correctly
-    if (System.getProperty('idea.sync.active') != 'true') {
+    if (!Boolean.getBoolean('idea.sync.active')) {
         annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
     }
 }
