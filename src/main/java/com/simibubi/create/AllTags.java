@@ -9,11 +9,14 @@ import java.util.Collections;
 
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,6 +52,7 @@ public class AllTags {
 	}
 
 	public enum NameSpace {
+		
 		MOD(Create.ID, false, true),
 		FORGE("forge"),
 		TIC("tconstruct"),
@@ -72,6 +76,7 @@ public class AllTags {
 	}
 
 	public enum AllBlockTags {
+		
 		BRITTLE,
 		CASING,
 		FAN_TRANSPARENT,
@@ -143,11 +148,12 @@ public class AllTags {
 			return state.is(tag);
 		}
 
-		private static void init() {
-		}
+		private static void init() {}
+		
 	}
 
 	public enum AllItemTags {
+		
 		BLAZE_BURNER_FUEL_REGULAR(MOD, "blaze_burner_fuel/regular"),
 		BLAZE_BURNER_FUEL_SPECIAL(MOD, "blaze_burner_fuel/special"),
 		CASING,
@@ -213,11 +219,12 @@ public class AllTags {
 			return stack.is(tag);
 		}
 
-		private static void init() {
-		}
+		private static void init() {}
+		
 	}
 
 	public enum AllFluidTags {
+		
 		BOTTOMLESS_ALLOW(MOD, "bottomless/allow"),
 		BOTTOMLESS_DENY(MOD, "bottomless/deny"),
 
@@ -263,13 +270,58 @@ public class AllTags {
 			return state.is(tag);
 		}
 
-		private static void init() {
+		private static void init() {}
+		
+	}
+	
+	public enum AllEntityTags {
+		
+		IGNORE_SEAT,
+
+		;
+
+		public final TagKey<EntityType<?>> tag;
+		public final boolean alwaysDatagen;
+
+		AllEntityTags() {
+			this(MOD);
 		}
+
+		AllEntityTags(NameSpace namespace) {
+			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+
+		AllEntityTags(NameSpace namespace, String path) {
+			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+
+		AllEntityTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
+			this(namespace, null, optional, alwaysDatagen);
+		}
+
+		AllEntityTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
+			if (optional) {
+				tag = optionalTag(ForgeRegistries.ENTITIES, id);
+			} else {
+				tag = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, id);
+			}
+			this.alwaysDatagen = alwaysDatagen;
+		}
+
+		public boolean matches(Entity entity) {
+			return entity.getType()
+				.is(tag);
+		}
+
+		private static void init() {}
+		
 	}
 
 	public static void init() {
 		AllBlockTags.init();
 		AllItemTags.init();
 		AllFluidTags.init();
+		AllEntityTags.init();
 	}
 }
