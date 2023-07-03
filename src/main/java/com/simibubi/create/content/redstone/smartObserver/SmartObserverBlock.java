@@ -133,12 +133,12 @@ public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<
 	}
 
 	public void onFunnelTransfer(Level world, BlockPos funnelPos, ItemStack transferred) {
-		for (Direction direction : Iterate.horizontalDirections) {
+		for (Direction direction : Iterate.directions) {
 			BlockPos detectorPos = funnelPos.relative(direction);
 			BlockState detectorState = world.getBlockState(detectorPos);
 			if (!AllBlocks.SMART_OBSERVER.has(detectorState))
 				continue;
-			if (detectorState.getValue(FACING) != direction.getOpposite())
+			if (SmartObserverBlock.getTargetDirection(detectorState) != direction.getOpposite())
 				continue;
 			withBlockEntityDo(world, detectorPos, be -> {
 				FilteringBehaviour filteringBehaviour = BlockEntityBehaviour.get(be, FilteringBehaviour.TYPE);

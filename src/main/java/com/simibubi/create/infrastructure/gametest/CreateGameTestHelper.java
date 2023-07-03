@@ -3,7 +3,19 @@ package com.simibubi.create.infrastructure.gametest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovement;
+import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovingInteraction;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
+
+import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
+
+import net.minecraftforge.registries.ForgeRegistries;
+
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +39,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -40,6 +53,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -80,7 +94,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public void flipBlock(BlockPos pos) {
 		BlockState original = getBlockState(pos);
 		if (!original.hasProperty(BlockStateProperties.FACING))
-			fail("FACING property not in block: " + Registry.BLOCK.getId(original.getBlock()));
+			fail("FACING property not in block: " + ForgeRegistries.BLOCKS.getKey(original.getBlock()));
 		Direction facing = original.getValue(BlockStateProperties.FACING);
 		BlockState reversed = original.setValue(BlockStateProperties.FACING, facing.getOpposite());
 		setBlock(pos, reversed);
@@ -121,6 +135,34 @@ public class CreateGameTestHelper extends GameTestHelper {
 	public void setTunnelMode(BlockPos pos, SelectionMode mode) {
 		ScrollValueBehaviour behavior = getBehavior(pos, ScrollOptionBehaviour.TYPE);
 		behavior.setValue(mode.ordinal());
+	}
+
+	public void assertSpeedometerSpeed(BlockPos speedometer, float value) {
+		SpeedGaugeBlockEntity be = getBlockEntity(AllBlockEntityTypes.SPEEDOMETER.get(), speedometer);
+		assertInRange(be.getSpeed(), value - 0.01, value + 0.01);
+	}
+
+	public void assertStressometerCapacity(BlockPos stressometer, float value) {
+		StressGaugeBlockEntity be = getBlockEntity(AllBlockEntityTypes.STRESSOMETER.get(), stressometer);
+		assertInRange(be.getNetworkCapacity(), value - 0.01, value + 0.01);
+	}
+
+	public void toggleActorsOfType(Contraption contraption, ItemLike item) {
+		AtomicBoolean toggled = new AtomicBoolean(false);
+		contraption.getInteractors().forEach((localPos, behavior) -> {
+			if (toggled.get() || !(behavior instanceof ContraptionControlsMovingInteraction controls))
+				return;
+			MutablePair<StructureBlockInfo, MovementContext> actor = contraption.getActorAt(localPos);
+			if (actor == null)
+				return;
+			ItemStack filter = ContraptionControlsMovement.getFilter(actor.right);
+			if (filter != null && filter.is(item.asItem())) {
+				controls.handlePlayerInteraction(
+						makeMockPlayer(), InteractionHand.MAIN_HAND, localPos, contraption.entity
+				);
+				toggled.set(true);
+			}
+		});
 	}
 
 	// block entities

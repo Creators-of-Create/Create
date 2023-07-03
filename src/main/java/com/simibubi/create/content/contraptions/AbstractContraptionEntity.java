@@ -876,7 +876,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			if (xRotation != 0)
 				matrix.multiply(new Matrix3d().asXRotation(AngleHelper.rad(-xRotation)));
 			if (yRotation != 0)
-				matrix.multiply(new Matrix3d().asYRotation(AngleHelper.rad(yRotation)));
+				matrix.multiply(new Matrix3d().asYRotation(AngleHelper.rad(-yRotation)));
 			if (zRotation != 0)
 				matrix.multiply(new Matrix3d().asZRotation(AngleHelper.rad(-zRotation)));
 			return matrix;

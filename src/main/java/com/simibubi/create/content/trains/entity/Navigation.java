@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -735,6 +736,9 @@ public class Navigation {
 		CompoundTag tag = new CompoundTag();
 		if (destination == null)
 			return tag;
+
+		removeBrokenPathEntries();
+
 		tag.putUUID("Destination", destination.id);
 		tag.putDouble("DistanceToDestination", distanceToDestination);
 		tag.putDouble("DistanceStartedAt", distanceStartedAt);
@@ -772,6 +776,9 @@ public class Navigation {
 			c -> currentPath.add(Couple
 				.deserializeEach(c.getList("Nodes", Tag.TAG_COMPOUND), c2 -> TrackNodeLocation.read(c2, dimensions))
 				.map(graph::locateNode)));
+		
+		removeBrokenPathEntries();
+		
 		waitingForSignal = tag.contains("BlockingSignal")
 			? Pair.of(tag.getUUID("BlockingSignal"), tag.getBoolean("BlockingSignalSide"))
 			: null;
@@ -779,6 +786,27 @@ public class Navigation {
 			return;
 		distanceToSignal = tag.getDouble("DistanceToSignal");
 		ticksWaitingForSignal = tag.getInt("TicksWaitingForSignal");
+	}
+
+	private void removeBrokenPathEntries() {
+		/*
+		 * Trains might load or save with null entries in their path, this method avoids
+		 * that anomaly from causing NPEs. The underlying issue has not been found.
+		 */
+		
+		boolean nullEntriesPresent = false;
+
+		for (Iterator<Couple<TrackNode>> iterator = currentPath.iterator(); iterator.hasNext();) {
+			Couple<TrackNode> couple = iterator.next();
+			if (couple == null || couple.getFirst() == null || couple.getSecond() == null) {
+				iterator.remove();
+				nullEntriesPresent = true;
+			}
+		}
+
+		if (nullEntriesPresent)
+			Create.LOGGER.error("Found null values in path of train with name: " + train.name.getString() + ", id: "
+				+ train.id.toString());
 	}
 
 }

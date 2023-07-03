@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.data;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
@@ -15,6 +16,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.minecraft.data.tags.TagsProvider.TagAppender;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -66,6 +68,7 @@ public class TagGen {
 		Create.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, TagGen::genBlockTags);
 		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, TagGen::genItemTags);
 		Create.REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, TagGen::genFluidTags);
+		Create.REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, TagGen::genEntityTags);
 	}
 
 	private static void genBlockTags(RegistrateTagsProvider<Block> prov) {
@@ -226,6 +229,17 @@ public class TagGen {
 		}
 	}
 
+	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> prov) {
+		
+		// VALIDATE
+
+		for (AllEntityTags tag : AllEntityTags.values()) {
+			if (tag.alwaysDatagen) {
+				prov.getOrCreateRawBuilder(tag.tag);
+			}
+		}
+	}
+
 	private static class StrippedWoodHelper {
 		protected final TagAppender<Item> logAppender;
 		protected final TagAppender<Item> woodAppender;
@@ -244,4 +258,5 @@ public class TagGen {
 			}
 		}
 	}
+
 }

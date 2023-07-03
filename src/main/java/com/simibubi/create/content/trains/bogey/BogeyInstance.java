@@ -30,8 +30,8 @@ public final class BogeyInstance {
 		this.renderer = this.style.createRendererInstance(this.size);
 		this.commonRenderer = this.style.getNewCommonRenderInstance();
 
-		commonRenderer.ifPresent(bogeyRenderer -> bogeyRenderer.initialiseContraptionModelData(materialManager));
-		renderer.initialiseContraptionModelData(materialManager);
+		commonRenderer.ifPresent(bogeyRenderer -> bogeyRenderer.initialiseContraptionModelData(materialManager, bogey));
+		renderer.initialiseContraptionModelData(materialManager, bogey);
 	}
 
 	public void beginFrame(float wheelAngle, PoseStack ms) {
