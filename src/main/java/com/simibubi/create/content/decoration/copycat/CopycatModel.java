@@ -137,7 +137,7 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 
 	@Nullable
 	public static BlockState getMaterial(ModelData data) {
-		BlockState material = data.get(MATERIAL_PROPERTY);
+		BlockState material = data == null ? null : data.get(MATERIAL_PROPERTY);
 		return material == null ? AllBlocks.COPYCAT_BASE.getDefaultState() : material;
 	}
 
