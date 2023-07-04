@@ -58,7 +58,6 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlockEntity extends KineticBlockEntity {
@@ -184,14 +183,11 @@ public class BeltBlockEntity extends KineticBlockEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if (!isItemHandlerCap(cap))
+			return super.getCapability(cap, side);
 		if (!isRemoved() && !itemHandler.isPresent())
 			initializeItemHandler();
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			if (side == Direction.UP || BeltBlock.canAccessFromSide(side, getBlockState())) {
-				return itemHandler.cast();
-			}
-		}
-		return super.getCapability(cap, side);
+		return itemHandler.cast();
 	}
 
 	@Override

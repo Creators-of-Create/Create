@@ -312,6 +312,8 @@ public class BuiltinPotatoProjectileTypes {
 			if (world instanceof Level l && !l.isLoaded(hitPos))
 				return true;
 			Direction face = ray.getDirection();
+			if (face != Direction.UP)
+				return false;
 			BlockPos placePos = hitPos.relative(face);
 			if (!world.getBlockState(placePos)
 				.getMaterial()

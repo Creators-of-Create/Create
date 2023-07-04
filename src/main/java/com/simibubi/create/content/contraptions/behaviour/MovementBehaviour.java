@@ -59,7 +59,11 @@ public interface MovementBehaviour {
 		if (remainder.isEmpty())
 			return;
 
+		// Actors might void items if their positions is undefined
 		Vec3 vec = context.position;
+		if (vec == null)
+			return;
+		
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
 		itemEntity.setDeltaMovement(context.motion.add(0, 0.5f, 0)
 			.scale(context.world.random.nextFloat() * .3f));
