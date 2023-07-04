@@ -8,14 +8,13 @@
   ],
   "ingredients": [
     {
-      "item": "hexcasting:akashic_wood_stripped"
+      "item": "hexcasting:edified_wood"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "count": 6,
-      "item": "hexcasting:akashic_planks"
+      "item": "hexcasting:stripped_edified_wood"
     }
   ]
 }

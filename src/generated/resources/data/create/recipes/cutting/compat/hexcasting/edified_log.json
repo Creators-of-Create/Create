@@ -8,14 +8,13 @@
   ],
   "ingredients": [
     {
-      "item": "hexcasting:akashic_log_stripped"
+      "item": "hexcasting:edified_log"
     }
   ],
   "processingTime": 50,
   "results": [
     {
-      "count": 6,
-      "item": "hexcasting:akashic_planks"
+      "item": "hexcasting:stripped_edified_log"
     }
   ]
 }
