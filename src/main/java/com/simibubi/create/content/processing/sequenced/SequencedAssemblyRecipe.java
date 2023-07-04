@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.simibubi.create.AllRecipeTypes;
@@ -57,9 +58,13 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 
 	public static <C extends Container, R extends ProcessingRecipe<C>> Optional<R> getRecipe(Level world, C inv,
 		RecipeType<R> type, Class<R> recipeClass) {
-		//return getRecipe(world, inv.getStackInSlot(0), type, recipeClass).filter(r -> r.matches(inv, world));
-		return getRecipes(world, inv.getItem(0), type, recipeClass).filter(r -> r.matches(inv, world))
-				.findFirst();
+		return getRecipe(world, inv, type, recipeClass, r -> r.matches(inv, world));
+	}
+
+	public static <C extends Container, R extends ProcessingRecipe<C>> Optional<R> getRecipe(Level world, C inv,
+		RecipeType<R> type, Class<R> recipeClass, Predicate<? super R> recipeFilter) {
+		return getRecipes(world, inv.getItem(0), type, recipeClass).filter(recipeFilter)
+			.findFirst();
 	}
 
 	public static <R extends ProcessingRecipe<?>> Optional<R> getRecipe(Level world, ItemStack item,

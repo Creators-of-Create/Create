@@ -2,6 +2,7 @@ package com.simibubi.create.content.fluids.spout;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
@@ -37,8 +38,8 @@ public class FillingBySpout {
 	public static int getRequiredAmountForItem(Level world, ItemStack stack, FluidStack availableFluid) {
 		WRAPPER.setItem(0, stack);
 
-		Optional<FillingRecipe> assemblyRecipe =
-			SequencedAssemblyRecipe.getRecipe(world, WRAPPER, AllRecipeTypes.FILLING.getType(), FillingRecipe.class);
+		Optional<FillingRecipe> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(world, WRAPPER,
+			AllRecipeTypes.FILLING.getType(), FillingRecipe.class, matchItemAndFluid(world, availableFluid));
 		if (assemblyRecipe.isPresent()) {
 			FluidIngredient requiredFluid = assemblyRecipe.get()
 				.getRequiredFluid();
@@ -62,9 +63,10 @@ public class FillingBySpout {
 
 		WRAPPER.setItem(0, stack);
 
-		FillingRecipe fillingRecipe =
-			SequencedAssemblyRecipe.getRecipe(world, WRAPPER, AllRecipeTypes.FILLING.getType(), FillingRecipe.class)
-				.filter(fr -> fr.getRequiredFluid()
+		FillingRecipe fillingRecipe = SequencedAssemblyRecipe
+			.getRecipe(world, WRAPPER, AllRecipeTypes.FILLING.getType(), FillingRecipe.class,
+				matchItemAndFluid(world, availableFluid))
+			.filter(fr -> fr.getRequiredFluid()
 					.test(toFill))
 				.orElseGet(() -> {
 					for (Recipe<RecipeWrapper> recipe : world.getRecipeManager()
@@ -85,6 +87,11 @@ public class FillingBySpout {
 		}
 
 		return GenericItemFilling.fillItem(world, requiredAmount, stack, availableFluid);
+	}
+
+	private static Predicate<FillingRecipe> matchItemAndFluid(Level world, FluidStack availableFluid) {
+		return r -> r.matches(WRAPPER, world) && r.getRequiredFluid()
+			.test(availableFluid);
 	}
 
 }

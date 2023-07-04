@@ -1,5 +1,9 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
@@ -15,15 +19,12 @@ import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 
 public class BacktankUtil {
 
@@ -173,6 +174,11 @@ public class BacktankUtil {
 		if (player == null)
 			return 0;
 		List<ItemStack> backtanks = getAllWithAir(player);
+		
+		// Fallback colour
+		if (backtanks.isEmpty())
+			return Mth.hsvToRgb(Math.max(0.0F, 1.0F - (float) stack.getDamageValue() / stack.getMaxDamage()) / 3.0F,
+				1.0F, 1.0F);
 
 		// Just return the "first" backtank for the bar color since that's the one we are consuming from
 		return backtanks.get(0)
