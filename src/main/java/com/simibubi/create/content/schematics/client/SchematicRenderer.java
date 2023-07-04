@@ -4,10 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.jozufozu.flywheel.core.model.ModelUtil;
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
-import com.jozufozu.flywheel.util.Pair;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferBuilder.RenderedBuffer;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -80,11 +79,15 @@ public class SchematicRenderer {
 	}
 
 	protected void redraw() {
+		bufferCache.forEach((layer, sbb) -> sbb.delete());
 		bufferCache.clear();
+
 		for (RenderType layer : RenderType.chunkBufferLayers()) {
 			SuperByteBuffer buffer = drawLayer(layer);
 			if (!buffer.isEmpty())
 				bufferCache.put(layer, buffer);
+			else
+				buffer.delete();
 		}
 	}
 
@@ -101,12 +104,12 @@ public class SchematicRenderer {
 		BoundingBox bounds = renderWorld.getBounds();
 
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		BufferBuilder builder = new BufferBuilder(512);
+		BufferBuilder shadedBuilder = objects.shadedBuilder;
 		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
 
-		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		shadeSeparatingWrapper.prepare(builder, unshadedBuilder);
+		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
 
 		ModelBlockRenderer.enableCaching();
 		for (BlockPos localPos : BlockPos.betweenClosed(bounds.minX(), bounds.minY(), bounds.minZ(), bounds.maxX(), bounds.maxY(), bounds.maxZ())) {
@@ -134,11 +137,13 @@ public class SchematicRenderer {
 		ModelBlockRenderer.clearCache();
 
 		shadeSeparatingWrapper.clear();
-		Pair<RenderedBuffer, Integer> pair = ModelUtil.endShadeSeparated(builder, unshadedBuilder);
+		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
 
 		renderWorld.renderMode = false;
 
-		return new SuperByteBuffer(pair.first(), pair.second());
+		SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
+		bufferedData.release();
+		return sbb;
 	}
 
 	private static int getLayerCount() {
@@ -151,6 +156,7 @@ public class SchematicRenderer {
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 

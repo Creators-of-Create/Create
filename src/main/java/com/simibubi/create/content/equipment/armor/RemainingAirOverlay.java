@@ -1,5 +1,7 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -61,9 +63,9 @@ public class RemainingAirOverlay implements IGuiOverlay {
 	}
 
 	public static ItemStack getDisplayedBacktank(LocalPlayer player) {
-		ItemStack backtank = BacktankUtil.get(player);
-		if (!backtank.isEmpty()) {
-			return backtank;
+		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
+		if (!backtanks.isEmpty()) {
+			return backtanks.get(0);
 		}
 		return AllItems.COPPER_BACKTANK.asStack();
 	}

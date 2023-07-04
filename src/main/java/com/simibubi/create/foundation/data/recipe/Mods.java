@@ -15,7 +15,7 @@ public enum Mods {
 	BSK("blue_skies"),
 	BTN("botania", b -> b.omitWoodSuffix()),
 	FA("forbidden_arcanus", b -> b.omitWoodSuffix()),
-	HEX("hexcasting", b -> b.strippedWoodIsSuffix()),
+	HEX("hexcasting"),
 	ID("integrateddynamics", b -> b.strippedWoodIsSuffix()),
 	BYG("byg"),
 	SG("silentgear"),

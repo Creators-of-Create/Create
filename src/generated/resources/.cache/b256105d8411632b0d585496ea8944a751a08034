@@ -1,4 +1,4 @@
-// 1.20.1	2023-06-29T19:16:25.6782348	Create's Processing Recipes
+// 1.20.1	2023-07-04T18:31:12.3313149	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -329,10 +329,10 @@ e5c3b98a78aa3995654583f3ce1c70e7cf8c2130 data/create/recipes/cutting/compat/forb
 4b2e710b98a3fd0a883cf5be9ec75835f8e4631b data/create/recipes/cutting/compat/forbidden_arcanus/stripped_cherrywood_log.json
 a3035cdad141574294844b8aaa41b92ac76dac2e data/create/recipes/cutting/compat/forbidden_arcanus/stripped_mysterywood.json
 20e75208dcb1720de5bbf629911f52b95612227f data/create/recipes/cutting/compat/forbidden_arcanus/stripped_mysterywood_log.json
-4bfafcc6fe8372535420dde28fcb3670cf171ad6 data/create/recipes/cutting/compat/hexcasting/akashic_log.json
-ff7713c6899e7c4cd921f0e72d1cfc26f506ada5 data/create/recipes/cutting/compat/hexcasting/akashic_log_stripped.json
-0bb9d6dd590881c9b8c4b7297694e78196cd9f85 data/create/recipes/cutting/compat/hexcasting/akashic_wood.json
-e01ed96c30daba091c4f435858795f1aa088f1be data/create/recipes/cutting/compat/hexcasting/akashic_wood_stripped.json
+3a9be23a966c2737c5059474c17a86566bc5505f data/create/recipes/cutting/compat/hexcasting/edified_log.json
+3f3879c426acb1753f2985ed19f0a905bdbd3797 data/create/recipes/cutting/compat/hexcasting/edified_wood.json
+68d80d00d15d6ad14100025eecbd76c1fa8e3a52 data/create/recipes/cutting/compat/hexcasting/stripped_edified_log.json
+9e665be213a1eca08df0dcf38766d2ce3a76de8a data/create/recipes/cutting/compat/hexcasting/stripped_edified_wood.json
 f87872a26b790bd29abfc036486474c5db8ee518 data/create/recipes/cutting/compat/integrateddynamics/menril_log.json
 cd568df5168a0cfccbdaaf767ec63d71871ba3ba data/create/recipes/cutting/compat/integrateddynamics/menril_log_stripped.json
 b5573785c73cbf3b2c2bd096bb0a12b054819b74 data/create/recipes/cutting/compat/integrateddynamics/menril_wood.json

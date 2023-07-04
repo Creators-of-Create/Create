@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
@@ -23,6 +24,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -74,6 +76,7 @@ public class TagGen {
 		Create.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, TagGen::genBlockTags);
 		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, TagGen::genItemTags);
 		Create.REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, TagGen::genFluidTags);
+		Create.REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, TagGen::genEntityTags);
 	}
 
 	private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
@@ -235,6 +238,18 @@ public class TagGen {
 		// VALIDATE
 
 		for (AllFluidTags tag : AllFluidTags.values()) {
+			if (tag.alwaysDatagen) {
+				prov.getOrCreateRawBuilder(tag.tag);
+			}
+		}
+	}
+
+	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> provIn) {
+		CreateTagsProvider<EntityType<?>> prov = new CreateTagsProvider<>(provIn, EntityType::builtInRegistryHolder);
+		
+		// VALIDATE
+
+		for (AllEntityTags tag : AllEntityTags.values()) {
 			if (tag.alwaysDatagen) {
 				prov.getOrCreateRawBuilder(tag.tag);
 			}

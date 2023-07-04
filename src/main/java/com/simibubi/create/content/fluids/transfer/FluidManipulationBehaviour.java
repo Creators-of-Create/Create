@@ -201,6 +201,9 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 	}
 
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
+		if (fluid == null)
+			return;
+		
 		BlockPos splooshPos = pos == null ? blockEntity.getBlockPos() : pos;
 		FluidStack stack = new FluidStack(fluid, 1);
 

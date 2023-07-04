@@ -297,7 +297,7 @@ public class SceneBuilder {
 			addInstruction(scene -> SuperGlueItem.spawnParticles(scene.getWorld(), pos, side, fullBlock));
 		}
 
-		private void rotationIndicator(BlockPos pos, boolean direction) {
+		private void rotationIndicator(BlockPos pos, boolean direction, BlockPos displayPos) {
 			addInstruction(scene -> {
 				BlockState blockState = scene.getWorld()
 					.getBlockState(pos);
@@ -319,7 +319,7 @@ public class SceneBuilder {
 				int particleSpeed = speedLevel.getParticleSpeed();
 				particleSpeed *= Math.signum(speed);
 
-				Vec3 location = VecHelper.getCenterOf(pos);
+				Vec3 location = VecHelper.getCenterOf(displayPos);
 				RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, particleSpeed,
 					kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis.name()
 						.charAt(0));
@@ -331,11 +331,19 @@ public class SceneBuilder {
 		}
 
 		public void rotationSpeedIndicator(BlockPos pos) {
-			rotationIndicator(pos, false);
+			rotationIndicator(pos, false, pos);
 		}
 
 		public void rotationDirectionIndicator(BlockPos pos) {
-			rotationIndicator(pos, true);
+			rotationIndicator(pos, true, pos);
+		}
+
+		public void rotationSpeedIndicator(BlockPos pos, BlockPos displayPos) {
+			rotationIndicator(pos, false, displayPos);
+		}
+
+		public void rotationDirectionIndicator(BlockPos pos, BlockPos displayPos) {
+			rotationIndicator(pos, true, displayPos);
 		}
 
 		public void indicateRedstone(BlockPos pos) {
@@ -524,6 +532,14 @@ public class SceneBuilder {
 			return instruction.createLink(scene);
 		}
 
+		public ElementLink<WorldSectionElement> showIndependentSection(Selection selection, Direction fadeInDirection,
+			int fadeInDuration) {
+			DisplayWorldSectionInstruction instruction =
+				new DisplayWorldSectionInstruction(fadeInDuration, fadeInDirection, selection, Optional.empty());
+			addInstruction(instruction);
+			return instruction.createLink(scene);
+		}
+
 		public ElementLink<WorldSectionElement> showIndependentSectionImmediately(Selection selection) {
 			DisplayWorldSectionInstruction instruction =
 				new DisplayWorldSectionInstruction(0, Direction.DOWN, selection, Optional.empty());
@@ -549,6 +565,16 @@ public class SceneBuilder {
 		public void hideIndependentSection(ElementLink<WorldSectionElement> link, Direction fadeOutDirection) {
 			addInstruction(new FadeOutOfSceneInstruction<>(15, fadeOutDirection, link));
 		}
+
+		public void hideIndependentSection(ElementLink<WorldSectionElement> link, Direction fadeOutDirection,
+			int fadeOutDuration) {
+			addInstruction(new FadeOutOfSceneInstruction<>(fadeOutDuration, fadeOutDirection, link));
+		}
+
+		public void hideIndependentSectionImmediately(ElementLink<WorldSectionElement> link) {
+			addInstruction(new FadeOutOfSceneInstruction<>(0, Direction.DOWN, link));
+		}
+		
 
 		public void restoreBlocks(Selection selection) {
 			addInstruction(scene -> scene.getWorld()

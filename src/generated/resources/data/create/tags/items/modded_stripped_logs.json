@@ -33,7 +33,7 @@
       "required": false
     },
     {
-      "id": "hexcasting:akashic_log_stripped",
+      "id": "hexcasting:stripped_akashic_log",
       "required": false
     },
     {

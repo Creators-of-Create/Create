@@ -1,5 +1,9 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
@@ -24,11 +28,34 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class BacktankUtil {
 
-	public static ItemStack get(LivingEntity entity) {
-		for (ItemStack itemStack : entity.getArmorSlots())
-			if (AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
-				return itemStack;
-		return ItemStack.EMPTY;
+	private static final List<Function<LivingEntity, List<ItemStack>>> BACKTANK_SUPPLIERS = new ArrayList<>();
+	
+	static {
+		addBacktankSupplier(entity -> {
+			List<ItemStack> stacks = new ArrayList<>();
+			for (ItemStack itemStack : entity.getArmorSlots())
+				if (AllTags.AllItemTags.PRESSURIZED_AIR_SOURCES.matches(itemStack))
+					stacks.add(itemStack);
+
+			return stacks;
+		});
+	}
+
+	public static List<ItemStack> getAllWithAir(LivingEntity entity) {
+		List<ItemStack> all = new ArrayList<>();
+
+		for (Function<LivingEntity, List<ItemStack>> supplier : BACKTANK_SUPPLIERS) {
+			List<ItemStack> result = supplier.apply(entity);
+
+			for (ItemStack stack : result)
+				if (hasAirRemaining(stack))
+					all.add(stack);
+		}
+
+		// Sort with ascending order (we want to prioritize the most empty so things actually run out)
+		all.sort((a, b) -> Float.compare(getAir(a), getAir(b)));
+
+		return all;
 	}
 
 	public static boolean hasAirRemaining(ItemStack backtank) {
@@ -44,12 +71,13 @@ public class BacktankUtil {
 		CompoundTag tag = backtank.getOrCreateTag();
 		int maxAir = maxAir(backtank);
 		float air = getAir(backtank);
-		float newAir = air - i;
+		float newAir = Math.max(air - i, 0);
 		tag.putFloat("Air", Math.min(newAir, maxAir));
 		backtank.setTag(tag);
 
 		if (!(entity instanceof ServerPlayer player))
 			return;
+		
 		sendWarning(player, air, newAir, maxAir / 10f);
 		sendWarning(player, air, newAir, 1);
 	}
@@ -91,13 +119,11 @@ public class BacktankUtil {
 			return true;
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return true;
-		ItemStack backtank = get(entity);
-		if (backtank.isEmpty())
-			return false;
-		if (!hasAirRemaining(backtank))
+		List<ItemStack> backtanks = getAllWithAir(entity);
+		if (backtanks.isEmpty())
 			return false;
 		float cost = ((float) maxAirWithoutEnchants()) / usesPerTank;
-		consumeAir(entity, backtank, cost);
+		consumeAir(entity, backtanks.get(0), cost);
 		return true;
 	}
 
@@ -109,8 +135,8 @@ public class BacktankUtil {
 		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return false;
-		ItemStack backtank = get(player);
-		if (backtank.isEmpty() || !hasAirRemaining(backtank))
+		List<ItemStack> backtanks = getAllWithAir(player);
+		if (backtanks.isEmpty())
 			return stack.isDamaged();
 		return true;
 	}
@@ -121,11 +147,24 @@ public class BacktankUtil {
 		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 13;
-		ItemStack backtank = get(player);
-		if (backtank.isEmpty() || !hasAirRemaining(backtank))
+
+		List<ItemStack> backtanks = getAllWithAir(player);
+
+		if (backtanks.isEmpty())
 			return Math.round(13.0F - (float) stack.getDamageValue() / stack.getMaxDamage() * 13.0F);
-		return backtank.getItem()
-			.getBarWidth(backtank);
+
+		if (backtanks.size() == 1)
+			return backtanks.get(0)
+				.getItem()
+				.getBarWidth(backtanks.get(0));
+
+		// If there is more than one backtank, average the bar widths.
+		int sumBarWidth = backtanks.stream()
+			.map(backtank -> backtank.getItem()
+				.getBarWidth(backtank))
+			.reduce(0, Integer::sum);
+
+		return Math.round((float) sumBarWidth / backtanks.size());
 	}
 
 	public static int getBarColor(ItemStack stack, int usesPerTank) {
@@ -134,12 +173,24 @@ public class BacktankUtil {
 		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 0;
-		ItemStack backtank = get(player);
-		if (backtank.isEmpty() || !hasAirRemaining(backtank))
+		List<ItemStack> backtanks = getAllWithAir(player);
+		
+		// Fallback colour
+		if (backtanks.isEmpty())
 			return Mth.hsvToRgb(Math.max(0.0F, 1.0F - (float) stack.getDamageValue() / stack.getMaxDamage()) / 3.0F,
 				1.0F, 1.0F);
-		return backtank.getItem()
-			.getBarColor(backtank);
+
+		// Just return the "first" backtank for the bar color since that's the one we are consuming from
+		return backtanks.get(0)
+			.getItem()
+			.getBarColor(backtanks.get(0));
 	}
 
+	/**
+	 * Use this method to add custom entry points to the backtank item stack supplier, e.g. getting them from custom
+	 * slots or items.
+	 */
+	public static void addBacktankSupplier(Function<LivingEntity, List<ItemStack>> supplier) {
+		BACKTANK_SUPPLIERS.add(supplier);
+	}
 }

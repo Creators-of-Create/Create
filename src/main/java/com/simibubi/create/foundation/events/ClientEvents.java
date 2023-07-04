@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
@@ -302,25 +301,11 @@ public class ClientEvents {
 		Fluid fluid = fluidState.getType();
 		Entity entity = camera.getEntity();
 
-		if (AllFluids.CHOCOLATE.get()
-			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f / 32f * AllConfigs.client().chocolateTransparencyMultiplier.getF());
-			event.setCanceled(true);
-			return;
-		}
-
-		if (AllFluids.HONEY.get()
-			.isSame(fluid)) {
-			event.scaleFarPlaneDistance(1f / 8f * AllConfigs.client().honeyTransparencyMultiplier.getF());
-			event.setCanceled(true);
-			return;
-		}
-
 		if (entity.isSpectator())
 			return;
 
 		ItemStack divingHelmet = DivingHelmetItem.getWornItem(entity);
-		if (divingHelmet != null) {
+		if (!divingHelmet.isEmpty()) {
 			if (FluidHelper.isWater(fluid)) {
 				event.scaleFarPlaneDistance(6.25f);
 				event.setCanceled(true);
@@ -331,34 +316,6 @@ public class ClientEvents {
 				event.setCanceled(true);
 				return;
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void getFogColor(ViewportEvent.ComputeFogColor event) {
-		Camera info = event.getCamera();
-		Level level = Minecraft.getInstance().level;
-		BlockPos blockPos = info.getBlockPosition();
-		FluidState fluidState = level.getFluidState(blockPos);
-		if (info.getPosition().y > blockPos.getY() + fluidState.getHeight(level, blockPos))
-			return;
-
-		Fluid fluid = fluidState.getType();
-
-		if (AllFluids.CHOCOLATE.get()
-			.isSame(fluid)) {
-			event.setRed(98 / 255f);
-			event.setGreen(32 / 255f);
-			event.setBlue(32 / 255f);
-			return;
-		}
-
-		if (AllFluids.HONEY.get()
-			.isSame(fluid)) {
-			event.setRed(234 / 255f);
-			event.setGreen(174 / 255f);
-			event.setBlue(47 / 255f);
-			return;
 		}
 	}
 
