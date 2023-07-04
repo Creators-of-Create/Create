@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.armor;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.minecraft.resources.ResourceLocation;
@@ -22,6 +20,8 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import java.util.List;
+
 @EventBusSubscriber
 public class DivingHelmetItem extends BaseArmorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.HEAD;
@@ -38,22 +38,19 @@ public class DivingHelmetItem extends BaseArmorItem {
 		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
-	public static boolean isWornBy(Entity entity, boolean fireproof) {
-		ItemStack stack = getWornItem(entity);
-		if (stack == null)
-			return false;
-		if (!stack.getItem()
-			.isFireResistant() && fireproof)
-			return false;
-		return stack.getItem() instanceof DivingHelmetItem;
+	public static boolean isWornBy(Entity entity) {
+		return !getWornItem(entity).isEmpty();
 	}
 
-	@Nullable
 	public static ItemStack getWornItem(Entity entity) {
 		if (!(entity instanceof LivingEntity livingEntity)) {
-			return null;
+			return ItemStack.EMPTY;
 		}
-		return livingEntity.getItemBySlot(SLOT);
+		ItemStack stack = livingEntity.getItemBySlot(SLOT);
+		if (!(stack.getItem() instanceof DivingHelmetItem)) {
+			return ItemStack.EMPTY;
+		}
+		return stack;
 	}
 
 	@SubscribeEvent
@@ -67,25 +64,29 @@ public class DivingHelmetItem extends BaseArmorItem {
 			entity.getPersistentData()
 				.remove("VisualBacktankAir");
 
+		ItemStack helmet = getWornItem(entity);
+		if (helmet.isEmpty())
+			return;
+
 		boolean lavaDiving = entity.isInLava();
-		if (!isWornBy(entity, lavaDiving))
+		if (!helmet.getItem()
+			.isFireResistant() && lavaDiving)
 			return;
 		if (!entity.isEyeInFluid(FluidTags.WATER) && !lavaDiving)
 			return;
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;
 
-		ItemStack backtank = BacktankUtil.get(entity);
-		if (backtank.isEmpty())
-			return;
-		if (!BacktankUtil.hasAirRemaining(backtank))
+		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(entity);
+		if (backtanks.isEmpty())
 			return;
 
 		if (lavaDiving) {
 			if (entity instanceof ServerPlayer sp)
 				AllAdvancements.DIVING_SUIT_LAVA.awardTo(sp);
-			if (!backtank.getItem()
-				.isFireResistant())
+			if (backtanks.stream()
+				.noneMatch(backtank -> backtank.getItem()
+					.isFireResistant()))
 				return;
 		}
 
@@ -94,12 +95,14 @@ public class DivingHelmetItem extends BaseArmorItem {
 
 		if (world.isClientSide)
 			entity.getPersistentData()
-				.putInt("VisualBacktankAir", (int) BacktankUtil.getAir(backtank));
+				.putInt("VisualBacktankAir", Math.round(backtanks.stream()
+					.map(BacktankUtil::getAir)
+					.reduce(0f, Float::sum)));
 
 		if (!second)
 			return;
-		
-		BacktankUtil.consumeAir(entity, backtank, 1);
+
+		BacktankUtil.consumeAir(entity, backtanks.get(0), 1);
 
 		if (lavaDiving)
 			return;

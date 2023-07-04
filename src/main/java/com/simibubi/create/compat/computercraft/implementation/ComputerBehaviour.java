@@ -35,21 +35,21 @@ public class ComputerBehaviour extends AbstractComputerBehaviour {
 		this.peripheralSupplier = getPeripheralFor(te);
 	}
 
-	public static NonNullSupplier<IPeripheral> getPeripheralFor(SmartBlockEntity te) {
-		if (te instanceof SpeedControllerBlockEntity scbe)
+	public static NonNullSupplier<IPeripheral> getPeripheralFor(SmartBlockEntity be) {
+		if (be instanceof SpeedControllerBlockEntity scbe)
 			return () -> new SpeedControllerPeripheral(scbe, scbe.targetSpeed);
-		if (te instanceof DisplayLinkBlockEntity dlbe)
+		if (be instanceof DisplayLinkBlockEntity dlbe)
 			return () -> new DisplayLinkPeripheral(dlbe);
-		if (te instanceof SequencedGearshiftBlockEntity sgbe)
+		if (be instanceof SequencedGearshiftBlockEntity sgbe)
 			return () -> new SequencedGearshiftPeripheral(sgbe);
-		if (te instanceof SpeedGaugeBlockEntity sgbe)
+		if (be instanceof SpeedGaugeBlockEntity sgbe)
 			return () -> new SpeedGaugePeripheral(sgbe);
-		if (te instanceof StressGaugeBlockEntity sgbe)
+		if (be instanceof StressGaugeBlockEntity sgbe)
 			return () -> new StressGaugePeripheral(sgbe);
-		if (te instanceof StationBlockEntity sbe)
+		if (be instanceof StationBlockEntity sbe)
 			return () -> new StationPeripheral(sbe);
 
-		throw new IllegalArgumentException("No peripheral available for " + te.getType()
+		throw new IllegalArgumentException("No peripheral available for " + be.getType()
 			.getRegistryName());
 	}
 

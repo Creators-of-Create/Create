@@ -16,6 +16,8 @@ import net.minecraft.world.level.GameType;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
 
+import java.util.List;
+
 public class RemainingAirOverlay implements IIngameOverlay {
 	public static final RemainingAirOverlay INSTANCE = new RemainingAirOverlay();
 
@@ -59,9 +61,9 @@ public class RemainingAirOverlay implements IIngameOverlay {
 	}
 
 	public static ItemStack getDisplayedBacktank(LocalPlayer player) {
-		ItemStack backtank = BacktankUtil.get(player);
-		if (!backtank.isEmpty()) {
-			return backtank;
+		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
+		if (!backtanks.isEmpty()) {
+			return backtanks.get(0);
 		}
 		return AllItems.COPPER_BACKTANK.asStack();
 	}
