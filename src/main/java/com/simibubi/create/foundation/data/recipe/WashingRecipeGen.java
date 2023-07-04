@@ -113,8 +113,10 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		ENDER_OVERWORLD_CROWN = simpleModded(Mods.ENDER, "overworld_corrock_crown", "petrified_overworld_corrock_crown"),
 
 		// Quark
-		Q = simpleModded(Mods.Q, "iron_plate", "rusty_iron_plate")
+		Q = simpleModded(Mods.Q, "iron_plate", "rusty_iron_plate"),
 
+		// Supplementaries
+		SUP = simpleModded(Mods.SUP, "blackboard", "blackboard")
 	;
 
 	public GeneratedRecipe convert(Block block, Block result) {

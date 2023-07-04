@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/brown"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:brown_dye"
+    }
+  ],
+  "processingTime": 50
+}

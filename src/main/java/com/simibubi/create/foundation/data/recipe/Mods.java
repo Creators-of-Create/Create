@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.data.recipe;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
 
 public enum Mods {
 
@@ -40,6 +42,18 @@ public enum Mods {
 
 	BEF("betterendforge"),
 	ENV("environmental"),
+
+	SUP("supplementaries"),
+
+	AM("alexsmobs"),
+	NEA("neapolitan"),
+	AE2("ae2"),
+	MC("minecraft"),
+	BB("buzzier_bees"),
+
+	SILENT_GEMS("silentgems"),
+
+	SF("simplefarming"),
 
 	;
 

@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/blue"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:blue_dye"
+    }
+  ],
+  "processingTime": 50
+}

@@ -1,0 +1,14 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "botania:petals/pink"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:pink_dye"
+    }
+  ],
+  "processingTime": 50
+}
