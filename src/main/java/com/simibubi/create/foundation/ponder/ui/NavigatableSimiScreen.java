@@ -9,14 +9,12 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
-import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -136,45 +134,51 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 		PoseStack ms = graphics.pose();
 		
-		Screen lastScreen = ScreenOpener.getPreviouslyRenderedScreen();
+//		Screen lastScreen = ScreenOpener.getPreviouslyRenderedScreen();
 		float transitionValue = transition.getValue(partialTicks);
 		float scale = 1 + 0.5f * transitionValue;
 
+		
+		/*
+		 * Looks like this stopped working sometime before 1.18
+		 * Now commented as it does mess with the background alpha since 1.20
+		 */
+		
 		// draw last screen into buffer
-		if (lastScreen != null && lastScreen != this && !transition.settled()) {
-			ms.pushPose();
-			UIRenderHelper.framebuffer.clear(Minecraft.ON_OSX);
-			ms.translate(0, 0, -1000);
-			UIRenderHelper.framebuffer.bindWrite(true);
-			PonderTooltipHandler.enable = false;
-			// Using 0,0 for mouse coords to hide tooltips
-			lastScreen.render(graphics, 0, 0, partialTicks);
-			PonderTooltipHandler.enable = true;
-
-			ms.popPose();
-			ms.pushPose();
-
-			// use the buffer texture
-			minecraft.getMainRenderTarget()
-				.bindWrite(true);
-
-			Window window = minecraft.getWindow();
-			int dpx = window.getGuiScaledWidth() / 2;
-			int dpy = window.getGuiScaledHeight() / 2;
-			if (lastScreen instanceof NavigatableSimiScreen navigableScreen) {
-				dpx = navigableScreen.depthPointX;
-				dpy = navigableScreen.depthPointY;
-			}
-
-			ms.translate(dpx, dpy, 0);
-			ms.scale(scale, scale, 1);
-			ms.translate(-dpx, -dpy, 0);
-			RenderSystem.enableBlend();
-			RenderSystem.defaultBlendFunc();
-			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
-			RenderSystem.disableBlend();
-			ms.popPose();
-		}
+//		if (lastScreen != null && lastScreen != this && !transition.settled()) {
+//			ms.pushPose();
+//			UIRenderHelper.framebuffer.clear(Minecraft.ON_OSX);
+//			ms.translate(0, 0, -1000);
+//			UIRenderHelper.framebuffer.bindWrite(true);
+//			PonderTooltipHandler.enable = false;
+//			// Using 0,0 for mouse coords to hide tooltips
+//			lastScreen.render(graphics, 0, 0, partialTicks);
+//			PonderTooltipHandler.enable = true;
+//
+//			ms.popPose();
+//			ms.pushPose();
+//
+//			// use the buffer texture
+//			minecraft.getMainRenderTarget()
+//				.bindWrite(true);
+//
+//			Window window = minecraft.getWindow();
+//			int dpx = window.getGuiScaledWidth() / 2;
+//			int dpy = window.getGuiScaledHeight() / 2;
+//			if (lastScreen instanceof NavigatableSimiScreen navigableScreen) {
+//				dpx = navigableScreen.depthPointX;
+//				dpy = navigableScreen.depthPointY;
+//			}
+//
+//			ms.translate(dpx, dpy, 0);
+//			ms.scale(scale, scale, 1);
+//			ms.translate(-dpx, -dpy, 0);
+//			RenderSystem.enableBlend();
+//			RenderSystem.defaultBlendFunc();
+//			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
+//			RenderSystem.disableBlend();
+//			ms.popPose();
+//		}
 
 		// modify current screen as well
 		scale = transitionValue > 0 ? 1 - 0.5f * (1 - transitionValue) : 1 + .5f * (1 + transitionValue);

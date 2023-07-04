@@ -65,6 +65,7 @@ public class PonderWorld extends SchematicWorld {
 
 	int overrideLight;
 	Selection mask;
+	boolean currentlyTickingEntities;
 
 	public PonderWorld(BlockPos anchor, Level original) {
 		super(anchor, original);
@@ -147,6 +148,8 @@ public class PonderWorld extends SchematicWorld {
 	public BlockState getBlockState(BlockPos globalPos) {
 		if (mask != null && !mask.test(globalPos.subtract(anchor)))
 			return Blocks.AIR.defaultBlockState();
+		if (currentlyTickingEntities && globalPos.getY() < 0)
+			return Blocks.AIR.defaultBlockState();
 		return super.getBlockState(globalPos);
 	}
 
@@ -194,6 +197,8 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	public void tick() {
+		currentlyTickingEntities = true;
+		
 		particles.tick();
 
 		for (Iterator<Entity> iterator = entities.iterator(); iterator.hasNext();) {
@@ -204,13 +209,15 @@ public class PonderWorld extends SchematicWorld {
 			entity.yOld = entity.getY();
 			entity.zOld = entity.getZ();
 			entity.tick();
-
+			
 			if (entity.getY() <= -.5f)
 				entity.discard();
 
 			if (!entity.isAlive())
 				iterator.remove();
 		}
+		
+		currentlyTickingEntities = false;
 	}
 
 	@Override
