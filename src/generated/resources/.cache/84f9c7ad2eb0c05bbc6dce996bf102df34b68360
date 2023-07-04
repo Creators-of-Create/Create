@@ -1,4 +1,4 @@
-// 1.20.1	2023-06-29T22:04:50.9792131	Tags for minecraft:damage_type mod id create
-55371872b65f63a4b7508599d18a9a5e029ed353 data/minecraft/tags/damage_type/bypasses_armor.json
+// 1.20.1	2023-07-04T18:31:12.3293201	Tags for minecraft:damage_type mod id create
+035f94f328fba0594df1a6bd7c374b8b99b8d7d1 data/minecraft/tags/damage_type/bypasses_armor.json
 62231dbbc4e6a21bafe1b3cdb3c86d06ff647ec7 data/minecraft/tags/damage_type/is_explosion.json
-25913dd7c9ec6de04eac0f77ff764e1c48ca651d data/minecraft/tags/damage_type/is_fire.json
+ad45c55a9cc7883cfcd8b208f735c739f599e1d0 data/minecraft/tags/damage_type/is_fire.json

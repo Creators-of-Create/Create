@@ -1,11 +1,11 @@
 {
   "values": [
     {
-      "id": "create:fan_lava",
+      "id": "create:fan_fire",
       "required": false
     },
     {
-      "id": "create:fan_fire",
+      "id": "create:fan_lava",
       "required": false
     }
   ]

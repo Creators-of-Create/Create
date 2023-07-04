@@ -5,7 +5,7 @@
       "required": false
     },
     {
-      "id": "create:fan_fire",
+      "id": "create:mechanical_saw",
       "required": false
     },
     {
@@ -13,11 +13,11 @@
       "required": false
     },
     {
-      "id": "create:mechanical_drill",
+      "id": "create:fan_fire",
       "required": false
     },
     {
-      "id": "create:mechanical_saw",
+      "id": "create:mechanical_drill",
       "required": false
     }
   ]
