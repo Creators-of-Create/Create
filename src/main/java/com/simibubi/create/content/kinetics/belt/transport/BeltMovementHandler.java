@@ -142,9 +142,9 @@ public class BeltMovementHandler {
 			|| ((LivingEntity) entityIn).zza == 0 && ((LivingEntity) entityIn).xxa == 0)
 			movement = movement.add(centering);
 
-		float step = entityIn.maxUpStep;
+		float step = entityIn.maxUpStep();
 		if (!isPlayer) 
-			entityIn.maxUpStep = 1;
+			entityIn.setMaxUpStep(1);
 
 		// Entity Collisions
 		if (Math.abs(movementSpeed) < .5f) {
@@ -180,7 +180,7 @@ public class BeltMovementHandler {
 		entityIn.setOnGround(true);
 
 		if (!isPlayer)
-			entityIn.maxUpStep = step;
+			entityIn.setMaxUpStep(step);
 
 		boolean movedPastEndingSlope = onSlope && (AllBlocks.BELT.has(world.getBlockState(entityIn.blockPosition()))
 			|| AllBlocks.BELT.has(world.getBlockState(entityIn.blockPosition()
