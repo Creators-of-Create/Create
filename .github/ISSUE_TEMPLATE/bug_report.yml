@@ -49,6 +49,7 @@ body:
             label: Mod Version
             description: The version of the mod you were using when the bug occured
             options:
+                - "0.5.1c"
                 - "0.5.1b"
                 - "0.5.1a"
                 - "0.5.0i"
@@ -114,6 +115,7 @@ body:
             label: Minecraft Version
             description: The version of Minecraft you were using when the bug occured
             options:
+                - "1.20.1"
                 - "1.19.2"
                 - "1.18.2"
                 - "1.18.1"
