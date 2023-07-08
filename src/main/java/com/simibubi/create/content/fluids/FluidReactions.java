@@ -21,12 +21,13 @@ public class FluidReactions {
 	public static void handlePipeFlowCollision(Level world, BlockPos pos, FluidStack fluid, FluidStack fluid2) {
 		Fluid f1 = fluid.getFluid();
 		Fluid f2 = fluid2.getFluid();
+		boolean isBelowDeepslate = pos.getY() < 4;
 
 		AdvancementBehaviour.tryAward(world, pos, AllAdvancements.CROSS_STREAMS);
 		BlockHelper.destroyBlock(world, pos, 1);
 
 		if (f1 == Fluids.WATER && f2 == Fluids.LAVA || f2 == Fluids.WATER && f1 == Fluids.LAVA)
-			world.setBlockAndUpdate(pos, Blocks.COBBLESTONE.defaultBlockState());
+			world.setBlockAndUpdate(pos, isBelowDeepslate ? Blocks.COBBLE_DEEPSLATE.defaultBlockState() : Blocks.COBBLESTONE.defaultBlockState());
 		else if (f1 == Fluids.LAVA && FluidHelper.hasBlockState(f2)) {
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(FluidHelper.convertToFlowing(f2)
 				.defaultFluidState());
@@ -43,14 +44,15 @@ public class FluidReactions {
 	public static void handlePipeSpillCollision(Level world, BlockPos pos, Fluid pipeFluid, FluidState worldFluid) {
 		Fluid pf = FluidHelper.convertToStill(pipeFluid);
 		Fluid wf = worldFluid.getType();
+		boolean isBelowDeepslate = pos.getY() < 4;
 		if (FluidHelper.isTag(pf, FluidTags.WATER) && wf == Fluids.LAVA)
 			world.setBlockAndUpdate(pos, Blocks.OBSIDIAN.defaultBlockState());
 		else if (pf == Fluids.WATER && wf == Fluids.FLOWING_LAVA)
-			world.setBlockAndUpdate(pos, Blocks.COBBLESTONE.defaultBlockState());
+			world.setBlockAndUpdate(pos, isBelowDeepslate ? Blocks.COBBLE_DEEPSLATE.defaultBlockState() : Blocks.COBBLESTONE.defaultBlockState());
 		else if (pf == Fluids.LAVA && wf == Fluids.WATER)
-			world.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
+			world.setBlockAndUpdate(pos, isBelowDeepslate ? Blocks.DEEPSLATE.defaultBlockState() : Blocks.STONE.defaultBlockState());
 		else if (pf == Fluids.LAVA && wf == Fluids.FLOWING_WATER)
-			world.setBlockAndUpdate(pos, Blocks.COBBLESTONE.defaultBlockState());
+			world.setBlockAndUpdate(pos, isBelowDeepslate ? Blocks.COBBLE_DEEPSLATE.defaultBlockState() : Blocks.COBBLESTONE.defaultBlockState());
 
 		if (pf == Fluids.LAVA) {
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(worldFluid);
