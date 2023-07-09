@@ -49,7 +49,7 @@ public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutR
 				dir = state.getValue(WaterWheelBlock.FACING);
 			}
 			PoseStack transform = CachedBufferer.rotateToFaceVertical(dir).get();
-			return new BlockModel(model, Blocks.AIR.defaultBlockState(), transform);
+			return BlockModel.of(model, Blocks.AIR.defaultBlockState(), transform);
 		});
 	}
 }

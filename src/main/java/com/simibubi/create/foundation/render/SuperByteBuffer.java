@@ -6,16 +6,14 @@ import java.util.function.IntPredicate;
 import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
 import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.backend.ShadersModHandler;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
 import com.jozufozu.flywheel.util.DiffuseLightCalculator;
 import com.jozufozu.flywheel.util.transform.TStack;
 import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferBuilder.DrawState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
@@ -41,7 +39,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	private final IntPredicate shadedPredicate;
 
 	// Vertex Position
-	private final PoseStack transforms;
+	private final PoseStack transforms = new PoseStack();
 
 	// Vertex Coloring
 	private boolean shouldColor;
@@ -69,23 +67,28 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	// Temporary
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
-	public SuperByteBuffer(BufferBuilder buf) {
-		Pair<DrawState, ByteBuffer> pair = buf.popNextBuffer();
-		DrawState drawState = pair.getFirst();
-		ByteBuffer buffer = pair.getSecond();
+	public SuperByteBuffer(ByteBuffer vertexBuffer, BufferBuilder.DrawState drawState, int unshadedStartVertex) {
 		int vertexCount = drawState.vertexCount();
 		int stride = drawState.format().getVertexSize();
 
-		if (buf instanceof ShadeSeparatedBufferBuilder separated) {
-			ShadedVertexList template = new BlockVertexList.Shaded(buffer, vertexCount, stride, separated.getUnshadedStartVertex());
-			shadedPredicate = template::isShaded;
-			this.template = template;
-		} else {
-			template = new BlockVertexList(buffer, vertexCount, stride);
-			shadedPredicate = index -> true;
-		}
+		ShadedVertexList template = new BlockVertexList.Shaded(vertexBuffer, vertexCount, stride, unshadedStartVertex);
+		shadedPredicate = template::isShaded;
+		this.template = template;
 
-		transforms = new PoseStack();
+		transforms.pushPose();
+	}
+
+	public SuperByteBuffer(ShadeSeparatedBufferedData data) {
+		this(data.vertexBuffer(), data.drawState(), data.unshadedStartVertex());
+	}
+
+	public SuperByteBuffer(ByteBuffer vertexBuffer, BufferBuilder.DrawState drawState) {
+		int vertexCount = drawState.vertexCount();
+		int stride = drawState.format().getVertexSize();
+
+		template = new BlockVertexList(vertexBuffer, vertexCount, stride);
+		shadedPredicate = index -> true;
+
 		transforms.pushPose();
 	}
 
@@ -244,6 +247,10 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 
 	public boolean isEmpty() {
 		return template.isEmpty();
+	}
+
+	public void delete() {
+		template.delete();
 	}
 
 	public PoseStack getTransforms() {
