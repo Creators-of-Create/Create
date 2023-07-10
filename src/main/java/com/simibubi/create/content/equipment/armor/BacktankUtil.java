@@ -3,6 +3,7 @@ package com.simibubi.create.content.equipment.armor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
@@ -29,8 +30,8 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class BacktankUtil {
 
-	private static final List<Function<LivingEntity, List<ItemStack>>> BACKTANK_SUPPLIERS = new ArrayList<>();
-	
+	private static final List<Function<LivingEntity, List<BacktankWrapper>>> BACKTANK_SUPPLIERS = new ArrayList<>();
+
 	static {
 		addBacktankSupplier(entity -> {
 			List<ItemStack> stacks = new ArrayList<>();
@@ -42,22 +43,24 @@ public class BacktankUtil {
 		});
 	}
 
-	public static List<ItemStack> getAllWithAir(LivingEntity entity) {
-		List<ItemStack> all = new ArrayList<>();
+	public static List<BacktankWrapper> getAllWithAir(LivingEntity entity) {
+		List<BacktankWrapper> all = new ArrayList<>();
 
-		for (Function<LivingEntity, List<ItemStack>> supplier : BACKTANK_SUPPLIERS) {
-			List<ItemStack> result = supplier.apply(entity);
+		for (Function<LivingEntity, List<BacktankWrapper>> supplier : BACKTANK_SUPPLIERS) {
+			List<BacktankWrapper> result = supplier.apply(entity);
 
-			for (ItemStack stack : result)
-				if (hasAirRemaining(stack))
+			for (BacktankWrapper stack : result)
+				if (stack.hasAirRemaining())
 					all.add(stack);
 		}
 
 		// Sort with ascending order (we want to prioritize the most empty so things actually run out)
-		all.sort((a, b) -> Float.compare(getAir(a), getAir(b)));
+		all.sort((a, b) -> Float.compare(a.getAir(), b.getAir()));
 
 		return all;
 	}
+
+	// BackTank-specific functions - could be moved to DefaultBacktankWrapper
 
 	public static boolean hasAirRemaining(ItemStack backtank) {
 		return getAir(backtank) > 0;
@@ -78,7 +81,7 @@ public class BacktankUtil {
 
 		if (!(entity instanceof ServerPlayer player))
 			return;
-		
+
 		sendWarning(player, air, newAir, maxAir / 10f);
 		sendWarning(player, air, newAir, 1);
 	}
@@ -115,16 +118,18 @@ public class BacktankUtil {
 		return AllConfigs.server().equipment.airInBacktank.get();
 	}
 
+	// BackTank-agnostic functions
+
 	public static boolean canAbsorbDamage(LivingEntity entity, int usesPerTank) {
 		if (usesPerTank == 0)
 			return true;
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return true;
-		List<ItemStack> backtanks = getAllWithAir(entity);
+		List<BacktankWrapper> backtanks = getAllWithAir(entity);
 		if (backtanks.isEmpty())
 			return false;
 		float cost = ((float) maxAirWithoutEnchants()) / usesPerTank;
-		consumeAir(entity, backtanks.get(0), cost);
+		backtanks.get(0).consumeAir(entity, cost);
 		return true;
 	}
 
@@ -136,7 +141,7 @@ public class BacktankUtil {
 		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return false;
-		List<ItemStack> backtanks = getAllWithAir(player);
+		List<BacktankWrapper> backtanks = getAllWithAir(player);
 		if (backtanks.isEmpty())
 			return stack.isDamaged();
 		return true;
@@ -149,20 +154,17 @@ public class BacktankUtil {
 		if (player == null)
 			return 13;
 
-		List<ItemStack> backtanks = getAllWithAir(player);
+		List<BacktankWrapper> backtanks = getAllWithAir(player);
 
 		if (backtanks.isEmpty())
 			return Math.round(13.0F - (float) stack.getDamageValue() / stack.getMaxDamage() * 13.0F);
 
 		if (backtanks.size() == 1)
-			return backtanks.get(0)
-				.getItem()
-				.getBarWidth(backtanks.get(0));
+			return backtanks.get(0).getBarWidth();
 
 		// If there is more than one backtank, average the bar widths.
 		int sumBarWidth = backtanks.stream()
-			.map(backtank -> backtank.getItem()
-				.getBarWidth(backtank))
+			.map(BacktankWrapper::getBarWidth)
 			.reduce(0, Integer::sum);
 
 		return Math.round((float) sumBarWidth / backtanks.size());
@@ -174,17 +176,15 @@ public class BacktankUtil {
 		Player player = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player);
 		if (player == null)
 			return 0;
-		List<ItemStack> backtanks = getAllWithAir(player);
-		
+		List<BacktankWrapper> backtanks = getAllWithAir(player);
+
 		// Fallback colour
 		if (backtanks.isEmpty())
 			return Mth.hsvToRgb(Math.max(0.0F, 1.0F - (float) stack.getDamageValue() / stack.getMaxDamage()) / 3.0F,
 				1.0F, 1.0F);
 
 		// Just return the "first" backtank for the bar color since that's the one we are consuming from
-		return backtanks.get(0)
-			.getItem()
-			.getBarColor(backtanks.get(0));
+		return backtanks.get(0).getBarColor();
 	}
 
 	/**
@@ -192,6 +192,74 @@ public class BacktankUtil {
 	 * slots or items.
 	 */
 	public static void addBacktankSupplier(Function<LivingEntity, List<ItemStack>> supplier) {
+		BACKTANK_SUPPLIERS.add(entity ->
+				supplier.apply(entity).stream().map(DefaultBacktankWrapper::new).collect(Collectors.toList())
+		);
+	}
+	public static void addBacktankWrapperSupplier(Function<LivingEntity, List<BacktankWrapper>> supplier) {
 		BACKTANK_SUPPLIERS.add(supplier);
+	}
+
+	public interface BacktankWrapper {
+		float getAir();
+		int maxAir();
+		void consumeAir(LivingEntity entity, float i);
+		boolean hasAirRemaining();
+
+		int getBarWidth();
+
+		int getBarColor();
+
+		boolean isFireResistant();
+
+		ItemStack getDisplayedBacktank();
+	}
+
+	public static class DefaultBacktankWrapper implements BacktankWrapper {
+		private final ItemStack backtankStack;
+
+		public DefaultBacktankWrapper(ItemStack backtankStack) {
+			this.backtankStack = backtankStack;
+		}
+
+		@Override
+		public float getAir() {
+			return BacktankUtil.getAir(backtankStack);
+		}
+
+		public int maxAir() {
+			return BacktankUtil.maxAir(backtankStack);
+		}
+
+
+		@Override
+		public void consumeAir(LivingEntity entity, float i) {
+			BacktankUtil.consumeAir(entity, backtankStack, i);
+		}
+
+		@Override
+		public boolean hasAirRemaining() {
+			return BacktankUtil.hasAirRemaining(backtankStack);
+		}
+
+		@Override
+		public int getBarWidth() {
+			return backtankStack.getBarWidth();
+		}
+
+		@Override
+		public int getBarColor() {
+			return backtankStack.getBarColor();
+		}
+
+		@Override
+		public boolean isFireResistant() {
+			return backtankStack.getItem().isFireResistant();
+		}
+
+		@Override
+		public ItemStack getDisplayedBacktank() {
+			return backtankStack;
+		}
 	}
 }

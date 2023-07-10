@@ -61,9 +61,9 @@ public class RemainingAirOverlay implements IIngameOverlay {
 	}
 
 	public static ItemStack getDisplayedBacktank(LocalPlayer player) {
-		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(player);
+		List<BacktankUtil.BacktankWrapper> backtanks = BacktankUtil.getAllWithAir(player);
 		if (!backtanks.isEmpty()) {
-			return backtanks.get(0);
+			return backtanks.get(0).getDisplayedBacktank();
 		}
 		return AllItems.COPPER_BACKTANK.asStack();
 	}

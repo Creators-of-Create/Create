@@ -77,7 +77,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;
 
-		List<ItemStack> backtanks = BacktankUtil.getAllWithAir(entity);
+		List<BacktankUtil.BacktankWrapper> backtanks = BacktankUtil.getAllWithAir(entity);
 		if (backtanks.isEmpty())
 			return;
 
@@ -85,8 +85,7 @@ public class DivingHelmetItem extends BaseArmorItem {
 			if (entity instanceof ServerPlayer sp)
 				AllAdvancements.DIVING_SUIT_LAVA.awardTo(sp);
 			if (backtanks.stream()
-				.noneMatch(backtank -> backtank.getItem()
-					.isFireResistant()))
+				.noneMatch(backtank -> backtank.isFireResistant()))
 				return;
 		}
 
@@ -96,13 +95,14 @@ public class DivingHelmetItem extends BaseArmorItem {
 		if (world.isClientSide)
 			entity.getPersistentData()
 				.putInt("VisualBacktankAir", Math.round(backtanks.stream()
-					.map(BacktankUtil::getAir)
+					.map(BacktankUtil.BacktankWrapper::getAir)
 					.reduce(0f, Float::sum)));
 
 		if (!second)
 			return;
 
-		BacktankUtil.consumeAir(entity, backtanks.get(0), 1);
+//		BacktankUtil.consumeAir(entity, backtanks.get(0), 1);
+		backtanks.get(0).consumeAir(entity, 1);
 
 		if (lavaDiving)
 			return;
