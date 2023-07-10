@@ -3,6 +3,8 @@ package com.simibubi.create.content.equipment.armor;
 import java.util.Locale;
 import java.util.function.Supplier;
 
+import com.simibubi.create.content.equipment.armor.backtank_utils.BacktankAirSource;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.equipment.armor.CapacityEnchantment.ICapacityEnchantable;
@@ -27,7 +29,7 @@ import net.minecraft.world.level.block.Block;
 public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable {
 	public static final EquipmentSlot SLOT = EquipmentSlot.CHEST;
 	public static final int BAR_COLOR = 0xEFEFEF;
-	
+
 	private final Supplier<BacktankBlockItem> blockItem;
 
 	public BacktankItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc, Supplier<BacktankBlockItem> placeable) {
@@ -69,7 +71,7 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 
 		ItemStack stack = new ItemStack(this);
 		CompoundTag nbt = new CompoundTag();
-		nbt.putInt("Air", BacktankUtil.maxAirWithoutEnchants());
+		nbt.putInt("Air", BacktankAirSource.maxAirWithoutEnchants());
 		stack.setTag(nbt);
 		items.add(stack);
 	}
@@ -81,7 +83,7 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		return Math.round(13.0F * Mth.clamp(getRemainingAir(stack) / ((float) BacktankUtil.maxAir(stack)), 0, 1));
+		return Math.round(13.0F * Mth.clamp(getRemainingAir(stack) / ((float) BacktankAirSource.maxAir(stack)), 0, 1));
 	}
 
 	@Override
