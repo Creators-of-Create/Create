@@ -384,6 +384,15 @@ public class Train {
 			int carriageType = first ? last ? Carriage.BOTH : Carriage.FIRST : last ? Carriage.LAST : Carriage.MIDDLE;
 			double actualDistance =
 				carriage.travel(level, graph, distance + totalStress, toFollowForward, toFollowBackward, carriageType);
+
+			TravellingPoint point = carriage.leadingBogey().isLeading ? carriage.getLeadingPoint() : carriage.getTrailingPoint();
+
+			// Remove trains with null point.edge fixing a rare crash that could occur
+			if (point.edge == null) {
+				Create.LOGGER.error("Found null 'point.edge' in train with name: " + carriage.train.name.getString() + ", id: " + carriage.train.id.toString());
+				carriage.train.invalid = true;
+			}
+
 			blocked |= carriage.blocked || carriage.isOnIncompatibleTrack();
 
 			boolean onTwoBogeys = carriage.isOnTwoBogeys();
