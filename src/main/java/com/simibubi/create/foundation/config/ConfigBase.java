@@ -22,6 +22,8 @@ public abstract class ConfigBase {
 	protected List<ConfigBase> children;
 
 	public void registerAll(final ForgeConfigSpec.Builder builder) {
+		if(allValues == null) // avoid null pointer exception if config class is empty
+			allValues = new ArrayList<>();
 		for (CValue<?, ?> cValue : allValues)
 			cValue.register(builder);
 	}

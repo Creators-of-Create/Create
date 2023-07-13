@@ -34,7 +34,7 @@ public class BaseConfigScreen extends ConfigScreen {
 	private static final Map<String, UnaryOperator<BaseConfigScreen>> DEFAULTS = new HashMap<>();
 
 	static {
-		DEFAULTS.put(Create.ID, (base) -> base
+		setDefaultActionFor(Create.ID, (base) -> base
 				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
 				.withSpecs(AllConfigs.client().specification, AllConfigs.common().specification, AllConfigs.server().specification)
 		);
@@ -50,14 +50,15 @@ public class BaseConfigScreen extends ConfigScreen {
 	 * @param modID     the modID of your addon/mod
 	 */
 	public static void setDefaultActionFor(String modID, UnaryOperator<BaseConfigScreen> transform) {
-		if (modID.equals(Create.ID))
+		if (!DEFAULTS.containsKey(modID)) {
+			Create.LOGGER.error("Somebody tried to set default action for mod {}, but it was already set!", modID);
 			return;
-
+		}
 		DEFAULTS.put(modID, transform);
 	}
 
 	public static BaseConfigScreen forCreate(Screen parent) {
-		return new BaseConfigScreen(parent);
+		return new BaseConfigScreen(parent, Create.ID);
 	}
 
 	BoxWidget clientConfigWidget;
@@ -74,21 +75,18 @@ public class BaseConfigScreen extends ConfigScreen {
 	String commonTitle = "Common Config";
 	String serverTitle = "Server Config";
 	String modID;
+	String titleString;
 	protected boolean returnOnClose;
 
 	public BaseConfigScreen(Screen parent, @Nonnull String modID) {
 		super(parent);
 		this.modID = modID;
+		this.titleString = modID;
 
 		if (DEFAULTS.containsKey(modID))
 			DEFAULTS.get(modID).apply(this);
-		else {
-			this.searchForSpecsInModContainer();
-		}
-	}
 
-	private BaseConfigScreen(Screen parent) {
-		this(parent, Create.ID);
+		else this.searchForSpecsInModContainer();
 	}
 
 	/**
@@ -125,6 +123,12 @@ public class BaseConfigScreen extends ConfigScreen {
 		clientSpec = client;
 		commonSpec = common;
 		serverSpec = server;
+		return this;
+	}
+
+	public BaseConfigScreen withTitle(String title) {
+		if(title != null && !title.isEmpty())
+			titleString = title;
 		return this;
 	}
 
@@ -191,7 +195,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			serverText.withElementRenderer(BoxWidget.gradientFactory.apply(serverConfigWidget));
 		}
 
-		TextStencilElement titleText = new TextStencilElement(font, modID.toUpperCase(Locale.ROOT))
+		TextStencilElement titleText = new TextStencilElement(font, titleString.toUpperCase(Locale.ROOT))
 				.centered(true, true)
 				.withElementRenderer((ms, w, h, alpha) -> {
 					UIRenderHelper.angledGradient(ms, 0, 0, h / 2, h, w / 2, Theme.p(Theme.Key.CONFIG_TITLE_A));
