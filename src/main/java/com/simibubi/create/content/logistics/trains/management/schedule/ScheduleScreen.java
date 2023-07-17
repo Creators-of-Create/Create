@@ -442,7 +442,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			if (h <= 0)
 				continue;
 
-			startStencil(matrixStack, leftPos + 43, topPos + y1, 161, h);
+			startStencil(matrixStack, leftPos + 43, topPos + y1, 175, h);
 			matrixStack.pushPose();
 			matrixStack.translate(0, scrollOffset, 0);
 			renderScheduleConditions(matrixStack, scheduleEntry, cardY, mouseX, mouseY, partialTicks, cardHeight, i);
@@ -450,7 +450,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			endStencil();
 
 			if (isConditionAreaScrollable(scheduleEntry)) {
-				startStencil(matrixStack, leftPos + 16, topPos + 16, 220, 173);
+				startStencil(matrixStack, leftPos + 16, topPos + 16, 234, 173);
 				matrixStack.pushPose();
 				matrixStack.translate(0, scrollOffset, 0);
 				int center = (cardHeight - 8 + CARD_HEADER) / 2;
@@ -459,7 +459,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 				if (!Mth.equal(chaseTarget, 0))
 					AllGuiTextures.SCHEDULE_SCROLL_LEFT.render(matrixStack, leftPos + 40, topPos + cardY + center);
 				if (!Mth.equal(chaseTarget, scheduleEntry.conditions.size() - 1))
-					AllGuiTextures.SCHEDULE_SCROLL_RIGHT.render(matrixStack, leftPos + 203, topPos + cardY + center);
+					AllGuiTextures.SCHEDULE_SCROLL_RIGHT.render(matrixStack, leftPos + 217, topPos + cardY + center);
 				matrixStack.popPose();
 				endStencil();
 			}
@@ -502,13 +502,13 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			supportsConditions ? light : medium);
 
 		AllGuiTextures.SCHEDULE_CARD_REMOVE.render(matrixStack, cardWidth - 14, 2);
-		AllGuiTextures.SCHEDULE_CARD_DUPLICATE.render(matrixStack, cardWidth - 14, cardHeight - 14);
+		AllGuiTextures.SCHEDULE_CARD_DUPLICATE.render(matrixStack, cardWidth - 14, 13);
 
 		int i = schedule.entries.indexOf(entry);
 		if (i > 0)
-			AllGuiTextures.SCHEDULE_CARD_MOVE_UP.render(matrixStack, cardWidth, cardHeader - 14);
+			AllGuiTextures.SCHEDULE_CARD_MOVE_UP.render(matrixStack, cardWidth, 0);
 		if (i < schedule.entries.size() - 1)
-			AllGuiTextures.SCHEDULE_CARD_MOVE_DOWN.render(matrixStack, cardWidth, cardHeader);
+			AllGuiTextures.SCHEDULE_CARD_MOVE_DOWN.render(matrixStack, cardWidth, 14);
 
 		UIRenderHelper.drawStretched(matrixStack, 8, 0, 3, cardHeight + 10, zLevel,
 			AllGuiTextures.SCHEDULE_STRIP_LIGHT);
@@ -557,13 +557,13 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		AllGuiTextures.SCHEDULE_CONDITION_NEW.render(matrixStack, xOffset - 3, 29);
 		matrixStack.popPose();
 
-		if (xOffset + 16 > cardWidth - 26) {
+		if (xOffset + 16 > cardWidth - 12) {
 			TransformStack.cast(matrixStack)
 				.rotateZ(-90);
 			Matrix4f m = matrixStack.last()
 				.pose();
 			GuiUtils.drawGradientRect(m, 200, -cardHeight + 2, 18, -2 - cardHeader, 28, 0x44000000, 0x00000000);
-			GuiUtils.drawGradientRect(m, 200, -cardHeight + 2, cardWidth - 26, -2 - cardHeader, cardWidth - 16,
+			GuiUtils.drawGradientRect(m, 200, -cardHeight + 2, cardWidth - 12, -2 - cardHeader, cardWidth - 2,
 				0x00000000, 0x44000000);
 		}
 
@@ -574,7 +574,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 		int xOffset = 26;
 		for (List<ScheduleWaitCondition> list : entry.conditions)
 			xOffset += getConditionColumnWidth(list) + 10;
-		return xOffset + 16 > CARD_WIDTH - 26;
+		return xOffset + 16 > CARD_WIDTH - 12;
 	}
 
 	private float getConditionScroll(ScheduleEntry entry, float partialTicks, int entryIndex) {
@@ -685,7 +685,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			}
 
 			if (x > 180 && x <= 192) {
-				if (y > 0 && y <= 14) {
+				if (y > 2 && y <= 13) {
 					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.remove_entry")), Optional.empty(),
 						mx, my);
 					if (click == 0) {
@@ -694,7 +694,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					}
 					return true;
 				}
-				if (y > cardHeight - 14) {
+				if (y > 13 && y <= 24) {
 					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.duplicate")), Optional.empty(), mx,
 						my);
 					if (click == 0) {
@@ -706,7 +706,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 			}
 
 			if (x > 194) {
-				if (y > 7 && y <= 20 && i > 0) {
+				if (y > 2 && y <= 14 && i > 0) {
 					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.move_up")), Optional.empty(), mx,
 						my);
 					if (click == 0) {
@@ -716,7 +716,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					}
 					return true;
 				}
-				if (y > 20 && y <= 33 && i < entries.size() - 1) {
+				if (y > 14 && y <= 26 && i < entries.size() - 1) {
 					renderTooltip(ms, ImmutableList.of(Lang.translateDirect("gui.schedule.move_down")), Optional.empty(), mx,
 						my);
 					if (click == 0) {
@@ -738,7 +738,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 							.chase(chaseTarget - 1, 0.5f, Chaser.EXP);
 					return true;
 				}
-				if (x > 177 && x <= 184 && !Mth.equal(chaseTarget, entry.conditions.size() - 1)) {
+				if (x > 191 && x <= 198 && !Mth.equal(chaseTarget, entry.conditions.size() - 1)) {
 					if (click == 0)
 						horizontalScrolls.get(i)
 							.chase(chaseTarget + 1, 0.5f, Chaser.EXP);
@@ -946,7 +946,7 @@ public class ScheduleScreen extends AbstractSimiContainerScreen<ScheduleContaine
 					break;
 				if (pMouseX < leftPos + 25)
 					break;
-				if (pMouseX > leftPos + 205)
+				if (pMouseX > leftPos + 219)
 					break;
 				float chaseTarget = horizontalScrolls.get(i)
 					.getChaseTarget();

@@ -93,8 +93,8 @@ public enum AllGuiTextures implements ScreenElement {
 	SCHEDULE_CARD_LIGHT("schedule", 7, 233, 1, 1),
 	SCHEDULE_CARD_MOVE_UP("schedule", 51, 230, 12, 12),
 	SCHEDULE_CARD_MOVE_DOWN("schedule", 65, 230, 12, 12),
-	SCHEDULE_CARD_REMOVE("schedule", 51, 243, 12, 12),
-	SCHEDULE_CARD_DUPLICATE("schedule", 65, 243, 12, 12),
+	SCHEDULE_CARD_REMOVE("schedule", 51, 243, 11, 11),
+	SCHEDULE_CARD_DUPLICATE("schedule", 65, 243, 11, 11),
 	SCHEDULE_CARD_NEW("schedule", 79, 239, 16, 16),
 	SCHEDULE_CONDITION_NEW("schedule", 96, 239, 19, 16),
 	SCHEDULE_CONDITION_LEFT("schedule", 116, 239, 6, 16),
@@ -161,7 +161,7 @@ public enum AllGuiTextures implements ScreenElement {
 
 	SPEECH_TOOLTIP_BACKGROUND("widgets", 0, 24, 8, 8),
 	SPEECH_TOOLTIP_COLOR("widgets", 8, 24, 8, 8),
-	
+
 	TRAIN_HUD_SPEED_BG("widgets", 0, 190, 182, 5),
 	TRAIN_HUD_SPEED("widgets", 0, 185, 182, 5),
 	TRAIN_HUD_THROTTLE("widgets", 0, 195, 182, 5),
