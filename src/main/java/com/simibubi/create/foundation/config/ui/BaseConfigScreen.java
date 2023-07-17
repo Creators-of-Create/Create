@@ -34,27 +34,38 @@ public class BaseConfigScreen extends ConfigScreen {
 	private static final Map<String, UnaryOperator<BaseConfigScreen>> DEFAULTS = new HashMap<>();
 
 	static {
-		setDefaultActionFor(Create.ID, (base) -> base
+		setDefaultActionFor(Create.ID, base -> base
 				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
 				.withSpecs(AllConfigs.client().specification, AllConfigs.common().specification, AllConfigs.server().specification)
 		);
+		// also set titles for jei and computercraft
+		setDefaultActionFor("jei", base -> base.withTitle("Just Enough Items"));
+		setDefaultActionFor("computercraft", base -> base.withTitle("ComputerCraft"));
 	}
 
 	/**
-	 * If you are a Create Addon dev and want to change the config labels,
-	 * add a default action here.
-	 *
+	 * If you are a Create Addon dev and want to change the config labels or title, add a default action here.
+	 * <p>
 	 * Make sure you call either {@link #withSpecs(ForgeConfigSpec, ForgeConfigSpec, ForgeConfigSpec)}
 	 * or {@link #searchForSpecsInModContainer()}
 	 *
 	 * @param modID     the modID of your addon/mod
 	 */
 	public static void setDefaultActionFor(String modID, UnaryOperator<BaseConfigScreen> transform) {
-		if (!DEFAULTS.containsKey(modID)) {
+		if (DEFAULTS.containsKey(modID)) {
 			Create.LOGGER.error("Somebody tried to set default action for mod {}, but it was already set!", modID);
 			return;
+			// or throw an exception
 		}
 		DEFAULTS.put(modID, transform);
+	}
+
+	public static String getCustomTitleIfExists(String modID) {
+		for(Map.Entry<String, UnaryOperator<BaseConfigScreen>> entry : DEFAULTS.entrySet()) {
+			if(entry.getKey().equals(modID))
+				return entry.getValue().apply(new BaseConfigScreen(null, modID)).titleString;
+		}
+		return modID;
 	}
 
 	public static BaseConfigScreen forCreate(Screen parent) {
