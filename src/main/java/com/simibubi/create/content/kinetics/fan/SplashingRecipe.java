@@ -3,14 +3,14 @@ package com.simibubi.create.content.kinetics.fan;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.kinetics.fan.FanProcessing.SplashingWrapper;
+import com.simibubi.create.content.kinetics.fan.processingTypes.SplashingType.SplashingWrapper;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
 import net.minecraft.world.level.Level;
 
 @ParametersAreNonnullByDefault
-public class SplashingRecipe extends ProcessingRecipe<FanProcessing.SplashingWrapper> {
+public class SplashingRecipe extends ProcessingRecipe<SplashingWrapper> {
 
 	public SplashingRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.SPLASHING, params);

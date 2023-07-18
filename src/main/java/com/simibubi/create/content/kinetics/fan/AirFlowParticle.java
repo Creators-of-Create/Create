@@ -14,10 +14,8 @@ import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -97,60 +95,75 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 	public void morphType(double distance) {
 		if (source.getAirCurrent() == null)
 			return;
-		FanProcessing.Type type = source.getAirCurrent().getSegmentAt((float) distance);
+		AbstractFanProcessingType type = source.getAirCurrent().getSegmentAt((float) distance);
 
-		if (type == FanProcessing.Type.SPLASHING) {
-			setColor(Color.mixColors(0x4499FF, 0x2277FF, level.random.nextFloat()));
-			setAlpha(1f);
-			selectSprite(level.random.nextInt(3));
-			if (level.random.nextFloat() < 1 / 32f)
-				level.addParticle(ParticleTypes.BUBBLE, x, y, z, xd * .125f, yd * .125f,
-						zd * .125f);
-			if (level.random.nextFloat() < 1 / 32f)
-				level.addParticle(ParticleTypes.BUBBLE_POP, x, y, z, xd * .125f, yd * .125f,
-						zd * .125f);
-		}
+//		if (type == FanProcessing.Type.SPLASHING) {
+//			setColor(Color.mixColors(0x4499FF, 0x2277FF, level.random.nextFloat()));
+//			setAlpha(1f);
+//			selectSprite(level.random.nextInt(3));
+//			if (level.random.nextFloat() < 1 / 32f)
+//				level.addParticle(ParticleTypes.BUBBLE, x, y, z, xd * .125f, yd * .125f,
+//						zd * .125f);
+//			if (level.random.nextFloat() < 1 / 32f)
+//				level.addParticle(ParticleTypes.BUBBLE_POP, x, y, z, xd * .125f, yd * .125f,
+//						zd * .125f);
+//		}
 
-		if (type == FanProcessing.Type.SMOKING) {
-			setColor(Color.mixColors(0x0, 0x555555, level.random.nextFloat()));
-			setAlpha(1f);
-			selectSprite(level.random.nextInt(3));
-			if (level.random.nextFloat() < 1 / 32f)
-				level.addParticle(ParticleTypes.SMOKE, x, y, z, xd * .125f, yd * .125f,
-						zd * .125f);
-			if (level.random.nextFloat() < 1 / 32f)
-				level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, xd * .125f, yd * .125f,
-						zd * .125f);
-		}
+//		if (type == FanProcessing.Type.SMOKING) {
+//			setColor(Color.mixColors(0x0, 0x555555, level.random.nextFloat()));
+//			setAlpha(1f);
+//			selectSprite(level.random.nextInt(3));
+//			if (level.random.nextFloat() < 1 / 32f)
+//				level.addParticle(ParticleTypes.SMOKE, x, y, z, xd * .125f, yd * .125f,
+//						zd * .125f);
+//			if (level.random.nextFloat() < 1 / 32f)
+//				level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, xd * .125f, yd * .125f,
+//						zd * .125f);
+//		}
 
-		if (type == FanProcessing.Type.HAUNTING) {
-			setColor(Color.mixColors(0x0, 0x126568, level.random.nextFloat()));
-			setAlpha(1f);
-			selectSprite(level.random.nextInt(3));
-			if (level.random.nextFloat() < 1 / 128f)
-				level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, xd * .125f, yd * .125f,
-						zd * .125f);
-			if (level.random.nextFloat() < 1 / 32f)
-				level.addParticle(ParticleTypes.SMOKE, x, y, z, xd * .125f, yd * .125f,
-						zd * .125f);
-		}
+//		if (type == FanProcessing.Type.HAUNTING) {
+//			setColor(Color.mixColors(0x0, 0x126568, level.random.nextFloat()));
+//			setAlpha(1f);
+//			selectSprite(level.random.nextInt(3));
+//			if (level.random.nextFloat() < 1 / 128f)
+//				level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, xd * .125f, yd * .125f,
+//						zd * .125f);
+//			if (level.random.nextFloat() < 1 / 32f)
+//				level.addParticle(ParticleTypes.SMOKE, x, y, z, xd * .125f, yd * .125f,
+//						zd * .125f);
+//		}
 
-		if (type == FanProcessing.Type.BLASTING) {
-			setColor(Color.mixColors(0xFF4400, 0xFF8855, level.random.nextFloat()));
-			setAlpha(.5f);
-			selectSprite(level.random.nextInt(3));
-			if (level.random.nextFloat() < 1 / 32f)
-				level.addParticle(ParticleTypes.FLAME, x, y, z, xd * .25f, yd * .25f,
-						zd * .25f);
-			if (level.random.nextFloat() < 1 / 16f)
-				level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.LAVA.defaultBlockState()), x, y,
-						z, xd * .25f, yd * .25f, zd * .25f);
-		}
+//		if (type == FanProcessing.Type.BLASTING) {
+//			setColor(Color.mixColors(0xFF4400, 0xFF8855, level.random.nextFloat()));
+//			setAlpha(.5f);
+//			selectSprite(level.random.nextInt(3));
+//			if (level.random.nextFloat() < 1 / 32f)
+//				level.addParticle(ParticleTypes.FLAME, x, y, z, xd * .25f, yd * .25f,
+//						zd * .25f);
+//			if (level.random.nextFloat() < 1 / 16f)
+//				level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.LAVA.defaultBlockState()), x, y,
+//						z, xd * .25f, yd * .25f, zd * .25f);
+//		}
 
 		if (type == null) {
 			setColor(0xEEEEEE);
 			setAlpha(.25f);
 			setSize(.2f, .2f);
+			return;
+		}
+
+		type.particleMorphType(this);
+	}
+
+	public void setProperties(int color_1, int color_2, float alpha, int sprite_length) {
+		setColor(Color.mixColors(color_1, color_2, level.random.nextFloat()));
+		setAlpha(alpha);
+		selectSprite(level.random.nextInt(sprite_length));
+	}
+
+	public void addParticle(ParticleOptions option, float chance, float speed) {
+		if (level.random.nextFloat() < chance) {
+			level.addParticle(option, x, y, z, xd * speed, yd * speed, zd * speed);
 		}
 	}
 

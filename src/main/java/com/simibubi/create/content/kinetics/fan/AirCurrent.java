@@ -10,7 +10,6 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.content.decoration.copycat.CopycatBlock;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.content.kinetics.fan.FanProcessing.Type;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -49,7 +48,7 @@ public class AirCurrent {
 	public boolean pushing;
 	public float maxDistance;
 
-	protected List<Pair<TransportedItemStackHandlerBehaviour, FanProcessing.Type>> affectedItemHandlers =
+	protected List<Pair<TransportedItemStackHandlerBehaviour, AbstractFanProcessingType>> affectedItemHandlers =
 		new ArrayList<>();
 	protected List<Entity> caughtEntities = new ArrayList<>();
 
@@ -110,9 +109,9 @@ public class AirCurrent {
 				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
 
 			entityDistance -= .5f;
-			FanProcessing.Type processingType = getSegmentAt((float) entityDistance);
+			AbstractFanProcessingType processingType = getSegmentAt((float) entityDistance);
 
-			if (processingType == null || processingType == Type.NONE)
+			if (processingType == null || processingType == AbstractFanProcessingType.NONE)
 				continue;
 
 			if (entity instanceof ItemEntity itemEntity) {
@@ -155,7 +154,7 @@ public class AirCurrent {
 		AirCurrentSegment currentSegment = new AirCurrentSegment();
 		segments.clear();
 		currentSegment.startOffset = 0;
-		FanProcessing.Type type = Type.NONE;
+		AbstractFanProcessingType type = AbstractFanProcessingType.NONE;
 
 		int limit = (int) (maxDistance + .5f);
 		int searchStart = pushing ? 0 : limit;
@@ -164,8 +163,8 @@ public class AirCurrent {
 
 		for (int i = searchStart; i * searchStep <= searchEnd * searchStep; i += searchStep) {
 			BlockPos currentPos = start.relative(direction, i);
-			FanProcessing.Type newType = FanProcessing.Type.byBlock(world, currentPos);
-			if (newType != Type.NONE)
+			AbstractFanProcessingType newType = AbstractFanProcessingType.byBlock(world, currentPos);
+			if (newType != AbstractFanProcessingType.NONE)
 				type = newType;
 			if (currentSegment.type != type || currentSegment.startOffset == 0) {
 				currentSegment.endOffset = i;
@@ -258,7 +257,7 @@ public class AirCurrent {
 		BlockPos start = source.getAirCurrentPos();
 		affectedItemHandlers.clear();
 		for (int i = 0; i < maxDistance + 1; i++) {
-			Type type = getSegmentAt(i);
+			AbstractFanProcessingType type = getSegmentAt(i);
 			if (type == null)
 				continue;
 
@@ -267,10 +266,10 @@ public class AirCurrent {
 					.below(offset);
 				TransportedItemStackHandlerBehaviour behaviour =
 					BlockEntityBehaviour.get(world, pos, TransportedItemStackHandlerBehaviour.TYPE);
-				FanProcessing.Type typeAtHandler = type;
+				AbstractFanProcessingType typeAtHandler = type;
 				if (world.getFluidState(pos)
 					.is(Fluids.WATER))
-					typeAtHandler = Type.SPLASHING;
+					typeAtHandler = FanProcessing.SPLASHING;
 				if (behaviour != null)
 					affectedItemHandlers.add(Pair.of(behaviour, typeAtHandler));
 				if (direction.getAxis()
@@ -281,10 +280,10 @@ public class AirCurrent {
 	}
 
 	public void tickAffectedHandlers() {
-		for (Pair<TransportedItemStackHandlerBehaviour, Type> pair : affectedItemHandlers) {
+		for (Pair<TransportedItemStackHandlerBehaviour, AbstractFanProcessingType> pair : affectedItemHandlers) {
 			TransportedItemStackHandlerBehaviour handler = pair.getKey();
 			Level world = handler.getWorld();
-			FanProcessing.Type processingType = pair.getRight();
+			AbstractFanProcessingType processingType = pair.getRight();
 
 			handler.handleProcessingOnAllItems((transported) -> {
 				if (world.isClientSide) {
@@ -304,7 +303,7 @@ public class AirCurrent {
 		return AllTags.AllBlockTags.FAN_TRANSPARENT.matches(state);
 	}
 
-	public FanProcessing.Type getSegmentAt(float offset) {
+	public AbstractFanProcessingType getSegmentAt(float offset) {
 		for (AirCurrentSegment airCurrentSegment : segments) {
 			if (offset > airCurrentSegment.endOffset && pushing)
 				continue;
@@ -312,11 +311,11 @@ public class AirCurrent {
 				continue;
 			return airCurrentSegment.type;
 		}
-		return FanProcessing.Type.NONE;
+		return AbstractFanProcessingType.NONE;
 	}
 
 	public static class AirCurrentSegment {
-		FanProcessing.Type type;
+		AbstractFanProcessingType type;
 		int startOffset;
 		int endOffset;
 	}

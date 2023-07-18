@@ -3,8 +3,8 @@ package com.simibubi.create.content.kinetics.belt.transport;
 import java.util.Random;
 
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
-import com.simibubi.create.content.kinetics.fan.FanProcessing;
 
+import com.simibubi.create.content.kinetics.fan.AbstractFanProcessingType;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +25,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 	public float prevBeltPosition;
 	public float prevSideOffset;
 
-	public FanProcessing.Type processedBy;
+	public AbstractFanProcessingType processedBy;
 	public int processingTime;
 
 	public TransportedItemStack(ItemStack stack) {
