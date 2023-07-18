@@ -87,9 +87,16 @@ public class Create {
 
 	public static CreateRegistrate registrate() {
 		Class<?> callerClass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-		if(callerClass.getPackageName().contains("com.simibubi.create"))
+		if(callerClass.getName().contains("com.simibubi.create"))
 			return REGISTRATE;
-		throw new IllegalCallerException("Create your own registrate!");
+		RuntimeException t = new IllegalCallerException(String.format("Mod %s tried to access Create's registrate! Class: %s", ModLoadingContext.get().getActiveContainer().getModId(), callerClass.getName()));
+//		throw t; // this gets caught by Forge's try-catch, (FMLModContainer line 70)
+				 // which makes it harder to pinpoint for new devs
+				 // what is going wrong.
+		alternative: // most useful java label
+		t.printStackTrace(); // error shows at bottom of log, clearly indicating what happened
+		System.exit(1);
+		return null;
 	}
 
 	static {
@@ -196,5 +203,4 @@ public class Create {
 	public static ResourceLocation asResource(String path) {
 		return new ResourceLocation(ID, path);
 	}
-
 }
