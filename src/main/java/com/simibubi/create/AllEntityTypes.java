@@ -73,7 +73,7 @@ public class AllEntityTypes {
 		MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
 		NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
 		String id = Lang.asId(name);
-		return (CreateEntityBuilder<T, ?>) Create.REGISTRATE
+		return (CreateEntityBuilder<T, ?>) Create.registrate()
 			.entity(id, factory, group)
 			.properties(b -> b.setTrackingRange(range)
 				.setUpdateInterval(updateFrequency)

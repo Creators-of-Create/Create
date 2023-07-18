@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.data;
 
-import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 import java.util.function.Function;
@@ -86,7 +85,7 @@ public class WindowGen {
 		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType,
 		NonNullFunction<String, ResourceLocation> endTexture, NonNullFunction<String, ResourceLocation> sideTexture,
 		Supplier<MaterialColor> color) {
-		return REGISTRATE.block(name, WindowBlock::new)
+		return Create.registrate().block(name, WindowBlock::new)
 			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get())))
 			.addLayer(renderType)
 			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 2)
@@ -109,7 +108,7 @@ public class WindowGen {
 
 	public static BlockEntry<ConnectedGlassBlock> framedGlass(String name,
 		Supplier<ConnectedTextureBehaviour> behaviour) {
-		return REGISTRATE.block(name, ConnectedGlassBlock::new)
+		return Create.registrate().block(name, ConnectedGlassBlock::new)
 			.onRegister(connectedTextures(behaviour))
 			.addLayer(() -> RenderType::cutout)
 			.initialProperties(() -> Blocks.GLASS)
@@ -202,7 +201,7 @@ public class WindowGen {
 		NonNullBiConsumer<DataGenContext<Block, G>, RegistrateBlockstateProvider> stateProvider) {
 		name += "_pane";
 
-		return REGISTRATE.block(name, factory)
+		return Create.registrate().block(name, factory)
 			.onRegister(connectedTextures)
 			.addLayer(renderType)
 			.initialProperties(() -> Blocks.GLASS_PANE)

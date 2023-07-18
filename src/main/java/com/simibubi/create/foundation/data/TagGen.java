@@ -65,10 +65,10 @@ public class TagGen {
 	}
 
 	public static void datagen() {
-		Create.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, TagGen::genBlockTags);
-		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, TagGen::genItemTags);
-		Create.REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, TagGen::genFluidTags);
-		Create.REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, TagGen::genEntityTags);
+		Create.registrate().addDataGenerator(ProviderType.BLOCK_TAGS, TagGen::genBlockTags);
+		Create.registrate().addDataGenerator(ProviderType.ITEM_TAGS, TagGen::genItemTags);
+		Create.registrate().addDataGenerator(ProviderType.FLUID_TAGS, TagGen::genFluidTags);
+		Create.registrate().addDataGenerator(ProviderType.ENTITY_TAGS, TagGen::genEntityTags);
 	}
 
 	private static void genBlockTags(RegistrateTagsProvider<Block> prov) {
@@ -147,7 +147,7 @@ public class TagGen {
 		prov.tag(AllItemTags.STRIPPED_WOOD.tag)
 			.addTag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
 			.addTag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
-		
+
 		prov.tag(AllItemTags.DEPLOYABLE_DRINK.tag)
 			.add(Items.MILK_BUCKET, Items.POTION);
 
@@ -230,7 +230,7 @@ public class TagGen {
 	}
 
 	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> prov) {
-		
+
 		// VALIDATE
 
 		for (AllEntityTags tag : AllEntityTags.values()) {

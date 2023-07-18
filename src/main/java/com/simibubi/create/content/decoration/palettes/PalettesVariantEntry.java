@@ -1,6 +1,5 @@
 package com.simibubi.create.content.decoration.palettes;
 
-import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
@@ -32,7 +31,7 @@ public class PalettesVariantEntry {
 
 		for (PaletteBlockPattern pattern : paletteStoneVariants.variantTypes) {
 			BlockBuilder<? extends Block, CreateRegistrate> builder =
-				REGISTRATE.block(pattern.createName(name), pattern.getBlockFactory())
+				Create.registrate().block(pattern.createName(name), pattern.getBlockFactory())
 					.initialProperties(baseBlock)
 					.transform(pickaxeOnly())
 					.blockstate(pattern.getBlockStateGenerator()
@@ -70,9 +69,9 @@ public class PalettesVariantEntry {
 					.register());
 		}
 
-		Create.REGISTRATE.addDataGenerator(ProviderType.RECIPE,
+		Create.registrate().addDataGenerator(ProviderType.RECIPE,
 			p -> p.stonecutting(DataIngredient.tag(paletteStoneVariants.materialTag), baseBlock));
-		Create.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, p -> p.tag(paletteStoneVariants.materialTag)
+		Create.registrate().addDataGenerator(ProviderType.ITEM_TAGS, p -> p.tag(paletteStoneVariants.materialTag)
 			.add(baseBlock.get()
 				.asItem()));
 

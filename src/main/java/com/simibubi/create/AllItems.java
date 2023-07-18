@@ -4,7 +4,6 @@ import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_RAW_MATERIALS;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
-import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
@@ -67,6 +66,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.Tags;
 
 public class AllItems {
+
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	static {
 		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);

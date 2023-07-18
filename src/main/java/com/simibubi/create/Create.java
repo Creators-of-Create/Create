@@ -2,6 +2,8 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.notsimibubi.badcreateaddon.Test;
+
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -81,13 +83,18 @@ public class Create {
 	@Deprecated
 	public static final Random RANDOM = new Random();
 
-	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
+	private static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
+
+	public static CreateRegistrate registrate() {
+		Class<?> callerClass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+		if(callerClass.getPackageName().contains("com.simibubi.create"))
+			return REGISTRATE;
+		throw new IllegalCallerException("Create your own registrate!");
+	}
 
 	static {
-		REGISTRATE.setTooltipModifierFactory(item -> {
-			return new ItemDescription.Modifier(item, Palette.STANDARD_CREATE)
-				.andThen(TooltipModifier.mapNull(KineticStats.create(item)));
-		});
+		REGISTRATE.setTooltipModifierFactory(item -> new ItemDescription.Modifier(item, Palette.STANDARD_CREATE)
+			.andThen(TooltipModifier.mapNull(KineticStats.create(item))));
 	}
 
 	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
@@ -101,6 +108,7 @@ public class Create {
 	}
 
 	public static void onCtor() {
+		Test.test();
 		ModLoadingContext modLoadingContext = ModLoadingContext.get();
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()

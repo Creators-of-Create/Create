@@ -2,7 +2,6 @@ package com.simibubi.create;
 
 import static com.simibubi.create.AllInteractionBehaviours.interactionBehaviour;
 import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
-import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.BlockStateGen.simpleCubeAll;
@@ -309,6 +308,8 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.ForgeSoundType;
 
 public class AllBlocks {
+
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	static {
 		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);

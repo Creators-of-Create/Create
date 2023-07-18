@@ -28,7 +28,7 @@ public abstract class CreateCreativeModeTab extends CreativeModeTab {
 	}
 
 	protected Collection<RegistryEntry<Item>> registeredItems() {
-		return Create.REGISTRATE.getAll(ForgeRegistries.ITEMS.getRegistryKey());
+		return Create.registrate().getAll(ForgeRegistries.ITEMS.getRegistryKey());
 	}
 
 	public void addBlocks(NonNullList<ItemStack> items) {

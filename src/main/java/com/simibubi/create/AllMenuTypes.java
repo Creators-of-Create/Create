@@ -44,16 +44,16 @@ public class AllMenuTypes {
 
 	public static final MenuEntry<LinkedControllerMenu> LINKED_CONTROLLER =
 		register("linked_controller", LinkedControllerMenu::new, () -> LinkedControllerScreen::new);
-	
+
 	public static final MenuEntry<ToolboxMenu> TOOLBOX =
 		register("toolbox", ToolboxMenu::new, () -> ToolboxScreen::new);
-	
+
 	public static final MenuEntry<ScheduleMenu> SCHEDULE =
 		register("schedule", ScheduleMenu::new, () -> ScheduleScreen::new);
 
 	private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(
 		String name, ForgeMenuFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
-		return Create.REGISTRATE
+		return Create.registrate()
 			.menu(name, factory, screenFactory)
 			.register();
 	}

@@ -1,6 +1,5 @@
 package com.simibubi.create.content.decoration.palettes;
 
-import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.WindowGen.customWindowBlock;
 import static com.simibubi.create.foundation.data.WindowGen.customWindowPane;
 import static com.simibubi.create.foundation.data.WindowGen.framedGlass;
@@ -14,6 +13,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.simibubi.create.foundation.block.connected.SimpleCTBehaviour;
 import com.simibubi.create.foundation.data.BlockStateGen;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.WindowGen;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -29,6 +29,8 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.Tags;
 
 public class AllPaletteBlocks {
+
+	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	static {
 		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.PALETTES_CREATIVE_TAB);

@@ -109,7 +109,7 @@ public class PonderIndex {
 			AllPonderTags.KINETIC_SOURCES);
 		HELPER.addStoryBoard(AllBlocks.LARGE_WATER_WHEEL, "large_water_wheel", KineticsScenes::largeWaterWheel,
 			AllPonderTags.KINETIC_SOURCES);
-		
+
 		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, AllPonderTags.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
@@ -355,7 +355,7 @@ public class PonderIndex {
 			.map((trackSupplier) -> new BlockEntry<TrackBlock>(
 				// note: these blocks probably WON'T be in the Create Registrate, but a simple
 				// code trace reveals the Entry's registrate isn't used
-				Create.REGISTRATE, RegistryObject.create(trackSupplier.get()
+				Create.registrate(), RegistryObject.create(trackSupplier.get()
 					.getRegistryName(), ForgeRegistries.BLOCKS)))
 			.toList())
 			.addStoryBoard("train_track/placement", TrackScenes::placement)

@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.data;
 
-import static com.simibubi.create.Create.REGISTRATE;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.EAST;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.NORTH;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.SOUTH;
@@ -123,7 +122,7 @@ public class MetalBarsGen {
 
 	public static BlockEntry<IronBarsBlock> createBars(String name, boolean specialEdge,
 		Supplier<DataIngredient> ingredient, MaterialColor color) {
-		return REGISTRATE.block(name + "_bars", IronBarsBlock::new)
+		return Create.registrate().block(name + "_bars", IronBarsBlock::new)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.initialProperties(() -> Blocks.IRON_BARS)
 			.properties(p -> p.sound(SoundType.COPPER)
