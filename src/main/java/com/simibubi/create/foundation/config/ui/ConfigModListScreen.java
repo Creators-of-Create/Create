@@ -99,7 +99,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		protected String id;
 
 		public ModEntry(String id, Screen parent) {
-			super(BaseConfigScreen.getCustomTitleIfExists(id).equals(id) ? toHumanReadable(id) : BaseConfigScreen.getCustomTitleIfExists(id));
+			super(BaseConfigScreen.getCustomTitle(id).orElse(toHumanReadable(id)));
 			this.id = id;
 
 			button = new BoxWidget(0, 0, 35, 16)
@@ -112,7 +112,7 @@ public class ConfigModListScreen extends ConfigScreen {
 				button.active = false;
 				button.updateColorsFromState();
 				button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BaseConfigScreen.DISABLED_RENDERER));
-				labelTooltip.add(Components.literal(BaseConfigScreen.getCustomTitleIfExists(id).equals(id) ? toHumanReadable(id) : BaseConfigScreen.getCustomTitleIfExists(id)));
+				labelTooltip.add(Components.literal(BaseConfigScreen.getCustomTitle(id).orElse(toHumanReadable(id))));
 				labelTooltip.addAll(TooltipHelper.cutStringTextComponent("This Mod does not have any configs registered or is not using Forge's config system", Palette.ALL_GRAY));
 			}
 
