@@ -85,17 +85,17 @@ public class Create {
 
 	public static CreateRegistrate registrate() {
 		Class<?> callerClass = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
-		if(callerClass.getName().contains("com.simibubi.create"))
-			return REGISTRATE;
-		RuntimeException t = new IllegalCallerException(String.format("Mod %s tried to access Create's registrate! Instead, make your own. Class: %s",
-				ModLoadingContext.get().getActiveContainer().getModId(), callerClass.getName()));
-//		throw t; // this gets caught by Forge's try-catch, (FMLModContainer line 70)
-				 // which makes it harder to pinpoint for new devs what is going wrong.
+		if (!callerClass.getName().startsWith(Create.class.getPackageName())) {
+			RuntimeException t = new IllegalCallerException(String.format("Mod %s tried to access Create's registrate! Instead, make your own. Class: %s",
+					ModLoadingContext.get().getActiveContainer().getModId(), callerClass.getName()));
+//			throw t; // this gets caught by Forge's try-catch, (FMLModContainer line 70)
+					 // which makes it harder to pinpoint for new devs what is going wrong,
+					 // since the actual error bets buried in the log
 
-		alternative: // most useful java label
-		t.printStackTrace(); // error shows at bottom of log, clearly indicating what happened
-		System.exit(1);
-		return null;
+			t.printStackTrace(); // error shows at bottom of log, clearly indicating what happened
+			System.exit(1);
+		}
+		return REGISTRATE;
 	}
 
 	static {
