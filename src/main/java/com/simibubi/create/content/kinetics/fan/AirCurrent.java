@@ -163,7 +163,7 @@ public class AirCurrent {
 
 		for (int i = searchStart; i * searchStep <= searchEnd * searchStep; i += searchStep) {
 			BlockPos currentPos = start.relative(direction, i);
-			AbstractFanProcessingType newType = AbstractFanProcessingType.byBlock(world, currentPos);
+			AbstractFanProcessingType newType = ProcessingTypeTransformerRegistry.byBlock(world, currentPos);
 			if (newType != AbstractFanProcessingType.NONE)
 				type = newType;
 			if (currentSegment.type != type || currentSegment.startOffset == 0) {
@@ -215,6 +215,9 @@ public class AirCurrent {
 			BlockState state = world.getBlockState(currentPos);
 			BlockState copycatState = CopycatBlock.getMaterial(world, currentPos);
 			if (shouldAlwaysPass(copycatState.isAir() ? state : copycatState))
+				continue;
+			// If there's defined Processing Type for the block, it's probably passable for the Air Current
+			if (ProcessingTypeTransformerRegistry.byBlock(world, currentPos) != AbstractFanProcessingType.NONE)
 				continue;
 			VoxelShape voxelshape = state.getCollisionShape(world, currentPos, CollisionContext.empty());
 			if (voxelshape.isEmpty())

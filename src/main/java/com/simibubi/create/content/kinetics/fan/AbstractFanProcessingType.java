@@ -1,29 +1,19 @@
 package com.simibubi.create.content.kinetics.fan;
 
 import com.google.common.collect.Maps;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.content.processing.burner.LitBlazeBurnerBlock;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CampfireBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.simibubi.create.content.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
-
+/**
+ * Make Class extending this if you want to add your own Fan processing type.
+ * After that, register it's condition using {@link ProcessingTypeTransformerRegistry#registerProcessingTypeTransformer(int, ProcessingTypeTransformerRegistry.ProcessingTypeTransformer)}
+ */
 public abstract class AbstractFanProcessingType {
 
 	public static final Map<String, AbstractFanProcessingType> REGISTRY = Maps.newConcurrentMap();
@@ -73,34 +63,6 @@ public abstract class AbstractFanProcessingType {
 	public abstract void particleMorphType(AirFlowParticle particle);
 
 	public abstract List<ItemStack> process(ItemStack stack, AbstractFanProcessingType type, Level world);
-
-	public static AbstractFanProcessingType byBlock(BlockGetter reader, BlockPos pos) {
-		FluidState fluidState = reader.getFluidState(pos);
-		if (fluidState.getType() == Fluids.WATER || fluidState.getType() == Fluids.FLOWING_WATER)
-			return FanProcessing.SPLASHING;
-		BlockState blockState = reader.getBlockState(pos);
-		Block block = blockState.getBlock();
-		if (block == Blocks.SOUL_FIRE
-				|| block == Blocks.SOUL_CAMPFIRE && blockState.getOptionalValue(CampfireBlock.LIT)
-				.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-				&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-				.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL)
-				.orElse(false))
-			return FanProcessing.HAUNTING;
-		if (block == Blocks.FIRE
-				|| blockState.is(BlockTags.CAMPFIRES) && blockState.getOptionalValue(CampfireBlock.LIT)
-				.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-				&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-				.map(flame -> flame == LitBlazeBurnerBlock.FlameType.REGULAR)
-				.orElse(false)
-				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
-			return FanProcessing.SMOKING;
-		if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
-			return FanProcessing.BLASTING;
-		return AbstractFanProcessingType.NONE;
-	}
 
 	public static AbstractFanProcessingType valueOf(String name) {
 		return REGISTRY.getOrDefault(name, NONE);
