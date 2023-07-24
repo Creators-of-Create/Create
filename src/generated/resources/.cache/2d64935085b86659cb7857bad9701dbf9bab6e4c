@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-09T11:36:25.1843493	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2023-07-24T10:08:09.5714589	Registrate Provider for create [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 60bbdf92d2ac9824ea6144955c74043a6005f79d assets/create/blockstates/acacia_window.json
 6a67703c2697d81b7dc83e9d72a66f9c9ff08383 assets/create/blockstates/acacia_window_pane.json
 c3ae87b62e81d8e9476eccd793bb1548d74c66a1 assets/create/blockstates/adjustable_chain_gearshift.json
@@ -4219,7 +4219,7 @@ e22493305e0cebfb7ededae122e19ee9dd24fc9d data/create/tags/items/stone_types/scor
 22c744a157399a21492bcd8b211578f8f504e653 data/create/tags/items/upright_on_belt.json
 da739ad2160e7df4e0e5cc89587670ce5e9450c3 data/create/tags/items/valve_handles.json
 aaf5cc629f6a40242a3d46e0dd3ae936125fdaf7 data/create/tags/items/vanilla_stripped_logs.json
-64441ac1daa64c81601b94b82b21c0ee862b6344 data/create/tags/items/vanilla_stripped_wood.json
+4c12c31950f93efb8150388d5746a45019fabbef data/create/tags/items/vanilla_stripped_wood.json
 10d5f0c1763f80860a39398ecc33dbbe43099471 data/forge/tags/blocks/glass/colorless.json
 de1fc89be6a52473d526d3efe0204b9b8489058c data/forge/tags/blocks/glass_panes.json
 81b107ada9c6ac5679a21f8c6a006bf230f69c39 data/forge/tags/blocks/ores.json
