@@ -44,6 +44,7 @@ public class HeatHandler extends SavedData {
 
 	public void addHeatProvider(BlockPos pos, IHeatProvider provider) {
 		this.data.put(pos, provider, new HashSet<>());
+		// TODO search for consumers in range without a provider
 	}
 
 	/**
