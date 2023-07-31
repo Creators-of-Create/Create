@@ -1,13 +1,13 @@
 package com.simibubi.create.api.heat;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.HeatDataMap;
-
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
@@ -22,6 +22,7 @@ public class HeatHandler extends SavedData {
 	private static final String KEY = "create_heat";
 	private static final String DATA_KEY = "create_heat_data";
 	private final HeatDataMap data = new HeatDataMap();
+	private final Set<BlockPos> unheatedConsumers = new HashSet<>();
 	private final Level level;
 
 	protected HeatHandler(Level level) {
@@ -44,7 +45,27 @@ public class HeatHandler extends SavedData {
 
 	public void addHeatProvider(BlockPos pos, IHeatProvider provider) {
 		this.data.put(pos, provider, new HashSet<>());
-		// TODO search for consumers in range without a provider
+		// search for consumers in range without a provider
+		Iterator<BlockPos> consumers = this.unheatedConsumers.iterator();
+		while (consumers.hasNext()) {
+			BlockPos consumerPos = consumers.next();
+			if (provider.getHeatedArea(this.level, pos).isInside(consumerPos)) {
+				BlockState consumerState = this.level.getBlockState(consumerPos);
+				if (consumerState.getBlock() instanceof IHeatConsumer consumer) {
+					if (consumer.isValidSource(provider)) {
+						if (addHeatConsumer(consumerPos, consumer)) {
+							// Success
+							consumers.remove();
+							break;
+						}
+					}
+				} else {
+					// Remove invalid consumers
+					Create.LOGGER.warn("Removed invalid pending heat consumer at {}", consumerPos);
+					consumers.remove();
+				}
+			}
+		}
 	}
 
 	/**
@@ -53,7 +74,11 @@ public class HeatHandler extends SavedData {
 	 * @return true if successfully added
 	 */
 	public boolean addHeatConsumer(BlockPos consumer) {
-		return addHeatConsumer(consumer, provider -> true);
+		BlockState consumerState = this.level.getBlockState(consumer);
+		if (consumerState.getBlock() instanceof IHeatConsumer heatConsumer) {
+			return addHeatConsumer(consumer, heatConsumer);
+		}
+		return false;
 	}
 
 	/**
@@ -61,33 +86,35 @@ public class HeatHandler extends SavedData {
 	 *
 	 * @return true if successfully added
 	 */
-	public boolean addHeatConsumer(BlockPos consumerPosition, Predicate<IHeatProvider> providerValidator) {
+	public boolean addHeatConsumer(BlockPos consumerPosition, IHeatConsumer consumer) {
 		// Get the closest possible heat provider
 		Optional<Entry<BlockPos, Pair<IHeatProvider, Set<BlockPos>>>> possibleProvider = this.data.entrySet()
 				.stream()
 				.filter(entry -> entry.getValue().getFirst().isInHeatRange(this.level, entry.getKey(), consumerPosition))
-				.filter(entry -> providerValidator.test(entry.getValue().getFirst()))
+				.filter(entry -> entry.getValue().getSecond().size() + 1 < entry.getValue().getFirst().getMaxHeatConsumers(this.level, entry.getKey()))
+				.filter(entry -> consumer.isValidSource(entry.getValue().getFirst()))
 				.min((o1, o2) -> {
 					double distance1 = o1.getKey().distSqr(consumerPosition);
 					double distance2 = o2.getKey().distSqr(consumerPosition);
 					return Double.compare(distance1, distance2);
 				});
 		// Exit if no valid provider exists
-		if (possibleProvider.isEmpty()) return false;
-
-		Entry<BlockPos, Pair<IHeatProvider, Set<BlockPos>>> providerEntry = possibleProvider.get();
-		Set<BlockPos> consumerSet = providerEntry.getValue().getSecond();
-
-		BlockState consumerState = this.level.getBlockState(consumerPosition);
-		if (!(consumerState.getBlock() instanceof IHeatConsumer consumer)) return false;
-		boolean successfulAdded = consumerSet.add(consumerPosition);
-
-		if (successfulAdded) {
-			// Callback to block when added successfully
-			consumer.onHeatProvided(this.level, providerEntry.getValue().getFirst(), providerEntry.getKey(), consumerPosition);
+		if (possibleProvider.isEmpty()) {
+			unheatedConsumers.add(consumerPosition);
+			return false;
 		}
 
-		return successfulAdded;
+		Entry<BlockPos, Pair<IHeatProvider, Set<BlockPos>>> providerEntry = possibleProvider.get();
+		return addConsumerToProvider(providerEntry.getKey(), providerEntry.getValue().getFirst(), providerEntry.getValue().getSecond(), consumerPosition, consumer);
+	}
+
+	protected boolean addConsumerToProvider(BlockPos providerPos, IHeatProvider provider, Set<BlockPos> consumerSet, BlockPos consumerPos, IHeatConsumer consumer) {
+		if (consumerSet.add(consumerPos)) {
+			consumer.onHeatProvided(this.level, provider, providerPos, consumerPos);
+			return true;
+		}
+
+		return false;
 	}
 
 	public static HeatHandler load(ServerLevel level) {
