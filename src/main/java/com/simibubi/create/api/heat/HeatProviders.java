@@ -185,6 +185,10 @@ public class HeatProviders extends SavedData {
 			if (consumerSet.size() + 1 > provider.getMaxConsumers(this.level, providerPosition)) continue;
 			// Skip is the provider is not a valid source for the consumer
 			if (!consumer.isValidSource(this.level, provider, providerPosition, consumerPosition)) continue;
+			if (closestProviderEntry == null) {
+				closestProviderEntry = entry;
+				continue;
+			}
 			double closestDistance = closestProviderEntry.getKey().distSqr(consumerPosition);
 			double currentDistance = providerPosition.distSqr(consumerPosition);
 			// Skip if the provider is further away
@@ -225,14 +229,14 @@ public class HeatProviders extends SavedData {
 
 	@SubscribeEvent
 	static void onHeatProviderPlaced(final BlockEvent.NeighborNotifyEvent e) {
-		BlockState state = e.getState();
-		HeatProvider heatProvider = HEAT_PROVIDERS.get(state.getBlock());
-		// Exit if no heat provider is registered for this block
-		if (isHeatProvider(state)) return;
 		// Exit if the World is not server side
 		if (!(e.getWorld() instanceof ServerLevel level)) return;
 		// Add Heat Provider
 		HeatProviders provider = load(level);
+		BlockState state = e.getState();
+		// Exit if no heat provider is registered for this block
+		if (!isHeatProvider(state)) return;
+		HeatProvider heatProvider = HEAT_PROVIDERS.get(state.getBlock());
 		provider.addHeatProvider(e.getPos(), heatProvider);
 	}
 
@@ -245,7 +249,7 @@ public class HeatProviders extends SavedData {
 		// Exit if no provider was at the location
 		if (!provider.isHeatProvider(e.getPos())) return;
 		// Remove heat provider
-		provider.removeHeatConsumer(e.getPos());
+		provider.removeHeatProvider(e.getPos());
 	}
 
 	@FunctionalInterface
