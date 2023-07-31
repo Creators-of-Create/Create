@@ -130,15 +130,16 @@ public class HeatProviders extends SavedData {
 		// No heat if no provider
 		if (this.data.getUnheatedConsumers().contains(consumerPos)) return HeatLevel.NONE;
 
-		return this.data.entrySet()
-				.stream()
-				.filter(entry -> {
-					Set<BlockPos> consumers = entry.getValue().getSecond();
-					return consumers.contains(consumerPos);
-				})
-				.findFirst()
-				.map(entry -> entry.getValue().getFirst().getHeatLevel(this.level, entry.getKey(), consumerPos))
-				.orElse(HeatLevel.NONE);
+		for (Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> entry : this.data.entrySet()) {
+			Set<BlockPos> consumers = entry.getValue().getSecond();
+			// Skip is block pos is not added as consumer pos
+			if (!consumers.contains(consumerPos)) continue;
+			HeatProvider provider = entry.getValue().getFirst();
+			HeatLevel heatLevel = provider.getHeatLevel(this.level, entry.getKey(), consumerPos);
+			return heatLevel;
+		}
+
+		return HeatLevel.NONE;
 	}
 
 	public static void registerDefaults() {
