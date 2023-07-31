@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.api.heat.HeatHandler;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -22,6 +23,7 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -40,15 +42,15 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			return false;
 
 		boolean filterTest = filter.test(recipe.getResultItem(basin.getLevel()
-			.registryAccess()));
+				.registryAccess()));
 		if (recipe instanceof BasinRecipe) {
 			BasinRecipe basinRecipe = (BasinRecipe) recipe;
 			if (basinRecipe.getRollableResults()
-				.isEmpty()
-				&& !basinRecipe.getFluidResults()
+					.isEmpty()
+					&& !basinRecipe.getFluidResults()
 					.isEmpty())
 				filterTest = filter.test(basinRecipe.getFluidResults()
-					.get(0));
+						.get(0));
 		}
 
 		if (!filterTest)
@@ -64,18 +66,22 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 	private static boolean apply(BasinBlockEntity basin, Recipe<?> recipe, boolean test) {
 		boolean isBasinRecipe = recipe instanceof BasinRecipe;
 		IItemHandler availableItems = basin.getCapability(ForgeCapabilities.ITEM_HANDLER)
-			.orElse(null);
+				.orElse(null);
 		IFluidHandler availableFluids = basin.getCapability(ForgeCapabilities.FLUID_HANDLER)
-			.orElse(null);
+				.orElse(null);
 
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = BasinBlockEntity.getHeatLevelOf(basin.getLevel()
-			.getBlockState(basin.getBlockPos()
-				.below(1)));
+		HeatLevel heat = HeatLevel.NONE;
+
+		if (basin.getLevel() instanceof ServerLevel level) {
+			HeatHandler heatHandler = HeatHandler.load(level);
+			heat = heatHandler.getHeatFor(basin.getBlockPos());
+		}
+
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
-			.testBlazeBurner(heat))
+				.testBlazeBurner(heat))
 			return false;
 
 		List<ItemStack> recipeOutputItems = new ArrayList<>();
@@ -83,7 +89,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 		List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
 		List<FluidIngredient> fluidIngredients =
-			isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
+				isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
 
 		for (boolean simulate : Iterate.trueAndFalse) {
 
@@ -93,12 +99,13 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			int[] extractedItemsFromSlot = new int[availableItems.getSlots()];
 			int[] extractedFluidsFromTank = new int[availableFluids.getTanks()];
 
-			Ingredients: for (int i = 0; i < ingredients.size(); i++) {
+			Ingredients:
+			for (int i = 0; i < ingredients.size(); i++) {
 				Ingredient ingredient = ingredients.get(i);
 
 				for (int slot = 0; slot < availableItems.getSlots(); slot++) {
 					if (simulate && availableItems.getStackInSlot(slot)
-						.getCount() <= extractedItemsFromSlot[slot])
+							.getCount() <= extractedItemsFromSlot[slot])
 						continue;
 					ItemStack extracted = availableItems.extractItem(slot, 1, true);
 					if (!ingredient.test(extracted))
@@ -114,7 +121,8 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			}
 
 			boolean fluidsAffected = false;
-			FluidIngredients: for (int i = 0; i < fluidIngredients.size(); i++) {
+			FluidIngredients:
+			for (int i = 0; i < fluidIngredients.size(); i++) {
 				FluidIngredient fluidIngredient = fluidIngredients.get(i);
 				int amountRequired = fluidIngredient.getRequiredAmount();
 
@@ -142,9 +150,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 			if (fluidsAffected) {
 				basin.getBehaviour(SmartFluidTankBehaviour.INPUT)
-					.forEach(TankSegment::onFluidStackChanged);
+						.forEach(TankSegment::onFluidStackChanged);
 				basin.getBehaviour(SmartFluidTankBehaviour.OUTPUT)
-					.forEach(TankSegment::onFluidStackChanged);
+						.forEach(TankSegment::onFluidStackChanged);
 			}
 
 			if (simulate) {
@@ -154,7 +162,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					recipeOutputItems.addAll(basinRecipe.getRemainingItems(basin.getInputInventory()));
 				} else {
 					recipeOutputItems.add(recipe.getResultItem(basin.getLevel()
-						.registryAccess()));
+							.registryAccess()));
 
 					if (recipe instanceof CraftingRecipe craftingRecipe) {
 						recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)));
@@ -171,9 +179,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 	public static BasinRecipe convertShapeless(Recipe<?> recipe) {
 		BasinRecipe basinRecipe =
-			new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId()).withItemIngredients(recipe.getIngredients())
-				.withSingleItemOutput(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()))
-				.build();
+				new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId()).withItemIngredients(recipe.getIngredients())
+						.withSingleItemOutput(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()))
+						.build();
 		return basinRecipe;
 	}
 

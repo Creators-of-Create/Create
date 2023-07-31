@@ -4,12 +4,15 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.heat.IHeatConsumer;
+import com.simibubi.create.api.heat.IHeatProvider;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.logistics.funnel.FunnelBlock;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -49,7 +52,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrenchable {
+public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrenchable, IHeatConsumer {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
 
@@ -75,13 +78,13 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (!context.getLevel().isClientSide)
 			withBlockEntityDo(context.getLevel(), context.getClickedPos(),
-				bte -> bte.onWrenched(context.getClickedFace()));
+					bte -> bte.onWrenched(context.getClickedFace()));
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
+								 BlockHitResult hit) {
 		ItemStack heldItem = player.getItemInHand(handIn);
 
 		return onBlockEntityUse(worldIn, pos, be -> {
@@ -92,11 +95,11 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 					return InteractionResult.SUCCESS;
 
 				if (GenericItemEmptying.canItemBeEmptied(worldIn, heldItem)
-					|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
+						|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
 					return InteractionResult.SUCCESS;
 				if (heldItem.getItem()
-					.equals(Items.SPONGE)
-					&& !be.getCapability(ForgeCapabilities.FLUID_HANDLER)
+						.equals(Items.SPONGE)
+						&& !be.getCapability(ForgeCapabilities.FLUID_HANDLER)
 						.map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE))
 						.orElse(FluidStack.EMPTY)
 						.isEmpty()) {
@@ -112,13 +115,13 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 				if (stackInSlot.isEmpty())
 					continue;
 				player.getInventory()
-					.placeItemBackInInventory(stackInSlot);
+						.placeItemBackInInventory(stackInSlot);
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
 				success = true;
 			}
 			if (success)
 				worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-					1f + Create.RANDOM.nextFloat());
+						1f + Create.RANDOM.nextFloat());
 			be.onEmptied();
 			return InteractionResult.SUCCESS;
 		});
@@ -139,7 +142,7 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 			// Tossed items bypass the quarter-stack limit
 			be.inputInventory.withMaxStackSize(64);
 			ItemStack insertItem = ItemHandlerHelper.insertItem(be.inputInventory, itemEntity.getItem()
-				.copy(), false);
+					.copy(), false);
 			be.inputInventory.withMaxStackSize(16);
 
 			if (insertItem.isEmpty()) {
@@ -181,8 +184,8 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 	@Override
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return getBlockEntityOptional(worldIn, pos).map(BasinBlockEntity::getInputInventory)
-			.map(ItemHelper::calcRedstoneFromInventory)
-			.orElse(0);
+				.map(ItemHelper::calcRedstoneFromInventory)
+				.orElse(0);
 	}
 
 	@Override
@@ -204,7 +207,7 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 			if (FunnelBlock.getFunnelFacing(blockState) == direction)
 				return false;
 		} else if (!blockState.getCollisionShape(world, neighbour)
-			.isEmpty()) {
+				.isEmpty()) {
 			return false;
 		} else {
 			BlockEntity blockEntity = world.getBlockEntity(output);
@@ -215,7 +218,7 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 		}
 
 		DirectBeltInputBehaviour directBeltInputBehaviour =
-			BlockEntityBehaviour.get(world, output, DirectBeltInputBehaviour.TYPE);
+				BlockEntityBehaviour.get(world, output, DirectBeltInputBehaviour.TYPE);
 		if (directBeltInputBehaviour != null)
 			return directBeltInputBehaviour.canInsertFromSide(direction);
 		return false;
@@ -226,4 +229,13 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 		return false;
 	}
 
+	@Override
+	public void onHeatProvided(Level level, IHeatProvider heatProvider, BlockPos heatProviderPos, BlockPos consumerPos) {
+		withBlockEntityDo(level, consumerPos, BasinBlockEntity::notifyChangeOfContents);
+	}
+
+	@Override
+	public boolean isValidSource(Level level, IHeatProvider provider, BlockPos providerPos, BlockPos consumerPos) {
+		return provider.getHeatLevel(level, providerPos, consumerPos).isAtLeast(HeatLevel.SMOULDERING);
+	}
 }

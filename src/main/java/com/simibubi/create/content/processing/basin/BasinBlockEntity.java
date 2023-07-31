@@ -10,14 +10,11 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllParticleTypes;
-import com.simibubi.create.AllTags;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.fluids.FluidFX;
 import com.simibubi.create.content.fluids.particle.FluidParticleData;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
@@ -597,12 +594,6 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	public void readOnlyItems(CompoundTag compound) {
 		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
 		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
-	}
-
-	public static HeatLevel getHeatLevelOf(BlockState state) {
-		if (state.hasProperty(BlazeBurnerBlock.HEAT_LEVEL))
-			return state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
-		return AllTags.AllBlockTags.PASSIVE_BOILER_HEATERS.matches(state) ? HeatLevel.SMOULDERING : HeatLevel.NONE;
 	}
 
 	public Couple<SmartFluidTankBehaviour> getTanks() {

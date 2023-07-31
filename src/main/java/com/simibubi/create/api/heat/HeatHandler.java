@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.utility.HeatDataMap;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -52,7 +53,7 @@ public class HeatHandler extends SavedData {
 			if (provider.getHeatedArea(this.level, pos).isInside(consumerPos)) {
 				BlockState consumerState = this.level.getBlockState(consumerPos);
 				if (consumerState.getBlock() instanceof IHeatConsumer consumer) {
-					if (consumer.isValidSource(provider)) {
+					if (consumer.isValidSource(this.level, provider, pos, consumerPos)) {
 						if (addHeatConsumer(consumerPos, consumer)) {
 							// Success
 							consumers.remove();
@@ -92,7 +93,7 @@ public class HeatHandler extends SavedData {
 				.stream()
 				.filter(entry -> entry.getValue().getFirst().isInHeatRange(this.level, entry.getKey(), consumerPosition))
 				.filter(entry -> entry.getValue().getSecond().size() + 1 < entry.getValue().getFirst().getMaxHeatConsumers(this.level, entry.getKey()))
-				.filter(entry -> consumer.isValidSource(entry.getValue().getFirst()))
+				.filter(entry -> consumer.isValidSource(this.level, entry.getValue().getFirst(), entry.getKey(), consumerPosition))
 				.min((o1, o2) -> {
 					double distance1 = o1.getKey().distSqr(consumerPosition);
 					double distance2 = o2.getKey().distSqr(consumerPosition);
@@ -129,5 +130,20 @@ public class HeatHandler extends SavedData {
 		Pair<IHeatProvider, Set<BlockPos>> removedEntry = this.data.remove(pos);
 		if (removedEntry == null) return;
 		this.unheatedConsumers.addAll(removedEntry.getSecond());
+	}
+
+	public HeatLevel getHeatFor(BlockPos consumerPos) {
+		// No heat if no provider
+		if (this.unheatedConsumers.contains(consumerPos)) return HeatLevel.NONE;
+
+		return this.data.entrySet()
+				.stream()
+				.filter(entry -> {
+					Set<BlockPos> consumers = entry.getValue().getSecond();
+					return consumers.contains(consumerPos);
+				})
+				.findFirst()
+				.map(entry -> entry.getValue().getFirst().getHeatLevel(this.level, entry.getKey(), consumerPos))
+				.orElse(HeatLevel.NONE);
 	}
 }
