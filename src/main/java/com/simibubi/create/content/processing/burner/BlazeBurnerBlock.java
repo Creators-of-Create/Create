@@ -271,8 +271,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 
 	@Override
 	public HeatLevel getHeatLevel(Level level, BlockPos providerPos, BlockPos consumerPos) {
-		BlockState state = level.getBlockState(providerPos);
-		return state.getValue(HEAT_LEVEL);
+		return getHeatLevelOf(level.getBlockState(providerPos));
 	}
 
 	@Override
