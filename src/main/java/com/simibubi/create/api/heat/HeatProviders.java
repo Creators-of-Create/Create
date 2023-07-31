@@ -205,18 +205,15 @@ public class HeatProviders extends SavedData {
 			return false;
 		}
 
-		return addConsumerToProvider(closestProviderEntry.getKey(), closestProviderEntry.getValue().getFirst(), closestProviderEntry.getValue().getSecond(), consumerPosition, consumer);
-	}
+		BlockPos providerPos = closestProviderEntry.getKey();
+		Set<BlockPos> consumers = closestProviderEntry.getValue().getSecond();
 
-	protected boolean addConsumerToProvider(BlockPos providerPos, HeatProvider provider, Set<BlockPos> consumerSet, BlockPos consumerPos, HeatConsumer consumer) {
-		if (consumerSet.add(consumerPos)) {
-			consumer.onHeatProvided(this.level, provider, providerPos, consumerPos);
-			setDirty();
-			return true;
-		}
+		if (!consumers.add(consumerPosition)) return false;
+		HeatProvider heatProvider = closestProviderEntry.getValue().getFirst();
 
+		consumer.onHeatProvided(this.level, heatProvider, providerPos, consumerPosition);
 		setDirty();
-		return false;
+		return true;
 	}
 
 	public void removeHeatConsumer(BlockPos pos) {
@@ -227,7 +224,12 @@ public class HeatProviders extends SavedData {
 	}
 
 	@SubscribeEvent
-	static void onHeatProviderPlaced(final BlockEvent.NeighborNotifyEvent e) {
+	static void onBlockUpdated(final BlockEvent.NeighborNotifyEvent e){
+		checkForProviderRemoval(e);
+		checkForProviderPlacement(e);
+	}
+
+	private static void checkForProviderPlacement(final BlockEvent.NeighborNotifyEvent e) {
 		// Exit if the World is not server side
 		if (!(e.getWorld() instanceof ServerLevel level)) return;
 		// Add Heat Provider
@@ -235,13 +237,15 @@ public class HeatProviders extends SavedData {
 		BlockState state = e.getState();
 		// Exit if no heat provider is registered for this block
 		if (!isHeatProvider(state)) return;
+		// Reset State
+		provider.removeHeatProvider(e.getPos());
+		// Apply new State
 		HeatProvider heatProvider = HEAT_PROVIDERS.get(state.getBlock());
 		provider.addHeatProvider(e.getPos(), heatProvider);
 		provider.setDirty();
 	}
 
-	@SubscribeEvent
-	static void onHeatProviderRemoved(final BlockEvent.NeighborNotifyEvent e) {
+	private static void checkForProviderRemoval(final BlockEvent.NeighborNotifyEvent e) {
 		// Exit if the World is not server side
 		if (!(e.getWorld() instanceof ServerLevel level)) return;
 		// Add Heat Provider
