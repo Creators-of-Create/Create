@@ -94,7 +94,7 @@ public class HeatHandler extends SavedData {
 		Optional<Entry<BlockPos, Pair<IHeatProvider, Set<BlockPos>>>> possibleProvider = this.data.entrySet()
 				.stream()
 				.filter(entry -> entry.getValue().getFirst().isInHeatRange(this.level, entry.getKey(), consumerPosition))
-				.filter(entry -> entry.getValue().getSecond().size() + 1 < entry.getValue().getFirst().getMaxHeatConsumers(this.level, entry.getKey()))
+				.filter(entry -> entry.getValue().getSecond().size() + 1 <= entry.getValue().getFirst().getMaxHeatConsumers(this.level, entry.getKey()))
 				.filter(entry -> consumer.isValidSource(this.level, entry.getValue().getFirst(), entry.getKey(), consumerPosition))
 				.min((o1, o2) -> {
 					double distance1 = o1.getKey().distSqr(consumerPosition);
