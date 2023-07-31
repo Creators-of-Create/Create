@@ -124,4 +124,10 @@ public class HeatHandler extends SavedData {
 	protected static HeatHandler load(Level level, CompoundTag tag) {
 		return new HeatHandler(level, tag);
 	}
+
+	public void removeHeatProvider(BlockPos pos) {
+		Pair<IHeatProvider, Set<BlockPos>> removedEntry = this.data.remove(pos);
+		if (removedEntry == null) return;
+		this.unheatedConsumers.addAll(removedEntry.getSecond());
+	}
 }

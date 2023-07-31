@@ -1,8 +1,11 @@
 package com.simibubi.create.api.heat;
 
+import java.util.Optional;
+
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
@@ -48,5 +51,30 @@ public interface IHeatProvider {
 	 */
 	default int getMaxHeatConsumers(Level level, BlockPos providerPos) {
 		return 1;
+	}
+
+	/**
+	 * Returns the {@link HeatHandler} for this {@link Level} on Server Side or {@link Optional#empty()} on Client Side
+	 */
+	default Optional<HeatHandler> getHeatHandler(Level level) {
+		if (level instanceof ServerLevel serverLevel) {
+			return Optional.of(HeatHandler.load(serverLevel));
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 * Registers the heat provider
+	 */
+	default void addHeatProvider(Level level, BlockPos pos) {
+		getHeatHandler(level).ifPresent(heatHandler -> heatHandler.addHeatProvider(pos, this));
+	}
+
+	/**
+	 * Removes the heat provider
+	 */
+	default void removeHeatProvider(Level level, BlockPos pos) {
+		getHeatHandler(level).ifPresent(heatHandler -> heatHandler.removeHeatProvider(pos));
 	}
 }

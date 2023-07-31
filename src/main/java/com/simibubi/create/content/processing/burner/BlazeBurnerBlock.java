@@ -9,7 +9,6 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.api.heat.HeatHandler;
 import com.simibubi.create.api.heat.IHeatProvider;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -18,7 +17,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
@@ -74,11 +72,14 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 	}
 
 	@Override
-	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
-		if (world.isClientSide)
-			return;
-		HeatHandler heatHandler = HeatHandler.load((ServerLevel) world);
-		heatHandler.addHeatProvider(pos, this);
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean pIsMoving) {
+		addHeatProvider(world, pos);
+	}
+
+	@Override
+	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+		super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+		removeHeatProvider(pLevel, pPos);
 	}
 
 	@Override
