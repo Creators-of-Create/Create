@@ -220,14 +220,10 @@ public class HeatProviders extends SavedData {
 	}
 
 	public void removeHeatConsumer(BlockPos pos) {
-		this.data.getActiveHeatProviders().stream()
-				.filter(entry -> {
-					Set<BlockPos> consumers = entry.getValue().getSecond();
-					return consumers.contains(pos);
-				})
-				.findFirst()
-				.ifPresent(entry -> entry.getValue().getSecond().remove(pos));
-		setDirty();
+		for (Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> entry : this.data.getActiveHeatProviders()) {
+			Set<BlockPos> consumers = entry.getValue().getSecond();
+			if (consumers.remove(pos)) setDirty();
+		}
 	}
 
 	@SubscribeEvent
