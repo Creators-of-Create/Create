@@ -144,6 +144,7 @@ public class HeatProviders extends SavedData {
 
 	public static void registerDefaults() {
 		registerHeatProvider(AllBlocks.BLAZE_BURNER.get(), (level1, providerPos, consumerPos) -> BlazeBurnerBlock.getHeatLevelOf(level1.getBlockState(providerPos)));
+		registerHeatProvider(AllBlocks.LIT_BLAZE_BURNER.get(), (level1, providerPos, consumerPos) -> HeatLevel.SMOULDERING);
 	}
 
 	public void removeHeatProvider(BlockPos pos) {
