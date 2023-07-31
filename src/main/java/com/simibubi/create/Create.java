@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
+import com.simibubi.create.api.heat.HeatProviders;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.compat.curios.Curios;
@@ -165,6 +166,7 @@ public class Create {
 			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
+			HeatProviders.registerDefaults();
 		});
 	}
 

@@ -9,7 +9,6 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.api.heat.HeatProvider;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Lang;
@@ -40,7 +39,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -58,7 +56,7 @@ import net.minecraftforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<BlazeBurnerBlockEntity>, IWrenchable, HeatProvider {
+public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<BlazeBurnerBlockEntity>, IWrenchable {
 
 	public static final EnumProperty<HeatLevel> HEAT_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
@@ -71,17 +69,6 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(HEAT_LEVEL, FACING);
-	}
-
-	@Override
-	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
-		addHeatProvider(world, pos);
-	}
-
-	@Override
-	public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-		super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-		removeHeatProvider(pLevel, pPos);
 	}
 
 	@Override
@@ -275,16 +262,6 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 		}
 		builder.withPool(poolBuilder.setRolls(ConstantValue.exactly(1)));
 		return builder;
-	}
-
-	@Override
-	public HeatLevel getHeatLevel(Level level, BlockPos providerPos, BlockPos consumerPos) {
-		return getHeatLevelOf(level.getBlockState(providerPos));
-	}
-
-	@Override
-	public BoundingBox getHeatedArea(Level level, BlockPos providerPos) {
-		return new BoundingBox(providerPos.above());
 	}
 
 	public enum HeatLevel implements StringRepresentable {

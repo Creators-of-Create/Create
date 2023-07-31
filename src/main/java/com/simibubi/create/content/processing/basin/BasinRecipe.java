@@ -8,7 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.api.heat.HeatHandler;
+import com.simibubi.create.api.heat.HeatProviders;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -75,8 +75,8 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		HeatLevel heat = HeatLevel.NONE;
 
 		if (basin.getLevel() instanceof ServerLevel level) {
-			HeatHandler heatHandler = HeatHandler.load(level);
-			heat = heatHandler.getHeatFor(basin.getBlockPos());
+			HeatProviders heatProviders = HeatProviders.load(level);
+			heat = heatProviders.getHeatFor(basin.getBlockPos());
 		}
 
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()

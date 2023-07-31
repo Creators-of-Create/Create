@@ -11,7 +11,8 @@ import org.apache.logging.log4j.util.TriConsumer;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.api.heat.HeatConsumer;
-import com.simibubi.create.api.heat.HeatProvider;
+import com.simibubi.create.api.heat.HeatProviders;
+import com.simibubi.create.api.heat.HeatProviders.HeatProvider;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
@@ -91,7 +92,7 @@ public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockP
 			BlockPos entryKey = constructBlockPos(entryRoot.getCompound(ENTRY_KEY));
 			BlockState providerState = level.getBlockState(entryKey);
 			// Validate Block
-			if (!(providerState.getBlock() instanceof HeatProvider heatProvider)) {
+			if (!HeatProviders.isHeatProvider(providerState)) {
 				Create.LOGGER.warn("Error on loading heat provider at {}. {} is not an instance of IHeatProvider", entryKey.toShortString(), providerState);
 				return;
 			}
@@ -99,7 +100,7 @@ public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockP
 			ListTag consumerTags = entryRoot.getList(CONSUMER_TAGS, Tag.TAG_COMPOUND);
 			Set<BlockPos> consumers = new HashSet<>();
 			consumerTags.forEach(t -> getSaveConsumerPos(level, t).ifPresent(consumers::add));
-			put(entryKey, heatProvider, consumers);
+			put(entryKey, HeatProviders.getHeatProviderOf(providerState), consumers);
 		});
 	}
 

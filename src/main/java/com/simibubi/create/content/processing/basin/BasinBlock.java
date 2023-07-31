@@ -5,7 +5,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.heat.HeatConsumer;
-import com.simibubi.create.api.heat.HeatProvider;
+import com.simibubi.create.api.heat.HeatProviders.HeatProvider;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
