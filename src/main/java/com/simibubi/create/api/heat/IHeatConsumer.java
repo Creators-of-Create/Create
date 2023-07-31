@@ -5,6 +5,7 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface IHeatConsumer {
 	void onHeatProvided(Level level, IHeatProvider heatProvider, BlockPos heatProviderPos, BlockPos consumerPos);
@@ -25,5 +26,10 @@ public interface IHeatConsumer {
 
 	default void removeHeatConsumer(Level level, BlockPos pos) {
 		getHeatHandler(level).ifPresent(heatHandler -> heatHandler.removeHeatConsumer(pos));
+	}
+
+	static boolean isValidConsumer(Level level, BlockPos pos) {
+		BlockState state = level.getBlockState(pos);
+		return state.getBlock() instanceof IHeatConsumer;
 	}
 }

@@ -1,9 +1,11 @@
 package com.simibubi.create.foundation.heat;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.api.heat.IHeatConsumer;
 import com.simibubi.create.api.heat.IHeatProvider;
 
 import com.simibubi.create.foundation.utility.map.DoubleValuesHashMap;
@@ -21,8 +23,30 @@ public class HeatDataMap extends DoubleValuesHashMap<BlockPos, IHeatProvider, Se
 	private static final String BLOCK_POS_Y = "y";
 	private static final String BLOCK_POS_Z = "z";
 	private static final String CONSUMER_TAGS = "consumers";
+	private static final String UNHEATED_CONSUMERS = "unheated";
+	private static final String HEAT_MAP = "heated";
+	private final Set<BlockPos> unheatedConsumers = new HashSet<>();
 
-	public ListTag serializeNBT() {
+	public CompoundTag serializeNBT() {
+		CompoundTag rootTag = new CompoundTag();
+		rootTag.put(HEAT_MAP, serializeHeatMap());
+		rootTag.put(UNHEATED_CONSUMERS, serializeUnheatedSet());
+		return rootTag;
+	}
+
+	private ListTag serializeUnheatedSet() {
+		ListTag list = new ListTag();
+
+		unheatedConsumers.forEach(pos -> {
+			CompoundTag consumerPosTag = new CompoundTag();
+			applyBlockPos(consumerPosTag, pos);
+			list.add(consumerPosTag);
+		});
+
+		return list;
+	}
+
+	private ListTag serializeHeatMap() {
 		ListTag list = new ListTag();
 
 		forEach((providerPos, provider, consumers) -> {
@@ -44,11 +68,21 @@ public class HeatDataMap extends DoubleValuesHashMap<BlockPos, IHeatProvider, Se
 		return list;
 	}
 
-	public void deserializeNBT(final Level level, final ListTag nbt) {
+	public void deserializeNBT(final Level level, final CompoundTag nbt) {
+		deserializeHeatMap(level, nbt.getList(HEAT_MAP, Tag.TAG_COMPOUND));
+		deserializeUnheatedSet(level, nbt.getList(UNHEATED_CONSUMERS, Tag.TAG_COMPOUND));
+	}
+
+	private void deserializeUnheatedSet(final Level level, final ListTag tag) {
+		this.unheatedConsumers.clear();
+		tag.forEach(t -> getSaveConsumerPos(level,t).ifPresent(unheatedConsumers::add));
+	}
+
+	private void deserializeHeatMap(final Level level, final ListTag tag) {
 		// Ensure no data exists
 		this.clear();
 		// load data from tag
-		nbt.forEach(entryTag -> {
+		tag.forEach(entryTag -> {
 			CompoundTag entryRoot = (CompoundTag) entryTag;
 			BlockPos entryKey = constructBlockPos(entryRoot.getCompound(ENTRY_KEY));
 			BlockState providerState = level.getBlockState(entryKey);
@@ -60,14 +94,23 @@ public class HeatDataMap extends DoubleValuesHashMap<BlockPos, IHeatProvider, Se
 			// Add entries
 			ListTag consumerTags = entryRoot.getList(CONSUMER_TAGS, Tag.TAG_COMPOUND);
 			Set<BlockPos> consumers = new HashSet<>();
-			consumerTags.forEach(consumerTag -> {
-				CompoundTag consumerEntry = (CompoundTag) consumerTag;
-				BlockPos consumerPos = constructBlockPos(consumerEntry);
-				consumers.add(consumerPos);
-			});
-
+			consumerTags.forEach(t -> getSaveConsumerPos(level,t).ifPresent(consumers::add));
 			put(entryKey, heatProvider, consumers);
 		});
+	}
+
+	private Optional<BlockPos> getSaveConsumerPos(Level level, Tag tag) {
+		CompoundTag consumerTag = (CompoundTag) tag;
+		BlockPos consumerPos = constructBlockPos(consumerTag);
+		if (!IHeatConsumer.isValidConsumer(level, consumerPos)) {
+			Create.LOGGER.warn("Error on loading heat consumer at {}. Invalid Block.", consumerPos);
+			return Optional.empty();
+		}
+		return Optional.of(consumerPos);
+	}
+
+	public Set<BlockPos> getUnheatedConsumers() {
+		return unheatedConsumers;
 	}
 
 	private void applyBlockPos(CompoundTag tag, BlockPos pos) {

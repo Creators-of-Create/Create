@@ -1,28 +1,27 @@
 package com.simibubi.create.api.heat;
 
-import com.simibubi.create.Create;
-import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.heat.HeatDataMap;
-import com.simibubi.create.foundation.utility.Pair;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.saveddata.SavedData;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import com.simibubi.create.Create;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.foundation.heat.HeatDataMap;
+import com.simibubi.create.foundation.utility.Pair;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.saveddata.SavedData;
+
 public class HeatHandler extends SavedData {
     private static final String KEY = "create_heat";
-    private static final String DATA_KEY = "create_heat_data";
+    private static final String DATA_KEY = "heat_data";
     private final HeatDataMap data = new HeatDataMap();
-    private final Set<BlockPos> unheatedConsumers = new HashSet<>();
     private final Level level;
 
     protected HeatHandler(Level level) {
@@ -33,7 +32,7 @@ public class HeatHandler extends SavedData {
         this(level);
         // Load data if present
         if (tag.contains(DATA_KEY)) {
-            data.deserializeNBT(level, tag.getList(DATA_KEY, Tag.TAG_COMPOUND));
+            data.deserializeNBT(level, tag.getCompound(DATA_KEY));
         }
     }
 
@@ -46,7 +45,7 @@ public class HeatHandler extends SavedData {
     public void addHeatProvider(BlockPos pos, IHeatProvider provider) {
         this.data.put(pos, provider, new HashSet<>());
         // search for consumers in range without a provider
-        Iterator<BlockPos> consumers = this.unheatedConsumers.iterator();
+        Iterator<BlockPos> consumers = this.data.getUnheatedConsumers().iterator();
         while (consumers.hasNext()) {
             BlockPos consumerPos = consumers.next();
             if (provider.getHeatedArea(this.level, pos).isInside(consumerPos)) {
@@ -102,7 +101,7 @@ public class HeatHandler extends SavedData {
                 });
         // Exit if no valid provider exists
         if (possibleProvider.isEmpty()) {
-            unheatedConsumers.add(consumerPosition);
+			this.data.getUnheatedConsumers().add(consumerPosition);
             setDirty();
             return false;
         }
@@ -132,13 +131,13 @@ public class HeatHandler extends SavedData {
     public void removeHeatProvider(BlockPos pos) {
         Pair<IHeatProvider, Set<BlockPos>> removedEntry = this.data.remove(pos);
         if (removedEntry == null) return;
-        this.unheatedConsumers.addAll(removedEntry.getSecond());
+		this.data.getUnheatedConsumers().addAll(removedEntry.getSecond());
         setDirty();
     }
 
     public HeatLevel getHeatFor(BlockPos consumerPos) {
         // No heat if no provider
-        if (this.unheatedConsumers.contains(consumerPos)) return HeatLevel.NONE;
+        if (this.data.getUnheatedConsumers().contains(consumerPos)) return HeatLevel.NONE;
 
         return this.data.entrySet()
                 .stream()
