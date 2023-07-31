@@ -4,12 +4,15 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.heat.IHeatConsumer;
+import com.simibubi.create.api.heat.IHeatProvider;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.logistics.funnel.FunnelBlock;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -49,7 +52,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrenchable {
+public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrenchable, IHeatConsumer {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
 
@@ -169,8 +172,15 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 	}
 
 	@Override
+	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+		super.onPlace(pState, pLevel, pPos, pOldState, pIsMoving);
+		addHeatConsumer(pLevel, pPos);
+	}
+
+	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		IBE.onRemove(state, worldIn, pos, newState);
+		removeHeatConsumer(worldIn, pos);
 	}
 
 	@Override
@@ -226,4 +236,13 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 		return false;
 	}
 
+	@Override
+	public void onHeatProvided(Level level, IHeatProvider heatProvider, BlockPos heatProviderPos, BlockPos consumerPos) {
+		withBlockEntityDo(level, consumerPos, BasinBlockEntity::notifyChangeOfContents);
+	}
+
+	@Override
+	public boolean isValidSource(Level level, IHeatProvider provider, BlockPos providerPos, BlockPos consumerPos) {
+		return provider.getHeatLevel(level, providerPos, consumerPos).isAtLeast(HeatLevel.SMOULDERING);
+	}
 }

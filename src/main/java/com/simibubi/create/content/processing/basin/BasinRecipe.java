@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.api.heat.HeatHandler;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -21,6 +22,7 @@ import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -70,9 +72,13 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = BasinBlockEntity.getHeatLevelOf(basin.getLevel()
-			.getBlockState(basin.getBlockPos()
-				.below(1)));
+		HeatLevel heat = HeatLevel.NONE;
+
+		if (basin.getLevel() instanceof ServerLevel level) {
+			HeatHandler heatHandler = HeatHandler.load(level);
+			heat = heatHandler.getHeatFor(basin.getBlockPos());
+		}
+
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
 			.testBlazeBurner(heat))
 			return false;

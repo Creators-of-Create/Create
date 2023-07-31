@@ -5,16 +5,19 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
+    "BaseFireBlockMixin",
+    "CampfireMixin",
     "ClientboundMapItemDataPacketMixin",
     "ContraptionDriverInteractMixin",
-    "WaterWheelFluidSpreadMixin",
     "CustomItemUseEffectsMixin",
     "EnchantmentHelperMixin",
     "EntityMixin",
     "LavaSwimmingMixin",
+    "MagmaBlockMixin",
     "MainMixin",
     "MapItemSavedDataMixin",
     "TestCommandMixin",
+    "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
@@ -24,6 +27,10 @@
     "accessor.ServerLevelAccessor"
   ],
   "client": [
+    "accessor.AgeableListModelAccessor",
+    "accessor.GameRendererAccessor",
+    "accessor.HumanoidArmorLayerAccessor",
+    "accessor.ParticleEngineAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",
@@ -35,11 +42,7 @@
     "client.MapRendererMapInstanceMixin",
     "client.ModelDataRefreshMixin",
     "client.PlayerRendererMixin",
-    "client.WindowResizeMixin",
-    "accessor.AgeableListModelAccessor",
-    "accessor.GameRendererAccessor",
-    "accessor.HumanoidArmorLayerAccessor",
-    "accessor.ParticleEngineAccessor"
+    "client.WindowResizeMixin"
   ],
   "injectors": {
     "defaultRequire": 1
