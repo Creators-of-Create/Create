@@ -1,14 +1,18 @@
 package com.simibubi.create.foundation.heat;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.util.TriConsumer;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.api.heat.HeatConsumer;
 import com.simibubi.create.api.heat.HeatProvider;
-
-import com.simibubi.create.foundation.utility.map.DoubleValuesHashMap;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +21,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class HeatDataMap extends DoubleValuesHashMap<BlockPos, HeatProvider, Set<BlockPos>> {
+public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockPos>>> {
 	private static final String ENTRY_KEY = "block_pos";
 	private static final String BLOCK_POS_X = "x";
 	private static final String BLOCK_POS_Y = "y";
@@ -75,7 +79,7 @@ public class HeatDataMap extends DoubleValuesHashMap<BlockPos, HeatProvider, Set
 
 	private void deserializeUnheatedSet(final Level level, final ListTag tag) {
 		this.unheatedConsumers.clear();
-		tag.forEach(t -> getSaveConsumerPos(level,t).ifPresent(unheatedConsumers::add));
+		tag.forEach(t -> getSaveConsumerPos(level, t).ifPresent(unheatedConsumers::add));
 	}
 
 	private void deserializeHeatMap(final Level level, final ListTag tag) {
@@ -94,7 +98,7 @@ public class HeatDataMap extends DoubleValuesHashMap<BlockPos, HeatProvider, Set
 			// Add entries
 			ListTag consumerTags = entryRoot.getList(CONSUMER_TAGS, Tag.TAG_COMPOUND);
 			Set<BlockPos> consumers = new HashSet<>();
-			consumerTags.forEach(t -> getSaveConsumerPos(level,t).ifPresent(consumers::add));
+			consumerTags.forEach(t -> getSaveConsumerPos(level, t).ifPresent(consumers::add));
 			put(entryKey, heatProvider, consumers);
 		});
 	}
@@ -121,5 +125,14 @@ public class HeatDataMap extends DoubleValuesHashMap<BlockPos, HeatProvider, Set
 
 	private BlockPos constructBlockPos(CompoundTag tag) {
 		return new BlockPos(tag.getInt(BLOCK_POS_X), tag.getInt(BLOCK_POS_Y), tag.getInt(BLOCK_POS_Z));
+	}
+
+	public void forEach(TriConsumer<BlockPos, HeatProvider, Set<BlockPos>> action) {
+		forEach((k, v1V2Pair) -> action.accept(k, v1V2Pair.getFirst(), v1V2Pair.getSecond()));
+	}
+
+	@Nullable
+	public Pair<HeatProvider, Set<BlockPos>> put(BlockPos key, HeatProvider value1, Set<BlockPos> value2) {
+		return put(key, Pair.of(value1, value2));
 	}
 }
