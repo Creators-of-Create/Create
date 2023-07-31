@@ -146,4 +146,14 @@ public class HeatHandler extends SavedData {
 				.map(entry -> entry.getValue().getFirst().getHeatLevel(this.level, entry.getKey(), consumerPos))
 				.orElse(HeatLevel.NONE);
 	}
+
+	public void removeHeatConsumer(BlockPos pos) {
+		this.data.entrySet().stream()
+				.filter(entry -> {
+					Set<BlockPos> consumers = entry.getValue().getSecond();
+					return consumers.contains(pos);
+				})
+				.findFirst()
+				.ifPresent(entry -> entry.getValue().getSecond().remove(pos));
+	}
 }

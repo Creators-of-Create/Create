@@ -174,6 +174,13 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		IBE.onRemove(state, worldIn, pos, newState);
+		removeHeatConsumer(worldIn, pos);
+	}
+
+	@Override
+	public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+		super.onPlace(pState, pLevel, pPos, pOldState, pIsMoving);
+		addHeatConsumer(pLevel, pPos);
 	}
 
 	@Override
