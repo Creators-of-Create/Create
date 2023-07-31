@@ -67,6 +67,8 @@ public class HeatHandler extends SavedData {
 				}
 			}
 		}
+
+		setDirty();
 	}
 
 	/**
@@ -102,6 +104,7 @@ public class HeatHandler extends SavedData {
 		// Exit if no valid provider exists
 		if (possibleProvider.isEmpty()) {
 			unheatedConsumers.add(consumerPosition);
+			setDirty();
 			return false;
 		}
 
@@ -110,6 +113,7 @@ public class HeatHandler extends SavedData {
 	}
 
 	protected boolean addConsumerToProvider(BlockPos providerPos, IHeatProvider provider, Set<BlockPos> consumerSet, BlockPos consumerPos, IHeatConsumer consumer) {
+		setDirty();
 		if (consumerSet.add(consumerPos)) {
 			consumer.onHeatProvided(this.level, provider, providerPos, consumerPos);
 			return true;
@@ -130,6 +134,7 @@ public class HeatHandler extends SavedData {
 		Pair<IHeatProvider, Set<BlockPos>> removedEntry = this.data.remove(pos);
 		if (removedEntry == null) return;
 		this.unheatedConsumers.addAll(removedEntry.getSecond());
+		setDirty();
 	}
 
 	public HeatLevel getHeatFor(BlockPos consumerPos) {
@@ -155,5 +160,6 @@ public class HeatHandler extends SavedData {
 				})
 				.findFirst()
 				.ifPresent(entry -> entry.getValue().getSecond().remove(pos));
+		setDirty();
 	}
 }
