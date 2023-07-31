@@ -3,7 +3,6 @@ package com.simibubi.create.api.heat;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -174,25 +173,33 @@ public class HeatProviders extends SavedData {
 	 */
 	public boolean addHeatConsumer(BlockPos consumerPosition, HeatConsumer consumer) {
 		// Get the closest possible heat provider
-		Optional<Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>>> possibleProvider = this.data.entrySet()
-				.stream()
-				.filter(entry -> entry.getValue().getFirst().isInHeatedRange(this.level, entry.getKey(), consumerPosition))
-				.filter(entry -> entry.getValue().getSecond().size() + 1 <= entry.getValue().getFirst().getMaxConsumers(this.level, entry.getKey()))
-				.filter(entry -> consumer.isValidSource(this.level, entry.getValue().getFirst(), entry.getKey(), consumerPosition))
-				.min((o1, o2) -> {
-					double distance1 = o1.getKey().distSqr(consumerPosition);
-					double distance2 = o2.getKey().distSqr(consumerPosition);
-					return Double.compare(distance1, distance2);
-				});
+		Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> closestProviderEntry = null;
+
+		for (Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> entry : this.data.entrySet()) {
+			BlockPos providerPosition = entry.getKey();
+			HeatProvider provider = entry.getValue().getFirst();
+			Set<BlockPos> consumerSet = entry.getValue().getSecond();
+			// Skip if consumer is out of range
+			if (!provider.isInHeatedRange(this.level, providerPosition, consumerPosition)) continue;
+			// Skip if the provider has no capacity left
+			if (consumerSet.size() + 1 > provider.getMaxConsumers(this.level, providerPosition)) continue;
+			// Skip is the provider is not a valid source for the consumer
+			if (!consumer.isValidSource(this.level, provider, providerPosition, consumerPosition)) continue;
+			double closestDistance = closestProviderEntry.getKey().distSqr(consumerPosition);
+			double currentDistance = providerPosition.distSqr(consumerPosition);
+			// Skip if the provider is further away
+			if (currentDistance >= closestDistance) continue;
+			closestProviderEntry = entry;
+		}
+
 		// Exit if no valid provider exists
-		if (possibleProvider.isEmpty()) {
+		if (closestProviderEntry == null) {
 			this.data.getUnheatedConsumers().add(consumerPosition);
 			setDirty();
 			return false;
 		}
 
-		Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> providerEntry = possibleProvider.get();
-		return addConsumerToProvider(providerEntry.getKey(), providerEntry.getValue().getFirst(), providerEntry.getValue().getSecond(), consumerPosition, consumer);
+		return addConsumerToProvider(closestProviderEntry.getKey(), closestProviderEntry.getValue().getFirst(), closestProviderEntry.getValue().getSecond(), consumerPosition, consumer);
 	}
 
 	protected boolean addConsumerToProvider(BlockPos providerPos, HeatProvider provider, Set<BlockPos> consumerSet, BlockPos consumerPos, HeatConsumer consumer) {
