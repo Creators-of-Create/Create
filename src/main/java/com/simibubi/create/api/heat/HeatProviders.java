@@ -96,31 +96,32 @@ public class HeatProviders extends SavedData {
 	}
 
 	public boolean isHeatProvider(BlockPos pos) {
-		return this.data.containsKey(pos);
+		return this.data.containsProviderAt(pos);
 	}
 
 	protected void addHeatProvider(BlockPos pos, HeatProvider provider) {
-		this.data.put(pos, provider, new HashSet<>());
+		this.data.storeProvider(pos, provider, new HashSet<>());
 		// search for consumers in range without a provider
 		Iterator<BlockPos> consumers = this.data.getUnheatedConsumers().iterator();
 		while (consumers.hasNext()) {
 			BlockPos consumerPos = consumers.next();
-			if (provider.getHeatedArea(this.level, pos).isInside(consumerPos)) {
-				BlockState consumerState = this.level.getBlockState(consumerPos);
-				if (consumerState.getBlock() instanceof HeatConsumer consumer) {
-					if (consumer.isValidSource(this.level, provider, pos, consumerPos)) {
-						if (addHeatConsumer(consumerPos, consumer)) {
-							// Success
-							consumers.remove();
-							break;
-						}
-					}
-				} else {
-					// Remove invalid consumers
-					Create.LOGGER.warn("Removed invalid pending heat consumer at {}", consumerPos);
-					consumers.remove();
-				}
+
+			if (!provider.getHeatedArea(this.level, pos).isInside(consumerPos)) continue;
+			BlockState consumerState = this.level.getBlockState(consumerPos);
+
+			if (!(consumerState.getBlock() instanceof HeatConsumer consumer)) {
+				// Remove invalid consumers
+				Create.LOGGER.warn("Removed invalid pending heat consumer at {}", consumerPos);
+				consumers.remove();
+				continue;
 			}
+
+			if (!consumer.isValidSource(this.level, provider, pos, consumerPos)) continue;
+
+			if (!addHeatConsumer(consumerPos, consumer)) continue;
+			// Success
+			consumers.remove();
+			break;
 		}
 
 		setDirty();
@@ -130,7 +131,7 @@ public class HeatProviders extends SavedData {
 		// No heat if no provider
 		if (this.data.getUnheatedConsumers().contains(consumerPos)) return HeatLevel.NONE;
 
-		for (Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> entry : this.data.entrySet()) {
+		for (Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> entry : this.data.getActiveHeatProviders()) {
 			Set<BlockPos> consumers = entry.getValue().getSecond();
 			// Skip is block pos is not added as consumer pos
 			if (!consumers.contains(consumerPos)) continue;
@@ -148,7 +149,7 @@ public class HeatProviders extends SavedData {
 	}
 
 	public void removeHeatProvider(BlockPos pos) {
-		Pair<HeatProvider, Set<BlockPos>> removedEntry = this.data.remove(pos);
+		Pair<HeatProvider, Set<BlockPos>> removedEntry = this.data.removeHeatProvider(pos);
 		if (removedEntry == null) return;
 		this.data.getUnheatedConsumers().addAll(removedEntry.getSecond());
 		setDirty();
@@ -176,7 +177,7 @@ public class HeatProviders extends SavedData {
 		// Get the closest possible heat provider
 		Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> closestProviderEntry = null;
 
-		for (Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> entry : this.data.entrySet()) {
+		for (Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> entry : this.data.getActiveHeatProviders()) {
 			BlockPos providerPosition = entry.getKey();
 			HeatProvider provider = entry.getValue().getFirst();
 			Set<BlockPos> consumerSet = entry.getValue().getSecond();
@@ -208,17 +209,18 @@ public class HeatProviders extends SavedData {
 	}
 
 	protected boolean addConsumerToProvider(BlockPos providerPos, HeatProvider provider, Set<BlockPos> consumerSet, BlockPos consumerPos, HeatConsumer consumer) {
-		setDirty();
 		if (consumerSet.add(consumerPos)) {
 			consumer.onHeatProvided(this.level, provider, providerPos, consumerPos);
+			setDirty();
 			return true;
 		}
 
+		setDirty();
 		return false;
 	}
 
 	public void removeHeatConsumer(BlockPos pos) {
-		this.data.entrySet().stream()
+		this.data.getActiveHeatProviders().stream()
 				.filter(entry -> {
 					Set<BlockPos> consumers = entry.getValue().getSecond();
 					return consumers.contains(pos);
@@ -239,6 +241,7 @@ public class HeatProviders extends SavedData {
 		if (!isHeatProvider(state)) return;
 		HeatProvider heatProvider = HEAT_PROVIDERS.get(state.getBlock());
 		provider.addHeatProvider(e.getPos(), heatProvider);
+		provider.setDirty();
 	}
 
 	@SubscribeEvent
@@ -246,11 +249,12 @@ public class HeatProviders extends SavedData {
 		// Exit if the World is not server side
 		if (!(e.getWorld() instanceof ServerLevel level)) return;
 		// Add Heat Provider
-		HeatProviders provider = load(level);
-		// Exit if no provider was at the location
-		if (!provider.isHeatProvider(e.getPos())) return;
+		// Exit if the provider is at the location
+		if (isHeatProvider(e.getState())) return;
 		// Remove heat provider
+		HeatProviders provider = load(level);
 		provider.removeHeatProvider(e.getPos());
+		provider.setDirty();
 	}
 
 	@FunctionalInterface

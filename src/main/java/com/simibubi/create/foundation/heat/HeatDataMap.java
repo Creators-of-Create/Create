@@ -2,6 +2,8 @@ package com.simibubi.create.foundation.heat;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,7 +24,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockPos>>> {
+public class HeatDataMap {
 	private static final String ENTRY_KEY = "block_pos";
 	private static final String BLOCK_POS_X = "x";
 	private static final String BLOCK_POS_Y = "y";
@@ -31,6 +33,7 @@ public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockP
 	private static final String UNHEATED_CONSUMERS = "unheated";
 	private static final String HEAT_MAP = "heated";
 	private final Set<BlockPos> unheatedConsumers = new HashSet<>();
+	private final Map<BlockPos, Pair<HeatProvider, Set<BlockPos>>> heatProviders = new HashMap<>();
 
 	public CompoundTag serializeNBT() {
 		CompoundTag rootTag = new CompoundTag();
@@ -68,6 +71,7 @@ public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockP
 				consumerTags.add(consumerPosTag);
 			});
 			entryRoot.put(CONSUMER_TAGS, consumerTags);
+			list.add(entryRoot);
 		});
 
 		return list;
@@ -85,7 +89,7 @@ public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockP
 
 	private void deserializeHeatMap(final Level level, final ListTag tag) {
 		// Ensure no data exists
-		this.clear();
+		this.heatProviders.clear();
 		// load data from tag
 		tag.forEach(entryTag -> {
 			CompoundTag entryRoot = (CompoundTag) entryTag;
@@ -100,7 +104,7 @@ public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockP
 			ListTag consumerTags = entryRoot.getList(CONSUMER_TAGS, Tag.TAG_COMPOUND);
 			Set<BlockPos> consumers = new HashSet<>();
 			consumerTags.forEach(t -> getSaveConsumerPos(level, t).ifPresent(consumers::add));
-			put(entryKey, HeatProviders.getHeatProviderOf(providerState), consumers);
+			storeProvider(entryKey, HeatProviders.getHeatProviderOf(providerState), consumers);
 		});
 	}
 
@@ -129,11 +133,23 @@ public class HeatDataMap extends HashMap<BlockPos, Pair<HeatProvider, Set<BlockP
 	}
 
 	public void forEach(TriConsumer<BlockPos, HeatProvider, Set<BlockPos>> action) {
-		forEach((k, v1V2Pair) -> action.accept(k, v1V2Pair.getFirst(), v1V2Pair.getSecond()));
+		this.heatProviders.forEach((k, v1V2Pair) -> action.accept(k, v1V2Pair.getFirst(), v1V2Pair.getSecond()));
 	}
 
 	@Nullable
-	public Pair<HeatProvider, Set<BlockPos>> put(BlockPos key, HeatProvider value1, Set<BlockPos> value2) {
-		return put(key, Pair.of(value1, value2));
+	public Pair<HeatProvider, Set<BlockPos>> storeProvider(BlockPos key, HeatProvider value1, Set<BlockPos> value2) {
+		return this.heatProviders.put(key, Pair.of(value1, value2));
+	}
+
+	public boolean containsProviderAt(BlockPos pos) {
+		return this.heatProviders.containsKey(pos);
+	}
+
+	public Set<Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>>> getActiveHeatProviders() {
+		return this.heatProviders.entrySet();
+	}
+
+	public Pair<HeatProvider, Set<BlockPos>> removeHeatProvider(BlockPos pos) {
+		return this.heatProviders.remove(pos);
 	}
 }
