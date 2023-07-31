@@ -12,14 +12,14 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 /**
  * Interface used by heat producing objects.
  * <p>
- * All {@link IHeatProvider} must register themselves when being "activated" to the SavedHeatData
+ * All {@link HeatProvider} must register themselves when being "activated" to the SavedHeatData
  */
-public interface IHeatProvider {
+public interface HeatProvider {
 	/**
 	 * Get the current {@link HeatLevel}
 	 *
-	 * @param level       Level the {@link IHeatProvider} is in
-	 * @param providerPos Position of the {@link IHeatProvider}
+	 * @param level       Level the {@link HeatProvider} is in
+	 * @param providerPos Position of the {@link HeatProvider}
 	 * @param consumerPos Position of the heat-consuming block
 	 */
 	HeatLevel getHeatLevel(Level level, BlockPos providerPos, BlockPos consumerPos);
@@ -27,16 +27,16 @@ public interface IHeatProvider {
 	/**
 	 * Get the max range this block can heat
 	 *
-	 * @param level       Level the {@link IHeatProvider} is in
-	 * @param providerPos Position of the {@link IHeatProvider}
+	 * @param level       Level the {@link HeatProvider} is in
+	 * @param providerPos Position of the {@link HeatProvider}
 	 */
 	BoundingBox getHeatedArea(Level level, BlockPos providerPos);
 
 	/**
-	 * Allows you to check if the heat-consuming block is in range to get heated by this {@link IHeatProvider}
+	 * Allows you to check if the heat-consuming block is in range to get heated by this {@link HeatProvider}
 	 *
-	 * @param level       Level the {@link IHeatProvider} is in
-	 * @param providerPos Position of the {@link IHeatProvider}
+	 * @param level       Level the {@link HeatProvider} is in
+	 * @param providerPos Position of the {@link HeatProvider}
 	 * @param consumerPos Position of the heat-consuming block
 	 */
 	default boolean isInHeatRange(Level level, BlockPos providerPos, BlockPos consumerPos) {
@@ -46,8 +46,8 @@ public interface IHeatProvider {
 	/**
 	 * Returns the max amount of heat-consuming blocks.
 	 *
-	 * @param level       Level the {@link IHeatProvider} is in
-	 * @param providerPos Position of the {@link IHeatProvider}
+	 * @param level       Level the {@link HeatProvider} is in
+	 * @param providerPos Position of the {@link HeatProvider}
 	 */
 	default int getMaxHeatConsumers(Level level, BlockPos providerPos) {
 		return 1;

@@ -4,8 +4,8 @@ import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.heat.IHeatConsumer;
-import com.simibubi.create.api.heat.IHeatProvider;
+import com.simibubi.create.api.heat.HeatConsumer;
+import com.simibubi.create.api.heat.HeatProvider;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
@@ -52,7 +52,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrenchable, IHeatConsumer {
+public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrenchable, HeatConsumer {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
 
@@ -237,12 +237,12 @@ public class BasinBlock extends Block implements IBE<BasinBlockEntity>, IWrencha
 	}
 
 	@Override
-	public void onHeatProvided(Level level, IHeatProvider heatProvider, BlockPos heatProviderPos, BlockPos consumerPos) {
+	public void onHeatProvided(Level level, HeatProvider heatProvider, BlockPos heatProviderPos, BlockPos consumerPos) {
 		withBlockEntityDo(level, consumerPos, BasinBlockEntity::notifyChangeOfContents);
 	}
 
 	@Override
-	public boolean isValidSource(Level level, IHeatProvider provider, BlockPos providerPos, BlockPos consumerPos) {
+	public boolean isValidSource(Level level, HeatProvider provider, BlockPos providerPos, BlockPos consumerPos) {
 		return provider.getHeatLevel(level, providerPos, consumerPos).isAtLeast(HeatLevel.SMOULDERING);
 	}
 }

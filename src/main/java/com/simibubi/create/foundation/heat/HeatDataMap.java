@@ -5,8 +5,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.api.heat.IHeatConsumer;
-import com.simibubi.create.api.heat.IHeatProvider;
+import com.simibubi.create.api.heat.HeatConsumer;
+import com.simibubi.create.api.heat.HeatProvider;
 
 import com.simibubi.create.foundation.utility.map.DoubleValuesHashMap;
 
@@ -17,7 +17,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class HeatDataMap extends DoubleValuesHashMap<BlockPos, IHeatProvider, Set<BlockPos>> {
+public class HeatDataMap extends DoubleValuesHashMap<BlockPos, HeatProvider, Set<BlockPos>> {
 	private static final String ENTRY_KEY = "block_pos";
 	private static final String BLOCK_POS_X = "x";
 	private static final String BLOCK_POS_Y = "y";
@@ -87,7 +87,7 @@ public class HeatDataMap extends DoubleValuesHashMap<BlockPos, IHeatProvider, Se
 			BlockPos entryKey = constructBlockPos(entryRoot.getCompound(ENTRY_KEY));
 			BlockState providerState = level.getBlockState(entryKey);
 			// Validate Block
-			if (!(providerState.getBlock() instanceof IHeatProvider heatProvider)) {
+			if (!(providerState.getBlock() instanceof HeatProvider heatProvider)) {
 				Create.LOGGER.warn("Error on loading heat provider at {}. {} is not an instance of IHeatProvider", entryKey.toShortString(), providerState);
 				return;
 			}
@@ -102,7 +102,7 @@ public class HeatDataMap extends DoubleValuesHashMap<BlockPos, IHeatProvider, Se
 	private Optional<BlockPos> getSaveConsumerPos(Level level, Tag tag) {
 		CompoundTag consumerTag = (CompoundTag) tag;
 		BlockPos consumerPos = constructBlockPos(consumerTag);
-		if (!IHeatConsumer.isValidConsumer(level, consumerPos)) {
+		if (!HeatConsumer.isValidConsumer(level, consumerPos)) {
 			Create.LOGGER.warn("Error on loading heat consumer at {}. Invalid Block.", consumerPos);
 			return Optional.empty();
 		}

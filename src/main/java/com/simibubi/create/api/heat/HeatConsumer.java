@@ -7,10 +7,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public interface IHeatConsumer {
-	void onHeatProvided(Level level, IHeatProvider heatProvider, BlockPos heatProviderPos, BlockPos consumerPos);
+public interface HeatConsumer {
+	void onHeatProvided(Level level, HeatProvider heatProvider, BlockPos heatProviderPos, BlockPos consumerPos);
 
-	boolean isValidSource(Level level, IHeatProvider provider, BlockPos providerPos, BlockPos consumerPos);
+	boolean isValidSource(Level level, HeatProvider provider, BlockPos providerPos, BlockPos consumerPos);
 
 	default Optional<HeatHandler> getHeatHandler(Level level) {
 		if (level instanceof ServerLevel serverLevel) {
@@ -30,6 +30,6 @@ public interface IHeatConsumer {
 
 	static boolean isValidConsumer(Level level, BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
-		return state.getBlock() instanceof IHeatConsumer;
+		return state.getBlock() instanceof HeatConsumer;
 	}
 }

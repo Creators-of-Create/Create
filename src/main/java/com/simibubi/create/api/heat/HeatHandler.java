@@ -42,7 +42,7 @@ public class HeatHandler extends SavedData {
         return pCompoundTag;
     }
 
-    public void addHeatProvider(BlockPos pos, IHeatProvider provider) {
+    public void addHeatProvider(BlockPos pos, HeatProvider provider) {
         this.data.put(pos, provider, new HashSet<>());
         // search for consumers in range without a provider
         Iterator<BlockPos> consumers = this.data.getUnheatedConsumers().iterator();
@@ -50,7 +50,7 @@ public class HeatHandler extends SavedData {
             BlockPos consumerPos = consumers.next();
             if (provider.getHeatedArea(this.level, pos).isInside(consumerPos)) {
                 BlockState consumerState = this.level.getBlockState(consumerPos);
-                if (consumerState.getBlock() instanceof IHeatConsumer consumer) {
+                if (consumerState.getBlock() instanceof HeatConsumer consumer) {
                     if (consumer.isValidSource(this.level, provider, pos, consumerPos)) {
                         if (addHeatConsumer(consumerPos, consumer)) {
                             // Success
@@ -76,7 +76,7 @@ public class HeatHandler extends SavedData {
      */
     public boolean addHeatConsumer(BlockPos consumer) {
         BlockState consumerState = this.level.getBlockState(consumer);
-        if (consumerState.getBlock() instanceof IHeatConsumer heatConsumer) {
+        if (consumerState.getBlock() instanceof HeatConsumer heatConsumer) {
             return addHeatConsumer(consumer, heatConsumer);
         }
         return false;
@@ -87,9 +87,9 @@ public class HeatHandler extends SavedData {
      *
      * @return true if successfully added
      */
-    public boolean addHeatConsumer(BlockPos consumerPosition, IHeatConsumer consumer) {
+    public boolean addHeatConsumer(BlockPos consumerPosition, HeatConsumer consumer) {
         // Get the closest possible heat provider
-        Optional<Entry<BlockPos, Pair<IHeatProvider, Set<BlockPos>>>> possibleProvider = this.data.entrySet()
+        Optional<Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>>> possibleProvider = this.data.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().getFirst().isInHeatRange(this.level, entry.getKey(), consumerPosition))
                 .filter(entry -> entry.getValue().getSecond().size() + 1 <= entry.getValue().getFirst().getMaxHeatConsumers(this.level, entry.getKey()))
@@ -106,11 +106,11 @@ public class HeatHandler extends SavedData {
             return false;
         }
 
-        Entry<BlockPos, Pair<IHeatProvider, Set<BlockPos>>> providerEntry = possibleProvider.get();
+        Entry<BlockPos, Pair<HeatProvider, Set<BlockPos>>> providerEntry = possibleProvider.get();
         return addConsumerToProvider(providerEntry.getKey(), providerEntry.getValue().getFirst(), providerEntry.getValue().getSecond(), consumerPosition, consumer);
     }
 
-    protected boolean addConsumerToProvider(BlockPos providerPos, IHeatProvider provider, Set<BlockPos> consumerSet, BlockPos consumerPos, IHeatConsumer consumer) {
+    protected boolean addConsumerToProvider(BlockPos providerPos, HeatProvider provider, Set<BlockPos> consumerSet, BlockPos consumerPos, HeatConsumer consumer) {
         setDirty();
         if (consumerSet.add(consumerPos)) {
             consumer.onHeatProvided(this.level, provider, providerPos, consumerPos);
@@ -129,7 +129,7 @@ public class HeatHandler extends SavedData {
     }
 
     public void removeHeatProvider(BlockPos pos) {
-        Pair<IHeatProvider, Set<BlockPos>> removedEntry = this.data.remove(pos);
+        Pair<HeatProvider, Set<BlockPos>> removedEntry = this.data.remove(pos);
         if (removedEntry == null) return;
 		this.data.getUnheatedConsumers().addAll(removedEntry.getSecond());
         setDirty();
