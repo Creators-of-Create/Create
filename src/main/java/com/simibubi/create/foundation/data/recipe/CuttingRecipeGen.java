@@ -54,7 +54,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		FA = cuttingCompat(Mods.FA, "cherrywood", "mysterywood"),
 
 		// Hexcasting (stripped is a suffix here)
-		HEX = cuttingCompat(Mods.HEX, "akashic"),
+		HEX = cuttingCompat(Mods.HEX, "edified"),
 
 		// Integrated Dynamics (stripped is a suffix here also)
 		ID = cuttingCompat(Mods.ID, "menril"),

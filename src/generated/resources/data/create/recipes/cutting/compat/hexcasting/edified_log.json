@@ -2,13 +2,12 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "item": "hexcasting:akashic_wood_stripped"
+      "item": "hexcasting:edified_log"
     }
   ],
   "results": [
     {
-      "item": "hexcasting:akashic_planks",
-      "count": 6
+      "item": "hexcasting:edified_log_stripped"
     }
   ],
   "processingTime": 50,
