@@ -55,6 +55,10 @@ public enum Mods {
 
 	SF("simplefarming"),
 
+	OREGANIZED("oreganized"),
+
+	GS("galosphere"),
+
 	;
 
 	private final String id;
