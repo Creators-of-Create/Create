@@ -290,10 +290,6 @@
       "required": false
     },
     {
-      "id": "byg:stripped_bulbis_stem",
-      "required": false
-    },
-    {
       "id": "environmental:stripped_cherry_log",
       "required": false
     },
@@ -330,10 +326,6 @@
       "required": false
     },
     {
-      "id": "infernalexp:stripped_luminous_stem",
-      "required": false
-    },
-    {
       "id": "goodending:stripped_muddy_oak_log",
       "required": false
     },
@@ -355,6 +347,14 @@
     },
     {
       "id": "biomemakeover:stripped_ancient_oak_log",
+      "required": false
+    },
+    {
+      "id": "infernalexp:stripped_luminous_stem",
+      "required": false
+    },
+    {
+      "id": "byg:stripped_bulbis_stem",
       "required": false
     }
   ]
