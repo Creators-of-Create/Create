@@ -28,16 +28,20 @@ public class EmptyingRecipe extends ProcessingRecipe<RecipeWrapper> {
 	protected int getMaxOutputCount() {
 		return 1;
 	}
-	
+
 	@Override
 	protected int getMaxFluidOutputCount() {
 		return 1;
 	}
-	
+
 	public FluidStack getResultingFluid() {
 		if (fluidResults.isEmpty())
 			throw new IllegalStateException("Emptying Recipe: " + id.toString() + " has no fluid output!");
 		return fluidResults.get(0);
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }

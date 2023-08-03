@@ -33,4 +33,8 @@ public class HauntingRecipe extends ProcessingRecipe<FanProcessing.HauntingWrapp
 		return 12;
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }

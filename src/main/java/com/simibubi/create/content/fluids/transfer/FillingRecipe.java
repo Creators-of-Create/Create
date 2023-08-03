@@ -58,7 +58,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 
 	@Override
 	public void addAssemblyIngredients(List<Ingredient> list) {}
-	
+
 	@Override
 	public void addAssemblyFluidIngredients(List<FluidIngredient> list) {
 		list.add(getRequiredFluid());
@@ -79,10 +79,14 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.SPOUT.get());
 	}
-	
+
 	@Override
 	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
 		return () -> SequencedAssemblySubCategory.AssemblySpouting::new;
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }

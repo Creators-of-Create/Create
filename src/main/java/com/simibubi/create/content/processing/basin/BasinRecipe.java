@@ -213,4 +213,8 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		return false;
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }

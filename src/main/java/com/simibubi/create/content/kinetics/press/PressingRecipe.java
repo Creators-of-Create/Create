@@ -55,15 +55,19 @@ public class PressingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 	public Component getDescriptionForAssembly() {
 		return Lang.translateDirect("recipe.assembly.pressing");
 	}
-	
+
 	@Override
 	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.MECHANICAL_PRESS.get());
 	}
-	
+
 	@Override
 	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
 		return () -> SequencedAssemblySubCategory.AssemblyPressing::new;
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }

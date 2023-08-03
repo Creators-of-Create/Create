@@ -49,4 +49,8 @@ public class ConversionRecipe extends ProcessingRecipe<RecipeWrapper> {
 		return 1;
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }

@@ -79,4 +79,8 @@ public class ItemApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
 		buffer.writeBoolean(keepHeldItem);
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }

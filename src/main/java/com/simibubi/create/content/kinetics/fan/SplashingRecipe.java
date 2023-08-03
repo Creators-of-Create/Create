@@ -34,4 +34,8 @@ public class SplashingRecipe extends ProcessingRecipe<FanProcessing.SplashingWra
 		return 12;
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }

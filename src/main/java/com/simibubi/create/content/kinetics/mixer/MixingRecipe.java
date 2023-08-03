@@ -10,4 +10,8 @@ public class MixingRecipe extends BasinRecipe {
 		super(AllRecipeTypes.MIXING, params);
 	}
 
+	@Override
+	protected boolean canSpecifyDuration() {
+		return true;
+	}
 }

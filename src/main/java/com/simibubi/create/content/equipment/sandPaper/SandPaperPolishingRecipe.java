@@ -65,5 +65,8 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 		}
 
 	}
-
+	@Override
+	protected boolean canSpecifyDuration() {
+		return false;
+	}
 }
