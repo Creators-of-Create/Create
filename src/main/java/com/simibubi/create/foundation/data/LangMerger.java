@@ -53,7 +53,7 @@ public class LangMerger implements DataProvider {
 	private PackOutput output;
 
 	public <T extends LangPartial> LangMerger(PackOutput output, String modid, String displayName,
-		AllLangPartials[] allLangPartials) {
+		T[] allLangPartials) {
 		this.output = output;
 		this.modid = modid;
 		this.displayName = displayName;
