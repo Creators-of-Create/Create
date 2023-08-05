@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
@@ -40,7 +42,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -140,6 +145,22 @@ public class AllCreativeModeTabs {
 
 			return exclusions::contains;
 		}
+		
+		private static Predicate<Item> make3DPredicate(boolean model3d) {
+			return item -> {
+				MutableBoolean result = new MutableBoolean(false);
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> result.setValue(isItem3d(item) == model3d));
+				return result.getValue();
+			};
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static boolean isItem3d(Item item) {
+			ItemRenderer itemRenderer = Minecraft.getInstance()
+				.getItemRenderer();
+			BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
+			return model.isGui3d();
+		}
 
 		private static List<ItemOrdering> makeOrderings() {
 			List<ItemOrdering> orderings = new ReferenceArrayList<>();
@@ -233,7 +254,6 @@ public class AllCreativeModeTabs {
 
 		@Override
 		public void accept(ItemDisplayParameters pParameters, Output output) {
-			ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 			Predicate<Item> exclusionPredicate = makeExclusionPredicate();
 			List<ItemOrdering> orderings = makeOrderings();
 			Function<Item, ItemStack> stackFunc = makeStackFunc();
@@ -241,9 +261,9 @@ public class AllCreativeModeTabs {
 			RegistryObject<CreativeModeTab> tab = mainTab ? MAIN_TAB : BUILDING_BLOCKS_TAB;
 
 			List<Item> items = new LinkedList<>();
-			items.addAll(collectItems(tab, itemRenderer, true, exclusionPredicate));
+			items.addAll(collectItems(tab, exclusionPredicate.or(make3DPredicate(false))));
 			items.addAll(collectBlocks(tab, exclusionPredicate));
-			items.addAll(collectItems(tab, itemRenderer, false, exclusionPredicate));
+			items.addAll(collectItems(tab, exclusionPredicate.or(make3DPredicate(true))));
 
 			applyOrderings(items, orderings);
 			outputAll(output, items, stackFunc, visibilityFunc);
@@ -265,8 +285,7 @@ public class AllCreativeModeTabs {
 			return items;
 		}
 
-		private List<Item> collectItems(RegistryObject<CreativeModeTab> tab, ItemRenderer itemRenderer, boolean special,
-			Predicate<Item> exclusionPredicate) {
+		private List<Item> collectItems(RegistryObject<CreativeModeTab> tab, Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
 
 			if (!mainTab)
@@ -277,9 +296,6 @@ public class AllCreativeModeTabs {
 					continue;
 				Item item = entry.get();
 				if (item instanceof BlockItem)
-					continue;
-				BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
-				if (model.isGui3d() != special)
 					continue;
 				if (!exclusionPredicate.test(item))
 					items.add(item);
