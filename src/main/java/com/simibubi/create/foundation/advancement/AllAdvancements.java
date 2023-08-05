@@ -331,7 +331,7 @@ public class AllAdvancements implements DataProvider {
 
 		// Copper - Hidden
 
-		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.COPPER_DIVING_HELMET)
+		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.NETHERITE_DIVING_HELMET)
 			.title("Swimming with the Striders")
 			.description("Attempt to take a dive in lava with your diving gear")
 			.after(BACKTANK)
