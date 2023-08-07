@@ -98,8 +98,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	public AllSections getSection(IForgeRegistryEntry<?> entry) {
 		return sectionLookup.entrySet()
 			.stream()
-			.filter(e -> e.getKey()
-				.get() == entry)
+			.filter(e -> e.getKey().get() == entry)
 			.map(Entry::getValue)
 			.findFirst()
 			.orElse(AllSections.UNASSIGNED);

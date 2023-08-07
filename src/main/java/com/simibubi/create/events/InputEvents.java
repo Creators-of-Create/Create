@@ -1,7 +1,10 @@
 package com.simibubi.create.events;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
+import com.simibubi.create.content.contraptions.wrench.RadialWrenchHandler;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.content.logistics.trains.entity.TrainRelocator;
@@ -28,10 +31,11 @@ public class InputEvents {
 			return;
 
 		int key = event.getKey();
-		boolean pressed = !(event.getAction() == 0);
+		boolean pressed = event.getAction() != GLFW.GLFW_RELEASE;
 
 		CreateClient.SCHEMATIC_HANDLER.onKeyInput(key, pressed);
 		ToolboxHandlerClient.onKeyInput(key, pressed);
+		RadialWrenchHandler.onKeyInput(key, pressed);
 	}
 
 	@SubscribeEvent
