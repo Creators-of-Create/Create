@@ -356,7 +356,7 @@ public class AllTags {
 		}
 		
 		public boolean matches(RecipeType<?> recipeType) {
-			return BuiltInRegistries.RECIPE_TYPE.getOrCreateTag(tag).contains(Holder.direct(recipeType));
+			return BuiltInRegistries.RECIPE_TYPE.getOrCreateTag(tag).contains(ForgeRegistries.RECIPE_TYPES.getHolder(recipeType).orElseThrow());
 		}
 		
 		private static void init() {}
