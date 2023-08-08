@@ -9,6 +9,8 @@ import java.util.Collections;
 
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -316,11 +319,54 @@ public class AllTags {
 		private static void init() {}
 		
 	}
+	
+	public enum AllRecipeTypeTags {
+		
+		AUTOMATION_IGNORE,
+		
+		;
+		
+		public final TagKey<RecipeType<?>> tag;
+		public final boolean alwaysDatagen;
+		
+		AllRecipeTypeTags() {
+			this(MOD);
+		}
+		
+		AllRecipeTypeTags(NameSpace namespace) {
+			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+		
+		AllRecipeTypeTags(NameSpace namespace, String path) {
+			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+		
+		AllRecipeTypeTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
+			this(namespace, null, optional, alwaysDatagen);
+		}
+		
+		AllRecipeTypeTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
+			if (optional) {
+				tag = optionalTag(ForgeRegistries.RECIPE_TYPES, id);
+			} else {
+				tag = TagKey.create(Registries.RECIPE_TYPE, id);
+			}
+			this.alwaysDatagen = alwaysDatagen;
+		}
+		
+		public boolean matches(RecipeType<?> recipeType) {
+			return BuiltInRegistries.RECIPE_TYPE.getOrCreateTag(tag).contains(Holder.direct(recipeType));
+		}
+		
+		private static void init() {}
+	}
 
 	public static void init() {
 		AllBlockTags.init();
 		AllItemTags.init();
 		AllFluidTags.init();
 		AllEntityTags.init();
+		AllRecipeTypeTags.init();
 	}
 }

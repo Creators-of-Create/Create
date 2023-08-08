@@ -30,6 +30,7 @@ import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
 import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
+import com.simibubi.create.foundation.data.RecipeTypeTagGen;
 import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
@@ -184,6 +185,8 @@ public class Create {
 			gen.addProvider(true, DamageTypeDataProvider.makeFactory(event.getLookupProvider()));
 			gen.addProvider(true,
 				new DamageTypeTagGen(output, event.getLookupProvider(), event.getExistingFileHelper()));
+			gen.addProvider(true, 
+				new RecipeTypeTagGen(output, event.getLookupProvider(), event.getExistingFileHelper()));
 		}
 	}
 
