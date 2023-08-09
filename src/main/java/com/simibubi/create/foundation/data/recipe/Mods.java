@@ -59,6 +59,8 @@ public enum Mods {
 
 	GS("galosphere"),
 
+	VH("the_vault"),
+
 	;
 
 	private final String id;
