@@ -121,7 +121,10 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		PVJ = cuttingCompatLogOnly(Mods.PVJ,"aspen", "baobab", "cottonwood", "fir", "juniper", "mangrove", "maple", "palm", "pine", "redwood", "willow"),
 
 		// Upgrade Aquatic
-		UA = cuttingCompatLogOnly(Mods.UA, "driftwood", "river")
+		UA = cuttingCompatLogOnly(Mods.UA, "driftwood", "river"),
+
+		//Vault Hunters
+		VH = cuttingCompatLogOnly(Mods.VH, "wooden", "overgrown_wooden", "driftwood")
 	;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {

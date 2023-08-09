@@ -116,7 +116,10 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		Q = simpleModded(Mods.Q, "iron_plate", "rusty_iron_plate"),
 
 		// Supplementaries
-		SUP = simpleModded(Mods.SUP, "blackboard", "blackboard")
+		SUP = simpleModded(Mods.SUP, "blackboard", "blackboard"),
+
+		//Vault Hunters
+		VH = simpleModded(Mods.VH, "ornate_chain", "ornate_chain_rusty")
 	;
 
 	public GeneratedRecipe convert(Block block, Block result) {
