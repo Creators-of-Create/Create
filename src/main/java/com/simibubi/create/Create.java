@@ -30,6 +30,7 @@ import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
+import com.simibubi.create.foundation.data.RecipeSerializerTagGen;
 import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
@@ -182,6 +183,7 @@ public class Create {
 			gen.addProvider(new SequencedAssemblyRecipeGen(gen));
 			ProcessingRecipeGen.registerAll(gen);
 //			AllOreFeatureConfigEntries.gatherData(event);
+			gen.addProvider(new RecipeSerializerTagGen(gen, event.getExistingFileHelper()));
 		}
 	}
 
