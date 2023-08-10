@@ -355,12 +355,11 @@ public class AllTags {
 		}
 
 		public boolean matches(RecipeSerializer<?> recipeSerializer) {
-			return Registry.RECIPE_SERIALIZER.getOrCreateTag(tag).contains(ForgeRegistries.RECIPE_SERIALIZERS.getHolder(recipeSerializer).orElseThrow());
+			return ForgeRegistries.RECIPE_SERIALIZERS.getHolder(recipeSerializer).orElseThrow().is(tag);
 		}
 
 		private static void init() {}
 	}
-
 
 	public static void init() {
 		AllBlockTags.init();

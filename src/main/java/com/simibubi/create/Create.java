@@ -177,13 +177,13 @@ public class Create {
 			gen.addProvider(AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {
+			gen.addProvider(new RecipeSerializerTagGen(gen, event.getExistingFileHelper()));
 			gen.addProvider(new AllAdvancements(gen));
 			gen.addProvider(new StandardRecipeGen(gen));
 			gen.addProvider(new MechanicalCraftingRecipeGen(gen));
 			gen.addProvider(new SequencedAssemblyRecipeGen(gen));
 			ProcessingRecipeGen.registerAll(gen);
 //			AllOreFeatureConfigEntries.gatherData(event);
-			gen.addProvider(new RecipeSerializerTagGen(gen, event.getExistingFileHelper()));
 		}
 	}
 
