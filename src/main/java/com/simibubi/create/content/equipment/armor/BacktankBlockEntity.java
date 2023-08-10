@@ -5,6 +5,7 @@ import java.util.List;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.equipment.armor.backtank_utils.BacktankAirSource;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
@@ -80,7 +81,7 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 			return;
 		}
 
-		int max = BacktankUtil.maxAir(capacityEnchantLevel);
+		int max = BacktankAirSource.maxAir(capacityEnchantLevel);
 		if (level.isClientSide) {
 			Vec3 centerOf = VecHelper.getCenterOf(worldPosition);
 			Vec3 v = VecHelper.offsetRandomly(centerOf, level.random, .65f);
@@ -105,7 +106,7 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 	}
 
 	public int getComparatorOutput() {
-		int max = BacktankUtil.maxAir(capacityEnchantLevel);
+		int max = BacktankAirSource.maxAir(capacityEnchantLevel);
 		return ComparatorUtil.fractionToRedstoneLevel(airLevel / (float) max);
 	}
 
@@ -130,7 +131,7 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		enchantmentTag = compound.getList("Enchantments", Tag.TAG_COMPOUND);
 		if (compound.contains("CustomName", 8))
 			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
-		if (prev != 0 && prev != airLevel && airLevel == BacktankUtil.maxAir(capacityEnchantLevel) && clientPacket)
+		if (prev != 0 && prev != airLevel && airLevel == BacktankAirSource.maxAir(capacityEnchantLevel) && clientPacket)
 			playFilledEffect();
 	}
 

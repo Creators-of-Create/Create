@@ -2,6 +2,8 @@ package com.simibubi.create.content.equipment.armor;
 
 import com.simibubi.create.AllItems;
 
+import com.simibubi.create.content.equipment.armor.backtank_utils.BacktankAirSource;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +36,7 @@ public final class NetheriteDivingHandler {
 				clearBit(entity, slot);
 			}
 		} else if (slot == EquipmentSlot.CHEST) {
-			if (AllItems.NETHERITE_BACKTANK.isIn(to) && BacktankUtil.hasAirRemaining(to)) {
+			if (AllItems.NETHERITE_BACKTANK.isIn(to) && BacktankAirSource.hasAirRemaining(to)) {
 				setBit(entity, slot);
 			} else {
 				clearBit(entity, slot);
