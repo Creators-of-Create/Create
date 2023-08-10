@@ -31,10 +31,10 @@ public class GenericItemFilling {
 	 * Forge without looking into what it actually does. In all cases this is
 	 * incorrect because having a non-bucket item turn into a bucket item does not
 	 * make sense.
-	 * 
+	 *
 	 * <p>This check is only necessary for filling since a FluidBucketWrapper will be
 	 * empty if it is initialized with a non-bucket item.
-	 * 
+	 *
 	 * @param stack The ItemStack.
 	 * @param fluidHandler The IFluidHandlerItem instance retrieved from the ItemStack.
 	 * @return If the IFluidHandlerItem is valid for the passed ItemStack.
@@ -104,6 +104,8 @@ public class GenericItemFilling {
 			return true;
 		if (fluid.isSame(AllFluids.POTION.get()))
 			return true;
+		if (fluid.isSame(AllFluids.APPLE_JUICE.get()))
+			return true;
 		if (fluid.isSame(AllFluids.TEA.get()))
 			return true;
 		return false;
@@ -125,6 +127,8 @@ public class GenericItemFilling {
 				fillBottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
 			else if (fluid.isSame(AllFluids.TEA.get()))
 				fillBottle = AllItems.BUILDERS_TEA.asStack();
+			else if (fluid.isSame(AllFluids.APPLE_JUICE.get()))
+				fillBottle = AllItems.APPLE_JUICE.asStack();
 			else
 				fillBottle = PotionFluidHandler.fillBottle(stack, toFill);
 			stack.shrink(1);
