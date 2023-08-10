@@ -1,21 +1,21 @@
 package com.simibubi.create;
 
-import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntityRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.gantry.GantryContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionEntityRenderer;
-import com.simibubi.create.content.curiosities.tools.BlueprintEntity;
-import com.simibubi.create.content.curiosities.tools.BlueprintRenderer;
-import com.simibubi.create.content.curiosities.weapons.PotatoProjectileEntity;
-import com.simibubi.create.content.curiosities.weapons.PotatoProjectileRenderer;
-import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntity;
-import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionEntityRenderer;
-import com.simibubi.create.content.logistics.trains.entity.CarriageContraptionInstance;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.ControlledContraptionEntity;
+import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
+import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
+import com.simibubi.create.content.contraptions.gantry.GantryContraptionEntity;
+import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
+import com.simibubi.create.content.contraptions.glue.SuperGlueRenderer;
+import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
+import com.simibubi.create.content.contraptions.render.OrientedContraptionEntityRenderer;
+import com.simibubi.create.content.equipment.blueprint.BlueprintEntity;
+import com.simibubi.create.content.equipment.blueprint.BlueprintRenderer;
+import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileEntity;
+import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileRenderer;
+import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.content.trains.entity.CarriageContraptionEntityRenderer;
+import com.simibubi.create.content.trains.entity.CarriageContraptionInstance;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -73,7 +73,7 @@ public class AllEntityTypes {
 		MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
 		NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
 		String id = Lang.asId(name);
-		return (CreateEntityBuilder<T, ?>) Create.registrate()
+		return (CreateEntityBuilder<T, ?>) Create.REGISTRATE
 			.entity(id, factory, group)
 			.properties(b -> b.setTrackingRange(range)
 				.setUpdateInterval(updateFrequency)

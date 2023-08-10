@@ -18,15 +18,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public class ModelSwapper {
 
 	protected CustomBlockModels customBlockModels = new CustomBlockModels();
 	protected CustomItemModels customItemModels = new CustomItemModels();
-	protected CustomRenderedItems customRenderedItems = new CustomRenderedItems();
 
 	public CustomBlockModels getCustomBlockModels() {
 		return customBlockModels;
@@ -36,32 +33,15 @@ public class ModelSwapper {
 		return customItemModels;
 	}
 
-	public CustomRenderedItems getCustomRenderedItems() {
-		return customRenderedItems;
-	}
-
-	public void onModelRegistry(ModelRegistryEvent event) {
-		customRenderedItems.forEach((item, modelFunc) -> modelFunc.apply(null)
-			.getModelLocations()
-			.forEach(ForgeModelBakery::addSpecialModel));
-	}
-
 	public void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, BakedModel> modelRegistry = event.getModelRegistry();
 
 		customBlockModels.forEach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		customItemModels.forEach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
-		customRenderedItems.forEach((item, modelFunc) -> {
-			swapModels(modelRegistry, getItemModelLocation(item), m -> {
-				CustomRenderedItemModel swapped = modelFunc.apply(m);
-				swapped.loadPartials(event);
-				return swapped;
-			});
-		});
+		CustomRenderedItems.forEach(item -> swapModels(modelRegistry, getItemModelLocation(item), CustomRenderedItemModel::new));
 	}
 
 	public void registerListeners(IEventBus modEventBus) {
-		modEventBus.addListener(this::onModelRegistry);
 		modEventBus.addListener(this::onModelBake);
 	}
 

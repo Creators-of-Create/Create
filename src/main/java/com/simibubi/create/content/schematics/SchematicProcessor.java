@@ -6,8 +6,8 @@ import javax.annotation.Nullable;
 
 import com.mojang.serialization.Codec;
 import com.simibubi.create.AllStructureProcessorTypes;
-import com.simibubi.create.foundation.utility.NBTProcessors;
 
+import net.createmod.catnip.utility.NBTProcessors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -33,9 +33,9 @@ public class SchematicProcessor extends StructureProcessor {
 	public StructureTemplate.StructureBlockInfo process(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
 			StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
 		if (info.nbt != null && info.state.hasBlockEntity()) {
-			BlockEntity te = ((EntityBlock) info.state.getBlock()).newBlockEntity(info.pos, info.state);
-			if (te != null) {
-				CompoundTag nbt = NBTProcessors.process(te, info.nbt, false);
+			BlockEntity be = ((EntityBlock) info.state.getBlock()).newBlockEntity(info.pos, info.state);
+			if (be != null) {
+				CompoundTag nbt = NBTProcessors.process(be, info.nbt, false);
 				if (nbt != info.nbt)
 					return new StructureTemplate.StructureBlockInfo(info.pos, info.state, nbt);
 			}

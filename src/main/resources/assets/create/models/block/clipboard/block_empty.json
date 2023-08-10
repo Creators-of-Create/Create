@@ -1,0 +1,33 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"0": "create:block/clipboard_model_blank",
+		"1": "create:block/belt/andesite_belt_casing",
+		"particle": "create:block/clipboard_model_blank"
+	},
+	"elements": [
+		{
+			"from": [3, 0, 1],
+			"to": [13, 1, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 16, 0]},
+			"faces": {
+				"north": {"uv": [1, 15, 11, 16], "rotation": 180, "texture": "#0"},
+				"east": {"uv": [0, 1, 1, 15], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [1, 0, 11, 1], "rotation": 180, "texture": "#0"},
+				"west": {"uv": [0, 1, 1, 15], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [1, 1, 11, 15], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [8.75, 12, 11.25, 16], "texture": "#1"}
+			}
+		},
+		{
+			"from": [6, 1, 14.95],
+			"to": [10, 1, 15.95],
+			"rotation": {"angle": -45, "axis": "x", "origin": [8, 1, 15]},
+			"faces": {
+				"up": {"uv": [12, 0, 16, 1], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [12, 0, 16, 1], "texture": "#0"}
+			}
+		}
+	]
+}

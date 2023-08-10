@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.content.decoration.copycat.CopycatBlock;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
-import com.simibubi.create.foundation.block.render.QuadHelper;
+import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
+import com.simibubi.create.foundation.model.BakedQuadHelper;
 
 import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -33,18 +35,22 @@ public class CTModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
-		return builder.withInitial(CT_PROPERTY, createCTData(world, pos, state));
+	protected void gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+		IModelData blockEntityData) {
+		builder.withInitial(CT_PROPERTY, createCTData(world, pos, state));
 	}
 
 	protected CTData createCTData(BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		CTData data = new CTData();
 		MutableBlockPos mutablePos = new MutableBlockPos();
 		for (Direction face : Iterate.directions) {
+			BlockState actualState = world.getBlockState(pos);
 			if (!behaviour.buildContextForOccludedDirections()
-				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face)))
+				&& !Block.shouldRenderFace(state, world, pos, face, mutablePos.setWithOffset(pos, face))
+				&& !(actualState.getBlock()instanceof CopycatBlock ufb
+					&& !ufb.canFaceBeOccluded(actualState, face)))
 				continue;
-			CTType dataType = behaviour.getDataType(state, face);
+			CTType dataType = behaviour.getDataType(world, pos, state, face);
 			if (dataType == null)
 				continue;
 			CTContext context = behaviour.buildContext(world, pos, state, face, dataType.getContextRequirement());
@@ -75,14 +81,14 @@ public class CTModel extends BakedModelWrapperWithData {
 			if (quad.getSprite() != spriteShift.getOriginal())
 				continue;
 
-			BakedQuad newQuad = QuadHelper.clone(quad);
+			BakedQuad newQuad = BakedQuadHelper.clone(quad);
 			int[] vertexData = newQuad.getVertices();
 
 			for (int vertex = 0; vertex < 4; vertex++) {
-				float u = QuadHelper.getU(vertexData, vertex);
-				float v = QuadHelper.getV(vertexData, vertex);
-				QuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u, index));
-				QuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v, index));
+				float u = BakedQuadHelper.getU(vertexData, vertex);
+				float v = BakedQuadHelper.getV(vertexData, vertex);
+				BakedQuadHelper.setU(vertexData, vertex, spriteShift.getTargetU(u, index));
+				BakedQuadHelper.setV(vertexData, vertex, spriteShift.getTargetV(v, index));
 			}
 
 			quads.set(i, newQuad);

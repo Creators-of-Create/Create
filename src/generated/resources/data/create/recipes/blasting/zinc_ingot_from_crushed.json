@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "create:crushed_zinc_ore"
+    "item": "create:crushed_raw_zinc"
   },
   "result": "create:zinc_ingot",
   "experience": 0.1,

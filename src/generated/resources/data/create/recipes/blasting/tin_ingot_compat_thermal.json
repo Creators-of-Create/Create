@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "create:crushed_tin_ore"
+    "item": "create:crushed_raw_tin"
   },
   "result": "thermal:tin_ingot",
   "experience": 0.1,

@@ -4,8 +4,13 @@
     "create:blaze_burner",
     "create:lit_blaze_burner",
     "create:sail_frame",
-    "#minecraft:fences",
+    "create:andesite_bars",
+    "create:brass_bars",
+    "create:copper_bars",
+    "create:copycat_base",
+    "minecraft:iron_bars",
     "#minecraft:campfires",
-    "minecraft:iron_bars"
+    "#minecraft:fences",
+    "#minecraft:leaves"
   ]
 }

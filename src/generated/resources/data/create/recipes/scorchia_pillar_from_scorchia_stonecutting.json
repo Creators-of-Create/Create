@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:scorchia"
-  },
-  "result": "create:scorchia_pillar",
-  "count": 1
-}

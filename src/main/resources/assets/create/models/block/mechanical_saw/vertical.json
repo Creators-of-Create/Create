@@ -1,72 +1,72 @@
 {
-    "__comment": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
-    "textures": {
-        "gearbox_top": "create:block/gearbox_top",
-        "gearbox": "create:block/gearbox",
-        "andesite_casing_short": "create:block/andesite_casing_short",
-        "mechanical_saw_top": "create:block/mechanical_saw_top",
-		"particle": "create:block/mechanical_saw_top"
-    },
-    "elements": [
-        {
-            "name": "Bottom",
-            "from": [ 0, 0, 0 ], 
-            "to": [ 16, 2, 16 ], 
-            "faces": {
-                "north": { "texture": "#gearbox_top", "uv": [ 0, 14, 16, 16 ] },
-                "east": { "texture": "#andesite_casing_short", "uv": [ 0, 14, 16, 16 ] },
-                "south": { "texture": "#gearbox_top", "uv": [ 0, 14, 16, 16 ] },
-                "west": { "texture": "#andesite_casing_short", "uv": [ 0, 14, 16, 16 ] },
-                "up": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 16 ] },
-                "down": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 16 ] }
-            }
-        },
-        {
-            "name": "Inner",
-            "from": [ 2, 2, 1 ], 
-            "to": [ 14, 12, 15 ], 
-            "faces": {
-                "north": { "texture": "#gearbox", "uv": [ 2, 4, 14, 14 ] },
-                "south": { "texture": "#gearbox", "uv": [ 2, 4, 14, 14 ] },
-                "up": { "texture": "#mechanical_saw_top", "uv": [ 2, 1, 14, 15 ] },
-                "down": { "texture": "#gearbox", "uv": [ 0, 0, 12, 14 ] }
-            }
-        },
-        {
-            "name": "Side",
-            "from": [ 0, 2, 0 ], 
-            "to": [ 2, 12, 16 ], 
-            "faces": {
-                "north": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 10 ] },
-                "east": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 10 ] },
-                "south": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 10 ] },
-                "west": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 14 ] },
-                "up": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 2 ], "rotation": 270 }
-            }
-        },
-        {
-            "name": "Side2",
-            "from": [ 14, 2, 0 ], 
-            "to": [ 16, 12, 16 ], 
-            "faces": {
-                "north": { "texture": "#gearbox_top", "uv": [ 0, 0, 2, 10 ] },
-                "east": { "texture": "#andesite_casing_short", "uv": [ 0, 4, 16, 14 ] },
-                "south": { "texture": "#gearbox_top", "uv": [ 14, 0, 16, 10 ] },
-                "west": { "texture": "#gearbox_top", "uv": [ 0, 0, 16, 10 ] },
-                "up": { "texture": "#gearbox_top", "uv": [ 0, 14, 16, 16 ], "rotation": 270 }
-            }
-        },
-        {
-            "name": "Top",
-            "from": [ 0, 12, 2 ], 
-            "to": [ 16, 13, 14 ], 
-            "faces": {
-                "north": { "texture": "#mechanical_saw_top", "uv": [ 0, 13, 16, 14 ] },
-                "east": { "texture": "#mechanical_saw_top", "uv": [ 0, 3, 1, 13 ], "rotation": 90 },
-                "south": { "texture": "#mechanical_saw_top", "uv": [ 0, 2, 16, 3 ] },
-                "west": { "texture": "#mechanical_saw_top", "uv": [ 15, 3, 16, 13 ], "rotation": 270 },
-                "up": { "texture": "#mechanical_saw_top", "uv": [ 0, 2, 16, 14 ] }
-            }
-        }
-    ]
+	"credit": "Model generated using MrCrayfish's Model Creator (https://mrcrayfish.com/tools?id=mc)",
+	"textures": {
+		"gearbox_top": "create:block/gearbox_top",
+		"gearbox": "create:block/gearbox",
+		"andesite_casing_short": "create:block/andesite_casing_short",
+		"particle": "create:block/mechanical_saw_top",
+		"mechanical_saw_top": "create:block/mechanical_saw_top"
+	},
+	"elements": [
+		{
+			"name": "Bottom",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#andesite_casing_short"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#andesite_casing_short"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#gearbox_top"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#andesite_casing_short"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#gearbox_top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#gearbox_top"}
+			}
+		},
+		{
+			"name": "Inner",
+			"from": [2, 2, 0.95],
+			"to": [14, 12, 15.05],
+			"faces": {
+				"north": {"uv": [2, 4, 14, 14], "texture": "#gearbox"},
+				"south": {"uv": [2, 4, 14, 14], "texture": "#gearbox"},
+				"up": {"uv": [2, 1, 14, 15], "texture": "#mechanical_saw_top"},
+				"down": {"uv": [0, 0, 12, 14], "texture": "#gearbox"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [0, 2, 0],
+			"to": [2, 12, 16],
+			"faces": {
+				"north": {"uv": [14, 4, 16, 14], "texture": "#andesite_casing_short"},
+				"east": {"uv": [0, 0, 16, 10], "texture": "#gearbox_top"},
+				"south": {"uv": [0, 4, 2, 14], "texture": "#andesite_casing_short"},
+				"west": {"uv": [0, 4, 16, 14], "texture": "#andesite_casing_short"},
+				"up": {"uv": [0, 0, 16, 2], "rotation": 270, "texture": "#gearbox_top"}
+			}
+		},
+		{
+			"name": "Side2",
+			"from": [14, 2, 0],
+			"to": [16, 12, 16],
+			"faces": {
+				"north": {"uv": [0, 4, 2, 14], "texture": "#andesite_casing_short"},
+				"east": {"uv": [0, 4, 16, 14], "texture": "#andesite_casing_short"},
+				"south": {"uv": [14, 4, 16, 14], "texture": "#andesite_casing_short"},
+				"west": {"uv": [0, 0, 16, 10], "texture": "#gearbox_top"},
+				"up": {"uv": [0, 14, 16, 16], "rotation": 270, "texture": "#gearbox_top"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [0, 12, 1.95],
+			"to": [16, 13, 14.05],
+			"faces": {
+				"north": {"uv": [16, 2, 0, 3], "texture": "#mechanical_saw_top"},
+				"east": {"uv": [0, 2, 1, 14], "rotation": 90, "texture": "#mechanical_saw_top"},
+				"south": {"uv": [0, 13, 16, 14], "texture": "#mechanical_saw_top"},
+				"west": {"uv": [15, 2, 16, 14], "rotation": 270, "texture": "#mechanical_saw_top"},
+				"up": {"uv": [0, 2, 16, 14], "texture": "#mechanical_saw_top"}
+			}
+		}
+	]
 }

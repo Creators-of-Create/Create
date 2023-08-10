@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
-import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.container.GhostItemContainer;
-import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
-import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.content.logistics.filter.AttributeFilterScreen;
+import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
+import com.simibubi.create.foundation.gui.menu.GhostItemSubmitPacket;
 
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class GhostIngredientHandler<T extends GhostItemContainer<?>>
+public class GhostIngredientHandler<T extends GhostItemMenu<?>>
 	implements IGhostIngredientHandler<AbstractSimiContainerScreen<T>> {
 
 	@Override
@@ -52,7 +52,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 		return true;
 	}
 
-	private static class GhostTarget<I, T extends GhostItemContainer<?>> implements Target<I> {
+	private static class GhostTarget<I, T extends GhostItemMenu<?>> implements Target<I> {
 
 		private final Rect2i area;
 		private final AbstractSimiContainerScreen<T> gui;
@@ -82,7 +82,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 				return;
 
 			// sync new filter contents with server
-			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
+			AllPackets.getChannel().sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
 		}
 	}
 }

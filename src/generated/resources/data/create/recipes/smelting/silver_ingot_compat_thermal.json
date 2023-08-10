@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "create:crushed_silver_ore"
+    "item": "create:crushed_raw_silver"
   },
   "result": "thermal:silver_ingot",
   "experience": 0.1,

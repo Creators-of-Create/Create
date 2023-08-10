@@ -7,10 +7,10 @@
   ],
   "key": {
     "S": {
-      "tag": "minecraft:wooden_slabs"
+      "tag": "minecraft:planks"
     },
     "C": {
-      "item": "create:large_cogwheel"
+      "item": "create:shaft"
     }
   },
   "result": {

@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.DoorMovingInteraction;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.LeverMovingInteraction;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
-import com.simibubi.create.foundation.utility.CreateRegistry;
+import com.simibubi.create.content.contraptions.behaviour.DoorMovingInteraction;
+import com.simibubi.create.content.contraptions.behaviour.LeverMovingInteraction;
+import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.TrapdoorMovingInteraction;
+import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import net.minecraft.resources.ResourceLocation;
@@ -18,10 +18,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class AllInteractionBehaviours {
-	private static final CreateRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new CreateRegistry<>(ForgeRegistries.BLOCKS);
+	private static final AttachedRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new AttachedRegistry<>(ForgeRegistries.BLOCKS);
 	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
 
 	public static void registerBehaviour(ResourceLocation block, MovingInteractionBehaviour provider) {
@@ -30,11 +29,6 @@ public class AllInteractionBehaviours {
 
 	public static void registerBehaviour(Block block, MovingInteractionBehaviour provider) {
 		BLOCK_BEHAVIOURS.register(block, provider);
-	}
-
-	@Deprecated(forRemoval = true)
-	public static void registerBehaviour(IRegistryDelegate<Block> block, MovingInteractionBehaviour provider) {
-		registerBehaviour(block.name(), provider);
 	}
 
 	public static void registerBehaviourProvider(BehaviourProvider provider) {

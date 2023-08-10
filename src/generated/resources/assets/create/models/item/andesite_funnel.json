@@ -1,11 +1,10 @@
 {
   "parent": "create:block/funnel/item",
   "textures": {
-    "particle": "create:block/andesite_casing",
-    "7": "create:block/andesite_funnel_plating",
-    "2": "create:block/andesite_funnel_neutral",
-    "6": "create:block/andesite_funnel",
-    "5": "create:block/andesite_funnel_tall",
-    "3": "create:block/andesite_funnel_back"
+    "particle": "create:block/andesite_block",
+    "block": "create:block/andesite_block",
+    "base": "create:block/funnel/andesite_funnel",
+    "direction": "create:block/funnel/andesite_funnel_neutral",
+    "redstone": "create:block/funnel/andesite_funnel_unpowered"
   }
 }

@@ -1,11 +1,10 @@
 {
   "parent": "create:block/funnel/item",
   "textures": {
-    "particle": "create:block/brass_casing",
-    "7": "create:block/brass_funnel_plating",
-    "2": "create:block/brass_funnel_neutral",
-    "6": "create:block/brass_funnel",
-    "5": "create:block/brass_funnel_tall",
-    "3": "create:block/brass_funnel_back"
+    "particle": "create:block/brass_block",
+    "block": "create:block/brass_block",
+    "base": "create:block/funnel/brass_funnel",
+    "direction": "create:block/funnel/brass_funnel_neutral",
+    "redstone": "create:block/funnel/brass_funnel_unpowered"
   }
 }

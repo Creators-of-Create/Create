@@ -2,33 +2,36 @@ package com.simibubi.create;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueSelectionHandler;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.TrainHUD;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
-import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
-import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
-import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
-import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
-import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
-import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
-import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler;
-import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
-import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
-import com.simibubi.create.content.logistics.trains.GlobalRailwayManager;
-import com.simibubi.create.content.schematics.ClientSchematicLoader;
+import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
+import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
+import com.simibubi.create.content.contraptions.render.SBBContraptionManager;
+import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
+import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
+import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
+import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
+import com.simibubi.create.content.equipment.goggles.GoggleOverlayRenderer;
+import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonRenderHandler;
+import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
+import com.simibubi.create.content.equipment.zapper.ZapperRenderHandler;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.kinetics.simpleRelays.CogWheelBlock;
+import com.simibubi.create.content.kinetics.waterwheel.WaterWheelRenderer;
+import com.simibubi.create.content.redstone.link.controller.LinkedControllerClientHandler;
+import com.simibubi.create.content.schematics.client.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
+import com.simibubi.create.content.trains.GlobalRailwayManager;
+import com.simibubi.create.content.trains.TrainHUD;
+import com.simibubi.create.content.trains.track.TrackPlacementOverlay;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsClient;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.FlwSuperBufferFactory;
 import com.simibubi.create.foundation.utility.ModelSwapper;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.gui.CreateMainMenuScreen;
 
 import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.createmod.catnip.config.ui.ConfigScreen;
@@ -64,6 +67,7 @@ public class CreateClient {
 	public static final PotatoCannonRenderHandler POTATO_CANNON_RENDER_HANDLER = new PotatoCannonRenderHandler();
 	public static final SoulPulseEffectHandler SOUL_PULSE_EFFECT_HANDLER = new SoulPulseEffectHandler();
 	public static final GlobalRailwayManager RAILWAYS = new GlobalRailwayManager();
+	public static final ValueSettingsClient VALUE_SETTINGS_HANDLER = new ValueSettingsClient();
 
 	public static final ClientResourceReloadListener RESOURCE_RELOAD_LISTENER = new ClientResourceReloadListener();
 
@@ -80,17 +84,27 @@ public class CreateClient {
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
+		//BUFFER_CACHE.registerCompartment(CachedBufferer.GENERIC_BLOCK);
+		//BUFFER_CACHE.registerCompartment(CachedPartialBuffers.partial);
+		//BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
+		//BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
+		//BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
+		//BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
+		//BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 		SuperBufferFactory.setInstance(new FlwSuperBufferFactory());
 
 		SuperByteBufferCache.getInstance().registerCompartment(CachedPartialBuffers.PARTIAL);
 		SuperByteBufferCache.getInstance().registerCompartment(CachedPartialBuffers.DIRECTIONAL_PARTIAL);
-		SuperByteBufferCache.getInstance().registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+		SuperByteBufferCache.getInstance().registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
+		SuperByteBufferCache.getInstance().registerCompartment(WaterWheelRenderer.WATER_WHEEL);
 		SuperByteBufferCache.getInstance().registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 
 		AllKeys.register();
-		AllBlockPartials.init();
-		AllStitchedTextures.init();
+		AllPartialModels.init();
 
+
+		//AllPonderTags.register();
+		//PonderIndex.register();
 		PonderIndex.addPlugin(new CreatePonderPlugin());
 
 		setupConfigUIBackground();
@@ -100,13 +114,15 @@ public class CreateClient {
 
 	private static void registerOverlays() {
 		// Register overlays in reverse order
-		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT, "Create's Remaining Air", CopperBacktankArmorLayer.REMAINING_AIR_OVERLAY);
+		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.AIR_LEVEL_ELEMENT, "Create's Remaining Air", RemainingAirOverlay.INSTANCE);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, "Create's Train Driver HUD", TrainHUD.OVERLAY);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Goggle Information", GoggleOverlayRenderer.OVERLAY);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Blueprints", BlueprintOverlayRenderer.OVERLAY);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Linked Controller", LinkedControllerClientHandler.OVERLAY);
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Schematics", SCHEMATIC_HANDLER.getOverlayRenderer());
 		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Toolboxes", ToolboxHandlerClient.OVERLAY);
+		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Value Settings", VALUE_SETTINGS_HANDLER);
+		OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Create's Track Placement", TrackPlacementOverlay.OVERLAY);
 	}
 
 	private static void setupConfigUIBackground() {
@@ -124,8 +140,8 @@ public class CreateClient {
 		ConfigScreen.shadowState = AllBlocks.LARGE_COGWHEEL.getDefaultState().setValue(CogWheelBlock.AXIS, Direction.Axis.Y);
 
 		BaseConfigScreen.setDefaultActionFor(Create.ID, base -> base
-				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
-				.withSpecs(AllConfigs.CLIENT.specification, AllConfigs.COMMON.specification, AllConfigs.SERVER.specification)
+				.withButtonLabels("Client Settings", "World Generation Settings", "Gameplay Settings")
+				.withSpecs(AllConfigs.client().specification, AllConfigs.common().specification, AllConfigs.server().specification)
 		);
 	}
 
@@ -142,7 +158,7 @@ public class CreateClient {
 		if (mc.options.graphicsMode != GraphicsStatus.FABULOUS)
 			return;
 
-		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
+		if (AllConfigs.client().ignoreFabulousWarning.get())
 			return;
 
 		MutableComponent text = ComponentUtils.wrapInSquareBrackets(Components.literal("WARN"))

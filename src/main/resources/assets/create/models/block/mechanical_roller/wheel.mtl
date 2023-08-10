@@ -1,0 +1,5 @@
+# Blender 3.5.1 MTL File: 'roller.blend'
+# www.blender.org
+
+newmtl roller_wheel
+map_Kd #wheel

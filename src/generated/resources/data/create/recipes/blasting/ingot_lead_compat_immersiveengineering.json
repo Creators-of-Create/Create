@@ -1,7 +1,7 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "create:crushed_lead_ore"
+    "item": "create:crushed_raw_lead"
   },
   "result": "immersiveengineering:ingot_lead",
   "experience": 0.1,

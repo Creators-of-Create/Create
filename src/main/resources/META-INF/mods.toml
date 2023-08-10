@@ -19,7 +19,7 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="forge"
     mandatory=true
-    versionRange="[40.1.60,)"
+    versionRange="[40.2.4,)"
     ordering="NONE"
     side="BOTH"
 
@@ -33,6 +33,6 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="flywheel"
     mandatory=true
-    versionRange="[0.6.5,0.6.7)"
+    versionRange="[0.6.9,0.6.10)"
     ordering="AFTER"
     side="CLIENT"

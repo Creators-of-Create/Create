@@ -8,8 +8,8 @@
 	"elements": [
 		{
 			"name": "rope",
-			"from": [6, 0, 6],
-			"to": [10, 8, 10],
+			"from": [5.95, 0, 5.95],
+			"to": [10.05, 8, 10.05],
 			"rotation": {"angle": 0, "axis": "y", "origin": [7.75, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 8, 4, 16], "texture": "#5"},

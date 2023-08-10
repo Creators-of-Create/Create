@@ -18,7 +18,7 @@
 				"south": {"uv": [0, 10, 6, 16], "texture": "#2"},
 				"west": {"uv": [9, 10, 16, 16], "texture": "#2"},
 				"up": {"uv": [9, 10, 16, 16], "rotation": 90, "texture": "#2"},
-				"down": {"uv": [5, 5, 12, 10], "rotation": 270, "texture": "#2"}
+				"down": {"uv": [9, 10.5, 16, 15.5], "rotation": 270, "texture": "#2"}
 			}
 		},
 		{
@@ -77,25 +77,12 @@
 			"to": [16, 13, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8, 8]},
 			"faces": {
-				"north": {"uv": [13, 5, 14, 10], "texture": "#2"},
+				"north": {"uv": [14, 5, 13, 10], "texture": "#2"},
 				"east": {"uv": [9, 5, 14, 10], "texture": "#2"},
-				"south": {"uv": [13, 5, 14, 10], "texture": "#2"},
+				"south": {"uv": [10, 5, 9, 10], "texture": "#2"},
 				"west": {"uv": [9, 5, 14, 10], "texture": "#2"},
-				"up": {"uv": [9, 5, 10, 10], "texture": "#2"},
-				"down": {"uv": [9, 5, 10, 10], "texture": "#2"}
-			}
-		},
-		{
-			"name": "GaugeColorBar",
-			"from": [14.5, 2.9, 2.9],
-			"to": [15.5, 13.1, 13.1],
-			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8, 8]},
-			"faces": {
-				"north": {"uv": [0, 8.5, 5, 9], "rotation": 90, "texture": "#2"},
-				"south": {"uv": [0, 8.5, 5, 9], "rotation": 90, "texture": "#2"},
-				"west": {"uv": [9, 5, 14, 10], "texture": "#2"},
-				"up": {"uv": [0, 8, 5, 8.5], "rotation": 90, "texture": "#2"},
-				"down": {"uv": [0, 8, 5, 8.5], "rotation": 90, "texture": "#2"}
+				"up": {"uv": [14, 5, 9, 6], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [9, 10, 14, 9], "rotation": 90, "texture": "#2"}
 			}
 		},
 		{
@@ -148,12 +135,14 @@
 		{
 			"name": "Gauge",
 			"origin": [8, 8, 8],
-			"children": [0, 1, 2, 3, 4, 5, 6]
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5]
 		},
 		{
 			"name": "shaft",
 			"origin": [8, 8, 8],
-			"children": [7]
+			"color": 0,
+			"children": [6]
 		}
 	]
 }

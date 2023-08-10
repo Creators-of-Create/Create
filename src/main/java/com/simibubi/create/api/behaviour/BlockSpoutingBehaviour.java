@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.tconstruct.SpoutCasting;
-import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
+import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -43,7 +43,7 @@ public abstract class BlockSpoutingBehaviour {
 	 * @param simulate       whether the spout is testing or actually performing this behaviour
 	 * @return amount filled into the block, 0 to idle/cancel
 	 */
-	public abstract int fillBlock(Level world, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
+	public abstract int fillBlock(Level world, BlockPos pos, SpoutBlockEntity spout, FluidStack availableFluid,
 		boolean simulate);
 
 	public static void registerDefaults() {

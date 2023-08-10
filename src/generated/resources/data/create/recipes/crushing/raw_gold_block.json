@@ -7,12 +7,12 @@
   ],
   "results": [
     {
-      "item": "create:crushed_gold_ore",
+      "item": "create:crushed_raw_gold",
       "count": 9
     },
     {
       "item": "create:experience_nugget",
-      "count": 9,
+      "count": 18,
       "chance": 0.75
     }
   ],

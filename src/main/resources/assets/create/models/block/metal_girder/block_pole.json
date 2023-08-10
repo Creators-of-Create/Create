@@ -3,7 +3,7 @@
 	"textures": {
 		"1": "create:block/girder_pole",
 		"2": "create:block/girder_pole_side",
-		"particle": "create:block/chute_block"
+		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [
 		{

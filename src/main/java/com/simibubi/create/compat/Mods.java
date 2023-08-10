@@ -4,7 +4,10 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import net.createmod.catnip.utility.lang.Lang;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * For compatibility with and without another mod present, we have to define load conditions of the specific code
@@ -12,7 +15,11 @@ import net.minecraftforge.fml.ModList;
 public enum Mods {
 	DYNAMICTREES,
 	TCONSTRUCT,
-	CURIOS;
+	CURIOS,
+
+	COMPUTERCRAFT,
+	STORAGEDRAWERS,
+	XLPACKETS;
 
 	/**
 	 * @return a boolean of whether the mod is loaded or not based on mod id
@@ -47,5 +54,9 @@ public enum Mods {
 		if (isLoaded()) {
 			toExecute.get().run();
 		}
+	}
+
+	public Block getBlock(String id) {
+		return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(asId(), id));
 	}
 }

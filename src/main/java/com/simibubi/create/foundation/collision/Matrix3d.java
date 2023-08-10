@@ -40,8 +40,8 @@ public class Matrix3d {
 		double s = Mth.sin(radians);
 		double c = Mth.cos(radians);
 		m00 = m22 = c;
-		m20 = s;
-		m02 = -s;
+		m02 = s;
+		m20 = -s;
 		return this;
 	}
 

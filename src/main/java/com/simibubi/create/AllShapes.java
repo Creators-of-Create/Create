@@ -7,8 +7,8 @@ import static net.minecraft.core.Direction.UP;
 
 import java.util.function.BiFunction;
 
-import com.simibubi.create.content.logistics.block.chute.ChuteShapes;
-import com.simibubi.create.content.logistics.trains.track.TrackVoxelShapes;
+import com.simibubi.create.content.logistics.chute.ChuteShapes;
+import com.simibubi.create.content.trains.track.TrackVoxelShapes;
 
 import net.createmod.catnip.utility.VoxelShaper;
 import net.minecraft.core.Direction;
@@ -30,6 +30,8 @@ public class AllShapes {
 		CASING_13PX = shape(0, 0, 0, 16, 13, 16).forDirectional(),
 		CASING_12PX = shape(0, 0, 0, 16, 12, 16).forDirectional(),
 		CASING_11PX = shape(0, 0, 0, 16, 11, 16).forDirectional(),
+		CASING_3PX = shape(0, 0, 0, 16, 3, 16).forDirectional(),
+		CASING_2PX = shape(0, 0, 0, 16, 2, 16).forDirectional(),
 		MOTOR_BLOCK = shape(3, 0, 3, 13, 14, 13).forDirectional(),
 
 		FOUR_VOXEL_POLE = shape(6, 0, 6, 10, 16, 10).forAxis(), SIX_VOXEL_POLE = shape(5, 0, 5, 11, 16, 11).forAxis(),
@@ -41,14 +43,20 @@ public class AllShapes {
 			.add(2, 13, 2, 14, 16, 14)
 			.add(0, 0, 14, 16, 16, 16)
 			.forHorizontalAxis(),
+		ELEVATOR_PULLEY = shape(0, 0, 0, 16, 16, 2).add(0, 0, 14, 16, 16, 16)
+			.add(2, 0, 2, 14, 14, 14)
+			.forHorizontal(EAST),
 		SAIL_FRAME_COLLISION = shape(0, 5, 0, 16, 9, 16).erase(2, 0, 2, 14, 16, 14)
 			.forDirectional(),
 		SAIL_FRAME = shape(0, 5, 0, 16, 9, 16).forDirectional(), SAIL = shape(0, 5, 0, 16, 10, 16).forDirectional(),
 		HARVESTER_BASE = shape(0, 2, 0, 16, 14, 3).forDirectional(SOUTH),
+		ROLLER_BASE = shape(0, 0, 0, 16, 16, 10).forDirectional(SOUTH),
 		NOZZLE = shape(2, 0, 2, 14, 14, 14).add(1, 13, 1, 15, 15, 15)
 			.erase(3, 13, 3, 13, 15, 13)
 			.forDirectional(),
 		CRANK = shape(5, 0, 5, 11, 6, 11).add(1, 3, 1, 15, 8, 15)
+			.forDirectional(),
+		VALVE_HANDLE = shape(5, 0, 5, 11, 4, 11).add(1, 3, 1, 15, 8, 15)
 			.forDirectional(),
 		CART_ASSEMBLER = shape(0, 12, 0, 16, 16, 16).add(-2, 0, 1, 18, 14, 15)
 			.forHorizontalAxis(),
@@ -104,7 +112,7 @@ public class AllShapes {
 			.add(5, -1, 6, 11, 0, 8)
 			.forHorizontal(SOUTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
-			.add(3, 12, 3, 13, 16, 13)
+			.add(3, 11, 3, 13, 16, 13)
 			.forDirectional(Direction.UP),
 		CRUSHING_WHEEL_CONTROLLER_COLLISION = shape(0, 0, 0, 16, 13, 16).forDirectional(Direction.DOWN),
 
@@ -121,7 +129,14 @@ public class AllShapes {
 		GIRDER_BEAM_SHAFT = shape(GIRDER_BEAM.get(Axis.X)).add(SIX_VOXEL_POLE.get(Axis.Z))
 			.forHorizontalAxis(),
 
+		STEP_BOTTOM = shape(0, 0, 8, 16, 8, 16).forHorizontal(SOUTH),
+		STEP_TOP = shape(0, 8, 8, 16, 16, 16).forHorizontal(SOUTH),
+
 		CONTROLS = shape(0, 0, 6, 16, 14, 16).forHorizontal(NORTH),
+		CONTRAPTION_CONTROLS = shape(0, 0, 6, 2, 14, 16).add(14, 0, 6, 16, 14, 16)
+			.add(0, 0, 14, 16, 14, 16)
+			.add(0, 0, 7, 16, 10, 16)
+			.forHorizontal(NORTH),
 
 		NIXIE_TUBE = shape(9, 0, 5, 15, 12, 11).add(1, 0, 5, 7, 12, 11)
 			.forHorizontalAxis(),
@@ -147,10 +162,17 @@ public class AllShapes {
 
 		PLACARD = shape(2, 0, 2, 14, 3, 14).forDirectional(UP),
 
+		CLIPBOARD_FLOOR = shape(3, 0, 1, 13, 1, 15).forHorizontal(SOUTH),
+		CLIPBOARD_CEILING = shape(3, 15, 1, 13, 16, 15).forHorizontal(SOUTH),
+		CLIPBOARD_WALL = shape(3, 1, 0, 13, 15, 1).forHorizontal(SOUTH),
+
 		TRACK_ORTHO = shape(TrackVoxelShapes.orthogonal()).forHorizontal(NORTH),
 		TRACK_ASC = shape(TrackVoxelShapes.ascending()).forHorizontal(SOUTH),
 		TRACK_DIAG = shape(TrackVoxelShapes.diagonal()).forHorizontal(SOUTH),
 		TRACK_ORTHO_LONG = shape(TrackVoxelShapes.longOrthogonalZOffset()).forHorizontal(SOUTH),
+
+		DEPLOYER_INTERACTION = shape(CASING_12PX.get(UP)).add(SIX_VOXEL_POLE.get(Axis.Y))
+			.forDirectional(UP),
 
 		WHISTLE_BASE = shape(1, 0, 1, 15, 3, 15).add(5, 0, 5, 11, 8, 11)
 			.forDirectional(UP)
@@ -181,8 +203,14 @@ public class AllShapes {
 	// Static Block Shapes
 	public static final VoxelShape
 
-	TRACK_CROSS = shape(TRACK_ORTHO.get(SOUTH)).add(TRACK_ORTHO.get(EAST))
+	SCAFFOLD_HALF = shape(0, 8, 0, 16, 16, 16).build(), SCAFFOLD_FULL = shape(SCAFFOLD_HALF).add(0, 0, 0, 2, 16, 2)
+		.add(0, 0, 14, 2, 16, 16)
+		.add(14, 0, 0, 16, 16, 2)
+		.add(14, 0, 14, 16, 16, 16)
 		.build(),
+
+		TRACK_CROSS = shape(TRACK_ORTHO.get(SOUTH)).add(TRACK_ORTHO.get(EAST))
+			.build(),
 
 		TRACK_CROSS_DIAG = shape(TRACK_DIAG.get(SOUTH)).add(TRACK_DIAG.get(EAST))
 			.build(),
@@ -210,7 +238,7 @@ public class AllShapes {
 		HEATER_BLOCK_SHAPE = shape(1, 0, 1, 15, 14, 15).build(),
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 16, 16), SEAT = cuboid(0, 0, 0, 16, 8, 16),
-		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16),
+		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16), SEAT_COLLISION_PLAYERS = cuboid(0, 0, 0, 16, 3, 16),
 		MECHANICAL_PROCESSOR_SHAPE = shape(Shapes.block()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
 		TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11)
@@ -221,12 +249,11 @@ public class AllShapes {
 		BELT_COLLISION_MASK = cuboid(0, 0, 0, 16, 19, 16),
 		SCHEMATICANNON_SHAPE = shape(1, 0, 1, 15, 8, 15).add(0.5, 8, 0.5, 15.5, 11, 15.5)
 			.build(),
-		PULLEY_MAGNET = shape(3, 0, 3, 13, 2, 13).add(FOUR_VOXEL_POLE.get(UP))
+		PULLEY_MAGNET = shape(3, 0, 3, 13, 3, 13).add(FOUR_VOXEL_POLE.get(UP))
 			.build(),
 		SPOUT = shape(1, 2, 1, 15, 14, 15).add(2, 0, 2, 14, 16, 14)
 			.build(),
-		MILLSTONE = shape(0, 0, 0, 16, 6, 16).add(2, 6, 2, 14, 13, 14)
-			.add(3, 13, 3, 13, 16, 13)
+		MILLSTONE = shape(0, 0, 0, 16, 6, 16).add(2, 6, 2, 14, 16, 14)
 			.build(),
 		CUCKOO_CLOCK = shape(1, 0, 1, 15, 19, 15).build(),
 		GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15)
@@ -238,9 +265,6 @@ public class AllShapes {
 			.add(0, 10, 0, 16, 16, 16)
 			.build(),
 		CHUTE = shape(1, 8, 1, 15, 16, 15).add(2, 0, 2, 14, 8, 14)
-			.build(),
-		SMART_CHUTE = shape(0, 0, 0, 16, 5, 16).add(0, 9, 0, 16, 15, 16)
-			.add(1, 0, 1, 15, 16, 15)
 			.build(),
 		TANK = shape(1, 0, 1, 15, 16, 15).build(), TANK_TOP = shape(TANK_TOP_LID).add(TANK)
 			.build(),
@@ -254,8 +278,6 @@ public class AllShapes {
 			.build(),
 		FUNNEL_CEILING = shape(2, 8, 2, 14, 18, 14).add(1, 8, 1, 15, 15, 15)
 			.add(0, 6, 0, 16, 12, 16)
-			.build(),
-		DEPOT = shape(CASING_11PX.get(Direction.UP)).add(1, 11, 1, 15, 13, 15)
 			.build(),
 		STATION = shape(0, 0, 0, 16, 2, 16).add(1, 0, 1, 15, 13, 15)
 			.build(),

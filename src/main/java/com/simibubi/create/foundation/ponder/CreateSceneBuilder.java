@@ -3,30 +3,30 @@ package com.simibubi.create.foundation.ponder;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticBlock;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.crafter.ConnectedInputHandler;
-import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
-import com.simibubi.create.content.contraptions.components.structureMovement.interaction.controls.ControlsBlock;
-import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
-import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
-import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkTileEntity;
-import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
-import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplayTileEntity;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.signal.SignalTileEntity;
-import com.simibubi.create.content.logistics.trains.management.edgePoint.station.StationTileEntity;
+import com.simibubi.create.content.contraptions.actors.trainControls.ControlsBlock;
+import com.simibubi.create.content.contraptions.glue.SuperGlueItem;
+import com.simibubi.create.content.fluids.pump.PumpBlockEntity;
+import com.simibubi.create.content.kinetics.base.IRotate;
+import com.simibubi.create.content.kinetics.base.KineticBlock;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.kinetics.base.RotationIndicatorParticleData;
+import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
+import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.kinetics.crafter.ConnectedInputHandler;
+import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity;
+import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
+import com.simibubi.create.content.kinetics.mechanicalArm.ArmBlockEntity;
+import com.simibubi.create.content.logistics.funnel.FunnelBlockEntity;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
+import com.simibubi.create.content.trains.display.FlapDisplayBlockEntity;
+import com.simibubi.create.content.trains.signal.SignalBlockEntity;
+import com.simibubi.create.content.trains.station.StationBlockEntity;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import com.simibubi.create.foundation.ponder.element.ExpandedParrotElement;
-import com.simibubi.create.foundation.ponder.instruction.AnimateTileEntityInstruction;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.ponder.instruction.AnimateBlockEntityInstruction;
 
 import net.createmod.catnip.utility.FunctionalHelper;
 import net.createmod.catnip.utility.NBTHelper;
@@ -72,29 +72,27 @@ public class CreateSceneBuilder extends SceneBuilder {
 			addInstruction(scene -> SuperGlueItem.spawnParticles(scene.getWorld(), pos, side, fullBlock));
 		}
 
-		private void rotationIndicator(BlockPos pos, boolean direction) {
+		private void rotationIndicator(BlockPos pos, boolean direction, BlockPos displayPos) {
 			addInstruction(scene -> {
-				BlockState blockState = scene.getWorld()
-						.getBlockState(pos);
-				BlockEntity tileEntity = scene.getWorld()
-						.getBlockEntity(pos);
+				BlockState blockState = scene.getWorld().getBlockState(pos);
+				BlockEntity blockEntity = scene.getWorld().getBlockEntity(pos);
 
-				if (!(blockState.getBlock() instanceof KineticBlock kineticBlock))
+				if (!(blockState.getBlock() instanceof KineticBlock kb))
 					return;
-				if (!(tileEntity instanceof KineticTileEntity kineticTile))
+				if (!(blockEntity instanceof KineticBlockEntity kbe))
 					return;
 
-				Direction.Axis rotationAxis = kineticBlock.getRotationAxis(blockState);
+				Direction.Axis rotationAxis = kb.getRotationAxis(blockState);
 
-				float speed = kineticTile.getTheoreticalSpeed();
+				float speed = kbe.getTheoreticalSpeed();
 				IRotate.SpeedLevel speedLevel = IRotate.SpeedLevel.of(speed);
 				int color = direction ? speed > 0 ? 0xeb5e0b : 0x1687a7 : speedLevel.getColor();
 				int particleSpeed = speedLevel.getParticleSpeed();
 				particleSpeed *= Math.signum(speed);
 
-				Vec3 location = VecHelper.getCenterOf(pos);
+				Vec3 location = VecHelper.getCenterOf(displayPos);
 				RotationIndicatorParticleData particleData = new RotationIndicatorParticleData(color, particleSpeed,
-						kineticBlock.getParticleInitialRadius(), kineticBlock.getParticleTargetRadius(), 20, rotationAxis.name()
+						kb.getParticleInitialRadius(), kb.getParticleTargetRadius(), 20, rotationAxis.name()
 						.charAt(0));
 
 				for (int i = 0; i < 20; i++)
@@ -104,11 +102,11 @@ public class CreateSceneBuilder extends SceneBuilder {
 		}
 
 		public void rotationSpeedIndicator(BlockPos pos) {
-			rotationIndicator(pos, false);
+			rotationIndicator(pos, false, pos);
 		}
 
 		public void rotationDirectionIndicator(BlockPos pos) {
-			rotationIndicator(pos, true);
+			rotationIndicator(pos, true, pos);
 		}
 
 
@@ -117,28 +115,28 @@ public class CreateSceneBuilder extends SceneBuilder {
 	public class WorldInstructions extends SceneBuilder.WorldInstructions {
 
 		public void rotateBearing(BlockPos pos, float angle, int duration) {
-			addInstruction(AnimateTileEntityInstruction.bearing(pos, angle, duration));
+			addInstruction(AnimateBlockEntityInstruction.bearing(pos, angle, duration));
 		}
 
 		public void movePulley(BlockPos pos, float distance, int duration) {
-			addInstruction(AnimateTileEntityInstruction.pulley(pos, distance, duration));
+			addInstruction(AnimateBlockEntityInstruction.pulley(pos, distance, duration));
 		}
 
 		public void animateBogey(BlockPos pos, float distance, int duration) {
-			addInstruction(AnimateTileEntityInstruction.bogey(pos, distance, duration + 1));
+			addInstruction(AnimateBlockEntityInstruction.bogey(pos, distance, duration + 1));
 		}
 
 		public void moveDeployer(BlockPos pos, float distance, int duration) {
-			addInstruction(AnimateTileEntityInstruction.deployer(pos, distance, duration));
+			addInstruction(AnimateBlockEntityInstruction.deployer(pos, distance, duration));
 		}
 
 		public void createItemOnBeltLike(BlockPos location, Direction insertionSide, ItemStack stack) {
 			addInstruction(scene -> {
 				PonderWorld world = scene.getWorld();
-				BlockEntity tileEntity = world.getBlockEntity(location);
-				if (!(tileEntity instanceof SmartTileEntity beltTileEntity))
+				BlockEntity blockEntity = world.getBlockEntity(location);
+				if (!(blockEntity instanceof SmartBlockEntity beltBlockEntity))
 					return;
-				DirectBeltInputBehaviour behaviour = beltTileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE);
+				DirectBeltInputBehaviour behaviour = beltBlockEntity.getBehaviour(DirectBeltInputBehaviour.TYPE);
 				if (behaviour == null)
 					return;
 				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
@@ -147,28 +145,28 @@ public class CreateSceneBuilder extends SceneBuilder {
 		}
 
 		public ElementLink<BeltItemElement> createItemOnBelt(BlockPos beltLocation, Direction insertionSide,
-				ItemStack stack) {
+															 ItemStack stack) {
 			ElementLink<BeltItemElement> link = new ElementLink<>(BeltItemElement.class);
 			addInstruction(scene -> {
 				PonderWorld world = scene.getWorld();
-				BlockEntity tileEntity = world.getBlockEntity(beltLocation);
-				if (!(tileEntity instanceof BeltTileEntity beltTileEntity))
+				BlockEntity blockEntity = world.getBlockEntity(beltLocation);
+				if (!(blockEntity instanceof BeltBlockEntity beltBlockEntity))
 					return;
 
-				DirectBeltInputBehaviour behaviour = beltTileEntity.getBehaviour(DirectBeltInputBehaviour.TYPE);
+				DirectBeltInputBehaviour behaviour = beltBlockEntity.getBehaviour(DirectBeltInputBehaviour.TYPE);
 				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
 
-				BeltTileEntity controllerTE = beltTileEntity.getControllerTE();
-				if (controllerTE != null)
-					controllerTE.tick();
+				BeltBlockEntity controllerBE = beltBlockEntity.getControllerBE();
+				if (controllerBE != null)
+					controllerBE.tick();
 
-				TransportedItemStackHandlerBehaviour transporter =
-						beltTileEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
+				com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour transporter =
+						beltBlockEntity.getBehaviour(com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TYPE);
 				transporter.handleProcessingOnAllItems(tis -> {
 					BeltItemElement tracker = new BeltItemElement(tis);
 					scene.addElement(tracker);
 					scene.linkElement(tracker, link);
-					return TransportedItemStackHandlerBehaviour.TransportedResult.doNothing();
+					return com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult.doNothing();
 				});
 			});
 			flapFunnel(beltLocation.above(), true);
@@ -178,11 +176,11 @@ public class CreateSceneBuilder extends SceneBuilder {
 		public void removeItemsFromBelt(BlockPos beltLocation) {
 			addInstruction(scene -> {
 				PonderWorld world = scene.getWorld();
-				BlockEntity tileEntity = world.getBlockEntity(beltLocation);
-				if (!(tileEntity instanceof SmartTileEntity beltTileEntity))
+				BlockEntity blockEntity = world.getBlockEntity(beltLocation);
+				if (!(blockEntity instanceof SmartBlockEntity beltBlockEntity))
 					return;
 				TransportedItemStackHandlerBehaviour transporter =
-						beltTileEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
+						beltBlockEntity.getBehaviour(TransportedItemStackHandlerBehaviour.TYPE);
 				if (transporter == null)
 					return;
 				transporter.handleCenteredProcessingOnAllItems(.52f, tis -> TransportedItemStackHandlerBehaviour.TransportedResult.removeItem());
@@ -214,41 +212,42 @@ public class CreateSceneBuilder extends SceneBuilder {
 		}
 
 		public void modifyKineticSpeed(Selection selection, UnaryOperator<Float> speedFunc) {
-			modifyTileNBT(selection, SpeedGaugeTileEntity.class, nbt -> {
+			modifyBlockEntityNBT(selection, SpeedGaugeBlockEntity.class, nbt -> {
 				float newSpeed = speedFunc.apply(nbt.getFloat("Speed"));
-				nbt.putFloat("Value", SpeedGaugeTileEntity.getDialTarget(newSpeed));
+				nbt.putFloat("Value", SpeedGaugeBlockEntity.getDialTarget(newSpeed));
 			});
-			modifyTileNBT(selection, KineticTileEntity.class, nbt -> {
+			modifyBlockEntityNBT(selection, KineticBlockEntity.class, nbt -> {
 				nbt.putFloat("Speed", speedFunc.apply(nbt.getFloat("Speed")));
 			});
 		}
 
 		public void propagatePipeChange(BlockPos pos) {
-			modifyTileEntity(pos, PumpTileEntity.class, te -> te.onSpeedChanged(0));
+			modifyBlockEntity(pos, PumpBlockEntity.class, be -> be.onSpeedChanged(0));
 		}
 
 		public void setFilterData(Selection selection, Class<? extends BlockEntity> teType, ItemStack filter) {
-			modifyTileNBT(selection, teType, nbt -> {
+			modifyBlockEntityNBT(selection, teType, nbt -> {
 				nbt.put("Filter", filter.serializeNBT());
 			});
 		}
 
-		public void instructArm(BlockPos armLocation, ArmTileEntity.Phase phase, ItemStack heldItem,
-				int targetedPoint) {
-			modifyTileNBT(getScene().getSceneBuildingUtil().select.position(armLocation), ArmTileEntity.class, compound -> {
-				NBTHelper.writeEnum(compound, "Phase", phase);
-				compound.put("HeldItem", heldItem.serializeNBT());
-				compound.putInt("TargetPointIndex", targetedPoint);
-				compound.putFloat("MovementProgress", 0);
-			});
+		public void instructArm(BlockPos armLocation, ArmBlockEntity.Phase phase, ItemStack heldItem,
+								int targetedPoint) {
+			modifyBlockEntityNBT(scene.getSceneBuildingUtil().select.position(armLocation), ArmBlockEntity.class,
+					compound -> {
+						NBTHelper.writeEnum(compound, "Phase", phase);
+						compound.put("HeldItem", heldItem.serializeNBT());
+						compound.putInt("TargetPointIndex", targetedPoint);
+						compound.putFloat("MovementProgress", 0);
+					});
 		}
 
 		public void flapFunnel(BlockPos position, boolean outward) {
-			modifyTileEntity(position, FunnelTileEntity.class, funnel -> funnel.flap(!outward));
+			modifyBlockEntity(position, FunnelBlockEntity.class, funnel -> funnel.flap(!outward));
 		}
 
 		public void setCraftingResult(BlockPos crafter, ItemStack output) {
-			modifyTileEntity(crafter, MechanicalCrafterTileEntity.class, mct -> mct.setScriptedResult(output));
+			modifyBlockEntity(crafter, MechanicalCrafterBlockEntity.class, mct -> mct.setScriptedResult(output));
 		}
 
 		public void connectCrafterInvs(BlockPos position1, BlockPos position2) {
@@ -263,31 +262,32 @@ public class CreateSceneBuilder extends SceneBuilder {
 		}
 
 		public void animateTrainStation(BlockPos position, boolean trainPresent) {
-			modifyTileNBT(getScene().getSceneBuildingUtil().select.position(position), StationTileEntity.class,
+			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select.position(position), StationBlockEntity.class,
 					c -> c.putBoolean("ForceFlag", trainPresent));
 		}
 
 		public void conductorBlaze(BlockPos position, boolean conductor) {
-			modifyTileNBT(getScene().getSceneBuildingUtil().select.position(position), BlazeBurnerTileEntity.class,
+			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select.position(position), BlazeBurnerBlockEntity.class,
 					c -> c.putBoolean("TrainHat", conductor));
 		}
 
-		public void changeSignalState(BlockPos position, SignalTileEntity.SignalState state) {
-			modifyTileNBT(getScene().getSceneBuildingUtil().select.position(position), SignalTileEntity.class,
+		public void changeSignalState(BlockPos position, SignalBlockEntity.SignalState state) {
+			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select.position(position), SignalBlockEntity.class,
 					c -> NBTHelper.writeEnum(c, "State", state));
 		}
 
 		public void setDisplayBoardText(BlockPos position, int line, Component text) {
-			modifyTileEntity(position, FlapDisplayTileEntity.class,
+			modifyBlockEntity(position, FlapDisplayBlockEntity.class,
 					t -> t.applyTextManually(line, Component.Serializer.toJson(text)));
 		}
 
 		public void dyeDisplayBoard(BlockPos position, int line, DyeColor color) {
-			modifyTileEntity(position, FlapDisplayTileEntity.class, t -> t.setColour(line, color));
+			modifyBlockEntity(position, FlapDisplayBlockEntity.class, t -> t.setColour(line, color));
 		}
 
 		public void flashDisplayLink(BlockPos position) {
-			modifyTileEntity(position, DisplayLinkTileEntity.class, linkTile -> linkTile.glow.setValue(2));
+			modifyBlockEntity(position, DisplayLinkBlockEntity.class,
+					linkBlockEntity -> linkBlockEntity.glow.setValue(2));
 		}
 
 	}
@@ -327,11 +327,10 @@ public class CreateSceneBuilder extends SceneBuilder {
 
 			@Override
 			protected void tick(PonderScene scene, Parrot entity, Vec3 location) {
-				BlockEntity tileEntity = scene.getWorld()
-						.getBlockEntity(componentPos);
-				if (!(tileEntity instanceof KineticTileEntity))
+				BlockEntity blockEntity = scene.getWorld().getBlockEntity(componentPos);
+				if (!(blockEntity instanceof KineticBlockEntity))
 					return;
-				float rpm = ((KineticTileEntity) tileEntity).getSpeed();
+				float rpm = ((KineticBlockEntity) blockEntity).getSpeed();
 				entity.yRotO = entity.getYRot();
 				entity.setYRot(entity.getYRot() + (rpm * .3f));
 			}

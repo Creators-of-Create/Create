@@ -1,0 +1,10 @@
+{
+  "parent": "create:block/belt_funnel/block_pushing",
+  "textures": {
+    "particle": "create:block/brass_block",
+    "block": "create:block/brass_block",
+    "direction": "create:block/funnel/brass_funnel_push",
+    "redstone": "create:block/funnel/brass_funnel_unpowered",
+    "base": "create:block/funnel/brass_funnel"
+  }
+}

@@ -1,6 +1,6 @@
 package com.simibubi.create;
 
-import com.simibubi.create.content.logistics.trains.entity.CarriageSyncDataSerializer;
+import com.simibubi.create.content.trains.entity.CarriageSyncDataSerializer;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DataSerializerEntry;

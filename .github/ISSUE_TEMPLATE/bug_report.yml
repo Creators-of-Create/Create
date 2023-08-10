@@ -1,6 +1,6 @@
 name: Bug Report
 description: Create a bug report to help us improve Create
-labels: [ "bug" ]
+labels: [ "type: bug" ]
 body:
     -   type: textarea
         attributes:
@@ -49,6 +49,13 @@ body:
             label: Mod Version
             description: The version of the mod you were using when the bug occured
             options:
+                - "0.5.1d"
+                - "0.5.1c"
+                - "0.5.1b"
+                - "0.5.1a"
+                - "0.5.0i"
+                - "0.5.0h"
+                - "0.5.0g"
                 - "0.5.0f"
                 - "0.5.0e"
                 - "0.5.0d"
@@ -109,6 +116,7 @@ body:
             label: Minecraft Version
             description: The version of Minecraft you were using when the bug occured
             options:
+                - "1.20.1"
                 - "1.19.2"
                 - "1.18.2"
                 - "1.18.1"

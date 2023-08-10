@@ -1,14 +1,10 @@
 package com.simibubi.create;
 
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
-import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
+import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_RAW_MATERIALS;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
 import static com.simibubi.create.AllTags.forgeItemTag;
-import static com.simibubi.create.content.AllSections.CURIOSITIES;
-import static com.simibubi.create.content.AllSections.KINETICS;
-import static com.simibubi.create.content.AllSections.LOGISTICS;
-import static com.simibubi.create.content.AllSections.MATERIALS;
-import static com.simibubi.create.content.AllSections.SCHEMATICS;
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.ALUMINUM;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.LEAD;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.NICKEL;
@@ -20,64 +16,60 @@ import static com.simibubi.create.foundation.data.recipe.CompatMetals.TIN;
 import static com.simibubi.create.foundation.data.recipe.CompatMetals.URANIUM;
 
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
-import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MinecartContraptionItem;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
-import com.simibubi.create.content.contraptions.goggles.GogglesItem;
-import com.simibubi.create.content.contraptions.goggles.GogglesModel;
-import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyItem;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
-import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
-import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
-import com.simibubi.create.content.contraptions.wrench.WrenchItem;
-import com.simibubi.create.content.curiosities.BuildersTeaItem;
-import com.simibubi.create.content.curiosities.ChromaticCompoundColor;
-import com.simibubi.create.content.curiosities.ChromaticCompoundItem;
-import com.simibubi.create.content.curiosities.CombustibleItem;
-import com.simibubi.create.content.curiosities.ExperienceNuggetItem;
-import com.simibubi.create.content.curiosities.RefinedRadianceItem;
-import com.simibubi.create.content.curiosities.ShadowSteelItem;
-import com.simibubi.create.content.curiosities.TreeFertilizerItem;
-import com.simibubi.create.content.curiosities.armor.CopperArmorItem;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankItem;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankItem.CopperBacktankBlockItem;
-import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
-import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
-import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
-import com.simibubi.create.content.curiosities.tools.BlueprintItem;
-import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
-import com.simibubi.create.content.curiosities.tools.SandPaperItem;
-import com.simibubi.create.content.curiosities.weapons.PotatoCannonItem;
-import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItem;
-import com.simibubi.create.content.logistics.item.LinkedControllerItem;
-import com.simibubi.create.content.logistics.item.filter.FilterItem;
-import com.simibubi.create.content.logistics.trains.management.schedule.ScheduleItem;
-import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
-import com.simibubi.create.content.schematics.item.SchematicItem;
+import com.simibubi.create.content.contraptions.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.minecart.MinecartCouplingItem;
+import com.simibubi.create.content.contraptions.mounted.MinecartContraptionItem;
+import com.simibubi.create.content.equipment.BuildersTeaItem;
+import com.simibubi.create.content.equipment.TreeFertilizerItem;
+import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
+import com.simibubi.create.content.equipment.armor.BacktankItem;
+import com.simibubi.create.content.equipment.armor.BacktankItem.BacktankBlockItem;
+import com.simibubi.create.content.equipment.armor.DivingBootsItem;
+import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
+import com.simibubi.create.content.equipment.blueprint.BlueprintItem;
+import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripItem;
+import com.simibubi.create.content.equipment.goggles.GogglesItem;
+import com.simibubi.create.content.equipment.goggles.GogglesModel;
+import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonItem;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperItem;
+import com.simibubi.create.content.equipment.symmetryWand.SymmetryWandItem;
+import com.simibubi.create.content.equipment.wrench.WrenchItem;
+import com.simibubi.create.content.equipment.zapper.terrainzapper.WorldshaperItem;
+import com.simibubi.create.content.kinetics.belt.item.BeltConnectorItem;
+import com.simibubi.create.content.kinetics.gearbox.VerticalGearboxItem;
+import com.simibubi.create.content.legacy.ChromaticCompoundColor;
+import com.simibubi.create.content.legacy.ChromaticCompoundItem;
+import com.simibubi.create.content.legacy.RefinedRadianceItem;
+import com.simibubi.create.content.legacy.ShadowSteelItem;
+import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.materials.ExperienceNuggetItem;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlockItem;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
+import com.simibubi.create.content.redstone.link.controller.LinkedControllerItem;
+import com.simibubi.create.content.schematics.SchematicAndQuillItem;
+import com.simibubi.create.content.schematics.SchematicItem;
+import com.simibubi.create.content.trains.schedule.ScheduleItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.recipe.CompatMetals;
+import com.simibubi.create.foundation.item.CombustibleItem;
 import com.simibubi.create.foundation.item.HiddenIngredientItem;
+import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.Tags;
 
 public class AllItems {
 
-	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.creativeModeTab(() -> Create.BASE_CREATIVE_TAB);
-
-	// Schematics
-
 	static {
-		REGISTRATE.startSection(MATERIALS);
+		REGISTRATE.creativeModeTab(() -> AllCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
 
 	public static final ItemEntry<Item> WHEAT_FLOUR =
@@ -186,10 +178,10 @@ public class AllItems {
 		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), PLATES.tag),
 		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), PLATES.tag, ItemTags.PIGLIN_LOVED),
 
-		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", CRUSHED_ORES.tag),
-		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", CRUSHED_ORES.tag, ItemTags.PIGLIN_LOVED),
-		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", CRUSHED_ORES.tag),
-		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag);
+		CRUSHED_IRON = taggedIngredient("crushed_raw_iron", CRUSHED_RAW_MATERIALS.tag),
+		CRUSHED_GOLD = taggedIngredient("crushed_raw_gold", CRUSHED_RAW_MATERIALS.tag, ItemTags.PIGLIN_LOVED),
+		CRUSHED_COPPER = taggedIngredient("crushed_raw_copper", CRUSHED_RAW_MATERIALS.tag),
+		CRUSHED_ZINC = taggedIngredient("crushed_raw_zinc", CRUSHED_RAW_MATERIALS.tag);
 
 	public static final ItemEntry<TagDependentIngredientItem> CRUSHED_OSMIUM = compatCrushedOre(OSMIUM),
 		CRUSHED_PLATINUM = compatCrushedOre(PLATINUM), CRUSHED_SILVER = compatCrushedOre(SILVER),
@@ -198,10 +190,6 @@ public class AllItems {
 		CRUSHED_URANIUM = compatCrushedOre(URANIUM), CRUSHED_NICKEL = compatCrushedOre(NICKEL);
 
 	// Kinetics
-
-	static {
-		REGISTRATE.startSection(KINETICS);
-	}
 
 	public static final ItemEntry<BeltConnectorItem> BELT_CONNECTOR =
 		REGISTRATE.item("belt_connector", BeltConnectorItem::new)
@@ -239,22 +227,72 @@ public class AllItems {
 
 	// wrapped by COPPER_BACKTANK for block placement uses.
 	// must be registered as of 1.18.2
-	public static final ItemEntry<CopperBacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
-		.item("copper_backtank_placeable", p -> new CopperBacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), p))
+	public static final ItemEntry<BacktankBlockItem> COPPER_BACKTANK_PLACEABLE = REGISTRATE
+		.item("copper_backtank_placeable",
+			p -> new BacktankBlockItem(AllBlocks.COPPER_BACKTANK.get(), AllItems.COPPER_BACKTANK::get, p))
 		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
 		.register();
 
-	public static final ItemEntry<? extends CopperArmorItem>
+	// wrapped by NETHERITE_BACKTANK for block placement uses.
+	// must be registered as of 1.18.2
+	public static final ItemEntry<BacktankBlockItem> NETHERITE_BACKTANK_PLACEABLE = REGISTRATE
+		.item("netherite_backtank_placeable",
+			p -> new BacktankBlockItem(AllBlocks.NETHERITE_BACKTANK.get(), AllItems.NETHERITE_BACKTANK::get, p))
+		.model((c, p) -> p.withExistingParent(c.getName(), p.mcLoc("item/barrier")))
+		.register();
 
-	COPPER_BACKTANK = REGISTRATE.item("copper_backtank", p -> new CopperBacktankItem(p, COPPER_BACKTANK_PLACEABLE))
-		.model(AssetLookup.customGenericItemModel("_", "item"))
-		.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
-		.register(),
+	public static final ItemEntry<? extends BacktankItem>
 
-		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
+	COPPER_BACKTANK =
+		REGISTRATE
+			.item("copper_backtank",
+				p -> new BacktankItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving"),
+					COPPER_BACKTANK_PLACEABLE))
+			.model(AssetLookup.customGenericItemModel("_", "item"))
+			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
+			.tag(forgeItemTag("armors/chestplates"))
 			.register(),
 
-		DIVING_BOOTS = REGISTRATE.item("diving_boots", DivingBootsItem::new)
+		NETHERITE_BACKTANK = REGISTRATE
+			.item("netherite_backtank",
+				p -> new BacktankItem.Layered(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving"),
+					NETHERITE_BACKTANK_PLACEABLE))
+			.model(AssetLookup.customGenericItemModel("_", "item"))
+			.properties(p -> p.fireResistant())
+			.tag(AllItemTags.PRESSURIZED_AIR_SOURCES.tag)
+			.tag(forgeItemTag("armors/chestplates"))
+			.register();
+
+	public static final ItemEntry<? extends DivingHelmetItem>
+
+	COPPER_DIVING_HELMET =
+		REGISTRATE
+			.item("copper_diving_helmet",
+				p -> new DivingHelmetItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
+			.tag(forgeItemTag("armors/helmets"))
+			.register(),
+
+		NETHERITE_DIVING_HELMET = REGISTRATE
+			.item("netherite_diving_helmet",
+				p -> new DivingHelmetItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+			.properties(p -> p.fireResistant())
+			.tag(forgeItemTag("armors/helmets"))
+			.register();
+
+	public static final ItemEntry<? extends DivingBootsItem>
+
+	COPPER_DIVING_BOOTS =
+		REGISTRATE
+			.item("copper_diving_boots",
+				p -> new DivingBootsItem(AllArmorMaterials.COPPER, p, Create.asResource("copper_diving")))
+			.tag(forgeItemTag("armors/boots"))
+			.register(),
+
+		NETHERITE_DIVING_BOOTS = REGISTRATE
+			.item("netherite_diving_boots",
+				p -> new DivingBootsItem(ArmorMaterials.NETHERITE, p, Create.asResource("netherite_diving")))
+			.properties(p -> p.fireResistant())
+			.tag(forgeItemTag("armors/boots"))
 			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
@@ -263,7 +301,7 @@ public class AllItems {
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
 		.tag(AllTags.AllItemTags.SANDPAPER.tag)
-		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
+		.onRegister(s -> ItemDescription.referKey(s, SAND_PAPER))
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
@@ -285,10 +323,6 @@ public class AllItems {
 			.register();
 
 	// Curiosities
-
-	static {
-		REGISTRATE.startSection(CURIOSITIES);
-	}
 
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
@@ -326,28 +360,17 @@ public class AllItems {
 
 	// Logistics
 
-	static {
-		REGISTRATE.startSection(LOGISTICS);
-	}
-
 	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
-		.model(AssetLookup.existingItemModel())
-		.register();
-
-	public static final ItemEntry<FilterItem> ATTRIBUTE_FILTER =
-		REGISTRATE.item("attribute_filter", FilterItem::attribute)
-			.model(AssetLookup.existingItemModel())
-			.register();
+		.lang("List Filter")
+		.register(), ATTRIBUTE_FILTER =
+			REGISTRATE.item("attribute_filter", FilterItem::attribute)
+				.register();
 
 	public static final ItemEntry<ScheduleItem> SCHEDULE = REGISTRATE.item("schedule", ScheduleItem::new)
 		.lang("Train Schedule")
 		.register();
 
 	// Schematics
-
-	static {
-		REGISTRATE.startSection(SCHEMATICS);
-	}
 
 	public static final ItemEntry<Item> EMPTY_SCHEMATIC = REGISTRATE.item("empty_schematic", Item::new)
 		.properties(p -> p.stacksTo(1))
@@ -389,9 +412,9 @@ public class AllItems {
 	private static ItemEntry<TagDependentIngredientItem> compatCrushedOre(CompatMetals metal) {
 		String metalName = metal.getName();
 		return REGISTRATE
-			.item("crushed_" + metalName + "_ore",
+			.item("crushed_raw_" + metalName,
 				props -> new TagDependentIngredientItem(props, AllTags.forgeItemTag("ores/" + metalName)))
-			.tag(CRUSHED_ORES.tag)
+			.tag(CRUSHED_RAW_MATERIALS.tag)
 			.register();
 	}
 

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "create:stone_types/ochrum"
+  },
+  "result": "create:ochrum",
+  "count": 1
+}

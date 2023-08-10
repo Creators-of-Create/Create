@@ -14,6 +14,7 @@
     "create:small_granite_brick_stairs",
     "create:small_granite_brick_wall",
     "create:layered_granite",
-    "create:granite_pillar"
+    "create:granite_pillar",
+    "minecraft:granite"
   ]
 }

@@ -14,20 +14,21 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
-import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleBlock.WhistleSize;
-import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock;
-import com.simibubi.create.content.contraptions.components.steam.whistle.WhistleExtenderBlock.WhistleExtenderShape;
-import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
-import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.contraptions.chassis.LinearChassisBlock;
+import com.simibubi.create.content.contraptions.chassis.RadialChassisBlock;
+import com.simibubi.create.content.contraptions.mounted.CartAssembleRailType;
+import com.simibubi.create.content.contraptions.mounted.CartAssemblerBlock;
+import com.simibubi.create.content.decoration.steamWhistle.WhistleBlock.WhistleSize;
+import com.simibubi.create.content.decoration.steamWhistle.WhistleExtenderBlock;
+import com.simibubi.create.content.decoration.steamWhistle.WhistleExtenderBlock.WhistleExtenderShape;
+import com.simibubi.create.content.fluids.pipes.EncasedPipeBlock;
+import com.simibubi.create.content.fluids.pipes.FluidPipeBlock;
+import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
+import com.tterrag.registrate.util.nullness.NonnullType;
 
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.Pointing;
@@ -333,6 +334,21 @@ public class BlockStateGen {
 		};
 	}
 
+	public static <P extends Block> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> naturalStoneTypeBlock(
+		String type) {
+		return (c, p) -> {
+			ConfiguredModel[] variants = new ConfiguredModel[4];
+			for (int i = 0; i < variants.length; i++)
+				variants[i] = ConfiguredModel.builder()
+					.modelFile(p.models()
+						.cubeAll(type + "_natural_" + i, p.modLoc("block/palettes/stone_types/natural/" + type + "_" + i)))
+					.buildLast();
+			p.getVariantBuilder(c.get())
+				.partialState()
+				.setModels(variants);
+		};
+	}
+
 	public static <P extends EncasedPipeBlock> NonNullBiConsumer<DataGenContext<Block, P>, RegistrateBlockstateProvider> encasedPipe() {
 		return (c, p) -> {
 			ModelFile open = AssetLookup.partialBaseModel(c, p, "open");
@@ -520,6 +536,13 @@ public class BlockStateGen {
 			.condition(propertyMap.get(rightD), right)
 			.condition(propertyMap.get(downD), down)
 			.end();
+	}
+
+	public static Function<BlockState, ConfiguredModel[]> mapToAir(@NonnullType RegistrateBlockstateProvider p) {
+		return state -> ConfiguredModel.builder()
+			.modelFile(p.models()
+				.getExistingFile(p.mcLoc("block/air")))
+			.build();
 	}
 
 }

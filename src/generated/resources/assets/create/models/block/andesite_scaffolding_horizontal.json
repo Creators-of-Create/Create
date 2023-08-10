@@ -1,0 +1,10 @@
+{
+  "parent": "create:block/scaffold/block_horizontal",
+  "textures": {
+    "top": "create:block/funnel/andesite_funnel_frame",
+    "inside": "create:block/scaffold/andesite_scaffold_inside",
+    "side": "create:block/scaffold/andesite_scaffold",
+    "casing": "create:block/andesite_casing",
+    "particle": "create:block/scaffold/andesite_scaffold"
+  }
+}

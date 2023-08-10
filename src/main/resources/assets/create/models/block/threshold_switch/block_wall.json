@@ -1,0 +1,42 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"3": "create:block/threshold_switch_back",
+		"level": "create:block/threshold_switch/level_0",
+		"5": "create:block/threshold_switch_front",
+		"6": "create:block/smart_observer_top",
+		"particle": "#level"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#5"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#level"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#3"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#level"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#6"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#6"}
+			}
+		},
+		{
+			"from": [2.95, 2.95, -1.95],
+			"to": [13.05, 13.05, 0.1],
+			"faces": {
+				"north": {"uv": [3, 3, 13, 13], "texture": "#5"},
+				"east": {"uv": [5, 3, 3, 13], "texture": "#5"},
+				"west": {"uv": [13, 3, 11, 13], "texture": "#5"},
+				"up": {"uv": [13, 3, 3, 5], "texture": "#5"},
+				"down": {"uv": [13, 11, 3, 13], "texture": "#5"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		}
+	}
+}

@@ -7,13 +7,14 @@
 		"1": "create:block/axis_top",
 		"6": "create:block/piston_bottom",
 		"7": "create:block/piston_inner",
+		"10": "create:block/andesite_casing_piston",
 		"18": "create:block/deployer",
+		"particle": "create:block/axis",
 		"gearbox_top": "create:block/gearbox_top",
 		"gearbox": "create:block/gearbox",
 		"andesite_casing_short": "create:block/andesite_casing_short",
 		"mechanical_press_pole": "create:block/mechanical_press_pole",
-		"mechanical_press_head": "create:block/mechanical_press_head",
-		"particle": "create:block/axis"
+		"mechanical_press_head": "create:block/mechanical_press_head"
 	},
 	"elements": [
 		{
@@ -21,7 +22,7 @@
 			"from": [0, 0, 0],
 			"to": [16, 16, 2],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#6"},
+				"north": {"uv": [0, 16, 16, 0], "rotation": 90, "texture": "#6"},
 				"east": {"uv": [0, 14, 16, 16], "rotation": 270, "texture": "#andesite_casing_short"},
 				"south": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#gearbox_top"},
 				"west": {"uv": [0, 14, 16, 16], "rotation": 90, "texture": "#andesite_casing_short"},
@@ -45,10 +46,10 @@
 			"from": [14, 0, 2],
 			"to": [16, 16, 12],
 			"faces": {
-				"east": {"uv": [0, 4, 16, 14], "rotation": 270, "texture": "#andesite_casing_short"},
+				"east": {"uv": [0, 4, 16, 14], "rotation": 270, "texture": "#10"},
 				"south": {"uv": [0, 0, 16, 2], "rotation": 270, "texture": "#andesite_casing_short"},
 				"west": {"uv": [0, 0, 16, 10], "rotation": 90, "texture": "#gearbox_top"},
-				"up": {"uv": [0, 2, 2, 12], "rotation": 180, "texture": "#gearbox_top"},
+				"up": {"uv": [16, 0, 14, 10], "rotation": 180, "texture": "#gearbox_top"},
 				"down": {"uv": [14, 0, 16, 10], "texture": "#gearbox_top"}
 			}
 		},
@@ -59,9 +60,9 @@
 			"faces": {
 				"east": {"uv": [0, 0, 16, 10], "rotation": 270, "texture": "#gearbox_top"},
 				"south": {"uv": [0, 0, 16, 2], "rotation": 90, "texture": "#andesite_casing_short"},
-				"west": {"uv": [0, 4, 16, 14], "rotation": 90, "texture": "#andesite_casing_short"},
-				"up": {"uv": [14, 2, 16, 12], "rotation": 180, "texture": "#gearbox_top"},
-				"down": {"uv": [0, 0, 2, 10], "texture": "#gearbox_top"}
+				"west": {"uv": [0, 4, 16, 14], "rotation": 90, "texture": "#10"},
+				"up": {"uv": [14, 0, 16, 10], "rotation": 180, "texture": "#gearbox_top"},
+				"down": {"uv": [16, 0, 14, 10], "texture": "#gearbox_top"}
 			}
 		},
 		{
@@ -231,15 +232,18 @@
 		{
 			"name": "body",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1, 2, 3]
 		},
 		{
 			"name": "pole",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [
 				{
 					"name": "head",
 					"origin": [8, 8, 8],
+					"color": 0,
 					"children": [4, 5]
 				}
 			]
@@ -247,14 +251,18 @@
 		{
 			"name": "hand_pointing",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [
 				{
 					"name": "head",
 					"origin": [8, 8, 8],
-					"children": [6,
+					"color": 0,
+					"children": [
+						6,
 						{
 							"name": "Pointing",
 							"origin": [8, 8, 8],
+							"color": 0,
 							"children": [7, 8, 9, 10, 11, 12]
 						}
 					]
@@ -264,6 +272,7 @@
 		{
 			"name": "shaft",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [13]
 		}
 	]

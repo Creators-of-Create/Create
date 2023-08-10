@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:ochrum_from_stone_types_ochrum_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_stone_types_ochrum": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/ochrum"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:ochrum_from_stone_types_ochrum_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_ochrum",
+      "has_the_recipe"
+    ]
+  ]
+}

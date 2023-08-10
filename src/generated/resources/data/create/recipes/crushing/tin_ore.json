@@ -7,10 +7,10 @@
   ],
   "results": [
     {
-      "item": "create:crushed_tin_ore"
+      "item": "create:crushed_raw_tin"
     },
     {
-      "item": "create:crushed_tin_ore",
+      "item": "create:crushed_raw_tin",
       "chance": 0.75
     },
     {

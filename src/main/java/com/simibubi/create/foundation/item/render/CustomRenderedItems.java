@@ -1,48 +1,44 @@
 package com.simibubi.create.foundation.item.render;
 
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.function.Consumer;
 
-import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
-
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class CustomRenderedItems {
 
-	private final Map<ResourceLocation, NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> modelFuncs = new HashMap<>();
-	private final Map<Item, NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> finalModelFuncs = new IdentityHashMap<>();
+	private static final Set<Item> ITEMS = new ReferenceOpenHashSet<>();
+	private static boolean itemsFiltered = false;
 
-	public void register(ResourceLocation item,
-		NonNullFunction<BakedModel, ? extends CustomRenderedItemModel> func) {
-		modelFuncs.put(item, func);
+	/**
+	 * Track an item that uses a subclass of {@link CustomRenderedItemModelRenderer} as its custom renderer
+	 * to automatically wrap its model with {@link CustomRenderedItemModel}.
+	 * @param item The item that should have its model swapped.
+	 */
+	public static void register(Item item) {
+		ITEMS.add(item);
 	}
 
-	public void forEach(
-		NonNullBiConsumer<Item, NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> consumer) {
-		loadEntriesIfMissing();
-		finalModelFuncs.forEach(consumer);
-	}
-
-	private void loadEntriesIfMissing() {
-		if (finalModelFuncs.isEmpty())
-			loadEntries();
-	}
-
-	private void loadEntries() {
-		finalModelFuncs.clear();
-		CustomRenderedItemModelRenderer.acceptModelFuncs(finalModelFuncs::put);
-		modelFuncs.forEach((location, func) -> {
-			Item item = ForgeRegistries.ITEMS.getValue(location);
-			if (item == null) {
-				return;
+	/**
+	 * This method must not be called before item registration is finished!
+	 */
+	public static void forEach(Consumer<Item> consumer) {
+		if (!itemsFiltered) {
+			Iterator<Item> iterator = ITEMS.iterator();
+			while (iterator.hasNext()) {
+				Item item = iterator.next();
+				if (!ForgeRegistries.ITEMS.containsValue(item) ||
+						!(RenderProperties.get(item).getItemStackRenderer() instanceof CustomRenderedItemModelRenderer)) {
+					iterator.remove();
+				}
 			}
-			finalModelFuncs.put(item, func);
-		});
+			itemsFiltered = true;
+		}
+		ITEMS.forEach(consumer);
 	}
 
 }

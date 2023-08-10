@@ -8,8 +8,8 @@
 	"elements": [
 		{
 			"name": "GaugeBody",
-			"from": [2, 2, 1],
-			"to": [14, 14, 15],
+			"from": [2, 1.95, 0.95],
+			"to": [14, 14.05, 15.05],
 			"faces": {
 				"north": {"uv": [0, 10, 6, 16], "texture": "#2"},
 				"east": {"uv": [9, 10, 16, 16], "texture": "#2"},

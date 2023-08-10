@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:dripstone_block"
-  },
-  "result": "create:layered_dripstone",
-  "count": 1
-}

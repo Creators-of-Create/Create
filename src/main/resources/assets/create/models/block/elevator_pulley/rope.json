@@ -1,0 +1,31 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"1": "create:block/elevator_pulley_belt",
+		"particle": "create:block/brass_gearbox"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 3.5],
+			"to": [10, 16, 5.5],
+			"faces": {
+				"north": {"uv": [3, 0, 7, 16], "texture": "#1"},
+				"east": {"uv": [2, 0, 0, 16], "texture": "#1"},
+				"south": {"uv": [3, 0, 7, 16], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 16], "texture": "#1"}
+			}
+		},
+		{
+			"from": [6, 0, 10.5],
+			"to": [10, 16, 12.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, -5.5, 11.5]},
+			"faces": {
+				"north": {"uv": [13, 16, 9, 0], "texture": "#1"},
+				"east": {"uv": [14, 0, 16, 16], "rotation": 180, "texture": "#1"},
+				"south": {"uv": [13, 16, 9, 0], "texture": "#1"},
+				"west": {"uv": [16, 0, 14, 16], "rotation": 180, "texture": "#1"}
+			}
+		}
+	]
+}

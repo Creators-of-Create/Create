@@ -5,15 +5,15 @@ import java.util.Map;
 import java.util.Random;
 
 import com.jozufozu.flywheel.core.model.ModelUtil;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferBuilder;
+import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.simibubi.create.foundation.render.TileEntityRenderHelper;
+import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
+import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
-import net.createmod.catnip.render.SuperBufferFactory;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
@@ -76,15 +76,19 @@ public class SchematicRenderer {
 		bufferCache.forEach((layer, buffer) -> {
 			buffer.renderInto(ms, buffers.getBuffer(layer));
 		});
-		TileEntityRenderHelper.renderTileEntities(schematic, schematic.getRenderedTileEntities(), ms, buffers);
+		BlockEntityRenderHelper.renderBlockEntities(schematic, schematic.getRenderedBlockEntities(), ms, buffers);
 	}
 
 	protected void redraw() {
+		bufferCache.forEach((layer, sbb) -> sbb.delete());
 		bufferCache.clear();
+
 		for (RenderType layer : RenderType.chunkBufferLayers()) {
 			SuperByteBuffer buffer = drawLayer(layer);
 			if (!buffer.isEmpty())
 				bufferCache.put(layer, buffer);
+			else
+				buffer.delete();
 		}
 	}
 
@@ -100,12 +104,12 @@ public class SchematicRenderer {
 		BoundingBox bounds = renderWorld.getBounds();
 
 		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		ShadeSeparatedBufferBuilder builder = new ShadeSeparatedBufferBuilder(512);
+		BufferBuilder shadedBuilder = objects.shadedBuilder;
 		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
 
-		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		shadeSeparatingWrapper.prepare(builder, unshadedBuilder);
+		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
 
 		ForgeHooksClient.setRenderType(layer);
 		ModelBlockRenderer.enableCaching();
@@ -117,9 +121,9 @@ public class SchematicRenderer {
 				poseStack.pushPose();
 				poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
 
-				BlockEntity tileEntity = renderWorld.getBlockEntity(localPos);
+				BlockEntity blockEntity = renderWorld.getBlockEntity(localPos);
 				dispatcher.renderBatched(state, pos, renderWorld, poseStack, shadeSeparatingWrapper, true, random,
-					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
+					blockEntity != null ? blockEntity.getModelData() : EmptyModelData.INSTANCE);
 
 				poseStack.popPose();
 			}
@@ -128,13 +132,13 @@ public class SchematicRenderer {
 		ForgeHooksClient.setRenderType(null);
 
 		shadeSeparatingWrapper.clear();
-		unshadedBuilder.end();
-		builder.appendUnshadedVertices(unshadedBuilder);
-		builder.end();
+		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
 
 		renderWorld.renderMode = false;
 
-		return SuperBufferFactory.getInstance().create(builder);
+		SuperByteBuffer sbb = new FlwSuperByteBuffer(bufferedData);
+		bufferedData.release();
+		return sbb;
 	}
 
 	private static int getLayerCount() {
@@ -147,6 +151,7 @@ public class SchematicRenderer {
 		public final Random random = new Random();
 		public final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}
 

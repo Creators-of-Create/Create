@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing",
+  "base": {
+    "item": "minecraft:netherite_chestplate"
+  },
+  "addition": {
+    "item": "create:copper_backtank"
+  },
+  "result": {
+    "item": "create:netherite_backtank"
+  }
+}

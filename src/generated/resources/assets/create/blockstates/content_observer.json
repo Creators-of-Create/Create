@@ -1,33 +1,109 @@
 {
   "variants": {
-    "facing=north,powered=false": {
+    "facing=north,powered=false,target=floor": {
+      "model": "create:block/content_observer/block",
+      "x": 90
+    },
+    "facing=south,powered=false,target=floor": {
+      "model": "create:block/content_observer/block",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,powered=false,target=floor": {
+      "model": "create:block/content_observer/block",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,powered=false,target=floor": {
+      "model": "create:block/content_observer/block",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,powered=true,target=floor": {
+      "model": "create:block/content_observer/block_powered",
+      "x": 90
+    },
+    "facing=south,powered=true,target=floor": {
+      "model": "create:block/content_observer/block_powered",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,powered=true,target=floor": {
+      "model": "create:block/content_observer/block_powered",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,powered=true,target=floor": {
+      "model": "create:block/content_observer/block_powered",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,powered=false,target=wall": {
       "model": "create:block/content_observer/block"
     },
-    "facing=south,powered=false": {
+    "facing=south,powered=false,target=wall": {
       "model": "create:block/content_observer/block",
       "y": 180
     },
-    "facing=west,powered=false": {
+    "facing=west,powered=false,target=wall": {
       "model": "create:block/content_observer/block",
       "y": 270
     },
-    "facing=east,powered=false": {
+    "facing=east,powered=false,target=wall": {
       "model": "create:block/content_observer/block",
       "y": 90
     },
-    "facing=north,powered=true": {
+    "facing=north,powered=true,target=wall": {
       "model": "create:block/content_observer/block_powered"
     },
-    "facing=south,powered=true": {
+    "facing=south,powered=true,target=wall": {
       "model": "create:block/content_observer/block_powered",
       "y": 180
     },
-    "facing=west,powered=true": {
+    "facing=west,powered=true,target=wall": {
       "model": "create:block/content_observer/block_powered",
       "y": 270
     },
-    "facing=east,powered=true": {
+    "facing=east,powered=true,target=wall": {
       "model": "create:block/content_observer/block_powered",
+      "y": 90
+    },
+    "facing=north,powered=false,target=ceiling": {
+      "model": "create:block/content_observer/block",
+      "x": 270
+    },
+    "facing=south,powered=false,target=ceiling": {
+      "model": "create:block/content_observer/block",
+      "x": 270,
+      "y": 180
+    },
+    "facing=west,powered=false,target=ceiling": {
+      "model": "create:block/content_observer/block",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,powered=false,target=ceiling": {
+      "model": "create:block/content_observer/block",
+      "x": 270,
+      "y": 90
+    },
+    "facing=north,powered=true,target=ceiling": {
+      "model": "create:block/content_observer/block_powered",
+      "x": 270
+    },
+    "facing=south,powered=true,target=ceiling": {
+      "model": "create:block/content_observer/block_powered",
+      "x": 270,
+      "y": 180
+    },
+    "facing=west,powered=true,target=ceiling": {
+      "model": "create:block/content_observer/block_powered",
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,powered=true,target=ceiling": {
+      "model": "create:block/content_observer/block_powered",
+      "x": 270,
       "y": 90
     }
   }

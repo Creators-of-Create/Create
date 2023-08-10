@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
@@ -28,15 +29,15 @@ public class FilesHelper {
 		}
 	}
 
-	public static String findFirstValidFilename(String name, String folderPath, String extension) {
+	public static String findFirstValidFilename(String name, Path folderPath, String extension) {
 		int index = 0;
 		String filename;
-		String filepath;
+		Path filepath;
 		do {
 			filename = slug(name) + ((index == 0) ? "" : "_" + index) + "." + extension;
 			index++;
-			filepath = folderPath + "/" + filename;
-		} while (Files.exists(Paths.get(filepath)));
+			filepath = folderPath.resolve(filename);
+		} while (Files.exists(filepath));
 		return filename;
 	}
 

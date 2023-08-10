@@ -3,10 +3,10 @@
 	"parent": "block/block",
 	"textures": {
 		"3": "create:block/net",
+		"particle": "create:block/net",
 		"back": "create:block/gearbox",
 		"fan_casing": "create:block/fan_casing",
-		"fan_side": "create:block/fan_side",
-		"particle": "create:block/net"
+		"fan_side": "create:block/fan_side"
 	},
 	"elements": [
 		{
@@ -16,9 +16,9 @@
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 9, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#fan_side"},
-				"east": {"uv": [0, 0, 16, 2], "texture": "#fan_side"},
-				"south": {"uv": [0, 0, 16, 2], "texture": "#fan_side"},
-				"west": {"uv": [0, 14, 16, 16], "rotation": 180, "texture": "#fan_side"},
+				"east": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#fan_side"},
+				"south": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#fan_side"},
+				"west": {"uv": [0, 0, 16, 2], "rotation": 180, "texture": "#fan_side"},
 				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#fan_casing"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#fan_casing"}
 			}
@@ -34,7 +34,7 @@
 				"south": {"uv": [0, 2, 14, 14], "rotation": 270, "texture": "#3"},
 				"west": {"uv": [0, 2, 14, 14], "rotation": 270, "texture": "#3"},
 				"up": {"uv": [0, 2, 12, 14], "rotation": 180, "texture": "#3"},
-				"down": {"uv": [0, 0, 12, 12], "texture": "#3"}
+				"down": {"uv": [0, 2, 12, 14], "texture": "#3"}
 			}
 		},
 		{
@@ -108,6 +108,7 @@
 		{
 			"name": "ItemCollector",
 			"origin": [8, 8, 24],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6]
 		}
 	]

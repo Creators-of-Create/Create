@@ -7,10 +7,10 @@
   ],
   "results": [
     {
-      "item": "create:crushed_nickel_ore"
+      "item": "create:crushed_raw_nickel"
     },
     {
-      "item": "create:crushed_nickel_ore",
+      "item": "create:crushed_raw_nickel",
       "chance": 0.75
     },
     {

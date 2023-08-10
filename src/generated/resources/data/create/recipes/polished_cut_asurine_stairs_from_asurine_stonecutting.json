@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:asurine"
-  },
-  "result": "create:polished_cut_asurine_stairs",
-  "count": 1
-}

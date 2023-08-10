@@ -5,7 +5,7 @@
       "tag": "minecraft:wooden_trapdoors"
     },
     {
-      "tag": "forge:plates/brass"
+      "item": "create:railway_casing"
     }
   ],
   "result": {

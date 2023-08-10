@@ -3,6 +3,7 @@ package com.simibubi.create.content.schematics.client.tools;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public abstract class PlacementToolBase extends SchematicToolBase {
@@ -18,8 +19,8 @@ public abstract class PlacementToolBase extends SchematicToolBase {
 	}
 
 	@Override
-	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer) {
-		super.renderTool(ms, buffer);
+	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera) {
+		super.renderTool(ms, buffer, camera);
 	}
 
 	@Override

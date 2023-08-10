@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:crimsite"
-  },
-  "result": "create:layered_crimsite",
-  "count": 1
-}

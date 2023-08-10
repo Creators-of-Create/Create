@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "create:crushed_tin_ore"
+    "item": "create:crushed_raw_tin"
   },
   "result": "mekanism:ingot_tin",
   "experience": 0.1,

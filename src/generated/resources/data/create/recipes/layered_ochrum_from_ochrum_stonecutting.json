@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:ochrum"
-  },
-  "result": "create:layered_ochrum",
-  "count": 1
-}

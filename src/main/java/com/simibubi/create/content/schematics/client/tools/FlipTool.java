@@ -72,10 +72,10 @@ public class FlipTool extends PlacementToolBase {
 		AllSpecialTextures tex = AllSpecialTextures.CHECKERED;
 		outline.getParams()
 			.lineWidth(1 / 16f)
-			.disableNormals()
+			.disableLineNormals()
 			.colored(0xdddddd)
 			.withFaceTextures(tex, tex);
-		outline.render(ms, buffer, AnimationTickHolder.getPartialTicks());
+		outline.render(ms, buffer, Vec3.ZERO, AnimationTickHolder.getPartialTicks());
 
 		super.renderOnSchematic(ms, buffer);
 	}

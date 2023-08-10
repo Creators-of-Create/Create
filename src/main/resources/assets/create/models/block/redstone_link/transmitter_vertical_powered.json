@@ -46,6 +46,28 @@
 			"faces": {
 				"north": {"uv": [1, 1, 2, 2], "texture": "#redstone_antenna"}
 			}
+		},
+		{
+			"from": [6, 2.5, 3.5],
+			"to": [10, 3.5, 7.5],
+			"faces": {
+				"north": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge_side"},
+				"east": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge_side"},
+				"south": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge_side"},
+				"west": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge_side"},
+				"up": {"uv": [11, 0, 13, 2], "texture": "#redstone_bridge_side"}
+			}
+		},
+		{
+			"from": [6, 2.5, 8.5],
+			"to": [10, 3.5, 12.5],
+			"faces": {
+				"north": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge_side"},
+				"east": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge_side"},
+				"south": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge_side"},
+				"west": {"uv": [11, 2, 13, 2.5], "texture": "#redstone_bridge_side"},
+				"up": {"uv": [13, 0, 15, 2], "texture": "#redstone_bridge_side"}
+			}
 		}
 	]
 }

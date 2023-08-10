@@ -3,9 +3,9 @@
   "values": [
     "create:blaze_burner",
     "create:lit_blaze_burner",
-    "#minecraft:fire",
-    "#minecraft:campfires",
     "minecraft:magma_block",
-    "minecraft:lava"
+    "minecraft:lava",
+    "#minecraft:campfires",
+    "#minecraft:fire"
   ]
 }

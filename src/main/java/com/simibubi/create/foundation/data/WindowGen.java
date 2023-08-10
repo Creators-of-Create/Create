@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.data;
 
+import static com.simibubi.create.Create.REGISTRATE;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
 
 import java.util.function.Function;
@@ -7,10 +8,10 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.palettes.ConnectedGlassBlock;
-import com.simibubi.create.content.palettes.ConnectedGlassPaneBlock;
-import com.simibubi.create.content.palettes.GlassPaneBlock;
-import com.simibubi.create.content.palettes.WindowBlock;
+import com.simibubi.create.content.decoration.palettes.ConnectedGlassBlock;
+import com.simibubi.create.content.decoration.palettes.ConnectedGlassPaneBlock;
+import com.simibubi.create.content.decoration.palettes.GlassPaneBlock;
+import com.simibubi.create.content.decoration.palettes.WindowBlock;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.connected.GlassPaneCTBehaviour;
@@ -42,8 +43,6 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 
 public class WindowGen {
-
-	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	private static Properties glassProperties(Properties p) {
 		return p.isValidSpawn(WindowGen::never)

@@ -4,12 +4,15 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -20,8 +23,10 @@ public class ScrollInput extends AbstractSimiWidget {
 	protected Component title = CreateLang.translateDirect("gui.scrollInput.defaultTitle");
 	protected final Component scrollToModify = CreateLang.translateDirect("gui.scrollInput.scrollToModify");
 	protected final Component shiftScrollsFaster = CreateLang.translateDirect("gui.scrollInput.shiftScrollsFaster");
+	protected Component hint = null;
 	protected Label displayLabel;
 	protected boolean inverted;
+	protected boolean soundPlayed;
 	protected Function<Integer, Component> formatter;
 
 	protected int min, max;
@@ -36,6 +41,7 @@ public class ScrollInput extends AbstractSimiWidget {
 		shiftStep = 5;
 		step = standardStep();
 		formatter = i -> Components.literal(String.valueOf(i));
+		soundPlayed = false;
 	}
 
 	public Function<StepContext, Integer> standardStep() {
@@ -74,6 +80,12 @@ public class ScrollInput extends AbstractSimiWidget {
 		return this;
 	}
 
+	public ScrollInput addHint(MutableComponent hint) {
+		this.hint = hint;
+		updateTooltip();
+		return this;
+	}
+
 	public ScrollInput withStepFunction(Function<StepContext, Integer> step) {
 		this.step = step;
 		return this;
@@ -84,6 +96,12 @@ public class ScrollInput extends AbstractSimiWidget {
 		if (label != null)
 			writeToLabel();
 		return this;
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		soundPlayed = false;
 	}
 
 	public int getState() {
@@ -125,8 +143,15 @@ public class ScrollInput extends AbstractSimiWidget {
 
 		clampState();
 
-		if (priorState != state)
+		if (priorState != state) {
+			if (!soundPlayed)
+				Minecraft.getInstance()
+					.getSoundManager()
+					.play(SimpleSoundInstance.forUI(AllSoundEvents.SCROLL_VALUE.getMainEvent(),
+						1.5f + 0.1f * (state - min) / (max - min)));
+			soundPlayed = true;
 			onChanged();
+		}
 
 		return priorState != state;
 	}
@@ -156,6 +181,9 @@ public class ScrollInput extends AbstractSimiWidget {
 			return;
 		toolTip.add(title.plainCopy()
 			.withStyle(s -> s.withColor(HEADER_RGB)));
+		if (hint != null)
+			toolTip.add(hint.plainCopy()
+				.withStyle(s -> s.withColor(HINT_RGB)));
 		toolTip.add(scrollToModify.plainCopy()
 			.withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
 		toolTip.add(shiftScrollsFaster.plainCopy()

@@ -1,0 +1,8 @@
+{
+  "parent": "create:block/bars/post_ends",
+  "textures": {
+    "bars": "create:block/bars/copper_bars",
+    "particle": "create:block/bars/copper_bars",
+    "edge": "create:block/bars/copper_bars_edge"
+  }
+}

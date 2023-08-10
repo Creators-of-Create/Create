@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:copper_ladder_from_ingots_copper_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_ingots_copper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ingots/copper"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:copper_ladder_from_ingots_copper_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ingots_copper",
+      "has_the_recipe"
+    ]
+  ]
+}

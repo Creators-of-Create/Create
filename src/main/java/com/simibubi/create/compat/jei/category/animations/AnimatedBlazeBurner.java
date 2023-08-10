@@ -4,10 +4,10 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
 import net.createmod.catnip.render.SpriteShiftEntry;
@@ -43,9 +43,9 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 			.render(matrixStack);
 
 		PartialModel blaze =
-			heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_SUPER : AllBlockPartials.BLAZE_ACTIVE;
-		PartialModel rods2 = heatLevel == HeatLevel.SEETHING ? AllBlockPartials.BLAZE_BURNER_SUPER_RODS_2
-			: AllBlockPartials.BLAZE_BURNER_RODS_2;
+			heatLevel == HeatLevel.SEETHING ? AllPartialModels.BLAZE_SUPER : AllPartialModels.BLAZE_ACTIVE;
+		PartialModel rods2 = heatLevel == HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS_2
+			: AllPartialModels.BLAZE_BURNER_RODS_2;
 
 		blockElement(blaze).atLocal(1, 1.8, 1)
 			.rotate(0, 180, 0)
@@ -87,7 +87,7 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 		MultiBufferSource.BufferSource buffer = mc.renderBuffers()
 			.bufferSource();
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
-		CachedPartialBuffers.partial(AllBlockPartials.BLAZE_BURNER_FLAME, Blocks.AIR.defaultBlockState())
+		CachedPartialBuffers.partial(AllPartialModels.BLAZE_BURNER_FLAME, Blocks.AIR.defaultBlockState())
 			.shiftUVScrolling(spriteShift, (float) uScroll, (float) vScroll)
 			.light(LightTexture.FULL_BRIGHT)
 			.renderInto(matrixStack, vb);

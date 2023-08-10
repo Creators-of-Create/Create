@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/belt_cover/andesite_belt_cover_z",
+	"textures": {
+		"0": "create:block/funnel/brass_funnel_frame",
+		"1": "create:block/brass_belt_cover"
+	}
+}

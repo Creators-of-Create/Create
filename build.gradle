@@ -7,7 +7,7 @@ buildscript {
         maven { url = 'https://maven.parchmentmc.org' }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: "${forgegradle_version}", changing: false
+        classpath "net.minecraftforge.gradle:ForgeGradle:${forgegradle_version}"
         classpath "org.spongepowered:mixingradle:${mixingradle_version}"
         classpath "org.parchmentmc:librarian:${librarian_version}"
     }
@@ -21,6 +21,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'idea'
 
 jarJar.enable()
 
@@ -49,9 +50,15 @@ version = mod_version + (dev && buildNumber != null ? "-${buildNumber}" : '')
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + ' (' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+    if (Boolean.parseBoolean(project.use_parchment)) {
+        mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+    } else {
+        mappings channel: 'official', version: "${minecraft_version}"
+    }
+
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -166,43 +173,61 @@ minecraft {
                 }
             }
         }
+
+        gameTestServer {
+            workingDirectory project.file('run/gametest')
+            arg '-mixin.config=create.mixins.json'
+            property 'forge.logging.console.level', 'info'
+            mods {
+                create {
+                    source sourceSets.main
+                }
+            }
+
+            //setForceExit false
+        }
     }
 }
 
 repositories {
     maven {
-        // Location of the maven that hosts JEI files (and TiC)
-        name 'Progwml6 maven'
-        url 'https://dvs1.progwml6.com/files/maven'
+        // location of the maven for Registrate and Flywheel
+        name = 'tterrag maven'
+        url = 'https://maven.tterrag.com'
+    }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        // location of the maven for Vazkii's mods
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
     }
     /*maven {
-        // Location of a maven mirror for JEI files, as a fallback
-        name 'ModMaven'
-        url 'https://modmaven.k-4u.nl'
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
     }*/
     maven {
-        // Location of the maven for vazkii's mods
-        name 'blamejared'
-        url 'https://maven.blamejared.com'
+        // location of the maven for Dynamic Trees
+        url = 'https://harleyoconnor.com/maven'
     }
     maven {
-        // Location of the maven for mixed mappings, Registrate, and Flywheel
-        name 'tterrag maven'
-        url 'https://maven.tterrag.com'
+        // location of the maven for Curios API
+        url = "https://maven.theillusivec4.top/"
     }
     maven {
-        url 'https://www.cursemaven.com'
+        // location of maven for CC: Tweaked
+        name = "squiddev"
+        url = "https://squiddev.cc/maven/"
+        content {
+            includeGroup "org.squiddev"
+        }
+    }
+
+    maven {
+        url = 'https://www.cursemaven.com'
         content {
             includeGroup "curse.maven"
         }
-    }
-    maven {
-        //location of the maven for dynamic trees
-        url 'https://harleyoconnor.com/maven'
-    }
-    maven {
-        //location of the maven for curios api
-        url = "https://maven.theillusivec4.top/"
     }
     maven {
         // Location of the maven for Ponder, Catnip
@@ -216,18 +241,22 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+
+    mavenLocal()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.18.2-1.1.3,)') {
-        jarJar.pin(it, project.registrate_version)
+    jarJar("com.tterrag.registrate:Registrate:${registrate_version}") {
+        jarJar.ranged(it, '[MC1.18.2-1.1.3,)')
     }
-    // Uncomment once Forge fixes mixins for included jars
-    //jarJar(group: 'com.jozufozu.flywheel', name: "flywheel-forge-${flywheel_minecraft_version}", version: '[0.6.4,0.6.5)') {
-    //    jarJar.pin(it, project.flywheel_version)
-    //}
+    jarJar("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
+        jarJar.ranged(it, '[0.6.9,0.6.10)')
+    }
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
@@ -257,6 +286,11 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}")
 
+	if (cc_tweaked_enable.toBoolean()) {
+        compileOnly fg.deobf("org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}:api")
+        runtimeOnly fg.deobf("org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}")
+	}
+
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
     // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
     // runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
@@ -264,13 +298,20 @@ dependencies {
     // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
     // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252")
     // runtimeOnly fg.deobf("maven.modrinth:rubidium:0.5.3")
+    // implementation fg.deobf("com.railwayteam.railways:railways-1.18.2-1.1.1:all") { transitive = false }
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
     // This allows 'Settings > Build, Execution, and Deployment > Build Tools > Gradle > Build and run using' set to IntelliJ to work correctly
-    if (System.getProperty('idea.sync.active') != 'true') {
+    if (!Boolean.getBoolean('idea.sync.active')) {
         annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
     }
+}
+
+sourceSets.main.java {
+	if (!cc_tweaked_enable.toBoolean()) {
+        exclude 'com/simibubi/create/compat/computercraft/implementation/**'
+	}
 }
 
 sourceSets.main.resources {
@@ -313,6 +354,7 @@ jar {
 }
 
 task jarJarRelease {
+    group = 'jarjar'
     doLast {
         tasks.jarJar {
             archiveClassifier = ''

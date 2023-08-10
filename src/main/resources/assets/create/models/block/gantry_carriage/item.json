@@ -5,12 +5,13 @@
 	"textures": {
 		"0": "create:block/axis",
 		"3": "create:block/cogwheel",
-		"8": "create:block/bearing_top_wooden",
+		"8": "create:block/bearing_top",
 		"9": "create:block/windmill_bearing_side",
 		"10": "create:block/pinion",
 		"11": "create:block/axis_top",
-		"particle": "create:block/andesite_casing",
-		"opening": "create:block/gearbox"
+		"12": "create:block/pinion_bottom",
+		"opening": "create:block/gearbox",
+		"particle": "create:block/andesite_casing"
 	},
 	"elements": [
 		{
@@ -191,7 +192,7 @@
 				"south": {"uv": [0, 8, 16, 12], "texture": "#10"},
 				"west": {"uv": [0, 0, 16, 4], "texture": "#9"},
 				"up": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#8"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#8"}
+				"down": {"uv": [0, 0, 16, 16], "texture": "#12"}
 			}
 		},
 		{

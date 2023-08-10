@@ -1,0 +1,216 @@
+{
+  "variants": {
+    "face=floor,facing=north,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty"
+    },
+    "face=wall,facing=north,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 90
+    },
+    "face=ceiling,facing=north,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 180,
+      "y": 180
+    },
+    "face=floor,facing=south,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "y": 180
+    },
+    "face=wall,facing=south,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 90,
+      "y": 180
+    },
+    "face=ceiling,facing=south,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 180
+    },
+    "face=floor,facing=west,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "y": 270
+    },
+    "face=wall,facing=west,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 90,
+      "y": 270
+    },
+    "face=ceiling,facing=west,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "y": 90
+    },
+    "face=wall,facing=east,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 90,
+      "y": 90
+    },
+    "face=ceiling,facing=east,waterlogged=false,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 180,
+      "y": 270
+    },
+    "face=floor,facing=north,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty"
+    },
+    "face=wall,facing=north,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 90
+    },
+    "face=ceiling,facing=north,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 180,
+      "y": 180
+    },
+    "face=floor,facing=south,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "y": 180
+    },
+    "face=wall,facing=south,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 90,
+      "y": 180
+    },
+    "face=ceiling,facing=south,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 180
+    },
+    "face=floor,facing=west,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "y": 270
+    },
+    "face=wall,facing=west,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 90,
+      "y": 270
+    },
+    "face=ceiling,facing=west,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "y": 90
+    },
+    "face=wall,facing=east,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 90,
+      "y": 90
+    },
+    "face=ceiling,facing=east,waterlogged=true,written=false": {
+      "model": "create:block/clipboard/block_empty",
+      "x": 180,
+      "y": 270
+    },
+    "face=floor,facing=north,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written"
+    },
+    "face=wall,facing=north,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 90
+    },
+    "face=ceiling,facing=north,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 180,
+      "y": 180
+    },
+    "face=floor,facing=south,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "y": 180
+    },
+    "face=wall,facing=south,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 90,
+      "y": 180
+    },
+    "face=ceiling,facing=south,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 180
+    },
+    "face=floor,facing=west,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "y": 270
+    },
+    "face=wall,facing=west,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 90,
+      "y": 270
+    },
+    "face=ceiling,facing=west,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "y": 90
+    },
+    "face=wall,facing=east,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 90,
+      "y": 90
+    },
+    "face=ceiling,facing=east,waterlogged=false,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 180,
+      "y": 270
+    },
+    "face=floor,facing=north,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written"
+    },
+    "face=wall,facing=north,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 90
+    },
+    "face=ceiling,facing=north,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 180,
+      "y": 180
+    },
+    "face=floor,facing=south,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "y": 180
+    },
+    "face=wall,facing=south,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 90,
+      "y": 180
+    },
+    "face=ceiling,facing=south,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 180
+    },
+    "face=floor,facing=west,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "y": 270
+    },
+    "face=wall,facing=west,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 90,
+      "y": 270
+    },
+    "face=ceiling,facing=west,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 180,
+      "y": 90
+    },
+    "face=floor,facing=east,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "y": 90
+    },
+    "face=wall,facing=east,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 90,
+      "y": 90
+    },
+    "face=ceiling,facing=east,waterlogged=true,written=true": {
+      "model": "create:block/clipboard/block_written",
+      "x": 180,
+      "y": 270
+    }
+  }
+}

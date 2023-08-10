@@ -4,6 +4,7 @@
 	"textures": {
 		"0": "create:block/signal_box_top",
 		"1": "create:block/observer_box",
+		"2": "create:block/train_observer_top",
 		"particle": "create:block/observer_box"
 	},
 	"elements": [
@@ -15,7 +16,7 @@
 				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
 			}
 		}

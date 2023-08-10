@@ -3,12 +3,12 @@ package com.simibubi.create.foundation.sound;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.sound.SoundScapes.PitchGroup;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.VecHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -90,7 +90,7 @@ class SoundScape {
 			distanceMultiplier = (float) Mth.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
 		}
 		int soundCount = SoundScapes.getSoundCount(group, pitchGroup);
-		float max = AllConfigs.CLIENT.ambientVolumeCap.getF();
+		float max = AllConfigs.client().ambientVolumeCap.getF();
 		float argMax = (float) SoundScapes.SOUND_VOLUME_ARG_MAX;
 		return Mth.clamp(soundCount / (argMax * 10f), 0.025f, max) * distanceMultiplier;
 	}

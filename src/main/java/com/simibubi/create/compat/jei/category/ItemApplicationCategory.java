@@ -1,5 +1,6 @@
 package com.simibubi.create.compat.jei.category;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -7,7 +8,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.contraptions.processing.ItemApplicationRecipe;
+import com.simibubi.create.content.kinetics.deployer.ItemApplicationRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.CreateLang;
 
@@ -46,10 +48,17 @@ public class ItemApplicationCategory extends CreateRecipeCategory<ItemApplicatio
 						: (view, tooltip) -> {}
 				);
 
-		builder.addSlot(RecipeIngredientRole.OUTPUT, 132, 38)
-				.setBackground(getRenderedSlot(recipe.getRollableResults().get(0)), -1, -1)
-				.addItemStack(recipe.getResultItem())
-				.addTooltipCallback(addStochasticTooltip(recipe.getRollableResults().get(0)));
+		List<ProcessingOutput> results = recipe.getRollableResults();
+		boolean single = results.size() == 1;
+		for (int i = 0; i < results.size(); i++) {
+			ProcessingOutput output = results.get(i);
+			int xOffset = i % 2 == 0 ? 0 : 19;
+			int yOffset = (i / 2) * -19;
+			builder.addSlot(RecipeIngredientRole.OUTPUT, single ? 132 : 132 + xOffset, 38 + yOffset)
+				.setBackground(getRenderedSlot(output), -1, -1)
+				.addItemStack(output.getStack())
+				.addTooltipCallback(addStochasticTooltip(output));
+		}
 	}
 
 	@Override

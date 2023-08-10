@@ -9,8 +9,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import com.simibubi.create.foundation.config.AllConfigs;
-
 import net.createmod.catnip.utility.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -148,8 +146,7 @@ public class ItemHelper {
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, boolean simulate) {
-		return extract(inv, test, ExtractionCountMode.UPTO, AllConfigs.SERVER.logistics.defaultExtractionLimit.get(),
-			simulate);
+		return extract(inv, test, ExtractionCountMode.UPTO, 64, simulate);
 	}
 
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test, int exactAmount, boolean simulate) {
@@ -224,7 +221,7 @@ public class ItemHelper {
 	public static ItemStack extract(IItemHandler inv, Predicate<ItemStack> test,
 		Function<ItemStack, Integer> amountFunction, boolean simulate) {
 		ItemStack extracting = ItemStack.EMPTY;
-		int maxExtractionCount = AllConfigs.SERVER.logistics.defaultExtractionLimit.get();
+		int maxExtractionCount = 64;
 
 		for (int slot = 0; slot < inv.getSlots(); slot++) {
 			if (extracting.isEmpty()) {

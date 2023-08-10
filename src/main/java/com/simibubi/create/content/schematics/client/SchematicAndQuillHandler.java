@@ -1,24 +1,18 @@
 package com.simibubi.create.content.schematics.client;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-
-import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.schematics.ClientSchematicLoader;
-import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
+import com.simibubi.create.content.schematics.SchematicExport;
+import com.simibubi.create.content.schematics.SchematicExport.SchematicExportResult;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
-import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.CreateLang;
-import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
 
@@ -27,22 +21,17 @@ import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.outliner.Outliner;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
@@ -52,8 +41,8 @@ public class SchematicAndQuillHandler {
 
 	private Object outlineSlot = new Object();
 
-	private BlockPos firstPos;
-	private BlockPos secondPos;
+	public BlockPos firstPos;
+	public BlockPos secondPos;
 	private BlockPos selectedPos;
 	private Direction selectedFace;
 	private int range = 10;
@@ -212,58 +201,31 @@ public class SchematicAndQuillHandler {
 	}
 
 	public void saveSchematic(String string, boolean convertImmediately) {
-		StructureTemplate t = new StructureTemplate();
-		BoundingBox bb = BoundingBox.fromCorners(firstPos, secondPos);
-		BlockPos origin = new BlockPos(bb.minX(), bb.minY(), bb.minZ());
-		BlockPos bounds = new BlockPos(bb.getXSpan(), bb.getYSpan(), bb.getZSpan());
-		Level level = Minecraft.getInstance().level;
-
-		t.fillFromWorld(level, origin, bounds, true, Blocks.AIR);
-
-		if (string.isEmpty())
-			string = CreateLang.translateDirect("schematicAndQuill.fallbackName")
-				.getString();
-
-		String folderPath = "schematics";
-		FilesHelper.createFolderIfMissing(folderPath);
-		String filename = FilesHelper.findFirstValidFilename(string, folderPath, "nbt");
-		String filepath = folderPath + "/" + filename;
-
-		Path path = Paths.get(filepath);
-		OutputStream outputStream = null;
-		try {
-			outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE);
-			CompoundTag nbttagcompound = t.save(new CompoundTag());
-			SchematicAndQuillItem.replaceStructureVoidWithAir(nbttagcompound);
-			SchematicAndQuillItem.clampGlueBoxes(level, new AABB(origin, origin.offset(bounds)), nbttagcompound);
-			NbtIo.writeCompressed(nbttagcompound, outputStream);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (outputStream != null)
-				IOUtils.closeQuietly(outputStream);
+		SchematicExportResult result = SchematicExport.saveSchematic(
+				SchematicExport.SCHEMATICS, string, false,
+				Minecraft.getInstance().level, firstPos, secondPos
+		);
+		LocalPlayer player = Minecraft.getInstance().player;
+		if (result == null) {
+			CreateLang.translate("schematicAndQuill.failed")
+					.style(ChatFormatting.RED)
+					.sendStatus(player);
+			return;
 		}
+		Path file = result.file();
+		CreateLang.translate("schematicAndQuill.saved", file.getFileName())
+				.sendStatus(player);
 		firstPos = null;
 		secondPos = null;
-		LocalPlayer player = Minecraft.getInstance().player;
-		CreateLang.translate("schematicAndQuill.saved", filepath)
-			.sendStatus(player);
-
 		if (!convertImmediately)
 			return;
-		if (!Files.exists(path)) {
-			Create.LOGGER.fatal("Missing Schematic file: " + path.toString());
-			return;
-		}
 		try {
-			if (!ClientSchematicLoader.validateSizeLimitation(Files.size(path)))
+			if (!ClientSchematicLoader.validateSizeLimitation(Files.size(file)))
 				return;
-			AllPackets.channel.sendToServer(new InstantSchematicPacket(filename, origin, bounds));
-
+			AllPackets.getChannel()
+				.sendToServer(new InstantSchematicPacket(result.fileName(), result.origin(), result.bounds()));
 		} catch (IOException e) {
-			Create.LOGGER.fatal("Error finding Schematic file: " + path.toString());
-			e.printStackTrace();
-			return;
+			Create.LOGGER.error("Error instantly uploading Schematic file: " + file, e);
 		}
 	}
 

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "forge:ingots/copper"
+  },
+  "result": "create:copper_tiles",
+  "count": 2
+}

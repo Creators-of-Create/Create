@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "create:experience_block"
+    }
+  ],
+  "result": {
+    "item": "create:experience_nugget",
+    "count": 9
+  }
+}

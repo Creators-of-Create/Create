@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "I",
+    "R",
     "B",
-    "R"
+    "I"
   ],
   "key": {
     "B": {
@@ -13,7 +13,7 @@
       "item": "create:electron_tube"
     },
     "I": {
-      "item": "minecraft:comparator"
+      "item": "minecraft:observer"
     }
   },
   "result": {

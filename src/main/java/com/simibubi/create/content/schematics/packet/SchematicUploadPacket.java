@@ -1,9 +1,7 @@
 package com.simibubi.create.content.schematics.packet;
 
-import java.util.function.Supplier;
-
 import com.simibubi.create.Create;
-import com.simibubi.create.content.schematics.block.SchematicTableContainer;
+import com.simibubi.create.content.schematics.table.SchematicTableMenu;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -53,6 +51,7 @@ public class SchematicUploadPacket extends SimplePacketBase {
 			data = buffer.readByteArray();
 	}
 
+	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(code);
 		buffer.writeUtf(schematic);
@@ -63,25 +62,23 @@ public class SchematicUploadPacket extends SimplePacketBase {
 			buffer.writeByteArray(data);
 	}
 
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> {
-				ServerPlayer player = context.get()
-					.getSender();
-				if (player == null)
-					return;
-				if (code == BEGIN) {
-					BlockPos pos = ((SchematicTableContainer) player.containerMenu).contentHolder
-							.getBlockPos();
-					Create.SCHEMATIC_RECEIVER.handleNewUpload(player, schematic, size, pos);
-				}
-				if (code == WRITE)
-					Create.SCHEMATIC_RECEIVER.handleWriteRequest(player, schematic, data);
-				if (code == FINISH)
-					Create.SCHEMATIC_RECEIVER.handleFinishedUpload(player, schematic);
-			});
-		context.get()
-			.setPacketHandled(true);
+	@Override
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+			if (code == BEGIN) {
+				BlockPos pos = ((SchematicTableMenu) player.containerMenu).contentHolder
+						.getBlockPos();
+				Create.SCHEMATIC_RECEIVER.handleNewUpload(player, schematic, size, pos);
+			}
+			if (code == WRITE)
+				Create.SCHEMATIC_RECEIVER.handleWriteRequest(player, schematic, data);
+			if (code == FINISH)
+				Create.SCHEMATIC_RECEIVER.handleFinishedUpload(player, schematic);
+		});
+		return true;
 	}
 
 }

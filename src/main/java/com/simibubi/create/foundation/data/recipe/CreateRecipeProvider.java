@@ -16,6 +16,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
@@ -182,6 +183,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 
 		static ItemLike shadowSteel() {
 			return AllItems.SHADOW_STEEL.get();
+		}
+
+		static Ingredient netherite() {
+			return Ingredient.of(AllTags.forgeItemTag("ingots/netherite"));
 		}
 
 	}

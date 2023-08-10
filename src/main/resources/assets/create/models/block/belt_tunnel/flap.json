@@ -1,21 +1,21 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"4": "create:block/brass_tunnel"
+		"4": "create:block/funnel/brass_funnel"
 	},
 	"elements": [
 		{
 			"name": "F4",
-			"from": [11, -3, 1],
-			"to": [14, 10, 2],
+			"from": [10.975, -3, 0.95],
+			"to": [14.025, 10.05, 1.95],
 			"rotation": {"angle": 0, "axis": "y", "origin": [-24.5, -7.5, 9]},
 			"faces": {
-				"north": {"uv": [9.5, 14.5, 16, 16], "rotation": 90, "texture": "#4"},
-				"east": {"uv": [9.5, 15.5, 16, 16], "rotation": 90, "texture": "#4"},
-				"south": {"uv": [9.5, 16, 16, 14.5], "rotation": 90, "texture": "#4"},
-				"west": {"uv": [9.5, 14.5, 16, 15], "rotation": 90, "texture": "#4"},
-				"up": {"uv": [15.5, 14.5, 16, 16], "rotation": 270, "texture": "#4"},
-				"down": {"uv": [9.5, 14.5, 10, 16], "rotation": 270, "texture": "#4"}
+				"north": {"uv": [6, 8, 7.5, 14.5], "texture": "#4"},
+				"east": {"uv": [6, 8, 6.5, 14.5], "texture": "#4"},
+				"south": {"uv": [7.5, 8, 6, 14.5], "texture": "#4"},
+				"west": {"uv": [7, 8, 7.5, 14.5], "texture": "#4"},
+				"up": {"uv": [6, 8, 7.5, 8.5], "rotation": 180, "texture": "#4"},
+				"down": {"uv": [6, 14, 7.5, 14.5], "rotation": 180, "texture": "#4"}
 			}
 		}
 	]

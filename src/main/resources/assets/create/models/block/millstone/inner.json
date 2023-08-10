@@ -11,63 +11,65 @@
 	"elements": [
 		{
 			"name": "Gear5",
-			"from": [6.5, 6.5, -1],
-			"to": [9.5, 12.5, 17],
+			"from": [6.5, 6, -1],
+			"to": [9.5, 12, 17],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, -0.5, 0]},
 			"faces": {
 				"north": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
 				"east": {"uv": [0, 10, 9, 13], "texture": "#5"},
 				"south": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
 				"west": {"uv": [0, 10, 9, 13], "texture": "#5"},
-				"up": {"uv": [6, 3, 15, 4.5], "rotation": 90, "texture": "#5"},
-				"down": {"uv": [6, 3, 15, 4.5], "rotation": 90, "texture": "#5"}
+				"up": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"}
 			}
 		},
 		{
 			"name": "Gear6",
-			"from": [6.5, 6.5, -1],
-			"to": [9.5, 12.5, 17],
-			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
+			"from": [6.5, 6, -1],
+			"to": [9.5, 12, 17],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 7.5, 8]},
 			"faces": {
 				"north": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
 				"east": {"uv": [0, 10, 9, 13], "texture": "#5"},
 				"south": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
 				"west": {"uv": [0, 10, 9, 13], "texture": "#5"},
-				"up": {"uv": [6, 3, 15, 4.5], "rotation": 90, "texture": "#5"},
-				"down": {"uv": [6, 3, 15, 4.5], "rotation": 90, "texture": "#5"}
+				"up": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 8.5, 9, 10], "rotation": 90, "texture": "#5"}
 			}
 		},
 		{
 			"name": "Gear7",
-			"from": [-1, 6.5, 6.5],
-			"to": [17, 12.5, 9.5],
-			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
+			"from": [-1, 6, 6.5],
+			"to": [17, 12, 9.5],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 7.5, 8]},
 			"faces": {
 				"north": {"uv": [0, 10, 9, 13], "texture": "#5"},
 				"east": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
 				"south": {"uv": [0, 10, 9, 13], "texture": "#5"},
 				"west": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
-				"up": {"uv": [6, 3, 15, 4.5], "texture": "#5"},
-				"down": {"uv": [6, 3, 15, 4.5], "rotation": 180, "texture": "#5"}
+				"up": {"uv": [0, 8.5, 9, 10], "texture": "#5"},
+				"down": {"uv": [0, 8.5, 9, 10], "rotation": 180, "texture": "#5"}
 			}
 		},
 		{
 			"name": "Gear7",
-			"from": [-1, 6.5, 6.5],
-			"to": [17, 12.5, 9.5],
+			"from": [-1, 6, 6.5],
+			"to": [17, 12, 9.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, -0.5, 0]},
 			"faces": {
 				"north": {"uv": [0, 10, 9, 13], "texture": "#5"},
 				"east": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
 				"south": {"uv": [0, 10, 9, 13], "texture": "#5"},
 				"west": {"uv": [9, 10, 10.5, 13], "texture": "#5"},
-				"up": {"uv": [6, 3, 15, 4.5], "texture": "#5"},
-				"down": {"uv": [6, 3, 15, 4.5], "rotation": 180, "texture": "#5"}
+				"up": {"uv": [0, 8.5, 9, 10], "texture": "#5"},
+				"down": {"uv": [0, 8.5, 9, 10], "rotation": 180, "texture": "#5"}
 			}
 		},
 		{
 			"name": "GearCaseInner",
-			"from": [2, 7, 2],
-			"to": [14, 12, 14],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8.5, 8]},
+			"from": [2, 6.5, 2],
+			"to": [14, 11.5, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 6, 6, 8.5], "texture": "#5"},
 				"east": {"uv": [0, 6, 6, 8.5], "texture": "#5"},
@@ -75,19 +77,6 @@
 				"west": {"uv": [0, 6, 6, 8.5], "texture": "#5"},
 				"up": {"uv": [0, 0, 6, 6], "texture": "#5"},
 				"down": {"uv": [0, 0, 6, 6], "texture": "#5"}
-			}
-		},
-		{
-			"name": "GearCaseOuter",
-			"from": [4, 6, 4],
-			"to": [12, 13, 12],
-			"faces": {
-				"north": {"uv": [6, 4.5, 10, 8], "texture": "#5"},
-				"east": {"uv": [6, 4.5, 10, 8], "texture": "#5"},
-				"south": {"uv": [6, 4.5, 10, 8], "texture": "#5"},
-				"west": {"uv": [6, 4.5, 10, 8], "texture": "#5"},
-				"up": {"uv": [1, 1, 5, 5], "texture": "#5"},
-				"down": {"uv": [1, 1, 5, 5], "texture": "#5"}
 			}
 		},
 		{
@@ -142,12 +131,14 @@
 		{
 			"name": "cogwheel",
 			"origin": [8, 8, 8],
-			"children": [0, 1, 2, 3, 4, 5]
+			"color": 0,
+			"children": [0, 1, 2, 3, 4]
 		},
 		{
 			"name": "shaft_half",
 			"origin": [8, 8, 8],
-			"children": [6]
+			"color": 0,
+			"children": [5]
 		}
 	]
 }

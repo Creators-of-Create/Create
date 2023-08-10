@@ -17,9 +17,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
-import com.simibubi.create.content.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 
 import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.data.DataGenerator;
@@ -225,7 +225,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 			float extra = expectedAmount - Mth.floor(expectedAmount);
 			if (extra > 0)
 				builder.output(extra, raw.get(), 1);
-			builder.output(.75f, AllItems.EXP_NUGGET.get(), 1);
+			builder.output(.75f, AllItems.EXP_NUGGET.get(), raw.get() == AllItems.CRUSHED_GOLD.get() ? 2 : 1);
 			return builder.output(.125f, stoneType);
 		});
 	}
@@ -233,7 +233,7 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 	protected GeneratedRecipe rawOre(Supplier<ItemLike> input, Supplier<ItemLike> result, int amount) {
 		return create(input, b -> b.duration(400)
 			.output(result.get(), amount)
-			.output(.75f, AllItems.EXP_NUGGET.get(), amount));
+			.output(.75f, AllItems.EXP_NUGGET.get(), (result.get() == AllItems.CRUSHED_GOLD.get() ? 2 : 1) * amount));
 	}
 
 	protected GeneratedRecipe moddedRawOre(CompatMetals metal, Supplier<ItemLike> result, int amount) {

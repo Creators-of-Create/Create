@@ -25,10 +25,10 @@
     "create:redstone_link",
     "create:peculiar_bell",
     "create:haunted_bell",
-    "#minecraft:doors",
-    "#minecraft:beds",
-    "minecraft:flower_pot",
     "minecraft:bell",
-    "minecraft:cocoa"
+    "minecraft:cocoa",
+    "minecraft:flower_pot",
+    "#minecraft:beds",
+    "#minecraft:doors"
   ]
 }

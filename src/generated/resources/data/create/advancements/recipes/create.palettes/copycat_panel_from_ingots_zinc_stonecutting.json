@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:copycat_panel_from_ingots_zinc_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_ingots_zinc": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ingots/zinc"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:copycat_panel_from_ingots_zinc_stonecutting"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ingots_zinc",
+      "has_the_recipe"
+    ]
+  ]
+}

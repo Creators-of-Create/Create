@@ -5,6 +5,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.infrastructure.ponder.AllPonderTags;
+import com.simibubi.create.infrastructure.ponder.CreatePonderIndex;
 
 import net.createmod.ponder.foundation.PonderPlugin;
 import net.createmod.ponder.foundation.PonderWorld;
@@ -24,7 +26,7 @@ public class CreatePonderPlugin implements PonderPlugin {
 
 	@Override
 	public void registerTags() {
-		CreatePonderIndex.registerTags();
+		AllPonderTags.register();
 	}
 
 	@Override
@@ -41,7 +43,7 @@ public class CreatePonderPlugin implements PonderPlugin {
 
 	@Override
 	public void onPonderWorldRestore(PonderWorld world) {
-		PonderWorldTileFix.fixControllerTiles(world);
+		PonderWorldBlockEntityFix.fixControllerBlockEntities(world);
 	}
 
 	@Override

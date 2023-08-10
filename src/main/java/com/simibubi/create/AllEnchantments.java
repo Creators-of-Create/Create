@@ -1,8 +1,9 @@
 package com.simibubi.create;
 
-import com.simibubi.create.content.curiosities.armor.CapacityEnchantment;
-import com.simibubi.create.content.curiosities.weapons.PotatoRecoveryEnchantment;
-import com.simibubi.create.foundation.data.CreateRegistrate;
+import static com.simibubi.create.Create.REGISTRATE;
+
+import com.simibubi.create.content.equipment.armor.CapacityEnchantment;
+import com.simibubi.create.content.equipment.potatoCannon.PotatoRecoveryEnchantment;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.minecraft.world.entity.EquipmentSlot;
@@ -10,8 +11,6 @@ import net.minecraft.world.item.enchantment.Enchantment.Rarity;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class AllEnchantments {
-
-	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	public static final RegistryEntry<PotatoRecoveryEnchantment> POTATO_RECOVERY = REGISTRATE.object("potato_recovery")
 		.enchantment(EnchantmentCategory.BOW, PotatoRecoveryEnchantment::new)

@@ -5,19 +5,19 @@ import net.minecraftforge.client.IItemRenderProperties;
 
 public class SimpleCustomRenderer implements IItemRenderProperties {
 
-	protected CustomRenderedItemModelRenderer<?> renderer;
+	protected CustomRenderedItemModelRenderer renderer;
 
-	protected SimpleCustomRenderer(CustomRenderedItemModelRenderer<?> renderer) {
+	protected SimpleCustomRenderer(CustomRenderedItemModelRenderer renderer) {
 		this.renderer = renderer;
 	}
 
-	public static SimpleCustomRenderer create(Item item, CustomRenderedItemModelRenderer<?> renderer) {
-		CustomRenderedItemModelRenderer.registerForSwapping(item);
+	public static SimpleCustomRenderer create(Item item, CustomRenderedItemModelRenderer renderer) {
+		CustomRenderedItems.register(item);
 		return new SimpleCustomRenderer(renderer);
 	}
 
 	@Override
-	public CustomRenderedItemModelRenderer<?> getItemStackRenderer() {
+	public CustomRenderedItemModelRenderer getItemStackRenderer() {
 		return renderer;
 	}
 

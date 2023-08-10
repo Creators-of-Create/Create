@@ -3,10 +3,10 @@ package com.simibubi.create.foundation.data.recipe;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.components.deployer.ManualApplicationRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.resources.ResourceLocation;
@@ -29,7 +29,7 @@ public class LogStrippingFakeRecipes {
 
 	public static List<ManualApplicationRecipe> createRecipes() {
 		List<ManualApplicationRecipe> recipes = new ArrayList<>();
-		if (!AllConfigs.SERVER.recipes.displayLogStrippingRecipes.get())
+		if (!AllConfigs.server().recipes.displayLogStrippingRecipes.get())
 			return recipes;
 
 		ItemStack axe = new ItemStack(Items.IRON_AXE);

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.wrench;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
 import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.Minecraft;

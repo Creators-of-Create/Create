@@ -1,17 +1,32 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,waterlogged=false": {
       "model": "create:block/mechanical_harvester/block"
     },
-    "facing=south": {
+    "facing=south,waterlogged=false": {
       "model": "create:block/mechanical_harvester/block",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,waterlogged=false": {
       "model": "create:block/mechanical_harvester/block",
       "y": 270
     },
-    "facing=east": {
+    "facing=east,waterlogged=false": {
+      "model": "create:block/mechanical_harvester/block",
+      "y": 90
+    },
+    "facing=north,waterlogged=true": {
+      "model": "create:block/mechanical_harvester/block"
+    },
+    "facing=south,waterlogged=true": {
+      "model": "create:block/mechanical_harvester/block",
+      "y": 180
+    },
+    "facing=west,waterlogged=true": {
+      "model": "create:block/mechanical_harvester/block",
+      "y": 270
+    },
+    "facing=east,waterlogged=true": {
       "model": "create:block/mechanical_harvester/block",
       "y": 90
     }

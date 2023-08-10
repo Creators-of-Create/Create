@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "create:veridium"
-  },
-  "result": "create:layered_veridium",
-  "count": 1
-}

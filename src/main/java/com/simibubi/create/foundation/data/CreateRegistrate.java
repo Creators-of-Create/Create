@@ -1,23 +1,21 @@
 package com.simibubi.create.foundation.data;
 
-import static com.simibubi.create.AllTags.pickaxeOnly;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.AllSections;
-import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
-import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
+import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
+import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.item.TooltipModifier;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
@@ -45,82 +43,62 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
+	@Nullable
+	protected Function<Item, TooltipModifier> currentTooltipModifierFactory;
 
 	protected CreateRegistrate(String modid) {
 		super(modid);
 	}
 
-	public static NonNullSupplier<CreateRegistrate> lazy(String modid) {
-		return NonNullSupplier
-			.lazy(() -> new CreateRegistrate(modid).registerEventListeners(FMLJavaModLoadingContext.get()
-				.getModEventBus()));
+	public static CreateRegistrate create(String modid) {
+		return new CreateRegistrate(modid);
 	}
 
-	/* Section Tracking */
-
-	private static Map<RegistryEntry<?>, AllSections> sectionLookup = new IdentityHashMap<>();
-	private AllSections section;
-
-	public CreateRegistrate startSection(AllSections section) {
-		this.section = section;
-		return this;
+	public CreateRegistrate setTooltipModifierFactory(@Nullable Function<Item, TooltipModifier> factory) {
+		currentTooltipModifierFactory = factory;
+		return self();
 	}
 
-	public AllSections currentSection() {
-		return section;
+	@Nullable
+	public Function<Item, TooltipModifier> getTooltipModifierFactory() {
+		return currentTooltipModifierFactory;
 	}
 
 	@Override
-	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name,
-		ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
-		NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
-		RegistryEntry<T> ret = super.accept(name, type, builder, creator, entryFactory);
-		sectionLookup.put(ret, currentSection());
-		return ret;
+	public CreateRegistrate registerEventListeners(IEventBus bus) {
+		return super.registerEventListeners(bus);
 	}
 
-	public void addToSection(RegistryEntry<?> entry, AllSections section) {
-		sectionLookup.put(entry, section);
+	@Override
+	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name, ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator, NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
+		RegistryEntry<T> entry = super.accept(name, type, builder, creator, entryFactory);
+		if (type.equals(Registry.ITEM_REGISTRY)) {
+			if (currentTooltipModifierFactory != null) {
+				TooltipModifier.REGISTRY.registerDeferred(entry.getId(), currentTooltipModifierFactory);
+			}
+		}
+		return entry;
 	}
 
-	public AllSections getSection(RegistryEntry<?> entry) {
-		return sectionLookup.getOrDefault(entry, AllSections.UNASSIGNED);
-	}
-
-	public AllSections getSection(IForgeRegistryEntry<?> entry) {
-		return sectionLookup.entrySet()
-			.stream()
-			.filter(e -> e.getKey().get() == entry)
-			.map(Entry::getValue)
-			.findFirst()
-			.orElse(AllSections.UNASSIGNED);
-	}
-
-	public <R extends IForgeRegistryEntry<R>> Collection<RegistryEntry<R>> getAll(AllSections section,
-		ResourceKey<? extends Registry<R>> registryType) {
-		return this.getAll(registryType)
-			.stream()
-			.filter(e -> getSection(e) == section)
-			.collect(Collectors.toList());
-	}
-
-	public <T extends BlockEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
+	@Override
+	public <T extends BlockEntity> CreateBlockEntityBuilder<T, CreateRegistrate> blockEntity(String name,
 		BlockEntityFactory<T> factory) {
-		return this.tileEntity(this.self(), name, factory);
+		return blockEntity(self(), name, factory);
 	}
 
-	public <T extends BlockEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
+	@Override
+	public <T extends BlockEntity, P> CreateBlockEntityBuilder<T, P> blockEntity(P parent, String name,
 		BlockEntityFactory<T> factory) {
-		return (CreateTileEntityBuilder<T, P>) this.entry(name,
-			(callback) -> CreateTileEntityBuilder.create(this, parent, name, callback, factory));
+		return (CreateBlockEntityBuilder<T, P>) entry(name,
+			(callback) -> CreateBlockEntityBuilder.create(this, parent, name, callback, factory));
 	}
 
 	@Override
@@ -140,10 +118,11 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Palettes */
 
 	public <T extends Block> BlockBuilder<T, CreateRegistrate> paletteStoneBlock(String name,
-		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
+		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone,
+		boolean hasNaturalVariants) {
 		BlockBuilder<T, CreateRegistrate> builder = super.block(name, factory).initialProperties(propertiesFrom)
 			.transform(pickaxeOnly())
-			.blockstate((c, p) -> {
+			.blockstate(hasNaturalVariants ? BlockStateGen.naturalStoneTypeBlock(name) : (c, p) -> {
 				final String location = "block/palettes/stone_types/" + c.getName();
 				p.simpleBlock(c.get(), p.models()
 					.cubeAll(c.getName(), p.modLoc(location)));
@@ -153,13 +132,16 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.tag(BlockTags.MOSS_REPLACEABLE)
 			.tag(BlockTags.LUSH_GROUND_REPLACEABLE)
 			.item()
+			.model((c, p) -> p.cubeAll(c.getName(),
+				p.modLoc(hasNaturalVariants ? "block/palettes/stone_types/natural/" + name + "_1"
+					: "block/palettes/stone_types/" + c.getName())))
 			.build();
 		return builder;
 	}
 
 	public BlockBuilder<Block, CreateRegistrate> paletteStoneBlock(String name, NonNullSupplier<Block> propertiesFrom,
-		boolean worldGenStone) {
-		return paletteStoneBlock(name, Block::new, propertiesFrom, worldGenStone);
+		boolean worldGenStone, boolean hasNaturalVariants) {
+		return paletteStoneBlock(name, Block::new, propertiesFrom, worldGenStone, hasNaturalVariants);
 	}
 
 	/* Fluids */
@@ -254,5 +236,4 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
 			.register(CatnipServices.REGISTRIES.getKeyOrThrow(entry), model -> new CTModel(model, behavior));
 	}
-
 }

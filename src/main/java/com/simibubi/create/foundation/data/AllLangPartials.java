@@ -5,12 +5,11 @@ import com.google.gson.JsonElement;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
-import com.simibubi.create.foundation.utility.FilesHelper;
 
 import net.createmod.catnip.utility.lang.Lang;
 import net.createmod.ponder.foundation.PonderLocalization;
 
-public enum AllLangPartials {
+public enum AllLangPartials implements LangPartial {
 
 	ADVANCEMENTS("Advancements", AllAdvancements::provideLangEntries),
 	INTERFACE("UI & Messages"),
@@ -20,34 +19,28 @@ public enum AllLangPartials {
 
 	;
 
-	private String display;
-	private Supplier<JsonElement> provider;
+	private final String displayName;
+	private final Supplier<JsonElement> provider;
 
-	private AllLangPartials(String display) {
-		this.display = display;
-		this.provider = this::fromResource;
+	private AllLangPartials(String displayName) {
+		this.displayName = displayName;
+		String fileName = Lang.asId(name());
+		this.provider = () -> LangPartial.fromResource(Create.ID, fileName);
 	}
 
-	private AllLangPartials(String display, Supplier<JsonElement> customProvider) {
-		this.display = display;
-		this.provider = customProvider;
+	private AllLangPartials(String displayName, Supplier<JsonElement> provider) {
+		this.displayName = displayName;
+		this.provider = provider;
 	}
 
-	public String getDisplay() {
-		return display;
+	@Override
+	public String getDisplayName() {
+		return displayName;
 	}
 
+	@Override
 	public JsonElement provide() {
 		return provider.get();
-	}
-
-	private JsonElement fromResource() {
-		String fileName = Lang.asId(name());
-		String filepath = "assets/" + Create.ID + "/lang/default/" + fileName + ".json";
-		JsonElement element = FilesHelper.loadJsonResource(filepath);
-		if (element == null)
-			throw new IllegalStateException(String.format("Could not find default lang file: %s", filepath));
-		return element;
 	}
 
 }
