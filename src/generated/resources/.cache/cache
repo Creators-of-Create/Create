@@ -5371,6 +5371,7 @@ d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/items/toolboxes.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/items/valve_handles.json
 f8d83f446d0a2071dca4481251339c4249b2fd3f data/create/tags/items/vanilla_stripped_logs.json
 f3e20d8b3ca5652d3975da680740cc36326fdfc9 data/create/tags/items/vanilla_stripped_wood.json
+747204dc59a2198feb2bb579d586ea3975b6e0d1 data/create/tags/recipe_serializer/automation_ignore.json
 16bcb8fcbe9170c2c11f1ca8d99d8b36cd812bbd data/forge/tags/blocks/glass/colorless.json
 81d3eb40b048160fcc2d6bb7ff12b49276297efd data/forge/tags/blocks/glass_panes.json
 6eec92869baa44d3ac53aec6a7a92c15147b59f0 data/forge/tags/blocks/ores.json
