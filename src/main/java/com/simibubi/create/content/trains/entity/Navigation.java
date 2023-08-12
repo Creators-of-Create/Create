@@ -805,8 +805,7 @@ public class Navigation {
 		}
 
 		if (nullEntriesPresent)
-			Create.LOGGER.error("Found null values in path of train with name: " + train.name.getString() + ", id: "
-				+ train.id.toString());
+			Create.LOGGER.error("Found null values in path of train with name: {}, id: {}", train.name.getString(), train.id.toString());
 	}
 
 }
