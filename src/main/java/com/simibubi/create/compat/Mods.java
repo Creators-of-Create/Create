@@ -14,26 +14,40 @@ import net.minecraftforge.registries.ForgeRegistries;
  * For compatibility with and without another mod present, we have to define load conditions of the specific code
  */
 public enum Mods {
-	DYNAMICTREES,
-	TCONSTRUCT,
-	CURIOS,
-
 	COMPUTERCRAFT,
+	CURIOS,
+	DYNAMICTREES,
+	OCCULTISM,
 	STORAGEDRAWERS,
+	TCONSTRUCT,
 	XLPACKETS;
 
-	/**
-	 * @return a boolean of whether the mod is loaded or not based on mod id
-	 */
-	public boolean isLoaded() {
-		return ModList.get().isLoaded(asId());
+	private final String id;
+
+	Mods() {
+		id = Lang.asId(name());
 	}
 
 	/**
 	 * @return the mod id
 	 */
-	public String asId() {
-		return Lang.asId(name());
+	public String id() {
+		return id;
+	}
+
+	public ResourceLocation rl(String path) {
+		return new ResourceLocation(id, path);
+	}
+
+	public Block getBlock(String id) {
+		return ForgeRegistries.BLOCKS.getValue(rl(id));
+	}
+
+	/**
+	 * @return a boolean of whether the mod is loaded or not based on mod id
+	 */
+	public boolean isLoaded() {
+		return ModList.get().isLoaded(id);
 	}
 
 	/**
@@ -55,9 +69,5 @@ public enum Mods {
 		if (isLoaded()) {
 			toExecute.get().run();
 		}
-	}
-
-	public Block getBlock(String id) {
-		return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(asId(), id));
 	}
 }
