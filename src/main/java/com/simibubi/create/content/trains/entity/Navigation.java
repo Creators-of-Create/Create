@@ -767,6 +767,8 @@ public class Navigation {
 		if (destination == null)
 			return;
 
+		removeBrokenPathEntries();
+
 		distanceToDestination = tag.getDouble("DistanceToDestination");
 		distanceStartedAt = tag.getDouble("DistanceStartedAt");
 		destinationBehindTrain = tag.getBoolean("BehindTrain");
@@ -776,9 +778,7 @@ public class Navigation {
 			c -> currentPath.add(Couple
 				.deserializeEach(c.getList("Nodes", Tag.TAG_COMPOUND), c2 -> TrackNodeLocation.read(c2, dimensions))
 				.map(graph::locateNode)));
-		
-		removeBrokenPathEntries();
-		
+
 		waitingForSignal = tag.contains("BlockingSignal")
 			? Pair.of(tag.getUUID("BlockingSignal"), tag.getBoolean("BlockingSignalSide"))
 			: null;
@@ -793,7 +793,7 @@ public class Navigation {
 		 * Trains might load or save with null entries in their path, this method avoids
 		 * that anomaly from causing NPEs. The underlying issue has not been found.
 		 */
-		
+
 		boolean nullEntriesPresent = false;
 
 		for (Iterator<Couple<TrackNode>> iterator = currentPath.iterator(); iterator.hasNext();) {
