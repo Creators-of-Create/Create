@@ -22,8 +22,8 @@ import com.simibubi.create.content.trains.signal.TrackEdgePoint;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
@@ -323,7 +323,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends BlockEnti
 		ITrackBlock track = (ITrackBlock) block;
 		PartialModel partial = track.prepareTrackOverlay(level, pos, trackState, bezier, direction, ms, type);
 		if (partial != null)
-			CachedPartialBuffers.partial(partial, trackState)
+			CachedBuffers.partial(partial, trackState)
 				.translate(.5, 0, .5)
 				.scale(scale)
 				.translate(-.5, 0, -.5)

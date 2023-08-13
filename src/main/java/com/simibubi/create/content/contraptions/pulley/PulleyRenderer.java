@@ -5,7 +5,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 
-import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction.Axis;
@@ -30,12 +30,12 @@ public class PulleyRenderer extends AbstractPulleyRenderer<PulleyBlockEntity> {
 
 	@Override
 	protected SuperByteBuffer renderRope(PulleyBlockEntity be) {
-		return CachedBlockBuffers.block(AllBlocks.ROPE.getDefaultState());
+		return CachedBuffers.block(AllBlocks.ROPE.getDefaultState());
 	}
 
 	@Override
 	protected SuperByteBuffer renderMagnet(PulleyBlockEntity be) {
-		return CachedBlockBuffers.block(AllBlocks.PULLEY_MAGNET.getDefaultState());
+		return CachedBuffers.block(AllBlocks.PULLEY_MAGNET.getDefaultState());
 	}
 
 	@Override

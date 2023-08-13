@@ -6,8 +6,8 @@ import com.jozufozu.flywheel.core.model.BlockModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.CutoutRotatingInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -48,7 +48,7 @@ public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutR
 			} else {
 				dir = state.getValue(WaterWheelBlock.FACING);
 			}
-			PoseStack transform = CachedPartialBuffers.rotateToFaceVertical(dir).get();
+			PoseStack transform = CachedBuffers.rotateToFaceVertical(dir).get();
 			return BlockModel.of(model, Blocks.AIR.defaultBlockState(), transform);
 		});
 	}

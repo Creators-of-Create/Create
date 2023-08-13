@@ -7,10 +7,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.redstone.nixieTube.DoubleFaceAttachedBlock.DoubleAttachFace;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.DyeHelper;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -137,7 +137,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		boolean invertTubes =
 			facing == Direction.DOWN || blockState.getValue(NixieTubeBlock.FACE) == DoubleAttachFace.WALL_REVERSED;
 
-		CachedPartialBuffers.partial(AllPartialModels.SIGNAL_PANEL, blockState)
+		CachedBuffers.partial(AllPartialModels.SIGNAL_PANEL, blockState)
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
@@ -166,13 +166,13 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 				float longSide = yellow ? 1 : 4;
 				float longSideGlow = yellow ? 2 : 5.125f;
 
-				CachedPartialBuffers.partial(AllPartialModels.SIGNAL_WHITE_CUBE, blockState)
+				CachedBuffers.partial(AllPartialModels.SIGNAL_WHITE_CUBE, blockState)
 					.light(0xf000f0)
 					.disableDiffuse()
 					.scale(vert ? longSide : 1, vert ? 1 : longSide, 1)
 					.renderInto(ms, buffer.getBuffer(RenderType.translucent()));
 
-				CachedPartialBuffers
+				CachedBuffers
 					.partial(
 						first ? AllPartialModels.SIGNAL_RED_GLOW
 							: yellow ? AllPartialModels.SIGNAL_YELLOW_GLOW : AllPartialModels.SIGNAL_WHITE_GLOW,
@@ -183,7 +183,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 					.renderInto(ms, buffer.getBuffer(RenderTypes.getAdditive()));
 			}
 
-			CachedPartialBuffers
+			CachedBuffers
 				.partial(first ? AllPartialModels.SIGNAL_RED
 					: yellow ? AllPartialModels.SIGNAL_YELLOW : AllPartialModels.SIGNAL_WHITE, blockState)
 				.light(0xF000F0)

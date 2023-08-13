@@ -13,8 +13,8 @@ import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForBelt;
 import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -57,14 +57,14 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		SuperByteBuffer connector = CachedPartialBuffers.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR, state);
+		SuperByteBuffer connector = CachedBuffers.partial(AllPartialModels.SCHEMATICANNON_CONNECTOR, state);
 		connector.translate(.5f, 0, .5f);
 		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		connector.translate(-.5f, 0, -.5f);
 		connector.light(light)
 			.renderInto(ms, vb);
 
-		SuperByteBuffer pipe = CachedPartialBuffers.partial(AllPartialModels.SCHEMATICANNON_PIPE, state);
+		SuperByteBuffer pipe = CachedBuffers.partial(AllPartialModels.SCHEMATICANNON_PIPE, state);
 		pipe.translate(.5f, 15 / 16f, .5f);
 		pipe.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));

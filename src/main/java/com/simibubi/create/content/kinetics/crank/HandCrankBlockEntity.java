@@ -7,8 +7,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.core.BlockPos;
@@ -98,7 +98,7 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 		BlockState blockState = getBlockState();
 		Direction facing = blockState.getOptionalValue(HandCrankBlock.FACING)
 			.orElse(Direction.UP);
-		return CachedPartialBuffers.partialFacing(AllPartialModels.HAND_CRANK_HANDLE, blockState, facing.getOpposite());
+		return CachedBuffers.partialFacing(AllPartialModels.HAND_CRANK_HANDLE, blockState, facing.getOpposite());
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,19 +1,19 @@
 package com.simibubi.create.content.logistics.depot;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.util.transform.Rotate;
 import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.util.transform.Translate;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.IntAttached;
 import net.createmod.catnip.utility.VecHelper;
-import net.createmod.catnip.utility.flw.Rotate;
-import net.createmod.catnip.utility.flw.Translate;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -46,7 +46,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		float angle = lidProgress * 70;
 
 		if (!Backend.canUseInstancing(be.getLevel())) {
-			SuperByteBuffer model = CachedPartialBuffers.partial(AllPartialModels.EJECTOR_TOP, be.getBlockState());
+			SuperByteBuffer model = CachedBuffers.partial(AllPartialModels.EJECTOR_TOP, be.getBlockState());
 			applyLidAngle(be, angle, model);
 			model.light(light)
 					.renderInto(ms, vertexBuilder);
@@ -80,7 +80,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 			return;
 
 		ms.pushPose();
-		//applyLidAngle(be, angle, msr);//TODO flw
+		applyLidAngle(be, angle, msr);
 		msr.centre()
 			.rotateY(-180 - AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))

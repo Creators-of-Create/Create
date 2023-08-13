@@ -10,10 +10,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.model.BakedModelHelper;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperBufferFactory;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperByteBufferCache;
@@ -69,7 +69,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 			} else {
 				dir = state1.getValue(WaterWheelBlock.FACING);
 			}
-			PoseStack transform = CachedPartialBuffers.rotateToFaceVertical(dir).get();
+			PoseStack transform = CachedBuffers.rotateToFaceVertical(dir).get();
 			return SuperBufferFactory.getInstance().createForBlock(model, Blocks.AIR.defaultBlockState(), transform);
 		});
 	}

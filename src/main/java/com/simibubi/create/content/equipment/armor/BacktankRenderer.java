@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.ponder.utility.WorldTickHolder;
@@ -27,7 +27,7 @@ public class BacktankRenderer extends KineticBlockEntityRenderer<BacktankBlockEn
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
 		BlockState blockState = be.getBlockState();
-		SuperByteBuffer cogs = CachedPartialBuffers.partial(getCogsModel(blockState), blockState);
+		SuperByteBuffer cogs = CachedBuffers.partial(getCogsModel(blockState), blockState);
 		cogs.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(blockState.getValue(BacktankBlock.HORIZONTAL_FACING)))
 			.unCentre()
@@ -41,7 +41,7 @@ public class BacktankRenderer extends KineticBlockEntityRenderer<BacktankBlockEn
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(BacktankBlockEntity be, BlockState state) {
-		return CachedPartialBuffers.partial(getShaftModel(state), state);
+		return CachedBuffers.partial(getShaftModel(state), state);
 	}
 
 	public static PartialModel getCogsModel(BlockState state) {

@@ -24,8 +24,8 @@ import com.simibubi.create.content.contraptions.ContraptionWorld;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.ShadeSpearatingSuperByteBuffer;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -176,7 +176,7 @@ public class ContraptionRenderDispatcher {
 				.withBlocks(values)
 				.withModelData(c.modelData)
 				.build();
-		SuperByteBuffer sbb = new FlwSuperByteBuffer(data);
+		SuperByteBuffer sbb = new ShadeSpearatingSuperByteBuffer(data);
 		data.release();
 		return sbb;
 	}

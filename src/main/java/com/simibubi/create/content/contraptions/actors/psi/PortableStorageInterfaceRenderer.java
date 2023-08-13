@@ -13,8 +13,8 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.animation.LerpedFloat;
@@ -62,8 +62,8 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 
 	private static void render(BlockState blockState, boolean lit, float progress, PoseStack local,
 		Consumer<SuperByteBuffer> drawCallback) {
-		SuperByteBuffer middle = CachedPartialBuffers.partial(getMiddleForState(blockState, lit), blockState);
-		SuperByteBuffer top = CachedPartialBuffers.partial(getTopForState(blockState), blockState);
+		SuperByteBuffer middle = CachedBuffers.partial(getMiddleForState(blockState, lit), blockState);
+		SuperByteBuffer top = CachedBuffers.partial(getTopForState(blockState), blockState);
 
 		if (local != null) {
 			middle.transform(local);

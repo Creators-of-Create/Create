@@ -7,8 +7,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.simibubi.create.content.kinetics.gauge.GaugeBlock.Type;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -47,8 +47,8 @@ public class GaugeRenderer extends ShaftRenderer<GaugeBlockEntity> {
 
 		PartialModel partialModel = (type == Type.SPEED ? AllPartialModels.GAUGE_HEAD_SPEED : AllPartialModels.GAUGE_HEAD_STRESS);
 		SuperByteBuffer headBuffer =
-				CachedPartialBuffers.partial(partialModel, gaugeState);
-		SuperByteBuffer dialBuffer = CachedPartialBuffers.partial(AllPartialModels.GAUGE_DIAL, gaugeState);
+				CachedBuffers.partial(partialModel, gaugeState);
+		SuperByteBuffer dialBuffer = CachedBuffers.partial(AllPartialModels.GAUGE_DIAL, gaugeState);
 
 		float dialPivot = 5.75f / 16;
 		float progress = Mth.lerp(partialTicks, gaugeBE.prevDialState, gaugeBE.dialState);

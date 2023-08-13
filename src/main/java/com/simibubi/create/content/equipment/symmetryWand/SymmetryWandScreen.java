@@ -10,7 +10,6 @@ import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.TriplePlaneMirror;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.PartialModelGuiElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
@@ -140,7 +139,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		ms.mulPose(new Vector3f(.3f, 1f, 0f).rotationDegrees(-22.5f));
 		currentElement.applyModelTransform(ms);
 		// RenderSystem.multMatrix(ms.peek().getModel());
-		PartialModelGuiElement.of(currentElement.getModel())
+		GuiGameElement.of(currentElement.getModel())
 			.render(ms);
 
 		ms.popPose();

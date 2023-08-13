@@ -13,9 +13,9 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.utility.DyeHelper;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -57,14 +57,14 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		ms.translate(buttonOffset.x, buttonOffset.y, buttonOffset.z);
 
 		VertexConsumer vc = buffer.getBuffer(RenderType.solid());
-		CachedPartialBuffers.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_BUTTON, blockState, facing)
+		CachedBuffers.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_BUTTON, blockState, facing)
 			.light(light)
 			.renderInto(ms, vc);
 
 		ms.popPose();
 
 		int i = (((int) blockEntity.indicator.getValue(pt) / 45) % 8) + 8;
-		CachedPartialBuffers.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_INDICATOR.get(i % 8), blockState, facing)
+		CachedBuffers.partialFacing(AllPartialModels.CONTRAPTION_CONTROLS_INDICATOR.get(i % 8), blockState, facing)
 			.light(light)
 			.renderInto(ms, vc);
 	}

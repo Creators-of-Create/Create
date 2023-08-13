@@ -4,8 +4,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.ponder.utility.WorldTickHolder;
@@ -37,7 +37,7 @@ public class GearboxRenderer extends KineticBlockEntityRenderer<GearboxBlockEnti
 			if (boxAxis == axis)
 				continue;
 
-			SuperByteBuffer shaft = CachedPartialBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
+			SuperByteBuffer shaft = CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
 			float offset = getRotationOffsetForPosition(be, pos, axis);
 			float angle = (time * be.getSpeed() * 3f / 10) % 360;
 

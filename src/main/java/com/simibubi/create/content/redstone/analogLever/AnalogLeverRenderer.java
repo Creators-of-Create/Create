@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.catnip.utility.theme.Color;
@@ -34,7 +34,7 @@ public class AnalogLeverRenderer extends SafeBlockEntityRenderer<AnalogLeverBloc
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
 		// Handle
-		SuperByteBuffer handle = CachedPartialBuffers.partial(AllPartialModels.ANALOG_LEVER_HANDLE, leverState);
+		SuperByteBuffer handle = CachedBuffers.partial(AllPartialModels.ANALOG_LEVER_HANDLE, leverState);
 		float angle = (float) ((state / 15) * 90 / 180 * Math.PI);
 		transform(handle, leverState).translate(1 / 2f, 1 / 16f, 1 / 2f)
 				.rotate(Direction.EAST, angle)
@@ -44,7 +44,7 @@ public class AnalogLeverRenderer extends SafeBlockEntityRenderer<AnalogLeverBloc
 
 		// Indicator
 		int color = Color.mixColors(0x2C0300, 0xCD0000, state / 15f);
-		SuperByteBuffer indicator = transform(CachedPartialBuffers.partial(AllPartialModels.ANALOG_LEVER_INDICATOR, leverState), leverState);
+		SuperByteBuffer indicator = transform(CachedBuffers.partial(AllPartialModels.ANALOG_LEVER_INDICATOR, leverState), leverState);
 		indicator.light(light)
 				.color(color)
 				.renderInto(ms, vb);

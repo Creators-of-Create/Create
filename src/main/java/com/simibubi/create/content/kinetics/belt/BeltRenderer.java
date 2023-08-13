@@ -15,9 +15,9 @@ import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SpriteShiftEntry;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
@@ -95,7 +95,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 				PartialModel beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
-				SuperByteBuffer beltBuffer = CachedPartialBuffers.partial(beltPartial, blockState)
+				SuperByteBuffer beltBuffer = CachedBuffers.partial(beltPartial, blockState)
 						.light(light);
 
 				SpriteShiftEntry spriteShift = getSpriteShiftEntry(color, diagonal, bottom);
@@ -140,7 +140,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 					return stack;
 				};
 
-				SuperByteBuffer superBuffer = CachedPartialBuffers.partialDirectional(AllPartialModels.BELT_PULLEY, blockState, dir, matrixStackSupplier);
+				SuperByteBuffer superBuffer = CachedBuffers.partialDirectional(AllPartialModels.BELT_PULLEY, blockState, dir, matrixStackSupplier);
 				KineticBlockEntityRenderer.standardKineticRotationTransform(superBuffer, be, light).renderInto(ms, vb);
 			}
 		}

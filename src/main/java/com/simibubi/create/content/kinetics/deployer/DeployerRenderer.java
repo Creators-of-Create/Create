@@ -21,9 +21,8 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity.Mode;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
-import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.NBTHelper;
@@ -122,8 +121,8 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		BlockState blockState = be.getBlockState();
 		Vec3 offset = getHandOffset(be, partialTicks, blockState);
 
-		SuperByteBuffer pole = CachedPartialBuffers.partial(AllPartialModels.DEPLOYER_POLE, blockState);
-		SuperByteBuffer hand = CachedPartialBuffers.partial(be.getHandPose(), blockState);
+		SuperByteBuffer pole = CachedBuffers.partial(AllPartialModels.DEPLOYER_POLE, blockState);
+		SuperByteBuffer hand = CachedBuffers.partial(be.getHandPose(), blockState);
 
 		transform(pole.translate(offset.x, offset.y, offset.z), blockState, true)
 			.light(light)
@@ -168,9 +167,9 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		if (context.contraption.stalled)
 			speed = 0;
 
-		SuperByteBuffer shaft = CachedBlockBuffers.block(AllBlocks.SHAFT.getDefaultState());
-		SuperByteBuffer pole = CachedPartialBuffers.partial(AllPartialModels.DEPLOYER_POLE, blockState);
-		SuperByteBuffer hand = CachedPartialBuffers.partial(handPose, blockState);
+		SuperByteBuffer shaft = CachedBuffers.block(AllBlocks.SHAFT.getDefaultState());
+		SuperByteBuffer pole = CachedBuffers.partial(AllPartialModels.DEPLOYER_POLE, blockState);
+		SuperByteBuffer hand = CachedBuffers.partial(handPose, blockState);
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {

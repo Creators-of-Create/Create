@@ -10,8 +10,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.ponder.utility.WorldTickHolder;
@@ -228,7 +228,7 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayB
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(FlapDisplayBlockEntity be, BlockState state) {
-		return CachedPartialBuffers.partialFacingVertical(AllPartialModels.SHAFTLESS_COGWHEEL, state,
+		return CachedBuffers.partialFacingVertical(AllPartialModels.SHAFTLESS_COGWHEEL, state,
 			state.getValue(FlapDisplayBlock.HORIZONTAL_FACING));
 	}
 

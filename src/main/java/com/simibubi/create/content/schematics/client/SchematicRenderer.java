@@ -12,8 +12,8 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
-import com.simibubi.create.foundation.render.FlwSuperByteBuffer;
 
+import net.createmod.catnip.render.ShadeSpearatingSuperByteBuffer;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
@@ -136,7 +136,7 @@ public class SchematicRenderer {
 
 		renderWorld.renderMode = false;
 
-		SuperByteBuffer sbb = new FlwSuperByteBuffer(bufferedData);
+		SuperByteBuffer sbb = new ShadeSpearatingSuperByteBuffer(bufferedData);
 		bufferedData.release();
 		return sbb;
 	}

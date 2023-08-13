@@ -4,8 +4,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.ponder.utility.WorldTickHolder;
@@ -28,7 +28,7 @@ public class StickerRenderer extends SafeBlockEntityRenderer<StickerBlockEntity>
 		if (Backend.canUseInstancing(be.getLevel())) return;
 
 		BlockState state = be.getBlockState();
-		SuperByteBuffer head = CachedPartialBuffers.partial(AllPartialModels.STICKER_HEAD, state);
+		SuperByteBuffer head = CachedBuffers.partial(AllPartialModels.STICKER_HEAD, state);
 		float offset = be.piston.getValue(WorldTickHolder.getPartialTicks(be.getLevel()));
 
 		if (be.getLevel() != Minecraft.getInstance().level && !be.isVirtual())

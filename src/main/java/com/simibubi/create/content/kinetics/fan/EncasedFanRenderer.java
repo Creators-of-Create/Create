@@ -7,8 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -37,9 +37,9 @@ public class EncasedFanRenderer extends KineticBlockEntityRenderer<EncasedFanBlo
 		int lightInFront = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos().relative(direction));
 
 		SuperByteBuffer shaftHalf =
-				CachedPartialBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction.getOpposite());
+				CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction.getOpposite());
 		SuperByteBuffer fanInner =
-				CachedPartialBuffers.partialFacing(AllPartialModels.ENCASED_FAN_INNER, be.getBlockState(), direction.getOpposite());
+				CachedBuffers.partialFacing(AllPartialModels.ENCASED_FAN_INNER, be.getBlockState(), direction.getOpposite());
 
 		float time = WorldTickHolder.getRenderTime(be.getLevel());
 		float speed = be.getSpeed() * 5;

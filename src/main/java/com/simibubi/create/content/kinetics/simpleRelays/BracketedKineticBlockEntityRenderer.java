@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -41,12 +41,12 @@ public class BracketedKineticBlockEntityRenderer extends KineticBlockEntityRende
 		Axis axis = getRotationAxisOf(be);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		renderRotatingBuffer(be,
-			CachedPartialBuffers.partialFacingVertical(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, be.getBlockState(), facing),
+			CachedBuffers.partialFacingVertical(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, be.getBlockState(), facing),
 			ms, buffer.getBuffer(RenderType.solid()), light);
 
 		float angle = getAngleForLargeCogShaft(be, axis);
 		SuperByteBuffer shaft =
-			CachedPartialBuffers.partialFacingVertical(AllPartialModels.COGWHEEL_SHAFT, be.getBlockState(), facing);
+			CachedBuffers.partialFacingVertical(AllPartialModels.COGWHEEL_SHAFT, be.getBlockState(), facing);
 		kineticRotationTransform(shaft, be, axis, angle, light);
 		shaft.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 

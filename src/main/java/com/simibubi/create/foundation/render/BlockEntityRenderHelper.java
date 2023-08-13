@@ -16,6 +16,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.platform.CatnipServices;
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -107,7 +108,7 @@ public class BlockEntityRenderHelper {
 
 		if (renderWorld != null) {
 			int renderWorldLight = LevelRenderer.getLightColor(renderWorld, renderWorldPos);
-			return FlwSuperByteBuffer.maxLight(worldLight, renderWorldLight);
+			return SuperByteBuffer.maxLight(worldLight, renderWorldLight);
 		}
 
 		return worldLight;

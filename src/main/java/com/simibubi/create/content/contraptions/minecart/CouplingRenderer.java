@@ -8,9 +8,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
 import com.simibubi.create.content.kinetics.KineticDebugger;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
 import net.createmod.catnip.CatnipClient;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.Couple;
@@ -64,9 +64,9 @@ public class CouplingRenderer {
 
 		BlockState renderState = Blocks.AIR.defaultBlockState();
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		SuperByteBuffer attachment = CachedPartialBuffers.partial(AllPartialModels.COUPLING_ATTACHMENT, renderState);
-		SuperByteBuffer ring = CachedPartialBuffers.partial(AllPartialModels.COUPLING_RING, renderState);
-		SuperByteBuffer connector = CachedPartialBuffers.partial(AllPartialModels.COUPLING_CONNECTOR, renderState);
+		SuperByteBuffer attachment = CachedBuffers.partial(AllPartialModels.COUPLING_ATTACHMENT, renderState);
+		SuperByteBuffer ring = CachedBuffers.partial(AllPartialModels.COUPLING_RING, renderState);
+		SuperByteBuffer connector = CachedBuffers.partial(AllPartialModels.COUPLING_CONNECTOR, renderState);
 
 		Vec3 zero = Vec3.ZERO;
 		Vec3 firstEndpoint = transforms.getFirst()

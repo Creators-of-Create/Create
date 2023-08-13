@@ -4,8 +4,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,7 +30,7 @@ public class FluidValveRenderer extends KineticBlockEntityRenderer<FluidValveBlo
 
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 		BlockState blockState = be.getBlockState();
-		SuperByteBuffer pointer = CachedPartialBuffers.partial(AllPartialModels.FLUID_VALVE_POINTER, blockState);
+		SuperByteBuffer pointer = CachedBuffers.partial(AllPartialModels.FLUID_VALVE_POINTER, blockState);
 		Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
 		float pointerRotation = Mth.lerp(be.pointer.getValue(partialTicks), 0, -90);

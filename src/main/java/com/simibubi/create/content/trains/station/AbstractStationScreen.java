@@ -13,7 +13,6 @@ import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.entity.TrainIconType;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.PartialModelGuiElement;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
 import net.createmod.catnip.gui.AbstractSimiScreen;
@@ -111,7 +110,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 		if (blockEntity.resolveFlagAngle()) {
 			msr.translate(1 / 16f, -19 / 16f, -12 / 16f);
 			StationRenderer.transformFlag(msr, blockEntity, partialTicks, 180, false);
-			PartialModelGuiElement.of(getFlag(partialTicks))
+			GuiGameElement.of(getFlag(partialTicks))
 				.render(ms);
 		}
 

@@ -11,8 +11,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.track.BezierConnection.GirderAngles;
 import com.simibubi.create.content.trains.track.BezierConnection.SegmentAngles;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -60,7 +60,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 
 			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
-			CachedPartialBuffers.partial(modelHolder.tie(), air)
+			CachedBuffers.partial(modelHolder.tie(), air)
 				.mulPose(segment.tieTransform.pose())
 				.mulNormal(segment.tieTransform.normal())
 				.light(light)
@@ -68,7 +68,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 
 			for (boolean first : Iterate.trueAndFalse) {
 				Pose transform = segment.railTransforms.get(first);
-				CachedPartialBuffers.partial(first ? modelHolder.segment_left() : modelHolder.segment_right(), air)
+				CachedBuffers.partial(first ? modelHolder.segment_left() : modelHolder.segment_right(), air)
 					.mulPose(transform.pose())
 					.mulNormal(transform.normal())
 					.light(light)
@@ -93,7 +93,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 
 			for (boolean first : Iterate.trueAndFalse) {
 				Pose beamTransform = segment.beams.get(first);
-				CachedPartialBuffers.partial(GIRDER_SEGMENT_MIDDLE, air)
+				CachedBuffers.partial(GIRDER_SEGMENT_MIDDLE, air)
 					.mulPose(beamTransform.pose())
 					.mulNormal(beamTransform.normal())
 					.light(light)
@@ -102,7 +102,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 				for (boolean top : Iterate.trueAndFalse) {
 					Pose beamCapTransform = segment.beamCaps.get(top)
 						.get(first);
-					CachedPartialBuffers.partial(top ? GIRDER_SEGMENT_TOP : GIRDER_SEGMENT_BOTTOM, air)
+					CachedBuffers.partial(top ? GIRDER_SEGMENT_TOP : GIRDER_SEGMENT_BOTTOM, air)
 						.mulPose(beamCapTransform.pose())
 						.mulNormal(beamCapTransform.normal())
 						.light(light)

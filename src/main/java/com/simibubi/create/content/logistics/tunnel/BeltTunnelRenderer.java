@@ -6,8 +6,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
@@ -34,7 +34,7 @@ public class BeltTunnelRenderer extends SmartBlockEntityRenderer<BeltTunnelBlock
 		if (Backend.canUseInstancing(be.getLevel()))
 			return;
 
-		SuperByteBuffer flapBuffer = CachedPartialBuffers.partial(AllPartialModels.BELT_TUNNEL_FLAP, be.getBlockState());
+		SuperByteBuffer flapBuffer = CachedBuffers.partial(AllPartialModels.BELT_TUNNEL_FLAP, be.getBlockState());
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 1f);
 		TransformStack msr = TransformStack.cast(ms);

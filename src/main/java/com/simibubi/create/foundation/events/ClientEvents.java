@@ -58,7 +58,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.createmod.catnip.config.ui.BaseConfigScreen;
-import net.createmod.catnip.render.DefaultSuperRenderTypeBufferImpl;
+import net.createmod.catnip.render.DefaultSuperRenderTypeBuffer;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.worldWrappers.WrappedClientWorld;
@@ -198,7 +198,7 @@ public class ClientEvents {
 	public static void onRenderWorld(RenderLevelLastEvent event) {
 		PoseStack ms = event.getPoseStack();
 		ms.pushPose();
-		SuperRenderTypeBuffer buffer = DefaultSuperRenderTypeBufferImpl.getInstance();
+		SuperRenderTypeBuffer buffer = DefaultSuperRenderTypeBuffer.getInstance();
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 		Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera()
 			.getPosition();

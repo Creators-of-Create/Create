@@ -14,7 +14,6 @@ import com.simibubi.create.content.logistics.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.PartialModelGuiElement;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -77,7 +76,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintMenu> 
 		background.render(ms, x, y, this);
 		font.draw(ms, title, x + 15, y + 4, 0xFFFFFF);
 
-		PartialModelGuiElement.of(AllPartialModels.CRAFTING_BLUEPRINT_1x1).<GuiGameElement
+		GuiGameElement.of(AllPartialModels.CRAFTING_BLUEPRINT_1x1).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.getWidth() + 20, y + background.getHeight() - 32, 0)
 			.rotate(45, -45, 22.5f)
 			.scale(40)

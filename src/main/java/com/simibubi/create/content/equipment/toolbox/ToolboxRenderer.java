@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -28,8 +28,8 @@ public class ToolboxRenderer extends SmartBlockEntityRenderer<ToolboxBlockEntity
 		Direction facing = blockState.getValue(ToolboxBlock.FACING)
 			.getOpposite();
 		SuperByteBuffer lid =
-			CachedPartialBuffers.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor()), blockState);
-		SuperByteBuffer drawer = CachedPartialBuffers.partial(AllPartialModels.TOOLBOX_DRAWER, blockState);
+			CachedBuffers.partial(AllPartialModels.TOOLBOX_LIDS.get(blockEntity.getColor()), blockState);
+		SuperByteBuffer drawer = CachedBuffers.partial(AllPartialModels.TOOLBOX_DRAWER, blockState);
 
 		float lidAngle = blockEntity.lid.getValue(partialTicks);
 		float drawerOffset = blockEntity.drawers.getValue(partialTicks);

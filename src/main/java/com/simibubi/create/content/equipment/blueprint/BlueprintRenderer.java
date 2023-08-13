@@ -6,8 +6,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix3f;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintSection;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Couple;
 import net.minecraft.client.Minecraft;
@@ -33,7 +33,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		int light) {
 		PartialModel partialModel = entity.size == 3 ? AllPartialModels.CRAFTING_BLUEPRINT_3x3
 			: entity.size == 2 ? AllPartialModels.CRAFTING_BLUEPRINT_2x2 : AllPartialModels.CRAFTING_BLUEPRINT_1x1;
-		SuperByteBuffer sbb = CachedPartialBuffers.partial(partialModel, Blocks.AIR.defaultBlockState());
+		SuperByteBuffer sbb = CachedBuffers.partial(partialModel, Blocks.AIR.defaultBlockState());
 		sbb.rotateY(-yaw)
 			.rotateX(90.0F + entity.getXRot())
 			.translate(-.5, -1 / 32f, -.5);

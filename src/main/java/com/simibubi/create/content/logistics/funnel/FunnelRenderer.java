@@ -7,8 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -37,7 +37,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		PartialModel partialModel = (blockState.getBlock() instanceof FunnelBlock ? AllPartialModels.FUNNEL_FLAP
 			: AllPartialModels.BELT_FUNNEL_FLAP);
-		SuperByteBuffer flapBuffer = CachedPartialBuffers.partial(partialModel, blockState);
+		SuperByteBuffer flapBuffer = CachedBuffers.partial(partialModel, blockState);
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 9.5f);
 		TransformStack msr = TransformStack.cast(ms);
 

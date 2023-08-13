@@ -15,8 +15,8 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -44,7 +44,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
 		Direction facing = context.state.getValue(BlockStateProperties.FACING);
 		PartialModel top = AllPartialModels.BEARING_TOP;
-		SuperByteBuffer superBuffer = CachedPartialBuffers.partial(top, context.state);
+		SuperByteBuffer superBuffer = CachedBuffers.partial(top, context.state);
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		// rotate to match blockstate

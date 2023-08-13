@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.ponder.utility.WorldTickHolder;
@@ -48,7 +48,7 @@ public class SplitShaftRenderer extends KineticBlockEntityRenderer<SplitShaftBlo
 			angle = angle / 180f * (float) Math.PI;
 
 			SuperByteBuffer superByteBuffer =
-					CachedPartialBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
+					CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, be.getBlockState(), direction);
 			kineticRotationTransform(superByteBuffer, be, axis, angle, light);
 			superByteBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}

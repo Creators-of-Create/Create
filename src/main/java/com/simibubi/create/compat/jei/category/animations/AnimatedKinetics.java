@@ -4,7 +4,6 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.gui.CustomLightingSettings;
-import com.simibubi.create.foundation.gui.element.PartialModelGuiElement;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.createmod.catnip.gui.ILightingSettings;
@@ -37,7 +36,7 @@ public abstract class AnimatedKinetics implements IDrawable {
 	 * Use {@link #blockElement(PartialModel)} if calling from inside a subclass.
 	 */
 	public static GuiGameElement.GuiRenderBuilder defaultBlockElement(PartialModel partial) {
-		return PartialModelGuiElement.of(partial)
+		return GuiGameElement.of(partial)
 				.lighting(DEFAULT_LIGHTING);
 	}
 

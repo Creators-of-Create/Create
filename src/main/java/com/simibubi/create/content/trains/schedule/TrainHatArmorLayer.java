@@ -7,8 +7,8 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.utility.Couple;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.AxolotlModel;
@@ -113,7 +113,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			ms.translate(0, -2.25f / 16f, 0);
 			msr.rotateX(-8.5f);
 			BlockState air = Blocks.AIR.defaultBlockState();
-			CachedPartialBuffers.partial(AllPartialModels.TRAIN_HAT, air)
+			CachedBuffers.partial(AllPartialModels.TRAIN_HAT, air)
 				.forEntityRender()
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(renderType));

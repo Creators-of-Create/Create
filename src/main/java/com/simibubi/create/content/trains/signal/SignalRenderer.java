@@ -9,8 +9,8 @@ import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour.RenderedTrackOverlayType;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -33,10 +33,10 @@ public class SignalRenderer extends SafeBlockEntityRenderer<SignalBlockEntity> {
 
 		float renderTime = WorldTickHolder.getRenderTime(be.getLevel());
 		if (signalState.isRedLight(renderTime))
-			CachedPartialBuffers.partial(AllPartialModels.SIGNAL_ON, blockState)
+			CachedBuffers.partial(AllPartialModels.SIGNAL_ON, blockState)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		else
-			CachedPartialBuffers.partial(AllPartialModels.SIGNAL_OFF, blockState)
+			CachedBuffers.partial(AllPartialModels.SIGNAL_OFF, blockState)
 				.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 

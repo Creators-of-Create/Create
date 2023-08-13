@@ -12,7 +12,6 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.element.PartialModelGuiElement;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -142,7 +141,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			.translate(0, -6 / 16f, 12 / 16f)
 			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))
 			.translate(0, 6 / 16f, -12 / 16f);
-		PartialModelGuiElement.of(AllPartialModels.TOOLBOX_LIDS.get(color))
+		GuiGameElement.of(AllPartialModels.TOOLBOX_LIDS.get(color))
 			.render(ms);
 		ms.popPose();
 
@@ -150,7 +149,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			ms.pushPose();
 			ms.translate(0, -offset * 1 / 8f,
 				menu.contentHolder.drawers.getValue(partialTicks) * -.175f * (2 - offset));
-			PartialModelGuiElement.of(AllPartialModels.TOOLBOX_DRAWER)
+			GuiGameElement.of(AllPartialModels.TOOLBOX_DRAWER)
 				.render(ms);
 			ms.popPose();
 		}

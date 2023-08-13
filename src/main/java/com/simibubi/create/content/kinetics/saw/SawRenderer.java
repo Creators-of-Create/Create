@@ -15,9 +15,8 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
-import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
@@ -80,7 +79,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 				rotate = true;
 		}
 
-		SuperByteBuffer superBuffer = CachedPartialBuffers.partialFacing(partial, blockState);
+		SuperByteBuffer superBuffer = CachedBuffers.partialFacing(partial, blockState);
 		if (rotate) {
 			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
 		}
@@ -148,9 +147,9 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		if (state.getValue(FACING)
 			.getAxis()
 			.isHorizontal())
-			return CachedPartialBuffers.partialFacing(AllPartialModels.SHAFT_HALF,
+			return CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF,
 				state.rotate(be.getLevel(), be.getBlockPos(), Rotation.CLOCKWISE_180));
-		return CachedBlockBuffers.block(KineticBlockEntityRenderer.KINETIC_BLOCK,
+		return CachedBuffers.block(KineticBlockEntityRenderer.KINETIC_BLOCK,
 			getRenderedBlockState(be));
 	}
 
@@ -179,14 +178,14 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		SuperByteBuffer superBuffer;
 		if (SawBlock.isHorizontal(state)) {
 			if (shouldAnimate)
-				superBuffer = CachedPartialBuffers.partial(AllPartialModels.SAW_BLADE_HORIZONTAL_ACTIVE, state);
+				superBuffer = CachedBuffers.partial(AllPartialModels.SAW_BLADE_HORIZONTAL_ACTIVE, state);
 			else
-				superBuffer = CachedPartialBuffers.partial(AllPartialModels.SAW_BLADE_HORIZONTAL_INACTIVE, state);
+				superBuffer = CachedBuffers.partial(AllPartialModels.SAW_BLADE_HORIZONTAL_INACTIVE, state);
 		} else {
 			if (shouldAnimate)
-				superBuffer = CachedPartialBuffers.partial(AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE, state);
+				superBuffer = CachedBuffers.partial(AllPartialModels.SAW_BLADE_VERTICAL_ACTIVE, state);
 			else
-				superBuffer = CachedPartialBuffers.partial(AllPartialModels.SAW_BLADE_VERTICAL_INACTIVE, state);
+				superBuffer = CachedBuffers.partial(AllPartialModels.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
 		superBuffer.transform(matrices.getModel())

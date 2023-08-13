@@ -6,9 +6,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
-import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -44,7 +43,7 @@ public class SpeedControllerRenderer extends SmartBlockEntityRenderer<SpeedContr
 		BlockState blockState = blockEntity.getBlockState();
 		boolean alongX = blockState.getValue(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
 
-		SuperByteBuffer bracket = CachedPartialBuffers.partial(AllPartialModels.SPEED_CONTROLLER_BRACKET, blockState);
+		SuperByteBuffer bracket = CachedBuffers.partial(AllPartialModels.SPEED_CONTROLLER_BRACKET, blockState);
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(Direction.UP,
 				(float) (alongX ? Math.PI : Math.PI / 2));
@@ -53,7 +52,7 @@ public class SpeedControllerRenderer extends SmartBlockEntityRenderer<SpeedContr
 	}
 
 	private SuperByteBuffer getRotatedModel(SpeedControllerBlockEntity blockEntity) {
-		return CachedBlockBuffers.block(KineticBlockEntityRenderer.KINETIC_BLOCK,
+		return CachedBuffers.block(KineticBlockEntityRenderer.KINETIC_BLOCK,
 				KineticBlockEntityRenderer.shaft(KineticBlockEntityRenderer.getRotationAxisOf(blockEntity)));
 	}
 

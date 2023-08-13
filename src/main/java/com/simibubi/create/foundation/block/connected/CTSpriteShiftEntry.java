@@ -1,14 +1,12 @@
 package com.simibubi.create.foundation.block.connected;
 
 import net.createmod.catnip.render.SpriteShiftEntry;
-import net.minecraft.resources.ResourceLocation;
 
 public class CTSpriteShiftEntry extends SpriteShiftEntry {
 
 	protected final CTType type;
 
-	public CTSpriteShiftEntry(CTType type, ResourceLocation originalTextureLocation, ResourceLocation targetTextureLocation) {
-		super(originalTextureLocation, targetTextureLocation);
+	public CTSpriteShiftEntry(CTType type) {
 		this.type = type;
 	}
 

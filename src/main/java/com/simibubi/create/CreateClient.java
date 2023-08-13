@@ -26,16 +26,14 @@ import com.simibubi.create.content.trains.track.TrackPlacementOverlay;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsClient;
 import com.simibubi.create.foundation.ponder.CreatePonderPlugin;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 import com.simibubi.create.foundation.render.CreateContexts;
-import com.simibubi.create.foundation.render.FlwSuperBufferFactory;
 import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.gui.CreateMainMenuScreen;
 
 import net.createmod.catnip.config.ui.BaseConfigScreen;
 import net.createmod.catnip.config.ui.ConfigScreen;
-import net.createmod.catnip.render.SuperBufferFactory;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBufferCache;
 import net.createmod.catnip.utility.lang.Components;
 import net.createmod.ponder.foundation.PonderIndex;
@@ -91,10 +89,9 @@ public class CreateClient {
 		//BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
 		//BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 		//BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
-		SuperBufferFactory.setInstance(new FlwSuperBufferFactory());
 
-		SuperByteBufferCache.getInstance().registerCompartment(CachedPartialBuffers.PARTIAL);
-		SuperByteBufferCache.getInstance().registerCompartment(CachedPartialBuffers.DIRECTIONAL_PARTIAL);
+		SuperByteBufferCache.getInstance().registerCompartment(CachedBuffers.PARTIAL);
+		SuperByteBufferCache.getInstance().registerCompartment(CachedBuffers.DIRECTIONAL_PARTIAL);
 		SuperByteBufferCache.getInstance().registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
 		SuperByteBufferCache.getInstance().registerCompartment(WaterWheelRenderer.WATER_WHEEL);
 		SuperByteBufferCache.getInstance().registerCompartment(SBBContraptionManager.CONTRAPTION, 20);

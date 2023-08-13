@@ -19,7 +19,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatt
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.lang.Components;
@@ -144,7 +144,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public SuperByteBuffer getRenderedHandle() {
-		return CachedBlockBuffers.block(getBlockState());
+		return CachedBuffers.block(getBlockState());
 	}
 
 	@Override

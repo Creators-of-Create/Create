@@ -10,7 +10,7 @@ import com.simibubi.create.content.kinetics.KineticDebugger;
 import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 
-import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.render.SuperByteBufferCache;
 import net.createmod.catnip.utility.theme.Color;
@@ -62,12 +62,12 @@ public class KineticBlockEntityRenderer<T extends KineticBlockEntity> extends Sa
 	}
 
 	protected SuperByteBuffer getRotatedModel(T be, BlockState state) {
-		return CachedBlockBuffers.block(KINETIC_BLOCK, state);
+		return CachedBuffers.block(KINETIC_BLOCK, state);
 	}
 
 	public static void renderRotatingKineticBlock(KineticBlockEntity be, BlockState renderedState, PoseStack ms,
 		VertexConsumer buffer, int light) {
-		SuperByteBuffer superByteBuffer = CachedBlockBuffers.block(KINETIC_BLOCK, renderedState);
+		SuperByteBuffer superByteBuffer = CachedBuffers.block(KINETIC_BLOCK, renderedState);
 		renderRotatingBuffer(be, superByteBuffer, ms, buffer, light);
 	}
 

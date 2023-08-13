@@ -7,8 +7,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -75,7 +75,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 	}
 
 	private SuperByteBuffer transformed(PartialModel model, BlockState blockState, Direction facing, boolean roll90) {
-		return CachedPartialBuffers.partial(model, blockState)
+		return CachedBuffers.partial(model, blockState)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing) + 90)

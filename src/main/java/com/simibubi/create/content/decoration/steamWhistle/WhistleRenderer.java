@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.decoration.steamWhistle.WhistleBlock.WhistleSize;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.ponder.utility.WorldTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -39,7 +39,7 @@ public class WhistleRenderer extends SafeBlockEntityRenderer<WhistleBlockEntity>
 			offset -= Math.sin(wiggleProgress * (2 * Mth.PI) * (4 - size.ordinal())) / 16f;
 		}
 
-		CachedPartialBuffers.partial(mouth, blockState)
+		CachedBuffers.partial(mouth, blockState)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(direction))
 			.unCentre()

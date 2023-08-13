@@ -7,8 +7,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -82,7 +82,7 @@ public class SpoutRenderer extends SafeBlockEntityRenderer<SpoutBlockEntity> {
 
 		ms.pushPose();
 		for (PartialModel bit : BITS) {
-			CachedPartialBuffers.partial(bit, be.getBlockState())
+			CachedBuffers.partial(bit, be.getBlockState())
 					.light(light)
 					.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 			ms.translate(0, -3 * squeeze / 32f, 0);

@@ -3,8 +3,8 @@ package com.simibubi.create.content.fluids.hosePulley;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.pulley.AbstractPulleyRenderer;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction.Axis;
@@ -30,12 +30,12 @@ public class HosePulleyRenderer extends AbstractPulleyRenderer<HosePulleyBlockEn
 
 	@Override
 	protected SuperByteBuffer renderRope(HosePulleyBlockEntity be) {
-		return CachedPartialBuffers.partial(AllPartialModels.HOSE, be.getBlockState());
+		return CachedBuffers.partial(AllPartialModels.HOSE, be.getBlockState());
 	}
 
 	@Override
 	protected SuperByteBuffer renderMagnet(HosePulleyBlockEntity be) {
-		return CachedPartialBuffers.partial(AllPartialModels.HOSE_MAGNET, be.getBlockState());
+		return CachedBuffers.partial(AllPartialModels.HOSE_MAGNET, be.getBlockState());
 	}
 
 	@Override

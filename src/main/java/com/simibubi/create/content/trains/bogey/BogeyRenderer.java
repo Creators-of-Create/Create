@@ -12,17 +12,16 @@ import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
-import com.simibubi.create.foundation.render.CachedPartialBuffers;
 
-import net.createmod.catnip.render.CachedBlockBuffers;
+import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.utility.flw.Transform;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -197,7 +196,7 @@ public abstract class BogeyRenderer {
 				.mapToObj(i -> materialManager.defaultSolid()
 						.material(Materials.TRANSFORMED)
 						.getModel(model).createInstance())
-				.map((ModelData transform) -> new BogeyModelData((Transform<?>) transform))//TODO
+				.map(BogeyModelData::new)
 				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(model), modelData);
 	}
@@ -214,7 +213,7 @@ public abstract class BogeyRenderer {
 				.mapToObj(i -> materialManager.defaultSolid()
 						.material(Materials.TRANSFORMED)
 						.getModel(state).createInstance())
-				.map((ModelData transform) -> new BogeyModelData((Transform<?>) transform))//TODO
+				.map(BogeyModelData::new)
 				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(state), modelData);
 	}
@@ -327,10 +326,10 @@ public abstract class BogeyRenderer {
 	public record BogeyModelData(Transform<?> transform) implements Transform<BogeyModelData> {
 		public static BogeyModelData from(PartialModel model) {
 			BlockState air = Blocks.AIR.defaultBlockState();
-			return new BogeyModelData(CachedPartialBuffers.partial(model, air));
+			return new BogeyModelData(CachedBuffers.partial(model, air));
 		}
 		public static BogeyModelData from(BlockState model) {
-			return new BogeyModelData(CachedBlockBuffers.block(model));
+			return new BogeyModelData(CachedBuffers.block(model));
 		}
 		public void render(PoseStack ms, int light, @Nullable VertexConsumer vb) {
 			transform.scale(1 - 1/512f);
