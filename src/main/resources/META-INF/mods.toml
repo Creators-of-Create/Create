@@ -1,20 +1,19 @@
 modLoader="javafml"
 loaderVersion="[43,)"
-issueTrackerURL="https://github.com/Creators-of-Create/Create/issues"
-license="MIT"
+issueTrackerURL="${mod_issues}"
+license="${mod_license}"
 
 [[mods]]
 modId="create"
-# The Implementation-Version property in the jar's MANIFEST.MF file will be used as the mod version at runtime 
 version="${file.jarVersion}"
-displayName="Create"
-#updateJSONURL=""
-displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
+displayName="${mod_name}"
+displayURL="${mod_homepage}"
 logoFile="logo.png"
 #credits=""
-authors="simibubi"
+authors="${mod_author}"
 description='''
-Technology that empowers the player.'''
+${mod_description}
+'''
 
 [[dependencies.create]]
     modId="forge"
