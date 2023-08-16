@@ -1,7 +1,7 @@
 {
 	"loader": "forge:obj",
 	"ambientocclusion": false,
-	"flip-v": true,
+	"flip_v": true,
 	"model": "create:models/block/track/ascending.obj",
 	"textures": {
 		"0": "create:block/standard_track",

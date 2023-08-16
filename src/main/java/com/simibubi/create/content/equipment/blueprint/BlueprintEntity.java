@@ -434,7 +434,7 @@ public class BlueprintEntity extends HangingEntity
 
 		int i = section.index;
 		if (!level.isClientSide && player instanceof ServerPlayer) {
-			NetworkHooks.openGui((ServerPlayer) player, section, buf -> {
+			NetworkHooks.openScreen((ServerPlayer) player, section, buf -> {
 				buf.writeVarInt(getId());
 				buf.writeVarInt(i);
 			});
@@ -465,6 +465,11 @@ public class BlueprintEntity extends HangingEntity
 		private static final AbstractContainerMenu dummyContainer = new AbstractContainerMenu(null, -1) {
 			public boolean stillValid(Player playerIn) {
 				return false;
+			}
+
+			@Override
+			public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+				return ItemStack.EMPTY;
 			}
 		};
 

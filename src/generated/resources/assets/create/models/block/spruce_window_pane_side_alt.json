@@ -1,7 +1,7 @@
 {
   "parent": "create:block/connected_glass_pane/side_alt",
   "textures": {
-    "pane": "create:block/palettes/spruce_window",
-    "edge": "minecraft:block/spruce_planks"
+    "edge": "minecraft:block/spruce_planks",
+    "pane": "create:block/palettes/spruce_window"
   }
 }

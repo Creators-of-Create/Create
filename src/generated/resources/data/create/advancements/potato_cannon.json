@@ -1,26 +1,26 @@
 {
   "parent": "create:display_link",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:potato_cannon_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:potato_cannon",
-      "nbt": "{Damage:0}"
-    },
-    "title": {
-      "translate": "advancement.create.potato_cannon"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.potato_cannon.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:potato_cannon",
+      "nbt": "{Damage:0}"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:potato_cannon_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.potato_cannon"
     }
   },
   "requirements": [

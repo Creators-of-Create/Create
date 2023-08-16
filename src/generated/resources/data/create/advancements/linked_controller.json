@@ -1,25 +1,25 @@
 {
   "parent": "create:extendo_grip",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:linked_controller_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:linked_controller"
-    },
-    "title": {
-      "translate": "advancement.create.linked_controller"
-    },
+    "announce_to_chat": false,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.linked_controller.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:linked_controller"
+    },
     "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:linked_controller_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.linked_controller"
     }
   },
   "requirements": [

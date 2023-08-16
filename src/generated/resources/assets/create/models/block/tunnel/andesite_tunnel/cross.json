@@ -1,10 +1,10 @@
 {
   "parent": "create:block/belt_tunnel/cross",
   "textures": {
-    "top": "create:block/tunnel/andesite_tunnel_top",
-    "tunnel": "create:block/tunnel/andesite_tunnel",
     "direction": "create:block/funnel/andesite_funnel_neutral",
     "frame": "create:block/funnel/andesite_funnel_frame",
-    "particle": "minecraft:block/polished_andesite"
+    "particle": "minecraft:block/polished_andesite",
+    "top": "create:block/tunnel/andesite_tunnel_top",
+    "tunnel": "create:block/tunnel/andesite_tunnel"
   }
 }

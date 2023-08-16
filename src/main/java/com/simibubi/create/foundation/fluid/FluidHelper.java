@@ -16,6 +16,9 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.utility.Pair;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
@@ -27,6 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -61,6 +65,26 @@ public class FluidHelper {
 
 	public static boolean isTag(FluidStack fluid, TagKey<Fluid> tag) {
 		return isTag(fluid.getFluid(), tag);
+	}
+
+	public static SoundEvent getFillSound(FluidStack fluid) {
+		SoundEvent soundevent = fluid.getFluid()
+			.getFluidType()
+			.getSound(fluid, SoundActions.BUCKET_FILL);
+		if (soundevent == null)
+			soundevent =
+				FluidHelper.isTag(fluid, FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
+		return soundevent;
+	}
+
+	public static SoundEvent getEmptySound(FluidStack fluid) {
+		SoundEvent soundevent = fluid.getFluid()
+			.getFluidType()
+			.getSound(fluid, SoundActions.BUCKET_EMPTY);
+		if (soundevent == null)
+			soundevent =
+				FluidHelper.isTag(fluid, FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
+		return soundevent;
 	}
 
 	public static boolean hasBlockState(Fluid fluid) {
@@ -157,7 +181,8 @@ public class FluidHelper {
 				player.setItemInHand(handIn, emptyingResult.getSecond());
 			else {
 				player.setItemInHand(handIn, copyOfHeld);
-				player.getInventory().placeItemBackInInventory(emptyingResult.getSecond());
+				player.getInventory()
+					.placeItemBackInInventory(emptyingResult.getSecond());
 			}
 		}
 		return true;
@@ -196,7 +221,8 @@ public class FluidHelper {
 			tank.drain(copy, FluidAction.EXECUTE);
 
 			if (!player.isCreative())
-				player.getInventory().placeItemBackInInventory(out);
+				player.getInventory()
+					.placeItemBackInInventory(out);
 			be.notifyUpdate();
 			return true;
 		}

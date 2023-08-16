@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions;
 
-import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
+import net.createmod.catnip.utility.levelWrappers.WrappedLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-public class ContraptionWorld extends WrappedWorld {
+public class ContraptionWorld extends WrappedLevel {
     final Contraption contraption;
 	private final int minY;
 	private final int height;

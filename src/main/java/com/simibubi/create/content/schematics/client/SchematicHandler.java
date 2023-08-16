@@ -21,8 +21,8 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.NBTHelper;
+import net.createmod.catnip.utility.levelWrappers.SchematicLevel;
 import net.createmod.catnip.utility.outliner.AABBOutline;
-import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -46,10 +46,10 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-public class SchematicHandler {
+public class SchematicHandler implements IGuiOverlay {
 
 	private String displayedSchematic;
 	private SchematicTransformation transformation;
@@ -67,8 +67,6 @@ public class SchematicHandler {
 	private Vector<SchematicRenderer> renderers;
 	private SchematicHotbarSlotOverlay overlay;
 	private ToolSelectionScreen selectionScreen;
-
-	private final IIngameOverlay overlayRenderer = this::renderOverlay;
 
 	public SchematicHandler() {
 		renderers = new Vector<>(3);
@@ -152,9 +150,9 @@ public class SchematicHandler {
 			return;
 
 		Level clientWorld = Minecraft.getInstance().level;
-		SchematicWorld w = new SchematicWorld(clientWorld);
-		SchematicWorld wMirroredFB = new SchematicWorld(clientWorld);
-		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
+		SchematicLevel w = new SchematicLevel(clientWorld);
+		SchematicLevel wMirroredFB = new SchematicLevel(clientWorld);
+		SchematicLevel wMirroredLR = new SchematicLevel(clientWorld);
 		StructurePlaceSettings placementSettings = new StructurePlaceSettings();
 		StructureTransform transform;
 		BlockPos pos;
@@ -240,11 +238,8 @@ public class SchematicHandler {
 		}
 	}
 
-	public IIngameOverlay getOverlayRenderer() {
-		return overlayRenderer;
-	}
-
-	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	@Override
+	public void render(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
 		if (Minecraft.getInstance().options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)
@@ -254,23 +249,23 @@ public class SchematicHandler {
 		selectionScreen.renderPassive(poseStack, partialTicks);
 	}
 
-	public void onMouseInput(int button, boolean pressed) {
+	public boolean onMouseInput(int button, boolean pressed) {
 		if (!active)
-			return;
+			return false;
 		if (!pressed || button != 1)
-			return;
+			return false;
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player.isShiftKeyDown())
-			return;
+			return false;
 		if (mc.hitResult instanceof BlockHitResult) {
 			BlockHitResult blockRayTraceResult = (BlockHitResult) mc.hitResult;
 			BlockState clickedBlock = mc.level.getBlockState(blockRayTraceResult.getBlockPos());
 			if (AllBlocks.SCHEMATICANNON.has(clickedBlock))
-				return;
+				return false;
 			if (AllBlocks.DEPLOYER.has(clickedBlock))
-				return;
+				return false;
 		}
-		currentTool.getTool()
+		return currentTool.getTool()
 			.handleRightClick();
 	}
 

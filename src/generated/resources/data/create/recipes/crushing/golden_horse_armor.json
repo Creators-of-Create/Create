@@ -5,31 +5,31 @@
       "item": "minecraft:golden_horse_armor"
     }
   ],
+  "processingTime": 200,
   "results": [
     {
-      "item": "minecraft:gold_ingot",
-      "count": 2
-    },
-    {
-      "item": "minecraft:leather",
       "count": 2,
-      "chance": 0.5
+      "item": "minecraft:gold_ingot"
     },
     {
-      "item": "minecraft:gold_ingot",
+      "chance": 0.5,
       "count": 2,
-      "chance": 0.5
+      "item": "minecraft:leather"
     },
     {
-      "item": "minecraft:string",
+      "chance": 0.5,
       "count": 2,
-      "chance": 0.25
+      "item": "minecraft:gold_ingot"
     },
     {
-      "item": "minecraft:gold_nugget",
+      "chance": 0.25,
+      "count": 2,
+      "item": "minecraft:string"
+    },
+    {
+      "chance": 0.25,
       "count": 8,
-      "chance": 0.25
+      "item": "minecraft:gold_nugget"
     }
-  ],
-  "processingTime": 200
+  ]
 }

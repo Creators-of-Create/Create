@@ -8,8 +8,8 @@ import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.BlockMovementChecks;
 
 import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.levelWrappers.RayTraceLevel;
 import net.createmod.catnip.utility.placement.IPlacementHelper;
-import net.createmod.catnip.utility.worldWrappers.RayTraceWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
+import net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.network.PacketDistributor;
@@ -36,7 +36,7 @@ public class SuperGlueHandler {
 
 	@SubscribeEvent
 	public static void glueListensForBlockPlacement(EntityPlaceEvent event) {
-		LevelAccessor world = event.getWorld();
+		LevelAccessor world = event.getLevel();
 		Entity entity = event.getEntity();
 		BlockPos pos = event.getPos();
 
@@ -74,10 +74,10 @@ public class SuperGlueHandler {
 		Vec3 end = start.add(look.x * distance, look.y * distance, look.z * distance);
 		Level world = placer.level;
 
-		RayTraceWorld rayTraceWorld =
-			new RayTraceWorld(world, (p, state) -> p.equals(pos) ? Blocks.AIR.defaultBlockState() : state);
+		RayTraceLevel rayTraceLevel =
+			new RayTraceLevel(world, (p, state) -> p.equals(pos) ? Blocks.AIR.defaultBlockState() : state);
 		BlockHitResult ray =
-			rayTraceWorld.clip(new ClipContext(start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, placer));
+			rayTraceLevel.clip(new ClipContext(start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, placer));
 
 		Direction face = ray.getDirection();
 		if (face == null || ray.getType() == Type.MISS)

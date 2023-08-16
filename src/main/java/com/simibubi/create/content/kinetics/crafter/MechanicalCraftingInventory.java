@@ -15,6 +15,11 @@ public class MechanicalCraftingInventory extends CraftingContainer {
 		public boolean stillValid(Player playerIn) {
 			return false;
 		}
+
+		@Override
+		public ItemStack quickMoveStack(Player p_38941_, int p_38942_) {
+			return ItemStack.EMPTY;
+		}
 	};
 
 	public MechanicalCraftingInventory(GroupedItems items) {

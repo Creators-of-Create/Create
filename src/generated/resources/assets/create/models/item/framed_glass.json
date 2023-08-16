@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/palettes/framed_glass",
-    "end": "create:block/palettes/framed_glass"
+    "end": "create:block/palettes/framed_glass",
+    "side": "create:block/palettes/framed_glass"
   }
 }

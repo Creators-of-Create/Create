@@ -1,30 +1,37 @@
 package com.simibubi.create.foundation.data;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import com.google.common.hash.Hashing;
+import com.google.common.hash.HashingOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 
 import net.createmod.ponder.foundation.PonderScene;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.util.GsonHelper;
 
 public class LangMerger implements DataProvider {
 
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
+	static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
 	private static final String CATEGORY_HEADER = "\t\"_\": \"->------------------------]  %s  [------------------------<-\",";
@@ -66,7 +73,7 @@ public class LangMerger implements DataProvider {
 	}
 
 	@Override
-	public void run(HashCache cache) throws IOException {
+	public void run(CachedOutput cache) throws IOException {
 		Path path = this.gen.getOutputFolder()
 			.resolve("assets/" + modid + "/lang/" + "en_us.json");
 
@@ -85,6 +92,27 @@ public class LangMerger implements DataProvider {
 
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 			JsonObject jsonobject = GsonHelper.fromJson(GSON, reader, JsonObject.class);
+
+			/*
+			 * Erase additional sections from previous lang in case registrate did not
+			 * create a new one (this assumes advancements to be the first section after
+			 * game elements)
+			 */
+			Set<String> keysToRemove = new HashSet<>();
+			MutableBoolean startErasing = new MutableBoolean();
+			jsonobject.entrySet()
+				.stream()
+				.forEachOrdered(entry -> {
+					String key = entry.getKey();
+					if (key.startsWith("advancement"))
+						startErasing.setTrue();
+					if (startErasing.isFalse())
+						return;
+					keysToRemove.add(key);
+				});
+			jsonobject.remove("_");
+			keysToRemove.forEach(jsonobject::remove);
+
 			addAll("Game Elements", jsonobject);
 			reader.close();
 		}
@@ -151,21 +179,18 @@ public class LangMerger implements DataProvider {
 				.getAsJsonObject());
 	}
 
-	private void save(HashCache cache, List<Object> dataIn, Path target, String message)
+	@SuppressWarnings("deprecation")
+	private void save(CachedOutput cache, List<Object> dataIn, Path target, String message)
 		throws IOException {
-		String data = createString(dataIn);
-		String hash = DataProvider.SHA1.hashUnencodedChars(data)
-			.toString();
-		if (!Objects.equals(cache.getHash(target), hash) || !Files.exists(target)) {
-			Files.createDirectories(target.getParent());
 
-			try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
-				Create.LOGGER.info(message);
-				bufferedwriter.write(data);
-			}
-		}
+		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+		HashingOutputStream hashingoutputstream = new HashingOutputStream(Hashing.sha1(), bytearrayoutputstream);
 
-		cache.putNew(target, hash);
+		Writer writer = new OutputStreamWriter(hashingoutputstream, StandardCharsets.UTF_8);
+		writer.append(createString(dataIn));
+		writer.close();
+
+		cache.writeIfNeeded(target, bytearrayoutputstream.toByteArray(), hashingoutputstream.hash());
 	}
 
 	protected String createString(List<Object> data) {
@@ -175,24 +200,6 @@ public class LangMerger implements DataProvider {
 		builder.append("\t\"_\": \"Thank you for translating ").append(displayName).append("!\"\n\n");
 		builder.append("}");
 		return builder.toString();
-	}
-
-	private class LangEntry {
-		static final String ENTRY_FORMAT = "\t\"%s\": %s,\n";
-
-		private String key;
-		private String value;
-
-		LangEntry(String key, String value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return String.format(ENTRY_FORMAT, key, GSON.toJson(value, String.class));
-		}
-
 	}
 
 }

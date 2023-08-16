@@ -309,6 +309,8 @@
 	"block.create.magenta_seat": "Magenta Seat",
 	"block.create.magenta_toolbox": "Magenta Toolbox",
 	"block.create.magenta_valve_handle": "Magenta Valve Handle",
+	"block.create.mangrove_window": "Mangrove Window",
+	"block.create.mangrove_window_pane": "Mangrove Window Pane",
 	"block.create.mechanical_arm": "Mechanical Arm",
 	"block.create.mechanical_bearing": "Mechanical Bearing",
 	"block.create.mechanical_crafter": "Mechanical Crafter",
@@ -599,6 +601,8 @@
 	"entity.create.stationary_contraption": "Stationary Contraption",
 	"entity.create.super_glue": "Super Glue",
 
+	"fluid.create.chocolate": "Chocolate",
+	"fluid.create.honey": "Honey",
 	"fluid.create.potion": "Potion",
 	"fluid.create.tea": "Builder's Tea",
 
@@ -885,9 +889,6 @@
 
 	"itemGroup.create.base": "Create",
 	"itemGroup.create.palettes": "Create's Building Blocks",
-
-	"block.create.mangrove_window": "Mangrove Window",
-	"block.create.mangrove_window_pane": "Mangrove Window Pane",
 
 	"death.attack.create.crush": "%1$s was processed by Crushing Wheels",
 	"death.attack.create.crush.player": "%1$s was thrown into Crushing Wheels by %2$s",

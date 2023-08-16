@@ -1,14 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " T ",
-    "RCR",
-    "SSS"
-  ],
   "key": {
-    "T": {
-      "item": "minecraft:redstone_torch"
-    },
     "C": {
       "item": "minecraft:lever"
     },
@@ -17,8 +9,16 @@
     },
     "S": {
       "tag": "forge:stone"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
     }
   },
+  "pattern": [
+    " T ",
+    "RCR",
+    "SSS"
+  ],
   "result": {
     "item": "create:powered_latch"
   }

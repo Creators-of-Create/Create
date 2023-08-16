@@ -20,7 +20,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
@@ -52,7 +51,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -196,11 +194,7 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 			Fluid fluid = fluidInTank.getFluid();
 			fluidState = fluid.defaultFluidState()
 				.createLegacyBlock();
-			FluidAttributes attributes = fluid.getAttributes();
-			soundevent = attributes.getEmptySound();
-			if (soundevent == null)
-				soundevent =
-					FluidHelper.isTag(fluid, FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
+			soundevent = FluidHelper.getEmptySound(fluidInTank);
 		}
 
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
@@ -211,11 +205,7 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 			Fluid fluid = prevFluidInTank.getFluid();
 			fluidState = fluid.defaultFluidState()
 				.createLegacyBlock();
-			soundevent = fluid.getAttributes()
-				.getFillSound();
-			if (soundevent == null)
-				soundevent =
-					FluidHelper.isTag(fluid, FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
+			soundevent = FluidHelper.getFillSound(prevFluidInTank);
 		}
 
 		if (soundevent != null && !onClient) {
@@ -237,7 +227,7 @@ public class FluidTankBlock extends Block implements IWrenchable, IBE<FluidTankB
 						float level = (float) fluidInTank.getAmount() / fluidTank.getTankCapacity(0);
 
 						boolean reversed = fluidInTank.getFluid()
-							.getAttributes()
+							.getFluidType()
 							.isLighterThanAir();
 						if (reversed)
 							level = 1 - level;

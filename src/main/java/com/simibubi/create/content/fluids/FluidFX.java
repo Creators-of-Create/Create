@@ -1,7 +1,5 @@
 package com.simibubi.create.content.fluids;
 
-import java.util.Random;
-
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.fluids.particle.FluidParticleData;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -13,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -22,7 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class FluidFX {
 
-	static Random r = new Random();
+	static RandomSource r = RandomSource.create();
 
 	public static void splash(BlockPos pos, FluidStack fluidStack) {
 		Fluid fluid = fluidStack.getFluid();

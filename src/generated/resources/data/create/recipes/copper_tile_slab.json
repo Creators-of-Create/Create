@@ -1,15 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:copper_tiles"
     }
   },
+  "pattern": [
+    "XXX"
+  ],
   "result": {
-    "item": "create:copper_tile_slab",
-    "count": 6
+    "count": 6,
+    "item": "create:copper_tile_slab"
   }
 }

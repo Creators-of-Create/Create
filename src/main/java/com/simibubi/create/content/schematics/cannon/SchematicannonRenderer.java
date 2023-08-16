@@ -1,9 +1,7 @@
 package com.simibubi.create.content.schematics.cannon;
 
-import java.util.Random;
-
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.virtual.VirtualEmptyModelData;
+import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -25,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -180,7 +179,8 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 				ms.scale(scale, scale, scale);
 				Minecraft.getInstance()
 					.getBlockRenderer()
-					.renderSingleBlock(state, ms, buffer, light, overlay, VirtualEmptyModelData.INSTANCE);
+					.renderSingleBlock(state, ms, buffer, light, overlay,
+						ModelUtil.VIRTUAL_DATA, null);
 			} else if (launched instanceof ForEntity) {
 				// Render the item
 				float scale = 1.2f;
@@ -197,7 +197,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 				start = start.subtract(.5, .5, .5);
 				blockEntity.firstRenderTick = false;
 				for (int i = 0; i < 10; i++) {
-					Random r = blockEntity.getLevel()
+					RandomSource r = blockEntity.getLevel()
 						.getRandom();
 					double sX = cannonOffset.x * .01f;
 					double sY = (cannonOffset.y + 1) * .01f;

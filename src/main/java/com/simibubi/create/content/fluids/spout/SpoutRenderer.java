@@ -39,8 +39,8 @@ public class SpoutRenderer extends SafeBlockEntityRenderer<SpoutBlockEntity> {
 
 		if (!fluidStack.isEmpty() && level != 0) {
 			boolean top = fluidStack.getFluid()
-					.getAttributes()
-					.isLighterThanAir();
+				.getFluidType()
+				.isLighterThanAir();
 
 			level = Math.max(level, 0.175f);
 			float min = 2.5f / 16f;

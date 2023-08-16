@@ -24,7 +24,7 @@ public final class NetheriteDivingHandler {
 			return;
 		}
 
-		LivingEntity entity = event.getEntityLiving();
+		LivingEntity entity = event.getEntity();
 		ItemStack to = event.getTo();
 
 		if (slot == EquipmentSlot.HEAD) {

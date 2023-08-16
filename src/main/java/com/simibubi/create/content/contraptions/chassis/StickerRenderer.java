@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -29,7 +29,7 @@ public class StickerRenderer extends SafeBlockEntityRenderer<StickerBlockEntity>
 
 		BlockState state = be.getBlockState();
 		SuperByteBuffer head = CachedBuffers.partial(AllPartialModels.STICKER_HEAD, state);
-		float offset = be.piston.getValue(WorldTickHolder.getPartialTicks(be.getLevel()));
+		float offset = be.piston.getValue(LevelTickHolder.getPartialTicks(be.getLevel()));
 
 		if (be.getLevel() != Minecraft.getInstance().level && !be.isVirtual())
 			offset = state.getValue(StickerBlock.EXTENDED) ? 1 : 0;

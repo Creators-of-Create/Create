@@ -2,18 +2,19 @@ package com.simibubi.create.content.decoration.copycat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 
 import net.createmod.catnip.render.SpriteShiftEntry;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class CopycatBarsModel extends CopycatModel {
 
@@ -27,11 +28,11 @@ public class CopycatBarsModel extends CopycatModel {
 	}
 
 	@Override
-	protected List<BakedQuad> getCroppedQuads(BlockState state, Direction side, Random rand, BlockState material,
-		IModelData wrappedData) {
+	protected List<BakedQuad> getCroppedQuads(BlockState state, Direction side, RandomSource rand, BlockState material,
+		ModelData wrappedData, RenderType renderType) {
 		BakedModel model = getModelOf(material);
-		List<BakedQuad> templateQuads = model.getQuads(material, null, rand, wrappedData);
-		List<BakedQuad> superQuads = originalModel.getQuads(state, side, rand, wrappedData);
+		List<BakedQuad> templateQuads = model.getQuads(material, null, rand, wrappedData, renderType);
+		List<BakedQuad> superQuads = originalModel.getQuads(state, side, rand, wrappedData, renderType);
 		List<BakedQuad> quads = new ArrayList<>();
 		TextureAtlasSprite targetSprite = model.getParticleIcon(wrappedData);
 

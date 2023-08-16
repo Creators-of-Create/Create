@@ -1,15 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "create:oxidized_copper_shingles"
     }
   },
+  "pattern": [
+    "XXX"
+  ],
   "result": {
-    "item": "create:oxidized_copper_shingle_slab",
-    "count": 6
+    "count": 6,
+    "item": "create:oxidized_copper_shingle_slab"
   }
 }

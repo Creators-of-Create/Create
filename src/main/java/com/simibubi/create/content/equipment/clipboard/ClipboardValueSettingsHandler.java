@@ -30,7 +30,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.DrawSelectionEvent;
+import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -40,7 +40,7 @@ public class ClipboardValueSettingsHandler {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void drawCustomBlockSelection(DrawSelectionEvent.HighlightBlock event) {
+	public static void drawCustomBlockSelection(RenderHighlightEvent.Block event) {
 		Minecraft mc = Minecraft.getInstance();
 		BlockHitResult target = event.getTarget();
 		BlockPos pos = target.getBlockPos();
@@ -137,8 +137,8 @@ public class ClipboardValueSettingsHandler {
 			return;
 
 		BlockPos pos = event.getPos();
-		Level world = event.getWorld();
-		Player player = event.getPlayer();
+		Level world = event.getLevel();
+		Player player = event.getEntity();
 		if (player != null && player.isSpectator())
 			return;
 		if (player.isSteppingCarefully())

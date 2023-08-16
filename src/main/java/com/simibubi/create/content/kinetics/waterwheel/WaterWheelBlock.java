@@ -1,7 +1,5 @@
 package com.simibubi.create.content.kinetics.waterwheel;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
@@ -9,12 +7,13 @@ import com.simibubi.create.foundation.block.IBE;
 
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Iterate;
-import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
+import net.createmod.catnip.utility.levelWrappers.WrappedLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -57,7 +56,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements IBE<Wate
 	@Override
 	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
-		if (worldIn instanceof WrappedWorld)
+		if (worldIn instanceof WrappedLevel)
 			return stateIn;
 		if (worldIn.isClientSide())
 			return stateIn;
@@ -78,7 +77,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements IBE<Wate
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		withBlockEntityDo(pLevel, pPos, WaterWheelBlockEntity::determineAndApplyFlowScore);
 	}
 

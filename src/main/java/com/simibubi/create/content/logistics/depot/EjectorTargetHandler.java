@@ -50,10 +50,10 @@ public class EjectorTargetHandler {
 		if (currentItem == null)
 			return;
 		BlockPos pos = event.getPos();
-		Level world = event.getWorld();
+		Level world = event.getLevel();
 		if (!world.isClientSide)
 			return;
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		if (player == null || player.isSpectator() || !player.isShiftKeyDown())
 			return;
 
@@ -71,9 +71,9 @@ public class EjectorTargetHandler {
 	public static void leftClickingBlocksDeselectsThem(PlayerInteractEvent.LeftClickBlock event) {
 		if (currentItem == null)
 			return;
-		if (!event.getWorld().isClientSide)
+		if (!event.getLevel().isClientSide)
 			return;
-		if (!event.getPlayer()
+		if (!event.getEntity()
 			.isShiftKeyDown())
 			return;
 		BlockPos pos = event.getPos();
@@ -86,9 +86,6 @@ public class EjectorTargetHandler {
 	}
 
 	public static void flushSettings(BlockPos pos) {
-		if (currentItem == null)
-			return;
-
 		int h = 0;
 		int v = 0;
 

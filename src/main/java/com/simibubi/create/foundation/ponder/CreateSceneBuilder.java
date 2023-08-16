@@ -32,8 +32,8 @@ import net.createmod.catnip.utility.FunctionalHelper;
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.ponder.foundation.ElementLink;
+import net.createmod.ponder.foundation.PonderLevel;
 import net.createmod.ponder.foundation.PonderScene;
-import net.createmod.ponder.foundation.PonderWorld;
 import net.createmod.ponder.foundation.SceneBuilder;
 import net.createmod.ponder.foundation.Selection;
 import net.createmod.ponder.foundation.element.ParrotElement;
@@ -132,7 +132,7 @@ public class CreateSceneBuilder extends SceneBuilder {
 
 		public void createItemOnBeltLike(BlockPos location, Direction insertionSide, ItemStack stack) {
 			addInstruction(scene -> {
-				PonderWorld world = scene.getWorld();
+				PonderLevel world = scene.getWorld();
 				BlockEntity blockEntity = world.getBlockEntity(location);
 				if (!(blockEntity instanceof SmartBlockEntity beltBlockEntity))
 					return;
@@ -148,7 +148,7 @@ public class CreateSceneBuilder extends SceneBuilder {
 															 ItemStack stack) {
 			ElementLink<BeltItemElement> link = new ElementLink<>(BeltItemElement.class);
 			addInstruction(scene -> {
-				PonderWorld world = scene.getWorld();
+				PonderLevel world = scene.getWorld();
 				BlockEntity blockEntity = world.getBlockEntity(beltLocation);
 				if (!(blockEntity instanceof BeltBlockEntity beltBlockEntity))
 					return;
@@ -175,7 +175,7 @@ public class CreateSceneBuilder extends SceneBuilder {
 
 		public void removeItemsFromBelt(BlockPos beltLocation) {
 			addInstruction(scene -> {
-				PonderWorld world = scene.getWorld();
+				PonderLevel world = scene.getWorld();
 				BlockEntity blockEntity = world.getBlockEntity(beltLocation);
 				if (!(blockEntity instanceof SmartBlockEntity beltBlockEntity))
 					return;

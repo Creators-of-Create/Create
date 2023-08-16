@@ -1,7 +1,6 @@
 package com.simibubi.create.infrastructure.ponder.scenes.fluid;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.FluidFX;
 import com.simibubi.create.content.fluids.pump.PumpBlock;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
@@ -23,6 +22,7 @@ import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emit
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
@@ -32,6 +32,8 @@ public class SpoutScenes {
 
 	public static void filling(SceneBuilder builder, SceneBuildingUtil util) {
 		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+		RandomSource random = RandomSource.create();
+
 		scene.title("spout_filling", "Filling Items using a Spout");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -73,7 +75,7 @@ public class SpoutScenes {
 		scene.idle(20);
 		FluidStack honey = new FluidStack(FluidHelper.convertToStill(AllFluids.HONEY.get()), 1000);
 		ItemStack bucket = AllFluids.HONEY.get()
-			.getAttributes()
+			.getFluidType()
 			.getBucket(honey);
 		scene.overlay.showControls(
 			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 3, 2), Direction.NORTH), Pointing.RIGHT)
@@ -117,7 +119,7 @@ public class SpoutScenes {
 		for (int i = 0; i < 10; i++) {
 			scene.effects.emitParticles(util.vector.topOf(depotPos.south())
 				.add(0, 1 / 16f, 0),
-				Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .1f)), 1, 1);
+				Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
 		}
 		scene.idle(10);
 		scene.overlay.showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(potion), 50);
@@ -154,7 +156,7 @@ public class SpoutScenes {
 		for (int i = 0; i < 10; i++) {
 			scene.effects.emitParticles(util.vector.topOf(depotPos.south())
 				.add(0, 1 / 16f, 0),
-				Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .1f)), 1, 1);
+				Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
 		}
 		scene.world.removeItemsFromBelt(spoutPos.below(2));
 		ingot = scene.world.createItemOnBelt(spoutPos.below(2), Direction.UP, potion);
@@ -168,7 +170,7 @@ public class SpoutScenes {
 		for (int i = 0; i < 10; i++) {
 			scene.effects.emitParticles(util.vector.topOf(depotPos.south())
 				.add(0, 1 / 16f, 0),
-				Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .1f)), 1, 1);
+				Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
 		}
 		scene.world.removeItemsFromBelt(spoutPos.below(2));
 		ingot2 = scene.world.createItemOnBelt(spoutPos.below(2), Direction.UP, potion);

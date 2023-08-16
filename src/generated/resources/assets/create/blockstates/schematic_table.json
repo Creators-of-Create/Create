@@ -1,5 +1,9 @@
 {
   "variants": {
+    "facing=east": {
+      "model": "create:block/schematic_table",
+      "y": 270
+    },
     "facing=north": {
       "model": "create:block/schematic_table",
       "y": 180
@@ -10,10 +14,6 @@
     "facing=west": {
       "model": "create:block/schematic_table",
       "y": 90
-    },
-    "facing=east": {
-      "model": "create:block/schematic_table",
-      "y": 270
     }
   }
 }

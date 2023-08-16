@@ -14,11 +14,11 @@ public class GogglesModel extends BakedModelWrapper<BakedModel> {
 	}
 
 	@Override
-	public BakedModel handlePerspective(TransformType cameraTransformType, PoseStack mat) {
+	public BakedModel applyTransform(TransformType cameraTransformType, PoseStack mat, boolean leftHanded) {
 		if (cameraTransformType == TransformType.HEAD)
 			return AllPartialModels.GOGGLES.get()
-				.handlePerspective(cameraTransformType, mat);
-		return super.handlePerspective(cameraTransformType, mat);
+				.applyTransform(cameraTransformType, mat, leftHanded);
+		return super.applyTransform(cameraTransformType, mat, leftHanded);
 	}
 
 }

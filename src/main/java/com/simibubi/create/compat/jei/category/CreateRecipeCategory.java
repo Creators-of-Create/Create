@@ -28,7 +28,6 @@ import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.fluids.FluidStack;
@@ -75,18 +74,6 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	@Override
 	public IDrawable getIcon() {
 		return icon;
-	}
-
-	@Override
-	@Deprecated
-	public final ResourceLocation getUid() {
-		return type.getUid();
-	}
-
-	@Override
-	@Deprecated
-	public final Class<? extends T> getRecipeClass() {
-		return type.getRecipeClass();
 	}
 
 	public void registerRecipes(IRecipeRegistration registration) {

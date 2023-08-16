@@ -13,9 +13,8 @@ import com.simibubi.create.Create;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class AttachedRegistry<K extends IForgeRegistryEntry<K>, V> {
+public class AttachedRegistry<K, V> {
 	private static final List<AttachedRegistry<?, ?>> ALL = new ArrayList<>();
 
 	protected final IForgeRegistry<K> objectRegistry;

@@ -1,25 +1,25 @@
 {
   "parent": "create:brass",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:brass_casing_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:brass_casing"
-    },
-    "title": {
-      "translate": "advancement.create.brass_casing"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.brass_casing.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:brass_casing"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:brass_casing_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.brass_casing"
     }
   },
   "requirements": [

@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 
-import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +45,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 	public Object[] getTranslationParameters() {
 		String parameter = "";
 		if (fluid != null)
-			parameter = Components.translatable(fluid.getAttributes().getTranslationKey()).getString();
+			parameter = fluid.getFluidType().getDescription().getString();
 		return new Object[] { parameter };
 	}
 
@@ -54,7 +53,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 	public void writeNBT(CompoundTag nbt) {
 		if (fluid == null)
 			return;
-		ResourceLocation id = fluid.getRegistryName();
+		ResourceLocation id = ForgeRegistries.FLUIDS.getKey(fluid);
 		if (id == null)
 			return;
 		nbt.putString("id", id.toString());

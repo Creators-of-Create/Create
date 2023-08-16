@@ -1,21 +1,21 @@
 {
   "type": "create:cutting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "byg"
+    }
+  ],
   "ingredients": [
     {
       "item": "byg:stripped_bulbis_stem"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "byg:bulbis_planks",
-      "count": 6
-    }
-  ],
-  "processingTime": 50,
-  "conditions": [
-    {
-      "modid": "byg",
-      "type": "forge:mod_loaded"
+      "count": 6,
+      "item": "byg:bulbis_planks"
     }
   ]
 }

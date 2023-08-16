@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -35,7 +35,7 @@ public class WhistleRenderer extends SafeBlockEntityRenderer<WhistleBlockEntity>
 
 		float offset = be.animation.getValue(partialTicks);
 		if (be.animation.getChaseTarget() > 0 && be.animation.getValue() > 0.5f) {
-			float wiggleProgress = (WorldTickHolder.getTicks(be.getLevel()) + partialTicks) / 8f;
+			float wiggleProgress = (LevelTickHolder.getTicks(be.getLevel()) + partialTicks) / 8f;
 			offset -= Math.sin(wiggleProgress * (2 * Mth.PI) * (4 - size.ordinal())) / 16f;
 		}
 

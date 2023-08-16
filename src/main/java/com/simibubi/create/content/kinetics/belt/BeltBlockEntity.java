@@ -53,8 +53,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
@@ -531,9 +530,10 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public IModelData getModelData() {
-		return new ModelDataMap.Builder().withInitial(BeltModel.CASING_PROPERTY, casing)
-			.withInitial(BeltModel.COVER_PROPERTY, covered)
+	public ModelData getModelData() {
+		return ModelData.builder()
+			.with(BeltModel.CASING_PROPERTY, casing)
+			.with(BeltModel.COVER_PROPERTY, covered)
 			.build();
 	}
 

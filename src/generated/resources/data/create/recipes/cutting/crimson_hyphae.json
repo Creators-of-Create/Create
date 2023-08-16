@@ -5,10 +5,10 @@
       "item": "minecraft:crimson_hyphae"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:stripped_crimson_hyphae"
     }
-  ],
-  "processingTime": 50
+  ]
 }

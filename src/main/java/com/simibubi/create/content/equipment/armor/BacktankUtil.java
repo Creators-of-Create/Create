@@ -23,7 +23,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
@@ -103,7 +102,7 @@ public class BacktankUtil {
 	}
 
 	public static int maxAir(ItemStack backtank) {
-		return maxAir(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), backtank));
+		return maxAir(backtank.getEnchantmentLevel(AllEnchantments.CAPACITY.get()));
 	}
 
 	public static int maxAir(int enchantLevel) {

@@ -1,8 +1,8 @@
 {
   "type": "minecraft:stonecutting",
+  "count": 2,
   "ingredient": {
     "tag": "forge:ingots/copper"
   },
-  "result": "create:copper_scaffolding",
-  "count": 2
+  "result": "create:copper_scaffolding"
 }

@@ -1,25 +1,25 @@
 {
   "parent": "create:track_signal",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:train_crash_backwards_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:incomplete_track"
-    },
-    "title": {
-      "translate": "advancement.create.train_crash_backwards"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.train_crash_backwards.desc"
     },
     "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "create:incomplete_track"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:train_crash_backwards_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.train_crash_backwards"
     }
   },
   "requirements": [

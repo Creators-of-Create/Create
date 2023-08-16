@@ -24,9 +24,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
@@ -207,19 +205,12 @@ public abstract class FluidManipulationBehaviour extends BlockEntityBehaviour {
 			return;
 
 		BlockPos splooshPos = pos == null ? blockEntity.getBlockPos() : pos;
+		FluidStack stack = new FluidStack(fluid, 1);
 
-		SoundEvent soundevent = fillSound ? fluid.getAttributes()
-			.getFillSound()
-			: fluid.getAttributes()
-				.getEmptySound();
-		if (soundevent == null)
-			soundevent = FluidHelper.isTag(fluid, FluidTags.LAVA)
-				? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
-				: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
-
+		SoundEvent soundevent = fillSound ? FluidHelper.getFillSound(stack) : FluidHelper.getEmptySound(stack);
 		world.playSound(null, splooshPos, soundevent, SoundSource.BLOCKS, 0.3F, 1.0F);
 		if (world instanceof ServerLevel)
-			AllPackets.sendToNear(world, splooshPos, 10, new FluidSplashPacket(splooshPos, new FluidStack(fluid, 1)));
+			AllPackets.sendToNear(world, splooshPos, 10, new FluidSplashPacket(splooshPos, stack));
 	}
 
 	protected boolean canDrainInfinitely(Fluid fluid) {

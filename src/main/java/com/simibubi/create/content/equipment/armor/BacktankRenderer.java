@@ -9,7 +9,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -33,7 +33,7 @@ public class BacktankRenderer extends KineticBlockEntityRenderer<BacktankBlockEn
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
 			.rotate(Direction.EAST,
-				AngleHelper.rad(be.getSpeed() / 4f * WorldTickHolder.getRenderTime(be.getLevel()) % 360))
+				AngleHelper.rad(be.getSpeed() / 4f * LevelTickHolder.getRenderTime(be.getLevel()) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

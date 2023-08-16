@@ -10,10 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>>
-	implements RecipeSerializer<SequencedAssemblyRecipe> {
+public class SequencedAssemblyRecipeSerializer implements RecipeSerializer<SequencedAssemblyRecipe> {
 
 	public SequencedAssemblyRecipeSerializer() {}
 

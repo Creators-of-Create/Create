@@ -171,7 +171,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void writeInternal(FriendlyByteBuf buffer) {
-			buffer.writeRegistryId(fluid);
+			buffer.writeRegistryId(ForgeRegistries.FLUIDS, fluid);
 			buffer.writeNbt(tagToMatch);
 		}
 

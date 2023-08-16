@@ -5,23 +5,23 @@
       "item": "minecraft:deepslate_emerald_ore"
     }
   ],
+  "processingTime": 450,
   "results": [
     {
-      "item": "minecraft:emerald",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:emerald"
     },
     {
-      "item": "minecraft:emerald",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:emerald"
     },
     {
-      "item": "create:experience_nugget",
-      "chance": 0.75
+      "chance": 0.75,
+      "item": "create:experience_nugget"
     },
     {
-      "item": "minecraft:cobbled_deepslate",
-      "chance": 0.125
+      "chance": 0.125,
+      "item": "minecraft:cobbled_deepslate"
     }
-  ],
-  "processingTime": 450
+  ]
 }

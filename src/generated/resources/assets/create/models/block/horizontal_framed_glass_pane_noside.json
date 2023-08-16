@@ -1,7 +1,7 @@
 {
   "parent": "create:block/connected_glass_pane/noside",
   "textures": {
-    "pane": "create:block/palettes/framed_glass",
-    "edge": "create:block/palettes/framed_glass_pane_top"
+    "edge": "create:block/palettes/framed_glass_pane_top",
+    "pane": "create:block/palettes/framed_glass"
   }
 }

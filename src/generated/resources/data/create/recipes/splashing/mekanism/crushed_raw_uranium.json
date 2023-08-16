@@ -1,5 +1,11 @@
 {
   "type": "create:splashing",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
   "ingredients": [
     {
       "item": "create:crushed_raw_uranium"
@@ -7,14 +13,8 @@
   ],
   "results": [
     {
-      "item": "mekanism:nugget_uranium",
-      "count": 9
-    }
-  ],
-  "conditions": [
-    {
-      "modid": "mekanism",
-      "type": "forge:mod_loaded"
+      "count": 9,
+      "item": "mekanism:nugget_uranium"
     }
   ]
 }

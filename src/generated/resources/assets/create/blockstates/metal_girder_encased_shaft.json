@@ -1,36 +1,36 @@
 {
   "multipart": [
     {
-      "when": {
-        "axis": "z"
-      },
       "apply": {
         "model": "create:block/metal_girder_encased_shaft/block"
+      },
+      "when": {
+        "axis": "z"
       }
     },
     {
-      "when": {
-        "axis": "x"
-      },
       "apply": {
         "model": "create:block/metal_girder_encased_shaft/block",
         "y": 90
+      },
+      "when": {
+        "axis": "x"
       }
     },
     {
-      "when": {
-        "top": "true"
-      },
       "apply": {
         "model": "create:block/metal_girder_encased_shaft/block_top"
+      },
+      "when": {
+        "top": "true"
       }
     },
     {
-      "when": {
-        "bottom": "true"
-      },
       "apply": {
         "model": "create:block/metal_girder_encased_shaft/block_bottom"
+      },
+      "when": {
+        "bottom": "true"
       }
     }
   ]

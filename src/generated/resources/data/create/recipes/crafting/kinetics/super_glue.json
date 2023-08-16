@@ -1,20 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "AS",
-    "NA"
-  ],
   "key": {
     "A": {
       "tag": "forge:slimeballs"
     },
-    "S": {
-      "tag": "forge:plates/iron"
-    },
     "N": {
       "tag": "forge:nuggets/iron"
+    },
+    "S": {
+      "tag": "forge:plates/iron"
     }
   },
+  "pattern": [
+    "AS",
+    "NA"
+  ],
   "result": {
     "item": "create:super_glue"
   }

@@ -5,15 +5,15 @@
       "item": "minecraft:sea_pickle"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:lime_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:lime_dye"
     },
     {
-      "item": "minecraft:green_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:green_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "A",
-    "R",
-    "A"
-  ],
   "key": {
     "A": {
       "item": "create:andesite_alloy"
@@ -13,8 +8,13 @@
       "tag": "forge:dusts/redstone"
     }
   },
+  "pattern": [
+    "A",
+    "R",
+    "A"
+  ],
   "result": {
-    "item": "create:gantry_shaft",
-    "count": 8
+    "count": 8,
+    "item": "create:gantry_shaft"
   }
 }

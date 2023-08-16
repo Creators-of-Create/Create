@@ -1,15 +1,15 @@
 {
   "type": "minecraft:blasting",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "immersiveengineering"
+    }
+  ],
+  "cookingtime": 100,
+  "experience": 0.1,
   "ingredient": {
     "item": "create:crushed_raw_silver"
   },
-  "result": "immersiveengineering:ingot_silver",
-  "experience": 0.1,
-  "cookingtime": 100,
-  "conditions": [
-    {
-      "modid": "immersiveengineering",
-      "type": "forge:mod_loaded"
-    }
-  ]
+  "result": "immersiveengineering:ingot_silver"
 }

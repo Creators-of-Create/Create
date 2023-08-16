@@ -7,8 +7,12 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public enum AllKeys {
 
 	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT),
@@ -29,13 +33,14 @@ public enum AllKeys {
 		this.modifiable = !description.isEmpty();
 	}
 
-	public static void register() {
+	@SubscribeEvent
+	public static void register(RegisterKeyMappingsEvent event) {
 		for (AllKeys key : values()) {
 			key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
 			if (!key.modifiable)
 				continue;
 
-			ClientRegistry.registerKeyBinding(key.keybind);
+			event.register(key.keybind);
 		}
 	}
 

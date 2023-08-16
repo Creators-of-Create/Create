@@ -90,7 +90,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -121,7 +121,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -157,7 +157,7 @@ public abstract class Contraption {
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
 
 	// Client
-	public Map<BlockPos, IModelData> modelData;
+	public Map<BlockPos, ModelData> modelData;
 	public Map<BlockPos, BlockEntity> presentBlockEntities;
 	public List<BlockEntity> maybeInstancedBlockEntities;
 	public List<BlockEntity> specialRenderedBlockEntities;
@@ -1001,7 +1001,7 @@ public abstract class Contraption {
 			// we add the POI data back now
 			// (code copied from ServerWorld.onBlockStateChange)
 			ServerLevel serverWorld = (ServerLevel) world;
-			PoiType.forState(block.state)
+			PoiTypes.forState(block.state)
 				.ifPresent(poiType -> {
 					world.getServer()
 						.execute(() -> {
@@ -1062,6 +1062,10 @@ public abstract class Contraption {
 				if (state.hasProperty(SlidingDoorBlock.VISIBLE))
 					state = state.setValue(SlidingDoorBlock.VISIBLE, !state.getValue(SlidingDoorBlock.OPEN))
 						.setValue(SlidingDoorBlock.POWERED, false);
+				// Stop Sculk shriekers from getting "stuck" if moved mid-shriek.
+				if(state.is(Blocks.SCULK_SHRIEKER)){
+					state = Blocks.SCULK_SHRIEKER.defaultBlockState();
+				}
 
 				world.setBlock(targetPos, state, Block.UPDATE_MOVE_BY_PISTON | Block.UPDATE_ALL);
 
@@ -1076,6 +1080,11 @@ public abstract class Contraption {
 				BlockEntity blockEntity = world.getBlockEntity(targetPos);
 
 				CompoundTag tag = block.nbt;
+
+				// Temporary fix: Calling load(CompoundTag tag) on a Sculk sensor causes it to not react to vibrations.
+				if(state.is(Blocks.SCULK_SENSOR) || state.is(Blocks.SCULK_SHRIEKER))
+					tag = null;
+
 				if (blockEntity != null)
 					tag = NBTProcessors.process(blockEntity, tag, false);
 				if (blockEntity != null && tag != null) {
@@ -1208,7 +1217,7 @@ public abstract class Contraption {
 	}
 
 	protected boolean shouldUpdateAfterMovement(StructureBlockInfo info) {
-		if (PoiType.forState(info.state)
+		if (PoiTypes.forState(info.state)
 			.isPresent())
 			return false;
 		if (info.state.getBlock() instanceof SlidingDoorBlock)

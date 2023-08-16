@@ -1,25 +1,25 @@
 {
   "parent": "create:copper",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:hose_pulley_lava_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:hose_pulley"
-    },
-    "title": {
-      "translate": "advancement.create.hose_pulley_lava"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.hose_pulley_lava.desc"
     },
     "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "create:hose_pulley"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:hose_pulley_lava_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.hose_pulley_lava"
     }
   },
   "requirements": [

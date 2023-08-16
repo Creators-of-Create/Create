@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.belt;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
@@ -10,14 +9,16 @@ import com.simibubi.create.content.kinetics.belt.BeltBlockEntity.CasingType;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 
 import net.createmod.catnip.render.SpriteShiftEntry;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.BakedModelWrapper;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 
 public class BeltModel extends BakedModelWrapper<BakedModel> {
@@ -32,23 +33,23 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleIcon(IModelData data) {
-		if (!data.hasProperty(CASING_PROPERTY))
+	public TextureAtlasSprite getParticleIcon(ModelData data) {
+		if (!data.has(CASING_PROPERTY))
 			return super.getParticleIcon(data);
-		CasingType type = data.getData(CASING_PROPERTY);
+		CasingType type = data.get(CASING_PROPERTY);
 		if (type == CasingType.NONE || type == CasingType.BRASS)
 			return super.getParticleIcon(data);
 		return AllSpriteShifts.ANDESITE_CASING.getOriginal();
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData extraData) {
-		List<BakedQuad> quads = super.getQuads(state, side, rand, extraData);
-		if (!extraData.hasProperty(CASING_PROPERTY))
+	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
+		List<BakedQuad> quads = super.getQuads(state, side, rand, extraData, renderType);
+		if (!extraData.has(CASING_PROPERTY))
 			return quads;
 
-		boolean cover = extraData.getData(COVER_PROPERTY);
-		CasingType type = extraData.getData(CASING_PROPERTY);
+		boolean cover = extraData.get(COVER_PROPERTY);
+		CasingType type = extraData.get(CASING_PROPERTY);
 		boolean brassCasing = type == CasingType.BRASS;
 
 		if (type == CasingType.NONE || brassCasing && !cover)
@@ -62,7 +63,7 @@ public class BeltModel extends BakedModelWrapper<BakedModel> {
 			BakedModel coverModel =
 				(brassCasing ? alongX ? AllPartialModels.BRASS_BELT_COVER_X : AllPartialModels.BRASS_BELT_COVER_Z
 					: alongX ? AllPartialModels.ANDESITE_BELT_COVER_X : AllPartialModels.ANDESITE_BELT_COVER_Z).get();
-			quads.addAll(coverModel.getQuads(state, side, rand, extraData));
+			quads.addAll(coverModel.getQuads(state, side, rand, extraData, renderType));
 		}
 
 		if (brassCasing)

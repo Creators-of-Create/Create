@@ -2,7 +2,6 @@ package com.simibubi.create.infrastructure.worldgen;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
@@ -12,44 +11,26 @@ import com.simibubi.create.infrastructure.worldgen.OreFeatureConfigEntry.Datagen
 import net.createmod.catnip.utility.Couple;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.common.world.BiomeModifier;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllOreFeatureConfigEntries {
-	private static final Predicate<BiomeLoadingEvent> OVERWORLD_BIOMES = event -> {
-		Biome.BiomeCategory category = event.getCategory();
-		return category != BiomeCategory.NETHER && category != BiomeCategory.THEEND && category != BiomeCategory.NONE;
-	};
-
-	private static final Predicate<BiomeLoadingEvent> NETHER_BIOMES = event -> {
-		Biome.BiomeCategory category = event.getCategory();
-		return category == BiomeCategory.NETHER;
-	};
-
-	//
-
 	public static final OreFeatureConfigEntry ZINC_ORE =
 		create("zinc_ore", 12, 8, -63, 70)
-			.biomeExt()
-			.predicate(OVERWORLD_BIOMES)
-			.parent()
 			.standardDatagenExt()
 			.withBlocks(Couple.create(AllBlocks.ZINC_ORE, AllBlocks.DEEPSLATE_ZINC_ORE))
+			.biomeTag(BiomeTags.IS_OVERWORLD)
 			.parent();
 
 	public static final OreFeatureConfigEntry STRIATED_ORES_OVERWORLD =
 		create("striated_ores_overworld", 32, 1 / 18f, -30, 70)
-			.biomeExt()
-			.predicate(OVERWORLD_BIOMES)
-			.parent()
 			.layeredDatagenExt()
 			.withLayerPattern(AllLayerPatterns.SCORIA)
 			.withLayerPattern(AllLayerPatterns.CINNABAR)
@@ -57,16 +38,15 @@ public class AllOreFeatureConfigEntries {
 			.withLayerPattern(AllLayerPatterns.MALACHITE)
 			.withLayerPattern(AllLayerPatterns.LIMESTONE)
 			.withLayerPattern(AllLayerPatterns.OCHRESTONE)
+			.biomeTag(BiomeTags.IS_OVERWORLD)
 			.parent();
 
 	public static final OreFeatureConfigEntry STRIATED_ORES_NETHER =
 		create("striated_ores_nether", 32, 1 / 18f, 40, 90)
-			.biomeExt()
-			.predicate(NETHER_BIOMES)
-			.parent()
 			.layeredDatagenExt()
 			.withLayerPattern(AllLayerPatterns.SCORIA_NETHER)
 			.withLayerPattern(AllLayerPatterns.SCORCHIA_NETHER)
+			.biomeTag(BiomeTags.IS_NETHER)
 			.parent();
 
 	//
@@ -91,12 +71,6 @@ public class AllOreFeatureConfigEntries {
 
 	public static void init() {}
 
-	public static void modifyBiomes(BiomeLoadingEvent event) {
-		for (OreFeatureConfigEntry entry : OreFeatureConfigEntry.ALL.values()) {
-			entry.biomeExt().modifyBiomes(event, BuiltinRegistries.PLACED_FEATURE);
-		}
-	}
-
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		RegistryAccess registryAccess = RegistryAccess.BUILTIN.get();
@@ -113,7 +87,7 @@ public class AllOreFeatureConfigEntries {
 
 		DynamicDataProvider<ConfiguredFeature<?, ?>> configuredFeatureProvider = DynamicDataProvider.create(generator, "Create's Configured Features", registryAccess, Registry.CONFIGURED_FEATURE_REGISTRY, configuredFeatures);
 		if (configuredFeatureProvider != null) {
-			generator.addProvider(configuredFeatureProvider);
+			generator.addProvider(true, configuredFeatureProvider);
 		}
 
 		//
@@ -128,7 +102,22 @@ public class AllOreFeatureConfigEntries {
 
 		DynamicDataProvider<PlacedFeature> placedFeatureProvider = DynamicDataProvider.create(generator, "Create's Placed Features", registryAccess, Registry.PLACED_FEATURE_REGISTRY, placedFeatures);
 		if (placedFeatureProvider != null) {
-			generator.addProvider(placedFeatureProvider);
+			generator.addProvider(true, placedFeatureProvider);
+		}
+
+		//
+
+		Map<ResourceLocation, BiomeModifier> biomeModifiers = new HashMap<>();
+		for (Map.Entry<ResourceLocation, OreFeatureConfigEntry> entry : OreFeatureConfigEntry.ALL.entrySet()) {
+			DatagenExtension datagenExt = entry.getValue().datagenExt();
+			if (datagenExt != null) {
+				biomeModifiers.put(entry.getKey(), datagenExt.createBiomeModifier(registryAccess));
+			}
+		}
+
+		DynamicDataProvider<BiomeModifier> biomeModifierProvider = DynamicDataProvider.create(generator, "Create's Biome Modifiers", registryAccess, ForgeRegistries.Keys.BIOME_MODIFIERS, biomeModifiers);
+		if (biomeModifierProvider != null) {
+			generator.addProvider(true, biomeModifierProvider);
 		}
 	}
 }

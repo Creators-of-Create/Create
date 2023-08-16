@@ -13,7 +13,6 @@ import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.compat.curios.Curios;
 import com.simibubi.create.content.contraptions.ContraptionMovementSetting;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
-import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.equipment.potatoCannon.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.kinetics.TorquePropagator;
@@ -53,12 +52,12 @@ import net.createmod.catnip.utility.lang.LangBuilder;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -66,7 +65,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod(Create.ID)
 public class Create {
@@ -150,9 +148,7 @@ public class Create {
 
 		modEventBus.addListener(Create::init);
 		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
-		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
-
-		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
+		modEventBus.addListener(AllSoundEvents::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
@@ -170,24 +166,26 @@ public class Create {
 			AllAdvancements.register();
 			AllTriggers.register();
 			BoilerHeaters.registerDefaults();
+			AllFluids.registerFluidInteractions();
 		});
 	}
 
 	public static void gatherData(GatherDataEvent event) {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
-		if (event.includeClient()) {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PonderIndex.addPlugin(new CreatePonderPlugin()));
-			gen.addProvider(new LangMerger(gen, ID, NAME, AllLangPartials.values()));
-			gen.addProvider(AllSoundEvents.provider(gen));
-		}
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PonderIndex.addPlugin(new CreatePonderPlugin()));
+		gen.addProvider(event.includeClient(), new LangMerger(gen, ID, NAME, AllLangPartials.values()));
+		gen.addProvider(event.includeClient(), AllSoundEvents.provider(gen));
+
+		gen.addProvider(event.includeServer(), new AllAdvancements(gen));
+		gen.addProvider(event.includeServer(), new StandardRecipeGen(gen));
+		gen.addProvider(event.includeServer(), new MechanicalCraftingRecipeGen(gen));
+		gen.addProvider(event.includeServer(), new SequencedAssemblyRecipeGen(gen));
+
 		if (event.includeServer()) {
-			gen.addProvider(new AllAdvancements(gen));
-			gen.addProvider(new StandardRecipeGen(gen));
-			gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-			gen.addProvider(new SequencedAssemblyRecipeGen(gen));
 			ProcessingRecipeGen.registerAll(gen);
-//			AllOreFeatureConfigEntries.gatherData(event);
+			//AllOreFeatureConfigEntries.gatherData(event);
 		}
 	}
 

@@ -33,31 +33,11 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
 
 public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<SlidingDoorBlockEntity> {
 
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
 	private boolean folds;
-
-	@Deprecated // Remove in 1.19 - Fixes incompatibility with Quarks double door module
-	public static void stopItQuark(PlayerInteractEvent.RightClickBlock event) {
-		Player player = event.getPlayer();
-		Level world = event.getWorld();
-
-		if (!world.isClientSide || player.isDiscrete() || event.isCanceled() || event.getResult() == Result.DENY
-			|| event.getUseBlock() == Result.DENY)
-			return;
-
-		BlockPos pos = event.getPos();
-		BlockState blockState = world.getBlockState(pos);
-
-		if (blockState.getBlock() instanceof SlidingDoorBlock sdb) {
-			event.setCanceled(true);
-			event.setCancellationResult(blockState.use(world, player, event.getHand(), event.getHitVec()));
-		}
-	}
 
 	public SlidingDoorBlock(Properties p_52737_, boolean folds) {
 		super(p_52737_);
@@ -169,7 +149,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 
 		if (isPowered != pState.getValue(OPEN)) {
 			this.playSound(pLevel, pPos, isPowered);
-			pLevel.gameEvent(isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
+			pLevel.gameEvent(null, isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
 
 			DoorHingeSide hinge = changedState.getValue(HINGE);
 			Direction facing = changedState.getValue(FACING);

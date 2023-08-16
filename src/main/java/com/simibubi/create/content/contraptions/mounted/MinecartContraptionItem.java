@@ -206,7 +206,7 @@ public class MinecartContraptionItem extends Item {
 	@SubscribeEvent
 	public static void wrenchCanBeUsedToPickUpMinecartContraptions(PlayerInteractEvent.EntityInteract event) {
 		Entity entity = event.getTarget();
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		if (player == null || entity == null)
 			return;
 		if (!AllConfigs.server().kinetics.survivalContraptionPickup.get() && !player.isCreative())
@@ -240,13 +240,13 @@ public class MinecartContraptionItem extends Item {
 			return;
 		}
 
-		if (event.getWorld().isClientSide) {
+		if (event.getLevel().isClientSide) {
 			event.setCancellationResult(InteractionResult.SUCCESS);
 			event.setCanceled(true);
 			return;
 		}
 
-		contraption.stop(event.getWorld());
+		contraption.stop(event.getLevel());
 
 		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraption.getActors())
 			if (AllMovementBehaviours.getBehaviour(pair.left.state)instanceof PortableStorageInterfaceMovement psim)

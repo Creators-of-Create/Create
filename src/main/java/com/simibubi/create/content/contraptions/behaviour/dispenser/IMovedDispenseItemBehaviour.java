@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.behaviour.dispenser;
 
-import java.util.Random;
-
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
 import net.minecraft.Util;
@@ -11,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
@@ -129,7 +128,7 @@ public interface IMovedDispenseItemBehaviour {
 				@Override
 				protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos,
 					Vec3 facing) {
-					Random random = context.world.random;
+					RandomSource random = context.world.random;
 					double x = pos.getX() + facing.x * .7 + .5;
 					double y = pos.getY() + facing.y * .7 + .5;
 					double z = pos.getZ() + facing.z * .7 + .5;

@@ -48,6 +48,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.ModelDataManager;
 
 public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEntity>, IWrenchable {
 
@@ -161,7 +162,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	@Nullable
 	public BlockState getAcceptedBlockState(Level pLevel, BlockPos pPos, ItemStack item, Direction face) {
-		if (!(item.getItem()instanceof BlockItem bi))
+		if (!(item.getItem() instanceof BlockItem bi))
 			return null;
 
 		Block block = bi.getBlock();
@@ -246,30 +247,29 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 
 	// Connected Textures
 
-	@Nullable
-	/**
-	 * The wrapped blockstate at toPos. Wrapper guaranteed to be a block of this
-	 * type <br>
-	 * Return null if the 'from' state shouldn't connect to this block/face
-	 * 
-	 * @param from
-	 * @param reader
-	 * @param targetPos
-	 * @param face
-	 * @return
-	 */
-	public abstract BlockState getConnectiveMaterial(BlockAndTintGetter reader, BlockState otherState, Direction face,
-		BlockPos fromPos, BlockPos toPos);
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side,
+		BlockState queryState, BlockPos queryPos) {
 
-	public boolean isUnblockableConnectivitySide(BlockAndTintGetter reader, BlockState state, Direction face,
-		BlockPos fromPos, BlockPos toPos) {
-		return false;
+		if (isIgnoredConnectivitySide(level, state, side, pos, queryPos))
+			return state;
+
+		ModelDataManager modelDataManager = level.getModelDataManager();
+		if (modelDataManager == null)
+			return getMaterial(level, pos);
+		return CopycatModel.getMaterial(modelDataManager.getAt(pos));
 	}
 
 	public boolean isIgnoredConnectivitySide(BlockAndTintGetter reader, BlockState state, Direction face,
 		BlockPos fromPos, BlockPos toPos) {
 		return false;
 	}
+
+	public abstract boolean canConnectTexturesToward(BlockAndTintGetter reader, BlockPos fromPos, BlockPos toPos,
+		BlockState state);
+
+	//
 
 	public static BlockState getMaterial(BlockGetter reader, BlockPos targetPos) {
 		if (reader.getBlockEntity(targetPos) instanceof CopycatBlockEntity cbe)
@@ -280,7 +280,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	public boolean canFaceBeOccluded(BlockState state, Direction face) {
 		return false;
 	}
-	
+
 	public boolean shouldFaceAlwaysRender(BlockState state, Direction face) {
 		return false;
 	}

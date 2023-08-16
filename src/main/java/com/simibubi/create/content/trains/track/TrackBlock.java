@@ -66,6 +66,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -105,7 +106,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IBlockRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 
 public class TrackBlock extends Block
 	implements IBE<TrackBlockEntity>, IWrenchable, ITrackBlock, ISpecialBlockItemRequirement, ProperWaterloggedBlock {
@@ -129,7 +130,8 @@ public class TrackBlock extends Block
 	}
 
 	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+	public @Nullable BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos,
+		@Nullable Mob mob) {
 		return BlockPathTypes.RAIL;
 	}
 
@@ -139,7 +141,7 @@ public class TrackBlock extends Block
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+	public void initializeClient(Consumer<IClientBlockExtensions> consumer) {
 		consumer.accept(new RenderProperties());
 	}
 
@@ -234,7 +236,7 @@ public class TrackBlock extends Block
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel level, BlockPos pos, Random p_60465_) {
+	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource p_60465_) {
 		TrackPropagator.onRailAdded(level, pos, state);
 		withBlockEntityDo(level, pos, tbe -> tbe.tilt.undoSmoothing());
 		if (!state.getValue(SHAPE)

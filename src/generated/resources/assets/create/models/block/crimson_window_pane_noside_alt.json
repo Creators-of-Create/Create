@@ -1,7 +1,7 @@
 {
   "parent": "create:block/connected_glass_pane/noside_alt",
   "textures": {
-    "pane": "create:block/palettes/crimson_window",
-    "edge": "minecraft:block/crimson_planks"
+    "edge": "minecraft:block/crimson_planks",
+    "pane": "create:block/palettes/crimson_window"
   }
 }

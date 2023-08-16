@@ -2,13 +2,13 @@ package com.simibubi.create.foundation.particle;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleOptions.Deserializer;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 
 public interface ICustomParticleData<T extends ParticleOptions> {
 
@@ -30,8 +30,8 @@ public interface ICustomParticleData<T extends ParticleOptions> {
 	public ParticleProvider<T> getFactory();
 	
 	@OnlyIn(Dist.CLIENT)
-	public default void register(ParticleType<T> type, ParticleEngine particles) {
-		particles.register(type, getFactory());
+	public default void register(ParticleType<T> type, RegisterParticleProvidersEvent event) {
+		event.register(type, getFactory());
 	}
 	
 }

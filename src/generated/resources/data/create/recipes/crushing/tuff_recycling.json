@@ -5,27 +5,27 @@
       "tag": "create:stone_types/tuff"
     }
   ],
+  "processingTime": 350,
   "results": [
     {
-      "item": "minecraft:flint",
-      "chance": 0.25
+      "chance": 0.25,
+      "item": "minecraft:flint"
     },
     {
-      "item": "minecraft:gold_nugget",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:gold_nugget"
     },
     {
-      "item": "create:copper_nugget",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "create:copper_nugget"
     },
     {
-      "item": "create:zinc_nugget",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "create:zinc_nugget"
     },
     {
-      "item": "minecraft:iron_nugget",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:iron_nugget"
     }
-  ],
-  "processingTime": 350
+  ]
 }

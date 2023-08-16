@@ -1,12 +1,11 @@
 package com.simibubi.create.content.redstone.diodes;
 
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -70,7 +69,7 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
 		boolean back = state.getValue(POWERED);
 		boolean shouldBack = this.shouldTurnOn(worldIn, pos, state);
 		boolean side = state.getValue(POWERED_SIDE);

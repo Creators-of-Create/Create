@@ -3,7 +3,6 @@ package com.simibubi.create.infrastructure.ponder.scenes.fluid;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.FluidFX;
 import com.simibubi.create.content.fluids.pump.PumpBlock;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
@@ -28,6 +27,7 @@ import net.createmod.ponder.foundation.element.WorldSectionElement;
 import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
@@ -40,6 +40,8 @@ public class FluidTankScenes {
 
 	public static void storage(SceneBuilder builder, SceneBuildingUtil util) {
 		CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+		RandomSource random = RandomSource.create();
+
 		scene.title("fluid_tank_storage", "Storing Fluids in Fluid Tanks");
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
@@ -195,7 +197,7 @@ public class FluidTankScenes {
 		scene.idle(90);
 
 		ItemStack chocBucket = AllFluids.CHOCOLATE.get()
-			.getAttributes()
+			.getFluidType()
 			.getBucket(new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), 1000));
 		scene.world.createItemOnBeltLike(util.grid.at(3, 1, 0), Direction.WEST, chocBucket);
 		scene.idle(40);
@@ -208,7 +210,7 @@ public class FluidTankScenes {
 			scene.effects.emitParticles(util.vector.topOf(3, 1, 1)
 				.add(0, 1 / 16f, 0),
 				Emitter.simple(FluidFX.getFluidParticle(content),
-					VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .1f)),
+					VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)),
 				1, 1);
 		}
 

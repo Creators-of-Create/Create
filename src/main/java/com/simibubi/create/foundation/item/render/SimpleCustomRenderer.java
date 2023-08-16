@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.item.render;
 
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
-public class SimpleCustomRenderer implements IItemRenderProperties {
+public class SimpleCustomRenderer implements IClientItemExtensions {
 
 	protected CustomRenderedItemModelRenderer renderer;
 
@@ -17,7 +17,7 @@ public class SimpleCustomRenderer implements IItemRenderProperties {
 	}
 
 	@Override
-	public CustomRenderedItemModelRenderer getItemStackRenderer() {
+	public CustomRenderedItemModelRenderer getCustomRenderer() {
 		return renderer;
 	}
 

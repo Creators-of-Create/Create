@@ -1,10 +1,10 @@
 {
   "parent": "create:block/belt_funnel/block_pulling",
   "textures": {
-    "particle": "create:block/andesite_block",
+    "base": "create:block/funnel/andesite_funnel",
     "block": "create:block/andesite_block",
     "direction": "create:block/funnel/andesite_funnel_pull",
-    "redstone": "create:block/funnel/andesite_funnel_unpowered",
-    "base": "create:block/funnel/andesite_funnel"
+    "particle": "create:block/andesite_block",
+    "redstone": "create:block/funnel/andesite_funnel_unpowered"
   }
 }

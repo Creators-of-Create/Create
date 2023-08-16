@@ -1,7 +1,5 @@
 package com.simibubi.create.content.kinetics.steamEngine;
 
-import java.util.Random;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -15,6 +13,7 @@ import net.createmod.catnip.utility.placement.PlacementHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -67,7 +66,7 @@ public class PoweredShaftBlock extends AbstractShaftBlock {
 	}
 
 	@Override
-	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
+	public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
 		if (!stillValid(pState, pLevel, pPos))
 			pLevel.setBlock(pPos, AllBlocks.SHAFT.getDefaultState()
 				.setValue(ShaftBlock.AXIS, pState.getValue(AXIS))

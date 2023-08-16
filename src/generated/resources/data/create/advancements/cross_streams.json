@@ -1,25 +1,25 @@
 {
   "parent": "create:backtank",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:cross_streams_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "minecraft:cobblestone"
-    },
-    "title": {
-      "translate": "advancement.create.cross_streams"
-    },
+    "announce_to_chat": true,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.cross_streams.desc"
     },
     "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:cobblestone"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": true
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:cross_streams_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.cross_streams"
     }
   },
   "requirements": [

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -23,6 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+
 	public BacktankArmorLayer(RenderLayerParent<T, M> renderer) {
 		super(renderer);
 	}
@@ -62,7 +63,7 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 			.rotateY(180)
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
-			.rotate(Direction.EAST, AngleHelper.rad(2 * WorldTickHolder.getRenderTime(entity.level) % 360))
+			.rotate(Direction.EAST, AngleHelper.rad(2 * LevelTickHolder.getRenderTime(entity.level) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 
 		cogs.forEntityRender()
@@ -89,4 +90,5 @@ public class BacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		BacktankArmorLayer<?, ?> layer = new BacktankArmorLayer<>(livingRenderer);
 		livingRenderer.addLayer((BacktankArmorLayer) layer);
 	}
+
 }

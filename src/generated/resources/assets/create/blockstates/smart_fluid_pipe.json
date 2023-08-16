@@ -1,40 +1,39 @@
 {
   "variants": {
-    "face=floor,facing=north,waterlogged=false": {
+    "face=ceiling,facing=east,waterlogged=false": {
       "model": "create:block/smart_fluid_pipe/block",
-      "y": 180
+      "x": 180,
+      "y": 90
     },
-    "face=wall,facing=north,waterlogged=false": {
+    "face=ceiling,facing=east,waterlogged=true": {
       "model": "create:block/smart_fluid_pipe/block",
-      "x": 270,
-      "y": 180
+      "x": 180,
+      "y": 90
     },
     "face=ceiling,facing=north,waterlogged=false": {
       "model": "create:block/smart_fluid_pipe/block",
       "x": 180
     },
-    "face=floor,facing=south,waterlogged=false": {
-      "model": "create:block/smart_fluid_pipe/block"
-    },
-    "face=wall,facing=south,waterlogged=false": {
+    "face=ceiling,facing=north,waterlogged=true": {
       "model": "create:block/smart_fluid_pipe/block",
-      "x": 270
+      "x": 180
     },
     "face=ceiling,facing=south,waterlogged=false": {
       "model": "create:block/smart_fluid_pipe/block",
       "x": 180,
       "y": 180
     },
-    "face=floor,facing=west,waterlogged=false": {
+    "face=ceiling,facing=south,waterlogged=true": {
       "model": "create:block/smart_fluid_pipe/block",
-      "y": 90
-    },
-    "face=wall,facing=west,waterlogged=false": {
-      "model": "create:block/smart_fluid_pipe/block",
-      "x": 270,
-      "y": 90
+      "x": 180,
+      "y": 180
     },
     "face=ceiling,facing=west,waterlogged=false": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 180,
+      "y": 270
+    },
+    "face=ceiling,facing=west,waterlogged=true": {
       "model": "create:block/smart_fluid_pipe/block",
       "x": 180,
       "y": 270
@@ -43,57 +42,35 @@
       "model": "create:block/smart_fluid_pipe/block",
       "y": 270
     },
-    "face=wall,facing=east,waterlogged=false": {
+    "face=floor,facing=east,waterlogged=true": {
       "model": "create:block/smart_fluid_pipe/block",
-      "x": 270,
       "y": 270
     },
-    "face=ceiling,facing=east,waterlogged=false": {
+    "face=floor,facing=north,waterlogged=false": {
       "model": "create:block/smart_fluid_pipe/block",
-      "x": 180,
-      "y": 90
+      "y": 180
     },
     "face=floor,facing=north,waterlogged=true": {
       "model": "create:block/smart_fluid_pipe/block",
       "y": 180
     },
-    "face=wall,facing=north,waterlogged=true": {
-      "model": "create:block/smart_fluid_pipe/block",
-      "x": 270,
-      "y": 180
-    },
-    "face=ceiling,facing=north,waterlogged=true": {
-      "model": "create:block/smart_fluid_pipe/block",
-      "x": 180
+    "face=floor,facing=south,waterlogged=false": {
+      "model": "create:block/smart_fluid_pipe/block"
     },
     "face=floor,facing=south,waterlogged=true": {
       "model": "create:block/smart_fluid_pipe/block"
     },
-    "face=wall,facing=south,waterlogged=true": {
+    "face=floor,facing=west,waterlogged=false": {
       "model": "create:block/smart_fluid_pipe/block",
-      "x": 270
-    },
-    "face=ceiling,facing=south,waterlogged=true": {
-      "model": "create:block/smart_fluid_pipe/block",
-      "x": 180,
-      "y": 180
+      "y": 90
     },
     "face=floor,facing=west,waterlogged=true": {
       "model": "create:block/smart_fluid_pipe/block",
       "y": 90
     },
-    "face=wall,facing=west,waterlogged=true": {
+    "face=wall,facing=east,waterlogged=false": {
       "model": "create:block/smart_fluid_pipe/block",
       "x": 270,
-      "y": 90
-    },
-    "face=ceiling,facing=west,waterlogged=true": {
-      "model": "create:block/smart_fluid_pipe/block",
-      "x": 180,
-      "y": 270
-    },
-    "face=floor,facing=east,waterlogged=true": {
-      "model": "create:block/smart_fluid_pipe/block",
       "y": 270
     },
     "face=wall,facing=east,waterlogged=true": {
@@ -101,9 +78,32 @@
       "x": 270,
       "y": 270
     },
-    "face=ceiling,facing=east,waterlogged=true": {
+    "face=wall,facing=north,waterlogged=false": {
       "model": "create:block/smart_fluid_pipe/block",
-      "x": 180,
+      "x": 270,
+      "y": 180
+    },
+    "face=wall,facing=north,waterlogged=true": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270,
+      "y": 180
+    },
+    "face=wall,facing=south,waterlogged=false": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270
+    },
+    "face=wall,facing=south,waterlogged=true": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270
+    },
+    "face=wall,facing=west,waterlogged=false": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270,
+      "y": 90
+    },
+    "face=wall,facing=west,waterlogged=true": {
+      "model": "create:block/smart_fluid_pipe/block",
+      "x": 270,
       "y": 90
     }
   }

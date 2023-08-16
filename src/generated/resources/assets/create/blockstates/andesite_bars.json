@@ -6,94 +6,94 @@
       }
     },
     {
-      "when": {
-        "north": "false",
-        "east": "false",
-        "south": "false",
-        "west": "false"
-      },
       "apply": {
         "model": "create:block/andesite_post"
+      },
+      "when": {
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false"
       }
     },
     {
-      "when": {
-        "north": "true",
-        "east": "false",
-        "south": "false",
-        "west": "false"
-      },
       "apply": {
         "model": "create:block/andesite_cap"
+      },
+      "when": {
+        "east": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false"
       }
     },
     {
-      "when": {
-        "north": "false",
-        "east": "true",
-        "south": "false",
-        "west": "false"
-      },
       "apply": {
         "model": "create:block/andesite_cap",
         "y": 90
+      },
+      "when": {
+        "east": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false"
       }
     },
     {
-      "when": {
-        "north": "false",
-        "east": "false",
-        "south": "true",
-        "west": "false"
-      },
       "apply": {
         "model": "create:block/andesite_cap_alt"
+      },
+      "when": {
+        "east": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false"
       }
     },
     {
-      "when": {
-        "north": "false",
-        "east": "false",
-        "south": "false",
-        "west": "true"
-      },
       "apply": {
         "model": "create:block/andesite_cap_alt",
         "y": 90
+      },
+      "when": {
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true"
       }
     },
     {
-      "when": {
-        "north": "true"
-      },
       "apply": {
         "model": "create:block/andesite_side"
+      },
+      "when": {
+        "north": "true"
       }
     },
     {
-      "when": {
-        "east": "true"
-      },
       "apply": {
         "model": "create:block/andesite_side",
         "y": 90
+      },
+      "when": {
+        "east": "true"
       }
     },
     {
-      "when": {
-        "south": "true"
-      },
       "apply": {
         "model": "create:block/andesite_side_alt"
+      },
+      "when": {
+        "south": "true"
       }
     },
     {
-      "when": {
-        "west": "true"
-      },
       "apply": {
         "model": "create:block/andesite_side_alt",
         "y": 90
+      },
+      "when": {
+        "west": "true"
       }
     }
   ]

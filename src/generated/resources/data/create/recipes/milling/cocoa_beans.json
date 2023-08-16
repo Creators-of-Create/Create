@@ -5,15 +5,15 @@
       "item": "minecraft:cocoa_beans"
     }
   ],
+  "processingTime": 70,
   "results": [
     {
-      "item": "minecraft:brown_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:brown_dye"
     },
     {
-      "item": "minecraft:brown_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:brown_dye"
     }
-  ],
-  "processingTime": 70
+  ]
 }

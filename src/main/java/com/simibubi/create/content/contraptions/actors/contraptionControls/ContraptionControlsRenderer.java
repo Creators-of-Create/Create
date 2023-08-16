@@ -20,7 +20,7 @@ import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.catnip.utility.theme.Color;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -104,7 +104,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 
 		float buttondepth = -.25f;
 		if (ctx.contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)
-			buttondepth += -1 / 24f * cbe.button.getValue(WorldTickHolder.getPartialTicks(renderWorld));
+			buttondepth += -1 / 24f * cbe.button.getValue(LevelTickHolder.getPartialTicks(renderWorld));
 
 		if (!text.isBlank() && playerDistance < 100) {
 			int actualWidth = fontRenderer.width(text);

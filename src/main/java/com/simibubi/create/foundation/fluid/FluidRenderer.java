@@ -18,8 +18,9 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 
 @OnlyIn(Dist.CLIENT)
 public class FluidRenderer extends BasicFluidRenderer {
@@ -32,15 +33,16 @@ public class FluidRenderer extends BasicFluidRenderer {
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
 		boolean inbound, VertexConsumer builder, PoseStack ms, int light) {
 		Fluid fluid = fluidStack.getFluid();
-		FluidAttributes fluidAttributes = fluid.getAttributes();
+		IClientFluidTypeExtensions clientFluid = IClientFluidTypeExtensions.of(fluid);
+		FluidType fluidAttributes = fluid.getFluidType();
 		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-		TextureAtlasSprite flowTexture = spriteAtlas.apply(fluidAttributes.getFlowingTexture(fluidStack));
-		TextureAtlasSprite stillTexture = spriteAtlas.apply(fluidAttributes.getStillTexture(fluidStack));
+		TextureAtlasSprite flowTexture = spriteAtlas.apply(clientFluid.getFlowingTexture(fluidStack));
+		TextureAtlasSprite stillTexture = spriteAtlas.apply(clientFluid.getStillTexture(fluidStack));
 
-		int color = fluidAttributes.getColor(fluidStack);
+		int color = clientFluid.getTintColor(fluidStack);
 		int blockLightIn = (light >> 4) & 0xF;
-		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
+		int luminosity = Math.max(blockLightIn, fluidAttributes.getLightLevel(fluidStack));
 		light = (light & 0xF00000) | luminosity << 4;
 
 		if (inbound)
@@ -63,15 +65,13 @@ public class FluidRenderer extends BasicFluidRenderer {
 
 		for (int i = 0; i < 4; i++) {
 			ms.pushPose();
-			renderFlowingTiledFace(Direction.SOUTH, hMin, yMin, hMax, yMax, h,
-				builder, ms, light, color, flowTexture);
+			renderFlowingTiledFace(Direction.SOUTH, hMin, yMin, hMax, yMax, h, builder, ms, light, color, flowTexture);
 			ms.popPose();
 			msr.rotateY(90);
 		}
 
 		if (progress != 1)
-			renderStillTiledFace(Direction.DOWN, hMin, hMin, hMax, hMax, yMin,
-				builder, ms, light, color, stillTexture);
+			renderStillTiledFace(Direction.DOWN, hMin, hMin, hMax, hMax, yMin, builder, ms, light, color, stillTexture);
 
 		ms.popPose();
 	}

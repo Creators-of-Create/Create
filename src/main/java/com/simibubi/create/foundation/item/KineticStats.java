@@ -50,7 +50,7 @@ public class KineticStats implements TooltipModifier {
 
 	@Override
 	public void modify(ItemTooltipEvent context) {
-		List<Component> kineticStats = getKineticStats(block, context.getPlayer());
+		List<Component> kineticStats = getKineticStats(block, context.getEntity());
 		if (!kineticStats.isEmpty()) {
 			List<Component> tooltip = context.getToolTip();
 			tooltip.add(Components.immutableEmpty());

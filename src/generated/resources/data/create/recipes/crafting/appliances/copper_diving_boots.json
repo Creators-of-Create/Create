@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "P P",
-    "P P",
-    "G G"
-  ],
   "key": {
     "G": {
       "item": "create:andesite_alloy"
@@ -13,6 +8,11 @@
       "item": "minecraft:copper_ingot"
     }
   },
+  "pattern": [
+    "P P",
+    "P P",
+    "G G"
+  ],
   "result": {
     "item": "create:copper_diving_boots"
   }

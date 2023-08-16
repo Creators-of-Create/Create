@@ -11,9 +11,9 @@
       "item": "minecraft:gravel"
     },
     {
+      "amount": 100,
       "fluid": "minecraft:lava",
-      "nbt": {},
-      "amount": 100
+      "nbt": {}
     }
   ],
   "results": [

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.equipment;
 
 
-import net.createmod.catnip.utility.worldWrappers.PlacementSimulationServerWorld;
+import net.createmod.catnip.utility.levelWrappers.PlacementSimulationServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -12,6 +12,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.MangrovePropaguleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -27,6 +28,10 @@ public class TreeFertilizerItem extends Item {
 			.getBlockState(context.getClickedPos());
 		Block block = state.getBlock();
 		if (block instanceof BonemealableBlock bonemealableBlock && state.is(BlockTags.SAPLINGS)) {
+
+			if (state.getOptionalValue(MangrovePropaguleBlock.HANGING)
+				.orElse(false))
+				return InteractionResult.PASS;
 
 			if (context.getLevel().isClientSide) {
 				BoneMealItem.addGrowthParticles(context.getLevel(), context.getClickedPos(), 100);
@@ -84,12 +89,18 @@ public class TreeFertilizerItem extends Item {
 		return original.setValue(BlockStateProperties.STAGE, 1);
 	}
 
-	private static class TreesDreamWorld extends PlacementSimulationServerWorld {
+	private static class TreesDreamWorld extends PlacementSimulationServerLevel {
 		private final BlockState soil;
 
 		protected TreesDreamWorld(ServerLevel wrapped, BlockPos saplingPos) {
 			super(wrapped);
-			soil = wrapped.getBlockState(saplingPos.below());
+			BlockState stateUnderSapling = wrapped.getBlockState(saplingPos.below());
+
+			// Tree features don't seem to succeed with mud as soil
+			if (stateUnderSapling.is(BlockTags.DIRT))
+				stateUnderSapling = Blocks.DIRT.defaultBlockState();
+
+			soil = stateUnderSapling;
 		}
 
 		@Override

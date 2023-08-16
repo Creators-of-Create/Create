@@ -5,14 +5,14 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.items.IItemHandler;
 
 public class StorageDrawers {
 
 	public static boolean isDrawer(BlockEntity be) {
 		return be != null && Mods.STORAGEDRAWERS.asId()
-			.equals(be.getType()
-				.getRegistryName()
+			.equals(BlockEntityType.getKey(be.getType())
 				.getNamespace());
 	}
 

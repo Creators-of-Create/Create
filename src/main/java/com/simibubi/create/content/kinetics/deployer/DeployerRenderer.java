@@ -28,7 +28,7 @@ import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -99,7 +99,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			ms.translate(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
 			ms.scale(scale, scale, scale);
 			transform = TransformType.GROUND;
-			ms.mulPose(Vector3f.YP.rotationDegrees(WorldTickHolder.getRenderTime(be.getLevel())));
+			ms.mulPose(Vector3f.YP.rotationDegrees(LevelTickHolder.getRenderTime(be.getLevel())));
 
 		} else {
 			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
@@ -195,7 +195,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			axis = def.getRotationAxis(context.state);
 		}
 
-		float time = WorldTickHolder.getRenderTime(context.world) / 20;
+		float time = LevelTickHolder.getRenderTime(context.world) / 20;
 		float angle = (time * speed) % 360;
 
 		TransformStack.cast(m)

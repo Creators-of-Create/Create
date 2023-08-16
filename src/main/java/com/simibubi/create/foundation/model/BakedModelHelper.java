@@ -8,20 +8,21 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.UnaryOperator;
 
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class BakedModelHelper {
 
@@ -95,20 +96,20 @@ public class BakedModelHelper {
 	}
 
 	public static BakedModel generateModel(BakedModel template, UnaryOperator<TextureAtlasSprite> spriteSwapper) {
-		Random random = new Random();
+		RandomSource random = RandomSource.create();
 
 		Map<Direction, List<BakedQuad>> culledFaces = new EnumMap<>(Direction.class);
 		for (Direction cullFace : Iterate.directions) {
 			random.setSeed(42L);
-			List<BakedQuad> quads = template.getQuads(null, cullFace, random, EmptyModelData.INSTANCE);
+			List<BakedQuad> quads = template.getQuads(null, cullFace, random, ModelData.EMPTY, RenderType.solid());
 			culledFaces.put(cullFace, swapSprites(quads, spriteSwapper));
 		}
 
 		random.setSeed(42L);
-		List<BakedQuad> quads = template.getQuads(null, null, random, EmptyModelData.INSTANCE);
+		List<BakedQuad> quads = template.getQuads(null, null, random, ModelData.EMPTY, RenderType.solid());
 		List<BakedQuad> unculledFaces = swapSprites(quads, spriteSwapper);
 
-		TextureAtlasSprite particleSprite = template.getParticleIcon(EmptyModelData.INSTANCE);
+		TextureAtlasSprite particleSprite = template.getParticleIcon(ModelData.EMPTY);
 		TextureAtlasSprite swappedParticleSprite = spriteSwapper.apply(particleSprite);
 		if (swappedParticleSprite != null) {
 			particleSprite = swappedParticleSprite;

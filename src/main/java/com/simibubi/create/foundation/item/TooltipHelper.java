@@ -18,7 +18,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraftforge.client.MinecraftForgeClient;
 
 public class TooltipHelper {
 
@@ -89,7 +88,7 @@ public class TooltipHelper {
 
 		// Split words
 		List<String> words = new LinkedList<>();
-		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
+		BreakIterator iterator = BreakIterator.getLineInstance(Minecraft.getInstance().getLocale());
 		iterator.setText(s);
 		int start = iterator.first();
 		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {

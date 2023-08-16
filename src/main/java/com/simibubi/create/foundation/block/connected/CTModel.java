@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.block.connected;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import com.simibubi.create.content.decoration.copycat.CopycatBlock;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
@@ -11,16 +10,18 @@ import com.simibubi.create.foundation.model.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 
 import net.createmod.catnip.utility.Iterate;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap.Builder;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelData.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
 
 public class CTModel extends BakedModelWrapperWithData {
@@ -35,9 +36,9 @@ public class CTModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	protected void gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
-		IModelData blockEntityData) {
-		builder.withInitial(CT_PROPERTY, createCTData(world, pos, state));
+	protected ModelData.Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state,
+		ModelData blockEntityData) {
+		return builder.with(CT_PROPERTY, createCTData(world, pos, state));
 	}
 
 	protected CTData createCTData(BlockAndTintGetter world, BlockPos pos, BlockState state) {
@@ -60,12 +61,12 @@ public class CTModel extends BakedModelWrapperWithData {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData extraData) {
-		List<BakedQuad> quads = super.getQuads(state, side, rand, extraData);
-		if (!extraData.hasProperty(CT_PROPERTY))
+	public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
+		List<BakedQuad> quads = super.getQuads(state, side, rand, extraData, renderType);
+		if (!extraData.has(CT_PROPERTY))
 			return quads;
 
-		CTData data = extraData.getData(CT_PROPERTY);
+		CTData data = extraData.get(CT_PROPERTY);
 		quads = new ArrayList<>(quads);
 
 		for (int i = 0; i < quads.size(); i++) {

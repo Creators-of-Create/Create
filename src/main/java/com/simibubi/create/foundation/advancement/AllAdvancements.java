@@ -16,8 +16,6 @@ import java.util.function.UnaryOperator;
 import org.slf4j.Logger;
 
 import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
@@ -26,9 +24,9 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.advancement.CreateAdvancement.Builder;
 
 import net.minecraft.advancements.Advancement;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
@@ -613,8 +611,6 @@ public class AllAdvancements implements DataProvider {
 	// Datagen
 
 	private static final Logger LOGGER = LogUtils.getLogger();
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-		.create();
 	private final DataGenerator generator;
 
 	public AllAdvancements(DataGenerator generatorIn) {
@@ -622,7 +618,7 @@ public class AllAdvancements implements DataProvider {
 	}
 
 	@Override
-	public void run(HashCache cache) throws IOException {
+	public void run(CachedOutput cache) throws IOException {
 		Path path = this.generator.getOutputFolder();
 		Set<ResourceLocation> set = Sets.newHashSet();
 		Consumer<Advancement> consumer = (p_204017_3_) -> {
@@ -632,7 +628,7 @@ public class AllAdvancements implements DataProvider {
 			Path path1 = getPath(path, p_204017_3_);
 
 			try {
-				DataProvider.save(GSON, cache, p_204017_3_.deconstruct()
+				DataProvider.saveStable(cache, p_204017_3_.deconstruct()
 					.serializeToJson(), path1);
 			} catch (IOException ioexception) {
 				LOGGER.error("Couldn't save advancement {}", path1, ioexception);

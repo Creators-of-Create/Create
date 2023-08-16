@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:rods/wooden"
+    },
+    "S": {
+      "item": "create:andesite_casing"
+    }
+  },
   "pattern": [
     "P",
     "S"
   ],
-  "key": {
-    "S": {
-      "item": "create:andesite_casing"
-    },
-    "P": {
-      "tag": "forge:rods/wooden"
-    }
-  },
   "result": {
     "item": "create:analog_lever"
   }

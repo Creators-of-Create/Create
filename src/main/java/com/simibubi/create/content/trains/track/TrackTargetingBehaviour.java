@@ -26,8 +26,8 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
-import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
-import net.createmod.ponder.foundation.PonderWorld;
+import net.createmod.catnip.utility.levelWrappers.SchematicLevel;
+import net.createmod.ponder.foundation.PonderLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -311,7 +311,7 @@ public class TrackTargetingBehaviour<T extends TrackEdgePoint> extends BlockEnti
 	public static void render(LevelAccessor level, BlockPos pos, AxisDirection direction,
 		BezierTrackPointLocation bezier, PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 		RenderedTrackOverlayType type, float scale) {
-		if (level instanceof SchematicWorld && !(level instanceof PonderWorld))
+		if (level instanceof SchematicLevel && !(level instanceof PonderLevel))
 			return;
 
 		BlockState trackState = level.getBlockState(pos);

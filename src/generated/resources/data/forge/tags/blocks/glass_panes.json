@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "create:tiled_glass_pane",
     "create:framed_glass_pane",
@@ -11,6 +10,7 @@
     "create:jungle_window_pane",
     "create:acacia_window_pane",
     "create:dark_oak_window_pane",
+    "create:mangrove_window_pane",
     "create:crimson_window_pane",
     "create:warped_window_pane",
     "create:ornate_iron_window_pane"

@@ -15,7 +15,7 @@ import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.createmod.catnip.utility.theme.Color;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
@@ -143,7 +143,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 
 		ms.pushPose();
 		ms.translate(1 / 2f, 7.5f / 16f, 1 / 2f);
-		float renderTime = WorldTickHolder.getRenderTime(be.getLevel());
+		float renderTime = LevelTickHolder.getRenderTime(be.getLevel());
 
 		for (boolean first : Iterate.trueAndFalse) {
 			Vec3 lampVec = Vec3.atCenterOf(be.getBlockPos());

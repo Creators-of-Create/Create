@@ -14,7 +14,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -85,7 +85,7 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayB
 			for (int i = 0; i < line.size(); i++) {
 				FlapDisplaySection section = line.get(i);
 				renderOutput.nextSection(section);
-				int ticks = WorldTickHolder.getTicks(be.getLevel());
+				int ticks = LevelTickHolder.getTicks(be.getLevel());
 				String text = section.renderCharsIndividually() || !section.spinning[0] ? section.text
 					: section.cyclingOptions[((ticks / 3) + i * 13) % section.cyclingOptions.length];
 				StringDecomposer.iterateFormatted(text, Style.EMPTY, renderOutput);
@@ -139,8 +139,8 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayB
 
 		public boolean accept(int charIndex, Style style, int glyph) {
 			FontSet fontset = getFontSet();
-			int ticks = paused ? 0 : WorldTickHolder.getTicks(level);
-			float time = paused ? 0 : WorldTickHolder.getRenderTime(level);
+			int ticks = paused ? 0 : LevelTickHolder.getTicks(level);
+			float time = paused ? 0 : LevelTickHolder.getRenderTime(level);
 			float dim = 1;
 
 			if (section.renderCharsIndividually() && section.spinning[Math.min(charIndex, section.spinning.length)]) {
@@ -152,7 +152,7 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayB
 				dim = 0.75f;
 			}
 
-			GlyphInfo glyphinfo = fontset.getGlyphInfo(glyph);
+			GlyphInfo glyphinfo = fontset.getGlyphInfo(glyph, false);
 			float glyphWidth = glyphinfo.getAdvance(false);
 
 			if (!section.renderCharsIndividually() && section.spinning[0]) {

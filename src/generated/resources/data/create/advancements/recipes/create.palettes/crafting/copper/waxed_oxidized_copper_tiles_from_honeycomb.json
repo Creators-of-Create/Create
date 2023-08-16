@@ -1,13 +1,13 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "create:crafting/copper/waxed_oxidized_copper_tiles_from_honeycomb"
-    ]
-  },
   "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:crafting/copper/waxed_oxidized_copper_tiles_from_honeycomb"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
     "has_unwaxed": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -16,13 +16,8 @@
             ]
           }
         ]
-      }
-    },
-    "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
-      "conditions": {
-        "recipe": "create:crafting/copper/waxed_oxidized_copper_tiles_from_honeycomb"
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
@@ -30,5 +25,10 @@
       "has_unwaxed",
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:crafting/copper/waxed_oxidized_copper_tiles_from_honeycomb"
+    ]
+  }
 }

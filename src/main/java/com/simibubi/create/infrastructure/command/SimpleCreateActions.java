@@ -11,7 +11,6 @@ import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfig;
@@ -51,10 +50,12 @@ public class SimpleCreateActions {
 	}
 
 	public static void fabulousWarning(String value) {
+
 		AllConfigs.client().ignoreFabulousWarning.set(true);
-		Minecraft.getInstance().gui.handleChat(ChatType.CHAT,
-				Components.literal("Disabled Fabulous graphics warning"),
-				Minecraft.getInstance().player.getUUID());
+		LocalPlayer player = Minecraft.getInstance().player;
+		if (player != null) {
+			player.displayClientMessage(Components.literal("Disabled Fabulous graphics warning"), false);
+		}
 	}
 
 	public static void zoomMultiplier(String value) {

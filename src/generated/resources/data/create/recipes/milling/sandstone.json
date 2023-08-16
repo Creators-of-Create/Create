@@ -5,10 +5,10 @@
       "item": "minecraft:sandstone"
     }
   ],
+  "processingTime": 150,
   "results": [
     {
       "item": "minecraft:sand"
     }
-  ],
-  "processingTime": 150
+  ]
 }

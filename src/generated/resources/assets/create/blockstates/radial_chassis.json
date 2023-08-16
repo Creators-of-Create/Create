@@ -1,266 +1,266 @@
 {
   "multipart": [
     {
-      "when": {
-        "axis": "x"
-      },
       "apply": {
         "model": "create:block/radial_chassis/base",
         "x": 90,
         "y": 90
+      },
+      "when": {
+        "axis": "x"
       }
     },
     {
-      "when": {
-        "axis": "y"
-      },
       "apply": {
         "model": "create:block/radial_chassis/base"
+      },
+      "when": {
+        "axis": "y"
       }
     },
     {
-      "when": {
-        "axis": "z"
-      },
       "apply": {
         "model": "create:block/radial_chassis/base",
         "x": 90
+      },
+      "when": {
+        "axis": "z"
       }
     },
     {
-      "when": {
-        "axis": "x",
-        "sticky_south": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x_sticky",
         "x": 180
+      },
+      "when": {
+        "axis": "x",
+        "sticky_south": "true"
       }
     },
     {
-      "when": {
-        "axis": "y",
-        "sticky_south": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_y_sticky"
+      },
+      "when": {
+        "axis": "y",
+        "sticky_south": "true"
       }
     },
     {
-      "when": {
-        "axis": "z",
-        "sticky_south": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x_sticky",
         "x": 180,
         "y": 90
+      },
+      "when": {
+        "axis": "z",
+        "sticky_south": "true"
       }
     },
     {
-      "when": {
-        "axis": "x",
-        "sticky_south": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x",
         "x": 180
+      },
+      "when": {
+        "axis": "x",
+        "sticky_south": "false"
       }
     },
     {
+      "apply": {
+        "model": "create:block/radial_chassis_side_y"
+      },
       "when": {
         "axis": "y",
         "sticky_south": "false"
-      },
-      "apply": {
-        "model": "create:block/radial_chassis_side_y"
       }
     },
     {
-      "when": {
-        "axis": "z",
-        "sticky_south": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x",
         "x": 180,
         "y": 90
+      },
+      "when": {
+        "axis": "z",
+        "sticky_south": "false"
       }
     },
     {
-      "when": {
-        "axis": "x",
-        "sticky_west": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x_sticky",
         "x": 90
+      },
+      "when": {
+        "axis": "x",
+        "sticky_west": "true"
       }
     },
     {
-      "when": {
-        "axis": "y",
-        "sticky_west": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_y_sticky",
         "y": 90
+      },
+      "when": {
+        "axis": "y",
+        "sticky_west": "true"
       }
     },
     {
-      "when": {
-        "axis": "z",
-        "sticky_west": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_z_sticky",
         "y": 180
+      },
+      "when": {
+        "axis": "z",
+        "sticky_west": "true"
       }
     },
     {
-      "when": {
-        "axis": "x",
-        "sticky_west": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x",
         "x": 90
+      },
+      "when": {
+        "axis": "x",
+        "sticky_west": "false"
       }
     },
     {
-      "when": {
-        "axis": "y",
-        "sticky_west": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_y",
         "y": 90
+      },
+      "when": {
+        "axis": "y",
+        "sticky_west": "false"
       }
     },
     {
-      "when": {
-        "axis": "z",
-        "sticky_west": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_z",
         "y": 180
+      },
+      "when": {
+        "axis": "z",
+        "sticky_west": "false"
       }
     },
     {
-      "when": {
-        "axis": "x",
-        "sticky_north": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x_sticky"
+      },
+      "when": {
+        "axis": "x",
+        "sticky_north": "true"
       }
     },
     {
-      "when": {
-        "axis": "y",
-        "sticky_north": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_y_sticky",
         "y": 180
+      },
+      "when": {
+        "axis": "y",
+        "sticky_north": "true"
       }
     },
     {
-      "when": {
-        "axis": "z",
-        "sticky_north": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x_sticky",
         "y": 90
+      },
+      "when": {
+        "axis": "z",
+        "sticky_north": "true"
       }
     },
     {
-      "when": {
-        "axis": "x",
-        "sticky_north": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x"
+      },
+      "when": {
+        "axis": "x",
+        "sticky_north": "false"
       }
     },
     {
-      "when": {
-        "axis": "y",
-        "sticky_north": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_y",
         "y": 180
+      },
+      "when": {
+        "axis": "y",
+        "sticky_north": "false"
       }
     },
     {
-      "when": {
-        "axis": "z",
-        "sticky_north": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x",
         "y": 90
+      },
+      "when": {
+        "axis": "z",
+        "sticky_north": "false"
       }
     },
     {
-      "when": {
-        "axis": "x",
-        "sticky_east": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x_sticky",
         "x": 270
+      },
+      "when": {
+        "axis": "x",
+        "sticky_east": "true"
       }
     },
     {
-      "when": {
-        "axis": "y",
-        "sticky_east": "true"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_y_sticky",
         "y": 270
+      },
+      "when": {
+        "axis": "y",
+        "sticky_east": "true"
       }
     },
     {
+      "apply": {
+        "model": "create:block/radial_chassis_side_z_sticky"
+      },
       "when": {
         "axis": "z",
         "sticky_east": "true"
-      },
-      "apply": {
-        "model": "create:block/radial_chassis_side_z_sticky"
       }
     },
     {
-      "when": {
-        "axis": "x",
-        "sticky_east": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_x",
         "x": 270
+      },
+      "when": {
+        "axis": "x",
+        "sticky_east": "false"
       }
     },
     {
-      "when": {
-        "axis": "y",
-        "sticky_east": "false"
-      },
       "apply": {
         "model": "create:block/radial_chassis_side_y",
         "y": 270
+      },
+      "when": {
+        "axis": "y",
+        "sticky_east": "false"
       }
     },
     {
+      "apply": {
+        "model": "create:block/radial_chassis_side_z"
+      },
       "when": {
         "axis": "z",
         "sticky_east": "false"
-      },
-      "apply": {
-        "model": "create:block/radial_chassis_side_z"
       }
     }
   ]

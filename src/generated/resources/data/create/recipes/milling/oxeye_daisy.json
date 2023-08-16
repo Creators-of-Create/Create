@@ -5,19 +5,19 @@
       "item": "minecraft:oxeye_daisy"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:light_gray_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:light_gray_dye"
     },
     {
-      "item": "minecraft:white_dye",
-      "chance": 0.2
+      "chance": 0.2,
+      "item": "minecraft:white_dye"
     },
     {
-      "item": "minecraft:yellow_dye",
-      "chance": 0.05
+      "chance": 0.05,
+      "item": "minecraft:yellow_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

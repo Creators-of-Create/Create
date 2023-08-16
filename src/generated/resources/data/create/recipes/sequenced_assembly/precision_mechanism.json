@@ -3,9 +3,43 @@
   "ingredient": {
     "tag": "forge:plates/gold"
   },
-  "transitionalItem": {
-    "item": "create:incomplete_precision_mechanism"
-  },
+  "loops": 5,
+  "results": [
+    {
+      "chance": 120.0,
+      "item": "create:precision_mechanism"
+    },
+    {
+      "chance": 8.0,
+      "item": "create:golden_sheet"
+    },
+    {
+      "chance": 8.0,
+      "item": "create:andesite_alloy"
+    },
+    {
+      "chance": 5.0,
+      "item": "create:cogwheel"
+    },
+    {
+      "chance": 3.0,
+      "item": "minecraft:gold_nugget"
+    },
+    {
+      "chance": 2.0,
+      "item": "create:shaft"
+    },
+    {
+      "chance": 2.0,
+      "item": "create:crushed_raw_gold"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:clock"
+    }
+  ],
   "sequence": [
     {
       "type": "create:deploying",
@@ -56,41 +90,7 @@
       ]
     }
   ],
-  "results": [
-    {
-      "item": "create:precision_mechanism",
-      "chance": 120.0
-    },
-    {
-      "item": "create:golden_sheet",
-      "chance": 8.0
-    },
-    {
-      "item": "create:andesite_alloy",
-      "chance": 8.0
-    },
-    {
-      "item": "create:cogwheel",
-      "chance": 5.0
-    },
-    {
-      "item": "minecraft:gold_nugget",
-      "chance": 3.0
-    },
-    {
-      "item": "create:shaft",
-      "chance": 2.0
-    },
-    {
-      "item": "create:crushed_raw_gold",
-      "chance": 2.0
-    },
-    {
-      "item": "minecraft:iron_ingot"
-    },
-    {
-      "item": "minecraft:clock"
-    }
-  ],
-  "loops": 5
+  "transitionalItem": {
+    "item": "create:incomplete_precision_mechanism"
+  }
 }

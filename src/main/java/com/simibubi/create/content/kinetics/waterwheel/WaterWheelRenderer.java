@@ -3,7 +3,6 @@ package com.simibubi.create.content.kinetics.waterwheel;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 import com.jozufozu.flywheel.core.StitchedSprite;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,10 +26,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends KineticBlockEntityRenderer<T> {
@@ -130,14 +130,15 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 			.getBlockModel(state);
 		if (model == null)
 			return null;
-		Random random = new Random(42L);
-		List<BakedQuad> quads = model.getQuads(state, side, random, EmptyModelData.INSTANCE);
+		RandomSource random = RandomSource.create();
+		random.setSeed(42L);
+		List<BakedQuad> quads = model.getQuads(state, side, random, ModelData.EMPTY, null);
 		if (!quads.isEmpty()) {
 			return quads.get(0)
 				.getSprite();
 		}
 		random.setSeed(42L);
-		quads = model.getQuads(state, null, random, EmptyModelData.INSTANCE);
+		quads = model.getQuads(state, null, random, ModelData.EMPTY, null);
 		if (!quads.isEmpty()) {
 			for (BakedQuad quad : quads) {
 				if (quad.getDirection() == side) {
@@ -145,7 +146,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 				}
 			}
 		}
-		return model.getParticleIcon(EmptyModelData.INSTANCE);
+		return model.getParticleIcon(ModelData.EMPTY);
 	}
 
 }

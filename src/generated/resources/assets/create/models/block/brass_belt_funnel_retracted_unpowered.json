@@ -1,10 +1,10 @@
 {
   "parent": "create:block/belt_funnel/block_retracted",
   "textures": {
-    "particle": "create:block/brass_block",
+    "base": "create:block/funnel/brass_funnel",
     "block": "create:block/brass_block",
     "direction": "create:block/funnel/brass_funnel_neutral",
-    "redstone": "create:block/funnel/brass_funnel_unpowered",
-    "base": "create:block/funnel/brass_funnel"
+    "particle": "create:block/brass_block",
+    "redstone": "create:block/funnel/brass_funnel_unpowered"
   }
 }

@@ -5,10 +5,10 @@
       "item": "minecraft:acacia_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:stripped_acacia_wood"
     }
-  ],
-  "processingTime": 50
+  ]
 }

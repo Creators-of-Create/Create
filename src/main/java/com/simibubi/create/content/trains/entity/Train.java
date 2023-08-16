@@ -1081,7 +1081,7 @@ public class Train {
 
 				stack = fuelItems.extractItem(slot, 1, false);
 				fuelTicks += burnTime * stack.getCount();
-				ItemStack containerItem = stack.getContainerItem();
+				ItemStack containerItem = stack.getCraftingRemainingItem();
 				if (!containerItem.isEmpty())
 					ItemHandlerHelper.insertItemStacked(fuelItems, containerItem, false);
 				return;

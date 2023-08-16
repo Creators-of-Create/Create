@@ -5,15 +5,15 @@
       "item": "minecraft:beetroot"
     }
   ],
+  "processingTime": 70,
   "results": [
     {
-      "item": "minecraft:red_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:red_dye"
     },
     {
-      "item": "minecraft:beetroot_seeds",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:beetroot_seeds"
     }
-  ],
-  "processingTime": 70
+  ]
 }

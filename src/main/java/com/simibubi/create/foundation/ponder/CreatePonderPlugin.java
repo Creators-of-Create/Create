@@ -8,8 +8,8 @@ import com.simibubi.create.Create;
 import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import com.simibubi.create.infrastructure.ponder.CreatePonderIndex;
 
+import net.createmod.ponder.foundation.PonderLevel;
 import net.createmod.ponder.foundation.PonderPlugin;
-import net.createmod.ponder.foundation.PonderWorld;
 import net.minecraft.world.level.ItemLike;
 
 public class CreatePonderPlugin implements PonderPlugin {
@@ -42,7 +42,7 @@ public class CreatePonderPlugin implements PonderPlugin {
 	}
 
 	@Override
-	public void onPonderWorldRestore(PonderWorld world) {
+	public void onPonderWorldRestore(PonderLevel world) {
 		PonderWorldBlockEntityFix.fixControllerBlockEntities(world);
 	}
 

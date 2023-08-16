@@ -9,7 +9,7 @@ import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.content.contraptions.StructureTransform;
 
 import net.createmod.catnip.utility.WorldAttached;
-import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
+import net.createmod.catnip.utility.levelWrappers.SchematicLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 public class SchematicInstances {
 
-	public static final WorldAttached<Cache<Integer, SchematicWorld>> loadedSchematics;
+	public static final WorldAttached<Cache<Integer, SchematicLevel>> loadedSchematics;
 
 	static {
 		loadedSchematics = new WorldAttached<>($ -> CacheBuilder.newBuilder()
@@ -35,20 +35,20 @@ public class SchematicInstances {
 	public static void register() {}
 
 	@Nullable
-	public static SchematicWorld get(Level world, ItemStack schematic) {
-		Cache<Integer, SchematicWorld> map = loadedSchematics.get(world);
+	public static SchematicLevel get(Level world, ItemStack schematic) {
+		Cache<Integer, SchematicLevel> map = loadedSchematics.get(world);
 		int hash = getHash(schematic);
-		SchematicWorld ifPresent = map.getIfPresent(hash);
+		SchematicLevel ifPresent = map.getIfPresent(hash);
 		if (ifPresent != null)
 			return ifPresent;
-		SchematicWorld loadWorld = loadWorld(world, schematic);
+		SchematicLevel loadWorld = loadWorld(world, schematic);
 		if (loadWorld == null)
 			return null;
 		map.put(hash, loadWorld);
 		return loadWorld;
 	}
 
-	private static SchematicWorld loadWorld(Level wrapped, ItemStack schematic) {
+	private static SchematicLevel loadWorld(Level wrapped, ItemStack schematic) {
 		if (schematic == null || !schematic.hasTag())
 			return null;
 		if (!schematic.getTag()
@@ -63,7 +63,7 @@ public class SchematicInstances {
 
 		BlockPos anchor = NbtUtils.readBlockPos(schematic.getTag()
 			.getCompound("Anchor"));
-		SchematicWorld world = new SchematicWorld(anchor, wrapped);
+		SchematicLevel world = new SchematicLevel(anchor, wrapped);
 		StructurePlaceSettings settings = SchematicItem.getSettings(schematic);
 		activeTemplate.placeInWorld(world, anchor, anchor, settings, wrapped.getRandom(), Block.UPDATE_CLIENTS);
 

@@ -4,10 +4,25 @@
       "model": "create:block/mechanical_drill/block",
       "x": 180
     },
-    "facing=up,waterlogged=false": {
-      "model": "create:block/mechanical_drill/block"
+    "facing=down,waterlogged=true": {
+      "model": "create:block/mechanical_drill/block",
+      "x": 180
+    },
+    "facing=east,waterlogged=false": {
+      "model": "create:block/mechanical_drill/block",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,waterlogged=true": {
+      "model": "create:block/mechanical_drill/block",
+      "x": 90,
+      "y": 90
     },
     "facing=north,waterlogged=false": {
+      "model": "create:block/mechanical_drill/block",
+      "x": 90
+    },
+    "facing=north,waterlogged=true": {
       "model": "create:block/mechanical_drill/block",
       "x": 90
     },
@@ -16,41 +31,26 @@
       "x": 90,
       "y": 180
     },
-    "facing=west,waterlogged=false": {
-      "model": "create:block/mechanical_drill/block",
-      "x": 90,
-      "y": 270
-    },
-    "facing=east,waterlogged=false": {
-      "model": "create:block/mechanical_drill/block",
-      "x": 90,
-      "y": 90
-    },
-    "facing=down,waterlogged=true": {
-      "model": "create:block/mechanical_drill/block",
-      "x": 180
-    },
-    "facing=up,waterlogged=true": {
-      "model": "create:block/mechanical_drill/block"
-    },
-    "facing=north,waterlogged=true": {
-      "model": "create:block/mechanical_drill/block",
-      "x": 90
-    },
     "facing=south,waterlogged=true": {
       "model": "create:block/mechanical_drill/block",
       "x": 90,
       "y": 180
     },
-    "facing=west,waterlogged=true": {
+    "facing=up,waterlogged=false": {
+      "model": "create:block/mechanical_drill/block"
+    },
+    "facing=up,waterlogged=true": {
+      "model": "create:block/mechanical_drill/block"
+    },
+    "facing=west,waterlogged=false": {
       "model": "create:block/mechanical_drill/block",
       "x": 90,
       "y": 270
     },
-    "facing=east,waterlogged=true": {
+    "facing=west,waterlogged=true": {
       "model": "create:block/mechanical_drill/block",
       "x": 90,
-      "y": 90
+      "y": 270
     }
   }
 }

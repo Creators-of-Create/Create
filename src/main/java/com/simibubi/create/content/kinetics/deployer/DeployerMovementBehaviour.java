@@ -33,7 +33,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.VecHelper;
-import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
+import net.createmod.catnip.utility.levelWrappers.SchematicLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -122,7 +122,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		CompoundTag tag = filter.getTag();
 		if (!tag.getBoolean("Deployed"))
 			return;
-		SchematicWorld schematicWorld = SchematicInstances.get(world, filter);
+		SchematicLevel schematicWorld = SchematicInstances.get(world, filter);
 		if (schematicWorld == null)
 			return;
 		if (!schematicWorld.getBounds()

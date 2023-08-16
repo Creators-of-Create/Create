@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.createmod.catnip.render.SuperRenderTypeBuffer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 
 public interface ISchematicTool {
 
@@ -15,7 +15,7 @@ public interface ISchematicTool {
 	public boolean handleMouseWheel(double delta);
 
 	public void renderTool(PoseStack ms, SuperRenderTypeBuffer buffer, Vec3 camera);
-	public void renderOverlay(ForgeIngameGui gui, PoseStack poseStack, float partialTicks, int width, int height);
+	public void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height);
 	public void renderOnSchematic(PoseStack ms, SuperRenderTypeBuffer buffer);
 
 }

@@ -1,29 +1,29 @@
 {
   "type": "create:crushing",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:storage_blocks/raw_osmium"
+      }
+    }
+  ],
   "ingredients": [
     {
       "tag": "forge:storage_blocks/raw_osmium"
     }
   ],
+  "processingTime": 400,
   "results": [
     {
-      "item": "create:crushed_raw_osmium",
-      "count": 9
+      "count": 9,
+      "item": "create:crushed_raw_osmium"
     },
     {
-      "item": "create:experience_nugget",
+      "chance": 0.75,
       "count": 9,
-      "chance": 0.75
-    }
-  ],
-  "processingTime": 400,
-  "conditions": [
-    {
-      "value": {
-        "tag": "forge:storage_blocks/raw_osmium",
-        "type": "forge:tag_empty"
-      },
-      "type": "forge:not"
+      "item": "create:experience_nugget"
     }
   ]
 }

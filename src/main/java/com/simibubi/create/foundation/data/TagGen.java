@@ -83,6 +83,7 @@ public class TagGen {
 
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.add(Blocks.IRON_BARS)
+			.add(Blocks.MANGROVE_ROOTS)
 			.addTag(BlockTags.CAMPFIRES)
 			.addTag(BlockTags.FENCES)
 			.addTag(BlockTags.LEAVES);
@@ -100,7 +101,7 @@ public class TagGen {
 			.addTag(BlockTags.SIGNS);
 
 		prov.tag(AllBlockTags.TREE_ATTACHMENTS.tag)
-			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
+			.add(Blocks.BEE_NEST, Blocks.COCOA, Blocks.MANGROVE_PROPAGULE, Blocks.MOSS_CARPET, Blocks.SHROOMLIGHT, Blocks.VINE);
 
 		prov.tag(AllBlockTags.WINDMILL_SAILS.tag)
 			.addTag(BlockTags.WOOL);
@@ -160,12 +161,12 @@ public class TagGen {
 
 		prov.tag(AllItemTags.VANILLA_STRIPPED_LOGS.tag)
 			.add(Items.STRIPPED_ACACIA_LOG, Items.STRIPPED_BIRCH_LOG, Items.STRIPPED_CRIMSON_STEM,
-					Items.STRIPPED_DARK_OAK_LOG, Items.STRIPPED_JUNGLE_LOG, Items.STRIPPED_OAK_LOG,
-					Items.STRIPPED_SPRUCE_LOG, Items.STRIPPED_WARPED_STEM);
+					Items.STRIPPED_DARK_OAK_LOG, Items.STRIPPED_JUNGLE_LOG, Items.STRIPPED_MANGROVE_LOG,
+					Items.STRIPPED_OAK_LOG, Items.STRIPPED_SPRUCE_LOG, Items.STRIPPED_WARPED_STEM);
 
 		prov.tag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
-			.add(Items.STRIPPED_ACACIA_WOOD, Items.STRIPPED_BIRCH_WOOD,
-					Items.STRIPPED_CRIMSON_HYPHAE, Items.STRIPPED_DARK_OAK_WOOD, Items.STRIPPED_JUNGLE_WOOD,
+			.add(Items.STRIPPED_ACACIA_WOOD, Items.STRIPPED_BIRCH_WOOD, Items.STRIPPED_CRIMSON_HYPHAE,
+					Items.STRIPPED_DARK_OAK_WOOD, Items.STRIPPED_JUNGLE_WOOD, Items.STRIPPED_MANGROVE_WOOD,
 					Items.STRIPPED_OAK_WOOD, Items.STRIPPED_SPRUCE_WOOD, Items.STRIPPED_WARPED_HYPHAE);
 
 		prov.tag(ItemTags.BEACON_PAYMENT_ITEMS)

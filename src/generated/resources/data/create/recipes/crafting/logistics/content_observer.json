@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "create:brass_casing"
+    },
+    "I": {
+      "item": "minecraft:observer"
+    },
+    "R": {
+      "item": "create:electron_tube"
+    }
+  },
   "pattern": [
     "R",
     "B",
     "I"
   ],
-  "key": {
-    "B": {
-      "item": "create:brass_casing"
-    },
-    "R": {
-      "item": "create:electron_tube"
-    },
-    "I": {
-      "item": "minecraft:observer"
-    }
-  },
   "result": {
     "item": "create:content_observer"
   }

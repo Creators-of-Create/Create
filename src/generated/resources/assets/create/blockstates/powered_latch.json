@@ -1,124 +1,124 @@
 {
   "variants": {
-    "facing=north,powered=false,powered_side=false,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 180
-    },
-    "facing=south,powered=false,powered_side=false,powering=false": {
-      "model": "create:block/powered_latch"
-    },
-    "facing=west,powered=false,powered_side=false,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 90
-    },
     "facing=east,powered=false,powered_side=false,powering=false": {
       "model": "create:block/powered_latch",
       "y": 270
-    },
-    "facing=north,powered=true,powered_side=false,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 180
-    },
-    "facing=south,powered=true,powered_side=false,powering=false": {
-      "model": "create:block/powered_latch"
-    },
-    "facing=west,powered=true,powered_side=false,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 90
-    },
-    "facing=east,powered=true,powered_side=false,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 270
-    },
-    "facing=north,powered=false,powered_side=true,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 180
-    },
-    "facing=south,powered=false,powered_side=true,powering=false": {
-      "model": "create:block/powered_latch"
-    },
-    "facing=west,powered=false,powered_side=true,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 90
-    },
-    "facing=east,powered=false,powered_side=true,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 270
-    },
-    "facing=north,powered=true,powered_side=true,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 180
-    },
-    "facing=south,powered=true,powered_side=true,powering=false": {
-      "model": "create:block/powered_latch"
-    },
-    "facing=west,powered=true,powered_side=true,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 90
-    },
-    "facing=east,powered=true,powered_side=true,powering=false": {
-      "model": "create:block/powered_latch",
-      "y": 270
-    },
-    "facing=north,powered=false,powered_side=false,powering=true": {
-      "model": "create:block/powered_latch_powered",
-      "y": 180
-    },
-    "facing=south,powered=false,powered_side=false,powering=true": {
-      "model": "create:block/powered_latch_powered"
-    },
-    "facing=west,powered=false,powered_side=false,powering=true": {
-      "model": "create:block/powered_latch_powered",
-      "y": 90
     },
     "facing=east,powered=false,powered_side=false,powering=true": {
       "model": "create:block/powered_latch_powered",
       "y": 270
     },
-    "facing=north,powered=true,powered_side=false,powering=true": {
-      "model": "create:block/powered_latch_powered",
-      "y": 180
-    },
-    "facing=south,powered=true,powered_side=false,powering=true": {
-      "model": "create:block/powered_latch_powered"
-    },
-    "facing=west,powered=true,powered_side=false,powering=true": {
-      "model": "create:block/powered_latch_powered",
-      "y": 90
-    },
-    "facing=east,powered=true,powered_side=false,powering=true": {
-      "model": "create:block/powered_latch_powered",
+    "facing=east,powered=false,powered_side=true,powering=false": {
+      "model": "create:block/powered_latch",
       "y": 270
-    },
-    "facing=north,powered=false,powered_side=true,powering=true": {
-      "model": "create:block/powered_latch_powered",
-      "y": 180
-    },
-    "facing=south,powered=false,powered_side=true,powering=true": {
-      "model": "create:block/powered_latch_powered"
-    },
-    "facing=west,powered=false,powered_side=true,powering=true": {
-      "model": "create:block/powered_latch_powered",
-      "y": 90
     },
     "facing=east,powered=false,powered_side=true,powering=true": {
       "model": "create:block/powered_latch_powered",
       "y": 270
     },
-    "facing=north,powered=true,powered_side=true,powering=true": {
-      "model": "create:block/powered_latch_powered",
-      "y": 180
+    "facing=east,powered=true,powered_side=false,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 270
     },
-    "facing=south,powered=true,powered_side=true,powering=true": {
-      "model": "create:block/powered_latch_powered"
-    },
-    "facing=west,powered=true,powered_side=true,powering=true": {
+    "facing=east,powered=true,powered_side=false,powering=true": {
       "model": "create:block/powered_latch_powered",
-      "y": 90
+      "y": 270
+    },
+    "facing=east,powered=true,powered_side=true,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 270
     },
     "facing=east,powered=true,powered_side=true,powering=true": {
       "model": "create:block/powered_latch_powered",
       "y": 270
+    },
+    "facing=north,powered=false,powered_side=false,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 180
+    },
+    "facing=north,powered=false,powered_side=false,powering=true": {
+      "model": "create:block/powered_latch_powered",
+      "y": 180
+    },
+    "facing=north,powered=false,powered_side=true,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 180
+    },
+    "facing=north,powered=false,powered_side=true,powering=true": {
+      "model": "create:block/powered_latch_powered",
+      "y": 180
+    },
+    "facing=north,powered=true,powered_side=false,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 180
+    },
+    "facing=north,powered=true,powered_side=false,powering=true": {
+      "model": "create:block/powered_latch_powered",
+      "y": 180
+    },
+    "facing=north,powered=true,powered_side=true,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 180
+    },
+    "facing=north,powered=true,powered_side=true,powering=true": {
+      "model": "create:block/powered_latch_powered",
+      "y": 180
+    },
+    "facing=south,powered=false,powered_side=false,powering=false": {
+      "model": "create:block/powered_latch"
+    },
+    "facing=south,powered=false,powered_side=false,powering=true": {
+      "model": "create:block/powered_latch_powered"
+    },
+    "facing=south,powered=false,powered_side=true,powering=false": {
+      "model": "create:block/powered_latch"
+    },
+    "facing=south,powered=false,powered_side=true,powering=true": {
+      "model": "create:block/powered_latch_powered"
+    },
+    "facing=south,powered=true,powered_side=false,powering=false": {
+      "model": "create:block/powered_latch"
+    },
+    "facing=south,powered=true,powered_side=false,powering=true": {
+      "model": "create:block/powered_latch_powered"
+    },
+    "facing=south,powered=true,powered_side=true,powering=false": {
+      "model": "create:block/powered_latch"
+    },
+    "facing=south,powered=true,powered_side=true,powering=true": {
+      "model": "create:block/powered_latch_powered"
+    },
+    "facing=west,powered=false,powered_side=false,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 90
+    },
+    "facing=west,powered=false,powered_side=false,powering=true": {
+      "model": "create:block/powered_latch_powered",
+      "y": 90
+    },
+    "facing=west,powered=false,powered_side=true,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 90
+    },
+    "facing=west,powered=false,powered_side=true,powering=true": {
+      "model": "create:block/powered_latch_powered",
+      "y": 90
+    },
+    "facing=west,powered=true,powered_side=false,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 90
+    },
+    "facing=west,powered=true,powered_side=false,powering=true": {
+      "model": "create:block/powered_latch_powered",
+      "y": 90
+    },
+    "facing=west,powered=true,powered_side=true,powering=false": {
+      "model": "create:block/powered_latch",
+      "y": 90
+    },
+    "facing=west,powered=true,powered_side=true,powering=true": {
+      "model": "create:block/powered_latch_powered",
+      "y": 90
     }
   }
 }

@@ -21,9 +21,9 @@ import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SpriteShiftEntry;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
+import net.createmod.catnip.utility.levelWrappers.WrappedLevel;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -75,7 +75,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			PoseStack localTransforms = new PoseStack();
             TransformStack msr = TransformStack.cast(localTransforms);
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-			float renderTick = WorldTickHolder.getRenderTime(be.getLevel());
+			float renderTick = LevelTickHolder.getRenderTime(be.getLevel());
 
 			msr.centre()
 					.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0))
@@ -194,7 +194,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		boolean slopeAlongX = beltFacing
 								.getAxis() == Axis.X;
 
-		boolean onContraption = be.getLevel() instanceof WrappedWorld;
+		boolean onContraption = be.getLevel() instanceof WrappedLevel;
 
 		for (TransportedItemStack transported : be.getInventory()
 			.getTransportedItems()) {

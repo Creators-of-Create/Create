@@ -1,24 +1,7 @@
 {
   "parent": "create:hose_pulley",
-  "display": {
-    "icon": {
-      "item": "create:chocolate_bucket"
-    },
-    "title": {
-      "translate": "advancement.create.chocolate_bucket"
-    },
-    "description": {
-      "color": "#DBA213",
-      "translate": "advancement.create.chocolate_bucket.desc"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
   "criteria": {
     "0": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -27,7 +10,24 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "color": "#DBA213",
+      "translate": "advancement.create.chocolate_bucket.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:chocolate_bucket"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.create.chocolate_bucket"
     }
   },
   "requirements": [

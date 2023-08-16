@@ -5,15 +5,15 @@
       "tag": "create:stone_types/asurine"
     }
   ],
+  "processingTime": 250,
   "results": [
     {
-      "item": "create:crushed_raw_zinc",
-      "chance": 0.3
+      "chance": 0.3,
+      "item": "create:crushed_raw_zinc"
     },
     {
-      "item": "create:zinc_nugget",
-      "chance": 0.3
+      "chance": 0.3,
+      "item": "create:zinc_nugget"
     }
-  ],
-  "processingTime": 250
+  ]
 }

@@ -1,10 +1,10 @@
 {
   "type": "minecraft:smithing",
-  "base": {
-    "item": "minecraft:netherite_boots"
-  },
   "addition": {
     "item": "create:copper_diving_boots"
+  },
+  "base": {
+    "item": "minecraft:netherite_boots"
   },
   "result": {
     "item": "create:netherite_diving_boots"

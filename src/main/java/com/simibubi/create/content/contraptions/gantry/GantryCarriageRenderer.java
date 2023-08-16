@@ -10,7 +10,7 @@ import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.math.AngleHelper;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -70,7 +70,7 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCar
 	}
 
 	public static float getAngleForBE(KineticBlockEntity be, final BlockPos pos, Axis axis) {
-		float time = WorldTickHolder.getRenderTime(be.getLevel());
+		float time = LevelTickHolder.getRenderTime(be.getLevel());
 		float offset = getRotationOffsetForPosition(be, pos, axis);
 		return (time * be.getSpeed() * 3f / 20 + offset) % 360;
 	}

@@ -1,1105 +1,513 @@
 {
   "variants": {
-    "casing=false,facing=north,part=start,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=start,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_start",
-      "y": 180
-    },
-    "casing=false,facing=south,part=start,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=start,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_start"
-    },
-    "casing=false,facing=west,part=start,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=start,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_start",
-      "y": 90
-    },
-    "casing=false,facing=east,part=start,slope=horizontal,waterlogged=false": {
+    "casing=false,facing=east,part=end,slope=downward,waterlogged=false": {
       "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=east,part=start,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_start",
-      "y": 270
-    },
-    "casing=false,facing=north,part=middle,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=middle,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_middle",
-      "y": 180
-    },
-    "casing=false,facing=south,part=middle,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=middle,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_middle"
-    },
-    "casing=false,facing=west,part=middle,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=middle,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_middle",
-      "y": 90
-    },
-    "casing=false,facing=east,part=middle,slope=horizontal,waterlogged=false": {
+    "casing=false,facing=east,part=end,slope=downward,waterlogged=true": {
       "model": "create:block/belt/particle",
       "y": 270
-    },
-    "casing=true,facing=east,part=middle,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_middle",
-      "y": 270
-    },
-    "casing=false,facing=north,part=end,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=end,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_end",
-      "y": 180
-    },
-    "casing=false,facing=south,part=end,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=end,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_end"
-    },
-    "casing=false,facing=west,part=end,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=end,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_end",
-      "y": 90
     },
     "casing=false,facing=east,part=end,slope=horizontal,waterlogged=false": {
       "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=east,part=end,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_end",
-      "y": 270
-    },
-    "casing=false,facing=north,part=pulley,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=pulley,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_pulley",
-      "y": 180
-    },
-    "casing=false,facing=south,part=pulley,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=pulley,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_pulley"
-    },
-    "casing=false,facing=west,part=pulley,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=pulley,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_pulley",
-      "y": 90
-    },
-    "casing=false,facing=east,part=pulley,slope=horizontal,waterlogged=false": {
+    "casing=false,facing=east,part=end,slope=horizontal,waterlogged=true": {
       "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=east,part=pulley,slope=horizontal,waterlogged=false": {
-      "model": "create:block/belt_casing/horizontal_pulley",
-      "y": 270
-    },
-    "casing=false,facing=north,part=start,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=north,part=start,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_start"
-    },
-    "casing=false,facing=south,part=start,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=south,part=start,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 180
-    },
-    "casing=false,facing=west,part=start,slope=upward,waterlogged=false": {
+    "casing=false,facing=east,part=end,slope=sideways,waterlogged=false": {
       "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=west,part=start,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 270
-    },
-    "casing=false,facing=east,part=start,slope=upward,waterlogged=false": {
+    "casing=false,facing=east,part=end,slope=sideways,waterlogged=true": {
       "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=east,part=start,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 90
-    },
-    "casing=false,facing=north,part=middle,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=north,part=middle,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_middle"
-    },
-    "casing=false,facing=south,part=middle,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=south,part=middle,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 180
-    },
-    "casing=false,facing=west,part=middle,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=west,part=middle,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 270
-    },
-    "casing=false,facing=east,part=middle,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=east,part=middle,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 90
-    },
-    "casing=false,facing=north,part=end,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=north,part=end,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_end"
-    },
-    "casing=false,facing=south,part=end,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=south,part=end,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 180
-    },
-    "casing=false,facing=west,part=end,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=west,part=end,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_end",
       "y": 270
     },
     "casing=false,facing=east,part=end,slope=upward,waterlogged=false": {
       "model": "create:block/belt/particle",
       "y": 90
     },
-    "casing=true,facing=east,part=end,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 90
-    },
-    "casing=false,facing=north,part=pulley,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=north,part=pulley,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_pulley"
-    },
-    "casing=false,facing=south,part=pulley,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=south,part=pulley,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 180
-    },
-    "casing=false,facing=west,part=pulley,slope=upward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=west,part=pulley,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 270
-    },
-    "casing=false,facing=east,part=pulley,slope=upward,waterlogged=false": {
+    "casing=false,facing=east,part=end,slope=upward,waterlogged=true": {
       "model": "create:block/belt/particle",
       "y": 90
-    },
-    "casing=true,facing=east,part=pulley,slope=upward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 90
-    },
-    "casing=false,facing=north,part=start,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=start,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 180
-    },
-    "casing=false,facing=south,part=start,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=start,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_end"
-    },
-    "casing=false,facing=west,part=start,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=start,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 90
-    },
-    "casing=false,facing=east,part=start,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=start,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 270
-    },
-    "casing=false,facing=north,part=middle,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=middle,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 180
-    },
-    "casing=false,facing=south,part=middle,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=middle,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_middle"
-    },
-    "casing=false,facing=west,part=middle,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=middle,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 90
-    },
-    "casing=false,facing=east,part=middle,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=middle,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 270
-    },
-    "casing=false,facing=north,part=end,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=end,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 180
-    },
-    "casing=false,facing=south,part=end,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=end,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_start"
-    },
-    "casing=false,facing=west,part=end,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=end,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 90
-    },
-    "casing=false,facing=east,part=end,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=end,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 270
-    },
-    "casing=false,facing=north,part=pulley,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=pulley,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 180
-    },
-    "casing=false,facing=south,part=pulley,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=pulley,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_pulley"
-    },
-    "casing=false,facing=west,part=pulley,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=pulley,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 90
-    },
-    "casing=false,facing=east,part=pulley,slope=downward,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=pulley,slope=downward,waterlogged=false": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 270
-    },
-    "casing=false,facing=north,part=start,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 180
-    },
-    "casing=true,facing=north,part=start,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 90,
-      "y": 270
-    },
-    "casing=false,facing=south,part=start,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90
-    },
-    "casing=true,facing=south,part=start,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 90,
-      "y": 90
-    },
-    "casing=false,facing=west,part=start,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 90
-    },
-    "casing=true,facing=west,part=start,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 90,
-      "y": 180
-    },
-    "casing=false,facing=east,part=start,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 270
-    },
-    "casing=true,facing=east,part=start,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 90
-    },
-    "casing=false,facing=north,part=middle,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 180
-    },
-    "casing=true,facing=north,part=middle,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 90,
-      "y": 270
-    },
-    "casing=false,facing=south,part=middle,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90
-    },
-    "casing=true,facing=south,part=middle,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 90,
-      "y": 90
-    },
-    "casing=false,facing=west,part=middle,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 90
-    },
-    "casing=true,facing=west,part=middle,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 90,
-      "y": 180
-    },
-    "casing=false,facing=east,part=middle,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 270
-    },
-    "casing=true,facing=east,part=middle,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 90
-    },
-    "casing=false,facing=north,part=end,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 180
-    },
-    "casing=true,facing=north,part=end,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 90,
-      "y": 270
-    },
-    "casing=false,facing=south,part=end,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90
-    },
-    "casing=true,facing=south,part=end,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 90,
-      "y": 90
-    },
-    "casing=false,facing=west,part=end,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 90
-    },
-    "casing=true,facing=west,part=end,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 90,
-      "y": 180
     },
     "casing=false,facing=east,part=end,slope=vertical,waterlogged=false": {
       "model": "create:block/belt/particle",
       "x": 90,
       "y": 270
     },
-    "casing=true,facing=east,part=end,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 90
-    },
-    "casing=false,facing=north,part=pulley,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 180
-    },
-    "casing=true,facing=north,part=pulley,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 90,
-      "y": 270
-    },
-    "casing=false,facing=south,part=pulley,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90
-    },
-    "casing=true,facing=south,part=pulley,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 90,
-      "y": 90
-    },
-    "casing=false,facing=west,part=pulley,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 90
-    },
-    "casing=true,facing=west,part=pulley,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 90,
-      "y": 180
-    },
-    "casing=false,facing=east,part=pulley,slope=vertical,waterlogged=false": {
+    "casing=false,facing=east,part=end,slope=vertical,waterlogged=true": {
       "model": "create:block/belt/particle",
       "x": 90,
       "y": 270
     },
-    "casing=true,facing=east,part=pulley,slope=vertical,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 90
-    },
-    "casing=false,facing=north,part=start,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 180
-    },
-    "casing=true,facing=north,part=start,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 180,
-      "y": 180
-    },
-    "casing=false,facing=south,part=start,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=start,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_start"
-    },
-    "casing=false,facing=west,part=start,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 90
-    },
-    "casing=true,facing=west,part=start,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 180,
-      "y": 90
-    },
-    "casing=false,facing=east,part=start,slope=sideways,waterlogged=false": {
+    "casing=false,facing=east,part=middle,slope=downward,waterlogged=false": {
       "model": "create:block/belt/particle",
       "y": 270
-    },
-    "casing=true,facing=east,part=start,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_start",
-      "y": 270
-    },
-    "casing=false,facing=north,part=middle,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 180
-    },
-    "casing=true,facing=north,part=middle,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 180,
-      "y": 180
-    },
-    "casing=false,facing=south,part=middle,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=middle,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_middle"
-    },
-    "casing=false,facing=west,part=middle,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 90
-    },
-    "casing=true,facing=west,part=middle,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 180,
-      "y": 90
-    },
-    "casing=false,facing=east,part=middle,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=middle,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "y": 270
-    },
-    "casing=false,facing=north,part=end,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 180
-    },
-    "casing=true,facing=north,part=end,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 180,
-      "y": 180
-    },
-    "casing=false,facing=south,part=end,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=end,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_end"
-    },
-    "casing=false,facing=west,part=end,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 90
-    },
-    "casing=true,facing=west,part=end,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 180,
-      "y": 90
-    },
-    "casing=false,facing=east,part=end,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=end,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_end",
-      "y": 270
-    },
-    "casing=false,facing=north,part=pulley,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 180
-    },
-    "casing=true,facing=north,part=pulley,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 180,
-      "y": 180
-    },
-    "casing=false,facing=south,part=pulley,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=pulley,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_pulley"
-    },
-    "casing=false,facing=west,part=pulley,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 90
-    },
-    "casing=true,facing=west,part=pulley,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 180,
-      "y": 90
-    },
-    "casing=false,facing=east,part=pulley,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=pulley,slope=sideways,waterlogged=false": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "y": 270
-    },
-    "casing=false,facing=north,part=start,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=start,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_start",
-      "y": 180
-    },
-    "casing=false,facing=south,part=start,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=start,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_start"
-    },
-    "casing=false,facing=west,part=start,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=start,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_start",
-      "y": 90
-    },
-    "casing=false,facing=east,part=start,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=start,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_start",
-      "y": 270
-    },
-    "casing=false,facing=north,part=middle,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=middle,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_middle",
-      "y": 180
-    },
-    "casing=false,facing=south,part=middle,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=middle,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_middle"
-    },
-    "casing=false,facing=west,part=middle,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=middle,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_middle",
-      "y": 90
-    },
-    "casing=false,facing=east,part=middle,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=middle,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_middle",
-      "y": 270
-    },
-    "casing=false,facing=north,part=end,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=end,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_end",
-      "y": 180
-    },
-    "casing=false,facing=south,part=end,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=end,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_end"
-    },
-    "casing=false,facing=west,part=end,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=end,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_end",
-      "y": 90
-    },
-    "casing=false,facing=east,part=end,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=end,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_end",
-      "y": 270
-    },
-    "casing=false,facing=north,part=pulley,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=pulley,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_pulley",
-      "y": 180
-    },
-    "casing=false,facing=south,part=pulley,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=pulley,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_pulley"
-    },
-    "casing=false,facing=west,part=pulley,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=pulley,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_pulley",
-      "y": 90
-    },
-    "casing=false,facing=east,part=pulley,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=pulley,slope=horizontal,waterlogged=true": {
-      "model": "create:block/belt_casing/horizontal_pulley",
-      "y": 270
-    },
-    "casing=false,facing=north,part=start,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=north,part=start,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_start"
-    },
-    "casing=false,facing=south,part=start,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=south,part=start,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 180
-    },
-    "casing=false,facing=west,part=start,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=west,part=start,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 270
-    },
-    "casing=false,facing=east,part=start,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=east,part=start,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 90
-    },
-    "casing=false,facing=north,part=middle,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=north,part=middle,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_middle"
-    },
-    "casing=false,facing=south,part=middle,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=south,part=middle,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 180
-    },
-    "casing=false,facing=west,part=middle,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=west,part=middle,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 270
-    },
-    "casing=false,facing=east,part=middle,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=east,part=middle,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 90
-    },
-    "casing=false,facing=north,part=end,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=north,part=end,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_end"
-    },
-    "casing=false,facing=south,part=end,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=south,part=end,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 180
-    },
-    "casing=false,facing=west,part=end,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=west,part=end,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 270
-    },
-    "casing=false,facing=east,part=end,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=east,part=end,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 90
-    },
-    "casing=false,facing=north,part=pulley,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=north,part=pulley,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_pulley"
-    },
-    "casing=false,facing=south,part=pulley,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=south,part=pulley,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 180
-    },
-    "casing=false,facing=west,part=pulley,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=west,part=pulley,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 270
-    },
-    "casing=false,facing=east,part=pulley,slope=upward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=east,part=pulley,slope=upward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 90
-    },
-    "casing=false,facing=north,part=start,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=start,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 180
-    },
-    "casing=false,facing=south,part=start,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=start,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_end"
-    },
-    "casing=false,facing=west,part=start,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=start,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 90
-    },
-    "casing=false,facing=east,part=start,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 270
-    },
-    "casing=true,facing=east,part=start,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_end",
-      "y": 270
-    },
-    "casing=false,facing=north,part=middle,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=middle,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 180
-    },
-    "casing=false,facing=south,part=middle,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=middle,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_middle"
-    },
-    "casing=false,facing=west,part=middle,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=middle,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 90
     },
     "casing=false,facing=east,part=middle,slope=downward,waterlogged=true": {
       "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=east,part=middle,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_middle",
-      "y": 270
-    },
-    "casing=false,facing=north,part=end,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=end,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 180
-    },
-    "casing=false,facing=south,part=end,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=end,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_start"
-    },
-    "casing=false,facing=west,part=end,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=end,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 90
-    },
-    "casing=false,facing=east,part=end,slope=downward,waterlogged=true": {
+    "casing=false,facing=east,part=middle,slope=horizontal,waterlogged=false": {
       "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=east,part=end,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_start",
-      "y": 270
-    },
-    "casing=false,facing=north,part=pulley,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 180
-    },
-    "casing=true,facing=north,part=pulley,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 180
-    },
-    "casing=false,facing=south,part=pulley,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=pulley,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_pulley"
-    },
-    "casing=false,facing=west,part=pulley,slope=downward,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "y": 90
-    },
-    "casing=true,facing=west,part=pulley,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_pulley",
-      "y": 90
-    },
-    "casing=false,facing=east,part=pulley,slope=downward,waterlogged=true": {
+    "casing=false,facing=east,part=middle,slope=horizontal,waterlogged=true": {
       "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=east,part=pulley,slope=downward,waterlogged=true": {
-      "model": "create:block/belt_casing/diagonal_pulley",
+    "casing=false,facing=east,part=middle,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=false,facing=north,part=start,slope=vertical,waterlogged=true": {
+    "casing=false,facing=east,part=middle,slope=sideways,waterlogged=true": {
       "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 180
-    },
-    "casing=true,facing=north,part=start,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 90,
       "y": 270
     },
-    "casing=false,facing=south,part=start,slope=vertical,waterlogged=true": {
+    "casing=false,facing=east,part=middle,slope=upward,waterlogged=false": {
       "model": "create:block/belt/particle",
-      "x": 90
-    },
-    "casing=true,facing=south,part=start,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 90,
       "y": 90
     },
-    "casing=false,facing=west,part=start,slope=vertical,waterlogged=true": {
+    "casing=false,facing=east,part=middle,slope=upward,waterlogged=true": {
       "model": "create:block/belt/particle",
-      "x": 90,
       "y": 90
     },
-    "casing=true,facing=west,part=start,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 90,
-      "y": 180
-    },
-    "casing=false,facing=east,part=start,slope=vertical,waterlogged=true": {
+    "casing=false,facing=east,part=middle,slope=vertical,waterlogged=false": {
       "model": "create:block/belt/particle",
       "x": 90,
       "y": 270
-    },
-    "casing=true,facing=east,part=start,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 90
-    },
-    "casing=false,facing=north,part=middle,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 180
-    },
-    "casing=true,facing=north,part=middle,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 90,
-      "y": 270
-    },
-    "casing=false,facing=south,part=middle,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "x": 90
-    },
-    "casing=true,facing=south,part=middle,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 90,
-      "y": 90
-    },
-    "casing=false,facing=west,part=middle,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 90
-    },
-    "casing=true,facing=west,part=middle,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 90,
-      "y": 180
     },
     "casing=false,facing=east,part=middle,slope=vertical,waterlogged=true": {
       "model": "create:block/belt/particle",
       "x": 90,
       "y": 270
     },
-    "casing=true,facing=east,part=middle,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 90
+    "casing=false,facing=east,part=pulley,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=pulley,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=pulley,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=pulley,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=pulley,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=pulley,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=pulley,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=east,part=pulley,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=east,part=pulley,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 270
+    },
+    "casing=false,facing=east,part=pulley,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 270
+    },
+    "casing=false,facing=east,part=start,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=start,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=start,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=start,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=start,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=start,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=east,part=start,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=east,part=start,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=east,part=start,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 270
+    },
+    "casing=false,facing=east,part=start,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 270
+    },
+    "casing=false,facing=north,part=end,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=end,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=end,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=end,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=end,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=north,part=end,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=north,part=end,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=north,part=end,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=north,part=end,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 180
     },
     "casing=false,facing=north,part=end,slope=vertical,waterlogged=true": {
       "model": "create:block/belt/particle",
       "x": 90,
       "y": 180
     },
-    "casing=true,facing=north,part=end,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_start",
+    "casing=false,facing=north,part=middle,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=middle,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=middle,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=middle,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=middle,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=north,part=middle,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=north,part=middle,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=north,part=middle,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=north,part=middle,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
       "x": 90,
-      "y": 270
+      "y": 180
+    },
+    "casing=false,facing=north,part=middle,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 180
+    },
+    "casing=false,facing=north,part=pulley,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=pulley,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=pulley,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=pulley,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=pulley,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=north,part=pulley,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=north,part=pulley,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=north,part=pulley,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=north,part=pulley,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 180
+    },
+    "casing=false,facing=north,part=pulley,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 180
+    },
+    "casing=false,facing=north,part=start,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=start,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=start,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=start,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=north,part=start,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=north,part=start,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=false,facing=north,part=start,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=north,part=start,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=north,part=start,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 180
+    },
+    "casing=false,facing=north,part=start,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 180
+    },
+    "casing=false,facing=south,part=end,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=end,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=end,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=end,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=end,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=end,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=end,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=south,part=end,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=south,part=end,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90
     },
     "casing=false,facing=south,part=end,slope=vertical,waterlogged=true": {
       "model": "create:block/belt/particle",
       "x": 90
     },
-    "casing=true,facing=south,part=end,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_end",
+    "casing=false,facing=south,part=middle,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=middle,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=middle,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=middle,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=middle,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=middle,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=middle,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=south,part=middle,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=south,part=middle,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90
+    },
+    "casing=false,facing=south,part=middle,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90
+    },
+    "casing=false,facing=south,part=pulley,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=pulley,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=pulley,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=pulley,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=pulley,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=pulley,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=pulley,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=south,part=pulley,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=south,part=pulley,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90
+    },
+    "casing=false,facing=south,part=pulley,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90
+    },
+    "casing=false,facing=south,part=start,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=start,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=start,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=start,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=start,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=start,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle"
+    },
+    "casing=false,facing=south,part=start,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=south,part=start,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 180
+    },
+    "casing=false,facing=south,part=start,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90
+    },
+    "casing=false,facing=south,part=start,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90
+    },
+    "casing=false,facing=west,part=end,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=end,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=end,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=end,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=end,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=west,part=end,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=west,part=end,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=west,part=end,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=west,part=end,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
       "x": 90,
       "y": 90
     },
@@ -1108,36 +516,86 @@
       "x": 90,
       "y": 90
     },
-    "casing=true,facing=west,part=end,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_start",
-      "x": 90,
-      "y": 180
-    },
-    "casing=false,facing=east,part=end,slope=vertical,waterlogged=true": {
+    "casing=false,facing=west,part=middle,slope=downward,waterlogged=false": {
       "model": "create:block/belt/particle",
-      "x": 90,
+      "y": 90
+    },
+    "casing=false,facing=west,part=middle,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=middle,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=middle,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=middle,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=west,part=middle,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=west,part=middle,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=east,part=end,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 90
-    },
-    "casing=false,facing=north,part=pulley,slope=vertical,waterlogged=true": {
+    "casing=false,facing=west,part=middle,slope=upward,waterlogged=true": {
       "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 180
-    },
-    "casing=true,facing=north,part=pulley,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 90,
       "y": 270
     },
-    "casing=false,facing=south,part=pulley,slope=vertical,waterlogged=true": {
+    "casing=false,facing=west,part=middle,slope=vertical,waterlogged=false": {
       "model": "create:block/belt/particle",
-      "x": 90
+      "x": 90,
+      "y": 90
     },
-    "casing=true,facing=south,part=pulley,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_pulley",
+    "casing=false,facing=west,part=middle,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 90
+    },
+    "casing=false,facing=west,part=pulley,slope=downward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=pulley,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=pulley,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=pulley,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=pulley,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=west,part=pulley,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=false,facing=west,part=pulley,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=west,part=pulley,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=west,part=pulley,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
       "x": 90,
       "y": 90
     },
@@ -1146,90 +604,228 @@
       "x": 90,
       "y": 90
     },
-    "casing=true,facing=west,part=pulley,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 90,
-      "y": 180
-    },
-    "casing=false,facing=east,part=pulley,slope=vertical,waterlogged=true": {
+    "casing=false,facing=west,part=start,slope=downward,waterlogged=false": {
       "model": "create:block/belt/particle",
-      "x": 90,
-      "y": 270
+      "y": 90
     },
-    "casing=true,facing=east,part=pulley,slope=vertical,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_pulley",
-      "x": 90
+    "casing=false,facing=west,part=start,slope=downward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
     },
-    "casing=false,facing=north,part=start,slope=sideways,waterlogged=true": {
+    "casing=false,facing=west,part=start,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=start,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 90
+    },
+    "casing=false,facing=west,part=start,slope=sideways,waterlogged=false": {
       "model": "create:block/belt/particle",
       "x": 180,
-      "y": 180
-    },
-    "casing=true,facing=north,part=start,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_end",
-      "x": 180,
-      "y": 180
-    },
-    "casing=false,facing=south,part=start,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=start,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_start"
+      "y": 90
     },
     "casing=false,facing=west,part=start,slope=sideways,waterlogged=true": {
       "model": "create:block/belt/particle",
       "x": 180,
       "y": 90
     },
-    "casing=true,facing=west,part=start,slope=sideways,waterlogged=true": {
+    "casing=false,facing=west,part=start,slope=upward,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=west,part=start,slope=upward,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "y": 270
+    },
+    "casing=false,facing=west,part=start,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 90
+    },
+    "casing=false,facing=west,part=start,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt/particle",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=east,part=end,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 270
+    },
+    "casing=true,facing=east,part=end,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 270
+    },
+    "casing=true,facing=east,part=end,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_end",
+      "y": 270
+    },
+    "casing=true,facing=east,part=end,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_end",
+      "y": 270
+    },
+    "casing=true,facing=east,part=end,slope=sideways,waterlogged=false": {
       "model": "create:block/belt_casing/sideways_end",
-      "x": 180,
-      "y": 90
-    },
-    "casing=false,facing=east,part=start,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
       "y": 270
     },
-    "casing=true,facing=east,part=start,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_start",
+    "casing=true,facing=east,part=end,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_end",
       "y": 270
     },
-    "casing=false,facing=north,part=middle,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 180
-    },
-    "casing=true,facing=north,part=middle,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 180,
-      "y": 180
-    },
-    "casing=false,facing=south,part=middle,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle"
-    },
-    "casing=true,facing=south,part=middle,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_middle"
-    },
-    "casing=false,facing=west,part=middle,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "x": 180,
+    "casing=true,facing=east,part=end,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_end",
       "y": 90
     },
-    "casing=true,facing=west,part=middle,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_middle",
-      "x": 180,
+    "casing=true,facing=east,part=end,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_end",
       "y": 90
     },
-    "casing=false,facing=east,part=middle,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
+    "casing=true,facing=east,part=end,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 90
+    },
+    "casing=true,facing=east,part=end,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 90
+    },
+    "casing=true,facing=east,part=middle,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 270
+    },
+    "casing=true,facing=east,part=middle,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 270
+    },
+    "casing=true,facing=east,part=middle,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_middle",
+      "y": 270
+    },
+    "casing=true,facing=east,part=middle,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_middle",
+      "y": 270
+    },
+    "casing=true,facing=east,part=middle,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_middle",
       "y": 270
     },
     "casing=true,facing=east,part=middle,slope=sideways,waterlogged=true": {
       "model": "create:block/belt_casing/sideways_middle",
       "y": 270
     },
-    "casing=false,facing=north,part=end,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
+    "casing=true,facing=east,part=middle,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 90
+    },
+    "casing=true,facing=east,part=middle,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 90
+    },
+    "casing=true,facing=east,part=middle,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 90
+    },
+    "casing=true,facing=east,part=middle,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 90
+    },
+    "casing=true,facing=east,part=pulley,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 270
+    },
+    "casing=true,facing=east,part=pulley,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 270
+    },
+    "casing=true,facing=east,part=pulley,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_pulley",
+      "y": 270
+    },
+    "casing=true,facing=east,part=pulley,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_pulley",
+      "y": 270
+    },
+    "casing=true,facing=east,part=pulley,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "y": 270
+    },
+    "casing=true,facing=east,part=pulley,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "y": 270
+    },
+    "casing=true,facing=east,part=pulley,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 90
+    },
+    "casing=true,facing=east,part=pulley,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 90
+    },
+    "casing=true,facing=east,part=pulley,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 90
+    },
+    "casing=true,facing=east,part=pulley,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 90
+    },
+    "casing=true,facing=east,part=start,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 270
+    },
+    "casing=true,facing=east,part=start,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 270
+    },
+    "casing=true,facing=east,part=start,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_start",
+      "y": 270
+    },
+    "casing=true,facing=east,part=start,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_start",
+      "y": 270
+    },
+    "casing=true,facing=east,part=start,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_start",
+      "y": 270
+    },
+    "casing=true,facing=east,part=start,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_start",
+      "y": 270
+    },
+    "casing=true,facing=east,part=start,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 90
+    },
+    "casing=true,facing=east,part=start,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 90
+    },
+    "casing=true,facing=east,part=start,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 90
+    },
+    "casing=true,facing=east,part=start,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 90
+    },
+    "casing=true,facing=north,part=end,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 180
+    },
+    "casing=true,facing=north,part=end,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 180
+    },
+    "casing=true,facing=north,part=end,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_end",
+      "y": 180
+    },
+    "casing=true,facing=north,part=end,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_end",
+      "y": 180
+    },
+    "casing=true,facing=north,part=end,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_start",
       "x": 180,
       "y": 180
     },
@@ -1238,32 +834,82 @@
       "x": 180,
       "y": 180
     },
-    "casing=false,facing=south,part=end,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle"
+    "casing=true,facing=north,part=end,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_end"
     },
-    "casing=true,facing=south,part=end,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_end"
+    "casing=true,facing=north,part=end,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_end"
     },
-    "casing=false,facing=west,part=end,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
-      "x": 180,
-      "y": 90
-    },
-    "casing=true,facing=west,part=end,slope=sideways,waterlogged=true": {
+    "casing=true,facing=north,part=end,slope=vertical,waterlogged=false": {
       "model": "create:block/belt_casing/sideways_start",
+      "x": 90,
+      "y": 270
+    },
+    "casing=true,facing=north,part=end,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 90,
+      "y": 270
+    },
+    "casing=true,facing=north,part=middle,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 180
+    },
+    "casing=true,facing=north,part=middle,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 180
+    },
+    "casing=true,facing=north,part=middle,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_middle",
+      "y": 180
+    },
+    "casing=true,facing=north,part=middle,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_middle",
+      "y": 180
+    },
+    "casing=true,facing=north,part=middle,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_middle",
       "x": 180,
-      "y": 90
+      "y": 180
     },
-    "casing=false,facing=east,part=end,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
+    "casing=true,facing=north,part=middle,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 180,
+      "y": 180
+    },
+    "casing=true,facing=north,part=middle,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_middle"
+    },
+    "casing=true,facing=north,part=middle,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_middle"
+    },
+    "casing=true,facing=north,part=middle,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 90,
       "y": 270
     },
-    "casing=true,facing=east,part=end,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_end",
+    "casing=true,facing=north,part=middle,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 90,
       "y": 270
     },
-    "casing=false,facing=north,part=pulley,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
+    "casing=true,facing=north,part=pulley,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 180
+    },
+    "casing=true,facing=north,part=pulley,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 180
+    },
+    "casing=true,facing=north,part=pulley,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_pulley",
+      "y": 180
+    },
+    "casing=true,facing=north,part=pulley,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_pulley",
+      "y": 180
+    },
+    "casing=true,facing=north,part=pulley,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_pulley",
       "x": 180,
       "y": 180
     },
@@ -1272,14 +918,314 @@
       "x": 180,
       "y": 180
     },
-    "casing=false,facing=south,part=pulley,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle"
+    "casing=true,facing=north,part=pulley,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_pulley"
+    },
+    "casing=true,facing=north,part=pulley,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_pulley"
+    },
+    "casing=true,facing=north,part=pulley,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 90,
+      "y": 270
+    },
+    "casing=true,facing=north,part=pulley,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 90,
+      "y": 270
+    },
+    "casing=true,facing=north,part=start,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 180
+    },
+    "casing=true,facing=north,part=start,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 180
+    },
+    "casing=true,facing=north,part=start,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_start",
+      "y": 180
+    },
+    "casing=true,facing=north,part=start,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_start",
+      "y": 180
+    },
+    "casing=true,facing=north,part=start,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 180,
+      "y": 180
+    },
+    "casing=true,facing=north,part=start,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 180,
+      "y": 180
+    },
+    "casing=true,facing=north,part=start,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_start"
+    },
+    "casing=true,facing=north,part=start,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_start"
+    },
+    "casing=true,facing=north,part=start,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 90,
+      "y": 270
+    },
+    "casing=true,facing=north,part=start,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 90,
+      "y": 270
+    },
+    "casing=true,facing=south,part=end,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_start"
+    },
+    "casing=true,facing=south,part=end,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_start"
+    },
+    "casing=true,facing=south,part=end,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_end"
+    },
+    "casing=true,facing=south,part=end,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_end"
+    },
+    "casing=true,facing=south,part=end,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_end"
+    },
+    "casing=true,facing=south,part=end,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_end"
+    },
+    "casing=true,facing=south,part=end,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 180
+    },
+    "casing=true,facing=south,part=end,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 180
+    },
+    "casing=true,facing=south,part=end,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=south,part=end,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=south,part=middle,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_middle"
+    },
+    "casing=true,facing=south,part=middle,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_middle"
+    },
+    "casing=true,facing=south,part=middle,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_middle"
+    },
+    "casing=true,facing=south,part=middle,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_middle"
+    },
+    "casing=true,facing=south,part=middle,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_middle"
+    },
+    "casing=true,facing=south,part=middle,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_middle"
+    },
+    "casing=true,facing=south,part=middle,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 180
+    },
+    "casing=true,facing=south,part=middle,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 180
+    },
+    "casing=true,facing=south,part=middle,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=south,part=middle,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=south,part=pulley,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_pulley"
+    },
+    "casing=true,facing=south,part=pulley,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_pulley"
+    },
+    "casing=true,facing=south,part=pulley,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_pulley"
+    },
+    "casing=true,facing=south,part=pulley,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_pulley"
+    },
+    "casing=true,facing=south,part=pulley,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_pulley"
     },
     "casing=true,facing=south,part=pulley,slope=sideways,waterlogged=true": {
       "model": "create:block/belt_casing/sideways_pulley"
     },
-    "casing=false,facing=west,part=pulley,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
+    "casing=true,facing=south,part=pulley,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 180
+    },
+    "casing=true,facing=south,part=pulley,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 180
+    },
+    "casing=true,facing=south,part=pulley,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=south,part=pulley,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=south,part=start,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_end"
+    },
+    "casing=true,facing=south,part=start,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_end"
+    },
+    "casing=true,facing=south,part=start,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_start"
+    },
+    "casing=true,facing=south,part=start,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_start"
+    },
+    "casing=true,facing=south,part=start,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_start"
+    },
+    "casing=true,facing=south,part=start,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_start"
+    },
+    "casing=true,facing=south,part=start,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 180
+    },
+    "casing=true,facing=south,part=start,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 180
+    },
+    "casing=true,facing=south,part=start,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=south,part=start,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 90,
+      "y": 90
+    },
+    "casing=true,facing=west,part=end,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 90
+    },
+    "casing=true,facing=west,part=end,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 90
+    },
+    "casing=true,facing=west,part=end,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_end",
+      "y": 90
+    },
+    "casing=true,facing=west,part=end,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_end",
+      "y": 90
+    },
+    "casing=true,facing=west,part=end,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=end,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=end,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 270
+    },
+    "casing=true,facing=west,part=end,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 270
+    },
+    "casing=true,facing=west,part=end,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 90,
+      "y": 180
+    },
+    "casing=true,facing=west,part=end,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_start",
+      "x": 90,
+      "y": 180
+    },
+    "casing=true,facing=west,part=middle,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 90
+    },
+    "casing=true,facing=west,part=middle,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 90
+    },
+    "casing=true,facing=west,part=middle,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_middle",
+      "y": 90
+    },
+    "casing=true,facing=west,part=middle,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_middle",
+      "y": 90
+    },
+    "casing=true,facing=west,part=middle,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=middle,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=middle,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 270
+    },
+    "casing=true,facing=west,part=middle,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_middle",
+      "y": 270
+    },
+    "casing=true,facing=west,part=middle,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 90,
+      "y": 180
+    },
+    "casing=true,facing=west,part=middle,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_middle",
+      "x": 90,
+      "y": 180
+    },
+    "casing=true,facing=west,part=pulley,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 90
+    },
+    "casing=true,facing=west,part=pulley,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_pulley",
+      "y": 90
+    },
+    "casing=true,facing=west,part=pulley,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_pulley",
+      "y": 90
+    },
+    "casing=true,facing=west,part=pulley,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_pulley",
+      "y": 90
+    },
+    "casing=true,facing=west,part=pulley,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_pulley",
       "x": 180,
       "y": 90
     },
@@ -1288,13 +1234,67 @@
       "x": 180,
       "y": 90
     },
-    "casing=false,facing=east,part=pulley,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt/particle",
+    "casing=true,facing=west,part=pulley,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_pulley",
       "y": 270
     },
-    "casing=true,facing=east,part=pulley,slope=sideways,waterlogged=true": {
-      "model": "create:block/belt_casing/sideways_pulley",
+    "casing=true,facing=west,part=pulley,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_pulley",
       "y": 270
+    },
+    "casing=true,facing=west,part=pulley,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 90,
+      "y": 180
+    },
+    "casing=true,facing=west,part=pulley,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_pulley",
+      "x": 90,
+      "y": 180
+    },
+    "casing=true,facing=west,part=start,slope=downward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 90
+    },
+    "casing=true,facing=west,part=start,slope=downward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_end",
+      "y": 90
+    },
+    "casing=true,facing=west,part=start,slope=horizontal,waterlogged=false": {
+      "model": "create:block/belt_casing/horizontal_start",
+      "y": 90
+    },
+    "casing=true,facing=west,part=start,slope=horizontal,waterlogged=true": {
+      "model": "create:block/belt_casing/horizontal_start",
+      "y": 90
+    },
+    "casing=true,facing=west,part=start,slope=sideways,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=start,slope=sideways,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 180,
+      "y": 90
+    },
+    "casing=true,facing=west,part=start,slope=upward,waterlogged=false": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 270
+    },
+    "casing=true,facing=west,part=start,slope=upward,waterlogged=true": {
+      "model": "create:block/belt_casing/diagonal_start",
+      "y": 270
+    },
+    "casing=true,facing=west,part=start,slope=vertical,waterlogged=false": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 90,
+      "y": 180
+    },
+    "casing=true,facing=west,part=start,slope=vertical,waterlogged=true": {
+      "model": "create:block/belt_casing/sideways_end",
+      "x": 90,
+      "y": 180
     }
   }
 }

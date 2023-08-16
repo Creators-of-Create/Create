@@ -1,25 +1,25 @@
 {
   "parent": "create:contraption_actors",
+  "criteria": {
+    "0": {
+      "conditions": {},
+      "trigger": "create:portable_storage_interface_builtin"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "create:portable_storage_interface"
-    },
-    "title": {
-      "translate": "advancement.create.portable_storage_interface"
-    },
+    "announce_to_chat": false,
     "description": {
       "color": "#DBA213",
       "translate": "advancement.create.portable_storage_interface.desc"
     },
     "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "create:portable_storage_interface"
+    },
     "show_toast": true,
-    "announce_to_chat": false,
-    "hidden": false
-  },
-  "criteria": {
-    "0": {
-      "trigger": "create:portable_storage_interface_builtin",
-      "conditions": {}
+    "title": {
+      "translate": "advancement.create.portable_storage_interface"
     }
   },
   "requirements": [

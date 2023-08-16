@@ -370,16 +370,17 @@ public class CreatePonderIndex {
 
 		// Trains
 		HELPER.forComponents(TrackMaterial.allBlocks()
-			.stream()
-			.map((trackSupplier) -> new BlockEntry<TrackBlock>(
-				// note: these blocks probably WON'T be in the Create Registrate, but a simple
-				// code trace reveals the Entry's registrate isn't used
-				Create.REGISTRATE, RegistryObject.create(trackSupplier.get()
-					.getRegistryName(), ForgeRegistries.BLOCKS)))
-			.toArray(BlockEntry[]::new))
-			.addStoryBoard("train_track/placement", TrackScenes::placement)
-			.addStoryBoard("train_track/portal", TrackScenes::portal)
-			.addStoryBoard("train_track/chunks", TrackScenes::chunks);
+				.stream()
+				.map((trackSupplier) -> new BlockEntry<TrackBlock>(
+						// note: these blocks probably WON'T be in the Create Registrate, but a simple
+						// code trace reveals the Entry's registrate isn't used
+						Create.REGISTRATE,
+						RegistryObject.create(ForgeRegistries.BLOCKS.getKey(trackSupplier.get()), ForgeRegistries.BLOCKS)
+				))
+				.toArray(BlockEntry[]::new))
+				.addStoryBoard("train_track/placement", TrackScenes::placement)
+				.addStoryBoard("train_track/portal", TrackScenes::portal)
+				.addStoryBoard("train_track/chunks", TrackScenes::chunks);
 
 		HELPER.forComponents(AllBlocks.TRACK_STATION)
 			.addStoryBoard("train_station/assembly", TrainStationScenes::assembly)

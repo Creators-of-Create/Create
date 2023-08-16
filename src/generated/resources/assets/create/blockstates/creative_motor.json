@@ -4,8 +4,9 @@
       "model": "create:block/creative_motor/block_vertical",
       "x": 180
     },
-    "facing=up": {
-      "model": "create:block/creative_motor/block_vertical"
+    "facing=east": {
+      "model": "create:block/creative_motor/block",
+      "y": 270
     },
     "facing=north": {
       "model": "create:block/creative_motor/block",
@@ -14,13 +15,12 @@
     "facing=south": {
       "model": "create:block/creative_motor/block"
     },
+    "facing=up": {
+      "model": "create:block/creative_motor/block_vertical"
+    },
     "facing=west": {
       "model": "create:block/creative_motor/block",
       "y": 90
-    },
-    "facing=east": {
-      "model": "create:block/creative_motor/block",
-      "y": 270
     }
   }
 }

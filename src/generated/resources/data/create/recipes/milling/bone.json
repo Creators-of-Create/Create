@@ -5,20 +5,20 @@
       "item": "minecraft:bone"
     }
   ],
+  "processingTime": 100,
   "results": [
     {
-      "item": "minecraft:bone_meal",
-      "count": 3
-    },
-    {
-      "item": "minecraft:white_dye",
-      "chance": 0.25
-    },
-    {
-      "item": "minecraft:bone_meal",
       "count": 3,
-      "chance": 0.25
+      "item": "minecraft:bone_meal"
+    },
+    {
+      "chance": 0.25,
+      "item": "minecraft:white_dye"
+    },
+    {
+      "chance": 0.25,
+      "count": 3,
+      "item": "minecraft:bone_meal"
     }
-  ],
-  "processingTime": 100
+  ]
 }

@@ -5,10 +5,10 @@
       "item": "minecraft:spruce_wood"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
       "item": "minecraft:stripped_spruce_wood"
     }
-  ],
-  "processingTime": 50
+  ]
 }

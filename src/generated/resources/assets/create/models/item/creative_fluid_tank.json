@@ -1,10 +1,10 @@
 {
   "parent": "create:block/fluid_tank/block_single_window",
   "textures": {
-    "5": "create:block/creative_fluid_tank_window_single",
+    "0": "create:block/creative_casing",
     "1": "create:block/creative_fluid_tank",
-    "particle": "create:block/creative_fluid_tank",
     "4": "create:block/creative_casing",
-    "0": "create:block/creative_casing"
+    "5": "create:block/creative_fluid_tank_window_single",
+    "particle": "create:block/creative_fluid_tank"
   }
 }

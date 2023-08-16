@@ -5,11 +5,11 @@
       "item": "minecraft:stripped_warped_hyphae"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:warped_planks",
-      "count": 6
+      "count": 6,
+      "item": "minecraft:warped_planks"
     }
-  ],
-  "processingTime": 50
+  ]
 }

@@ -4,13 +4,13 @@ import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 
-import net.createmod.ponder.foundation.PonderWorld;
+import net.createmod.ponder.foundation.PonderLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class PonderWorldBlockEntityFix {
 
-	public static void fixControllerBlockEntities(PonderWorld world) {
+	public static void fixControllerBlockEntities(PonderLevel world) {
 		for (BlockEntity blockEntity : world.getBlockEntities()) {
 
 			if (blockEntity instanceof BeltBlockEntity beltBlockEntity) {

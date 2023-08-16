@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     {
       "id": "ars_nouveau:stripped_blue_archwood_wood",
@@ -34,7 +33,7 @@
       "required": false
     },
     {
-      "id": "hexcasting:akashic_wood_stripped",
+      "id": "hexcasting:stripped_akashic_wood",
       "required": false
     },
     {

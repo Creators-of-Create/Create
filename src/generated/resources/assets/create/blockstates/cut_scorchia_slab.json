@@ -1,13 +1,13 @@
 {
   "variants": {
-    "type=top": {
-      "model": "create:block/cut_scorchia_slab_top"
-    },
     "type=bottom": {
       "model": "create:block/cut_scorchia_slab"
     },
     "type=double": {
       "model": "create:block/cut_scorchia"
+    },
+    "type=top": {
+      "model": "create:block/cut_scorchia_slab_top"
     }
   }
 }

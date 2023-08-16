@@ -47,10 +47,10 @@ public class CopperBlockSet {
 
 	protected static final Map<WeatherState, Supplier<Block>> BASE_BLOCKS = new EnumMap<>(WeatherState.class);
 	static {
-		BASE_BLOCKS.put(WeatherState.UNAFFECTED, Blocks.COPPER_BLOCK.delegate);
-		BASE_BLOCKS.put(WeatherState.EXPOSED, Blocks.EXPOSED_COPPER.delegate);
-		BASE_BLOCKS.put(WeatherState.WEATHERED, Blocks.WEATHERED_COPPER.delegate);
-		BASE_BLOCKS.put(WeatherState.OXIDIZED, Blocks.OXIDIZED_COPPER.delegate);
+		BASE_BLOCKS.put(WeatherState.UNAFFECTED, () -> Blocks.COPPER_BLOCK);
+		BASE_BLOCKS.put(WeatherState.EXPOSED, () -> Blocks.EXPOSED_COPPER);
+		BASE_BLOCKS.put(WeatherState.WEATHERED, () -> Blocks.WEATHERED_COPPER);
+		BASE_BLOCKS.put(WeatherState.OXIDIZED, () -> Blocks.OXIDIZED_COPPER);
 	}
 
 	public static final Variant<?>[] DEFAULT_VARIANTS =

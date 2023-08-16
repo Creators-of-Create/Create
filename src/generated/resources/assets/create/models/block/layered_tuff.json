@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_column",
   "textures": {
-    "side": "create:block/palettes/stone_types/layered/tuff_cut_layered",
-    "end": "create:block/palettes/stone_types/cap/tuff_cut_cap"
+    "end": "create:block/palettes/stone_types/cap/tuff_cut_cap",
+    "side": "create:block/palettes/stone_types/layered/tuff_cut_layered"
   }
 }

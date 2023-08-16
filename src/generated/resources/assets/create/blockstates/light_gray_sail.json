@@ -4,8 +4,10 @@
       "model": "create:block/light_gray_sail",
       "x": 180
     },
-    "facing=up": {
-      "model": "create:block/light_gray_sail"
+    "facing=east": {
+      "model": "create:block/light_gray_sail",
+      "x": 90,
+      "y": 90
     },
     "facing=north": {
       "model": "create:block/light_gray_sail",
@@ -16,15 +18,13 @@
       "x": 90,
       "y": 180
     },
+    "facing=up": {
+      "model": "create:block/light_gray_sail"
+    },
     "facing=west": {
       "model": "create:block/light_gray_sail",
       "x": 90,
       "y": 270
-    },
-    "facing=east": {
-      "model": "create:block/light_gray_sail",
-      "x": 90,
-      "y": 90
     }
   }
 }

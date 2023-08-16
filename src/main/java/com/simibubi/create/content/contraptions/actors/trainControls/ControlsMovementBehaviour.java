@@ -11,7 +11,7 @@ import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 
 import net.createmod.catnip.utility.animation.LerpedFloat;
 import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -86,7 +86,7 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 			angles.speed.chase(0, 0, Chaser.EXP);
 		}
 
-		float pt = WorldTickHolder.getPartialTicks(context.world);
+		float pt = LevelTickHolder.getPartialTicks(context.world);
 		ControlsRenderer.render(context, renderWorld, matrices, buffer, angles.equipAnimation.getValue(pt),
 			angles.speed.getValue(pt), angles.steering.getValue(pt));
 	}

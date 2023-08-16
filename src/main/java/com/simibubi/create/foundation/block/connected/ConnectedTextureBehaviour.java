@@ -3,14 +3,13 @@ package com.simibubi.create.foundation.block.connected;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.content.decoration.copycat.CopycatBlock;
-
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class ConnectedTextureBehaviour {
@@ -31,17 +30,18 @@ public abstract class ConnectedTextureBehaviour {
 		Direction face) {
 		BlockPos blockingPos = otherPos.relative(face);
 		BlockState blockState = reader.getBlockState(pos);
+		BlockState blockingState = reader.getBlockState(blockingPos);
 
-		if (blockState.getBlock() instanceof CopycatBlock ufb
-			&& ufb.isUnblockableConnectivitySide(reader, blockState, face, pos, otherPos))
+		if (!Block.isFaceFull(blockingState.getShape(reader, blockingPos), face.getOpposite()))
+			return false;
+		if (face.getAxis()
+			.choose(pos.getX(), pos.getY(), pos.getZ()) != face.getAxis()
+				.choose(otherPos.getX(), otherPos.getY(), otherPos.getZ()))
 			return false;
 
-		return face.getAxis()
-			.choose(pos.getX(), pos.getY(), pos.getZ()) == face.getAxis()
-				.choose(otherPos.getX(), otherPos.getY(), otherPos.getZ())
-			&& connectsTo(state,
-				getCTBlockState(reader, blockState, face.getOpposite(), pos.relative(face), blockingPos), reader, pos,
-				blockingPos, face);
+		return connectsTo(state,
+			getCTBlockState(reader, blockState, face.getOpposite(), pos.relative(face), blockingPos), reader, pos,
+			blockingPos, face);
 	}
 
 	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos,
@@ -54,17 +54,14 @@ public abstract class ConnectedTextureBehaviour {
 		return !isBeingBlocked(state, reader, pos, otherPos, face) && state.getBlock() == other.getBlock();
 	}
 
-	private boolean testConnection(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face,
-		final Direction horizontal, final Direction vertical, int sh, int sv) {
-		BlockPos p = pos.relative(horizontal, sh)
+	private boolean testConnection(BlockAndTintGetter reader, BlockPos currentPos, BlockState connectiveCurrentState,
+		Direction textureSide, final Direction horizontal, final Direction vertical, int sh, int sv) {
+		BlockState trueCurrentState = reader.getBlockState(currentPos);
+		BlockPos targetPos = currentPos.relative(horizontal, sh)
 			.relative(vertical, sv);
-		BlockState blockState = reader.getBlockState(pos);
-
-		if (blockState.getBlock() instanceof CopycatBlock ufb
-			&& ufb.isIgnoredConnectivitySide(reader, blockState, face, pos, p))
-			return false;
-
-		return connectsTo(state, getCTBlockState(reader, blockState, face, pos, p), reader, pos, p, face,
+		BlockState connectiveTargetState =
+			getCTBlockState(reader, trueCurrentState, textureSide, currentPos, targetPos);
+		return connectsTo(connectiveCurrentState, connectiveTargetState, reader, currentPos, targetPos, textureSide,
 			sh == 0 ? null : sh == -1 ? horizontal.getOpposite() : horizontal,
 			sv == 0 ? null : sv == -1 ? vertical.getOpposite() : vertical);
 	}
@@ -72,13 +69,7 @@ public abstract class ConnectedTextureBehaviour {
 	public BlockState getCTBlockState(BlockAndTintGetter reader, BlockState reference, Direction face, BlockPos fromPos,
 		BlockPos toPos) {
 		BlockState blockState = reader.getBlockState(toPos);
-
-		if (blockState.getBlock() instanceof CopycatBlock ufb) {
-			BlockState connectiveMaterial = ufb.getConnectiveMaterial(reader, reference, face, fromPos, toPos);
-			return connectiveMaterial == null ? blockState : connectiveMaterial;
-		}
-
-		return blockState;
+		return blockState.getAppearance(reader, toPos, face, reference, fromPos);
 	}
 
 	protected boolean reverseUVs(BlockState state, Direction face) {

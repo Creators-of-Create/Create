@@ -12,7 +12,7 @@ import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SpriteShiftEntry;
 import net.createmod.catnip.utility.AnimationTickHolder;
-import net.createmod.ponder.utility.WorldTickHolder;
+import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -72,7 +72,7 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 			- spriteShift.getTarget()
 				.getV0();
 
-		float time = WorldTickHolder.getRenderTime(Minecraft.getInstance().level);
+		float time = LevelTickHolder.getRenderTime(Minecraft.getInstance().level);
 		float speed = 1 / 32f + 1 / 64f * heatLevel.ordinal();
 
 		double vScroll = speed * time;

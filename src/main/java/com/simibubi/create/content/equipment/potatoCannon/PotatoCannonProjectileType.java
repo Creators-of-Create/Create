@@ -2,6 +2,7 @@ package com.simibubi.create.content.equipment.potatoCannon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -13,6 +14,7 @@ import com.google.gson.JsonPrimitive;
 
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -110,9 +112,9 @@ public class PotatoCannonProjectileType {
 						JsonPrimitive primitive = element.getAsJsonPrimitive();
 						if (primitive.isString()) {
 							try {
-								Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(primitive.getAsString()));
-								if (item != null) {
-									type.items.add(item.delegate);
+								Optional<Holder.Reference<Item>> reference = ForgeRegistries.ITEMS.getDelegate(new ResourceLocation(primitive.getAsString()));
+								if (reference.isPresent()) {
+									type.items.add(reference.get());
 								}
 							} catch (ResourceLocationException e) {
 								//
@@ -167,9 +169,9 @@ public class PotatoCannonProjectileType {
 		PotatoCannonProjectileType type = new PotatoCannonProjectileType();
 		int size = buffer.readVarInt();
 		for (int i = 0; i < size; i++) {
-			Item item = ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation());
-			if (item != null) {
-				type.items.add(item.delegate);
+			Optional<Holder.Reference<Item>> reference = ForgeRegistries.ITEMS.getDelegate(buffer.readResourceLocation());
+			if (reference.isPresent()) {
+				type.items.add(reference.get());
 			}
 		}
 		type.reloadTicks = buffer.readInt();
@@ -276,7 +278,7 @@ public class PotatoCannonProjectileType {
 
 		public Builder addItems(ItemLike... items) {
 			for (ItemLike provider : items)
-				result.items.add(provider.asItem().delegate);
+				result.items.add(ForgeRegistries.ITEMS.getDelegateOrThrow(provider.asItem()));
 			return this;
 		}
 

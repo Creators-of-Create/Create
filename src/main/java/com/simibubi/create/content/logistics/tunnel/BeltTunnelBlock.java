@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.createmod.catnip.utility.lang.Lang;
-import net.createmod.catnip.utility.worldWrappers.WrappedWorld;
+import net.createmod.catnip.utility.levelWrappers.WrappedLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -99,7 +99,7 @@ public class BeltTunnelBlock extends Block implements IBE<BeltTunnelBlockEntity>
 
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
-		if (!(world instanceof WrappedWorld) && !world.isClientSide())
+		if (!(world instanceof WrappedLevel) && !world.isClientSide())
 			withBlockEntityDo(world, pos, BeltTunnelBlockEntity::updateTunnelConnections);
 	}
 
@@ -109,7 +109,7 @@ public class BeltTunnelBlock extends Block implements IBE<BeltTunnelBlockEntity>
 		if (facing.getAxis()
 			.isVertical())
 			return state;
-		if (!(worldIn instanceof WrappedWorld) && !worldIn.isClientSide())
+		if (!(worldIn instanceof WrappedLevel) && !worldIn.isClientSide())
 			withBlockEntityDo(worldIn, currentPos, BeltTunnelBlockEntity::updateTunnelConnections);
 		BlockState tunnelState = getTunnelState(worldIn, currentPos);
 		if (tunnelState.getValue(HORIZONTAL_AXIS) == state.getValue(HORIZONTAL_AXIS)) {

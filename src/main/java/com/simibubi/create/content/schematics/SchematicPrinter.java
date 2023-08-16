@@ -14,7 +14,7 @@ import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.createmod.catnip.utility.BBHelper;
-import net.createmod.catnip.utility.worldWrappers.SchematicWorld;
+import net.createmod.catnip.utility.levelWrappers.SchematicLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -41,7 +41,7 @@ public class SchematicPrinter {
 
 	private boolean schematicLoaded;
 	private boolean isErrored;
-	private SchematicWorld blockReader;
+	private SchematicLevel blockReader;
 	private BlockPos schematicAnchor;
 
 	private BlockPos currentPos;
@@ -96,7 +96,7 @@ public class SchematicPrinter {
 
 		schematicAnchor = NbtUtils.readBlockPos(blueprint.getTag()
 			.getCompound("Anchor"));
-		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
+		blockReader = new SchematicLevel(schematicAnchor, originalWorld);
 
 		try {
 			activeTemplate.placeInWorld(blockReader, schematicAnchor, schematicAnchor, settings,

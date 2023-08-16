@@ -5,19 +5,19 @@
       "item": "minecraft:lily_of_the_valley"
     }
   ],
+  "processingTime": 50,
   "results": [
     {
-      "item": "minecraft:white_dye",
-      "count": 2
+      "count": 2,
+      "item": "minecraft:white_dye"
     },
     {
-      "item": "minecraft:lime_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:lime_dye"
     },
     {
-      "item": "minecraft:white_dye",
-      "chance": 0.1
+      "chance": 0.1,
+      "item": "minecraft:white_dye"
     }
-  ],
-  "processingTime": 50
+  ]
 }

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.bell;
 
-import java.util.Random;
-
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllPartialModels;
 
@@ -11,6 +9,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,7 +66,7 @@ public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 		if (!level.isClientSide)
 			return;
 
-		Random rand = level.getRandom();
+		RandomSource rand = level.getRandom();
 		if (rand.nextFloat() > 0.25f)
 			return;
 
@@ -75,7 +74,7 @@ public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 		playSound(rand);
 	}
 
-	protected void spawnParticle(Random rand) {
+	protected void spawnParticle(RandomSource rand) {
 		double x = worldPosition.getX() + rand.nextDouble();
 		double y = worldPosition.getY() + 0.5;
 		double z = worldPosition.getZ() + rand.nextDouble();
@@ -85,7 +84,7 @@ public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 		level.addParticle(ParticleTypes.SOUL, x, y, z, vx, vy, vz);
 	}
 
-	protected void playSound(Random rand) {
+	protected void playSound(RandomSource rand) {
 		float vol = rand.nextFloat() * 0.4F + rand.nextFloat() > 0.9F ? 0.6F : 0.0F;
 		float pitch = 0.6F + rand.nextFloat() * 0.4F;
 		level.playSound(null, worldPosition, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, vol, pitch);

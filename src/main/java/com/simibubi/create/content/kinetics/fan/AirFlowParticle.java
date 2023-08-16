@@ -2,8 +2,6 @@ package com.simibubi.create.content.kinetics.fan;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.Create;
-
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -33,7 +31,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		this.lifetime = 40;
 		hasPhysics = false;
 		selectSprite(7);
-		Vec3 offset = VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .25f);
+		Vec3 offset = VecHelper.offsetRandomly(Vec3.ZERO, world.random, .25f);
 		this.setPos(x + offset.x, y + offset.y, z + offset.z);
 		this.xo = x;
 		this.yo = y;
