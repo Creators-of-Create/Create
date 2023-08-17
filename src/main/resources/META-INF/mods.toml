@@ -35,3 +35,17 @@ ${mod_description}
     versionRange="[0.6.9,0.6.10)"
     ordering="AFTER"
     side="CLIENT"
+
+[[dependencies.create]]
+    modId="catnip"
+    mandatory=true
+    versionRange="[0.6,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.create]]
+    modId="ponder"
+    mandatory=true
+    versionRange="[0.6,)"
+    ordering="AFTER"
+    side="BOTH"
