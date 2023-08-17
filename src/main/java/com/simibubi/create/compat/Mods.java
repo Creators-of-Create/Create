@@ -20,7 +20,9 @@ public enum Mods {
 
 	COMPUTERCRAFT,
 	STORAGEDRAWERS,
-	XLPACKETS;
+	XLPACKETS,
+	CONNECTIVITY,
+	PACKETFIXER;
 
 	/**
 	 * @return a boolean of whether the mod is loaded or not based on mod id

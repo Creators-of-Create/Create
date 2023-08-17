@@ -10,21 +10,60 @@ import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 public class ContraptionData {
 	/**
 	 * A sane, default maximum for contraption data size.
 	 */
 	public static final int DEFAULT_MAX = 2_000_000;
 	/**
+	 * Connectivity expands the NBT packet limit to 2 GB.
+	 */
+	public static final int EXPANDED_MAX_CONNECTIVITY = Integer.MAX_VALUE;
+	/**
 	 * XL Packets expands the NBT packet limit to 2 GB.
 	 */
-	public static final int EXPANDED_MAX = 2_000_000_000;
+	public static final int EXPANDED_MAX_XL_PACKETS = 2_000_000_000;
+	/**
+	 * Packet Fixer expands the NBT packet limit to 200 MB.
+	 */
+	public static final int EXPANDED_MAX_PACKET_FIXER = 209_715_200;
 	/**
 	 * Minecart item sizes are limited by the vanilla slot change packet ({@link ClientboundContainerSetSlotPacket}).
 	 * {@link ContraptionData#DEFAULT_MAX} is used as the default.
-	 * XL Packets expands the size limit to ~2 GB. If the mod is loaded, we take advantage of it and use the higher limit.
+	 * Some network optimisation mods expand the size limit:
+	 * Connectivity to Integer.MAX_VALUE = 2_147_483_647 ~= 2GB.
+	 * XL Packets to 2_000_000_000 bytes ~= 2GB.
+	 * Packet Fixer to 209_715_200 bytes ~= 200MB.
+	 * If some of these mods are loaded, we take advantage of it and use the higher limit.
 	 */
-	public static final int PICKUP_MAX = Mods.XLPACKETS.isLoaded() ? EXPANDED_MAX : DEFAULT_MAX;
+	public static final int PICKUP_MAX = getMaxPickUpSize();
+
+
+	/**
+	 * @return max contraption data size depending on packet size optimisation mods loaded.
+	 */
+	public static int getMaxPickUpSize() {
+		Set<Integer> values = new HashSet<>();
+
+		if (Mods.CONNECTIVITY.isLoaded()) {
+			values.add(EXPANDED_MAX_CONNECTIVITY);
+		}
+		if (Mods.XLPACKETS.isLoaded()) {
+			values.add(EXPANDED_MAX_XL_PACKETS);
+		}
+		if (Mods.PACKETFIXER.isLoaded()) {
+			values.add(EXPANDED_MAX_PACKET_FIXER);
+		}
+
+		if (values.isEmpty()) {
+			values.add(DEFAULT_MAX);
+		}
+		return Collections.min(values);
+	}
 
 	/**
 	 * @return true if the given NBT is too large for a contraption to be synced to clients.
