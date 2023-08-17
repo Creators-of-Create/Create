@@ -20,6 +20,8 @@ public enum Mods {
 	OCCULTISM,
 	STORAGEDRAWERS,
 	TCONSTRUCT,
+	CONNECTIVITY,
+	PACKETFIXER,
 	XLPACKETS;
 
 	private final String id;
