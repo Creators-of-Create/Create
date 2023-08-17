@@ -1,12 +1,10 @@
 package com.simibubi.create;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.equipment.toolbox.ToolboxDyeingRecipe;
