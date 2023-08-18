@@ -62,7 +62,12 @@ public class ContraptionData {
 		if (values.isEmpty()) { // None of packet size changing mods loaded, use default max.
 			return DEFAULT_MAX;
 		}
-		return Collections.min(values); // If several mods are loaded that change the size of the packet, we will use the minimum one to avoid conflict.
+
+		return Collections.min(values); // If several packet size mods are loaded we need use min (not max), because we
+		// don't know how modpack is configured. All of these mods are using same mixin, witch means what at same time
+		// can be used only one. Or crash because of mixin conflict. Let's say we've installed Connectivity and
+		// XL Packets and disabled Connectivity mixin, we will get exception if contraption size is between
+		// 2_000_000_000 and 2_147_483_647 if we used max value. But all will be good if we used min value.
 	}
 
 	/**
