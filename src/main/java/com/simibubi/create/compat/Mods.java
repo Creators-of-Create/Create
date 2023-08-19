@@ -15,13 +15,13 @@ import net.minecraftforge.registries.ForgeRegistries;
  */
 public enum Mods {
 	COMPUTERCRAFT,
+	CONNECTIVITY,
 	CURIOS,
 	DYNAMICTREES,
 	OCCULTISM,
+	PACKETFIXER,
 	STORAGEDRAWERS,
 	TCONSTRUCT,
-	CONNECTIVITY,
-	PACKETFIXER,
 	XLPACKETS;
 
 	private final String id;

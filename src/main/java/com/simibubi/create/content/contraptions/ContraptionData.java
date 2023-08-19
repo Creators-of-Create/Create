@@ -10,64 +10,49 @@ import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 public class ContraptionData {
 	/**
 	 * A sane, default maximum for contraption data size.
 	 */
-	public static final int DEFAULT_MAX = 2_000_000;
+	public static final int DEFAULT_LIMIT = 2_000_000;
 	/**
 	 * Connectivity expands the NBT packet limit to 2 GB.
 	 */
-	public static final int EXPANDED_MAX_CONNECTIVITY = Integer.MAX_VALUE;
-	/**
-	 * XL Packets expands the NBT packet limit to 2 GB.
-	 */
-	public static final int EXPANDED_MAX_XL_PACKETS = 2_000_000_000;
+	public static final int CONNECTIVITY_LIMIT = Integer.MAX_VALUE;
 	/**
 	 * Packet Fixer expands the NBT packet limit to 200 MB.
 	 */
-	public static final int EXPANDED_MAX_PACKET_FIXER = 209_715_200;
+	public static final int PACKET_FIXER_LIMIT = 209_715_200;
+	/**
+	 * XL Packets expands the NBT packet limit to 2 GB.
+	 */
+	public static final int XL_PACKETS_LIMIT = 2_000_000_000;
 	/**
 	 * Minecart item sizes are limited by the vanilla slot change packet ({@link ClientboundContainerSetSlotPacket}).
-	 * {@link ContraptionData#DEFAULT_MAX} is used as the default.
-	 * Some network optimisation mods expand the size limit:
-	 * Connectivity to Integer.MAX_VALUE = 2_147_483_647 ~= 2GB.
-	 * XL Packets to 2_000_000_000 bytes ~= 2GB.
-	 * Packet Fixer to 209_715_200 bytes ~= 200MB.
-	 * If some of these mods are loaded, we take advantage of it and use the higher limit.
+	 * {@link #DEFAULT_LIMIT} is used as the default.
+	 * Connectivity, PacketFixer, and XL Packets expand the size limit.
+	 * If one of these mods is loaded, we take advantage of it and use the higher limit.
 	 */
-	public static final int PICKUP_MAX = getMaxPickUpSize();
+	public static final int PICKUP_LIMIT;
 
+	static {
+		int limit = DEFAULT_LIMIT;
 
-	/**
-	 * @return max contraption data size depending on packet size optimisation mods loaded.
-	 */
-	public static int getMaxPickUpSize() {
-		Set<Integer> values = new HashSet<>();
-
+		// Check from largest to smallest to use the smallest limit if multiple mods are loaded.
+		// It is necessary to use the smallest limit because even if multiple mods are loaded,
+		// not all of their mixins may be applied. Therefore, it is safest to only assume that
+		// the mod with the smallest limit is actually active.
 		if (Mods.CONNECTIVITY.isLoaded()) {
-			values.add(EXPANDED_MAX_CONNECTIVITY);
+			limit = CONNECTIVITY_LIMIT;
 		}
 		if (Mods.XLPACKETS.isLoaded()) {
-			values.add(EXPANDED_MAX_XL_PACKETS);
+			limit = XL_PACKETS_LIMIT;
 		}
 		if (Mods.PACKETFIXER.isLoaded()) {
-			values.add(EXPANDED_MAX_PACKET_FIXER);
+			limit = PACKET_FIXER_LIMIT;
 		}
 
-		if (values.isEmpty()) { // None of packet size changing mods loaded, use default max.
-			return DEFAULT_MAX;
-		}
-
-		return Collections.min(values); // If several packet size mods are loaded we need use min (not max), because we
-		// don't know how modpack is configured. All of these mods are using same mixin, witch means what at same time
-		// can be used only one. Or crash because of mixin conflict. Let's say we've installed Connectivity and
-		// XL Packets and disabled Connectivity mixin, we will get exception if contraption size is between
-		// 2_000_000_000 and 2_147_483_647 if we used max value. But all will be good if we used min value.
+		PICKUP_LIMIT = limit;
 	}
 
 	/**
@@ -82,7 +67,7 @@ public class ContraptionData {
 	 * @return true if the given NBT is too large for a contraption to be picked up with a wrench.
 	 */
 	public static boolean isTooLargeForPickup(CompoundTag data) {
-		return packetSize(data) > PICKUP_MAX;
+		return packetSize(data) > PICKUP_LIMIT;
 	}
 
 	/**
