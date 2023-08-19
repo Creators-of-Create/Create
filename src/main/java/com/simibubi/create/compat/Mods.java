@@ -15,9 +15,11 @@ import net.minecraftforge.registries.ForgeRegistries;
  */
 public enum Mods {
 	COMPUTERCRAFT,
+	CONNECTIVITY,
 	CURIOS,
 	DYNAMICTREES,
 	OCCULTISM,
+	PACKETFIXER,
 	STORAGEDRAWERS,
 	TCONSTRUCT,
 	XLPACKETS;
