@@ -17,6 +17,7 @@ import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.equipment.potatoCannon.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.kinetics.TorquePropagator;
+import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.kinetics.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
@@ -138,9 +139,8 @@ public class Create {
 		AllDisplayBehaviours.registerDefaults();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
+		AllFanProcessingTypes.register();
 		BlockSpoutingBehaviour.registerDefaults();
-		BoilerHeaters.registerDefaults();
-		BuiltinPotatoProjectileTypes.register();
 		BogeySizes.init();
 		AllBogeyStyles.register();
 		// ----
@@ -164,6 +164,13 @@ public class Create {
 
 	public static void init(final FMLCommonSetupEvent event) {
 		event.enqueueWork(() -> {
+			// TODO: custom registration should all happen in one place
+			// Most registration happens in the constructor.
+			// These registrations use Create's registered objects directly so they must run after registration has finished.
+			BuiltinPotatoProjectileTypes.register();
+			BoilerHeaters.registerDefaults();
+			// --
+
 			AttachedRegistry.unwrapAll();
 			AllAdvancements.register();
 			AllTriggers.register();
