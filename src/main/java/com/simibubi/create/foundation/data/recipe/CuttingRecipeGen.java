@@ -22,7 +22,6 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		DARK_OAK_WOOD = stripAndMakePlanks(Blocks.DARK_OAK_WOOD, Blocks.STRIPPED_DARK_OAK_WOOD, Blocks.DARK_OAK_PLANKS),
 		MANGROVE_WOOD = stripAndMakePlanks(Blocks.MANGROVE_WOOD, Blocks.STRIPPED_MANGROVE_WOOD, Blocks.MANGROVE_PLANKS),
 		CHERRY_WOOD = stripAndMakePlanks(Blocks.CHERRY_WOOD, Blocks.STRIPPED_CHERRY_WOOD, Blocks.CHERRY_PLANKS),
-		BAMBOO_BLOCK = stripAndMakePlanks(Blocks.BAMBOO_BLOCK, Blocks.STRIPPED_BAMBOO_BLOCK, Blocks.BAMBOO_PLANKS),
 		CRIMSON_WOOD = stripAndMakePlanks(Blocks.CRIMSON_HYPHAE, Blocks.STRIPPED_CRIMSON_HYPHAE, Blocks.CRIMSON_PLANKS),
 		WARPED_WOOD = stripAndMakePlanks(Blocks.WARPED_HYPHAE, Blocks.STRIPPED_WARPED_HYPHAE, Blocks.WARPED_PLANKS),
 
@@ -34,6 +33,8 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		DARK_OAK_LOG = stripAndMakePlanks(Blocks.DARK_OAK_LOG, Blocks.STRIPPED_DARK_OAK_LOG, Blocks.DARK_OAK_PLANKS),
 		MANGROVE_LOG = stripAndMakePlanks(Blocks.MANGROVE_LOG, Blocks.STRIPPED_MANGROVE_LOG, Blocks.MANGROVE_PLANKS),
 		CHERRY_LOG = stripAndMakePlanks(Blocks.CHERRY_LOG, Blocks.STRIPPED_CHERRY_LOG, Blocks.CHERRY_PLANKS),
+
+		BAMBOO_BLOCK = stripAndMakePlanks(Blocks.BAMBOO_BLOCK, Blocks.STRIPPED_BAMBOO_BLOCK, Blocks.BAMBOO_PLANKS),
 		CRIMSON_LOG = stripAndMakePlanks(Blocks.CRIMSON_STEM, Blocks.STRIPPED_CRIMSON_STEM, Blocks.CRIMSON_PLANKS),
 		WARPED_LOG = stripAndMakePlanks(Blocks.WARPED_STEM, Blocks.STRIPPED_WARPED_STEM, Blocks.WARPED_PLANKS),
 
@@ -113,8 +114,13 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
 		create(() -> wood, b -> b.duration(50)
 			.output(stripped));
-		return create(() -> stripped, b -> b.duration(50)
-			.output(planks, 6));
+		if (planks.equals(Blocks.BAMBOO_PLANKS)) {
+			return create(() -> stripped, b -> b.duration(50)
+					.output(planks, 3));
+		} else {
+			return create(() -> stripped, b -> b.duration(50)
+					.output(planks, 6));
+		}
 	}
 
 	GeneratedRecipe cuttingCompat(Mods mod, String... woodtypes) {
