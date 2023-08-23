@@ -10,7 +10,7 @@ import net.minecraftforge.items.IItemHandler;
 public class StorageDrawers {
 
 	public static boolean isDrawer(BlockEntity be) {
-		return be != null && Mods.STORAGEDRAWERS.asId()
+		return be != null && Mods.STORAGEDRAWERS.id()
 			.equals(be.getType()
 				.getRegistryName()
 				.getNamespace());

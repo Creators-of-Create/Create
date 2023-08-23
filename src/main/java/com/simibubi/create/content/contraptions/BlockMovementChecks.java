@@ -337,7 +337,7 @@ public class BlockMovementChecks {
 			return direction == state.getValue(StickerBlock.FACING)
 				&& !isNotSupportive(world.getBlockState(pos.relative(direction)), direction.getOpposite());
 		}
-		if (block instanceof AbstractBogeyBlock bogey)
+		if (block instanceof AbstractBogeyBlock<?> bogey)
 			return bogey.getStickySurfaces(world, pos, state)
 				.contains(direction);
 		if (block instanceof WhistleBlock)

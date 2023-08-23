@@ -7,7 +7,6 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderTag;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -314,7 +313,7 @@ public class AllPonderTags {
 			.add(Blocks.TARGET);
 
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
-			Block computer = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
+			Block computer = ForgeRegistries.BLOCKS.getValue(Mods.COMPUTERCRAFT.rl("computer_advanced"));
 			if (computer != null)
 				PonderRegistry.TAGS.forTag(DISPLAY_SOURCES).add(computer);
 		});

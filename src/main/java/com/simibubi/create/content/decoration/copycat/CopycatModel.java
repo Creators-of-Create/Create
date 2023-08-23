@@ -1,5 +1,6 @@
 package com.simibubi.create.content.decoration.copycat;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -107,14 +108,24 @@ public abstract class CopycatModel extends BakedModelWrapperWithData {
 
 		// Rubidium: render side!=null versions of the base material during side==null,
 		// to avoid getting culled away
-		if (side == null && state.getBlock() instanceof CopycatBlock ccb)
+		if (side == null && state.getBlock() instanceof CopycatBlock ccb) {
+			boolean immutable = true;
 			for (Direction nonOcclusionSide : Iterate.directions)
-				if (ccb.shouldFaceAlwaysRender(state, nonOcclusionSide))
+				if (ccb.shouldFaceAlwaysRender(state, nonOcclusionSide)) {
+					if (immutable) {
+						croppedQuads = new ArrayList<>(croppedQuads);
+						immutable = false;
+					}
 					croppedQuads.addAll(getCroppedQuads(state, nonOcclusionSide, rand, material, wrappedData));
+				}
+		}
 
 		return croppedQuads;
 	}
 
+	/**
+	 * The returned list must not be mutated.
+	 */
 	protected abstract List<BakedQuad> getCroppedQuads(BlockState state, Direction side, Random rand,
 		BlockState material, IModelData wrappedData);
 
