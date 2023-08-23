@@ -18,10 +18,10 @@ import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.equipment.potatoCannon.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.kinetics.TorquePropagator;
+import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.kinetics.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
-import com.simibubi.create.content.schematics.SchematicInstances;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
@@ -31,6 +31,7 @@ import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
+import com.simibubi.create.foundation.data.RecipeSerializerTagGen;
 import com.simibubi.create.foundation.data.TagGen;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
@@ -70,7 +71,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.5.1c";
+	public static final String VERSION = "0.5.1e";
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -125,21 +126,26 @@ public class Create {
 		AllParticleTypes.register(modEventBus);
 		AllStructureProcessorTypes.register(modEventBus);
 		AllEntityDataSerializers.register(modEventBus);
+		AllPackets.registerPackets();
 		AllOreFeatureConfigEntries.init();
 		AllFeatures.register(modEventBus);
 		AllPlacementModifiers.register(modEventBus);
 		BuiltinRegistration.register(modEventBus);
-		BogeySizes.init();
-		AllBogeyStyles.register();
 
 		AllConfigs.register(modLoadingContext);
 
+		// FIXME: some of these registrations are not thread-safe
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
+		AllFanProcessingTypes.register();
 		BlockSpoutingBehaviour.registerDefaults();
+		BogeySizes.init();
+		AllBogeyStyles.register();
+		// ----
+
 		ComputerCraftProxy.register();
 
 		ForgeMod.enableMilkFluid();
@@ -153,21 +159,23 @@ public class Create {
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 
+		// FIXME: this is not thread-safe
 		Mods.CURIOS.executeIfInstalled(() -> () -> Curios.init(modEventBus, forgeEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
-		AllPackets.registerPackets();
-		SchematicInstances.register();
-		BuiltinPotatoProjectileTypes.register();
+        event.enqueueWork(() -> {
+            // TODO: custom registration should all happen in one place
+            // Most registration happens in the constructor.
+            // These registrations use Create's registered objects directly so they must run after registration has finished.
+            BuiltinPotatoProjectileTypes.register();
+            BoilerHeaters.registerDefaults();
+            HeatProviders.registerDefaults();
 
-		event.enqueueWork(() -> {
-			AttachedRegistry.unwrapAll();
-			AllAdvancements.register();
-			AllTriggers.register();
-			BoilerHeaters.registerDefaults();
-			HeatProviders.registerDefaults();
-		});
+            AttachedRegistry.unwrapAll();
+            AllAdvancements.register();
+            AllTriggers.register();
+        });
 	}
 
 	public static void gatherData(GatherDataEvent event) {
@@ -178,6 +186,7 @@ public class Create {
 			gen.addProvider(AllSoundEvents.provider(gen));
 		}
 		if (event.includeServer()) {
+			gen.addProvider(new RecipeSerializerTagGen(gen, event.getExistingFileHelper()));
 			gen.addProvider(new AllAdvancements(gen));
 			gen.addProvider(new StandardRecipeGen(gen));
 			gen.addProvider(new MechanicalCraftingRecipeGen(gen));

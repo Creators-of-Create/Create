@@ -14,7 +14,6 @@ import com.simibubi.create.infrastructure.gametest.CreateGameTestHelper;
 import com.simibubi.create.infrastructure.gametest.GameTestGroup;
 
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.entity.EntityType;

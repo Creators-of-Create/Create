@@ -5,21 +5,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.simibubi.create.content.contraptions.Contraption;
-import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovement;
-import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovingInteraction;
-import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
-
-import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
-
-import net.minecraftforge.registries.ForgeRegistries;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovement;
+import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovingInteraction;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.kinetics.gauge.SpeedGaugeBlockEntity;
+import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity.SelectionMode;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
@@ -35,7 +31,6 @@ import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.server.level.ServerLevel;
@@ -62,6 +57,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * A helper class expanding the functionality of {@link GameTestHelper}.

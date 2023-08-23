@@ -1,5 +1,7 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -15,8 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
-
-import java.util.List;
 
 public class RemainingAirOverlay implements IIngameOverlay {
 	public static final RemainingAirOverlay INSTANCE = new RemainingAirOverlay();

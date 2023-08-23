@@ -14,17 +14,46 @@ public class ContraptionData {
 	/**
 	 * A sane, default maximum for contraption data size.
 	 */
-	public static final int DEFAULT_MAX = 2_000_000;
+	public static final int DEFAULT_LIMIT = 2_000_000;
+	/**
+	 * Connectivity expands the NBT packet limit to 2 GB.
+	 */
+	public static final int CONNECTIVITY_LIMIT = Integer.MAX_VALUE;
+	/**
+	 * Packet Fixer expands the NBT packet limit to 200 MB.
+	 */
+	public static final int PACKET_FIXER_LIMIT = 209_715_200;
 	/**
 	 * XL Packets expands the NBT packet limit to 2 GB.
 	 */
-	public static final int EXPANDED_MAX = 2_000_000_000;
+	public static final int XL_PACKETS_LIMIT = 2_000_000_000;
 	/**
 	 * Minecart item sizes are limited by the vanilla slot change packet ({@link ClientboundContainerSetSlotPacket}).
-	 * {@link ContraptionData#DEFAULT_MAX} is used as the default.
-	 * XL Packets expands the size limit to ~2 GB. If the mod is loaded, we take advantage of it and use the higher limit.
+	 * {@link #DEFAULT_LIMIT} is used as the default.
+	 * Connectivity, PacketFixer, and XL Packets expand the size limit.
+	 * If one of these mods is loaded, we take advantage of it and use the higher limit.
 	 */
-	public static final int PICKUP_MAX = Mods.XLPACKETS.isLoaded() ? EXPANDED_MAX : DEFAULT_MAX;
+	public static final int PICKUP_LIMIT;
+
+	static {
+		int limit = DEFAULT_LIMIT;
+
+		// Check from largest to smallest to use the smallest limit if multiple mods are loaded.
+		// It is necessary to use the smallest limit because even if multiple mods are loaded,
+		// not all of their mixins may be applied. Therefore, it is safest to only assume that
+		// the mod with the smallest limit is actually active.
+		if (Mods.CONNECTIVITY.isLoaded()) {
+			limit = CONNECTIVITY_LIMIT;
+		}
+		if (Mods.XLPACKETS.isLoaded()) {
+			limit = XL_PACKETS_LIMIT;
+		}
+		if (Mods.PACKETFIXER.isLoaded()) {
+			limit = PACKET_FIXER_LIMIT;
+		}
+
+		PICKUP_LIMIT = limit;
+	}
 
 	/**
 	 * @return true if the given NBT is too large for a contraption to be synced to clients.
@@ -38,7 +67,7 @@ public class ContraptionData {
 	 * @return true if the given NBT is too large for a contraption to be picked up with a wrench.
 	 */
 	public static boolean isTooLargeForPickup(CompoundTag data) {
-		return packetSize(data) > PICKUP_MAX;
+		return packetSize(data) > PICKUP_LIMIT;
 	}
 
 	/**

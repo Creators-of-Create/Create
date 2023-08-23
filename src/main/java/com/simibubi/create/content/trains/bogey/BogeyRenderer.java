@@ -6,11 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.simibubi.create.content.trains.entity.CarriageBogey;
-
 import org.jetbrains.annotations.Nullable;
 
 import com.jozufozu.flywheel.api.MaterialManager;
@@ -20,6 +15,10 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
