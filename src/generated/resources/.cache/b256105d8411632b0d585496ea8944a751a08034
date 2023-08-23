@@ -1,4 +1,4 @@
-// 1.20.1	2023-08-22T15:37:03.5521408	Create's Processing Recipes
+// 1.20.1	2023-08-23T16:29:07.6573146	Create's Processing Recipes
 3c94326fb730f68c1e44fe1e2ef09c9db6ffd92b data/create/recipes/compacting/andesite_from_flint.json
 8d3d5b31f3601b9f681ff710e0545a483a1494c6 data/create/recipes/compacting/blaze_cake.json
 8bd7f4e3a686ab520b2d55594d2018d0e9a50c91 data/create/recipes/compacting/chocolate.json
@@ -90,6 +90,7 @@ b5c33d039e3c9771b3ffc322aadae7e75a823635 data/create/recipes/cutting/acacia_log.
 b45b88bf2ac614b2518437656746f8e8a465d693 data/create/recipes/cutting/acacia_wood.json
 cdb26cd91feeda5901f31f57c16517dda5287810 data/create/recipes/cutting/andesite_alloy.json
 5afeada82e71eb5012e35725821792f64d92a6b3 data/create/recipes/cutting/bamboo_block.json
+4ac4bb94de7b25a3eec85e8290ab5f2f6b2b4167 data/create/recipes/cutting/bamboo_planks.json
 1a3dd0e51603a3e47da4465da210004c78028faf data/create/recipes/cutting/birch_log.json
 71c3a093c849a99fbaef8772114ac9305627f2c1 data/create/recipes/cutting/birch_wood.json
 31a1713f8bc5577b3fcf2fcfd2d42dac145f9560 data/create/recipes/cutting/cherry_log.json
