@@ -1,0 +1,14 @@
+{
+  "type": "create:cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:bamboo_planks"
+    }
+  ],
+  "processingTime": 20,
+  "results": [
+    {
+      "item": "minecraft:bamboo_mosaic"
+    }
+  ]
+}
