@@ -7,6 +7,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.Objects;
+
 public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -168,10 +170,17 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 				.output(1, mod, stripped, 1)
 				.whenModLoaded(mod.getId()));
 		if (planks != null)
-			create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
-				.require(mod, stripped)
-				.output(1, mod, planks, 6)
-				.whenModLoaded(mod.getId()));
+			if (!Objects.equals(mod.getId(), Mods.VH.getId())) {
+				create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
+						.require(mod, stripped)
+						.output(1, mod, planks, 6)
+						.whenModLoaded(mod.getId()));
+			} else {
+				create("compat/" + mod.getId() + "/" + stripped, b -> b.duration(50)
+						.require(mod, stripped)
+						.output(1, mod, planks, 4)
+						.whenModLoaded(mod.getId()));
+			}
 		return null;
 	}
 
@@ -183,5 +192,4 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	protected AllRecipeTypes getRecipeType() {
 		return AllRecipeTypes.CUTTING;
 	}
-
 }
