@@ -237,10 +237,10 @@ public class AllDisplayBehaviours {
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
 			DisplayBehaviour computerDisplaySource = register(Create.asResource("computer_display_source"), new ComputerDisplaySource());
 
-			assignBlockEntity(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "wired_modem_full"));
-			assignBlockEntity(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_normal"));
-			assignBlockEntity(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
-			assignBlockEntity(computerDisplaySource, new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_command"));
+			assignBlockEntity(computerDisplaySource, Mods.COMPUTERCRAFT.rl("wired_modem_full"));
+			assignBlockEntity(computerDisplaySource, Mods.COMPUTERCRAFT.rl("computer_normal"));
+			assignBlockEntity(computerDisplaySource, Mods.COMPUTERCRAFT.rl("computer_advanced"));
+			assignBlockEntity(computerDisplaySource, Mods.COMPUTERCRAFT.rl("computer_command"));
 		});
 	}
 }

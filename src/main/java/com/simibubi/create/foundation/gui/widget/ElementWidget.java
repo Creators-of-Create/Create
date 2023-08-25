@@ -3,8 +3,6 @@ package com.simibubi.create.foundation.gui.widget;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.element.RenderElement;
 import com.simibubi.create.foundation.gui.element.ScreenElement;

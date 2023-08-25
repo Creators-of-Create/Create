@@ -1,5 +1,7 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
@@ -36,8 +38,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
-
-import org.jetbrains.annotations.NotNull;
 
 public class PotatoProjectileEntity extends AbstractHurtingProjectile implements IEntityAdditionalSpawnData {
 

@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.kinetics.fan.FanProcessing;
+import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.logistics.filter.attribute.BookAuthorAttribute;
 import com.simibubi.create.content.logistics.filter.attribute.BookCopyAttribute;
 import com.simibubi.create.content.logistics.filter.attribute.ColorAttribute;
@@ -143,8 +143,8 @@ public interface ItemAttribute {
 		EQUIPABLE(s -> LivingEntity.getEquipmentSlotForItem(s)
 			.getType() != EquipmentSlot.Type.HAND),
 		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
-		WASHABLE(FanProcessing::isWashable),
-		HAUNTABLE(FanProcessing::isHauntable),
+		WASHABLE(AllFanProcessingTypes.SPLASHING::canProcess),
+		HAUNTABLE(AllFanProcessingTypes.HAUNTING::canProcess),
 		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
 			|| testRecipe(s, w, AllRecipeTypes.MILLING.getType())),
 		SMELTABLE((s, w) -> testRecipe(s, w, RecipeType.SMELTING)),

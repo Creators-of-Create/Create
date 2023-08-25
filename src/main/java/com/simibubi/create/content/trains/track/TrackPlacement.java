@@ -13,6 +13,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -44,7 +45,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
@@ -478,18 +478,6 @@ public class TrackPlacement {
 			info.requiredPavement += TrackPaver.paveCurve(level, info.curve, block, simulate, visited);
 	}
 
-	private static BlockState copyProperties(BlockState from, BlockState onto) {
-		for (Property property : onto.getProperties()) {
-			if (from.hasProperty(property))
-				onto = onto.setValue(property, from.getValue(property));
-		}
-		return onto;
-	}
-
-	private static BlockState copyProperties(BlockState from, BlockState onto, boolean keepFrom) {
-		return keepFrom ? from : copyProperties(from, onto);
-	}
-
 	private static PlacementInfo placeTracks(Level level, PlacementInfo info, BlockState state1, BlockState state2,
 		BlockPos targetPos1, BlockPos targetPos2, boolean simulate) {
 		info.requiredTracks = 0;
@@ -518,7 +506,7 @@ public class TrackPlacement {
 				BlockPos offsetPos = pos.offset(BlockPos.containing(offset));
 				BlockState stateAtPos = level.getBlockState(offsetPos);
 				// copy over all shared properties from the shaped state to the correct track material block
-				BlockState toPlace = copyProperties(state, info.trackMaterial.getBlock().defaultBlockState());
+				BlockState toPlace = BlockHelper.copyProperties(state, info.trackMaterial.getBlock().defaultBlockState());
 
 				boolean canPlace = stateAtPos.canBeReplaced();
 				if (canPlace)
@@ -543,12 +531,12 @@ public class TrackPlacement {
 			BlockState onto = info.trackMaterial.getBlock().defaultBlockState();
 			BlockState stateAtPos = level.getBlockState(targetPos1);
 			level.setBlock(targetPos1, ProperWaterloggedBlock.withWater(level,
-					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state1, onto))
+					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : BlockHelper.copyProperties(state1, onto))
 							.setValue(TrackBlock.HAS_BE, true), targetPos1), 3);
 
 			stateAtPos = level.getBlockState(targetPos2);
 			level.setBlock(targetPos2, ProperWaterloggedBlock.withWater(level,
-					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : copyProperties(state2, onto))
+					(AllTags.AllBlockTags.TRACKS.matches(stateAtPos) ? stateAtPos : BlockHelper.copyProperties(state2, onto))
 							.setValue(TrackBlock.HAS_BE, true), targetPos2), 3);
 		}
 

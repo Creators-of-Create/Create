@@ -2,7 +2,6 @@ package com.simibubi.create.content.kinetics.transmission.sequencer;
 
 import java.util.Vector;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.compat.computercraft.ComputerScreen;

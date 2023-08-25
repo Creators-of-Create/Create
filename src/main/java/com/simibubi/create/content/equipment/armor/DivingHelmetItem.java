@@ -1,5 +1,6 @@
 package com.simibubi.create.content.equipment.armor;
 
+import java.util.List;
 import java.util.Map;
 
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -21,8 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import java.util.List;
 
 @EventBusSubscriber
 public class DivingHelmetItem extends BaseArmorItem {

@@ -1379,7 +1379,7 @@ public abstract class Contraption {
 		return blocks.values();
 	}
 
-	public Collection<BlockEntity> getSpecialRenderedTEs() {
+	public Collection<BlockEntity> getSpecialRenderedBEs() {
 		return specialRenderedBlockEntities;
 	}
 

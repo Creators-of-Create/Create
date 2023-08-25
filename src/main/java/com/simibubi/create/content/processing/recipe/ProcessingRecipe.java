@@ -72,7 +72,7 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 	}
 
 	protected boolean canSpecifyDuration() {
-		return true;
+		return false;
 	}
 
 	protected int getMaxFluidInputCount() {

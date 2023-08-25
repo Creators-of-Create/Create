@@ -8,7 +8,6 @@ import static com.simibubi.create.AllPartialModels.LARGE_BOGEY_WHEELS;
 import static com.simibubi.create.AllPartialModels.SMALL_BOGEY_WHEELS;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;

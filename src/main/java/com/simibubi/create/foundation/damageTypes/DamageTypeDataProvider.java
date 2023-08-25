@@ -3,19 +3,17 @@ package com.simibubi.create.foundation.damageTypes;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import com.simibubi.create.AllDamageTypes;
-
-import com.simibubi.create.Create;
-
-import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
-
 import org.jetbrains.annotations.NotNull;
+
+import com.simibubi.create.AllDamageTypes;
+import com.simibubi.create.Create;
 
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 
 public class DamageTypeDataProvider extends DatapackBuiltinEntriesProvider {
 	private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()

@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.gui.widget;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.client.Minecraft;
