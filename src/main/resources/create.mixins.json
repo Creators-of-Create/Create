@@ -16,6 +16,7 @@
     "TestCommandMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
+    "accessor.EntityAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.GameTestHelperAccessor",
     "accessor.LivingEntityAccessor",

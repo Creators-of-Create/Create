@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.foundation.mixin.accessor.EntityAccessor;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -93,7 +95,7 @@ public class WrappedServerWorld extends ServerLevel {
 
 	@Override
 	public boolean addFreshEntity(Entity entityIn) {
-		entityIn.level = world;
+		((EntityAccessor) entityIn).create$callSetLevel(world);
 		return world.addFreshEntity(entityIn);
 	}
 
