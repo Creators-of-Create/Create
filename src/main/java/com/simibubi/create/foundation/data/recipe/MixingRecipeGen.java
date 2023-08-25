@@ -20,6 +20,12 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		.output(Fluids.LAVA, 50)
 		.requiresHeat(HeatCondition.SUPERHEATED)),
 
+		APPLE_JUICE = create("apple_juice", b -> b.require(Fluids.WATER, 250)
+				.require(Items.SUGAR)
+				.require(Items.APPLE)
+				.output(AllFluids.APPLE_JUICE.get(), 250)
+				.requiresHeat(HeatCondition.HEATED)),
+
 		TEA = create("tea", b -> b.require(Fluids.WATER, 250)
 			.require(Tags.Fluids.MILK, 250)
 			.require(ItemTags.LEAVES)

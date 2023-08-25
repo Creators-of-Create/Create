@@ -20,6 +20,10 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 		.require(Items.GLASS_BOTTLE)
 		.output(Items.HONEY_BOTTLE)),
 
+		APPLE_JUICE = create("apple_juice", b -> b.require(AllFluids.APPLE_JUICE.get(), 250)
+				.require(Items.GLASS_BOTTLE)
+				.output(AllItems.APPLE_JUICE.get())),
+
 		BUILDERS_TEA = create("builders_tea", b -> b.require(AllFluids.TEA.get(), 250)
 			.require(Items.GLASS_BOTTLE)
 			.output(AllItems.BUILDERS_TEA.get())),

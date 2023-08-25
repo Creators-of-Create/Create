@@ -19,6 +19,7 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.contraptions.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.minecart.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.mounted.MinecartContraptionItem;
+import com.simibubi.create.content.equipment.AppleJuiceItem;
 import com.simibubi.create.content.equipment.BuildersTeaItem;
 import com.simibubi.create.content.equipment.TreeFertilizerItem;
 import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
@@ -130,6 +131,12 @@ public class AllItems {
 			.saturationMod(0.8F)
 			.build()))
 		.register();
+
+	public static final ItemEntry<AppleJuiceItem> APPLE_JUICE = REGISTRATE.item("apple_juice", AppleJuiceItem::new)
+			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+			.properties(p -> p.stacksTo(16))
+			.lang("Apple Juice")
+			.register();
 
 	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)

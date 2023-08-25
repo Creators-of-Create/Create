@@ -20,6 +20,10 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 		.output(AllFluids.HONEY.get(), 250)
 		.output(Items.GLASS_BOTTLE)),
 
+		APPLE_JUICE = create("apple_juice", b -> b.require(AllItems.APPLE_JUICE.get())
+				.output(AllFluids.APPLE_JUICE.get(), 250)
+				.output(Items.GLASS_BOTTLE)),
+
 		BUILDERS_TEA = create("builders_tea", b -> b.require(AllItems.BUILDERS_TEA.get())
 			.output(AllFluids.TEA.get(), 250)
 			.output(Items.GLASS_BOTTLE)),

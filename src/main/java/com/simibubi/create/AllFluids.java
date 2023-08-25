@@ -26,6 +26,12 @@ public class AllFluids {
 					.lang("Potion")
 					.register();
 
+	// TODO: Look for better tag than juice/apple
+	public static final FluidEntry<VirtualFluid> APPLE_JUICE = REGISTRATE.virtualFluid("apple_juice")
+			.lang("Apple Juice")
+			.tag(AllTags.forgeFluidTag("juice/apple"))
+			.register();
+
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 			.lang("Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
@@ -93,5 +99,5 @@ public class AllFluids {
 		}
 
 	}
-	
+
 }

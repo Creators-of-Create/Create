@@ -601,8 +601,10 @@
 
 	"fluid.create.potion": "Potion",
 	"fluid.create.tea": "Builder's Tea",
+  "fluid.create.apple_juice": "Apple Juice",
 
 	"item.create.andesite_alloy": "Andesite Alloy",
+  "item.create.apple_juice": "Apple Juice",
 	"item.create.attribute_filter": "Attribute Filter",
 	"item.create.bar_of_chocolate": "Bar of Chocolate",
 	"item.create.belt_connector": "Mechanical Belt",
@@ -2070,7 +2072,10 @@
 	"item.create.builders_tea.tooltip": "BUILDERS TEA",
 	"item.create.builders_tea.tooltip.summary": "The perfect drink to get the day started- _Motivating_ and _Saturating._",
 
-	"item.create.linked_controller.tooltip": "LINKED CONTROLLER",
+  "item.create.apple_juice.tooltip": "APPLE JUICE",
+  "item.create.apple_juice.tooltip.summary": "A nice sweet drink made with apples, sugar, and love",
+
+  "item.create.linked_controller.tooltip": "LINKED CONTROLLER",
 	"item.create.linked_controller.tooltip.summary": "Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
 	"item.create.linked_controller.tooltip.condition1": "R-Click",
 	"item.create.linked_controller.tooltip.behaviour1": "_Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",

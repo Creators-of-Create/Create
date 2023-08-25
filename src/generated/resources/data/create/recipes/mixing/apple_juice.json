@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:apple"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "fluid": "minecraft:water",
+      "nbt": {},
+      "amount": 250
+    }
+  ],
+  "results": [
+    {
+      "fluid": "create:apple_juice",
+      "amount": 250
+    }
+  ]
+}
