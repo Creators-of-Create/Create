@@ -16,4 +16,9 @@ public abstract class AbstractCrushingRecipe extends ProcessingRecipe<RecipeWrap
 	protected int getMaxInputCount() {
 		return 1;
 	}
+
+	@Override
+	protected boolean canSpecifyDuration() {
+		return true;
+	}
 }

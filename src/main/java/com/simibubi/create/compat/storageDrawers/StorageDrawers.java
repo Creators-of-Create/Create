@@ -2,17 +2,17 @@ package com.simibubi.create.compat.storageDrawers;
 
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.items.IItemHandler;
 
 public class StorageDrawers {
 
 	public static boolean isDrawer(BlockEntity be) {
-		return be != null && Mods.STORAGEDRAWERS.asId()
-			.equals(BlockEntityType.getKey(be.getType())
+		return be != null && Mods.STORAGEDRAWERS.id()
+			.equals(RegisteredObjects.getKeyOrThrow(be.getType())
 				.getNamespace());
 	}
 

@@ -118,9 +118,9 @@ public class ContraptionRenderDispatcher {
 		ContraptionWorld contraptionWorld = c.getContraptionWorld();
 
 		BlockPos origin = c.anchor;
-		int height = contraptionWorld.getHeight();
 		int minBuildHeight = contraptionWorld.getMinBuildHeight();
-		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, origin, height, minBuildHeight) {
+		int height = contraptionWorld.getHeight();
+		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, minBuildHeight, height, origin) {
 			@Override
 			public boolean supportsFlywheel() {
 				return canInstance();
@@ -133,13 +133,13 @@ public class ContraptionRenderDispatcher {
 			// Skip individual lighting updates to prevent lag with large contraptions
 			renderWorld.setBlock(info.pos, info.state, Block.UPDATE_SUPPRESS_LIGHT);
 
-		renderWorld.runLightingEngine();
+		renderWorld.runLightEngine();
 		return renderWorld;
 	}
 
 	public static void renderBlockEntities(Level world, VirtualRenderWorld renderWorld, Contraption c,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		BlockEntityRenderHelper.renderBlockEntities(world, renderWorld, c.getSpecialRenderedTEs(),
+		BlockEntityRenderHelper.renderBlockEntities(world, renderWorld, c.getSpecialRenderedBEs(),
 			matrices.getModelViewProjection(), matrices.getLight(), buffer);
 	}
 
