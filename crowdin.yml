@@ -18,6 +18,7 @@
                 "es-CL": "es_cl",
                 "es-ES": "es_es",
                 "es-MX": "es_mx",
+                "et": "et_ee",
                 "fa": "fa_ir",
                 "fi": "fi_fi",
                 "fr": "fr_fr",
@@ -41,6 +42,7 @@
                 "tok": "tok",
                 "tr": "tr_tr",
                 "uk": "uk_ua",
+                "vi": "vi_vn",
                 "zh-CN": "zh_cn",
                 "zh-TW": "zh_tw",
             }
