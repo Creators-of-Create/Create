@@ -7,10 +7,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.placement.PlacementOffset;
@@ -67,7 +67,7 @@ public class DrillBlock extends DirectionalKineticBlock implements IBE<DrillBloc
 		withBlockEntityDo(worldIn, pos, be -> {
 			if (be.getSpeed() == 0)
 				return;
-			entityIn.hurt(AllDamageTypes.DRILL.source(worldIn), (float) getDamage(be.getSpeed()));
+			entityIn.hurt(CreateDamageSources.drill(worldIn), (float) getDamage(be.getSpeed()));
 		});
 	}
 

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions;
 
-import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -43,7 +43,7 @@ public class TrainCollisionPacket extends SimplePacketBase {
 			if (!(entity instanceof CarriageContraptionEntity cce))
 				return;
 
-			player.hurt(AllDamageTypes.RUN_OVER.source(level, cce), damage);
+			player.hurt(CreateDamageSources.runOver(level, cce), damage);
 			player.level().playSound(player, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL,
 				1, .75f);
 		});

@@ -2,10 +2,10 @@ package com.simibubi.create.content.kinetics.clock;
 
 import java.util.List;
 
-import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -104,7 +104,7 @@ public class CuckooClockBlockEntity extends KineticBlockEntity {
 				if (animationType == Animation.SURPRISE && Mth.equal(animationProgress.getValue(), 50)) {
 					Vec3 center = VecHelper.getCenterOf(worldPosition);
 					level.destroyBlock(worldPosition, false);
-					DamageSource damageSource = AllDamageTypes.CUCKOO_SURPRISE.source(level);
+					DamageSource damageSource = CreateDamageSources.cuckooSurprise(level);
 					level.explode(null, damageSource, null, center.x, center.y, center.z, 3, false,
 						ExplosionInteraction.BLOCK);
 				}

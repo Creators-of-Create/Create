@@ -11,13 +11,13 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.fan.processing.HauntingRecipe.HauntingWrapper;
 import com.simibubi.create.content.kinetics.fan.processing.SplashingRecipe.SplashingWrapper;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.LitBlazeBurnerBlock;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -223,7 +223,7 @@ public class AllFanProcessingTypes {
 
 			if (!entity.fireImmune()) {
 				entity.setSecondsOnFire(10);
-				entity.hurt(AllDamageTypes.FAN_LAVA.source(level), 4);
+				entity.hurt(CreateDamageSources.fanLava(level), 4);
 			}
 		}
 	}
@@ -409,7 +409,7 @@ public class AllFanProcessingTypes {
 
 			if (!entity.fireImmune()) {
 				entity.setSecondsOnFire(2);
-				entity.hurt(AllDamageTypes.FAN_FIRE.source(level), 2);
+				entity.hurt(CreateDamageSources.fanFire(level), 2);
 			}
 		}
 	}

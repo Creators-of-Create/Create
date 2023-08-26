@@ -16,7 +16,6 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity.ContraptionRotationState;
@@ -31,6 +30,7 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.collision.OrientedBB;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -530,7 +530,7 @@ public class ContraptionCollider {
 		if (diffMotion.length() <= 0.35f || contraptionMotion.length() <= 0.35f)
 			return entityMotion;
 
-		DamageSource source = AllDamageTypes.RUN_OVER.source(world, contraptionEntity);
+		DamageSource source = CreateDamageSources.runOver(world, contraptionEntity);
 		double damage = diffMotion.length();
 		if (entity.getClassification(false) == MobCategory.MONSTER)
 			damage *= 2;

@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 
@@ -26,9 +27,9 @@ import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
-import com.simibubi.create.foundation.damageTypes.DamageTypeDataProvider;
-import com.simibubi.create.foundation.damageTypes.DamageTypeTagGen;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.DamageTypeTagGen;
+import com.simibubi.create.foundation.data.GeneratedEntriesProvider;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.RecipeSerializerTagGen;
 import com.simibubi.create.foundation.data.TagGen;
@@ -45,8 +46,8 @@ import com.simibubi.create.infrastructure.command.ServerLagger;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
-import com.simibubi.create.infrastructure.worldgen.WorldgenDataProvider;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -178,6 +179,7 @@ public class Create {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
 		PackOutput output = gen.getPackOutput();
+		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
 		if (event.includeClient()) {
 			gen.addProvider(true, AllSoundEvents.provider(gen));
@@ -185,16 +187,17 @@ public class Create {
 		}
 
 		if (event.includeServer()) {
-			gen.addProvider(true, new RecipeSerializerTagGen(output, event.getLookupProvider(), event.getExistingFileHelper()));
+			GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
+			lookupProvider = generatedEntriesProvider.getRegistryProvider();
+			gen.addProvider(true, generatedEntriesProvider);
+
+			gen.addProvider(true, new RecipeSerializerTagGen(output, lookupProvider, event.getExistingFileHelper()));
+			gen.addProvider(true, new DamageTypeTagGen(output, lookupProvider, event.getExistingFileHelper()));
 			gen.addProvider(true, new AllAdvancements(output));
 			gen.addProvider(true, new StandardRecipeGen(output));
 			gen.addProvider(true, new MechanicalCraftingRecipeGen(output));
 			gen.addProvider(true, new SequencedAssemblyRecipeGen(output));
 			ProcessingRecipeGen.registerAll(gen, output);
-			gen.addProvider(true, WorldgenDataProvider.makeFactory(event.getLookupProvider()));
-			gen.addProvider(true, DamageTypeDataProvider.makeFactory(event.getLookupProvider()));
-			gen.addProvider(true,
-				new DamageTypeTagGen(output, event.getLookupProvider(), event.getExistingFileHelper()));
 		}
 	}
 

@@ -2,10 +2,10 @@ package com.simibubi.create.content.equipment.potatoCannon;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.simibubi.create.AllDamageTypes;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.particle.AirParticleData;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -317,7 +317,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	private DamageSource causePotatoDamage() {
-		return AllDamageTypes.POTATO_CANNON.source(level(), getOwner(), this);
+		return CreateDamageSources.potatoCannon(level(), getOwner(), this);
 	}
 
 	@SuppressWarnings("unchecked")
