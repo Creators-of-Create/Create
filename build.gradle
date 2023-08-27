@@ -185,7 +185,7 @@ repositories {
     }
     maven {
         // Location of the maven for Ponder, Catnip
-        name 'createmod maven'
+        name = 'createmod maven'
         url 'https://maven.createmod.net'
     }
     maven {
