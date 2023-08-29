@@ -9,7 +9,6 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.createmod.ponder.foundation.CustomPonderRegistrationHelper;
 import net.createmod.ponder.foundation.PonderTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -318,7 +317,7 @@ public class AllPonderTags {
 			.add(Blocks.TARGET);
 
 		Mods.COMPUTERCRAFT.executeIfInstalled(() -> () -> {
-			Block computer = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Mods.COMPUTERCRAFT.asId(), "computer_advanced"));
+			Block computer = ForgeRegistries.BLOCKS.getValue(Mods.COMPUTERCRAFT.rl("computer_advanced"));
 			if (computer != null)
 				HELPER.addToTag(DISPLAY_SOURCES).add(computer);
 		});

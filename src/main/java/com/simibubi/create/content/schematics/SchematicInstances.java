@@ -24,19 +24,13 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 public class SchematicInstances {
 
-	public static final WorldAttached<Cache<Integer, SchematicLevel>> loadedSchematics;
-
-	static {
-		loadedSchematics = new WorldAttached<>($ -> CacheBuilder.newBuilder()
+	private static final WorldAttached<Cache<Integer, SchematicLevel>> LOADED_SCHEMATICS = new WorldAttached<>($ -> CacheBuilder.newBuilder()
 			.expireAfterAccess(5, TimeUnit.MINUTES)
 			.build());
-	}
-
-	public static void register() {}
 
 	@Nullable
 	public static SchematicLevel get(Level world, ItemStack schematic) {
-		Cache<Integer, SchematicLevel> map = loadedSchematics.get(world);
+		Cache<Integer, SchematicLevel> map = LOADED_SCHEMATICS.get(world);
 		int hash = getHash(schematic);
 		SchematicLevel ifPresent = map.getIfPresent(hash);
 		if (ifPresent != null)

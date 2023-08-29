@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.kinetics.fan.SplashingRecipe;
+import com.simibubi.create.content.kinetics.fan.processing.SplashingRecipe;
 
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.world.level.material.Fluids;

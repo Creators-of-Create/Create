@@ -31,15 +31,14 @@ public class CopycatBarsModel extends CopycatModel {
 	protected List<BakedQuad> getCroppedQuads(BlockState state, Direction side, RandomSource rand, BlockState material,
 		ModelData wrappedData, RenderType renderType) {
 		BakedModel model = getModelOf(material);
-		List<BakedQuad> templateQuads = model.getQuads(material, null, rand, wrappedData, renderType);
 		List<BakedQuad> superQuads = originalModel.getQuads(state, side, rand, wrappedData, renderType);
-		List<BakedQuad> quads = new ArrayList<>();
 		TextureAtlasSprite targetSprite = model.getParticleIcon(wrappedData);
 
 		boolean vertical = state.getValue(CopycatPanelBlock.FACING)
 			.getAxis() == Axis.Y;
 
-		if (side != null && (vertical || side.getAxis() == Axis.Y))
+		if (side != null && (vertical || side.getAxis() == Axis.Y)) {
+			List<BakedQuad> templateQuads = model.getQuads(material, null, rand, wrappedData, renderType);
 			for (int i = 0; i < templateQuads.size(); i++) {
 				BakedQuad quad = templateQuads.get(i);
 				if (quad.getDirection() != Direction.UP)
@@ -47,9 +46,12 @@ public class CopycatBarsModel extends CopycatModel {
 				targetSprite = quad.getSprite();
 				break;
 			}
+		}
 
 		if (targetSprite == null)
 			return superQuads;
+
+		List<BakedQuad> quads = new ArrayList<>();
 
 		for (int i = 0; i < superQuads.size(); i++) {
 			BakedQuad quad = superQuads.get(i);

@@ -28,7 +28,6 @@
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",
-    "client.FixNormalScalingMixin",
     "client.GameRendererMixin",
     "client.HeavyBootsOnPlayerMixin",
     "client.HumanoidArmorLayerMixin",

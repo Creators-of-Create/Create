@@ -31,7 +31,7 @@ public class CKinetics extends ConfigBase {
 	public final ConfigGroup contraptions = group(1, "contraptions", "Moving Contraptions");
 	public final ConfigInt maxBlocksMoved = i(2048, 1, "maxBlocksMoved", Comments.maxBlocksMoved);
 	public final ConfigInt maxDataSize =
-		i(ContraptionData.DEFAULT_MAX, 0, "maxDataSize", Comments.bytes, Comments.maxDataDisable, Comments.maxDataSize, Comments.maxDataSize2);
+		i(ContraptionData.DEFAULT_LIMIT, 0, "maxDataSize", Comments.bytes, Comments.maxDataDisable, Comments.maxDataSize, Comments.maxDataSize2);
 	public final ConfigInt maxChassisRange = i(16, 1, "maxChassisRange", Comments.maxChassisRange);
 	public final ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public final ConfigInt maxRopeLength = i(256, 1, "maxRopeLength", Comments.maxRopeLength);

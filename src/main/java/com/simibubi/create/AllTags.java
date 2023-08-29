@@ -19,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -315,11 +316,54 @@ public class AllTags {
 		private static void init() {}
 
 	}
+	
+	public enum AllRecipeSerializerTags {
+
+		AUTOMATION_IGNORE,
+
+		;
+
+		public final TagKey<RecipeSerializer<?>> tag;
+		public final boolean alwaysDatagen;
+
+		AllRecipeSerializerTags() {
+			this(MOD);
+		}
+
+		AllRecipeSerializerTags(NameSpace namespace) {
+			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+
+		AllRecipeSerializerTags(NameSpace namespace, String path) {
+			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+
+		AllRecipeSerializerTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
+			this(namespace, null, optional, alwaysDatagen);
+		}
+
+		AllRecipeSerializerTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
+			if (optional) {
+				tag = optionalTag(ForgeRegistries.RECIPE_SERIALIZERS, id);
+			} else {
+				tag = TagKey.create(Registry.RECIPE_SERIALIZER_REGISTRY, id);
+			}
+			this.alwaysDatagen = alwaysDatagen;
+		}
+
+		public boolean matches(RecipeSerializer<?> recipeSerializer) {
+			return ForgeRegistries.RECIPE_SERIALIZERS.getHolder(recipeSerializer).orElseThrow().is(tag);
+		}
+
+		private static void init() {}
+	}
 
 	public static void init() {
 		AllBlockTags.init();
 		AllItemTags.init();
 		AllFluidTags.init();
 		AllEntityTags.init();
+		AllRecipeSerializerTags.init();
 	}
 }

@@ -214,7 +214,7 @@ dependencies {
         jarJar.ranged(it, '[MC1.19-1.1.5,)')
     }
     jarJar("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
-        jarJar.ranged(it, '[0.6.9,0.6.10)')
+        jarJar.ranged(it, '[0.6.10,0.6.11)')
     }
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
