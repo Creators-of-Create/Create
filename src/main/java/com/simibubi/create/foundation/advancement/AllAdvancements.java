@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
@@ -18,7 +19,6 @@ import org.slf4j.Logger;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
@@ -656,11 +656,9 @@ public class AllAdvancements implements DataProvider {
 		return "Create's Advancements";
 	}
 
-	public static JsonObject provideLangEntries() {
-		JsonObject object = new JsonObject();
+	public static void consumeLang(BiConsumer<String, String> consumer) {
 		for (CreateAdvancement advancement : ENTRIES)
-			advancement.appendToLang(object);
-		return object;
+			advancement.consumeLang(consumer);
 	}
 
 	public static void register() {}

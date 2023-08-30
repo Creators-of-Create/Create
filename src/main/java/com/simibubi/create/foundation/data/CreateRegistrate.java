@@ -2,10 +2,12 @@ package com.simibubi.create.foundation.data;
 
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +24,7 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.BlockEntityBuilder.BlockEntityFactory;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -43,16 +46,24 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.data.loading.DatagenModLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
+	protected final NonNullSupplier<Boolean> doDatagen = NonNullSupplier.lazy(DatagenModLoader::isRunningDataGen);
+
 	@Nullable
 	protected Function<Item, TooltipModifier> currentTooltipModifierFactory;
+	@Nullable
+	protected UnaryOperator<Map<String, String>> deferredLangPostprocessor;
+
+	protected boolean hasDataProvider = false;
 
 	protected CreateRegistrate(String modid) {
 		super(modid);
@@ -72,9 +83,37 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return currentTooltipModifierFactory;
 	}
 
+	/**
+	 * <b>Use {@link #addRawLang(String, String)} instead where possible!</b>
+	 */
+	public void addLangPostprocessor(UnaryOperator<Map<String, String>> langPostprocessor) {
+		if (!doDatagen.get()) {
+			return;
+		}
+
+		if (hasDataProvider) {
+			((LanguageProviderExtension) getDataProvider(ProviderType.LANG).orElseThrow()).create$addPostprocessor(langPostprocessor);
+		} else {
+			if (this.deferredLangPostprocessor == null) {
+				this.deferredLangPostprocessor = langPostprocessor;
+			} else {
+				UnaryOperator<Map<String, String>> current = this.deferredLangPostprocessor;
+				this.deferredLangPostprocessor = entries -> langPostprocessor.apply(current.apply(entries));
+			}
+		}
+	}
+
 	@Override
 	public CreateRegistrate registerEventListeners(IEventBus bus) {
 		return super.registerEventListeners(bus);
+	}
+
+	@Override
+	protected void onData(GatherDataEvent event) {
+		super.onData(event);
+		hasDataProvider = true;
+		((LanguageProviderExtension) getDataProvider(ProviderType.LANG).orElseThrow()).create$addPostprocessor(deferredLangPostprocessor);
+		deferredLangPostprocessor = null;
 	}
 
 	@Override

@@ -16,12 +16,17 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
+import com.tterrag.registrate.AbstractRegistrate;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.util.GsonHelper;
 
+/**
+ * @deprecated Use {@link AbstractRegistrate#addRawLang} or, if absolutely necessary, {@link CreateRegistrate#addLangPostprocessor} instead.
+ */
+@Deprecated(forRemoval = true)
 public class LangMerger implements DataProvider {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting()

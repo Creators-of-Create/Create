@@ -1,20 +1,22 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "priority": 1100,
   "package": "com.simibubi.create.foundation.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "create.refmap.json",
   "mixins": [
     "ClientboundMapItemDataPacketMixin",
     "ContraptionDriverInteractMixin",
-    "WaterWheelFluidSpreadMixin",
     "CustomItemUseEffectsMixin",
     "EnchantmentHelperMixin",
     "EntityMixin",
+    "LanguageProviderMixin",
     "LavaSwimmingMixin",
     "MainMixin",
     "MapItemSavedDataMixin",
     "TestCommandMixin",
+    "WaterWheelFluidSpreadMixin",
     "accessor.AbstractProjectileDispenseBehaviorAccessor",
     "accessor.DispenserBlockAccessor",
     "accessor.FallingBlockEntityAccessor",
@@ -42,6 +44,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "minVersion": "0.8"
+  }
 }

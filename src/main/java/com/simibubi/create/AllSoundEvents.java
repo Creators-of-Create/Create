@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import com.google.gson.Gson;
@@ -318,12 +319,10 @@ public class AllSoundEvents {
 			entry.register(registry);
 	}
 
-	public static JsonObject provideLangEntries() {
-		JsonObject object = new JsonObject();
+	public static void consumeLang(BiConsumer<String, String> consumer) {
 		for (SoundEntry entry : ALL.values())
 			if (entry.hasSubtitle())
-				object.addProperty(entry.getSubtitleKey(), entry.getSubtitle());
-		return object;
+				consumer.accept(entry.getSubtitleKey(), entry.getSubtitle());
 	}
 
 	public static SoundEntryProvider provider(DataGenerator generator) {

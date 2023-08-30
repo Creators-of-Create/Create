@@ -27,15 +27,7 @@ import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
-import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.simibubi.create.foundation.data.LangMerger;
-import com.simibubi.create.foundation.data.RecipeSerializerTagGen;
-import com.simibubi.create.foundation.data.TagGen;
-import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
-import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
@@ -43,12 +35,12 @@ import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.infrastructure.command.ServerLagger;
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.data.CreateDatagen;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.AllOreFeatureConfigEntries;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
 import com.simibubi.create.infrastructure.worldgen.BuiltinRegistration;
 
-import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -63,7 +55,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod(Create.ID)
 public class Create {
@@ -151,7 +142,7 @@ public class Create {
 		CopperRegistries.inject();
 
 		modEventBus.addListener(Create::init);
-		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
+		modEventBus.addListener(EventPriority.LOWEST, CreateDatagen::gatherData);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 
 		forgeEventBus.addListener(EventPriority.HIGH, SlidingDoorBlock::stopItQuark);
@@ -175,24 +166,6 @@ public class Create {
 			AllAdvancements.register();
 			AllTriggers.register();
 		});
-	}
-
-	public static void gatherData(GatherDataEvent event) {
-		TagGen.datagen();
-		DataGenerator gen = event.getGenerator();
-		if (event.includeClient()) {
-			gen.addProvider(new LangMerger(gen, ID, NAME, AllLangPartials.values()));
-			gen.addProvider(AllSoundEvents.provider(gen));
-		}
-		if (event.includeServer()) {
-			gen.addProvider(new RecipeSerializerTagGen(gen, event.getExistingFileHelper()));
-			gen.addProvider(new AllAdvancements(gen));
-			gen.addProvider(new StandardRecipeGen(gen));
-			gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-			gen.addProvider(new SequencedAssemblyRecipeGen(gen));
-			ProcessingRecipeGen.registerAll(gen);
-//			AllOreFeatureConfigEntries.gatherData(event);
-		}
 	}
 
 	public static ResourceLocation asResource(String path) {
