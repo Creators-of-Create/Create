@@ -114,7 +114,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 	public static void drawInWorldString(PoseStack ms, MultiBufferSource buffer, String c, int color) {
 		Font fontRenderer = Minecraft.getInstance().font;
 		fontRenderer.drawInBatch(c, 0, 0, color, false, ms.last()
-			.pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
+			.pose(), buffer, Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
 		if (buffer instanceof BufferSource) {
 			BakedGlyph texturedglyph = fontRenderer.getFontSet(Style.DEFAULT_FONT)
 				.whiteGlyph();

@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
@@ -16,13 +16,12 @@ import com.simibubi.create.foundation.fluid.FluidRenderer;
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -67,7 +66,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			.scale(.5f - offset);
 		ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 		boolean alongX = insertedFrom.getClockWise()
-			.getAxis() == Axis.X;
+			.getAxis() == Direction.Axis.X;
 		if (!alongX)
 			sideOffset *= -1;
 		ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
@@ -87,9 +86,9 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 		int positive = insertedFrom.getAxisDirection()
 			.getStep();
 		float verticalAngle = positive * offset * 360;
-		if (insertedFrom.getAxis() != Axis.X)
+		if (insertedFrom.getAxis() != Direction.Axis.X)
 			msr.rotateX(verticalAngle);
-		if (insertedFrom.getAxis() != Axis.Z)
+		if (insertedFrom.getAxis() != Direction.Axis.Z)
 			msr.rotateZ(-verticalAngle);
 
 		if (renderUpright) {
@@ -99,13 +98,13 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 				Vec3 vectorForOffset = itemPosition.add(offsetVec);
 				Vec3 diff = vectorForOffset.subtract(positionVec);
 
-				if (insertedFrom.getAxis() != Axis.X)
-					diff = VecHelper.rotate(diff, verticalAngle, Axis.X);
-				if (insertedFrom.getAxis() != Axis.Z)
-					diff = VecHelper.rotate(diff, -verticalAngle, Axis.Z);
+				if (insertedFrom.getAxis() != Direction.Axis.X)
+					diff = VecHelper.rotate(diff, verticalAngle, Direction.Axis.X);
+				if (insertedFrom.getAxis() != Direction.Axis.Z)
+					diff = VecHelper.rotate(diff, -verticalAngle, Direction.Axis.Z);
 
 				float yRot = (float) Mth.atan2(diff.z, -diff.x);
-				ms.mulPose(Vector3f.YP.rotation((float) (yRot - Math.PI / 2)));
+				ms.mulPose(Axis.YP.rotation((float) (yRot - Math.PI / 2)));
 			}
 			ms.translate(0, 0, -1 / 16f);
 		}
@@ -117,7 +116,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 			ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright)
 				msr.rotateX(90);
-			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer, 0);
+			itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 			ms.popPose();
 
 			if (!renderUpright) {

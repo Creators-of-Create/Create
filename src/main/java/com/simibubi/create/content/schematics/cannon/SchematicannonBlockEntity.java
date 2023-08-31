@@ -57,8 +57,8 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
@@ -135,7 +135,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 			BlockEntity blockEntity = level.getBlockEntity(worldPosition.relative(facing));
 			if (blockEntity != null) {
 				LazyOptional<IItemHandler> capability =
-					blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+					blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, facing.getOpposite());
 				if (capability.isPresent()) {
 					attachedInventories.add(capability);
 				}
@@ -189,7 +189,7 @@ public class SchematicannonBlockEntity extends SmartBlockEntity implements MenuP
 
 		for (int i = 0; i < tagBlocks.size(); i++) {
 			CompoundTag c = tagBlocks.getCompound(i);
-			LaunchedItem launched = LaunchedItem.fromNBT(c);
+			LaunchedItem launched = LaunchedItem.fromNBT(c, blockHolderGetter());
 			BlockPos readBlockPos = launched.target;
 
 			// Always write to Server block entity

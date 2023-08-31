@@ -1,10 +1,5 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import java.lang.ref.WeakReference;
-import java.util.Collection;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -16,7 +11,6 @@ import com.simibubi.create.content.contraptions.actors.contraptionControls.Contr
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovement;
 import com.simibubi.create.content.contraptions.actors.contraptionControls.ContraptionControlsMovement.ElevatorFloorSelection;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-
 import net.createmod.catnip.utility.Couple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -29,6 +23,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import java.lang.ref.WeakReference;
+import java.util.Collection;
 
 public class ElevatorControlsHandler {
 
@@ -91,10 +89,10 @@ public class ElevatorControlsHandler {
 
 			if (info == null)
 				continue;
-			if (!AllBlocks.CONTRAPTION_CONTROLS.has(info.state))
+			if (!AllBlocks.CONTRAPTION_CONTROLS.has(info.state()))
 				continue;
 
-			if (!slot.testHit(info.state, rayTraceResult.getLocation()
+			if (!slot.testHit(info.state(), rayTraceResult.getLocation()
 				.subtract(Vec3.atLowerCornerOf(pos))))
 				continue;
 
@@ -117,8 +115,8 @@ public class ElevatorControlsHandler {
 			if (prev != efs.currentIndex && !ec.namesList.isEmpty()) {
 				float pitch = (efs.currentIndex) / (float) (ec.namesList.size());
 				pitch = Mth.lerp(pitch, 1f, 1.5f);
-				AllSoundEvents.SCROLL_VALUE.play(mc.player.level, mc.player,
-					new BlockPos(contraptionEntity.toGlobalVector(rayTraceResult.getLocation(), 1)), 1, pitch);
+				AllSoundEvents.SCROLL_VALUE.play(mc.player.level(), mc.player,
+					BlockPos.containing(contraptionEntity.toGlobalVector(rayTraceResult.getLocation(), 1)), 1, pitch);
 			}
 
 			return true;

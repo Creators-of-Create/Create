@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.depot;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;

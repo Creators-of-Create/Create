@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "G": {
       "tag": "forge:plates/gold"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:wrench"
-  }
+  },
+  "show_notification": true
 }

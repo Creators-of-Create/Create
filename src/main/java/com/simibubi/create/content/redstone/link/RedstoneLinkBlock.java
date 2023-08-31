@@ -166,8 +166,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE
 		BlockPos neighbourPos = pos.relative(state.getValue(FACING)
 			.getOpposite());
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
-		return !neighbour.getMaterial()
-			.isReplaceable();
+		return !neighbour.canBeReplaced();
 	}
 
 	@Override

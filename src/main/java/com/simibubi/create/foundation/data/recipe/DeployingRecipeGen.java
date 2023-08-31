@@ -7,7 +7,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.block.CopperBlockSet;
 import com.simibubi.create.foundation.block.CopperBlockSet.Variant;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
@@ -64,8 +64,8 @@ public class DeployingRecipeGen extends ProcessingRecipeGen {
 			.output(waxed.get()));
 	}
 
-	public DeployingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public DeployingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

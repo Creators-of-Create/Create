@@ -71,7 +71,7 @@ public class CreateTestCommand {
 	}
 
 	private static void sendSuccess(CommandSourceStack source, String text, ChatFormatting color) {
-		source.sendSuccess(Components.literal(text).withStyle(color), true);
+		source.sendSuccess(() -> Components.literal(text).withStyle(color), true);
 	}
 
 	// find existing tests and folders for autofill

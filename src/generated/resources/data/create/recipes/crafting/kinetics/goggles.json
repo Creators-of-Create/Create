@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "G": {
       "tag": "forge:glass"
@@ -17,5 +18,6 @@
   ],
   "result": {
     "item": "create:goggles"
-  }
+  },
+  "show_notification": true
 }

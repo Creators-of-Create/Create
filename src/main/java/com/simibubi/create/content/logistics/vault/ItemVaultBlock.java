@@ -31,8 +31,8 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.ForgeSoundType;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultBlockEntity> {
 
@@ -160,7 +160,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultB
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
 		return getBlockEntityOptional(pLevel, pPos)
-			.map(vte -> vte.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY))
+			.map(vte -> vte.getCapability(ForgeCapabilities.ITEM_HANDLER))
 			.map(lo -> lo.map(ItemHelper::calcRedstoneFromInventory)
 				.orElse(0))
 			.orElse(0);

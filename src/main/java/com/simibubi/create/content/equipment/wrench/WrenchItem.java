@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
@@ -88,7 +87,7 @@ public class WrenchItem extends Item {
 		if (player.isCreative())
 			return;
 		AbstractMinecart minecart = (AbstractMinecart) target;
-		minecart.hurt(DamageSource.playerAttack(player), 100);
+		minecart.hurt(minecart.damageSources().playerAttack(player), 100);
 	}
 
 	@Override

@@ -160,7 +160,7 @@ public class SchematicTransformation {
 		vec = VecHelper.rotate(vec, rotation.getChaseTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
 		vec = vec.add(target.getX(), target.getY(), target.getZ());
-		return new BlockPos(vec.x, vec.y, vec.z);
+		return BlockPos.containing(vec.x, vec.y, vec.z);
 	}
 
 	public BlockPos fromAnchor(BlockPos pos) {
@@ -171,7 +171,7 @@ public class SchematicTransformation {
 		vec = vec.multiply(getScaleFB().getChaseTarget(), 1, getScaleLR().getChaseTarget());
 		vec = VecHelper.rotate(vec, rotation.getChaseTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
-		return pos.subtract(new BlockPos(vec.x, vec.y, vec.z));
+		return pos.subtract(BlockPos.containing(vec.x, vec.y, vec.z));
 	}
 
 	public int getRotationTarget() {

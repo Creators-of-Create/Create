@@ -1,7 +1,9 @@
 package com.simibubi.create.content.equipment.symmetryWand;
 
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.CrossPlaneMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
@@ -19,6 +21,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.lang.Components;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -117,30 +120,32 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
-		font.draw(ms, wand.getHoverName(), x + 11, y + 4, 0x592424);
+		background.render(graphics, x, y);
+		graphics.drawString(font, wand.getHoverName(), x + 11, y + 4, 0x592424, false);
 
-		renderBlock(ms, x, y);
+		renderBlock(graphics, x, y);
 		GuiGameElement.of(wand)
 				.scale(4)
 				.rotate(-70, 20, 20)
 				.at(x + 178, y + 448, -150)
-				.render(ms);
+				.render(graphics);
 	}
 
-	protected void renderBlock(PoseStack ms, int x, int y) {
+	protected void renderBlock(GuiGraphics graphics, int x, int y) {
+		PoseStack ms = graphics.pose();
+
 		ms.pushPose();
 		ms.translate(x + 26, y + 39, 20);
 		ms.scale(16, 16, 16);
-		ms.mulPose(new Vector3f(.3f, 1f, 0f).rotationDegrees(-22.5f));
+		ms.mulPose(Axis.of(new Vector3f(.3f, 1f, 0f)).rotationDegrees(-22.5f));
 		currentElement.applyModelTransform(ms);
 		// RenderSystem.multMatrix(ms.peek().getModel());
 		GuiGameElement.of(currentElement.getModel())
-			.render(ms);
+			.render(graphics);
 
 		ms.popPose();
 	}

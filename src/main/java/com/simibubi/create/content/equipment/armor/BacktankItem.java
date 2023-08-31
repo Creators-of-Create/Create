@@ -1,14 +1,7 @@
 package com.simibubi.create.content.equipment.armor;
 
-import java.util.Locale;
-import java.util.function.Supplier;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.simibubi.create.content.equipment.armor.CapacityEnchantment.ICapacityEnchantable;
 import com.simibubi.create.foundation.item.LayeredArmorItem;
-
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -16,22 +9,27 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Locale;
+import java.util.function.Supplier;
 
 public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable {
 	public static final EquipmentSlot SLOT = EquipmentSlot.CHEST;
+	public static final ArmorItem.Type TYPE = ArmorItem.Type.CHESTPLATE;
 	public static final int BAR_COLOR = 0xEFEFEF;
-	
+
 	private final Supplier<BacktankBlockItem> blockItem;
 
 	public BacktankItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc, Supplier<BacktankBlockItem> placeable) {
-		super(material, SLOT, properties, textureLoc);
+		super(material, TYPE, properties, textureLoc);
 		this.blockItem = placeable;
 	}
 
@@ -60,18 +58,6 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 	@Override
 	public boolean isEnchantable(ItemStack p_77616_1_) {
 		return true;
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
-		if (!allowedIn(tab))
-			return;
-
-		ItemStack stack = new ItemStack(this);
-		CompoundTag nbt = new CompoundTag();
-		nbt.putInt("Air", BacktankUtil.maxAirWithoutEnchants());
-		stack.setTag(nbt);
-		items.add(stack);
 	}
 
 	@Override
@@ -105,9 +91,6 @@ public class BacktankItem extends BaseArmorItem implements ICapacityEnchantable 
 			super(block, properties);
 			this.actualItem = actualItem;
 		}
-
-		@Override
-		public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {}
 
 		@Override
 		public String getDescriptionId() {

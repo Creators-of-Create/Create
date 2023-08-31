@@ -1,11 +1,8 @@
 package com.simibubi.create.content.equipment.blueprint;
 
-import java.util.Optional;
-
 import com.simibubi.create.AllMenuTypes;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.foundation.gui.menu.GhostItemMenu;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -16,14 +13,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+
+import java.util.Optional;
 
 public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 
@@ -60,7 +61,8 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 	}
 
 	public void onCraftMatrixChanged() {
-		if (contentHolder.getBlueprintWorld().isClientSide)
+		Level level = contentHolder.getBlueprintWorld();
+		if (level.isClientSide)
 			return;
 
 		ServerPlayer serverplayerentity = (ServerPlayer) player;
@@ -83,7 +85,7 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 		}
 
 		CraftingRecipe icraftingrecipe = optional.get();
-		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory);
+		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory, level.registryAccess());
 		ghostInventory.setStackInSlot(9, itemstack);
 		contentHolder.inferredIcon = true;
 		ItemStack toSend = itemstack.copy();
@@ -139,7 +141,7 @@ public class BlueprintMenu extends GhostItemMenu<BlueprintSection> {
 		return contentHolder != null && contentHolder.canPlayerUse(player);
 	}
 
-	static class BlueprintCraftingInventory extends CraftingContainer {
+	static class BlueprintCraftingInventory extends TransientCraftingContainer {
 
 		public BlueprintCraftingInventory(AbstractContainerMenu menu, ItemStackHandler items) {
 			super(menu, 3, 3);

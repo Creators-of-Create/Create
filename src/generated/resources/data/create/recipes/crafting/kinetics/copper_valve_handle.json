@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "tag": "forge:plates/copper"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:copper_valve_handle"
-  }
+  },
+  "show_notification": true
 }

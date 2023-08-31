@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "P": {
       "tag": "forge:rods/wooden"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:analog_lever"
-  }
+  },
+  "show_notification": true
 }

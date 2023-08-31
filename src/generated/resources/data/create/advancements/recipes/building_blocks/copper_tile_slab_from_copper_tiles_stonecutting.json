@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_copper_tiles": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:copper_tiles"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:copper_tile_slab_from_copper_tiles_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_copper_tiles",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:copper_tile_slab_from_copper_tiles_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

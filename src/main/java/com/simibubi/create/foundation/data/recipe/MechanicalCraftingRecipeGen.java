@@ -8,7 +8,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 
 import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -64,7 +64,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	public MechanicalCraftingRecipeGen(DataGenerator p_i48262_1_) {
+	public MechanicalCraftingRecipeGen(PackOutput p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

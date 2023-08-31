@@ -1,7 +1,8 @@
 package com.simibubi.create.content.kinetics.base.flwdata;
 
+import org.joml.Vector3f;
+
 import com.jozufozu.flywheel.core.materials.BasicData;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 
 import net.createmod.catnip.utility.theme.Color;

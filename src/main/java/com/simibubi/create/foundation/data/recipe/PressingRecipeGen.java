@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -27,8 +27,8 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public PressingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public PressingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

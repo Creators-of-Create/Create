@@ -1,13 +1,11 @@
 package com.simibubi.create.foundation.gui.widget;
 
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import net.createmod.catnip.gui.element.ScreenElement;
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class IconButton extends AbstractSimiWidget {
@@ -24,22 +22,21 @@ public class IconButton extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
-			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+			isHovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
 
 			AllGuiTextures button = !active ? AllGuiTextures.BUTTON_DOWN
-				: isHoveredOrFocused() ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
+				: isMouseOver(mouseX, mouseY) ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
 
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			drawBg(matrixStack, button);
-			icon.render(matrixStack, x + 1, y + 1);
+			drawBg(graphics, button);
+			icon.render(graphics, getX() + 1, getY() + 1);
 		}
 	}
 
-	protected void drawBg(PoseStack matrixStack, AllGuiTextures button) {
-		AllGuiTextures.BUTTON.bind();
-		blit(matrixStack, x, y, button.getStartX(), button.getStartY(), button.getWidth(), button.getHeight());
+	protected void drawBg(GuiGraphics graphics, AllGuiTextures button) {
+		graphics.blit(button.location, getX(), getY(), button.getStartX(), button.getStartY(), button.getWidth(), button.getHeight());
 	}
 
 	public void setToolTip(Component text) {

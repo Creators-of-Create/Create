@@ -1,9 +1,5 @@
 package com.simibubi.create.content.equipment.goggles;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -16,7 +12,6 @@ import com.simibubi.create.foundation.gui.RemovedGuiUtils;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
-
 import net.createmod.catnip.CatnipClient;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.Iterate;
@@ -26,6 +21,7 @@ import net.createmod.catnip.utility.outliner.Outliner.OutlineEntry;
 import net.createmod.catnip.utility.theme.Color;
 import net.createmod.catnip.utility.theme.Theme;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,6 +38,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class GoggleOverlayRenderer {
 
 	public static final IGuiOverlay OVERLAY = GoggleOverlayRenderer::renderOverlay;
@@ -51,7 +51,7 @@ public class GoggleOverlayRenderer {
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
-	public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width,
+	public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width,
 		int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || mc.gameMode.getPlayerMode() == GameType.SPECTATOR)
@@ -159,6 +159,7 @@ public class GoggleOverlayRenderer {
 			return;
 		}
 
+		PoseStack poseStack = graphics.pose();
 		poseStack.pushPose();
 
 		int tooltipTextWidth = 0;
@@ -197,13 +198,13 @@ public class GoggleOverlayRenderer {
 			colorBorderBot.scaleAlpha(fade);
 		}
 
-		RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
+		RemovedGuiUtils.drawHoveringText(graphics, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
 			colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item)
 			.at(posX + 10, posY - 16, 450)
-			.render(poseStack);
+			.render(graphics);
 		poseStack.popPose();
 	}
 

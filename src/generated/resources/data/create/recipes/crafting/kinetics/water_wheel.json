@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "create:shaft"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "create:water_wheel"
-  }
+  },
+  "show_notification": true
 }

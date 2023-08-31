@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "item": "create:electron_tube"
@@ -14,5 +15,6 @@
   "result": {
     "count": 2,
     "item": "create:display_board"
-  }
+  },
+  "show_notification": true
 }

@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -28,7 +29,7 @@ public class TrackNodeLocation extends Vec3i {
 	}
 
 	public TrackNodeLocation(double x, double y, double z) {
-		super(Math.round(x * 2), Math.floor(y) * 2, Math.round(z * 2));
+		super(Mth.floor(Math.round(x * 2)), Mth.floor(y) * 2, Mth.floor(Math.round(z * 2)));
 	}
 
 	public TrackNodeLocation in(Level level) {
@@ -114,7 +115,7 @@ public class TrackNodeLocation extends Vec3i {
 		for (int x : Iterate.positiveAndNegative)
 			for (int y : Iterate.positiveAndNegative)
 				for (int z : Iterate.positiveAndNegative)
-					set.add(new BlockPos(vec3.add(x * step, y * step, z * step)));
+					set.add(BlockPos.containing(vec3.add(x * step, y * step, z * step)));
 		return set;
 	}
 

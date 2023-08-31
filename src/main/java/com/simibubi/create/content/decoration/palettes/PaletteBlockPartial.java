@@ -1,10 +1,5 @@
 package com.simibubi.create.content.decoration.palettes;
 
-import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
-
-import java.util.Arrays;
-import java.util.function.Supplier;
-
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -12,12 +7,11 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonnullType;
-
 import net.createmod.catnip.utility.lang.Lang;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +26,11 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraftforge.client.model.generators.ModelFile;
+
+import java.util.Arrays;
+import java.util.function.Supplier;
+
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 public abstract class PaletteBlockPartial<B extends Block> {
 
@@ -133,8 +132,9 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		@Override
 		protected void createRecipes(AllPaletteStoneTypes type, BlockEntry<? extends Block> patternBlock,
 			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
-			p.stairs(DataIngredient.items(patternBlock), c::get, c.getName(), false);
-			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 1);
+			RecipeCategory category = RecipeCategory.BUILDING_BLOCKS;
+			p.stairs(DataIngredient.items(patternBlock.get()), category, c::get, c.getName(), false);
+			p.stonecutting(DataIngredient.tag(type.materialTag), category, c::get, 1);
 		}
 
 	}
@@ -195,10 +195,11 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		@Override
 		protected void createRecipes(AllPaletteStoneTypes type, BlockEntry<? extends Block> patternBlock,
 			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
-			p.slab(DataIngredient.items(patternBlock), c::get, c.getName(), false);
-			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 2);
+			RecipeCategory category = RecipeCategory.BUILDING_BLOCKS;
+			p.slab(DataIngredient.items(patternBlock.get()), category, c::get, c.getName(), false);
+			p.stonecutting(DataIngredient.tag(type.materialTag), category, c::get, 2);
 			DataIngredient ingredient = DataIngredient.items(c.get());
-			ShapelessRecipeBuilder.shapeless(patternBlock.get())
+			ShapelessRecipeBuilder.shapeless(category, patternBlock.get())
 				.requires(ingredient)
 				.requires(ingredient)
 				.unlockedBy("has_" + c.getName(), ingredient.getCritereon(p))
@@ -208,7 +209,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		@Override
 		protected BlockBuilder<SlabBlock, CreateRegistrate> transformBlock(
 			BlockBuilder<SlabBlock, CreateRegistrate> builder, String variantName, PaletteBlockPattern pattern) {
-			builder.loot((lt, block) -> lt.add(block, RegistrateBlockLootTables.createSlabItemTable(block)));
+			builder.loot((lt, block) -> lt.add(block, lt.createSlabItemTable(block)));
 			return super.transformBlock(builder, variantName, pattern);
 		}
 
@@ -252,9 +253,10 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		@Override
 		protected void createRecipes(AllPaletteStoneTypes type, BlockEntry<? extends Block> patternBlock,
 			DataGenContext<Block, ? extends Block> c, RegistrateRecipeProvider p) {
-			p.stonecutting(DataIngredient.tag(type.materialTag), c::get, 1);
-			DataIngredient ingredient = DataIngredient.items(patternBlock);
-			ShapedRecipeBuilder.shaped(c.get(), 6)
+			RecipeCategory category = RecipeCategory.BUILDING_BLOCKS;
+			p.stonecutting(DataIngredient.tag(type.materialTag), category, c::get, 1);
+			DataIngredient ingredient = DataIngredient.items(patternBlock.get());
+			ShapedRecipeBuilder.shaped(category, c.get(), 6)
 				.pattern("XXX")
 				.pattern("XXX")
 				.define('X', ingredient)

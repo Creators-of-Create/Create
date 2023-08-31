@@ -2,10 +2,12 @@ package com.simibubi.create.content.contraptions.bearing;
 
 import javax.annotation.Nullable;
 
+import org.joml.Quaternionf;
+
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.mojang.math.Quaternion;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.ControlledContraptionEntity;
@@ -22,7 +24,6 @@ import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
@@ -48,13 +49,13 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		// rotate to match blockstate
-		Quaternion orientation = BearingInstance.getBlockStateOrientation(facing);
+		Quaternionf orientation = BearingInstance.getBlockStateOrientation(facing);
 
 		// rotate against parent
 		float angle = getCounterRotationAngle(context, facing, renderPartialTicks) * facing.getAxisDirection()
 			.getStep();
 
-		Quaternion rotation = facing.step()
+		Quaternionf rotation = Axis.of(facing.step())
 			.rotationDegrees(angle);
 
 		rotation.mul(orientation);
@@ -87,7 +88,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 			return 0;
 
 		float offset = 0;
-		Axis axis = facing.getAxis();
+		Direction.Axis axis = facing.getAxis();
 		AbstractContraptionEntity entity = context.contraption.entity;
 
 		if (entity instanceof ControlledContraptionEntity) {

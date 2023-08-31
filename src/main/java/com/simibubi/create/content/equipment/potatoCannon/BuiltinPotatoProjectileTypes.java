@@ -1,16 +1,10 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
-import java.util.UUID;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.mixin.accessor.FallingBlockEntityAccessor;
-
 import net.createmod.catnip.utility.WorldAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,6 +39,11 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.UUID;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class BuiltinPotatoProjectileTypes {
 
@@ -160,7 +159,7 @@ public class BuiltinPotatoProjectileTypes {
 			.soundPitch(1.1f)
 			.onEntityHit(ray -> {
 				Entity entity = ray.getEntity();
-				Level world = entity.level;
+				Level world = entity.level();
 
 				if (!(entity instanceof ZombieVillager) || !((ZombieVillager) entity).hasEffect(MobEffects.WEAKNESS))
 					return foodEffects(Foods.GOLDEN_APPLE, false).test(ray);
@@ -271,7 +270,7 @@ public class BuiltinPotatoProjectileTypes {
 	private static Predicate<EntityHitResult> potion(MobEffect effect, int level, int ticks, boolean recoverable) {
 		return ray -> {
 			Entity entity = ray.getEntity();
-			if (entity.level.isClientSide)
+			if (entity.level().isClientSide)
 				return true;
 			if (entity instanceof LivingEntity)
 				applyEffect((LivingEntity) entity, new MobEffectInstance(effect, ticks, level - 1));
@@ -282,7 +281,7 @@ public class BuiltinPotatoProjectileTypes {
 	private static Predicate<EntityHitResult> foodEffects(FoodProperties food, boolean recoverable) {
 		return ray -> {
 			Entity entity = ray.getEntity();
-			if (entity.level.isClientSide)
+			if (entity.level().isClientSide)
 				return true;
 
 			if (entity instanceof LivingEntity) {
@@ -317,8 +316,7 @@ public class BuiltinPotatoProjectileTypes {
 				return false;
 			BlockPos placePos = hitPos.relative(face);
 			if (!world.getBlockState(placePos)
-				.getMaterial()
-				.isReplaceable())
+				.canBeReplaced())
 				return false;
 			if (!(cropBlock.get() instanceof IPlantable))
 				return false;
@@ -347,8 +345,7 @@ public class BuiltinPotatoProjectileTypes {
 			Direction face = ray.getDirection();
 			BlockPos placePos = hitPos.relative(face);
 			if (!world.getBlockState(placePos)
-				.getMaterial()
-				.isReplaceable())
+				.canBeReplaced())
 				return false;
 
 			if (face == Direction.UP) {

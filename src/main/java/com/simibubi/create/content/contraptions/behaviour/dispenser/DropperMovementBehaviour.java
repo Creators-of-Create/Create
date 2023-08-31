@@ -42,7 +42,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 			.filter(itemStack -> !itemStack.isEmpty() && itemStack.getItem() != Items.AIR
 				&& itemStack.getMaxStackSize() > itemStack.getCount())
 			.forEach(itemStack -> itemStack.grow(ItemHelper
-				.extract(context.contraption.getSharedInventory(), itemStack::sameItem,
+				.extract(context.contraption.getSharedInventory(), ItemHelper.sameItemPredicate(itemStack),
 					ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false)
 				.getCount()));
 	}
@@ -69,8 +69,8 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 			if (testStack == null || testStack.isEmpty())
 				continue;
 			if (testStack.getMaxStackSize() == 1) {
-				location = new DispenseItemLocation(false, ItemHelper
-					.findFirstMatchingSlotIndex(context.contraption.getSharedInventory(), testStack::sameItem));
+				location = new DispenseItemLocation(false, ItemHelper.findFirstMatchingSlotIndex(
+					context.contraption.getSharedInventory(), ItemHelper.sameItemPredicate(testStack)));
 				if (!getItemStackAt(location, context).isEmpty())
 					useable.add(location);
 			} else if (testStack.getCount() >= 2)

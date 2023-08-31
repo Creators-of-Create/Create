@@ -4,14 +4,15 @@ import java.util.Iterator;
 
 import javax.annotation.Nullable;
 
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.config.BackendType;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector4f;
 import com.simibubi.create.Create;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -95,8 +96,8 @@ public class BlockEntityRenderHelper {
 	private static BlockPos getLightPos(@Nullable Matrix4f lightTransform, BlockPos contraptionPos) {
 		if (lightTransform != null) {
 			Vector4f lightVec = new Vector4f(contraptionPos.getX() + .5f, contraptionPos.getY() + .5f, contraptionPos.getZ() + .5f, 1);
-			lightVec.transform(lightTransform);
-			return new BlockPos(lightVec.x(), lightVec.y(), lightVec.z());
+			lightVec.mul(lightTransform);
+			return BlockPos.containing(lightVec.x(), lightVec.y(), lightVec.z());
 		} else {
 			return contraptionPos;
 		}

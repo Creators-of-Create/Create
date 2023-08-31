@@ -25,8 +25,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -88,7 +88,7 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
 		super.updateEntityAfterFallOn(worldIn, entityIn);
 
-		if (entityIn.level.isClientSide)
+		if (entityIn.level().isClientSide)
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;
@@ -104,7 +104,7 @@ public class MillstoneBlock extends KineticBlock implements IBE<MillstoneBlockEn
 			return;
 
 		ItemEntity itemEntity = (ItemEntity) entityIn;
-		LazyOptional<IItemHandler> capability = millstone.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> capability = millstone.getCapability(ForgeCapabilities.ITEM_HANDLER);
 		if (!capability.isPresent())
 			return;
 

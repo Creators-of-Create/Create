@@ -79,7 +79,6 @@ public class DirectedDirectionalBlock extends HorizontalDirectionalBlock impleme
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public BlockState transform(BlockState state, StructureTransform transform) {
 		if (transform.mirror != null)
 			state = mirror(state, transform.mirror);

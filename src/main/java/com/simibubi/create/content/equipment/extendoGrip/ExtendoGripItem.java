@@ -1,9 +1,5 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
-import java.util.UUID;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -13,7 +9,6 @@ import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -51,6 +46,10 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {
 	public static final int MAX_DAMAGE = 200;
@@ -64,10 +63,10 @@ public class ExtendoGripItem extends Item {
 
 	private static final Supplier<Multimap<Attribute, AttributeModifier>> rangeModifier = Suppliers.memoize(() ->
 	// Holding an ExtendoGrip
-	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), singleRangeAttributeModifier));
+	ImmutableMultimap.of(ForgeMod.BLOCK_REACH.get(), singleRangeAttributeModifier));
 	private static final Supplier<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = Suppliers.memoize(() ->
 	// Holding two ExtendoGrips o.O
-	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier));
+	ImmutableMultimap.of(ForgeMod.BLOCK_REACH.get(), doubleRangeAttributeModifier));
 
 	private static DamageSource lastActiveDamageSource;
 
@@ -148,7 +147,7 @@ public class ExtendoGripItem extends Item {
 			return;
 
 		// Modified version of GameRenderer#getMouseOver
-		double d0 = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+		double d0 = player.getAttribute(ForgeMod.BLOCK_REACH.get())
 			.getValue();
 		if (!player.isCreative())
 			d0 -= 0.5f;
@@ -194,7 +193,7 @@ public class ExtendoGripItem extends Item {
 	private static void findAndDamageExtendoGrip(Player player) {
 		if (player == null)
 			return;
-		if (player.level.isClientSide)
+		if (player.level().isClientSide)
 			return;
 		InteractionHand hand = InteractionHand.MAIN_HAND;
 		ItemStack extendo = player.getMainHandItem();
@@ -258,7 +257,7 @@ public class ExtendoGripItem extends Item {
 		// Server ignores entity interaction further than 6m
 		if (entity.distanceToSqr(target) < 36)
 			return false;
-		if (!entity.level.isClientSide)
+		if (!entity.level().isClientSide)
 			return false;
 		if (!(entity instanceof Player))
 			return false;

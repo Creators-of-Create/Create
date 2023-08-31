@@ -1,10 +1,5 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
@@ -17,7 +12,6 @@ import com.simibubi.create.content.contraptions.elevator.ElevatorColumn.ColumnCo
 import com.simibubi.create.content.contraptions.pulley.PulleyContraption;
 import com.simibubi.create.content.redstone.contact.RedstoneContactBlock;
 import com.simibubi.create.foundation.utility.CreateLang;
-
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.IntAttached;
 import net.minecraft.core.BlockPos;
@@ -29,6 +23,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraftforge.network.PacketDistributor;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
 
 public class ElevatorContraption extends PulleyContraption {
 
@@ -62,7 +60,7 @@ public class ElevatorContraption extends PulleyContraption {
 			return;
 
 		ColumnCoords coords = getGlobalColumn();
-		ElevatorColumn column = ElevatorColumn.get(entity.level, coords);
+		ElevatorColumn column = ElevatorColumn.get(entity.level(), coords);
 
 		if (column == null)
 			return;

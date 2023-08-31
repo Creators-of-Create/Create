@@ -26,6 +26,7 @@ import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -165,14 +166,14 @@ public class LinkedControllerClientHandler {
 			// Released Keys
 			if (!releasedKeys.isEmpty()) {
 				AllPackets.getChannel().sendToServer(new LinkedControllerInputPacket(releasedKeys, false, lecternPos));
-				AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .5f, true);
+				AllSoundEvents.CONTROLLER_CLICK.playAt(player.level(), player.blockPosition(), 1f, .5f, true);
 			}
 
 			// Newly Pressed Keys
 			if (!newKeys.isEmpty()) {
 				AllPackets.getChannel().sendToServer(new LinkedControllerInputPacket(newKeys, true, lecternPos));
 				packetCooldown = PACKET_RATE;
-				AllSoundEvents.CONTROLLER_CLICK.playAt(player.level, player.blockPosition(), 1f, .75f, true);
+				AllSoundEvents.CONTROLLER_CLICK.playAt(player.level(), player.blockPosition(), 1f, .75f, true);
 			}
 
 			// Keepalive Pressed Keys
@@ -211,7 +212,7 @@ public class LinkedControllerClientHandler {
 		controls.forEach(kb -> kb.setDown(false));
 	}
 
-	public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width1,
+	public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width1,
 		int height1) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui)
@@ -220,6 +221,7 @@ public class LinkedControllerClientHandler {
 		if (MODE != Mode.BIND)
 			return;
 
+		PoseStack poseStack = graphics.pose();
 		poseStack.pushPose();
 		Screen tooltipScreen = new Screen(Components.immutableEmpty()) {
 		};
@@ -247,7 +249,7 @@ public class LinkedControllerClientHandler {
 		int y = height1 - height - 24;
 
 		// TODO
-		tooltipScreen.renderComponentTooltip(poseStack, list, x, y);
+		graphics.renderComponentTooltip(Minecraft.getInstance().font, list, x, y);
 
 		poseStack.popPose();
 	}

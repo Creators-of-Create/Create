@@ -10,6 +10,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.lang.Components;
@@ -331,7 +332,7 @@ public class FilterItem extends Item implements MenuProvider {
 		if (matchNBT) {
 			return ItemHandlerHelper.canItemStacksStack(filter, stack);
 		} else {
-			return ItemStack.isSame(filter, stack);
+			return ItemHelper.sameItem(filter, stack);
 		}
 	}
 

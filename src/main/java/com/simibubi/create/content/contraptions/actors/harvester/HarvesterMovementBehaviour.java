@@ -1,9 +1,5 @@
 package com.simibubi.create.content.contraptions.actors.harvester;
 
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
@@ -11,9 +7,9 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -34,6 +30,9 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IPlantable;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
+import javax.annotation.Nullable;
 
 public class HarvesterMovementBehaviour implements MovementBehaviour {
 
@@ -98,7 +97,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		BlockState state = stateVisited;
 		BlockHelper.destroyBlockAs(world, pos, null, item, effectChance, stack -> {
 			if (AllConfigs.server().kinetics.harvesterReplants.get() && !seedSubtracted.getValue()
-				&& stack.sameItem(new ItemStack(state.getBlock()))) {
+				&& ItemHelper.sameItem(stack, new ItemStack(state.getBlock()))) {
 				stack.shrink(1);
 				seedSubtracted.setTrue();
 			}
@@ -116,7 +115,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		if (state.getBlock() instanceof CropBlock) {
 			CropBlock crop = (CropBlock) state.getBlock();
 			if (harvestPartial)
-				return state.getValue(crop.getAgeProperty()) != 0 || !replant;
+				return state != crop.getStateForAge(0) || !replant;
 			return crop.isMaxAge(state);
 		}
 

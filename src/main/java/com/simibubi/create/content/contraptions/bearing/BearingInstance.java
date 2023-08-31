@@ -1,11 +1,12 @@
 package com.simibubi.create.content.contraptions.bearing;
 
+import org.joml.Quaternionf;
+
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.BackHalfShaftInstance;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -18,14 +19,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 public class BearingInstance<B extends KineticBlockEntity & IBearingBlockEntity> extends BackHalfShaftInstance<B> implements DynamicInstance {
 	final OrientedData topInstance;
 
-	final Vector3f rotationAxis;
-	final Quaternion blockOrientation;
+	final Axis rotationAxis;
+	final Quaternionf blockOrientation;
 
 	public BearingInstance(MaterialManager materialManager, B blockEntity) {
 		super(materialManager, blockEntity);
 
 		Direction facing = blockState.getValue(BlockStateProperties.FACING);
-		rotationAxis = Direction.get(Direction.AxisDirection.POSITIVE, axis).step();
+		rotationAxis = Axis.of(Direction.get(Direction.AxisDirection.POSITIVE, axis).step());
 
 		blockOrientation = getBlockStateOrientation(facing);
 
@@ -39,9 +40,8 @@ public class BearingInstance<B extends KineticBlockEntity & IBearingBlockEntity>
 
 	@Override
 	public void beginFrame() {
-
 		float interpolatedAngle = blockEntity.getInterpolatedAngle(AnimationTickHolder.getPartialTicks() - 1);
-		Quaternion rot = rotationAxis.rotationDegrees(interpolatedAngle);
+		Quaternionf rot = rotationAxis.rotationDegrees(interpolatedAngle);
 
 		rot.mul(blockOrientation);
 
@@ -60,16 +60,16 @@ public class BearingInstance<B extends KineticBlockEntity & IBearingBlockEntity>
 		topInstance.delete();
 	}
 
-	static Quaternion getBlockStateOrientation(Direction facing) {
-		Quaternion orientation;
+	static Quaternionf getBlockStateOrientation(Direction facing) {
+		Quaternionf orientation;
 
 		if (facing.getAxis().isHorizontal()) {
-			orientation = Vector3f.YP.rotationDegrees(AngleHelper.horizontalAngle(facing.getOpposite()));
+			orientation = Axis.YP.rotationDegrees(AngleHelper.horizontalAngle(facing.getOpposite()));
 		} else {
-			orientation = Quaternion.ONE.copy();
+			orientation = new Quaternionf();
 		}
 
-		orientation.mul(Vector3f.XP.rotationDegrees(-90 - AngleHelper.verticalAngle(facing)));
+		orientation.mul(Axis.XP.rotationDegrees(-90 - AngleHelper.verticalAngle(facing)));
 		return orientation;
 	}
 }

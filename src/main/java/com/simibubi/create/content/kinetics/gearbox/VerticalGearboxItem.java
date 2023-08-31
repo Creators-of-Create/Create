@@ -9,10 +9,8 @@ import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,10 +22,6 @@ public class VerticalGearboxItem extends BlockItem {
 
 	public VerticalGearboxItem(Properties builder) {
 		super(AllBlocks.GEARBOX.get(), builder);
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 	}
 
 	@Override

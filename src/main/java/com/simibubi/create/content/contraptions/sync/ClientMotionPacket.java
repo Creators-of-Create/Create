@@ -2,10 +2,8 @@ package com.simibubi.create.content.contraptions.sync;
 
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.PacketDistributor;
@@ -46,7 +44,7 @@ public class ClientMotionPacket extends SimplePacketBase {
 			sender.setDeltaMovement(motion);
 			sender.setOnGround(onGround);
 			if (onGround) {
-				sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
+				sender.causeFallDamage(sender.fallDistance, 1, sender.damageSources().fall());
 				sender.fallDistance = 0;
 				sender.connection.aboveGroundTickCount = 0;
 				sender.connection.aboveGroundVehicleTickCount = 0;

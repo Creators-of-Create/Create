@@ -3,7 +3,7 @@ package com.simibubi.create.content.equipment.potatoCannon;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
@@ -14,11 +14,11 @@ import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
@@ -27,11 +27,11 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
-		TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		ItemRenderer itemRenderer = Minecraft.getInstance()
-			.getItemRenderer();
+		ItemDisplayContext transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+		Minecraft mc = Minecraft.getInstance();
+		ItemRenderer itemRenderer = mc.getItemRenderer();
 		renderer.render(model.getOriginalModel(), light);
-		LocalPlayer player = Minecraft.getInstance().player;
+		LocalPlayer player = mc.player;
 		boolean mainHand = player.getMainHandItem() == stack;
 		boolean offHand = player.getOffhandItem() == stack;
 		boolean leftHanded = player.getMainArm() == HumanoidArm.LEFT;
@@ -48,12 +48,12 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 
 		ms.pushPose();
 		ms.translate(0, offset, 0);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
+		ms.mulPose(Axis.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
 		renderer.render(COG.get(), light);
 		ms.popPose();
 
-		if (transformType == TransformType.GUI) {
+		if (transformType == ItemDisplayContext.GUI) {
 			PotatoCannonItem.getAmmoforPreview(stack)
 				.ifPresent(ammo -> {
 					PoseStack localMs = new PoseStack();
@@ -61,7 +61,8 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 					localMs.scale(.5f, .5f, .5f);
 					TransformStack.cast(localMs)
 						.rotateY(-34);
-					itemRenderer.renderStatic(ammo, TransformType.GUI, light, OverlayTexture.NO_OVERLAY, localMs, buffer, 0);
+					itemRenderer.renderStatic(ammo, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, localMs,
+						buffer, mc.level, 0);
 				});
 		}
 

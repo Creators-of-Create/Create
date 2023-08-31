@@ -9,7 +9,7 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -32,15 +32,14 @@ import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -77,9 +76,9 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		boolean displayMode = facing == Direction.UP && be.getSpeed() == 0 && !punching;
 
-		ms.mulPose(Vector3f.YP.rotationDegrees(yRot));
+		ms.mulPose(Axis.YP.rotationDegrees(yRot));
 		if (!displayMode) {
-			ms.mulPose(Vector3f.XP.rotationDegrees(xRot));
+			ms.mulPose(Axis.XP.rotationDegrees(xRot));
 			ms.translate(0, 0, -11 / 16f);
 		}
 
@@ -89,7 +88,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
 
-		TransformType transform = TransformType.NONE;
+		ItemDisplayContext transform = ItemDisplayContext.NONE;
 		boolean isBlockItem = (be.heldItem.getItem() instanceof BlockItem)
 			&& itemRenderer.getModel(be.heldItem, be.getLevel(), null, 0)
 				.isGui3d();
@@ -98,16 +97,16 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 			float scale = isBlockItem ? 1.25f : 1;
 			ms.translate(0, isBlockItem ? 9 / 16f : 11 / 16f, 0);
 			ms.scale(scale, scale, scale);
-			transform = TransformType.GROUND;
-			ms.mulPose(Vector3f.YP.rotationDegrees(LevelTickHolder.getRenderTime(be.getLevel())));
+			transform = ItemDisplayContext.GROUND;
+			ms.mulPose(Axis.YP.rotationDegrees(LevelTickHolder.getRenderTime(be.getLevel())));
 
 		} else {
 			float scale = punching ? .75f : isBlockItem ? .75f - 1 / 64f : .5f;
 			ms.scale(scale, scale, scale);
-			transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
+			transform = punching ? ItemDisplayContext.THIRD_PERSON_RIGHT_HAND : ItemDisplayContext.FIXED;
 		}
 
-		itemRenderer.renderStatic(be.heldItem, transform, light, overlay, ms, buffer, 0);
+		itemRenderer.renderStatic(be.heldItem, transform, light, overlay, ms, buffer, be.getLevel(), 0);
 		ms.popPose();
 	}
 
@@ -147,7 +146,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		float yRot = AngleHelper.horizontalAngle(facing);
 		float xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
 		float zRot =
-			axisDirectionMatters && (deployerState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Axis.Z) ? 90
+			axisDirectionMatters && (deployerState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z) ? 90
 				: 0;
 
 		buffer.rotateCentered(Direction.UP, (float) ((yRot) / 180 * Math.PI));
@@ -175,7 +174,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
 			factor = Mth.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
 		} else {
-			Vec3 center = VecHelper.getCenterOf(new BlockPos(context.position));
+			Vec3 center = VecHelper.getCenterOf(BlockPos.containing(context.position));
 			double distance = context.position.distanceTo(center);
 			double nextDistance = context.position.add(context.motion)
 				.distanceTo(center);
@@ -189,7 +188,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		m.pushPose();
 
 		m.pushPose();
-		Axis axis = Axis.Y;
+		Direction.Axis axis = Direction.Axis.Y;
 		if (context.state.getBlock() instanceof IRotate) {
 			IRotate def = (IRotate) context.state.getBlock();
 			axis = def.getRotationAxis(context.state);
@@ -200,11 +199,11 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 
 		TransformStack.cast(m)
 			.centre()
-			.rotateY(axis == Axis.Z ? 90 : 0)
+			.rotateY(axis == Direction.Axis.Z ? 90 : 0)
 			.rotateZ(axis.isHorizontal() ? 90 : 0)
 			.unCentre();
 		shaft.transform(m);
-		shaft.rotateCentered(Direction.get(AxisDirection.POSITIVE, Axis.Y), angle);
+		shaft.rotateCentered(Direction.get(AxisDirection.POSITIVE, Direction.Axis.Y), angle);
 		m.popPose();
 
 		if (!context.disabled)

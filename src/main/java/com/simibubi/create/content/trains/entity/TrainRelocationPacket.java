@@ -68,7 +68,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 		context.enqueueWork(() -> {
 			ServerPlayer sender = context.getSender();
 			Train train = Create.RAILWAYS.trains.get(trainId);
-			Entity entity = sender.level.getEntity(entityId);
+			Entity entity = sender.level().getEntity(entityId);
 
 			String messagePrefix = sender.getName()
 				.getString() + " could not relocate Train ";
@@ -95,7 +95,7 @@ public class TrainRelocationPacket extends SimplePacketBase {
 				return;
 			}
 
-			if (TrainRelocator.relocate(train, sender.level, pos, hoveredBezier, direction, lookAngle, false)) {
+			if (TrainRelocator.relocate(train, sender.level(), pos, hoveredBezier, direction, lookAngle, false)) {
 				sender.displayClientMessage(CreateLang.translateDirect("train.relocate.success")
 					.withStyle(ChatFormatting.GREEN), true);
 				train.carriages.forEach(c -> c.forEachPresentEntity(e -> {

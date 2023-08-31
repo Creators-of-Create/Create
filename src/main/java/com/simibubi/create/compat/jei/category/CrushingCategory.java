@@ -1,22 +1,20 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrushingWheels;
 import com.simibubi.create.content.kinetics.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.createmod.catnip.utility.layout.LayoutHelper;
+import net.minecraft.client.gui.GuiGraphics;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecipe> {
@@ -65,10 +63,10 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	) {}
 
 	@Override
-	public void draw(AbstractCrushingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 72, 7);
+	public void draw(AbstractCrushingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 72, 7);
 
-		crushingWheels.draw(matrixStack, 62, 59);
+		crushingWheels.draw(graphics, 62, 59);
 	}
 
 }

@@ -149,8 +149,7 @@ public class OpenEndedPipe extends FlowSource {
 			return drainBlock;
 		}
 
-		if (!waterlog && !state.getMaterial()
-			.isReplaceable())
+		if (!waterlog && !state.canBeReplaced())
 			return empty;
 		if (fluidState.isEmpty() || !fluidState.isSource())
 			return empty;
@@ -183,8 +182,7 @@ public class OpenEndedPipe extends FlowSource {
 		FluidState fluidState = state.getFluidState();
 		boolean waterlog = state.hasProperty(WATERLOGGED);
 
-		if (!waterlog && !state.getMaterial()
-			.isReplaceable())
+		if (!waterlog && !state.canBeReplaced())
 			return false;
 		if (fluid.isEmpty())
 			return false;

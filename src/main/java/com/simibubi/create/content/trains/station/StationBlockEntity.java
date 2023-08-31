@@ -283,8 +283,8 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		if (bb == null || !bb.isInside(pos))
 			return false;
 
-		BlockPos up = new BlockPos(track.getUpNormal(level, pos, state));
-		BlockPos down = new BlockPos(track.getUpNormal(level, pos, state).scale(-1));
+		BlockPos up = BlockPos.containing(track.getUpNormal(level, pos, state));
+		BlockPos down = BlockPos.containing(track.getUpNormal(level, pos, state).scale(-1));
 		int bogeyOffset = pos.distManhattan(edgePoint.getGlobalPosition()) - 1;
 
 		if (!isValidBogeyOffset(bogeyOffset)) {
@@ -493,7 +493,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		MutableBlockPos currentPos = targetPosition.mutable();
 		currentPos.move(assemblyDirection);
 
-		BlockPos bogeyOffset = new BlockPos(track.getUpNormal(level, targetPosition, trackState));
+		BlockPos bogeyOffset = BlockPos.containing(track.getUpNormal(level, targetPosition, trackState));
 
 		int MAX_LENGTH = AllConfigs.server().trains.maxAssemblyLength.get();
 		int MAX_BOGEY_COUNT = AllConfigs.server().trains.maxBogeyCount.get();
@@ -614,7 +614,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		BlockPos trackPosition = edgePoint.getGlobalPosition();
 		BlockState trackState = edgePoint.getTrackBlockState();
 		ITrackBlock track = edgePoint.getTrack();
-		BlockPos bogeyOffset = new BlockPos(track.getUpNormal(level, trackPosition, trackState));
+		BlockPos bogeyOffset = BlockPos.containing(track.getUpNormal(level, trackPosition, trackState));
 
 		TrackNodeLocation location = null;
 		Vec3 centre = Vec3.atBottomCenterOf(trackPosition)

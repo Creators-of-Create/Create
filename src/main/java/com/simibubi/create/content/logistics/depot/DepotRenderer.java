@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -13,13 +13,14 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
@@ -59,7 +60,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 					.getNormal()).scale(.5f - offset);
 				ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 				boolean alongX = tis.insertedFrom.getClockWise()
-					.getAxis() == Axis.X;
+					.getAxis() == Direction.Axis.X;
 				if (!alongX)
 					sideOffset *= -1;
 				ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
@@ -68,7 +69,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			ItemStack itemStack = tis.stack;
 			int angle = tis.angle;
 			Random r = new Random(0);
-			renderItem(ms, buffer, light, overlay, itemStack, angle, r, itemPosition);
+			renderItem(be.getLevel(), ms, buffer, light, overlay, itemStack, angle, r, itemPosition);
 			ms.popPose();
 		}
 
@@ -90,14 +91,14 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 				msr.rotateY(-(360 / 8f * i));
 			Random r = new Random(i + 1);
 			int angle = (int) (360 * r.nextFloat());
-			renderItem(ms, buffer, light, overlay, stack, renderUpright ? angle + 90 : angle, r, itemPosition);
+			renderItem(be.getLevel(), ms, buffer, light, overlay, stack, renderUpright ? angle + 90 : angle, r, itemPosition);
 			ms.popPose();
 		}
 
 		ms.popPose();
 	}
 
-	public static void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack itemStack,
+	public static void renderItem(Level level, PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack itemStack,
 		int angle, Random r, Vec3 itemPosition) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
@@ -117,7 +118,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 				Vec3 vectorForOffset = itemPosition;
 				Vec3 diff = vectorForOffset.subtract(positionVec);
 				float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
-				ms.mulPose(Vector3f.YP.rotation(yRot));
+				ms.mulPose(Axis.YP.rotation(yRot));
 			}
 			ms.translate(0, 3 / 32d, -1 / 16f);
 		}
@@ -131,7 +132,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 				ms.translate(0, -3 / 16f, 0);
 				msr.rotateX(90);
 			}
-			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer, 0);
+			itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, level, 0);
 			ms.popPose();
 
 			if (!renderUpright) {

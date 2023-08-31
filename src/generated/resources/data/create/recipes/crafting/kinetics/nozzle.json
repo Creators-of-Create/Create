@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "tag": "minecraft:wool"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "create:nozzle"
-  }
+  },
+  "show_notification": true
 }

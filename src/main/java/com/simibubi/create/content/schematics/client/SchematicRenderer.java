@@ -121,6 +121,7 @@ public class SchematicRenderer {
 				BakedModel model = dispatcher.getBlockModel(state);
 				BlockEntity blockEntity = renderWorld.getBlockEntity(localPos);
 				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
+				modelData = model.getModelData(renderWorld, pos, state, modelData);
 				long seed = state.getSeed(pos);
 				random.setSeed(seed);
 				if (model.getRenderTypes(state, random, modelData).contains(layer)) {

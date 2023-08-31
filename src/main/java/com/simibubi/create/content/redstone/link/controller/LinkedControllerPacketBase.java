@@ -46,7 +46,7 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 				return;
 
 			if (inLectern()) {
-				BlockEntity be = player.level.getBlockEntity(lecternPos);
+				BlockEntity be = player.level().getBlockEntity(lecternPos);
 				if (!(be instanceof LecternControllerBlockEntity))
 					return;
 				handleLectern(player, (LecternControllerBlockEntity) be);

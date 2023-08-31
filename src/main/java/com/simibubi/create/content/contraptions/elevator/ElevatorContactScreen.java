@@ -1,9 +1,6 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.decoration.slidingDoor.DoorControl;
@@ -14,16 +11,17 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.TooltipArea;
 import com.simibubi.create.foundation.utility.CreateLang;
-
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.Pair;
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
+import org.lwjgl.glfw.GLFW;
 
 public class ElevatorContactScreen extends AbstractSimiScreen {
 
@@ -67,7 +65,7 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 			shortName = s;
 			centerInput(x);
 		});
-		shortNameInput.changeFocus(true);
+		shortNameInput.setFocused(true);
 		setFocused(shortNameInput);
 		shortNameInput.setHighlightPos(0);
 
@@ -101,7 +99,9 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 	}
 
 	private int centerInput(int x) {
-		return shortNameInput.x = x + (shortName.isEmpty() ? 34 : 36 - font.width(shortName) / 2);
+		int centeredX = x + (shortName.isEmpty() ? 34 : 36 - font.width(shortName) / 2);
+		shortNameInput.setX(centeredX);
+		return centeredX;
 	}
 
 	private EditBox editBox(int x, int width, int chars) {
@@ -110,29 +110,29 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 		editBox.setTextColorUneditable(-1);
 		editBox.setBordered(false);
 		editBox.setMaxLength(chars);
-		editBox.changeFocus(false);
+		editBox.setFocused(false);
 		editBox.mouseClicked(0, 0, 0);
 		addRenderableWidget(editBox);
 		return editBox;
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
+		background.render(graphics, x, y);
 
 		FormattedCharSequence formattedcharsequence = title.getVisualOrderText();
-		font.draw(ms, formattedcharsequence,
-			(float) (x + (background.getWidth() - 8) / 2 - font.width(formattedcharsequence) / 2), (float) y + 6, 0x2F3738);
+		graphics.drawString(font, formattedcharsequence,
+			(float) (x + (background.getWidth() - 8) / 2 - font.width(formattedcharsequence) / 2), (float) y + 6, 0x2F3738, false);
 
 		GuiGameElement.of(AllBlocks.ELEVATOR_CONTACT.asStack()).<GuiGameElement
 			.GuiRenderBuilder>at(x + background.getWidth() + 6, y + background.getHeight() - 56, -200)
 			.scale(5)
-			.render(ms);
+			.render(graphics);
 
-		itemRenderer.renderGuiItem(AllBlocks.TRAIN_DOOR.asStack(), x + 37, y + 58);
+		graphics.renderItem(AllBlocks.TRAIN_DOOR.asStack(), x + 37, y + 58);
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class ElevatorContactScreen extends AbstractSimiScreen {
 		if (!consumed && pMouseX > guiLeft + 22 && pMouseY > guiTop + 24 && pMouseX < guiLeft + 50
 			&& pMouseY < guiTop + 40) {
 			setFocused(shortNameInput);
-			shortNameInput.changeFocus(true);
+			shortNameInput.setFocused(true);
 			return true;
 		}
 

@@ -12,7 +12,7 @@ import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluids;
@@ -73,7 +73,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
 	;
 
-	public SequencedAssemblyRecipeGen(DataGenerator p_i48262_1_) {
+	public SequencedAssemblyRecipeGen(PackOutput p_i48262_1_) {
 		super(p_i48262_1_);
 	}
 

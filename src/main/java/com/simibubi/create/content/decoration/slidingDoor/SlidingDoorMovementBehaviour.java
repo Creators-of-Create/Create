@@ -1,8 +1,5 @@
 package com.simibubi.create.content.decoration.slidingDoor;
 
-import java.lang.ref.WeakReference;
-import java.util.Map;
-
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -13,7 +10,6 @@ import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-
 import net.createmod.catnip.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,6 +26,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
+
+import java.lang.ref.WeakReference;
+import java.util.Map;
 
 public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 
@@ -49,7 +48,7 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 			.get(context.localPos);
 		if (structureBlockInfo == null)
 			return;
-		boolean open = SlidingDoorBlockEntity.isOpen(structureBlockInfo.state);
+		boolean open = SlidingDoorBlockEntity.isOpen(structureBlockInfo.state());
 
 		if (!context.world.isClientSide())
 			tickOpen(context, open);
@@ -78,26 +77,26 @@ public class SlidingDoorMovementBehaviour implements MovementBehaviour {
 
 		StructureBlockInfo info = contraption.getBlocks()
 			.get(pos);
-		if (info == null || !info.state.hasProperty(DoorBlock.OPEN))
+		if (info == null || !info.state().hasProperty(DoorBlock.OPEN))
 			return;
 
 		toggleDoor(pos, contraption, info);
 
 		if (shouldOpen)
-			context.world.playSound(null, new BlockPos(context.position), SoundEvents.IRON_DOOR_OPEN,
+			context.world.playSound(null, BlockPos.containing(context.position), SoundEvents.IRON_DOOR_OPEN,
 				SoundSource.BLOCKS, .125f, 1);
 	}
 
 	private void toggleDoor(BlockPos pos, Contraption contraption, StructureBlockInfo info) {
-		BlockState newState = info.state.cycle(DoorBlock.OPEN);
-		contraption.entity.setBlock(pos, new StructureBlockInfo(info.pos, newState, info.nbt));
+		BlockState newState = info.state().cycle(DoorBlock.OPEN);
+		contraption.entity.setBlock(pos, new StructureBlockInfo(info.pos(), newState, info.nbt()));
 
 		BlockPos otherPos = newState.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
 		info = contraption.getBlocks()
 			.get(otherPos);
-		if (info != null && info.state.hasProperty(DoorBlock.OPEN)) {
-			newState = info.state.cycle(DoorBlock.OPEN);
-			contraption.entity.setBlock(otherPos, new StructureBlockInfo(info.pos, newState, info.nbt));
+		if (info != null && info.state().hasProperty(DoorBlock.OPEN)) {
+			newState = info.state().cycle(DoorBlock.OPEN);
+			contraption.entity.setBlock(otherPos, new StructureBlockInfo(info.pos(), newState, info.nbt()));
 			contraption.invalidateColliders();
 		}
 	}

@@ -16,7 +16,6 @@ import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -78,7 +76,7 @@ public class ScheduleItem extends Item implements MenuProvider {
 		Entity rootVehicle = pInteractionTarget.getRootVehicle();
 		if (!(rootVehicle instanceof CarriageContraptionEntity))
 			return pass;
-		if (pPlayer.level.isClientSide)
+		if (pPlayer.level().isClientSide)
 			return InteractionResult.SUCCESS;
 
 		CarriageContraptionEntity entity = (CarriageContraptionEntity) rootVehicle;
@@ -98,25 +96,25 @@ public class ScheduleItem extends Item implements MenuProvider {
 			Couple<Boolean> directions = cc.conductorSeats.get(seatPos);
 			if (directions == null) {
 				pPlayer.displayClientMessage(CreateLang.translateDirect("schedule.non_controlling_seat"), true);
-				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
+				AllSoundEvents.DENY.playOnServer(pPlayer.level(), pPlayer.blockPosition(), 1, 1);
 				return InteractionResult.SUCCESS;
 			}
 
 			if (train.runtime.getSchedule() != null) {
-				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
+				AllSoundEvents.DENY.playOnServer(pPlayer.level(), pPlayer.blockPosition(), 1, 1);
 				pPlayer.displayClientMessage(CreateLang.translateDirect("schedule.remove_with_empty_hand"), true);
 				return InteractionResult.SUCCESS;
 			}
 
 			if (schedule.entries.isEmpty()) {
-				AllSoundEvents.DENY.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
+				AllSoundEvents.DENY.playOnServer(pPlayer.level(), pPlayer.blockPosition(), 1, 1);
 				pPlayer.displayClientMessage(CreateLang.translateDirect("schedule.no_stops"), true);
 				return InteractionResult.SUCCESS;
 			}
 
 			train.runtime.setSchedule(schedule, false);
 			AllAdvancements.CONDUCTOR.awardTo(pPlayer);
-			AllSoundEvents.CONFIRM.playOnServer(pPlayer.level, pPlayer.blockPosition(), 1, 1);
+			AllSoundEvents.CONFIRM.playOnServer(pPlayer.level(), pPlayer.blockPosition(), 1, 1);
 			pPlayer.displayClientMessage(CreateLang.translateDirect("schedule.applied_to_train")
 				.withStyle(ChatFormatting.GREEN), true);
 			pStack.shrink(1);
@@ -168,8 +166,5 @@ public class ScheduleItem extends Item implements MenuProvider {
 	public Component getDisplayName() {
 		return getDescription();
 	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {}
 
 }

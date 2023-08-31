@@ -65,8 +65,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
@@ -459,7 +459,7 @@ public class Train {
 
 			if ((runtime.getSchedule() == null || runtime.paused) && signalEdgeGroup.isOccupiedUnless(this))
 				carriages.forEach(c -> c.forEachPresentEntity(cce -> cce.getControllingPlayer()
-					.ifPresent(uuid -> AllAdvancements.RED_SIGNAL.awardTo(cce.level.getPlayerByUUID(uuid)))));
+					.ifPresent(uuid -> AllAdvancements.RED_SIGNAL.awardTo(cce.level().getPlayerByUUID(uuid)))));
 
 			signalEdgeGroup.reserved = signal;
 			occupy(groupId, signal.id);
@@ -475,7 +475,7 @@ public class Train {
 			c.forEachPresentEntity(cce -> cce.getContraption()
 				.getActors()
 				.forEach(pair -> {
-					MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.getKey().state);
+					MovementBehaviour behaviour = AllMovementBehaviours.getBehaviour(pair.getKey().state());
 					if (behaviour != null)
 						behaviour.cancelStall(pair.getValue());
 				}));
@@ -610,7 +610,7 @@ public class Train {
 		double combinedSpeed = Math.abs(speed) + Math.abs(train.speed);
 		if (combinedSpeed > .2f) {
 			Vec3 v = collision.getSecond();
-			level.explode(null, v.x, v.y, v.z, (float) Math.min(3 * combinedSpeed, 5), BlockInteraction.NONE);
+			level.explode(null, v.x, v.y, v.z, (float) Math.min(3 * combinedSpeed, 5), ExplosionInteraction.NONE);
 		}
 
 		crash();
@@ -726,7 +726,7 @@ public class Train {
 			CarriageContraptionEntity entity = carriage.anyAvailableEntity();
 			if (entity == null)
 				return false;
-			level = entity.level;
+			level = entity.level();
 
 			if (entity.getContraption()instanceof CarriageContraption cc)
 				cc.returnStorageForDisassembly(carriage.storage);
@@ -739,7 +739,7 @@ public class Train {
 					continue;
 				Vec3 bogeyPosition = bogey.getAnchorPosition();
 				if (bogeyPosition == null) continue;
-				BlockEntity be = level.getBlockEntity(new BlockPos(bogeyPosition));
+				BlockEntity be = level.getBlockEntity(BlockPos.containing(bogeyPosition));
 				if (!(be instanceof AbstractBogeyBlockEntity sbbe))
 					continue;
 				sbbe.setBogeyData(bogey.bogeyData);

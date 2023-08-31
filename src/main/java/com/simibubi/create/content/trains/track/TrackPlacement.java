@@ -196,8 +196,8 @@ public class TrackPlacement {
 		if (level.isClientSide) {
 			Vec3 offset1 = axis1.scale(info.end1Extent);
 			Vec3 offset2 = axis2.scale(info.end2Extent);
-			BlockPos targetPos1 = pos1.offset(offset1.x, offset1.y, offset1.z);
-			BlockPos targetPos2 = pos2.offset(offset2.x, offset2.y, offset2.z);
+			BlockPos targetPos1 = pos1.offset(BlockPos.containing(offset1));
+			BlockPos targetPos2 = pos2.offset(BlockPos.containing(offset2));
 			info.curve = new BezierConnection(Couple.create(targetPos1, targetPos2),
 				Couple.create(end1.add(offset1), end2.add(offset2)), Couple.create(normedAxis1, normedAxis2),
 				Couple.create(normal1, normal2), true, girder, TrackMaterial.fromItem(stack.getItem()));
@@ -354,8 +354,8 @@ public class TrackPlacement {
 
 		Vec3 offset1 = axis1.scale(info.end1Extent);
 		Vec3 offset2 = axis2.scale(info.end2Extent);
-		BlockPos targetPos1 = pos1.offset(offset1.x, offset1.y, offset1.z);
-		BlockPos targetPos2 = pos2.offset(offset2.x, offset2.y, offset2.z);
+		BlockPos targetPos1 = pos1.offset(BlockPos.containing(offset1));
+		BlockPos targetPos2 = pos2.offset(BlockPos.containing(offset2));
 
 		info.curve = skipCurve ? null
 			: new BezierConnection(Couple.create(targetPos1, targetPos2),
@@ -503,13 +503,12 @@ public class TrackPlacement {
 
 			for (int i = 0; i < (info.curve != null ? extent + 1 : extent); i++) {
 				Vec3 offset = axis.scale(i);
-				BlockPos offsetPos = pos.offset(offset.x, offset.y, offset.z);
+				BlockPos offsetPos = pos.offset(BlockPos.containing(offset));
 				BlockState stateAtPos = level.getBlockState(offsetPos);
 				// copy over all shared properties from the shaped state to the correct track material block
 				BlockState toPlace = BlockHelper.copyProperties(state, info.trackMaterial.getBlock().defaultBlockState());
 
-				boolean canPlace = stateAtPos.getMaterial()
-					.isReplaceable();
+				boolean canPlace = stateAtPos.canBeReplaced();
 				if (canPlace)
 					info.requiredTracks++;
 				if (simulate)
@@ -600,12 +599,11 @@ public class TrackPlacement {
 			return;
 
 		TrackBlockItem blockItem = (TrackBlockItem) stack.getItem();
-		Level level = player.level;
+		Level level = player.level();
 		BlockHitResult bhr = (BlockHitResult) hitResult;
 		BlockPos pos = bhr.getBlockPos();
 		BlockState hitState = level.getBlockState(pos);
-		if (!(hitState.getBlock() instanceof TrackBlock) && !hitState.getMaterial()
-			.isReplaceable()) {
+		if (!(hitState.getBlock() instanceof TrackBlock) && !hitState.canBeReplaced()) {
 			pos = pos.relative(bhr.getDirection());
 			hitState = blockItem.getPlacementState(new UseOnContext(player, hand, bhr));
 			if (hitState == null)

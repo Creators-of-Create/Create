@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
@@ -12,7 +12,6 @@ import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 
 public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<BracketedKineticBlockEntity> {
@@ -33,7 +32,7 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 		// mesh properly
 
 		float speed = blockEntity.getSpeed();
-		Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
+		Direction.Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
 		BlockPos pos = blockEntity.getBlockPos();
 		float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
@@ -49,19 +48,19 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 		if (!ICogWheel.isLargeCog(blockEntity.getBlockState()))
 			return super.getModel();
 
-		Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
+		Direction.Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		return getRotatingMaterial().getModel(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, blockState, facing,
 			() -> this.rotateToAxis(axis));
 	}
 
-	private PoseStack rotateToAxis(Axis axis) {
+	private PoseStack rotateToAxis(Direction.Axis axis) {
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		PoseStack poseStack = new PoseStack();
 		TransformStack.cast(poseStack)
 				.centre()
 				.rotateToFace(facing)
-				.multiply(Vector3f.XN.rotationDegrees(-90))
+				.multiply(Axis.XN.rotationDegrees(-90))
 				.unCentre();
 		return poseStack;
 	}

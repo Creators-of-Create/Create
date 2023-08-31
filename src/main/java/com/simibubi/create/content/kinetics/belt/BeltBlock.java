@@ -73,6 +73,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -85,7 +86,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 public class BeltBlock extends HorizontalKineticBlock
@@ -139,8 +140,7 @@ public class BeltBlock extends HorizontalKineticBlock
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<ItemStack> getDrops(BlockState state,
-		net.minecraft.world.level.storage.loot.LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
 		List<ItemStack> drops = super.getDrops(state, builder);
 		BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (blockEntity instanceof BeltBlockEntity && ((BeltBlockEntity) blockEntity).hasPulley())
@@ -209,7 +209,7 @@ public class BeltBlock extends HorizontalKineticBlock
 				return;
 			withBlockEntityDo(worldIn, pos, be -> {
 				ItemEntity itemEntity = (ItemEntity) entityIn;
-				IItemHandler handler = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+				IItemHandler handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER)
 					.orElse(null);
 				if (handler == null)
 					return;

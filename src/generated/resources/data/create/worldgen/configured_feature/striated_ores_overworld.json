@@ -1,0 +1,769 @@
+{
+  "type": "create:layered_ore",
+  "config": {
+    "discard_chance_on_air_exposure": 0.0,
+    "layer_patterns": [
+      [
+        {
+          "max_size": 5,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "create:scoria"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "create:scoria"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 3,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ],
+            [
+              {
+                "state": {
+                  "Name": "minecraft:andesite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:andesite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 2,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:andesite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        },
+        {
+          "max_size": 2,
+          "min_size": 1,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:diorite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:diorite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        }
+      ],
+      [
+        {
+          "max_size": 5,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "create:crimsite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "create:crimsite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 3,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ],
+            [
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        },
+        {
+          "max_size": 2,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        },
+        {
+          "max_size": 2,
+          "min_size": 1,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "create:limestone"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "create:limestone"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        }
+      ],
+      [
+        {
+          "max_size": 5,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "create:asurine"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "create:asurine"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 3,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ],
+            [
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        },
+        {
+          "max_size": 2,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        },
+        {
+          "max_size": 2,
+          "min_size": 1,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:calcite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:calcite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        }
+      ],
+      [
+        {
+          "max_size": 5,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "create:veridium"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "create:veridium"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 4
+        },
+        {
+          "max_size": 3,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ],
+            [
+              {
+                "state": {
+                  "Name": "minecraft:andesite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:andesite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 2,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:andesite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 2,
+          "min_size": 1,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:smooth_basalt"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:smooth_basalt"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 3
+        }
+      ],
+      [
+        {
+          "max_size": 1,
+          "min_size": 1,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:stone"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        },
+        {
+          "max_size": 1,
+          "min_size": 1,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:calcite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:calcite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 1,
+          "min_size": 1,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:diorite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:diorite"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 1
+        },
+        {
+          "max_size": 4,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "create:limestone"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "create:limestone"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        }
+      ],
+      [
+        {
+          "max_size": 5,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "create:ochrum"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "create:ochrum"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 3,
+          "min_size": 2,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:tuff"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ],
+            [
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:deepslate",
+                  "Properties": {
+                    "axis": "y"
+                  }
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        },
+        {
+          "max_size": 2,
+          "min_size": 1,
+          "targets": [
+            [
+              {
+                "state": {
+                  "Name": "minecraft:dripstone_block"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:stone_ore_replaceables"
+                }
+              },
+              {
+                "state": {
+                  "Name": "minecraft:dripstone_block"
+                },
+                "target": {
+                  "predicate_type": "minecraft:tag_match",
+                  "tag": "minecraft:deepslate_ore_replaceables"
+                }
+              }
+            ]
+          ],
+          "weight": 2
+        }
+      ]
+    ],
+    "size": 32
+  }
+}

@@ -12,7 +12,6 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -25,7 +24,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -61,13 +59,6 @@ public class BlazeBurnerBlockItem extends BlockItem {
 	private BlazeBurnerBlockItem(Block block, Properties properties, boolean capturedBlaze) {
 		super(block, properties);
 		this.capturedBlaze = capturedBlaze;
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (!hasCapturedBlaze())
-			return;
-		super.fillItemCategory(p_150895_1_, p_150895_2_);
 	}
 
 	@Override
@@ -126,7 +117,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 		if (!(entity instanceof Blaze))
 			return InteractionResult.PASS;
 
-		Level world = player.level;
+		Level world = player.level();
 		spawnCaptureEffects(world, entity.position());
 		if (world.isClientSide)
 			return InteractionResult.FAIL;
@@ -161,7 +152,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			return;
 		}
 
-		BlockPos soundPos = new BlockPos(vec);
+		BlockPos soundPos = BlockPos.containing(vec);
 		world.playSound(null, soundPos, SoundEvents.BLAZE_HURT, SoundSource.HOSTILE, .25f, .75f);
 		world.playSound(null, soundPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.HOSTILE, .5f, .75f);
 	}

@@ -35,11 +35,11 @@ public class MapItemSavedDataMixin implements StationMapData {
 
 	@Shadow
 	@Final
-	public int x;
+	public int centerX;
 
 	@Shadow
 	@Final
-	public int z;
+	public int centerZ;
 
 	@Shadow
 	@Final
@@ -87,8 +87,8 @@ public class MapItemSavedDataMixin implements StationMapData {
 		create$stationMarkers.put(marker.getId(), marker);
 
 		int scaleMultiplier = 1 << scale;
-		float localX = (marker.getTarget().getX() - x) / (float) scaleMultiplier;
-		float localZ = (marker.getTarget().getZ() - z) / (float) scaleMultiplier;
+		float localX = (marker.getTarget().getX() - centerX) / (float) scaleMultiplier;
+		float localZ = (marker.getTarget().getZ() - centerZ) / (float) scaleMultiplier;
 
 		if (localX < -63.0F || localX > 63.0F || localZ < -63.0F || localZ > 63.0F) {
 			removeDecoration(marker.getId());
@@ -134,8 +134,8 @@ public class MapItemSavedDataMixin implements StationMapData {
 		double zCenter = pos.getZ() + 0.5D;
 		int scaleMultiplier = 1 << scale;
 
-		double localX = (xCenter - (double) x) / (double) scaleMultiplier;
-		double localZ = (zCenter - (double) z) / (double) scaleMultiplier;
+		double localX = (xCenter - (double) centerX) / (double) scaleMultiplier;
+		double localZ = (zCenter - (double) centerZ) / (double) scaleMultiplier;
 
 		if (localX < -63.0D || localX > 63.0D || localZ < -63.0D || localZ > 63.0D)
 			return false;

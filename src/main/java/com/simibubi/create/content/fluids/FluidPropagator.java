@@ -35,8 +35,8 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidPropagator {
@@ -181,8 +181,7 @@ public class FluidPropagator {
 			return false;
 		if (hasFluidCapability(reader, connectedPos, side.getOpposite()))
 			return false;
-		if (!(connectedState.getMaterial()
-			.isReplaceable() && connectedState.getDestroySpeed(reader, connectedPos) != -1)
+		if (!(connectedState.canBeReplaced() && connectedState.getDestroySpeed(reader, connectedPos) != -1)
 			&& !connectedState.hasProperty(BlockStateProperties.WATERLOGGED))
 			return false;
 		return true;
@@ -205,7 +204,7 @@ public class FluidPropagator {
 		if (blockEntity == null)
 			return false;
 		LazyOptional<IFluidHandler> capability =
-			blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+			blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side);
 		return capability.isPresent();
 	}
 

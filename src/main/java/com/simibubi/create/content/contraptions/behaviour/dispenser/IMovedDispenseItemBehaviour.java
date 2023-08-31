@@ -43,7 +43,7 @@ public interface IMovedDispenseItemBehaviour {
 				if (context.world instanceof ServerLevel) {
 					EntityType<?> entityType = ((SpawnEggItem) itemStack.getItem()).getType(itemStack.getTag());
 					Entity spawnedEntity = entityType.spawn((ServerLevel) context.world, itemStack, null,
-						pos.offset(facing.x + .7, facing.y + .7, facing.z + .7), MobSpawnType.DISPENSER, facing.y < .5,
+						pos.offset(BlockPos.containing(facing.x + .7, facing.y + .7, facing.z + .7)), MobSpawnType.DISPENSER, facing.y < .5,
 						false);
 					if (spawnedEntity != null)
 						spawnedEntity.setDeltaMovement(context.motion.scale(2));

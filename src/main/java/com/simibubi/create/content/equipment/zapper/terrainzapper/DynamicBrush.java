@@ -107,8 +107,7 @@ public class DynamicBrush extends Brush {
 					continue;
 				if (stateToReplace.getBlock() != state.getBlock() && !fuzzy)
 					continue;
-				if (stateToReplace.getMaterial()
-					.isReplaceable())
+				if (stateToReplace.canBeReplaced())
 					continue;
 				if (BlockHelper.hasBlockSolidSide(stateAboveStateToReplace, world, currentPos.relative(targetFace),
 					targetFace.getOpposite()) && surface)
@@ -126,13 +125,11 @@ public class DynamicBrush extends Brush {
 			BlockState stateToPlaceOn = world.getBlockState(currentPos.relative(targetFace.getOpposite()));
 
 			// Criteria
-			if (stateToPlaceOn.getMaterial()
-				.isReplaceable())
+			if (stateToPlaceOn.canBeReplaced())
 				continue;
 			if (stateToPlaceOn.getBlock() != state.getBlock() && !fuzzy)
 				continue;
-			if (!stateToPlaceAt.getMaterial()
-				.isReplaceable())
+			if (!stateToPlaceAt.canBeReplaced())
 				continue;
 			affectedPositions.add(currentPos);
 

@@ -2,9 +2,7 @@ package com.simibubi.create.content.equipment.bell;
 
 import com.jozufozu.flywheel.backend.ShadersModHandler;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-
+import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
@@ -12,6 +10,8 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class CustomRotationParticle extends SimpleAnimatedParticle {
 
@@ -27,11 +27,11 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 		this.setSprite(sprite.get(loopFrame, loopLength));
 	}
 
-	public Quaternion getCustomRotation(Camera camera, float partialTicks) {
-		Quaternion quaternion = new Quaternion(camera.rotation());
+	public Quaternionf getCustomRotation(Camera camera, float partialTicks) {
+		Quaternionf quaternion = new Quaternionf(camera.rotation());
 		if (roll != 0.0F) {
 			float angle = Mth.lerp(partialTicks, oRoll, roll);
-			quaternion.mul(Vector3f.ZP.rotation(angle));
+			quaternion.mul(Axis.ZP.rotation(angle));
 		}
 		return quaternion;
 	}
@@ -51,10 +51,10 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 		};
 		float scale = getQuadSize(partialTicks);
 
-		Quaternion rotation = getCustomRotation(camera, partialTicks);
+		Quaternionf rotation = getCustomRotation(camera, partialTicks);
 		for(int i = 0; i < 4; ++i) {
 			Vector3f vertex = vertices[i];
-			vertex.transform(rotation);
+			vertex.rotate(rotation);
 			vertex.mul(scale);
 			vertex.add(originX, originY, originZ);
 		}

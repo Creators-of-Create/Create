@@ -6,7 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.recipe.BlockTagIngredient;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -65,8 +65,8 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public MixingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public MixingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

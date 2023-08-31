@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import java.util.List;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
@@ -12,13 +10,14 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 
@@ -82,7 +81,7 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 
 		double y = movedContraption.getY();
 		int targetLevel = Mth.floor(0.5f + y) + ec.contactYOffset;
-		
+
 		Integer ecCurrentTargetY = ec.getCurrentTargetY(level);
 		if (ecCurrentTargetY != null)
 			targetLevel = ecCurrentTargetY;
@@ -246,8 +245,7 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 			BlockState ropeState = level.getBlockState(ropePos);
 			if (!ropeState.getCollisionShape(level, ropePos)
 				.isEmpty()
-				&& !ropeState.getMaterial()
-					.isReplaceable()) {
+				&& !ropeState.canBeReplaced()) {
 				break;
 			}
 			++i;

@@ -9,7 +9,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
@@ -24,12 +24,12 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 
 	protected final List<GeneratedRecipe> all = new ArrayList<>();
 
-	public CreateRecipeProvider(DataGenerator generator) {
-		super(generator);
+	public CreateRecipeProvider(PackOutput output) {
+		super(output);
 	}
 
 	@Override
-	protected void buildCraftingRecipes(Consumer<FinishedRecipe> p_200404_1_) {
+	protected void buildRecipes(Consumer<FinishedRecipe> p_200404_1_) {
 		all.forEach(c -> c.register(p_200404_1_));
 		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
 	}
@@ -116,7 +116,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static TagKey<Item> ironSheet() {
 			return AllTags.forgeItemTag("plates/iron");
 		}
-		
+
 		static TagKey<Item> sturdySheet() {
 			return AllTags.forgeItemTag("plates/obsidian");
 		}
@@ -124,7 +124,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ItemLike brassCasing() {
 			return AllBlocks.BRASS_CASING.get();
 		}
-		
+
 		static ItemLike railwayCasing() {
 			return AllBlocks.RAILWAY_CASING.get();
 		}
@@ -136,7 +136,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ItemLike precisionMechanism() {
 			return AllItems.PRECISION_MECHANISM.get();
 		}
-		
+
 		static ItemLike copperBlock() {
 			return Items.COPPER_BLOCK;
 		}
@@ -148,7 +148,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static TagKey<Item> zincBlock() {
 			return AllTags.forgeItemTag("storage_blocks/zinc");
 		}
-		
+
 		static TagKey<Item> wheatFlour() {
 			return AllTags.forgeItemTag("flour/wheat");
 		}

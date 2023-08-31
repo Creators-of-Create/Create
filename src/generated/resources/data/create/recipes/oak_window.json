@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "#": {
       "item": "minecraft:oak_planks"
@@ -15,5 +16,6 @@
   "result": {
     "count": 2,
     "item": "create:oak_window"
-  }
+  },
+  "show_notification": true
 }

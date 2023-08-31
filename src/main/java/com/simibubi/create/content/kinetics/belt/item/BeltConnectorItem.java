@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
@@ -22,7 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.sounds.SoundEvents;
@@ -30,8 +28,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,13 +43,6 @@ public class BeltConnectorItem extends BlockItem {
 	@Override
 	public String getDescriptionId() {
 		return getOrCreateDescriptionId();
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab pGroup, NonNullList<ItemStack> pItems) {
-		// See CogWheelBlock.fillItemCategory()
-		if (pGroup != AllCreativeModeTabs.BASE_CREATIVE_TAB)
-			super.fillItemCategory(pGroup, pItems);
 	}
 
 	@Nonnull
@@ -122,7 +111,7 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	public static void createBelts(Level world, BlockPos start, BlockPos end) {
-		world.playSound(null, new BlockPos(VecHelper.getCenterOf(start.offset(end))
+		world.playSound(null, BlockPos.containing(VecHelper.getCenterOf(start.offset(end))
 			.scale(.5f)), SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.5F, 1F);
 
 		BeltSlope slope = getSlopeBetween(start, end);
@@ -152,8 +141,7 @@ public class BeltConnectorItem extends BlockItem {
 			if (pulley && shaftState.getValue(AbstractSimpleShaftBlock.AXIS) == Axis.Y)
 				slope = BeltSlope.SIDEWAYS;
 
-			if (!existingBlock.getMaterial()
-					.isReplaceable())
+			if (!existingBlock.canBeReplaced())
 				world.destroyBlock(pos, false);
 
 			KineticBlockEntity.switchToBlockState(world, pos,
@@ -258,15 +246,14 @@ public class BeltConnectorItem extends BlockItem {
 		if (Math.signum(speed1) != Math.signum(speed2) && speed1 != 0 && speed2 != 0)
 			return false;
 
-		BlockPos step = new BlockPos(Math.signum(diff.getX()), Math.signum(diff.getY()), Math.signum(diff.getZ()));
+		BlockPos step = BlockPos.containing(Math.signum(diff.getX()), Math.signum(diff.getY()), Math.signum(diff.getZ()));
 		int limit = 1000;
 		for (BlockPos currentPos = first.offset(step); !currentPos.equals(second) && limit-- > 0; currentPos =
 			currentPos.offset(step)) {
 			BlockState blockState = world.getBlockState(currentPos);
 			if (ShaftBlock.isShaft(blockState) && blockState.getValue(AbstractSimpleShaftBlock.AXIS) == shaftAxis)
 				continue;
-			if (!blockState.getMaterial()
-				.isReplaceable())
+			if (!blockState.canBeReplaced())
 				return false;
 		}
 

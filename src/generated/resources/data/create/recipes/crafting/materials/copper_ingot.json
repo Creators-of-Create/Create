@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "tag": "forge:nuggets/copper"
@@ -12,5 +13,6 @@
   ],
   "result": {
     "item": "minecraft:copper_ingot"
-  }
+  },
+  "show_notification": true
 }

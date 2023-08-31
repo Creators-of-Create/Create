@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "create:precision_mechanism"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:rotation_speed_controller"
-  }
+  },
+  "show_notification": true
 }

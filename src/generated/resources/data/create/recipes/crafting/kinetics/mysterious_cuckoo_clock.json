@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "create:cuckoo_clock"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "create:mysterious_cuckoo_clock"
-  }
+  },
+  "show_notification": true
 }

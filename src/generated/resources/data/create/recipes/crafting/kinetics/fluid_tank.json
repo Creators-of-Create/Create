@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "tag": "forge:plates/copper"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "create:fluid_tank"
-  }
+  },
+  "show_notification": true
 }

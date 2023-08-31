@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "tag": "forge:cobblestone"
@@ -20,5 +21,6 @@
   ],
   "result": {
     "item": "create:sticker"
-  }
+  },
+  "show_notification": true
 }

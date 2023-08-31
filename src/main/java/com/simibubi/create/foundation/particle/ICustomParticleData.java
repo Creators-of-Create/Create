@@ -31,7 +31,7 @@ public interface ICustomParticleData<T extends ParticleOptions> {
 	
 	@OnlyIn(Dist.CLIENT)
 	public default void register(ParticleType<T> type, RegisterParticleProvidersEvent event) {
-		event.register(type, getFactory());
+		event.registerSpecial(type, getFactory());
 	}
 	
 }

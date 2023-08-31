@@ -1,14 +1,9 @@
 package com.simibubi.create.content.equipment.bell;
 
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
-
 import net.createmod.catnip.utility.IntAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +14,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.network.PacketDistributor;
+
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @EventBusSubscriber
 public class HauntedBellPulser {
@@ -55,9 +54,9 @@ public class HauntedBellPulser {
 		} catch (ExecutionException e) {
 		}
 
-		long gameTime = player.level.getGameTime();
+		long gameTime = player.level().getGameTime();
 		if (firstPulse || gameTime % RECHARGE_TICKS != 0)
-			sendPulse(player.level, event.player.blockPosition(), DISTANCE, false);
+			sendPulse(player.level(), event.player.blockPosition(), DISTANCE, false);
 	}
 
 	public static void sendPulse(Level world, BlockPos pos, int distance, boolean canOverlap) {

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "create:electron_tube"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:deployer"
-  }
+  },
+  "show_notification": true
 }

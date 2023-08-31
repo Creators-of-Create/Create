@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:crafting/copper/waxed_exposed_copper_tile_stairs_from_honeycomb"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_unwaxed": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:exposed_copper_tile_stairs"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_unwaxed",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:crafting/copper/waxed_exposed_copper_tile_stairs_from_honeycomb"
+    ]
+  },
+  "sends_telemetry_event": false
+}

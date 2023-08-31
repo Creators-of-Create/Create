@@ -1,12 +1,9 @@
 package com.simibubi.create.content.equipment.blueprint;
 
-import java.util.Collection;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -31,6 +28,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.common.crafting.MultiItemValue;
 import net.minecraftforge.items.ItemStackHandler;
+
+import java.util.Collection;
 
 public class BlueprintItem extends Item {
 
@@ -72,12 +71,12 @@ public class BlueprintItem extends Item {
 		return p_200127_1_.mayUseItemAt(p_200127_4_, p_200127_2_, p_200127_3_);
 	}
 
-	public static void assignCompleteRecipe(ItemStackHandler inv, Recipe<?> recipe) {
+	public static void assignCompleteRecipe(Level level, ItemStackHandler inv, Recipe<?> recipe) {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 
 		for (int i = 0; i < 9; i++)
 			inv.setStackInSlot(i, ItemStack.EMPTY);
-		inv.setStackInSlot(9, recipe.getResultItem());
+		inv.setStackInSlot(9, recipe.getResultItem(level.registryAccess()));
 
 		if (recipe instanceof IShapedRecipe) {
 			IShapedRecipe<?> shapedRecipe = (IShapedRecipe<?>) recipe;

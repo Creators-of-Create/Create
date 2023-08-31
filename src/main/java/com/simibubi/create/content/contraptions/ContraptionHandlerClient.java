@@ -1,12 +1,5 @@
 package com.simibubi.create.content.contraptions;
 
-import java.lang.ref.WeakReference;
-import java.util.Collection;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.mutable.MutableObject;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.sync.ContraptionInteractionPacket;
@@ -14,7 +7,6 @@ import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult;
-
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
@@ -39,6 +31,11 @@ import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import org.apache.commons.lang3.mutable.MutableObject;
+
+import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
+import java.util.Collection;
 
 @EventBusSubscriber
 public class ContraptionHandlerClient {
@@ -156,7 +153,7 @@ public class ContraptionHandlerClient {
 					.get(pos);
 				if (blockInfo == null)
 					continue;
-				BlockState state = blockInfo.state;
+				BlockState state = blockInfo.state();
 				VoxelShape raytraceShape = state.getShape(contraption.getContraptionWorld(), BlockPos.ZERO.below());
 				if (raytraceShape.isEmpty())
 					continue;

@@ -6,10 +6,10 @@ import com.simibubi.create.content.kinetics.crafter.RecipeGridHandler.GroupedIte
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
-public class MechanicalCraftingInventory extends CraftingContainer {
+public class MechanicalCraftingInventory extends TransientCraftingContainer {
 
 	private static final AbstractContainerMenu dummyContainer = new AbstractContainerMenu(null, -1) {
 		public boolean stillValid(Player playerIn) {

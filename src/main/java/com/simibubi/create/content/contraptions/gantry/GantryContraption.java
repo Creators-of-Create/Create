@@ -6,7 +6,6 @@ import com.simibubi.create.content.contraptions.ContraptionType;
 import com.simibubi.create.content.contraptions.TranslatingContraption;
 import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 import com.simibubi.create.content.contraptions.render.NonStationaryLighter;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -62,7 +61,7 @@ public class GantryContraption extends TranslatingContraption {
 
 	@Override
 	protected boolean shouldUpdateAfterMovement(StructureBlockInfo info) {
-		return super.shouldUpdateAfterMovement(info) && !AllBlocks.GANTRY_CARRIAGE.has(info.state);
+		return super.shouldUpdateAfterMovement(info) && !AllBlocks.GANTRY_CARRIAGE.has(info.state());
 	}
 
 	@Override

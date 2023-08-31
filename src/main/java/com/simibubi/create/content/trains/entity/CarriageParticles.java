@@ -39,7 +39,7 @@ public class CarriageParticles {
 		if (leadingAnchor == null || !leadingAnchor.closerThan(camEntity.position(), 64))
 			return;
 
-		RandomSource r = entity.level.random;
+		RandomSource r = entity.level().random;
 		Vec3 contraptionMotion = entity.position()
 			.subtract(entity.getPrevPositionVec());
 		double length = contraptionMotion.length();
@@ -63,7 +63,7 @@ public class CarriageParticles {
 		brakes.tickChaser();
 		prevMotion = length;
 
-		Level level = entity.level;
+		Level level = entity.level();
 		Vec3 position = entity.getPosition(0);
 		float viewYRot = entity.getViewYRot(0);
 		float viewXRot = entity.getViewXRot(0);

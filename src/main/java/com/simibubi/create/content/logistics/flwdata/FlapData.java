@@ -1,8 +1,9 @@
 package com.simibubi.create.content.logistics.flwdata;
 
+import org.joml.Vector3f;
+
 import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.core.materials.FlatLit;
-import com.mojang.math.Vector3f;
 
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;

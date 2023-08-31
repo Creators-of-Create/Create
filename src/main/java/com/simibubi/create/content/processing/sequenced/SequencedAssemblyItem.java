@@ -1,9 +1,7 @@
 package com.simibubi.create.content.processing.sequenced;
 
 import net.createmod.catnip.utility.theme.Color;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,9 +20,6 @@ public class SequencedAssemblyItem extends Item {
 		return tag.getCompound("SequencedAssembly")
 			.getFloat("Progress");
 	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {}
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {

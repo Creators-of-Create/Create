@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "minecraft:redstone_torch"
@@ -15,5 +16,6 @@
   "result": {
     "count": 2,
     "item": "create:redstone_link"
-  }
+  },
+  "show_notification": true
 }

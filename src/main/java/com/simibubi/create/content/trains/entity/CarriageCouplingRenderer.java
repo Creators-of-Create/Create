@@ -116,16 +116,16 @@ public class CarriageCouplingRenderer {
 	}
 
 	public static int getPackedLightCoords(Entity pEntity, float pPartialTicks) {
-		BlockPos blockpos = new BlockPos(pEntity.getLightProbePosition(pPartialTicks));
+		BlockPos blockpos = BlockPos.containing(pEntity.getLightProbePosition(pPartialTicks));
 		return LightTexture.pack(getBlockLightLevel(pEntity, blockpos), getSkyLightLevel(pEntity, blockpos));
 	}
 
 	protected static int getSkyLightLevel(Entity pEntity, BlockPos pPos) {
-		return pEntity.level.getBrightness(LightLayer.SKY, pPos);
+		return pEntity.level().getBrightness(LightLayer.SKY, pPos);
 	}
 
 	protected static int getBlockLightLevel(Entity pEntity, BlockPos pPos) {
-		return pEntity.isOnFire() ? 15 : pEntity.level.getBrightness(LightLayer.BLOCK, pPos);
+		return pEntity.isOnFire() ? 15 : pEntity.level().getBrightness(LightLayer.BLOCK, pPos);
 	}
 
 }

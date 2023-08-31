@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterShadersEvent;
@@ -52,7 +52,7 @@ public class RenderTypes extends RenderStateShard {
 
 	private static final RenderType ADDITIVE = RenderType.create(createLayerName("additive"), DefaultVertexFormat.BLOCK,
 		VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
-			.setShaderState(BLOCK_SHADER)
+			.setShaderState(RENDERTYPE_SOLID_SHADER)
 			.setTextureState(new RenderStateShard.TextureStateShard(InventoryMenu.BLOCK_ATLAS, false, false))
 			.setTransparencyState(ADDITIVE_TRANSPARENCY)
 			.setCullState(NO_CULL)
@@ -112,8 +112,8 @@ public class RenderTypes extends RenderStateShard {
 
 		@SubscribeEvent
 		public static void onRegisterShaders(RegisterShadersEvent event) throws IOException {
-			ResourceManager resourceManager = event.getResourceManager();
-			event.registerShader(new ShaderInstance(resourceManager, Create.asResource("glowing_shader"), DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader);
+			ResourceProvider resourceProvider = event.getResourceProvider();
+			event.registerShader(new ShaderInstance(resourceProvider, Create.asResource("glowing_shader"), DefaultVertexFormat.NEW_ENTITY), shader -> glowingShader = shader);
 		}
 	}
 

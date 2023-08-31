@@ -1,20 +1,19 @@
 package com.simibubi.create.compat.jei.category;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class PackingCategory extends BasinCategory {
@@ -64,24 +63,24 @@ public class PackingCategory extends BasinCategory {
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 142, 51)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addItemStack(recipe.getResultItem());
+				.addItemStack(getResultItem(recipe));
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(BasinRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		if (type == PackingType.COMPACTING) {
-			super.draw(recipe, iRecipeSlotsView, matrixStack, mouseX, mouseY);
+			super.draw(recipe, iRecipeSlotsView, graphics, mouseX, mouseY);
 		} else {
-			AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 136, 32);
-			AllGuiTextures.JEI_SHADOW.render(matrixStack, 81, 68);
+			AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 136, 32);
+			AllGuiTextures.JEI_SHADOW.render(graphics, 81, 68);
 		}
 
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (requiredHeat != HeatCondition.NONE)
 			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
-				.draw(matrixStack, getBackground().getWidth() / 2 + 3, 55);
-		press.draw(matrixStack, getBackground().getWidth() / 2 + 3, 34);
+				.draw(graphics, getBackground().getWidth() / 2 + 3, 55);
+		press.draw(graphics, getBackground().getWidth() / 2 + 3, 34);
 
 
 	}

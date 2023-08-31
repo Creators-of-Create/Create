@@ -1,13 +1,9 @@
 package com.simibubi.create.content.decoration.girder;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripItem;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-
 import net.createmod.catnip.utility.placement.IPlacementHelper;
 import net.createmod.catnip.utility.placement.PlacementOffset;
 import net.minecraft.core.BlockPos;
@@ -21,6 +17,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeMod;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public class GirderPlacementHelper implements IPlacementHelper {
 
@@ -81,7 +80,7 @@ public class GirderPlacementHelper implements IPlacementHelper {
 		for (Direction dir : directions) {
 			int range = AllConfigs.server().equipment.placementAssistRange.get();
 			if (player != null) {
-				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+				AttributeInstance reach = player.getAttribute(ForgeMod.BLOCK_REACH.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))
 					range += 4;
 			}
@@ -92,8 +91,7 @@ public class GirderPlacementHelper implements IPlacementHelper {
 			BlockPos newPos = pos.relative(dir, poles + 1);
 			BlockState newState = world.getBlockState(newPos);
 
-			if (!newState.getMaterial()
-				.isReplaceable())
+			if (!newState.canBeReplaced())
 				continue;
 
 			return PlacementOffset.success(newPos,

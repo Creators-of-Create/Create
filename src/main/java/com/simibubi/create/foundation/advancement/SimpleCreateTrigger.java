@@ -9,8 +9,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.gson.JsonObject;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -38,7 +38,7 @@ public class SimpleCreateTrigger extends CriterionTriggerBase<SimpleCreateTrigge
 	public static class Instance extends CriterionTriggerBase.Instance {
 
 		public Instance(ResourceLocation idIn) {
-			super(idIn, EntityPredicate.Composite.ANY);
+			super(idIn, ContextAwarePredicate.ANY);
 		}
 
 		@Override

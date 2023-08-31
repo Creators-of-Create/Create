@@ -3,13 +3,14 @@ package com.simibubi.create.content.kinetics.belt;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
+import org.joml.Quaternionf;
+
 import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
@@ -20,6 +21,7 @@ import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import net.createmod.catnip.render.SpriteShiftEntry;
 import net.createmod.catnip.utility.Iterate;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.LightLayer;
 
@@ -161,7 +163,7 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
         float rotY = facing.toYRot() + ((diagonal ^ alongX) && !downward ? 180 : 0) + (sideways && alongZ ? 180 : 0) + (vertical && alongX ? 90 : 0);
         float rotZ = (sideways ? 90 : 0) + (vertical && alongX ? 90 : 0);
 
-        Quaternion q = new Quaternion(rotX, rotY, rotZ, true);
+        Quaternionf q = new Quaternionf().rotationXYZ(rotX * Mth.DEG_TO_RAD, rotY * Mth.DEG_TO_RAD, rotZ * Mth.DEG_TO_RAD);
 
 		key.setScrollTexture(spriteShift)
 				.setScrollMult(diagonal ? 3f / 8f : 0.5f)

@@ -1,10 +1,10 @@
 package com.simibubi.create.content.trains.station;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 
 import net.createmod.catnip.gui.element.ScreenElement;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class WideIconButton extends IconButton {
 
@@ -13,9 +13,9 @@ public class WideIconButton extends IconButton {
 	}
 
 	@Override
-	protected void drawBg(PoseStack matrixStack, AllGuiTextures button) {
-		super.drawBg(matrixStack, button);
-		blit(matrixStack, x + 9, y, button.getStartX() + 1, button.getStartY(), button.getWidth() - 1, button.getHeight());
+	protected void drawBg(GuiGraphics graphics, AllGuiTextures button) {
+		super.drawBg(graphics, button);
+		graphics.blit(button.location, getX() + 9, getY(), button.getStartX() + 1, button.getStartY(), button.getWidth() - 1, button.getHeight());
 	}
 
 }

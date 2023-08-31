@@ -15,10 +15,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.bridge.game.Language;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.createmod.catnip.utility.FontHelper;
+import net.createmod.catnip.utility.FontHelper.Palette;
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -33,12 +32,12 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 	private static final Map<Item, Supplier<String>> CUSTOM_TOOLTIP_KEYS = new IdentityHashMap<>();
 
 	@Nullable
-	public static ItemDescription create(Item item, FontHelper.Palette palette) {
+	public static ItemDescription create(Item item, Palette palette) {
 		return create(getTooltipTranslationKey(item), palette);
 	}
 
 	@Nullable
-	public static ItemDescription create(String translationKey, FontHelper.Palette palette) {
+	public static ItemDescription create(String translationKey, Palette palette) {
 		if (!canFillBuilder(translationKey)) {
 			return null;
 		}
@@ -110,12 +109,12 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 	}
 
 	public static class Builder {
-		protected final FontHelper.Palette palette;
+		protected final Palette palette;
 		protected final List<String> summary = new ArrayList<>();
 		protected final List<Pair<String, String>> behaviours = new ArrayList<>();
 		protected final List<Pair<String, String>> actions = new ArrayList<>();
 
-		public Builder(FontHelper.Palette palette) {
+		public Builder(Palette palette) {
 			this.palette = palette;
 		}
 
@@ -220,11 +219,11 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 
 	public static class Modifier implements TooltipModifier {
 		protected final Item item;
-		protected final FontHelper.Palette palette;
-		protected Language cachedLanguage;
+		protected final Palette palette;
+		protected String cachedLanguage;
 		protected ItemDescription description;
 
-		public Modifier(Item item, FontHelper.Palette palette) {
+		public Modifier(Item item, Palette palette) {
 			this.item = item;
 			this.palette = palette;
 		}
@@ -241,10 +240,10 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 		}
 
 		protected boolean checkLocale() {
-			Language currentLanguage = Minecraft.getInstance()
+			String currentLanguage = Minecraft.getInstance()
 				.getLanguageManager()
 				.getSelected();
-			if (cachedLanguage != currentLanguage) {
+			if (!currentLanguage.equals(cachedLanguage)) {
 				cachedLanguage = currentLanguage;
 				return true;
 			}

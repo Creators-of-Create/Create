@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity.Phase;
@@ -23,11 +23,11 @@ import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -58,7 +58,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 		ms.translate(vec.x, vec.y, vec.z);
 		ms.scale(1 / 2f, 1 / 2f, 1 / 2f);
 		float yRot = AngleHelper.horizontalAngle(facing);
-		ms.mulPose(Vector3f.YP.rotationDegrees(yRot));
+		ms.mulPose(Axis.YP.rotationDegrees(yRot));
 		renderItems(be, partialTicks, ms, buffer, light, overlay);
 		ms.popPose();
 
@@ -73,10 +73,10 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 			if (!stack.isEmpty()) {
 				ms.pushPose();
 				ms.translate(0, 0, -1 / 256f);
-				ms.mulPose(Vector3f.YP.rotationDegrees(180));
+				ms.mulPose(Axis.YP.rotationDegrees(180));
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 0);
+					.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 				ms.popPose();
 			}
 		} else {
@@ -127,7 +127,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 0);
+					.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 				ms.popPose();
 			});
 
@@ -140,7 +140,7 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 				float earlyProgress = Mth.clamp(progress * 2, 0, 1);
 				float lateProgress = Mth.clamp(progress * 2 - 1, 0, 1);
 
-				ms.mulPose(Vector3f.ZP.rotationDegrees(earlyProgress * 2 * 360));
+				ms.mulPose(Axis.ZP.rotationDegrees(earlyProgress * 2 * 360));
 				float upScaling = earlyProgress * 1.125f;
 				float downScaling = 1 + (1 - lateProgress) * .125f;
 				ms.scale(upScaling, upScaling, upScaling);
@@ -153,10 +153,10 @@ public class MechanicalCrafterRenderer extends SafeBlockEntityRenderer<Mechanica
 							.intValue() != 0)
 						return;
 					ms.pushPose();
-					ms.mulPose(Vector3f.YP.rotationDegrees(180));
+					ms.mulPose(Axis.YP.rotationDegrees(180));
 					Minecraft.getInstance()
 						.getItemRenderer()
-						.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 0);
+						.renderStatic(stack, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 					ms.popPose();
 				});
 			}

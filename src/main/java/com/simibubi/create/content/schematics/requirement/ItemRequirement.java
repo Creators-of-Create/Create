@@ -164,7 +164,7 @@ public class ItemRequirement {
 		}
 
 		public boolean matches(ItemStack other) {
-			return stack.sameItem(other);
+			return ItemStack.isSameItem(stack, other);
 		}
 	}
 

@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -31,9 +30,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class RollerBlock extends AttachedActorBlock implements IBE<RollerBlockEntity> {
-
-	public static DamageSource damageSourceRoller = new DamageSource("create.mechanical_roller");
-
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
 	public RollerBlock(Properties p_i48377_1_) {

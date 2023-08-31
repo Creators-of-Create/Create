@@ -30,5 +30,6 @@
     "recipes": [
       "create:blasting/gold_ingot_from_crushed"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

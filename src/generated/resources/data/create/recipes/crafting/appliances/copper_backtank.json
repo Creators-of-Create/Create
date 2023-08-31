@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "item": "create:andesite_alloy"
@@ -21,5 +22,6 @@
   ],
   "result": {
     "item": "create:copper_backtank"
-  }
+  },
+  "show_notification": true
 }

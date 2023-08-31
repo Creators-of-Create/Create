@@ -1,14 +1,13 @@
 package com.simibubi.create.content.equipment.bell;
 
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllParticleTypes;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleType;
+import org.joml.Quaternionf;
 
 public class SoulBaseParticle extends CustomRotationParticle {
 
@@ -30,14 +29,14 @@ public class SoulBaseParticle extends CustomRotationParticle {
 	public void tick() {
 		selectSpriteLoopingWithAge(animatedSprite);
 
-		BlockPos pos = new BlockPos(x, y, z);
+		BlockPos pos = BlockPos.containing(x, y, z);
 		if (age++ >= lifetime || !SoulPulseEffect.isDark(level, pos))
 			remove();
 	}
 
 	@Override
-	public Quaternion getCustomRotation(Camera camera, float partialTicks) {
-		return Vector3f.XP.rotationDegrees(90);
+	public Quaternionf getCustomRotation(Camera camera, float partialTicks) {
+		return Axis.XP.rotationDegrees(90);
 	}
 
 	public static class Data extends BasicParticleData<SoulBaseParticle> {

@@ -11,11 +11,12 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class RecipeApplier {
 	public static void applyRecipeOn(ItemEntity entity, Recipe<?> recipe) {
-		List<ItemStack> stacks = applyRecipeOn(entity.getItem(), recipe);
+		List<ItemStack> stacks = applyRecipeOn(entity.level(), entity.getItem(), recipe);
 		if (stacks == null)
 			return;
 		if (stacks.isEmpty()) {
@@ -24,13 +25,13 @@ public class RecipeApplier {
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
-			ItemEntity entityIn = new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), additional);
+			ItemEntity entityIn = new ItemEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), additional);
 			entityIn.setDeltaMovement(entity.getDeltaMovement());
-			entity.level.addFreshEntity(entityIn);
+			entity.level().addFreshEntity(entityIn);
 		}
 	}
 
-	public static List<ItemStack> applyRecipeOn(ItemStack stackIn, Recipe<?> recipe) {
+	public static List<ItemStack> applyRecipeOn(Level level, ItemStack stackIn, Recipe<?> recipe) {
 		List<ItemStack> stacks;
 
 		if (recipe instanceof ProcessingRecipe<?> pr) {
@@ -57,7 +58,7 @@ public class RecipeApplier {
 				}
 			}
 		} else {
-			ItemStack out = recipe.getResultItem()
+			ItemStack out = recipe.getResultItem(level.registryAccess())
 				.copy();
 			stacks = ItemHelper.multipliedOutput(stackIn, out);
 		}

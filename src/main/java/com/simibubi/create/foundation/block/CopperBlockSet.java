@@ -24,6 +24,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.lang.Lang;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -136,7 +137,7 @@ public class CopperBlockSet {
 		if (waxed) {
 			builder.recipe((ctx, prov) -> {
 				Block unwaxed = get(variant, state, false).get();
-				ShapelessRecipeBuilder.shapeless(ctx.get())
+				ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get())
 					.requires(unwaxed)
 					.requires(Items.HONEYCOMB)
 					.unlockedBy("has_unwaxed", RegistrateRecipeProvider.has(unwaxed))
@@ -273,7 +274,7 @@ public class CopperBlockSet {
 		@Override
 		public void generateLootTable(RegistrateBlockLootTables lootTable, SlabBlock block, CopperBlockSet blocks,
 			WeatherState state, boolean waxed) {
-			lootTable.add(block, RegistrateBlockLootTables.createSlabItemTable(block));
+			lootTable.add(block, lootTable.createSlabItemTable(block));
 		}
 
 		@Override
@@ -292,7 +293,7 @@ public class CopperBlockSet {
 		@Override
 		public void generateRecipes(BlockEntry<?> blockVariant, DataGenContext<Block, SlabBlock> ctx,
 			RegistrateRecipeProvider prov) {
-			prov.slab(DataIngredient.items(blockVariant.get()), ctx::get, null, true);
+			prov.slab(DataIngredient.items(blockVariant.get()), RecipeCategory.BUILDING_BLOCKS, ctx::get, null, true);
 		}
 	}
 
@@ -346,7 +347,7 @@ public class CopperBlockSet {
 		@Override
 		public void generateRecipes(BlockEntry<?> blockVariant, DataGenContext<Block, StairBlock> ctx,
 			RegistrateRecipeProvider prov) {
-			prov.stairs(DataIngredient.items(blockVariant.get()), ctx::get, null, true);
+			prov.stairs(DataIngredient.items(blockVariant.get()), RecipeCategory.BUILDING_BLOCKS, ctx::get, null, true);
 		}
 	}
 }

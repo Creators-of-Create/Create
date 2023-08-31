@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stone_types_scorchia": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/scorchia"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:cut_scorchia_brick_slab_from_stone_types_scorchia_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_scorchia",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:cut_scorchia_brick_slab_from_stone_types_scorchia_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

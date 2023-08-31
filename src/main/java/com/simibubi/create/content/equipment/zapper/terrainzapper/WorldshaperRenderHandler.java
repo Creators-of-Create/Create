@@ -79,7 +79,7 @@ public class WorldshaperRenderHandler {
 			.add(0, player.getEyeHeight(), 0);
 		Vec3 range = player.getLookAngle()
 			.scale(128);
-		BlockHitResult raytrace = player.level
+		BlockHitResult raytrace = player.level()
 			.clip(new ClipContext(start, start.add(range), Block.OUTLINE, Fluid.NONE, player));
 		if (raytrace == null || raytrace.getType() == Type.MISS) {
 			renderedPositions = null;
@@ -89,7 +89,7 @@ public class WorldshaperRenderHandler {
 		BlockPos pos = raytrace.getBlockPos()
 			.offset(brush.getOffset(player.getLookAngle(), raytrace.getDirection(), placement));
 		renderedPositions =
-			() -> brush.addToGlobalPositions(player.level, pos, raytrace.getDirection(), new ArrayList<>(), tool);
+			() -> brush.addToGlobalPositions(player.level(), pos, raytrace.getDirection(), new ArrayList<>(), tool);
 	}
 
 }

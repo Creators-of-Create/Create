@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
-import net.minecraft.world.level.Explosion.BlockInteraction;
+import net.minecraft.world.level.Level.ExplosionInteraction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -171,7 +171,7 @@ public class NozzleBlockEntity extends SmartBlockEntity {
 		}
 
 		if (!pushing && pushingEntities.size() > 256 && !level.isClientSide) {
-			level.explode(null, center.x, center.y, center.z, 2, BlockInteraction.NONE);
+			level.explode(null, center.x, center.y, center.z, 2, ExplosionInteraction.NONE);
 			for (Iterator<Entity> iterator = pushingEntities.iterator(); iterator.hasNext();) {
 				Entity entity = iterator.next();
 				entity.discard();

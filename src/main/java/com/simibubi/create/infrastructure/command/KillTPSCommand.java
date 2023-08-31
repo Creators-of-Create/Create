@@ -16,14 +16,14 @@ public class KillTPSCommand {
 			.executes(ctx -> {
 				// killtps no arguments
 				ctx.getSource()
-					.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.0",
+					.sendSuccess(() -> CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.0",
 						Create.LAGGER.isLagging() ? Create.LAGGER.getTickTime() : 0), true);
 				if (Create.LAGGER.isLagging())
 					ctx.getSource()
-						.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
+						.sendSuccess(() -> CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
 				else
 					ctx.getSource()
-						.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.1"), true);
+						.sendSuccess(() -> CreateLang.translateDirect("command.killTPSCommand.status.usage.1"), true);
 
 				return 1;
 			})
@@ -34,13 +34,13 @@ public class KillTPSCommand {
 					if (tickTime > 0) {
 						Create.LAGGER.setLagging(true);
 						ctx.getSource()
-							.sendSuccess((CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.1", tickTime)),
+							.sendSuccess(() -> (CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.1", tickTime)),
 								true);
 						ctx.getSource()
-							.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
+							.sendSuccess(() -> CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
 					} else {
 						ctx.getSource()
-							.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.1"), true);
+							.sendSuccess(() -> CreateLang.translateDirect("command.killTPSCommand.status.usage.1"), true);
 					}
 
 					return 1;
@@ -55,10 +55,10 @@ public class KillTPSCommand {
 						Create.LAGGER.setTickTime(tickTime);
 						Create.LAGGER.setLagging(true);
 						ctx.getSource()
-							.sendSuccess((CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.1", tickTime)),
+							.sendSuccess(() -> (CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.1", tickTime)),
 								true);
 						ctx.getSource()
-							.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
+							.sendSuccess(() -> CreateLang.translateDirect("command.killTPSCommand.status.usage.0"), true);
 
 						return 1;
 					})))
@@ -67,7 +67,7 @@ public class KillTPSCommand {
 					// killtps stop
 					Create.LAGGER.setLagging(false);
 					ctx.getSource()
-						.sendSuccess(CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.2"), false);
+						.sendSuccess(() -> CreateLang.translateDirect("command.killTPSCommand.status.slowed_by.2"), false);
 
 					return 1;
 				}));

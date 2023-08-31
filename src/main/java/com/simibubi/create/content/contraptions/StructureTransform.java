@@ -1,9 +1,5 @@
 package com.simibubi.create.content.contraptions;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,6 +23,10 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.Vec3;
+
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public class StructureTransform {
 
@@ -102,7 +102,7 @@ public class StructureTransform {
 	}
 
 	public BlockPos applyWithoutOffset(BlockPos localPos) {
-		return new BlockPos(applyWithoutOffset(VecHelper.getCenterOf(localPos)));
+		return BlockPos.containing(applyWithoutOffset(VecHelper.getCenterOf(localPos)));
 	}
 
 	public BlockPos apply(BlockPos localPos) {

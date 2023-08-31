@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "minecraft:lever"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:controls"
-  }
+  },
+  "show_notification": true
 }

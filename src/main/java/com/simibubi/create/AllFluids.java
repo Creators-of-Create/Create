@@ -8,10 +8,10 @@ import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.content.fluids.VirtualFluid;

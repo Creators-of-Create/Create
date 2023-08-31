@@ -11,6 +11,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.kinetics.drill.DrillBlock;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 
 import net.createmod.catnip.utility.placement.IPlacementHelper;
 import net.createmod.catnip.utility.placement.PlacementHelpers;
@@ -22,7 +23,6 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -49,8 +49,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBlockEntity> {
-	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").bypassArmor();
-
 	public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
@@ -163,7 +161,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 		withBlockEntityDo(worldIn, pos, be -> {
 			if (be.getSpeed() == 0)
 				return;
-			entityIn.hurt(damageSourceSaw, (float) DrillBlock.getDamage(be.getSpeed()));
+			entityIn.hurt(CreateDamageSources.saw(worldIn), (float) DrillBlock.getDamage(be.getSpeed()));
 		});
 	}
 
@@ -172,11 +170,11 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 		super.updateEntityAfterFallOn(worldIn, entityIn);
 		if (!(entityIn instanceof ItemEntity))
 			return;
-		if (entityIn.level.isClientSide)
+		if (entityIn.level().isClientSide)
 			return;
 
 		BlockPos pos = entityIn.blockPosition();
-		withBlockEntityDo(entityIn.level, pos, be -> {
+		withBlockEntityDo(entityIn.level(), pos, be -> {
 			if (be.getSpeed() == 0)
 				return;
 			be.insertItem((ItemEntity) entityIn);
@@ -241,8 +239,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements IBE<SawBloc
 				state.getValue(FACING)
 					.getAxis(),
 				dir -> world.getBlockState(pos.relative(dir))
-					.getMaterial()
-					.isReplaceable());
+					.canBeReplaced());
 
 			if (directions.isEmpty())
 				return PlacementOffset.fail();

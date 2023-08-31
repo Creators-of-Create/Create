@@ -8,10 +8,11 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.CrossCollisionBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,16 +20,17 @@ import net.minecraft.world.level.block.state.BlockState;
 public abstract class ZapperItemRenderer extends CustomRenderedItemModelRenderer {
 
 	@Override
-	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, TransformType transformType,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		// Block indicator
-		if (transformType == TransformType.GUI && stack.hasTag() && stack.getTag()
+		if (transformType == ItemDisplayContext.GUI && stack.hasTag() && stack.getTag()
 			.contains("BlockUsed"))
 			renderBlockUsed(stack, ms, buffer, light, overlay);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void renderBlockUsed(ItemStack stack, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		BlockState state = NbtUtils.readBlockState(stack.getTag()
+		BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), stack.getTag()
 			.getCompound("BlockUsed"));
 
 		ms.pushPose();
@@ -45,7 +47,7 @@ public abstract class ZapperItemRenderer extends CustomRenderedItemModelRenderer
 
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.render(new ItemStack(state.getBlock()), TransformType.NONE, false, ms, buffer, light, overlay,
+			.render(new ItemStack(state.getBlock()), ItemDisplayContext.NONE, false, ms, buffer, light, overlay,
 				modelForState);
 		ms.popPose();
 	}

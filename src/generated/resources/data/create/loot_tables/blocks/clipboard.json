@@ -1,3 +1,4 @@
 {
-  "type": "minecraft:block"
+  "type": "minecraft:block",
+  "random_sequence": "create:blocks/clipboard"
 }

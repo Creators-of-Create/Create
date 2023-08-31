@@ -338,7 +338,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 	protected int getDistributableAmount(ArmInteractionPoint armInteractionPoint, int i) {
 		ItemStack stack = armInteractionPoint.extract(i, true);
 		ItemStack remainder = simulateInsertion(stack);
-		if (stack.sameItem(remainder)) {
+		if (ItemStack.isSameItem(stack, remainder)) {
 			return stack.getCount() - remainder.getCount();
 		} else {
 			return stack.getCount();
@@ -392,7 +392,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 				sendData();
 				setChanged();
 
-				if (!prevHeld.sameItem(heldItem))
+				if (!ItemStack.isSameItem(heldItem, prevHeld))
 					level.playSound(null, worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .125f,
 						.5f + Create.RANDOM.nextFloat() * .25f);
 				return;

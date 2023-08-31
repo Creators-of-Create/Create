@@ -30,5 +30,6 @@
       ],
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "create:blocks/exposed_copper_shingle_slab"
 }

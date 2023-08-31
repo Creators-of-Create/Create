@@ -1,29 +1,26 @@
 package com.simibubi.create.content.contraptions.wrench;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
-
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.RadialMenu;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.phys.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RadialWrenchMenu extends AbstractSimiScreen {
 
@@ -87,21 +84,20 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = this.width / 2;
 		int y = this.height / 2;
 
-		LocalPlayer player = Minecraft.getInstance().player;
+		PoseStack ms = graphics.pose();
 
-		Vec3 lookAngle = player.getLookAngle();
-		Quaternion quaternion = Quaternion.fromXYZDegrees(new Vector3f(player.getXRot(), player.getYRot(), 0));
+		LocalPlayer player = Minecraft.getInstance().player;
 
 		ms.pushPose();
 		ms.translate(x, y, 0);
 
 		ms.pushPose();
 
-		radialMenu.draw(ms, allStates
+		radialMenu.draw(graphics, allStates
 				.stream()
 				.map(state -> GuiGameElement.of(state)
 						.rotateBlock(player.getXRot(), player.getYRot() + 180, 0f)
@@ -115,7 +111,7 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 			GuiGameElement.of(state)
 					.rotateBlock(player.getXRot(), player.getYRot(), 0f)
 					.scale(24)
-					.render(ms);
+					.render(graphics);
 		}
 
 		ms.popPose();
@@ -123,11 +119,11 @@ public class RadialWrenchMenu extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void renderBackground(PoseStack p_238651_1_, int p_238651_2_) {
+	public void renderBackground(GuiGraphics graphics) {
 		Color color = new Color(0x50_101010)
 				.scaleAlpha(Math.min(1, (ticksOpen + AnimationTickHolder.getPartialTicks()) / 20f));
 
-		fillGradient(p_238651_1_, 0, 0, this.width, this.height, color.getRGB(), color.getRGB());
+		graphics.fillGradient(0, 0, this.width, this.height, color.getRGB(), color.getRGB());
 	}
 
 	@Override

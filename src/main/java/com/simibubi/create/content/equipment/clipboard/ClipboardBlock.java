@@ -1,14 +1,11 @@
 package com.simibubi.create.content.equipment.clipboard;
 
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
-
 import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -31,7 +28,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -40,6 +37,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.DistExecutor;
+
+import java.util.List;
 
 public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements IBE<ClipboardBlockEntity>, IWrenchable, ProperWaterloggedBlock {
@@ -80,8 +79,7 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
 		return !pLevel.getBlockState(pPos.relative(getConnectedDirection(pState).getOpposite()))
-			.getMaterial()
-			.isReplaceable();
+			.canBeReplaced();
 	}
 
 	@Override
@@ -140,11 +138,10 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
+	public List<ItemStack> getDrops(BlockState pState, LootParams.Builder pBuilder) {
 		if (!(pBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof ClipboardBlockEntity cbe))
 			return super.getDrops(pState, pBuilder);
-		pBuilder.withDynamicDrop(ShulkerBoxBlock.CONTENTS,
-			(p_56218_, p_56219_) -> p_56219_.accept(cbe.dataContainer.copy()));
+		pBuilder.withDynamicDrop(ShulkerBoxBlock.CONTENTS, p_56219_ -> p_56219_.accept(cbe.dataContainer.copy()));
 		return ImmutableList.of(cbe.dataContainer.copy());
 	}
 

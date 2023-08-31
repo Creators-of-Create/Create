@@ -19,8 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -64,7 +64,7 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 	}
 
 	private ItemStack defaultInsertionCallback(TransportedItemStack inserted, Direction side, boolean simulate) {
-		LazyOptional<IItemHandler> lazy = blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
+		LazyOptional<IItemHandler> lazy = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side);
 		if (!lazy.isPresent())
 			return inserted.stack;
 		return ItemHandlerHelper.insertItemStacked(lazy.orElse(null), inserted.stack.copy(), simulate);

@@ -3,10 +3,12 @@ package com.simibubi.create.content.equipment.toolbox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -15,8 +17,8 @@ import net.minecraftforge.common.Tags;
 
 public class ToolboxDyeingRecipe extends CustomRecipe {
 
-	public ToolboxDyeingRecipe(ResourceLocation rl) {
-		super(rl);
+	public ToolboxDyeingRecipe(ResourceLocation rl, CraftingBookCategory category) {
+		super(rl, category);
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class ToolboxDyeingRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingContainer inventory) {
+	public ItemStack assemble(CraftingContainer inventory, RegistryAccess pRegistryAccess) {
 		ItemStack toolbox = ItemStack.EMPTY;
 		DyeColor color = DyeColor.BROWN;
 

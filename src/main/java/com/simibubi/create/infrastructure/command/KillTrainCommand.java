@@ -33,7 +33,7 @@ public class KillTrainCommand {
 		}
 
 		train.invalid = true;
-		source.sendSuccess(Components.literal("Train '").append(train.name)
+		source.sendSuccess(() -> Components.literal("Train '").append(train.name)
 			.append("' removed successfully"), true);
 	}
 

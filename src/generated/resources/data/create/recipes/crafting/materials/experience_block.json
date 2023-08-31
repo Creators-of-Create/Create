@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "create:experience_nugget"
@@ -12,5 +13,6 @@
   ],
   "result": {
     "item": "create:experience_block"
-  }
+  },
+  "show_notification": true
 }

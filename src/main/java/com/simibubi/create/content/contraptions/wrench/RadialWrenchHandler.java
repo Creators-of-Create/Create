@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.wrench;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
-
 import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -28,7 +27,7 @@ public class RadialWrenchHandler {
 		if (player == null)
 			return;
 
-		Level level = player.level;
+		Level level = player.level();
 
 		ItemStack heldItem = player.getMainHandItem();
 		if (heldItem.getItem() != AllItems.WRENCH.get())

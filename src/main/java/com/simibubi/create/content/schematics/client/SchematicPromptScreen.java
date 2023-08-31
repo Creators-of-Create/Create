@@ -2,7 +2,6 @@ package com.simibubi.create.content.schematics.client;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -13,6 +12,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.lang.Components;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 
@@ -47,7 +47,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		nameField.setTextColorUneditable(-1);
 		nameField.setBordered(false);
 		nameField.setMaxLength(35);
-		nameField.changeFocus(true);
+		nameField.setFocused(true);
 		setFocused(nameField);
 		addRenderableWidget(nameField);
 
@@ -75,21 +75,21 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
-		drawCenteredString(ms, font, title, x + (background.getWidth() - 8) / 2, y + 3, 0xFFFFFF);
+		background.render(graphics, x, y);
+		graphics.drawCenteredString(font, title, x + (background.getWidth() - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
 				.at(x + 22, y + 23, 0)
-				.render(ms);
+				.render(graphics);
 
 		GuiGameElement.of(AllItems.SCHEMATIC_AND_QUILL.asStack())
 				.scale(3)
 				.at(x + background.getWidth() + 6, y + background.getHeight() - 40, -200)
-				.render(ms);
+				.render(graphics);
 	}
 
 	@Override

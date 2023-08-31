@@ -19,6 +19,7 @@ import net.createmod.catnip.utility.Pair;
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -183,7 +184,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	}
 
 	@Override
-	public ItemStack assemble(RecipeWrapper p_77572_1_) {
+	public ItemStack assemble(RecipeWrapper inv, RegistryAccess registryAccess) {
 		return ItemStack.EMPTY;
 	}
 
@@ -193,7 +194,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	}
 
 	@Override
-	public ItemStack getResultItem() {
+	public ItemStack getResultItem(RegistryAccess registryAccess) {
 		return resultPool.get(0)
 			.getStack();
 	}

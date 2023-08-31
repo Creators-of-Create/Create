@@ -21,7 +21,7 @@ public class FixLightingCommand {
 				);
 
 				ctx.getSource()
-					.sendSuccess(
+					.sendSuccess(() -> 
 						Components.literal("Forge's experimental block rendering pipeline is now enabled."), true);
 
 				return 1;

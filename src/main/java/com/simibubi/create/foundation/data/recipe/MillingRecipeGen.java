@@ -5,7 +5,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -196,10 +196,10 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(crushed.get()));
 	}
 
-	public MillingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public MillingRecipeGen(PackOutput output) {
+		super(output);
 	}
-
+	
 	@Override
 	protected AllRecipeTypes getRecipeType() {
 		return AllRecipeTypes.MILLING;

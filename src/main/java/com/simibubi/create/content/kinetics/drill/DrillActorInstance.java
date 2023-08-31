@@ -1,9 +1,10 @@
 package com.simibubi.create.content.kinetics.drill;
 
+import org.joml.Quaternionf;
+
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.mojang.math.Quaternion;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.flwdata.ActorData;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -13,6 +14,7 @@ import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import net.createmod.catnip.utility.VecHelper;
 import net.createmod.catnip.utility.math.AngleHelper;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class DrillActorInstance extends ActorInstance {
@@ -45,7 +47,7 @@ public class DrillActorInstance extends ActorInstance {
                  .setBlockLight(localBlockLight())
                  .setRotationOffset(0)
                  .setRotationAxis(0, 0, 1)
-                 .setLocalRotation(new Quaternion(eulerX, eulerY, 0, true))
+                 .setLocalRotation(new Quaternionf().rotationXYZ(eulerX * Mth.DEG_TO_RAD, eulerY * Mth.DEG_TO_RAD, 0))
                  .setSpeed(getSpeed(facing));
     }
 

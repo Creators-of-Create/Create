@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "I": {
       "tag": "forge:storage_blocks/brass"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:peculiar_bell"
-  }
+  },
+  "show_notification": true
 }

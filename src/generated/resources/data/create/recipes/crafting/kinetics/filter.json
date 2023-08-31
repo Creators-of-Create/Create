@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "tag": "forge:nuggets/iron"
@@ -13,5 +14,6 @@
   ],
   "result": {
     "item": "create:filter"
-  }
+  },
+  "show_notification": true
 }

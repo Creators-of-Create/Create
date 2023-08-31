@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "minecraft:copper_ingot"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:steam_whistle"
-  }
+  },
+  "show_notification": true
 }

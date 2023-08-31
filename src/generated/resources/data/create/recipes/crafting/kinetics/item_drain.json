@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "P": {
       "item": "minecraft:iron_bars"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:item_drain"
-  }
+  },
+  "show_notification": true
 }

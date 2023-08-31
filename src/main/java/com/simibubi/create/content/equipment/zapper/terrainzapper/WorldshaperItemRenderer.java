@@ -4,7 +4,7 @@ import static java.lang.Math.max;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.zapper.ZapperItemRenderer;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
@@ -15,9 +15,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class WorldshaperItemRenderer extends ZapperItemRenderer {
@@ -27,7 +27,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer {
 	protected static final PartialModel ACCELERATOR = new PartialModel(Create.asResource("item/handheld_worldshaper/accelerator"));
 
 	@Override
-	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
+	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		super.render(stack, model, renderer, transformType, ms, buffer, light, overlay);
 
@@ -62,7 +62,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer {
 		angle %= 360;
 		float offset = -.155f;
 		ms.translate(0, offset, 0);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
+		ms.mulPose(Axis.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
 		renderer.render(ACCELERATOR.get(), light);
 	}

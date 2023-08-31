@@ -25,7 +25,7 @@ import net.createmod.catnip.utility.Pair;
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -234,7 +234,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 
 		if (tag.contains("BoundLocation"))
 			boundLocation = Pair.of(
-				ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(tag.getString("BoundDimension"))),
+				ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("BoundDimension"))),
 				NbtUtils.readBlockPos(tag.getCompound("BoundLocation")));
 	}
 
@@ -284,8 +284,9 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 
 			BlockPos diff = newConnection.tePositions.getSecond()
 				.subtract(newConnection.tePositions.getFirst());
-			newConnection.tePositions.setSecond(new BlockPos(Vec3.atCenterOf(newConnection.tePositions.getFirst())
-				.add(transform.applyWithoutOffsetUncentered(Vec3.atLowerCornerOf(diff)))));
+			newConnection.tePositions
+				.setSecond(BlockPos.containing(Vec3.atCenterOf(newConnection.tePositions.getFirst())
+					.add(transform.applyWithoutOffsetUncentered(Vec3.atLowerCornerOf(diff)))));
 
 			Vec3 beVec = Vec3.atLowerCornerOf(worldPosition);
 			Vec3 teCenterVec = beVec.add(0.5, 0.5, 0.5);
@@ -404,7 +405,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 				.scale(.5);
 
 			for (Vec3 vec : new Vec3[] { railMiddle }) {
-				BlockPos pos = new BlockPos(vec);
+				BlockPos pos = BlockPos.containing(vec);
 				Pair<Integer, Integer> key = Pair.of(pos.getX(), pos.getZ());
 				if (!yLevels.containsKey(key) || yLevels.get(key) > vec.y)
 					yLevels.put(key, vec.y);
@@ -434,8 +435,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 			if (!fluidState.isEmpty() && !fluidState.isSourceOfType(Fluids.WATER))
 				continue;
 
-			if (!present && stateAtPos.getMaterial()
-				.isReplaceable())
+			if (!present && stateAtPos.canBeReplaced())
 				level.setBlock(targetPos,
 					ProperWaterloggedBlock.withWater(level, AllBlocks.FAKE_TRACK.getDefaultState(), targetPos), 3);
 			FakeTrackBlock.keepAlive(level, targetPos);

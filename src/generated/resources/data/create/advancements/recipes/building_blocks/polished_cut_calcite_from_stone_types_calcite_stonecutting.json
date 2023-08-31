@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stone_types_calcite": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/calcite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:polished_cut_calcite_from_stone_types_calcite_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_calcite",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:polished_cut_calcite_from_stone_types_calcite_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

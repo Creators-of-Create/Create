@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -147,7 +148,7 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 	public List<ItemStack> rollResults() {
 		return rollResults(this.getRollableResults());
 	}
-	
+
 	public List<ItemStack> rollResults(List<ProcessingOutput> rollableResults) {
 		List<ItemStack> results = new ArrayList<>();
 		for (int i = 0; i < rollableResults.size(); i++) {
@@ -170,8 +171,8 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 	// IRecipe<> paperwork
 
 	@Override
-	public ItemStack assemble(T inv) {
-		return getResultItem();
+	public ItemStack assemble(T inv, RegistryAccess registryAccess) {
+		return getResultItem(registryAccess);
 	}
 
 	@Override
@@ -180,7 +181,7 @@ public abstract class ProcessingRecipe<T extends Container> implements Recipe<T>
 	}
 
 	@Override
-	public ItemStack getResultItem() {
+	public ItemStack getResultItem(RegistryAccess registryAccess) {
 		return getRollableResults().isEmpty() ? ItemStack.EMPTY
 			: getRollableResults().get(0)
 				.getStack();

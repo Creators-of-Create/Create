@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
@@ -14,11 +14,15 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	ANDESITE_ALLOY = create(I::andesite, b -> b.duration(200)
 		.output(AllBlocks.SHAFT.get(), 6)),
 
+		BAMBOO_PLANKS = create(() -> Blocks.BAMBOO_PLANKS, b -> b.duration(20)
+			.output(Blocks.BAMBOO_MOSAIC, 1)),
+
 		OAK_WOOD = stripAndMakePlanks(Blocks.OAK_WOOD, Blocks.STRIPPED_OAK_WOOD, Blocks.OAK_PLANKS),
 		SPRUCE_WOOD = stripAndMakePlanks(Blocks.SPRUCE_WOOD, Blocks.STRIPPED_SPRUCE_WOOD, Blocks.SPRUCE_PLANKS),
 		BIRCH_WOOD = stripAndMakePlanks(Blocks.BIRCH_WOOD, Blocks.STRIPPED_BIRCH_WOOD, Blocks.BIRCH_PLANKS),
 		JUNGLE_WOOD = stripAndMakePlanks(Blocks.JUNGLE_WOOD, Blocks.STRIPPED_JUNGLE_WOOD, Blocks.JUNGLE_PLANKS),
 		ACACIA_WOOD = stripAndMakePlanks(Blocks.ACACIA_WOOD, Blocks.STRIPPED_ACACIA_WOOD, Blocks.ACACIA_PLANKS),
+		CHERRY_WOOD = stripAndMakePlanks(Blocks.CHERRY_WOOD, Blocks.STRIPPED_CHERRY_WOOD, Blocks.CHERRY_PLANKS),
 		DARK_OAK_WOOD = stripAndMakePlanks(Blocks.DARK_OAK_WOOD, Blocks.STRIPPED_DARK_OAK_WOOD, Blocks.DARK_OAK_PLANKS),
 		MANGROVE_WOOD = stripAndMakePlanks(Blocks.MANGROVE_WOOD, Blocks.STRIPPED_MANGROVE_WOOD, Blocks.MANGROVE_PLANKS),
 		CRIMSON_WOOD = stripAndMakePlanks(Blocks.CRIMSON_HYPHAE, Blocks.STRIPPED_CRIMSON_HYPHAE, Blocks.CRIMSON_PLANKS),
@@ -29,8 +33,10 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		BIRCH_LOG = stripAndMakePlanks(Blocks.BIRCH_LOG, Blocks.STRIPPED_BIRCH_LOG, Blocks.BIRCH_PLANKS),
 		JUNGLE_LOG = stripAndMakePlanks(Blocks.JUNGLE_LOG, Blocks.STRIPPED_JUNGLE_LOG, Blocks.JUNGLE_PLANKS),
 		ACACIA_LOG = stripAndMakePlanks(Blocks.ACACIA_LOG, Blocks.STRIPPED_ACACIA_LOG, Blocks.ACACIA_PLANKS),
+		CHERRY_LOG = stripAndMakePlanks(Blocks.CHERRY_LOG, Blocks.STRIPPED_CHERRY_LOG, Blocks.CHERRY_PLANKS),
 		DARK_OAK_LOG = stripAndMakePlanks(Blocks.DARK_OAK_LOG, Blocks.STRIPPED_DARK_OAK_LOG, Blocks.DARK_OAK_PLANKS),
 		MANGROVE_LOG = stripAndMakePlanks(Blocks.MANGROVE_LOG, Blocks.STRIPPED_MANGROVE_LOG, Blocks.MANGROVE_PLANKS),
+		BAMBOO_BLOCK = stripAndMakePlanks(Blocks.BAMBOO_BLOCK, Blocks.STRIPPED_BAMBOO_BLOCK, Blocks.BAMBOO_PLANKS, 3),
 		CRIMSON_LOG = stripAndMakePlanks(Blocks.CRIMSON_STEM, Blocks.STRIPPED_CRIMSON_STEM, Blocks.CRIMSON_PLANKS),
 		WARPED_LOG = stripAndMakePlanks(Blocks.WARPED_STEM, Blocks.STRIPPED_WARPED_STEM, Blocks.WARPED_PLANKS),
 
@@ -108,10 +114,14 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
+		return stripAndMakePlanks(wood, stripped, planks, 6);
+	}
+
+	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks, int planksAmount) {
 		create(() -> wood, b -> b.duration(50)
 			.output(stripped));
 		return create(() -> stripped, b -> b.duration(50)
-			.output(planks, 6));
+			.output(planks, planksAmount));
 	}
 
 	GeneratedRecipe cuttingCompat(Mods mod, String... woodtypes) {
@@ -145,8 +155,8 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		return null;
 	}
 
-	public CuttingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public CuttingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

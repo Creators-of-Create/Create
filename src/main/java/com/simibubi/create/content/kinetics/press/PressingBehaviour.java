@@ -149,7 +149,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 
 					for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class,
 						new AABB(worldPosition.below()).deflate(.125f))) {
-						if (!itemEntity.isAlive() || !itemEntity.isOnGround())
+						if (!itemEntity.isAlive() || !itemEntity.onGround())
 							continue;
 						if (!specifics.tryProcessInWorld(itemEntity, true))
 							continue;
@@ -226,7 +226,7 @@ public class PressingBehaviour extends BeltProcessingBehaviour {
 		for (Entity entity : level.getEntities(null, bb)) {
 			if (!(entity instanceof ItemEntity itemEntity))
 				continue;
-			if (!entity.isAlive() || !entity.isOnGround())
+			if (!entity.isAlive() || !entity.onGround())
 				continue;
 
 			entityScanCooldown = 0;

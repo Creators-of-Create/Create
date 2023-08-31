@@ -30,9 +30,8 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<SmartObserverBlockEntity> {
@@ -52,8 +51,8 @@ public class SmartObserverBlock extends DirectedDirectionalBlock implements IBE<
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
-		Capability<IItemHandler> itemCap = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-		Capability<IFluidHandler> fluidCap = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+		Capability<IItemHandler> itemCap = ForgeCapabilities.ITEM_HANDLER;
+		Capability<IFluidHandler> fluidCap = ForgeCapabilities.FLUID_HANDLER;
 
 		Direction preferredFacing = null;
 		for (Direction face : context.getNearestLookingDirections()) {

@@ -1,14 +1,13 @@
 package com.simibubi.create.content.decoration.slidingDoor;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.contraptions.ContraptionWorld;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -22,10 +21,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -34,13 +35,36 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
+
 public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<SlidingDoorBlockEntity> {
+
+	public static final Supplier<BlockSetType> TRAIN_SET_TYPE =
+		() -> new BlockSetType("train", true, SoundType.NETHERITE_BLOCK, SoundEvents.IRON_DOOR_CLOSE,
+			SoundEvents.IRON_DOOR_OPEN, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundEvents.IRON_TRAPDOOR_OPEN,
+			SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+			SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+
+	public static final Supplier<BlockSetType> GLASS_SET_TYPE =
+		() -> new BlockSetType("train", true, SoundType.NETHERITE_BLOCK, SoundEvents.IRON_DOOR_CLOSE,
+			SoundEvents.IRON_DOOR_OPEN, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundEvents.IRON_TRAPDOOR_OPEN,
+			SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+			SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
 
 	public static final BooleanProperty VISIBLE = BooleanProperty.create("visible");
 	private boolean folds;
 
-	public SlidingDoorBlock(Properties p_52737_, boolean folds) {
-		super(p_52737_);
+	public static SlidingDoorBlock metal(Properties p_52737_, boolean folds) {
+		return new SlidingDoorBlock(p_52737_, TRAIN_SET_TYPE.get(), folds);
+	}
+
+	public static SlidingDoorBlock glass(Properties p_52737_, boolean folds) {
+		return new SlidingDoorBlock(p_52737_, GLASS_SET_TYPE.get(), folds);
+	}
+
+	public SlidingDoorBlock(Properties p_52737_, BlockSetType type, boolean folds) {
+		super(p_52737_, type);
 		this.folds = folds;
 	}
 
@@ -124,7 +148,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		if (isDoubleDoor(changedState, hinge, facing, otherDoor))
 			setOpen(entity, level, otherDoor, otherPos, open);
 
-		this.playSound(level, pos, open);
+		this.playSound(entity, level, pos, open);
 		level.gameEvent(entity, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
 	}
 
@@ -148,7 +172,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 			changedState = changedState.setValue(VISIBLE, false);
 
 		if (isPowered != pState.getValue(OPEN)) {
-			this.playSound(pLevel, pPos, isPowered);
+			this.playSound(null, pLevel, pPos, isPowered);
 			pLevel.gameEvent(null, isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pPos);
 
 			DoorHingeSide hinge = changedState.getValue(HINGE);
@@ -203,7 +227,7 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		if (isDoubleDoor(pState, hinge, facing, otherDoor))
 			use(otherDoor, pLevel, otherPos, pPlayer, pHand, pHit);
 		else if (pState.getValue(OPEN))
-			pLevel.levelEvent(pPlayer, getOpenSound(), pPos, 0);
+			pLevel.gameEvent(pPlayer, GameEvent.BLOCK_OPEN, pPos);
 
 		return InteractionResult.sidedSuccess(pLevel.isClientSide);
 	}
@@ -223,13 +247,10 @@ public class SlidingDoorBlock extends DoorBlock implements IWrenchable, IBE<Slid
 		return pState.getValue(VISIBLE) ? RenderShape.MODEL : RenderShape.ENTITYBLOCK_ANIMATED;
 	}
 
-	private void playSound(Level pLevel, BlockPos pPos, boolean pIsOpening) {
-		if (pIsOpening)
-			pLevel.levelEvent((Player) null, this.getOpenSound(), pPos, 0);
-	}
-
-	private int getOpenSound() {
-		return 1005;
+	private void playSound(@Nullable Entity pSource, Level pLevel, BlockPos pPos, boolean pIsOpening) {
+		pLevel.playSound(pSource, pPos, pIsOpening ? SoundEvents.IRON_DOOR_OPEN : SoundEvents.IRON_DOOR_CLOSE,
+			SoundSource.BLOCKS, 1.0F, pLevel.getRandom()
+				.nextFloat() * 0.1F + 0.9F);
 	}
 
 	@Nullable

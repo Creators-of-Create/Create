@@ -4,11 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEntity> {
@@ -31,7 +31,8 @@ public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEnt
 
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.renderStatic(item, TransformType.GROUND, light, OverlayTexture.NO_OVERLAY, ms, buffer, 0);
+			.renderStatic(item, ItemDisplayContext.GROUND, light, OverlayTexture.NO_OVERLAY, ms, buffer, entity.level(),
+				0);
 		ms.popPose();
 	}
 

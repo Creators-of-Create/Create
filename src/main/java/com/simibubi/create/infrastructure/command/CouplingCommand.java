@@ -105,7 +105,7 @@ public class CouplingCommand {
 								cart1.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
 							if (!cart1Capability.isPresent()) {
 								ctx.getSource()
-									.sendSuccess(Components.literal("Minecart has no Couplings Attached"), true);
+									.sendSuccess(() -> Components.literal("Minecart has no Couplings Attached"), true);
 								return 0;
 							}
 
@@ -115,7 +115,7 @@ public class CouplingCommand {
 								+ (cart1Controller.isLeadingCoupling() ? 1 : 0);
 							if (cart1Couplings == 0) {
 								ctx.getSource()
-									.sendSuccess(Components.literal("Minecart has no Couplings Attached"), true);
+									.sendSuccess(() -> Components.literal("Minecart has no Couplings Attached"), true);
 								return 0;
 							}
 
@@ -138,7 +138,7 @@ public class CouplingCommand {
 							}
 
 							ctx.getSource()
-								.sendSuccess(Components.literal("The specified Carts are not coupled"), true);
+								.sendSuccess(() -> Components.literal("The specified Carts are not coupled"), true);
 
 							return 0;
 						}))))
@@ -153,7 +153,7 @@ public class CouplingCommand {
 							cart.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
 						if (!capability.isPresent()) {
 							ctx.getSource()
-								.sendSuccess(Components.literal("Minecart has no Couplings Attached"), true);
+								.sendSuccess(() -> Components.literal("Minecart has no Couplings Attached"), true);
 							return 0;
 						}
 
@@ -163,14 +163,14 @@ public class CouplingCommand {
 							(controller.isConnectedToCoupling() ? 1 : 0) + (controller.isLeadingCoupling() ? 1 : 0);
 						if (couplings == 0) {
 							ctx.getSource()
-								.sendSuccess(Components.literal("Minecart has no Couplings Attached"), true);
+								.sendSuccess(() -> Components.literal("Minecart has no Couplings Attached"), true);
 							return 0;
 						}
 
 						controller.decouple();
 
 						ctx.getSource()
-							.sendSuccess(
+							.sendSuccess(() -> 
 								Components.literal("Removed " + couplings + " couplings from the Minecart"), true);
 
 						return couplings;

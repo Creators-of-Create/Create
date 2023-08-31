@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.utility.Pair;
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -178,19 +179,16 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 	}
 
 	@Override
-	public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		ItemStack stack = menu.ghostInventory.getStackInSlot(1);
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
-		matrixStack.translate(0.0F, 0.0F, 32.0F);
-		this.setBlitOffset(150);
-		this.itemRenderer.blitOffset = 150.0F;
-		this.itemRenderer.renderGuiItemDecorations(font, stack, leftPos + 22, topPos + 59,
+		matrixStack.translate(0, 0, 150);
+		graphics.renderItemDecorations(font, stack, leftPos + 22, topPos + 59,
 			String.valueOf(selectedAttributes.size() - 1));
-		this.setBlitOffset(0);
-		this.itemRenderer.blitOffset = 0.0F;
 		matrixStack.popPose();
 
-		super.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
+		super.renderForeground(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
@@ -202,15 +200,15 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 	}
 
 	@Override
-	protected void renderTooltip(PoseStack matrixStack, int mouseX, int mouseY) {
+	protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
 		if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
 			if (this.hoveredSlot.index == 37) {
-				renderComponentTooltip(matrixStack, selectedAttributes, mouseX, mouseY);
+				graphics.renderComponentTooltip(font, selectedAttributes, mouseX, mouseY);
 				return;
 			}
-			this.renderTooltip(matrixStack, this.hoveredSlot.getItem(), mouseX, mouseY);
+			graphics.renderTooltip(font, this.hoveredSlot.getItem(), mouseX, mouseY);
 		}
-		super.renderTooltip(matrixStack, mouseX, mouseY);
+		super.renderTooltip(graphics, mouseX, mouseY);
 	}
 
 	@Override

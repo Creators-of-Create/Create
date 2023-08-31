@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "#": {
       "item": "create:vertical_framed_glass"
@@ -12,5 +13,6 @@
   "result": {
     "count": 16,
     "item": "create:vertical_framed_glass_pane"
-  }
+  },
+  "show_notification": true
 }

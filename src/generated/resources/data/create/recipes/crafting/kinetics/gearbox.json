@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "create:andesite_casing"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "create:gearbox"
-  }
+  },
+  "show_notification": true
 }

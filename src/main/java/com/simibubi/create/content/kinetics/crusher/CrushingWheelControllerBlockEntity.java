@@ -11,6 +11,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingInventory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
@@ -41,9 +42,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -145,8 +146,8 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 
 			// Output Items
 			if (facing != Direction.UP) {
-				BlockPos nextPos = worldPosition.offset(facing.getAxis() == Axis.X ? 1f * offset : 0f, (-1f),
-					facing.getAxis() == Axis.Z ? 1f * offset : 0f);
+				BlockPos nextPos = worldPosition.offset(facing.getAxis() == Axis.X ? 1 * offset : 0, -1,
+					facing.getAxis() == Axis.Z ? 1 * offset : 0);
 				DirectBeltInputBehaviour behaviour =
 					BlockEntityBehaviour.get(level, nextPos, DirectBeltInputBehaviour.TYPE);
 				if (behaviour != null) {
@@ -230,7 +231,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 					processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 				}
 			}
-			processingEntity.hurt(CrushingWheelBlockEntity.DAMAGE_SOURCE, crusherDamage);
+			processingEntity.hurt(CreateDamageSources.crush(level), crusherDamage);
 			if (!processingEntity.isAlive()) {
 				processingEntity.setPos(entityOutPos.x, entityOutPos.y, entityOutPos.z);
 			}
@@ -354,7 +355,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		if (cap == ForgeCapabilities.ITEM_HANDLER)
 			return handler.cast();
 		return super.getCapability(cap, side);
 	}

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "item": "create:shaft"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "create:flywheel"
-  }
+  },
+  "show_notification": true
 }

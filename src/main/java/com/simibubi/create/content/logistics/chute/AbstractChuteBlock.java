@@ -87,12 +87,15 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		super.updateEntityAfterFallOn(worldIn, entityIn);
 		if (!(entityIn instanceof ItemEntity))
 			return;
-		if (entityIn.level.isClientSide)
+		if (entityIn.level().isClientSide)
 			return;
 		if (!entityIn.isAlive())
 			return;
-		DirectBeltInputBehaviour input = BlockEntityBehaviour.get(entityIn.level, new BlockPos(entityIn.position()
-			.add(0, 0.5f, 0)).below(), DirectBeltInputBehaviour.TYPE);
+		DirectBeltInputBehaviour input = BlockEntityBehaviour.get(entityIn.level(),
+			BlockPos.containing(entityIn.position()
+				.add(0, 0.5f, 0))
+				.below(),
+			DirectBeltInputBehaviour.TYPE);
 		if (input == null)
 			return;
 		if (!input.canInsertFromSide(Direction.UP))

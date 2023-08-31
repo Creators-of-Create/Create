@@ -7,7 +7,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 
 import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -59,8 +59,8 @@ public class HauntingRecipeGen extends ProcessingRecipeGen {
 				.output(result.get()));
 	}
 
-	public HauntingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public HauntingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

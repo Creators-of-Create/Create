@@ -4,7 +4,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.AssemblyException;
@@ -17,7 +16,8 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
 
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
@@ -40,7 +40,7 @@ public class AssemblyScreen extends AbstractStationScreen {
 		int y = guiTop;
 		int by = y + background.getHeight() - 24;
 
-		Widget widget = renderables.get(0);
+		Renderable widget = renderables.get(0);
 		if (widget instanceof IconButton ib) {
 			ib.setIcon(AllIcons.I_PRIORITY_VERY_LOW);
 			ib.setToolTip(CreateLang.translateDirect("station.close"));
@@ -119,28 +119,28 @@ public class AssemblyScreen extends AbstractStationScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderWindow(ms, mouseX, mouseY, partialTicks);
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWindow(graphics, mouseX, mouseY, partialTicks);
 		int x = guiLeft;
 		int y = guiTop;
 
 		MutableComponent header = CreateLang.translateDirect("station.assembly_title");
-		font.draw(ms, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x0E2233);
+		graphics.drawString(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x0E2233, false);
 
 		AssemblyException lastAssemblyException = blockEntity.lastException;
 		if (lastAssemblyException != null) {
 			MutableComponent text = CreateLang.translateDirect("station.failed");
-			font.draw(ms, text, x + 97 - font.width(text) / 2, y + 47, 0x775B5B);
+			graphics.drawString(font, text, x + 97 - font.width(text) / 2, y + 47, 0x775B5B, false);
 			int offset = 0;
 			if (blockEntity.failedCarriageIndex != -1) {
-				font.draw(ms, CreateLang.translateDirect("station.carriage_number", blockEntity.failedCarriageIndex), x + 30,
-					y + 67, 0x7A7A7A);
+				graphics.drawString(font, CreateLang.translateDirect("station.carriage_number", blockEntity.failedCarriageIndex), x + 30,
+					y + 67, 0x7A7A7A, false);
 				offset += 10;
 			}
-			font.drawWordWrap(lastAssemblyException.component, x + 30, y + 67 + offset, 134, 0x775B5B);
+			graphics.drawWordWrap(font, lastAssemblyException.component, x + 30, y + 67 + offset, 134, 0x775B5B);
 			offset += font.split(lastAssemblyException.component, 134)
 				.size() * 9 + 5;
-			font.drawWordWrap(CreateLang.translateDirect("station.retry"), x + 30, y + 67 + offset, 134, 0x7A7A7A);
+			graphics.drawWordWrap(font, CreateLang.translateDirect("station.retry"), x + 30, y + 67 + offset, 134, 0x7A7A7A);
 			return;
 		}
 
@@ -149,11 +149,11 @@ public class AssemblyScreen extends AbstractStationScreen {
 		MutableComponent text = CreateLang.translateDirect(
 			bogeyCount == 0 ? "station.no_bogeys" : bogeyCount == 1 ? "station.one_bogey" : "station.more_bogeys",
 			bogeyCount);
-		font.draw(ms, text, x + 97 - font.width(text) / 2, y + 47, 0x7A7A7A);
+		graphics.drawString(font, text, x + 97 - font.width(text) / 2, y + 47, 0x7A7A7A, false);
 
-		font.drawWordWrap(CreateLang.translateDirect("station.how_to"), x + 28, y + 62, 134, 0x7A7A7A);
-		font.drawWordWrap(CreateLang.translateDirect("station.how_to_1"), x + 28, y + 94, 134, 0x7A7A7A);
-		font.drawWordWrap(CreateLang.translateDirect("station.how_to_2"), x + 28, y + 117, 138, 0x7A7A7A);
+		graphics.drawWordWrap(font, CreateLang.translateDirect("station.how_to"), x + 28, y + 62, 134, 0x7A7A7A);
+		graphics.drawWordWrap(font, CreateLang.translateDirect("station.how_to_1"), x + 28, y + 94, 134, 0x7A7A7A);
+		graphics.drawWordWrap(font, CreateLang.translateDirect("station.how_to_2"), x + 28, y + 117, 138, 0x7A7A7A);
 	}
 
 	@Override

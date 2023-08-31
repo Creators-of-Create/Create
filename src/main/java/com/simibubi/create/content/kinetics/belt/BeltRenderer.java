@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSpriteShifts;
@@ -27,16 +27,15 @@ import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -70,7 +69,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			boolean start = part == BeltPart.START;
 			boolean end = part == BeltPart.END;
 			boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
-			boolean alongX = facing.getAxis() == Axis.X;
+			boolean alongX = facing.getAxis() == Direction.Axis.X;
 
 			PoseStack localTransforms = new PoseStack();
             TransformStack msr = TransformStack.cast(localTransforms);
@@ -133,8 +132,8 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 					PoseStack stack = new PoseStack();
                     TransformStack stacker = TransformStack.cast(stack);
 					stacker.centre();
-					if (dir.getAxis() == Axis.X) stacker.rotateY(90);
-					if (dir.getAxis() == Axis.Y) stacker.rotateX(90);
+					if (dir.getAxis() == Direction.Axis.X) stacker.rotateY(90);
+					if (dir.getAxis() == Direction.Axis.Y) stacker.rotateX(90);
 					stacker.rotateX(90);
 					stacker.unCentre();
 					return stack;
@@ -192,7 +191,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			.getValue(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		boolean slopeAlongX = beltFacing
-								.getAxis() == Axis.X;
+								.getAxis() == Direction.Axis.X;
 
 		boolean onContraption = be.getLevel() instanceof WrappedLevel;
 
@@ -225,14 +224,14 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				slope != BeltSlope.HORIZONTAL && Mth.clamp(offset, .5f, be.beltLength - .5f) == offset;
 			boolean tiltForward = (slope == BeltSlope.DOWNWARD ^ beltFacing
 																   .getAxisDirection() == AxisDirection.POSITIVE) == (beltFacing
-																														.getAxis() == Axis.Z);
+																														.getAxis() == Direction.Axis.Z);
 			float slopeAngle = onSlope ? tiltForward ? -45 : 45 : 0;
 
 			ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
 
 			boolean alongX = beltFacing
 							   .getClockWise()
-							   .getAxis() == Axis.X;
+							   .getAxis() == Direction.Axis.X;
 			if (!alongX)
 				sideOffset *= -1;
 			ms.translate(alongX ? sideOffset : 0, 0, alongX ? 0 : sideOffset);
@@ -251,7 +250,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			if (slopeShadowOnly)
 				ms.pushPose();
 			if (!renderUpright || slopeShadowOnly)
-				ms.mulPose(new Vector3f(slopeAlongX ? 0 : 1, 0, slopeAlongX ? 1 : 0).rotationDegrees(slopeAngle));
+				ms.mulPose((slopeAlongX ? Axis.ZP : Axis.XP).rotationDegrees(slopeAngle));
 			if (onSlope)
 				ms.translate(0, slopeOffset, 0);
 			ms.pushPose();
@@ -270,7 +269,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 					Vec3 vectorForOffset = BeltHelper.getVectorForOffset(be, offset);
 					Vec3 diff = vectorForOffset.subtract(positionVec);
 					float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
-					ms.mulPose(Vector3f.YP.rotation(yRot));
+					ms.mulPose(Axis.YP.rotation(yRot));
 				}
 				ms.translate(0, 3 / 32d, 1 / 16f);
 			}
@@ -278,10 +277,10 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			for (int i = 0; i <= count; i++) {
 				ms.pushPose();
 
-				ms.mulPose(Vector3f.YP.rotationDegrees(transported.angle));
+				ms.mulPose(Axis.YP.rotationDegrees(transported.angle));
 				if (!blockItem && !renderUpright) {
 					ms.translate(0, -.09375, 0);
-					ms.mulPose(Vector3f.XP.rotationDegrees(90));
+					ms.mulPose(Axis.XP.rotationDegrees(90));
 				}
 
 				if (blockItem) {
@@ -289,12 +288,12 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 				}
 
 				ms.scale(.5f, .5f, .5f);
-				itemRenderer.renderStatic(null, transported.stack, TransformType.FIXED, false, ms, buffer, be.getLevel(), stackLight, overlay, 0);
+				itemRenderer.renderStatic(null, transported.stack, ItemDisplayContext.FIXED, false, ms, buffer, be.getLevel(), stackLight, overlay, 0);
 				ms.popPose();
 
 				if (!renderUpright) {
 					if (!blockItem)
-						ms.mulPose(Vector3f.YP.rotationDegrees(10));
+						ms.mulPose(Axis.YP.rotationDegrees(10));
 					ms.translate(0, blockItem ? 1 / 64d : 1 / 16d, 0);
 				} else
 					ms.translate(0, 0, -1 / 16f);

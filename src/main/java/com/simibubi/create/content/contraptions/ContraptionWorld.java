@@ -36,14 +36,14 @@ public class ContraptionWorld extends WrappedLevel {
         StructureTemplate.StructureBlockInfo blockInfo = contraption.getBlocks().get(pos);
 
         if (blockInfo != null)
-            return blockInfo.state;
+            return blockInfo.state();
 
         return Blocks.AIR.defaultBlockState();
     }
 
     @Override
     public void playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource category, float volume, float pitch, boolean distanceDelay) {
-        world.playLocalSound(x, y, z, sound, category, volume, pitch, distanceDelay);
+        level.playLocalSound(x, y, z, sound, category, volume, pitch, distanceDelay);
     }
 
 	// Ensure that we provide accurate information about ContraptionWorld height to mods (such as Starlight) which

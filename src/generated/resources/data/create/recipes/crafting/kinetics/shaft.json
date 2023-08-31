@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "item": "create:andesite_alloy"
@@ -12,5 +13,6 @@
   "result": {
     "count": 8,
     "item": "create:shaft"
-  }
+  },
+  "show_notification": true
 }

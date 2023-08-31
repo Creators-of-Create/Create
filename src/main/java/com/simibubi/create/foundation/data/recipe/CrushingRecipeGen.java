@@ -22,7 +22,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 
 import net.createmod.catnip.utility.lang.Lang;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
@@ -261,8 +261,8 @@ public class CrushingRecipeGen extends ProcessingRecipeGen {
 		});
 	}
 
-	public CrushingRecipeGen(DataGenerator dataGenerator) {
-		super(dataGenerator);
+	public CrushingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

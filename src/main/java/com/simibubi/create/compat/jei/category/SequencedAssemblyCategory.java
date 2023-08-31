@@ -1,14 +1,5 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.jetbrains.annotations.NotNull;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
@@ -16,7 +7,6 @@ import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.CreateLang;
-
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -26,9 +16,17 @@ import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ParametersAreNonnullByDefault
 public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAssemblyRecipe> {
@@ -51,7 +49,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132 + xOffset, 91)
 				.setBackground(getRenderedSlot(recipe.getOutputChance()), -1 , -1)
-				.addItemStack(recipe.getResultItem())
+				.addItemStack(getResultItem(recipe))
 				.addTooltipCallback((recipeSlotView, tooltip) -> {
 					if (noRandomOutput)
 						return;
@@ -87,29 +85,30 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 	final String[] romans = { "I", "II", "III", "IV", "V", "VI", "-" };
 
 	@Override
-	public void draw(SequencedAssemblyRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SequencedAssemblyRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
 		Font font = Minecraft.getInstance().font;
 
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 
 		matrixStack.pushPose();
 		matrixStack.translate(0, 15, 0);
 		boolean singleOutput = recipe.getOutputChance() == 1;
 		int xOffset = singleOutput ? 0 : -7;
-		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52 + xOffset, 79);
+		AllGuiTextures.JEI_LONG_ARROW.render(graphics, 52 + xOffset, 79);
 		if (!singleOutput) {
-			AllGuiTextures.JEI_CHANCE_SLOT.render(matrixStack, 150 + xOffset, 75);
+			AllGuiTextures.JEI_CHANCE_SLOT.render(graphics, 150 + xOffset, 75);
 			Component component = Components.literal("?").withStyle(ChatFormatting.BOLD);
-			font.drawShadow(matrixStack, component, font.width(component) / -2 + 8 + 150 + xOffset, 2 + 78,
+			graphics.drawString(font, component, font.width(component) / -2 + 8 + 150 + xOffset, 2 + 78,
 				0xefefef);
 		}
 
 		if (recipe.getLoops() > 1) {
 			matrixStack.pushPose();
 			matrixStack.translate(15, 9, 0);
-			AllIcons.I_SEQ_REPEAT.render(matrixStack, 50 + xOffset, 75);
+			AllIcons.I_SEQ_REPEAT.render(graphics, 50 + xOffset, 75);
 			Component repeat = Components.literal("x" + recipe.getLoops());
-			font.draw(matrixStack, repeat, 66 + xOffset, 80, 0x888888);
+			graphics.drawString(font, repeat, 66 + xOffset, 80, 0x888888, false);
 			matrixStack.popPose();
 		}
 
@@ -129,8 +128,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			SequencedAssemblySubCategory subCategory = getSubCategory(sequencedRecipe);
 			int subWidth = subCategory.getWidth();
 			MutableComponent component = Components.literal("" + romans[Math.min(i, 6)]);
-			font.draw(matrixStack, component, font.width(component) / -2 + subWidth / 2, 2, 0x888888);
-			subCategory.draw(sequencedRecipe, matrixStack, mouseX, mouseY, i);
+			graphics.drawString(font, component, font.width(component) / -2 + subWidth / 2, 2, 0x888888, false);
+			subCategory.draw(sequencedRecipe, graphics, mouseX, mouseY, i);
 			matrixStack.translate(subWidth + margin, 0, 0);
 		}
 		matrixStack.popPose();

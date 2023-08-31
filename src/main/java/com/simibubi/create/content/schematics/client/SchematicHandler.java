@@ -24,10 +24,12 @@ import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.levelWrappers.SchematicLevel;
 import net.createmod.catnip.utility.outliner.AABBOutline;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -144,12 +146,13 @@ public class SchematicHandler implements IGuiOverlay {
 	}
 
 	private void setupRenderer() {
-		StructureTemplate schematic = SchematicItem.loadSchematic(activeSchematicItem);
+		Level clientWorld = Minecraft.getInstance().level;
+		StructureTemplate schematic =
+			SchematicItem.loadSchematic(clientWorld.holderLookup(Registries.BLOCK), activeSchematicItem);
 		Vec3i size = schematic.getSize();
 		if (size.equals(Vec3i.ZERO))
 			return;
 
-		Level clientWorld = Minecraft.getInstance().level;
 		SchematicLevel w = new SchematicLevel(clientWorld);
 		SchematicLevel wMirroredFB = new SchematicLevel(clientWorld);
 		SchematicLevel wMirroredLR = new SchematicLevel(clientWorld);
@@ -239,14 +242,14 @@ public class SchematicHandler implements IGuiOverlay {
 	}
 
 	@Override
-	public void render(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
 		if (Minecraft.getInstance().options.hideGui || !active)
 			return;
 		if (activeSchematicItem != null)
-			this.overlay.renderOn(poseStack, activeHotbarSlot);
+			this.overlay.renderOn(graphics, activeHotbarSlot);
 		currentTool.getTool()
-			.renderOverlay(gui, poseStack, partialTicks, width, height);
-		selectionScreen.renderPassive(poseStack, partialTicks);
+			.renderOverlay(gui, graphics, partialTicks, width, height);
+		selectionScreen.renderPassive(graphics, partialTicks);
 	}
 
 	public boolean onMouseInput(int button, boolean pressed) {
@@ -311,11 +314,7 @@ public class SchematicHandler implements IGuiOverlay {
 
 	private boolean itemLost(Player player) {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!player.getInventory()
-				.getItem(i)
-				.sameItem(activeSchematicItem))
-				continue;
-			if (!ItemStack.tagMatches(player.getInventory()
+			if (!ItemStack.matches(player.getInventory()
 				.getItem(i), activeSchematicItem))
 				continue;
 			return false;

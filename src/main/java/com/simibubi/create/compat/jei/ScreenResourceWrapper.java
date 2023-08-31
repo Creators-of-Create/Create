@@ -1,10 +1,8 @@
 package com.simibubi.create.compat.jei;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import mezz.jei.api.gui.drawable.IDrawable;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class ScreenResourceWrapper implements IDrawable {
 
@@ -25,10 +23,9 @@ public class ScreenResourceWrapper implements IDrawable {
 	}
 
 	@Override
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
-		resource.bind();
-		GuiComponent.blit(matrixStack, xOffset, yOffset, 0, resource.getStartX(), resource.getStartY(), resource.getWidth(),
-				resource.getHeight(), 256, 256);
+	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+		graphics.blit(resource.location, xOffset, yOffset, 0, resource.getStartX(), resource.getStartY(), resource.getWidth(),
+			resource.getHeight(), 256, 256);
 	}
 
 }

@@ -1,5 +1,21 @@
 package com.simibubi.create.api.connectivity;
 
+import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
+import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
+import net.createmod.catnip.utility.Iterate;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,26 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
-import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
-
-import net.createmod.catnip.utility.Iterate;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class ConnectivityHandler {
 
@@ -361,10 +357,10 @@ public class ConnectivityHandler {
 		}
 
 		if (be instanceof IMultiBlockEntityContainer.Inventory inv && inv.hasInventory())
-			be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+			be.getCapability(ForgeCapabilities.ITEM_HANDLER)
 				.invalidate();
 		if (be instanceof IMultiBlockEntityContainer.Fluid fluid && fluid.hasTank())
-			be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			be.getCapability(ForgeCapabilities.FLUID_HANDLER)
 				.invalidate();
 
 		if (tryReconnect)

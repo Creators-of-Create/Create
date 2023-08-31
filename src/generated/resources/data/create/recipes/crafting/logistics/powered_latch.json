@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "minecraft:lever"
@@ -21,5 +22,6 @@
   ],
   "result": {
     "item": "create:powered_latch"
-  }
+  },
+  "show_notification": true
 }

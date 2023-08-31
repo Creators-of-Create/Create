@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "P": {
       "item": "create:mechanical_piston"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:sticky_mechanical_piston"
-  }
+  },
+  "show_notification": true
 }

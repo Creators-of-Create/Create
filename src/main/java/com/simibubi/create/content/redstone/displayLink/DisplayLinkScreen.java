@@ -30,6 +30,7 @@ import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.lang.Components;
 import net.createmod.ponder.foundation.ui.PonderTagScreen;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Direction;
@@ -249,26 +250,27 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
+		background.render(graphics, x, y);
 		MutableComponent header = CreateLang.translateDirect("display_link.title");
-		font.draw(ms, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x592424);
+		graphics.drawString(font, header, x + background.getWidth() / 2 - font.width(header) / 2, y + 4, 0x592424, false);
 
 		if (sources.isEmpty())
-			font.drawShadow(ms, CreateLang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
+			graphics.drawString(font, CreateLang.translateDirect("display_link.no_source"), x + 65, y + 30, 0xD3D3D3);
 		if (target == null)
-			font.drawShadow(ms, CreateLang.translateDirect("display_link.no_target"), x + 65, y + 109, 0xD3D3D3);
+			graphics.drawString(font, CreateLang.translateDirect("display_link.no_target"), x + 65, y + 109, 0xD3D3D3);
 
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(0, guiTop + 46, 0);
 		configWidgets.getFirst()
-				.renderWidgetBG(guiLeft, ms);
+				.renderWidgetBG(guiLeft, graphics);
 		ms.translate(0, 21, 0);
 		configWidgets.getSecond()
-				.renderWidgetBG(guiLeft, ms);
+				.renderWidgetBG(guiLeft, graphics);
 		ms.popPose();
 
 		ms.pushPose();
@@ -280,7 +282,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 				.rotateY(63);
 		GuiGameElement.of(blockEntity.getBlockState()
 						.setValue(DisplayLinkBlock.FACING, Direction.UP))
-				.render(ms);
+				.render(graphics);
 		ms.popPose();
 	}
 

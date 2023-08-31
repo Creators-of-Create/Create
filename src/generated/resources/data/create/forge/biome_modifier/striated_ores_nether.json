@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_nether",
+  "features": "create:striated_ores_nether",
+  "step": "underground_ores"
+}

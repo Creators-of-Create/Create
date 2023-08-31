@@ -20,7 +20,7 @@ public class OverlayConfigCommand {
 
 						CatnipServices.NETWORK.simpleActionToClient(player, "overlayReset", "");
 
-						ctx.getSource().sendSuccess(Components.literal("Create Goggle Overlay has been reset to default position"), true);
+						ctx.getSource().sendSuccess(() -> Components.literal("Create Goggle Overlay has been reset to default position"), true);
 
 						return Command.SINGLE_SUCCESS;
 					})

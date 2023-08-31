@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.gui;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import net.createmod.catnip.gui.ILightingSettings;
 
@@ -21,20 +23,20 @@ public class CustomLightingSettings implements ILightingSettings {
 	}
 
 	protected void init(float yRot1, float xRot1, float yRot2, float xRot2, boolean doubleLight) {
-		light1 = Vector3f.ZP.copy();
-		light1.transform(Vector3f.YP.rotationDegrees(yRot1));
-		light1.transform(Vector3f.XN.rotationDegrees(xRot1));
+		light1 = new Vector3f(0, 0, 1);
+		light1.rotate(Axis.YP.rotationDegrees(yRot1));
+		light1.rotate(Axis.XN.rotationDegrees(xRot1));
 
 		if (doubleLight) {
-			light2 = Vector3f.ZP.copy();
-			light2.transform(Vector3f.YP.rotationDegrees(yRot2));
-			light2.transform(Vector3f.XN.rotationDegrees(xRot2));
+			light2 = new Vector3f(0, 0, 1);
+			light2.rotate(Axis.YP.rotationDegrees(yRot2));
+			light2.rotate(Axis.XN.rotationDegrees(xRot2));
 		} else {
-			light2 = Vector3f.ZERO;
+			light2 = new Vector3f();
 		}
 
 		lightMatrix = new Matrix4f();
-		lightMatrix.setIdentity();
+		lightMatrix.identity();
 	}
 
 	@Override

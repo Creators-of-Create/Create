@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "X": {
       "item": "create:cut_limestone"
@@ -12,5 +13,6 @@
   "result": {
     "count": 6,
     "item": "create:cut_limestone_wall"
-  }
+  },
+  "show_notification": true
 }

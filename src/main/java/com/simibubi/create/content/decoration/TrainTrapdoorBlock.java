@@ -1,7 +1,7 @@
 package com.simibubi.create.content.decoration;
 
+import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -18,7 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
 
 	public TrainTrapdoorBlock(Properties p_57526_) {
-		super(p_57526_);
+		super(p_57526_, SlidingDoorBlock.TRAIN_SET_TYPE.get());
 	}
 
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,

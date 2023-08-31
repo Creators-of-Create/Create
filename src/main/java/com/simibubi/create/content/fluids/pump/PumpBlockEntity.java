@@ -33,8 +33,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class PumpBlockEntity extends KineticBlockEntity {
@@ -288,7 +288,7 @@ public class PumpBlockEntity extends KineticBlockEntity {
 		// fluid handler endpoint
 		if (blockEntity != null) {
 			LazyOptional<IFluidHandler> capability =
-				blockEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face.getOpposite());
+				blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, face.getOpposite());
 			if (capability.isPresent())
 				return true;
 		}

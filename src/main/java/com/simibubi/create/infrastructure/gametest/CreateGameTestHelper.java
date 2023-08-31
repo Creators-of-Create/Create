@@ -50,11 +50,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -251,7 +250,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 		BlockEntity be = getBlockEntity(pos);
 		if (be == null)
 			fail("BlockEntity not present");
-		Optional<IFluidHandler> handler = be.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).resolve();
+		Optional<IFluidHandler> handler = be.getCapability(ForgeCapabilities.FLUID_HANDLER).resolve();
 		if (handler.isEmpty())
 			fail("handler not present");
 		return handler.get();
@@ -319,7 +318,7 @@ public class CreateGameTestHelper extends GameTestHelper {
 		BlockEntity be = getBlockEntity(pos);
 		if (be == null)
 			fail("BlockEntity not present");
-		Optional<IItemHandler> handler = be.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).resolve();
+		Optional<IItemHandler> handler = be.getCapability(ForgeCapabilities.ITEM_HANDLER).resolve();
 		if (handler.isEmpty())
 			fail("handler not present");
 		return handler.get();

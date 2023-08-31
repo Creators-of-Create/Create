@@ -1,12 +1,9 @@
 package com.simibubi.create.content.contraptions.minecart;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
-
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -20,6 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
+
+import java.util.Map;
 
 /**
  * Useful methods for dealing with Minecarts
@@ -83,7 +82,7 @@ public class MinecartSim2020 {
 		actualY = cartPos.getY() + 1;
 
 		BaseRailBlock abstractrailblock = (BaseRailBlock) trackState.getBlock();
-		RailShape railshape = abstractrailblock.getRailDirection(trackState, cart.level, cartPos, cart);
+		RailShape railshape = abstractrailblock.getRailDirection(trackState, cart.level(), cartPos, cart);
 		switch (railshape) {
 		case ASCENDING_EAST:
 			forcedMovement = forcedMovement.add(-1 * cart.getSlopeAdjustment(), 0.0D, 0.0D);

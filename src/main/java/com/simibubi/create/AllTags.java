@@ -8,7 +8,7 @@ import static com.simibubi.create.AllTags.NameSpace.TIC;
 import java.util.Collections;
 
 import net.createmod.catnip.utility.lang.Lang;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -303,7 +303,7 @@ public class AllTags {
 			if (optional) {
 				tag = optionalTag(ForgeRegistries.ENTITY_TYPES, id);
 			} else {
-				tag = TagKey.create(Registry.ENTITY_TYPE_REGISTRY, id);
+				tag = TagKey.create(Registries.ENTITY_TYPE, id);
 			}
 			this.alwaysDatagen = alwaysDatagen;
 		}
@@ -316,7 +316,7 @@ public class AllTags {
 		private static void init() {}
 
 	}
-	
+
 	public enum AllRecipeSerializerTags {
 
 		AUTOMATION_IGNORE,
@@ -347,7 +347,7 @@ public class AllTags {
 			if (optional) {
 				tag = optionalTag(ForgeRegistries.RECIPE_SERIALIZERS, id);
 			} else {
-				tag = TagKey.create(Registry.RECIPE_SERIALIZER_REGISTRY, id);
+				tag = TagKey.create(Registries.RECIPE_SERIALIZER, id);
 			}
 			this.alwaysDatagen = alwaysDatagen;
 		}

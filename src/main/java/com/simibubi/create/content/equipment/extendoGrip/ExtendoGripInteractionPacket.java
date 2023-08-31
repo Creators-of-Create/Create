@@ -1,7 +1,6 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -56,10 +55,10 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 			ServerPlayer sender = context.getSender();
 			if (sender == null)
 				return;
-			Entity entityByID = sender.getLevel()
+			Entity entityByID = sender.level()
 				.getEntity(target);
 			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
-				double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get())
+				double d = sender.getAttribute(ForgeMod.BLOCK_REACH.get())
 					.getValue();
 				if (!sender.hasLineOfSight(entityByID))
 					d -= 3;

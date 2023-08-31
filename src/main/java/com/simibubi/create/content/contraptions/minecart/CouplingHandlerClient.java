@@ -1,9 +1,7 @@
 package com.simibubi.create.content.contraptions.minecart;
 
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
-
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -17,6 +15,7 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public class CouplingHandlerClient {
 

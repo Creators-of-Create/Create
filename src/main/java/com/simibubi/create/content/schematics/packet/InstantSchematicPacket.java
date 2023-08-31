@@ -39,7 +39,7 @@ public class InstantSchematicPacket extends SimplePacketBase {
 			ServerPlayer player = context.getSender();
 			if (player == null)
 				return;
-			Create.SCHEMATIC_RECEIVER.handleInstantSchematic(player, name, player.level, origin, bounds);
+			Create.SCHEMATIC_RECEIVER.handleInstantSchematic(player, name, player.level(), origin, bounds);
 		});
 		return true;
 	}

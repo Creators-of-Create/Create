@@ -1,11 +1,8 @@
 package com.simibubi.create.content.decoration;
 
-import java.util.function.Predicate;
-
 import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripItem;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-
 import net.createmod.catnip.utility.placement.IPlacementHelper;
 import net.createmod.catnip.utility.placement.PlacementHelpers;
 import net.createmod.catnip.utility.placement.PlacementOffset;
@@ -25,6 +22,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
+
+import java.util.function.Predicate;
 
 public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
@@ -92,7 +91,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 
 			int range = AllConfigs.server().equipment.placementAssistRange.get();
 			if (player != null) {
-				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+				AttributeInstance reach = player.getAttribute(ForgeMod.BLOCK_REACH.get());
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))
 					range += 4;
 			}
@@ -107,8 +106,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
 			if (!state.canSurvive(world, newPos))
 				return PlacementOffset.fail();
 
-			if (newState.getMaterial()
-				.isReplaceable())
+			if (newState.canBeReplaced())
 				return PlacementOffset.success(newPos, bState -> bState.setValue(FACING, state.getValue(FACING)));
 			return PlacementOffset.fail();
 		}

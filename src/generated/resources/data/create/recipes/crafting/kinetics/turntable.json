@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "P": {
       "tag": "minecraft:wooden_slabs"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:turntable"
-  }
+  },
+  "show_notification": true
 }

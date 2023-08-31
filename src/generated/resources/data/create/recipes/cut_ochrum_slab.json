@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "cut_ochrum_slab",
   "key": {
     "X": {
@@ -12,5 +13,6 @@
   "result": {
     "count": 6,
     "item": "create:cut_ochrum_slab"
-  }
+  },
+  "show_notification": true
 }

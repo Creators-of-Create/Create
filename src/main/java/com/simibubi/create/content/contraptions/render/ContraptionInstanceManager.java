@@ -1,11 +1,5 @@
 package com.simibubi.create.content.contraptions.render;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.TaskEngine;
@@ -15,10 +9,13 @@ import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-
 import net.minecraft.client.Camera;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 
@@ -63,7 +60,7 @@ public class ContraptionInstanceManager extends BlockEntityInstanceManager {
 		if (contraption.isHiddenInPortal(context.localPos))
 			return null;
 
-		MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state);
+		MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state());
 
 		if (movementBehaviour != null && movementBehaviour.hasSpecialInstancedRendering()) {
 			ActorInstance instance = movementBehaviour.createInstance(materialManager, renderWorld, context);

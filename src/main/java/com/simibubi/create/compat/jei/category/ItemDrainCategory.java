@@ -1,17 +1,11 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.function.Consumer;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.animations.AnimatedItemDrain;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -20,16 +14,20 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
 public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
@@ -54,12 +52,12 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 			}
 
 			LazyOptional<IFluidHandlerItem> capability =
-				stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+				stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 			if (!capability.isPresent())
 				continue;
 
 			ItemStack copy = stack.copy();
-			capability = copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			capability = copy.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
 			IFluidHandlerItem handler = capability.orElse(null);
 			FluidStack extracted = handler.drain(1000, FluidAction.EXECUTE);
 			ItemStack result = handler.getContainer();
@@ -95,15 +93,15 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 		builder
 				.addSlot(RecipeIngredientRole.OUTPUT, 132, 27)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addItemStack(recipe.getResultItem());
+				.addItemStack(getResultItem(recipe));
 	}
 
 	@Override
-	public void draw(EmptyingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 37);
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 73, 4);
+	public void draw(EmptyingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 37);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 73, 4);
 		drain.withFluid(recipe.getResultingFluid())
-			.draw(matrixStack, getBackground().getWidth() / 2 - 13, 40);
+			.draw(graphics, getBackground().getWidth() / 2 - 13, 40);
 	}
 
 }

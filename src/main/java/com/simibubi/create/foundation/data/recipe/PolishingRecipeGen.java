@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 
 public class PolishingRecipeGen extends ProcessingRecipeGen {
 
@@ -13,8 +13,8 @@ public class PolishingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public PolishingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public PolishingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

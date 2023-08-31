@@ -31,5 +31,6 @@
       ],
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "create:blocks/metal_girder_encased_shaft"
 }

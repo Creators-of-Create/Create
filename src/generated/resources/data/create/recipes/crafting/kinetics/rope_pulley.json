@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "create:andesite_casing"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:rope_pulley"
-  }
+  },
+  "show_notification": true
 }

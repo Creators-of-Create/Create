@@ -6,6 +6,7 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 import com.simibubi.create.foundation.utility.TreeCutter;
 
@@ -102,7 +103,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
-	protected DamageSource getDamageSource() {
-		return SawBlock.damageSourceSaw;
+	protected DamageSource getDamageSource(Level level) {
+		return CreateDamageSources.saw(level);
 	}
 }

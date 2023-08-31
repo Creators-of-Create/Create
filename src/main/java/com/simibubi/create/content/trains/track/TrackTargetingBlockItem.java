@@ -114,8 +114,7 @@ public class TrackTargetingBlockItem extends BlockItem {
 		teTag.putBoolean("TargetDirection", tag.getBoolean("SelectedDirection"));
 
 		BlockPos selectedPos = NbtUtils.readBlockPos(tag.getCompound("SelectedPos"));
-		BlockPos placedPos = pos.relative(pContext.getClickedFace(), state.getMaterial()
-			.isReplaceable() ? 0 : 1);
+		BlockPos placedPos = pos.relative(pContext.getClickedFace(), state.canBeReplaced() ? 0 : 1);
 
 		boolean bezier = tag.contains("Bezier");
 

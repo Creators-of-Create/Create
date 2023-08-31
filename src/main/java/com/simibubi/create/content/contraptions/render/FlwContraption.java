@@ -1,10 +1,5 @@
 package com.simibubi.create.content.contraptions.render;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlStateTracker;
 import com.jozufozu.flywheel.backend.instancing.Engine;
@@ -19,11 +14,9 @@ import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.render.CreateContexts;
-
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
@@ -32,6 +25,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FlwContraption extends ContraptionRenderInfo {
 
@@ -90,7 +89,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 	public void beginFrame(BeginFrameEvent event) {
 		super.beginFrame(event);
 
-		modelViewPartial.setIdentity();
+		modelViewPartial.identity();
 		modelViewPartialReady = false;
 
 		if (!isVisible()) return;
@@ -173,7 +172,7 @@ public class FlwContraption extends ContraptionRenderInfo {
 		float y = (float) (Mth.lerp(pt, entity.yOld, entity.getY()) - camY);
 		float z = (float) (Mth.lerp(pt, entity.zOld, entity.getZ()) - camZ);
 		matrix.setTranslation(x, y, z);
-		matrix.multiply(modelMatrix);
+		matrix.mul(modelMatrix);
 	}
 
 	public void tick() {

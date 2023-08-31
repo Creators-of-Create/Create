@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "I": {
       "tag": "forge:plates/brass"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:smart_fluid_pipe"
-  }
+  },
+  "show_notification": true
 }

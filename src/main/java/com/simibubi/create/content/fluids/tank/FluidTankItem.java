@@ -104,8 +104,7 @@ public class FluidTankItem extends BlockItem {
 				BlockState blockState = world.getBlockState(offsetPos);
 				if (FluidTankBlock.isTank(blockState))
 					continue;
-				if (!blockState.getMaterial()
-					.isReplaceable())
+				if (!blockState.canBeReplaced())
 					return;
 				tanksToPlace++;
 			}

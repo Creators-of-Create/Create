@@ -1,5 +1,7 @@
 package com.simibubi.create.content.kinetics.base.flwdata;
 
+import org.joml.Quaternionf;
+
 import com.jozufozu.flywheel.api.struct.Batched;
 import com.jozufozu.flywheel.api.struct.Instanced;
 import com.jozufozu.flywheel.api.struct.StructWriter;
@@ -7,7 +9,6 @@ import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.core.layout.BufferLayout;
 import com.jozufozu.flywheel.core.model.ModelTransformer;
 import com.jozufozu.flywheel.util.RenderMath;
-import com.mojang.math.Quaternion;
 import com.simibubi.create.content.kinetics.KineticDebugger;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
@@ -52,7 +53,7 @@ public class BeltType implements Instanced<BeltData>, Batched<BeltData> {
 		});
 
 		b.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5)
-				.multiply(new Quaternion(d.qX, d.qY, d.qZ, d.qW))
+				.multiply(new Quaternionf(d.qX, d.qY, d.qZ, d.qW))
 				.unCentre()
 				.light(d.getPackedLight());
 		if (KineticDebugger.isActive()) {

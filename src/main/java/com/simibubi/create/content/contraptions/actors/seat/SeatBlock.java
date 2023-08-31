@@ -16,7 +16,6 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -25,7 +24,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -50,12 +48,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class SeatBlock extends Block implements ProperWaterloggedBlock {
 
 	protected final DyeColor color;
-	protected final boolean inCreativeTab;
 
-	public SeatBlock(Properties properties, DyeColor color, boolean inCreativeTab) {
+	public SeatBlock(Properties properties, DyeColor color) {
 		super(properties);
 		this.color = color;
-		this.inCreativeTab = inCreativeTab;
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
@@ -82,13 +78,6 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> p_149666_2_) {
-		if (group != CreativeModeTab.TAB_SEARCH && !inCreativeTab)
-			return;
-		super.fillItemCategory(group, p_149666_2_);
-	}
-
-	@Override
 	public void fallOn(Level p_152426_, BlockState p_152427_, BlockPos p_152428_, Entity p_152429_, float p_152430_) {
 		super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, p_152430_ * 0.5F);
 	}
@@ -97,7 +86,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 	public void updateEntityAfterFallOn(BlockGetter reader, Entity entity) {
 		BlockPos pos = entity.blockPosition();
 		if (entity instanceof Player || !(entity instanceof LivingEntity) || !canBePickedUp(entity)
-			|| isSeatOccupied(entity.level, pos)) {
+			|| isSeatOccupied(entity.level(), pos)) {
 			if (entity.isSuppressingBounce()) {
 				super.updateEntityAfterFallOn(reader, entity);
 				return;
@@ -114,7 +103,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 		if (reader.getBlockState(pos)
 			.getBlock() != this)
 			return;
-		sitDown(entity.level, pos, entity);
+		sitDown(entity.level(), pos, entity);
 	}
 
 	@Override
@@ -178,7 +167,7 @@ public class SeatBlock extends Block implements ProperWaterloggedBlock {
 	}
 
 	public static Optional<Entity> getLeashed(Level level, Player player) {
-		List<Entity> entities = player.level.getEntities((Entity) null, player.getBoundingBox()
+		List<Entity> entities = player.level().getEntities((Entity) null, player.getBoundingBox()
 			.inflate(10), e -> true);
 		for (Entity e : entities)
 			if (e instanceof Mob mob && mob.getLeashHolder() == player && SeatBlock.canBePickedUp(e))

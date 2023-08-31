@@ -8,6 +8,8 @@
     "minecraft:stripped_mangrove_log",
     "minecraft:stripped_oak_log",
     "minecraft:stripped_spruce_log",
-    "minecraft:stripped_warped_stem"
+    "minecraft:stripped_warped_stem",
+    "minecraft:stripped_cherry_log",
+    "minecraft:stripped_bamboo_block"
   ]
 }

@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 
@@ -26,8 +27,9 @@ import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
-import com.simibubi.create.foundation.data.AllLangPartials;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.DamageTypeTagGen;
+import com.simibubi.create.foundation.data.GeneratedEntriesProvider;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.RecipeSerializerTagGen;
 import com.simibubi.create.foundation.data.TagGen;
@@ -45,13 +47,13 @@ import com.simibubi.create.foundation.utility.CreateNBTProcessors;
 import com.simibubi.create.infrastructure.command.ServerLagger;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
-import com.simibubi.create.infrastructure.worldgen.AllOreFeatureConfigEntries;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
-import com.simibubi.create.infrastructure.worldgen.BuiltinRegistration;
 
+import net.minecraft.core.HolderLookup;
 import net.createmod.catnip.utility.lang.LangBuilder;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -114,7 +116,7 @@ public class Create {
 
 		AllSoundEvents.prepare();
 		AllTags.init();
-		AllCreativeModeTabs.init();
+		AllCreativeModeTabs.register(modEventBus);
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
@@ -128,10 +130,8 @@ public class Create {
 		AllStructureProcessorTypes.register(modEventBus);
 		AllEntityDataSerializers.register(modEventBus);
 		AllPackets.registerPackets();
-		AllOreFeatureConfigEntries.init();
 		AllFeatures.register(modEventBus);
 		AllPlacementModifiers.register(modEventBus);
-		BuiltinRegistration.register(modEventBus);
 
 		AllConfigs.register(modLoadingContext);
 
@@ -153,7 +153,7 @@ public class Create {
 		CopperRegistries.inject();
 
 		modEventBus.addListener(Create::init);
-		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
+		modEventBus.addListener(EventPriority.LOW, Create::gatherData);
 		modEventBus.addListener(AllSoundEvents::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
@@ -183,21 +183,30 @@ public class Create {
 	public static void gatherData(GatherDataEvent event) {
 		TagGen.datagen();
 		DataGenerator gen = event.getGenerator();
+		PackOutput output = gen.getPackOutput();
+		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PonderIndex.addPlugin(new CreatePonderPlugin()));
-		gen.addProvider(event.includeClient(), new LangMerger(gen, ID, NAME, AllLangPartials.values()));
+
 		gen.addProvider(event.includeClient(), AllSoundEvents.provider(gen));
 
-		gen.addProvider(event.includeServer(), new RecipeSerializerTagGen(gen, event.getExistingFileHelper()));
-		gen.addProvider(event.includeServer(), new AllAdvancements(gen));
-		gen.addProvider(event.includeServer(), new StandardRecipeGen(gen));
-		gen.addProvider(event.includeServer(), new MechanicalCraftingRecipeGen(gen));
-		gen.addProvider(event.includeServer(), new SequencedAssemblyRecipeGen(gen));
+		GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
+		lookupProvider = generatedEntriesProvider.getRegistryProvider();
+		gen.addProvider(event.includeServer(), generatedEntriesProvider);
 
+		gen.addProvider(event.includeServer(), new RecipeSerializerTagGen(output, lookupProvider, event.getExistingFileHelper()));
+		gen.addProvider(event.includeServer(), new DamageTypeTagGen(output, lookupProvider, event.getExistingFileHelper()));
+		gen.addProvider(event.includeServer(), new AllAdvancements(output));
+		gen.addProvider(event.includeServer(), new StandardRecipeGen(output));
+		gen.addProvider(event.includeServer(), new MechanicalCraftingRecipeGen(output));
+		gen.addProvider(event.includeServer(), new SequencedAssemblyRecipeGen(output));
+
+		if (event.includeClient()) {
+			LangMerger.attachToRegistrateProvider(gen, output);
+		}
 
 		if (event.includeServer()) {
-			ProcessingRecipeGen.registerAll(gen);
-			//AllOreFeatureConfigEntries.gatherData(event);
+			ProcessingRecipeGen.registerAll(gen, output);
 		}
 	}
 

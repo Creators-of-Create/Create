@@ -13,6 +13,7 @@ import net.createmod.catnip.utility.levelWrappers.SchematicLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +50,8 @@ public class SchematicInstances {
 			.getBoolean("Deployed"))
 			return null;
 
-		StructureTemplate activeTemplate = SchematicItem.loadSchematic(schematic);
+		StructureTemplate activeTemplate =
+			SchematicItem.loadSchematic(wrapped.holderLookup(Registries.BLOCK), schematic);
 
 		if (activeTemplate.getSize()
 			.equals(Vec3i.ZERO))

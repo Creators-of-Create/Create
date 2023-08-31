@@ -1,19 +1,17 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.List;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.content.kinetics.saw.CuttingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.minecraft.client.gui.GuiGraphics;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
@@ -46,11 +44,11 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 	}
 
 	@Override
-	public void draw(CuttingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 70, 6);
-		AllGuiTextures.JEI_SHADOW.render(matrixStack, 72 - 17, 42 + 13);
+	public void draw(CuttingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 70, 6);
+		AllGuiTextures.JEI_SHADOW.render(graphics, 72 - 17, 42 + 13);
 
-		saw.draw(matrixStack, 72, 42);
+		saw.draw(graphics, 72, 42);
 	}
 
 }

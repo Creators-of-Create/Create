@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "small_tuff_brick_slab",
   "key": {
     "X": {
@@ -12,5 +13,6 @@
   "result": {
     "count": 6,
     "item": "create:small_tuff_brick_slab"
-  }
+  },
+  "show_notification": true
 }

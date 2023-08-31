@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "#": {
       "item": "create:spruce_window"
@@ -12,5 +13,6 @@
   "result": {
     "count": 16,
     "item": "create:spruce_window_pane"
-  }
+  },
+  "show_notification": true
 }

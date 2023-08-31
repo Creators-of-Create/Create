@@ -1,17 +1,9 @@
 package com.simibubi.create.compat.jei.category;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.jetbrains.annotations.NotNull;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -22,7 +14,7 @@ import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +23,11 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.IShapedRecipe;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
@@ -44,7 +41,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, CraftingRecipe recipe, IFocusGroup focuses) {
 		builder.addSlot(RecipeIngredientRole.OUTPUT, 134, 81)
-			.addItemStack(recipe.getResultItem());
+			.addItemStack(getResultItem(recipe));
 
 		int x = getXPadding(recipe);
 		int y = getYPadding(recipe);
@@ -92,8 +89,9 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 	}
 
 	@Override
-	public void draw(CraftingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX,
+	public void draw(CraftingRecipe recipe, IRecipeSlotsView iRecipeSlotsView, GuiGraphics graphics, double mouseX,
 		double mouseY) {
+		PoseStack matrixStack = graphics.pose();
 		matrixStack.pushPose();
 		float scale = getScale(recipe);
 		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);
@@ -106,15 +104,15 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 					matrixStack.pushPose();
 					matrixStack.translate(col * 19 * scale, row * 19 * scale, 0);
 					matrixStack.scale(scale, scale, scale);
-					AllGuiTextures.JEI_SLOT.render(matrixStack, 0, 0);
+					AllGuiTextures.JEI_SLOT.render(graphics, 0, 0);
 					matrixStack.popPose();
 				}
 
 		matrixStack.popPose();
 
-		AllGuiTextures.JEI_SLOT.render(matrixStack, 133, 80);
-		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 128, 59);
-		crafter.draw(matrixStack, 129, 25);
+		AllGuiTextures.JEI_SLOT.render(graphics, 133, 80);
+		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 128, 59);
+		crafter.draw(graphics, 129, 25);
 
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0, 300);
@@ -126,7 +124,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			amount++;
 		}
 
-		Minecraft.getInstance().font.drawShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
+		graphics.drawString(Minecraft.getInstance().font, amount + "", 142, 39, 0xFFFFFF);
 		matrixStack.popPose();
 	}
 
@@ -141,7 +139,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		}
 
 		@Override
-		public void render(PoseStack matrixStack, @NotNull ItemStack ingredient) {
+		public void render(GuiGraphics graphics, @NotNull ItemStack ingredient) {
+			PoseStack matrixStack = graphics.pose();
 			matrixStack.pushPose();
 			float scale = getScale(recipe);
 			matrixStack.scale(scale, scale, scale);
@@ -149,15 +148,12 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			if (ingredient != null) {
 				PoseStack modelViewStack = RenderSystem.getModelViewStack();
 				modelViewStack.pushPose();
-				modelViewStack.mulPoseMatrix(matrixStack.last()
-					.pose());
 				RenderSystem.applyModelViewMatrix();
 				RenderSystem.enableDepthTest();
 				Minecraft minecraft = Minecraft.getInstance();
 				Font font = getFontRenderer(minecraft, ingredient);
-				ItemRenderer itemRenderer = minecraft.getItemRenderer();
-				itemRenderer.renderAndDecorateFakeItem(ingredient, 0, 0);
-				itemRenderer.renderGuiItemDecorations(font, ingredient, 0, 0, null);
+				graphics.renderItem(ingredient, 0, 0);
+				graphics.renderItemDecorations(font, ingredient, 0, 0, null);
 				RenderSystem.disableBlend();
 				modelViewStack.popPose();
 				RenderSystem.applyModelViewMatrix();

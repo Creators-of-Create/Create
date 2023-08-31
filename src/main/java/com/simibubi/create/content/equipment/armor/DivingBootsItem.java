@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -18,9 +19,10 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber
 public class DivingBootsItem extends BaseArmorItem {
 	public static final EquipmentSlot SLOT = EquipmentSlot.FEET;
+	public static final ArmorItem.Type TYPE = ArmorItem.Type.BOOTS;
 
 	public DivingBootsItem(ArmorMaterial material, Properties properties, ResourceLocation textureLoc) {
-		super(material, SLOT, properties, textureLoc);
+		super(material, TYPE, properties, textureLoc);
 	}
 
 	public static boolean isWornBy(Entity entity) {
@@ -46,9 +48,9 @@ public class DivingBootsItem extends BaseArmorItem {
 
 		Vec3 motion = entity.getDeltaMovement();
 		boolean isJumping = entity.jumping;
-		entity.setOnGround(entity.isOnGround() || entity.verticalCollision);
+		entity.setOnGround(entity.onGround() || entity.verticalCollision);
 
-		if (isJumping && entity.isOnGround()) {
+		if (isJumping && entity.onGround()) {
 			motion = motion.add(0, .5f, 0);
 			entity.setOnGround(false);
 		} else {
@@ -86,7 +88,7 @@ public class DivingBootsItem extends BaseArmorItem {
 		double yMotion = entity.getDeltaMovement().y;
 		double vMultiplier = yMotion < 0 ? Math.max(0, 2.5 - Math.abs(yMotion) * 2) : 1;
 
-		if (!entity.isOnGround()) {
+		if (!entity.onGround()) {
 			if (entity.jumping && entity.getPersistentData()
 				.contains("LavaGrounded")) {
 				boolean eyeInFluid = entity.isEyeInFluid(FluidTags.LAVA);

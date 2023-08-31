@@ -1,10 +1,11 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.particle.AirParticleData;
 
 import net.createmod.catnip.utility.VecHelper;
@@ -15,10 +16,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -207,7 +209,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (this.isOnFire() && !targetIsEnderman)
 			target.setSecondsOnFire(5);
 
-		boolean onServer = !level.isClientSide;
+		boolean onServer = !level().isClientSide;
 		if (onServer && !target.hurt(causePotatoDamage(), damage)) {
 			target.setRemainingFireTicks(k);
 			kill();
@@ -222,7 +224,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 				recoverItem();
 
 		if (!(target instanceof LivingEntity)) {
-			playHitSound(level, position());
+			playHitSound(level(), position());
 			kill();
 			return;
 		}
@@ -273,7 +275,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	public static void playHitSound(Level world, Vec3 location) {
-		AllSoundEvents.POTATO_HIT.playOnServer(world, new BlockPos(location));
+		AllSoundEvents.POTATO_HIT.playOnServer(world, BlockPos.containing(location));
 	}
 
 	public static void playLaunchSound(Level world, Vec3 location, float pitch) {
@@ -284,7 +286,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	protected void onHitBlock(BlockHitResult ray) {
 		Vec3 hit = ray.getLocation();
 		pop(hit);
-		if (!getProjectileType().onBlockHit(level, ray) && !level.isClientSide)
+		if (!getProjectileType().onBlockHit(level(), ray) && !level().isClientSide)
 			if (random.nextDouble() <= recoveryChance)
 				recoverItem();
 		super.onHitBlock(ray);
@@ -292,8 +294,8 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	@Override
-	public boolean hurt(DamageSource source, float amt) {
-		if (source == DamageSource.IN_FIRE || source == DamageSource.ON_FIRE)
+	public boolean hurt(@NotNull DamageSource source, float amt) {
+		if (source.is(DamageTypeTags.IS_FIRE))
 			return false;
 		if (this.isInvulnerableTo(source))
 			return false;
@@ -306,24 +308,16 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (!stack.isEmpty()) {
 			for (int i = 0; i < 7; i++) {
 				Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, this.random, .25f);
-				level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y,
+				level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y,
 					m.z);
 			}
 		}
-		if (!level.isClientSide)
-			playHitSound(level, position());
+		if (!level().isClientSide)
+			playHitSound(level(), position());
 	}
 
 	private DamageSource causePotatoDamage() {
-		return new PotatoDamageSource(this, getOwner()).setProjectile();
-	}
-
-	public static class PotatoDamageSource extends IndirectEntityDamageSource {
-
-		public PotatoDamageSource(Entity source, @Nullable Entity trueSource) {
-			super("create.potato_cannon", source, trueSource);
-		}
-
+		return CreateDamageSources.potatoCannon(level(), getOwner(), this);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -333,7 +327,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "P": {
       "item": "minecraft:dried_kelp"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:spout"
-  }
+  },
+  "show_notification": true
 }

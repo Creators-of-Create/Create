@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "X": {
       "item": "create:exposed_copper_tiles"
@@ -13,5 +14,6 @@
   "result": {
     "count": 4,
     "item": "create:exposed_copper_tile_stairs"
-  }
+  },
+  "show_notification": true
 }

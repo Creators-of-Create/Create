@@ -1,0 +1,9 @@
+{
+  "values": [
+    "create:crush",
+    "create:fan_fire",
+    "create:fan_lava",
+    "create:mechanical_drill",
+    "create:mechanical_saw"
+  ]
+}

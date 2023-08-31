@@ -1,6 +1,7 @@
 package com.simibubi.create.content.kinetics.gauge;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
+
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.kinetics.base.IRotate;

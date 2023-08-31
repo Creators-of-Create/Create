@@ -33,7 +33,6 @@ import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ComponentUtils;
@@ -98,15 +97,15 @@ public class CreateClient {
 	}
 
 	private static void setupConfigUIBackground() {
-		ConfigScreen.backgrounds.put(Create.ID, (screen, ms, partialTicks) -> {
+		ConfigScreen.backgrounds.put(Create.ID, (screen, graphics, partialTicks) -> {
 			CreateMainMenuScreen.PANORAMA.render(screen.getMinecraft().getDeltaFrameTime(), 1);
 
-			RenderSystem.setShaderTexture(0, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
+			//RenderSystem.setShaderTexture(0, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			Screen.blit(ms, 0, 0, screen.width, screen.height, 0.0F, 0.0F, 16, 128, 16, 128);
+			graphics.blit(CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES, 0, 0, screen.width, screen.height, 0.0F, 0.0F, 16, 128, 16, 128);
 
-			Screen.fill(ms, 0, 0, screen.width, screen.height, 0x90_282c34);
+			graphics.fill(0, 0, screen.width, screen.height, 0x90_282c34);
 		});
 
 		ConfigScreen.shadowState = AllBlocks.LARGE_COGWHEEL.getDefaultState().setValue(CogWheelBlock.AXIS, Direction.Axis.Y);

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "D": {
       "item": "minecraft:dried_kelp"
@@ -11,5 +12,6 @@
   ],
   "result": {
     "item": "create:belt_connector"
-  }
+  },
+  "show_notification": true
 }

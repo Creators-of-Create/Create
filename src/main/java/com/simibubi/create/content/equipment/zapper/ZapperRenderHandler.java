@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllSoundEvents;
 
 import net.createmod.catnip.CatnipClient;
@@ -50,7 +50,7 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 	@Override
 	protected void transformTool(PoseStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -0.1f, 0.1f, -0.4f);
-		ms.mulPose(Vector3f.YP.rotationDegrees(flip * 5.0F));
+		ms.mulPose(Axis.YP.rotationDegrees(flip * 5.0F));
 	}
 
 	@Override

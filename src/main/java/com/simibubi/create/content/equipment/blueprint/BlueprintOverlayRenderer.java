@@ -1,14 +1,6 @@
 package com.simibubi.create.content.equipment.blueprint;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintCraftingInventory;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintSection;
@@ -17,13 +9,13 @@ import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.content.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.AnimationTickHolder;
 import net.createmod.catnip.utility.Pair;
 import net.createmod.ponder.utility.LevelTickHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -43,6 +35,13 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 import net.minecraftforge.registries.tags.ITagManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class BlueprintOverlayRenderer {
 
@@ -187,7 +186,7 @@ public class BlueprintOverlayRenderer {
 					recipe = mc.level.getRecipeManager()
 						.getRecipeFor(RecipeType.CRAFTING, craftingInventory, mc.level);
 				ItemStack resultFromRecipe = recipe.filter(r -> r.matches(craftingInventory, mc.level))
-					.map(r -> r.assemble(craftingInventory))
+					.map(r -> r.assemble(craftingInventory, mc.level.registryAccess()))
 					.orElse(ItemStack.EMPTY);
 
 				if (resultFromRecipe.isEmpty()) {
@@ -239,7 +238,7 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
-	public static void renderOverlay(ForgeGui gui, PoseStack poseStack, float partialTicks, int width,
+	public static void renderOverlay(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width,
 		int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui)
@@ -258,10 +257,10 @@ public class BlueprintOverlayRenderer {
 
 		for (Pair<ItemStack, Boolean> pair : ingredients) {
 			RenderSystem.enableBlend();
-			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(poseStack, x, y);
+			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(graphics, x, y);
 			ItemStack itemStack = pair.getFirst();
 			String count = pair.getSecond() ? null : ChatFormatting.GOLD.toString() + itemStack.getCount();
-			drawItemStack(poseStack, mc, x, y, itemStack, count);
+			drawItemStack(graphics, mc, x, y, itemStack, count);
 			x += 21;
 		}
 
@@ -270,23 +269,23 @@ public class BlueprintOverlayRenderer {
 
 		x += 5;
 		RenderSystem.enableBlend();
-		AllGuiTextures.HOTSLOT_ARROW.render(poseStack, x, y + 4);
+		AllGuiTextures.HOTSLOT_ARROW.render(graphics, x, y + 4);
 		x += 25;
 
 		if (result.isEmpty()) {
-			AllGuiTextures.HOTSLOT.render(poseStack, x, y);
+			AllGuiTextures.HOTSLOT.render(graphics, x, y);
 			GuiGameElement.of(Items.BARRIER)
 				.at(x + 3, y + 3)
-				.render(poseStack);
+				.render(graphics);
 		} else {
-			(resultCraftable ? AllGuiTextures.HOTSLOT_SUPER_ACTIVE : AllGuiTextures.HOTSLOT).render(poseStack,
+			(resultCraftable ? AllGuiTextures.HOTSLOT_SUPER_ACTIVE : AllGuiTextures.HOTSLOT).render(graphics,
 				resultCraftable ? x - 1 : x, resultCraftable ? y - 1 : y);
-			drawItemStack(poseStack, mc, x, y, result, null);
+			drawItemStack(graphics, mc, x, y, result, null);
 		}
 		RenderSystem.disableBlend();
 	}
 
-	public static void drawItemStack(PoseStack ms, Minecraft mc, int x, int y, ItemStack itemStack, String count) {
+	public static void drawItemStack(GuiGraphics graphics, Minecraft mc, int x, int y, ItemStack itemStack, String count) {
 		if (itemStack.getItem() instanceof FilterItem) {
 			int step = LevelTickHolder.getTicks(mc.level) / 10;
 			ItemStack[] itemsMatchingFilter = getItemsMatchingFilter(itemStack);
@@ -296,9 +295,8 @@ public class BlueprintOverlayRenderer {
 
 		GuiGameElement.of(itemStack)
 			.at(x + 3, y + 3)
-			.render(ms);
-		mc.getItemRenderer()
-			.renderGuiItemDecorations(mc.font, itemStack, x + 3, y + 3, count);
+			.render(graphics);
+		graphics.renderItemDecorations(mc.font, itemStack, x + 3, y + 3, count);
 	}
 
 	private static ItemStack[] getItemsMatchingFilter(ItemStack filter) {

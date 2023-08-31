@@ -2,6 +2,7 @@ package com.simibubi.create.infrastructure.worldgen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import com.simibubi.create.infrastructure.worldgen.LayerPattern.Layer;
 
@@ -15,22 +16,23 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
 
-public class LayeredOreFeature extends BaseConfigDrivenOreFeature<ConfigDrivenLayeredOreFeatureConfiguration> {
+public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
 	public LayeredOreFeature() {
-		super(ConfigDrivenLayeredOreFeatureConfiguration.CODEC);
+		super(LayeredOreConfiguration.CODEC);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<ConfigDrivenLayeredOreFeatureConfiguration> pContext) {
+	public boolean place(FeaturePlaceContext<LayeredOreConfiguration> pContext) {
 		RandomSource random = pContext.random();
 		BlockPos blockpos = pContext.origin();
 		WorldGenLevel worldgenlevel = pContext.level();
-		ConfigDrivenLayeredOreFeatureConfiguration config = pContext.config();
-		List<LayerPattern> patternPool = config.getLayerPatterns();
+		LayeredOreConfiguration config = pContext.config();
+		List<LayerPattern> patternPool = config.layerPatterns;
 
 		if (patternPool.isEmpty())
 			return false;
@@ -38,8 +40,8 @@ public class LayeredOreFeature extends BaseConfigDrivenOreFeature<ConfigDrivenLa
 		LayerPattern layerPattern = patternPool.get(random.nextInt(patternPool.size()));
 
 		int placedAmount = 0;
-		int size = config.getClusterSize();
-		int radius = Mth.ceil(config.getClusterSize() / 2f);
+		int size = config.size;
+		int radius = Mth.ceil(config.size / 2f);
 		int x0 = blockpos.getX() - radius;
 		int y0 = blockpos.getY() - radius;
 		int z0 = blockpos.getZ() - radius;
@@ -141,5 +143,20 @@ public class LayeredOreFeature extends BaseConfigDrivenOreFeature<ConfigDrivenLa
 
 		bulksectionaccess.close();
 		return placedAmount > 0;
+	}
+
+	public boolean canPlaceOre(BlockState pState, Function<BlockPos, BlockState> pAdjacentStateAccessor,
+		RandomSource pRandom, LayeredOreConfiguration pConfig, OreConfiguration.TargetBlockState pTargetState,
+		BlockPos.MutableBlockPos pMatablePos) {
+		if (!pTargetState.target.test(pState, pRandom))
+			return false;
+		if (shouldSkipAirCheck(pRandom, pConfig.discardChanceOnAirExposure))
+			return true;
+
+		return !isAdjacentToAir(pAdjacentStateAccessor, pMatablePos);
+	}
+
+	protected boolean shouldSkipAirCheck(RandomSource pRandom, float pChance) {
+		return pChance <= 0 ? true : pChance >= 1 ? false : pRandom.nextFloat() >= pChance;
 	}
 }

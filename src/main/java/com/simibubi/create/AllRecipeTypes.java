@@ -28,14 +28,14 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeS
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import net.createmod.catnip.utility.lang.Lang;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -63,7 +63,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
 
-	TOOLBOX_DYEING(() -> new SimpleRecipeSerializer<>(ToolboxDyeingRecipe::new), () -> RecipeType.CRAFTING, false);
+	TOOLBOX_DYEING(() -> new SimpleCraftingRecipeSerializer<>(ToolboxDyeingRecipe::new), () -> RecipeType.CRAFTING, false);
 
 	private final ResourceLocation id;
 	private final RegistryObject<RecipeSerializer<?>> serializerObject;
@@ -135,7 +135,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 
 	private static class Registers {
 		private static final DeferredRegister<RecipeSerializer<?>> SERIALIZER_REGISTER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Create.ID);
-		private static final DeferredRegister<RecipeType<?>> TYPE_REGISTER = DeferredRegister.create(Registry.RECIPE_TYPE_REGISTRY, Create.ID);
+		private static final DeferredRegister<RecipeType<?>> TYPE_REGISTER = DeferredRegister.create(Registries.RECIPE_TYPE, Create.ID);
 	}
 
 }

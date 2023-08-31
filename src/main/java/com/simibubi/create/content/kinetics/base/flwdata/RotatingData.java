@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.base.flwdata;
 
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
 
 import net.minecraft.core.Direction;
 

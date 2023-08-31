@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.command.AllCommands;
 
 import net.createmod.catnip.utility.WorldAttached;
+import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -103,7 +104,7 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void onUpdateLivingEntity(LivingTickEvent event) {
 		LivingEntity entityLiving = event.getEntity();
-		Level world = entityLiving.level;
+		Level world = entityLiving.level();
 		if (world == null)
 			return;
 		ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(entityLiving, world);
@@ -203,8 +204,11 @@ public class CommonEvents {
 					return;
 				}
 				IModFile modFile = modFileInfo.getFile();
-				event.addRepositorySource((consumer, constructor) -> {
-					consumer.accept(Pack.create(Create.asResource("legacy_copper").toString(), false, () -> new ModFilePackResources("Create Legacy Copper", modFile, "resourcepacks/legacy_copper"), constructor, Pack.Position.TOP, PackSource.DEFAULT));
+				event.addRepositorySource(consumer -> {
+					Pack pack = Pack.readMetaAndCreate(Create.asResource("legacy_copper").toString(), Components.literal("Create Legacy Copper"), false, id -> new ModFilePackResources(id, modFile, "resourcepacks/legacy_copper"), PackType.CLIENT_RESOURCES, Pack.Position.TOP, PackSource.BUILT_IN);
+					if (pack != null) {
+						consumer.accept(pack);
+					}
 				});
 			}
 		}

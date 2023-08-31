@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "group": "cut_scorchia_stairs",
   "key": {
     "X": {
@@ -14,5 +15,6 @@
   "result": {
     "count": 4,
     "item": "create:cut_scorchia_stairs"
-  }
+  },
+  "show_notification": true
 }

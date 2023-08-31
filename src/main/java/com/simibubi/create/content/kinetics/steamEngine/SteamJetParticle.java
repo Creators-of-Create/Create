@@ -1,8 +1,10 @@
 package com.simibubi.create.content.kinetics.steamEngine;
 
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -53,11 +55,11 @@ public class SteamJetParticle extends SimpleAnimatedParticle {
 		float f4 = this.getQuadSize(pPartialTicks);
 
 		for (int i = 0; i < 4; i++) {
-			Quaternion quaternion = new Quaternion(Vector3f.YP, yaw, false);
-			quaternion.mul(Vector3f.XP.rotation(pitch));
-			quaternion.mul(Vector3f.YP.rotation(f3 + Mth.PI / 2 * i + roll));
+			Quaternionf quaternion = Axis.YP.rotation(yaw);
+			quaternion.mul(Axis.XP.rotation(pitch));
+			quaternion.mul(Axis.YP.rotation(f3 + Mth.PI / 2 * i + roll));
 			Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
-			vector3f1.transform(quaternion);
+			vector3f1.rotate(quaternion);
 
 			Vector3f[] avector3f = new Vector3f[] { new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F),
 				new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F) };
@@ -65,7 +67,7 @@ public class SteamJetParticle extends SimpleAnimatedParticle {
 			for (int j = 0; j < 4; ++j) {
 				Vector3f vector3f = avector3f[j];
 				vector3f.add(0, 1, 0);
-				vector3f.transform(quaternion);
+				vector3f.rotate(quaternion);
 				vector3f.mul(f4);
 				vector3f.add(f, f1, f2);
 			}
@@ -97,7 +99,7 @@ public class SteamJetParticle extends SimpleAnimatedParticle {
 
 	@Override
 	public int getLightColor(float partialTick) {
-		BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
+		BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);
 		return this.level.isLoaded(blockpos) ? LevelRenderer.getLightColor(level, blockpos) : 0;
 	}
 

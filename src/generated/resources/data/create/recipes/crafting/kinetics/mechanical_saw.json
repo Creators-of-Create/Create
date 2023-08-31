@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "tag": "forge:plates/iron"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:mechanical_saw"
-  }
+  },
+  "show_notification": true
 }

@@ -1,12 +1,13 @@
 package com.simibubi.create.content.trains.entity;
 
+import org.joml.Vector3f;
+
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.content.trains.bogey.BogeyInstance;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
 

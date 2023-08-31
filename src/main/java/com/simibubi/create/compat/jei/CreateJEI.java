@@ -1,18 +1,5 @@
 package com.simibubi.create.compat.jei;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
@@ -64,11 +51,11 @@ import com.simibubi.create.content.redstone.link.controller.LinkedControllerScre
 import com.simibubi.create.content.trains.schedule.ScheduleScreen;
 import com.simibubi.create.foundation.data.recipe.LogStrippingFakeRecipes;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CRecipes;
-
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -85,6 +72,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.createmod.catnip.config.ConfigBase.ConfigBool;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -97,6 +85,18 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.fml.ModList;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @JeiPlugin
 @SuppressWarnings("unused")
@@ -224,7 +224,7 @@ public class CreateJEI implements IModPlugin {
 
 		blockCutting = builder(CondensedBlockCuttingRecipe.class)
 				.enableWhen(c -> c.allowStonecuttingOnSaw)
-				.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(RecipeType.STONECUTTING, AllRecipeTypes::shouldIgnoreInAutomation)))
+				.addRecipes(() -> BlockCuttingCategory.condenseRecipes(getTypedRecipesExcluding(RecipeType.STONECUTTING, AllRecipeTypes::shouldIgnoreInAutomation)))
 				.catalyst(AllBlocks.MECHANICAL_SAW::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.STONE_BRICK_STAIRS)
 				.emptyBackground(177, 70)
@@ -233,7 +233,7 @@ public class CreateJEI implements IModPlugin {
 		woodCutting = builder(CondensedBlockCuttingRecipe.class)
 				.enableIf(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
 						.isLoaded("druidcraft"))
-				.addRecipes(() -> CondensedBlockCuttingRecipe.condenseRecipes(getTypedRecipesExcluding(SawBlockEntity.woodcuttingRecipeType.get(), AllRecipeTypes::shouldIgnoreInAutomation)))
+				.addRecipes(() -> BlockCuttingCategory.condenseRecipes(getTypedRecipesExcluding(SawBlockEntity.woodcuttingRecipeType.get(), AllRecipeTypes::shouldIgnoreInAutomation)))
 				.catalyst(AllBlocks.MECHANICAL_SAW::get)
 				.doubleItemIcon(AllBlocks.MECHANICAL_SAW.get(), Items.OAK_STAIRS)
 				.emptyBackground(177, 70)
@@ -570,7 +570,8 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public static boolean doOutputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
-		return ItemStack.isSame(recipe1.getResultItem(), recipe2.getResultItem());
+		RegistryAccess registryAccess = Minecraft.getInstance().level.registryAccess();
+		return ItemHelper.sameItem(recipe1.getResultItem(registryAccess), recipe2.getResultItem(registryAccess));
 	}
 
 }

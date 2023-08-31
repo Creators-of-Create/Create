@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "create:electron_tube"
@@ -19,5 +20,6 @@
   "result": {
     "count": 3,
     "item": "create:mechanical_crafter"
-  }
+  },
+  "show_notification": true
 }

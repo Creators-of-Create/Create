@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.createmod.catnip.utility.NBTHelper;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -44,7 +44,7 @@ public class DimensionPalette {
 		DimensionPalette palette = new DimensionPalette();
 		int length = buffer.readInt();
 		for (int i = 0; i < length; i++)
-			palette.gatheredDims.add(ResourceKey.create(Registry.DIMENSION_REGISTRY, buffer.readResourceLocation()));
+			palette.gatheredDims.add(ResourceKey.create(Registries.DIMENSION, buffer.readResourceLocation()));
 		return palette;
 	}
 
@@ -60,7 +60,7 @@ public class DimensionPalette {
 	public static DimensionPalette read(CompoundTag tag) {
 		DimensionPalette palette = new DimensionPalette();
 		NBTHelper.iterateCompoundList(tag.getList("DimensionPalette", Tag.TAG_COMPOUND), c -> palette.gatheredDims
-			.add(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(c.getString("Id")))));
+			.add(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(c.getString("Id")))));
 		return palette;
 	}
 

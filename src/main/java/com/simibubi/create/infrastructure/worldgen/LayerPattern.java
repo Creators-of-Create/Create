@@ -11,13 +11,15 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.createmod.catnip.utility.Couple;
-import net.minecraft.data.worldgen.features.OreFeatures;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.TargetBlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraftforge.common.util.NonNullConsumer;
 
 public class LayerPattern {
@@ -110,6 +112,10 @@ public class LayerPattern {
 		}
 
 		public static class Builder {
+			private static final RuleTest STONE_ORE_REPLACEABLES = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
+			private static final RuleTest DEEPSLATE_ORE_REPLACEABLES = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
+			private static final RuleTest NETHER_ORE_REPLACEABLES = new TagMatchTest(BlockTags.BASE_STONE_NETHER);
+
 			private final List<List<TargetBlockState>> targets = new ArrayList<>();
 			private int minSize = 1;
 			private int maxSize = 1;
@@ -127,7 +133,7 @@ public class LayerPattern {
 			public Builder block(Block block) {
 				if (netherMode) {
 					this.targets.add(ImmutableList.of(OreConfiguration
-						.target(OreFeatures.NETHER_ORE_REPLACEABLES, block.defaultBlockState())));
+						.target(NETHER_ORE_REPLACEABLES, block.defaultBlockState())));
 					return this;
 				}
 				return blocks(block.defaultBlockState(), block.defaultBlockState());
@@ -148,8 +154,8 @@ public class LayerPattern {
 
 			private Builder blocks(BlockState stone, BlockState deepslate) {
 				this.targets.add(
-					ImmutableList.of(OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES, stone),
-						OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, deepslate)));
+					ImmutableList.of(OreConfiguration.target(STONE_ORE_REPLACEABLES, stone),
+						OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLES, deepslate)));
 				return this;
 			}
 

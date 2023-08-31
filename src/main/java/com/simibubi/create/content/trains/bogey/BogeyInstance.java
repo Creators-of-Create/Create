@@ -45,7 +45,7 @@ public final class BogeyInstance {
 	}
 
 	public void updateLight(BlockAndTintGetter world, CarriageContraptionEntity entity) {
-		var lightPos = new BlockPos(getLightPos(entity));
+		var lightPos = BlockPos.containing(getLightPos(entity));
 		commonRenderer
 			.ifPresent(bogeyRenderer -> bogeyRenderer.updateLight(world.getBrightness(LightLayer.BLOCK, lightPos),
 				world.getBrightness(LightLayer.SKY, lightPos)));

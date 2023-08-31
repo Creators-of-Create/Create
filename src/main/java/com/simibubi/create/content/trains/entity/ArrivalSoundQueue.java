@@ -74,9 +74,9 @@ public class ArrivalSoundQueue {
 					.get(blockPos);
 				if (info == null)
 					continue;
-				BlockState state = info.state;
-				if (state.getBlock() instanceof WhistleBlock && info.nbt != null) {
-					int pitch = info.nbt.getInt("Pitch");
+				BlockState state = info.state();
+				if (state.getBlock() instanceof WhistleBlock && info.nbt() != null) {
+					int pitch = info.nbt().getInt("Pitch");
 					WhistleSize size = state.getValue(WhistleBlock.SIZE);
 					return Pair.of(size == WhistleSize.LARGE, (size == WhistleSize.SMALL ? 12 : 0) - pitch);
 				}
@@ -123,7 +123,7 @@ public class ArrivalSoundQueue {
 	public static void play(CarriageContraptionEntity entity, StructureBlockInfo info) {
 		if (info == null)
 			return;
-		BlockState state = info.state;
+		BlockState state = info.state();
 
 		if (state.getBlock() instanceof BellBlock) {
 			if (AllBlocks.HAUNTED_BELL.has(state))
@@ -135,11 +135,12 @@ public class ArrivalSoundQueue {
 		if (state.getBlock() instanceof NoteBlock nb) {
 			float f = (float) Math.pow(2, (state.getValue(NoteBlock.NOTE) - 12) / 12.0);
 			playSimple(entity, state.getValue(NoteBlock.INSTRUMENT)
-				.getSoundEvent(), 1, f);
+				.getSoundEvent()
+				.get(), 1, f);
 		}
 
-		if (state.getBlock() instanceof WhistleBlock && info.nbt != null) {
-			int pitch = info.nbt.getInt("Pitch");
+		if (state.getBlock() instanceof WhistleBlock && info.nbt() != null) {
+			int pitch = info.nbt().getInt("Pitch");
 			WhistleSize size = state.getValue(WhistleBlock.SIZE);
 			float f = (float) Math.pow(2, ((size == WhistleSize.SMALL ? 12 : 0) - pitch) / 12.0);
 			playSimple(entity,
@@ -153,7 +154,7 @@ public class ArrivalSoundQueue {
 	}
 
 	private static void playSimple(CarriageContraptionEntity entity, SoundEvent event, float volume, float pitch) {
-		entity.level.playSound(null, entity, event, SoundSource.NEUTRAL, 5 * volume, pitch);
+		entity.level().playSound(null, entity, event, SoundSource.NEUTRAL, 5 * volume, pitch);
 	}
 
 }

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "item": "minecraft:andesite"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:andesite_alloy"
-  }
+  },
+  "show_notification": true
 }

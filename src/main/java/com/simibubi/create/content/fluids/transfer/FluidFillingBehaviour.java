@@ -35,7 +35,6 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.LevelTicks;
@@ -281,14 +280,13 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	// From FlowingFluidBlock#isBlocked
-	protected boolean canBeReplacedByFluid(BlockGetter world, BlockPos pos, BlockState state) {
-		Block block = state.getBlock();
-		if (!(block instanceof DoorBlock) && !state.is(BlockTags.SIGNS) && block != Blocks.LADDER
-			&& block != Blocks.SUGAR_CANE && block != Blocks.BUBBLE_COLUMN) {
-			Material material = state.getMaterial();
-			if (material != Material.PORTAL && material != Material.STRUCTURAL_AIR && material != Material.WATER_PLANT
-				&& material != Material.REPLACEABLE_WATER_PLANT) {
-				return !material.blocksMotion();
+	protected boolean canBeReplacedByFluid(BlockGetter world, BlockPos pos, BlockState pState) {
+		Block block = pState.getBlock();
+		if (!(block instanceof DoorBlock) && !pState.is(BlockTags.SIGNS) && !pState.is(Blocks.LADDER)
+			&& !pState.is(Blocks.SUGAR_CANE) && !pState.is(Blocks.BUBBLE_COLUMN)) {
+			if (!pState.is(Blocks.NETHER_PORTAL) && !pState.is(Blocks.END_PORTAL) && !pState.is(Blocks.END_GATEWAY)
+				&& !pState.is(Blocks.STRUCTURE_VOID)) {
+				return !pState.blocksMotion();
 			} else {
 				return false;
 			}

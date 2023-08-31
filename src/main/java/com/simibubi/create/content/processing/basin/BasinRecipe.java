@@ -21,15 +21,15 @@ import com.simibubi.create.foundation.recipe.DummyCraftingContainer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import net.createmod.catnip.utility.Iterate;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
@@ -39,7 +39,8 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		if (filter == null)
 			return false;
 
-		boolean filterTest = filter.test(recipe.getResultItem());
+		boolean filterTest = filter.test(recipe.getResultItem(basin.getLevel()
+			.registryAccess()));
 		if (recipe instanceof BasinRecipe) {
 			BasinRecipe basinRecipe = (BasinRecipe) recipe;
 			if (basinRecipe.getRollableResults()
@@ -62,9 +63,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 	private static boolean apply(BasinBlockEntity basin, Recipe<?> recipe, boolean test) {
 		boolean isBasinRecipe = recipe instanceof BasinRecipe;
-		IItemHandler availableItems = basin.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		IItemHandler availableItems = basin.getCapability(ForgeCapabilities.ITEM_HANDLER)
 			.orElse(null);
-		IFluidHandler availableFluids = basin.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		IFluidHandler availableFluids = basin.getCapability(ForgeCapabilities.FLUID_HANDLER)
 			.orElse(null);
 
 		if (availableItems == null || availableFluids == null)
@@ -152,7 +153,8 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					recipeOutputFluids.addAll(basinRecipe.getFluidResults());
 					recipeOutputItems.addAll(basinRecipe.getRemainingItems(basin.getInputInventory()));
 				} else {
-					recipeOutputItems.add(recipe.getResultItem());
+					recipeOutputItems.add(recipe.getResultItem(basin.getLevel()
+						.registryAccess()));
 
 					if (recipe instanceof CraftingRecipe craftingRecipe) {
 						recipeOutputItems.addAll(craftingRecipe.getRemainingItems(new DummyCraftingContainer(availableItems, extractedItemsFromSlot)));
@@ -170,7 +172,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 	public static BasinRecipe convertShapeless(Recipe<?> recipe) {
 		BasinRecipe basinRecipe =
 			new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId()).withItemIngredients(recipe.getIngredients())
-				.withSingleItemOutput(recipe.getResultItem())
+				.withSingleItemOutput(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()))
 				.build();
 		return basinRecipe;
 	}

@@ -42,7 +42,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 			damageEntities(context, pos, world);
 		if (world.isClientSide)
 			return;
-		
+
 		if (!canBreak(world, pos, stateVisited))
 			return;
 		context.data.put("BreakingPos", NbtUtils.writeBlockPos(pos));
@@ -52,8 +52,8 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 	public void damageEntities(MovementContext context, BlockPos pos, Level world) {
 		if (context.contraption.entity instanceof OrientedContraptionEntity oce && oce.nonDamageTicks > 0)
 			return;
-		DamageSource damageSource = getDamageSource();
-		if (damageSource == null && !throwsEntities())
+		DamageSource damageSource = getDamageSource(world);
+		if (damageSource == null && !throwsEntities(world))
 			return;
 		Entities: for (Entity entity : world.getEntitiesOfClass(Entity.class, new AABB(pos))) {
 			if (entity instanceof ItemEntity)
@@ -72,7 +72,7 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 				float damage = (float) Mth.clamp(6 * Math.pow(context.relativeMotion.length(), 0.4) + 1, 2, 10);
 				entity.hurt(damageSource, damage);
 			}
-			if (throwsEntities() && (world.isClientSide == (entity instanceof Player))) 
+			if (throwsEntities(world) && (world.isClientSide == (entity instanceof Player)))
 				throwEntity(context, entity);
 		}
 	}
@@ -89,12 +89,12 @@ public class BlockBreakingMovementBehaviour implements MovementBehaviour {
 		entity.hurtMarked = true;
 	}
 
-	protected DamageSource getDamageSource() {
+	protected DamageSource getDamageSource(Level level) {
 		return null;
 	}
 
-	protected boolean throwsEntities() {
-		return getDamageSource() != null;
+	protected boolean throwsEntities(Level level) {
+		return getDamageSource(level) != null;
 	}
 
 	@Override

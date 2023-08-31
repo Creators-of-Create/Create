@@ -93,7 +93,7 @@ public class CarriageBogey {
 
 		if (leading().edge == null || carriage.train.derailed) {
 			yRot = -90 + entity.yaw - derailAngle;
-		} else if (!entity.level.dimension()
+		} else if (!entity.level().dimension()
 			.equals(getDimension())) {
 			yRot = -90 + entity.yaw;
 			xRot = 0;

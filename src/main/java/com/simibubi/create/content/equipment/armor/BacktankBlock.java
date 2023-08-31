@@ -1,17 +1,13 @@
 package com.simibubi.create.content.equipment.armor;
 
-import java.util.Optional;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -23,7 +19,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -44,6 +39,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayer;
+
+import java.util.Optional;
 
 public class BacktankBlock extends HorizontalKineticBlock
 	implements IBE<BacktankBlockEntity>, SimpleWaterloggedBlock {
@@ -66,9 +63,6 @@ public class BacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
-
-	@Override
 	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
 		return true;
 	}
@@ -82,7 +76,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
 		LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.getValue(BlockStateProperties.WATERLOGGED)) 
+		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return state;
 	}
@@ -186,7 +180,7 @@ public class BacktankBlock extends HorizontalKineticBlock
 	public Class<BacktankBlockEntity> getBlockEntityClass() {
 		return BacktankBlockEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends BacktankBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.BACKTANK.get();

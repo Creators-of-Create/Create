@@ -1,9 +1,5 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -15,25 +11,22 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
-
 import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -45,6 +38,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	implements IBE<ElevatorContactBlockEntity>, ISpecialBlockItemRequirement {
@@ -181,9 +177,9 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	public boolean shouldCheckWeakPower(BlockState state, LevelReader level, BlockPos pos, Direction side) {
-		return false;
-	}
+    public boolean shouldCheckWeakPower(BlockState state, SignalGetter level, BlockPos pos, Direction side) {
+        return false;
+    }
 
 	@Override
 	public boolean isSignalSource(BlockState state) {
@@ -221,9 +217,6 @@ public class ElevatorContactBlock extends WrenchableDirectionalBlock
 	public BlockEntityType<? extends ElevatorContactBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.ELEVATOR_CONTACT.get();
 	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {}
 
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {

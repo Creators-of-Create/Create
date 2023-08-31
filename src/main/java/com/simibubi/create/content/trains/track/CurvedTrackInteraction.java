@@ -56,7 +56,7 @@ public class CurvedTrackInteraction {
 				mc.getSoundManager()
 					.play(new SimpleSoundInstance(soundtype.getHitSound(), SoundSource.BLOCKS,
 						(soundtype.getVolume() + 1.0F) / 8.0F, soundtype.getPitch() * 0.5F,
-						level.random, new BlockPos(result.vec())));
+						level.random, BlockPos.containing(result.vec())));
 			}
 
 			boolean creative = player.getAbilities().instabuild;
@@ -74,7 +74,7 @@ public class CurvedTrackInteraction {
 
 			if (breakProgress >= 1) {
 				AllPackets.getChannel().sendToServer(new CurvedTrackDestroyPacket(breakPos, result.loc()
-					.curveTarget(), new BlockPos(result.vec()), false));
+					.curveTarget(), BlockPos.containing(result.vec()), false));
 				resetBreakProgress();
 			}
 
@@ -127,11 +127,12 @@ public class CurvedTrackInteraction {
 				return true;
 			}
 			if (AllItems.WRENCH.isIn(heldItem) && player.isSteppingCarefully()) {
-				AllPackets.getChannel().sendToServer(new CurvedTrackDestroyPacket(result.blockEntity()
-					.getBlockPos(),
-					result.loc()
-						.curveTarget(),
-					new BlockPos(result.vec()), true));
+				AllPackets.getChannel()
+					.sendToServer(new CurvedTrackDestroyPacket(result.blockEntity()
+						.getBlockPos(),
+						result.loc()
+							.curveTarget(),
+						BlockPos.containing(result.vec()), true));
 				resetBreakProgress();
 				player.swing(InteractionHand.MAIN_HAND);
 				return true;

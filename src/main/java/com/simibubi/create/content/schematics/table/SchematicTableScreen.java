@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.client.ClientSchematicLoader;
@@ -24,6 +23,7 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.Util;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -129,20 +129,20 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 		extraAreas = ImmutableList.of(
 			new Rect2i(x + background.getWidth(), y + background.getHeight() - 40, 48, 48),
-			new Rect2i(refreshButton.x, refreshButton.y, refreshButton.getWidth(), refreshButton.getHeight())
+			new Rect2i(refreshButton.getX(), refreshButton.getY(), refreshButton.getWidth(), refreshButton.getHeight())
 		);
 	}
 
 	@Override
-	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.getWidth());
 		int invY = topPos + background.getHeight() + 4;
-		renderPlayerInventory(ms, invX, invY);
+		renderPlayerInventory(graphics, invX, invY);
 
 		int x = leftPos;
 		int y = topPos;
 
-		background.render(ms, x, y, this);
+		background.render(graphics, x, y);
 
 		Component titleText;
 		if (menu.contentHolder.isUploading)
@@ -152,22 +152,21 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			titleText = finished;
 		else
 			titleText = title;
-		drawCenteredString(ms, font, titleText, x + (background.getWidth() - 8) / 2, y + 3, 0xFFFFFF);
+		graphics.drawCenteredString(font, titleText, x + (background.getWidth() - 8) / 2, y + 3, 0xFFFFFF);
 
 		if (schematicsArea == null)
-			font.drawShadow(ms, noSchematics, x + 54, y + 26, 0xD3D3D3);
+			graphics.drawString(font, noSchematics, x + 54, y + 26, 0xD3D3D3);
 
 		GuiGameElement.of(renderedItem)
 			.<GuiGameElement.GuiRenderBuilder>at(x + background.getWidth(), y + background.getHeight() - 40, -200)
 			.scale(3)
-			.render(ms);
+			.render(graphics);
 
-		SCHEMATIC_TABLE_PROGRESS.bind();
 		int width = (int) (SCHEMATIC_TABLE_PROGRESS.getWidth()
 			* Mth.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.getHeight();
-		blit(ms, x + 70, y + 57, SCHEMATIC_TABLE_PROGRESS.getStartX(),
-				SCHEMATIC_TABLE_PROGRESS.getStartY(), width, height);
+		graphics.blit(SCHEMATIC_TABLE_PROGRESS.location, x + 70, y + 57, SCHEMATIC_TABLE_PROGRESS.getStartX(),
+			SCHEMATIC_TABLE_PROGRESS.getStartY(), width, height);
 	}
 
 	@Override

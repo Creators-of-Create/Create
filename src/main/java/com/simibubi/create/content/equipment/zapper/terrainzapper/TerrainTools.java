@@ -92,7 +92,7 @@ public enum TerrainTools {
 	}
 
 	public static boolean isReplaceable(BlockState toReplace) {
-		return toReplace.getMaterial().isReplaceable();
+		return toReplace.canBeReplaced();
 	}
 
 }

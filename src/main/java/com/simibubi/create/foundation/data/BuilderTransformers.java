@@ -51,7 +51,7 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -65,8 +65,7 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.PistonType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTable.Builder;
@@ -113,7 +112,7 @@ public class BuilderTransformers {
 				.getExistingFile(p.mcLoc("air"))))
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.noOcclusion()
-				.color(MaterialColor.NONE))
+				.mapColor(MapColor.NONE))
 			.addLayer(() -> RenderType::solid)
 			.addLayer(() -> RenderType::cutout)
 			.addLayer(() -> RenderType::cutoutMipped)
@@ -142,7 +141,7 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends SlidingDoorBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> slidingDoor(String type) {
-		return b -> b.initialProperties(Material.NETHER_WOOD) // for villager AI..
+		return b -> b.initialProperties(() -> Blocks.IRON_DOOR)
 			.properties(p -> p.requiresCorrectToolForDrops()
 				.strength(3.0F, 6.0F))
 			.blockstate((c, p) -> {
@@ -157,7 +156,7 @@ public class BuilderTransformers {
 			.tag(BlockTags.DOORS)
 			.tag(BlockTags.WOODEN_DOORS) // for villager AI
 			.tag(AllBlockTags.NON_DOUBLE_DOOR.tag)
-			.loot((lr, block) -> lr.add(block, BlockLoot.createDoorTable(block)))
+			.loot((lr, block) -> lr.add(block, lr.createDoorTable(block)))
 			.item()
 			.tag(ItemTags.DOORS)
 			.tag(AllItemTags.CONTRAPTION_CONTROLLED.tag)
@@ -227,9 +226,9 @@ public class BuilderTransformers {
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> ladder(String name,
-		Supplier<DataIngredient> ingredient, MaterialColor color) {
+		Supplier<DataIngredient> ingredient, MapColor color) {
 		return b -> b.initialProperties(() -> Blocks.LADDER)
-			.properties(p -> p.color(color))
+			.properties(p -> p.mapColor(color))
 			.addLayer(() -> RenderType::cutout)
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
 				.withExistingParent(c.getName(), p.modLoc("block/ladder"))
@@ -240,17 +239,17 @@ public class BuilderTransformers {
 			.transform(pickaxeOnly())
 			.tag(BlockTags.CLIMBABLE)
 			.item()
-			.recipe((c, p) -> p.stonecutting(ingredient.get(), c::get, 2))
+			.recipe((c, p) -> p.stonecutting(ingredient.get(), RecipeCategory.DECORATIONS, c::get, 2))
 			.model((c, p) -> p.blockSprite(c::get, p.modLoc("block/ladder_" + name)))
 			.build();
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> scaffold(String name,
-		Supplier<DataIngredient> ingredient, MaterialColor color, CTSpriteShiftEntry scaffoldShift,
+		Supplier<DataIngredient> ingredient, MapColor color, CTSpriteShiftEntry scaffoldShift,
 		CTSpriteShiftEntry scaffoldInsideShift, CTSpriteShiftEntry casingShift) {
 		return b -> b.initialProperties(() -> Blocks.SCAFFOLDING)
 			.properties(p -> p.sound(SoundType.COPPER)
-				.color(color))
+				.mapColor(color))
 			.addLayer(() -> RenderType::cutout)
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStatesExcept(s -> {
@@ -270,7 +269,7 @@ public class BuilderTransformers {
 			.transform(pickaxeOnly())
 			.tag(BlockTags.CLIMBABLE)
 			.item(MetalScaffoldingBlockItem::new)
-			.recipe((c, p) -> p.stonecutting(ingredient.get(), c::get, 2))
+			.recipe((c, p) -> p.stonecutting(ingredient.get(), RecipeCategory.DECORATIONS, c::get, 2))
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + c.getName())))
 			.build();
 	}

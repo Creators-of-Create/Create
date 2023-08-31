@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "create:cogwheel"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:millstone"
-  }
+  },
+  "show_notification": true
 }

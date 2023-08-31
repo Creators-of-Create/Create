@@ -1,0 +1,27 @@
+{
+  "feature": "create:striated_ores_overworld",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 18
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "max_inclusive": {
+          "absolute": 70
+        },
+        "min_inclusive": {
+          "absolute": -30
+        }
+      }
+    },
+    {
+      "type": "create:config_filter"
+    }
+  ]
+}

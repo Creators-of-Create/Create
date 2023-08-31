@@ -39,7 +39,7 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 			return;
 
 		ItemStackHandler frequencyItems = LinkedControllerItem.getFrequencyItems(heldItem);
-		LinkBehaviour linkBehaviour = BlockEntityBehaviour.get(player.level, linkLocation, LinkBehaviour.TYPE);
+		LinkBehaviour linkBehaviour = BlockEntityBehaviour.get(player.level(), linkLocation, LinkBehaviour.TYPE);
 		if (linkBehaviour == null)
 			return;
 

@@ -10,11 +10,9 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.createmod.catnip.utility.Couple;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -102,13 +100,6 @@ public class ValveHandleBlock extends HandCrankBlock {
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult hit) {
 		return InteractionResult.PASS;
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> p_149666_2_) {
-		if (group != CreativeModeTab.TAB_SEARCH && !inCreativeTab)
-			return;
-		super.fillItemCategory(group, p_149666_2_);
 	}
 
 	@Override

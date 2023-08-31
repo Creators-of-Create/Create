@@ -1,7 +1,6 @@
 package com.simibubi.create.content.equipment.blueprint;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,10 +31,10 @@ public class BlueprintAssignCompleteRecipePacket extends SimplePacketBase {
 				return;
 			if (player.containerMenu instanceof BlueprintMenu) {
 				BlueprintMenu c = (BlueprintMenu) player.containerMenu;
-				player.getLevel()
+				player.level()
 						.getRecipeManager()
 						.byKey(recipeID)
-						.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.ghostInventory, r));
+						.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.player.level(), c.ghostInventory, r));
 			}
 		});
 		return true;

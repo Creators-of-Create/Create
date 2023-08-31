@@ -3,7 +3,7 @@ package com.simibubi.create.content.equipment.zapper;
 import java.util.Vector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -14,6 +14,8 @@ import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.lang.Components;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -92,19 +94,19 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.render(ms, x, y, this);
-		drawOnBackground(ms, x, y);
+		background.render(graphics, x, y);
+		drawOnBackground(graphics, x, y);
 
-		renderBlock(ms, x, y);
-		renderZapper(ms, x, y);
+		renderBlock(graphics, x, y);
+		renderZapper(graphics, x, y);
 	}
 
-	protected void drawOnBackground(PoseStack ms, int x, int y) {
-		font.draw(ms, title, x + 11, y + 4, 0x54214F);
+	protected void drawOnBackground(GuiGraphics graphics, int x, int y) {
+		graphics.drawString(font, title, x + 11, y + 4, 0x54214F, false);
 	}
 
 	@Override
@@ -120,28 +122,30 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 		AllPackets.getChannel().sendToServer(packet);
 	}
 
-	protected void renderZapper(PoseStack ms, int x, int y) {
+	protected void renderZapper(GuiGraphics graphics, int x, int y) {
 		GuiGameElement.of(zapper)
 				.scale(4)
 				.at(x + background.getWidth(), y + background.getHeight() - 48, -200)
-				.render(ms);
+				.render(graphics);
 	}
 
-	protected void renderBlock(PoseStack ms, int x, int y) {
+	@SuppressWarnings("deprecation")
+	protected void renderBlock(GuiGraphics graphics, int x, int y) {
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(x + 32, y + 42, 120);
-		ms.mulPose(new Vector3f(1f, 0, 0).rotationDegrees(-25f));
-		ms.mulPose(new Vector3f(0, 1f, 0).rotationDegrees(-45f));
+		ms.mulPose(Axis.XP.rotationDegrees(-25f));
+		ms.mulPose(Axis.YP.rotationDegrees(-45f));
 		ms.scale(20, 20, 20);
 
 		BlockState state = Blocks.AIR.defaultBlockState();
 		if (zapper.hasTag() && zapper.getTag()
 			.contains("BlockUsed"))
-			state = NbtUtils.readBlockState(zapper.getTag()
+			state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), zapper.getTag()
 				.getCompound("BlockUsed"));
 
 		GuiGameElement.of(state)
-			.render(ms);
+			.render(graphics);
 		ms.popPose();
 	}
 

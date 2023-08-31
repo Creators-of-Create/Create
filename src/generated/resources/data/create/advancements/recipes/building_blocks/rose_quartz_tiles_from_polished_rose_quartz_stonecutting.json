@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_polished_rose_quartz": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:polished_rose_quartz"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:rose_quartz_tiles_from_polished_rose_quartz_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_polished_rose_quartz",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:rose_quartz_tiles_from_polished_rose_quartz_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

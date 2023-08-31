@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "X": {
       "item": "create:copper_shingles"
@@ -11,5 +12,6 @@
   "result": {
     "count": 6,
     "item": "create:copper_shingle_slab"
-  }
+  },
+  "show_notification": true
 }

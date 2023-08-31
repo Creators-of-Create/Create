@@ -314,7 +314,7 @@ public class DeployerBlockEntity extends KineticBlockEntity {
 		deployerBlockEntity.sendData();
 		award(AllAdvancements.FIST_BUMP);
 
-		BlockPos soundLocation = new BlockPos(Vec3.atCenterOf(worldPosition)
+		BlockPos soundLocation = BlockPos.containing(Vec3.atCenterOf(worldPosition)
 			.add(Vec3.atCenterOf(deployerBlockEntity.getBlockPos()))
 			.scale(.5f));
 		level.playSound(null, soundLocation, SoundEvents.PLAYER_ATTACK_NODAMAGE, SoundSource.BLOCKS, .75f, .75f);

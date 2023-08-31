@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "create:raw_zinc"
@@ -12,5 +13,6 @@
   ],
   "result": {
     "item": "create:raw_zinc_block"
-  }
+  },
+  "show_notification": true
 }

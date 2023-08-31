@@ -3,12 +3,12 @@ package com.simibubi.create.foundation.gui.widget;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.createmod.catnip.gui.widget.AbstractSimiWidget;
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -72,7 +72,7 @@ public class Label extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderButton(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (text == null || text.getString().isEmpty())
 			return;
 
@@ -81,10 +81,7 @@ public class Label extends AbstractSimiWidget {
 		if (suffix != null && !suffix.isEmpty())
 			copy.append(suffix);
 
-		if (hasShadow)
-			font.drawShadow(matrixStack, copy, x, y, color);
-		else
-			font.draw(matrixStack, copy, x, y, color);
+		graphics.drawString(font, copy, getX(), getY(), color, hasShadow);
 	}
 
 }

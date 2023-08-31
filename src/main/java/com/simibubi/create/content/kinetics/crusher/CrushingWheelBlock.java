@@ -110,8 +110,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE
 
 		if (!controllerExists) {
 			if (!world.getBlockState(controllerPos)
-				.getMaterial()
-				.isReplaceable())
+				.canBeReplaced())
 				return;
 			world.setBlockAndUpdate(controllerPos, AllBlocks.CRUSHING_WHEEL_CONTROLLER.getDefaultState()
 				.setValue(VALID, controllerShouldBeValid)
@@ -129,7 +128,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements IBE
 
 	@Override
 	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-		if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.isOnGround())
+		if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.onGround())
 			return;
 
 		float speed = getBlockEntityOptional(worldIn, pos).map(CrushingWheelBlockEntity::getSpeed)

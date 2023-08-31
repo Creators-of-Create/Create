@@ -1,15 +1,10 @@
 package com.simibubi.create.content.equipment.armor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-
 import net.createmod.catnip.utility.lang.Components;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -25,6 +20,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 
 public class BacktankUtil {
 
@@ -91,8 +90,8 @@ public class BacktankUtil {
 		boolean depleted = threshold == 1;
 		MutableComponent component = CreateLang.translateDirect(depleted ? "backtank.depleted" : "backtank.low");
 
-		AllSoundEvents.DENY.play(player.level, null, player.blockPosition(), 1, 1.25f);
-		AllSoundEvents.STEAM.play(player.level, null, player.blockPosition(), .5f, .5f);
+		AllSoundEvents.DENY.play(player.level(), null, player.blockPosition(), 1, 1.25f);
+		AllSoundEvents.STEAM.play(player.level(), null, player.blockPosition(), .5f, .5f);
 
 		player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 40, 10));
 		player.connection.send(new ClientboundSetSubtitleTextPacket(

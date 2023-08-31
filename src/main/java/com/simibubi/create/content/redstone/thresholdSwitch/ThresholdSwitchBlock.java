@@ -30,10 +30,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IBE<ThresholdSwitchBlockEntity> {
@@ -102,8 +101,8 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
-		Capability<IItemHandler> itemCap = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-		Capability<IFluidHandler> fluidCap = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+		Capability<IItemHandler> itemCap = ForgeCapabilities.ITEM_HANDLER;
+		Capability<IFluidHandler> fluidCap = ForgeCapabilities.FLUID_HANDLER;
 
 		Direction preferredFacing = null;
 		for (Direction face : context.getNearestLookingDirections()) {

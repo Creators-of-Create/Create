@@ -32,12 +32,12 @@ public class SchematicProcessor extends StructureProcessor {
 	@Override
 	public StructureTemplate.StructureBlockInfo process(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
 			StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
-		if (info.nbt != null && info.state.hasBlockEntity()) {
-			BlockEntity be = ((EntityBlock) info.state.getBlock()).newBlockEntity(info.pos, info.state);
+		if (info.nbt() != null && info.state().hasBlockEntity()) {
+			BlockEntity be = ((EntityBlock) info.state().getBlock()).newBlockEntity(info.pos(), info.state());
 			if (be != null) {
-				CompoundTag nbt = NBTProcessors.process(be, info.nbt, false);
-				if (nbt != info.nbt)
-					return new StructureTemplate.StructureBlockInfo(info.pos, info.state, nbt);
+				CompoundTag nbt = NBTProcessors.process(be, info.nbt(), false);
+				if (nbt != info.nbt())
+					return new StructureTemplate.StructureBlockInfo(info.pos(), info.state(), nbt);
 			}
 		}
 		return info;

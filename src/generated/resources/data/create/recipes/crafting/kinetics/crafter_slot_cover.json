@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "tag": "forge:nuggets/brass"
@@ -10,5 +11,6 @@
   ],
   "result": {
     "item": "create:crafter_slot_cover"
-  }
+  },
+  "show_notification": true
 }

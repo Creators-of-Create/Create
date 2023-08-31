@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "create:andesite_casing"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:mechanical_mixer"
-  }
+  },
+  "show_notification": true
 }

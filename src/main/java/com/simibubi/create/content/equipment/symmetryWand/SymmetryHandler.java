@@ -2,9 +2,10 @@ package com.simibubi.create.content.equipment.symmetryWand;
 
 import java.util.Random;
 
+import org.joml.Vector3f;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.EmptyMirror;
 import com.simibubi.create.content.equipment.symmetryWand.mirror.SymmetryMirror;
@@ -29,7 +30,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
@@ -60,7 +62,7 @@ public class SymmetryHandler {
 				.isEmpty()
 				&& inv.getItem(i)
 					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
-				SymmetryWandItem.apply(player.level, inv.getItem(i), player, event.getPos(), event.getPlacedBlock());
+				SymmetryWandItem.apply(player.level(), inv.getItem(i), player, event.getPos(), event.getPlacedBlock());
 			}
 		}
 	}
@@ -76,14 +78,17 @@ public class SymmetryHandler {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
 				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
-				SymmetryWandItem.remove(player.level, inv.getItem(i), player, event.getPos());
+				SymmetryWandItem.remove(player.level(), inv.getItem(i), player, event.getPos());
 			}
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public static void render(RenderLevelLastEvent event) {
+	public static void onRenderWorld(RenderLevelStageEvent event) {
+		if (event.getStage() != Stage.AFTER_PARTICLES)
+			return;
+		
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		RandomSource random = RandomSource.create();
@@ -99,7 +104,7 @@ public class SymmetryHandler {
 			if (mirror instanceof EmptyMirror)
 				continue;
 
-			BlockPos pos = new BlockPos(mirror.getPosition());
+			BlockPos pos = BlockPos.containing(mirror.getPosition());
 
 			float yShift = 0;
 			double speed = 1 / 16d;
@@ -121,7 +126,7 @@ public class SymmetryHandler {
 
 			mc.getBlockRenderer()
 				.getModelRenderer()
-				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
+				.tesselateBlock(player.level(), model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
 					random, Mth.getSeed(pos), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, RenderType.solid());
 
 			ms.popPose();

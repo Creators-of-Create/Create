@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class TranslatingContraption extends Contraption {
 
@@ -27,15 +27,15 @@ public abstract class TranslatingContraption extends Contraption {
 	public Set<BlockPos> createColliders(Level world, Direction movementDirection) {
 		Set<BlockPos> colliders = new HashSet<>();
 		for (StructureBlockInfo info : getBlocks().values()) {
-			BlockPos offsetPos = info.pos.relative(movementDirection);
-			if (info.state.getCollisionShape(world, offsetPos)
+			BlockPos offsetPos = info.pos().relative(movementDirection);
+			if (info.state().getCollisionShape(world, offsetPos)
 				.isEmpty())
 				continue;
 			if (getBlocks().containsKey(offsetPos)
-				&& !getBlocks().get(offsetPos).state.getCollisionShape(world, offsetPos)
+				&& !getBlocks().get(offsetPos).state().getCollisionShape(world, offsetPos)
 					.isEmpty())
 				continue;
-			colliders.add(info.pos);
+			colliders.add(info.pos());
 		}
 		return colliders;
 	}
@@ -53,5 +53,5 @@ public abstract class TranslatingContraption extends Contraption {
 	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return false;
 	}
-	
+
 }

@@ -2,13 +2,13 @@ package com.simibubi.create.foundation.blockEntity.behaviour;
 
 import java.util.List;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.utility.theme.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.MutableComponent;
@@ -116,7 +116,7 @@ public class ValueSettingsClient implements IGuiOverlay {
 	}
 
 	@Override
-	public void render(ForgeGui gui, PoseStack poseStack, float partialTicks, int width, int height) {
+	public void render(ForgeGui gui, GuiGraphics graphics, float partialTicks, int width, int height) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.hideGui || !ValueSettingsInputHandler.canInteract(mc.player))
 			return;
@@ -134,7 +134,7 @@ public class ValueSettingsClient implements IGuiOverlay {
 
 		for (int i = 0; i < lastHoverTip.size(); i++) {
 			MutableComponent mutableComponent = lastHoverTip.get(i);
-			mc.font.drawShadow(poseStack, mutableComponent, x - mc.font.width(mutableComponent) / 2, y,
+			graphics.drawString(mc.font, mutableComponent, x - mc.font.width(mutableComponent) / 2, y,
 				(i == 0 ? titleColor : color).getRGB());
 			y += 12;
 		}

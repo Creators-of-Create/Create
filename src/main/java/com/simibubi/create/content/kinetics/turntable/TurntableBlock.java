@@ -43,7 +43,7 @@ public class TurntableBlock extends KineticBlock implements IBE<TurntableBlockEn
 
 	@Override
 	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity e) {
-		if (!e.isOnGround())
+		if (!e.onGround())
 			return;
 		if (e.getDeltaMovement().y > 0)
 			return;

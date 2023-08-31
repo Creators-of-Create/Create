@@ -19,7 +19,7 @@ public class CarriageEntityHandler {
 		if (!(entity instanceof CarriageContraptionEntity cce))
 			return;
 		SectionPos newPos = event.getNewPos();
-		Level level = entity.getLevel();
+		Level level = entity.level();
 		if (level.isClientSide)
 			return;
 		if (!isActiveChunk(level, newPos.center()))
@@ -29,7 +29,7 @@ public class CarriageEntityHandler {
 	public static void validateCarriageEntity(CarriageContraptionEntity entity) {
 		if (!entity.isAlive())
 			return;
-		Level level = entity.getLevel();
+		Level level = entity.level();
 		if (level.isClientSide)
 			return;
 		if (!isActiveChunk(level, entity.blockPosition()))

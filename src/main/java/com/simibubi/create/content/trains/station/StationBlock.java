@@ -14,13 +14,11 @@ import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
@@ -90,12 +88,6 @@ public class StationBlock extends Block implements IBE<StationBlockEntity>, IWre
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
 		return getBlockEntityOptional(pLevel, pPos).map(ste -> ste.trainPresent ? 15 : 0)
 			.orElse(0);
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab pTab, NonNullList<ItemStack> pItems) {
-		pItems.add(AllItems.SCHEDULE.asStack());
-		super.fillItemCategory(pTab, pItems);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "tag": "forge:plates/iron"
@@ -16,5 +17,6 @@
   "result": {
     "count": 4,
     "item": "create:chute"
-  }
+  },
+  "show_notification": true
 }

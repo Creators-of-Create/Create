@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "tag": "minecraft:wooden_slabs"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "create:clockwork_bearing"
-  }
+  },
+  "show_notification": true
 }

@@ -12,10 +12,9 @@ import com.jozufozu.flywheel.light.LightVolume;
 import com.jozufozu.flywheel.light.TickingLightListener;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
-
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
@@ -29,7 +28,7 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 
 	protected float offset;
 	protected final Direction rotatingAbout;
-	protected final Vector3f rotationAxis;
+	protected final Axis rotationAxis;
 
 	private final GridAlignedBB volume = new GridAlignedBB();
 	private final LightVolume light;
@@ -38,7 +37,7 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 		super(dispatcher, blockEntity);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);
-		rotationAxis = rotatingAbout.step();
+		rotationAxis = Axis.of(rotatingAbout.step());
 
 		coil = getCoilModel().createInstance()
 				.setPosition(getInstancePosition());

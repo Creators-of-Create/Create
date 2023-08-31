@@ -6,7 +6,6 @@ import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.util.box.GridAlignedBB;
 import com.jozufozu.flywheel.util.box.ImmutableBox;
 import com.simibubi.create.content.contraptions.Contraption;
-
 import net.minecraft.world.level.LightLayer;
 
 public abstract class ContraptionLighter<C extends Contraption> implements LightListener {
@@ -20,12 +19,12 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 
     protected ContraptionLighter(C contraption) {
         this.contraption = contraption;
-		lightUpdater = LightUpdater.get(contraption.entity.level);
+		lightUpdater = LightUpdater.get(contraption.entity.level());
 
 		bounds = getContraptionBounds();
 		growBoundsForEdgeData(bounds);
 
-		lightVolume = new GPULightVolume(contraption.entity.level, bounds);
+		lightVolume = new GPULightVolume(contraption.entity.level(), bounds);
 
 		lightVolume.initialize();
 		scheduleRebuild = true;

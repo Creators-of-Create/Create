@@ -88,7 +88,7 @@ public class DeployerActorInstance extends ActorInstance {
         } else if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
             factor = Mth.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
         } else {
-        	Vec3 center = VecHelper.getCenterOf(new BlockPos(context.position));
+        	Vec3 center = VecHelper.getCenterOf(BlockPos.containing(context.position));
             double distance = context.position.distanceTo(center);
             double nextDistance = context.position.add(context.motion)
                                                   .distanceTo(center);

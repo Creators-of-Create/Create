@@ -7,10 +7,10 @@ import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRender
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ChuteRenderer extends SafeBlockEntityRenderer<ChuteBlockEntity> {
@@ -45,7 +45,7 @@ public class ChuteRenderer extends SafeBlockEntityRenderer<ChuteBlockEntity> {
 		ms.scale(itemScale, itemScale, itemScale);
 		msr.rotateX(itemPosition * 180);
 		msr.rotateY(itemPosition * 180);
-		itemRenderer.renderStatic(be.item, TransformType.FIXED, light, overlay, ms, buffer, 0);
+		itemRenderer.renderStatic(be.item, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 		ms.popPose();
 	}
 

@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForBelt;
@@ -17,13 +17,13 @@ import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -162,8 +162,8 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 			ms.translate(blockLocation.x, blockLocation.y, blockLocation.z);
 
 			ms.translate(.125f, .125f, .125f);
-			ms.mulPose(new Vector3f(0, 1, 0).rotationDegrees(360 * t));
-			ms.mulPose(new Vector3f(1, 0, 0).rotationDegrees(360 * t));
+			ms.mulPose(Axis.YP.rotationDegrees(360 * t));
+			ms.mulPose(Axis.XP.rotationDegrees(360 * t));
 			ms.translate(-.125f, -.125f, -.125f);
 
 			if (launched instanceof ForBlockState) {
@@ -187,7 +187,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 				ms.scale(scale, scale, scale);
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(launched.stack, TransformType.GROUND, light, overlay, ms, buffer, 0);
+					.renderStatic(launched.stack, ItemDisplayContext.GROUND, light, overlay, ms, buffer, blockEntity.getLevel(), 0);
 			}
 
 			ms.popPose();

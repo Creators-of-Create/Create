@@ -1,19 +1,5 @@
 package com.simibubi.create.content.contraptions;
 
-import static net.minecraft.world.entity.Entity.collideBoundingBox;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.lang3.mutable.MutableFloat;
-import org.apache.commons.lang3.mutable.MutableObject;
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import com.google.common.base.Predicates;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
@@ -30,9 +16,9 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.collision.ContinuousOBBCollider.ContinuousSeparationManifold;
 import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.collision.OrientedBB;
+import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.VecHelper;
 import net.minecraft.client.Minecraft;
@@ -50,7 +36,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -66,6 +52,19 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableFloat;
+import org.apache.commons.lang3.mutable.MutableObject;
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+import static net.minecraft.world.entity.Entity.collideBoundingBox;
 
 public class ContraptionCollider {
 
@@ -272,22 +271,22 @@ public class ContraptionCollider {
 				if (temporalCollision)
 					collisionLocation = collisionLocation.add(0, motionResponse.y, 0);
 
-				BlockPos pos = new BlockPos(contraptionEntity.toLocalVector(entity.position(), 0));
+				BlockPos pos = BlockPos.containing(contraptionEntity.toLocalVector(entity.position(), 0));
 				if (contraption.getBlocks()
 					.containsKey(pos)) {
 					BlockState blockState = contraption.getBlocks()
-						.get(pos).state;
+						.get(pos).state();
 					if (blockState.is(BlockTags.CLIMBABLE)) {
 						surfaceCollision.setTrue();
 						totalResponse = totalResponse.add(0, .1f, 0);
 					}
 				}
 
-				pos = new BlockPos(contraptionEntity.toLocalVector(collisionLocation, 0));
+				pos = BlockPos.containing(contraptionEntity.toLocalVector(collisionLocation, 0));
 				if (contraption.getBlocks()
 					.containsKey(pos)) {
 					BlockState blockState = contraption.getBlocks()
-						.get(pos).state;
+						.get(pos).state();
 
 					MovingInteractionBehaviour movingInteractionBehaviour = contraption.interactors.get(pos);
 					if (movingInteractionBehaviour != null)
@@ -303,7 +302,7 @@ public class ContraptionCollider {
 
 			if (bounce > 0 && hasNormal && anyCollision
 				&& bounceEntity(entity, collisionNormal, contraptionEntity, bounce)) {
-				entity.level.playSound(playerType == PlayerType.CLIENT ? (Player) entity : null, entity.getX(),
+				entity.level().playSound(playerType == PlayerType.CLIENT ? (Player) entity : null, entity.getX(),
 					entity.getY(), entity.getZ(), SoundEvents.SLIME_BLOCK_FALL, SoundSource.BLOCKS, .5f, 1);
 				continue;
 			}
@@ -397,7 +396,7 @@ public class ContraptionCollider {
 			AllPackets.getChannel()
 				.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
 
-			if (entity.isOnGround() && contraption instanceof TranslatingContraption) {
+			if (entity.onGround() && contraption instanceof TranslatingContraption) {
 				safetyLock.setLeft(new WeakReference<>(contraptionEntity));
 				safetyLock.setRight(entity.getY() - contraptionEntity.getY());
 			}
@@ -506,7 +505,7 @@ public class ContraptionCollider {
 
 		if (!(contraptionEntity instanceof CarriageContraptionEntity cce))
 			return entityMotion;
-		if (!entity.isOnGround())
+		if (!entity.onGround())
 			return entityMotion;
 
 		CompoundTag persistentData = entity.getPersistentData();
@@ -529,7 +528,7 @@ public class ContraptionCollider {
 		if (diffMotion.length() <= 0.35f || contraptionMotion.length() <= 0.35f)
 			return entityMotion;
 
-		EntityDamageSource pSource = new EntityDamageSource("create.run_over", contraptionEntity);
+		DamageSource source = CreateDamageSources.runOver(world, contraptionEntity);
 		double damage = diffMotion.length();
 		if (entity.getClassification(false) == MobCategory.MONSTER)
 			damage *= 2;
@@ -543,7 +542,7 @@ public class ContraptionCollider {
 			world.playSound((Player) entity, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT,
 				SoundSource.NEUTRAL, 1, .75f);
 		} else {
-			entity.hurt(pSource, (int) (damage * 16));
+			entity.hurt(source, (int) (damage * 16));
 			world.playSound(null, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.NEUTRAL, 1, .75f);
 			if (!entity.isAlive())
 				contraptionEntity.getControllingPlayer()
@@ -612,20 +611,20 @@ public class ContraptionCollider {
 	/** From Entity#collide **/
 	static Vec3 collide(Vec3 p_20273_, Entity e) {
 		AABB aabb = e.getBoundingBox();
-		List<VoxelShape> list = e.level.getEntityCollisions(e, aabb.expandTowards(p_20273_));
-		Vec3 vec3 = p_20273_.lengthSqr() == 0.0D ? p_20273_ : collideBoundingBox(e, p_20273_, aabb, e.level, list);
+		List<VoxelShape> list = e.level().getEntityCollisions(e, aabb.expandTowards(p_20273_));
+		Vec3 vec3 = p_20273_.lengthSqr() == 0.0D ? p_20273_ : collideBoundingBox(e, p_20273_, aabb, e.level(), list);
 		boolean flag = p_20273_.x != vec3.x;
 		boolean flag1 = p_20273_.y != vec3.y;
 		boolean flag2 = p_20273_.z != vec3.z;
 		boolean flag3 = flag1 && p_20273_.y < 0.0D;
 		if (e.getStepHeight() > 0.0F && flag3 && (flag || flag2)) {
 			Vec3 vec31 = collideBoundingBox(e, new Vec3(p_20273_.x, (double) e.getStepHeight(), p_20273_.z), aabb,
-				e.level, list);
+				e.level(), list);
 			Vec3 vec32 = collideBoundingBox(e, new Vec3(0.0D, (double) e.getStepHeight(), 0.0D),
-				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level, list);
+				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level(), list);
 			if (vec32.y < (double) e.getStepHeight()) {
 				Vec3 vec33 =
-					collideBoundingBox(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z), aabb.move(vec32), e.level, list)
+					collideBoundingBox(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z), aabb.move(vec32), e.level(), list)
 						.add(vec32);
 				if (vec33.horizontalDistanceSqr() > vec31.horizontalDistanceSqr()) {
 					vec31 = vec33;
@@ -634,7 +633,7 @@ public class ContraptionCollider {
 
 			if (vec31.horizontalDistanceSqr() > vec3.horizontalDistanceSqr()) {
 				return vec31.add(collideBoundingBox(e, new Vec3(0.0D, -vec31.y + p_20273_.y, 0.0D), aabb.move(vec31),
-					e.level, list));
+					e.level(), list));
 			}
 		}
 
@@ -644,7 +643,7 @@ public class ContraptionCollider {
 	private static PlayerType getPlayerType(Entity entity) {
 		if (!(entity instanceof Player))
 			return PlayerType.NONE;
-		if (!entity.level.isClientSide)
+		if (!entity.level().isClientSide)
 			return PlayerType.SERVER;
 		MutableBoolean isClient = new MutableBoolean(false);
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> isClient.setValue(isClientPlayerEntity(entity)));
@@ -665,17 +664,17 @@ public class ContraptionCollider {
 		AABB blockScanBB = localBB.inflate(0.5f);
 		blockScanBB = blockScanBB.inflate(horizontalFactor, verticalFactor, horizontalFactor);
 
-		BlockPos min = new BlockPos(blockScanBB.minX, blockScanBB.minY, blockScanBB.minZ);
-		BlockPos max = new BlockPos(blockScanBB.maxX, blockScanBB.maxY, blockScanBB.maxZ);
+		BlockPos min = BlockPos.containing(blockScanBB.minX, blockScanBB.minY, blockScanBB.minZ);
+		BlockPos max = BlockPos.containing(blockScanBB.maxX, blockScanBB.maxY, blockScanBB.maxZ);
 
 		List<VoxelShape> potentialHits = BlockPos.betweenClosedStream(min, max)
 			.filter(contraption.getBlocks()::containsKey)
 			.filter(Predicates.not(contraption::isHiddenInPortal))
 			.map(p -> {
 				BlockState blockState = contraption.getBlocks()
-					.get(p).state;
+					.get(p).state();
 				BlockPos pos = contraption.getBlocks()
-					.get(p).pos;
+					.get(p).pos();
 				VoxelShape collisionShape = blockState.getCollisionShape(world, p);
 				return collisionShape.move(pos.getX(), pos.getY(), pos.getZ());
 			})
@@ -694,7 +693,7 @@ public class ContraptionCollider {
 		TranslatingContraption contraption = (TranslatingContraption) contraptionEntity.getContraption();
 		AABB bounds = contraptionEntity.getBoundingBox();
 		Vec3 position = contraptionEntity.position();
-		BlockPos gridPos = new BlockPos(position);
+		BlockPos gridPos = BlockPos.containing(position);
 
 		if (contraption == null)
 			return false;
@@ -734,7 +733,7 @@ public class ContraptionCollider {
 
 			for (BlockPos colliderPos : contraption.getOrCreateColliders(world, movementDirection)) {
 				colliderPos = colliderPos.offset(gridPos)
-					.subtract(new BlockPos(otherPosition));
+					.subtract(BlockPos.containing(otherPosition));
 				if (!otherContraption.getBlocks()
 					.containsKey(colliderPos))
 					continue;
@@ -762,7 +761,7 @@ public class ContraptionCollider {
 			if (collidedState.getBlock() instanceof CocoaBlock)
 				continue;
 
-			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state);
+			MovementBehaviour movementBehaviour = AllMovementBehaviours.getBehaviour(blockInfo.state());
 			if (movementBehaviour != null) {
 				if (movementBehaviour instanceof BlockBreakingMovementBehaviour) {
 					BlockBreakingMovementBehaviour behaviour = (BlockBreakingMovementBehaviour) movementBehaviour;
@@ -784,8 +783,7 @@ public class ContraptionCollider {
 			if (AllBlocks.PULLEY_MAGNET.has(collidedState) && pos.equals(BlockPos.ZERO)
 				&& movementDirection == Direction.UP)
 				continue;
-			if (!collidedState.getMaterial()
-				.isReplaceable() && !emptyCollider) {
+			if (!collidedState.canBeReplaced() && !emptyCollider) {
 				return true;
 			}
 

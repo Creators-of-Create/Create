@@ -5,19 +5,16 @@ import static com.simibubi.create.foundation.advancement.CreateAdvancement.TaskT
 import static com.simibubi.create.foundation.advancement.CreateAdvancement.TaskType.SECRET;
 import static com.simibubi.create.foundation.advancement.CreateAdvancement.TaskType.SILENT;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
-import org.slf4j.Logger;
-
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
-import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
@@ -25,8 +22,9 @@ import com.simibubi.create.foundation.advancement.CreateAdvancement.Builder;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.PackOutput.PathProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
@@ -610,41 +608,31 @@ public class AllAdvancements implements DataProvider {
 
 	// Datagen
 
-	private static final Logger LOGGER = LogUtils.getLogger();
-	private final DataGenerator generator;
+	private final PackOutput output;
 
-	public AllAdvancements(DataGenerator generatorIn) {
-		this.generator = generatorIn;
+	public AllAdvancements(PackOutput output) {
+		this.output = output;
 	}
 
 	@Override
-	public void run(CachedOutput cache) throws IOException {
-		Path path = this.generator.getOutputFolder();
+	public CompletableFuture<?> run(CachedOutput cache) {
+		PathProvider pathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "advancements");
+		List<CompletableFuture<?>> futures = new ArrayList<>();
+
 		Set<ResourceLocation> set = Sets.newHashSet();
-		Consumer<Advancement> consumer = (p_204017_3_) -> {
-			if (!set.add(p_204017_3_.getId()))
-				throw new IllegalStateException("Duplicate advancement " + p_204017_3_.getId());
-
-			Path path1 = getPath(path, p_204017_3_);
-
-			try {
-				DataProvider.saveStable(cache, p_204017_3_.deconstruct()
-					.serializeToJson(), path1);
-			} catch (IOException ioexception) {
-				LOGGER.error("Couldn't save advancement {}", path1, ioexception);
-			}
+		Consumer<Advancement> consumer = (advancement) -> {
+			ResourceLocation id = advancement.getId();
+			if (!set.add(id))
+				throw new IllegalStateException("Duplicate advancement " + id);
+			Path path = pathProvider.json(id);
+			futures.add(DataProvider.saveStable(cache, advancement.deconstruct()
+				.serializeToJson(), path));
 		};
 
 		for (CreateAdvancement advancement : ENTRIES)
 			advancement.save(consumer);
-	}
 
-	private static Path getPath(Path pathIn, Advancement advancementIn) {
-		return pathIn.resolve("data/" + advancementIn.getId()
-			.getNamespace() + "/advancements/"
-			+ advancementIn.getId()
-				.getPath()
-			+ ".json");
+		return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "minecraft:cobblestone"
@@ -19,5 +20,6 @@
   "result": {
     "count": 2,
     "item": "create:redstone_contact"
-  }
+  },
+  "show_notification": true
 }

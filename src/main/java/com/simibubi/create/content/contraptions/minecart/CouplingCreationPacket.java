@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.minecart;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
@@ -32,7 +31,7 @@ public class CouplingCreationPacket extends SimplePacketBase {
 		context.enqueueWork(() -> {
 			ServerPlayer sender = context.getSender();
 			if (sender != null)
-				CouplingHandler.tryToCoupleCarts(sender, sender.level, id1, id2);
+				CouplingHandler.tryToCoupleCarts(sender, sender.level(), id1, id2);
 		});
 		return true;
 	}

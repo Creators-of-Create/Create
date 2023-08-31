@@ -6,7 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.material.Fluids;
@@ -63,8 +63,8 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	;
 
-	public FillingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public FillingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override

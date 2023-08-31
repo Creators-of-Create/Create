@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "G": {
       "tag": "forge:glass"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "create:copper_diving_helmet"
-  }
+  },
+  "show_notification": true
 }

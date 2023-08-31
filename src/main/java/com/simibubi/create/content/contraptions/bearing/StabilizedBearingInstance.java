@@ -1,11 +1,12 @@
 package com.simibubi.create.content.contraptions.bearing;
 
+import org.joml.Quaternionf;
+
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
@@ -23,8 +24,8 @@ public class StabilizedBearingInstance extends ActorInstance {
 	final RotatingData shaft;
 
 	final Direction facing;
-	final Vector3f rotationAxis;
-	final Quaternion blockOrientation;
+	final Axis rotationAxis;
+	final Quaternionf blockOrientation;
 
 	public StabilizedBearingInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
 		super(materialManager, simulationWorld, context);
@@ -32,7 +33,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 		BlockState blockState = context.state;
 
 		facing = blockState.getValue(BlockStateProperties.FACING);
-		rotationAxis = Direction.get(Direction.AxisDirection.POSITIVE, facing.getAxis()).step();
+		rotationAxis = Axis.of(Direction.get(Direction.AxisDirection.POSITIVE, facing.getAxis()).step());
 
 		blockOrientation = BearingInstance.getBlockStateOrientation(facing);
 
@@ -60,7 +61,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 	public void beginFrame() {
 		float counterRotationAngle = StabilizedBearingMovementBehaviour.getCounterRotationAngle(context, facing, AnimationTickHolder.getPartialTicks());
 
-		Quaternion rotation = rotationAxis.rotationDegrees(counterRotationAngle);
+		Quaternionf rotation = rotationAxis.rotationDegrees(counterRotationAngle);
 
 		rotation.mul(blockOrientation);
 

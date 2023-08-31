@@ -27,6 +27,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -38,7 +39,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 
@@ -66,7 +67,7 @@ public class WindowGen {
 
 	public static BlockEntry<WindowBlock> customWindowBlock(String name, Supplier<? extends ItemLike> ingredient,
 		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType, boolean translucent,
-		Supplier<MaterialColor> color) {
+		Supplier<MapColor> color) {
 		NonNullFunction<String, ResourceLocation> end_texture = n -> Create.asResource(palettesDir() + name + "_end");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
 		return windowBlock(name, ingredient, ct, renderType, translucent, end_texture, side_texture, color);
@@ -80,17 +81,17 @@ public class WindowGen {
 			$ -> new ResourceLocation("block/" + woodName + "_planks");
 		NonNullFunction<String, ResourceLocation> side_texture = n -> Create.asResource(palettesDir() + n);
 		return windowBlock(name, () -> planksBlock, () -> AllSpriteShifts.getWoodenWindow(woodType), renderType,
-			translucent, end_texture, side_texture, planksBlock::defaultMaterialColor);
+			translucent, end_texture, side_texture, planksBlock::defaultMapColor);
 	}
 
 	public static BlockEntry<WindowBlock> windowBlock(String name, Supplier<? extends ItemLike> ingredient,
 		Supplier<CTSpriteShiftEntry> ct, Supplier<Supplier<RenderType>> renderType, boolean translucent,
 		NonNullFunction<String, ResourceLocation> endTexture, NonNullFunction<String, ResourceLocation> sideTexture,
-		Supplier<MaterialColor> color) {
+		Supplier<MapColor> color) {
 		return REGISTRATE.block(name, p -> new WindowBlock(p, translucent))
 			.onRegister(connectedTextures(() -> new HorizontalCTBehaviour(ct.get())))
 			.addLayer(renderType)
-			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 2)
+			.recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 2)
 				.pattern(" # ")
 				.pattern("#X#")
 				.define('#', ingredient.get())
@@ -99,7 +100,7 @@ public class WindowGen {
 				.save(p::accept))
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
-			.properties(p -> p.color(color.get()))
+			.properties(p -> p.mapColor(color.get()))
 			.loot((t, g) -> t.dropWhenSilkTouch(g))
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.cubeColumn(c.getName(), sideTexture.apply(c.getName()), endTexture.apply(c.getName()))))
@@ -116,7 +117,8 @@ public class WindowGen {
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
 			.loot((t, g) -> t.dropWhenSilkTouch(g))
-			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
+			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS),
+				RecipeCategory.BUILDING_BLOCKS, c::get))
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
 			.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
 			.item()
@@ -207,10 +209,10 @@ public class WindowGen {
 			.onRegister(connectedTextures)
 			.addLayer(renderType)
 			.initialProperties(() -> Blocks.GLASS_PANE)
-			.properties(p -> p.color(parent.get()
-				.defaultMaterialColor()))
+			.properties(p -> p.mapColor(parent.get()
+				.defaultMapColor()))
 			.blockstate(stateProvider)
-			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 16)
+			.recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 16)
 				.pattern("###")
 				.pattern("###")
 				.define('#', parent.get())

@@ -8,9 +8,6 @@ import com.simibubi.create.foundation.block.IBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
@@ -42,12 +39,6 @@ public class CuckooClockBlock extends HorizontalKineticBlock implements IBE<Cuck
 	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
 		CollisionContext p_220053_4_) {
 		return AllShapes.CUCKOO_CLOCK;
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-		if (!mysterious)
-			super.fillItemCategory(group, items);
 	}
 	
 	@Override

@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stone_types_diorite": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:stone_types/diorite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:layered_diorite_from_stone_types_diorite_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_types_diorite",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:layered_diorite_from_stone_types_diorite_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

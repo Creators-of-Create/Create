@@ -8,6 +8,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
+import com.simibubi.create.Create;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.builders.EntityBuilder;
@@ -57,7 +58,7 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 	}
 
 	protected void registerInstance() {
-		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
+		OneTimeEventReceiver.addModListener(Create.REGISTRATE, FMLClientSetupEvent.class, $ -> {
 			NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
 				NonNullPredicate<T> renderNormally = this.renderNormally;

@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_oxidized_copper_tiles": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:oxidized_copper_tiles"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:oxidized_copper_tile_slab_from_oxidized_copper_tiles_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_oxidized_copper_tiles",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:oxidized_copper_tile_slab_from_oxidized_copper_tiles_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

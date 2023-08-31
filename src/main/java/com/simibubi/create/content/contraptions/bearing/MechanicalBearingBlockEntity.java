@@ -342,8 +342,7 @@ public class MechanicalBearingBlockEntity extends GeneratingKineticBlockEntity
 			return false;
 
 		BlockState attachedState = level.getBlockState(worldPosition.relative(state.getValue(BearingBlock.FACING)));
-		if (attachedState.getMaterial()
-			.isReplaceable())
+		if (attachedState.canBeReplaced())
 			return false;
 		TooltipHelper.addHint(tooltip, "hint.empty_bearing");
 		return true;

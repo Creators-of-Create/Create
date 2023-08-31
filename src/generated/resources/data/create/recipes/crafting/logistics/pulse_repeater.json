@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "tag": "forge:plates/brass"
@@ -20,5 +21,6 @@
   ],
   "result": {
     "item": "create:pulse_repeater"
-  }
+  },
+  "show_notification": true
 }

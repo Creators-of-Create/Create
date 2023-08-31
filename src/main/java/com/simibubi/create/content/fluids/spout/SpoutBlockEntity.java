@@ -35,9 +35,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
 
@@ -184,7 +184,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN)
+		if (cap == ForgeCapabilities.FLUID_HANDLER && side != Direction.DOWN)
 			return tank.getCapability()
 				.cast();
 		return super.getCapability(cap, side);
@@ -253,6 +253,6 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+			getCapability(ForgeCapabilities.FLUID_HANDLER));
 	}
 }

@@ -32,11 +32,11 @@ boolean catnipInWorkspace = rootProject.hasProperty('multiModWorkspace.catnip')
 boolean ponderInWorkspace = rootProject.hasProperty('multiModWorkspace.ponder')
 
 if (catnipInWorkspace) {
-    evaluationDependsOn(":catnip")
+    evaluationDependsOn(":catnip:Forge")
 }
 
 if (ponderInWorkspace) {
-    evaluationDependsOn(":Ponder")
+    evaluationDependsOn(":ponder:Forge")
 }
 
 project.logger.lifecycle("MultiModWorkspace ${inMultiModWorkspace || flywheelInWorkspace ? 'enabled' : 'disabled'} for project ${project.name}.")
@@ -100,8 +100,8 @@ minecraft {
 
                 if (ponderInWorkspace) {
                     ponder {
-                        source project(":Ponder:Common").sourceSets.main
-                        source project(":Ponder:Forge").sourceSets.main
+                        source project(":ponder:Common").sourceSets.main
+                        source project(":ponder:Forge").sourceSets.main
                     }
                 }
             }
@@ -138,7 +138,7 @@ minecraft {
 
         gameTestServer {
             workingDirectory project.file('run/gametest')
-            //setForceExit false
+            //setForceExit false <- FIXME 1.20
         }
     }
 }
@@ -172,9 +172,6 @@ repositories {
         // location of maven for CC: Tweaked
         name = "squiddev"
         url = "https://squiddev.cc/maven/"
-        content {
-            includeGroup "org.squiddev"
-        }
     }
 
     maven {
@@ -195,6 +192,7 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" }
 
     mavenLocal()
     flatDir {
@@ -211,7 +209,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     jarJar("com.tterrag.registrate:Registrate:${registrate_version}") {
-        jarJar.ranged(it, '[MC1.19-1.1.5,)')
+        jarJar.ranged(it, '[MC1.19.3-1.1.10,)')
     }
     jarJar("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}") {
         jarJar.ranged(it, '[0.6.10,0.6.11)')
@@ -233,8 +231,8 @@ dependencies {
     }
 
     if (ponderInWorkspace) {
-        implementation project(":Ponder:Common")
-        implementation project(":Ponder:Forge")
+        implementation project(":ponder:Common")
+        implementation project(":ponder:Forge")
     } else {
         implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
     }
@@ -243,12 +241,13 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge:${jei_version}")
 
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_minecraft_version}-${curios_version}")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${curios_minecraft_version}:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${curios_minecraft_version}")
 
 	if (cc_tweaked_enable.toBoolean()) {
-        compileOnly fg.deobf("org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}:api")
-        runtimeOnly fg.deobf("org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}")
+	    compileOnly("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-core-api:${cc_tweaked_version}")
+        compileOnly fg.deobf("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-forge-api:${cc_tweaked_version}")
+        runtimeOnly fg.deobf("cc.tweaked:cc-tweaked-${cc_tweaked_minecraft_version}-forge:${cc_tweaked_version}")
 	}
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
@@ -276,8 +275,8 @@ sourceSets.main.java {
 
 // Workaround for SpongePowered/MixinGradle#38
 afterEvaluate {
-    //tasks.configureReobfTaskForReobfJar.mustRunAfter(tasks.compileJava)
-    //tasks.configureReobfTaskForReobfJarJar.mustRunAfter(tasks.compileJava)
+    tasks.configureReobfTaskForReobfJar.mustRunAfter(tasks.compileJava)
+    tasks.configureReobfTaskForReobfJarJar.mustRunAfter(tasks.compileJava)
 }
 
 processResources {

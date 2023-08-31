@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllItems;
@@ -155,7 +155,7 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 		if (state != null) {
 			ms.translate(.5f, .5f, .5f);
 			if (state.getValue(AXIS) == Direction.Axis.X)
-				ms.mulPose(Vector3f.YP.rotationDegrees(90));
+				ms.mulPose(Axis.YP.rotationDegrees(90));
 		}
 		ms.translate(0, -1.5 - 1 / 128f, 0);
 		VertexConsumer vb = buffers.getBuffer(RenderType.cutoutMipped());

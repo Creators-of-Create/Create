@@ -8,7 +8,6 @@ import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.tank.FluidTankBlock;
 import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.foundation.block.IBE;
-
 import net.createmod.catnip.utility.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -138,7 +137,7 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 		for (int i = 1; i <= 6; i++) {
 			BlockState blockState = pLevel.getBlockState(currentPos);
 			float pVolume = (soundtype.getVolume() + 1.0F) / 2.0F;
-			SoundEvent growSound = SoundEvents.NOTE_BLOCK_XYLOPHONE;
+			SoundEvent growSound = SoundEvents.NOTE_BLOCK_XYLOPHONE.get();
 			SoundEvent hitSound = soundtype.getHitSound();
 
 			if (AllBlocks.STEAM_WHISTLE_EXTENSION.has(blockState)) {
@@ -156,8 +155,7 @@ public class WhistleBlock extends Block implements IBE<WhistleBlockEntity>, IWre
 				continue;
 			}
 
-			if (!blockState.getMaterial()
-				.isReplaceable())
+			if (!blockState.canBeReplaced())
 				return;
 
 			pLevel.setBlock(currentPos, AllBlocks.STEAM_WHISTLE_EXTENSION.getDefaultState()

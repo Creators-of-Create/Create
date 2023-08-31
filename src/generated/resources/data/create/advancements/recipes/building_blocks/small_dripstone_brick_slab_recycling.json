@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_small_dripstone_brick_slab": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "create:small_dripstone_brick_slab"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create:small_dripstone_brick_slab_recycling"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_small_dripstone_brick_slab",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create:small_dripstone_brick_slab_recycling"
+    ]
+  },
+  "sends_telemetry_event": false
+}

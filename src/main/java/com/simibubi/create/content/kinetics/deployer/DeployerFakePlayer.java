@@ -24,7 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -40,9 +40,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -119,9 +119,7 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void deployerCollectsDropsFromKilledEntities(LivingDropsEvent event) {
-		if (!(event.getSource() instanceof EntityDamageSource))
-			return;
-		EntityDamageSource source = (EntityDamageSource) event.getSource();
+		DamageSource source = event.getSource();
 		Entity trueSource = source.getEntity();
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;
@@ -138,12 +136,9 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	protected void playEquipSound(ItemStack p_217042_) {}
-
-	@Override
 	public void remove(RemovalReason p_150097_) {
-		if (blockBreakingProgress != null && !level.isClientSide)
-			level.destroyBlockProgress(getId(), blockBreakingProgress.getKey(), -1);
+		if (blockBreakingProgress != null && !level().isClientSide)
+			level().destroyBlockProgress(getId(), blockBreakingProgress.getKey(), -1);
 		super.remove(p_150097_);
 	}
 
@@ -154,8 +149,8 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@SubscribeEvent
-	public static void entitiesDontRetaliate(LivingSetAttackTargetEvent event) {
-		if (!(event.getTarget() instanceof DeployerFakePlayer))
+	public static void entitiesDontRetaliate(LivingChangeTargetEvent event) {
+		if (!(event.getNewTarget() instanceof DeployerFakePlayer))
 			return;
 		LivingEntity entityLiving = event.getEntity();
 		if (!(entityLiving instanceof Mob))

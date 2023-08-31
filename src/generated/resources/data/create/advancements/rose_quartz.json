@@ -34,5 +34,6 @@
     [
       "0"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -16,6 +16,7 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -27,20 +28,20 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 	protected static final int BUCKET = FluidType.BUCKET_VOLUME;
 	protected static final int BOTTLE = 250;
 
-	public static void registerAll(DataGenerator gen) {
-		GENERATORS.add(new CrushingRecipeGen(gen));
-		GENERATORS.add(new MillingRecipeGen(gen));
-		GENERATORS.add(new CuttingRecipeGen(gen));
-		GENERATORS.add(new WashingRecipeGen(gen));
-		GENERATORS.add(new PolishingRecipeGen(gen));
-		GENERATORS.add(new DeployingRecipeGen(gen));
-		GENERATORS.add(new MixingRecipeGen(gen));
-		GENERATORS.add(new CompactingRecipeGen(gen));
-		GENERATORS.add(new PressingRecipeGen(gen));
-		GENERATORS.add(new FillingRecipeGen(gen));
-		GENERATORS.add(new EmptyingRecipeGen(gen));
-		GENERATORS.add(new HauntingRecipeGen(gen));
-		GENERATORS.add(new ItemApplicationRecipeGen(gen));
+	public static void registerAll(DataGenerator gen, PackOutput output) {
+		GENERATORS.add(new CrushingRecipeGen(output));
+		GENERATORS.add(new MillingRecipeGen(output));
+		GENERATORS.add(new CuttingRecipeGen(output));
+		GENERATORS.add(new WashingRecipeGen(output));
+		GENERATORS.add(new PolishingRecipeGen(output));
+		GENERATORS.add(new DeployingRecipeGen(output));
+		GENERATORS.add(new MixingRecipeGen(output));
+		GENERATORS.add(new CompactingRecipeGen(output));
+		GENERATORS.add(new PressingRecipeGen(output));
+		GENERATORS.add(new FillingRecipeGen(output));
+		GENERATORS.add(new EmptyingRecipeGen(output));
+		GENERATORS.add(new HauntingRecipeGen(output));
+		GENERATORS.add(new ItemApplicationRecipeGen(output));
 
 		gen.addProvider(true, new DataProvider() {
 
@@ -50,19 +51,15 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 			}
 
 			@Override
-			public void run(CachedOutput dc) throws IOException {
-				GENERATORS.forEach(g -> {
-					try {
-						g.run(dc);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				});
+			public CompletableFuture<?> run(CachedOutput dc) {
+				return CompletableFuture.allOf(GENERATORS.stream()
+					.map(gen -> gen.run(dc))
+					.toArray(CompletableFuture[]::new));
 			}
 		});
 	}
 
-	public ProcessingRecipeGen(DataGenerator generator) {
+	public ProcessingRecipeGen(PackOutput generator) {
 		super(generator);
 	}
 

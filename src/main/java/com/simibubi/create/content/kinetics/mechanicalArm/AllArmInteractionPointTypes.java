@@ -653,13 +653,13 @@ public class AllArmInteractionPointTypes {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (!(blockEntity instanceof JukeboxBlockEntity jukeboxBE))
 				return stack;
-			if (!jukeboxBE.getRecord()
+			if (!jukeboxBE.getFirstItem()
 				.isEmpty())
 				return stack;
 			ItemStack remainder = stack.copy();
 			ItemStack toInsert = remainder.split(1);
 			if (!simulate) {
-				jukeboxBE.setRecord(toInsert);
+				jukeboxBE.setFirstItem(toInsert);
 				level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, true), 2);
 				level.levelEvent(null, 1010, pos, Item.getId(item));
 			}
@@ -674,7 +674,7 @@ public class AllArmInteractionPointTypes {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (!(blockEntity instanceof JukeboxBlockEntity jukeboxBE))
 				return ItemStack.EMPTY;
-			ItemStack record = jukeboxBE.getRecord();
+			ItemStack record = jukeboxBE.getFirstItem();
 			if (record.isEmpty())
 				return ItemStack.EMPTY;
 			if (!simulate) {
@@ -705,7 +705,7 @@ public class AllArmInteractionPointTypes {
 				.orElse(4) == 4)
 				return stack;
 			if (!simulate)
-				RespawnAnchorBlock.charge(level, pos, cachedState);
+				RespawnAnchorBlock.charge(null, level, pos, cachedState);
 			ItemStack remainder = stack.copy();
 			remainder.shrink(1);
 			return remainder;

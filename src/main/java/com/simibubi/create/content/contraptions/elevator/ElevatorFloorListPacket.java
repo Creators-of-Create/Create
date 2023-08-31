@@ -1,12 +1,8 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.IntAttached;
 import net.minecraft.client.Minecraft;
@@ -15,6 +11,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.PacketDistributor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ElevatorFloorListPacket extends SimplePacketBase {
 
@@ -81,7 +80,7 @@ public class ElevatorFloorListPacket extends SimplePacketBase {
 		public boolean handle(Context context) {
 			context.enqueueWork(() -> {
 				ServerPlayer sender = context.getSender();
-				Entity entityByID = sender.getLevel()
+				Entity entityByID = sender.level()
 					.getEntity(entityId);
 				if (!(entityByID instanceof AbstractContraptionEntity ace))
 					return;

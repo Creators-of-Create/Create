@@ -1,11 +1,5 @@
 package com.simibubi.create.content.contraptions.mounted;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -15,7 +9,6 @@ import com.simibubi.create.content.schematics.requirement.ISpecialBlockItemRequi
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.IBE;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -50,7 +43,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -58,6 +51,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CartAssemblerBlock extends BaseRailBlock
 	implements IBE<CartAssemblerBlockEntity>, IWrenchable, ISpecialBlockItemRequirement {
@@ -91,11 +89,11 @@ public class CartAssemblerBlock extends BaseRailBlock
 	public static BlockState getRailBlock(BlockState state) {
 		BaseRailBlock railBlock = (BaseRailBlock) state.getValue(RAIL_TYPE)
 			.getBlock();
-		
+
 		@SuppressWarnings("deprecation")
 		BlockState railState = railBlock.defaultBlockState()
 			.setValue(railBlock.getShapeProperty(), state.getValue(RAIL_SHAPE));
-		
+
 		if (railState.hasProperty(ControllerRailBlock.BACKWARDS))
 			railState = railState.setValue(ControllerRailBlock.BACKWARDS, state.getValue(BACKWARDS));
 		return railState;
@@ -264,7 +262,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 	@Override
 	@SuppressWarnings("deprecation")
 	@Nonnull
-	public List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
 		List<ItemStack> drops = super.getDrops(state, builder);
 		drops.addAll(getRailBlock(state).getDrops(builder));
 		return drops;
@@ -273,11 +271,11 @@ public class CartAssemblerBlock extends BaseRailBlock
 	@SuppressWarnings("deprecation")
 	public List<ItemStack> getDropsNoRail(BlockState state, ServerLevel world, BlockPos pos,
 		@Nullable BlockEntity p_220077_3_, @Nullable Entity p_220077_4_, ItemStack p_220077_5_) {
-		return super.getDrops(state, (new LootContext.Builder(world)).withRandom(world.random)
-			.withParameter(LootContextParams.ORIGIN, Vec3.atLowerCornerOf(pos))
-			.withParameter(LootContextParams.TOOL, p_220077_5_)
-			.withOptionalParameter(LootContextParams.THIS_ENTITY, p_220077_4_)
-			.withOptionalParameter(LootContextParams.BLOCK_ENTITY, p_220077_3_));
+		return super.getDrops(state,
+			(new LootParams.Builder(world)).withParameter(LootContextParams.ORIGIN, Vec3.atLowerCornerOf(pos))
+				.withParameter(LootContextParams.TOOL, p_220077_5_)
+				.withOptionalParameter(LootContextParams.THIS_ENTITY, p_220077_4_)
+				.withOptionalParameter(LootContextParams.BLOCK_ENTITY, p_220077_3_));
 	}
 
 	@Override
