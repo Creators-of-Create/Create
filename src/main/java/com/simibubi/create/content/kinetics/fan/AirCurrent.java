@@ -54,8 +54,6 @@ public class AirCurrent {
 		new ArrayList<>();
 	protected List<Entity> caughtEntities = new ArrayList<>();
 
-	static boolean isClientPlayerInAirCurrent;
-
 	public AirCurrent(IAirCurrentSource source) {
 		this.source = source;
 	}
@@ -111,7 +109,7 @@ public class AirCurrent {
 				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
 
 			entityDistance -= .5f;
-			FanProcessingType processingType = getSegmentAt((float) entityDistance);
+			FanProcessingType processingType = getTypeAt((float) entityDistance);
 
 			if (processingType == AllFanProcessingTypes.NONE)
 				continue;
@@ -131,7 +129,33 @@ public class AirCurrent {
 			if (world != null)
 				processingType.affectEntity(entity, world);
 		}
+	}
 
+	public static boolean isPlayerCreativeFlying(Entity entity) {
+		if (entity instanceof Player) {
+			Player player = (Player) entity;
+			return player.isCreative() && player.getAbilities().flying;
+		}
+		return false;
+	}
+
+	public void tickAffectedHandlers() {
+		for (Pair<TransportedItemStackHandlerBehaviour, FanProcessingType> pair : affectedItemHandlers) {
+			TransportedItemStackHandlerBehaviour handler = pair.getKey();
+			Level world = handler.getWorld();
+			FanProcessingType processingType = pair.getRight();
+
+			handler.handleProcessingOnAllItems(transported -> {
+				if (world.isClientSide) {
+					processingType.spawnProcessingParticles(world, handler.getWorldPositionOf(transported));
+					return TransportedResult.doNothing();
+				}
+				TransportedResult applyProcessing = FanProcessing.applyProcessing(transported, world, processingType);
+				if (!applyProcessing.doesNothing() && source instanceof EncasedFanBlockEntity fan)
+					fan.award(AllAdvancements.FAN_PROCESSING);
+				return applyProcessing;
+			});
+		}
 	}
 
 	public void rebuild() {
@@ -154,31 +178,35 @@ public class AirCurrent {
 		maxDistance = getFlowLimit(world, start, max, facing);
 
 		// Determine segments with transported fluids/gases
-		AirCurrentSegment currentSegment = new AirCurrentSegment();
 		segments.clear();
-		currentSegment.startOffset = 0;
+		AirCurrentSegment currentSegment = null;
 		FanProcessingType type = AllFanProcessingTypes.NONE;
 
-		int limit = (int) (maxDistance + .5f);
-		int searchStart = pushing ? 0 : limit;
-		int searchEnd = pushing ? limit : 0;
+		int limit = getLimit();
+		int searchStart = pushing ? 1 : limit;
+		int searchEnd = pushing ? limit : 1;
 		int searchStep = pushing ? 1 : -1;
+		int toOffset = pushing ? -1 : 0;
 
 		for (int i = searchStart; i * searchStep <= searchEnd * searchStep; i += searchStep) {
 			BlockPos currentPos = start.relative(direction, i);
 			FanProcessingType newType = FanProcessingType.getAt(world, currentPos);
-			if (newType != AllFanProcessingTypes.NONE)
+			if (newType != AllFanProcessingTypes.NONE) {
 				type = newType;
-			if (currentSegment.type != type || currentSegment.startOffset == 0) {
-				currentSegment.endOffset = i;
-				if (currentSegment.startOffset != 0)
-					segments.add(currentSegment);
+			}
+			if (currentSegment == null) {
 				currentSegment = new AirCurrentSegment();
-				currentSegment.startOffset = i;
+				currentSegment.startOffset = i + toOffset;
+				currentSegment.type = type;
+			} else if (currentSegment.type != type) {
+				currentSegment.endOffset = i + toOffset;
+				segments.add(currentSegment);
+				currentSegment = new AirCurrentSegment();
+				currentSegment.startOffset = i + toOffset;
 				currentSegment.type = type;
 			}
 		}
-		currentSegment.endOffset = searchEnd + searchStep;
+		currentSegment.endOffset = searchEnd + searchStep + toOffset;
 		segments.add(currentSegment);
 
 		// Build Bounding Box
@@ -194,6 +222,7 @@ public class AirCurrent {
 					.move(scale);
 			}
 		}
+
 		findAffectedHandlers();
 	}
 
@@ -249,18 +278,25 @@ public class AirCurrent {
 		return max;
 	}
 
-	public void findEntities() {
-		caughtEntities.clear();
-		caughtEntities = source.getAirCurrentWorld()
-			.getEntities(null, bounds);
+	private static boolean shouldAlwaysPass(BlockState state) {
+		return AllTags.AllBlockTags.FAN_TRANSPARENT.matches(state);
+	}
+
+	private int getLimit() {
+		if ((float) (int) maxDistance == maxDistance) {
+			return (int) maxDistance;
+		} else {
+			return (int) maxDistance + 1;
+		}
 	}
 
 	public void findAffectedHandlers() {
 		Level world = source.getAirCurrentWorld();
 		BlockPos start = source.getAirCurrentPos();
 		affectedItemHandlers.clear();
-		for (int i = 0; i < maxDistance + 1; i++) {
-			FanProcessingType segmentType = getSegmentAt(i);
+		int limit = getLimit();
+		for (int i = 1; i <= limit; i++) {
+			FanProcessingType segmentType = getTypeAt(i - 0.5f);
 			for (int offset : Iterate.zeroAndOne) {
 				BlockPos pos = start.relative(direction, i)
 					.below(offset);
@@ -279,48 +315,41 @@ public class AirCurrent {
 		}
 	}
 
-	public void tickAffectedHandlers() {
-		for (Pair<TransportedItemStackHandlerBehaviour, FanProcessingType> pair : affectedItemHandlers) {
-			TransportedItemStackHandlerBehaviour handler = pair.getKey();
-			Level world = handler.getWorld();
-			FanProcessingType processingType = pair.getRight();
+	public void findEntities() {
+		caughtEntities.clear();
+		caughtEntities = source.getAirCurrentWorld()
+			.getEntities(null, bounds);
+	}
 
-			handler.handleProcessingOnAllItems(transported -> {
-				if (world.isClientSide) {
-					processingType.spawnProcessingParticles(world, handler.getWorldPositionOf(transported));
-					return TransportedResult.doNothing();
+	public FanProcessingType getTypeAt(float offset) {
+		if (offset >= 0 && offset <= maxDistance) {
+			if (pushing) {
+				for (AirCurrentSegment airCurrentSegment : segments) {
+					if (offset <= airCurrentSegment.endOffset) {
+						return airCurrentSegment.type;
+					}
 				}
-				TransportedResult applyProcessing = FanProcessing.applyProcessing(transported, world, processingType);
-				if (!applyProcessing.doesNothing() && source instanceof EncasedFanBlockEntity fan)
-					fan.award(AllAdvancements.FAN_PROCESSING);
-				return applyProcessing;
-			});
-		}
-	}
-
-	private static boolean shouldAlwaysPass(BlockState state) {
-		return AllTags.AllBlockTags.FAN_TRANSPARENT.matches(state);
-	}
-
-	public FanProcessingType getSegmentAt(float offset) {
-		for (AirCurrentSegment airCurrentSegment : segments) {
-			if (offset > airCurrentSegment.endOffset && pushing)
-				continue;
-			if (offset < airCurrentSegment.endOffset && !pushing)
-				continue;
-			return airCurrentSegment.type;
+			} else {
+				for (AirCurrentSegment airCurrentSegment : segments) {
+					if (offset >= airCurrentSegment.endOffset) {
+						return airCurrentSegment.type;
+					}
+				}
+			}
 		}
 		return AllFanProcessingTypes.NONE;
 	}
 
-	public static class AirCurrentSegment {
-		FanProcessingType type;
-		int startOffset;
-		int endOffset;
+	private static class AirCurrentSegment {
+		private FanProcessingType type;
+		private int startOffset;
+		private int endOffset;
 	}
 
+	private static boolean isClientPlayerInAirCurrent;
+
 	@OnlyIn(Dist.CLIENT)
-	static AirCurrentSound flyingSound;
+	private static AirCurrentSound flyingSound;
 
 	@OnlyIn(Dist.CLIENT)
 	private static void enableClientPlayerSound(Entity e, float maxVolume) {
@@ -345,20 +374,12 @@ public class AirCurrent {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void tickClientPlayerSounds() {
-		if (!AirCurrent.isClientPlayerInAirCurrent && flyingSound != null)
+		if (!isClientPlayerInAirCurrent && flyingSound != null)
 			if (flyingSound.isFaded())
 				flyingSound.stopSound();
 			else
 				flyingSound.fadeOut();
 		isClientPlayerInAirCurrent = false;
-	}
-
-	public static boolean isPlayerCreativeFlying(Entity entity) {
-		if (entity instanceof Player) {
-			Player player = (Player) entity;
-			return player.isCreative() && player.getAbilities().flying;
-		}
-		return false;
 	}
 
 }

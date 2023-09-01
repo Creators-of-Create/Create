@@ -36,15 +36,31 @@ public class CreateRegistrateTags {
 			.addTag(BlockTags.BEDS)
 			.addTag(BlockTags.DOORS);
 
-		prov.tag(AllBlockTags.MOVABLE_EMPTY_COLLIDER.tag)
-			.add(Blocks.COBWEB, Blocks.POWDER_SNOW, Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK)
-			.addTag(BlockTags.FENCE_GATES);
+		prov.tag(AllBlockTags.COPYCAT_ALLOW.tag)
+			.add(Blocks.BARREL);
+
+		prov.tag(AllBlockTags.COPYCAT_DENY.tag)
+			.addTag(BlockTags.CAULDRONS)
+			.addTag(BlockTags.SAPLINGS)
+			.addTag(BlockTags.CLIMBABLE);
+
+		prov.tag(AllBlockTags.FAN_PROCESSING_CATALYSTS_HAUNTING.tag)
+			.add(Blocks.SOUL_FIRE)
+			.add(Blocks.SOUL_CAMPFIRE);
+
+		prov.tag(AllBlockTags.FAN_PROCESSING_CATALYSTS_SMOKING.tag)
+			.add(Blocks.FIRE)
+			.add(Blocks.CAMPFIRE);
 
 		prov.tag(AllBlockTags.FAN_TRANSPARENT.tag)
 			.add(Blocks.IRON_BARS)
 			.addTag(BlockTags.CAMPFIRES)
 			.addTag(BlockTags.FENCES)
 			.addTag(BlockTags.LEAVES);
+
+		prov.tag(AllBlockTags.MOVABLE_EMPTY_COLLIDER.tag)
+			.add(Blocks.COBWEB, Blocks.POWDER_SNOW, Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK)
+			.addTag(BlockTags.FENCE_GATES);
 
 		prov.tag(AllBlockTags.ORE_OVERRIDE_STONE.tag)
 			.addTag(BlockTags.STONE_ORE_REPLACEABLES);
@@ -71,13 +87,6 @@ public class CreateRegistrateTags {
 			.addTag(BlockTags.BUTTONS)
 			.addTag(BlockTags.PRESSURE_PLATES)
 			.addTag(BlockTags.RAILS);
-
-		prov.tag(AllBlockTags.COPYCAT_ALLOW.tag)
-			.add(Blocks.BARREL);
-		prov.tag(AllBlockTags.COPYCAT_DENY.tag)
-			.addTag(BlockTags.CAULDRONS)
-			.addTag(BlockTags.SAPLINGS)
-			.addTag(BlockTags.CLIMBABLE);
 
 		// COMPAT
 
@@ -178,6 +187,12 @@ public class CreateRegistrateTags {
 	private static void genFluidTags(RegistrateTagsProvider<Fluid> prov) {
 		prov.tag(AllFluidTags.BOTTOMLESS_ALLOW.tag)
 			.add(Fluids.WATER, Fluids.LAVA);
+
+		prov.tag(AllFluidTags.FAN_PROCESSING_CATALYSTS_BLASTING.tag)
+			.add(Fluids.LAVA, Fluids.FLOWING_LAVA);
+
+		prov.tag(AllFluidTags.FAN_PROCESSING_CATALYSTS_SPLASHING.tag)
+			.add(Fluids.WATER, Fluids.FLOWING_WATER);
 
 		// VALIDATE
 

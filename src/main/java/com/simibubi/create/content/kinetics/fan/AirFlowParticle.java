@@ -34,9 +34,9 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		selectSprite(7);
 		Vec3 offset = VecHelper.offsetRandomly(Vec3.ZERO, random, .25f);
 		this.setPos(x + offset.x, y + offset.y, z + offset.z);
-		this.xo = x;
-		this.yo = y;
-		this.zo = z;
+		this.xo = this.x;
+		this.yo = this.y;
+		this.zo = this.z;
 		setColor(0xEEEEEE);
 		setAlpha(.25f);
 	}
@@ -97,15 +97,13 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 				this.zd *= 0.7;
 			}
 			this.move(this.xd, this.yd, this.zd);
-
 		}
-
 	}
 
 	private FanProcessingType getType(double distance) {
 		if (source.getAirCurrent() == null)
 			return AllFanProcessingTypes.NONE;
-		return source.getAirCurrent().getSegmentAt((float) distance);
+		return source.getAirCurrent().getTypeAt((float) distance);
 	}
 
 	public int getLightColor(float partialTick) {

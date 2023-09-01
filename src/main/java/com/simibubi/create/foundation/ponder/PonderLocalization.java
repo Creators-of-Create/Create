@@ -112,7 +112,7 @@ public class PonderLocalization {
 		});
 	}
 
-	public static void consumeLang(String namespace, BiConsumer<String, String> consumer) {
+	public static void provideLang(String namespace, BiConsumer<String, String> consumer) {
 		SHARED.forEach((k, v) -> {
 			if (k.getNamespace().equals(namespace)) {
 				consumer.accept(langKeyForShared(k), v);
@@ -148,11 +148,11 @@ public class PonderLocalization {
 
 	@Deprecated(forRemoval = true)
 	public static void record(String namespace, JsonObject object) {
-		consumeLang(namespace, object::addProperty);
+		provideLang(namespace, object::addProperty);
 	}
 
 	public static void provideRegistrateLang(AbstractRegistrate<?> registrate) {
 		generateSceneLang();
-		consumeLang(registrate.getModid(), registrate::addRawLang);
+		provideLang(registrate.getModid(), registrate::addRawLang);
 	}
 }

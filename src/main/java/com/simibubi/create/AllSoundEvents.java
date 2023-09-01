@@ -319,7 +319,7 @@ public class AllSoundEvents {
 			entry.register(registry);
 	}
 
-	public static void consumeLang(BiConsumer<String, String> consumer) {
+	public static void provideLang(BiConsumer<String, String> consumer) {
 		for (SoundEntry entry : ALL.values())
 			if (entry.hasSubtitle())
 				consumer.accept(entry.getSubtitleKey(), entry.getSubtitle());

@@ -656,9 +656,9 @@ public class AllAdvancements implements DataProvider {
 		return "Create's Advancements";
 	}
 
-	public static void consumeLang(BiConsumer<String, String> consumer) {
+	public static void provideLang(BiConsumer<String, String> consumer) {
 		for (CreateAdvancement advancement : ENTRIES)
-			advancement.consumeLang(consumer);
+			advancement.provideLang(consumer);
 	}
 
 	public static void register() {}

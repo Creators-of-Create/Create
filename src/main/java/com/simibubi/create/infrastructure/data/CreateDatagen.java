@@ -64,17 +64,17 @@ public class CreateDatagen {
 				}
 			};
 
-			AllAdvancements.consumeLang(langConsumer);
-			consumeDefaultLang("interface", langConsumer);
-			AllSoundEvents.consumeLang(langConsumer);
-			consumeDefaultLang("tooltips", langConsumer);
-			consumePonderLang(langConsumer);
+			AllAdvancements.provideLang(langConsumer);
+			provideDefaultLang("interface", langConsumer);
+			AllSoundEvents.provideLang(langConsumer);
+			provideDefaultLang("tooltips", langConsumer);
+			providePonderLang(langConsumer);
 
 			return newEntries;
 		});
 	}
 
-	private static void consumeDefaultLang(String fileName, BiConsumer<String, String> consumer) {
+	private static void provideDefaultLang(String fileName, BiConsumer<String, String> consumer) {
 		String path = "assets/create/lang/default/" + fileName + ".json";
 		JsonElement jsonElement = FilesHelper.loadJsonResource(path);
 		if (jsonElement == null) {
@@ -88,7 +88,7 @@ public class CreateDatagen {
 		}
 	}
 
-	private static void consumePonderLang(BiConsumer<String, String> consumer) {
+	private static void providePonderLang(BiConsumer<String, String> consumer) {
 		// Register these since FMLClientSetupEvent does not run during datagen
 		AllPonderTags.register();
 		PonderIndex.register();
@@ -96,7 +96,7 @@ public class CreateDatagen {
 		SharedText.gatherText();
 		PonderLocalization.generateSceneLang();
 
-		GeneralText.consumeLang(consumer);
-		PonderLocalization.consumeLang(Create.ID, consumer);
+		GeneralText.provideLang(consumer);
+		PonderLocalization.provideLang(Create.ID, consumer);
 	}
 }

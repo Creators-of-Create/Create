@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.ponder.ui.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderUI;
 
 public class GeneralText {
-	public static void consumeLang(BiConsumer<String, String> consumer) {
+	public static void provideLang(BiConsumer<String, String> consumer) {
 		consume(consumer, PonderTooltipHandler.HOLD_TO_PONDER, "Hold [%1$s] to Ponder");
 		consume(consumer, PonderTooltipHandler.SUBJECT, "Subject of this scene");
 		consume(consumer, PonderUI.PONDERING, "Pondering about...");

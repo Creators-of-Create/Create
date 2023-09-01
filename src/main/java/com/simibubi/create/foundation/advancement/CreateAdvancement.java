@@ -101,7 +101,7 @@ public class CreateAdvancement {
 			.toString());
 	}
 
-	void consumeLang(BiConsumer<String, String> consumer) {
+	void provideLang(BiConsumer<String, String> consumer) {
 		consumer.accept(titleKey(), title);
 		consumer.accept(descriptionKey(), description);
 	}
