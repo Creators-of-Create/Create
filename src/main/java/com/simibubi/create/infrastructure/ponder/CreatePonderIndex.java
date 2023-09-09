@@ -54,7 +54,8 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.createmod.ponder.foundation.CustomPonderRegistrationHelper;
+import net.createmod.ponder.foundation.api.registration.PonderSceneRegistrationHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -62,9 +63,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CreatePonderIndex {
-
-	static final CustomPonderRegistrationHelper<ItemProviderEntry<?>> HELPER = new CustomPonderRegistrationHelper<>(Create.ID, RegistryEntry::getId);
-
 	public static final List<Predicate<ItemLike>> INDEX_SCREEN_EXCLUSIONS = List.of(
 			itemLike -> {
 				if (!(itemLike instanceof BlockItem blockItem))
@@ -78,10 +76,8 @@ public class CreatePonderIndex {
 			}
 	);
 
-	public static void register() {
-		// Register storyboards here
-		// (!) Added entries require re-launch
-		// (!) Modifications inside storyboard methods only require re-opening the ui
+	public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+		PonderSceneRegistrationHelper<ItemProviderEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
 		HELPER.forComponents(AllBlocks.SHAFT)
 			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay, AllPonderTags.KINETIC_RELAYS);
