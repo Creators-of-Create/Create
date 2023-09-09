@@ -31,8 +31,10 @@ import net.minecraftforge.common.Tags;
 
 public class AllPaletteBlocks {
 
-	static { REGISTRATE.useCreativeTab(AllCreativeModeTabs.BUILDING_BLOCKS_TAB); }
-	
+	static {
+		REGISTRATE.setCreativeTab(AllCreativeModeTabs.PALETTES_CREATIVE_TAB);
+	}
+
 	// Windows and Glass
 
 	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)

@@ -7,14 +7,16 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.simibubi.create.content.contraptions.actors.seat.SeatBlock;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.content.equipment.toolbox.ToolboxBlock;
 import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
+import com.simibubi.create.foundation.utility.Components;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
@@ -29,7 +31,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
@@ -53,45 +54,63 @@ import net.minecraftforge.registries.RegistryObject;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class AllCreativeModeTabs {
-
-	private static final DeferredRegister<CreativeModeTab> TAB_REGISTER =
+	private static final DeferredRegister<CreativeModeTab> REGISTER =
 		DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Create.ID);
 
-	public static final RegistryObject<CreativeModeTab> MAIN_TAB = TAB_REGISTER.register("base",
+	public static final RegistryObject<CreativeModeTab> BASE_CREATIVE_TAB = REGISTER.register("base",
 		() -> CreativeModeTab.builder()
-			.title(Component.translatable("itemGroup.create.base"))
+			.title(Components.translatable("itemGroup.create.base"))
 			.withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
 			.icon(() -> AllBlocks.COGWHEEL.asStack())
-			.displayItems(new RegistrateDisplayItemsGenerator(true))
+			.displayItems(new RegistrateDisplayItemsGenerator(true, AllCreativeModeTabs.BASE_CREATIVE_TAB))
 			.build());
 
-	public static final RegistryObject<CreativeModeTab> BUILDING_BLOCKS_TAB = TAB_REGISTER.register("palettes",
+	public static final RegistryObject<CreativeModeTab> PALETTES_CREATIVE_TAB = REGISTER.register("palettes",
 		() -> CreativeModeTab.builder()
-			.title(Component.translatable("itemGroup.create.palettes"))
-			.withTabsBefore(MAIN_TAB.getKey())
+			.title(Components.translatable("itemGroup.create.palettes"))
+			.withTabsBefore(BASE_CREATIVE_TAB.getKey())
 			.icon(() -> AllPaletteBlocks.ORNATE_IRON_WINDOW.asStack())
-			.displayItems(new RegistrateDisplayItemsGenerator(false))
+			.displayItems(new RegistrateDisplayItemsGenerator(false, AllCreativeModeTabs.PALETTES_CREATIVE_TAB))
 			.build());
-	
+
 	public static void register(IEventBus modEventBus) {
-		TAB_REGISTER.register(modEventBus);
+		REGISTER.register(modEventBus);
 	}
 
-	public static CreativeModeTab getBaseTab() {
-		return MAIN_TAB.get();
-	}
+	private static class RegistrateDisplayItemsGenerator implements DisplayItemsGenerator {
+		private static final Predicate<Item> IS_ITEM_3D_PREDICATE;
 
-	public static CreativeModeTab getPalettesTab() {
-		return BUILDING_BLOCKS_TAB.get();
-	}
-
-	public static class RegistrateDisplayItemsGenerator implements DisplayItemsGenerator {
-		
-		private final boolean mainTab;
-
-		public RegistrateDisplayItemsGenerator(boolean mainTab) {
-			this.mainTab = mainTab;
+		static {
+			MutableObject<Predicate<Item>> isItem3d = new MutableObject<>(item -> false);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				isItem3d.setValue(item -> {
+					ItemRenderer itemRenderer = Minecraft.getInstance()
+						.getItemRenderer();
+					BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
+					return model.isGui3d();
+				});
+			});
+			IS_ITEM_3D_PREDICATE = isItem3d.getValue();
 		}
+
+		@OnlyIn(Dist.CLIENT)
+		private static Predicate<Item> makeClient3dItemPredicate() {
+			return item -> {
+				ItemRenderer itemRenderer = Minecraft.getInstance()
+					.getItemRenderer();
+				BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
+				return model.isGui3d();
+			};
+		}
+
+		private final boolean addItems;
+		private final RegistryObject<CreativeModeTab> tabFilter;
+
+		public RegistrateDisplayItemsGenerator(boolean addItems, RegistryObject<CreativeModeTab> tabFilter) {
+			this.addItems = addItems;
+			this.tabFilter = tabFilter;
+		}
+
 		private static Predicate<Item> makeExclusionPredicate() {
 			Set<Item> exclusions = new ReferenceOpenHashSet<>();
 
@@ -144,22 +163,6 @@ public class AllCreativeModeTabs {
 			}
 
 			return exclusions::contains;
-		}
-		
-		private static Predicate<Item> make3DPredicate(boolean model3d) {
-			return item -> {
-				MutableBoolean result = new MutableBoolean(false);
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> result.setValue(isItem3d(item) == model3d));
-				return result.getValue();
-			};
-		}
-
-		@OnlyIn(Dist.CLIENT)
-		private static boolean isItem3d(Item item) {
-			ItemRenderer itemRenderer = Minecraft.getInstance()
-				.getItemRenderer();
-			BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
-			return model.isGui3d();
 		}
 
 		private static List<ItemOrdering> makeOrderings() {
@@ -253,26 +256,29 @@ public class AllCreativeModeTabs {
 		}
 
 		@Override
-		public void accept(ItemDisplayParameters pParameters, Output output) {
+		public void accept(ItemDisplayParameters parameters, Output output) {
 			Predicate<Item> exclusionPredicate = makeExclusionPredicate();
 			List<ItemOrdering> orderings = makeOrderings();
 			Function<Item, ItemStack> stackFunc = makeStackFunc();
 			Function<Item, TabVisibility> visibilityFunc = makeVisibilityFunc();
-			RegistryObject<CreativeModeTab> tab = mainTab ? MAIN_TAB : BUILDING_BLOCKS_TAB;
 
 			List<Item> items = new LinkedList<>();
-			items.addAll(collectItems(tab, exclusionPredicate.or(make3DPredicate(false))));
-			items.addAll(collectBlocks(tab, exclusionPredicate));
-			items.addAll(collectItems(tab, exclusionPredicate.or(make3DPredicate(true))));
+			if (addItems) {
+				items.addAll(collectItems(exclusionPredicate.or(IS_ITEM_3D_PREDICATE.negate())));
+			}
+			items.addAll(collectBlocks(exclusionPredicate));
+			if (addItems) {
+				items.addAll(collectItems(exclusionPredicate.or(IS_ITEM_3D_PREDICATE)));
+			}
 
 			applyOrderings(items, orderings);
 			outputAll(output, items, stackFunc, visibilityFunc);
 		}
 
-		private List<Item> collectBlocks(RegistryObject<CreativeModeTab> tab, Predicate<Item> exclusionPredicate) {
+		private List<Item> collectBlocks(Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
 			for (RegistryEntry<Block> entry : Create.REGISTRATE.getAll(Registries.BLOCK)) {
-				if (!Create.REGISTRATE.isInCreativeTab(entry, tab))
+				if (!CreateRegistrate.isInCreativeTab(entry, tabFilter))
 					continue;
 				Item item = entry.get()
 					.asItem();
@@ -285,14 +291,10 @@ public class AllCreativeModeTabs {
 			return items;
 		}
 
-		private List<Item> collectItems(RegistryObject<CreativeModeTab> tab, Predicate<Item> exclusionPredicate) {
+		private List<Item> collectItems(Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
-
-			if (!mainTab)
-				return items;
-
 			for (RegistryEntry<Item> entry : Create.REGISTRATE.getAll(Registries.ITEM)) {
-				if (!Create.REGISTRATE.isInCreativeTab(entry, tab))
+				if (!CreateRegistrate.isInCreativeTab(entry, tabFilter))
 					continue;
 				Item item = entry.get();
 				if (item instanceof BlockItem)

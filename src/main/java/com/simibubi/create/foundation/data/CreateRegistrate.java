@@ -53,8 +53,12 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
+	private static final Map<RegistryEntry<?>, RegistryObject<CreativeModeTab>> TAB_LOOKUP = new IdentityHashMap<>();
+
 	@Nullable
 	protected Function<Item, TooltipModifier> currentTooltipModifierFactory;
+	@Nullable
+	protected RegistryObject<CreativeModeTab> currentTab;
 
 	protected CreateRegistrate(String modid) {
 		super(modid);
@@ -62,6 +66,10 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public static CreateRegistrate create(String modid) {
 		return new CreateRegistrate(modid);
+	}
+
+	public static boolean isInCreativeTab(RegistryEntry<?> entry, RegistryObject<CreativeModeTab> tab) {
+		return TAB_LOOKUP.get(entry) == tab;
 	}
 
 	public CreateRegistrate setTooltipModifierFactory(@Nullable Function<Item, TooltipModifier> factory) {
@@ -74,21 +82,19 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return currentTooltipModifierFactory;
 	}
 
+	@Nullable
+	public CreateRegistrate setCreativeTab(RegistryObject<CreativeModeTab> tab) {
+		currentTab = tab;
+		return self();
+	}
+
+	public RegistryObject<CreativeModeTab> getCreativeTab() {
+		return currentTab;
+	}
+
 	@Override
 	public CreateRegistrate registerEventListeners(IEventBus bus) {
 		return super.registerEventListeners(bus);
-	}
-	
-	private static Map<RegistryEntry<?>, RegistryObject<CreativeModeTab>> tabLookup = new IdentityHashMap<>();
-	private RegistryObject<CreativeModeTab> currentTab;
-
-	public CreateRegistrate useCreativeTab(RegistryObject<CreativeModeTab> tab) {
-		this.currentTab = tab;
-		return this;
-	}
-	
-	public boolean isInCreativeTab(RegistryEntry<?> entry, RegistryObject<CreativeModeTab> tab) {
-		return tabLookup.get(entry) == tab;
 	}
 
 	@Override
@@ -101,8 +107,9 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				TooltipModifier.REGISTRY.registerDeferred(entry.getId(), currentTooltipModifierFactory);
 			}
 		}
-		if (currentTab != null)
-			tabLookup.put(entry, currentTab);
+		if (currentTab != null) {
+			TAB_LOOKUP.put(entry, currentTab);
+		}
 		return entry;
 	}
 

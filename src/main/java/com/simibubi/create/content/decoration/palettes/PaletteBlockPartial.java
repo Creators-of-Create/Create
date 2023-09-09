@@ -224,7 +224,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected WallBlock createBlock(Supplier<? extends Block> block) {
-			return new WallBlock(Properties.copy(block.get()));
+			return new WallBlock(Properties.copy(block.get()).forceSolidOn());
 		}
 
 		@Override
