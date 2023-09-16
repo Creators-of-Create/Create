@@ -7,8 +7,7 @@ import com.simibubi.create.compat.Mods;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.createmod.catnip.platform.CatnipServices;
-import net.createmod.ponder.foundation.PonderTag;
-import net.createmod.ponder.foundation.api.registration.PonderTagRegistrationHelper;
+import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
@@ -17,9 +16,29 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class AllPonderTags {
+public class AllCreatePonderTags {
 
-	public static final PonderTag
+	public static final ResourceLocation
+
+	KINETIC_RELAYS = loc("kinetic_relays"),
+	KINETIC_SOURCES = loc("kinetic_sources"),
+	KINETIC_APPLIANCES = loc("kinetic_appliances"),
+	FLUIDS = loc("fluids"),
+	LOGISTICS = loc("logistics"),
+	REDSTONE = loc("redstone"),
+	DECORATION = loc("decoration"),
+	CREATIVE = loc("creative"),
+	MOVEMENT_ANCHOR = loc("movement_anchor"),
+	CONTRAPTION_ACTOR = loc("contraption_actor"),
+	CONTRAPTION_ASSEMBLY = loc("contraption_assembly"),
+	SAILS = loc("windmill_sails"),
+	ARM_TARGETS = loc("arm_targets"),
+	TRAIN_RELATED = loc("train_related"),
+	RECENTLY_UPDATED = loc("recently_updated"),
+	DISPLAY_SOURCES = loc("display_sources"),
+	DISPLAY_TARGETS = loc("display_targets");
+
+	/*public static final PonderTag
 
 	KINETIC_RELAYS = create("kinetic_relays").item(AllBlocks.COGWHEEL.get())
 			.defaultLang("Kinetic Blocks", "Components which help relaying Rotational Force elsewhere"),
@@ -79,10 +98,10 @@ public class AllPonderTags {
 
 	DISPLAY_TARGETS = create("display_targets").item(AllBlocks.DISPLAY_LINK.get(), true, true)
 			.defaultLang("Targets for Display Links",
-						 "Components or Blocks which can process and display the data received from a Display Link");
+						 "Components or Blocks which can process and display the data received from a Display Link");*/
 
-	private static PonderTag create(String id) {
-		return new PonderTag(Create.asResource(id));
+	private static ResourceLocation loc(String id) {
+		return Create.asResource(id);
 	}
 
 	public static void register(PonderTagRegistrationHelper<ResourceLocation> helper) {
@@ -92,24 +111,120 @@ public class AllPonderTags {
 		PonderTagRegistrationHelper<ItemLike> itemHelper = helper.withKeyFunction(
 				CatnipServices.REGISTRIES::getKeyOrThrow);
 
-		helper
-				.registerTag(KINETIC_RELAYS, true)
-				.registerTag(KINETIC_SOURCES, true)
-				.registerTag(KINETIC_APPLIANCES, true)
-				.registerTag(FLUIDS, true)
-				.registerTag(LOGISTICS, true)
-				.registerTag(REDSTONE, true)
-				.registerTag(DECORATION, true)
-				.registerTag(CREATIVE, true)
-				.registerTag(MOVEMENT_ANCHOR, true)
-				.registerTag(CONTRAPTION_ACTOR, true)
-				.registerTag(CONTRAPTION_ASSEMBLY, true)
-				.registerTag(SAILS)
-				.registerTag(ARM_TARGETS)
-				.registerTag(TRAIN_RELATED, true)
-				.registerTag(RECENTLY_UPDATED, true)
-				.registerTag(DISPLAY_SOURCES)
-				.registerTag(DISPLAY_TARGETS);
+		helper.registerTag(KINETIC_RELAYS)
+				.addToIndex()
+				.item(AllBlocks.COGWHEEL.get())
+				.title("Kinetic Blocks")
+				.description("Components which help relaying Rotational Force elsewhere")
+				.register();
+
+		helper.registerTag(KINETIC_SOURCES)
+				.addToIndex()
+				.item(AllBlocks.WATER_WHEEL.get())
+				.title("Kinetic Sources")
+				.description("Components which generate Rotational Force")
+				.register();
+
+		helper.registerTag(KINETIC_APPLIANCES)
+				.addToIndex()
+				.item(AllBlocks.MECHANICAL_PRESS.get())
+				.title("Kinetic Appliances")
+				.description("Components which make use of Rotational Force")
+				.register();
+
+		helper.registerTag(FLUIDS)
+				.addToIndex()
+				.item(AllBlocks.FLUID_PIPE.get())
+				.title("Fluid Manipulators")
+				.description("Components which help relaying and making use of Fluids")
+				.register();
+
+		helper.registerTag(LOGISTICS)
+				.addToIndex()
+				.item(Blocks.CHEST)
+				.title("Item Transportation")
+				.description("Components which help moving items around")
+				.register();
+
+		helper.registerTag(REDSTONE)
+				.addToIndex()
+				.item(Items.REDSTONE)
+				.title("Logic Components")
+				.description("Components which help with redstone engineering")
+				.register();
+
+		helper.registerTag(DECORATION)
+				.addToIndex()
+				.item(Items.ROSE_BUSH)
+				.title("Aesthetics")
+				.description("Components used mostly for decorative purposes")
+				.register();
+
+		helper.registerTag(CREATIVE)
+				.addToIndex()
+				.item(AllBlocks.CREATIVE_CRATE.get())
+				.title("Creative Mode")
+				.description("Components not usually available for Survival Mode")
+				.register();
+
+		helper.registerTag(MOVEMENT_ANCHOR)
+				.addToIndex()
+				.item(AllBlocks.MECHANICAL_PISTON.get())
+				.title("Movement Anchors")
+				.description("Components which allow the creation of moving contraptions, animating an attached structure in a variety of ways")
+				.register();
+
+		helper.registerTag(CONTRAPTION_ACTOR)
+				.addToIndex()
+				.item(AllBlocks.MECHANICAL_HARVESTER.get())
+				.title("Contraption Actors")
+				.description("Components which expose special behaviour when attached to a moving contraption")
+				.register();
+
+		helper.registerTag(CONTRAPTION_ASSEMBLY)
+				.addToIndex()
+				.item(AllItems.SUPER_GLUE.get())
+				.title("Block Attachment Utility")
+				.description("Tools and Components used to assemble structures moved as an animated Contraption")
+				.register();
+
+		helper.registerTag(SAILS)
+				.item(AllBlocks.WINDMILL_BEARING.get())
+				.title("Sails for Windmill Bearings")
+				.description("Blocks that count towards the strength of a Windmill Contraption when assembled. Each of these have equal efficiency in doing so.")
+				.register();
+
+		helper.registerTag(ARM_TARGETS)
+				.item(AllBlocks.MECHANICAL_ARM.get())
+				.title("Targets for Mechanical Arms")
+				.description("Components which can be selected as inputs or outputs to the Mechanical Arm")
+				.register();
+
+		helper.registerTag(TRAIN_RELATED)
+				.addToIndex()
+				.item(AllBlocks.TRACK.get())
+				.title("Railway Equipment")
+				.description("Components used in the construction or management of Train Contraptions")
+				.register();
+
+		helper.registerTag(RECENTLY_UPDATED)
+				.addToIndex()
+				.item(AllBlocks.CLIPBOARD.get())
+				.title("Recent Changes")
+				.description("Components that have been added or changed significantly in the latest versions of Create")
+				.register();
+
+		helper.registerTag(DISPLAY_SOURCES)
+				.item(AllBlocks.DISPLAY_LINK.get())
+				.title("Sources for Display Links")
+				.description("Components or Blocks which offer some data that can be read with a Display Link")
+				.register();
+
+		helper.registerTag(DISPLAY_TARGETS)
+				.item(AllBlocks.DISPLAY_LINK.get())
+				.title("Targets for Display Links")
+				.description("Components or Blocks which can process and display the data received from a Display Link")
+				.register();
 
 		HELPER.addToTag(RECENTLY_UPDATED)
 				.add(AllBlocks.WATER_WHEEL)

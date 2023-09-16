@@ -1,19 +1,18 @@
 package com.simibubi.create.foundation.ponder;
 
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.infrastructure.ponder.AllPonderTags;
-import com.simibubi.create.infrastructure.ponder.CreatePonderIndex;
+import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
+import com.simibubi.create.infrastructure.ponder.AllCreatePonderScenes;
+import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
+import net.createmod.ponder.api.registration.IndexExclusionHelper;
+import net.createmod.ponder.api.registration.PonderPlugin;
+import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
+import net.createmod.ponder.api.registration.SharedTextRegistrationHelper;
 import net.createmod.ponder.foundation.PonderLevel;
-import net.createmod.ponder.foundation.api.registration.PonderPlugin;
-import net.createmod.ponder.foundation.api.registration.PonderSceneRegistrationHelper;
-import net.createmod.ponder.foundation.api.registration.PonderTagRegistrationHelper;
-import net.createmod.ponder.foundation.api.registration.SharedTextRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ItemLike;
 
 public class CreatePonderPlugin implements PonderPlugin {
 
@@ -24,12 +23,12 @@ public class CreatePonderPlugin implements PonderPlugin {
 
 	@Override
 	public void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
-		CreatePonderIndex.register(helper);
+		AllCreatePonderScenes.register(helper);
 	}
 
 	@Override
 	public void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
-		AllPonderTags.register(helper);
+		AllCreatePonderTags.register(helper);
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class CreatePonderPlugin implements PonderPlugin {
 	}
 
 	@Override
-	public Stream<Predicate<ItemLike>> indexExclusions() {
-		return CreatePonderIndex.INDEX_SCREEN_EXCLUSIONS.stream();
+	public void indexExclusions(IndexExclusionHelper helper) {
+		helper.excludeBlockVariants(ValveHandleBlock.class, AllBlocks.COPPER_VALVE_HANDLE.get());
 	}
 }
