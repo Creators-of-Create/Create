@@ -7,7 +7,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
 import net.createmod.catnip.utility.lang.Lang;
-import net.createmod.ponder.foundation.PonderLocalization;
+import net.createmod.ponder.foundation.PonderIndex;
 
 public enum AllLangPartials implements LangPartial {
 
@@ -15,7 +15,7 @@ public enum AllLangPartials implements LangPartial {
 	INTERFACE("UI & Messages"),
 	SUBTITLES("Subtitles", AllSoundEvents::provideLangEntries),
 	TOOLTIPS("Item Descriptions"),
-	PONDER("Ponder Content", () -> PonderLocalization.provideLangEntries(Create.ID)),
+	PONDER("Ponder Content", () -> PonderIndex.getLangAccess().provideLangEntries(Create.ID)),
 
 	;
 

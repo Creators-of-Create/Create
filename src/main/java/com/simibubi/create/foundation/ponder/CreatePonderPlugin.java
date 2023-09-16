@@ -1,44 +1,46 @@
 package com.simibubi.create.foundation.ponder;
 
-import java.util.function.BiConsumer;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
-import com.simibubi.create.infrastructure.ponder.AllPonderTags;
-import com.simibubi.create.infrastructure.ponder.CreatePonderIndex;
+import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
+import com.simibubi.create.infrastructure.ponder.AllCreatePonderScenes;
+import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
+import net.createmod.ponder.api.registration.IndexExclusionHelper;
+import net.createmod.ponder.api.registration.PonderPlugin;
+import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
+import net.createmod.ponder.api.registration.SharedTextRegistrationHelper;
 import net.createmod.ponder.foundation.PonderLevel;
-import net.createmod.ponder.foundation.PonderPlugin;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 
 public class CreatePonderPlugin implements PonderPlugin {
 
 	@Override
-	public String getModID() {
+	public String getModId() {
 		return Create.ID;
 	}
 
 	@Override
-	public void registerScenes() {
-		CreatePonderIndex.register();
+	public void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+		AllCreatePonderScenes.register(helper);
 	}
 
 	@Override
-	public void registerTags() {
-		AllPonderTags.register();
+	public void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
+		AllCreatePonderTags.register(helper);
 	}
 
 	@Override
-	public void registerSharedText(BiConsumer<String, String> adder) {
-		adder.accept("rpm8", "8 RPM");
-		adder.accept("rpm16", "16 RPM");
-		adder.accept("rpm16_source", "Source: 16 RPM");
-		adder.accept("rpm32", "32 RPM");
+	public void registerSharedText(SharedTextRegistrationHelper helper) {
+		helper.registerSharedText("rpm8", "8 RPM");
+		helper.registerSharedText("rpm16", "16 RPM");
+		helper.registerSharedText("rpm16_source", "Source: 16 RPM");
+		helper.registerSharedText("rpm32", "32 RPM");
 
-		adder.accept("movement_anchors", "With the help of Super Glue, larger structures can be moved.");
-		adder.accept("behaviour_modify_wrench", "This behaviour can be modified using a Wrench");
-		adder.accept("storage_on_contraption", "Inventories attached to the Contraption will pick up their drops automatically");
+		helper.registerSharedText("movement_anchors", "With the help of Super Glue, larger structures can be moved.");
+		helper.registerSharedText("behaviour_modify_wrench", "This behaviour can be modified using a Wrench");
+		helper.registerSharedText("storage_on_contraption", "Inventories attached to the Contraption will pick up their drops automatically");
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class CreatePonderPlugin implements PonderPlugin {
 	}
 
 	@Override
-	public Stream<Predicate<ItemLike>> indexExclusions() {
-		return CreatePonderIndex.INDEX_SCREEN_EXCLUSIONS.stream();
+	public void indexExclusions(IndexExclusionHelper helper) {
+		helper.excludeBlockVariants(ValveHandleBlock.class, AllBlocks.COPPER_VALVE_HANDLE.get());
 	}
 }

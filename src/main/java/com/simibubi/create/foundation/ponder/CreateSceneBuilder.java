@@ -31,10 +31,11 @@ import com.simibubi.create.foundation.ponder.instruction.AnimateBlockEntityInstr
 import net.createmod.catnip.utility.FunctionalHelper;
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.foundation.ElementLink;
 import net.createmod.ponder.foundation.PonderLevel;
 import net.createmod.ponder.foundation.PonderScene;
-import net.createmod.ponder.foundation.SceneBuilder;
+import net.createmod.ponder.foundation.PonderSceneBuilder;
 import net.createmod.ponder.foundation.Selection;
 import net.createmod.ponder.foundation.element.ParrotElement;
 import net.createmod.ponder.foundation.element.WorldSectionElement;
@@ -49,11 +50,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class CreateSceneBuilder extends SceneBuilder {
+public class CreateSceneBuilder extends PonderSceneBuilder {
 
-	public final EffectInstructions effects;
-	public final WorldInstructions world;
-	public final SpecialInstructions special;
+	private final EffectInstructions effects;
+	private final WorldInstructions world;
+	private final SpecialInstructions special;
 
 	public CreateSceneBuilder(SceneBuilder baseSceneBuilder) {
 		this(baseSceneBuilder.getScene());
@@ -66,7 +67,19 @@ public class CreateSceneBuilder extends SceneBuilder {
 		special = new SpecialInstructions();
 	}
 
-	public class EffectInstructions extends SceneBuilder.EffectInstructions {
+	public EffectInstructions effects() {
+		return effects;
+	}
+
+	public WorldInstructions world() {
+		return world;
+	}
+
+	public SpecialInstructions special() {
+		return special;
+	}
+
+	public class EffectInstructions extends PonderEffectInstructions {
 
 		public void superGlue(BlockPos pos, Direction side, boolean fullBlock) {
 			addInstruction(scene -> SuperGlueItem.spawnParticles(scene.getWorld(), pos, side, fullBlock));
@@ -112,7 +125,7 @@ public class CreateSceneBuilder extends SceneBuilder {
 
 	}
 
-	public class WorldInstructions extends SceneBuilder.WorldInstructions {
+	public class WorldInstructions extends PonderWorldInstructions {
 
 		public void rotateBearing(BlockPos pos, float angle, int duration) {
 			addInstruction(AnimateBlockEntityInstruction.bearing(pos, angle, duration));
@@ -233,7 +246,7 @@ public class CreateSceneBuilder extends SceneBuilder {
 
 		public void instructArm(BlockPos armLocation, ArmBlockEntity.Phase phase, ItemStack heldItem,
 								int targetedPoint) {
-			modifyBlockEntityNBT(scene.getSceneBuildingUtil().select.position(armLocation), ArmBlockEntity.class,
+			modifyBlockEntityNBT(scene.getSceneBuildingUtil().select().position(armLocation), ArmBlockEntity.class,
 					compound -> {
 						NBTHelper.writeEnum(compound, "Phase", phase);
 						compound.put("HeldItem", heldItem.serializeNBT());
@@ -262,17 +275,17 @@ public class CreateSceneBuilder extends SceneBuilder {
 		}
 
 		public void animateTrainStation(BlockPos position, boolean trainPresent) {
-			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select.position(position), StationBlockEntity.class,
+			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select().position(position), StationBlockEntity.class,
 					c -> c.putBoolean("ForceFlag", trainPresent));
 		}
 
 		public void conductorBlaze(BlockPos position, boolean conductor) {
-			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select.position(position), BlazeBurnerBlockEntity.class,
+			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select().position(position), BlazeBurnerBlockEntity.class,
 					c -> c.putBoolean("TrainHat", conductor));
 		}
 
 		public void changeSignalState(BlockPos position, SignalBlockEntity.SignalState state) {
-			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select.position(position), SignalBlockEntity.class,
+			modifyBlockEntityNBT(getScene().getSceneBuildingUtil().select().position(position), SignalBlockEntity.class,
 					c -> NBTHelper.writeEnum(c, "State", state));
 		}
 
@@ -292,7 +305,7 @@ public class CreateSceneBuilder extends SceneBuilder {
 
 	}
 
-	public class SpecialInstructions extends SceneBuilder.SpecialInstructions {
+	public class SpecialInstructions extends PonderSpecialInstructions {
 
 		@Override
 		public ElementLink<ParrotElement> createBirb(Vec3 location, Supplier<? extends ParrotElement.ParrotPose> pose) {

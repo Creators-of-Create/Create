@@ -1,12 +1,8 @@
 package com.simibubi.create.infrastructure.ponder;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
 import com.simibubi.create.content.trains.track.TrackBlock;
 import com.simibubi.create.content.trains.track.TrackMaterial;
 import com.simibubi.create.infrastructure.ponder.scenes.ArmScenes;
@@ -54,54 +50,35 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.createmod.ponder.foundation.CustomPonderRegistrationHelper;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
+import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class CreatePonderIndex {
+public class AllCreatePonderScenes {
 
-	static final CustomPonderRegistrationHelper<ItemProviderEntry<?>> HELPER = new CustomPonderRegistrationHelper<>(Create.ID, RegistryEntry::getId);
-
-	public static final List<Predicate<ItemLike>> INDEX_SCREEN_EXCLUSIONS = List.of(
-			itemLike -> {
-				if (!(itemLike instanceof BlockItem blockItem))
-					return false;
-
-				Block block = blockItem.getBlock();
-				if (!(block instanceof ValveHandleBlock))
-					return false;
-
-				return !AllBlocks.COPPER_VALVE_HANDLE.is(block);
-			}
-	);
-
-	public static void register() {
-		// Register storyboards here
-		// (!) Added entries require re-launch
-		// (!) Modifications inside storyboard methods only require re-opening the ui
+	public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+		PonderSceneRegistrationHelper<ItemProviderEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
 		HELPER.forComponents(AllBlocks.SHAFT)
-			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay, AllPonderTags.KINETIC_RELAYS);
+			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay, AllCreatePonderTags.KINETIC_RELAYS);
 		HELPER.forComponents(AllBlocks.SHAFT, AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT)
 			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased);
 
 		HELPER.forComponents(AllBlocks.COGWHEEL)
-			.addStoryBoard("cog/small", KineticsScenes::cogAsRelay, AllPonderTags.KINETIC_RELAYS)
+			.addStoryBoard("cog/small", KineticsScenes::cogAsRelay, AllCreatePonderTags.KINETIC_RELAYS)
 			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp)
 			.addStoryBoard("cog/encasing", KineticsScenes::cogwheelsCanBeEncased);
 
 		HELPER.forComponents(AllBlocks.LARGE_COGWHEEL)
 			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp)
-			.addStoryBoard("cog/large", KineticsScenes::largeCogAsRelay, AllPonderTags.KINETIC_RELAYS)
+			.addStoryBoard("cog/large", KineticsScenes::largeCogAsRelay, AllCreatePonderTags.KINETIC_RELAYS)
 			.addStoryBoard("cog/encasing", KineticsScenes::cogwheelsCanBeEncased);
 
 		HELPER.forComponents(AllItems.BELT_CONNECTOR)
-			.addStoryBoard("belt/connect", BeltScenes::beltConnector, AllPonderTags.KINETIC_RELAYS)
+			.addStoryBoard("belt/connect", BeltScenes::beltConnector, AllCreatePonderTags.KINETIC_RELAYS)
 			.addStoryBoard("belt/directions", BeltScenes::directions)
-			.addStoryBoard("belt/transport", BeltScenes::transport, AllPonderTags.LOGISTICS)
+			.addStoryBoard("belt/transport", BeltScenes::transport, AllCreatePonderTags.LOGISTICS)
 			.addStoryBoard("belt/encasing", BeltScenes::beltsCanBeEncased);
 
 		HELPER.forComponents(AllBlocks.ANDESITE_CASING, AllBlocks.BRASS_CASING)
@@ -109,35 +86,35 @@ public class CreatePonderIndex {
 			.addStoryBoard("belt/encasing", BeltScenes::beltsCanBeEncased);
 
 		HELPER.forComponents(AllBlocks.GEARBOX, AllItems.VERTICAL_GEARBOX)
-			.addStoryBoard("gearbox", KineticsScenes::gearbox, AllPonderTags.KINETIC_RELAYS);
+			.addStoryBoard("gearbox", KineticsScenes::gearbox, AllCreatePonderTags.KINETIC_RELAYS);
 
-		HELPER.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch, AllPonderTags.KINETIC_RELAYS);
-		HELPER.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift, AllPonderTags.KINETIC_RELAYS);
+		HELPER.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch, AllCreatePonderTags.KINETIC_RELAYS);
+		HELPER.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift, AllCreatePonderTags.KINETIC_RELAYS);
 
 		HELPER.forComponents(AllBlocks.SEQUENCED_GEARSHIFT)
 			.addStoryBoard("sequenced_gearshift", KineticsScenes::sequencedGearshift);
 
 		HELPER.forComponents(AllBlocks.ENCASED_FAN)
-			.addStoryBoard("fan/direction", FanScenes::direction, AllPonderTags.KINETIC_APPLIANCES)
+			.addStoryBoard("fan/direction", FanScenes::direction, AllCreatePonderTags.KINETIC_APPLIANCES)
 			.addStoryBoard("fan/processing", FanScenes::processing);
 
 		HELPER.forComponents(AllBlocks.CREATIVE_MOTOR)
-			.addStoryBoard("creative_motor", KineticsScenes::creativeMotor, AllPonderTags.KINETIC_SOURCES)
+			.addStoryBoard("creative_motor", KineticsScenes::creativeMotor, AllCreatePonderTags.KINETIC_SOURCES)
 			.addStoryBoard("creative_motor_mojang", KineticsScenes::creativeMotorMojang);
 		HELPER.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
-			AllPonderTags.KINETIC_SOURCES);
+							 AllCreatePonderTags.KINETIC_SOURCES);
 		HELPER.addStoryBoard(AllBlocks.LARGE_WATER_WHEEL, "large_water_wheel", KineticsScenes::largeWaterWheel,
-			AllPonderTags.KINETIC_SOURCES);
+							 AllCreatePonderTags.KINETIC_SOURCES);
 
-		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, AllPonderTags.KINETIC_SOURCES);
+		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank, AllCreatePonderTags.KINETIC_SOURCES);
 
 		HELPER.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
-			AllPonderTags.KINETIC_SOURCES);
+							 AllCreatePonderTags.KINETIC_SOURCES);
 		HELPER.forComponents(AllBlocks.DYED_VALVE_HANDLES.toArray())
 			.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
 
 		HELPER.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay", ChainDriveScenes::chainDriveAsRelay,
-			AllPonderTags.KINETIC_RELAYS);
+							 AllCreatePonderTags.KINETIC_RELAYS);
 		HELPER.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 			.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
 
@@ -176,12 +153,12 @@ public class CreatePonderIndex {
 
 		// Vaults
 		HELPER.forComponents(AllBlocks.ITEM_VAULT)
-			.addStoryBoard("item_vault/storage", ItemVaultScenes::storage, AllPonderTags.LOGISTICS)
+			.addStoryBoard("item_vault/storage", ItemVaultScenes::storage, AllCreatePonderTags.LOGISTICS)
 			.addStoryBoard("item_vault/sizes", ItemVaultScenes::sizes);
 
 		// Chutes
 		HELPER.forComponents(AllBlocks.CHUTE)
-			.addStoryBoard("chute/downward", ChuteScenes::downward, AllPonderTags.LOGISTICS)
+			.addStoryBoard("chute/downward", ChuteScenes::downward, AllCreatePonderTags.LOGISTICS)
 			.addStoryBoard("chute/upward", ChuteScenes::upward);
 		HELPER.forComponents(AllBlocks.CHUTE, AllBlocks.SMART_CHUTE)
 			.addStoryBoard("chute/smart", ChuteScenes::smart);
@@ -189,7 +166,7 @@ public class CreatePonderIndex {
 		// Funnels
 		HELPER.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
 		HELPER.forComponents(AllBlocks.ANDESITE_FUNNEL, AllBlocks.BRASS_FUNNEL)
-			.addStoryBoard("funnels/intro", FunnelScenes::intro, AllPonderTags.LOGISTICS)
+			.addStoryBoard("funnels/intro", FunnelScenes::intro, AllCreatePonderTags.LOGISTICS)
 			.addStoryBoard("funnels/direction", FunnelScenes::directionality)
 			.addStoryBoard("funnels/compat", FunnelScenes::compat)
 			.addStoryBoard("funnels/redstone", FunnelScenes::redstone)
@@ -204,26 +181,26 @@ public class CreatePonderIndex {
 
 		// Chassis & Super Glue
 		HELPER.forComponents(AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
-			.addStoryBoard("chassis/linear_group", ChassisScenes::linearGroup, AllPonderTags.CONTRAPTION_ASSEMBLY)
+			.addStoryBoard("chassis/linear_group", ChassisScenes::linearGroup, AllCreatePonderTags.CONTRAPTION_ASSEMBLY)
 			.addStoryBoard("chassis/linear_attachment", ChassisScenes::linearAttachement);
 		HELPER.forComponents(AllBlocks.RADIAL_CHASSIS)
-			.addStoryBoard("chassis/radial", ChassisScenes::radial, AllPonderTags.CONTRAPTION_ASSEMBLY);
+			.addStoryBoard("chassis/radial", ChassisScenes::radial, AllCreatePonderTags.CONTRAPTION_ASSEMBLY);
 		HELPER.forComponents(AllItems.SUPER_GLUE)
-			.addStoryBoard("super_glue", ChassisScenes::superGlue, AllPonderTags.CONTRAPTION_ASSEMBLY);
+			.addStoryBoard("super_glue", ChassisScenes::superGlue, AllCreatePonderTags.CONTRAPTION_ASSEMBLY);
 		HELPER.forComponents(AllBlocks.STICKER)
-			.addStoryBoard("sticker", RedstoneScenes::sticker, AllPonderTags.CONTRAPTION_ASSEMBLY);
+			.addStoryBoard("sticker", RedstoneScenes::sticker, AllCreatePonderTags.CONTRAPTION_ASSEMBLY);
 
 		// Mechanical Arm
 		HELPER.forComponents(AllBlocks.MECHANICAL_ARM)
-			.addStoryBoard("mechanical_arm/setup", ArmScenes::setup, AllPonderTags.ARM_TARGETS)
+			.addStoryBoard("mechanical_arm/setup", ArmScenes::setup, AllCreatePonderTags.ARM_TARGETS)
 			.addStoryBoard("mechanical_arm/filter", ArmScenes::filtering)
 			.addStoryBoard("mechanical_arm/modes", ArmScenes::modes)
 			.addStoryBoard("mechanical_arm/redstone", ArmScenes::redstone);
 
 		// Mechanical Piston
 		HELPER.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
-			.addStoryBoard("mechanical_piston/anchor", PistonScenes::movement, AllPonderTags.KINETIC_APPLIANCES,
-				AllPonderTags.MOVEMENT_ANCHOR);
+			.addStoryBoard("mechanical_piston/anchor", PistonScenes::movement, AllCreatePonderTags.KINETIC_APPLIANCES,
+						   AllCreatePonderTags.MOVEMENT_ANCHOR);
 		HELPER
 			.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON,
 				AllBlocks.PISTON_EXTENSION_POLE)
@@ -233,8 +210,8 @@ public class CreatePonderIndex {
 
 		// Pulleys
 		HELPER.forComponents(AllBlocks.ROPE_PULLEY)
-			.addStoryBoard("rope_pulley/anchor", PulleyScenes::movement, AllPonderTags.KINETIC_APPLIANCES,
-				AllPonderTags.MOVEMENT_ANCHOR)
+			.addStoryBoard("rope_pulley/anchor", PulleyScenes::movement, AllCreatePonderTags.KINETIC_APPLIANCES,
+						   AllCreatePonderTags.MOVEMENT_ANCHOR)
 			.addStoryBoard("rope_pulley/modes", PulleyScenes::movementModes)
 			.addStoryBoard("rope_pulley/multi_rope", PulleyScenes::multiRope)
 			.addStoryBoard("rope_pulley/attachment", PulleyScenes::attachment);
@@ -244,9 +221,9 @@ public class CreatePonderIndex {
 
 		// Windmill Bearing
 		HELPER.forComponents(AllBlocks.WINDMILL_BEARING)
-			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, AllPonderTags.KINETIC_SOURCES)
+			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, AllCreatePonderTags.KINETIC_SOURCES)
 			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
-				AllPonderTags.MOVEMENT_ANCHOR);
+						   AllCreatePonderTags.MOVEMENT_ANCHOR);
 		HELPER.forComponents(AllBlocks.SAIL)
 			.addStoryBoard("sail", BearingScenes::sail);
 		HELPER.forComponents(AllBlocks.SAIL_FRAME)
@@ -254,21 +231,21 @@ public class CreatePonderIndex {
 
 		// Mechanical Bearing
 		HELPER.forComponents(AllBlocks.MECHANICAL_BEARING)
-			.addStoryBoard("mechanical_bearing/anchor", BearingScenes::mechanicalBearing, AllPonderTags.KINETIC_APPLIANCES,
-				AllPonderTags.MOVEMENT_ANCHOR)
+			.addStoryBoard("mechanical_bearing/anchor", BearingScenes::mechanicalBearing, AllCreatePonderTags.KINETIC_APPLIANCES,
+						   AllCreatePonderTags.MOVEMENT_ANCHOR)
 			.addStoryBoard("mechanical_bearing/modes", BearingScenes::bearingModes)
 			.addStoryBoard("mechanical_bearing/stabilized", BearingScenes::stabilizedBearings,
-				AllPonderTags.CONTRAPTION_ACTOR);
+						   AllCreatePonderTags.CONTRAPTION_ACTOR);
 
 		// Clockwork Bearing
 		HELPER.addStoryBoard(AllBlocks.CLOCKWORK_BEARING, "clockwork_bearing", BearingScenes::clockwork,
-			AllPonderTags.KINETIC_APPLIANCES, AllPonderTags.MOVEMENT_ANCHOR);
+							 AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
 
 		// Gantries
 		HELPER.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft,
-			AllPonderTags.KINETIC_APPLIANCES, AllPonderTags.MOVEMENT_ANCHOR);
+							 AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
 		HELPER.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion,
-			AllPonderTags.KINETIC_APPLIANCES, AllPonderTags.MOVEMENT_ANCHOR);
+							 AllCreatePonderTags.KINETIC_APPLIANCES, AllCreatePonderTags.MOVEMENT_ANCHOR);
 		HELPER.forComponents(AllBlocks.GANTRY_SHAFT, AllBlocks.GANTRY_CARRIAGE)
 			.addStoryBoard("gantry/redstone", GantryScenes::redstone)
 			.addStoryBoard("gantry/direction", GantryScenes::direction)
@@ -276,31 +253,31 @@ public class CreatePonderIndex {
 
 		// Cart Assembler
 		HELPER.forComponents(AllBlocks.CART_ASSEMBLER)
-			.addStoryBoard("cart_assembler/anchor", CartAssemblerScenes::anchor, AllPonderTags.MOVEMENT_ANCHOR)
+			.addStoryBoard("cart_assembler/anchor", CartAssemblerScenes::anchor, AllCreatePonderTags.MOVEMENT_ANCHOR)
 			.addStoryBoard("cart_assembler/modes", CartAssemblerScenes::modes)
 			.addStoryBoard("cart_assembler/dual", CartAssemblerScenes::dual)
 			.addStoryBoard("cart_assembler/rails", CartAssemblerScenes::rails);
 
 		// Movement Actors
 		HELPER.forComponents(AllBlocks.PORTABLE_STORAGE_INTERFACE)
-			.addStoryBoard("portable_interface/transfer", MovementActorScenes::psiTransfer, AllPonderTags.CONTRAPTION_ACTOR)
+			.addStoryBoard("portable_interface/transfer", MovementActorScenes::psiTransfer, AllCreatePonderTags.CONTRAPTION_ACTOR)
 			.addStoryBoard("portable_interface/redstone", MovementActorScenes::psiRedstone);
 		HELPER.forComponents(AllBlocks.REDSTONE_CONTACT)
 			.addStoryBoard("redstone_contact", RedstoneScenes::contact);
 		HELPER.forComponents(AllBlocks.MECHANICAL_SAW)
-			.addStoryBoard("mechanical_saw/processing", MechanicalSawScenes::processing, AllPonderTags.KINETIC_APPLIANCES)
+			.addStoryBoard("mechanical_saw/processing", MechanicalSawScenes::processing, AllCreatePonderTags.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_saw/breaker", MechanicalSawScenes::treeCutting)
-			.addStoryBoard("mechanical_saw/contraption", MechanicalSawScenes::contraption, AllPonderTags.CONTRAPTION_ACTOR);
+			.addStoryBoard("mechanical_saw/contraption", MechanicalSawScenes::contraption, AllCreatePonderTags.CONTRAPTION_ACTOR);
 		HELPER.forComponents(AllBlocks.MECHANICAL_DRILL)
-			.addStoryBoard("mechanical_drill/breaker", MechanicalDrillScenes::breaker, AllPonderTags.KINETIC_APPLIANCES)
+			.addStoryBoard("mechanical_drill/breaker", MechanicalDrillScenes::breaker, AllCreatePonderTags.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_drill/contraption", MechanicalDrillScenes::contraption,
-				AllPonderTags.CONTRAPTION_ACTOR);
+						   AllCreatePonderTags.CONTRAPTION_ACTOR);
 		HELPER.forComponents(AllBlocks.DEPLOYER)
-			.addStoryBoard("deployer/filter", DeployerScenes::filter, AllPonderTags.KINETIC_APPLIANCES)
+			.addStoryBoard("deployer/filter", DeployerScenes::filter, AllCreatePonderTags.KINETIC_APPLIANCES)
 			.addStoryBoard("deployer/modes", DeployerScenes::modes)
 			.addStoryBoard("deployer/processing", DeployerScenes::processing)
 			.addStoryBoard("deployer/redstone", DeployerScenes::redstone)
-			.addStoryBoard("deployer/contraption", DeployerScenes::contraption, AllPonderTags.CONTRAPTION_ACTOR);
+			.addStoryBoard("deployer/contraption", DeployerScenes::contraption, AllCreatePonderTags.CONTRAPTION_ACTOR);
 		HELPER.forComponents(AllBlocks.MECHANICAL_HARVESTER)
 			.addStoryBoard("harvester", MovementActorScenes::harvester);
 		HELPER.forComponents(AllBlocks.MECHANICAL_PLOUGH)
@@ -313,36 +290,36 @@ public class CreatePonderIndex {
 
 		// Fluids
 		HELPER.forComponents(AllBlocks.FLUID_PIPE)
-			.addStoryBoard("fluid_pipe/flow", PipeScenes::flow, AllPonderTags.FLUIDS)
+			.addStoryBoard("fluid_pipe/flow", PipeScenes::flow, AllCreatePonderTags.FLUIDS)
 			.addStoryBoard("fluid_pipe/interaction", PipeScenes::interaction)
 			.addStoryBoard("fluid_pipe/encasing", PipeScenes::encasing);
 		HELPER.forComponents(AllBlocks.COPPER_CASING)
 			.addStoryBoard("fluid_pipe/encasing", PipeScenes::encasing);
 		HELPER.forComponents(AllBlocks.MECHANICAL_PUMP)
-			.addStoryBoard("mechanical_pump/flow", PumpScenes::flow, AllPonderTags.FLUIDS, AllPonderTags.KINETIC_APPLIANCES)
+			.addStoryBoard("mechanical_pump/flow", PumpScenes::flow, AllCreatePonderTags.FLUIDS, AllCreatePonderTags.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_pump/speed", PumpScenes::speed);
 		HELPER.forComponents(AllBlocks.FLUID_VALVE)
-			.addStoryBoard("fluid_valve", PipeScenes::valve, AllPonderTags.FLUIDS, AllPonderTags.KINETIC_APPLIANCES);
+			.addStoryBoard("fluid_valve", PipeScenes::valve, AllCreatePonderTags.FLUIDS, AllCreatePonderTags.KINETIC_APPLIANCES);
 		HELPER.forComponents(AllBlocks.SMART_FLUID_PIPE)
-			.addStoryBoard("smart_pipe", PipeScenes::smart, AllPonderTags.FLUIDS);
+			.addStoryBoard("smart_pipe", PipeScenes::smart, AllCreatePonderTags.FLUIDS);
 		HELPER.forComponents(AllBlocks.FLUID_TANK)
-			.addStoryBoard("fluid_tank/storage", FluidTankScenes::storage, AllPonderTags.FLUIDS)
+			.addStoryBoard("fluid_tank/storage", FluidTankScenes::storage, AllCreatePonderTags.FLUIDS)
 			.addStoryBoard("fluid_tank/sizes", FluidTankScenes::sizes);
 		HELPER.forComponents(AllBlocks.CREATIVE_FLUID_TANK)
-			.addStoryBoard("fluid_tank/storage_creative", FluidTankScenes::creative, AllPonderTags.FLUIDS,
-				AllPonderTags.CREATIVE)
+			.addStoryBoard("fluid_tank/storage_creative", FluidTankScenes::creative, AllCreatePonderTags.FLUIDS,
+						   AllCreatePonderTags.CREATIVE)
 			.addStoryBoard("fluid_tank/sizes_creative", FluidTankScenes::sizes);
 		HELPER.forComponents(AllBlocks.HOSE_PULLEY)
-			.addStoryBoard("hose_pulley/intro", HosePulleyScenes::intro, AllPonderTags.FLUIDS, AllPonderTags.KINETIC_APPLIANCES)
+			.addStoryBoard("hose_pulley/intro", HosePulleyScenes::intro, AllCreatePonderTags.FLUIDS, AllCreatePonderTags.KINETIC_APPLIANCES)
 			.addStoryBoard("hose_pulley/level", HosePulleyScenes::level)
 			.addStoryBoard("hose_pulley/infinite", HosePulleyScenes::infinite);
 		HELPER.forComponents(AllBlocks.SPOUT)
-			.addStoryBoard("spout", SpoutScenes::filling, AllPonderTags.FLUIDS);
+			.addStoryBoard("spout", SpoutScenes::filling, AllCreatePonderTags.FLUIDS);
 		HELPER.forComponents(AllBlocks.ITEM_DRAIN)
-			.addStoryBoard("item_drain", DrainScenes::emptying, AllPonderTags.FLUIDS);
+			.addStoryBoard("item_drain", DrainScenes::emptying, AllCreatePonderTags.FLUIDS);
 		HELPER.forComponents(AllBlocks.PORTABLE_FLUID_INTERFACE)
-			.addStoryBoard("portable_interface/transfer_fluid", FluidMovementActorScenes::transfer, AllPonderTags.FLUIDS,
-				AllPonderTags.CONTRAPTION_ACTOR)
+			.addStoryBoard("portable_interface/transfer_fluid", FluidMovementActorScenes::transfer, AllCreatePonderTags.FLUIDS,
+						   AllCreatePonderTags.CONTRAPTION_ACTOR)
 			.addStoryBoard("portable_interface/redstone_fluid", MovementActorScenes::psiRedstone);
 
 		// Redstone

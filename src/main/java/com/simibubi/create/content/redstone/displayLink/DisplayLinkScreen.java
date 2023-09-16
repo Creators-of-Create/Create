@@ -19,7 +19,7 @@ import com.simibubi.create.foundation.gui.widget.Label;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.CreateLang;
-import com.simibubi.create.infrastructure.ponder.AllPonderTags;
+import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.ScreenOpener;
@@ -156,7 +156,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		sourceWidget = new ElementWidget(x + 37, y + 26)
 				.showingElement(GuiGameElement.of(sourceIcon))
 				.withCallback((mX, mY) -> {
-					ScreenOpener.open(new PonderTagScreen(AllPonderTags.DISPLAY_SOURCES));
+					ScreenOpener.open(new PonderTagScreen(AllCreatePonderTags.DISPLAY_SOURCES));
 				});
 
 		sourceWidget.getToolTip().addAll(List.of(
@@ -173,7 +173,7 @@ public class DisplayLinkScreen extends AbstractSimiScreen {
 		targetWidget = new ElementWidget(x + 37, y + 105)
 				.showingElement(GuiGameElement.of(targetIcon))
 				.withCallback((mX, mY) -> {
-					ScreenOpener.open(new PonderTagScreen(AllPonderTags.DISPLAY_TARGETS));
+					ScreenOpener.open(new PonderTagScreen(AllCreatePonderTags.DISPLAY_TARGETS));
 				});
 
 		targetWidget.getToolTip().addAll(List.of(
