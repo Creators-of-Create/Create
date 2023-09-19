@@ -122,6 +122,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 			this.spriteSet = animatedSprite;
 		}
 
+		@Override
 		public Particle createParticle(AirFlowParticleData data, ClientLevel worldIn, double x, double y, double z,
 									   double xSpeed, double ySpeed, double zSpeed) {
 			BlockEntity be = worldIn.getBlockEntity(new BlockPos(data.posX, data.posY, data.posZ));

@@ -206,8 +206,10 @@ public class AirCurrent {
 				currentSegment.type = type;
 			}
 		}
-		currentSegment.endOffset = searchEnd + searchStep + toOffset;
-		segments.add(currentSegment);
+		if (currentSegment != null) {
+			currentSegment.endOffset = searchEnd + searchStep + toOffset;
+			segments.add(currentSegment);
+		}
 
 		// Build Bounding Box
 		if (maxDistance < 0.25f)
@@ -296,18 +298,18 @@ public class AirCurrent {
 		affectedItemHandlers.clear();
 		int limit = getLimit();
 		for (int i = 1; i <= limit; i++) {
-			FanProcessingType segmentType = getTypeAt(i - 0.5f);
+			FanProcessingType segmentType = getTypeAt(i - 1);
 			for (int offset : Iterate.zeroAndOne) {
 				BlockPos pos = start.relative(direction, i)
 					.below(offset);
 				TransportedItemStackHandlerBehaviour behaviour =
 					BlockEntityBehaviour.get(world, pos, TransportedItemStackHandlerBehaviour.TYPE);
-				if (behaviour == null)
-					continue;
-				FanProcessingType type = FanProcessingType.getAt(world, pos);
-				if (type == AllFanProcessingTypes.NONE)
-					type = segmentType;
-				affectedItemHandlers.add(Pair.of(behaviour, type));
+				if (behaviour != null) {
+					FanProcessingType type = FanProcessingType.getAt(world, pos);
+					if (type == AllFanProcessingTypes.NONE)
+						type = segmentType;
+					affectedItemHandlers.add(Pair.of(behaviour, type));
+				}
 				if (direction.getAxis()
 					.isVertical())
 					break;

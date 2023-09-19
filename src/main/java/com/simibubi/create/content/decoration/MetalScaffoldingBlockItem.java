@@ -2,12 +2,13 @@ package com.simibubi.create.content.decoration;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.Components;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ScaffoldingBlockItem;
@@ -47,9 +48,9 @@ public class MetalScaffoldingBlockItem extends ScaffoldingBlockItem {
 			if (!level.isClientSide && !level.isInWorldBounds(blockpos$mutableblockpos)) {
 				Player player = pContext.getPlayer();
 				int j = level.getMaxBuildHeight();
-				if (player instanceof ServerPlayer && blockpos$mutableblockpos.getY() >= j) {
-					((ServerPlayer) player).sendMessage(
-						(new TranslatableComponent("build.tooHigh", j - 1)).withStyle(ChatFormatting.RED),
+				if (player instanceof ServerPlayer sp && blockpos$mutableblockpos.getY() >= j) {
+					sp.sendMessage(
+						Components.translatable("build.tooHigh", j - 1).withStyle(ChatFormatting.RED),
 						ChatType.GAME_INFO, Util.NIL_UUID);
 				}
 				break;
