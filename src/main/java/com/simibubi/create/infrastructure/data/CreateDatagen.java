@@ -1,7 +1,5 @@
 package com.simibubi.create.infrastructure.data;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 
@@ -20,6 +18,7 @@ import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import com.simibubi.create.infrastructure.ponder.GeneralText;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 import com.simibubi.create.infrastructure.ponder.SharedText;
+import com.tterrag.registrate.providers.ProviderType;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -53,24 +52,14 @@ public class CreateDatagen {
 	private static void addExtraRegistrateData() {
 		CreateRegistrateTags.addGenerators();
 
-		// Really all additional lang entries should be added using AbstractRegistrate#addRawLang,
-		// but doing so would change the generated lang entry order and potentially mess up Crowndin.
-		Create.REGISTRATE.addLangPostprocessor(entries -> {
-			Map<String, String> newEntries = new LinkedHashMap<>(entries);
-			BiConsumer<String, String> langConsumer = (key, value) -> {
-				String oldValue = newEntries.put(key, value);
-				if (oldValue != null) {
-					Create.LOGGER.warn("Value of lang key '" + key + "' was overridden!");
-				}
-			};
+		Create.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
+			BiConsumer<String, String> langConsumer = provider::add;
 
-			AllAdvancements.provideLang(langConsumer);
 			provideDefaultLang("interface", langConsumer);
-			AllSoundEvents.provideLang(langConsumer);
 			provideDefaultLang("tooltips", langConsumer);
+			AllAdvancements.provideLang(langConsumer);
+			AllSoundEvents.provideLang(langConsumer);
 			providePonderLang(langConsumer);
-
-			return newEntries;
 		});
 	}
 
