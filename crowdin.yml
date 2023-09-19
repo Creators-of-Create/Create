@@ -10,6 +10,7 @@
         "translation": "src/main/resources/assets/create/lang/%locale_with_underscore%.json",
         "languages_mapping": {
             "locale_with_underscore": {
+                "be": "be_by",
                 "cs": "cs_cz",
                 "cy": "cy_gb",
                 "da": "da_dk",
