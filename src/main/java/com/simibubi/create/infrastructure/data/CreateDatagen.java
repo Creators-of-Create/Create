@@ -10,7 +10,6 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.data.DamageTypeTagGen;
-import com.simibubi.create.foundation.data.GeneratedEntriesProvider;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;

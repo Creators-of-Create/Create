@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.data;
+package com.simibubi.create.infrastructure.data;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
