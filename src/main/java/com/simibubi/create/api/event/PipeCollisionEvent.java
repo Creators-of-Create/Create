@@ -1,32 +1,36 @@
 package com.simibubi.create.api.event;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.eventbus.api.Event;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
- * Event that is fired when a two fluids meet in a pipe ({@link Flow})<br>
- * or when a fluid in a pipe meets with a fluid in the world ({@link Spill}).<br>
+ * This Event is fired when a two fluids meet in a pipe ({@link Flow})<br>
+ * or when a fluid in a pipe meets with a fluid in the world
+ * ({@link Spill}).<br>
  * <br>
- * If it is not null, the event's BlockState will be placed in world after firing.
+ * If it is not null, the event's BlockState will be placed in world after
+ * firing.
  */
 public class PipeCollisionEvent extends Event {
 
 	private final Level level;
 	private final BlockPos pos;
-	protected final Fluid fluid0, fluid1;
+	protected final Fluid firstFluid, secondFluid;
+
 	@Nullable
 	private BlockState state;
 
-	protected PipeCollisionEvent(Level level, BlockPos pos, Fluid fluid0, Fluid fluid1, @Nullable BlockState defaultState) {
+	protected PipeCollisionEvent(Level level, BlockPos pos, Fluid firstFluid, Fluid secondFluid,
+		@Nullable BlockState defaultState) {
 		this.level = level;
 		this.pos = pos;
-		this.fluid0 = fluid0;
-		this.fluid1 =fluid1;
+		this.firstFluid = firstFluid;
+		this.secondFluid = secondFluid;
 		this.state = defaultState;
 	}
 
@@ -54,11 +58,11 @@ public class PipeCollisionEvent extends Event {
 		}
 
 		public Fluid getFirstFluid() {
-			return fluid0;
+			return firstFluid;
 		}
 
 		public Fluid getSecondFluid() {
-			return fluid1;
+			return secondFluid;
 		}
 	}
 
@@ -69,11 +73,11 @@ public class PipeCollisionEvent extends Event {
 		}
 
 		public Fluid getWorldFluid() {
-			return fluid0;
+			return firstFluid;
 		}
 
 		public Fluid getPipeFluid() {
-			return fluid1;
+			return secondFluid;
 		}
 	}
 }
