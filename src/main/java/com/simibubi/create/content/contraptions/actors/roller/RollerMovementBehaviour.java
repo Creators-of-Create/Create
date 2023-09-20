@@ -278,8 +278,15 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		};
 		rollerScout.travel(train.graph, lengthWiseOffset + 1, steering);
 
-		rollerScout.traversalCallback = (edge, coords) -> TrackPaverV2.pave(heightProfile, train.graph, edge,
-			coords.getFirst(), coords.getSecond());
+		rollerScout.traversalCallback = (edge, coords) -> {
+			if (edge == null)
+				return;
+			if (edge.isInterDimensional())
+				return;
+			if (edge.node1.getLocation().dimension != context.world.dimension())
+				return;
+			TrackPaverV2.pave(heightProfile, train.graph, edge, coords.getFirst(), coords.getSecond());
+		};
 		rollerScout.travel(train.graph, distanceToTravel, steering);
 
 		for (Couple<Integer> entry : heightProfile.keys())
@@ -292,6 +299,9 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		BlockState stateToPaveWith = getStateToPaveWith(context);
 		BlockState stateToPaveWithAsSlab = getStateToPaveWithAsSlab(context);
 		RollingMode mode = getMode(context);
+		
+		if (mode != RollingMode.TUNNEL_PAVE && stateToPaveWith.isAir())
+			return;
 
 		Vec3 directionVec = Vec3.atLowerCornerOf(context.state.getValue(RollerBlock.FACING)
 			.getClockWise()
