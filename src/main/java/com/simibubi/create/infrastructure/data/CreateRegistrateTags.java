@@ -179,7 +179,14 @@ public class CreateRegistrateTags {
 		helper.add(Mods.BOP, "fir", "redwood", "cherry", "mahogany", "jacaranda", "palm", "willow", "dead",
 			"magic", "umbran", "hellbark");
 		helper.add(Mods.BSK, "bluebright", "starlit", "frostbright", "lunar", "dusk", "maple", "cherry");
+		helper.add(Mods.ENV, "cherry", "willow", "wisteria");
+		helper.add(Mods.ATM, "aspen", "kousa", "yucca", "morado");
+		helper.add(Mods.ATM_2, "rosewood", "grimwood");
+		helper.add(Mods.GOOD, "muddy_oak", "cypress");
+		helper.add(Mods.BMK, "blighted_balsa", "willow", "swamp_cypress", "ancient_oak");
 
+		TagGen.addOptional(logAppender, Mods.IX, "stripped_luminous_stem");
+		TagGen.addOptional(woodAppender, Mods.IX, "stripped_luminous_hyphae");
 		TagGen.addOptional(logAppender, Mods.BYG, "stripped_bulbis_stem");
 		TagGen.addOptional(woodAppender, Mods.BYG, "stripped_bulbis_wood");
 	}
