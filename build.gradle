@@ -52,7 +52,6 @@ minecraft {
         client {
             workingDirectory project.file('run')
             arg '-mixin.config=create.mixins.json'
-            arg '-mixin.config=flywheel.mixins.json'
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
             mods {
@@ -81,6 +80,7 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
+            arg '-mixin.config=create.mixins.json'
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')

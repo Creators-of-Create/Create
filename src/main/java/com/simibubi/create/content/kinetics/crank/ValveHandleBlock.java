@@ -64,6 +64,8 @@ public class ValveHandleBlock extends HandCrankBlock {
 
 		if (!(blockState.getBlock() instanceof ValveHandleBlock vhb))
 			return;
+		if (!player.mayBuild())
+			return;
 		if (AllItems.WRENCH.isIn(player.getItemInHand(event.getHand())) && player.isSteppingCarefully())
 			return;
 
