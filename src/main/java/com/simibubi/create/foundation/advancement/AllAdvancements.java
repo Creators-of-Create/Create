@@ -551,7 +551,7 @@ public class AllAdvancements implements DataProvider {
 
 		TRAIN_PORTAL = create("train_portal", b -> b.icon(Blocks.AMETHYST_BLOCK)
 			.title("Dimensional Commuter")
-			.description("Ride a Train through a Nether portal")
+			.description("Ride a Train through a portal")
 			.after(TRAIN_WHISTLE)
 			.special(NOISY)),
 

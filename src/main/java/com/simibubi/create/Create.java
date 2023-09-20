@@ -23,6 +23,7 @@ import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
+import com.simibubi.create.content.trains.track.AllPortalTracks;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
@@ -134,6 +135,7 @@ public class Create {
 		// FIXME: some of these registrations are not thread-safe
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
+		AllPortalTracks.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();

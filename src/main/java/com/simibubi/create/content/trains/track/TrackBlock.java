@@ -30,7 +30,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.requirement.ISpecialBlockItemRequirement;
@@ -63,7 +62,6 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -82,7 +80,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -95,9 +92,6 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.portal.PortalForcer;
-import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -241,10 +235,10 @@ public class TrackBlock extends Block
 		withBlockEntityDo(level, pos, tbe -> tbe.tilt.undoSmoothing());
 		if (!state.getValue(SHAPE)
 			.isPortal())
-			connectToNether(level, pos, state);
+			connectToPortal(level, pos, state);
 	}
 
-	protected void connectToNether(ServerLevel level, BlockPos pos, BlockState state) {
+	protected void connectToPortal(ServerLevel level, BlockPos pos, BlockState state) {
 		TrackShape shape = state.getValue(TrackBlock.SHAPE);
 		Axis portalTest = shape == TrackShape.XO ? Axis.X : shape == TrackShape.ZO ? Axis.Z : null;
 		if (portalTest == null)
@@ -257,11 +251,11 @@ public class TrackBlock extends Block
 		for (Direction d : Iterate.directionsInAxis(portalTest)) {
 			BlockPos portalPos = pos.relative(d);
 			BlockState portalState = level.getBlockState(portalPos);
-			if (!(portalState.getBlock() instanceof NetherPortalBlock))
+			if (!AllPortalTracks.isSupportedPortal(portalState))
 				continue;
 
 			pop = true;
-			Pair<ServerLevel, BlockFace> otherSide = getOtherSide(level, new BlockFace(pos, d));
+			Pair<ServerLevel, BlockFace> otherSide = AllPortalTracks.getOtherSide(level, new BlockFace(pos, d));
 			if (otherSide == null) {
 				fail = "missing";
 				continue;
@@ -314,38 +308,6 @@ public class TrackBlock extends Block
 			.append(component.withStyle(st -> st.withColor(0xFFD3B4))), false);
 	}
 
-	protected Pair<ServerLevel, BlockFace> getOtherSide(ServerLevel level, BlockFace inboundTrack) {
-		BlockPos portalPos = inboundTrack.getConnectedPos();
-		BlockState portalState = level.getBlockState(portalPos);
-		if (!(portalState.getBlock() instanceof NetherPortalBlock))
-			return null;
-
-		MinecraftServer minecraftserver = level.getServer();
-		ResourceKey<Level> resourcekey = level.dimension() == Level.NETHER ? Level.OVERWORLD : Level.NETHER;
-		ServerLevel otherLevel = minecraftserver.getLevel(resourcekey);
-		if (otherLevel == null || !minecraftserver.isNetherEnabled())
-			return null;
-
-		PortalForcer teleporter = otherLevel.getPortalForcer();
-		SuperGlueEntity probe = new SuperGlueEntity(level, new AABB(portalPos));
-		probe.setYRot(inboundTrack.getFace()
-			.toYRot());
-		PortalInfo portalinfo = teleporter.getPortalInfo(probe, otherLevel, probe::findDimensionEntryPoint);
-		if (portalinfo == null)
-			return null;
-
-		BlockPos otherPortalPos = new BlockPos(portalinfo.pos);
-		BlockState otherPortalState = otherLevel.getBlockState(otherPortalPos);
-		if (!(otherPortalState.getBlock() instanceof NetherPortalBlock))
-			return null;
-
-		Direction targetDirection = inboundTrack.getFace();
-		if (targetDirection.getAxis() == otherPortalState.getValue(NetherPortalBlock.AXIS))
-			targetDirection = targetDirection.getClockWise();
-		BlockPos otherPos = otherPortalPos.relative(targetDirection);
-		return Pair.of(otherLevel, new BlockFace(otherPos, targetDirection.getOpposite()));
-	}
-
 	@Override
 	public BlockState updateShape(BlockState state, Direction pDirection, BlockState pNeighborState,
 		LevelAccessor level, BlockPos pCurrentPos, BlockPos pNeighborPos) {
@@ -362,7 +324,7 @@ public class TrackBlock extends Block
 
 			BlockPos portalPos = pCurrentPos.relative(d);
 			BlockState portalState = level.getBlockState(portalPos);
-			if (!(portalState.getBlock() instanceof NetherPortalBlock))
+			if (!AllPortalTracks.isSupportedPortal(portalState))
 				return Blocks.AIR.defaultBlockState();
 		}
 

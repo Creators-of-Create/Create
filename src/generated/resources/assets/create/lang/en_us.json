@@ -868,7 +868,7 @@
 	"advancement.create.train_whistle": "Choo Choo!",
 	"advancement.create.train_whistle.desc": "Assemble a Steam Whistle to your Train and activate it while driving",
 	"advancement.create.train_portal": "Dimensional Commuter",
-	"advancement.create.train_portal.desc": "Ride a Train through a Nether portal",
+	"advancement.create.train_portal.desc": "Ride a Train through a portal",
 	"advancement.create.track_crafting_factory": "Track Factory",
 	"advancement.create.track_crafting_factory.desc": "Produce more than 1000 Train Tracks with the same Mechanical Press",
 	"advancement.create.long_train": "Ambitious Endeavours",
