@@ -1,6 +1,7 @@
 package com.simibubi.create.infrastructure.data;
 
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 import com.google.gson.JsonElement;
@@ -8,6 +9,8 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
+import com.simibubi.create.foundation.data.DamageTypeTagGen;
+import com.simibubi.create.foundation.data.GeneratedEntriesProvider;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
@@ -20,7 +23,9 @@ import com.simibubi.create.infrastructure.ponder.PonderIndex;
 import com.simibubi.create.infrastructure.ponder.SharedText;
 import com.tterrag.registrate.providers.ProviderType;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 
@@ -29,6 +34,8 @@ public class CreateDatagen {
 		addExtraRegistrateData();
 
 		DataGenerator generator = event.getGenerator();
+		PackOutput output = generator.getPackOutput();
+		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 		ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
 		if (event.includeClient()) {
@@ -36,16 +43,17 @@ public class CreateDatagen {
 		}
 
 		if (event.includeServer()) {
-			generator.addProvider(true, new CreateRecipeSerializerTagsProvider(generator, existingFileHelper));
-
-			generator.addProvider(true, new AllAdvancements(generator));
-
-			generator.addProvider(true, new StandardRecipeGen(generator));
-			generator.addProvider(true, new MechanicalCraftingRecipeGen(generator));
-			generator.addProvider(true, new SequencedAssemblyRecipeGen(generator));
-			ProcessingRecipeGen.registerAll(generator);
-
-//			AllOreFeatureConfigEntries.gatherData(event);
+			GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
+			lookupProvider = generatedEntriesProvider.getRegistryProvider();
+			generator.addProvider(true, generatedEntriesProvider);
+			
+			generator.addProvider(true, new CreateRecipeSerializerTagsProvider(output, lookupProvider, existingFileHelper));
+			generator.addProvider(true, new DamageTypeTagGen(output, lookupProvider, existingFileHelper));
+			generator.addProvider(true, new AllAdvancements(output));
+			generator.addProvider(true, new StandardRecipeGen(output));
+			generator.addProvider(true, new MechanicalCraftingRecipeGen(output));
+			generator.addProvider(true, new SequencedAssemblyRecipeGen(output));
+			ProcessingRecipeGen.registerAll(generator, output);
 		}
 	}
 

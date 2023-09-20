@@ -6,6 +6,7 @@ import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.data.TagGen;
+import com.simibubi.create.foundation.data.TagGen.CreateTagsProvider;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
@@ -30,7 +31,9 @@ public class CreateRegistrateTags {
 		Create.REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, CreateRegistrateTags::genEntityTags);
 	}
 
-	private static void genBlockTags(RegistrateTagsProvider<Block> prov) {
+	private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
+		CreateTagsProvider<Block> prov = new CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
+		
 		prov.tag(AllBlockTags.BRITTLE.tag)
 			.add(Blocks.BELL, Blocks.COCOA, Blocks.FLOWER_POT)
 			.addTag(BlockTags.BEDS)
@@ -105,7 +108,9 @@ public class CreateRegistrateTags {
 		}
 	}
 
-	private static void genItemTags(RegistrateTagsProvider<Item> prov) {
+	private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
+		CreateTagsProvider<Item> prov = new CreateTagsProvider<>(provIn, Item::builtInRegistryHolder);
+		
 		prov.tag(AllItemTags.SLEEPERS.tag)
 			.add(Items.STONE_SLAB, Items.SMOOTH_STONE_SLAB, Items.ANDESITE_SLAB);
 
@@ -130,12 +135,12 @@ public class CreateRegistrateTags {
 		prov.tag(AllItemTags.VANILLA_STRIPPED_LOGS.tag)
 			.add(Items.STRIPPED_ACACIA_LOG, Items.STRIPPED_BIRCH_LOG, Items.STRIPPED_CRIMSON_STEM,
 				Items.STRIPPED_DARK_OAK_LOG, Items.STRIPPED_JUNGLE_LOG, Items.STRIPPED_MANGROVE_LOG,
-				Items.STRIPPED_OAK_LOG, Items.STRIPPED_SPRUCE_LOG, Items.STRIPPED_WARPED_STEM);
+				Items.STRIPPED_OAK_LOG, Items.STRIPPED_SPRUCE_LOG, Items.STRIPPED_WARPED_STEM, Items.STRIPPED_CHERRY_LOG, Items.STRIPPED_BAMBOO_BLOCK);
 
 		prov.tag(AllItemTags.VANILLA_STRIPPED_WOOD.tag)
 			.add(Items.STRIPPED_ACACIA_WOOD, Items.STRIPPED_BIRCH_WOOD, Items.STRIPPED_CRIMSON_HYPHAE,
 				Items.STRIPPED_DARK_OAK_WOOD, Items.STRIPPED_JUNGLE_WOOD, Items.STRIPPED_MANGROVE_WOOD,
-				Items.STRIPPED_OAK_WOOD, Items.STRIPPED_SPRUCE_WOOD, Items.STRIPPED_WARPED_HYPHAE);
+				Items.STRIPPED_OAK_WOOD, Items.STRIPPED_SPRUCE_WOOD, Items.STRIPPED_WARPED_HYPHAE, Items.STRIPPED_CHERRY_WOOD);
 
 		prov.tag(ItemTags.BEACON_PAYMENT_ITEMS)
 			.addTag(AllItemTags.CREATE_INGOTS.tag);
@@ -156,7 +161,7 @@ public class CreateRegistrateTags {
 		}
 	}
 
-	private static void genStrippedWoodItemTags(RegistrateTagsProvider<Item> prov) {
+	private static void genStrippedWoodItemTags(CreateTagsProvider<Item> prov) {
 		TagAppender<Item> logAppender = prov.tag(AllItemTags.MODDED_STRIPPED_LOGS.tag);
 		TagAppender<Item> woodAppender = prov.tag(AllItemTags.MODDED_STRIPPED_WOOD.tag);
 		StrippedWoodHelper helper = new StrippedWoodHelper(logAppender, woodAppender);
@@ -192,7 +197,9 @@ public class CreateRegistrateTags {
 		TagGen.addOptional(woodAppender, Mods.BYG, "stripped_bulbis_wood");
 	}
 
-	private static void genFluidTags(RegistrateTagsProvider<Fluid> prov) {
+	private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {
+		CreateTagsProvider<Fluid> prov = new CreateTagsProvider<>(provIn, Fluid::builtInRegistryHolder);
+		
 		prov.tag(AllFluidTags.BOTTOMLESS_ALLOW.tag)
 			.add(Fluids.WATER, Fluids.LAVA);
 
@@ -211,7 +218,8 @@ public class CreateRegistrateTags {
 		}
 	}
 
-	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> prov) {
+	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> provIn) {
+		CreateTagsProvider<EntityType<?>> prov = new CreateTagsProvider<>(provIn, EntityType::builtInRegistryHolder);
 		
 		// VALIDATE
 

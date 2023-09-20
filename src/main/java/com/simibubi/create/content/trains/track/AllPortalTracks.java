@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -69,7 +70,7 @@ public class AllPortalTracks {
 
 	private static Pair<ServerLevel, BlockFace> aether(Pair<ServerLevel, BlockFace> inbound) {
 		ResourceKey<Level> aetherLevelKey =
-			ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("aether", "the_aether"));
+			ResourceKey.create(Registries.DIMENSION, new ResourceLocation("aether", "the_aether"));
 		return standardPortalProvider(inbound, Level.OVERWORLD, aetherLevelKey, level -> {
 			try {
 				return (ITeleporter) Class.forName("com.aetherteam.aether.block.portal.AetherPortalForcer")
@@ -107,7 +108,7 @@ public class AllPortalTracks {
 		if (portalinfo == null)
 			return null;
 
-		BlockPos otherPortalPos = new BlockPos(portalinfo.pos);
+		BlockPos otherPortalPos = BlockPos.containing(portalinfo.pos);
 		BlockState otherPortalState = otherLevel.getBlockState(otherPortalPos);
 		if (otherPortalState.getBlock() != portalState.getBlock())
 			return null;
