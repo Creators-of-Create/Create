@@ -1,8 +1,8 @@
 {
-  "parent": "create:backtank",
+  "parent": "create:foods",
   "display": {
     "icon": {
-      "item": "create:copper_diving_helmet",
+      "item": "create:netherite_diving_helmet",
       "nbt": "{Damage:0}"
     },
     "title": {
@@ -15,7 +15,7 @@
     "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
-    "hidden": true
+    "hidden": false
   },
   "criteria": {
     "0": {

@@ -328,14 +328,14 @@ public class AllAdvancements implements DataProvider {
 			.description("Create Chocolate Glazed Berries, a Honeyed Apple, and a Sweet Roll all from the same Spout")
 			.after(STEAM_ENGINE_MAXED)
 			.special(EXPERT)),
+		
+		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.NETHERITE_DIVING_HELMET)
+			.title("Swimming with the Striders")
+			.description("Attempt to take a dive in lava with your netherite diving gear")
+			.after(FOODS)
+			.special(EXPERT)),
 
 		// Copper - Hidden
-
-		DIVING_SUIT_LAVA = create("diving_suit_lava", b -> b.icon(AllItems.COPPER_DIVING_HELMET)
-			.title("Swimming with the Striders")
-			.description("Attempt to take a dive in lava with your diving gear")
-			.after(BACKTANK)
-			.special(SECRET)),
 
 		CHAINED_DRAIN = create("chained_drain", b -> b.icon(AllBlocks.ITEM_DRAIN)
 			.title("On a Roll")
@@ -388,7 +388,7 @@ public class AllAdvancements implements DataProvider {
 			.special(NOISY)),
 
 		SPEED_CONTROLLER = create("speed_controller", b -> b.icon(AllBlocks.ROTATION_SPEED_CONTROLLER)
-			.title("Engineers Hate Him!")
+			.title("Engineers hate this simple trick!")
 			.description("Fine-tune your Contraption with a Rotation Speed Controller")
 			.after(MECHANISM)),
 
