@@ -25,6 +25,7 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
+import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.track.TrackMaterial;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
@@ -75,7 +76,10 @@ public abstract class AbstractBogeyBlock<T extends AbstractBogeyBlockEntity> ext
 	public boolean isOnIncompatibleTrack(Carriage carriage, boolean leading) {
 		TravellingPoint point = leading ? carriage.getLeadingPoint() : carriage.getTrailingPoint();
 		CarriageBogey bogey = leading ? carriage.leadingBogey() : carriage.trailingBogey();
-		return point.edge.getTrackMaterial().trackType != getTrackType(bogey.getStyle());
+		TrackEdge currentEdge = point.edge;
+		if (currentEdge == null)
+			return false;
+		return currentEdge.getTrackMaterial().trackType != getTrackType(bogey.getStyle());
 	}
 
 	public Set<TrackMaterial.TrackType> getValidPathfindingTypes(BogeyStyle style) {

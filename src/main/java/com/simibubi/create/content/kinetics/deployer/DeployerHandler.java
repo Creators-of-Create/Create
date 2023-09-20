@@ -299,9 +299,6 @@ public class DeployerHandler {
 			return;
 		if (useItem == DENY)
 			return;
-		if (item instanceof BlockItem && !(item instanceof CartAssemblerBlockItem)
-			&& !clickedState.canBeReplaced(new BlockPlaceContext(itemusecontext)))
-			return;
 
 		// Reposition fire placement for convenience
 		if (item == Items.FLINT_AND_STEEL) {
@@ -323,6 +320,10 @@ public class DeployerHandler {
 				player.placedTracks = true;
 			return;
 		}
+
+		if (item instanceof BlockItem && !(item instanceof CartAssemblerBlockItem)
+				&& !clickedState.canBeReplaced(new BlockPlaceContext(itemusecontext)))
+			return;
 		if (item == Items.ENDER_PEARL)
 			return;
 		if (AllItemTags.DEPLOYABLE_DRINK.matches(item))

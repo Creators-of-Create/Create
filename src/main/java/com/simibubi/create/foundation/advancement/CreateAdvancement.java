@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.advancement;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
-import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Components;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
@@ -30,7 +30,7 @@ public class CreateAdvancement {
 
 	static final ResourceLocation BACKGROUND = Create.asResource("textures/gui/advancements.png");
 	static final String LANG = "advancement." + Create.ID + ".";
-	static final String SECRET_SUFFIX = "\u00A77\n(Hidden Advancement)";
+	static final String SECRET_SUFFIX = "\n\u00A77(Hidden Advancement)";
 
 	private Advancement.Builder builder;
 	private SimpleCreateTrigger builtinTrigger;
@@ -101,9 +101,9 @@ public class CreateAdvancement {
 			.toString());
 	}
 
-	void appendToLang(JsonObject object) {
-		object.addProperty(titleKey(), title);
-		object.addProperty(descriptionKey(), description);
+	void provideLang(BiConsumer<String, String> consumer) {
+		consumer.accept(titleKey(), title);
+		consumer.accept(descriptionKey(), description);
 	}
 
 	static enum TaskType {

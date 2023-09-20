@@ -1,36 +1,20 @@
 {
-
-	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",
-	"item.create.example_item.tooltip.summary": "A brief description of the item. _Underscores_ highlight a term.",
-	"item.create.example_item.tooltip.condition1": "When this",
-	"item.create.example_item.tooltip.behaviour1": "Then this item does this. (behaviours show on shift)",
-	"item.create.example_item.tooltip.condition2": "And When this",
-	"item.create.example_item.tooltip.behaviour2": "You can add as many behaviours as you like",
-	"item.create.example_item.tooltip.control1": "When Ctrl pressed",
-	"item.create.example_item.tooltip.action1": "These controls are displayed.",
-
-	"block.create.wooden_bracket.tooltip": "WOODEN BRACKET",
 	"block.create.wooden_bracket.tooltip.summary": "_Decorate_ your _Shafts, Cogwheels_ and _Pipes_ with a cozy and wooden bit of reinforcement.",
-
-	"block.create.metal_bracket.tooltip": "METAL BRACKET",
+	
 	"block.create.metal_bracket.tooltip.summary": "_Decorate_ your _Shafts, Cogwheels_ and _Pipes_ with an industrial and sturdy bit of reinforcement.",
-
-	"block.create.seat.tooltip": "SEAT",
+	
 	"block.create.seat.tooltip.summary": "Sit yourself down and enjoy the ride! Will anchor a player onto a moving _contraption_. Great for static furniture too! Comes in a variety of colours.",
 	"block.create.seat.tooltip.condition1": "Right click on Seat",
 	"block.create.seat.tooltip.behaviour1": "Sits the player on the _Seat_. Press L-shift to leave the _Seat_.",
 
-	"item.create.blaze_cake.tooltip": "BLAZE CAKE",
 	"item.create.blaze_cake.tooltip.summary": "A Delicious treat for your hard-working _Blaze Burners_. Gets them all fired up!",
 
-	"item.create.wand_of_symmetry.tooltip": "SYMMETRY WAND",
 	"item.create.wand_of_symmetry.tooltip.summary": "_Mirrors Block placement_ while present in any _Hotbar Slot_.",
 	"item.create.wand_of_symmetry.tooltip.condition1": "When used on a Surface",
 	"item.create.wand_of_symmetry.tooltip.behaviour1": "_Creates_ or _Moves_ its Mirror. _Sneak_ while using to open the _Configuration Interface_",
 	"item.create.wand_of_symmetry.tooltip.condition2": "When used with no target",
 	"item.create.wand_of_symmetry.tooltip.behaviour2": "_Removes_ the active Mirror",
 
-	"item.create.handheld_worldshaper.tooltip": "HANDHELD WORLDSHAPER",
 	"item.create.handheld_worldshaper.tooltip.summary": "_Creative mode_ tool for large-scale _landscaping_ from a distance.",
 	"item.create.handheld_worldshaper.tooltip.condition1": "L-Click at Block",
 	"item.create.handheld_worldshaper.tooltip.behaviour1": "_Targeted block_ will become the _material_ placed by the shaper.",
@@ -39,86 +23,70 @@
 	"item.create.handheld_worldshaper.tooltip.condition3": "R-Click while Sneaking",
 	"item.create.handheld_worldshaper.tooltip.behaviour3": "Opens the _Configuration Interface_",
 
-	"item.create.tree_fertilizer.tooltip": "TREE FERTILIZER",
 	"item.create.tree_fertilizer.tooltip.summary": "A powerful combination of minerals useful for _growing saplings_ in tight spaces.",
 	"item.create.tree_fertilizer.tooltip.condition1": "When used on a Sapling",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Creates a tree _regardless_ of its _spacing conditions_",
 
-	"item.create.extendo_grip.tooltip": "EXTENDO GRIP",
 	"item.create.extendo_grip.tooltip.summary": "Greatly _increases reach distance_ of the wielder. Can be powered with _Air_ _Pressure_ from a _Backtank_",
 	"item.create.extendo_grip.tooltip.condition1": "When in Off-Hand",
 	"item.create.extendo_grip.tooltip.behaviour1": "Increases _reach distance_ of items used in the _Main-Hand_.",
 	"item.create.extendo_grip.tooltip.condition2": "While wearing Backtank",
 	"item.create.extendo_grip.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
-	"item.create.potato_cannon.tooltip": "POTATO CANNON",
 	"item.create.potato_cannon.tooltip.summary": "Launches your home-grown vegetables at Enemies. Can be powered with _Air_ _Pressure_ from a _Backtank_",
 	"item.create.potato_cannon.tooltip.condition1": "When R-Clicked",
 	"item.create.potato_cannon.tooltip.behaviour1": "_Shoots_ a suitable item from your _Inventory_.",
 	"item.create.potato_cannon.tooltip.condition2": "While wearing Backtank",
 	"item.create.potato_cannon.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
-	"item.create.filter.tooltip": "LIST FILTER",
 	"item.create.filter.tooltip.summary": "_Matches items_ against a collection of _items_ or _other filters_. Can be used in _Filter Slots_ of Create's Components",
 	"item.create.filter.tooltip.condition1": "When R-Clicked",
 	"item.create.filter.tooltip.behaviour1": "Opens the _configuration interface_.",
 
-	"item.create.attribute_filter.tooltip": "ATTRIBUTE FILTER",
 	"item.create.attribute_filter.tooltip.summary": "_Matches items_ against a set of _attributes_ or _categories_. Can be used in _Filter Slots_ of Create's Components",
 	"item.create.attribute_filter.tooltip.condition1": "When R-Clicked",
 	"item.create.attribute_filter.tooltip.behaviour1": "Opens the _configuration interface_.",
 
-	"item.create.empty_schematic.tooltip": "EMPTY SCHEMATIC",
 	"item.create.empty_schematic.tooltip.summary": "Used as a recipe ingredient and for writing at the _Schematic Table_.",
 
-	"item.create.schematic.tooltip": "SCHEMATIC",
 	"item.create.schematic.tooltip.summary": "Holds a structure to be positioned and placed into the world. Position the Hologram as desired and use a _Schematicannon_ to build it.",
 	"item.create.schematic.tooltip.condition1": "When Held",
 	"item.create.schematic.tooltip.behaviour1": "Can be positioned using the Tools on Screen.",
 	"item.create.schematic.tooltip.condition2": "R-Click while Sneaking",
 	"item.create.schematic.tooltip.behaviour2": "Opens an _Interface_ for entering exact _Coordinates_.",
 
-	"item.create.schematic_and_quill.tooltip": "SCHEMATIC AND QUILL",
 	"item.create.schematic_and_quill.tooltip.summary": "Used for _saving a Structure_ in your world to a _.nbt file_.",
 	"item.create.schematic_and_quill.tooltip.condition1": "Creating a selection",
 	"item.create.schematic_and_quill.tooltip.behaviour1": "Select two _corner points_ using _R-Click_. Hold _Ctrl_ and Scroll to select locations mid-air.",
 	"item.create.schematic_and_quill.tooltip.condition2": "Adjusting and Saving",
 	"item.create.schematic_and_quill.tooltip.behaviour2": "_Ctrl-Scroll_ on the faces to adjust the size, then R-Click again to Save.",
 
-	"block.create.schematicannon.tooltip": "SCHEMATICANNON",
 	"block.create.schematicannon.tooltip.summary": "Shoots blocks to recreate a deployed _Schematic_ in the World. Uses items from adjacent Inventories and _Gunpowder_ as fuel.",
 	"block.create.schematicannon.tooltip.condition1": "When R-Clicked",
 	"block.create.schematicannon.tooltip.behaviour1": "Opens the _Interface_",
 
-	"block.create.schematic_table.tooltip": "SCHEMATIC TABLE",
 	"block.create.schematic_table.tooltip.summary": "Writes saved Schematics onto an _Empty Schematic_.",
 	"block.create.schematic_table.tooltip.condition1": "When given an Empty Schematic",
 	"block.create.schematic_table.tooltip.behaviour1": "Uploads a chosen File from your Schematics Folder.",
 
-	"item.create.goggles.tooltip": "GOGGLES",
 	"item.create.goggles.tooltip.summary": "Augments your HUD with _miscellaneous information_ about placed components.",
 	"item.create.goggles.tooltip.condition1": "When looking at blocks",
 	"item.create.goggles.tooltip.behaviour1": "_Kinetic components_ show added _Stress Impact_ or _Capacity_. _Stressometers_ show statistics of their _attached kinetic network_. Some other blocks reveal information such as item and fluid content.",
 
-	"item.create.wrench.tooltip": "WRENCH",
 	"item.create.wrench.tooltip.summary": "Multi-purpose tool for working with your kinetic contraptions.",
 	"item.create.wrench.tooltip.condition1": "When used on Blocks",
 	"item.create.wrench.tooltip.behaviour1": "_Rotates components_ around the clicked face. _Sneak_ while interacting to _dismantle_ components.",
 	"item.create.wrench.tooltip.condition2": "When used on Contraptions",
 	"item.create.wrench.tooltip.behaviour2": "_Relocates_ assembled minecart- and train-based contraptions.",
 
-	"block.create.nozzle.tooltip": "NOZZLE",
 	"block.create.nozzle.tooltip.summary": "Attach to the front of an _Encased Fan_ to distribute its effect on Entities in _all directions_.",
 
-	"block.create.cuckoo_clock.tooltip": "CUCKOO CLOCK",
 	"block.create.cuckoo_clock.tooltip.summary": "Fine craftsmanship for _decorating_ a space and _keeping track of time_.",
 	"block.create.cuckoo_clock.tooltip.condition1": "When Powered by Kinetics",
 	"block.create.cuckoo_clock.tooltip.behaviour1": "Shows the _current time_ and plays a tune twice a day. _Activates_ once at _noon_ and at dusk, as soon as _players can sleep_.",
 
-	"block.create.turntable.tooltip": "TURNTABLE",
 	"block.create.turntable.tooltip.summary": "Uses _Rotational Force_ to create Motion Sickness.",
 
-	"block.create.toolbox.tooltip": "TOOLBOX",
 	"block.create.toolbox.tooltip.summary": "Every Inventors' dearest Companion. Conveniently _holds_ a large amount of _8 Different_ item types.",
 	"block.create.toolbox.tooltip.condition1": "When Picked Up",
 	"block.create.toolbox.tooltip.behaviour1": "_Retains_ Inventory _Contents_.",
@@ -127,30 +95,24 @@
 	"block.create.toolbox.tooltip.condition3": "When R-Clicked",
 	"block.create.toolbox.tooltip.behaviour3": "Opens the _Container Interface_.",
 
-	"block.create.creative_crate.tooltip": "CREATIVE CRATE",
 	"block.create.creative_crate.tooltip.summary": "This _Storage Container_ allows infinite replication of items.",
 	"block.create.creative_crate.tooltip.condition1": "When Item in Filter Slot",
 	"block.create.creative_crate.tooltip.behaviour1": "Anything _extracting_ from this container will provide an _endless supply_ of the item specified. Items _inserted_ into this crate will be _voided._",
 	"block.create.creative_crate.tooltip.condition2": "When next to Schematicannon",
 	"block.create.creative_crate.tooltip.behaviour2": "Provides any material required by the Schematic.",
 
-	"item.create.creative_blaze_cake.tooltip": "CREATIVE BLAZE CAKE",
 	"item.create.creative_blaze_cake.tooltip.summary": "A very special treat for your _Blaze Burners_. After eating this cake, Blaze Burners will _never run out of fuel_.",
 	"item.create.creative_blaze_cake.tooltip.condition1": "When Used",
 	"item.create.creative_blaze_cake.tooltip.behaviour1": "_Cycles_ a Blaze Burner's heat level.",
 
-	"block.create.controller_rail.tooltip": "CONTROLLER RAIL",
 	"block.create.controller_rail.tooltip.summary": "A _uni-directional_ powered rail with _variable speed_, controlled by the _signal strength_ supplied to it.",
 
-	"item.create.sand_paper.tooltip": "SAND PAPER",
 	"item.create.sand_paper.tooltip.summary": "Can be used to _refine materials_. The process can be automated with a Deployer.",
 	"item.create.sand_paper.tooltip.condition1": "When Used",
 	"item.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking at them_",
 
-	"item.create.builders_tea.tooltip": "BUILDERS TEA",
 	"item.create.builders_tea.tooltip.summary": "The perfect drink to get the day started- _Motivating_ and _Saturating._",
 
-	"item.create.linked_controller.tooltip": "LINKED CONTROLLER",
 	"item.create.linked_controller.tooltip.summary": "Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
 	"item.create.linked_controller.tooltip.condition1": "R-Click",
 	"item.create.linked_controller.tooltip.behaviour1": "_Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
@@ -161,86 +123,70 @@
 	"item.create.linked_controller.tooltip.condition4": "R-Click on Lectern",
 	"item.create.linked_controller.tooltip.behaviour4": "Places the Controller into the Lectern for easy activation. (R-Click while Sneaking to retrieve it)",
 	
-	"item.create.copper_diving_helmet.tooltip": "COPPER DIVING HELMET",
 	"item.create.copper_diving_helmet.tooltip.summary": "Together with a _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
 	"item.create.copper_diving_helmet.tooltip.condition1": "When Worn",
 	"item.create.copper_diving_helmet.tooltip.behaviour1": "Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
 	
-	"item.create.netherite_diving_helmet.tooltip": "NETHERITE DIVING HELMET",
 	"item.create.netherite_diving_helmet.tooltip.summary": "Together with a _Netherite Backtank_, this can protect you from _extreme heat_. To be effective, _Legs and Feet_ have to be covered in _Netherite_, too.",
 	"item.create.netherite_diving_helmet.tooltip.condition1": "When Worn (Full set)",
 	"item.create.netherite_diving_helmet.tooltip.behaviour1": "Provides immunity to _Fire_ and _Lava_, slowly draining _Air Pressure_ from the Backtank. Also grants _improved vision_ in Lava",
 
-	"item.create.copper_backtank.tooltip": "COPPER BACKTANK",
 	"item.create.copper_backtank.tooltip.summary": "A _Wearable_ _Tank_ for carrying Pressurized Air.",
 	"item.create.copper_backtank.tooltip.condition1": "When Worn",
 	"item.create.copper_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
 	"item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
 	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
-	"item.create.netherite_backtank.tooltip": "NETHERITE BACKTANK",
 	"item.create.netherite_backtank.tooltip.summary": "A _Wearable_ _Tank_ for carrying Pressurized Air.",
 	"item.create.netherite_backtank.tooltip.condition1": "When Worn",
 	"item.create.netherite_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
 	"item.create.netherite_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
 	"item.create.netherite_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
 
-	"block.create.placard.tooltip": "PLACARD",
 	"block.create.placard.tooltip.summary": "_Frame_ your _items_ in brass using this fancy wall panel. Safe for contraptions!",
 	"block.create.placard.tooltip.condition1": "When R-Clicked with Item",
 	"block.create.placard.tooltip.behaviour1": "_Adds_ the held _item_ to the Placard. _Emits_ a brief _Redstone_ signal if a matching item was present already.",
 	"block.create.placard.tooltip.condition2": "When Punched",
 	"block.create.placard.tooltip.behaviour2": "_Removes_ the current _item_ in the frame.",
 	
-	"block.create.flywheel.tooltip": "FLYWHEEL",
 	"block.create.flywheel.tooltip.summary": "_Embellish_ your _Machines_ with this imposing Wheel of Brass.",
 	"block.create.flywheel.tooltip.condition1": "When Powered by Kinetics",
 	"block.create.flywheel.tooltip.behaviour1": "Starts spinning.",
 
-	"item.create.copper_diving_boots.tooltip": "COPPER DIVING BOOTS",
 	"item.create.copper_diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
 	"item.create.copper_diving_boots.tooltip.condition1": "When Worn",
 	"item.create.copper_diving_boots.tooltip.behaviour1": "Wielder _descends_ more _quickly_ in liquids. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
 
-	"item.create.netherite_diving_boots.tooltip": "NETHERITE DIVING BOOTS",
 	"item.create.netherite_diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor, including Oceans made of Lava.",
 	"item.create.netherite_diving_boots.tooltip.condition1": "When Worn",
 	"item.create.netherite_diving_boots.tooltip.behaviour1": "Wielder _descends_ more _quickly_ in liquids. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
 
-	"item.create.crafting_blueprint.tooltip": "CRAFTING BLUEPRINT",
 	"item.create.crafting_blueprint.tooltip.summary": "_Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
 	"item.create.crafting_blueprint.condition1": "R-Click empty Slot",
 	"item.create.crafting_blueprint.behaviour1": "Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
 	"item.create.crafting_blueprint.condition2": "R-Click configured Slot",
 	"item.create.crafting_blueprint.behaviour2": "_Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
 
-	"item.create.minecart_coupling.tooltip": "MINECART COUPLING",
 	"item.create.minecart_coupling.tooltip.summary": "_Chains_ together individual _Minecarts_, causing them to move as a group.",
 
-	"item.create.experience_nugget.tooltip": "NUGGET OF EXPERIENCE",
 	"item.create.experience_nugget.tooltip.summary": "A speck of _inspiration_ from your fantastic inventions.",
 	"item.create.experience_nugget.tooltip.condition1": "When Used",
 	"item.create.experience_nugget.tooltip.behaviour1": "_Redeems_ _Experience_ points contained within.",
 
-	"block.create.peculiar_bell.tooltip": "PECULIAR BELL",
 	"block.create.peculiar_bell.tooltip.summary": "A decorative _Brass Bell_. Placing it right above open _Soul Fire_ may have side-effects...",
 
-	"block.create.haunted_bell.tooltip": "HAUNTED BELL",
 	"block.create.haunted_bell.tooltip.summary": "A _Cursed Bell_ haunted by lost souls of the Nether.",
 	"block.create.haunted_bell.tooltip.condition1": "When Held or Rang",
 	"block.create.haunted_bell.tooltip.behaviour1": "Highlights nearby _Lightless Spots_ on which _Hostile Mobs_ can spawn.",
 
-	"block.create.copycat_panel.tooltip": "COPYCAT PANEL",
 	"block.create.copycat_panel.tooltip.summary": "_Converts_ any _full block_ into a decorative panel. Also accepts _Bars_ and _Trapdoors_.",
 	"block.create.copycat_panel.tooltip.condition1": "When R-Clicked",
 	"block.create.copycat_panel.tooltip.behaviour1": "Applies _held item_ as its _material_ if possible. _Click again_ to cycle _orientation_ or _powered_ state. Use a _Wrench_ to _reset_ the material.",
 
-	"block.create.copycat_step.tooltip": "COPYCAT STEP",
 	"block.create.copycat_step.tooltip.summary": "_Converts_ any _full block_ into a decorative step.",
 	"block.create.copycat_step.tooltip.condition1": "When R-Clicked",
 	"block.create.copycat_step.tooltip.behaviour1": "Applies _held item_ as its _material_ if possible. _Click again_ to cycle _orientation_ or _powered_ state. Use a _Wrench_ to _reset_ the material.",
 
-	"block.create.clipboard.tooltip": "CLIPBOARD",
 	"block.create.clipboard.tooltip.summary": "_Keeps your notes_ and makes you look more professional.",
 	"block.create.clipboard.tooltip.condition1": "When R-Clicked",
 	"block.create.clipboard.tooltip.behaviour1": "Opens the _Interface_. _Sneak-Click_ to _place_ it on a surface.",

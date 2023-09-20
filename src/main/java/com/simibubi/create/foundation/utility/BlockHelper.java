@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.blockEntity.IMergeableBE;
 
 import net.minecraft.core.BlockPos;
@@ -33,6 +35,7 @@ import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.IceBlock;
 import net.minecraft.world.level.block.SlimeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -355,6 +358,16 @@ public class BlockHelper {
 			return toState.setValue(property, fromState.getValue(property));
 		}
 		return toState;
+	}
+
+	public static boolean isNotUnheated(BlockState state) {
+		if (state.is(BlockTags.CAMPFIRES) && state.hasProperty(CampfireBlock.LIT)) {
+			return state.getValue(CampfireBlock.LIT);
+		}
+		if (state.hasProperty(BlazeBurnerBlock.HEAT_LEVEL)) {
+			return state.getValue(BlazeBurnerBlock.HEAT_LEVEL) != HeatLevel.NONE;
+		}
+		return true;
 	}
 
 }

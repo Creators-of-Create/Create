@@ -1,7 +1,6 @@
 package com.simibubi.create;
 
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 
@@ -24,19 +23,11 @@ import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.schematics.ServerSchematicLoader;
 import com.simibubi.create.content.trains.GlobalRailwayManager;
 import com.simibubi.create.content.trains.bogey.BogeySizes;
+import com.simibubi.create.content.trains.track.AllPortalTracks;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.CopperRegistries;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.simibubi.create.foundation.data.DamageTypeTagGen;
-import com.simibubi.create.foundation.data.GeneratedEntriesProvider;
-import com.simibubi.create.foundation.data.LangMerger;
-import com.simibubi.create.foundation.data.RecipeSerializerTagGen;
-import com.simibubi.create.foundation.data.TagGen;
-import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
-import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
-import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipHelper.Palette;
@@ -44,19 +35,16 @@ import com.simibubi.create.foundation.item.TooltipModifier;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.infrastructure.command.ServerLagger;
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.data.CreateDatagen;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -82,6 +70,10 @@ public class Create {
 	@Deprecated
 	public static final Random RANDOM = new Random();
 
+	/**
+	 * <b>Other mods should not use this field!</b> If you are an addon developer, create your own instance of
+	 * {@link CreateRegistrate}.
+	 */
 	public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(ID);
 
 	static {
@@ -134,6 +126,7 @@ public class Create {
 		// FIXME: some of these registrations are not thread-safe
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
+		AllPortalTracks.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
@@ -149,7 +142,7 @@ public class Create {
 		CopperRegistries.inject();
 
 		modEventBus.addListener(Create::init);
-		modEventBus.addListener(EventPriority.LOW, Create::gatherData);
+		modEventBus.addListener(EventPriority.LOWEST, CreateDatagen::gatherData);
 		modEventBus.addListener(AllSoundEvents::register);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
@@ -173,32 +166,6 @@ public class Create {
 			AllAdvancements.register();
 			AllTriggers.register();
 		});
-	}
-
-	public static void gatherData(GatherDataEvent event) {
-		TagGen.datagen();
-		DataGenerator gen = event.getGenerator();
-		PackOutput output = gen.getPackOutput();
-		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-
-		if (event.includeClient()) {
-			gen.addProvider(true, AllSoundEvents.provider(gen));
-			LangMerger.attachToRegistrateProvider(gen, output);
-		}
-
-		if (event.includeServer()) {
-			GeneratedEntriesProvider generatedEntriesProvider = new GeneratedEntriesProvider(output, lookupProvider);
-			lookupProvider = generatedEntriesProvider.getRegistryProvider();
-			gen.addProvider(true, generatedEntriesProvider);
-
-			gen.addProvider(true, new RecipeSerializerTagGen(output, lookupProvider, event.getExistingFileHelper()));
-			gen.addProvider(true, new DamageTypeTagGen(output, lookupProvider, event.getExistingFileHelper()));
-			gen.addProvider(true, new AllAdvancements(output));
-			gen.addProvider(true, new StandardRecipeGen(output));
-			gen.addProvider(true, new MechanicalCraftingRecipeGen(output));
-			gen.addProvider(true, new SequencedAssemblyRecipeGen(output));
-			ProcessingRecipeGen.registerAll(gen, output);
-		}
 	}
 
 	public static ResourceLocation asResource(String path) {

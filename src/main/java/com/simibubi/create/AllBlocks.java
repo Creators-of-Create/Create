@@ -704,7 +704,7 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY).lightLevel(BlazeBurnerBlock::getLight))
 			.transform(pickaxeOnly())
 			.addLayer(() -> RenderType::cutoutMipped)
-			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
+			.tag(AllBlockTags.FAN_PROCESSING_CATALYSTS_BLASTING.tag, AllBlockTags.FAN_PROCESSING_CATALYSTS_SMOKING.tag, AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
 			.loot((lt, block) -> lt.add(block, BlazeBurnerBlock.buildLootTable()))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.onRegister(movementBehaviour(new BlazeBurnerMovementBehaviour()))
@@ -720,7 +720,7 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY).lightLevel(LitBlazeBurnerBlock::getLight))
 			.transform(pickaxeOnly())
 			.addLayer(() -> RenderType::cutoutMipped)
-			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
+			.tag(AllBlockTags.FAN_PROCESSING_CATALYSTS_HAUNTING.tag, AllBlockTags.FAN_PROCESSING_CATALYSTS_SMOKING.tag, AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.PASSIVE_BOILER_HEATERS.tag)
 			.loot((lt, block) -> lt.dropOther(block, AllItems.EMPTY_BLAZE_BURNER.get()))
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStates(state -> ConfiguredModel.builder()
@@ -755,7 +755,6 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
-		.addLayer(() -> RenderType::cutoutMipped)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
 		.transform(pickaxeOnly())
@@ -766,12 +765,12 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<SmartChuteBlock> SMART_CHUTE = REGISTRATE.block("smart_chute", SmartChuteBlock::new)
-		.addLayer(() -> RenderType::cutoutMipped)
 		.initialProperties(SharedProperties::softMetal)
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 			.sound(SoundType.NETHERITE_BLOCK)
 			.noOcclusion()
 			.isRedstoneConductor((level, pos, state) -> false))
+		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(pickaxeOnly())
 		.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
@@ -2020,9 +2019,9 @@ public class AllBlocks {
 
 	public static final BlockEntry<GirderBlock> METAL_GIRDER = REGISTRATE.block("metal_girder", GirderBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.blockstate(GirderBlockStateGenerator::blockState)
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
 		.transform(pickaxeOnly())
+		.blockstate(GirderBlockStateGenerator::blockState)
 		.onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
 		.item()
 		.transform(customItemModel())
@@ -2031,9 +2030,9 @@ public class AllBlocks {
 	public static final BlockEntry<GirderEncasedShaftBlock> METAL_GIRDER_ENCASED_SHAFT =
 		REGISTRATE.block("metal_girder_encased_shaft", GirderEncasedShaftBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.blockstate(GirderBlockStateGenerator::blockStateWithShaft)
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
 			.transform(pickaxeOnly())
+			.blockstate(GirderBlockStateGenerator::blockStateWithShaft)
 			.loot((p, b) -> p.add(b, p.createSingleItemTable(METAL_GIRDER.get())
 				.withPool(p.applyExplosionCondition(SHAFT.get(), LootPool.lootPool()
 					.setRolls(ConstantValue.exactly(1.0F))

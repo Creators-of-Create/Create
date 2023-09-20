@@ -189,6 +189,8 @@ public class SuperGlueSelectionHandler {
 
 		if (!isGlue(player.getMainHandItem()))
 			return false;
+		if (!player.mayBuild())
+			return false;
 
 		if (attack) {
 			if (selected == null)

@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SimpleCreateTrigger extends CriterionTriggerBase<SimpleCreateTrigger.Instance> implements ITriggerable {
+public class SimpleCreateTrigger extends CriterionTriggerBase<SimpleCreateTrigger.Instance> {
 
 	public SimpleCreateTrigger(String id) {
 		super(id);

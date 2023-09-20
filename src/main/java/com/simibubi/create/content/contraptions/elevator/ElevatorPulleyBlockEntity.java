@@ -82,14 +82,14 @@ public class ElevatorPulleyBlockEntity extends PulleyBlockEntity {
 
 		double y = movedContraption.getY();
 		int targetLevel = Mth.floor(0.5f + y) + ec.contactYOffset;
-		
+
 		Integer ecCurrentTargetY = ec.getCurrentTargetY(level);
 		if (ecCurrentTargetY != null)
 			targetLevel = ecCurrentTargetY;
 		if (level.isClientSide())
 			targetLevel = ec.clientYTarget;
 		if (!wasArrived && !level.isClientSide()) {
-			triggerContact(ec, targetLevel);
+			triggerContact(ec, targetLevel - ec.contactYOffset);
 			AllSoundEvents.CONTRAPTION_DISASSEMBLE.play(level, null, worldPosition.below((int) offset), 0.75f, 0.8f);
 		}
 

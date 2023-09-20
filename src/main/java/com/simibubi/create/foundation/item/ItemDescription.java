@@ -38,7 +38,7 @@ public record ItemDescription(ImmutableList<Component> lines, ImmutableList<Comp
 
 	@Nullable
 	public static ItemDescription create(String translationKey, Palette palette) {
-		if (!canFillBuilder(translationKey)) {
+		if (!canFillBuilder(translationKey + ".summary")) {
 			return null;
 		}
 

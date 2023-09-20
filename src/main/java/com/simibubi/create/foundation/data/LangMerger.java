@@ -11,8 +11,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -25,17 +23,19 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
-import com.tterrag.registrate.providers.RegistrateDataProvider;
+import com.tterrag.registrate.AbstractRegistrate;
 
 import net.minecraft.Util;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
+/**
+ * @deprecated Use {@link AbstractRegistrate#addRawLang} or, if absolutely necessary, {@link CreateRegistrate#addLangPostprocessor} instead.
+ */
+@Deprecated(forRemoval = true)
 public class LangMerger implements DataProvider {
 
 	static final Gson GSON = new GsonBuilder().setPrettyPrinting()
@@ -61,18 +61,6 @@ public class LangMerger implements DataProvider {
 		this.mergedLangData = new ArrayList<>();
 		this.langIgnore = new ArrayList<>();
 		populateLangIgnore();
-	}
-
-	public static void attachToRegistrateProvider(DataGenerator gen, PackOutput output) {
-		Map<String, DataProvider> providers =
-			ObfuscationReflectionHelper.getPrivateValue(DataGenerator.class, gen, "providersToRun");
-		Entry<String, DataProvider> entryToReplace = null;
-		for (Entry<String, DataProvider> entry : providers.entrySet())
-			if (entry.getValue() instanceof RegistrateDataProvider rdp)
-				entryToReplace = entry;
-		if (entryToReplace != null)
-			providers.put(entryToReplace.getKey(), new ChainedDataProvider(entryToReplace.getValue(),
-				new LangMerger(output, Create.ID, Create.NAME, AllLangPartials.values())));
 	}
 
 	protected void populateLangIgnore() {
