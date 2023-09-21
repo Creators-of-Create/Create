@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.tterrag.registrate.AbstractRegistrate;
+import com.tterrag.registrate.providers.ProviderType;
 
 import net.minecraft.Util;
 import net.minecraft.data.CachedOutput;
@@ -33,7 +34,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
 /**
- * @deprecated Use {@link AbstractRegistrate#addRawLang} instead.
+ * @deprecated Use {@link AbstractRegistrate#addRawLang} or {@link AbstractRegistrate#addDataGenerator} with {@link ProviderType#LANG} instead.
  */
 @Deprecated(forRemoval = true)
 public class LangMerger implements DataProvider {
