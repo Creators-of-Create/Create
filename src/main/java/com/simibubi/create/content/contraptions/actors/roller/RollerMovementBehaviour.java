@@ -33,6 +33,7 @@ import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -101,6 +102,11 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(Level world, BlockPos breakingPos, BlockState state) {
+		for (Direction side : Iterate.directions)
+			if (world.getBlockState(breakingPos.relative(side))
+				.is(BlockTags.PORTALS))
+				return false;
+
 		return super.canBreak(world, breakingPos, state) && !state.getCollisionShape(world, breakingPos)
 			.isEmpty() && !AllBlocks.TRACK.has(state);
 	}
