@@ -1,5 +1,10 @@
 package com.simibubi.create.foundation.data;
 
+import com.tterrag.registrate.AbstractRegistrate;
+
+/**
+ * @deprecated Use {@link AbstractRegistrate#addRawLang} instead.
+ */
 public class LangEntry {
 	static final String ENTRY_FORMAT = "\t\"%s\": %s,\n";
 
