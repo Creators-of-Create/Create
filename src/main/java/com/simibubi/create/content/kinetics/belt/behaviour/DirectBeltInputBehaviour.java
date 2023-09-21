@@ -33,6 +33,7 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 	public static final BehaviourType<DirectBeltInputBehaviour> TYPE = new BehaviourType<>();
 
 	private InsertionCallback tryInsert;
+	private OccupiedPredicate isOccupied;
 	private AvailabilityPredicate canInsert;
 	private Supplier<Boolean> supportsBeltFunnels;
 
@@ -40,6 +41,7 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 		super(be);
 		tryInsert = this::defaultInsertionCallback;
 		canInsert = d -> true;
+		isOccupied = d -> false;
 		supportsBeltFunnels = () -> false;
 	}
 
@@ -55,6 +57,11 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 
 	public DirectBeltInputBehaviour onlyInsertWhen(AvailabilityPredicate pred) {
 		canInsert = pred;
+		return this;
+	}
+	
+	public DirectBeltInputBehaviour considerOccupiedWhen(OccupiedPredicate pred) {
+		isOccupied = pred;
 		return this;
 	}
 
@@ -75,6 +82,10 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 		return canInsert.test(side);
 	}
 
+	public boolean isOccupied(Direction side) {
+		return isOccupied.test(side);
+	}
+	
 	public ItemStack handleInsertion(ItemStack stack, Direction side, boolean simulate) {
 		return handleInsertion(new TransportedItemStack(stack), side, simulate);
 	}
@@ -93,6 +104,11 @@ public class DirectBeltInputBehaviour extends BlockEntityBehaviour {
 		public ItemStack apply(TransportedItemStack stack, Direction side, boolean simulate);
 	}
 
+	@FunctionalInterface
+	public interface OccupiedPredicate {
+		public boolean test(Direction side);
+	}
+	
 	@FunctionalInterface
 	public interface AvailabilityPredicate {
 		public boolean test(Direction side);
