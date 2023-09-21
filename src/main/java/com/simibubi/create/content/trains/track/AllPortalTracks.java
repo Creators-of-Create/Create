@@ -3,6 +3,7 @@ package com.simibubi.create.content.trains.track;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.foundation.utility.BlockFace;
@@ -61,7 +62,8 @@ public class AllPortalTracks {
 
 	public static void registerDefaults() {
 		registerIntegration(Blocks.NETHER_PORTAL, AllPortalTracks::nether);
-		registerIntegration(new ResourceLocation("aether", "aether_portal"), AllPortalTracks::aether);
+		if (Mods.AETHER.isLoaded())
+			registerIntegration(new ResourceLocation("aether", "aether_portal"), AllPortalTracks::aether);
 	}
 
 	private static Pair<ServerLevel, BlockFace> nether(Pair<ServerLevel, BlockFace> inbound) {
