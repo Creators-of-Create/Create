@@ -51,7 +51,8 @@ public class SmartChuteBlockEntity extends ChuteBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(filtering =
-			new FilteringBehaviour(this, new SmartChuteFilterSlotPositioning()).showCountWhen(this::isExtracting));
+			new FilteringBehaviour(this, new SmartChuteFilterSlotPositioning()).showCountWhen(this::isExtracting)
+				.withCallback($ -> invVersionTracker.reset()));
 		super.addBehaviours(behaviours);
 	}
 

@@ -33,7 +33,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
 /**
- * @deprecated Use {@link AbstractRegistrate#addRawLang} or, if absolutely necessary, {@link CreateRegistrate#addLangPostprocessor} instead.
+ * @deprecated Use {@link AbstractRegistrate#addRawLang} instead.
  */
 @Deprecated(forRemoval = true)
 public class LangMerger implements DataProvider {

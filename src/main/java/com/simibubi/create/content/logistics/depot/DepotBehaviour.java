@@ -240,7 +240,7 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 
 	public void addSubBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(blockEntity).allowingBeltFunnels()
-			.setInsertionHandler(this::tryInsertingFromSide));
+			.setInsertionHandler(this::tryInsertingFromSide).considerOccupiedWhen(this::isOccupied));
 		transportedHandler = new TransportedItemStackHandlerBehaviour(blockEntity, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf);
 		behaviours.add(transportedHandler);
@@ -339,14 +339,20 @@ public class DepotBehaviour extends BlockEntityBehaviour {
 		return lazyItemHandler.cast();
 	}
 
+	private boolean isOccupied(Direction side) {
+		if (!getHeldItemStack().isEmpty() && !canMergeItems())
+			return true;
+		if (!isOutputEmpty() && !canMergeItems())
+			return true;
+		if (!canAcceptItems.get())
+			return true;
+		return false;
+	}
+	
 	private ItemStack tryInsertingFromSide(TransportedItemStack transportedStack, Direction side, boolean simulate) {
 		ItemStack inserted = transportedStack.stack;
 
-		if (!getHeldItemStack().isEmpty() && !canMergeItems())
-			return inserted;
-		if (!isOutputEmpty() && !canMergeItems())
-			return inserted;
-		if (!canAcceptItems.get())
+		if (isOccupied(side))
 			return inserted;
 
 		int size = transportedStack.stack.getCount();

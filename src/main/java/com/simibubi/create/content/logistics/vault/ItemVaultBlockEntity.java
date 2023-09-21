@@ -7,6 +7,7 @@ import com.simibubi.create.api.connectivity.ConnectivityHandler;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryWrapper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.core.BlockPos;
@@ -260,8 +261,8 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 			}
 		}
 
-		CombinedInvWrapper combinedInvWrapper = new CombinedInvWrapper(invs);
-		itemCapability = LazyOptional.of(() -> combinedInvWrapper);
+		IItemHandler itemHandler = new VersionedInventoryWrapper(new CombinedInvWrapper(invs));
+		itemCapability = LazyOptional.of(() -> itemHandler);
 	}
 
 	public static int getMaxLength(int radius) {

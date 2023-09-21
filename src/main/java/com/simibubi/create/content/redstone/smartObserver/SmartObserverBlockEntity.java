@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.CapManipulationBehaviourBase.InterfaceProvider;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -31,6 +32,10 @@ public class SmartObserverBlockEntity extends SmartBlockEntity {
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour observedInventory;
 	private TankManipulationBehaviour observedTank;
+	
+	private VersionedInventoryTrackerBehaviour invVersionTracker;
+	private boolean sustainSignal;
+	
 	public int turnOffTicks = 0;
 
 	public SmartObserverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -40,7 +45,9 @@ public class SmartObserverBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		behaviours.add(filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot(false)));
+		behaviours.add(filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot(false))
+			.withCallback($ -> invVersionTracker.reset()));
+		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 
 		InterfaceProvider towardBlockFacing =
 			(w, p, s) -> new BlockFace(p, DirectedDirectionalBlock.getTargetDirection(s));
@@ -105,11 +112,23 @@ public class SmartObserverBlockEntity extends SmartBlockEntity {
 			return;
 		}
 
-		if (!observedInventory.simulate()
-			.extract()
-			.isEmpty()) {
-			activate();
-			return;
+		if (observedInventory.hasInventory()) {
+			boolean skipInv = invVersionTracker.stillWaiting(observedInventory);
+			invVersionTracker.awaitNewVersion(observedInventory);
+
+			if (skipInv && sustainSignal)
+				turnOffTicks = DEFAULT_DELAY;
+
+			if (!skipInv) {
+				sustainSignal = false;
+				if (!observedInventory.simulate()
+					.extract()
+					.isEmpty()) {
+					sustainSignal = true;
+					activate();
+					return;
+				}
+			}
 		}
 
 		if (!observedTank.simulate()
