@@ -202,6 +202,7 @@ dependencies {
     // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252")
     // runtimeOnly fg.deobf("maven.modrinth:rubidium:0.5.3")
     // implementation fg.deobf("com.railwayteam.railways:railways-1.18.2-1.1.1:all") { transitive = false }
+    // runtimeOnly fg.deobf("maven.modrinth:spark:1.10.38-forge")
 
     // https://discord.com/channels/313125603924639766/725850371834118214/910619168821354497
     // Prevent Mixin annotation processor from getting into IntelliJ's annotation processor settings
