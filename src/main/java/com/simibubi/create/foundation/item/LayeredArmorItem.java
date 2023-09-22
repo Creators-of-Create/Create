@@ -3,11 +3,15 @@ package com.simibubi.create.foundation.item;
 import java.util.Map;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.mixin.accessor.HumanoidArmorLayerAccessor;
 
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,14 +43,21 @@ public interface LayeredArmorItem extends CustomRenderedArmorItem {
 		accessor.create$callSetPartVisibility(innerModel, slot);
 		String locationStr2 = getArmorTextureLocation(entity, slot, stack, 2);
 		ResourceLocation location2 = locationCache.computeIfAbsent(locationStr2, ResourceLocation::new);
-		accessor.create$callRenderModel(poseStack, bufferSource, light, item, innerModel, glint, 1.0F, 1.0F, 1.0F, location2);
+		renderModel(poseStack, bufferSource, light, item, innerModel, glint, 1.0F, 1.0F, 1.0F, location2);
 
 		HumanoidModel<?> outerModel = accessor.create$getOuterModel();
 		layer.getParentModel().copyPropertiesTo((HumanoidModel) outerModel);
 		accessor.create$callSetPartVisibility(outerModel, slot);
 		String locationStr1 = getArmorTextureLocation(entity, slot, stack, 1);
 		ResourceLocation location1 = locationCache.computeIfAbsent(locationStr1, ResourceLocation::new);
-		accessor.create$callRenderModel(poseStack, bufferSource, light, item, outerModel, glint, 1.0F, 1.0F, 1.0F, location1);
+		renderModel(poseStack, bufferSource, light, item, outerModel, glint, 1.0F, 1.0F, 1.0F, location1);
+	}
+
+	// from HumanoidArmorLayer.renderModel
+	private void renderModel(PoseStack poseStack, MultiBufferSource bufferSource, int light, ArmorItem item,
+		Model model, boolean glint, float red, float green, float blue, ResourceLocation armorResource) {
+		VertexConsumer vertexconsumer = bufferSource.getBuffer(RenderType.armorCutoutNoCull(armorResource));
+		model.renderToBuffer(poseStack, vertexconsumer, light, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
 	}
 
 	String getArmorTextureLocation(LivingEntity entity, EquipmentSlot slot, ItemStack stack, int layer);
