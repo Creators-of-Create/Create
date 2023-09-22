@@ -2,6 +2,7 @@ package com.simibubi.create.infrastructure.debugInfo.element;
 
 import com.google.common.collect.ImmutableList;
 
+import com.simibubi.create.infrastructure.debugInfo.DebugInformation;
 import com.simibubi.create.infrastructure.debugInfo.InfoProvider;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,6 +17,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A section for organizing debug information. Can contain both information and other sections.
+ * To create one, use the {@link #builder(String) builder} method.
+ */
 public record DebugInfoSection(String name, ImmutableList<InfoElement> elements) implements InfoElement {
 	@Override
 	public void write(Player player, FriendlyByteBuf buffer) {
@@ -30,18 +35,20 @@ public record DebugInfoSection(String name, ImmutableList<InfoElement> elements)
 
 	@Override
 	public void print(int depth, @Nullable Player player, Consumer<String> lineConsumer) {
-		String indent = Stream.generate(() -> "\t").limit(depth).collect(Collectors.joining(""));
-		lineConsumer.accept(indent + "<details>");
-		lineConsumer.accept(indent + "<summary>" + name + "</summary>");
+		String indent = DebugInformation.getIndent(depth);
+		lineConsumer.accept(indent + name + ":");
 		elements.forEach(element -> element.print(depth + 1, player, lineConsumer));
-		lineConsumer.accept(indent + "</details>");
-
 	}
 
 	public static DebugInfoSection read(FriendlyByteBuf buffer) {
 		String name = buffer.readUtf();
 		ArrayList<InfoElement> elements = buffer.readCollection(ArrayList::new, InfoElement::read);
 		return new DebugInfoSection(name, ImmutableList.copyOf(elements));
+	}
+
+	public static DebugInfoSection readDirect(FriendlyByteBuf buf) {
+		buf.readBoolean(); // discard type marker
+		return read(buf);
 	}
 
 	public static Builder builder(String name) {

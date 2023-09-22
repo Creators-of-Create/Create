@@ -1,5 +1,7 @@
 package com.simibubi.create.infrastructure.debugInfo;
 
+import java.util.List;
+
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import com.simibubi.create.foundation.utility.Components;
@@ -19,7 +21,7 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 			"Debug information has been copied to your clipboard."
 			).withStyle(ChatFormatting.GREEN);
 
-	private final DebugInfoSection serverInfo;
+	private final List<DebugInfoSection> serverInfo;
 	private final Player player;
 
 	public ServerDebugInfoPacket(Player player) {
@@ -28,30 +30,51 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 	}
 
 	public ServerDebugInfoPacket(FriendlyByteBuf buffer) {
-		buffer.readBoolean(); // excess marker
-		this.serverInfo = DebugInfoSection.read(buffer);
+		this.serverInfo = buffer.readList(DebugInfoSection::readDirect);
 		this.player = null;
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {
-		this.serverInfo.write(this.player, buffer);
+		buffer.writeCollection(this.serverInfo, (buf, section) -> section.write(player, buf));
 	}
 
 	@Override
 	public boolean handle(NetworkEvent.Context context) {
 		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			Player player = Minecraft.getInstance().player;
-
 			StringBuilder output = new StringBuilder();
-			serverInfo.print(player, line -> output.append(line).append("\n\n"));
-			output.append("\n\n");
-			DebugInformation.getClientInfo().print(player, line -> output.append(line).append("\n\n"));
-			String text = output.toString();
+			List<DebugInfoSection> clientInfo = DebugInformation.getClientInfo();
 
+			printInfo("Client", player, clientInfo, output);
+			output.append("\n\n");
+			printInfo("Server", player, serverInfo, output);
+
+			String text = output.toString();
 			Minecraft.getInstance().keyboardHandler.setClipboard(text);
 			player.displayClientMessage(COPIED, true);
 		}));
 		return true;
+	}
+
+	private void printInfo(String side, Player player, List<DebugInfoSection> sections, StringBuilder output) {
+		output.append("<details>");
+		output.append('\n');
+		output.append("<summary>").append(side).append(" Info").append("</summary>");
+		output.append('\n').append('\n');
+		output.append("```");
+		output.append('\n');
+
+		for (int i = 0; i < sections.size(); i++) {
+			if (i != 0) {
+				output.append('\n');
+			}
+			sections.get(i).print(player, line -> output.append(line).append('\n'));
+		}
+
+		output.append("```");
+		output.append('\n').append('\n');
+		output.append("</details>");
+		output.append('\n');
 	}
 }

@@ -1,5 +1,6 @@
 package com.simibubi.create.infrastructure.debugInfo;
 
+import com.google.common.collect.ImmutableMap;
 import com.jozufozu.flywheel.Flywheel;
 import com.jozufozu.flywheel.backend.Backend;
 import com.simibubi.create.Create;
@@ -8,31 +9,50 @@ import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.SystemReport;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+
+import com.simibubi.create.infrastructure.debugInfo.element.InfoElement;
+
+import com.simibubi.create.infrastructure.debugInfo.element.InfoEntry;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
+
+import com.mojang.blaze3d.platform.GlUtil;
 
 /**
  * Allows for providing easily accessible debugging information.
  * This info can be retrieved with the "/create debuginfo" command.
  * This command copies all information to the clipboard, formatted for a GitHub issue.
+ * Addons are welcome to add their own sections. Registration must occur synchronously.
  */
 public class DebugInformation {
-	private static DebugInfoSection client = DebugInfoSection.builder("Client Info").build();
-	private static DebugInfoSection server = DebugInfoSection.builder("Server Info").build();
+	private static final List<DebugInfoSection> client = new ArrayList<>();
+	private static final List<DebugInfoSection> server = new ArrayList<>();
+
+	private static final ImmutableMap<String, String> mcSystemInfo = Util.make(() -> {
+		SystemReport systemReport = new SystemReport();
+		SystemReportAccessor access = (SystemReportAccessor) systemReport;
+		return ImmutableMap.copyOf(access.getEntries());
+	});
 
 	public static void registerClientInfo(DebugInfoSection section) {
-		client = client.builder().put(section).build();
+		client.add(section);
 	}
 
 	public static void registerServerInfo(DebugInfoSection section) {
-		server = server.builder().put(section).build();
+		server.add(section);
 	}
 
 	public static void registerBothInfo(DebugInfoSection section) {
@@ -40,11 +60,11 @@ public class DebugInformation {
 		registerServerInfo(section);
 	}
 
-	public static DebugInfoSection getClientInfo() {
+	public static List<DebugInfoSection> getClientInfo() {
 		return client;
 	}
 
-	public static DebugInfoSection getServerInfo() {
+	public static List<DebugInfoSection> getServerInfo() {
 		return server;
 	}
 
@@ -53,19 +73,30 @@ public class DebugInformation {
 				.put("Mod Version", Create.VERSION)
 				.put("Forge Version", getVersionOfMod("forge"))
 				.put("Minecraft Version", SharedConstants.getCurrentVersion().getName())
-				.put("Other Mods", listAllOtherMods())
-				.put("Operating System", SystemReportAccessor.getOPERATING_SYSTEM())
-				.put("Java Version", SystemReportAccessor.getJAVA_VERSION())
-				.put("Memory", () -> getMcSystemInfo().get("Memory"))
 				.buildTo(DebugInformation::registerBothInfo);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			DebugInfoSection.builder(Create.NAME)
+			DebugInfoSection.builder("Graphics")
 					.put("Flywheel Version", Flywheel.getVersion().toString())
 					.put("Flywheel Backend", () -> Backend.getBackendType().toString())
-					.put("Graphics Cards", DebugInformation.getGraphicsCardsInfo())
+					.put("OpenGL Renderer", GlUtil::getRenderer)
+					.put("OpenGL Version", GlUtil::getOpenGLVersion)
+					.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode.toString())
 					.buildTo(DebugInformation::registerClientInfo);
 		});
+
+		DebugInfoSection.builder("System Information")
+				.put("Operating System", SystemReportAccessor.getOPERATING_SYSTEM())
+				.put("Java Version", SystemReportAccessor.getJAVA_VERSION())
+				.put("JVM Flags", getMcSystemInfo("JVM Flags"))
+				.put("Memory", () -> getMcSystemInfo("Memory"))
+				.put("CPU", getCpuInfo())
+				.putAll(listAllGraphicsCards())
+				.buildTo(DebugInformation::registerBothInfo);
+
+		DebugInfoSection.builder("Other Mods")
+				.putAll(listAllOtherMods())
+				.buildTo(DebugInformation::registerBothInfo);
 	}
 
 	public static String getVersionOfMod(String id) {
@@ -74,42 +105,58 @@ public class DebugInformation {
 				.orElse("None");
 	}
 
-	public static String listAllOtherMods() {
-		StringBuilder mods = new StringBuilder();
+	public static Collection<InfoElement> listAllOtherMods() {
+		List<InfoElement> mods = new ArrayList<>();
 		ModList.get().forEachModContainer((id, mod) -> {
-			if (!id.equals(Create.ID) && !id.equals("forge") && !id.equals("minecraft")) {
+			if (!id.equals(Create.ID) && !id.equals("forge") && !id.equals("minecraft") && !id.equals("flywheel")) {
 				IModInfo info = mod.getModInfo();
 				String name = info.getDisplayName();
 				String version = info.getVersion().toString();
-				if (!mods.isEmpty())
-					mods.append('\n');
-				mods.append(name).append(": ").append(version);
+				mods.add(new InfoEntry(name, version));
 			}
 		});
-		return mods.toString();
+		return mods;
 	}
 
-	public static Map<String, String> getMcSystemInfo() {
-		return ((SystemReportAccessor) new SystemReport()).getEntries();
-	}
-
-	public static String getGraphicsCardsInfo() {
-		StringBuilder builder = new StringBuilder();
-		Map<String, String> info = getMcSystemInfo();
-		String[] types = { "name", "vendor", "VRAM (MB)" };
-		cards: for (int i = 0; i < 10; i++) {
-			for (String type : types) {
-				String key = "Graphics card #" + i + " " + type;
-				if (!info.containsKey(key))
-					break cards;
-				if (!builder.isEmpty())
-					builder.append('\n');
-				String value = String.format("%s #%s: %s", type, i, info.get(key));
-				builder.append(value);
-			}
+	public static Collection<InfoElement> listAllGraphicsCards() {
+		List<InfoElement> cards = new ArrayList<>();
+		for (int i = 0; i < 10; i++) { // there won't be more than 10, right? right??
+			String name = getMcSystemInfo("Graphics card #" + i + " name");
+			String vendor = getMcSystemInfo("Graphics card #" + i + " vendor");
+			String vram = getMcSystemInfo("Graphics card #" + i + " VRAM (MB)");
+			if (name == null || vendor == null || vram == null)
+				break;
+			String key = "Graphics card #" + i;
+			String value = String.format("%s (%s); %s MB of VRAM", name, vendor, vram);
+			cards.add(new InfoEntry(key, value));
 		}
-		if (builder.isEmpty())
-			return "No GPU found?";
-		return builder.toString();
+		return cards.isEmpty() ? List.of(new InfoEntry("Graphics cards", "none")) : cards;
+	}
+
+	public static String getCpuInfo() {
+		String name = tryTrim(getMcSystemInfo("Processor Name"));
+		String freq = getMcSystemInfo("Frequency (GHz)");
+		String sockets = getMcSystemInfo("Number of physical packages");
+		String cores = getMcSystemInfo("Number of physical CPUs");
+		String threads = getMcSystemInfo("Number of logical CPUs");
+		return String.format("%s @ %s GHz; %s cores / %s threads on %s socket(s)", name, freq, cores, threads, sockets);
+	}
+
+	/**
+	 * Get a system attribute provided by Minecraft.
+	 * They can be found in the constructor of {@link SystemReport}.
+	 */
+	@Nullable
+	public static String getMcSystemInfo(String key) {
+		return mcSystemInfo.get(key);
+	}
+
+	public static String getIndent(int depth) {
+		return Stream.generate(() -> "\t").limit(depth).collect(Collectors.joining());
+	}
+
+	@Nullable
+	public static String tryTrim(@Nullable String s) {
+		return s == null ? null : s.trim();
 	}
 }

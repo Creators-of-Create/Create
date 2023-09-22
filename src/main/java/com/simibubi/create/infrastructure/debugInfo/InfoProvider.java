@@ -1,5 +1,7 @@
 package com.simibubi.create.infrastructure.debugInfo;
 
+import java.util.Objects;
+
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
@@ -12,11 +14,12 @@ public interface InfoProvider {
 	/**
 	 * @param player the player requesting the data. May be null
 	 */
+	@Nullable
 	String getInfo(@Nullable Player player);
 
 	default String getInfoSafe(Player player) {
 		try {
-			return getInfo(player);
+			return Objects.toString(getInfo(player));
 		} catch (Throwable t) {
 			StringBuilder builder = new StringBuilder("Error getting information!");
 			builder.append(' ').append(t.getMessage());
