@@ -16,6 +16,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -35,8 +36,8 @@ public class FluidReactions {
 		if (event.getState() != null)
 			level.setBlockAndUpdate(pos, event.getState());
 	}
-	
-	@SubscribeEvent
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void handlePipeFlowCollisionFallback(PipeCollisionEvent.Flow event) {
 		Fluid f1 = event.getFirstFluid();
 		Fluid f2 = event.getSecondFluid();
@@ -66,8 +67,8 @@ public class FluidReactions {
 			level.setBlockAndUpdate(pos, event.getState());
 		}
 	}
-	
-	@SubscribeEvent
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void handlePipeSpillCollisionFallback(PipeCollisionEvent.Spill event) {
 		Fluid pf = event.getPipeFluid();
 		Fluid wf = event.getWorldFluid();
