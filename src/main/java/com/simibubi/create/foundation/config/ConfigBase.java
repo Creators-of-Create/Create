@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -133,6 +134,18 @@ public abstract class ConfigBase {
 
 		public String getName() {
 			return name;
+		}
+
+		public V getDefault() {
+			return value.getDefault();
+		}
+
+		public boolean isDefault() {
+			return Objects.equals(get(), getDefault());
+		}
+
+		public void reset() {
+			set(getDefault());
 		}
 	}
 
