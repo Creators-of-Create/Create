@@ -3,10 +3,13 @@ package com.simibubi.create.foundation.config.ui;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.simibubi.create.foundation.utility.Pair;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -34,10 +37,14 @@ public class BaseConfigScreen extends ConfigScreen {
 	private static final Map<String, UnaryOperator<BaseConfigScreen>> DEFAULTS = new HashMap<>();
 
 	static {
-		DEFAULTS.put(Create.ID, (base) -> base
-				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
+		setDefaultActionFor(Create.ID, base -> base
+				.withLabels("Client Settings", "World Generation Settings", "Gameplay Settings")
 				.withSpecs(AllConfigs.client().specification, AllConfigs.common().specification, AllConfigs.server().specification)
 		);
+		setDefaultActionFor("jei", base -> base
+				.withTitle("Just Enough Items"));
+		setDefaultActionFor("computercraft", base -> base
+				.withTitle("ComputerCraft"));
 	}
 
 	/**
@@ -50,14 +57,16 @@ public class BaseConfigScreen extends ConfigScreen {
 	 * @param modID     the modID of your addon/mod
 	 */
 	public static void setDefaultActionFor(String modID, UnaryOperator<BaseConfigScreen> transform) {
-		if (modID.equals(Create.ID))
+		if(DEFAULTS.containsKey(modID)) {
+			Create.LOGGER.error("Somebody tried to set default action for mod {}, but it was already set!", modID);
 			return;
+		}
 
 		DEFAULTS.put(modID, transform);
 	}
 
 	public static BaseConfigScreen forCreate(Screen parent) {
-		return new BaseConfigScreen(parent);
+		return new BaseConfigScreen(parent, Create.ID);
 	}
 
 	BoxWidget clientConfigWidget;
@@ -70,25 +79,21 @@ public class BaseConfigScreen extends ConfigScreen {
 	ForgeConfigSpec clientSpec;
 	ForgeConfigSpec commonSpec;
 	ForgeConfigSpec serverSpec;
-	String clientTitle = "Client Config";
-	String commonTitle = "Common Config";
-	String serverTitle = "Server Config";
+	String clientLabel = "Client Config";
+	String commonLabel = "Common Config";
+	String serverLabel = "Server Config";
 	String modID;
+	Pair<String, Boolean> displayTitle;
 	protected boolean returnOnClose;
 
 	public BaseConfigScreen(Screen parent, @Nonnull String modID) {
 		super(parent);
 		this.modID = modID;
+		this.displayTitle = Pair.of(modID, true);
 
 		if (DEFAULTS.containsKey(modID))
 			DEFAULTS.get(modID).apply(this);
-		else {
-			this.searchForSpecsInModContainer();
-		}
-	}
-
-	private BaseConfigScreen(Screen parent) {
-		this(parent, Create.ID);
+		else this.searchForSpecsInModContainer();
 	}
 
 	/**
@@ -128,17 +133,39 @@ public class BaseConfigScreen extends ConfigScreen {
 		return this;
 	}
 
-	public BaseConfigScreen withTitles(@Nullable String client, @Nullable String common, @Nullable String server) {
+	public BaseConfigScreen withLabels(@Nullable String client, @Nullable String common, @Nullable String server) {
 		if (client != null)
-			clientTitle = client;
+			clientLabel = client;
 
 		if (common != null)
-			commonTitle = common;
+			commonLabel = common;
 
 		if (server != null)
-			serverTitle = server;
+			serverLabel = server;
 
 		return this;
+	}
+
+	public BaseConfigScreen withTitle(String title, boolean uppercase) {
+		if(title != null && !title.isEmpty())
+			displayTitle = Pair.of(title, uppercase);
+		return this;
+	}
+
+	public BaseConfigScreen withTitle(String title) {
+		return withTitle(title, true);
+	}
+
+	public static Optional<String> getCustomTitle(String modID) {
+		for (Map.Entry<String, UnaryOperator<BaseConfigScreen>> entry : DEFAULTS.entrySet()) {
+			if (entry.getKey().equals(modID)) {
+				String s = entry.getValue().apply(new BaseConfigScreen(null, modID)).displayTitle.getFirst();
+				if (!s.equals(modID)) {
+					return Optional.of(s);
+				}
+			}
+		}
+		return Optional.empty();
 	}
 
 	@Override
@@ -146,7 +173,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		super.init();
 		returnOnClose = true;
 
-		TextStencilElement clientText = new TextStencilElement(font, Components.literal(clientTitle)).centered(true, true);
+		TextStencilElement clientText = new TextStencilElement(font, Components.literal(clientLabel)).centered(true, true);
 		addRenderableWidget(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
 
 		if (clientSpec != null) {
@@ -158,7 +185,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			clientText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement commonText = new TextStencilElement(font, Components.literal(commonTitle)).centered(true, true);
+		TextStencilElement commonText = new TextStencilElement(font, Components.literal(commonLabel)).centered(true, true);
 		addRenderableWidget(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
 
 		if (commonSpec != null) {
@@ -170,7 +197,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			commonText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement serverText = new TextStencilElement(font, Components.literal(serverTitle)).centered(true, true);
+		TextStencilElement serverText = new TextStencilElement(font, Components.literal(serverLabel)).centered(true, true);
 		addRenderableWidget(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
 
 		if (serverSpec == null) {
@@ -191,7 +218,11 @@ public class BaseConfigScreen extends ConfigScreen {
 			serverText.withElementRenderer(BoxWidget.gradientFactory.apply(serverConfigWidget));
 		}
 
-		TextStencilElement titleText = new TextStencilElement(font, modID.toUpperCase(Locale.ROOT))
+		String titleToDisplay = displayTitle.getFirst();
+		if(displayTitle.getSecond())
+			titleToDisplay = titleToDisplay.toUpperCase(Locale.ROOT);
+
+		TextStencilElement titleText = new TextStencilElement(font, titleToDisplay)
 				.centered(true, true)
 				.withElementRenderer((ms, w, h, alpha) -> {
 					UIRenderHelper.angledGradient(ms, 0, 0, h / 2, h, w / 2, Theme.p(Theme.Key.CONFIG_TITLE_A));
@@ -247,5 +278,4 @@ public class BaseConfigScreen extends ConfigScreen {
 		}
 		return false;
 	}
-
 }

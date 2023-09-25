@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.config.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -42,7 +43,11 @@ public class ConfigModListScreen extends ConfigScreen {
 		addRenderableWidget(list);
 
 		allEntries = new ArrayList<>();
-		ModList.get().getMods().stream().map(IModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));
+		ModList.get()
+				.getMods()
+				.stream()
+				.map(IModInfo::getModId)
+				.forEach(title -> allEntries.add(new ModEntry(title, this)));
 		allEntries.sort((e1, e2) -> {
 			int empty = (e2.button.active ? 1 : 0) - (e1.button.active ? 1 : 0);
 			if (empty != 0)
@@ -86,7 +91,7 @@ public class ConfigModListScreen extends ConfigScreen {
 				.forEach(list.children()::add);
 
 		list.setScrollAmount(list.getScrollAmount());
-		if (list.children().size() > 0) {
+		if (!list.children().isEmpty()) {
 			this.search.setTextColor(Theme.i(Theme.Key.TEXT));
 		} else {
 			this.search.setTextColor(Theme.i(Theme.Key.BUTTON_FAIL));
@@ -99,7 +104,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		protected String id;
 
 		public ModEntry(String id, Screen parent) {
-			super(toHumanReadable(id));
+			super(BaseConfigScreen.getCustomTitle(id).orElse(toHumanReadable(id)));
 			this.id = id;
 
 			button = new BoxWidget(0, 0, 35, 16)
@@ -112,7 +117,7 @@ public class ConfigModListScreen extends ConfigScreen {
 				button.active = false;
 				button.updateColorsFromState();
 				button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BaseConfigScreen.DISABLED_RENDERER));
-				labelTooltip.add(Components.literal(toHumanReadable(id)));
+				labelTooltip.add(Components.literal(BaseConfigScreen.getCustomTitle(id).orElse(toHumanReadable(id))));
 				labelTooltip.addAll(TooltipHelper.cutStringTextComponent("This Mod does not have any configs registered or is not using Forge's config system", Palette.ALL_GRAY));
 			}
 

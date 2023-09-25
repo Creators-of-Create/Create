@@ -22,6 +22,8 @@ public abstract class ConfigBase {
 	protected List<ConfigBase> children;
 
 	public void registerAll(final ForgeConfigSpec.Builder builder) {
+		if(allValues == null)
+			allValues = new ArrayList<>();
 		for (CValue<?, ?> cValue : allValues)
 			cValue.register(builder);
 	}
@@ -39,7 +41,7 @@ public abstract class ConfigBase {
 	public abstract String getName();
 
 	@FunctionalInterface
-	protected static interface IValueProvider<V, T extends ConfigValue<V>>
+	public interface IValueProvider<V, T extends ConfigValue<V>>
 		extends Function<ForgeConfigSpec.Builder, T> {
 	}
 
