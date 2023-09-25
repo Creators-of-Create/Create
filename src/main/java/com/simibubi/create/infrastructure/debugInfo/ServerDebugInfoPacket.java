@@ -1,6 +1,7 @@
 package com.simibubi.create.infrastructure.debugInfo;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -13,6 +14,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -41,19 +43,7 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(NetworkEvent.Context context) {
-		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			Player player = Minecraft.getInstance().player;
-			StringBuilder output = new StringBuilder();
-			List<DebugInfoSection> clientInfo = DebugInformation.getClientInfo();
-
-			printInfo("Client", player, clientInfo, output);
-			output.append("\n\n");
-			printInfo("Server", player, serverInfo, output);
-
-			String text = output.toString();
-			Minecraft.getInstance().keyboardHandler.setClipboard(text);
-			player.displayClientMessage(COPIED, true);
-		}));
+		context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::handleOnClient));
 		return true;
 	}
 
@@ -76,5 +66,20 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 		output.append('\n').append('\n');
 		output.append("</details>");
 		output.append('\n');
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private void handleOnClient() {
+		Player player = Objects.requireNonNull(Minecraft.getInstance().player);
+		StringBuilder output = new StringBuilder();
+		List<DebugInfoSection> clientInfo = DebugInformation.getClientInfo();
+
+		printInfo("Client", player, clientInfo, output);
+		output.append("\n\n");
+		printInfo("Server", player, serverInfo, output);
+
+		String text = output.toString();
+		Minecraft.getInstance().keyboardHandler.setClipboard(text);
+		player.displayClientMessage(COPIED, true);
 	}
 }
