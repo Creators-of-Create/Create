@@ -79,7 +79,7 @@ public class FluidReactions {
 			event.setState(Blocks.COBBLESTONE.defaultBlockState());
 		} else if (pf == Fluids.LAVA && wf == Fluids.WATER) {
 			event.setState(Blocks.STONE.defaultBlockState());
-		} else if (pf == Fluids.LAVA && wf == Fluids.FLOWING_LAVA) {
+		} else if (pf == Fluids.LAVA && wf == Fluids.FLOWING_WATER) {
 			event.setState(Blocks.COBBLESTONE.defaultBlockState());
 		}
 
