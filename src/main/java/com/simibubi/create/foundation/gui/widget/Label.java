@@ -71,7 +71,7 @@ public class Label extends AbstractSimiWidget {
 	}
 
 	@Override
-	protected void renderButton(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void doRender(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (text == null || text.getString().isEmpty())
 			return;
 

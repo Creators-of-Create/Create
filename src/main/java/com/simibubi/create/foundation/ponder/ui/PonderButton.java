@@ -88,8 +88,8 @@ public class PonderButton extends BoxWidget {
 	}
 
 	@Override
-	public void renderButton(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		super.renderButton(graphics, mouseX, mouseY, partialTicks);
+	public void doRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.doRender(graphics, mouseX, mouseY, partialTicks);
 		float fadeValue = fade.getValue();
 
 		if (fadeValue < .1f)

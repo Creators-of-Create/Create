@@ -40,7 +40,7 @@ public abstract class AbstractSimiWidget extends AbstractWidget implements Ticka
 	protected AbstractSimiWidget(int x, int y, int width, int height, Component message) {
 		super(x, y, width, height, message);
 	}
-	
+
 	@Override
 	protected ClientTooltipPositioner createTooltipPositioner() {
 		return DefaultTooltipPositioner.INSTANCE;
@@ -72,7 +72,7 @@ public abstract class AbstractSimiWidget extends AbstractWidget implements Ticka
 	@Override
 	public void renderWidget(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		beforeRender(graphics, mouseX, mouseY, partialTicks);
-		renderButton(graphics, mouseX, mouseY, partialTicks);
+		doRender(graphics, mouseX, mouseY, partialTicks);
 		afterRender(graphics, mouseX, mouseY, partialTicks);
 		wasHovered = isHoveredOrFocused();
 	}
@@ -81,7 +81,7 @@ public abstract class AbstractSimiWidget extends AbstractWidget implements Ticka
 		graphics.pose().pushPose();
 	}
 
-	protected void renderButton(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void doRender(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 	}
 
 	protected void afterRender(@Nonnull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {

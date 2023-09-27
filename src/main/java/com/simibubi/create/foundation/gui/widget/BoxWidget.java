@@ -121,7 +121,7 @@ public class BoxWidget extends ElementWidget {
 	}
 
 	@Override
-	public void renderButton(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void doRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		float fadeValue = fade.getValue(partialTicks);
 		if (fadeValue < .1f)
 			return;
@@ -133,7 +133,7 @@ public class BoxWidget extends ElementWidget {
 				.withBounds(width, height)
 				.render(graphics);
 
-		super.renderButton(graphics, mouseX, mouseY, partialTicks);
+		super.doRender(graphics, mouseX, mouseY, partialTicks);
 
 		wasHovered = isHovered;
 	}
@@ -148,7 +148,7 @@ public class BoxWidget extends ElementWidget {
 
 		return getX() - padX <= mX && getY() - padY <= mY && mX < getX() + padX + width && mY < getY() + padY + height;
 	}
-	
+
 	@Override
 	protected boolean clicked(double pMouseX, double pMouseY) {
 		if (!active || !visible)
