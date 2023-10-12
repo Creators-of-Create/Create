@@ -35,7 +35,7 @@ public class FluidReactions {
 		if (event.getState() != null)
 			level.setBlockAndUpdate(pos, event.getState());
 	}
-	
+
 	@SubscribeEvent
 	public static void handlePipeFlowCollisionFallback(PipeCollisionEvent.Flow event) {
 		Fluid f1 = event.getFirstFluid();
@@ -66,7 +66,7 @@ public class FluidReactions {
 			level.setBlockAndUpdate(pos, event.getState());
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void handlePipeSpillCollisionFallback(PipeCollisionEvent.Spill event) {
 		Fluid pf = event.getPipeFluid();
@@ -78,7 +78,7 @@ public class FluidReactions {
 			event.setState(Blocks.COBBLESTONE.defaultBlockState());
 		} else if (pf == Fluids.LAVA && wf == Fluids.WATER) {
 			event.setState(Blocks.STONE.defaultBlockState());
-		} else if (pf == Fluids.LAVA && wf == Fluids.FLOWING_LAVA) {
+		} else if (pf == Fluids.LAVA && wf == Fluids.FLOWING_WATER) {
 			event.setState(Blocks.COBBLESTONE.defaultBlockState());
 		}
 
