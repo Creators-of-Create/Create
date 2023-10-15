@@ -289,9 +289,9 @@ public class CarriageContraption extends Contraption {
 	}
 
 	@Override
-	public Collection<BlockEntity> getSpecialRenderedTEs() {
+	public Collection<BlockEntity> getSpecialRenderedBEs() {
 		if (notInPortal())
-			return super.getSpecialRenderedTEs();
+			return super.getSpecialRenderedBEs();
 		return specialRenderedBEsOutsidePortal;
 	}
 

@@ -290,6 +290,70 @@
       "required": false
     },
     {
+      "id": "environmental:stripped_cherry_log",
+      "required": false
+    },
+    {
+      "id": "environmental:stripped_willow_log",
+      "required": false
+    },
+    {
+      "id": "environmental:stripped_wisteria_log",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_aspen_log",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_kousa_log",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_yucca_log",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_morado_log",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_rosewood_log",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_grimwood_log",
+      "required": false
+    },
+    {
+      "id": "goodending:stripped_muddy_oak_log",
+      "required": false
+    },
+    {
+      "id": "goodending:stripped_cypress_log",
+      "required": false
+    },
+    {
+      "id": "biomemakeover:stripped_blighted_balsa_log",
+      "required": false
+    },
+    {
+      "id": "biomemakeover:stripped_willow_log",
+      "required": false
+    },
+    {
+      "id": "biomemakeover:stripped_swamp_cypress_log",
+      "required": false
+    },
+    {
+      "id": "biomemakeover:stripped_ancient_oak_log",
+      "required": false
+    },
+    {
+      "id": "infernalexp:stripped_luminous_stem",
+      "required": false
+    },
+    {
       "id": "byg:stripped_bulbis_stem",
       "required": false
     }

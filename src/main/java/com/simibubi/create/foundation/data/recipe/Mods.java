@@ -11,7 +11,6 @@ public enum Mods {
 	MEK("mekanism", b -> b.reverseMetalPrefix()),
 	TH("thermal"),
 	IE("immersiveengineering", b -> b.reverseMetalPrefix()),
-
 	FD("farmersdelight"),
 	ARS_N("ars_nouveau"),
 	BSK("blue_skies"),
@@ -27,39 +26,32 @@ public enum Mods {
 	BOP("biomesoplenty"),
 	TF("twilightforest"),
 	ECO("ecologics"),
-
 	IC2("ic2", b -> b.reverseMetalPrefix()),
-
 	ATMO("atmospheric"),
-
 	AUTUM("autumnity"),
-
 	DRUIDCRAFT("druidcraft"),
 	ENDER("endergetic"),
 	PVJ("projectvibrantjourneys"),
-
 	UA("upgrade_aquatic"),
-
 	BEF("betterendforge"),
 	ENV("environmental"),
-
 	SUP("supplementaries"),
-
-	AM("alexsmobs"),
+  AM("alexsmobs"),
 	NEA("neapolitan"),
 	AE2("ae2"),
 	MC("minecraft"),
 	BB("buzzier_bees"),
-
 	SILENT_GEMS("silentgems"),
-
 	SF("simplefarming"),
-
 	OREGANIZED("oreganized"),
-
 	GS("galosphere"),
-
 	VH("the_vault"),
+	ENV("environmental"),
+	ATM("atmospheric"),
+	ATM_2("atmospheric", b -> b.omitWoodSuffix()),
+	IX("infernalexp"),
+	GOOD("goodending"),
+	BMK("biomemakeover")
 
 	;
 

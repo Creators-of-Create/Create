@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringB
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.CapManipulationBehaviourBase.InterfaceProvider;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 
 import net.minecraft.core.BlockPos;
@@ -39,6 +40,7 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour observedInventory;
 	private TankManipulationBehaviour observedTank;
+	private VersionedInventoryTrackerBehaviour invVersionTracker;
 
 	public ThresholdSwitchBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -107,18 +109,26 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 
 		} else if (observedInventory.hasInventory() || observedTank.hasInventory()) {
 			if (observedInventory.hasInventory()) {
+				
 				// Item inventory
 				IItemHandler inv = observedInventory.getInventory();
-				for (int slot = 0; slot < inv.getSlots(); slot++) {
-					ItemStack stackInSlot = inv.getStackInSlot(slot);
-					int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
-					int count = stackInSlot.getCount();
-					if (space == 0)
-						continue;
-
-					totalSpace += 1;
-					if (filtering.test(stackInSlot))
-						occupied += count * (1f / space);
+				if (invVersionTracker.stillWaiting(inv)) {
+					occupied = prevLevel;
+					totalSpace = 1f;
+					
+				} else {
+					invVersionTracker.awaitNewVersion(inv);
+					for (int slot = 0; slot < inv.getSlots(); slot++) {
+						ItemStack stackInSlot = inv.getStackInSlot(slot);
+						int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
+						int count = stackInSlot.getCount();
+						if (space == 0)
+							continue;
+						
+						totalSpace += 1;
+						if (filtering.test(stackInSlot))
+							occupied += count * (1f / space);
+					}
 				}
 			}
 
@@ -195,7 +205,12 @@ public class ThresholdSwitchBlockEntity extends SmartBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot(true))
-			.withCallback($ -> this.updateCurrentLevel()));
+			.withCallback($ -> {
+				this.updateCurrentLevel();
+				invVersionTracker.reset();
+			}));
+		
+		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 
 		InterfaceProvider towardBlockFacing =
 			(w, p, s) -> new BlockFace(p, DirectedDirectionalBlock.getTargetDirection(s));

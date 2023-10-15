@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.funnel;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
@@ -18,6 +20,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipulationBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -42,6 +45,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour invManipulation;
+	private VersionedInventoryTrackerBehaviour invVersionTracker;
 	private int extractionCooldown;
 
 	private WeakReference<ItemEntity> lastObserved; // In-world Extractors only
@@ -111,6 +115,9 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	}
 
 	private void activateExtractor() {
+		if (invVersionTracker.stillWaiting(invManipulation))
+			return;
+		
 		BlockState blockState = getBlockState();
 		Direction facing = AbstractFunnelBlock.getFunnelFacing(blockState);
 
@@ -140,8 +147,10 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		ExtractionCountMode mode = getModeToExtract();
 		ItemStack stack = invManipulation.simulate()
 			.extract(mode, amountToExtract);
-		if (stack.isEmpty())
+		if (stack.isEmpty()) {
+			invVersionTracker.awaitNewVersion(invManipulation);
 			return;
+		}
 		for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class, area)) {
 			lastObserved = new WeakReference<>(itemEntity);
 			return;
@@ -189,6 +198,9 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	}
 
 	private void activateExtractingBeltFunnel() {
+		if (invVersionTracker.stillWaiting(invManipulation))
+			return;
+
 		BlockState blockState = getBlockState();
 		Direction facing = blockState.getValue(BeltFunnelBlock.HORIZONTAL_FACING);
 		DirectBeltInputBehaviour inputBehaviour =
@@ -198,14 +210,24 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 			return;
 		if (!inputBehaviour.canInsertFromSide(facing))
 			return;
+		if (inputBehaviour.isOccupied(facing))
+			return;
 
 		int amountToExtract = getAmountToExtract();
 		ExtractionCountMode mode = getModeToExtract();
-		ItemStack stack =
-			invManipulation.extract(mode, amountToExtract, s -> inputBehaviour.handleInsertion(s, facing, true)
-				.isEmpty());
-		if (stack.isEmpty())
+		MutableBoolean deniedByInsertion = new MutableBoolean(false);
+		ItemStack stack = invManipulation.extract(mode, amountToExtract, s -> {
+			ItemStack handleInsertion = inputBehaviour.handleInsertion(s, facing, true);
+			if (handleInsertion.isEmpty())
+				return true;
+			deniedByInsertion.setTrue();
+			return false;
+		});
+		if (stack.isEmpty()) {
+			if (deniedByInsertion.isFalse())
+				invVersionTracker.awaitNewVersion(invManipulation.getInventory());
 			return;
+		}
 		flap(false);
 		onTransfer(stack);
 		inputBehaviour.handleInsertion(stack, facing, false);
@@ -237,12 +259,15 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 			new InvManipulationBehaviour(this, (w, p, s) -> new BlockFace(p, AbstractFunnelBlock.getFunnelFacing(s)
 				.getOpposite()));
 		behaviours.add(invManipulation);
+		
+		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 
 		filtering = new FilteringBehaviour(this, new FunnelFilterSlotPositioning());
 		filtering.showCountWhen(this::supportsAmountOnFilter);
 		filtering.onlyActiveWhen(this::supportsFiltering);
+		filtering.withCallback($ -> invVersionTracker.reset());
 		behaviours.add(filtering);
-
+		
 		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
 			.setInsertionHandler(this::handleDirectBeltInput));
 		registerAwardables(behaviours, AllAdvancements.FUNNEL);

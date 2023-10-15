@@ -13,7 +13,7 @@ public class SharedProperties {
 		new Material(MaterialColor.COLOR_GRAY, false, true, true, true, false, false, PushReaction.NORMAL);
 
 	public static final Material CRUSHING_WHEEL_CONTROLLER_MATERIAL =
-		new Material(MaterialColor.NONE, false, false, true, true, false, false, PushReaction.BLOCK);
+		new Material(MaterialColor.NONE, false, true, true, true, false, false, PushReaction.BLOCK);
 
 	public static Block wooden() {
 		return Blocks.STRIPPED_SPRUCE_WOOD;
