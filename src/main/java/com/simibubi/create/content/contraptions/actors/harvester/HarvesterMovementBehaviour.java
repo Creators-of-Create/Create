@@ -148,7 +148,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 			return false;
 		if (state.getBlock() instanceof SugarCaneBlock)
 			return true;
-		if (state.is(BlockTags.LEAVES))
+		if (state.is(BlockTags.LEAVES) && AllConfigs.server().kinetics.harvesterBreaksLeaves.get())
 			return true;
 		if (state.getBlock() instanceof CocoaBlock)
 			return state.getValue(CocoaBlock.AGE) == CocoaBlock.MAX_AGE;

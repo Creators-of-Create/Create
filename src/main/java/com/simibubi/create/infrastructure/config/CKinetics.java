@@ -46,6 +46,7 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool moveItemsToStorage = b(true, "moveItemsToStorage", Comments.moveItemsToStorage);
 	public final ConfigBool harvestPartiallyGrown = b(false, "harvestPartiallyGrown", Comments.harvestPartiallyGrown);
 	public final ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
+	public final ConfigBool harvesterBreaksLeaves = b(true, "harvesterBreaksLeaves", Comments.harvesterBreaksLeaves);
 	public final ConfigBool minecartContraptionInContainers =
 		b(false, "minecartContraptionInContainers", Comments.minecartContraptionInContainers);
 
@@ -90,6 +91,7 @@ public class CKinetics extends ConfigBase {
 			"Whether items mined or harvested by contraptions should be placed in their mounted storage.";
 		static String harvestPartiallyGrown = "Whether harvesters should break crops that aren't fully grown.";
 		static String harvesterReplants = "Whether harvesters should replant crops after harvesting.";
+		static String harvesterBreaksLeaves = "Whether harvesters should break leaves.";
 		static String stats = "Configure speed/capacity levels for requirements and indicators.";
 		static String rpm = "[in Revolutions per Minute]";
 		static String su = "[in Stress Units]";
