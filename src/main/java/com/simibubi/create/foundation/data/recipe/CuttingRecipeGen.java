@@ -129,8 +129,12 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		UA_3 = cuttingCompatLogOnly(Mods.UA, "driftwood"),
 
 		//Vault Hunters
-		VH = cuttingCompatLogOnly(Mods.VH, "wooden", "overgrown_wooden", "driftwood", "chromatic")
-	;
+		VH = cuttingCompatLogOnly(Mods.VH, "wooden", "overgrown_wooden", "driftwood", "chromatic"),
+
+		// Nether's Exoticism
+		NE = cuttingCompat(Mods.NE, "ramboutan"),
+		NE_2 = cuttingCompatLogOnly(Mods.NE, "jabuticaba")
+		;
 
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
 		create(() -> wood, b -> b.duration(50)

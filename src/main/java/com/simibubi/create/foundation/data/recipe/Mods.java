@@ -50,7 +50,8 @@ public enum Mods {
 	ATM_2("atmospheric", b -> b.omitWoodSuffix()),
 	IX("infernalexp"),
 	GOOD("goodending"),
-	BMK("biomemakeover")
+	BMK("biomemakeover"),
+	NE("nethers_exoticism"),
 
 	;
 
