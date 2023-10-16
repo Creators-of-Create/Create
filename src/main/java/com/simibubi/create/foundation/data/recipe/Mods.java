@@ -46,7 +46,6 @@ public enum Mods {
 	OREGANIZED("oreganized"),
 	GS("galosphere"),
 	VH("the_vault"),
-	ENV("environmental"),
 	ATM("atmospheric"),
 	ATM_2("atmospheric", b -> b.omitWoodSuffix()),
 	IX("infernalexp"),

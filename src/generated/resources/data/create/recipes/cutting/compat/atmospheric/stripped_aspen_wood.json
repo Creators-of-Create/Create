@@ -2,19 +2,19 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "item": "druidcraft:stripped_elder_log"
+      "item": "atmospheric:stripped_aspen_wood"
     }
   ],
   "results": [
     {
-      "item": "druidcraft:elder_planks",
+      "item": "atmospheric:aspen_planks",
       "count": 6
     }
   ],
   "processingTime": 50,
   "conditions": [
     {
-      "modid": "druidcraft",
+      "modid": "atmospheric",
       "type": "forge:mod_loaded"
     }
   ]

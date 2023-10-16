@@ -2,19 +2,19 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "item": "druidcraft:stripped_darkwood_log"
+      "item": "upgrade_aquatic:strippped_driftwood"
     }
   ],
   "results": [
     {
-      "item": "druidcraft:darkwood_planks",
+      "item": "upgrade_aquatic:driftwood_planks",
       "count": 6
     }
   ],
   "processingTime": 50,
   "conditions": [
     {
-      "modid": "druidcraft",
+      "modid": "upgrade_aquatic",
       "type": "forge:mod_loaded"
     }
   ]

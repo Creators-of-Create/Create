@@ -107,13 +107,14 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 		// Atmospheric
 
-		ATMO = cuttingCompatLogOnly(Mods.ATMO, "aspen", "grimwood", "kousa", "rosewood", "yucca" ),
+		ATMO = cuttingCompat(Mods.ATMO, "aspen", "kousa", "yucca", "morado"),
+		ATMO_2 = stripAndMakePlanks(Mods.ATMO, "grimwood", "stripped_grimwood", "grimwood_planks"),
+		ATMO_3 = stripAndMakePlanks(Mods.ATMO, "rosewood", "stripped_rosewood", "rosewood_planks"),
+		ATMO_4 = cuttingCompatLogOnly(Mods.ATMO, "grimwood", "rosewood"),
 
 		// Autumnity
-		AUTUM = cuttingCompatLogOnly(Mods.AUTUM, "maple"),
-
-		// Druidcraft
-		DRUIDCRAFT = cuttingCompatLogOnly(Mods.DRUIDCRAFT, "darkwood", "elder"),
+		AUTUM = cuttingCompat(Mods.AUTUM, "maple"),
+		AUTUM_2 = stripAndMakePlanks(Mods.AUTUM, "sappy_maple_wood", "sappy_maple_log", "maple_planks"),
 
 		// Endergetic
 
@@ -123,7 +124,9 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 		PVJ = cuttingCompatLogOnly(Mods.PVJ,"aspen", "baobab", "cottonwood", "fir", "juniper", "mangrove", "maple", "palm", "pine", "redwood", "willow"),
 
 		// Upgrade Aquatic
-		UA = cuttingCompatLogOnly(Mods.UA, "driftwood", "river"),
+		UA = cuttingCompat(Mods.UA, "river"),
+		UA_2 = stripAndMakePlanks(Mods.UA, "driftwood", "strippped_driftwood", "driftwood_planks"),
+		UA_3 = cuttingCompatLogOnly(Mods.UA, "driftwood"),
 
 		//Vault Hunters
 		VH = cuttingCompatLogOnly(Mods.VH, "wooden", "overgrown_wooden", "driftwood", "chromatic")

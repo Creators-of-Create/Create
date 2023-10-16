@@ -2,18 +2,18 @@
   "type": "create:cutting",
   "ingredients": [
     {
-      "item": "druidcraft:elder_log"
+      "item": "atmospheric:grimwood"
     }
   ],
   "results": [
     {
-      "item": "druidcraft:stripped_elder_log"
+      "item": "atmospheric:stripped_grimwood"
     }
   ],
   "processingTime": 50,
   "conditions": [
     {
-      "modid": "druidcraft",
+      "modid": "atmospheric",
       "type": "forge:mod_loaded"
     }
   ]
