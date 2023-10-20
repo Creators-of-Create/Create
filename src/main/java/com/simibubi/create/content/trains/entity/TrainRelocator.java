@@ -83,7 +83,7 @@ public class TrainRelocator {
 			return;
 
 		if (!player.position()
-			.closerThan(relocatingOrigin, 24) || player.isSteppingCarefully()) {
+			.closerThan(relocatingOrigin, 24) || player.isShiftKeyDown()) {
 			relocatingTrain = null;
 			player.displayClientMessage(Lang.translateDirect("train.relocate.abort")
 				.withStyle(ChatFormatting.RED), true);
