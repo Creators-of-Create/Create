@@ -55,15 +55,23 @@ public class ClientboundMapItemDataPacketMixin {
 
 	@Inject(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V", at = @At("RETURN"))
 	private void create$onInit(FriendlyByteBuf buf, CallbackInfo ci) {
-		create$stationIndices = buf.readVarIntArray();
+		// without this try catch statement, it crashes when loading on a Velocity hub (https://github.com/Fabricators-of-Create/Create/issues/1162)
+		// might be a better way to handle this such as checking if on a modded server but this works
+		try {
+			create$stationIndices = buf.readVarIntArray();
 
-		if (decorations != null) {
-			for (int i : create$stationIndices) {
-				if (i >= 0 && i < decorations.size()) {
-					MapDecoration decoration = decorations.get(i);
-					decorations.set(i, StationMarker.Decoration.from(decoration));
+			if (decorations != null) {
+				for (int i : create$stationIndices) {
+					if (i >= 0 && i < decorations.size()) {
+						MapDecoration decoration = decorations.get(i);
+						decorations.set(i, StationMarker.Decoration.from(decoration));
+					}
 				}
 			}
+		} catch (IndexOutOfBoundsException ignored) {
+			// specific exception causing crash
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
