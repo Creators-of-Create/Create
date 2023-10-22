@@ -14,14 +14,14 @@ public class IconButton extends AbstractSimiWidget {
 	public IconButton(int x, int y, ScreenElement icon) {
 		this(x, y, 18, 18, icon);
 	}
-	
+
 	public IconButton(int x, int y, int w, int h, ScreenElement icon) {
 		super(x, y, w, h);
 		this.icon = icon;
 	}
 
 	@Override
-	public void renderButton(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void doRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
 			isHovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
 

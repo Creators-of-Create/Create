@@ -130,7 +130,7 @@ public class ElementWidget extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void doRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(getX() + paddingX, getY() + paddingY, z);

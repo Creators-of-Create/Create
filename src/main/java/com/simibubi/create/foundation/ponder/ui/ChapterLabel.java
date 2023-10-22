@@ -31,7 +31,7 @@ public class ChapterLabel extends AbstractSimiWidget {
 		graphics.drawString(Minecraft.getInstance().font, chapter.getTitle(), getX() + 50,
 			getY() + 20, Theme.i(Theme.Key.TEXT_ACCENT_SLIGHT), false);
 
-		button.renderButton(graphics, mouseX, mouseY, partialTicks);
+		button.doRender(graphics, mouseX, mouseY, partialTicks);
 		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
