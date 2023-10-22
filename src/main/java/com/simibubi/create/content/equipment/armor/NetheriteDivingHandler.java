@@ -1,7 +1,5 @@
 package com.simibubi.create.content.equipment.armor;
 
-import com.simibubi.create.AllItems;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,13 +26,13 @@ public final class NetheriteDivingHandler {
 		ItemStack to = event.getTo();
 
 		if (slot == EquipmentSlot.HEAD) {
-			if (AllItems.NETHERITE_DIVING_HELMET.isIn(to)) {
+			if (to.getItem() instanceof DivingHelmetItem && isNetheriteArmor(to)) {
 				setBit(entity, slot);
 			} else {
 				clearBit(entity, slot);
 			}
 		} else if (slot == EquipmentSlot.CHEST) {
-			if (AllItems.NETHERITE_BACKTANK.isIn(to) && BacktankUtil.hasAirRemaining(to)) {
+			if (to.getItem() instanceof BacktankItem && isNetheriteArmor(to) && BacktankUtil.hasAirRemaining(to)) {
 				setBit(entity, slot);
 			} else {
 				clearBit(entity, slot);
