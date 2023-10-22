@@ -93,6 +93,8 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.infrastructure.command.HighlightPacket;
 import com.simibubi.create.infrastructure.command.SConfigureConfigPacket;
 
+import com.simibubi.create.infrastructure.debugInfo.ServerDebugInfoPacket;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -203,7 +205,7 @@ public enum AllPackets {
 	CONTRAPTION_ACTOR_TOGGLE(ContraptionDisableActorPacket.class, ContraptionDisableActorPacket::new, PLAY_TO_CLIENT),
 	CONTRAPTION_COLLIDER_LOCK(ContraptionColliderLockPacket.class, ContraptionColliderLockPacket::new, PLAY_TO_CLIENT),
 	ATTACHED_COMPUTER(AttachedComputerPacket.class, AttachedComputerPacket::new, PLAY_TO_CLIENT),
-
+	SERVER_DEBUG_INFO(ServerDebugInfoPacket.class, ServerDebugInfoPacket::new, PLAY_TO_CLIENT)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
