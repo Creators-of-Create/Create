@@ -4,24 +4,20 @@ import java.util.List;
 import java.util.Objects;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
-import com.simibubi.create.foundation.utility.Components;
+import com.simibubi.create.foundation.utility.DyeHelper;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 public class ServerDebugInfoPacket extends SimplePacketBase {
-	public static final Component COPIED = Components.literal(
-			"Debug information has been copied to your clipboard."
-			).withStyle(ChatFormatting.GREEN);
 
 	private final List<DebugInfoSection> serverInfo;
 	private final Player player;
@@ -50,8 +46,12 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 	private void printInfo(String side, Player player, List<DebugInfoSection> sections, StringBuilder output) {
 		output.append("<details>");
 		output.append('\n');
-		output.append("<summary>").append(side).append(" Info").append("</summary>");
-		output.append('\n').append('\n');
+		output.append("<summary>")
+			.append(side)
+			.append(" Info")
+			.append("</summary>");
+		output.append('\n')
+			.append('\n');
 		output.append("```");
 		output.append('\n');
 
@@ -59,11 +59,14 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 			if (i != 0) {
 				output.append('\n');
 			}
-			sections.get(i).print(player, line -> output.append(line).append('\n'));
+			sections.get(i)
+				.print(player, line -> output.append(line)
+					.append('\n'));
 		}
 
 		output.append("```");
-		output.append('\n').append('\n');
+		output.append('\n')
+			.append('\n');
 		output.append("</details>");
 		output.append('\n');
 	}
@@ -80,6 +83,9 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 
 		String text = output.toString();
 		Minecraft.getInstance().keyboardHandler.setClipboard(text);
-		player.displayClientMessage(COPIED, true);
+		Lang.translate("command.debuginfo.saved_to_clipboard")
+			.color(DyeHelper.DYE_TABLE.get(DyeColor.LIME)
+				.getFirst())
+			.sendChat(player);
 	}
 }

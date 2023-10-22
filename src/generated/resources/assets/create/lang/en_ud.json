@@ -858,6 +858,8 @@
   "create.clipboard.pasted_to": "%1$s o\u0287 sbu\u0131\u0287\u0287\u01DDs p\u01DD\u0131\u05DFdd\u2C6F",
   "create.clipboard.to_copy": "sbu\u0131\u0287\u0287\u01DDs \u028Edo\u0186 o\u0287 %1$s",
   "create.clipboard.to_paste": "sbu\u0131\u0287\u0287\u01DDs \u01DD\u0287s\u0250\u0500 o\u0287 %1$s",
+  "create.command.debuginfo.saved_to_clipboard": "\u02D9p\u0279\u0250oqd\u0131\u05DF\u0254 \u0279no\u028E o\u0287 p\u01DD\u0131do\u0254 u\u01DD\u01DDq s\u0250\u0265 uo\u0131\u0287\u0250\u026F\u0279o\u025Fu\u0131 bnq\u01DD\u15E1",
+  "create.command.debuginfo.sending": "\u02D9\u02D9\u02D9uo\u0131\u0287\u0250\u026F\u0279o\u025Fu\u0131 bnq\u01DDp bu\u0131\u0287\u0254\u01DD\u05DF\u05DFo\u0186",
   "create.command.killTPSCommand": "sd\u0287\u05DF\u05DF\u0131\u029E",
   "create.command.killTPSCommand.argument.tickTime": "\u01DD\u026F\u0131\u27D8\u029E\u0254\u0131\u0287",
   "create.command.killTPSCommand.status.slowed_by.0": "o: s\u026F %s \u028Eq p\u01DD\u028Do\u05DFs \u028E\u05DF\u0287u\u01DD\u0279\u0279n\u0254 s\u0131 \u029E\u0254\u0131\u0287 \u0279\u01DD\u028C\u0279\u01DDS :]\u01DD\u0287\u0250\u01DD\u0279\u0186[",

@@ -1,21 +1,18 @@
 package com.simibubi.create.infrastructure.debugInfo.element;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.infrastructure.debugInfo.DebugInformation;
 import com.simibubi.create.infrastructure.debugInfo.InfoProvider;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A section for organizing debug information. Can contain both information and other sections.
