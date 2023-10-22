@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.events;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
@@ -317,7 +316,7 @@ public class ClientEvents {
 				event.scaleFarPlaneDistance(6.25f);
 				event.setCanceled(true);
 				return;
-			} else if (FluidHelper.isLava(fluid) && NetheriteDivingHandler.isNetheriteArmor(divingHelmet)) {
+			} else if (FluidHelper.isLava(fluid) && NetheriteDivingHandler.isNetheriteDivingHelmet(divingHelmet)) {
 				event.setNearPlaneDistance(-4.0f);
 				event.setFarPlaneDistance(20.0f);
 				event.setCanceled(true);
