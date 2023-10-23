@@ -1,25 +1,14 @@
-name: Suggestion
-description: Suggest something that would improve Create
+name: I have an idea/suggestion!
+description: Submit your ideas and suggestions for consideration.
 labels: [ "type: suggestion" ]
 body:
     -   type: textarea
         attributes:
             label: Describe the Suggestion
-            description: What should we add or change to make Create better?
+            description: What should we add or change to make Create better? Please add screenshots or videos if they would be useful.
         validations:
             required: true
-    -   type: textarea
-        attributes:
-            label: Screenshots and Videos
-            description: If applicable, add screenshots or videos to help explain your suggestion.
-        validations:
-            required: false
-    -   type: textarea
-        attributes:
-            label: Additional Context
-            description: Add any extra context about the suggestion here.
-        validations:
-            required: false
+    
     -   type: markdown
         attributes:
             value: "Thank you for taking the time to make this suggestion and help improve Create!"
