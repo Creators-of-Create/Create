@@ -54,7 +54,7 @@ public class ItemVaultItem extends BlockItem {
 		Player player = ctx.getPlayer();
 		if (player == null)
 			return;
-		if (player.isSteppingCarefully())
+		if (player.isShiftKeyDown())
 			return;
 		Direction face = ctx.getClickedFace();
 		ItemStack stack = ctx.getItemInHand();

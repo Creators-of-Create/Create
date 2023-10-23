@@ -132,7 +132,7 @@ public class PumpBlock extends DirectionalKineticBlock
 			return toPlace;
 		if (bestConnectedDirection.getAxis() == targetDirection.getAxis())
 			return toPlace;
-		if (player.isSteppingCarefully() && bestConnectedDirection.getAxis() != targetDirection.getAxis())
+		if (player.isShiftKeyDown() && bestConnectedDirection.getAxis() != targetDirection.getAxis())
 			return toPlace;
 
 		return toPlace.setValue(FACING, bestConnectedDirection);

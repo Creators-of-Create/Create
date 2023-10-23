@@ -123,7 +123,7 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 		if (preferredFacing == null) {
 			Direction facing = context.getNearestLookingDirection();
 			preferredFacing = context.getPlayer() != null && context.getPlayer()
-				.isSteppingCarefully() ? facing : facing.getOpposite();
+				.isShiftKeyDown() ? facing : facing.getOpposite();
 		}
 
 		if (preferredFacing.getAxis() == Axis.Y) {
