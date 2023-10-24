@@ -21,6 +21,15 @@ body:
         validations:
             required: true
 
+    -   type: dropdown
+        attributes:
+            label: Minecraft Version
+            options:
+                # formatted for regex matching
+                - "Minecraft Version: 1.18.2"
+                - "Minecraft Version: 1.19.2"
+                - "Minecraft Version: 1.20.1"
+
     -   type: markdown
         attributes:
             value: "Thank you for taking the time to report this and help improve Create!"
