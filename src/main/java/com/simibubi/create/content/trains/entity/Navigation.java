@@ -15,6 +15,9 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.mojang.logging.LogUtils;
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -380,14 +383,10 @@ public class Navigation {
 		train.reservedSignalBlocks.clear();
 	}
 
-	public double startNavigation(GlobalStation destination, double maxCost, boolean simulate) {
-		DiscoveredPath pathTo = findPathTo(destination, maxCost);
+	public double startNavigation(DiscoveredPath pathTo) {
 		boolean noneFound = pathTo == null;
 		double distance = noneFound ? -1 : Math.abs(pathTo.distance);
 		double cost = noneFound ? -1 : pathTo.cost;
-
-		if (simulate)
-			return cost;
 
 		distanceToDestination = distance;
 
@@ -407,10 +406,10 @@ public class Navigation {
 		train.reservedSignalBlocks.clear();
 		train.navigation.waitingForSignal = null;
 
-		if (this.destination == null && !simulate)
+		if (this.destination == null)
 			distanceStartedAt = distance;
 
-		if (this.destination == destination)
+		if (this.destination == pathTo.destination)
 			return 0;
 
 		if (!train.runtime.paused) {
@@ -435,16 +434,16 @@ public class Navigation {
 			train.status.foundConductor();
 		}
 
-		this.destination = destination;
+		this.destination = pathTo.destination;
 		return cost;
 	}
 
 	@Nullable
-	private DiscoveredPath findPathTo(GlobalStation destination, double maxCost) {
+	public DiscoveredPath findPathTo(GlobalStation destination, double maxCost) {
 		TrackGraph graph = train.graph;
 		if (graph == null)
 			return null;
-
+		LogUtils.getLogger().info("finding path");
 		Couple<DiscoveredPath> results = Couple.create(null, null);
 		for (boolean forward : Iterate.trueAndFalse) {
 
@@ -486,7 +485,7 @@ public class Navigation {
 
 				double position = edge.getLength() - destination.getLocationOn(edge);
 				double distanceToDestination = distance - position;
-				results.set(forward, new DiscoveredPath((forward ? 1 : -1) * distanceToDestination, cost, currentPath));
+				results.set(forward, new DiscoveredPath((forward ? 1 : -1) * distanceToDestination, cost, currentPath, destination));
 				return true;
 			});
 		}
@@ -506,18 +505,6 @@ public class Navigation {
 
 		boolean frontBetter = maxCost == -1 ? -back.distance > front.distance : back.cost > front.cost;
 		return frontBetter ? front : back;
-	}
-
-	public class DiscoveredPath {
-		List<Couple<TrackNode>> path;
-		double distance;
-		double cost;
-
-		public DiscoveredPath(double distance, double cost, List<Couple<TrackNode>> path) {
-			this.distance = distance;
-			this.cost = cost;
-			this.path = path;
-		}
 	}
 
 	public GlobalStation findNearestApproachable(boolean forward) {
@@ -776,9 +763,9 @@ public class Navigation {
 			c -> currentPath.add(Couple
 				.deserializeEach(c.getList("Nodes", Tag.TAG_COMPOUND), c2 -> TrackNodeLocation.read(c2, dimensions))
 				.map(graph::locateNode)));
-		
+
 		removeBrokenPathEntries();
-		
+
 		waitingForSignal = tag.contains("BlockingSignal")
 			? Pair.of(tag.getUUID("BlockingSignal"), tag.getBoolean("BlockingSignalSide"))
 			: null;
@@ -793,7 +780,7 @@ public class Navigation {
 		 * Trains might load or save with null entries in their path, this method avoids
 		 * that anomaly from causing NPEs. The underlying issue has not been found.
 		 */
-		
+
 		boolean nullEntriesPresent = false;
 
 		for (Iterator<Couple<TrackNode>> iterator = currentPath.iterator(); iterator.hasNext();) {
