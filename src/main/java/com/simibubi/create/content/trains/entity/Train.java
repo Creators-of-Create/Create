@@ -541,14 +541,12 @@ public class Train {
 		if (!reservedSignalBlocks.isEmpty())
 			return;
 
-		GlobalStation destination = navigation.destination;
 		if (!navigatingManually && fullRefresh) {
 			DiscoveredPath preferredPath = runtime.startCurrentInstruction();
-			if (preferredPath != null)
-				destination = preferredPath.destination;
+			if (preferredPath != null){
+				navigation.startNavigation(preferredPath);
+			}
 		}
-
-		navigation.startNavigation(navigation.findPathTo(destination, navigatingManually ? -1 : Double.MAX_VALUE));
 	}
 
 	private void tickDerailedSlowdown() {

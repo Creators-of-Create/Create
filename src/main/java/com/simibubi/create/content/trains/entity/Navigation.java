@@ -443,7 +443,7 @@ public class Navigation {
 		TrackGraph graph = train.graph;
 		if (graph == null)
 			return null;
-		LogUtils.getLogger().info("finding path");
+
 		Couple<DiscoveredPath> results = Couple.create(null, null);
 		for (boolean forward : Iterate.trueAndFalse) {
 
