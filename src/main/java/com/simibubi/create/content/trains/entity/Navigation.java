@@ -461,7 +461,7 @@ public class Navigation {
 				: graph.getConnectionsFrom(initialPoint.node2)
 					.get(initialPoint.node1);
 
-			search(Double.MAX_VALUE, maxCost, forward, new Vec3(destination.getBlockEntityPos().getX(), destination.getBlockEntityPos().getY(), destination.getBlockEntityPos().getZ()), (distance, cost, reachedVia, currentEntry, globalStation) -> {
+			search(Double.MAX_VALUE, maxCost, forward, destination, (distance, cost, reachedVia, currentEntry, globalStation) -> {
 				if (globalStation != destination)
 					return false;
 
@@ -502,7 +502,6 @@ public class Navigation {
 
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);
-		LogUtils.getLogger().info("Time taken: " + duration + " nanoseconds");
 
 		if (backEmpty || !canDriveBackward)
 			return canDriveForward ? front : null;
@@ -541,15 +540,15 @@ public class Navigation {
 		return result.getValue();
 	}
 
-	public void search(double maxDistance, boolean forward, Vec3 destinationPos, StationTest stationTest) {
-		search(maxDistance, -1, forward, destinationPos, stationTest);
+	public void search(double maxDistance, boolean forward, GlobalStation destination, StationTest stationTest) {
+		search(maxDistance, -1, forward, destination, stationTest);
 	}
 
-	public void search(double maxDistance, double maxCost, boolean forward, Vec3 destinationPos, StationTest stationTest) {
+	public void search(double maxDistance, double maxCost, boolean forward, GlobalStation destination, StationTest stationTest) {
 		TrackGraph graph = train.graph;
 		if (graph == null)
 			return;
-		if(destinationPos != null) LogUtils.getLogger().info(destinationPos.toString());
+
 		// Cache the list of track types that the train can travel on
 		Set<TrackMaterial.TrackType> validTypes = new HashSet<>();
 		for (int i = 0; i < train.carriages.size(); i++) {
@@ -624,7 +623,7 @@ public class Navigation {
 			TrackEdge edge = entry.edge;
 			TrackNode node1 = entry.node1;
 			TrackNode node2 = entry.node2;
-
+			//LogUtils.getLogger().info("straight: " + entry.straight + " | dist: " + distance + " | old: " + node1.getLocation().getLocation().toString() + " | new: " + node2.getLocation().getLocation().toString() + " | " + (entry.straight + entry.distance));
 			if (costRelevant)
 				penalty += penalties.getOrDefault(edge, 0);
 
@@ -659,11 +658,8 @@ public class Navigation {
 						if (presentTrain != null && !isOwnStation)
 							penalty += Train.Penalties.STATION_WITH_TRAIN;
 						if (station.canApproachFrom(node2) && stationTest.test(distance, distance + penalty, reachedVia,
-							Pair.of(Couple.create(node1, node2), edge), station)){
-							// remove brackets after removing this
-							LogUtils.getLogger().info("Nodes considered: " + total);
+							Pair.of(Couple.create(node1, node2), edge), station))
 							return;
-						}
 						if (!isOwnStation)
 							penalty += Train.Penalties.STATION;
 					}
@@ -692,10 +688,14 @@ public class Navigation {
 				TrackNode newNode = target.getKey();
 				TrackEdge newEdge = target.getValue();
 				double newDistance = newEdge.getLength() + distance;
-				double straightDist = destinationPos == null ? 0 : newNode.getLocation().getLocation().distanceTo(destinationPos);
-				LogUtils.getLogger().info("straight: " + straightDist + " | dist: " + newDistance + " | new: " + newNode.getLocation().getLocation().toString() + " | " + (straightDist + newDistance));
+				double straightDist = destination == null ? 0 : newNode.getLocation().getLocation().distanceTo(destination.edgeLocation.getSecond().getLocation());
 				int newPenalty = penalty;
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
+				if (destination != null && straightDist == 0.0 && stationTest.test(newDistance, newDistance + newPenalty, reachedVia,
+						Pair.of(Couple.create(node2, newNode), newEdge), destination)){
+					LogUtils.getLogger().info("Node term: " + total);
+					return;
+				}
 				frontier.add(new FrontierEntry(newDistance, newPenalty, straightDist, node2, newNode, newEdge));
 			}
 		}
