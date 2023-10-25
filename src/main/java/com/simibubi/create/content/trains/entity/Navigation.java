@@ -18,8 +18,6 @@ import javax.annotation.Nullable;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.content.trains.graph.DiscoveredPath;
 
-import com.simibubi.create.foundation.utility.VecHelper;
-
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -445,7 +443,7 @@ public class Navigation {
 		TrackGraph graph = train.graph;
 		if (graph == null)
 			return null;
-		long startTime = System.nanoTime();
+
 		Couple<DiscoveredPath> results = Couple.create(null, null);
 		for (boolean forward : Iterate.trueAndFalse) {
 
@@ -499,9 +497,6 @@ public class Navigation {
 		boolean backEmpty = back == null;
 		boolean canDriveForward = train.hasForwardConductor() || train.runtime.paused;
 		boolean canDriveBackward = train.doubleEnded && train.hasBackwardConductor() || train.runtime.paused;
-
-		long endTime = System.nanoTime();
-		long duration = (endTime - startTime);
 
 		if (backEmpty || !canDriveBackward)
 			return canDriveForward ? front : null;
@@ -688,15 +683,15 @@ public class Navigation {
 				TrackNode newNode = target.getKey();
 				TrackEdge newEdge = target.getValue();
 				double newDistance = newEdge.getLength() + distance;
-				double straightDist = destination == null ? 0 : newNode.getLocation().getLocation().distanceTo(destination.edgeLocation.getSecond().getLocation());
-				int newPenalty = penalty;
+				double remainingDist = destination == null ? 0 : newNode.getLocation().getLocation().distanceTo(destination.edgeLocation.getSecond().getLocation());
+
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
-				if (destination != null && straightDist == 0.0 && stationTest.test(newDistance, newDistance + newPenalty, reachedVia,
+				if (destination != null && remainingDist == 0.0 && stationTest.test(newDistance, newDistance + penalty, reachedVia,
 						Pair.of(Couple.create(node2, newNode), newEdge), destination)){
 					LogUtils.getLogger().info("Node term: " + total);
 					return;
 				}
-				frontier.add(new FrontierEntry(newDistance, newPenalty, straightDist, node2, newNode, newEdge));
+				frontier.add(new FrontierEntry(newDistance, penalty, remainingDist, node2, newNode, newEdge));
 			}
 		}
 	}
@@ -705,15 +700,15 @@ public class Navigation {
 
 		double distance;
 		int penalty;
-		double straight;
+		double remaining;
 		TrackNode node1;
 		TrackNode node2;
 		TrackEdge edge;
 
-		public FrontierEntry(double distance, int penalty, double straight, TrackNode node1, TrackNode node2, TrackEdge edge) {
+		public FrontierEntry(double distance, int penalty, double remaining, TrackNode node1, TrackNode node2, TrackEdge edge) {
 			this.distance = distance;
 			this.penalty = penalty;
-			this.straight = straight;
+			this.remaining = remaining;
 			this.node1 = node1;
 			this.node2 = node2;
 			this.edge = edge;
@@ -721,7 +716,7 @@ public class Navigation {
 
 		@Override
 		public int compareTo(FrontierEntry o) {
-			return Double.compare(distance + penalty + straight, o.distance + o.penalty + o.straight);
+			return Double.compare(distance + penalty + remaining, o.distance + o.penalty + o.remaining);
 		}
 
 	}
