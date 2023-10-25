@@ -18,6 +18,8 @@ import javax.annotation.Nullable;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.content.trains.graph.DiscoveredPath;
 
+import com.simibubi.create.foundation.utility.VecHelper;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -443,7 +445,7 @@ public class Navigation {
 		TrackGraph graph = train.graph;
 		if (graph == null)
 			return null;
-
+		long startTime = System.nanoTime();
 		Couple<DiscoveredPath> results = Couple.create(null, null);
 		for (boolean forward : Iterate.trueAndFalse) {
 
@@ -459,7 +461,7 @@ public class Navigation {
 				: graph.getConnectionsFrom(initialPoint.node2)
 					.get(initialPoint.node1);
 
-			search(Double.MAX_VALUE, maxCost, forward, (distance, cost, reachedVia, currentEntry, globalStation) -> {
+			search(Double.MAX_VALUE, maxCost, forward, new Vec3(destination.getBlockEntityPos().getX(), destination.getBlockEntityPos().getY(), destination.getBlockEntityPos().getZ()), (distance, cost, reachedVia, currentEntry, globalStation) -> {
 				if (globalStation != destination)
 					return false;
 
@@ -498,6 +500,10 @@ public class Navigation {
 		boolean canDriveForward = train.hasForwardConductor() || train.runtime.paused;
 		boolean canDriveBackward = train.doubleEnded && train.hasBackwardConductor() || train.runtime.paused;
 
+		long endTime = System.nanoTime();
+		long duration = (endTime - startTime);
+		LogUtils.getLogger().info("Time taken: " + duration + " nanoseconds");
+
 		if (backEmpty || !canDriveBackward)
 			return canDriveForward ? front : null;
 		if (frontEmpty || !canDriveForward)
@@ -517,7 +523,7 @@ public class Navigation {
 		double minDistance = .75f * (train.speed * train.speed) / (2 * acceleration);
 		double maxDistance = Math.max(32, 1.5f * (train.speed * train.speed) / (2 * acceleration));
 
-		search(maxDistance, forward, (distance, cost, reachedVia, currentEntry, globalStation) -> {
+		search(maxDistance, forward, null, (distance, cost, reachedVia, currentEntry, globalStation) -> {
 			if (distance < minDistance)
 				return false;
 
@@ -535,15 +541,15 @@ public class Navigation {
 		return result.getValue();
 	}
 
-	public void search(double maxDistance, boolean forward, StationTest stationTest) {
-		search(maxDistance, -1, forward, stationTest);
+	public void search(double maxDistance, boolean forward, Vec3 destinationPos, StationTest stationTest) {
+		search(maxDistance, -1, forward, destinationPos, stationTest);
 	}
 
-	public void search(double maxDistance, double maxCost, boolean forward, StationTest stationTest) {
+	public void search(double maxDistance, double maxCost, boolean forward, Vec3 destinationPos, StationTest stationTest) {
 		TrackGraph graph = train.graph;
 		if (graph == null)
 			return;
-
+		if(destinationPos != null) LogUtils.getLogger().info(destinationPos.toString());
 		// Cache the list of track types that the train can travel on
 		Set<TrackMaterial.TrackType> validTypes = new HashSet<>();
 		for (int i = 0; i < train.carriages.size(); i++) {
@@ -601,9 +607,9 @@ public class Navigation {
 
 		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
-		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));
+		frontier.add(new FrontierEntry(distanceToNode2, 0, 0, initialNode1, initialNode2, initialEdge));
 		int signalWeight = Mth.clamp(ticksWaitingForSignal * 2, Train.Penalties.RED_SIGNAL, 200);
-
+		int total = 0;
 		Search: while (!frontier.isEmpty()) {
 			FrontierEntry entry = frontier.poll();
 			if (!visited.add(entry.edge))
@@ -614,7 +620,7 @@ public class Navigation {
 
 			if (distance > maxDistance)
 				continue;
-
+			total++;
 			TrackEdge edge = entry.edge;
 			TrackNode node1 = entry.node1;
 			TrackNode node2 = entry.node2;
@@ -653,8 +659,11 @@ public class Navigation {
 						if (presentTrain != null && !isOwnStation)
 							penalty += Train.Penalties.STATION_WITH_TRAIN;
 						if (station.canApproachFrom(node2) && stationTest.test(distance, distance + penalty, reachedVia,
-							Pair.of(Couple.create(node1, node2), edge), station))
+							Pair.of(Couple.create(node1, node2), edge), station)){
+							// remove brackets after removing this
+							LogUtils.getLogger().info("Nodes considered: " + total);
 							return;
+						}
 						if (!isOwnStation)
 							penalty += Train.Penalties.STATION;
 					}
@@ -683,9 +692,11 @@ public class Navigation {
 				TrackNode newNode = target.getKey();
 				TrackEdge newEdge = target.getValue();
 				double newDistance = newEdge.getLength() + distance;
+				double straightDist = destinationPos == null ? 0 : newNode.getLocation().getLocation().distanceTo(destinationPos);
+				LogUtils.getLogger().info("straight: " + straightDist + " | dist: " + newDistance + " | new: " + newNode.getLocation().getLocation().toString() + " | " + (straightDist + newDistance));
 				int newPenalty = penalty;
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
-				frontier.add(new FrontierEntry(newDistance, newPenalty, node2, newNode, newEdge));
+				frontier.add(new FrontierEntry(newDistance, newPenalty, straightDist, node2, newNode, newEdge));
 			}
 		}
 	}
@@ -694,13 +705,15 @@ public class Navigation {
 
 		double distance;
 		int penalty;
+		double straight;
 		TrackNode node1;
 		TrackNode node2;
 		TrackEdge edge;
 
-		public FrontierEntry(double distance, int penalty, TrackNode node1, TrackNode node2, TrackEdge edge) {
+		public FrontierEntry(double distance, int penalty, double straight, TrackNode node1, TrackNode node2, TrackEdge edge) {
 			this.distance = distance;
 			this.penalty = penalty;
+			this.straight = straight;
 			this.node1 = node1;
 			this.node2 = node2;
 			this.edge = edge;
@@ -708,7 +721,7 @@ public class Navigation {
 
 		@Override
 		public int compareTo(FrontierEntry o) {
-			return Double.compare(distance + penalty, o.distance + o.penalty);
+			return Double.compare(distance + penalty + straight, o.distance + o.penalty + o.straight);
 		}
 
 	}
