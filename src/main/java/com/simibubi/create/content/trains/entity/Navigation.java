@@ -15,7 +15,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.mojang.logging.LogUtils;
 import com.simibubi.create.content.trains.graph.DiscoveredPath;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
@@ -618,7 +617,7 @@ public class Navigation {
 			TrackEdge edge = entry.edge;
 			TrackNode node1 = entry.node1;
 			TrackNode node2 = entry.node2;
-			//LogUtils.getLogger().info("straight: " + entry.straight + " | dist: " + distance + " | old: " + node1.getLocation().getLocation().toString() + " | new: " + node2.getLocation().getLocation().toString() + " | " + (entry.straight + entry.distance));
+
 			if (costRelevant)
 				penalty += penalties.getOrDefault(edge, 0);
 
@@ -687,10 +686,8 @@ public class Navigation {
 
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
 				if (destination != null && remainingDist == 0.0 && stationTest.test(newDistance, newDistance + penalty, reachedVia,
-						Pair.of(Couple.create(node2, newNode), newEdge), destination)){
-					LogUtils.getLogger().info("Node term: " + total);
+						Pair.of(Couple.create(node2, newNode), newEdge), destination))
 					return;
-				}
 				frontier.add(new FrontierEntry(newDistance, penalty, remainingDist, node2, newNode, newEdge));
 			}
 		}
