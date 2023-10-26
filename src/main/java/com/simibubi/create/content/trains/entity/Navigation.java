@@ -605,7 +605,7 @@ public class Navigation {
 
 		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));
 		int signalWeight = Mth.clamp(ticksWaitingForSignal * 2, Train.Penalties.RED_SIGNAL, 200);
-		int total = 0;
+
 		Search: while (!frontier.isEmpty()) {
 			FrontierEntry entry = frontier.poll();
 			if (!visited.add(entry.edge))
@@ -616,7 +616,7 @@ public class Navigation {
 
 			if (distance > maxDistance)
 				continue;
-			total++;
+
 			TrackEdge edge = entry.edge;
 			TrackNode node1 = entry.node1;
 			TrackNode node2 = entry.node2;
