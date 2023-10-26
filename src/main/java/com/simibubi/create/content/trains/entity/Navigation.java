@@ -601,7 +601,7 @@ public class Navigation {
 
 		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
-		frontier.add(new FrontierEntry(distanceToNode2, 0, 0, initialNode1, initialNode2, initialEdge));
+		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));
 		int signalWeight = Mth.clamp(ticksWaitingForSignal * 2, Train.Penalties.RED_SIGNAL, 200);
 		int total = 0;
 		Search: while (!frontier.isEmpty()) {
@@ -705,6 +705,14 @@ public class Navigation {
 		TrackNode node2;
 		TrackEdge edge;
 
+		public FrontierEntry(double distance, int penalty, TrackNode node1, TrackNode node2, TrackEdge edge) {
+			this.distance = distance;
+			this.penalty = penalty;
+			this.remaining = 0;
+			this.node1 = node1;
+			this.node2 = node2;
+			this.edge = edge;
+		}
 		public FrontierEntry(double distance, int penalty, double remaining, TrackNode node1, TrackNode node2, TrackEdge edge) {
 			this.distance = distance;
 			this.penalty = penalty;
