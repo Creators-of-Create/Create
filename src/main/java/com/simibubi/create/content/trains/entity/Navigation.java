@@ -543,6 +543,9 @@ public class Navigation {
 		if (graph == null)
 			return;
 
+		// Cache the position of a node on the station edge if provided
+		Vec3 destinationNodePosition = destination == null ? null : destination.edgeLocation.getSecond().getLocation();
+
 		// Cache the list of track types that the train can travel on
 		Set<TrackMaterial.TrackType> validTypes = new HashSet<>();
 		for (int i = 0; i < train.carriages.size(); i++) {
@@ -682,7 +685,7 @@ public class Navigation {
 				TrackNode newNode = target.getKey();
 				TrackEdge newEdge = target.getValue();
 				double newDistance = newEdge.getLength() + distance;
-				double remainingDist = destination == null ? 0 : newNode.getLocation().getLocation().distanceTo(destination.edgeLocation.getSecond().getLocation());
+				double remainingDist = destination == null ? 0 : newNode.getLocation().getLocation().distanceTo(destinationNodePosition);
 
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
 				if (destination != null && remainingDist == 0.0 && stationTest.test(newDistance, newDistance + penalty, reachedVia,
