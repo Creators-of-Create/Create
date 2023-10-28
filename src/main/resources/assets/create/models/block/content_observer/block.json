@@ -5,7 +5,7 @@
 		"0": "create:block/smart_observer",
 		"2": "create:block/smart_observer_front",
 		"4": "create:block/smart_observer_top",
-		"6": "block/observer_top",
+		"6": "create:block/smart_observer_bottom",
 		"7": "create:block/smart_observer_side",
 		"particle": "create:block/smart_observer"
 	},

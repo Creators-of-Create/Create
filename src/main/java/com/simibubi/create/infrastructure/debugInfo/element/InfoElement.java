@@ -1,11 +1,11 @@
 package com.simibubi.create.infrastructure.debugInfo.element;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 
 public sealed interface InfoElement permits DebugInfoSection, InfoEntry {
 	void write(Player player, FriendlyByteBuf buffer);

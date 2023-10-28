@@ -1,26 +1,5 @@
 package com.simibubi.create.infrastructure.debugInfo;
 
-import com.google.common.collect.ImmutableMap;
-import com.jozufozu.flywheel.Flywheel;
-import com.jozufozu.flywheel.backend.Backend;
-import com.simibubi.create.Create;
-import com.simibubi.create.foundation.mixin.accessor.SystemReportAccessor;
-import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
-
-import net.minecraft.SharedConstants;
-import net.minecraft.SystemReport;
-import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
-
-import com.simibubi.create.infrastructure.debugInfo.element.InfoElement;
-
-import com.simibubi.create.infrastructure.debugInfo.element.InfoEntry;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.IModInfo;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +8,24 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableMap;
+import com.jozufozu.flywheel.Flywheel;
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.platform.GlUtil;
+import com.simibubi.create.Create;
+import com.simibubi.create.foundation.mixin.accessor.SystemReportAccessor;
+import com.simibubi.create.infrastructure.debugInfo.element.DebugInfoSection;
+import com.simibubi.create.infrastructure.debugInfo.element.InfoElement;
+import com.simibubi.create.infrastructure.debugInfo.element.InfoEntry;
+
+import net.minecraft.SharedConstants;
+import net.minecraft.SystemReport;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 /**
  * Allows for providing easily accessible debugging information.

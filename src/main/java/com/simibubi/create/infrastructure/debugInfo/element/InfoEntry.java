@@ -1,16 +1,16 @@
 package com.simibubi.create.infrastructure.debugInfo.element;
 
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.infrastructure.debugInfo.DebugInformation;
 import com.simibubi.create.infrastructure.debugInfo.InfoProvider;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public record InfoEntry(String name, InfoProvider provider) implements InfoElement {
 	public InfoEntry(String name, String info) {
