@@ -1,6 +1,7 @@
 package com.simibubi.create.content.trains.entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -685,10 +686,36 @@ public class Navigation {
 				TrackNode newNode = target.getKey();
 				TrackEdge newEdge = target.getValue();
 				double newDistance = newEdge.getLength() + distance;
-				double remainingDist = destination == null ? 0 : newNode.getLocation().getLocation().distanceTo(destinationNodePosition);
+				double remainingDist = 0;
+
+				if (destination != null) {
+					Vec3 newNodePosition = newNode.getLocation().getLocation();
+					double dMin = Math.abs(newNodePosition.x - destinationNodePosition.x);
+					double dMid = Math.abs(newNodePosition.y - destinationNodePosition.y);
+					double dMax = Math.abs(newNodePosition.z - destinationNodePosition.z);
+
+					double temp;
+					if (dMin > dMid) {
+						temp = dMid;
+						dMid = dMin;
+						dMin = temp;
+					}
+					if (dMin > dMax) {
+						temp = dMax;
+						dMax = dMin;
+						dMin = temp;
+					}
+					if (dMid > dMax) {
+						temp = dMax;
+						dMax = dMid;
+						dMid = temp;
+					}
+					// Octile distance from newNode to station node
+					remainingDist = 0.317837245 * dMin + 0.414213562 * dMid + dMax;
+				}
 
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
-				if (destination != null && remainingDist == 0.0 && stationTest.test(newDistance, newDistance + penalty, reachedVia,
+				if (destination != null && Math.round(remainingDist) == 0 && stationTest.test(newDistance, newDistance + penalty, reachedVia,
 						Pair.of(Couple.create(node2, newNode), newEdge), destination))
 					return;
 				frontier.add(new FrontierEntry(newDistance, penalty, remainingDist, node2, newNode, newEdge));
