@@ -1,7 +1,6 @@
 package com.simibubi.create.content.trains.entity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -693,7 +692,7 @@ public class Navigation {
 					double dMin = Math.abs(newNodePosition.x - destinationNodePosition.x);
 					double dMid = Math.abs(newNodePosition.y - destinationNodePosition.y);
 					double dMax = Math.abs(newNodePosition.z - destinationNodePosition.z);
-
+					// Sort distance vector in ascending order
 					double temp;
 					if (dMin > dMid) {
 						temp = dMid;
@@ -714,10 +713,10 @@ public class Navigation {
 					remainingDist = 0.317837245 * dMin + 0.414213562 * dMid + dMax;
 				}
 
+				if (destination != null && Math.round(remainingDist) == 0)
+					remainingDist = -999999; // Ensure edges containing the station node get checked first
+
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
-				if (destination != null && Math.round(remainingDist) == 0 && stationTest.test(newDistance, newDistance + penalty, reachedVia,
-						Pair.of(Couple.create(node2, newNode), newEdge), destination))
-					return;
 				frontier.add(new FrontierEntry(newDistance, penalty, remainingDist, node2, newNode, newEdge));
 			}
 		}
