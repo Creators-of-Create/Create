@@ -1040,7 +1040,7 @@ public class Train {
 	}
 
 	public static class Penalties {
-		static final int STATION = 200, STATION_WITH_TRAIN = 300;
+		static final int STATION = 50, STATION_WITH_TRAIN = 300;
 		static final int MANUAL_TRAIN = 200, IDLE_TRAIN = 700, ARRIVING_TRAIN = 50, WAITING_TRAIN = 50, ANY_TRAIN = 25,
 			RED_SIGNAL = 25, REDSTONE_RED_SIGNAL = 400;
 	}
