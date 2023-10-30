@@ -326,9 +326,9 @@ public class ScheduleRuntime {
 			return accumulatedTime;
 		if (predictionTicks.size() <= currentEntry)
 			return accumulatedTime;
-
+		
 		int departureTime = estimateStayDuration(index);
-
+		
 		if (accumulatedTime < 0) {
 			predictions.add(createPrediction(index, filter.getFilter(), currentTitle, accumulatedTime));
 			return Math.min(accumulatedTime, departureTime);
@@ -344,10 +344,10 @@ public class ScheduleRuntime {
 
 		if (accumulatedTime != TBD)
 			accumulatedTime += departureTime;
-
+		
 		if (departureTime == INVALID)
 			accumulatedTime = INVALID;
-
+		
 		return accumulatedTime;
 	}
 
@@ -375,7 +375,7 @@ public class ScheduleRuntime {
 	private TrainDeparturePrediction createPrediction(int index, String destination, String currentTitle, int time) {
 		if (time == INVALID)
 			return null;
-
+		
 		int size = schedule.entries.size();
 		if (index >= size) {
 			if (!schedule.cyclic)

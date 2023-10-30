@@ -288,7 +288,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		BlockPos up = new BlockPos(track.getUpNormal(level, pos, state));
 		BlockPos down = new BlockPos(track.getUpNormal(level, pos, state).scale(-1));
 		int bogeyOffset = pos.distManhattan(edgePoint.getGlobalPosition()) - 1;
-
+		
 		if (!isValidBogeyOffset(bogeyOffset)) {
 			for (boolean upsideDown : Iterate.falseAndTrue) {
 				for (int i = -1; i <= 1; i++) {

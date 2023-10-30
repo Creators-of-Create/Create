@@ -611,6 +611,7 @@ public class Navigation {
 
 		int signalWeight = Mth.clamp(ticksWaitingForSignal * 2, Train.Penalties.RED_SIGNAL, 200);
 
+		// Apply penalties to initial edge
 		int initialPenalty = 0;
 		if (costRelevant)
 			initialPenalty += penalties.getOrDefault(initialEdge, 0);
@@ -712,6 +713,7 @@ public class Navigation {
 				if (costRelevant)
 					newPenalty += penalties.getOrDefault(newEdge, 0);
 
+				// Apply penalty to next connected edge
 				boolean hasDestination = false;
 				EdgeData signalData = newEdge.getEdgeData();
 				if (signalData.hasPoints()) {
@@ -758,7 +760,7 @@ public class Navigation {
 					continue;
 
 				double remainingDist = 0;
-
+				// Calculate remaining distance estimator for next connected edge
 				if (destinations != null && !destinations.isEmpty()) {
 					remainingDist = Double.MAX_VALUE;
 					Vec3 newNodePosition = newNode.getLocation().getLocation();
@@ -884,9 +886,9 @@ public class Navigation {
 			c -> currentPath.add(Couple
 				.deserializeEach(c.getList("Nodes", Tag.TAG_COMPOUND), c2 -> TrackNodeLocation.read(c2, dimensions))
 				.map(graph::locateNode)));
-
+		
 		removeBrokenPathEntries();
-
+		
 		waitingForSignal = tag.contains("BlockingSignal")
 			? Pair.of(tag.getUUID("BlockingSignal"), tag.getBoolean("BlockingSignalSide"))
 			: null;
@@ -901,7 +903,7 @@ public class Navigation {
 		 * Trains might load or save with null entries in their path, this method avoids
 		 * that anomaly from causing NPEs. The underlying issue has not been found.
 		 */
-
+		
 		boolean nullEntriesPresent = false;
 
 		for (Iterator<Couple<TrackNode>> iterator = currentPath.iterator(); iterator.hasNext();) {

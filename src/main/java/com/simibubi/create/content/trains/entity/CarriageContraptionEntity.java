@@ -1,7 +1,6 @@
 package com.simibubi.create.content.trains.entity;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -54,8 +53,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.PacketDistributor;
-
-import org.openjdk.nashorn.internal.objects.Global;
 
 public class CarriageContraptionEntity extends OrientedContraptionEntity {
 
