@@ -175,9 +175,8 @@ public class ScheduleRuntime {
 
 		if (instruction instanceof DestinationInstruction destination) {
 			String regex = destination.getFilterForRegex();
-			DiscoveredPath best = null;
-			double bestCost = Double.MAX_VALUE;
 			boolean anyMatch = false;
+			ArrayList<GlobalStation> validStations = new ArrayList<>();
 
 			if (!train.hasForwardConductor() && !train.hasBackwardConductor()) {
 				train.status.missingConductor();
@@ -189,23 +188,9 @@ public class ScheduleRuntime {
 				if (!globalStation.name.matches(regex))
 					continue;
 				anyMatch = true;
-				boolean matchesCurrent = train.currentStation != null && train.currentStation.equals(globalStation.id);
-				double cost;
-				DiscoveredPath path = train.navigation.findPathTo(globalStation, bestCost);
-				if (matchesCurrent) {
-					cost = 0;
-				} else {
-					cost = path == null ? -1 : path.cost;
-				}
-
-				if (cost < 0)
-					continue;
-				if (cost > bestCost)
-					continue;
-				best = path;
-				bestCost = cost;
+				validStations.add(globalStation);
 			}
-
+			DiscoveredPath best = train.navigation.findPathTo(validStations, Double.MAX_VALUE);
 			if (best == null) {
 				if (anyMatch)
 					train.status.failedNavigation();
