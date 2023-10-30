@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.PatternSyntaxException;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.trains.display.GlobalTrainDisplayData.TrainDeparturePrediction;
@@ -183,13 +184,16 @@ public class ScheduleRuntime {
 				cooldown = INTERVAL;
 				return null;
 			}
-
-			for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
-				if (!globalStation.name.matches(regex))
-					continue;
-				anyMatch = true;
-				validStations.add(globalStation);
-			}
+			
+			try {
+				for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
+					if (!globalStation.name.matches(regex))
+						continue;
+					anyMatch = true;
+					validStations.add(globalStation);
+				}
+			} catch (PatternSyntaxException ignored) {}
+			
 			DiscoveredPath best = train.navigation.findPathTo(validStations, Double.MAX_VALUE);
 			if (best == null) {
 				if (anyMatch)
