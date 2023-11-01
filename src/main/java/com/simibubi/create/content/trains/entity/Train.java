@@ -17,6 +17,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -539,14 +541,12 @@ public class Train {
 		if (!reservedSignalBlocks.isEmpty())
 			return;
 
-		GlobalStation destination = navigation.destination;
 		if (!navigatingManually && fullRefresh) {
-			GlobalStation preferredDestination = runtime.startCurrentInstruction();
-			if (preferredDestination != null)
-				destination = preferredDestination;
+			DiscoveredPath preferredPath = runtime.startCurrentInstruction();
+			if (preferredPath != null){
+				navigation.startNavigation(preferredPath);
+			}
 		}
-
-		navigation.startNavigation(destination, navigatingManually ? -1 : Double.MAX_VALUE, false);
 	}
 
 	private void tickDerailedSlowdown() {
@@ -1040,7 +1040,7 @@ public class Train {
 	}
 
 	public static class Penalties {
-		static final int STATION = 200, STATION_WITH_TRAIN = 300;
+		static final int STATION = 50, STATION_WITH_TRAIN = 300;
 		static final int MANUAL_TRAIN = 200, IDLE_TRAIN = 700, ARRIVING_TRAIN = 50, WAITING_TRAIN = 50, ANY_TRAIN = 25,
 			RED_SIGNAL = 25, REDSTONE_RED_SIGNAL = 400;
 	}

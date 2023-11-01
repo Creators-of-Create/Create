@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.simibubi.create.AllBlocks;
@@ -374,8 +376,8 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 				if (train.navigation.destination != station)
 					continue;
 
-				GlobalStation preferredDestination = train.runtime.startCurrentInstruction();
-				train.navigation.startNavigation(preferredDestination != null ? preferredDestination : station, Double.MAX_VALUE, false);
+				DiscoveredPath preferredPath = train.runtime.startCurrentInstruction();
+				train.navigation.startNavigation(preferredPath != null ? preferredPath : train.navigation.findPathTo(station, Double.MAX_VALUE));
 			}
 		}
 
