@@ -21,7 +21,7 @@ import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity.Mode;
-import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.schematics.SchematicInstances;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
@@ -80,9 +80,9 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	public void activate(MovementContext context, BlockPos pos, DeployerFakePlayer player, Mode mode) {
 		Level world = context.world;
 
-		ItemStack filter = getFilter(context);
-		if (AllItems.SCHEMATIC.isIn(filter))
-			activateAsSchematicPrinter(context, pos, player, world, filter);
+		FilterItemStack filter = context.getFilterFromBE();
+		if (AllItems.SCHEMATIC.isIn(filter.item()))
+			activateAsSchematicPrinter(context, pos, player, world, filter.item());
 
 		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
 			.getNormal());
@@ -222,11 +222,11 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			return;
 		if (player.getMainHandItem()
 			.isEmpty()) {
-			ItemStack filter = getFilter(context);
-			if (AllItems.SCHEMATIC.isIn(filter))
+			FilterItemStack filter = context.getFilterFromBE();
+			if (AllItems.SCHEMATIC.isIn(filter.item()))
 				return;
 			ItemStack held = ItemHelper.extract(context.contraption.getSharedInventory(),
-				stack -> FilterItem.test(context.world, stack, filter), 1, false);
+				stack -> filter.test(context.world, stack), 1, false);
 			player.setItemInHand(InteractionHand.MAIN_HAND, held);
 		}
 	}
@@ -236,7 +236,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 		if (player == null)
 			return;
 		Inventory inv = player.getInventory();
-		ItemStack filter = getFilter(context);
+		FilterItemStack filter = context.getFilterFromBE();
 
 		for (List<ItemStack> list : Arrays.asList(inv.armor, inv.offhand, inv.items)) {
 			for (int i = 0; i < list.size(); ++i) {
@@ -244,7 +244,7 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 				if (itemstack.isEmpty())
 					continue;
 
-				if (list == inv.items && i == inv.selected && FilterItem.test(context.world, itemstack, filter))
+				if (list == inv.items && i == inv.selected && filter.test(context.world, itemstack))
 					continue;
 
 				dropItem(context, itemstack);
@@ -276,10 +276,6 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			context.temporaryData = deployerFakePlayer;
 		}
 		return (DeployerFakePlayer) context.temporaryData;
-	}
-
-	private ItemStack getFilter(MovementContext context) {
-		return ItemStack.of(context.blockEntityData.getCompound("Filter"));
 	}
 
 	private Mode getMode(MovementContext context) {

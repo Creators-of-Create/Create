@@ -17,8 +17,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.content.trains.graph.DiscoveredPath;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -26,12 +24,13 @@ import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
-import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
 import com.simibubi.create.content.trains.entity.Carriage.DimensionalCarriageEntity;
 import com.simibubi.create.content.trains.entity.TravellingPoint.IEdgePointListener;
 import com.simibubi.create.content.trains.entity.TravellingPoint.SteerDirection;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgeData;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.graph.TrackEdge;
@@ -197,7 +196,7 @@ public class Train {
 			if (observer == null)
 				continue;
 
-			ItemStack filter = observer.getFilter();
+			FilterItemStack filter = observer.getFilter();
 			if (filter.isEmpty()) {
 				observer.keepAlive(this);
 				continue;
@@ -225,7 +224,7 @@ public class Train {
 						ItemStack extractItem = inv.extractItem(slot, 1, true);
 						if (extractItem.isEmpty())
 							continue;
-						shouldActivate |= FilterItem.test(level, extractItem, filter);
+						shouldActivate |= filter.test(level, extractItem);
 					}
 				}
 
@@ -237,7 +236,7 @@ public class Train {
 						FluidStack drain = tank.drain(1, FluidAction.SIMULATE);
 						if (drain.isEmpty())
 							continue;
-						shouldActivate |= FilterItem.test(level, drain, filter);
+						shouldActivate |= filter.test(level, drain);
 					}
 				}
 			}
