@@ -658,7 +658,7 @@ public class Navigation {
 		if (costRelevant && distanceToNode2 + initialPenalty > maxCost)
 			return;
 
-		frontier.add(new FrontierEntry(distanceToNode2, initialPenalty, false, initialNode1, initialNode2, initialEdge));
+		frontier.add(new FrontierEntry(distanceToNode2, initialPenalty, initialNode1, initialNode2, initialEdge));
 
 		while (!frontier.isEmpty()) {
 			FrontierEntry entry = frontier.poll();
@@ -787,7 +787,7 @@ public class Navigation {
 							dMid = temp;
 						}
 						// Octile distance from newNode to station node
-						double currentRemaining = 0.317837245 * dMin + 0.414213562 * dMid + dMax + destination.position;
+						double currentRemaining = 0.317837245195782 * dMin + 0.414213562373095 * dMid + dMax + destination.position;
 						if (node2.getLocation().equals(destinationNode))
 							currentRemaining -= newEdge.getLength() * 2; // Correct the distance estimator for station edge
 						remainingDist = Math.min(remainingDist, currentRemaining);
@@ -810,11 +810,11 @@ public class Navigation {
 		TrackNode node2;
 		TrackEdge edge;
 
-		public FrontierEntry(double distance, int penalty, boolean hasDestination, TrackNode node1, TrackNode node2, TrackEdge edge) {
+		public FrontierEntry(double distance, int penalty, TrackNode node1, TrackNode node2, TrackEdge edge) {
 			this.distance = distance;
 			this.penalty = penalty;
 			this.remaining = 0;
-			this.hasDestination = hasDestination;
+			this.hasDestination = false;
 			this.node1 = node1;
 			this.node2 = node2;
 			this.edge = edge;
