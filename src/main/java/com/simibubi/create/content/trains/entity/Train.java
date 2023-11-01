@@ -601,7 +601,7 @@ public class Train {
 		Vec3 start = (speed < 0 ? trailingPoint : leadingPoint).getPosition(graph);
 		Vec3 end = (speed < 0 ? leadingPoint : trailingPoint).getPosition(graph);
 
-		Pair<Train, Vec3> collision = findCollidingTrain(level, start, end, this, dimension);
+		Pair<Train, Vec3> collision = findCollidingTrain(level, start, end, dimension);
 		if (collision == null)
 			return;
 
@@ -617,13 +617,16 @@ public class Train {
 		train.crash();
 	}
 
-	public static Pair<Train, Vec3> findCollidingTrain(Level level, Vec3 start, Vec3 end, Train ignore,
-		ResourceKey<Level> dimension) {
-		for (Train train : Create.RAILWAYS.sided(level).trains.values()) {
-			if (train == ignore)
+	public Pair<Train, Vec3> findCollidingTrain(Level level, Vec3 start, Vec3 end, ResourceKey<Level> dimension) {
+		Vec3 diff = end.subtract(start);
+		double maxDistanceSqr = Math.pow(AllConfigs.server().trains.maxAssemblyLength.get(), 2.0);
+		
+		Trains: for (Train train : Create.RAILWAYS.sided(level).trains.values()) {
+			if (train == this)
+				continue;
+			if (train.graph != null && train.graph != graph)
 				continue;
 
-			Vec3 diff = end.subtract(start);
 			Vec3 lastPoint = null;
 
 			for (Carriage otherCarriage : train.carriages) {
@@ -643,6 +646,10 @@ public class Train {
 
 					Vec3 start2 = otherLeading.getPosition(train.graph);
 					Vec3 end2 = otherTrailing.getPosition(train.graph);
+
+					if (Math.min(start2.distanceToSqr(start), end2.distanceToSqr(start)) > maxDistanceSqr)
+						continue Trains;
+
 					if (betweenBits) {
 						end2 = start2;
 						start2 = lastPoint;

@@ -304,9 +304,12 @@ public class CarriageSyncData {
 
 		TrackNode initialNode1 = forward ? current.node1 : current.node2;
 		TrackNode initialNode2 = forward ? current.node2 : current.node1;
-		TrackEdge initialEdge = graph.getConnectionsFrom(initialNode1)
-			.get(initialNode2);
-
+		
+		Map<TrackNode, TrackEdge> connectionsFromInitial = graph.getConnectionsFrom(initialNode1);
+		if (connectionsFromInitial == null)
+			return -1;
+		
+		TrackEdge initialEdge = connectionsFromInitial.get(initialNode2);
 		if (initialEdge == null)
 			return -1; // graph changed
 
