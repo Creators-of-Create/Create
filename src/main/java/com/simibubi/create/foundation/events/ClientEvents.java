@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
@@ -18,6 +17,7 @@ import com.simibubi.create.content.decoration.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.equipment.armor.BacktankArmorLayer;
 import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
 import com.simibubi.create.content.equipment.armor.NetheriteBacktankFirstPersonRenderer;
+import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
 import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
 import com.simibubi.create.content.equipment.clipboard.ClipboardValueSettingsHandler;
@@ -306,7 +306,7 @@ public class ClientEvents {
 				event.scaleFarPlaneDistance(6.25f);
 				event.setCanceled(true);
 				return;
-			} else if (FluidHelper.isLava(fluid) && AllItems.NETHERITE_DIVING_HELMET.isIn(divingHelmet)) {
+			} else if (FluidHelper.isLava(fluid) && NetheriteDivingHandler.isNetheriteDivingHelmet(divingHelmet)) {
 				event.setNearPlaneDistance(-4.0f);
 				event.setFarPlaneDistance(20.0f);
 				event.setCanceled(true);

@@ -91,9 +91,6 @@ public final class NBTProcessors {
 			.stream()
 			.filter(NBTProcessors::isUnsafeItemNBTKey)
 			.forEach(copy::removeTagKey);
-		if (copy.getTag()
-			.isEmpty())
-			copy.setTag(null);
 		return copy;
 	}
 

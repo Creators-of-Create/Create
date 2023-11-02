@@ -141,7 +141,7 @@ public class ClipboardValueSettingsHandler {
 		Player player = event.getEntity();
 		if (player != null && player.isSpectator())
 			return;
-		if (player.isSteppingCarefully())
+		if (player.isShiftKeyDown())
 			return;
 		if (!(world.getBlockEntity(pos) instanceof SmartBlockEntity smartBE))
 			return;

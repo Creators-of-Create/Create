@@ -1,5 +1,6 @@
 package com.simibubi.create.content.trains.signal;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -187,10 +188,7 @@ public class SignalBoundary extends TrackEdgePoint {
 			if (set.isEmpty())
 				continue;
 
-			boolean forcedRed = set.values()
-				.stream()
-				.anyMatch(Boolean::booleanValue);
-
+			boolean forcedRed = isForcedRed(current);
 			UUID group = groups.get(current);
 			if (Objects.equal(group, groups.get(!current))) {
 				cachedStates.set(current, SignalState.INVALID);
@@ -214,10 +212,12 @@ public class SignalBoundary extends TrackEdgePoint {
 	}
 
 	public boolean isForcedRed(boolean primary) {
-		return blockEntities.get(primary)
-			.values()
-			.stream()
-			.anyMatch(Boolean::booleanValue);
+		Collection<Boolean> values = blockEntities.get(primary)
+			.values();
+		for (Boolean b : values)
+			if (b)
+				return true;
+		return false;
 	}
 
 	private SignalState resolveSignalChain(TrackGraph graph, boolean side) {

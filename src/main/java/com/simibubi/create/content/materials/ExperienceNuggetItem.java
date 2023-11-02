@@ -35,7 +35,7 @@ public class ExperienceNuggetItem extends Item {
 			return InteractionResultHolder.consume(itemInHand);
 		}
 
-		int amountUsed = pPlayer.isSteppingCarefully() ? 1 : itemInHand.getCount();
+		int amountUsed = pPlayer.isShiftKeyDown() ? 1 : itemInHand.getCount();
 		int total = Mth.ceil(3f * amountUsed);
 		int maxOrbs = amountUsed == 1 ? 1 : 5;
 		int valuePer = Math.max(1, 1 + total / maxOrbs);

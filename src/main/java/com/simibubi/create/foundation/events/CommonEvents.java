@@ -10,6 +10,7 @@ import com.simibubi.create.content.equipment.toolbox.ToolboxHandler;
 import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.content.equipment.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.equipment.zapper.ZapperItem;
+import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerServerHandler;
 import com.simibubi.create.content.trains.entity.CarriageEntityHandler;
 import com.simibubi.create.foundation.ModFilePackResources;
@@ -136,6 +137,7 @@ public class CommonEvents {
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
+		event.addListener(BeltHelper.LISTENER);
 	}
 
 	@SubscribeEvent

@@ -283,7 +283,8 @@ public class AllTags {
 	}
 	
 	public enum AllEntityTags {
-		
+
+		BLAZE_BURNER_CAPTURABLE,
 		IGNORE_SEAT,
 
 		;
@@ -317,9 +318,12 @@ public class AllTags {
 			this.alwaysDatagen = alwaysDatagen;
 		}
 
+		public boolean matches(EntityType<?> type) {
+			return type.is(tag);
+		}
+
 		public boolean matches(Entity entity) {
-			return entity.getType()
-				.is(tag);
+			return matches(entity.getType());
 		}
 
 		private static void init() {}

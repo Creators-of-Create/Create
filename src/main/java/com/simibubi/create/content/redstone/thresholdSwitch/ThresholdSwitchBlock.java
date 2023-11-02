@@ -55,7 +55,7 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 
 	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
-		return side != null && side.getOpposite() != state.getValue(FACING);
+		return side != null && side.getOpposite() != getTargetDirection(state);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 
 	@Override
 	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		if (side == blockState.getValue(FACING)
+		if (side == getTargetDirection(blockState)
 			.getOpposite())
 			return 0;
 		return getBlockEntityOptional(blockAccess, pos).filter(ThresholdSwitchBlockEntity::isPowered)
@@ -122,7 +122,7 @@ public class ThresholdSwitchBlock extends DirectedDirectionalBlock implements IB
 		if (preferredFacing == null) {
 			Direction facing = context.getNearestLookingDirection();
 			preferredFacing = context.getPlayer() != null && context.getPlayer()
-				.isSteppingCarefully() ? facing : facing.getOpposite();
+				.isShiftKeyDown() ? facing : facing.getOpposite();
 		}
 
 		if (preferredFacing.getAxis() == Axis.Y) {

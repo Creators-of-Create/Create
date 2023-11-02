@@ -9,7 +9,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
- * This Event is fired when a two fluids meet in a pipe ({@link Flow})<br>
+ * This Event is fired when two fluids meet in a pipe ({@link Flow})<br>
  * or when a fluid in a pipe meets with a fluid in the world
  * ({@link Spill}).<br>
  * <br>
