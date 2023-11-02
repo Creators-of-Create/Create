@@ -9,9 +9,7 @@
   "block.create.cogwheel": "Tannhjól",
   "block.create.crimsite": "Krímsít",
   "block.create.cuckoo_clock": "Gauksklukka",
-  "block.create.cuckoo_clock.tooltip": "GAUKSKLUKKA",
   "block.create.flywheel": "Svinghjól",
-  "block.create.flywheel.tooltip": "SVINGHJÓL",
   "block.create.honey": "Hunang",
   "block.create.large_cogwheel": "Stórt tannhjól",
   "block.create.limestone": "Kalksteinn",
@@ -61,6 +59,5 @@
   "item.create.rose_quartz": "Rósakvars",
   "item.create.sand_paper": "Sandpappír",
   "item.create.wrench": "Skiptilykill",
-  "item.create.wrench.tooltip": "SKIPTILYKILL",
   "item.create.zinc_ingot": "Sinkhleifur"
 }

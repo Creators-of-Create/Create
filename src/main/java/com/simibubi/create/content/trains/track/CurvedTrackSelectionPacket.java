@@ -60,7 +60,7 @@ public class CurvedTrackSelectionPacket extends BlockEntityConfigurationPacket<T
 			.getItem(slot);
 		if (!(stack.getItem() instanceof TrackTargetingBlockItem))
 			return;
-		if (player.isSteppingCarefully() && stack.hasTag()) {
+		if (player.isShiftKeyDown() && stack.hasTag()) {
 			player.displayClientMessage(Lang.translateDirect("track_target.clear"), true);
 			stack.setTag(null);
 			AllSoundEvents.CONTROLLER_CLICK.play(player.level(), null, pos, 1, .5f);

@@ -221,6 +221,9 @@ public class CreateRegistrateTags {
 	private static void genEntityTags(RegistrateTagsProvider<EntityType<?>> provIn) {
 		CreateTagsProvider<EntityType<?>> prov = new CreateTagsProvider<>(provIn, EntityType::builtInRegistryHolder);
 		
+		prov.tag(AllEntityTags.BLAZE_BURNER_CAPTURABLE.tag)
+			.add(EntityType.BLAZE);
+
 		// VALIDATE
 
 		for (AllEntityTags tag : AllEntityTags.values()) {

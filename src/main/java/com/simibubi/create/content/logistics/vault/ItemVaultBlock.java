@@ -53,7 +53,7 @@ public class ItemVaultBlock extends Block implements IWrenchable, IBE<ItemVaultB
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext pContext) {
 		if (pContext.getPlayer() == null || !pContext.getPlayer()
-			.isSteppingCarefully()) {
+			.isShiftKeyDown()) {
 			BlockState placedOn = pContext.getLevel()
 				.getBlockState(pContext.getClickedPos()
 					.relative(pContext.getClickedFace()

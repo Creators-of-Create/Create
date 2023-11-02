@@ -858,6 +858,8 @@
   "create.clipboard.pasted_to": "Applied settings to %1$s",
   "create.clipboard.to_copy": "%1$s to Copy settings",
   "create.clipboard.to_paste": "%1$s to Paste settings",
+  "create.command.debuginfo.saved_to_clipboard": "Debug information has been copied to your clipboard.",
+  "create.command.debuginfo.sending": "Collecting debug information...",
   "create.command.killTPSCommand": "killtps",
   "create.command.killTPSCommand.argument.tickTime": "tickTime",
   "create.command.killTPSCommand.status.slowed_by.0": "[Create]: Server tick is currently slowed by %s ms :o",

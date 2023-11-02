@@ -19,7 +19,7 @@ import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
-import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.trains.bogey.StandardBogeyBlock;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
@@ -194,10 +194,10 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 		int startingY = 1;
 		if (!getStateToPaveWith(context).isAir()) {
-			ItemStack filter = ItemStack.of(context.blockEntityData.getCompound("Filter"));
-			if (!ItemHelper
+			FilterItemStack filter = context.getFilterFromBE();
+			if (!ItemHelper	
 				.extract(context.contraption.getSharedInventory(),
-					stack -> FilterItem.test(context.world, stack, filter), 1, true)
+					stack -> filter.test(context.world, stack), 1, true)
 				.isEmpty())
 				startingY = 0;
 		}
@@ -473,9 +473,9 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 				.isEmpty())
 			return PaveResult.FAIL;
 
-		ItemStack filter = ItemStack.of(context.blockEntityData.getCompound("Filter"));
+		FilterItemStack filter = context.getFilterFromBE();
 		ItemStack held = ItemHelper.extract(context.contraption.getSharedInventory(),
-			stack -> FilterItem.test(context.world, stack, filter), 1, false);
+			stack -> filter.test(context.world, stack), 1, false);
 		if (held.isEmpty())
 			return PaveResult.FAIL;
 

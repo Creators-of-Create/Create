@@ -45,7 +45,7 @@ public class WrenchItem extends Item {
 		Block block = state.getBlock();
 
 		if (!(block instanceof IWrenchable)) {
-			if (canWrenchPickup(state))
+			if (player.isShiftKeyDown() && canWrenchPickup(state))
 				return onItemUseOnOther(context);
 			return super.useOn(context);
 		}

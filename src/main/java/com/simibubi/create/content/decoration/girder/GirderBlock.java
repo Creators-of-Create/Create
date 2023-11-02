@@ -120,7 +120,7 @@ public class GirderBlock extends Block implements SimpleWaterloggedBlock, IWrenc
 			return InteractionResult.SUCCESS;
 		}
 
-		if (AllItems.WRENCH.isIn(itemInHand) && !pPlayer.isSteppingCarefully()) {
+		if (AllItems.WRENCH.isIn(itemInHand) && !pPlayer.isShiftKeyDown()) {
 			if (GirderWrenchBehavior.handleClick(pLevel, pPos, pState, pHit))
 				return InteractionResult.sidedSuccess(pLevel.isClientSide);
 			return InteractionResult.FAIL;

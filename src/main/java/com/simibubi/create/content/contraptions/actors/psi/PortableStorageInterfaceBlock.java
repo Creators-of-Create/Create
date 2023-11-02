@@ -58,7 +58,7 @@ public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction direction = context.getNearestLookingDirection();
 		if (context.getPlayer() != null && context.getPlayer()
-			.isSteppingCarefully())
+			.isShiftKeyDown())
 			direction = direction.getOpposite();
 		return defaultBlockState().setValue(FACING, direction.getOpposite());
 	}

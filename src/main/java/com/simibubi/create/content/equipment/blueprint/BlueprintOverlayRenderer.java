@@ -13,6 +13,7 @@ import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.Blueprint
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.content.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -161,14 +162,14 @@ public class BlueprintOverlayRenderer {
 			newlyMissing.clear();
 
 			Search: for (int i = 0; i < 9; i++) {
-				ItemStack requestedItem = items.getStackInSlot(i);
+				FilterItemStack requestedItem = FilterItemStack.of(items.getStackInSlot(i));
 				if (requestedItem.isEmpty()) {
 					craftingGrid.put(i, ItemStack.EMPTY);
 					continue;
 				}
 
 				for (int slot = 0; slot < playerInv.getSlots(); slot++) {
-					if (!FilterItem.test(mc.level, playerInv.getStackInSlot(slot), requestedItem))
+					if (!requestedItem.test(mc.level, playerInv.getStackInSlot(slot)))
 						continue;
 					ItemStack currentItem = playerInv.extractItem(slot, 1, false);
 					craftingGrid.put(i, currentItem);
@@ -177,7 +178,7 @@ public class BlueprintOverlayRenderer {
 				}
 
 				success = false;
-				newlyMissing.add(requestedItem);
+				newlyMissing.add(requestedItem.item());
 			}
 
 			if (success) {
