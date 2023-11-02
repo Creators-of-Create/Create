@@ -26,12 +26,12 @@
 			"from": [1, 0, 0],
 			"to": [15, 2, 16],
 			"faces": {
-				"north": {"uv": [0, 9, 8, 10], "texture": "#2"},
+				"north": {"uv": [0.5, 9, 7.5, 10], "texture": "#2"},
 				"east": {"uv": [0, 9, 8, 10], "texture": "#2"},
-				"south": {"uv": [0, 9, 7, 10], "texture": "#2"},
+				"south": {"uv": [0.5, 9, 7.5, 10], "texture": "#2"},
 				"west": {"uv": [0, 9, 8, 10], "texture": "#2"},
 				"up": {"uv": [0, 0, 8, 7], "rotation": 270, "texture": "#2"},
-				"down": {"uv": [0, 0, 8, 7], "texture": "#2"}
+				"down": {"uv": [0, 0, 8, 7], "rotation": 90, "texture": "#2"}
 			}
 		},
 		{
@@ -148,11 +148,13 @@
 		{
 			"name": "Gauge",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6]
 		},
 		{
 			"name": "shaft",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [7]
 		}
 	]
