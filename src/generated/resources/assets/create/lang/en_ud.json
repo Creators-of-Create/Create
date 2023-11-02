@@ -858,6 +858,8 @@
   "create.clipboard.pasted_to": "%1$s oʇ sbuıʇʇǝs pǝıןddⱯ",
   "create.clipboard.to_copy": "sbuıʇʇǝs ʎdoƆ oʇ %1$s",
   "create.clipboard.to_paste": "sbuıʇʇǝs ǝʇsɐԀ oʇ %1$s",
+  "create.command.debuginfo.saved_to_clipboard": "˙pɹɐoqdıןɔ ɹnoʎ oʇ pǝıdoɔ uǝǝq sɐɥ uoıʇɐɯɹoɟuı bnqǝᗡ",
+  "create.command.debuginfo.sending": "˙˙˙uoıʇɐɯɹoɟuı bnqǝp buıʇɔǝןןoƆ",
   "create.command.killTPSCommand": "sdʇןןıʞ",
   "create.command.killTPSCommand.argument.tickTime": "ǝɯı⟘ʞɔıʇ",
   "create.command.killTPSCommand.status.slowed_by.0": "o: sɯ %s ʎq pǝʍoןs ʎןʇuǝɹɹnɔ sı ʞɔıʇ ɹǝʌɹǝS :]ǝʇɐǝɹƆ[",
