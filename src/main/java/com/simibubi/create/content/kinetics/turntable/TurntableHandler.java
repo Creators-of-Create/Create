@@ -16,6 +16,8 @@ public class TurntableHandler {
 		Minecraft mc = Minecraft.getInstance();
 		BlockPos pos = mc.player.blockPosition();
 
+		if (mc.gameMode == null)
+			return;
 		if (!AllBlocks.TURNTABLE.has(mc.level.getBlockState(pos)))
 			return;
 		if (!mc.player.isOnGround())
