@@ -18,13 +18,12 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -89,8 +88,8 @@ public class KineticsScenes {
 		BlockEntry<EncasedShaftBlock> andesiteEncased = AllBlocks.ANDESITE_ENCASED_SHAFT;
 		ItemStack andesiteCasingItem = AllBlocks.ANDESITE_CASING.asStack();
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(3, 1, 2), Pointing.DOWN).rightClick()
-			.withItem(andesiteCasingItem), 60);
+		scene.overlay().showControls(util.vector().topOf(3, 1, 2), Pointing.DOWN, 60).rightClick()
+			.withItem(andesiteCasingItem);
 		scene.idle(7);
 		scene.world().setBlocks(andesite, andesiteEncased.getDefaultState()
 			.setValue(EncasedShaftBlock.AXIS, Axis.X), true);
@@ -100,8 +99,8 @@ public class KineticsScenes {
 		BlockEntry<EncasedShaftBlock> brassEncased = AllBlocks.BRASS_ENCASED_SHAFT;
 		ItemStack brassCasingItem = AllBlocks.BRASS_CASING.asStack();
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(1, 0, 2), Pointing.UP).rightClick()
-			.withItem(brassCasingItem), 60);
+		scene.overlay().showControls(util.vector().topOf(1, 0, 2), Pointing.UP, 60).rightClick()
+			.withItem(brassCasingItem);
 		scene.idle(7);
 		scene.world().setBlocks(brass, brassEncased.getDefaultState()
 			.setValue(EncasedShaftBlock.AXIS, Axis.X), true);
@@ -327,8 +326,8 @@ public class KineticsScenes {
 		BlockEntry<EncasedCogwheelBlock> andesiteEncased = AllBlocks.ANDESITE_ENCASED_COGWHEEL;
 		ItemStack andesiteCasingItem = AllBlocks.ANDESITE_CASING.asStack();
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(3, 0, 2), Pointing.UP).rightClick()
-			.withItem(andesiteCasingItem), 100);
+		scene.overlay().showControls(util.vector().topOf(3, 0, 2), Pointing.UP, 100).rightClick()
+			.withItem(andesiteCasingItem);
 		scene.idle(7);
 		scene.world().setBlocks(util.select().position(3, 1, 2), andesiteEncased.getDefaultState()
 			.setValue(EncasedCogwheelBlock.AXIS, Axis.Y)
@@ -336,8 +335,8 @@ public class KineticsScenes {
 		scene.world().setKineticSpeed(util.select().position(3, 1, 2), -32);
 		scene.idle(15);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(2, 1, 2), Pointing.DOWN).rightClick()
-			.withItem(andesiteCasingItem), 30);
+		scene.overlay().showControls(util.vector().topOf(2, 1, 2), Pointing.DOWN, 30).rightClick()
+			.withItem(andesiteCasingItem);
 		scene.idle(7);
 		scene.world().setBlocks(small2, andesiteEncased.getDefaultState()
 			.setValue(EncasedCogwheelBlock.AXIS, Axis.Y), true);
@@ -347,8 +346,8 @@ public class KineticsScenes {
 		BlockEntry<EncasedCogwheelBlock> brassEncased = AllBlocks.BRASS_ENCASED_LARGE_COGWHEEL;
 		ItemStack brassCasingItem = AllBlocks.BRASS_CASING.asStack();
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(1, 0, 3), Pointing.UP).rightClick()
-			.withItem(brassCasingItem), 60);
+		scene.overlay().showControls(util.vector().topOf(1, 0, 3), Pointing.UP, 60).rightClick()
+			.withItem(brassCasingItem);
 		scene.idle(7);
 		scene.world().setBlocks(util.select().position(1, 1, 3), brassEncased.getDefaultState()
 			.setValue(EncasedCogwheelBlock.AXIS, Axis.Y), true);
@@ -378,8 +377,8 @@ public class KineticsScenes {
 		scene.addKeyframe();
 		Vec3 wrenchHere = util.vector().topOf(2, 1, 2)
 			.add(.25, 0, -.25);
-		scene.overlay().showControls(new InputWindowElement(wrenchHere, Pointing.RIGHT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 25);
+		scene.overlay().showControls(wrenchHere, Pointing.RIGHT, 25).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().cycleBlockProperty(util.grid().at(2, 1, 2), EncasedCogwheelBlock.TOP_SHAFT);
 		scene.idle(15);
@@ -396,8 +395,8 @@ public class KineticsScenes {
 			.pointAt(wrenchHere.add(-.5, 0, .5));
 		scene.idle(40);
 
-		scene.overlay().showControls(new InputWindowElement(wrenchHere, Pointing.RIGHT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 25);
+		scene.overlay().showControls(wrenchHere, Pointing.RIGHT, 25).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().cycleBlockProperty(util.grid().at(2, 1, 2), EncasedCogwheelBlock.TOP_SHAFT);
 		scene.world().setKineticSpeed(shaft2, 0);
@@ -612,7 +611,7 @@ public class KineticsScenes {
 		Vec3 blockSurface = util.vector().blockSurface(motor, Direction.NORTH)
 			.add(1 / 16f, 0, 3 / 16f);
 		scene.overlay().showFilterSlotInput(blockSurface, Direction.NORTH, 80);
-		scene.overlay().showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(blockSurface, Pointing.DOWN, 60).rightClick();
 		scene.idle(20);
 
 		scene.overlay().showText(60)
@@ -703,8 +702,8 @@ public class KineticsScenes {
 
 		scene.idle(5);
 		ItemStack crimsonPlanks = new ItemStack(Items.CRIMSON_PLANKS);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(wheel), Pointing.DOWN).rightClick()
-			.withItem(crimsonPlanks), 20);
+		scene.overlay().showControls(util.vector().topOf(wheel), Pointing.DOWN, 20).rightClick()
+			.withItem(crimsonPlanks);
 		scene.idle(7);
 		scene.world().modifyBlockEntity(wheel, WaterWheelBlockEntity.class, be -> be.applyMaterialIfValid(crimsonPlanks));
 		scene.overlay().showText(50)
@@ -715,15 +714,15 @@ public class KineticsScenes {
 		scene.idle(40);
 
 		ItemStack birchPlanks = new ItemStack(Items.BIRCH_PLANKS);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(wheel), Pointing.DOWN).rightClick()
-			.withItem(birchPlanks), 20);
+		scene.overlay().showControls(util.vector().topOf(wheel), Pointing.DOWN, 20).rightClick()
+			.withItem(birchPlanks);
 		scene.idle(7);
 		scene.world().modifyBlockEntity(wheel, WaterWheelBlockEntity.class, be -> be.applyMaterialIfValid(birchPlanks));
 		scene.idle(40);
 
 		ItemStack junglePlanks = new ItemStack(Items.JUNGLE_PLANKS);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(wheel), Pointing.DOWN).rightClick()
-			.withItem(junglePlanks), 20);
+		scene.overlay().showControls(util.vector().topOf(wheel), Pointing.DOWN, 20).rightClick()
+			.withItem(junglePlanks);
 		scene.idle(7);
 		scene.world().modifyBlockEntity(wheel, WaterWheelBlockEntity.class, be -> be.applyMaterialIfValid(junglePlanks));
 		scene.idle(20);
@@ -834,8 +833,8 @@ public class KineticsScenes {
 
 		scene.idle(5);
 		ItemStack crimsonPlanks = new ItemStack(Items.CRIMSON_PLANKS);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(target), Pointing.DOWN).rightClick()
-			.withItem(crimsonPlanks), 20);
+		scene.overlay().showControls(util.vector().topOf(target), Pointing.DOWN, 20).rightClick()
+			.withItem(crimsonPlanks);
 		scene.idle(7);
 		scene.world().modifyBlockEntity(wheel, WaterWheelBlockEntity.class, be -> be.applyMaterialIfValid(crimsonPlanks));
 		scene.overlay().showText(50)
@@ -846,15 +845,15 @@ public class KineticsScenes {
 		scene.idle(40);
 
 		ItemStack birchPlanks = new ItemStack(Items.BIRCH_PLANKS);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(target), Pointing.DOWN).rightClick()
-			.withItem(birchPlanks), 20);
+		scene.overlay().showControls(util.vector().topOf(target), Pointing.DOWN, 20).rightClick()
+			.withItem(birchPlanks);
 		scene.idle(7);
 		scene.world().modifyBlockEntity(wheel, WaterWheelBlockEntity.class, be -> be.applyMaterialIfValid(birchPlanks));
 		scene.idle(40);
 
 		ItemStack junglePlanks = new ItemStack(Items.JUNGLE_PLANKS);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(target), Pointing.DOWN).rightClick()
-			.withItem(junglePlanks), 20);
+		scene.overlay().showControls(util.vector().topOf(target), Pointing.DOWN, 20).rightClick()
+			.withItem(junglePlanks);
 		scene.idle(7);
 		scene.world().modifyBlockEntity(wheel, WaterWheelBlockEntity.class, be -> be.applyMaterialIfValid(junglePlanks));
 		scene.idle(20);
@@ -891,7 +890,7 @@ public class KineticsScenes {
 			.pointAt(sideOf);
 		scene.idle(80);
 
-		scene.overlay().showControls(new InputWindowElement(centerOf, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(centerOf, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
 		scene.world().setKineticSpeed(util.select().everywhere(), 32);
 		scene.world().modifyKineticSpeed(util.select().column(1, 3), f -> f * -2);
@@ -908,8 +907,8 @@ public class KineticsScenes {
 		scene.world().setKineticSpeed(util.select().everywhere(), 0);
 		scene.idle(15);
 
-		scene.overlay().showControls(new InputWindowElement(centerOf, Pointing.DOWN).rightClick()
-			.whileSneaking(), 40);
+		scene.overlay().showControls(centerOf, Pointing.DOWN, 40).rightClick()
+			.whileSneaking();
 		scene.idle(7);
 		scene.world().setKineticSpeed(util.select().everywhere(), -32);
 		scene.world().modifyKineticSpeed(util.select().column(1, 3), f -> f * -2);
@@ -972,7 +971,7 @@ public class KineticsScenes {
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.WHITE, blockSurface, point, 1);
 		scene.idle(1);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.WHITE, blockSurface, expanded, 80);
-		scene.overlay().showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(blockSurface, Pointing.DOWN, 60).rightClick();
 		scene.idle(10);
 
 		scene.overlay().showText(60)
@@ -982,7 +981,7 @@ public class KineticsScenes {
 			.pointAt(blockSurface);
 
 		scene.idle(70);
-		scene.overlay().showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(topOf, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
 		scene.world().rotateSection(valve, 0, 0, 90, 30);
 		scene.world().rotateSection(contraption, 0, 0, 90, 30);
@@ -1000,8 +999,8 @@ public class KineticsScenes {
 		scene.world().setKineticSpeed(util.select().everywhere(), 0);
 
 		scene.idle(25);
-		scene.overlay().showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick()
-			.whileSneaking(), 40);
+		scene.overlay().showControls(topOf, Pointing.DOWN, 40).rightClick()
+			.whileSneaking();
 		scene.idle(7);
 		scene.world().rotateSection(valve, 0, 0, -90, 30);
 		scene.world().rotateSection(contraption, 0, 0, -90, 30);
@@ -1035,8 +1034,8 @@ public class KineticsScenes {
 		scene.idle(90);
 
 		scene.addKeyframe();
-		scene.overlay().showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick()
-			.withItem(new ItemStack(Items.BLUE_DYE)), 40);
+		scene.overlay().showControls(topOf, Pointing.DOWN, 40).rightClick()
+			.withItem(new ItemStack(Items.BLUE_DYE));
 		scene.idle(7);
 		scene.world().modifyBlock(valvePos, s -> AllBlocks.DYED_VALVE_HANDLES.get(DyeColor.BLUE)
 			.getDefaultState()
@@ -1086,9 +1085,9 @@ public class KineticsScenes {
 			.placeNearTarget();
 		scene.idle(80);
 
-		scene.overlay().showControls(new InputWindowElement(top, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(top, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
-		scene.overlay().showSelectionWithText(gearshiftSelection, 50)
+		scene.overlay().showOutlineWithText(gearshiftSelection, 50)
 			.colored(PonderPalette.BLUE)
 			.text("Right-click it to open the Configuration UI")
 			.pointAt(top)
@@ -1259,21 +1258,20 @@ public class KineticsScenes {
 			.text("Using the value panel on its side, the conveyed speed can be configured");
 		scene.idle(80);
 
-		InputWindowElement input = new InputWindowElement(inputVec, Pointing.UP).rightClick();
-		scene.overlay().showControls(input, 40);
+		scene.overlay().showControls(inputVec, Pointing.UP, 40).rightClick();
 		scene.idle(15);
 		scene.world().multiplyKineticSpeed(util.select().fromTo(1, 2, 1, 1, 2, 3), 4);
 		scene.effects().rotationSpeedIndicator(cogPos);
 		scene.idle(55);
 		scene.markAsFinished();
 
-		scene.overlay().showControls(input, 30);
+		scene.overlay().showControls(inputVec, Pointing.UP, 30).rightClick();
 		scene.idle(15);
 		scene.world().multiplyKineticSpeed(util.select().fromTo(1, 2, 1, 1, 2, 3), 4);
 		scene.effects().rotationSpeedIndicator(cogPos);
 		scene.idle(55);
 
-		scene.overlay().showControls(input, 30);
+		scene.overlay().showControls(inputVec, Pointing.UP, 30).rightClick();
 		scene.idle(15);
 		scene.world().multiplyKineticSpeed(util.select().fromTo(1, 2, 1, 1, 2, 3), -.05f);
 		scene.effects().rotationSpeedIndicator(cogPos);
@@ -1345,8 +1343,7 @@ public class KineticsScenes {
 		scene.idle(30);
 
 		Vec3 blockSurface = util.vector().blockSurface(gaugePos, Direction.NORTH);
-		scene.overlay().showControls(
-			new InputWindowElement(blockSurface, Pointing.RIGHT).withItem(AllItems.GOGGLES.asStack()), 80);
+		scene.overlay().showControls(blockSurface, Pointing.RIGHT, 80).withItem(AllItems.GOGGLES.asStack());
 		scene.idle(7);
 		scene.overlay().showText(80)
 			.text("When wearing Engineers' Goggles, the player can get more detailed information from the Gauge")

@@ -5,14 +5,14 @@ import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -50,8 +50,8 @@ public class TrackObserverScenes {
 		Vec3 target = util.vector().topOf(5, 0, 7);
 		AABB bb = new AABB(target, target).move(0, 2 / 16f, 0);
 
-		scene.overlay().showControls(new InputWindowElement(target, Pointing.DOWN).rightClick()
-			.withItem(AllBlocks.TRACK_OBSERVER.asStack()), 40);
+		scene.overlay().showControls(target, Pointing.DOWN, 40).rightClick()
+			.withItem(AllBlocks.TRACK_OBSERVER.asStack());
 		scene.idle(6);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 1);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb.inflate(.45f, 1 / 16f, .45f), 60);
@@ -83,7 +83,7 @@ public class TrackObserverScenes {
 		scene.world().moveSection(trainInstance1, util.vector().of(-16, 0, 0), 80);
 		scene.world().animateBogey(util.grid().at(5, 2, 7), 16, 80);
 		ElementLink<ParrotElement> birb =
-			scene.special().createBirb(util.vector().centerOf(12, 3, 7), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().centerOf(12, 3, 7), ParrotPose.FacePointOfInterestPose::new);
 		scene.special().moveParrot(birb, util.vector().of(-16, 0, 0), 80);
 		scene.idle(10);
 
@@ -118,7 +118,7 @@ public class TrackObserverScenes {
 		scene.idle(40);
 
 		ItemStack waterBucket = new ItemStack(Items.WATER_BUCKET);
-		scene.overlay().showControls(new InputWindowElement(target, Pointing.DOWN).withItem(waterBucket), 30);
+		scene.overlay().showControls(target, Pointing.DOWN, 30).withItem(waterBucket);
 		scene.idle(6);
 		scene.world().setFilterData(observer, TrackObserverBlockEntity.class, waterBucket);
 		scene.idle(50);
@@ -127,7 +127,7 @@ public class TrackObserverScenes {
 		scene.world().moveSection(trainInstance1, util.vector().of(6, 0, 0), 0);
 		scene.world().moveSection(trainInstance1, util.vector().of(-16, 0, 0), 80);
 		scene.world().animateBogey(util.grid().at(5, 2, 7), 16, 80);
-		birb = scene.special().createBirb(util.vector().centerOf(12, 3, 7), ParrotElement.FacePointOfInterestPose::new);
+		birb = scene.special().createBirb(util.vector().centerOf(12, 3, 7), ParrotPose.FacePointOfInterestPose::new);
 		scene.special().moveParrot(birb, util.vector().of(-16, 0, 0), 80);
 		scene.idle(10);
 
@@ -147,7 +147,7 @@ public class TrackObserverScenes {
 		scene.world().moveSection(trainInstance1, util.vector().of(6, 0, 0), 0);
 		scene.world().moveSection(trainInstance1, util.vector().of(-16, 0, 0), 80);
 		scene.world().animateBogey(util.grid().at(5, 2, 7), 16, 80);
-		birb = scene.special().createBirb(util.vector().centerOf(12, 3, 7), ParrotElement.FacePointOfInterestPose::new);
+		birb = scene.special().createBirb(util.vector().centerOf(12, 3, 7), ParrotPose.FacePointOfInterestPose::new);
 		scene.special().moveParrot(birb, util.vector().of(-16, 0, 0), 80);
 		scene.idle(10);
 

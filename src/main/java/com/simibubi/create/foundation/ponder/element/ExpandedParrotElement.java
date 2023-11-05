@@ -2,12 +2,13 @@ package com.simibubi.create.foundation.ponder.element;
 
 import java.util.function.Supplier;
 
+import net.createmod.ponder.api.element.ParrotPose;
 import net.createmod.ponder.foundation.PonderScene;
-import net.createmod.ponder.foundation.element.ParrotElement;
+import net.createmod.ponder.foundation.element.ParrotElementImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 
-public class ExpandedParrotElement extends ParrotElement {
+public class ExpandedParrotElement extends ParrotElementImpl {
 
 	protected boolean deferConductor = false;
 

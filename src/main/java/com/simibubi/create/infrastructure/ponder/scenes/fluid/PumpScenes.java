@@ -10,13 +10,12 @@ import com.simibubi.create.content.kinetics.simpleRelays.CogWheelBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -139,8 +138,8 @@ public class PumpScenes {
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, in, new AABB(leverPos.below()), 30);
 		scene.idle(45);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(pumpPos), Pointing.DOWN).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 40);
+		scene.overlay().showControls(util.vector().topOf(pumpPos), Pointing.DOWN, 40).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.EAST), true);
 		scene.overlay().showText(70)
@@ -291,7 +290,7 @@ public class PumpScenes {
 		scene.world().setKineticSpeed(largeCog, 8);
 		scene.idle(20);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(2, 1, 1, 2, 1, 3), 60)
+		scene.overlay().showOutlineWithText(util.select().fromTo(2, 1, 1, 2, 1, 3), 60)
 			.attachKeyFrame()
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector().topOf(pumpPos))
@@ -300,9 +299,8 @@ public class PumpScenes {
 		scene.idle(70);
 
 		scene.idle(30);
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(pumpPos.north()), Pointing.DOWN).rightClick()
-				.withItem(AllItems.WRENCH.asStack()), 30);
+		scene.overlay().showControls(util.vector().topOf(pumpPos.north()), Pointing.DOWN, 30).rightClick()
+				.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(pumpPos.north(), s -> s.setValue(PumpBlock.FACING, Direction.WEST), true);
 		scene.idle(30);

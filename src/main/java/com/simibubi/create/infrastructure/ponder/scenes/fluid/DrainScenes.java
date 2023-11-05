@@ -5,12 +5,11 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -51,10 +50,8 @@ public class DrainScenes {
 		scene.idle(50);
 
 		ItemStack lavaBucket = new ItemStack(Items.LAVA_BUCKET);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(drainPos.west(), Direction.UP), Pointing.DOWN).rightClick()
-				.withItem(lavaBucket),
-			40);
+		scene.overlay().showControls(util.vector().blockSurface(drainPos.west(), Direction.UP), Pointing.DOWN, 40).rightClick()
+				.withItem(lavaBucket);
 		scene.idle(7);
 		scene.world().modifyBlockEntity(drainPos, ItemDrainBlockEntity.class, be -> {
 			be.getBehaviour(SmartFluidTankBehaviour.TYPE)
@@ -90,8 +87,7 @@ public class DrainScenes {
 			.pointAt(util.vector().topOf(util.grid().at(2, 1, 2)));
 		scene.idle(40);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(beltPos), Pointing.DOWN).withItem(lavaBucket), 20);
+		scene.overlay().showControls(util.vector().topOf(beltPos), Pointing.DOWN, 20).withItem(lavaBucket);
 		scene.idle(7);
 		scene.world().createItemOnBelt(beltPos, Direction.NORTH, lavaBucket);
 		scene.idle(30);

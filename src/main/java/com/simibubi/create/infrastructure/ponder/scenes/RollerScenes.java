@@ -6,14 +6,14 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +54,7 @@ public class RollerScenes {
 		scene.world().showSection(util.select().position(stationPos), Direction.DOWN);
 		scene.idle(5);
 		ElementLink<ParrotElement> birbLink =
-			scene.special().createBirb(util.vector().centerOf(8, 3, 4), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().centerOf(8, 3, 4), ParrotPose.FacePointOfInterestPose::new);
 		ElementLink<WorldSectionElement> trainLink = scene.world().showIndependentSection(train, Direction.DOWN);
 		scene.idle(5);
 		scene.world().showSectionAndMerge(rollers, Direction.EAST, trainLink);
@@ -85,8 +85,8 @@ public class RollerScenes {
 			scene.world().modifyBlockEntity(util.grid().at(6, 2, 3 + i), RollerBlockEntity.class,
 				rte -> rte.setAnimatedSpeed(0));
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(util.grid().at(2, 2, 4)), Pointing.DOWN)
-			.showing(AllIcons.I_ROLLER_PAVE), 70);
+		scene.overlay().showControls(util.vector().topOf(util.grid().at(2, 2, 4)), Pointing.DOWN, 70)
+			.showing(AllIcons.I_ROLLER_PAVE);
 
 		scene.overlay().showText(80)
 			.pointAt(util.vector().topOf(util.grid().at(2, 2, 4)))
@@ -133,7 +133,7 @@ public class RollerScenes {
 		scene.world().hideIndependentSection(trainLink, Direction.UP);
 		scene.idle(15);
 
-		birbLink = scene.special().createBirb(util.vector().centerOf(8, 3, 4), ParrotElement.FacePointOfInterestPose::new);
+		birbLink = scene.special().createBirb(util.vector().centerOf(8, 3, 4), ParrotPose.FacePointOfInterestPose::new);
 		trainLink = scene.world().showIndependentSection(train, Direction.DOWN);
 		scene.world().toggleControls(controlsPos);
 		scene.idle(5);
@@ -154,7 +154,7 @@ public class RollerScenes {
 
 		Block paveMaterial = Blocks.TUFF;
 		ItemStack paveItem = new ItemStack(paveMaterial);
-		scene.overlay().showControls(new InputWindowElement(filterSlot, Pointing.DOWN).withItem(paveItem), 40);
+		scene.overlay().showControls(filterSlot, Pointing.DOWN, 40).withItem(paveItem);
 		scene.idle(7);
 		scene.world().setFilterData(rollers, RollerBlockEntity.class, paveItem);
 		scene.idle(20);
@@ -246,7 +246,7 @@ public class RollerScenes {
 		scene.world().hideSection(util.select().position(stationPos), Direction.UP);
 		scene.idle(10);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(5, 0, 3, 0, 0, 5), 90)
+		scene.overlay().showOutlineWithText(util.select().fromTo(5, 0, 3, 0, 0, 5), 90)
 			.pointAt(util.vector().topOf(util.grid().at(3, 0, 4)))
 			.attachKeyFrame()
 			.colored(PonderPalette.RED)
@@ -268,7 +268,7 @@ public class RollerScenes {
 
 		paveMaterial = Blocks.GRASS_BLOCK;
 		paveItem = new ItemStack(paveMaterial);
-		scene.overlay().showControls(new InputWindowElement(filterSlot, Pointing.DOWN).withItem(paveItem), 40);
+		scene.overlay().showControls(filterSlot, Pointing.DOWN, 40).withItem(paveItem);
 		scene.idle(7);
 		scene.world().setFilterData(rollers, RollerBlockEntity.class, paveItem);
 		scene.idle(20);
@@ -339,7 +339,7 @@ public class RollerScenes {
 
 		ElementLink<WorldSectionElement> trainLink = scene.world().showIndependentSection(train, Direction.DOWN);
 		ElementLink<ParrotElement> birbLink =
-			scene.special().createBirb(util.vector().centerOf(8, 7, 4), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().centerOf(8, 7, 4), ParrotPose.FacePointOfInterestPose::new);
 		scene.idle(5);
 		scene.world().showSectionAndMerge(rollers, Direction.EAST, trainLink);
 		scene.idle(15);
@@ -353,20 +353,18 @@ public class RollerScenes {
 			.placeNearTarget();
 		scene.idle(70);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(5, 3, 3, 0, 1, 5), 90)
+		scene.overlay().showOutlineWithText(util.select().fromTo(5, 3, 3, 0, 1, 5), 90)
 			.attachKeyFrame()
 			.colored(PonderPalette.BLUE)
 			.text("The 'fill' modes can help to bridge gaps between pavement and terrain")
 			.placeNearTarget();
 		scene.idle(100);
 
-		scene.overlay().showControls(new InputWindowElement(filterSlot, Pointing.DOWN).showing(AllIcons.I_ROLLER_FILL),
-									 50);
+		scene.overlay().showControls(filterSlot, Pointing.DOWN, 50).showing(AllIcons.I_ROLLER_FILL);
 		scene.idle(15);
 		Block paveMaterial = Blocks.COARSE_DIRT;
 		ItemStack paveItem = new ItemStack(paveMaterial);
-		scene.overlay()
-			.showControls(new InputWindowElement(filterSlot.add(0, 0, -6 / 16f), Pointing.UP).withItem(paveItem), 35);
+		scene.overlay().showControls(filterSlot.add(0, 0, -6 / 16f), Pointing.UP, 35).withItem(paveItem);
 		scene.idle(7);
 		scene.world().setFilterData(rollers, RollerBlockEntity.class, paveItem);
 		scene.idle(10);
@@ -423,14 +421,13 @@ public class RollerScenes {
 
 		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, true);
-		birbLink = scene.special().createBirb(util.vector().centerOf(8, 7, 4), ParrotElement.FacePointOfInterestPose::new);
+		birbLink = scene.special().createBirb(util.vector().centerOf(8, 7, 4), ParrotPose.FacePointOfInterestPose::new);
 		trainLink = scene.world().showIndependentSection(train, Direction.DOWN);
 		scene.idle(5);
 		scene.world().showSectionAndMerge(rollers, Direction.EAST, trainLink);
 		scene.idle(25);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(filterSlot, Pointing.DOWN).showing(AllIcons.I_ROLLER_WIDE_FILL), 40);
+		scene.overlay().showControls(filterSlot, Pointing.DOWN, 40).showing(AllIcons.I_ROLLER_WIDE_FILL);
 		scene.idle(45);
 
 		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
@@ -488,7 +485,7 @@ public class RollerScenes {
 		scene.world().cycleBlockProperty(stationPos, StationBlock.ASSEMBLING);
 		scene.world().animateTrainStation(stationPos, true);
 		scene.world().showSection(util.select().fromTo(5, 1, 3, 0, 3, 5), Direction.NORTH);
-		birbLink = scene.special().createBirb(util.vector().centerOf(8, 7, 4), ParrotElement.FacePointOfInterestPose::new);
+		birbLink = scene.special().createBirb(util.vector().centerOf(8, 7, 4), ParrotPose.FacePointOfInterestPose::new);
 		trainLink = scene.world().showIndependentSection(train, Direction.DOWN);
 		scene.idle(5);
 		scene.world().showSectionAndMerge(rollers, Direction.EAST, trainLink);

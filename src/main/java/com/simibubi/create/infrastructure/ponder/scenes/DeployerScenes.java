@@ -8,15 +8,13 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
-import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -60,7 +58,7 @@ public class DeployerScenes {
 		scene.world().moveDeployer(deployerPos, -1, 25);
 		scene.idle(44);
 
-		scene.overlay().showSelectionWithText(util.select().position(deployerPos.west(2)), 60)
+		scene.overlay().showOutlineWithText(util.select().position(deployerPos.west(2)), 60)
 			.text("It will always interact with the position 2 blocks in front of itself")
 			.attachKeyFrame()
 			.placeNearTarget()
@@ -109,8 +107,8 @@ public class DeployerScenes {
 		Vec3 frontVec = util.vector().blockSurface(deployerPos, Direction.WEST)
 			.add(-.125, 0, 0);
 
-		scene.overlay().showControls(new InputWindowElement(frontVec, Pointing.DOWN).rightClick()
-			.withItem(pot), 40);
+		scene.overlay().showControls(frontVec, Pointing.DOWN, 40).rightClick()
+			.withItem(pot);
 		scene.idle(7);
 		Class<DeployerBlockEntity> teType = DeployerBlockEntity.class;
 		scene.world().modifyBlockEntityNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", pot.serializeNBT()));
@@ -169,8 +167,8 @@ public class DeployerScenes {
 
 		ItemStack shears = new ItemStack(Items.SHEARS);
 
-		scene.overlay().showControls(new InputWindowElement(filterSlot, Pointing.DOWN).rightClick()
-			.withItem(shears), 40);
+		scene.overlay().showControls(filterSlot, Pointing.DOWN, 40).rightClick()
+			.withItem(shears);
 		scene.idle(7);
 		scene.world().setFilterData(deployerSelection, teType, shears);
 		scene.overlay().showText(60)
@@ -212,10 +210,10 @@ public class DeployerScenes {
 		scene.idle(26);
 		scene.world().modifyEntity(sheep, e -> ((Sheep) e).setSheared(true));
 		scene.effects().emitParticles(util.vector().topOf(deployerPos.west(2))
-			.add(0, -.25, 0),
-									  Emitter.withinBlockSpace(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.PINK_WOOL.defaultBlockState()),
-															   util.vector().of(0, 0, 0)),
-									  25, 1);
+						.add(0, -.25, 0),
+				scene.effects().particleEmitterWithinBlockSpace(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.PINK_WOOL.defaultBlockState()),
+						util.vector().of(0, 0, 0)),
+				25, 1);
 		scene.world().moveDeployer(deployerPos, -1, 25);
 		scene.world().showSection(util.select().position(deployerPos.north()), Direction.SOUTH);
 		scene.idle(25);
@@ -259,8 +257,7 @@ public class DeployerScenes {
 		scene.idle(10);
 
 		ItemStack tool = new ItemStack(Items.GOLDEN_HOE);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(deployerPos), Pointing.DOWN).withItem(tool),
-									 30);
+		scene.overlay().showControls(util.vector().topOf(deployerPos), Pointing.DOWN, 30).withItem(tool);
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(deployerSelection, DeployerBlockEntity.class,
 			nbt -> nbt.put("HeldItem", tool.serializeNBT()));
@@ -281,8 +278,8 @@ public class DeployerScenes {
 		scene.world().moveDeployer(deployerPos, -1, 25);
 		scene.idle(46);
 
-		scene.overlay().showControls(new InputWindowElement(frontVec, Pointing.LEFT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 40);
+		scene.overlay().showControls(frontVec, Pointing.LEFT, 40).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(deployerSelection, DeployerBlockEntity.class,
 			nbt -> nbt.putString("Mode", "PUNCH"));
@@ -342,8 +339,8 @@ public class DeployerScenes {
 		scene.idle(10);
 
 		ItemStack tool = AllItems.SAND_PAPER.asStack();
-		scene.overlay().showControls(new InputWindowElement(util.vector().blockSurface(pressPos.below(), Direction.EAST)
-			.add(0, 0.15, 0), Pointing.RIGHT).withItem(tool), 30);
+		scene.overlay().showControls(util.vector().blockSurface(pressPos.below(), Direction.EAST).add(0, 0.15, 0), Pointing.RIGHT, 30)
+				.withItem(tool);
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(pressS, DeployerBlockEntity.class,
 			nbt -> nbt.put("HeldItem", tool.serializeNBT()));
@@ -365,7 +362,7 @@ public class DeployerScenes {
 		ItemStack quartz = AllItems.ROSE_QUARTZ.asStack();
 		scene.world().createItemOnBeltLike(depotPos, Direction.NORTH, quartz);
 		Vec3 depotCenter = util.vector().centerOf(depotPos.south());
-		scene.overlay().showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(quartz), 30);
+		scene.overlay().showControls(depotCenter, Pointing.UP, 30).withItem(quartz);
 		scene.idle(10);
 
 		Vec3 targetV = util.vector().centerOf(pressPos)
@@ -380,7 +377,7 @@ public class DeployerScenes {
 		ItemStack polished = AllItems.POLISHED_ROSE_QUARTZ.asStack();
 		scene.world().createItemOnBeltLike(depotPos, Direction.UP, polished);
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(polished), 50);
+		scene.overlay().showControls(depotCenter, Pointing.UP, 50).withItem(polished);
 		scene.idle(60);
 
 		scene.world().hideIndependentSection(depot, Direction.NORTH);
@@ -547,7 +544,7 @@ public class DeployerScenes {
 			scene.idle(18);
 		}
 
-		scene.overlay().showSelectionWithText(flowers, 90)
+		scene.overlay().showOutlineWithText(flowers, 90)
 			.attachKeyFrame()
 			.colored(PonderPalette.GREEN)
 			.text("They activate at each visited location, using items from inventories anywhere on the contraption");
@@ -569,7 +566,7 @@ public class DeployerScenes {
 		scene.idle(70);
 
 		ItemStack poppy = new ItemStack(Items.POPPY);
-		scene.overlay().showControls(new InputWindowElement(filterSlot, Pointing.DOWN).withItem(poppy), 30);
+		scene.overlay().showControls(filterSlot, Pointing.DOWN, 30).withItem(poppy);
 		scene.idle(7);
 		scene.world().setFilterData(deployerSelection, DeployerBlockEntity.class, poppy);
 		scene.idle(25);

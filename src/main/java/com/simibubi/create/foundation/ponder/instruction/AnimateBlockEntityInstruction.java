@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
 import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
 
-import net.createmod.ponder.foundation.PonderLevel;
+import net.createmod.ponder.api.level.PonderLevel;
 import net.createmod.ponder.foundation.PonderScene;
 import net.createmod.ponder.foundation.instruction.TickingInstruction;
 import net.minecraft.core.BlockPos;
@@ -22,8 +22,8 @@ public class AnimateBlockEntityInstruction extends TickingInstruction {
 	protected double target;
 	protected final BlockPos location;
 
-	private BiConsumer<PonderLevel, Float> setter;
-	private Function<PonderLevel, Float> getter;
+	private final BiConsumer<PonderLevel, Float> setter;
+	private final Function<PonderLevel, Float> getter;
 
 	public static AnimateBlockEntityInstruction bearing(BlockPos location, float totalDelta, int ticks) {
 		return new AnimateBlockEntityInstruction(location, totalDelta, ticks,

@@ -533,7 +533,7 @@ public class BeltBlock extends HorizontalKineticBlock
 			((BeltTunnelBlock) tunnelBlock).updateTunnel(world, pos);
 	}
 
-	public static List<BlockPos> getBeltChain(Level world, BlockPos controllerPos) {
+	public static List<BlockPos> getBeltChain(LevelAccessor world, BlockPos controllerPos) {
 		List<BlockPos> positions = new LinkedList<>();
 
 		BlockState blockState = world.getBlockState(controllerPos);

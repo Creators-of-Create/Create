@@ -11,14 +11,12 @@ import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 
 import net.createmod.catnip.utility.Pointing;
 import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
-import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -77,13 +75,11 @@ public class SpoutScenes {
 		ItemStack bucket = AllFluids.HONEY.get()
 			.getFluidType()
 			.getBucket(honey);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.NORTH), Pointing.RIGHT, 40)
 				.showing(AllIcons.I_MTD_CLOSE)
-				.withItem(bucket),
-			40);
+				.withItem(bucket);
 		scene.idle(7);
-		scene.overlay().showSelectionWithText(util.select().position(2, 3, 2), 50)
+		scene.overlay().showOutlineWithText(util.select().position(2, 3, 2), 50)
 			.pointAt(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.WEST))
 			.attachKeyFrame()
 			.colored(PonderPalette.RED)
@@ -106,7 +102,7 @@ public class SpoutScenes {
 		ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
 		scene.world().createItemOnBeltLike(depotPos, Direction.NORTH, bottle);
 		Vec3 depotCenter = util.vector().centerOf(depotPos.south());
-		scene.overlay().showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(bottle), 30);
+		scene.overlay().showControls(depotCenter, Pointing.UP, 30).withItem(bottle);
 		scene.idle(10);
 
 		scene.idle(20);
@@ -119,10 +115,10 @@ public class SpoutScenes {
 		for (int i = 0; i < 10; i++) {
 			scene.effects().emitParticles(util.vector().topOf(depotPos.south())
 				.add(0, 1 / 16f, 0),
-										  Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
+					scene.effects().simpleParticleEmitter(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
 		}
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(potion), 50);
+		scene.overlay().showControls(depotCenter, Pointing.UP, 50).withItem(potion);
 		scene.idle(60);
 
 		scene.world().hideIndependentSection(depot, Direction.NORTH);
@@ -156,7 +152,7 @@ public class SpoutScenes {
 		for (int i = 0; i < 10; i++) {
 			scene.effects().emitParticles(util.vector().topOf(depotPos.south())
 				.add(0, 1 / 16f, 0),
-										  Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
+					scene.effects().simpleParticleEmitter(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
 		}
 		scene.world().removeItemsFromBelt(spoutPos.below(2));
 		ingot = scene.world().createItemOnBelt(spoutPos.below(2), Direction.UP, potion);
@@ -170,7 +166,7 @@ public class SpoutScenes {
 		for (int i = 0; i < 10; i++) {
 			scene.effects().emitParticles(util.vector().topOf(depotPos.south())
 				.add(0, 1 / 16f, 0),
-										  Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
+					scene.effects().simpleParticleEmitter(fluidParticle, VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)), 1, 1);
 		}
 		scene.world().removeItemsFromBelt(spoutPos.below(2));
 		ingot2 = scene.world().createItemOnBelt(spoutPos.below(2), Direction.UP, potion);

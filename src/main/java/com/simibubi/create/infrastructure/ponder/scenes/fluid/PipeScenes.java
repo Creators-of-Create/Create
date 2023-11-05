@@ -18,13 +18,12 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -94,8 +93,8 @@ public class PipeScenes {
 
 		scene.idle(60);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().centerOf(2, 1, 1), Pointing.DOWN).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 40);
+		scene.overlay().showControls(util.vector().centerOf(2, 1, 1), Pointing.DOWN, 40).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().restoreBlocks(util.select().position(2, 1, 1));
 		scene.overlay().showText(70)
@@ -105,8 +104,8 @@ public class PipeScenes {
 			.text("Using a wrench, a straight pipe segment can be given a window");
 		scene.idle(40);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().centerOf(1, 1, 2), Pointing.DOWN).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 10);
+		scene.overlay().showControls(util.vector().centerOf(1, 1, 2), Pointing.DOWN, 10).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().restoreBlocks(util.select().position(1, 1, 2));
 		scene.idle(40);
@@ -151,7 +150,7 @@ public class PipeScenes {
 			.placeNearTarget()
 			.text("Powered by Mechanical Pumps, the Pipes can transport Fluids");
 		scene.idle(85);
-		scene.overlay().showSelectionWithText(tank, 40)
+		scene.overlay().showOutlineWithText(tank, 40)
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.text("No fluid is being extracted at first");
@@ -323,8 +322,8 @@ public class PipeScenes {
 			.setValue(FluidPipeBlock.WEST, true);
 		ItemStack casingItem = AllBlocks.COPPER_CASING.asStack();
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(3, 1, 1), Pointing.DOWN).rightClick()
-			.withItem(casingItem), 60);
+		scene.overlay().showControls(util.vector().topOf(3, 1, 1), Pointing.DOWN, 60).rightClick()
+			.withItem(casingItem);
 		scene.idle(7);
 		scene.world().setBlock(util.grid().at(3, 1, 1), copperEncased, true);
 		scene.idle(10);
@@ -527,7 +526,7 @@ public class PipeScenes {
 			.pointAt(filterVec);
 		scene.idle(60);
 
-		scene.overlay().showSelectionWithText(util.select().position(basinPos), 80)
+		scene.overlay().showOutlineWithText(util.select().position(basinPos), 80)
 			.placeNearTarget()
 			.colored(PonderPalette.GREEN)
 			.text("When placed directly at the source, they can specify the type of fluid to extract")
@@ -540,8 +539,8 @@ public class PipeScenes {
 			.getFluidType()
 			.getBucket(chocolate);
 		ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
-		scene.overlay().showControls(new InputWindowElement(filterVec, Pointing.DOWN).rightClick()
-			.withItem(bucket), 80);
+		scene.overlay().showControls(filterVec, Pointing.DOWN, 80).rightClick()
+			.withItem(bucket);
 		scene.idle(7);
 		scene.world().setFilterData(util.select().position(3, 1, 1), SmartFluidPipeBlockEntity.class, bucket);
 		scene.idle(10);
@@ -589,14 +588,14 @@ public class PipeScenes {
 			.pointAt(filterVec.add(-1, 0, 2));
 		scene.idle(90);
 
-		scene.overlay().showControls(new InputWindowElement(filterVec.add(-1, 0, 3), Pointing.DOWN).rightClick()
-			.withItem(milkBucket), 30);
+		scene.overlay().showControls(filterVec.add(-1, 0, 3), Pointing.DOWN, 30).rightClick()
+			.withItem(milkBucket);
 		scene.idle(7);
 		scene.world().setFilterData(util.select().position(2, 1, 4), SmartFluidPipeBlockEntity.class, milkBucket);
 		scene.idle(30);
 
-		scene.overlay().showControls(new InputWindowElement(filterVec.add(-1, 0, 2), Pointing.DOWN).rightClick()
-			.withItem(bucket), 30);
+		scene.overlay().showControls(filterVec.add(-1, 0, 2), Pointing.DOWN, 30).rightClick()
+			.withItem(bucket);
 		scene.idle(7);
 		scene.world().setFilterData(util.select().position(2, 1, 3), SmartFluidPipeBlockEntity.class, bucket);
 		scene.idle(30);

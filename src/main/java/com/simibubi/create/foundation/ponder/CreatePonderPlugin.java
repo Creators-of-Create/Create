@@ -6,12 +6,12 @@ import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderScenes;
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 
+import net.createmod.ponder.api.level.PonderLevel;
 import net.createmod.ponder.api.registration.IndexExclusionHelper;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.createmod.ponder.api.registration.SharedTextRegistrationHelper;
-import net.createmod.ponder.foundation.PonderLevel;
 import net.minecraft.resources.ResourceLocation;
 
 public class CreatePonderPlugin implements PonderPlugin {
@@ -44,8 +44,8 @@ public class CreatePonderPlugin implements PonderPlugin {
 	}
 
 	@Override
-	public void onPonderWorldRestore(PonderLevel world) {
-		PonderWorldBlockEntityFix.fixControllerBlockEntities(world);
+	public void onPonderLevelRestore(PonderLevel ponderLevel) {
+		PonderWorldBlockEntityFix.fixControllerBlockEntities(ponderLevel);
 	}
 
 	@Override

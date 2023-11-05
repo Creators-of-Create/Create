@@ -31,14 +31,16 @@ import com.simibubi.create.foundation.ponder.instruction.AnimateBlockEntityInstr
 import net.createmod.catnip.utility.FunctionalHelper;
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
+import net.createmod.ponder.api.level.PonderLevel;
 import net.createmod.ponder.api.scene.SceneBuilder;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderLevel;
+import net.createmod.ponder.api.scene.Selection;
 import net.createmod.ponder.foundation.PonderScene;
 import net.createmod.ponder.foundation.PonderSceneBuilder;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.foundation.element.ElementLinkImpl;
 import net.createmod.ponder.foundation.instruction.CreateParrotInstruction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -159,7 +161,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 
 		public ElementLink<BeltItemElement> createItemOnBelt(BlockPos beltLocation, Direction insertionSide,
 															 ItemStack stack) {
-			ElementLink<BeltItemElement> link = new ElementLink<>(BeltItemElement.class);
+			ElementLink<BeltItemElement> link = new ElementLinkImpl<>(BeltItemElement.class);
 			addInstruction(scene -> {
 				PonderLevel world = scene.getWorld();
 				BlockEntity blockEntity = world.getBlockEntity(beltLocation);
@@ -308,8 +310,8 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 	public class SpecialInstructions extends PonderSpecialInstructions {
 
 		@Override
-		public ElementLink<ParrotElement> createBirb(Vec3 location, Supplier<? extends ParrotElement.ParrotPose> pose) {
-			ElementLink<ParrotElement> link = new ElementLink<>(ParrotElement.class);
+		public ElementLink<ParrotElement> createBirb(Vec3 location, Supplier<? extends ParrotPose> pose) {
+			ElementLink<ParrotElement> link = new ElementLinkImpl<>(ParrotElement.class);
 			ParrotElement parrot = ExpandedParrotElement.create(location, pose);
 			addInstruction(new CreateParrotInstruction(10, Direction.DOWN, parrot));
 			addInstruction(scene -> scene.linkElement(parrot, link));
@@ -331,7 +333,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 					.ifPresent(expandedBirb -> expandedBirb.setConductor(conductor)));
 		}
 
-		public static class ParrotSpinOnComponentPose extends ParrotElement.ParrotPose {
+		public static class ParrotSpinOnComponentPose extends ParrotPose {
 			private final BlockPos componentPos;
 
 			public ParrotSpinOnComponentPose(BlockPos componentPos) {
@@ -339,7 +341,7 @@ public class CreateSceneBuilder extends PonderSceneBuilder {
 			}
 
 			@Override
-			protected void tick(PonderScene scene, Parrot entity, Vec3 location) {
+			public void tick(PonderScene scene, Parrot entity, Vec3 location) {
 				BlockEntity blockEntity = scene.getWorld().getBlockEntity(componentPos);
 				if (!(blockEntity instanceof KineticBlockEntity))
 					return;

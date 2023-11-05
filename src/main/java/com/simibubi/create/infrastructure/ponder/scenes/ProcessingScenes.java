@@ -20,15 +20,14 @@ import net.createmod.catnip.utility.IntAttached;
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.ParticleEmitter;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
-import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -99,7 +98,7 @@ public class ProcessingScenes {
 		scene.world().modifyBlockEntity(millstone, MillstoneBlockEntity.class,
 			ms -> ms.inputInv.setStackInSlot(0, itemStack));
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(millstoneTop, Pointing.DOWN).withItem(itemStack), 30);
+		scene.overlay().showControls(millstoneTop, Pointing.DOWN, 30).withItem(itemStack);
 		scene.idle(7);
 
 		scene.overlay().showText(40)
@@ -119,10 +118,8 @@ public class ProcessingScenes {
 		scene.idle(60);
 
 		ItemStack flour = AllItems.WHEAT_FLOUR.asStack();
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(millstone, Direction.NORTH), Pointing.RIGHT).rightClick()
-				.withItem(flour),
-			40);
+		scene.overlay().showControls(util.vector().blockSurface(millstone, Direction.NORTH), Pointing.RIGHT, 40).rightClick()
+				.withItem(flour);
 		scene.idle(50);
 
 		scene.addKeyframe();
@@ -213,12 +210,12 @@ public class ProcessingScenes {
 			scene.world().createItemEntity(entitySpawn, util.vector().of(0, 0.2, 0), input);
 		scene.idle(18);
 		scene.world().modifyEntity(entity1, Entity::discard);
-		Emitter blockSpace =
-			Emitter.withinBlockSpace(new ItemParticleOption(ParticleTypes.ITEM, input), util.vector().of(0, 0, 0));
+		ParticleEmitter blockSpace =
+				scene.effects().particleEmitterWithinBlockSpace(new ItemParticleOption(ParticleTypes.ITEM, input), util.vector().of(0, 0, 0));
 		scene.effects().emitParticles(util.vector().centerOf(center)
 			.add(0, -0.2, 0), blockSpace, 3, 40);
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(centerTop, Pointing.DOWN).withItem(input), 30);
+		scene.overlay().showControls(centerTop, Pointing.DOWN, 30).withItem(input);
 		scene.idle(7);
 
 		scene.overlay().showText(50)
@@ -231,7 +228,7 @@ public class ProcessingScenes {
 		scene.world().createItemEntity(centerTop.add(0, -1.4, 0), util.vector().of(0, 0, 0), output);
 		scene.idle(10);
 		scene.world().createItemEntity(centerTop.add(0, -1.4, 0), util.vector().of(0, 0, 0), output);
-		scene.overlay().showControls(new InputWindowElement(centerTop.add(0, -2, 0), Pointing.UP).withItem(output), 30);
+		scene.overlay().showControls(centerTop.add(0, -2, 0), Pointing.UP, 30).withItem(output);
 		scene.idle(40);
 
 		scene.world().restoreBlocks(util.select().position(2, 3, 2));
@@ -314,7 +311,7 @@ public class ProcessingScenes {
 		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
 		scene.world().createItemOnBeltLike(depotPos, Direction.NORTH, copper);
 		Vec3 depotCenter = util.vector().centerOf(depotPos.south());
-		scene.overlay().showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(copper), 30);
+		scene.overlay().showControls(depotCenter, Pointing.UP, 30).withItem(copper);
 		scene.idle(10);
 
 		Class<MechanicalPressBlockEntity> type = MechanicalPressBlockEntity.class;
@@ -327,7 +324,7 @@ public class ProcessingScenes {
 		ItemStack sheet = AllItems.COPPER_SHEET.asStack();
 		scene.world().createItemOnBeltLike(depotPos, Direction.UP, sheet);
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(sheet), 50);
+		scene.overlay().showControls(depotCenter, Pointing.UP, 50).withItem(sheet);
 		scene.idle(60);
 
 		scene.world().hideIndependentSection(depot, Direction.NORTH);
@@ -415,8 +412,8 @@ public class ProcessingScenes {
 			.text("With a Mixer and Basin, some Crafting Recipes can be automated");
 		scene.idle(40);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basin), Pointing.LEFT).withItem(blue), 30);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basin), Pointing.RIGHT).withItem(red), 30);
+		scene.overlay().showControls(util.vector().topOf(basin), Pointing.LEFT, 30).withItem(blue);
+		scene.overlay().showControls(util.vector().topOf(basin), Pointing.RIGHT, 30).withItem(red);
 		scene.idle(30);
 		Class<MechanicalMixerBlockEntity> type = MechanicalMixerBlockEntity.class;
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.startProcessingBasin());
@@ -497,8 +494,7 @@ public class ProcessingScenes {
 			.text("Pressing items held in a Basin will cause them to be Compacted");
 		scene.idle(40);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basin), Pointing.DOWN).withItem(copper),
-									 30);
+		scene.overlay().showControls(util.vector().topOf(basin), Pointing.DOWN, 30).withItem(copper);
 		scene.idle(30);
 		Class<MechanicalPressBlockEntity> type = MechanicalPressBlockEntity.class;
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
@@ -525,7 +521,7 @@ public class ProcessingScenes {
 		ItemStack log = new ItemStack(Items.OAK_LOG);
 		ItemStack bark = new ItemStack(Items.OAK_WOOD);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basin), Pointing.DOWN).withItem(log), 30);
+		scene.overlay().showControls(util.vector().topOf(basin), Pointing.DOWN, 30).withItem(log);
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.start(Mode.BASIN));
@@ -582,9 +578,8 @@ public class ProcessingScenes {
 		});
 
 		scene.idle(20);
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().centerOf(center.above(2)), Pointing.DOWN).rightClick()
-				.withItem(AllItems.EMPTY_BLAZE_BURNER.asStack()), 40);
+		scene.overlay().showControls(util.vector().centerOf(center.above(2)), Pointing.DOWN, 40).rightClick()
+				.withItem(AllItems.EMPTY_BLAZE_BURNER.asStack());
 		scene.idle(10);
 		scene.overlay().showText(60)
 			.text("Right-click a Blaze with the empty burner to capture it")
@@ -598,8 +593,8 @@ public class ProcessingScenes {
 
 		scene.world().showSection(util.select().position(2, 1, 2), Direction.DOWN);
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(center.above()), Pointing.DOWN).rightClick()
-			.withItem(AllItems.EMPTY_BLAZE_BURNER.asStack()), 40);
+		scene.overlay().showControls(util.vector().topOf(center.above()), Pointing.DOWN, 40).rightClick()
+			.withItem(AllItems.EMPTY_BLAZE_BURNER.asStack());
 		scene.idle(10);
 		scene.overlay().showText(60)
 			.text("Alternatively, Blazes can be collected from their Spawners directly")
@@ -624,10 +619,8 @@ public class ProcessingScenes {
 
 		scene.world().showSection(util.select().position(3, 1, 2), Direction.DOWN);
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(center.east()
-			.above()), Pointing.DOWN).rightClick()
-				.withItem(new ItemStack(Items.FLINT_AND_STEEL)),
-									 40);
+		scene.overlay().showControls(util.vector().topOf(center.east().above()), Pointing.DOWN, 40).rightClick()
+				.withItem(new ItemStack(Items.FLINT_AND_STEEL));
 		scene.idle(7);
 		scene.world().setBlock(util.grid().at(3, 1, 2), AllBlocks.LIT_BLAZE_BURNER.getDefaultState(), false);
 		scene.idle(10);
@@ -638,10 +631,8 @@ public class ProcessingScenes {
 				.above(), Direction.UP))
 			.placeNearTarget();
 		scene.idle(80);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(center.east()
-			.above()), Pointing.DOWN).rightClick()
-				.withItem(new ItemStack(Items.SOUL_SAND)),
-									 40);
+		scene.overlay().showControls(util.vector().topOf(center.east().above()), Pointing.DOWN, 40).rightClick()
+				.withItem(new ItemStack(Items.SOUL_SAND));
 		scene.idle(7);
 		scene.world().modifyBlock(util.grid().at(3, 1, 2),
 			s -> s.setValue(LitBlazeBurnerBlock.FLAME_TYPE, LitBlazeBurnerBlock.FlameType.SOUL), false);
@@ -682,8 +673,8 @@ public class ProcessingScenes {
 		scene.world().hideSection(util.select().position(burner.above()), Direction.UP);
 		scene.idle(20);
 		scene.world().setBlock(burner.above(), Blocks.AIR.defaultBlockState(), false);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(burner), Pointing.DOWN).rightClick()
-			.withItem(new ItemStack(Items.OAK_PLANKS)), 15);
+		scene.overlay().showControls(util.vector().topOf(burner), Pointing.DOWN, 15).rightClick()
+			.withItem(new ItemStack(Items.OAK_PLANKS));
 		scene.idle(7);
 		scene.world().modifyBlock(burner, s -> s.setValue(BlazeBurnerBlock.HEAT_LEVEL, HeatLevel.KINDLED), false);
 		scene.idle(20);
@@ -696,8 +687,8 @@ public class ProcessingScenes {
 		scene.idle(80);
 
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(burner), Pointing.DOWN).rightClick()
-			.withItem(AllItems.BLAZE_CAKE.asStack()), 30);
+		scene.overlay().showControls(util.vector().topOf(burner), Pointing.DOWN, 30).rightClick()
+			.withItem(AllItems.BLAZE_CAKE.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(burner, s -> s.setValue(BlazeBurnerBlock.HEAT_LEVEL, HeatLevel.SEETHING), false);
 		scene.idle(20);
@@ -756,8 +747,7 @@ public class ProcessingScenes {
 			scene.idle(10);
 		}
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basinPos), Pointing.DOWN).withItem(stack),
-									 30);
+		scene.overlay().showControls(util.vector().topOf(basinPos), Pointing.DOWN, 30).withItem(stack);
 		scene.idle(30);
 
 		for (Direction d : Iterate.horizontalDirections) {
@@ -840,8 +830,7 @@ public class ProcessingScenes {
 						.serializeNBT()));
 		});
 		scene.idle(4);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basinPos.below()
-			.north()), Pointing.RIGHT).withItem(new ItemStack(Items.BRICKS)), 30);
+		scene.overlay().showControls(util.vector().topOf(basinPos.below().north()), Pointing.RIGHT, 30).withItem(new ItemStack(Items.BRICKS));
 
 		scene.overlay().showText(60)
 			.attachKeyFrame()
@@ -864,8 +853,7 @@ public class ProcessingScenes {
 		scene.idle(50);
 
 		ItemStack nugget = AllItems.COPPER_NUGGET.asStack();
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basinPos), Pointing.RIGHT).withItem(nugget),
-									 30);
+		scene.overlay().showControls(util.vector().topOf(basinPos), Pointing.RIGHT, 30).withItem(nugget);
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.start(Mode.BASIN));
@@ -875,8 +863,7 @@ public class ProcessingScenes {
 
 		ItemStack ingot = new ItemStack(Items.COPPER_INGOT);
 		scene.idle(30);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basinPos), Pointing.RIGHT).withItem(ingot),
-									 30);
+		scene.overlay().showControls(util.vector().topOf(basinPos), Pointing.RIGHT, 30).withItem(ingot);
 		scene.idle(30);
 		scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
 			.start(Mode.BASIN));
@@ -886,8 +873,7 @@ public class ProcessingScenes {
 
 		ItemStack block = new ItemStack(Items.COPPER_BLOCK);
 		scene.idle(30);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(basinPos), Pointing.RIGHT).withItem(block),
-									 30);
+		scene.overlay().showControls(util.vector().topOf(basinPos), Pointing.RIGHT, 30).withItem(block);
 		scene.overlay().showText(70)
 			.attachKeyFrame()
 			.colored(PonderPalette.GREEN)

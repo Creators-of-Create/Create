@@ -12,13 +12,12 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -103,12 +102,9 @@ public class SteamScenes {
 		scene.world().toggleRedstonePower(lever);
 		scene.idle(40);
 
-		InputWindowElement rightClick =
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT)
-				.withItem(AllBlocks.STEAM_WHISTLE.asStack())
-				.rightClick();
-
-		scene.overlay().showControls(rightClick, 50);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT, 50)
+			.withItem(AllBlocks.STEAM_WHISTLE.asStack())
+			.rightClick();
 		scene.idle(6);
 		BlockState extension = AllBlocks.STEAM_WHISTLE_EXTENSION.getDefaultState();
 		scene.world().setBlock(whistlePos.above(), extension, false);
@@ -122,31 +118,36 @@ public class SteamScenes {
 
 		scene.idle(40);
 
-		scene.overlay().showControls(rightClick, 2);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT, 2)
+			.withItem(AllBlocks.STEAM_WHISTLE.asStack())
+			.rightClick();
 		scene.idle(6);
 		scene.world().cycleBlockProperty(whistlePos.above(), WhistleExtenderBlock.SHAPE);
 		scene.idle(4);
-		scene.overlay().showControls(rightClick, 2);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT, 2)
+			.withItem(AllBlocks.STEAM_WHISTLE.asStack())
+			.rightClick();
 		scene.idle(6);
 		scene.world().setBlock(whistlePos.above(2), extension, false);
 		scene.world().cycleBlockProperty(whistlePos.above(), WhistleExtenderBlock.SHAPE);
 		scene.idle(4);
-		scene.overlay().showControls(rightClick, 2);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT, 2)
+			.withItem(AllBlocks.STEAM_WHISTLE.asStack())
+			.rightClick();
 		scene.idle(6);
 		scene.world().cycleBlockProperty(whistlePos.above(2), WhistleExtenderBlock.SHAPE);
 		scene.idle(4);
-		scene.overlay().showControls(rightClick, 2);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT, 2)
+			.withItem(AllBlocks.STEAM_WHISTLE.asStack())
+			.rightClick();
 		scene.idle(6);
 		scene.world().cycleBlockProperty(whistlePos.above(2), WhistleExtenderBlock.SHAPE);
 		scene.world().setBlock(whistlePos.above(3), extension, false);
 		scene.idle(20);
 
-		rightClick =
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT)
-				.withItem(AllItems.WRENCH.asStack())
-				.rightClick();
-
-		scene.overlay().showControls(rightClick, 50);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT, 50)
+			.withItem(AllItems.WRENCH.asStack())
+			.rightClick();
 		scene.idle(6);
 		for (int i = 0; i < 4; i++) {
 			scene.world().cycleBlockProperty(whistlePos.above(i), WhistleBlock.SIZE);
@@ -161,7 +162,9 @@ public class SteamScenes {
 			.placeNearTarget();
 
 		scene.idle(40);
-		scene.overlay().showControls(rightClick, 4);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.EAST), Pointing.RIGHT, 4)
+			.withItem(AllItems.WRENCH.asStack())
+			.rightClick();
 		scene.idle(6);
 		for (int i = 0; i < 4; i++) {
 			scene.world().cycleBlockProperty(whistlePos.above(i), WhistleBlock.SIZE);
@@ -177,10 +180,8 @@ public class SteamScenes {
 		scene.world().toggleRedstonePower(lever);
 		scene.idle(20);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.DOWN), Pointing.UP)
-				.withItem(AllItems.GOGGLES.asStack()),
-			80);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 1), Direction.DOWN), Pointing.UP, 80)
+				.withItem(AllItems.GOGGLES.asStack());
 		scene.idle(6);
 
 		scene.overlay().showText(70)
@@ -253,11 +254,9 @@ public class SteamScenes {
 			.placeNearTarget();
 		scene.idle(60);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(3, 1, 3), Direction.UP), Pointing.DOWN)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 1, 3), Direction.UP), Pointing.DOWN, 60)
 				.withItem(AllBlocks.SHAFT.asStack())
-				.rightClick(),
-			60);
+				.rightClick();
 		scene.idle(10);
 		scene.world().setBlock(engine1ShaftPos, AllBlocks.SHAFT.getDefaultState()
 			.setValue(ShaftBlock.AXIS, Axis.Z), false);
@@ -317,7 +316,7 @@ public class SteamScenes {
 			.placeNearTarget();
 		scene.idle(70);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(5, 2, 3, 4, 2, 4), 50)
+		scene.overlay().showOutlineWithText(util.select().fromTo(5, 2, 3, 4, 2, 4), 50)
 			.attachKeyFrame()
 			.text("The minimal setup requires 4 Fluid Tanks")
 			.pointAt(util.vector().blockSurface(util.grid().at(4, 2, 4), Direction.UP))
@@ -330,11 +329,9 @@ public class SteamScenes {
 		scene.world().moveSection(burnersElement, util.vector().of(2, 0, 0), 0);
 		scene.idle(25);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(4, 1, 3), Direction.EAST), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(4, 1, 3), Direction.EAST), Pointing.RIGHT, 60)
 				.withItem(new ItemStack(Items.OAK_LOG))
-				.rightClick(),
-			60);
+				.rightClick();
 		scene.idle(10);
 		scene.world().setBlocks(burners, AllBlocks.BLAZE_BURNER.getDefaultState()
 			.setValue(BlazeBurnerBlock.HEAT_LEVEL, HeatLevel.KINDLED), false);
@@ -370,8 +367,7 @@ public class SteamScenes {
 			.placeNearTarget();
 		scene.idle(90);
 
-		scene.overlay().showControls(
-			new InputWindowElement(target.add(0, 0, 0.5), Pointing.DOWN).withItem(AllItems.GOGGLES.asStack()), 60);
+		scene.overlay().showControls(target.add(0, 0, 0.5), Pointing.DOWN, 60).withItem(AllItems.GOGGLES.asStack());
 		scene.idle(6);
 		scene.overlay().showText(80)
 			.text("The boiler's current power level can be inspected with Engineer's Goggles")
@@ -410,7 +406,7 @@ public class SteamScenes {
 			.pointAt(util.vector().blockSurface(util.grid().at(4, 4, 4), Direction.WEST))
 			.placeNearTarget();
 		scene.idle(40);
-		scene.overlay().showSelectionWithText(util.select().fromTo(3, 2, 3, 3, 3, 4), 30)
+		scene.overlay().showOutlineWithText(util.select().fromTo(3, 2, 3, 3, 3, 4), 30)
 			.text("4 Engines")
 			.colored(PonderPalette.BLUE)
 			.pointAt(util.vector().blockSurface(util.grid().at(3, 3, 4), Direction.UP))
@@ -424,10 +420,8 @@ public class SteamScenes {
 		scene.world().hideIndependentSection(engineShaftElement, Direction.SOUTH);
 		scene.idle(20);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().of(5, 2, 4), Pointing.DOWN).withItem(AllItems.BLAZE_CAKE.asStack())
-				.rightClick(),
-			10);
+		scene.overlay().showControls(util.vector().of(5, 2, 4), Pointing.DOWN, 10).withItem(AllItems.BLAZE_CAKE.asStack())
+				.rightClick();
 		scene.idle(6);
 		scene.world().setBlocks(burners, AllBlocks.BLAZE_BURNER.getDefaultState()
 			.setValue(BlazeBurnerBlock.HEAT_LEVEL, HeatLevel.SEETHING), false);
@@ -470,7 +464,7 @@ public class SteamScenes {
 			.pointAt(util.vector().blockSurface(util.grid().at(4, 4, 3), Direction.NORTH))
 			.placeNearTarget();
 		scene.idle(40);
-		scene.overlay().showSelectionWithText(util.select().fromTo(3, 2, 3, 3, 6, 4), 30)
+		scene.overlay().showOutlineWithText(util.select().fromTo(3, 2, 3, 3, 6, 4), 30)
 			.text("8 Engines")
 			.colored(PonderPalette.BLUE)
 			.pointAt(util.vector().blockSurface(util.grid().at(3, 3, 4), Direction.UP))

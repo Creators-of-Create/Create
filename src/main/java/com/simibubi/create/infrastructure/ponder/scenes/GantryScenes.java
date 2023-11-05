@@ -5,13 +5,12 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Iterate;
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -82,8 +81,8 @@ public class GantryScenes {
 		scene.overlay().showOutline(PonderPalette.GREEN, "glue", util.select().position(3, 4, 2)
 			.add(util.select().fromTo(3, 3, 2, 5, 3, 2))
 			.add(util.select().position(5, 3, 1)), 40);
-		scene.overlay().showControls(new InputWindowElement(util.vector().centerOf(util.grid().at(3, 3, 2)), Pointing.UP)
-			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+		scene.overlay().showControls(util.vector().centerOf(util.grid().at(3, 3, 2)), Pointing.UP, 40)
+			.withItem(AllItems.SUPER_GLUE.asStack());
 		scene.effects().superGlue(util.grid().at(5, 3, 1), Direction.SOUTH, true);
 		scene.idle(20);
 		scene.overlay().showText(80)

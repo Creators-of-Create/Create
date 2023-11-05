@@ -4,13 +4,12 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -86,8 +85,8 @@ public class PulleyScenes {
 		scene.overlay().showOutline(PonderPalette.GREEN, "glue", util.select().position(3, 1, 1)
 			.add(util.select().fromTo(1, 1, 2, 3, 1, 2))
 			.add(util.select().position(1, 2, 2)), 40);
-		scene.overlay().showControls(new InputWindowElement(util.vector().centerOf(util.grid().at(2, 2, 0)), Pointing.RIGHT)
-			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+		scene.overlay().showControls(util.vector().centerOf(util.grid().at(2, 2, 0)), Pointing.RIGHT, 40)
+			.withItem(AllItems.SUPER_GLUE.asStack());
 		scene.idle(15);
 		scene.effects().superGlue(util.grid().at(3, 1, 1), Direction.SOUTH, true);
 		scene.overlay().showText(80)
@@ -148,7 +147,7 @@ public class PulleyScenes {
 
 		scene.world().destroyBlock(flowerPos);
 		scene.idle(10);
-		scene.overlay().showSelectionWithText(util.select().position(flowerPos), 70)
+		scene.overlay().showOutlineWithText(util.select().position(flowerPos), 70)
 			.text("Whenever Pulleys stop moving, the moved structure reverts to blocks")
 			.attachKeyFrame()
 			.placeNearTarget()
@@ -167,8 +166,7 @@ public class PulleyScenes {
 		scene.world().setBlock(flowerPos, Blocks.BLUE_ORCHID.defaultBlockState(), false);
 		scene.world().showSection(util.select().position(flowerPos), Direction.DOWN);
 		scene.overlay().showCenteredScrollInput(pulleyPos, Direction.UP, 60);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(pulleyPos), Pointing.DOWN).rightClick(),
-									 60);
+		scene.overlay().showControls(util.vector().topOf(pulleyPos), Pointing.DOWN, 60).rightClick();
 		scene.overlay().showText(70)
 			.pointAt(util.vector().topOf(pulleyPos))
 			.placeNearTarget()
@@ -231,7 +229,7 @@ public class PulleyScenes {
 		scene.world().moveSection(pulley, util.vector().of(-2, 0, 0), 40);
 		scene.idle(40);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(1, 1, 1, 1, 1, 2), 50)
+		scene.overlay().showOutlineWithText(util.select().fromTo(1, 1, 1, 1, 1, 2), 50)
 			.colored(PonderPalette.GREEN)
 			.placeNearTarget()
 			.attachKeyFrame()

@@ -6,16 +6,15 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
-import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -46,7 +45,7 @@ public class FanScenes {
 		scene.idle(40);
 		scene.effects().rotationDirectionIndicator(fanPos.south());
 
-		ElementLink<ParrotElement> flappyBirb = scene.special().createBirb(util.vector().topOf(1, 0, 3), ParrotElement.FlappyPose::new);
+		ElementLink<ParrotElement> flappyBirb = scene.special().createBirb(util.vector().topOf(1, 0, 3), ParrotPose.FlappyPose::new);
 		scene.idle(2);
 		scene.special().rotateParrot(flappyBirb, 0, 235, 0, 30);
 		scene.special().moveParrot(flappyBirb, util.vector().of(0, 0, -2.5), 30);
@@ -108,7 +107,7 @@ public class FanScenes {
 		scene.world().setBlock(blockPos, Blocks.LAVA.defaultBlockState(), false);
 		scene.idle(10);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(blockPos, blockPos.west(2)), 80)
+		scene.overlay().showOutlineWithText(util.select().fromTo(blockPos, blockPos.west(2)), 80)
 			.colored(PonderPalette.RED)
 			.text("When passing through lava, the Air Flow becomes Heated");
 		scene.idle(80);
@@ -122,10 +121,10 @@ public class FanScenes {
 		scene.world().modifyEntity(entityLink, e -> e.setDeltaMovement(-0.2f, 0, 0));
 		Vec3 itemVec = util.vector().blockSurface(util.grid().at(1, 1, 2), Direction.EAST)
 			.add(0.1, 0, 0);
-		scene.overlay().showControls(new InputWindowElement(itemVec, Pointing.DOWN).withItem(stack), 20);
+		scene.overlay().showControls(itemVec, Pointing.DOWN, 20).withItem(stack);
 		scene.idle(20);
-		scene.effects().emitParticles(itemVec.add(0, 0.2f, 0), Emitter.simple(ParticleTypes.LARGE_SMOKE, Vec3.ZERO), 1,
-									  60);
+		scene.effects().emitParticles(itemVec.add(0, 0.2f, 0), scene.effects().simpleParticleEmitter(ParticleTypes.LARGE_SMOKE, Vec3.ZERO), 1,
+				60);
 
 		scene.overlay().showText(80)
 			.colored(PonderPalette.WHITE)
@@ -137,7 +136,7 @@ public class FanScenes {
 		scene.idle(60);
 		scene.world().modifyEntities(ItemEntity.class, ie -> ie.setItem(smelted));
 		scene.idle(40);
-		scene.overlay().showControls(new InputWindowElement(itemVec, Pointing.DOWN).withItem(smelted), 20);
+		scene.overlay().showControls(itemVec, Pointing.DOWN, 20).withItem(smelted);
 		scene.idle(20);
 		scene.world().modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(20);
@@ -160,7 +159,7 @@ public class FanScenes {
 		scene.world().moveSection(blockInFront, util.vector().of(1, 0, 2), 0);
 		scene.idle(50);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(blockPos, blockPos.west(2)), 60)
+		scene.overlay().showOutlineWithText(util.select().fromTo(blockPos, blockPos.west(2)), 60)
 			.colored(PonderPalette.BLACK)
 			.attachKeyFrame()
 			.text("Instead, a setup for Smoking using Fire should be used for them");
@@ -177,7 +176,7 @@ public class FanScenes {
 		scene.world().moveSection(blockInFront, util.vector().of(1, 0, 2), 0);
 		scene.idle(20);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(blockPos, blockPos.west(2)), 60)
+		scene.overlay().showOutlineWithText(util.select().fromTo(blockPos, blockPos.west(2)), 60)
 			.colored(PonderPalette.MEDIUM)
 			.attachKeyFrame()
 			.text("Air Flows passing through water create a Washing Setup");
@@ -190,9 +189,9 @@ public class FanScenes {
 			.above(2)), util.vector().of(0, 0.1, 0), stack);
 		scene.idle(15);
 		scene.world().modifyEntity(entityLink, e -> e.setDeltaMovement(-0.2f, 0, 0));
-		scene.overlay().showControls(new InputWindowElement(itemVec, Pointing.DOWN).withItem(stack), 20);
+		scene.overlay().showControls(itemVec, Pointing.DOWN, 20).withItem(stack);
 		scene.idle(20);
-		scene.effects().emitParticles(itemVec.add(0, 0.2f, 0), Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), 1, 60);
+		scene.effects().emitParticles(itemVec.add(0, 0.2f, 0), scene.effects().simpleParticleEmitter(ParticleTypes.SPIT, Vec3.ZERO), 1, 60);
 
 		scene.overlay().showText(50)
 			.colored(PonderPalette.WHITE)
@@ -202,7 +201,7 @@ public class FanScenes {
 
 		scene.idle(60);
 		scene.world().modifyEntities(ItemEntity.class, ie -> ie.setItem(washed));
-		scene.overlay().showControls(new InputWindowElement(itemVec, Pointing.DOWN).withItem(washed), 20);
+		scene.overlay().showControls(itemVec, Pointing.DOWN, 20).withItem(washed);
 		scene.idle(20);
 		scene.world().modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(20);
@@ -239,11 +238,11 @@ public class FanScenes {
 		scene.idle(10);
 		Vec3 depotTop = util.vector().topOf(2, 1, 2)
 			.add(0, 0.25, 0);
-		scene.effects().emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 30);
+		scene.effects().emitParticles(depotTop, scene.effects().simpleParticleEmitter(ParticleTypes.SPIT, Vec3.ZERO), .5f, 30);
 		scene.idle(30);
 		scene.world().modifyBlockEntityNBT(util.select().position(depos), DepotBlockEntity.class,
 			nbt -> nbt.put("HeldItem", new TransportedItemStack(clay).serializeNBT()));
-		scene.effects().emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 30);
+		scene.effects().emitParticles(depotTop, scene.effects().simpleParticleEmitter(ParticleTypes.SPIT, Vec3.ZERO), .5f, 30);
 		scene.overlay().showText(90)
 			.pointAt(depotTop)
 			.attachKeyFrame()
@@ -261,10 +260,10 @@ public class FanScenes {
 		ElementLink<BeltItemElement> transported =
 			scene.world().createItemOnBelt(util.grid().at(3, 3, 3), Direction.SOUTH, sand);
 		scene.idle(60);
-		scene.effects().emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 25);
+		scene.effects().emitParticles(depotTop, scene.effects().simpleParticleEmitter(ParticleTypes.SPIT, Vec3.ZERO), .5f, 25);
 		scene.idle(25);
 		scene.world().changeBeltItemTo(transported, new ItemStack(Items.CLAY_BALL));
-		scene.effects().emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 25);
+		scene.effects().emitParticles(depotTop, scene.effects().simpleParticleEmitter(ParticleTypes.SPIT, Vec3.ZERO), .5f, 25);
 		scene.idle(60);
 
 		scene.world().setKineticSpeed(util.select().position(1, 2, 4)

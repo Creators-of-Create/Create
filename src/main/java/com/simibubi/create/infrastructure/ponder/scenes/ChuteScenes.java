@@ -10,14 +10,13 @@ import com.simibubi.create.content.logistics.chute.SmartChuteBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -62,11 +61,9 @@ public class ChuteScenes {
 		scene.world().moveSection(bottom, util.vector().of(1, 0, 0), 10);
 		scene.world().moveSection(top, util.vector().of(-1, 0, 0), 10);
 		scene.idle(20);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.NORTH), Pointing.RIGHT, 40)
 				.rightClick()
-				.withItem(AllItems.WRENCH.asStack()),
-			40);
+				.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(util.grid().at(3, 3, 3), s -> s.setValue(ChuteBlock.SHAPE, ChuteBlock.Shape.WINDOW),
 								  false);
@@ -77,11 +74,9 @@ public class ChuteScenes {
 			.text("Using the Wrench, a window can be created");
 
 		scene.idle(60);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH), Pointing.RIGHT, 40)
 				.rightClick()
-				.withItem(AllBlocks.INDUSTRIAL_IRON_BLOCK.asStack()),
-			40);
+				.withItem(AllBlocks.INDUSTRIAL_IRON_BLOCK.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(util.grid().at(3, 2, 3), s -> s.setValue(ChuteBlock.SHAPE, ChuteBlock.Shape.ENCASED),
 								  false);
@@ -108,21 +103,17 @@ public class ChuteScenes {
 		scene.world().showSection(util.select().fromTo(2, 1, 1, 2, 2, 1), Direction.DOWN);
 		scene.idle(30);
 		ItemStack chuteItem = AllBlocks.CHUTE.asStack();
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 2, 1), Direction.SOUTH), Pointing.LEFT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 2, 1), Direction.SOUTH), Pointing.LEFT, 30)
 				.rightClick()
-				.withItem(chuteItem),
-			30);
+				.withItem(chuteItem);
 		scene.idle(7);
 		scene.world().showSection(util.select().position(2, 3, 2), Direction.NORTH);
 		scene.world().restoreBlocks(util.select().position(2, 2, 1));
 		scene.idle(15);
 		scene.idle(20);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.SOUTH), Pointing.LEFT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.SOUTH), Pointing.LEFT, 30)
 				.rightClick()
-				.withItem(chuteItem),
-			30);
+				.withItem(chuteItem);
 		scene.idle(7);
 		scene.world().showSection(util.select().position(2, 4, 3), Direction.NORTH);
 		scene.idle(10);
@@ -154,10 +145,8 @@ public class ChuteScenes {
 		}
 
 		scene.idle(10);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 1, 1), Direction.NORTH), Pointing.RIGHT)
-				.withItem(stack),
-			50);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 1, 1), Direction.NORTH), Pointing.RIGHT, 50)
+				.withItem(stack);
 		scene.markAsFinished();
 	}
 
@@ -183,10 +172,8 @@ public class ChuteScenes {
 			.pointAt(surface)
 			.placeNearTarget();
 		scene.idle(80);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(1, 2, 2), Direction.NORTH), Pointing.RIGHT)
-				.withItem(AllItems.GOGGLES.asStack()),
-			50);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(1, 2, 2), Direction.NORTH), Pointing.RIGHT, 50)
+				.withItem(AllItems.GOGGLES.asStack());
 		scene.overlay().showText(70)
 			.text("Inspecting chutes with Engineers' Goggles reveals information about the movement direction")
 			.attachKeyFrame()
@@ -250,8 +237,8 @@ public class ChuteScenes {
 		scene.idle(15);
 
 		ItemStack copper = new ItemStack(Items.IRON_INGOT);
-		scene.overlay().showControls(new InputWindowElement(filter.add(0, 0.125, 0), Pointing.DOWN).rightClick()
-			.withItem(copper), 40);
+		scene.overlay().showControls(filter.add(0, 0.125, 0), Pointing.DOWN, 40).rightClick()
+			.withItem(copper);
 		scene.idle(7);
 		scene.world().setFilterData(util.select().position(smarty), SmartChuteBlockEntity.class, copper);
 
@@ -260,8 +247,7 @@ public class ChuteScenes {
 			scene.world().createItemOnBeltLike(util.grid().at(2, 2, 2), Direction.UP, copper);
 			if (i == 8) {
 				scene.rotateCameraY(-20);
-				scene.overlay().showControls(new InputWindowElement(filter.add(0, 0.125, 0), Pointing.DOWN).rightClick(),
-											 40);
+				scene.overlay().showControls(filter.add(0, 0.125, 0), Pointing.DOWN, 40).rightClick();
 				scene.overlay().showText(50)
 					.text("Use the value panel to specify the extracted stack size")
 					.attachKeyFrame()

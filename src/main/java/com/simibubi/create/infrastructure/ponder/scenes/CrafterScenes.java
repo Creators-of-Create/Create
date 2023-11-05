@@ -10,13 +10,12 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Couple;
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -58,11 +57,9 @@ public class CrafterScenes {
 			.placeNearTarget();
 		scene.idle(80);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.NORTH), Pointing.RIGHT, 40)
 				.rightClick()
-				.withItem(AllItems.WRENCH.asStack()),
-			40);
+				.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().cycleBlockProperty(util.grid().at(2, 3, 2), MechanicalCrafterBlock.POINTING);
 		scene.idle(10);
@@ -76,10 +73,8 @@ public class CrafterScenes {
 		BlockPos[] positions = new BlockPos[] { util.grid().at(3, 1, 2), util.grid().at(2, 1, 2), util.grid().at(1, 1, 2) };
 
 		for (BlockPos pos : positions) {
-			scene.overlay().showControls(
-				new InputWindowElement(util.vector().blockSurface(pos, Direction.NORTH), Pointing.RIGHT).rightClick()
-					.withItem(AllItems.WRENCH.asStack()),
-				10);
+			scene.overlay().showControls(util.vector().blockSurface(pos, Direction.NORTH), Pointing.RIGHT, 10).rightClick()
+					.withItem(AllItems.WRENCH.asStack());
 			scene.idle(7);
 			scene.world().cycleBlockProperty(pos, MechanicalCrafterBlock.POINTING);
 			scene.idle(15);
@@ -145,11 +140,9 @@ public class CrafterScenes {
 
 		scene.idle(40);
 		ItemStack planks = new ItemStack(Items.OAK_PLANKS);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(1, 3, 2), Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(1, 3, 2), Direction.NORTH), Pointing.RIGHT, 40)
 				.rightClick()
-				.withItem(planks),
-			40);
+				.withItem(planks);
 		scene.idle(7);
 		Class<MechanicalCrafterBlockEntity> type = MechanicalCrafterBlockEntity.class;
 		scene.world().modifyBlockEntity(util.grid().at(1, 3, 2), type, mct -> mct.getInventory()
@@ -272,7 +265,7 @@ public class CrafterScenes {
 		scene.world().removeItemsFromBelt(util.grid().at(3, 1, 2));
 		scene.world().flapFunnel(util.grid().at(3, 2, 2), false);
 
-		scene.overlay().showSelectionWithText(util.select().position(2, 2, 2), 70)
+		scene.overlay().showOutlineWithText(util.select().position(2, 2, 2), 70)
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH))
@@ -287,47 +280,46 @@ public class CrafterScenes {
 		v = v.add(0, 0, .5);
 
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.WHITE, new Object(), bb, 45);
-		scene.overlay().showControls(new InputWindowElement(v, Pointing.LEFT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 40);
+		scene.overlay().showControls(v, Pointing.LEFT, 40).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().connectCrafterInvs(util.grid().at(2, 2, 2), util.grid().at(1, 2, 2));
 		scene.idle(40);
-		scene.overlay().showSelectionWithText(util.select().fromTo(2, 2, 2, 1, 2, 2), 70)
+		scene.overlay().showOutlineWithText(util.select().fromTo(2, 2, 2, 1, 2, 2), 70)
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(v)
 			.text("Using the Wrench at their backs, Mechanical Crafter inputs can be combined");
 		scene.idle(80);
-		scene.overlay().showControls(new InputWindowElement(v.add(0, 1, 0), Pointing.LEFT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 20);
+		scene.overlay().showControls(v.add(0, 1, 0), Pointing.LEFT, 20).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().connectCrafterInvs(util.grid().at(2, 3, 2), util.grid().at(1, 3, 2));
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(v.add(0, -1, 0), Pointing.LEFT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 20);
+		scene.overlay().showControls(v.add(0, -1, 0), Pointing.LEFT, 20).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().connectCrafterInvs(util.grid().at(2, 1, 2), util.grid().at(1, 1, 2));
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(v.add(.5, -.5, 0), Pointing.LEFT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 20);
+		scene.overlay().showControls(v.add(.5, -.5, 0), Pointing.LEFT, 20).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().connectCrafterInvs(util.grid().at(2, 1, 2), util.grid().at(2, 2, 2));
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(v.add(.5, .5, 0), Pointing.LEFT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 20);
+		scene.overlay().showControls(v.add(.5, .5, 0), Pointing.LEFT, 20).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().connectCrafterInvs(util.grid().at(2, 2, 2), util.grid().at(2, 3, 2));
 		scene.idle(20);
 
 		scene.rotateCameraY(90 + 30);
 		scene.idle(40);
-		scene.overlay().showSelectionWithText(util.select().fromTo(1, 1, 2, 2, 3, 2), 70)
+		scene.overlay().showOutlineWithText(util.select().fromTo(1, 1, 2, 2, 3, 2), 70)
 			.attachKeyFrame()
 			.placeNearTarget()
 			.text("All connected Crafters can now be accessed by the same input location");
 		scene.idle(60);
-		scene.overlay().showControls(
-				new InputWindowElement(util.vector().centerOf(util.grid().at(4, 2, 2)), Pointing.DOWN).withItem(planks), 40);
+		scene.overlay().showControls(util.vector().centerOf(util.grid().at(4, 2, 2)), Pointing.DOWN, 40).withItem(planks);
 		scene.idle(7);
 		scene.world().createItemOnBelt(util.grid().at(4, 1, 2), Direction.EAST,
 									   ItemHandlerHelper.copyStackWithSize(planks, 16));
@@ -378,7 +370,7 @@ public class CrafterScenes {
 		scene.idle(5);
 
 		Selection emptyCrafter = util.select().position(2, 2, 2);
-		scene.overlay().showSelectionWithText(emptyCrafter, 90)
+		scene.overlay().showOutlineWithText(emptyCrafter, 90)
 			.attachKeyFrame()
 			.colored(PonderPalette.RED)
 			.text("Some recipes will require additional Crafters to bridge gaps in the path")
@@ -404,19 +396,14 @@ public class CrafterScenes {
 			.text("Using Slot Covers, Crafters can be set to act as an Empty Slot in the arrangement")
 			.placeNearTarget();
 		scene.idle(100);
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH)
-				.add(0.5, 0, 0), Pointing.RIGHT).withItem(AllItems.CRAFTER_SLOT_COVER.asStack())
-					.rightClick(),
-				50);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH).add(0.5, 0, 0), Pointing.RIGHT, 50).withItem(AllItems.CRAFTER_SLOT_COVER.asStack())
+					.rightClick();
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(emptyCrafter, type, compound -> compound.putBoolean("Cover", true));
 		scene.idle(130);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.WEST), Pointing.LEFT)
-				.withItem(new ItemStack(Items.BUCKET)),
-			40);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.WEST), Pointing.LEFT, 40)
+				.withItem(new ItemStack(Items.BUCKET));
 		scene.idle(50);
 		scene.world().showSection(util.select().position(4, 2, 2), Direction.DOWN);
 
@@ -427,7 +414,7 @@ public class CrafterScenes {
 		scene.world().connectCrafterInvs(util.grid().at(1, 2, 2), util.grid().at(2, 2, 2));
 		scene.idle(10);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(3, 2, 2, 1, 2, 2)
+		scene.overlay().showOutlineWithText(util.select().fromTo(3, 2, 2, 1, 2, 2)
 			.add(util.select().position(2, 1, 2)), 80)
 			.attachKeyFrame()
 			.pointAt(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH))

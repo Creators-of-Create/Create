@@ -20,14 +20,13 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
 import net.createmod.catnip.utility.lang.Components;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -250,7 +249,7 @@ public class RedstoneScenes {
 		scene.idle(50);
 
 		scene.overlay().showRepeaterScrollInput(circuitPos, 60);
-		scene.overlay().showControls(new InputWindowElement(circuitTop, Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(circuitTop, Pointing.DOWN, 60).rightClick();
 		scene.idle(10);
 		scene.overlay().showText(60)
 			.text("Using the value panel, the discharge time can be configured")
@@ -323,7 +322,7 @@ public class RedstoneScenes {
 		scene.idle(70);
 
 		scene.overlay().showRepeaterScrollInput(circuitPos, 60);
-		scene.overlay().showControls(new InputWindowElement(circuitTop, Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(circuitTop, Pointing.DOWN, 60).rightClick();
 		scene.idle(10);
 		scene.overlay().showText(60)
 			.text("Using the value panel, the charge time can be configured")
@@ -412,7 +411,7 @@ public class RedstoneScenes {
 
 		scene.addKeyframe();
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(circuitTop, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(circuitTop, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
 		scene.world().toggleRedstonePower(util.select().fromTo(2, 1, 2, 0, 1, 2));
 		scene.world().cycleBlockProperty(circuitPos, PoweredLatchBlock.POWERING);
@@ -424,7 +423,7 @@ public class RedstoneScenes {
 			.pointAt(circuitTop);
 		scene.idle(60);
 
-		scene.overlay().showControls(new InputWindowElement(circuitTop, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(circuitTop, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
 		scene.world().toggleRedstonePower(util.select().fromTo(2, 1, 2, 0, 1, 2));
 		scene.world().cycleBlockProperty(circuitPos, PoweredLatchBlock.POWERING);
@@ -485,7 +484,7 @@ public class RedstoneScenes {
 
 		scene.addKeyframe();
 		scene.idle(10);
-		scene.overlay().showControls(new InputWindowElement(circuitTop, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(circuitTop, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
 		scene.world().toggleRedstonePower(util.select().fromTo(2, 1, 2, 0, 1, 2));
 		scene.world().cycleBlockProperty(circuitPos, ToggleLatchBlock.POWERING);
@@ -497,7 +496,7 @@ public class RedstoneScenes {
 			.pointAt(circuitTop);
 		scene.idle(60);
 
-		scene.overlay().showControls(new InputWindowElement(circuitTop, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(circuitTop, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
 		scene.world().toggleRedstonePower(util.select().fromTo(2, 1, 2, 0, 1, 2));
 		scene.world().cycleBlockProperty(circuitPos, ToggleLatchBlock.POWERING);
@@ -537,7 +536,7 @@ public class RedstoneScenes {
 		scene.idle(70);
 
 		IntegerProperty power = RedStoneWireBlock.POWER;
-		scene.overlay().showControls(new InputWindowElement(leverVec, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(leverVec, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
 		for (int i = 0; i < 7; i++) {
 			scene.idle(2);
@@ -556,8 +555,8 @@ public class RedstoneScenes {
 			.pointAt(leverVec);
 		scene.idle(70);
 
-		scene.overlay().showControls(new InputWindowElement(leverVec, Pointing.DOWN).rightClick()
-			.whileSneaking(), 40);
+		scene.overlay().showControls(leverVec, Pointing.DOWN, 40).rightClick()
+			.whileSneaking();
 		scene.idle(7);
 		for (int i = 7; i > 0; i--) {
 			scene.idle(2);
@@ -579,7 +578,7 @@ public class RedstoneScenes {
 			.pointAt(leverVec);
 		scene.idle(70);
 
-		scene.overlay().showControls(new InputWindowElement(leverVec, Pointing.DOWN).rightClick(), 40);
+		scene.overlay().showControls(leverVec, Pointing.DOWN, 40).rightClick();
 		scene.idle(7);
 		for (int i = 0; i < 15; i++) {
 			scene.idle(2);
@@ -635,8 +634,8 @@ public class RedstoneScenes {
 
 		ItemStack clipboard = AllBlocks.CLIPBOARD.asStack();
 		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, clipboard);
-		scene.overlay().showControls(new InputWindowElement(centerTube.add(1, .35, 0), Pointing.DOWN).rightClick()
-			.withItem(clipboard), 40);
+		scene.overlay().showControls(centerTube.add(1, .35, 0), Pointing.DOWN, 40).rightClick()
+			.withItem(clipboard);
 		scene.idle(7);
 
 		Component component = Components.literal("CREATE");
@@ -652,7 +651,7 @@ public class RedstoneScenes {
 		scene.idle(10);
 		scene.world().showSection(util.select().position(4, 1, 3), Direction.DOWN);
 		scene.idle(10);
-		scene.special().createBirb(util.vector().topOf(util.grid().at(0, 0, 3)), ParrotElement.DancePose::new);
+		scene.special().createBirb(util.vector().topOf(util.grid().at(0, 0, 3)), ParrotPose.DancePose::new);
 
 		scene.idle(20);
 		scene.overlay().showText(80)
@@ -663,10 +662,8 @@ public class RedstoneScenes {
 				.add(-.75, -.05f, 0));
 		scene.idle(90);
 
-		InputWindowElement input =
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(3, 1, 3), Direction.UP), Pointing.DOWN)
-				.withItem(new ItemStack(Items.BLUE_DYE));
-		scene.overlay().showControls(input, 30);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 1, 3), Direction.UP), Pointing.DOWN, 30)
+			.withItem(new ItemStack(Items.BLUE_DYE));
 		scene.idle(7);
 		scene.world().setBlocks(util.select().fromTo(1, 1, 3, 3, 1, 3), AllBlocks.NIXIE_TUBES.get(DyeColor.BLUE)
 			.getDefaultState()
@@ -720,8 +717,8 @@ public class RedstoneScenes {
 			.pointAt(link1Vec);
 		scene.idle(60);
 
-		scene.overlay().showControls(new InputWindowElement(link2Vec, Pointing.UP).rightClick()
-			.whileSneaking(), 40);
+		scene.overlay().showControls(link2Vec, Pointing.UP, 40).rightClick()
+			.whileSneaking();
 		scene.idle(7);
 		scene.world().modifyBlock(link2Pos, s -> s.cycle(RedstoneLinkBlock.RECEIVER), true);
 		scene.idle(10);
@@ -731,8 +728,8 @@ public class RedstoneScenes {
 			.pointAt(link2Vec);
 		scene.idle(60);
 
-		scene.overlay().showControls(new InputWindowElement(link3Vec, Pointing.UP).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 40);
+		scene.overlay().showControls(link3Vec, Pointing.UP, 40).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(link3Pos, s -> s.cycle(RedstoneLinkBlock.RECEIVER), true);
 		scene.idle(10);
@@ -786,9 +783,9 @@ public class RedstoneScenes {
 		ItemStack gold = new ItemStack(Items.GOLD_INGOT);
 		ItemStack sapling = new ItemStack(Items.OAK_SAPLING);
 
-		scene.overlay().showControls(new InputWindowElement(frontSlot, Pointing.UP).withItem(iron), 30);
+		scene.overlay().showControls(frontSlot, Pointing.UP, 30).withItem(iron);
 		scene.idle(7);
-		scene.overlay().showControls(new InputWindowElement(backSlot, Pointing.DOWN).withItem(sapling), 30);
+		scene.overlay().showControls(backSlot, Pointing.DOWN, 30).withItem(sapling);
 		scene.world().modifyBlockEntityNBT(link1Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundTag())));
 		scene.idle(7);
@@ -796,9 +793,9 @@ public class RedstoneScenes {
 			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundTag())));
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(bottom2Slot, Pointing.UP).withItem(iron), 30);
+		scene.overlay().showControls(bottom2Slot, Pointing.UP, 30).withItem(iron);
 		scene.idle(7);
-		scene.overlay().showControls(new InputWindowElement(top2Slot, Pointing.DOWN).withItem(sapling), 30);
+		scene.overlay().showControls(top2Slot, Pointing.DOWN, 30).withItem(sapling);
 		scene.world().modifyBlockEntityNBT(link2Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundTag())));
 		scene.idle(7);
@@ -806,9 +803,9 @@ public class RedstoneScenes {
 			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundTag())));
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(bottom3Slot, Pointing.UP).withItem(gold), 30);
+		scene.overlay().showControls(bottom3Slot, Pointing.UP, 30).withItem(gold);
 		scene.idle(7);
-		scene.overlay().showControls(new InputWindowElement(top3Slot, Pointing.DOWN).withItem(sapling), 30);
+		scene.overlay().showControls(top3Slot, Pointing.DOWN, 30).withItem(sapling);
 		scene.world().modifyBlockEntityNBT(link3Select, RedstoneLinkBlockEntity.class,
 			nbt -> nbt.put("FrequencyLast", gold.save(new CompoundTag())));
 		scene.idle(7);
