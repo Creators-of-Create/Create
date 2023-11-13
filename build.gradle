@@ -1,6 +1,5 @@
 plugins {
     id 'dev.architectury.loom' version "${loom_version}"
-    id 'io.github.juuxel.loom-vineflower' version "${vineflower_version}"
     id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
     id 'maven-publish'
 }
@@ -21,6 +20,7 @@ loom {
 
     forge {
         mixinConfig "create.mixins.json"
+
     }
 
     runs {
@@ -175,14 +175,13 @@ remapJar {
     archiveClassifier.set('all')
 }
 
-task slimJar {
-    doLast {
-        tasks.remapJar {
-            archiveClassifier.set('slim')
-            addNestedDependencies = false
-        }
-    }
-    finalizedBy('remapJar')
+tasks.register('slimJar', net.fabricmc.loom.task.RemapJarTask) {
+    dependsOn 'jar'
+    group = 'build'
+
+    input = jar.archiveFile
+    archiveClassifier.set('slim')
+    addNestedDependencies = false
 }
 
 void addLicense(jarTask) {
@@ -193,6 +192,7 @@ void addLicense(jarTask) {
 
 addLicense(jar)
 addLicense(remapJar)
+addLicense(slimJar)
 
 publishing {
     publications {
