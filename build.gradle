@@ -20,7 +20,19 @@ loom {
 
     forge {
         mixinConfig "create.mixins.json"
+    }
 
+    mixin {
+        defaultRefmapName = "create.refmap.json"
+    }
+
+    mods {
+        create {
+            sourceSet sourceSets.main
+            if(inWorkspace) {
+                sourceSet project(":Flywheel").sourceSets.main
+            }
+        }
     }
 
     runs {
@@ -29,11 +41,6 @@ loom {
             //vmArg '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             runDir 'run'
             ideConfigGenerated true
-            source sourceSets.main
-            if (inWorkspace) {
-                //TODO make this work
-                source project(":Flywheel").sourceSets.main
-            }
         }
 
         server {
@@ -54,7 +61,6 @@ loom {
 
         gameTest {
             inherit server
-            source project.sourceSets.main
             configName = 'Server Game Tests'
         }
     }
@@ -104,6 +110,7 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
     maven {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
@@ -111,6 +118,7 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+
     flatDir {
         dirs 'libs'
     }
@@ -121,9 +129,9 @@ dependencies {
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     mappings(loom.layered {
-        //if(Boolean.parseBoolean(project.use_parchment)) {
+        if(Boolean.parseBoolean(project.use_parchment)) {
             it.parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
-        //}
+        }
         it.officialMojangMappings { nameSyntheticMembers = false }
     })
 
@@ -149,15 +157,17 @@ dependencies {
     }
 }
 
-sourceSets.main.java {
-    if (!cc_tweaked_enable.toBoolean()) {
-        exclude 'com/simibubi/create/compat/computercraft/implementation/**'
+sourceSets.main {
+    java {
+        if (!cc_tweaked_enable.toBoolean()) {
+            exclude 'com/simibubi/create/compat/computercraft/implementation/**'
+        }
     }
-}
 
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-    exclude '.cache/'
+    resources {
+        srcDir 'src/generated/resources'
+        exclude '.cache/'
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -172,7 +182,7 @@ java {
 }
 
 remapJar {
-    archiveClassifier.set('all')
+    archiveClassifier = 'all'
 }
 
 tasks.register('slimJar', net.fabricmc.loom.task.RemapJarTask) {
@@ -180,8 +190,33 @@ tasks.register('slimJar', net.fabricmc.loom.task.RemapJarTask) {
     group = 'build'
 
     input = jar.archiveFile
-    archiveClassifier.set('slim')
+    archiveClassifier = 'slim'
     addNestedDependencies = false
+}
+
+tasks.register('releaseJar') {
+    group - 'build'
+    doLast {
+        remapJar {
+            archiveClassifier = ''
+        }
+    }
+    finalizedBy remapJar
+}
+
+jar {
+    manifest {
+        attributes([
+                'Specification-Title': 'create',
+                'Specification-Vendor': 'simibubi',
+                'Specification-Version': '1',
+                'Implementation-Title': archivesBaseName,
+                'Implementation-Version': version,
+                'Implementation-Vendor': 'simibubi',
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'MixinConfigs': 'create.mixins.json'
+        ])
+    }
 }
 
 void addLicense(jarTask) {
@@ -217,7 +252,7 @@ String getChangelogText() {
     boolean done = false
     changelogFile.eachLine {
         if (done || it == null) {
-            return
+            return ''
         }
         if (it.size() > 1) {
             def temp = it
@@ -226,8 +261,8 @@ String getChangelogText() {
                 temp = "<span style=\"font-size: 18px; color: #333399;\">Create v${mod_version}</span>&nbsp;&nbsp;<em>for Minecraft ${minecraft_version}</em><br/>"
             } else if (it.startsWith('-')) {
                 temp = "&nbsp;&nbsp;&nbsp;$temp<br/>"
-                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
-                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
+                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>")
+                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>")
             } else {
                 temp = "<h4>$temp</h4>"
             }
