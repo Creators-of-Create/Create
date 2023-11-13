@@ -569,6 +569,9 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	private Vec3 getContraptionOffset(float partialTicks, Entity ridingEntity) {
 		AbstractContraptionEntity parent = (AbstractContraptionEntity) ridingEntity;
 		Vec3 passengerPosition = parent.getPassengerPosition(this, partialTicks);
+		if (passengerPosition == null)
+			return Vec3.ZERO;
+		
 		double x = passengerPosition.x - Mth.lerp(partialTicks, this.xOld, this.getX());
 		double y = passengerPosition.y - Mth.lerp(partialTicks, this.yOld, this.getY());
 		double z = passengerPosition.z - Mth.lerp(partialTicks, this.zOld, this.getZ());

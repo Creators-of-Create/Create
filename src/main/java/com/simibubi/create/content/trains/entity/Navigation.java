@@ -15,6 +15,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -380,14 +382,10 @@ public class Navigation {
 		train.reservedSignalBlocks.clear();
 	}
 
-	public double startNavigation(GlobalStation destination, double maxCost, boolean simulate) {
-		DiscoveredPath pathTo = findPathTo(destination, maxCost);
+	public double startNavigation(DiscoveredPath pathTo) {
 		boolean noneFound = pathTo == null;
 		double distance = noneFound ? -1 : Math.abs(pathTo.distance);
 		double cost = noneFound ? -1 : pathTo.cost;
-
-		if (simulate)
-			return cost;
 
 		distanceToDestination = distance;
 
@@ -407,10 +405,10 @@ public class Navigation {
 		train.reservedSignalBlocks.clear();
 		train.navigation.waitingForSignal = null;
 
-		if (this.destination == null && !simulate)
+		if (this.destination == null)
 			distanceStartedAt = distance;
 
-		if (this.destination == destination)
+		if (this.destination == pathTo.destination)
 			return 0;
 
 		if (!train.runtime.paused) {
@@ -435,12 +433,19 @@ public class Navigation {
 			train.status.foundConductor();
 		}
 
-		this.destination = destination;
+		this.destination = pathTo.destination;
 		return cost;
 	}
 
 	@Nullable
-	private DiscoveredPath findPathTo(GlobalStation destination, double maxCost) {
+	public DiscoveredPath findPathTo(GlobalStation destination, double maxCost) {
+		ArrayList<GlobalStation> destinations = new ArrayList<>();
+		destinations.add(destination);
+		return findPathTo(destinations, maxCost);
+	}
+
+	@Nullable
+	public DiscoveredPath findPathTo(ArrayList<GlobalStation> destinations, double maxCost) {
 		TrackGraph graph = train.graph;
 		if (graph == null)
 			return null;
@@ -460,34 +465,36 @@ public class Navigation {
 				: graph.getConnectionsFrom(initialPoint.node2)
 					.get(initialPoint.node1);
 
-			search(Double.MAX_VALUE, maxCost, forward, (distance, cost, reachedVia, currentEntry, globalStation) -> {
-				if (globalStation != destination)
-					return false;
+			search(Double.MAX_VALUE, maxCost, forward, destinations, (distance, cost, reachedVia, currentEntry, globalStation) -> {
+				for (GlobalStation destination : destinations){
+					if (globalStation == destination) {
+						TrackEdge edge = currentEntry.getSecond();
+						TrackNode node1 = currentEntry.getFirst()
+								.getFirst();
+						TrackNode node2 = currentEntry.getFirst()
+								.getSecond();
 
-				TrackEdge edge = currentEntry.getSecond();
-				TrackNode node1 = currentEntry.getFirst()
-					.getFirst();
-				TrackNode node2 = currentEntry.getFirst()
-					.getSecond();
+						List<Couple<TrackNode>> currentPath = new ArrayList<>();
+						Pair<Boolean, Couple<TrackNode>> backTrack = reachedVia.get(edge);
+						Couple<TrackNode> toReach = Couple.create(node1, node2);
+						TrackEdge edgeReached = edge;
+						while (backTrack != null) {
+							if (edgeReached == initialEdge)
+								break;
+							if (backTrack.getFirst())
+								currentPath.add(0, toReach);
+							toReach = backTrack.getSecond();
+							edgeReached = graph.getConnection(toReach);
+							backTrack = reachedVia.get(edgeReached);
+						}
 
-				List<Couple<TrackNode>> currentPath = new ArrayList<>();
-				Pair<Boolean, Couple<TrackNode>> backTrack = reachedVia.get(edge);
-				Couple<TrackNode> toReach = Couple.create(node1, node2);
-				TrackEdge edgeReached = edge;
-				while (backTrack != null) {
-					if (edgeReached == initialEdge)
-						break;
-					if (backTrack.getFirst())
-						currentPath.add(0, toReach);
-					toReach = backTrack.getSecond();
-					edgeReached = graph.getConnection(toReach);
-					backTrack = reachedVia.get(edgeReached);
+						double position = edge.getLength() - destination.getLocationOn(edge);
+						double distanceToDestination = distance - position;
+						results.set(forward, new DiscoveredPath((forward ? 1 : -1) * distanceToDestination, cost, currentPath, destination));
+						return true;
+					}
 				}
-
-				double position = edge.getLength() - destination.getLocationOn(edge);
-				double distanceToDestination = distance - position;
-				results.set(forward, new DiscoveredPath((forward ? 1 : -1) * distanceToDestination, cost, currentPath));
-				return true;
+				return false;
 			});
 		}
 
@@ -508,18 +515,6 @@ public class Navigation {
 		return frontBetter ? front : back;
 	}
 
-	public class DiscoveredPath {
-		List<Couple<TrackNode>> path;
-		double distance;
-		double cost;
-
-		public DiscoveredPath(double distance, double cost, List<Couple<TrackNode>> path) {
-			this.distance = distance;
-			this.cost = cost;
-			this.path = path;
-		}
-	}
-
 	public GlobalStation findNearestApproachable(boolean forward) {
 		TrackGraph graph = train.graph;
 		if (graph == null)
@@ -530,7 +525,7 @@ public class Navigation {
 		double minDistance = .75f * (train.speed * train.speed) / (2 * acceleration);
 		double maxDistance = Math.max(32, 1.5f * (train.speed * train.speed) / (2 * acceleration));
 
-		search(maxDistance, forward, (distance, cost, reachedVia, currentEntry, globalStation) -> {
+		search(maxDistance, forward, null, (distance, cost, reachedVia, currentEntry, globalStation) -> {
 			if (distance < minDistance)
 				return false;
 
@@ -548,11 +543,11 @@ public class Navigation {
 		return result.getValue();
 	}
 
-	public void search(double maxDistance, boolean forward, StationTest stationTest) {
-		search(maxDistance, -1, forward, stationTest);
+	public void search(double maxDistance, boolean forward, ArrayList<GlobalStation> destinations, StationTest stationTest) {
+		search(maxDistance, -1, forward, destinations, stationTest);
 	}
 
-	public void search(double maxDistance, double maxCost, boolean forward, StationTest stationTest) {
+	public void search(double maxDistance, double maxCost, boolean forward, ArrayList<GlobalStation> destinations, StationTest stationTest) {
 		TrackGraph graph = train.graph;
 		if (graph == null)
 			return;
@@ -614,10 +609,58 @@ public class Navigation {
 
 		double distanceToNode2 = forward ? initialEdge.getLength() - startingPoint.position : startingPoint.position;
 
-		frontier.add(new FrontierEntry(distanceToNode2, 0, initialNode1, initialNode2, initialEdge));
 		int signalWeight = Mth.clamp(ticksWaitingForSignal * 2, Train.Penalties.RED_SIGNAL, 200);
 
-		Search: while (!frontier.isEmpty()) {
+		// Apply penalties to initial edge
+		int initialPenalty = 0;
+		if (costRelevant)
+			initialPenalty += penalties.getOrDefault(initialEdge, 0);
+
+		EdgeData initialSignalData = initialEdge.getEdgeData();
+		if (initialSignalData.hasPoints()) {
+			for (TrackEdgePoint point : initialSignalData.getPoints()) {
+				if (point.getLocationOn(initialEdge) < initialEdge.getLength() - distanceToNode2)
+					continue;
+				if (costRelevant && distanceToNode2 + initialPenalty > maxCost)
+					return;
+				if (!point.canNavigateVia(initialNode2))
+					return;
+				if (point instanceof SignalBoundary signal) {
+					if (signal.isForcedRed(initialNode2)) {
+						initialPenalty += Train.Penalties.REDSTONE_RED_SIGNAL;
+						continue;
+					}
+					UUID group = signal.getGroup(initialNode2);
+					if (group == null)
+						continue;
+					SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(group);
+					if (signalEdgeGroup == null)
+						continue;
+					if (signalEdgeGroup.isOccupiedUnless(signal)) {
+						initialPenalty += signalWeight;
+						signalWeight /= 2;
+					}
+				}
+				if (point instanceof GlobalStation station) {
+					Train presentTrain = station.getPresentTrain();
+					boolean isOwnStation = presentTrain == train;
+					if (presentTrain != null && !isOwnStation)
+						initialPenalty += Train.Penalties.STATION_WITH_TRAIN;
+					if (station.canApproachFrom(initialNode2) && stationTest.test(distanceToNode2, distanceToNode2 + initialPenalty, reachedVia,
+							Pair.of(Couple.create(initialNode1, initialNode2), initialEdge), station))
+						return;
+					if (!isOwnStation)
+						initialPenalty += Train.Penalties.STATION;
+				}
+			}
+		}
+
+		if (costRelevant && distanceToNode2 + initialPenalty > maxCost)
+			return;
+
+		frontier.add(new FrontierEntry(distanceToNode2, initialPenalty, initialNode1, initialNode2, initialEdge));
+
+		while (!frontier.isEmpty()) {
 			FrontierEntry entry = frontier.poll();
 			if (!visited.add(entry.edge))
 				continue;
@@ -632,50 +675,18 @@ public class Navigation {
 			TrackNode node1 = entry.node1;
 			TrackNode node2 = entry.node2;
 
-			if (costRelevant)
-				penalty += penalties.getOrDefault(edge, 0);
-
-			EdgeData signalData = edge.getEdgeData();
-			if (signalData.hasPoints()) {
-				for (TrackEdgePoint point : signalData.getPoints()) {
-					if (node1 == initialNode1 && point.getLocationOn(edge) < edge.getLength() - distanceToNode2)
-						continue;
-					if (costRelevant && distance + penalty > maxCost)
-						continue Search;
-					if (!point.canNavigateVia(node2))
-						continue Search;
-					if (point instanceof SignalBoundary signal) {
-						if (signal.isForcedRed(node2)) {
-							penalty += Train.Penalties.REDSTONE_RED_SIGNAL;
-							continue;
+			if (entry.hasDestination) {
+				EdgeData signalData = edge.getEdgeData();
+				if (signalData.hasPoints()) {
+					for (TrackEdgePoint point : signalData.getPoints()) {
+						if (point instanceof GlobalStation station) {
+							if (station.canApproachFrom(node2) && stationTest.test(distance, penalty, reachedVia,
+									Pair.of(Couple.create(node1, node2), edge), station))
+								return;
 						}
-						UUID group = signal.getGroup(node2);
-						if (group == null)
-							continue;
-						SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(group);
-						if (signalEdgeGroup == null)
-							continue;
-						if (signalEdgeGroup.isOccupiedUnless(signal)) {
-							penalty += signalWeight;
-							signalWeight /= 2;
-						}
-					}
-					if (point instanceof GlobalStation station) {
-						Train presentTrain = station.getPresentTrain();
-						boolean isOwnStation = presentTrain == train;
-						if (presentTrain != null && !isOwnStation)
-							penalty += Train.Penalties.STATION_WITH_TRAIN;
-						if (station.canApproachFrom(node2) && stationTest.test(distance, distance + penalty, reachedVia,
-							Pair.of(Couple.create(node1, node2), edge), station))
-							return;
-						if (!isOwnStation)
-							penalty += Train.Penalties.STATION;
 					}
 				}
 			}
-
-			if (costRelevant && distance + penalty > maxCost)
-				continue;
 
 			List<Entry<TrackNode, TrackEdge>> validTargets = new ArrayList<>();
 			Map<TrackNode, TrackEdge> connectionsFrom = graph.getConnectionsFrom(node2);
@@ -690,15 +701,101 @@ public class Navigation {
 			if (validTargets.isEmpty())
 				continue;
 
-			for (Entry<TrackNode, TrackEdge> target : validTargets) {
+			Search: for (Entry<TrackNode, TrackEdge> target : validTargets) {
 				if (!validTypes.contains(target.getValue().getTrackMaterial().trackType))
 					continue;
 				TrackNode newNode = target.getKey();
 				TrackEdge newEdge = target.getValue();
-				double newDistance = newEdge.getLength() + distance;
 				int newPenalty = penalty;
+				double edgeLength = newEdge.getLength();
+				double newDistance = distance + edgeLength;
+
+				if (costRelevant)
+					newPenalty += penalties.getOrDefault(newEdge, 0);
+
+				// Apply penalty to next connected edge
+				boolean hasDestination = false;
+				EdgeData signalData = newEdge.getEdgeData();
+				if (signalData.hasPoints()) {
+					for (TrackEdgePoint point : signalData.getPoints()) {
+						if (node2 == initialNode1 && point.getLocationOn(newEdge) < edgeLength - distanceToNode2)
+							continue;
+						if (costRelevant && newDistance + newPenalty > maxCost)
+							continue Search;
+						if (!point.canNavigateVia(newNode))
+							continue Search;
+						if (point instanceof SignalBoundary signal) {
+							if (signal.isForcedRed(newNode)) {
+								newPenalty += Train.Penalties.REDSTONE_RED_SIGNAL;
+								continue;
+							}
+							UUID group = signal.getGroup(newNode);
+							if (group == null)
+								continue;
+							SignalEdgeGroup signalEdgeGroup = Create.RAILWAYS.signalEdgeGroups.get(group);
+							if (signalEdgeGroup == null)
+								continue;
+							if (signalEdgeGroup.isOccupiedUnless(signal)) {
+								newPenalty += signalWeight;
+								signalWeight /= 2;
+							}
+						}
+						if (point instanceof GlobalStation station) {
+							Train presentTrain = station.getPresentTrain();
+							boolean isOwnStation = presentTrain == train;
+							if (presentTrain != null && !isOwnStation)
+								newPenalty += Train.Penalties.STATION_WITH_TRAIN;
+							if (station.canApproachFrom(newNode) && stationTest.test(newDistance, newDistance + newPenalty, reachedVia,
+									Pair.of(Couple.create(node2, newNode), newEdge), station)) {
+								hasDestination = true;
+								continue;
+							}
+							if (!isOwnStation)
+								newPenalty += Train.Penalties.STATION;
+						}
+					}
+				}
+
+				if (costRelevant && newDistance + newPenalty > maxCost)
+					continue;
+
+				double remainingDist = 0;
+				// Calculate remaining distance estimator for next connected edge
+				if (destinations != null && !destinations.isEmpty()) {
+					remainingDist = Double.MAX_VALUE;
+					Vec3 newNodePosition = newNode.getLocation().getLocation();
+					for (GlobalStation destination : destinations) {
+						TrackNodeLocation destinationNode = destination.edgeLocation.getFirst();
+						double dMin = Math.abs(newNodePosition.x - destinationNode.getLocation().x);
+						double dMid = Math.abs(newNodePosition.y - destinationNode.getLocation().y);
+						double dMax = Math.abs(newNodePosition.z - destinationNode.getLocation().z);
+						// Sort distance vector in ascending order
+						double temp;
+						if (dMin > dMid) {
+							temp = dMid;
+							dMid = dMin;
+							dMin = temp;
+						}
+						if (dMin > dMax) {
+							temp = dMax;
+							dMax = dMin;
+							dMin = temp;
+						}
+						if (dMid > dMax) {
+							temp = dMax;
+							dMax = dMid;
+							dMid = temp;
+						}
+						// Octile distance from newNode to station node
+						double currentRemaining = 0.317837245195782 * dMin + 0.414213562373095 * dMid + dMax + destination.position;
+						if (node2.getLocation().equals(destinationNode))
+							currentRemaining -= newEdge.getLength() * 2; // Correct the distance estimator for station edge
+						remainingDist = Math.min(remainingDist, currentRemaining);
+					}
+				}
+
 				reachedVia.putIfAbsent(newEdge, Pair.of(validTargets.size() > 1, Couple.create(node1, node2)));
-				frontier.add(new FrontierEntry(newDistance, newPenalty, node2, newNode, newEdge));
+				frontier.add(new FrontierEntry(newDistance, newPenalty, remainingDist, hasDestination, node2, newNode, newEdge));
 			}
 		}
 	}
@@ -707,6 +804,8 @@ public class Navigation {
 
 		double distance;
 		int penalty;
+		double remaining;
+		boolean hasDestination;
 		TrackNode node1;
 		TrackNode node2;
 		TrackEdge edge;
@@ -714,6 +813,17 @@ public class Navigation {
 		public FrontierEntry(double distance, int penalty, TrackNode node1, TrackNode node2, TrackEdge edge) {
 			this.distance = distance;
 			this.penalty = penalty;
+			this.remaining = 0;
+			this.hasDestination = false;
+			this.node1 = node1;
+			this.node2 = node2;
+			this.edge = edge;
+		}
+		public FrontierEntry(double distance, int penalty, double remaining, boolean hasDestination, TrackNode node1, TrackNode node2, TrackEdge edge) {
+			this.distance = distance;
+			this.penalty = penalty;
+			this.remaining = remaining;
+			this.hasDestination = hasDestination;
 			this.node1 = node1;
 			this.node2 = node2;
 			this.edge = edge;
@@ -721,7 +831,7 @@ public class Navigation {
 
 		@Override
 		public int compareTo(FrontierEntry o) {
-			return Double.compare(distance + penalty, o.distance + o.penalty);
+			return Double.compare(distance + penalty + remaining, o.distance + o.penalty + o.remaining);
 		}
 
 	}

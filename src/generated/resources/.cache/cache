@@ -582,8 +582,8 @@ bf2b0310500213ff853c748c236eb5d01f61658e assets/create/blockstates/yellow_toolbo
 5616dda664dd106d576848124fc0fc1de18d0fd3 assets/create/blockstates/yellow_valve_handle.json
 7f39521b211441f5c3e06d60c5978cebe16cacfb assets/create/blockstates/zinc_block.json
 b7181bcd8182b2f17088e5aa881f374c9c65470c assets/create/blockstates/zinc_ore.json
-fb5edeb33c43fb1aa36cfe84e376da287ae23b51 assets/create/lang/en_ud.json
-eac32f8a9ed3c1b652916191c96c0ee446fd97ca assets/create/lang/en_us.json
+d09a8a181fa472e6ae66bdd8d937d1464aee102f assets/create/lang/en_ud.json
+71b5b55d73d5bd7fb39bd352338d9e1ad7184ea9 assets/create/lang/en_us.json
 487a511a01b2a4531fb672f917922312db78f958 assets/create/models/block/acacia_window.json
 b48060cba1a382f373a05bf0039054053eccf076 assets/create/models/block/acacia_window_pane_noside.json
 3066db1bf03cffa1a9c7fbacf47ae586632f4eb3 assets/create/models/block/acacia_window_pane_noside_alt.json
@@ -5340,6 +5340,7 @@ ad8fa04f7bbbafd70d0ce158af78a35e899301e2 data/create/tags/blocks/tracks.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/blocks/valve_handles.json
 eac71740fb12bdb38b5dfaa2268613d7ba82b809 data/create/tags/blocks/windmill_sails.json
 9851b3bef451f326ef322a31f85b9a970859590d data/create/tags/blocks/wrench_pickup.json
+cf85bc6b8b9d3fe2baf408731225de9c050763b8 data/create/tags/entity_types/blaze_burner_capturable.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/entity_types/ignore_seat.json
 a8bdc387cfa6296ebcc4af14323e2ddb632234dc data/create/tags/fluids/bottomless/allow.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/fluids/bottomless/deny.json

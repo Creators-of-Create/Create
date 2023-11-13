@@ -22,9 +22,14 @@
     "accessor.GameTestHelperAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.NbtAccounterAccessor",
-    "accessor.ServerLevelAccessor"
+    "accessor.ServerLevelAccessor",
+    "accessor.SystemReportAccessor"
   ],
   "client": [
+    "accessor.AgeableListModelAccessor",
+    "accessor.GameRendererAccessor",
+    "accessor.HumanoidArmorLayerAccessor",
+    "accessor.ParticleEngineAccessor",
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",
@@ -35,11 +40,7 @@
     "client.MapRendererMapInstanceMixin",
     "client.ModelDataRefreshMixin",
     "client.PlayerRendererMixin",
-    "client.WindowResizeMixin",
-    "accessor.AgeableListModelAccessor",
-    "accessor.GameRendererAccessor",
-    "accessor.HumanoidArmorLayerAccessor",
-    "accessor.ParticleEngineAccessor"
+    "client.WindowResizeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

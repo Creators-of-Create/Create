@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.events;
 
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
-import com.simibubi.create.api.event.PipeCollisionEvent;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
@@ -12,6 +11,7 @@ import com.simibubi.create.content.equipment.toolbox.ToolboxHandler;
 import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.content.equipment.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.equipment.zapper.ZapperItem;
+import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerServerHandler;
 import com.simibubi.create.content.trains.entity.CarriageEntityHandler;
 import com.simibubi.create.foundation.ModFilePackResources;
@@ -36,11 +36,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -175,6 +172,7 @@ public class CommonEvents {
 	public static void addReloadListeners(AddReloadListenerEvent event) {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
+		event.addListener(BeltHelper.LISTENER);
 	}
 
 	@SubscribeEvent

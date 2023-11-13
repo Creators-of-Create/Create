@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.PatternSyntaxException;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.trains.display.GlobalTrainDisplayData.TrainDeparturePrediction;
 import com.simibubi.create.content.trains.entity.Carriage;
+import com.simibubi.create.content.trains.entity.Navigation;
 import com.simibubi.create.content.trains.entity.Train;
+import com.simibubi.create.content.trains.graph.DiscoveredPath;
 import com.simibubi.create.content.trains.graph.EdgePointType;
 import com.simibubi.create.content.trains.schedule.condition.ScheduleWaitCondition;
 import com.simibubi.create.content.trains.schedule.condition.ScheduledDelay;
@@ -122,17 +125,17 @@ public class ScheduleRuntime {
 			return;
 		}
 
-		GlobalStation nextStation = startCurrentInstruction();
-		if (nextStation == null)
+		DiscoveredPath nextPath = startCurrentInstruction();
+		if (nextPath == null)
 			return;
 
 		train.status.successfulNavigation();
-		if (nextStation == train.getCurrentStation()) {
+		if (nextPath.destination == train.getCurrentStation()) {
 			state = State.IN_TRANSIT;
 			destinationReached();
 			return;
 		}
-		if (train.navigation.startNavigation(nextStation, Double.MAX_VALUE, false) != TBD) {
+		if (train.navigation.startNavigation(nextPath) != TBD) {
 			state = State.IN_TRANSIT;
 			ticksInTransit = 0;
 		}
@@ -167,36 +170,31 @@ public class ScheduleRuntime {
 			carriage.storage.tickIdleCargoTracker();
 	}
 
-	public GlobalStation startCurrentInstruction() {
+	public DiscoveredPath startCurrentInstruction() {
 		ScheduleEntry entry = schedule.entries.get(currentEntry);
 		ScheduleInstruction instruction = entry.instruction;
 
 		if (instruction instanceof DestinationInstruction destination) {
 			String regex = destination.getFilterForRegex();
-			GlobalStation best = null;
-			double bestCost = Double.MAX_VALUE;
 			boolean anyMatch = false;
+			ArrayList<GlobalStation> validStations = new ArrayList<>();
 
 			if (!train.hasForwardConductor() && !train.hasBackwardConductor()) {
 				train.status.missingConductor();
 				cooldown = INTERVAL;
 				return null;
 			}
-
-			for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
-				if (!globalStation.name.matches(regex))
-					continue;
-				anyMatch = true;
-				boolean matchesCurrent = train.currentStation != null && train.currentStation.equals(globalStation.id);
-				double cost = matchesCurrent ? 0 : train.navigation.startNavigation(globalStation, bestCost, true);
-				if (cost < 0)
-					continue;
-				if (cost > bestCost)
-					continue;
-				best = globalStation;
-				bestCost = cost;
-			}
-
+			
+			try {
+				for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
+					if (!globalStation.name.matches(regex))
+						continue;
+					anyMatch = true;
+					validStations.add(globalStation);
+				}
+			} catch (PatternSyntaxException ignored) {}
+			
+			DiscoveredPath best = train.navigation.findPathTo(validStations, Double.MAX_VALUE);
 			if (best == null) {
 				if (anyMatch)
 					train.status.failedNavigation();
@@ -348,7 +346,7 @@ public class ScheduleRuntime {
 
 		predictions.add(createPrediction(index, filter.getFilter(), currentTitle, accumulatedTime));
 
-		if (accumulatedTime != TBD) 
+		if (accumulatedTime != TBD)
 			accumulatedTime += departureTime;
 		
 		if (departureTime == INVALID)
