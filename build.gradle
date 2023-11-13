@@ -45,6 +45,7 @@ loom {
 
         server {
             server()
+            project.file('run/server').absolutePath
             ideConfigGenerated true
             runDir 'run/server'
         }
@@ -60,6 +61,7 @@ loom {
         }
 
         gameTest {
+            runDir = project.file('run/gametest').absolutePath
             inherit server
             configName = 'Server Game Tests'
         }
@@ -195,7 +197,7 @@ tasks.register('slimJar', net.fabricmc.loom.task.RemapJarTask) {
 }
 
 tasks.register('releaseJar') {
-    group - 'build'
+    group = 'build'
     doLast {
         remapJar {
             archiveClassifier = ''
