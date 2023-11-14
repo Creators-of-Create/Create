@@ -130,12 +130,12 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    mappings(loom.layered {
+    mappings loom.layered() {
+        officialMojangMappings() { nameSyntheticMembers = false }
         if(Boolean.parseBoolean(project.use_parchment)) {
-            it.parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
+            parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
         }
-        it.officialMojangMappings { nameSyntheticMembers = false }
-    })
+    }
 
     include modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
@@ -157,6 +157,16 @@ dependencies {
         modCompileOnly "org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}:api"
         modLocalRuntime "org.squiddev:cc-tweaked-${cc_tweaked_minecraft_version}:${cc_tweaked_version}"
     }
+
+//     modImplementation "curse.maven:druidcraft-340991:3101903"
+//     modImplementation "com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25"
+//     modLocalRuntime "vazkii.arl:AutoRegLib:1.4-35.69"
+//     modLocalRuntime "vazkii.quark:Quark:r2.0-212.984"
+//     modLocalRuntime "slimeknights.mantle:Mantle:1.16.5-1.6.115"
+//     modLocalRuntime "slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252"
+//     modLocalRuntime "maven.modrinth:rubidium:0.5.3"
+//     modImplementation("com.railwayteam.railways:railways-1.18.2-1.1.1:all") { transitive = false }
+//     modLocalRuntime "maven.modrinth:spark:1.10.38-forge"
 }
 
 sourceSets.main {
@@ -196,14 +206,12 @@ tasks.register('slimJar', net.fabricmc.loom.task.RemapJarTask) {
     addNestedDependencies = false
 }
 
-tasks.register('releaseJar') {
+tasks.register('releaseJar', net.fabricmc.loom.task.RemapJarTask) {
+    dependsOn 'jar'
     group = 'build'
-    doLast {
-        remapJar {
-            archiveClassifier = ''
-        }
-    }
-    finalizedBy remapJar
+
+    input = jar.archiveFile
+    archiveClassifier = ''
 }
 
 jar {
