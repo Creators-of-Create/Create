@@ -37,6 +37,13 @@ public class CKinetics extends ConfigBase {
 	public final ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
 	public final ConfigInt rollerFillDepth = i(12, 1, "rollerFillDepth", Comments.rollerFillDepth);
 	public final ConfigBool survivalContraptionPickup = b(true, "survivalContraptionPickup", Comments.survivalContraptionPickup);
+
+	public final ConfigInt funnelMaxItemsToTransfer = i(1, 0, "funnelMaxItemsToTransfer",
+			Comments.funnelMaxItemsToTransfer);
+	public final ConfigInt chuteMaxItemsToTransfer = i(16, 0, "chuteMaxItemsToTransfer",
+			Comments.chuteMaxItemsToTransfer);
+	public final ConfigInt filterMaxItemsToTransfer = i(64, 0, "filterMaxItemsToTransfer",
+			Comments.filterMaxItemsToTransfer);
 	public final ConfigEnum<ContraptionMovementSetting> spawnerMovement =
 		e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
 	public final ConfigEnum<ContraptionMovementSetting> amethystMovement =
@@ -116,7 +123,15 @@ public class CKinetics extends ConfigBase {
 		static String amethystMovement = "Configure how Budding Amethyst can be moved by contraptions.";
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
 		static String minecartContraptionInContainers = "Whether minecart contraptions can be placed into container items.";
+
+		static String funnelMaxItemsToTransfer = "Maximum amount of items that can be " +
+				"transferred by a single Andesite Funnel per pull";
+		static String chuteMaxItemsToTransfer = "Maximum amount of items that can be " +
+				"transferred by a single Chute per pull";
+		static String filterMaxItemsToTransfer = "Maximum amount of items that can be " +
+				"transferred by a single brass Funnel or smart Chute per pull";
 	}
+
 
 	public enum DeployerAggroSetting {
 		ALL, CREEPERS, NONE
