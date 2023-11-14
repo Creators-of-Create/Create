@@ -214,10 +214,10 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 
 	public int getAmountToExtract() {
 		if (!supportsAmountOnFilter())
-			return 64;
+			return AllConfigs.server().kinetics.filterMaxItemsToTransfer.get();
 		int amountToExtract = invManipulation.getAmountFromFilter();
 		if (!filtering.isActive())
-			amountToExtract = 1;
+			amountToExtract = AllConfigs.server().kinetics.funnelMaxItemsToTransfer.get();
 		return amountToExtract;
 	}
 

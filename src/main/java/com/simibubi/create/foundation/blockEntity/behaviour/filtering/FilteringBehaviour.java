@@ -22,6 +22,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.infrastructure.config.AllConfigs;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,7 +73,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		};
 		predicate = stack -> true;
 		isActive = () -> true;
-		count = 64;
+		count = AllConfigs.server().kinetics.filterMaxItemsToTransfer.get();
 		showCountPredicate = () -> showCount;
 		recipeFilter = false;
 		fluidFilter = false;
@@ -96,13 +98,13 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		filter = ItemStack.of(nbt.getCompound("Filter"));
 		count = nbt.getInt("FilterAmount");
 		upTo = nbt.getBoolean("UpTo");
-		
+
 		// Migrate from previous behaviour
 		if (count == 0) {
 			upTo = true;
 			count = filter.getMaxStackSize();
 		}
-		
+
 		super.read(nbt, clientPacket);
 	}
 
@@ -255,7 +257,9 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	@Override
 	public ValueSettingsBoard createBoard(Player player, BlockHitResult hitResult) {
 		ItemStack filter = getFilter(hitResult.getDirection());
-		int maxAmount = (filter.getItem() instanceof FilterItem) ? 64 : filter.getMaxStackSize();
+		int maxAmount = (filter.getItem() instanceof FilterItem) ?
+				AllConfigs.server().kinetics.filterMaxItemsToTransfer.get()
+				: filter.getMaxStackSize();
 		return new ValueSettingsBoard(Lang.translateDirect("logistics.filter.extracted_amount"), maxAmount, 16,
 			Lang.translatedOptions("logistics.filter", "up_to", "exactly"),
 			new ValueSettingsFormatter(this::formatValue));
