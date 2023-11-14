@@ -485,7 +485,7 @@ public class ChuteBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 	}
 
 	protected int getExtractionAmount() {
-		return 16;
+		return AllConfigs.server().kinetics.chuteMaxItemsToTransfer.get();
 	}
 
 	protected ExtractionCountMode getExtractionMode() {
