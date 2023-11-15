@@ -7,14 +7,14 @@ import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -62,16 +62,21 @@ public class TrackScenes {
 		scene.idle(30);
 
 		ItemStack trackStack = AllBlocks.TRACK.asStack();
-		scene.overlay().showControls(new InputWindowElement(startTrack, Pointing.DOWN).rightClick()
-			.withItem(trackStack), 40);
+
+		scene.overlay().showControls(startTrack, Pointing.DOWN, 40)
+				.rightClick()
+				.withItem(trackStack);
+
+		scene.overlay().showControls(startTrack, Pointing.DOWN, 40).rightClick()
+			.withItem(trackStack);
 		scene.idle(6);
 		AABB bb = new AABB(util.grid().at(3, 1, 5)).contract(0, .75f, 0)
 			.inflate(0, 0, .85f);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, startTrack, bb, 32);
 		scene.idle(45);
 
-		scene.overlay().showControls(new InputWindowElement(startTrack.add(9, 0, 0), Pointing.DOWN).rightClick()
-			.withItem(trackStack), 40);
+		scene.overlay().showControls(startTrack.add(9, 0, 0), Pointing.DOWN, 40).rightClick()
+			.withItem(trackStack);
 		scene.idle(6);
 		scene.overlay().showText(40)
 			.pointAt(util.vector().topOf(12, 0, 5))
@@ -93,11 +98,11 @@ public class TrackScenes {
 		scene.idle(10);
 		scene.addKeyframe();
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(8, 0, 2), Pointing.DOWN).rightClick()
-			.withItem(trackStack), 15);
+		scene.overlay().showControls(util.vector().topOf(8, 0, 2), Pointing.DOWN, 15).rightClick()
+			.withItem(trackStack);
 		scene.idle(15);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(2, 0, 8), Pointing.DOWN).rightClick()
-			.withItem(trackStack), 15);
+		scene.overlay().showControls(util.vector().topOf(2, 0, 8), Pointing.DOWN, 15).rightClick()
+			.withItem(trackStack);
 		scene.idle(7);
 		scene.world().showSection(util.select().position(2, 1, 8), Direction.DOWN);
 		scene.idle(25);
@@ -111,11 +116,11 @@ public class TrackScenes {
 		scene.world().showSection(util.select().position(12, 1, 2), Direction.SOUTH);
 		scene.idle(10);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(12, 0, 2), Pointing.DOWN).rightClick()
-			.withItem(trackStack), 10);
+		scene.overlay().showControls(util.vector().topOf(12, 0, 2), Pointing.DOWN, 10).rightClick()
+			.withItem(trackStack);
 		scene.idle(15);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(2, 0, 12), Pointing.DOWN).rightClick()
-			.withItem(trackStack), 10);
+		scene.overlay().showControls(util.vector().topOf(2, 0, 12), Pointing.DOWN, 10).rightClick()
+			.withItem(trackStack);
 		scene.idle(7);
 		scene.world().showSection(util.select().fromTo(12, 1, 3, 12, 1, 5), Direction.DOWN);
 		scene.idle(3);
@@ -148,13 +153,13 @@ public class TrackScenes {
 		scene.world().showSection(util.select().position(12, 1, 2), Direction.SOUTH);
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(12, 0, 2), Pointing.DOWN).rightClick()
-			.withItem(trackStack), 10);
+		scene.overlay().showControls(util.vector().topOf(12, 0, 2), Pointing.DOWN, 10).rightClick()
+			.withItem(trackStack);
 		scene.idle(10);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(2, 0, 12), Pointing.DOWN).rightClick()
+		scene.overlay().showControls(util.vector().topOf(2, 0, 12), Pointing.DOWN, 60).rightClick()
 			.withItem(trackStack)
-			.whileCTRL(), 60);
+			.whileCTRL();
 		scene.idle(10);
 
 		scene.overlay().showText(60)
@@ -192,19 +197,15 @@ public class TrackScenes {
 		scene.world().showSectionAndMerge(util.select().fromTo(2, 6, 10, 2, 11, 12), Direction.DOWN, slopeStart);
 		scene.idle(20);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(12, 3, 11), Pointing.LEFT).withItem(trackStack), 30);
+		scene.overlay().showControls(util.vector().topOf(12, 3, 11), Pointing.LEFT, 30).withItem(trackStack);
 		scene.idle(4);
 		ItemStack smoothStone = new ItemStack(Blocks.SMOOTH_STONE);
-		scene.overlay().showControls(
-				new InputWindowElement(util.vector().topOf(12, 3, 11), Pointing.RIGHT).withItem(smoothStone), 26);
+		scene.overlay().showControls(util.vector().topOf(12, 3, 11), Pointing.RIGHT, 26).withItem(smoothStone);
 		scene.idle(30);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(2, 6, 11), Pointing.LEFT).withItem(trackStack), 30);
+		scene.overlay().showControls(util.vector().topOf(2, 6, 11), Pointing.LEFT, 30).withItem(trackStack);
 		scene.idle(4);
-		scene.overlay().showControls(
-				new InputWindowElement(util.vector().topOf(2, 6, 11), Pointing.RIGHT).withItem(smoothStone), 26);
+		scene.overlay().showControls(util.vector().topOf(2, 6, 11), Pointing.RIGHT, 26).withItem(smoothStone);
 		scene.idle(10);
 
 		scene.world().showSectionAndMerge(util.select().position(2, 12, 11), Direction.DOWN, slopeStart);
@@ -219,19 +220,15 @@ public class TrackScenes {
 			.text("Materials in the off-hand will be paved under tracks automatically");
 		scene.idle(80);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(12, 2, 7), Pointing.LEFT).withItem(trackStack), 30);
+		scene.overlay().showControls(util.vector().topOf(12, 2, 7), Pointing.LEFT, 30).withItem(trackStack);
 		scene.idle(4);
 		smoothStone = new ItemStack(Blocks.SMOOTH_STONE_SLAB);
-		scene.overlay().showControls(
-				new InputWindowElement(util.vector().topOf(12, 2, 7), Pointing.RIGHT).withItem(smoothStone), 26);
+		scene.overlay().showControls(util.vector().topOf(12, 2, 7), Pointing.RIGHT, 26).withItem(smoothStone);
 		scene.idle(30);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(2, 4, 7), Pointing.LEFT).withItem(trackStack), 30);
+		scene.overlay().showControls(util.vector().topOf(2, 4, 7), Pointing.LEFT, 30).withItem(trackStack);
 		scene.idle(4);
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(2, 4, 7), Pointing.RIGHT).withItem(smoothStone), 26);
+		scene.overlay().showControls(util.vector().topOf(2, 4, 7), Pointing.RIGHT, 26).withItem(smoothStone);
 		scene.idle(10);
 
 		scene.world().showSectionAndMerge(util.select().position(2, 10, 7), Direction.DOWN, slopeStart);
@@ -239,19 +236,15 @@ public class TrackScenes {
 		scene.world().showSectionAndMerge(util.select().fromTo(11, 7, 6, 3, 11, 8), Direction.UP, slopeStart);
 		scene.idle(20);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(12, 1, 3), Pointing.LEFT).withItem(trackStack), 30);
+		scene.overlay().showControls(util.vector().topOf(12, 1, 3), Pointing.LEFT, 30).withItem(trackStack);
 		scene.idle(4);
 		smoothStone = AllBlocks.METAL_GIRDER.asStack();
-		scene.overlay().showControls(
-				new InputWindowElement(util.vector().topOf(12, 1, 3), Pointing.RIGHT).withItem(smoothStone), 26);
+		scene.overlay().showControls(util.vector().topOf(12, 1, 3), Pointing.RIGHT, 26).withItem(smoothStone);
 		scene.idle(30);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(2, 2, 3), Pointing.LEFT).withItem(trackStack), 30);
+		scene.overlay().showControls(util.vector().topOf(2, 2, 3), Pointing.LEFT, 30).withItem(trackStack);
 		scene.idle(4);
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(2, 2, 3), Pointing.RIGHT).withItem(smoothStone), 26);
+		scene.overlay().showControls(util.vector().topOf(2, 2, 3), Pointing.RIGHT, 26).withItem(smoothStone);
 		scene.idle(10);
 
 		scene.world().showSectionAndMerge(util.select().position(2, 8, 3), Direction.DOWN, slopeStart);
@@ -299,7 +292,7 @@ public class TrackScenes {
 			scene.world().showIndependentSection(util.select().fromTo(5, 2, 4, 3, 3, 5), Direction.DOWN);
 
 		ElementLink<ParrotElement> birb =
-			scene.special().createBirb(util.vector().centerOf(4, 3, 2), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().centerOf(4, 3, 2), ParrotPose.FacePointOfInterestPose::new);
 		scene.special().conductorBirb(birb, true);
 		scene.special().movePointOfInterest(util.grid().at(4, 4, 10));
 
@@ -379,7 +372,7 @@ public class TrackScenes {
 		scene.idle(5);
 		scene.world().showSectionAndMerge(vStation, Direction.DOWN, stationElement);
 		ElementLink<ParrotElement> birb =
-			scene.special().createBirb(util.vector().centerOf(2, 2, 7), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().centerOf(2, 2, 7), ParrotPose.FacePointOfInterestPose::new);
 		scene.special().movePointOfInterest(util.grid().at(4, 3, 4));
 		scene.idle(5);
 		ElementLink<WorldSectionElement> trainElement = scene.world().showIndependentSection(train, Direction.DOWN);
@@ -446,7 +439,7 @@ public class TrackScenes {
 			.add(dStation), null);
 		ElementLink<WorldSectionElement> dPlatformElement =
 			scene.world().showIndependentSection(dPlatform, null);
-		birb = scene.special().createBirb(util.vector().centerOf(-2, 2, 7), ParrotElement.FacePointOfInterestPose::new);
+		birb = scene.special().createBirb(util.vector().centerOf(-2, 2, 7), ParrotPose.FacePointOfInterestPose::new);
 		scene.world().moveSection(dPlatformElement, util.vector().of(-8, -2, 0), 0);
 		scene.world().moveSection(stationElement, util.vector().of(-8, 0, 0), 0);
 		scene.world().moveSection(stationElement, util.vector().of(8, 0, 0), 80);

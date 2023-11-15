@@ -17,14 +17,12 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
 import net.createmod.catnip.utility.VecHelper;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
-import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -157,13 +155,11 @@ public class FluidTankScenes {
 		scene.idle(20);
 
 		ItemStack bucket = new ItemStack(Items.BUCKET, 1);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH), Pointing.RIGHT, 40)
 				.showing(AllIcons.I_MTD_CLOSE)
-				.withItem(bucket),
-			40);
+				.withItem(bucket);
 		scene.idle(7);
-		scene.overlay().showSelectionWithText(util.select().fromTo(2, 1, 2, 2, 2, 2), 70)
+		scene.overlay().showOutlineWithText(util.select().fromTo(2, 1, 2, 2, 2, 2), 70)
 			.text("However, in Survival Mode Fluids cannot be added or taken manually")
 			.attachKeyFrame()
 			.colored(PonderPalette.RED)
@@ -209,7 +205,7 @@ public class FluidTankScenes {
 		for (int i = 0; i < 10; i++) {
 			scene.effects().emitParticles(util.vector().topOf(3, 1, 1)
 				.add(0, 1 / 16f, 0),
-										  Emitter.simple(FluidFX.getFluidParticle(content),
+					scene.effects().simpleParticleEmitter(FluidFX.getFluidParticle(content),
 					VecHelper.offsetRandomly(Vec3.ZERO, random, .1f)),
 										  1, 1);
 		}
@@ -332,11 +328,9 @@ public class FluidTankScenes {
 			.pointAt(blockSurface);
 		scene.idle(70);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(3, 3, 1), Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 3, 1), Direction.NORTH), Pointing.RIGHT, 60)
 				.rightClick()
-				.withItem(AllItems.WRENCH.asStack()),
-			60);
+				.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlocks(full2, s -> s.setValue(FluidTankBlock.SHAPE, FluidTankBlock.Shape.PLAIN), false);
 		scene.idle(30);
@@ -375,11 +369,9 @@ public class FluidTankScenes {
 		scene.idle(80);
 
 		ItemStack bucket = new ItemStack(Items.LAVA_BUCKET);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.NORTH), Pointing.RIGHT, 40)
 				.rightClick()
-				.withItem(bucket),
-			40);
+				.withItem(bucket);
 		scene.idle(7);
 		scene.world().modifyBlockEntity(cTankPos, CreativeFluidTankBlockEntity.class,
 			be -> ((CreativeSmartFluidTank) be.getTankInventory())

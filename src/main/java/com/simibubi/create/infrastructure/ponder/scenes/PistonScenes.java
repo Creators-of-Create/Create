@@ -5,14 +5,14 @@ import com.simibubi.create.content.contraptions.piston.MechanicalPistonHeadBlock
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -79,10 +79,8 @@ public class PistonScenes {
 		scene.world().moveSection(contraption, util.vector().of(2, 0, 0), 40);
 		scene.idle(60);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(piston, Direction.WEST), Pointing.DOWN).rightClick()
-				.withItem(new ItemStack(Items.SLIME_BALL)),
-			30);
+		scene.overlay().showControls(util.vector().blockSurface(piston, Direction.WEST), Pointing.DOWN, 30).rightClick()
+				.withItem(new ItemStack(Items.SLIME_BALL));
 		scene.idle(7);
 		scene.world().modifyBlock(piston.north(), s -> s.setValue(MechanicalPistonHeadBlock.TYPE, PistonType.STICKY),
 								  false);
@@ -117,8 +115,8 @@ public class PistonScenes {
 		scene.overlay().showOutline(PonderPalette.GREEN, "glue", util.select().fromTo(2, 2, 3, 2, 1, 3)
 			.add(util.select().fromTo(2, 1, 3, 2, 1, 1))
 			.add(util.select().position(1, 1, 1)), 40);
-		scene.overlay().showControls(new InputWindowElement(util.vector().centerOf(util.grid().at(2, 2, 0)), Pointing.RIGHT)
-			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+		scene.overlay().showControls(util.vector().centerOf(util.grid().at(2, 2, 0)), Pointing.RIGHT, 40)
+			.withItem(AllItems.SUPER_GLUE.asStack());
 
 		ElementLink<WorldSectionElement> chassis =
 			scene.world().showIndependentSection(util.select().fromTo(2, 2, 0, 2, 3, 2), Direction.DOWN);
@@ -168,7 +166,7 @@ public class PistonScenes {
 		scene.world().setKineticSpeed(kinetics, 16);
 		scene.idle(10);
 
-		scene.overlay().showSelectionWithText(util.select().position(piston), 50)
+		scene.overlay().showOutlineWithText(util.select().position(piston), 50)
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.attachKeyFrame()
@@ -188,7 +186,7 @@ public class PistonScenes {
 
 		scene.overlay().showOutline(PonderPalette.RED, new Object(), util.select().fromTo(piston.east(), piston.east(2)),
 									100);
-		scene.overlay().showSelectionWithText(util.select().fromTo(piston.west(), piston.west(2)), 100)
+		scene.overlay().showOutlineWithText(util.select().fromTo(piston.west(), piston.west(2)), 100)
 			.text("The Length of pole added at its back determines the Extension Range")
 			.attachKeyFrame()
 			.placeNearTarget()
@@ -199,7 +197,7 @@ public class PistonScenes {
 			.west()), Direction.EAST, contraption);
 		scene.idle(10);
 		ElementLink<ParrotElement> birb =
-			scene.special().createBirb(util.vector().topOf(piston.west()), ParrotElement.FaceCursorPose::new);
+			scene.special().createBirb(util.vector().topOf(piston.west()), ParrotPose.FaceCursorPose::new);
 		scene.idle(15);
 
 		scene.effects().indicateRedstone(leverPos);
@@ -256,7 +254,7 @@ public class PistonScenes {
 		scene.world().destroyBlock(util.grid().at(0, 1, 2));
 		scene.world().destroyBlock(util.grid().at(0, 2, 2));
 		scene.idle(10);
-		scene.overlay().showSelectionWithText(rose, 70)
+		scene.overlay().showOutlineWithText(rose, 70)
 			.text("Whenever Pistons stop moving, the moved structure reverts to blocks")
 			.attachKeyFrame()
 			.colored(PonderPalette.RED);
@@ -277,7 +275,7 @@ public class PistonScenes {
 		Vec3 filter = util.vector().topOf(piston)
 			.add(.125, 0, 0);
 		scene.overlay().showFilterSlotInput(filter, Direction.UP, 60);
-		scene.overlay().showControls(new InputWindowElement(filter.add(0, .125, 0), Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(filter.add(0, .125, 0), Pointing.DOWN, 60).rightClick();
 		scene.overlay().showText(70)
 			.pointAt(filter.add(-.125, 0, 0))
 			.placeNearTarget()

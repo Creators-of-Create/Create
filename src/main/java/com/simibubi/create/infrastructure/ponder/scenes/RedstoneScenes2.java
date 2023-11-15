@@ -6,12 +6,11 @@ import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 
@@ -116,9 +115,8 @@ public class RedstoneScenes2 {
 			.text("Comparators output based on the distance to a powered lamp");
 		scene.idle(90);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(centerLamp.east(2)), Pointing.DOWN).rightClick()
-				.withItem(AllItems.WRENCH.asStack()), 20);
+		scene.overlay().showControls(util.vector().topOf(centerLamp.east(2)), Pointing.DOWN, 20).rightClick()
+				.withItem(AllItems.WRENCH.asStack());
 		scene.idle(6);
 		scene.world().cycleBlockProperty(centerLamp.east(), RoseQuartzLampBlock.POWERING);
 		scene.world().toggleRedstonePower(comparator);
@@ -126,8 +124,8 @@ public class RedstoneScenes2 {
 				.modifyBlockEntityNBT(comparator, NixieTubeBlockEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(centerLamp), Pointing.DOWN).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 20);
+		scene.overlay().showControls(util.vector().topOf(centerLamp), Pointing.DOWN, 20).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(6);
 		scene.world().cycleBlockProperty(centerLamp.west(), RoseQuartzLampBlock.POWERING);
 		scene.world().toggleRedstonePower(comparator);

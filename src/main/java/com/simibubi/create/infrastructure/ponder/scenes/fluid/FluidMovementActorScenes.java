@@ -8,13 +8,12 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -88,7 +87,7 @@ public class FluidMovementActorScenes {
 
 		BlockPos psi2 = psi.west(2);
 		scene.world().showSection(util.select().position(psi2), Direction.DOWN);
-		scene.overlay().showSelectionWithText(util.select().position(psi.west()), 50)
+		scene.overlay().showOutlineWithText(util.select().position(psi.west()), 50)
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.attachKeyFrame()
@@ -117,7 +116,7 @@ public class FluidMovementActorScenes {
 		scene.overlay().showOutline(PonderPalette.GREEN, psi, util.select().fromTo(5, 3, 2, 6, 4, 2), 80);
 		scene.idle(10);
 
-		scene.overlay().showSelectionWithText(util.select().position(psi2), 70)
+		scene.overlay().showOutlineWithText(util.select().position(psi2), 70)
 			.placeNearTarget()
 			.colored(PonderPalette.GREEN)
 			.attachKeyFrame()
@@ -142,9 +141,11 @@ public class FluidMovementActorScenes {
 
 		for (int i = 0; i < 16; i++) {
 			if (i == 8)
-				scene.overlay()
-					.showControls(new InputWindowElement(util.vector().blockSurface(util.grid().at(5, 3, 2), Direction.WEST)
-						.add(0, 0.5, 0), Pointing.LEFT).withItem(bucket), 30);
+				scene.overlay().showControls(util.vector().blockSurface(
+										util.grid().at(5, 3, 2), Direction.WEST)
+								.add(0, 0.5, 0), Pointing.LEFT, 30)
+						.withItem(bucket);
+
 			scene.world().modifyBlockEntity(st, type, be -> be.getCapability(fhc)
 				.ifPresent(ifh -> ifh.drain(1000, FluidAction.EXECUTE)));
 			scene.world().modifyBlockEntity(ct1, type, be -> be.getCapability(fhc)

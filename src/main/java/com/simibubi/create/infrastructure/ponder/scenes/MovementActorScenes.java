@@ -9,15 +9,15 @@ import com.simibubi.create.content.contraptions.chassis.LinearChassisBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -72,7 +72,7 @@ public class MovementActorScenes {
 
 		BlockPos psi2 = psi.west(2);
 		scene.world().showSection(util.select().position(psi2), Direction.DOWN);
-		scene.overlay().showSelectionWithText(util.select().position(psi.west()), 50)
+		scene.overlay().showOutlineWithText(util.select().position(psi.west()), 50)
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.attachKeyFrame()
@@ -101,7 +101,7 @@ public class MovementActorScenes {
 		scene.overlay().showOutline(PonderPalette.GREEN, psi, util.select().fromTo(5, 3, 2, 6, 3, 2), 80);
 		scene.idle(10);
 
-		scene.overlay().showSelectionWithText(util.select().position(psi2), 70)
+		scene.overlay().showOutlineWithText(util.select().position(psi2), 70)
 			.placeNearTarget()
 			.colored(PonderPalette.GREEN)
 			.attachKeyFrame()
@@ -130,8 +130,7 @@ public class MovementActorScenes {
 		scene.idle(10);
 		scene.world().modifyEntity(entity2, Entity::discard);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(5, 3, 2), Pointing.DOWN).withItem(itemStack), 40);
+		scene.overlay().showControls(util.vector().topOf(5, 3, 2), Pointing.DOWN, 40).withItem(itemStack);
 
 		scene.idle(30);
 		scene.world().hideSection(util.select().position(hopper), Direction.UP);
@@ -198,7 +197,7 @@ public class MovementActorScenes {
 
 		scene.idle(10);
 
-		scene.overlay().showSelectionWithText(util.select().position(1, 1, 3), 120)
+		scene.overlay().showOutlineWithText(util.select().position(1, 1, 3), 120)
 			.colored(PonderPalette.RED)
 			.text("Redstone power will prevent the stationary interface from engaging");
 
@@ -331,8 +330,7 @@ public class MovementActorScenes {
 		scene.world().setBlock(current, harvested, true);
 
 		scene.idle(116);
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(1, 2, 5), Pointing.DOWN).withItem(wheatItem), 50);
+		scene.overlay().showControls(util.vector().topOf(1, 2, 5), Pointing.DOWN, 50).withItem(wheatItem);
 		for (int i = 0; i < 3; i++)
 			scene.world().modifyBlockEntity(util.grid().at(i, 1, 4), HarvesterBlockEntity.class,
 				hte -> hte.setAnimatedSpeed(0));
@@ -432,9 +430,7 @@ public class MovementActorScenes {
 		scene.world().destroyBlock(util.grid().at(1, 1, 2));
 		scene.idle(15);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().topOf(2, 2, 2), Pointing.DOWN).withItem(new ItemStack(Items.SNOWBALL)),
-			40);
+		scene.overlay().showControls(util.vector().topOf(2, 2, 2), Pointing.DOWN, 40).withItem(new ItemStack(Items.SNOWBALL));
 		scene.idle(40);
 		scene.world().hideIndependentSection(chest, Direction.UP);
 		scene.world().modifyKineticSpeed(util.select().everywhere(), f -> -f);
@@ -497,7 +493,7 @@ public class MovementActorScenes {
 
 		scene.idle(10);
 		ElementLink<ParrotElement> birb = scene.special().createBirb(util.vector().topOf(3, 0, 2)
-			.add(0, 0, 0.5), ParrotElement.FlappyPose::new);
+			.add(0, 0, 0.5), ParrotPose.FlappyPose::new);
 		scene.idle(11);
 
 		scene.world().modifyKineticSpeed(util.select().everywhere(), f -> -2 * f);
@@ -617,8 +613,7 @@ public class MovementActorScenes {
 		scene.idle(10);
 		scene.world().modifyBlockEntity(harvesterPos, HarvesterBlockEntity.class, hte -> hte.setAnimatedSpeed(0));
 		scene.world().setKineticSpeed(util.select().position(drillPos), 0);
-		scene.overlay().showControls(new InputWindowElement(util.vector().of(1.5, 2.75, 4.5), Pointing.DOWN).rightClick(),
-									 15);
+		scene.overlay().showControls(util.vector().of(1.5, 2.75, 4.5), Pointing.DOWN, 15).rightClick();
 		scene.idle(7);
 		scene.world().modifyBlockEntity(controlsPos1, ContraptionControlsBlockEntity.class, ccte -> ccte.disabled = true);
 		scene.effects().indicateRedstone(util.grid().at(1, 2, 4));
@@ -627,8 +622,7 @@ public class MovementActorScenes {
 		scene.world().rotateSection(contraptionLink, 0, -60, 0, 40);
 		scene.idle(40);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().of(3.5, 2.75, 1), Pointing.DOWN).rightClick(),
-									 15);
+		scene.overlay().showControls(util.vector().of(3.5, 2.75, 1), Pointing.DOWN, 15).rightClick();
 		scene.idle(7);
 		scene.world().modifyBlockEntity(controlsPos1, ContraptionControlsBlockEntity.class,
 			ccte -> ccte.disabled = false);
@@ -663,11 +657,11 @@ public class MovementActorScenes {
 			.text("They can be attached anywhere on the contraption");
 		scene.idle(75);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(controlsPos2), Pointing.DOWN).rightClick()
-			.withItem(AllBlocks.MECHANICAL_DRILL.asStack()), 30);
+		scene.overlay().showControls(util.vector().topOf(controlsPos2), Pointing.DOWN, 30).rightClick()
+			.withItem(AllBlocks.MECHANICAL_DRILL.asStack());
 		scene.idle(5);
-		scene.overlay().showControls(new InputWindowElement(util.vector().centerOf(controlsPos1), Pointing.UP).rightClick()
-			.withItem(AllBlocks.MECHANICAL_HARVESTER.asStack()), 25);
+		scene.overlay().showControls(util.vector().centerOf(controlsPos1), Pointing.UP, 25).rightClick()
+			.withItem(AllBlocks.MECHANICAL_HARVESTER.asStack());
 		scene.idle(2);
 		scene.world().setFilterData(util.select().position(controlsPos2), ContraptionControlsBlockEntity.class,
 									AllBlocks.MECHANICAL_DRILL.asStack());
@@ -683,8 +677,7 @@ public class MovementActorScenes {
 			.text("While disassembled, the filter can be changed to target specific types of actors");
 		scene.idle(90);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(controlsPos2), Pointing.RIGHT).rightClick(),
-									 15);
+		scene.overlay().showControls(util.vector().topOf(controlsPos2), Pointing.RIGHT, 15).rightClick();
 		scene.idle(7);
 		scene.world().modifyBlockEntity(controlsPos2, ContraptionControlsBlockEntity.class, ccte -> ccte.disabled = true);
 		scene.effects().indicateRedstone(controlsPos2);

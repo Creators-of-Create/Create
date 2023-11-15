@@ -10,13 +10,12 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
 import net.createmod.catnip.utility.lang.Components;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -112,15 +111,15 @@ public class ElevatorScenes {
 		AABB glue2 = glue1.inflate(1, 0, 1)
 			.expandTowards(0, -4, 0);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().centerOf(4, 3, 1), Pointing.RIGHT)
-			.withItem(AllItems.SUPER_GLUE.asStack()), 60);
+		scene.overlay().showControls(util.vector().centerOf(4, 3, 1), Pointing.RIGHT, 60)
+			.withItem(AllItems.SUPER_GLUE.asStack());
 		scene.idle(7);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, glue1, glue1, 5);
 		scene.idle(1);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, glue1, glue2, 90);
 		scene.idle(10);
 
-		scene.overlay().showSelectionWithText(util.select().position(2, 1, 2), 80)
+		scene.overlay().showOutlineWithText(util.select().position(2, 1, 2), 80)
 			.placeNearTarget()
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector().blockSurface(util.grid().at(1, 2, 1), Direction.UP))
@@ -150,10 +149,8 @@ public class ElevatorScenes {
 			.text("Ensure that the pulley is supplied with Rotational Power");
 		scene.idle(75);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(3, 6, 2), Direction.NORTH), Pointing.RIGHT)
-				.rightClick(),
-			60);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 6, 2), Direction.NORTH), Pointing.RIGHT, 60)
+				.rightClick();
 		scene.idle(7);
 		scene.effects().indicateSuccess(util.grid().at(3, 6, 2));
 		scene.world().toggleRedstonePower(util.select().position(1, 13, 2));
@@ -175,12 +172,10 @@ public class ElevatorScenes {
 			.text("The stationary contact now turns into an Elevator Contact");
 		scene.idle(80);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(1, 1, 2), Direction.UP), Pointing.DOWN)
-				.rightClick(),
-			60);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(1, 1, 2), Direction.UP), Pointing.DOWN, 60)
+				.rightClick();
 		scene.idle(7);
-		scene.overlay().showSelectionWithText(util.select().position(1, 1, 2), 60)
+		scene.overlay().showOutlineWithText(util.select().position(1, 1, 2), 60)
 			.placeNearTarget()
 			.colored(PonderPalette.BLUE)
 			.pointAt(util.vector().blockSurface(util.grid().at(1, 1, 2), Direction.UP))
@@ -245,10 +240,8 @@ public class ElevatorScenes {
 		scene.addLazyKeyframe();
 		scene.idle(10);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(4, 2, 2), Direction.UP), Pointing.DOWN)
-				.scroll(),
-			60);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(4, 2, 2), Direction.UP), Pointing.DOWN, 60)
+				.scroll();
 		scene.idle(15);
 		scene.overlay().showText(90)
 			.placeNearTarget()
@@ -256,10 +249,8 @@ public class ElevatorScenes {
 			.text("Scroll and click on the controls block to choose a floor while on-board");
 		scene.idle(85);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(4, 2, 2), Direction.UP), Pointing.DOWN)
-				.rightClick(),
-			10);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(4, 2, 2), Direction.UP), Pointing.DOWN, 10)
+				.rightClick();
 		scene.idle(7);
 		scene.world().cycleBlockProperty(midContact, ElevatorContactBlock.POWERING);
 		scene.world().cycleBlockProperty(topContact, ElevatorContactBlock.CALLING);
@@ -274,10 +265,8 @@ public class ElevatorScenes {
 		scene.world().cycleBlockProperty(topContact, ElevatorContactBlock.CALLING);
 		scene.idle(15);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(3, 6, 2), Direction.NORTH), Pointing.RIGHT)
-				.rightClick(),
-			60);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 6, 2), Direction.NORTH), Pointing.RIGHT, 60)
+				.rightClick();
 		scene.idle(7);
 		scene.effects().indicateSuccess(util.grid().at(3, 6, 2));
 		scene.world().movePulley(pulleyPos, -1, 0);
@@ -292,10 +281,8 @@ public class ElevatorScenes {
 		scene.world().showSectionAndMerge(util.select().fromTo(doorPos, doorPos.above()), Direction.DOWN, elevatorLink);
 		scene.idle(20);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(3, 6, 2), Direction.NORTH), Pointing.RIGHT)
-				.rightClick(),
-			60);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 6, 2), Direction.NORTH), Pointing.RIGHT, 60)
+				.rightClick();
 		scene.idle(7);
 		scene.effects().indicateSuccess(util.grid().at(3, 6, 2));
 		scene.world().movePulley(pulleyPos, 1, 0);
@@ -373,11 +360,9 @@ public class ElevatorScenes {
 		scene.idle(30);
 		scene.world().showSectionAndMerge(util.select().position(nixiePos), Direction.DOWN, camLink);
 		scene.idle(15);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(4, 1, 0), Direction.UP), Pointing.DOWN)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(4, 1, 0), Direction.UP), Pointing.DOWN, 15)
 				.rightClick()
-				.withItem(AllBlocks.DISPLAY_LINK.asStack()),
-			15);
+				.withItem(AllBlocks.DISPLAY_LINK.asStack());
 		scene.world().toggleRedstonePower(util.select().position(1, 14, 2));
 		scene.idle(15);
 		scene.world().showSectionAndMerge(util.select().position(linkPos), Direction.DOWN, camLink);

@@ -7,16 +7,15 @@ import com.simibubi.create.content.contraptions.mounted.CartAssemblerBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.ParticleEmitter;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.createmod.ponder.foundation.element.MinecartElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
-import net.createmod.ponder.foundation.instruction.EmitParticlesInstruction.Emitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -52,9 +51,8 @@ public class CartAssemblerScenes {
 
 		scene.idle(10);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().centerOf(assemblerPos), Pointing.DOWN).rightClick()
-				.withItem(AllBlocks.CART_ASSEMBLER.asStack()), 30);
+		scene.overlay().showControls(util.vector().centerOf(assemblerPos), Pointing.DOWN, 30).rightClick()
+				.withItem(AllBlocks.CART_ASSEMBLER.asStack());
 		scene.idle(7);
 		scene.world().setBlock(assemblerPos, AllBlocks.CART_ASSEMBLER.getDefaultState()
 			.setValue(CartAssemblerBlock.RAIL_SHAPE, RailShape.NORTH_SOUTH)
@@ -126,8 +124,8 @@ public class CartAssemblerScenes {
 		scene.overlay().showOutline(PonderPalette.GREEN, "glue", util.select().position(1, 3, 2)
 			.add(util.select().fromTo(3, 2, 2, 1, 2, 2))
 			.add(util.select().position(3, 2, 1)), 40);
-		scene.overlay().showControls(new InputWindowElement(util.vector().centerOf(util.grid().at(3, 2, 2)), Pointing.RIGHT)
-			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+		scene.overlay().showControls(util.vector().centerOf(util.grid().at(3, 2, 2)), Pointing.RIGHT, 40)
+			.withItem(AllItems.SUPER_GLUE.asStack());
 
 		scene.effects().superGlue(util.grid().at(3, 2, 1), Direction.SOUTH, true);
 		scene.overlay().showText(80)
@@ -149,8 +147,8 @@ public class CartAssemblerScenes {
 		scene.idle(25);
 
 		Vec3 cartCenter = util.vector().centerOf(assemblerPos.north(2));
-		scene.overlay().showControls(new InputWindowElement(cartCenter, Pointing.LEFT).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 40);
+		scene.overlay().showControls(cartCenter, Pointing.LEFT, 40).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.special().moveCart(cart, util.vector().of(0, -100, 4), 0);
 		scene.world().moveSection(anchor, util.vector().of(0, -100, 4), 0);
@@ -167,8 +165,8 @@ public class CartAssemblerScenes {
 		scene.idle(80);
 		scene.world().modifyEntity(itemEntity, Entity::discard);
 
-		scene.overlay().showControls(new InputWindowElement(cartCenter.add(0, 0, 4), Pointing.DOWN).rightClick()
-			.withItem(asStack), 20);
+		scene.overlay().showControls(cartCenter.add(0, 0, 4), Pointing.DOWN, 20).rightClick()
+			.withItem(asStack);
 		scene.idle(20);
 		scene.special().moveCart(cart, util.vector().of(0, 100.5, 0), 0);
 		scene.world().moveSection(anchor, util.vector().of(0, 100.5, 0), 0);
@@ -261,7 +259,7 @@ public class CartAssemblerScenes {
 		Vec3 blockSurface = util.vector().blockSurface(assemblerPos, Direction.NORTH)
 			.add(0, -1 / 16f, -2 / 16f);
 		scene.overlay().showFilterSlotInput(blockSurface, Direction.NORTH, 60);
-		scene.overlay().showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(blockSurface, Pointing.DOWN, 60).rightClick();
 		scene.idle(10);
 		scene.overlay().showText(60)
 			.pointAt(util.vector().of(3, 1.5, 3))
@@ -344,7 +342,7 @@ public class CartAssemblerScenes {
 		ElementLink<WorldSectionElement> contraption = scene.world().showIndependentSection(chassis, Direction.DOWN);
 		scene.idle(15);
 		scene.overlay().showOutline(PonderPalette.GREEN, new Object(), util.select().position(assembler2), 60);
-		scene.overlay().showSelectionWithText(util.select().position(assembler1), 60)
+		scene.overlay().showOutlineWithText(util.select().position(assembler1), 60)
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector().blockSurface(util.grid().at(2, 2, 4), Direction.NORTH))
 			.placeNearTarget()
@@ -464,8 +462,8 @@ public class CartAssemblerScenes {
 		scene.world().moveSection(anchor, util.vector().of(0, -3, 0), 0);
 		scene.idle(30);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(assembler), Pointing.DOWN)
-			.withItem(new ItemStack(Items.POWERED_RAIL)), 50);
+		scene.overlay().showControls(util.vector().topOf(assembler), Pointing.DOWN, 50)
+			.withItem(new ItemStack(Items.POWERED_RAIL));
 		scene.idle(7);
 		scene.world().setBlock(assembler, AllBlocks.CART_ASSEMBLER.getDefaultState()
 			.setValue(CartAssemblerBlock.RAIL_SHAPE, RailShape.EAST_WEST)
@@ -520,8 +518,8 @@ public class CartAssemblerScenes {
 		scene.world().glueBlockOnto(assembler.above(2), Direction.DOWN, contraption);
 		scene.idle(15);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(assembler.above()), Pointing.UP)
-			.withItem(new ItemStack(Items.CHARCOAL)), 40);
+		scene.overlay().showControls(util.vector().topOf(assembler.above()), Pointing.UP, 40)
+			.withItem(new ItemStack(Items.CHARCOAL));
 		scene.idle(7);
 		scene.overlay().showText(80)
 			.pointAt(util.vector().blockSurface(assembler.above(2), Direction.WEST))
@@ -529,7 +527,7 @@ public class CartAssemblerScenes {
 			.text("Furnace Carts will keep themselves powered, pulling fuel from any attached inventories");
 		scene.idle(85);
 
-		Emitter smoke = Emitter.simple(ParticleTypes.LARGE_SMOKE, util.vector().of(0, 0, 0));
+		ParticleEmitter smoke = scene.effects().simpleParticleEmitter(ParticleTypes.LARGE_SMOKE, util.vector().of(0, 0, 0));
 
 		scene.special().moveCart(cart, util.vector().of(-5, 0, 0), 50);
 		scene.idle(20);

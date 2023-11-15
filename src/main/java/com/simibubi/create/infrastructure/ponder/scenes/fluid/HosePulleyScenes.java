@@ -10,12 +10,12 @@ import com.simibubi.create.content.fluids.pump.PumpBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -204,7 +204,7 @@ public class HosePulleyScenes {
 		scene.world().showSectionAndMerge(crank, Direction.EAST, hoselink);
 		scene.idle(20);
 
-		scene.overlay().showSelectionWithText(util.select().position(hosePos.below()), 50)
+		scene.overlay().showOutlineWithText(util.select().position(hosePos.below()), 50)
 			.text("While fully retracted, the Hose Pulley cannot operate")
 			.placeNearTarget()
 			.colored(PonderPalette.RED)
@@ -352,7 +352,7 @@ public class HosePulleyScenes {
 		scene.idle(30);
 
 		Selection pulleyPos = util.select().position(1, 3, 2);
-		scene.overlay().showSelectionWithText(pulleyPos, 60)
+		scene.overlay().showOutlineWithText(pulleyPos, 60)
 			.text("It will provide/dispose fluids without affecting the source")
 			.attachKeyFrame()
 			.colored(PonderPalette.BLUE)

@@ -7,14 +7,14 @@ import com.simibubi.create.content.trains.signal.SignalBlockEntity.SignalState;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
@@ -57,8 +57,8 @@ public class TrainSignalScenes {
 		AABB bb = new AABB(marker, marker);
 		AABB bb3 = bb.move(3, 0, 0);
 
-		scene.overlay().showControls(new InputWindowElement(marker, Pointing.DOWN).rightClick()
-			.withItem(AllBlocks.TRACK_SIGNAL.asStack()), 40);
+		scene.overlay().showControls(marker, Pointing.DOWN, 40).rightClick()
+			.withItem(AllBlocks.TRACK_SIGNAL.asStack());
 		scene.idle(6);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb.move(0, -1 / 16f, 0), 1);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb.move(0, -1 / 16f, 0)
@@ -87,7 +87,7 @@ public class TrainSignalScenes {
 
 		ElementLink<WorldSectionElement> trainElement = scene.world().showIndependentSection(train, Direction.DOWN);
 		Vec3 birbVec = util.vector().centerOf(util.grid().at(2, 3, 6));
-		ElementLink<ParrotElement> birb = scene.special().createBirb(birbVec, ParrotElement.FacePointOfInterestPose::new);
+		ElementLink<ParrotElement> birb = scene.special().createBirb(birbVec, ParrotPose.FacePointOfInterestPose::new);
 
 		scene.idle(10);
 		scene.world().showSection(station, Direction.DOWN);
@@ -102,8 +102,7 @@ public class TrainSignalScenes {
 			.text("Scheduled Trains will never cross signals in the opposite direction");
 		scene.idle(90);
 
-		scene.overlay().showControls(
-			new InputWindowElement(birbVec.add(0, 0.5, 0), Pointing.DOWN).withItem(AllItems.SCHEDULE.asStack()), 40);
+		scene.overlay().showControls(birbVec.add(0, 0.5, 0), Pointing.DOWN, 40).withItem(AllItems.SCHEDULE.asStack());
 		scene.idle(6);
 		scene.special().movePointOfInterest(util.grid().at(19, 4, 6));
 
@@ -124,8 +123,8 @@ public class TrainSignalScenes {
 		scene.special().movePointOfInterest(util.grid().at(5, 1, 4));
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(marker, Pointing.DOWN).rightClick()
-			.withItem(AllBlocks.TRACK_SIGNAL.asStack()), 40);
+		scene.overlay().showControls(marker, Pointing.DOWN, 40).rightClick()
+			.withItem(AllBlocks.TRACK_SIGNAL.asStack());
 		scene.idle(6);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb.move(0, -1 / 16f, 0), 1);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb.move(0, -1 / 16f, 0)
@@ -145,8 +144,7 @@ public class TrainSignalScenes {
 		scene.idle(90);
 		scene.world().hideIndependentSection(signalElement, null);
 
-		scene.overlay().showControls(
-			new InputWindowElement(birbVec.add(0, 0.5, 0), Pointing.DOWN).withItem(AllItems.SCHEDULE.asStack()), 40);
+		scene.overlay().showControls(birbVec.add(0, 0.5, 0), Pointing.DOWN, 40).withItem(AllItems.SCHEDULE.asStack());
 		scene.idle(6);
 		scene.special().movePointOfInterest(util.grid().at(19, 4, 6));
 
@@ -288,7 +286,7 @@ public class TrainSignalScenes {
 
 		ElementLink<WorldSectionElement> trainElement = scene.world().showIndependentSection(train1, null);
 		ElementLink<ParrotElement> birb1 =
-			scene.special().createBirb(util.vector().centerOf(18, 3, 7), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().centerOf(18, 3, 7), ParrotPose.FacePointOfInterestPose::new);
 		scene.world().moveSection(trainElement, util.vector().of(4, 0, 0), 0);
 		scene.world().moveSection(trainElement, util.vector().of(-9, 0, 0), 45);
 		scene.world().animateBogey(util.grid().at(13, 2, 7), 9f, 45);
@@ -313,7 +311,7 @@ public class TrainSignalScenes {
 
 		ElementLink<WorldSectionElement> trainElement2 = scene.world().showIndependentSection(train3, null);
 		ElementLink<ParrotElement> birb2 =
-			scene.special().createBirb(util.vector().centerOf(18, 3, 7), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().centerOf(18, 3, 7), ParrotPose.FacePointOfInterestPose::new);
 		scene.world().moveSection(trainElement2, util.vector().of(4, 0, 6), 0);
 		scene.world().moveSection(trainElement2, util.vector().of(-4.5, 0, 0), 35);
 		scene.world().animateBogey(util.grid().at(13, 2, 1), 4.5f, 35);
@@ -340,10 +338,8 @@ public class TrainSignalScenes {
 		scene.world().changeSignalState(s3Pos, SignalState.GREEN);
 		scene.idle(20);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(s1Pos, Direction.EAST), Pointing.RIGHT).rightClick()
-				.withItem(AllItems.WRENCH.asStack()),
-			80);
+		scene.overlay().showControls(util.vector().blockSurface(s1Pos, Direction.EAST), Pointing.RIGHT, 80).rightClick()
+				.withItem(AllItems.WRENCH.asStack());
 		scene.idle(6);
 		scene.world().cycleBlockProperty(s1Pos, SignalBlock.TYPE);
 		scene.idle(15);
@@ -387,7 +383,7 @@ public class TrainSignalScenes {
 		trainElement = scene.world().showIndependentSection(train1, Direction.DOWN);
 		scene.world().moveSection(trainElement, util.vector().of(-10.5, 0, 0), 0);
 		birb1 = scene.special().createBirb(util.vector().centerOf(3, 3, 7)
-			.add(.5, 0, 0), ParrotElement.DancePose::new);
+			.add(.5, 0, 0), ParrotPose.DancePose::new);
 		scene.idle(10);
 		scene.world().changeSignalState(s2Pos, SignalState.RED);
 		scene.effects().indicateRedstone(s2Pos.above());
@@ -403,7 +399,7 @@ public class TrainSignalScenes {
 		scene.idle(10);
 
 		trainElement2 = scene.world().showIndependentSection(train3, null);
-		birb2 = scene.special().createBirb(util.vector().centerOf(18, 3, 7), ParrotElement.FacePointOfInterestPose::new);
+		birb2 = scene.special().createBirb(util.vector().centerOf(18, 3, 7), ParrotPose.FacePointOfInterestPose::new);
 
 		scene.world().moveSection(trainElement2, util.vector().of(4, 0, 6), 0);
 		scene.world().moveSection(trainElement2, util.vector().of(-4.5, 0, 0), 35);
@@ -449,7 +445,7 @@ public class TrainSignalScenes {
 		scene.world().moveSection(trainElement3a, util.vector().of(-20, 0, 20), 40);
 		scene.world().animateBogey(util.grid().at(13, 2, 4), -20f, 40);
 		ElementLink<ParrotElement> birb3 =
-			scene.special().createBirb(util.vector().of(18, 3.5, -2), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().of(18, 3.5, -2), ParrotPose.FacePointOfInterestPose::new);
 		scene.special().moveParrot(birb3, util.vector().of(-20, 0, 20), 40);
 		scene.idle(5);
 
@@ -546,7 +542,7 @@ public class TrainSignalScenes {
 
 		scene.world().toggleControls(util.grid().at(6, 3, 5));
 		scene.world().showSection(train, Direction.DOWN);
-		scene.special().createBirb(util.vector().centerOf(util.grid().at(6, 3, 4)), ParrotElement.DancePose::new);
+		scene.special().createBirb(util.vector().centerOf(util.grid().at(6, 3, 4)), ParrotPose.DancePose::new);
 		scene.idle(10);
 		scene.world().toggleRedstonePower(comparator);
 		scene.effects().indicateRedstone(signalPos);

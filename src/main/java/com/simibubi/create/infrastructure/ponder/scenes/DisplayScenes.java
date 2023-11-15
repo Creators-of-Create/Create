@@ -9,13 +9,12 @@ import com.simibubi.create.foundation.utility.CreateLang;
 
 import net.createmod.catnip.utility.Pointing;
 import net.createmod.catnip.utility.lang.Components;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
@@ -73,9 +72,8 @@ public class DisplayScenes {
 		scene.idle(25);
 
 		Vec3 target = util.vector().of(3.5, 2.75, 3.25);
-		scene.overlay()
-			.showControls(new InputWindowElement(target, Pointing.RIGHT).withItem(AllBlocks.DISPLAY_LINK.asStack())
-				.rightClick(), 60);
+		scene.overlay().showControls(target, Pointing.RIGHT, 60).withItem(AllBlocks.DISPLAY_LINK.asStack())
+				.rightClick();
 		scene.idle(6);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.OUTPUT, link, new AABB(board).expandTowards(-2, -1, 0)
 			.deflate(0, 0, 3 / 16f), 60);
@@ -92,7 +90,7 @@ public class DisplayScenes {
 		scene.idle(10);
 		scene.world().showSection(link, Direction.EAST);
 		scene.idle(20);
-		scene.overlay().showSelectionWithText(depot, 70)
+		scene.overlay().showOutlineWithText(depot, 70)
 			.text("...then attach it to the block to read from")
 			.pointAt(util.vector().centerOf(linkPos))
 			.colored(PonderPalette.INPUT)
@@ -103,7 +101,7 @@ public class DisplayScenes {
 		scene.world().createItemOnBeltLike(depotPos, Direction.SOUTH, item);
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(linkPos), Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(util.vector().topOf(linkPos), Pointing.DOWN, 60).rightClick();
 		scene.idle(20);
 		scene.overlay().showText(80)
 			.text("Open the Interface to select and configure what is sent")
@@ -146,7 +144,7 @@ public class DisplayScenes {
 		scene.world().moveSection(dirtElement, util.vector().of(0, -4, 0), 0);
 
 		scene.idle(25);
-		scene.overlay().showSelectionWithText(depot, 50)
+		scene.overlay().showOutlineWithText(depot, 50)
 			.text("Not every block can act as a source")
 			.pointAt(util.vector().topOf(depotPos))
 			.attachKeyFrame()
@@ -286,8 +284,8 @@ public class DisplayScenes {
 		Vec3 target = util.vector().of(3.95, 2.75, 3.25);
 		ItemStack clipboard = AllBlocks.CLIPBOARD.asStack();
 		ClipboardOverrides.switchTo(ClipboardType.WRITTEN, clipboard);
-		scene.overlay().showControls(new InputWindowElement(target, Pointing.RIGHT).withItem(clipboard)
-			.rightClick(), 40);
+		scene.overlay().showControls(target, Pointing.RIGHT, 40).withItem(clipboard)
+			.rightClick();
 		scene.idle(6);
 		scene.world().setDisplayBoardText(board, 0, Components.literal("Create"));
 		scene.idle(25);
@@ -337,9 +335,8 @@ public class DisplayScenes {
 		scene.world().flashDisplayLink(linkPos);
 		scene.idle(50);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(target, Pointing.RIGHT).withItem(new ItemStack(Items.PINK_DYE))
-				.rightClick(), 40);
+		scene.overlay().showControls(target, Pointing.RIGHT, 40).withItem(new ItemStack(Items.PINK_DYE))
+				.rightClick();
 		scene.idle(6);
 		scene.world().dyeDisplayBoard(board, 0, DyeColor.PINK);
 		scene.idle(25);
@@ -351,15 +348,13 @@ public class DisplayScenes {
 			.placeNearTarget();
 		scene.idle(25);
 
-		scene.overlay().showControls(
-			new InputWindowElement(target.add(0, -.5f, 0), Pointing.RIGHT).withItem(new ItemStack(Items.LIME_DYE))
-				.rightClick(),
-			40);
+		scene.overlay().showControls(target.add(0, -.5f, 0), Pointing.RIGHT, 40).withItem(new ItemStack(Items.LIME_DYE))
+				.rightClick();
 		scene.idle(6);
 		scene.world().dyeDisplayBoard(board, 1, DyeColor.LIME);
 		scene.idle(55);
 
-		scene.overlay().showControls(new InputWindowElement(target, Pointing.RIGHT).rightClick(), 40);
+		scene.overlay().showControls(target, Pointing.RIGHT, 40).rightClick();
 		scene.idle(6);
 		scene.world().setDisplayBoardText(board, 0, Components.immutableEmpty());
 		scene.idle(25);
@@ -457,7 +452,7 @@ public class DisplayScenes {
 		scene.world().setDisplayBoardText(board, 1, Components.immutableEmpty());
 		scene.idle(25);
 
-		scene.overlay().showSelectionWithText(depot, 80)
+		scene.overlay().showOutlineWithText(depot, 80)
 			.colored(PonderPalette.RED)
 			.attachKeyFrame()
 			.pointAt(util.vector().topOf(linkPos))

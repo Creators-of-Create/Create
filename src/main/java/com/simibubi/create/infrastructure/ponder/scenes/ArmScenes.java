@@ -8,13 +8,12 @@ import com.simibubi.create.content.logistics.funnel.FunnelBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -44,7 +43,7 @@ public class ArmScenes {
 		scene.world().showSection(armSel, Direction.DOWN);
 		scene.idle(10);
 		scene.effects().indicateRedstone(armPos);
-		scene.overlay().showSelectionWithText(armSel, 70)
+		scene.overlay().showOutlineWithText(armSel, 70)
 			.attachKeyFrame()
 			.colored(PonderPalette.RED)
 			.text("Mechanical Arms have to be assigned their in- and outputs before they are placed")
@@ -55,8 +54,9 @@ public class ArmScenes {
 		scene.world().showSection(util.select().fromTo(0, 1, 1, 0, 2, 1), Direction.DOWN);
 		scene.world().hideSection(armSel, Direction.UP);
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(depotSurface, Pointing.RIGHT).rightClick()
-			.withItem(armItem), 50);
+		scene.overlay().showControls(depotSurface, Pointing.RIGHT, 50)
+			.rightClick()
+			.withItem(armItem);
 		scene.idle(7);
 		AABB depotBounds = AllShapes.CASING_13PX.get(Direction.UP)
 			.bounds();
@@ -71,15 +71,14 @@ public class ArmScenes {
 		scene.idle(80);
 
 		BlockPos outputDepot = util.grid().at(0, 2, 1);
-		InputWindowElement input =
-			new InputWindowElement(util.vector().blockSurface(outputDepot, Direction.NORTH), Pointing.RIGHT).rightClick()
-				.withItem(armItem);
-		scene.overlay().showControls(input, 20);
+		scene.overlay().showControls(util.vector().blockSurface(outputDepot, Direction.NORTH), Pointing.RIGHT, 20).rightClick()
+			.withItem(armItem);
 		scene.idle(7);
 		Object second = new Object();
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.INPUT, second, depotBounds.move(0, 2, 1), 100);
 		scene.idle(25);
-		scene.overlay().showControls(input, 30);
+		scene.overlay().showControls(util.vector().blockSurface(outputDepot, Direction.NORTH), Pointing.RIGHT, 30).rightClick()
+			.withItem(armItem);
 		scene.idle(7);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.OUTPUT, second, depotBounds.move(0, 2, 1), 280);
 		scene.overlay().showText(70)
@@ -100,9 +99,8 @@ public class ArmScenes {
 			.placeNearTarget();
 
 		scene.idle(35);
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(util.grid().at(1, 1, 0)), Pointing.DOWN).leftClick()
-				.withItem(armItem), 30);
+		scene.overlay().showControls(util.vector().topOf(util.grid().at(1, 1, 0)), Pointing.DOWN, 30).leftClick()
+				.withItem(armItem);
 		scene.idle(50);
 
 		scene.world().showSection(armSel, Direction.DOWN);
@@ -223,8 +221,7 @@ public class ArmScenes {
 		scene.idle(70);
 		ItemStack sword = new ItemStack(Items.GOLDEN_SWORD);
 		inputDepot = util.grid().at(4, 1, 2);
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(inputDepot), Pointing.RIGHT).withItem(sword), 30);
+		scene.overlay().showControls(util.vector().topOf(inputDepot), Pointing.RIGHT, 30).withItem(sword);
 		scene.world().createItemOnBeltLike(inputDepot, Direction.SOUTH, sword);
 
 		scene.idle(20);
@@ -238,10 +235,8 @@ public class ArmScenes {
 		scene.world().flapFunnel(util.grid().at(0, 2, 2), false);
 		scene.world().instructArm(armPos, Phase.SEARCH_INPUTS, ItemStack.EMPTY, -1);
 		scene.idle(5);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(0, 2, 3), Direction.WEST), Pointing.LEFT)
-				.withItem(sword),
-			30);
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(0, 2, 3), Direction.WEST), Pointing.LEFT, 30)
+				.withItem(sword);
 
 	}
 
@@ -276,12 +271,12 @@ public class ArmScenes {
 		scene.world().createItemOnBeltLike(util.grid().at(2, 1, 4), Direction.SOUTH, sand);
 		scene.world().createItemOnBeltLike(util.grid().at(1, 1, 4), Direction.SOUTH, sulphur);
 
-		scene.overlay().showSelectionWithText(util.select().fromTo(2, 1, 4, 1, 1, 4), 60)
+		scene.overlay().showOutlineWithText(util.select().fromTo(2, 1, 4, 1, 1, 4), 60)
 			.text("Inputs")
 			.placeNearTarget()
 			.colored(PonderPalette.INPUT);
 		scene.idle(50);
-		scene.overlay().showSelectionWithText(util.select().fromTo(5, 3, 1, 3, 1, 1), 40)
+		scene.overlay().showOutlineWithText(util.select().fromTo(5, 3, 1, 3, 1, 1), 40)
 			.text("Outputs")
 			.placeNearTarget()
 			.colored(PonderPalette.OUTPUT);
@@ -297,7 +292,7 @@ public class ArmScenes {
 		scene.rotateCameraY(-90 - 30);
 		scene.idle(20);
 
-		scene.overlay().showSelectionWithText(util.select().position(4, 1, 4), 80)
+		scene.overlay().showOutlineWithText(util.select().position(4, 1, 4), 80)
 			.colored(PonderPalette.RED)
 			.text("Mechanical Arms by themselves do not provide any options for filtering")
 			.placeNearTarget();
@@ -322,9 +317,8 @@ public class ArmScenes {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				ItemStack item = (x + y) % 2 == 0 ? sulphur : sand;
-				scene.overlay()
-					.showControls(new InputWindowElement(filterSlot.add(2 - x, -y, 0), Pointing.LEFT).rightClick()
-						.withItem(item), 5);
+				scene.overlay().showControls(filterSlot.add(2 - x, -y, 0), Pointing.LEFT, 5).rightClick()
+						.withItem(item);
 				scene.idle(7);
 				scene.world().setFilterData(util.select().position(5 - x, 3 - y, 2), FunnelBlockEntity.class, item);
 				scene.idle(4);
@@ -440,7 +434,7 @@ public class ArmScenes {
 			.placeNearTarget();
 		scene.idle(60);
 
-		scene.overlay().showControls(new InputWindowElement(scrollSlot, Pointing.RIGHT).rightClick(), 40);
+		scene.overlay().showControls(scrollSlot, Pointing.RIGHT, 40).rightClick();
 		scene.idle(10);
 		scene.overlay().showText(50)
 			.text("The value panel will allow you to configure it")

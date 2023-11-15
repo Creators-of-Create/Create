@@ -7,14 +7,14 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -44,9 +44,9 @@ public class EjectorScenes {
 
 		scene.idle(10);
 		ItemStack asStack = AllBlocks.WEIGHTED_EJECTOR.asStack();
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(targetPos), Pointing.DOWN).rightClick()
+		scene.overlay().showControls(util.vector().topOf(targetPos), Pointing.DOWN, 50).rightClick()
 			.whileSneaking()
-			.withItem(asStack), 50);
+			.withItem(asStack);
 		scene.idle(7);
 		Object slot = new Object();
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.OUTPUT, slot, new AABB(targetPos), 160);
@@ -58,8 +58,8 @@ public class EjectorScenes {
 			.pointAt(util.vector().blockSurface(targetPos, Direction.WEST))
 			.placeNearTarget();
 		scene.idle(80);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(ejectorPos), Pointing.DOWN).rightClick()
-			.withItem(asStack), 50);
+		scene.overlay().showControls(util.vector().topOf(ejectorPos), Pointing.DOWN, 50).rightClick()
+			.withItem(asStack);
 		scene.idle(7);
 		scene.world().setKineticSpeed(ejectorS, 0);
 		scene.world().modifyBlockEntityNBT(ejectorS, EjectorBlockEntity.class, nbt -> {
@@ -99,7 +99,7 @@ public class EjectorScenes {
 				.east(), Direction.WEST))
 			.placeNearTarget();
 		scene.idle(70);
-		scene.overlay().showSelectionWithText(util.select().position(ejectorPos.west()), 70)
+		scene.overlay().showOutlineWithText(util.select().position(ejectorPos.west()), 70)
 			.colored(PonderPalette.OUTPUT)
 			.text("If no valid Target was selected, it will simply target the block directly in front")
 			.placeNearTarget();
@@ -119,8 +119,7 @@ public class EjectorScenes {
 
 		ItemStack copperBlock = new ItemStack(Items.COPPER_BLOCK);
 		ItemStack copperIngot = new ItemStack(Items.COPPER_INGOT);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(ejectorPos)
-			.add(0.5, 0, 0), Pointing.RIGHT).withItem(copperBlock), 30);
+		scene.overlay().showControls(util.vector().topOf(ejectorPos).add(0.5, 0, 0), Pointing.RIGHT, 30).withItem(copperBlock);
 		scene.idle(7);
 		scene.world().createItemOnBeltLike(ejectorPos, Direction.NORTH, copperBlock);
 		scene.idle(20);
@@ -156,7 +155,7 @@ public class EjectorScenes {
 		Vec3 input = util.vector().blockSurface(ejectorPos, Direction.WEST)
 			.add(0, -2 / 16f, 0);
 		Vec3 topOfSlot = input.add(0, 2 / 16f, 0);
-		scene.overlay().showControls(new InputWindowElement(topOfSlot, Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(topOfSlot, Pointing.DOWN, 60).rightClick();
 		scene.overlay().showFilterSlotInput(input, Direction.WEST, 80);
 		scene.idle(10);
 		scene.overlay().showText(80)
@@ -194,7 +193,7 @@ public class EjectorScenes {
 
 		scene.addKeyframe();
 		ElementLink<ParrotElement> birb = scene.special().createBirb(util.vector().topOf(ejectorPos)
-			.add(0, -3 / 16f, 0), ParrotElement.FlappyPose::new);
+			.add(0, -3 / 16f, 0), ParrotPose.FlappyPose::new);
 		scene.idle(15);
 		scene.world().modifyBlockEntity(ejectorPos, EjectorBlockEntity.class, ejector -> ejector.activateDeferred());
 		scene.special().moveParrot(birb, util.vector().of(-2, 3, 0), 5);
@@ -206,7 +205,7 @@ public class EjectorScenes {
 		scene.idle(6);
 		scene.special().moveParrot(birb, util.vector().of(-0.25, -2 + 3 / 16f, 0), 12);
 		scene.idle(15);
-		scene.special().changeBirbPose(birb, ParrotElement.FaceCursorPose::new);
+		scene.special().changeBirbPose(birb, ParrotPose.FaceCursorPose::new);
 		scene.overlay().showText(80)
 			.text("Mobs and Players will always trigger an Ejector when stepping on it")
 			.pointAt(util.vector().topOf(targetPos))
@@ -241,9 +240,7 @@ public class EjectorScenes {
 		scene.idle(90);
 
 		BlockPos tunnel = util.grid().at(2, 2, 3);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().topOf(tunnel), Pointing.DOWN).showing(AllIcons.I_TUNNEL_PREFER_NEAREST),
-			80);
+		scene.overlay().showControls(util.vector().topOf(tunnel), Pointing.DOWN, 80).showing(AllIcons.I_TUNNEL_PREFER_NEAREST);
 		scene.idle(10);
 		scene.overlay().showCenteredScrollInput(tunnel, Direction.UP, 100);
 		scene.idle(10);
@@ -270,8 +267,8 @@ public class EjectorScenes {
 		});
 		scene.idle(90);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(util.grid().at(4, 1, 3)), Pointing.DOWN)
-			.withItem(new ItemStack(Items.COPPER_INGOT)), 20);
+		scene.overlay().showControls(util.vector().topOf(util.grid().at(4, 1, 3)), Pointing.DOWN, 20)
+			.withItem(new ItemStack(Items.COPPER_INGOT));
 		scene.world().showSection(coverbelt, Direction.SOUTH);
 
 		scene.idle(7);

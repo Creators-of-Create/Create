@@ -5,13 +5,12 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -60,10 +59,9 @@ public class ItemVaultScenes {
 		scene.idle(15);
 
 		ItemStack hand = AllItems.BRASS_HAND.asStack();
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().blockSurface(frontVault, Direction.NORTH), Pointing.RIGHT)
+		scene.overlay().showControls(util.vector().blockSurface(frontVault, Direction.NORTH), Pointing.RIGHT, 40)
 				.showing(AllIcons.I_MTD_CLOSE)
-				.withItem(hand), 40);
+				.withItem(hand);
 		scene.idle(7);
 
 		scene.overlay().showText(60)

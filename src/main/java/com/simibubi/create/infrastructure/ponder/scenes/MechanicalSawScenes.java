@@ -6,14 +6,13 @@ import com.simibubi.create.content.kinetics.simpleRelays.ShaftBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -62,7 +61,7 @@ public class MechanicalSawScenes {
 		ElementLink<EntityElement> logItem = scene.world().createItemEntity(itemSpawn, util.vector().of(0, 0, 0), log);
 		scene.idle(12);
 
-		scene.overlay().showControls(new InputWindowElement(itemSpawn, Pointing.DOWN).withItem(log), 20);
+		scene.overlay().showControls(itemSpawn, Pointing.DOWN, 20).withItem(log);
 		scene.idle(10);
 
 		scene.world().modifyEntity(logItem, e -> e.setDeltaMovement(util.vector().of(0.05, 0.2, 0)));
@@ -75,8 +74,7 @@ public class MechanicalSawScenes {
 		logItem = scene.world().createItemEntity(util.vector().topOf(sawPos)
 			.add(0.5, -.1, 0), util.vector().of(0.05, 0.18, 0), strippedLog);
 		scene.idle(12);
-		scene.overlay().showControls(new InputWindowElement(itemSpawn.add(2, 0, 0), Pointing.DOWN).withItem(strippedLog),
-									 20);
+		scene.overlay().showControls(itemSpawn.add(2, 0, 0), Pointing.DOWN, 20).withItem(strippedLog);
 		scene.idle(30);
 
 		scene.overlay().showText(60)
@@ -154,7 +152,7 @@ public class MechanicalSawScenes {
 		scene.idle(90);
 
 		ItemStack bricks = new ItemStack(Blocks.STONE_BRICKS);
-		scene.overlay().showControls(new InputWindowElement(filter, Pointing.DOWN).withItem(bricks), 30);
+		scene.overlay().showControls(filter, Pointing.DOWN, 30).withItem(bricks);
 		scene.world().modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(7);
 		scene.world().setFilterData(util.select().position(sawPos), SawBlockEntity.class, bricks);
@@ -240,7 +238,7 @@ public class MechanicalSawScenes {
 		scene.world().hideSection(util.select().fromTo(2, 1, 2, 1, 1, 3)
 			.substract(util.select().position(breakingPos)), Direction.WEST);
 		scene.idle(10);
-		scene.overlay().showSelectionWithText(util.select().position(breakingPos), 90)
+		scene.overlay().showOutlineWithText(util.select().position(breakingPos), 90)
 			.attachKeyFrame()
 			.colored(PonderPalette.GREEN)
 			.placeNearTarget()
@@ -392,9 +390,7 @@ public class MechanicalSawScenes {
 		scene.idle(20);
 		scene.world().setKineticSpeed(saws, 0);
 		scene.idle(10);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().topOf(3, 2, 2), Pointing.DOWN).withItem(new ItemStack(Blocks.OAK_LOG)),
-			60);
+		scene.overlay().showControls(util.vector().topOf(3, 2, 2), Pointing.DOWN, 60).withItem(new ItemStack(Blocks.OAK_LOG));
 		scene.idle(20);
 	}
 

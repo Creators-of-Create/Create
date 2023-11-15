@@ -8,14 +8,13 @@ import com.simibubi.create.content.logistics.funnel.FunnelBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -127,9 +126,6 @@ public class FunnelScenes {
 		Vec3 topCenter = util.vector().centerOf(topFunnel);
 		Vec3 topSide = util.vector().blockSurface(topFunnel, Direction.EAST);
 
-		InputWindowElement controlsSneak = new InputWindowElement(topCenter, Pointing.DOWN).rightClick()
-			.whileSneaking();
-
 		// Placing funnels without sneak
 		scene.world().showSection(topFunnelSelection, Direction.DOWN);
 		scene.overlay().showText(80)
@@ -152,7 +148,8 @@ public class FunnelScenes {
 		scene.idle(5);
 
 		scene.world().showSection(topFunnelSelection, Direction.DOWN);
-		scene.overlay().showControls(controlsSneak, 35);
+		scene.overlay().showControls(topCenter, Pointing.DOWN, 35).rightClick()
+			.whileSneaking();
 		scene.overlay().showText(80)
 			.text("Placed while sneaking, it puts items into the inventory.")
 			.attachKeyFrame()
@@ -167,9 +164,8 @@ public class FunnelScenes {
 		scene.idle(45);
 
 		// Wrench interaction
-		InputWindowElement wrenchControls = new InputWindowElement(topSide, Pointing.RIGHT).rightClick()
+		scene.overlay().showControls(topSide, Pointing.RIGHT, 40).rightClick()
 			.withItem(AllItems.WRENCH.asStack());
-		scene.overlay().showControls(wrenchControls, 40);
 		scene.idle(10);
 		scene.world().modifyBlock(topFunnel, s -> s.cycle(FunnelBlock.EXTRACTING), true);
 		scene.idle(10);
@@ -182,7 +178,8 @@ public class FunnelScenes {
 		itemLink = scene.world().createItemEntity(topCenter, util.vector().of(0, 4 / 16f, 0), itemStack);
 		scene.idle(30);
 
-		scene.overlay().showControls(wrenchControls, 40);
+		scene.overlay().showControls(topSide, Pointing.RIGHT, 40).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(10);
 		scene.world().modifyBlock(topFunnel, s -> s.cycle(FunnelBlock.EXTRACTING), true);
 		scene.idle(10);
@@ -404,7 +401,7 @@ public class FunnelScenes {
 
 		filter = filter.add(0, -5 / 16f, -1.5 / 16f);
 		scene.overlay().showFilterSlotInput(filter, Direction.NORTH, 80);
-		scene.overlay().showControls(new InputWindowElement(filter, Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(filter, Pointing.DOWN, 60).rightClick();
 		scene.idle(10);
 		scene.overlay().showText(80)
 			.text("The value panel allows for precise control over the extracted stack size.")
@@ -446,8 +443,8 @@ public class FunnelScenes {
 
 			if (i == 2) {
 				scene.overlay().showFilterSlotInput(filter, Direction.NORTH, 40);
-				scene.overlay().showControls(new InputWindowElement(filter, Pointing.DOWN).rightClick()
-					.withItem(emerald), 60);
+				scene.overlay().showControls(filter, Pointing.DOWN, 60).rightClick()
+					.withItem(emerald);
 				scene.idle(10);
 				scene.overlay().showText(80)
 					.text("Using items on the filter slot will restrict the funnel to only transfer matching stacks.")
@@ -484,7 +481,7 @@ public class FunnelScenes {
 		scene.world().showSection(funnelSelect, Direction.DOWN);
 		scene.idle(20);
 
-		scene.overlay().showSelectionWithText(funnelSelect, 40)
+		scene.overlay().showOutlineWithText(funnelSelect, 40)
 			.colored(PonderPalette.RED)
 			.text("Funnels cannot ever transfer between closed inventories directly.")
 			.attachKeyFrame()

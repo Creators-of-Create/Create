@@ -18,15 +18,15 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.NBTHelper;
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.EntityElement;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -66,16 +66,16 @@ public class BeltScenes {
 			.getShape(null, null)
 			.bounds();
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(backEnd), Pointing.DOWN).rightClick()
-			.withItem(beltItem), 57);
+		scene.overlay().showControls(util.vector().topOf(backEnd), Pointing.DOWN, 57).rightClick()
+			.withItem(beltItem);
 		scene.idle(7);
 
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, backEnd, shaftBB.move(backEnd), 42);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.BLACK, backEndCenter, connectBB, 50);
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(frontEnd), Pointing.DOWN).rightClick()
-			.withItem(beltItem), 37);
+		scene.overlay().showControls(util.vector().topOf(frontEnd), Pointing.DOWN, 37).rightClick()
+			.withItem(beltItem);
 		scene.idle(7);
 
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, frontEnd, shaftBB.move(frontEnd), 17);
@@ -95,8 +95,8 @@ public class BeltScenes {
 		scene.idle(90);
 
 		Vec3 falseSelection = util.vector().topOf(backEnd.south(1));
-		scene.overlay().showControls(new InputWindowElement(falseSelection, Pointing.DOWN).rightClick()
-			.withItem(beltItem), 37);
+		scene.overlay().showControls(falseSelection, Pointing.DOWN, 37).rightClick()
+			.withItem(beltItem);
 		scene.idle(7);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, backEnd, shaftBB.move(backEnd.south(1)), 50);
 
@@ -108,14 +108,14 @@ public class BeltScenes {
 			.pointAt(util.vector().centerOf(backEnd.south(1)));
 		scene.idle(43);
 
-		scene.overlay().showControls(new InputWindowElement(falseSelection, Pointing.DOWN).rightClick()
+		scene.overlay().showControls(falseSelection, Pointing.DOWN, 20).rightClick()
 			.withItem(beltItem)
-			.whileSneaking(), 20);
+			.whileSneaking();
 		scene.idle(60);
 
 		BlockPos shaftLocation = frontEnd.east();
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(shaftLocation), Pointing.DOWN).rightClick()
-			.withItem(AllBlocks.SHAFT.asStack()), 50);
+		scene.overlay().showControls(util.vector().topOf(shaftLocation), Pointing.DOWN, 50).rightClick()
+			.withItem(AllBlocks.SHAFT.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(shaftLocation, s -> s.setValue(BeltBlock.PART, BeltPart.PULLEY), true);
 		scene.idle(10);
@@ -144,8 +144,8 @@ public class BeltScenes {
 		scene.world().hideSection(attachedShafts, Direction.NORTH);
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(shaftLocation), Pointing.DOWN).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 50);
+		scene.overlay().showControls(util.vector().topOf(shaftLocation), Pointing.DOWN, 50).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(shaftLocation, s -> s.setValue(BeltBlock.PART, BeltPart.MIDDLE), true);
 		scene.idle(10);
@@ -156,9 +156,8 @@ public class BeltScenes {
 			.pointAt(util.vector().blockSurface(shaftLocation, Direction.NORTH));
 		scene.idle(70);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(shaftLocation.east()), Pointing.DOWN).rightClick()
-				.withItem(new ItemStack(Items.BLUE_DYE)), 50);
+		scene.overlay().showControls(util.vector().topOf(shaftLocation.east()), Pointing.DOWN, 50).rightClick()
+				.withItem(new ItemStack(Items.BLUE_DYE));
 		scene.idle(7);
 		scene.world().modifyBlockEntityNBT(util.select().fromTo(0, 1, 2, 4, 1, 2), BeltBlockEntity.class,
 			nbt -> NBTHelper.writeEnum(nbt, "Dye", DyeColor.BLUE));
@@ -348,7 +347,7 @@ public class BeltScenes {
 		scene.idle(20);
 
 		ElementLink<ParrotElement> parrot = scene.special().createBirb(util.vector().topOf(0, 1, 2)
-			.add(0, -3 / 16f, 0), ParrotElement.FacePointOfInterestPose::new);
+			.add(0, -3 / 16f, 0), ParrotPose.FacePointOfInterestPose::new);
 		scene.special().moveParrot(parrot, util.vector().of(1.78, 0, 0), 40);
 		scene.special().movePointOfInterest(util.grid().at(1, 1, 3));
 
@@ -383,7 +382,7 @@ public class BeltScenes {
 
 		Vec3 topOf = util.vector().topOf(util.grid().at(3, 2, 2))
 			.add(-0.1, 0.3, 0);
-		scene.overlay().showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(topOf, Pointing.DOWN, 60).rightClick();
 		scene.idle(10);
 		scene.overlay().showText(60)
 			.placeNearTarget()
@@ -395,7 +394,7 @@ public class BeltScenes {
 		scene.effects().indicateSuccess(util.grid().at(3, 2, 2));
 		scene.idle(20);
 
-		scene.special().changeBirbPose(parrot, ParrotElement.FaceCursorPose::new);
+		scene.special().changeBirbPose(parrot, ParrotPose.FaceCursorPose::new);
 	}
 
 	public static void beltsCanBeEncased(SceneBuilder builder, SceneBuildingUtil util) {
@@ -415,14 +414,14 @@ public class BeltScenes {
 		BlockPos beltPos2 = util.grid().at(0, 2, 3);
 		BlockPos beltPos3 = util.grid().at(1, 4, 4);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(beltPos), Pointing.DOWN).rightClick()
-			.withItem(brassCasingItem), 20);
+		scene.overlay().showControls(util.vector().topOf(beltPos), Pointing.DOWN, 20).rightClick()
+			.withItem(brassCasingItem);
 		scene.idle(7);
 		scene.world().modifyBlock(beltPos, s -> s.setValue(BeltBlock.CASING, true), true);
 		scene.idle(20);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(beltPos2), Pointing.DOWN).rightClick()
-			.withItem(andesiteCasingItem), 20);
+		scene.overlay().showControls(util.vector().topOf(beltPos2), Pointing.DOWN, 20).rightClick()
+			.withItem(andesiteCasingItem);
 		scene.idle(7);
 		scene.world().modifyBlock(beltPos2, s -> s.setValue(BeltBlock.CASING, true), true);
 		scene.world().modifyBlockEntityNBT(util.select().position(beltPos2), BeltBlockEntity.class, nbt -> {
@@ -430,10 +429,8 @@ public class BeltScenes {
 		});
 		scene.idle(20);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(beltPos3, Direction.EAST), Pointing.RIGHT).rightClick()
-				.withItem(brassCasingItem),
-			20);
+		scene.overlay().showControls(util.vector().blockSurface(beltPos3, Direction.EAST), Pointing.RIGHT, 20).rightClick()
+				.withItem(brassCasingItem);
 		scene.idle(7);
 		scene.world().modifyBlock(beltPos3, s -> s.setValue(BeltBlock.CASING, true), true);
 		scene.idle(20);
@@ -473,9 +470,8 @@ public class BeltScenes {
 		scene.idle(30);
 		scene.addKeyframe();
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(beltPos.south()), Pointing.DOWN).rightClick()
-				.withItem(AllItems.WRENCH.asStack()), 40);
+		scene.overlay().showControls(util.vector().topOf(beltPos.south()), Pointing.DOWN, 40).rightClick()
+				.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(beltPos.south(), s -> s.setValue(BeltBlock.CASING, false), true);
 		scene.overlay().showText(80)
@@ -502,8 +498,8 @@ public class BeltScenes {
 			.pointAt(topOf);
 		scene.idle(70);
 
-		scene.overlay().showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick()
-			.withItem(new ItemStack(Items.COPPER_BLOCK)), 20);
+		scene.overlay().showControls(topOf, Pointing.DOWN, 20).rightClick()
+			.withItem(new ItemStack(Items.COPPER_BLOCK));
 		scene.idle(7);
 		scene.world().createItemOnBeltLike(depotPos, Direction.NORTH, new ItemStack(Items.COPPER_BLOCK));
 		scene.idle(10);
@@ -514,7 +510,7 @@ public class BeltScenes {
 			.pointAt(topOf);
 		scene.idle(80);
 
-		scene.overlay().showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick(), 20);
+		scene.overlay().showControls(topOf, Pointing.DOWN, 20).rightClick();
 		scene.idle(7);
 		scene.world().removeItemsFromBelt(depotPos);
 		scene.effects().indicateSuccess(depotPos);

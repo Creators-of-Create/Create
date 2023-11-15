@@ -5,13 +5,12 @@ import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlock
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -60,10 +59,8 @@ public class DetectorScenes {
 		ItemStack copperIngot = new ItemStack(Items.COPPER_INGOT);
 		ItemStack amethystItem = new ItemStack(Blocks.AMETHYST_BLOCK);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(observerPos.north(), Direction.NORTH), Pointing.RIGHT)
-				.withItem(copperIngot),
-			40);
+		scene.overlay().showControls(util.vector().blockSurface(observerPos.north(), Direction.NORTH), Pointing.RIGHT, 40)
+				.withItem(copperIngot);
 		scene.idle(7);
 		scene.world().toggleRedstonePower(util.select().position(observerPos));
 		scene.world().toggleRedstonePower(redstoneDust);
@@ -79,10 +76,8 @@ public class DetectorScenes {
 
 		scene.overlay().showCenteredScrollInput(observerPos, Direction.UP, 10);
 		scene.idle(5);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(observerPos, Direction.UP), Pointing.DOWN).rightClick()
-				.withItem(amethystItem),
-			60);
+		scene.overlay().showControls(util.vector().blockSurface(observerPos, Direction.UP), Pointing.DOWN, 60).rightClick()
+				.withItem(amethystItem);
 		scene.idle(7);
 		scene.world().setFilterData(util.select().position(observerPos), SmartObserverBlockEntity.class, amethystItem);
 		scene.world().toggleRedstonePower(util.select().position(observerPos));
@@ -320,8 +315,7 @@ public class DetectorScenes {
 		scene.idle(5);
 		scene.overlay().showLine(PonderPalette.RED, upper.add(2 / 16f, 0, 0), upper.subtract(2 / 16f, 0, 0), 100);
 		scene.idle(15);
-		scene.overlay().showControls(
-				new InputWindowElement(util.vector().blockSurface(switchPos, Direction.UP), Pointing.DOWN).rightClick(), 60);
+		scene.overlay().showControls(util.vector().blockSurface(switchPos, Direction.UP), Pointing.DOWN, 60).rightClick();
 		scene.idle(7);
 		scene.overlay().showText(70)
 			.text("The specific thresholds can be changed in the UI")

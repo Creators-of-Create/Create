@@ -6,14 +6,13 @@ import com.simibubi.create.content.redstone.analogLever.AnalogLeverBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.TextElementBuilder;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.TextWindowElement.Builder;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -78,8 +77,8 @@ public class ChainDriveScenes {
 		scene.idle(25);
 
 		scene.addKeyframe();
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(rotatedECD), Pointing.DOWN).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 30);
+		scene.overlay().showControls(util.vector().topOf(rotatedECD), Pointing.DOWN, 30).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(7);
 		scene.world().modifyBlock(rotatedECD, s -> s.setValue(ChainDriveBlock.AXIS, Axis.Y), true);
 		scene.idle(40);
@@ -240,9 +239,7 @@ public class ChainDriveScenes {
 		scene.world().showSection(util.select().fromTo(analogPos, analogPos.south()), Direction.DOWN);
 
 		scene.idle(15);
-		scene.world().modifyBlockEntityNBT(util.select().position(analogPos), AnalogLeverBlockEntity.class, nbt -> {
-			nbt.putInt("State", 8);
-		});
+		scene.world().modifyBlockEntityNBT(util.select().position(analogPos), AnalogLeverBlockEntity.class, nbt -> nbt.putInt("State", 8));
 		scene.world().modifyBlock(analogPos.south(), s -> s.setValue(RedStoneWireBlock.POWER, 8), false);
 		scene.world().toggleRedstonePower(util.select().position(1, 1, 4));
 		scene.world().modifyKineticSpeed(util.select().position(westGauge), f -> .75f * f);
@@ -259,7 +256,7 @@ public class ChainDriveScenes {
 
 		for (BlockPos gauge : new BlockPos[] { eastGauge, middleGauge, westGauge }) {
 			scene.idle(5);
-			Builder textBuilder = scene.overlay().showText(180)
+			TextElementBuilder textBuilder = scene.overlay().showText(180)
 				.colored(gauge == westGauge ? PonderPalette.SLOW : PonderPalette.MEDIUM)
 				.placeNearTarget()
 				.pointAt(util.vector().blockSurface(gauge, Direction.NORTH));

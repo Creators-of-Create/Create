@@ -6,14 +6,14 @@ import com.simibubi.create.content.trains.station.StationBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.ParrotElement;
+import net.createmod.ponder.api.element.ParrotPose;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.ParrotElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -61,8 +61,8 @@ public class TrainStationScenes {
 
 		AABB bb = new AABB(util.vector().topOf(11, 0, 6), util.vector().topOf(11, 0, 6)).move(0, 2 / 16f, 0);
 
-		scene.overlay().showControls(new InputWindowElement(marker, Pointing.DOWN).rightClick()
-			.withItem(AllBlocks.TRACK_STATION.asStack()), 40);
+		scene.overlay().showControls(marker, Pointing.DOWN, 40).rightClick()
+			.withItem(AllBlocks.TRACK_STATION.asStack());
 		scene.idle(6);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 1);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb.inflate(.45f, 1 / 16f, .45f), 100);
@@ -88,7 +88,7 @@ public class TrainStationScenes {
 			.text("Stations are the Waypoints of your Track Network");
 		scene.idle(90);
 
-		scene.overlay().showControls(new InputWindowElement(stationTop, Pointing.DOWN).rightClick(), 50);
+		scene.overlay().showControls(stationTop, Pointing.DOWN, 50).rightClick();
 		scene.idle(16);
 		scene.overlay().showText(70)
 			.pointAt(stationTop)
@@ -101,8 +101,7 @@ public class TrainStationScenes {
 		scene.effects().indicateSuccess(stationPos);
 
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(marker, Pointing.DOWN).withItem(new ItemStack(Items.BARRIER)),
-									 60);
+		scene.overlay().showControls(marker, Pointing.DOWN, 60).withItem(new ItemStack(Items.BARRIER));
 		scene.idle(6);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, bb, bb, 1);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.RED, bb, bb.inflate(.45f, 1 / 16f, .45f), 80);
@@ -115,8 +114,8 @@ public class TrainStationScenes {
 		scene.idle(85);
 
 		ItemStack casing = AllBlocks.RAILWAY_CASING.asStack();
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(11, 0, 6), Pointing.RIGHT).rightClick()
-			.withItem(casing), 80);
+		scene.overlay().showControls(util.vector().topOf(11, 0, 6), Pointing.RIGHT, 80).rightClick()
+			.withItem(casing);
 		scene.idle(6);
 		scene.world().restoreBlocks(util.select().position(10, 2, 6));
 		ElementLink<WorldSectionElement> trainElement1 =
@@ -130,15 +129,15 @@ public class TrainStationScenes {
 			.text("Create new bogeys by using Train Casing on Tracks");
 		scene.idle(55);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(4, 0, 6), Pointing.RIGHT).rightClick()
-			.withItem(casing), 15);
+		scene.overlay().showControls(util.vector().topOf(4, 0, 6), Pointing.RIGHT, 15).rightClick()
+			.withItem(casing);
 		scene.idle(6);
 		scene.world().setBlock(util.grid().at(3, 2, 6), AllBlocks.SMALL_BOGEY.getDefaultState(), false);
 		ElementLink<WorldSectionElement> trainElement2 =
 			scene.world().showIndependentSection(util.select().position(3, 2, 6), Direction.DOWN);
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(7, 0, 6), Pointing.RIGHT).rightClick()
-			.withItem(casing), 15);
+		scene.overlay().showControls(util.vector().topOf(7, 0, 6), Pointing.RIGHT, 15).rightClick()
+			.withItem(casing);
 		scene.idle(6);
 		scene.world().setBlock(util.grid().at(6, 2, 6), AllBlocks.SMALL_BOGEY.getDefaultState(), false);
 		scene.world().showSectionAndMerge(util.select().position(6, 2, 6), Direction.DOWN, trainElement2);
@@ -152,11 +151,11 @@ public class TrainStationScenes {
 			.text("Click the track again to cycle between bogey designs");
 		scene.idle(35);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(4, 0, 6), Pointing.RIGHT).rightClick(), 15);
+		scene.overlay().showControls(util.vector().topOf(4, 0, 6), Pointing.RIGHT, 15).rightClick();
 		scene.idle(6);
 		scene.world().restoreBlocks(util.select().position(3, 2, 6));
 		scene.idle(20);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(7, 0, 6), Pointing.RIGHT).rightClick(), 15);
+		scene.overlay().showControls(util.vector().topOf(7, 0, 6), Pointing.RIGHT, 15).rightClick();
 		scene.idle(6);
 		scene.world().restoreBlocks(util.select().position(6, 2, 6));
 		scene.idle(30);
@@ -200,15 +199,15 @@ public class TrainStationScenes {
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, glue1, glue1.inflate(1.25, 0, .25)
 			.expandTowards(0, 1, 0), 60);
 		scene.idle(15);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(util.grid().at(4, 2, 6)), Pointing.UP)
-			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+		scene.overlay().showControls(util.vector().topOf(util.grid().at(4, 2, 6)), Pointing.UP, 40)
+			.withItem(AllItems.SUPER_GLUE.asStack());
 		scene.idle(5);
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(util.grid().at(10, 2, 6)), Pointing.UP)
-			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
+		scene.overlay().showControls(util.vector().topOf(util.grid().at(10, 2, 6)), Pointing.UP, 40)
+			.withItem(AllItems.SUPER_GLUE.asStack());
 		scene.idle(55);
 
-		scene.overlay().showControls(new InputWindowElement(util.vector().topOf(util.grid().at(5, 3, 5)), Pointing.DOWN)
-			.withItem(new ItemStack(Items.CHARCOAL)), 40);
+		scene.overlay().showControls(util.vector().topOf(util.grid().at(5, 3, 5)), Pointing.DOWN, 40)
+			.withItem(new ItemStack(Items.CHARCOAL));
 		scene.idle(10);
 		scene.overlay().showText(90)
 			.pointAt(util.vector().blockSurface(util.grid().at(5, 3, 5), Direction.WEST))
@@ -217,7 +216,7 @@ public class TrainStationScenes {
 			.colored(PonderPalette.BLUE)
 			.text("Assembled Trains will move faster if they can find fuel in assembled chests or barrels");
 		scene.idle(100);
-		scene.overlay().showSelectionWithText(util.select().fromTo(4, 3, 6, 5, 4, 7), 60)
+		scene.overlay().showOutlineWithText(util.select().fromTo(4, 3, 6, 5, 4, 7), 60)
 			.pointAt(util.vector().blockSurface(util.grid().at(5, 4, 6), Direction.UP))
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
@@ -243,7 +242,7 @@ public class TrainStationScenes {
 			.text("An optional second one allows departure from Stations in both directions");
 		scene.idle(75);
 
-		scene.overlay().showControls(new InputWindowElement(stationTop, Pointing.DOWN).rightClick(), 50);
+		scene.overlay().showControls(stationTop, Pointing.DOWN, 50).rightClick();
 		scene.idle(16);
 		scene.overlay().showText(60)
 			.pointAt(stationTop)
@@ -260,7 +259,7 @@ public class TrainStationScenes {
 		scene.idle(20);
 
 		ElementLink<ParrotElement> birb =
-			scene.special().createBirb(util.vector().centerOf(10, 3, 6), ParrotElement.FacePointOfInterestPose::new);
+			scene.special().createBirb(util.vector().centerOf(10, 3, 6), ParrotPose.FacePointOfInterestPose::new);
 		scene.idle(15);
 		scene.special().movePointOfInterest(util.grid().at(18, 3, 6));
 		scene.idle(15);
@@ -288,8 +287,8 @@ public class TrainStationScenes {
 			.text("Trains can be disassembled back into blocks at stations only");
 		scene.idle(85);
 
-		scene.overlay().showControls(new InputWindowElement(stationTop, Pointing.DOWN).rightClick()
-			.withItem(new ItemStack(Items.FILLED_MAP)), 75);
+		scene.overlay().showControls(stationTop, Pointing.DOWN, 75).rightClick()
+			.withItem(new ItemStack(Items.FILLED_MAP));
 		scene.idle(15);
 		scene.overlay().showText(70)
 			.pointAt(stationTop)
@@ -311,8 +310,8 @@ public class TrainStationScenes {
 		scene.idle(15);
 
 		Vec3 target = util.vector().topOf(util.grid().at(5, 3, 6));
-		scene.overlay().showControls(new InputWindowElement(target, Pointing.DOWN).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 75);
+		scene.overlay().showControls(target, Pointing.DOWN, 75).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 		scene.idle(15);
 
 		scene.overlay().showText(70)
@@ -323,9 +322,8 @@ public class TrainStationScenes {
 			.text("Assembled Trains can be relocated to nearby Tracks using the Wrench");
 		scene.idle(60);
 
-		scene.overlay()
-			.showControls(new InputWindowElement(util.vector().topOf(util.grid().at(6, 0, 2)), Pointing.DOWN).rightClick()
-				.withItem(AllItems.WRENCH.asStack()), 15);
+		scene.overlay().showControls(util.vector().topOf(util.grid().at(6, 0, 2)), Pointing.DOWN, 15).rightClick()
+				.withItem(AllItems.WRENCH.asStack());
 		scene.idle(15);
 		scene.world().moveSection(trainElement3, util.vector().of(0, 0, -4), 5);
 
@@ -361,7 +359,7 @@ public class TrainStationScenes {
 		ElementLink<WorldSectionElement> trainElement = scene.world().showIndependentSection(train, Direction.DOWN);
 		scene.world().moveSection(trainElement, util.vector().of(-4, 0, 0), 0);
 		Vec3 target = util.vector().centerOf(2, 3, 6);
-		ElementLink<ParrotElement> birb = scene.special().createBirb(target, ParrotElement.FacePointOfInterestPose::new);
+		ElementLink<ParrotElement> birb = scene.special().createBirb(target, ParrotPose.FacePointOfInterestPose::new);
 		scene.idle(10);
 
 		scene.overlay().showText(90)
@@ -370,8 +368,7 @@ public class TrainStationScenes {
 			.attachKeyFrame()
 			.text("Schedules can be used to provide drivers with a destination");
 		scene.idle(70);
-		scene.overlay().showControls(
-			new InputWindowElement(target.add(0, 0.5, 0), Pointing.DOWN).withItem(AllItems.SCHEDULE.asStack()), 40);
+		scene.overlay().showControls(target.add(0, 0.5, 0), Pointing.DOWN, 40).withItem(AllItems.SCHEDULE.asStack());
 		scene.idle(6);
 		scene.special().movePointOfInterest(util.grid().at(9, 4, 6));
 
@@ -431,8 +428,7 @@ public class TrainStationScenes {
 			.attachKeyFrame()
 			.text("Mind that a Station can only be approached from the indicated direction");
 		scene.idle(70);
-		scene.overlay().showControls(
-			new InputWindowElement(target.add(0, 0.5, 0), Pointing.DOWN).withItem(AllItems.SCHEDULE.asStack()), 40);
+		scene.overlay().showControls(target.add(0, 0.5, 0), Pointing.DOWN, 40).withItem(AllItems.SCHEDULE.asStack());
 		scene.idle(6);
 
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.OUTPUT, bb, bb, 1);
@@ -474,7 +470,7 @@ public class TrainStationScenes {
 		trainElement = scene.world().showIndependentSection(train, Direction.DOWN);
 		scene.world().moveSection(trainElement, util.vector().of(-4, 0, 0), 0);
 		target = util.vector().centerOf(2, 3, 6);
-		birb = scene.special().createBirb(target, ParrotElement.FacePointOfInterestPose::new);
+		birb = scene.special().createBirb(target, ParrotPose.FacePointOfInterestPose::new);
 		scene.idle(10);
 		scene.world().moveSection(trainElement, util.vector().of(4, 0, 0), 20);
 		scene.world().animateBogey(util.grid().at(7, 2, 6), -4f, 20);
@@ -485,9 +481,7 @@ public class TrainStationScenes {
 		scene.idle(10);
 		scene.world().animateTrainStation(stationPos, true);
 		scene.idle(10);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().topOf(stationPos), Pointing.DOWN).withItem(AllItems.SCHEDULE.asStack()),
-			20);
+		scene.overlay().showControls(util.vector().topOf(stationPos), Pointing.DOWN, 20).withItem(AllItems.SCHEDULE.asStack());
 		scene.idle(30);
 		scene.effects().indicateSuccess(stationPos);
 		scene.idle(10);

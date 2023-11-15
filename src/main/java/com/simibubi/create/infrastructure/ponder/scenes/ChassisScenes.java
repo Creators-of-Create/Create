@@ -8,13 +8,12 @@ import com.simibubi.create.content.contraptions.chassis.RadialChassisBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 
 import net.createmod.catnip.utility.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.foundation.ElementLink;
-import net.createmod.ponder.foundation.PonderPalette;
-import net.createmod.ponder.foundation.Selection;
-import net.createmod.ponder.foundation.element.InputWindowElement;
-import net.createmod.ponder.foundation.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -80,7 +79,7 @@ public class ChassisScenes {
 		scene.world().showSection(wrong1, Direction.DOWN);
 		scene.idle(10);
 		scene.overlay().showOutline(PonderPalette.RED, wrong2, wrong2, 80);
-		scene.overlay().showSelectionWithText(wrong1, 80)
+		scene.overlay().showOutlineWithText(wrong1, 80)
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.text("Chassis of a different type or facing another direction will not attach");
@@ -106,10 +105,8 @@ public class ChassisScenes {
 		scene.world().showSection(chassis, Direction.DOWN);
 		scene.idle(10);
 
-		InputWindowElement input =
-			new InputWindowElement(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT).rightClick()
-				.withItem(new ItemStack(Items.SLIME_BALL));
-		scene.overlay().showControls(input, 30);
+		scene.overlay().showControls(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT, 30).rightClick()
+			.withItem(new ItemStack(Items.SLIME_BALL));
 		scene.idle(7);
 		scene.world().modifyBlock(chassisPos, s -> s.setValue(LinearChassisBlock.STICKY_BOTTOM, true), false);
 		scene.effects().superGlue(chassisPos, Direction.WEST, false);
@@ -121,7 +118,8 @@ public class ChassisScenes {
 			.pointAt(util.vector().blockSurface(chassisPos, Direction.WEST));
 		scene.idle(70);
 
-		scene.overlay().showControls(input, 15);
+		scene.overlay().showControls(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT, 15).rightClick()
+			.withItem(new ItemStack(Items.SLIME_BALL));
 		scene.idle(7);
 		scene.world().modifyBlock(chassisPos, s -> s.setValue(LinearChassisBlock.STICKY_TOP, true), false);
 		scene.effects().superGlue(chassisPos, Direction.EAST, false);
@@ -137,10 +135,8 @@ public class ChassisScenes {
 		scene.rotateCameraY(-60);
 		scene.idle(25);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT).rightClick()
-				.whileSneaking(),
-			30);
+		scene.overlay().showControls(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT, 30).rightClick()
+				.whileSneaking();
 		scene.idle(7);
 		scene.world().modifyBlock(chassisPos, s -> s.setValue(LinearChassisBlock.STICKY_BOTTOM, false), false);
 		scene.effects().superGlue(chassisPos, Direction.WEST, false);
@@ -170,7 +166,7 @@ public class ChassisScenes {
 		Selection column2 = util.select().fromTo(2, 3, 2, 2, 4, 2);
 		Selection column3 = util.select().fromTo(2, 3, 2, 2, 5, 2);
 
-		scene.overlay().showSelectionWithText(column3, 80)
+		scene.overlay().showOutlineWithText(column3, 80)
 			.colored(PonderPalette.GREEN)
 			.text("Stickied faces of the Linear Chassis will attach a line of blocks in front of it")
 			.placeNearTarget();
@@ -185,8 +181,8 @@ public class ChassisScenes {
 
 		Vec3 blockSurface = util.vector().blockSurface(chassisPos, Direction.NORTH);
 		scene.overlay().showCenteredScrollInput(chassisPos, Direction.NORTH, 50);
-		scene.overlay().showControls(new InputWindowElement(blockSurface, Pointing.UP).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 50);
+		scene.overlay().showControls(blockSurface, Pointing.UP, 50).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 
 		scene.idle(10);
 		scene.overlay().showOutline(PonderPalette.WHITE, chassis, column3, 20);
@@ -217,9 +213,9 @@ public class ChassisScenes {
 		scene.idle(20);
 
 		scene.overlay().showCenteredScrollInput(chassisPos, Direction.NORTH, 50);
-		scene.overlay().showControls(new InputWindowElement(blockSurface, Pointing.UP).whileCTRL()
+		scene.overlay().showControls(blockSurface, Pointing.UP, 50).whileCTRL()
 			.rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 50);
+			.withItem(AllItems.WRENCH.asStack());
 
 		column1 = util.select().fromTo(1, 3, 2, 3, 3, 2);
 		column2 = util.select().fromTo(1, 3, 2, 3, 4, 2);
@@ -253,8 +249,8 @@ public class ChassisScenes {
 			.text("Attaching blocks to any other side requires the use of Super Glue")
 			.placeNearTarget();
 		scene.idle(90);
-		scene.overlay().showControls(new InputWindowElement(glueSurface, Pointing.DOWN).rightClick()
-			.withItem(AllItems.SUPER_GLUE.asStack()), 30);
+		scene.overlay().showControls(glueSurface, Pointing.DOWN, 30).rightClick()
+			.withItem(AllItems.SUPER_GLUE.asStack());
 		scene.idle(7);
 		scene.overlay().chaseBoundingBoxOutline(PonderPalette.GREEN, glueSurface,
 												new AABB(util.grid().at(1, 2, 2)).expandTowards(0, 0, -1), 40);
@@ -340,10 +336,8 @@ public class ChassisScenes {
 		scene.idle(15);
 
 		scene.addKeyframe();
-		InputWindowElement input =
-			new InputWindowElement(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT).rightClick()
-				.withItem(new ItemStack(Items.SLIME_BALL));
-		scene.overlay().showControls(input, 30);
+		scene.overlay().showControls(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT, 30).rightClick()
+			.withItem(new ItemStack(Items.SLIME_BALL));
 		scene.idle(7);
 		scene.world().modifyBlock(chassisPos, s -> s.setValue(RadialChassisBlock.STICKY_WEST, true), false);
 		scene.effects().superGlue(chassisPos, Direction.WEST, false);
@@ -355,7 +349,8 @@ public class ChassisScenes {
 			.pointAt(util.vector().blockSurface(chassisPos, Direction.WEST));
 		scene.idle(70);
 
-		scene.overlay().showControls(input, 15);
+		scene.overlay().showControls(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT, 15).rightClick()
+			.withItem(new ItemStack(Items.SLIME_BALL));
 		scene.idle(7);
 		scene.world().modifyBlock(chassisPos, s -> s.setValue(RadialChassisBlock.STICKY_EAST, true)
 			.setValue(RadialChassisBlock.STICKY_NORTH, true)
@@ -375,10 +370,8 @@ public class ChassisScenes {
 		scene.rotateCameraY(-60);
 		scene.idle(25);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT).rightClick()
-				.whileSneaking(),
-			30);
+		scene.overlay().showControls(util.vector().blockSurface(chassisPos, Direction.WEST), Pointing.LEFT, 30).rightClick()
+				.whileSneaking();
 		scene.idle(7);
 		scene.world().modifyBlock(chassisPos, s -> s.setValue(RadialChassisBlock.STICKY_WEST, false), false);
 		scene.effects().superGlue(chassisPos, Direction.WEST, false);
@@ -431,7 +424,7 @@ public class ChassisScenes {
 			obj.setValue(add);
 		});
 
-		scene.overlay().showSelectionWithText(obj.getValue(), 60)
+		scene.overlay().showOutlineWithText(obj.getValue(), 60)
 			.colored(PonderPalette.GREEN)
 			.text("...it will attach all reachable blocks within a radius on that layer");
 		scene.idle(70);
@@ -445,8 +438,8 @@ public class ChassisScenes {
 		scene.addKeyframe();
 		blockSurface = util.vector().topOf(chassisPos);
 		scene.overlay().showCenteredScrollInput(chassisPos, Direction.UP, 50);
-		scene.overlay().showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick()
-			.withItem(AllItems.WRENCH.asStack()), 50);
+		scene.overlay().showControls(blockSurface, Pointing.DOWN, 50).rightClick()
+			.withItem(AllItems.WRENCH.asStack());
 
 		scene.idle(10);
 		scene.overlay().showOutline(PonderPalette.WHITE, chassis, r2, 20);
@@ -482,7 +475,7 @@ public class ChassisScenes {
 		scene.overlay().showOutline(PonderPalette.GREEN, r2, r2.copy()
 			.substract(util.select().fromTo(0, 2, 0, 1, 2, 4)), 80);
 		scene.markAsFinished();
-		scene.overlay().showSelectionWithText(ignored, 80)
+		scene.overlay().showOutlineWithText(ignored, 80)
 			.colored(PonderPalette.RED)
 			.text("Blocks not reachable by any sticky face will not attach");
 	}
@@ -519,19 +512,15 @@ public class ChassisScenes {
 			.pointAt(util.vector().topOf(util.grid().at(2, 1, 2)));
 		scene.idle(70);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().topOf(2, 2, 3), Pointing.DOWN).withItem(AllItems.SUPER_GLUE.asStack())
-				.rightClick(),
-			40);
+		scene.overlay().showControls(util.vector().topOf(2, 2, 3), Pointing.DOWN, 40).withItem(AllItems.SUPER_GLUE.asStack())
+				.rightClick();
 		scene.idle(6);
 		scene.effects().indicateSuccess(util.grid().at(2, 2, 3));
 
 		scene.idle(45);
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(1, 1, 2), Direction.DOWN), Pointing.UP)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(1, 1, 2), Direction.DOWN), Pointing.UP, 40)
 				.withItem(AllItems.SUPER_GLUE.asStack())
-				.rightClick(),
-			40);
+				.rightClick();
 		scene.idle(6);
 
 		AABB bb = new AABB(util.grid().at(2, 2, 3));
@@ -559,16 +548,14 @@ public class ChassisScenes {
 			.pointAt(util.vector().blockSurface(util.grid().at(3, 1, 1), Direction.WEST));
 		scene.idle(40);
 
-		scene.overlay().showControls(
-			new InputWindowElement(util.vector().blockSurface(util.grid().at(3, 1, 1), Direction.UP), Pointing.DOWN)
+		scene.overlay().showControls(util.vector().blockSurface(util.grid().at(3, 1, 1), Direction.UP), Pointing.DOWN, 40)
 				.withItem(AllItems.SUPER_GLUE.asStack())
-				.leftClick(),
-			40);
+				.leftClick();
 		scene.idle(50);
 
 		Selection toMove = util.select().fromTo(1, 1, 2, 2, 1, 2)
 			.add(util.select().fromTo(2, 2, 3, 2, 1, 3));
-		scene.overlay().showSelectionWithText(toMove, 70)
+		scene.overlay().showOutlineWithText(toMove, 70)
 			.text("Adjacent blocks sharing an area will pull each other along")
 			.placeNearTarget()
 			.attachKeyFrame()
