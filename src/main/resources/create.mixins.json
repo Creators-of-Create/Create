@@ -4,7 +4,6 @@
   "priority": 1100,
   "package": "com.simibubi.create.foundation.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "create.refmap.json",
   "mixins": [
     "ClientboundMapItemDataPacketMixin",
     "ContraptionDriverInteractMixin",

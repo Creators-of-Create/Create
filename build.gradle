@@ -227,17 +227,11 @@ jar {
                 'MixinConfigs': 'create.mixins.json'
         ])
     }
-}
 
-void addLicense(jarTask) {
-    jarTask.from('LICENSE') {
+    from('LICENSE') {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
-
-addLicense(jar)
-addLicense(remapJar)
-addLicense(slimJar)
 
 publishing {
     publications {
@@ -299,7 +293,7 @@ String getChangelogText() {
 //         changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
 //         changelogType = 'html'
 //         releaseType = project.curse_type
-//         mainArtifact(shadowJar) {
+//         mainArtifact(releaseJar) {
 //             displayName = "Create - ${version}"
 //         }
 //         relations {
