@@ -3237,7 +3237,7 @@ c02335d1e84dffdc0c50e8ba2a27ce84366a5f6d data/create/advancements/steam_whistle.
 0cb2a6357d3bcabb9dc2c87863a77cf53e8dcef1 data/create/advancements/stressometer_maxed.json
 566d3804e962be45c80c8debb2eb2761b2ded905 data/create/advancements/sturdy_sheet.json
 1c431334d71f7e25b9bedc525c642c8cb5271b9f data/create/advancements/super_glue.json
-58fd8b7440508a8128d2860eb70a2c5b7a2531f9 data/create/advancements/track_0.json
+7c274fba06fb2bf357f817cf47d92ca63f3f8837 data/create/advancements/track_0.json
 7388901df65f05074c2a2ad8156cbd76a069cdc6 data/create/advancements/track_crafting_factory.json
 c6c3a803ff7738a36ac0956eda593f9774e567b5 data/create/advancements/track_signal.json
 7f4cb81f3ddf26f47055b369b3f3af82f1894fcb data/create/advancements/train.json
@@ -5376,6 +5376,7 @@ ba2e448d208997c8327df19fac39748184d49465 data/create/tags/items/stone_types/ochr
 14710201b8b392a414feddff420594fb7194b194 data/create/tags/items/stone_types/tuff.json
 634faefc734062b869002bd38aa4e5a2b06d8b9a data/create/tags/items/stone_types/veridium.json
 d063e12c9ef75f39518c6d129ea35d833464d547 data/create/tags/items/toolboxes.json
+ad8fa04f7bbbafd70d0ce158af78a35e899301e2 data/create/tags/items/tracks.json
 2f4044c2989b9a8aa394c88617d67a6a310e6b1b data/create/tags/items/upright_on_belt.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/items/valve_handles.json
 f8d83f446d0a2071dca4481251339c4249b2fd3f data/create/tags/items/vanilla_stripped_logs.json
