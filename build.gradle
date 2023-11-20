@@ -1,10 +1,11 @@
+//file:noinspection GroovyAssignabilityCheck
 plugins {
     id 'dev.architectury.loom' version "${loom_version}"
-    id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
+    id 'me.shedaniel.unified-publishing' version "${unified_publishing_version}"
     id 'maven-publish'
 }
 
-boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false')
+boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE') == 'false'
 // jozu: I use a gradle workspace with both projects.
 // The project is named Flywheel-Forge, but sub-projects are named by folder.
 boolean inWorkspace = findProject(':Flywheel') != null
@@ -19,18 +20,18 @@ loom {
     silentMojangMappingsLicense()
 
     forge {
-        mixinConfig "create.mixins.json"
+        mixinConfig 'create.mixins.json'
     }
 
     mixin {
-        defaultRefmapName = "create.refmap.json"
+        defaultRefmapName = 'create.refmap.json'
     }
 
     mods {
         create {
             sourceSet sourceSets.main
             if(inWorkspace) {
-                sourceSet project(":Flywheel").sourceSets.main
+                sourceSet project(':Flywheel').sourceSets.main
             }
         }
     }
@@ -40,14 +41,11 @@ loom {
             client()
             //vmArg '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             runDir 'run'
-            ideConfigGenerated true
         }
 
         server {
             server()
-            project.file('run/server').absolutePath
-            ideConfigGenerated true
-            runDir 'run/server'
+            runDir = 'run/server'
         }
 
         data {
@@ -61,9 +59,13 @@ loom {
         }
 
         gameTest {
-            runDir = project.file('run/gametest').absolutePath
+            runDir = 'run/gametest'
             inherit server
             configName = 'Server Game Tests'
+        }
+
+        configureEach {
+            ideConfigGenerated = true
         }
     }
 }
@@ -130,12 +132,12 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    mappings loom.layered() {
+    mappings loom.layered ({
         officialMojangMappings() { nameSyntheticMembers = false }
         if(Boolean.parseBoolean(project.use_parchment)) {
             parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
         }
-    }
+    })
 
     include modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
@@ -197,7 +199,9 @@ remapJar {
     archiveClassifier = 'all'
 }
 
-tasks.register('slimJar', net.fabricmc.loom.task.RemapJarTask) {
+import net.fabricmc.loom.task.RemapJarTask
+
+tasks.register('slimJar', RemapJarTask) {
     dependsOn 'jar'
     group = 'build'
 
@@ -206,7 +210,7 @@ tasks.register('slimJar', net.fabricmc.loom.task.RemapJarTask) {
     addNestedDependencies = false
 }
 
-tasks.register('releaseJar', net.fabricmc.loom.task.RemapJarTask) {
+tasks.register('releaseJar', RemapJarTask) {
     dependsOn 'jar'
     group = 'build'
 
@@ -261,7 +265,6 @@ String getChangelogText() {
         if (it.size() > 1) {
             def temp = it
             if (lineCount == 0) {
-                temp = "Create ${version}"
                 temp = "<span style=\"font-size: 18px; color: #333399;\">Create v${mod_version}</span>&nbsp;&nbsp;<em>for Minecraft ${minecraft_version}</em><br/>"
             } else if (it.startsWith('-')) {
                 temp = "&nbsp;&nbsp;&nbsp;$temp<br/>"
@@ -281,24 +284,36 @@ String getChangelogText() {
 }
 
 // changelog debugging
-// new File("changelog.html").write getChangelogText()
-// tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
-// curseforge {
-//     if (project.hasProperty('simi_curseforge_key')) {
-//         apiKey = project.simi_curseforge_key
-//     }
+//new File("changelog.html").write getChangelogText()
+//tasks.publishUnified.enabled = !dev && (project.hasProperty('simi_curseforge_key') || project.hasProperty('simi_modrinth_key'))
+//unifiedPublishing {
+//    project {
+//        gameVersions = [minecraft_version]
+//        gameLoaders = ['forge']
+//        releaseType = project.release_type
 //
-//     project {
-//         id = project.projectId
-//         changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
-//         changelogType = 'html'
-//         releaseType = project.curse_type
-//         mainArtifact(releaseJar) {
-//             displayName = "Create - ${version}"
-//         }
-//         relations {
-//             optionalDependency 'jei'
-//         }
-//     }
-// }
+//        mainPublication tasks.releaseJar
+//
+//        if (project.hasProperty('simi_curseforge_key')) {
+//            curseforge {
+//                token = project.simi_curseforge_key
+//                id = project.curseforge_project_id
+//            }
+//        }
+//
+//        if (project.hasProperty('simi_modrinth_key')) {
+//            modrinth {
+//                token = project.simi_modrinth_key
+//                id = project.modrinth_project_id
+//            }
+//        }
+//
+//        relations {
+//            optional {
+//                curseforge = 'jei'
+//                modrinth = 'jei'
+//            }
+//        }
+//    }
+//}
 
