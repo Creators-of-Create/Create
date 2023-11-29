@@ -30,6 +30,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -508,8 +509,7 @@ public class TrackPlacement {
 				// copy over all shared properties from the shaped state to the correct track material block
 				BlockState toPlace = BlockHelper.copyProperties(state, info.trackMaterial.getBlock().defaultBlockState());
 
-				boolean canPlace = stateAtPos.getMaterial()
-					.isReplaceable();
+				boolean canPlace = stateAtPos.getMaterial().isReplaceable() || stateAtPos.is(BlockTags.FLOWERS);
 				if (canPlace)
 					info.requiredTracks++;
 				if (simulate)
