@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
@@ -33,7 +34,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,7 +51,8 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	ValueBoxTransform slotPositioning;
 	boolean showCount;
 
-	private ItemStack filter;
+	private FilterItemStack filter;
+	
 	public int count;
 	public boolean upTo;
 	private Predicate<ItemStack> predicate;
@@ -64,7 +65,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	public FilteringBehaviour(SmartBlockEntity be, ValueBoxTransform slot) {
 		super(be);
-		filter = ItemStack.EMPTY;
+		filter = FilterItemStack.empty();
 		slotPositioning = slot;
 		showCount = false;
 		callback = stack -> {
@@ -93,14 +94,15 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	@Override
 	public void read(CompoundTag nbt, boolean clientPacket) {
-		filter = ItemStack.of(nbt.getCompound("Filter"));
+		filter = FilterItemStack.of(nbt.getCompound("Filter"));
 		count = nbt.getInt("FilterAmount");
 		upTo = nbt.getBoolean("UpTo");
 		
 		// Migrate from previous behaviour
 		if (count == 0) {
 			upTo = true;
-			count = filter.getMaxStackSize();
+			count = filter.item()
+				.getMaxStackSize();
 		}
 		
 		super.read(nbt, clientPacket);
@@ -153,7 +155,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 		ItemStack filter = stack.copy();
 		if (!filter.isEmpty() && !predicate.test(filter))
 			return false;
-		this.filter = filter;
+		this.filter = FilterItemStack.of(filter);
 		if (!upTo)
 			count = Math.min(count, stack.getMaxStackSize());
 		callback.accept(filter);
@@ -166,7 +168,8 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	public void setValueSettings(Player player, ValueSettings settings, boolean ctrlDown) {
 		if (getValueSettings().equals(settings))
 			return;
-		count = Mth.clamp(settings.value(), 1, filter.getMaxStackSize());
+		count = Mth.clamp(settings.value(), 1, filter.item()
+			.getMaxStackSize());
 		upTo = settings.row() == 0;
 		blockEntity.setChanged();
 		blockEntity.sendData();
@@ -175,24 +178,25 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 
 	@Override
 	public ValueSettings getValueSettings() {
-		return new ValueSettings(upTo ? 0 : 1, count == 0 ? filter.getMaxStackSize() : count);
+		return new ValueSettings(upTo ? 0 : 1, count == 0 ? filter.item()
+			.getMaxStackSize() : count);
 	}
 
 	@Override
 	public void destroy() {
-		if (filter.getItem() instanceof FilterItem) {
+		if (filter.isFilterItem()) {
 			Vec3 pos = VecHelper.getCenterOf(getPos());
 			Level world = getWorld();
-			world.addFreshEntity(new ItemEntity(world, pos.x, pos.y, pos.z, filter.copy()));
+			world.addFreshEntity(new ItemEntity(world, pos.x, pos.y, pos.z, filter.item()
+				.copy()));
 		}
 		super.destroy();
 	}
 
 	@Override
 	public ItemRequirement getRequiredItems() {
-		Item filterItem = filter.getItem();
-		if (filterItem instanceof FilterItem)
-			return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, filterItem);
+		if (filter.isFilterItem())
+			return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, filter.item());
 
 		return ItemRequirement.NONE;
 	}
@@ -202,19 +206,20 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	}
 
 	public ItemStack getFilter() {
-		return filter.copy();
+		return filter.item();
 	}
 
 	public boolean isCountVisible() {
-		return showCountPredicate.get() && filter.getMaxStackSize() > 1;
+		return showCountPredicate.get() && filter.item()
+			.getMaxStackSize() > 1;
 	}
 
 	public boolean test(ItemStack stack) {
-		return !isActive() || filter.isEmpty() || FilterItem.test(blockEntity.getLevel(), stack, filter);
+		return !isActive() || filter.test(blockEntity.getLevel(), stack);
 	}
 
 	public boolean test(FluidStack stack) {
-		return !isActive() || filter.isEmpty() || FilterItem.test(blockEntity.getLevel(), stack, filter);
+		return !isActive() || filter.test(blockEntity.getLevel(), stack);
 	}
 
 	@Override
@@ -262,7 +267,8 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 	}
 
 	public MutableComponent formatValue(ValueSettings value) {
-		if (value.row() == 0 && value.value() == filter.getMaxStackSize())
+		if (value.row() == 0 && value.value() == filter.item()
+			.getMaxStackSize())
 			return Lang.translateDirect("logistics.filter.any_amount_short");
 		return Components.literal(((value.row() == 0) ? "\u2264" : "=") + Math.max(1, value.value()));
 	}
@@ -287,7 +293,7 @@ public class FilteringBehaviour extends BlockEntityBehaviour implements ValueSet
 					stack -> ItemHandlerHelper.canItemStacksStack(stack, getFilter(side)), true)
 				.isEmpty())
 				player.getInventory()
-					.placeItemBackInInventory(getFilter(side));
+					.placeItemBackInInventory(getFilter(side).copy());
 		}
 
 		if (toApply.getItem() instanceof FilterItem)
