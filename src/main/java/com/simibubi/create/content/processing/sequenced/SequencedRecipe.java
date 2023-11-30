@@ -1,18 +1,17 @@
 package com.simibubi.create.content.processing.sequenced;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.conditions.ICondition.IContext;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -51,10 +50,10 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 			IAssemblyRecipe assemblyRecipe = (IAssemblyRecipe) recipe;
 			if (assemblyRecipe.supportsAssembly()) {
 				Ingredient transit = Ingredient.of(parent.getTransitionalItem());
+
 				processingRecipe.getIngredients()
-					.set(0, index == 0 ? Ingredient.merge(ImmutableList.of(transit, parent.getIngredient())) : transit);
-				SequencedRecipe<?> sequencedRecipe = new SequencedRecipe<>(processingRecipe);
-				return sequencedRecipe;
+					.set(0, index == 0 ? CompoundIngredient.of(transit, parent.getIngredient()) : transit);
+                return new SequencedRecipe<>(processingRecipe);
 			}
 		}
 		throw new JsonParseException("Not a supported recipe type");
