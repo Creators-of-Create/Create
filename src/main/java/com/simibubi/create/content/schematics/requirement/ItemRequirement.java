@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.SeaPickleBlock;
 import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.TallGrassBlock;
 import net.minecraft.world.level.block.TurtleEggBlock;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -98,6 +99,9 @@ public class ItemRequirement {
 			return new ItemRequirement(ItemUseType.CONSUME, Items.DIRT);
 		if (block instanceof AbstractBannerBlock && be instanceof BannerBlockEntity bannerBE)
 			return new ItemRequirement(new StrictNbtStackRequirement(bannerBE.getItem(), ItemUseType.CONSUME));
+		// Tall grass doesnt exist as a block so use 2 grass blades
+		if (block instanceof TallGrassBlock)
+			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.GRASS, 2));
 
 		return new ItemRequirement(ItemUseType.CONSUME, item);
 	}
