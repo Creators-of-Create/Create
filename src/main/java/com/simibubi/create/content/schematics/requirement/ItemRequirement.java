@@ -101,6 +101,7 @@ public class ItemRequirement {
 		// Tall grass doesnt exist as a block so use 2 grass blades
 		if (block == Blocks.TALL_GRASS)
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.GRASS, 2));
+		// Large ferns don't exist as blocks so use 2 ferns instead
 		if (block == Blocks.LARGE_FERN)
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.FERN, 2));
 
