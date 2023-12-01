@@ -100,8 +100,10 @@ public class ItemRequirement {
 		if (block instanceof AbstractBannerBlock && be instanceof BannerBlockEntity bannerBE)
 			return new ItemRequirement(new StrictNbtStackRequirement(bannerBE.getItem(), ItemUseType.CONSUME));
 		// Tall grass doesnt exist as a block so use 2 grass blades
-		if (block instanceof TallGrassBlock)
+		if (block == Blocks.TALL_GRASS)
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.GRASS, 2));
+		if (block == Blocks.LARGE_FERN)
+			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.FERN, 2));
 
 		return new ItemRequirement(ItemUseType.CONSUME, item);
 	}
