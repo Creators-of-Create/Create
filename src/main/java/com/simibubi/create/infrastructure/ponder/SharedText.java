@@ -3,10 +3,7 @@ package com.simibubi.create.infrastructure.ponder;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 
-import net.minecraft.resources.ResourceLocation;
-
 public class SharedText {
-
 	public static void gatherText() {
 		// Add entries used across several ponder scenes (Safe for hotswap)
 
@@ -23,16 +20,7 @@ public class SharedText {
 		add("storage_on_contraption", "Inventories attached to the Contraption will pick up their drops automatically");
 	}
 
-	public static String get(ResourceLocation key) {
-		return PonderLocalization.getShared(key);
-	}
-
-	public static void add(ResourceLocation k, String v) {
-		PonderLocalization.registerShared(k, v);
-	}
-
 	private static void add(String k, String v) {
-		add(Create.asResource(k), v);
+		PonderLocalization.registerShared(Create.asResource(k), v);
 	}
-
 }

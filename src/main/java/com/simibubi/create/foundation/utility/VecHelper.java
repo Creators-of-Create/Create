@@ -351,4 +351,9 @@ public class VecHelper {
 		return new double[] { t, u };
 	}
 
+	public static double alignedDistanceToFace(Vec3 pos, BlockPos blockPos, Direction face) {
+		Axis axis = face.getAxis();
+		return Math.abs(getCoordinate(pos, axis) - (blockPos.get(axis) + (face.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1 : 0)));
+	}
+
 }

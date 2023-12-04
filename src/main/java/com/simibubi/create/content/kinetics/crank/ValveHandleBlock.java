@@ -64,7 +64,9 @@ public class ValveHandleBlock extends HandCrankBlock {
 
 		if (!(blockState.getBlock() instanceof ValveHandleBlock vhb))
 			return;
-		if (AllItems.WRENCH.isIn(player.getItemInHand(event.getHand())) && player.isSteppingCarefully())
+		if (!player.mayBuild())
+			return;
+		if (AllItems.WRENCH.isIn(player.getItemInHand(event.getHand())) && player.isShiftKeyDown())
 			return;
 
 		if (vhb.clicked(level, pos, blockState, player, event.getHand())) {
@@ -92,7 +94,7 @@ public class ValveHandleBlock extends HandCrankBlock {
 		}
 
 		onBlockEntityUse(level, pos,
-			hcbe -> (hcbe instanceof ValveHandleBlockEntity vhbe) && vhbe.activate(player.isSteppingCarefully())
+			hcbe -> (hcbe instanceof ValveHandleBlockEntity vhbe) && vhbe.activate(player.isShiftKeyDown())
 				? InteractionResult.SUCCESS
 				: InteractionResult.PASS);
 		return true;

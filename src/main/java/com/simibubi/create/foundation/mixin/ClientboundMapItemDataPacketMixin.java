@@ -23,7 +23,7 @@ import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 // random priority to prevent networking conflicts
-@Mixin(value = ClientboundMapItemDataPacket.class, priority = 826)
+@Mixin(value = ClientboundMapItemDataPacket.class, priority = 426)
 public class ClientboundMapItemDataPacketMixin {
 	@Shadow
 	@Final

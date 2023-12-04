@@ -19,7 +19,7 @@ import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.base.BlockBreakingMovementBehaviour;
-import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.trains.bogey.StandardBogeyBlock;
 import com.simibubi.create.content.trains.entity.Carriage;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
@@ -33,6 +33,7 @@ import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -101,6 +102,11 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(Level world, BlockPos breakingPos, BlockState state) {
+		for (Direction side : Iterate.directions)
+			if (world.getBlockState(breakingPos.relative(side))
+				.is(BlockTags.PORTALS))
+				return false;
+
 		return super.canBreak(world, breakingPos, state) && !state.getCollisionShape(world, breakingPos)
 			.isEmpty() && !AllBlocks.TRACK.has(state);
 	}
@@ -187,10 +193,10 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 		int startingY = 1;
 		if (!getStateToPaveWith(context).isAir()) {
-			ItemStack filter = ItemStack.of(context.blockEntityData.getCompound("Filter"));
-			if (!ItemHelper
+			FilterItemStack filter = context.getFilterFromBE();
+			if (!ItemHelper	
 				.extract(context.contraption.getSharedInventory(),
-					stack -> FilterItem.test(context.world, stack, filter), 1, true)
+					stack -> filter.test(context.world, stack), 1, true)
 				.isEmpty())
 				startingY = 0;
 		}
@@ -278,8 +284,15 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		};
 		rollerScout.travel(train.graph, lengthWiseOffset + 1, steering);
 
-		rollerScout.traversalCallback = (edge, coords) -> TrackPaverV2.pave(heightProfile, train.graph, edge,
-			coords.getFirst(), coords.getSecond());
+		rollerScout.traversalCallback = (edge, coords) -> {
+			if (edge == null)
+				return;
+			if (edge.isInterDimensional())
+				return;
+			if (edge.node1.getLocation().dimension != context.world.dimension())
+				return;
+			TrackPaverV2.pave(heightProfile, train.graph, edge, coords.getFirst(), coords.getSecond());
+		};
 		rollerScout.travel(train.graph, distanceToTravel, steering);
 
 		for (Couple<Integer> entry : heightProfile.keys())
@@ -292,6 +305,9 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		BlockState stateToPaveWith = getStateToPaveWith(context);
 		BlockState stateToPaveWithAsSlab = getStateToPaveWithAsSlab(context);
 		RollingMode mode = getMode(context);
+		
+		if (mode != RollingMode.TUNNEL_PAVE && stateToPaveWith.isAir())
+			return;
 
 		Vec3 directionVec = Vec3.atLowerCornerOf(context.state.getValue(RollerBlock.FACING)
 			.getClockWise()
@@ -457,9 +473,9 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 				.isEmpty())
 			return PaveResult.FAIL;
 
-		ItemStack filter = ItemStack.of(context.blockEntityData.getCompound("Filter"));
+		FilterItemStack filter = context.getFilterFromBE();
 		ItemStack held = ItemHelper.extract(context.contraption.getSharedInventory(),
-			stack -> FilterItem.test(context.world, stack, filter), 1, false);
+			stack -> filter.test(context.world, stack), 1, false);
 		if (held.isEmpty())
 			return PaveResult.FAIL;
 

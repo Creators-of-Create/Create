@@ -44,7 +44,7 @@ public class GirderWrenchBehavior {
 		Player player = mc.player;
 		ItemStack heldItem = player.getMainHandItem();
 
-		if (player.isSteppingCarefully())
+		if (player.isShiftKeyDown())
 			return;
 
 		if (!AllBlocks.METAL_GIRDER.has(world.getBlockState(pos)))

@@ -95,7 +95,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::canInsertFrom)
-			.setInsertionHandler(this::tryInsertingFromSide));
+			.setInsertionHandler(this::tryInsertingFromSide).considerOccupiedWhen(this::isOccupied));
 		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf));
 	}
@@ -464,6 +464,22 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return false;
 		return getMovementFacing() != side.getOpposite();
 	}
+	
+	private boolean isOccupied(Direction side) {
+		BeltBlockEntity nextBeltController = getControllerBE();
+		if (nextBeltController == null)
+			return true;
+		BeltInventory nextInventory = nextBeltController.getInventory();
+		if (nextInventory == null)
+			return true;
+		if (getSpeed() == 0)
+			return true;
+		if (getMovementFacing() == side.getOpposite())
+			return true;
+		if (!nextInventory.canInsertAtFromSide(index, side))
+			return true;
+		return false;
+	}
 
 	private ItemStack tryInsertingFromSide(TransportedItemStack transportedStack, Direction side, boolean simulate) {
 		BeltBlockEntity nextBeltController = getControllerBE();
@@ -493,11 +509,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			}
 		}
 
-		if (getSpeed() == 0)
-			return inserted;
-		if (getMovementFacing() == side.getOpposite())
-			return inserted;
-		if (!nextInventory.canInsertAtFromSide(index, side))
+		if (isOccupied(side))
 			return inserted;
 		if (simulate)
 			return empty;

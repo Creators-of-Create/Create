@@ -217,6 +217,9 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
+		if (contraption == null)
+			return null;
+		
 		UUID id = passenger.getUUID();
 		if (passenger instanceof OrientedContraptionEntity) {
 			BlockPos localPos = contraption.getBearingPosOf(id);
@@ -231,6 +234,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		BlockPos seat = contraption.getSeatOf(id);
 		if (seat == null)
 			return null;
+		
 		Vec3 transformedVector = toGlobalVector(Vec3.atLowerCornerOf(seat)
 			.add(.5, passenger.getMyRidingOffset() + ySize - .15f, .5), partialTicks)
 				.add(VecHelper.getCenterOf(BlockPos.ZERO))

@@ -1,7 +1,5 @@
 package com.simibubi.create.content.kinetics.fan.processing;
 
-import static com.simibubi.create.content.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +9,9 @@ import java.util.Random;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.math.Vector3f;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllTags.AllBlockTags;
+import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.fan.processing.HauntingRecipe.HauntingWrapper;
 import com.simibubi.create.content.kinetics.fan.processing.SplashingRecipe.SplashingWrapper;
@@ -47,13 +46,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -141,9 +137,18 @@ public class AllFanProcessingTypes {
 
 		@Override
 		public boolean isValidAt(Level level, BlockPos pos) {
+			FluidState fluidState = level.getFluidState(pos);
+			if (AllFluidTags.FAN_PROCESSING_CATALYSTS_BLASTING.matches(fluidState)) {
+				return true;
+			}
 			BlockState blockState = level.getBlockState(pos);
-			Block block = blockState.getBlock();
-			return block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING);
+			if (AllBlockTags.FAN_PROCESSING_CATALYSTS_BLASTING.matches(blockState)) {
+				if (blockState.hasProperty(BlazeBurnerBlock.HEAT_LEVEL) && !blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING)) {
+					return false;
+				}
+				return true;
+			}
+			return false;
 		}
 
 		@Override
@@ -233,15 +238,21 @@ public class AllFanProcessingTypes {
 
 		@Override
 		public boolean isValidAt(Level level, BlockPos pos) {
+			FluidState fluidState = level.getFluidState(pos);
+			if (AllFluidTags.FAN_PROCESSING_CATALYSTS_HAUNTING.matches(fluidState)) {
+				return true;
+			}
 			BlockState blockState = level.getBlockState(pos);
-			Block block = blockState.getBlock();
-			return block == Blocks.SOUL_FIRE
-				|| block == Blocks.SOUL_CAMPFIRE && blockState.getOptionalValue(CampfireBlock.LIT)
-					.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-					&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-						.map(flame -> flame == LitBlazeBurnerBlock.FlameType.SOUL)
-						.orElse(false);
+			if (AllBlockTags.FAN_PROCESSING_CATALYSTS_HAUNTING.matches(blockState)) {
+				if (blockState.is(BlockTags.CAMPFIRES) && blockState.hasProperty(CampfireBlock.LIT) && !blockState.getValue(CampfireBlock.LIT)) {
+					return false;
+				}
+				if (blockState.hasProperty(LitBlazeBurnerBlock.FLAME_TYPE) && blockState.getValue(LitBlazeBurnerBlock.FLAME_TYPE) != LitBlazeBurnerBlock.FlameType.SOUL) {
+					return false;
+				}
+				return true;
+			}
+			return false;
 		}
 
 		@Override
@@ -349,16 +360,24 @@ public class AllFanProcessingTypes {
 
 		@Override
 		public boolean isValidAt(Level level, BlockPos pos) {
+			FluidState fluidState = level.getFluidState(pos);
+			if (AllFluidTags.FAN_PROCESSING_CATALYSTS_SMOKING.matches(fluidState)) {
+				return true;
+			}
 			BlockState blockState = level.getBlockState(pos);
-			Block block = blockState.getBlock();
-			return block == Blocks.FIRE
-				|| blockState.is(BlockTags.CAMPFIRES) && blockState.getOptionalValue(CampfireBlock.LIT)
-					.orElse(false)
-				|| AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-					&& blockState.getOptionalValue(LitBlazeBurnerBlock.FLAME_TYPE)
-						.map(flame -> flame == LitBlazeBurnerBlock.FlameType.REGULAR)
-						.orElse(false)
-				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING;
+			if (AllBlockTags.FAN_PROCESSING_CATALYSTS_SMOKING.matches(blockState)) {
+				if (blockState.is(BlockTags.CAMPFIRES) && blockState.hasProperty(CampfireBlock.LIT) && !blockState.getValue(CampfireBlock.LIT)) {
+					return false;
+				}
+				if (blockState.hasProperty(LitBlazeBurnerBlock.FLAME_TYPE) && blockState.getValue(LitBlazeBurnerBlock.FLAME_TYPE) != LitBlazeBurnerBlock.FlameType.REGULAR) {
+					return false;
+				}
+				if (blockState.hasProperty(BlazeBurnerBlock.HEAT_LEVEL) && blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL) != BlazeBurnerBlock.HeatLevel.SMOULDERING) {
+					return false;
+				}
+				return true;
+			}
+			return false;
 		}
 
 		@Override
@@ -422,8 +441,14 @@ public class AllFanProcessingTypes {
 		@Override
 		public boolean isValidAt(Level level, BlockPos pos) {
 			FluidState fluidState = level.getFluidState(pos);
-			Fluid fluid = fluidState.getType();
-			return fluid == Fluids.WATER || fluid == Fluids.FLOWING_WATER;
+			if (AllFluidTags.FAN_PROCESSING_CATALYSTS_SPLASHING.matches(fluidState)) {
+				return true;
+			}
+			BlockState blockState = level.getBlockState(pos);
+			if (AllBlockTags.FAN_PROCESSING_CATALYSTS_SPLASHING.matches(blockState)) {
+				return true;
+			}
+			return false;
 		}
 
 		@Override

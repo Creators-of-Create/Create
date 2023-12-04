@@ -87,7 +87,7 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 	@Override
 	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
 		BlockHitResult pHit) {
-		if (pPlayer.isSteppingCarefully()) {
+		if (pPlayer.isShiftKeyDown()) {
 			breakAndCollect(pState, pLevel, pPos, pPlayer);
 			return InteractionResult.SUCCESS;
 		}

@@ -215,6 +215,11 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 	}
 
 	@Override
+	protected boolean canSpecifyDuration() {
+		return true;
+	}
+
+	@Override
 	public boolean matches(SmartInventory inv, @Nonnull Level worldIn) {
 		return false;
 	}

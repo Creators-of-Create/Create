@@ -290,6 +290,70 @@
       "required": false
     },
     {
+      "id": "environmental:stripped_cherry_wood",
+      "required": false
+    },
+    {
+      "id": "environmental:stripped_willow_wood",
+      "required": false
+    },
+    {
+      "id": "environmental:stripped_wisteria_wood",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_aspen_wood",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_kousa_wood",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_yucca_wood",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_morado_wood",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_rosewood",
+      "required": false
+    },
+    {
+      "id": "atmospheric:stripped_grimwood",
+      "required": false
+    },
+    {
+      "id": "goodending:stripped_muddy_oak_wood",
+      "required": false
+    },
+    {
+      "id": "goodending:stripped_cypress_wood",
+      "required": false
+    },
+    {
+      "id": "biomemakeover:stripped_blighted_balsa_wood",
+      "required": false
+    },
+    {
+      "id": "biomemakeover:stripped_willow_wood",
+      "required": false
+    },
+    {
+      "id": "biomemakeover:stripped_swamp_cypress_wood",
+      "required": false
+    },
+    {
+      "id": "biomemakeover:stripped_ancient_oak_wood",
+      "required": false
+    },
+    {
+      "id": "infernalexp:stripped_luminous_hyphae",
+      "required": false
+    },
+    {
       "id": "byg:stripped_bulbis_wood",
       "required": false
     }

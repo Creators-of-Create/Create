@@ -1,8 +1,9 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "priority": 1100,
   "package": "com.simibubi.create.foundation.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "create.refmap.json",
   "mixins": [
     "ClientboundMapItemDataPacketMixin",
@@ -21,7 +22,8 @@
     "accessor.GameTestHelperAccessor",
     "accessor.LivingEntityAccessor",
     "accessor.NbtAccounterAccessor",
-    "accessor.ServerLevelAccessor"
+    "accessor.ServerLevelAccessor",
+    "accessor.SystemReportAccessor"
   ],
   "client": [
     "accessor.AgeableListModelAccessor",
@@ -31,7 +33,6 @@
     "client.BlockDestructionProgressMixin",
     "client.CameraMixin",
     "client.EntityContraptionInteractionMixin",
-    "client.FixNormalScalingMixin",
     "client.GameRendererMixin",
     "client.HeavyBootsOnPlayerMixin",
     "client.HumanoidArmorLayerMixin",
@@ -43,6 +44,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "minVersion": "0.8"
+  }
 }

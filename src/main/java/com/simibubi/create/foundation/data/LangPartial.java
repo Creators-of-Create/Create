@@ -2,7 +2,13 @@ package com.simibubi.create.foundation.data;
 
 import com.google.gson.JsonElement;
 import com.simibubi.create.foundation.utility.FilesHelper;
+import com.tterrag.registrate.AbstractRegistrate;
+import com.tterrag.registrate.providers.ProviderType;
 
+/**
+ * @deprecated Use {@link AbstractRegistrate#addRawLang} or {@link AbstractRegistrate#addDataGenerator} with {@link ProviderType#LANG} instead.
+ */
+@Deprecated(forRemoval = true)
 public interface LangPartial {
 	String getDisplayName();
 

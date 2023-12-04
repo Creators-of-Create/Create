@@ -126,7 +126,7 @@ public class CurvedTrackInteraction {
 				player.swing(InteractionHand.MAIN_HAND);
 				return true;
 			}
-			if (AllItems.WRENCH.isIn(heldItem) && player.isSteppingCarefully()) {
+			if (AllItems.WRENCH.isIn(heldItem) && player.isShiftKeyDown()) {
 				AllPackets.getChannel().sendToServer(new CurvedTrackDestroyPacket(result.blockEntity()
 					.getBlockPos(),
 					result.loc()

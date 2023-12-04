@@ -139,7 +139,7 @@ public class DisplayLinkBlock extends WrenchableDirectionalBlock implements IBE<
 		BlockHitResult pHit) {
 		if (pPlayer == null)
 			return InteractionResult.PASS;
-		if (pPlayer.isSteppingCarefully())
+		if (pPlayer.isShiftKeyDown())
 			return InteractionResult.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> withBlockEntityDo(pLevel, pPos, be -> this.displayScreen(be, pPlayer)));
