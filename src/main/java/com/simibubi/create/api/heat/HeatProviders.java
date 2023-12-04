@@ -224,7 +224,7 @@ public class HeatProviders extends SavedData {
 	}
 
 	@SubscribeEvent
-	static void onBlockUpdated(final BlockEvent.NeighborNotifyEvent e){
+	static void onBlockUpdated(final BlockEvent.NeighborNotifyEvent e) {
 		checkForProviderRemoval(e);
 		checkForProviderPlacement(e);
 	}
@@ -273,39 +273,79 @@ public class HeatProviders extends SavedData {
 	}
 
 	/**
-	 * Internal Helper class to handle easily handle actions
+	 * Internal Helper class to handle actions
 	 */
 	public static class HeatProvider {
 		private final HeatLevelCalculation levelCalculation;
 		private final HeatedAreaOverride areaOverride;
 		private final MaxHeatConsumerOverride maxHeatConsumerOverride;
 
+		/**
+		 * Creates a {@link HeatProvider} that heats a single {@link HeatConsumer} right above itself.
+		 *
+		 * @param heatLevelCalculation Determines the provided heat level
+		 */
 		protected HeatProvider(HeatLevelCalculation heatLevelCalculation) {
 			this(heatLevelCalculation, (level1, providerPos) -> new BoundingBox(providerPos.above()), (level1, providerPos) -> 1);
 		}
 
+		/**
+		 * Creates a {@link HeatProvider} that heats a single {@link HeatConsumer} in a given {@link BoundingBox}.
+		 *
+		 * @param heatLevelCalculation Determines the provided heat level
+		 * @param areaOverride         Provides the {@link BoundingBox} where {@link HeatConsumer}s can consume the heat of this {@link HeatProvider}
+		 */
 		protected HeatProvider(HeatLevelCalculation heatLevelCalculation, HeatedAreaOverride areaOverride) {
 			this(heatLevelCalculation, areaOverride, (level1, providerPos) -> 1);
 		}
 
+		/**
+		 * Creates a {@link HeatProvider} that heats a given amount of {@link HeatConsumer} in a given {@link BoundingBox}.
+		 *
+		 * @param heatLevelCalculation    Determines the provided heat level
+		 * @param areaOverride            Provides the {@link BoundingBox} where {@link HeatConsumer}s can consume the heat of this {@link HeatProvider}
+		 * @param maxHeatConsumerOverride Provides the amount of {@link HeatConsumer}s that can be heated simultaneously
+		 */
 		protected HeatProvider(HeatLevelCalculation heatLevelCalculation, HeatedAreaOverride areaOverride, MaxHeatConsumerOverride maxHeatConsumerOverride) {
 			this.levelCalculation = heatLevelCalculation;
 			this.areaOverride = areaOverride;
 			this.maxHeatConsumerOverride = maxHeatConsumerOverride;
 		}
 
+		/**
+		 * @param level       World of the {@link HeatProvider}
+		 * @param providerPos {@link BlockPos}ition of the {@link HeatProvider}
+		 * @param consumerPos {@link BlockPos}ition of the {@link HeatConsumer}
+		 * @return the {@link HeatLevel} provided by this {@link HeatProvider} to the targeted {@link HeatConsumer}
+		 */
 		public HeatLevel getHeatLevel(Level level, BlockPos providerPos, BlockPos consumerPos) {
 			return levelCalculation.getHeatLevel(level, providerPos, consumerPos);
 		}
 
+		/**
+		 * @param level       World of the {@link HeatProvider}
+		 * @param providerPos {@link BlockPos}ition of the {@link HeatProvider}
+		 * @return {@link BoundingBox} representing the heated area of this {@link HeatProvider}
+		 */
 		public BoundingBox getHeatedArea(Level level, BlockPos providerPos) {
 			return areaOverride.getHeatedArea(level, providerPos);
 		}
 
+		/**
+		 * @param level       World of the {@link HeatProvider}
+		 * @param providerPos {@link BlockPos}ition of the {@link HeatProvider}
+		 * @return the maximum count of {@link HeatConsumer} that can be heated using this {@link HeatProvider}
+		 */
 		public int getMaxConsumers(Level level, BlockPos providerPos) {
 			return maxHeatConsumerOverride.getMaxHeatConsumers(level, providerPos);
 		}
 
+		/**
+		 * @param level       World of the {@link HeatProvider}
+		 * @param providerPos {@link BlockPos}ition of the {@link HeatProvider}
+		 * @param consumerPos {@link BlockPos}ition of the {@link HeatConsumer}
+		 * @return true if the given {@link HeatConsumer} is within the heated area of this {@link HeatProvider}
+		 */
 		public boolean isInHeatedRange(Level level, BlockPos providerPos, BlockPos consumerPos) {
 			return getHeatedArea(level, providerPos).isInside(consumerPos);
 		}
