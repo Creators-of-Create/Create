@@ -48,10 +48,12 @@ public class MountedStorageManager {
 	protected CombinedTankWrapper fluidInventory;
 	protected Map<BlockPos, MountedStorage> storage;
 	protected Map<BlockPos, MountedFluidStorage> fluidStorage;
+	protected List<Map.Entry<BlockPos, MountedStorage>> finalEntries;
 
 	public MountedStorageManager() {
 		storage = new HashMap<>();
 		fluidStorage = new HashMap<>();
+		finalEntries = new ArrayList<>();
 	}
 
 	public void entityTick(AbstractContraptionEntity entity) {
@@ -73,13 +75,13 @@ public class MountedStorageManager {
 		}
 	}
 
-	public void createHandlers() {
+	private void calcFinalEntries() {
+		finalEntries.clear();
 		List<Map.Entry<BlockPos, MountedStorage>> sortedEntries = new ArrayList<>(storage.entrySet());
 		sortedEntries.sort(new BlockPosComparator());
 
 		// weather an index is used
 		boolean[] used = new boolean[sortedEntries.size()];
-		List<Map.Entry<BlockPos, MountedStorage>> finalEntries = new ArrayList<>();
 		// make sure large chest's left and right side have proper order
 		for (int i = 0; i < sortedEntries.size(); i++) {
 			if (used[i]) continue;
@@ -87,6 +89,7 @@ public class MountedStorageManager {
 			BlockPos pos = entry.getKey();
 			MountedStorage mountedStorage = entry.getValue();
 			BlockEntity blockEntity = mountedStorage.getBlockEntity();
+			if (blockEntity == null) continue;
 			BlockState blockState = blockEntity.getBlockState();
 			if (blockState.hasProperty(ChestBlock.TYPE)) {
 				ChestType chestType = blockState.getValue(ChestBlock.TYPE);
@@ -124,7 +127,10 @@ public class MountedStorageManager {
 				finalEntries.add(entry);
 			}
 		}
+	}
 
+	public void createHandlers() {
+		calcFinalEntries();
 		List<MountedStorage> itemHandlers = finalEntries.stream()
 			.map(Map.Entry::getValue)
 			.collect(Collectors.toList());
@@ -161,8 +167,8 @@ public class MountedStorageManager {
 
 	public void read(CompoundTag nbt, Map<BlockPos, BlockEntity> presentBlockEntities, boolean clientPacket) {
 		storage.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Storage", Tag.TAG_COMPOUND), c -> storage
-			.put(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data"))));
+		NBTHelper.iterateCompoundList(nbt.getList("Storage", Tag.TAG_COMPOUND), c -> finalEntries
+			.add(Map.entry(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data")))));
 
 		fluidStorage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", Tag.TAG_COMPOUND), c -> fluidStorage
@@ -173,7 +179,9 @@ public class MountedStorageManager {
 
 		List<IItemHandlerModifiable> handlers = new ArrayList<>();
 		List<IItemHandlerModifiable> fuelHandlers = new ArrayList<>();
-		for (MountedStorage mountedStorage : storage.values()) {
+		for (Map.Entry<BlockPos, MountedStorage> entry : finalEntries) {
+			MountedStorage mountedStorage = entry.getValue();
+			storage.put(entry.getKey(), mountedStorage);
 			IItemHandlerModifiable itemHandler = mountedStorage.getItemHandler();
 			handlers.add(itemHandler);
 			if (mountedStorage.canUseForFuel())
@@ -206,9 +214,10 @@ public class MountedStorageManager {
 	public void write(CompoundTag nbt, boolean clientPacket) {
 		ListTag storageNBT = new ListTag();
 		if (!clientPacket)
-			for (BlockPos pos : storage.keySet()) {
+			for (Map.Entry<BlockPos, MountedStorage> entry : finalEntries) {
+				BlockPos pos = entry.getKey();
 				CompoundTag c = new CompoundTag();
-				MountedStorage mountedStorage = storage.get(pos);
+				MountedStorage mountedStorage = entry.getValue();
 				if (!mountedStorage.isValid())
 					continue;
 				c.put("Pos", NbtUtils.writeBlockPos(pos));
