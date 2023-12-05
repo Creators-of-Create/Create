@@ -141,7 +141,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			max = hardness;
 			argMax = toBreak;
 		}
-		
+
 		if (argMax == null) {
 			triggerPaver(context, pos);
 			return;
@@ -194,13 +194,13 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		int startingY = 1;
 		if (!getStateToPaveWith(context).isAir()) {
 			FilterItemStack filter = context.getFilterFromBE();
-			if (!ItemHelper	
+			if (!ItemHelper
 				.extract(context.contraption.getSharedInventory(),
 					stack -> filter.test(context.world, stack), 1, true)
 				.isEmpty())
 				startingY = 0;
 		}
-		
+
 		// Train
 		PaveTask profileForTracks = createHeightProfileForTracks(context);
 		if (profileForTracks != null) {
@@ -305,7 +305,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		BlockState stateToPaveWith = getStateToPaveWith(context);
 		BlockState stateToPaveWithAsSlab = getStateToPaveWithAsSlab(context);
 		RollingMode mode = getMode(context);
-		
+
 		if (mode != RollingMode.TUNNEL_PAVE && stateToPaveWith.isAir())
 			return;
 
@@ -469,6 +469,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 			return PaveResult.PASS;
 		if (!existing.is(BlockTags.LEAVES) && !existing.getMaterial()
 			.isReplaceable()
+			&& !existing.is(BlockTags.FLOWERS)
 			&& !existing.getCollisionShape(level, targetPos)
 				.isEmpty())
 			return PaveResult.FAIL;
