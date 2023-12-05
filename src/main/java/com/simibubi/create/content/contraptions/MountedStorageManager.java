@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraft.world.phys.Vec3;
@@ -56,8 +58,90 @@ public class MountedStorageManager {
 		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, entity.level().isClientSide));
 	}
 
+	public class BlockPosComparator implements Comparator<Map.Entry<BlockPos, MountedStorage>> {
+		@Override
+		public int compare(Map.Entry<BlockPos, MountedStorage> entry1, Map.Entry<BlockPos, MountedStorage> entry2) {
+			BlockPos pos1 = entry1.getKey(), pos2 = entry2.getKey();
+			// sort y from small to large
+			int result = Integer.compare(pos1.getY(), pos2.getY());
+			if (result != 0) return result;
+			// sort x from small to large if y equals
+			result = Integer.compare(pos1.getX(), pos2.getX());
+			if (result != 0) return result;
+			// sort z from small to large if x and y equals
+			return Integer.compare(pos1.getZ(), pos2.getZ());
+		}
+	}
+
 	public void createHandlers() {
-		Collection<MountedStorage> itemHandlers = storage.values();
+		List<Map.Entry<BlockPos, MountedStorage>> sortedEntries = new ArrayList<>(storage.entrySet());
+		sortedEntries.sort(new BlockPosComparator());
+
+		System.out.println("original order:");
+		for (Map.Entry<BlockPos, MountedStorage> entry : sortedEntries) {
+			System.out.println(entry.getKey().toString() + entry.getValue().toString());
+		}
+
+		// weather an index is used
+		boolean[] used = new boolean[sortedEntries.size()];
+		List<Map.Entry<BlockPos, MountedStorage>> finalEntries = new ArrayList<>();
+		// make sure large chest's left and right side have proper order
+		for (int i = 0; i < sortedEntries.size(); i++) {
+			if (used[i]) continue;
+			Map.Entry<BlockPos, MountedStorage> entry = sortedEntries.get(i);
+			BlockPos pos = entry.getKey();
+			MountedStorage mountedStorage = entry.getValue();
+			BlockEntity blockEntity = mountedStorage.getBlockEntity();
+			BlockState blockState = blockEntity.getBlockState();
+			if (blockState.hasProperty(ChestBlock.TYPE)) {
+				ChestType chestType = blockState.getValue(ChestBlock.TYPE);
+				// not large chest, just add it
+				if (chestType == ChestType.SINGLE) {
+					used[i] = true;
+					finalEntries.add(entry);
+					System.out.printf("%d: I am single chest!\n", i);
+					continue;
+				}
+				Direction facing = blockState.getOptionalValue(ChestBlock.FACING).orElse(Direction.SOUTH);
+				Direction connectedDirection = chestType == ChestType.LEFT ? facing.getClockWise() : facing.getCounterClockWise();
+				BlockPos connectedPos = pos.relative(connectedDirection);
+				// find connected chest entry index
+				int connectedindex = -1;
+				for (int j = 0; j < sortedEntries.size(); j++) {
+					if (sortedEntries.get(j).getKey().equals(connectedPos)) {
+						connectedindex = j;
+						break;
+					}
+				}
+				// make sure left side is before right side
+				if (chestType == ChestType.LEFT) {
+					used[connectedindex] = true;
+					finalEntries.add(sortedEntries.get(connectedindex));
+					System.out.printf("%d: I am right, let %d in first!\n", i, connectedindex);
+				}
+				used[i] = true;
+				finalEntries.add(entry);
+				if (chestType == ChestType.RIGHT) {
+					used[connectedindex] = true;
+					finalEntries.add(sortedEntries.get(connectedindex));
+					System.out.printf("%d: I am left, let %d in second!\n", i, connectedindex);
+				}
+			// not chest, just add it
+			} else {
+				used[i] = true;
+				finalEntries.add(entry);
+				System.out.printf("%d: I am not chest!\n", i);
+			}
+		}
+
+		System.out.println("final order:");
+		for (Map.Entry<BlockPos, MountedStorage> entry : finalEntries) {
+			System.out.println(entry.getKey().toString() + entry.getValue().toString());
+		}
+
+		List<MountedStorage> itemHandlers = finalEntries.stream()
+			.map(Map.Entry::getValue)
+			.collect(Collectors.toList());
 
 		inventory = wrapItems(itemHandlers.stream()
 			.map(MountedStorage::getItemHandler)

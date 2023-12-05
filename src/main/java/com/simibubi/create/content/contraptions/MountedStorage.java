@@ -34,6 +34,10 @@ public class MountedStorage {
 
 	private BlockEntity blockEntity;
 
+	public BlockEntity getBlockEntity() {
+		return blockEntity;
+	}
+
 	public static boolean canUseAsStorage(BlockEntity be) {
 		if (be == null)
 			return false;
