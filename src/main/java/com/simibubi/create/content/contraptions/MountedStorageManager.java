@@ -77,11 +77,6 @@ public class MountedStorageManager {
 		List<Map.Entry<BlockPos, MountedStorage>> sortedEntries = new ArrayList<>(storage.entrySet());
 		sortedEntries.sort(new BlockPosComparator());
 
-		System.out.println("original order:");
-		for (Map.Entry<BlockPos, MountedStorage> entry : sortedEntries) {
-			System.out.println(entry.getKey().toString() + entry.getValue().toString());
-		}
-
 		// weather an index is used
 		boolean[] used = new boolean[sortedEntries.size()];
 		List<Map.Entry<BlockPos, MountedStorage>> finalEntries = new ArrayList<>();
@@ -99,7 +94,6 @@ public class MountedStorageManager {
 				if (chestType == ChestType.SINGLE) {
 					used[i] = true;
 					finalEntries.add(entry);
-					System.out.printf("%d: I am single chest!\n", i);
 					continue;
 				}
 				Direction facing = blockState.getOptionalValue(ChestBlock.FACING).orElse(Direction.SOUTH);
@@ -117,26 +111,18 @@ public class MountedStorageManager {
 				if (chestType == ChestType.LEFT) {
 					used[connectedindex] = true;
 					finalEntries.add(sortedEntries.get(connectedindex));
-					System.out.printf("%d: I am right, let %d in first!\n", i, connectedindex);
 				}
 				used[i] = true;
 				finalEntries.add(entry);
 				if (chestType == ChestType.RIGHT) {
 					used[connectedindex] = true;
 					finalEntries.add(sortedEntries.get(connectedindex));
-					System.out.printf("%d: I am left, let %d in second!\n", i, connectedindex);
 				}
 			// not chest, just add it
 			} else {
 				used[i] = true;
 				finalEntries.add(entry);
-				System.out.printf("%d: I am not chest!\n", i);
 			}
-		}
-
-		System.out.println("final order:");
-		for (Map.Entry<BlockPos, MountedStorage> entry : finalEntries) {
-			System.out.println(entry.getKey().toString() + entry.getValue().toString());
 		}
 
 		List<MountedStorage> itemHandlers = finalEntries.stream()
