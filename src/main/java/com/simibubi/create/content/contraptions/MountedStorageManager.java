@@ -49,11 +49,13 @@ public class MountedStorageManager {
 	protected Map<BlockPos, MountedStorage> storage;
 	protected Map<BlockPos, MountedFluidStorage> fluidStorage;
 	protected List<Map.Entry<BlockPos, MountedStorage>> finalEntries;
+	protected boolean sorted;
 
 	public MountedStorageManager() {
 		storage = new HashMap<>();
 		fluidStorage = new HashMap<>();
 		finalEntries = new ArrayList<>();
+		sorted = false;
 	}
 
 	public void entityTick(AbstractContraptionEntity entity) {
@@ -76,6 +78,8 @@ public class MountedStorageManager {
 	}
 
 	private void calcFinalEntries() {
+		if (sorted) return;
+		sorted = true;
 		finalEntries.clear();
 		List<Map.Entry<BlockPos, MountedStorage>> sortedEntries = new ArrayList<>(storage.entrySet());
 		sortedEntries.sort(new BlockPosComparator());
@@ -89,7 +93,11 @@ public class MountedStorageManager {
 			BlockPos pos = entry.getKey();
 			MountedStorage mountedStorage = entry.getValue();
 			BlockEntity blockEntity = mountedStorage.getBlockEntity();
-			if (blockEntity == null) continue;
+			if (blockEntity == null) {
+				used[i] = true;
+				finalEntries.add(entry);
+				continue;
+			}
 			BlockState blockState = blockEntity.getBlockState();
 			if (blockState.hasProperty(ChestBlock.TYPE)) {
 				ChestType chestType = blockState.getValue(ChestBlock.TYPE);
@@ -169,6 +177,7 @@ public class MountedStorageManager {
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", Tag.TAG_COMPOUND), c -> finalEntries
 			.add(Map.entry(NbtUtils.readBlockPos(c.getCompound("Pos")), MountedStorage.deserialize(c.getCompound("Data")))));
+		sorted = true;
 
 		fluidStorage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", Tag.TAG_COMPOUND), c -> fluidStorage
