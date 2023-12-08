@@ -16,6 +16,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -36,7 +37,7 @@ public class FluidReactions {
 			level.setBlockAndUpdate(pos, event.getState());
 	}
 	
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void handlePipeFlowCollisionFallback(PipeCollisionEvent.Flow event) {
 		Fluid f1 = event.getFirstFluid();
 		Fluid f2 = event.getSecondFluid();
@@ -67,7 +68,7 @@ public class FluidReactions {
 		}
 	}
 	
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void handlePipeSpillCollisionFallback(PipeCollisionEvent.Spill event) {
 		Fluid pf = event.getPipeFluid();
 		Fluid wf = event.getWorldFluid();
@@ -78,7 +79,7 @@ public class FluidReactions {
 			event.setState(Blocks.COBBLESTONE.defaultBlockState());
 		} else if (pf == Fluids.LAVA && wf == Fluids.WATER) {
 			event.setState(Blocks.STONE.defaultBlockState());
-		} else if (pf == Fluids.LAVA && wf == Fluids.FLOWING_LAVA) {
+		} else if (pf == Fluids.LAVA && wf == Fluids.FLOWING_WATER) {
 			event.setState(Blocks.COBBLESTONE.defaultBlockState());
 		}
 

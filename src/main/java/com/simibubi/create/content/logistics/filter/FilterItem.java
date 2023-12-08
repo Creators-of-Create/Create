@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -33,7 +32,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
@@ -188,146 +186,7 @@ public class FilterItem extends Item implements MenuProvider {
 		return newInv;
 	}
 
-	public static boolean test(Level world, ItemStack stack, ItemStack filter) {
-		return test(world, stack, filter, false);
-	}
-
-	public static boolean test(Level world, FluidStack stack, ItemStack filter) {
-		return test(world, stack, filter, true);
-	}
-
-	public static boolean test(Level world, ItemStack stack, ItemStack filter, boolean matchNBT) {
-		if (filter.isEmpty())
-			return true;
-
-		if (!(filter.getItem() instanceof FilterItem))
-			return testDirect(filter, stack, matchNBT);
-
-		boolean defaults = !filter.hasTag();
-
-		if (defaults) {
-			return testDirect(filter, stack, matchNBT);
-		}
-
-		if (AllItems.FILTER.get() == filter.getItem()) {
-			ItemStackHandler filterItems = getFilterItems(filter);
-			boolean respectNBT = defaults ? false
-				: filter.getTag()
-					.getBoolean("RespectNBT");
-			boolean blacklist = defaults ? false
-				: filter.getTag()
-					.getBoolean("Blacklist");
-			boolean isEmpty = true;
-			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
-				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
-				if (stackInSlot.isEmpty())
-					continue;
-				isEmpty = false;
-				boolean matches = test(world, stack, stackInSlot, respectNBT);
-				if (matches)
-					return !blacklist;
-			}
-			if (isEmpty) {
-				return testDirect(filter, stack, matchNBT);
-			}
-			return blacklist;
-		}
-
-		if (AllItems.ATTRIBUTE_FILTER.get() == filter.getItem()) {
-			ListTag attributes = defaults ? new ListTag()
-				: filter.getTag()
-					.getList("MatchedAttributes", Tag.TAG_COMPOUND);
-			if (attributes.isEmpty()) {
-				return testDirect(filter, stack, matchNBT);
-			}
-			WhitelistMode whitelistMode = WhitelistMode.values()[defaults ? 0
-				: filter.getTag()
-					.getInt("WhitelistMode")];
-			for (Tag inbt : attributes) {
-				CompoundTag compound = (CompoundTag) inbt;
-				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
-				if (attribute == null)
-					continue;
-				boolean matches = attribute.appliesTo(stack, world) != compound.getBoolean("Inverted");
-
-				if (matches) {
-					switch (whitelistMode) {
-					case BLACKLIST:
-						return false;
-					case WHITELIST_CONJ:
-						continue;
-					case WHITELIST_DISJ:
-						return true;
-					}
-				} else {
-					switch (whitelistMode) {
-					case BLACKLIST:
-						continue;
-					case WHITELIST_CONJ:
-						return false;
-					case WHITELIST_DISJ:
-						continue;
-					}
-				}
-			}
-
-			switch (whitelistMode) {
-			case BLACKLIST:
-				return true;
-			case WHITELIST_CONJ:
-				return true;
-			case WHITELIST_DISJ:
-				return false;
-			}
-		}
-
-		return false;
-	}
-
-	public static boolean test(Level world, FluidStack stack, ItemStack filter, boolean matchNBT) {
-		if (filter.isEmpty())
-			return true;
-		if (stack.isEmpty())
-			return false;
-
-		if (!(filter.getItem() instanceof FilterItem)) {
-			if (!GenericItemEmptying.canItemBeEmptied(world, filter))
-				return false;
-			FluidStack fluidInFilter = GenericItemEmptying.emptyItem(world, filter, true)
-				.getFirst();
-			if (fluidInFilter == null)
-				return false;
-			if (!matchNBT)
-				return fluidInFilter.getFluid()
-					.isSame(stack.getFluid());
-			boolean fluidEqual = fluidInFilter.isFluidEqual(stack);
-			return fluidEqual;
-		}
-
-		boolean defaults = !filter.hasTag();
-
-		if (AllItems.FILTER.get() == filter.getItem()) {
-			ItemStackHandler filterItems = getFilterItems(filter);
-			boolean respectNBT = defaults ? false
-				: filter.getTag()
-					.getBoolean("RespectNBT");
-			boolean blacklist = defaults ? false
-				: filter.getTag()
-					.getBoolean("Blacklist");
-			for (int slot = 0; slot < filterItems.getSlots(); slot++) {
-				ItemStack stackInSlot = filterItems.getStackInSlot(slot);
-				if (stackInSlot.isEmpty())
-					continue;
-				boolean matches = test(world, stack, stackInSlot, respectNBT);
-				if (matches)
-					return !blacklist;
-			}
-			return blacklist;
-		}
-		return false;
-	}
-
-	private static boolean testDirect(ItemStack filter, ItemStack stack, boolean matchNBT) {
+	public static boolean testDirect(ItemStack filter, ItemStack stack, boolean matchNBT) {
 		if (matchNBT) {
 			return ItemHandlerHelper.canItemStacksStack(filter, stack);
 		} else {

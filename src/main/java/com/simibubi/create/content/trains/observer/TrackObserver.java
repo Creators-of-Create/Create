@@ -3,6 +3,7 @@ package com.simibubi.create.content.trains.observer;
 import java.util.UUID;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackEdge;
@@ -21,12 +22,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class TrackObserver extends SingleBlockEntityEdgePoint {
 
 	private int activated;
-	private ItemStack filter;
+	private FilterItemStack filter;
 	private UUID currentTrain;
 
 	public TrackObserver() {
 		activated = 0;
-		filter = ItemStack.EMPTY;
+		filter = FilterItemStack.empty();
 		currentTrain = null;
 	}
 
@@ -48,7 +49,7 @@ public class TrackObserver extends SingleBlockEntityEdgePoint {
 	}
 
 	public void setFilterAndNotify(Level level, ItemStack filter) {
-		this.filter = filter;
+		this.filter = FilterItemStack.of(filter.copy());
 		notifyTrains(level);
 	}
 
@@ -63,7 +64,7 @@ public class TrackObserver extends SingleBlockEntityEdgePoint {
 		SignalPropagator.notifyTrains(graph, edge);
 	}
 
-	public ItemStack getFilter() {
+	public FilterItemStack getFilter() {
 		return filter;
 	}
 	
@@ -84,7 +85,7 @@ public class TrackObserver extends SingleBlockEntityEdgePoint {
 	public void read(CompoundTag nbt, boolean migration, DimensionPalette dimensions) {
 		super.read(nbt, migration, dimensions);
 		activated = nbt.getInt("Activated");
-		filter = ItemStack.of(nbt.getCompound("Filter"));
+		filter = FilterItemStack.of(nbt.getCompound("Filter"));
 		if (nbt.contains("TrainId"))
 			currentTrain = nbt.getUUID("TrainId");
 	}

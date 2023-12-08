@@ -131,7 +131,7 @@ public class ValueBox extends ChasingAABBOutline {
 				return;
 
 			Font font = Minecraft.getInstance().font;
-			boolean wildcard = count == 0 || upTo && count == stack.getMaxStackSize();
+			boolean wildcard = count == 0 || upTo && count >= stack.getMaxStackSize();
 			Component countString = Components.literal(wildcard ? "*" : count + "");
 			ms.translate(17.5f, -5f, 7f);
 

@@ -117,7 +117,7 @@ public class RollerBlockEntity extends SmartBlockEntity {
 
 	protected void acceptSharedValues(int mode, ItemStack filter) {
 		dontPropagate = true;
-		this.filtering.setFilter(filter);
+		this.filtering.setFilter(filter.copy());
 		this.mode.setValue(mode);
 		dontPropagate = false;
 		notifyUpdate();

@@ -316,7 +316,7 @@ public abstract class CopycatBlock extends Block implements IBE<CopycatBlockEnti
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos,
 		Player player) {
 		BlockState material = getMaterial(level, pos);
-		if (AllBlocks.COPYCAT_BASE.has(material) || player != null && player.isSteppingCarefully())
+		if (AllBlocks.COPYCAT_BASE.has(material) || player != null && player.isShiftKeyDown())
 			return new ItemStack(this);
 		return material.getCloneItemStack(target, level, pos, player);
 	}
