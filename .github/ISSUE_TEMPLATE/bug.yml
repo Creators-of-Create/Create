@@ -30,7 +30,7 @@ body:
             Please run the \"/create debuginfo\" command in-game.
             This will copy a bunch of useful information that will greatly help with debugging.
             Please paste this information here.
-            If this command is not available, your version of Create is outdated.
+            If this command does not exist, your version of Create is outdated.
             Please update to the latest version first.
             "
         validations:
