@@ -25,10 +25,9 @@ body:
         attributes:
             label: Minecraft Version
             options:
-                # formatted for regex matching
-                - "Minecraft Version: 1.18.2"
-                - "Minecraft Version: 1.19.2"
-                - "Minecraft Version: 1.20.1"
+                - "1.18.2"
+                - "1.19.2"
+                - "1.20.1"
         validations:
             required: true
 

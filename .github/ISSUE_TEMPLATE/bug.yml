@@ -7,7 +7,7 @@ body:
             label: Description
             description: "
             Please describe the issue with as much detail as possible.
-            Explain what happened, and what should have happened.
+            Explain what happened, and what should have happened instead.
             Add screenshots or videos if they would be useful."
         validations:
             required: true
