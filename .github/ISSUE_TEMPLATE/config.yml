@@ -1,5 +1,8 @@
 blank_issues_enabled: true
 contact_links:
-  - name: Talk to us on Discord
-    url: https://discord.gg/hmaD7Se
-    about: Ask questions and get help from the community.
+    - name: I have an idea/suggestion!
+      url: https://discord.gg/hmaD7Se
+      about: These are best discussed with the community and submitted on Discord.
+    - name: Talk to us on Discord
+      url: https://discord.gg/hmaD7Se
+      about: Ask questions and get help from the community.
