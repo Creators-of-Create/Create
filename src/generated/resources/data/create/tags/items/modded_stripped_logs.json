@@ -25,10 +25,6 @@
       "required": false
     },
     {
-      "id": "forbidden_arcanus:stripped_cherrywood_log",
-      "required": false
-    },
-    {
       "id": "forbidden_arcanus:stripped_mysterywood_log",
       "required": false
     },
@@ -50,10 +46,6 @@
     },
     {
       "id": "byg:stripped_enchanted_log",
-      "required": false
-    },
-    {
-      "id": "byg:stripped_cherry_log",
       "required": false
     },
     {
@@ -225,10 +217,6 @@
       "required": false
     },
     {
-      "id": "biomesoplenty:stripped_cherry_log",
-      "required": false
-    },
-    {
       "id": "biomesoplenty:stripped_mahogany_log",
       "required": false
     },
@@ -282,14 +270,6 @@
     },
     {
       "id": "blue_skies:stripped_maple_log",
-      "required": false
-    },
-    {
-      "id": "blue_skies:stripped_cherry_log",
-      "required": false
-    },
-    {
-      "id": "environmental:stripped_cherry_log",
       "required": false
     },
     {

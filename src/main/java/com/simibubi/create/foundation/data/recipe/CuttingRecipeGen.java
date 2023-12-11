@@ -59,7 +59,7 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 			stripAndMakePlanks(Mods.BTN, "glimmering_dreamwood", "glimmering_stripped_dreamwood", "dreamwood_planks"),
 
 		// Forbidden Arcanus (no _wood suffix)
-		FA = cuttingCompat(Mods.FA,  "mysterywood"), // Does cherrywood still exist?
+		FA = cuttingCompat(Mods.FA,  "mysterywood"),
 
 		// Hexcasting (stripped is a suffix here)
 		HEX = cuttingCompat(Mods.HEX, "edified"),
