@@ -188,7 +188,7 @@ public class RemovedGuiUtils {
 			if (lineNumber + 1 == titleLinesCount)
 				tooltipY += 2;
 
-			tooltipY += 10;
+			tooltipY += line.getHeight();
 		}
 
 		renderType.endBatch();
