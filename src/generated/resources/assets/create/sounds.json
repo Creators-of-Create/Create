@@ -388,6 +388,27 @@
     ],
     "subtitle": "create.subtitle.slime_added"
   },
+  "spout": {
+    "sounds": [
+      {
+        "name": "create:spout",
+        "type": "file"
+      },
+      {
+        "name": "create:spout_1",
+        "type": "file"
+      },
+      {
+        "name": "create:spout_2",
+        "type": "file"
+      },
+      {
+        "name": "create:spout_3",
+        "type": "file"
+      }
+    ],
+    "subtitle": "create.subtitle.spout"
+  },
   "steam": {
     "sounds": [
       {
