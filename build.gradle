@@ -1,33 +1,24 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-        jcenter()
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-    dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:${forgegradle_version}"
-        classpath "org.spongepowered:mixingradle:${mixingradle_version}"
-        classpath "org.parchmentmc:librarian:${librarian_version}"
-    }
-}
-
 plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version "${forgegradle_version}"
+    id 'org.parchmentmc.librarian.forgegradle' version "${librarian_version}"
+    id 'org.spongepowered.mixin' version "${mixingradle_version}"
     id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
 
 jarJar.enable()
 
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
 // jozu: I use a gradle workspace with both projects.
 // The project is named Flywheel-Forge, but sub-projects are named by folder.
-boolean inWorkspace = findProject(':Flywheel') != null
+Project flywheelProject = findProject(':Flywheel')
+boolean flywheelInWorkspace = flywheelProject != null
+
+if (flywheelInWorkspace) {
+    println('Workspace detected, using Flywheel sibling project')
+}
 
 ext.buildNumber = System.getenv('BUILD_NUMBER')
 
@@ -39,8 +30,19 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + ' (' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
+mixin {
+    add sourceSets.main, 'create.refmap.json'
+
+    config 'flywheel.mixins.json'
+    config 'flywheel.sodium.mixins.json'
+    config 'create.mixins.json'
+
+    debug.verbose = true
+    debug.export = true
+}
+
 minecraft {
-    if (Boolean.parseBoolean(project.use_parchment)) {
+    if (Boolean.parseBoolean(use_parchment)) {
         mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
     } else {
         mappings channel: 'official', version: "${minecraft_version}"
@@ -49,19 +51,26 @@ minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
-        client {
-            workingDirectory project.file('run')
-            arg '-mixin.config=create.mixins.json'
-            //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
+        configureEach {
+            property 'forge.logging.markers', ''
             property 'forge.logging.console.level', 'info'
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods {
                 create {
                     source sourceSets.main
                 }
+            }
+        }
 
-                if (inWorkspace) {
+        client {
+            workingDirectory project.file('run')
+            mods {
+                if (flywheelInWorkspace) {
                     flywheel {
-                        source project(":Flywheel").sourceSets.main
+                        source flywheelProject.sourceSets.main
                     }
                 }
             }
@@ -69,29 +78,17 @@ minecraft {
 
         server {
             workingDirectory project.file('run/server')
-            arg '-mixin.config=create.mixins.json'
-            property 'forge.logging.console.level', 'info'
-            mods {
-                create {
-                    source sourceSets.main
-                }
-            }
         }
 
         data {
             workingDirectory project.file('run')
-            arg '-mixin.config=create.mixins.json'
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
             mods {
-                create {
-                    source sourceSets.main
-                }
-
-                if (inWorkspace) {
+                if (flywheelInWorkspace) {
                     flywheel {
-                        source project(":Flywheel").sourceSets.main
+                        source flywheelProject.sourceSets.main
                     }
                 }
             }
@@ -99,13 +96,6 @@ minecraft {
 
         gameTestServer {
             workingDirectory project.file('run/gametest')
-            arg '-mixin.config=create.mixins.json'
-            property 'forge.logging.console.level', 'info'
-            mods {
-                create {
-                    source sourceSets.main
-                }
-            }
             // setForceExit false <- FIXME 1.20
         }
     }
@@ -156,6 +146,7 @@ repositories {
         }
     }
 
+    mavenCentral()
     mavenLocal()
     flatDir {
         dirs 'libs'
@@ -174,8 +165,8 @@ dependencies {
 
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    if (inWorkspace) {
-        implementation project(':Flywheel')
+    if (flywheelInWorkspace) {
+        implementation flywheelProject
     } else {
         implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     }
@@ -221,10 +212,6 @@ sourceSets.main.java {
 sourceSets.main.resources {
     srcDir 'src/generated/resources'
     exclude '.cache/'
-}
-
-mixin {
-    add sourceSets.main, 'create.refmap.json'
 }
 
 // Workaround for SpongePowered/MixinGradle#38
