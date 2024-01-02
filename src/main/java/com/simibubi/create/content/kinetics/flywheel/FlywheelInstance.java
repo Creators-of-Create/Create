@@ -1,36 +1,41 @@
 package com.simibubi.create.content.kinetics.flywheel;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
-public class FlywheelInstance extends KineticBlockEntityInstance<FlywheelBlockEntity> implements DynamicInstance {
+public class FlywheelInstance extends KineticBlockEntityInstance<FlywheelBlockEntity> implements DynamicVisual {
 
-	protected final RotatingData shaft;
-	protected final ModelData wheel;
+	protected final RotatingInstance shaft;
+	protected final TransformedInstance wheel;
 	protected float lastAngle = Float.NaN;
 
-	public FlywheelInstance(MaterialManager materialManager, FlywheelBlockEntity blockEntity) {
+	public FlywheelInstance(VisualizationContext materialManager, FlywheelBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		shaft = setup(getRotatingMaterial().getModel(shaft())
+		shaft = setup(instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.block(shaft()), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance());
-		wheel = getTransformMaterial().getModel(blockState)
+		wheel = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.block(blockState), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
 
 		animate(blockEntity.angle);
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
@@ -47,18 +52,18 @@ public class FlywheelInstance extends KineticBlockEntityInstance<FlywheelBlockEn
 
 	private void animate(float angle) {
 		PoseStack ms = new PoseStack();
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 
-		msr.translate(getInstancePosition());
-		msr.centre()
-			.rotate(Direction.get(Direction.AxisDirection.POSITIVE, axis), AngleHelper.rad(angle))
-			.unCentre();
+		msr.translate(getVisualPosition());
+		msr.center()
+			.rotate(AngleHelper.rad(angle), Direction.get(Direction.AxisDirection.POSITIVE, axis))
+			.uncenter();
 
 		wheel.setTransform(ms);
 	}
 
 	@Override
-	public void update() {
+	public void update(float pt) {
 		updateRotation(shaft);
 	}
 
@@ -68,7 +73,7 @@ public class FlywheelInstance extends KineticBlockEntityInstance<FlywheelBlockEn
 	}
 
 	@Override
-	public void remove() {
+	protected void _delete() {
 		shaft.delete();
 		wheel.delete();
 	}

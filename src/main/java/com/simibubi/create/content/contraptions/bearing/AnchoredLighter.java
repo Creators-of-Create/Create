@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.bearing;
 
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
+import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 
@@ -11,8 +11,8 @@ public class AnchoredLighter extends ContraptionLighter<Contraption> {
     }
 
     @Override
-    public GridAlignedBB getContraptionBounds() {
-        GridAlignedBB bb = GridAlignedBB.from(contraption.bounds);
+    public MutableBox getContraptionBounds() {
+        MutableBox bb = MutableBox.from(contraption.bounds);
         bb.translate(contraption.anchor);
         return bb;
     }

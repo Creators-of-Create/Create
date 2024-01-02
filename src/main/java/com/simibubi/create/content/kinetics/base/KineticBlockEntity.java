@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
@@ -68,7 +68,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	private int validationCountdown;
 	protected float lastStressApplied;
 	protected float lastCapacityProvided;
-	
+
 	public SequenceContext sequenceContext;
 
 	public KineticBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
@@ -265,7 +265,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationManager.queueUpdate(this));
 	}
 
 	public float getGeneratedSpeed() {
@@ -578,7 +578,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
 		if (!this.remove)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationManager.queueUpdate(this));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -603,7 +603,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	public int getRotationAngleOffset(Axis axis) {
 		return 0;
 	}
-	
+
 	protected boolean syncSequenceContext() {
 		return false;
 	}

@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.event.RenderLayerEvent;
+import com.jozufozu.flywheel.api.event.RenderStageEvent;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.renderer.RenderType;
@@ -20,7 +20,7 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 	}
 
 	@Override
-	public void renderLayer(RenderLayerEvent event) {
+	public void renderLayer(RenderStageEvent event) {
 		super.renderLayer(event);
 		RenderType type = event.getType();
 		VertexConsumer consumer = event.buffers.bufferSource()

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.deployer;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -43,10 +43,10 @@ public class DeployerFilterSlot extends ValueBoxTransform.Sided {
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 
 		if (facing.getAxis() == Axis.Y)
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.rotateY(180 + AngleHelper.horizontalAngle(state.getValue(DeployerBlock.FACING)));
 
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateY(yRot)
 			.rotateX(xRot);
 	}

@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -229,7 +229,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	public void transformMS(PoseStack ms, float pt) {
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
 		if (!animatedRotation.equals(Vec3.ZERO) || !prevAnimatedRotation.equals(Vec3.ZERO)) {
 			if (centerOfRotation == null)
@@ -237,14 +237,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			double rotX = Mth.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
 			double rotZ = Mth.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
 			double rotY = Mth.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.translate(centerOfRotation)
 				.rotateX(rotX)
 				.rotateZ(rotZ)
 				.rotateY(rotY)
 				.translateBack(centerOfRotation);
 			if (stabilizationAnchor != null) {
-				TransformStack.cast(ms)
+				TransformStack.of(ms)
 					.translate(stabilizationAnchor)
 					.rotateX(-rotX)
 					.rotateZ(-rotZ)

@@ -5,11 +5,16 @@ import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.api.instance.TickableInstance;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.TickableVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.VisualTickContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.OrientedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
@@ -21,21 +26,21 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
 
-public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> implements DynamicInstance, TickableInstance {
+public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> implements DynamicVisual, TickableVisual {
 
     final Direction facing;
     final float yRot;
     final float xRot;
     final float zRot;
 
-    protected final OrientedData pole;
+    protected final OrientedInstance pole;
 
-    protected OrientedData hand;
+    protected OrientedInstance hand;
 
     PartialModel currentHand;
     float progress;
 
-    public DeployerInstance(MaterialManager materialManager, DeployerBlockEntity blockEntity) {
+    public DeployerInstance(VisualizationContext materialManager, DeployerBlockEntity blockEntity) {
         super(materialManager, blockEntity);
 
         facing = blockState.getValue(FACING);
@@ -46,11 +51,11 @@ public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> impleme
         xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRot = rotatePole ? 90 : 0;
 
-        pole = getOrientedMaterial().getModel(AllPartialModels.DEPLOYER_POLE, blockState).createInstance();
+        pole = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.DEPLOYER_POLE), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
 
 		currentHand = this.blockEntity.getHandPose();
 
-		hand = getOrientedMaterial().getModel(currentHand, blockState).createInstance();
+		hand = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
 
 		progress = getProgress(AnimationTickHolder.getPartialTicks());
         updateRotation(pole, hand, yRot, xRot, zRot);
@@ -58,18 +63,18 @@ public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> impleme
     }
 
     @Override
-    public void tick() {
+    public void tick(VisualTickContext ctx) {
 		PartialModel handPose = blockEntity.getHandPose();
 
 		if (currentHand != handPose) {
 			currentHand = handPose;
-			getOrientedMaterial().getModel(currentHand, blockState)
+			instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(currentHand), RenderStage.AFTER_BLOCK_ENTITIES)
 					.stealInstance(hand);
 		}
 	}
 
     @Override
-    public void beginFrame() {
+    public void beginFrame(VisualFrameContext ctx) {
 
         float newProgress = getProgress(AnimationTickHolder.getPartialTicks());
 
@@ -87,8 +92,8 @@ public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> impleme
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    protected void _delete() {
+        super._delete();
         hand.delete();
         pole.delete();
     }
@@ -110,7 +115,7 @@ public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> impleme
                 : currentHand == AllPartialModels.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
         float distance = Math.min(Mth.clamp(progress, 0, 1) * (blockEntity.reach + handLength), 21 / 16f);
         Vec3i facingVec = facing.getNormal();
-        BlockPos blockPos = getInstancePosition();
+        BlockPos blockPos = getVisualPosition();
 
         float x = blockPos.getX() + ((float) facingVec.getX()) * distance;
         float y = blockPos.getY() + ((float) facingVec.getY()) * distance;
@@ -120,7 +125,7 @@ public class DeployerInstance extends ShaftInstance<DeployerBlockEntity> impleme
         hand.setPosition(x, y, z);
     }
 
-    static void updateRotation(OrientedData pole, OrientedData hand, float yRot, float xRot, float zRot) {
+    static void updateRotation(OrientedInstance pole, OrientedInstance hand, float yRot, float xRot, float zRot) {
 
         Quaternionf q = Axis.YP.rotationDegrees(yRot);
         q.mul(Axis.XP.rotationDegrees(xRot));

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.decoration.placard;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -37,8 +37,8 @@ public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity>
 			.isGui3d();
 
 		ms.pushPose();
-		TransformStack.cast(ms)
-			.centre()
+		TransformStack.of(ms)
+			.center()
 			.rotate(Direction.UP,
 				(face == AttachFace.CEILING ? Mth.PI : 0) + AngleHelper.rad(180 + AngleHelper.horizontalAngle(facing)))
 			.rotate(Direction.EAST,

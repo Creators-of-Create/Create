@@ -11,7 +11,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.config.BackendType;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -62,7 +62,7 @@ public class BlockEntityRenderHelper {
 
 			BlockPos pos = blockEntity.getBlockPos();
 			ms.pushPose();
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.translate(pos);
 
 			try {

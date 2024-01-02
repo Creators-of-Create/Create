@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joml.Matrix4f;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.font.GlyphInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
@@ -56,11 +56,11 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayB
 		List<FlapDisplayLayout> lines = be.getLines();
 
 		ms.pushPose();
-		TransformStack.cast(ms)
-			.centre()
+		TransformStack.of(ms)
+			.center()
 			.rotateY(AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(FlapDisplayBlock.HORIZONTAL_FACING)))
-			.unCentre()
+			.uncenter()
 			.translate(0, 0, -3 / 16f);
 
 		ms.translate(0, 1, 1);

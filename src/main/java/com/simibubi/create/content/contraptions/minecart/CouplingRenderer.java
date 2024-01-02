@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.minecart;
 
 import static net.minecraft.util.Mth.lerp;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -79,7 +79,7 @@ public class CouplingRenderer {
 		double connectorPitch = Math.atan2(endPointDiff.y, endPointDiff.multiply(1, 0, 1)
 			.length()) * 180 / Math.PI;
 
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 		carts.forEachWithContext((cart, isFirst) -> {
 			CartEndpoint cartTransform = transforms.get(isFirst);
 
@@ -201,7 +201,7 @@ public class CouplingRenderer {
 		}
 
 		public void apply(PoseStack ms, Vec3 camera) {
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.translate(camera.scale(-1)
 					.add(x, y, z))
 				.rotateY(yaw)

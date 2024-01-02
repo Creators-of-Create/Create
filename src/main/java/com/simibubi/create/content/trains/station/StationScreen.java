@@ -4,7 +4,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -252,7 +252,7 @@ public class StationScreen extends AbstractStationScreen {
 			AllGuiTextures.STATION_EDIT_NAME.render(graphics, nameBoxX(text, nameBox) + font.width(text) + 5, y + 1);
 
 		graphics.renderItem(AllBlocks.TRAIN_DOOR.asStack(), x + 14, y + 103);
-		
+
 		Train train = displayedTrain.get();
 		if (train == null) {
 			MutableComponent header = Lang.translateDirect("station.idle");

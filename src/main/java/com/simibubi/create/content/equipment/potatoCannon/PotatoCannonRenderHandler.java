@@ -1,6 +1,6 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.zapper.ShootableGadgetRenderHandler;
@@ -49,14 +49,14 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 	protected void transformTool(PoseStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -.1f, 0, .14f);
 		ms.scale(.75f, .75f, .75f);
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateX(recoil * 80);
 	}
 
 	@Override
 	protected void transformHand(PoseStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -.09, -.275, -.25);
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateZ(flip * -10);
 	}
 

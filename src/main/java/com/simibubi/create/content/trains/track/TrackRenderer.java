@@ -36,7 +36,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 	protected void renderSafe(TrackBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		Level level = be.getLevel();
-		if (Backend.canUseInstancing(level))
+		if (VisualizationManager.supportsVisualization(level))
 			return;
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
 		be.connections.values()

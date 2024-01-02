@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.fan;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -27,7 +27,7 @@ public class EncasedFanRenderer extends KineticBlockEntityRenderer<EncasedFanBlo
 	@Override
 	protected void renderSafe(EncasedFanBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		Direction direction = be.getBlockState()
 				.getValue(FACING);

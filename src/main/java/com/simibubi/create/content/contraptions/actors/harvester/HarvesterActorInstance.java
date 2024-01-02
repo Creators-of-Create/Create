@@ -1,14 +1,12 @@
 package com.simibubi.create.content.contraptions.actors.harvester;
 
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -17,12 +15,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class HarvesterActorInstance extends ActorInstance {
     static float originOffset = 1 / 16f;
     static Vec3 rotOffset = new Vec3(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
 
-    protected ModelData harvester;
+    protected TransformedInstance harvester;
     private Direction facing;
 
     protected float horizontalAngle;
@@ -30,11 +29,11 @@ public class HarvesterActorInstance extends ActorInstance {
     private double rotation;
     private double previousRotation;
 
-    public HarvesterActorInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+    public HarvesterActorInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
 		Material<ModelData> material = materialManager.defaultCutout()
-				.material(Materials.TRANSFORMED);
+				.material(InstanceTypes.TRANSFORMED);
 
         BlockState state = context.state;
 
@@ -50,11 +49,11 @@ public class HarvesterActorInstance extends ActorInstance {
 	protected PartialModel getRollingPartial() {
 		return AllPartialModels.HARVESTER_BLADE;
 	}
-	
+
 	protected Vec3 getRotationOffset() {
 		return rotOffset;
 	}
-	
+
 	protected double getRadius() {
 		return 6.5;
 	}
@@ -86,9 +85,9 @@ public class HarvesterActorInstance extends ActorInstance {
     public void beginFrame() {
         harvester.loadIdentity()
 				.translate(context.localPos)
-				.centre()
+				.center()
 				.rotateY(horizontalAngle)
-				.unCentre()
+				.uncenter()
 				.translate(getRotationOffset())
 				.rotateX(getRotation())
 				.translateBack(getRotationOffset());

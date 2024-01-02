@@ -4,14 +4,14 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -52,7 +52,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+	public ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
 		MovementContext context) {
 		return new HarvesterActorInstance(materialManager, simulationWorld, context);
 	}

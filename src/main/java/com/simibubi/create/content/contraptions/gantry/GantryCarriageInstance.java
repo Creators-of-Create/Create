@@ -1,8 +1,12 @@
 package com.simibubi.create.content.contraptions.gantry;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
@@ -12,10 +16,11 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraftforge.client.model.data.ModelData;
 
-public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEntity> implements DynamicInstance {
+public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEntity> implements DynamicVisual {
 
-	private final ModelData gantryCogs;
+	private final TransformedInstance gantryCogs;
 
 	final Direction facing;
 	final Boolean alongFirst;
@@ -25,11 +30,10 @@ public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEnt
 
 	private float lastAngle = Float.NaN;
 
-	public GantryCarriageInstance(MaterialManager materialManager, GantryCarriageBlockEntity blockEntity) {
+	public GantryCarriageInstance(VisualizationContext materialManager, GantryCarriageBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		gantryCogs = getTransformMaterial()
-								 .getModel(AllPartialModels.GANTRY_COGS, blockState)
+		gantryCogs = instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GANTRY_COGS), RenderStage.AFTER_BLOCK_ENTITIES)
 								 .createInstance();
 
 		facing = blockState.getValue(GantryCarriageBlock.FACING);
@@ -46,7 +50,7 @@ public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEnt
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		float cogAngle = getCogAngle();
 
 		if (Mth.equal(cogAngle, lastAngle)) return;
@@ -60,15 +64,15 @@ public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEnt
 
 	private void animateCogs(float cogAngle) {
 		gantryCogs.loadIdentity()
-				.translate(getInstancePosition())
-				.centre()
+				.translate(getVisualPosition())
+				.center()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 				.rotateY(alongFirst ^ facing.getAxis() == Direction.Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
 				.rotateX(-cogAngle)
 				.translate(0, 9 / 16f, 0)
-				.unCentre();
+				.uncenter();
 	}
 
 	static float getRotationMultiplier(Direction.Axis gantryAxis, Direction facing) {
@@ -97,8 +101,8 @@ public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEnt
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+    protected void _delete() {
+		super._delete();
 		gantryCogs.delete();
 	}
 }

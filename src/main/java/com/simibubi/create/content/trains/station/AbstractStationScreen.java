@@ -3,8 +3,8 @@ package com.simibubi.create.content.trains.station;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.compat.computercraft.ComputerScreen;
@@ -99,7 +99,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
 		PoseStack ms = graphics.pose();
 		ms.pushPose();
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 		msr.pushPose()
 			.translate(guiLeft + background.width + 4, guiTop + background.height + 4, 100)
 			.scale(40)

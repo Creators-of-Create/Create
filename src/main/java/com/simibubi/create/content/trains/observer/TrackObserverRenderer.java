@@ -1,6 +1,6 @@
 package com.simibubi.create.content.trains.observer;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.trains.track.ITrackBlock;
 import com.simibubi.create.content.trains.track.TrackTargetingBehaviour;
@@ -36,7 +36,7 @@ public class TrackObserverRenderer extends SmartBlockEntityRenderer<TrackObserve
 			return;
 
 		ms.pushPose();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(targetPosition.subtract(pos));
 		RenderedTrackOverlayType type = RenderedTrackOverlayType.OBSERVER;
 		TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), target.getTargetBezier(), ms,

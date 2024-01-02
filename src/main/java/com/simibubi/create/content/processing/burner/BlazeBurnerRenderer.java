@@ -2,7 +2,7 @@ package com.simibubi.create.content.processing.burner;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -158,9 +158,9 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 			hatBuffer.translate(0, headY, 0);
 			if (blazeModel == AllPartialModels.BLAZE_INERT) {
 				hatBuffer.translateY(0.5f)
-					.centre()
+					.center()
 					.scale(0.75f)
-					.unCentre();
+					.uncenter();
 			} else {
 				hatBuffer.translateY(0.75f);
 			}

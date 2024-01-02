@@ -1,9 +1,12 @@
 package com.simibubi.create.content.fluids.pipes.valve;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
@@ -13,16 +16,16 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> implements DynamicInstance {
+public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> implements DynamicVisual {
 
-	protected ModelData pointer;
+	protected TransformedInstance pointer;
 	protected boolean settled;
 
     protected final double xRot;
     protected final double yRot;
     protected final int pointerRotationOffset;
 
-    public FluidValveInstance(MaterialManager dispatcher, FluidValveBlockEntity blockEntity) {
+    public FluidValveInstance(VisualizationContext dispatcher, FluidValveBlockEntity blockEntity) {
         super(dispatcher, blockEntity);
 
         Direction facing = blockState.getValue(FluidValveBlock.FACING);
@@ -37,15 +40,13 @@ public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> imp
         pointerRotationOffset = twist ? 90 : 0;
         settled = false;
 
-        pointer = materialManager.defaultSolid()
-                .material(Materials.TRANSFORMED)
-                .getModel(AllPartialModels.FLUID_VALVE_POINTER, blockState).createInstance();
+        pointer = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLUID_VALVE_POINTER), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
 
 		transformPointer();
     }
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		if (blockEntity.pointer.settled() && settled)
 			return;
 
@@ -58,12 +59,12 @@ public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> imp
 		settled = (value == 0 || value == 1) && blockEntity.pointer.settled();
 
         pointer.loadIdentity()
-				 .translate(getInstancePosition())
-				 .centre()
+				 .translate(getVisualPosition())
+				 .center()
 				 .rotateY(yRot)
 				 .rotateX(xRot)
 				 .rotateY(pointerRotationOffset + pointerRotation)
-				 .unCentre();
+				 .uncenter();
 	}
 
     @Override
@@ -73,8 +74,8 @@ public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> imp
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    protected void _delete() {
+        super._delete();
         pointer.delete();
     }
 }

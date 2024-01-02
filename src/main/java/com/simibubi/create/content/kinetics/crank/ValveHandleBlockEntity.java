@@ -3,9 +3,8 @@ package com.simibubi.create.content.kinetics.crank;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -149,8 +148,8 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public Instancer<ModelData> getRenderedHandleInstance(Material<ModelData> material) {
-		return material.getModel(getBlockState());
+	public Model getRenderedHandleInstance() {
+		return Models.block(getBlockState());
 	}
 
 	@Override
@@ -215,7 +214,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 		protected Vec3 getSouthLocation() {
 			return VecHelper.voxelSpace(8, 8, 4.5);
 		}
-		
+
 		@Override
 		public boolean testHit(BlockState state, Vec3 localHit) {
 			Vec3 offset = getLocalOffset(state);

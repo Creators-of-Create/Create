@@ -3,21 +3,22 @@ package com.simibubi.create.content.kinetics.deployer;
 import static com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.FACING;
 
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -39,16 +40,12 @@ public class DeployerActorInstance extends ActorInstance {
     float xRot;
     float zRot;
 
-    ModelData pole;
-    ModelData hand;
-    RotatingData shaft;
+    TransformedInstance pole;
+    TransformedInstance hand;
+    RotatingInstance shaft;
 
-	public DeployerActorInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+	public DeployerActorInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
-
-		Material<ModelData> mat = materialManager.defaultSolid()
-				.material(Materials.TRANSFORMED);
-
         BlockState state = context.state;
         DeployerBlockEntity.Mode mode = NBTHelper.readEnum(context.blockEntityData, "Mode", DeployerBlockEntity.Mode.class);
         PartialModel handPose = DeployerRenderer.getHandPose(mode);
@@ -61,13 +58,13 @@ public class DeployerActorInstance extends ActorInstance {
         xRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRot = rotatePole ? 90 : 0;
 
-        pole = mat.getModel(AllPartialModels.DEPLOYER_POLE, state).createInstance();
-        hand = mat.getModel(handPose, state).createInstance();
+		var instancerProvider = materialManager.instancerProvider();
+
+		pole = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.DEPLOYER_POLE), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
+        hand = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(handPose), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
 
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
-        shaft = materialManager.defaultSolid()
-                .material(AllMaterialSpecs.ROTATING)
-				.getModel(KineticBlockEntityInstance.shaft(axis))
+        shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.block(KineticBlockEntityInstance.shaft(axis)), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 
         int blockLight = localBlockLight();
@@ -97,7 +94,7 @@ public class DeployerActorInstance extends ActorInstance {
 
         Vec3 offset = Vec3.atLowerCornerOf(facing.getNormal()).scale(factor);
 
-        TransformStack tstack = TransformStack.cast(stack);
+        TransformStack tstack = TransformStack.of(stack);
         stack.setIdentity();
         tstack.translate(context.localPos)
 				.translate(offset);
@@ -105,20 +102,20 @@ public class DeployerActorInstance extends ActorInstance {
         transformModel(stack, pole, hand, yRot, xRot, zRot);
     }
 
-    static void transformModel(PoseStack stack, ModelData pole, ModelData hand, float yRot, float xRot, float zRot) {
-        TransformStack tstack = TransformStack.cast(stack);
+    static void transformModel(PoseStack stack, TransformedInstance pole, TransformedInstance hand, float yRot, float xRot, float zRot) {
+        TransformStack tstack = TransformStack.of(stack);
 
-        tstack.centre();
-        tstack.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
-        tstack.rotate(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
+        tstack.center();
+        tstack.rotate((float) ((yRot) / 180 * Math.PI), Direction.UP);
+        tstack.rotate((float) ((xRot) / 180 * Math.PI), Direction.EAST);
 
         stack.pushPose();
-        tstack.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
-        tstack.unCentre();
+        tstack.rotate((float) ((zRot) / 180 * Math.PI), Direction.SOUTH);
+        tstack.uncenter();
         pole.setTransform(stack);
         stack.popPose();
 
-        tstack.unCentre();
+        tstack.uncenter();
 
         hand.setTransform(stack);
     }

@@ -1,13 +1,9 @@
 package com.simibubi.create.foundation.data;
 
-import java.util.function.BiFunction;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
-import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
+import com.jozufozu.flywheel.lib.visual.SimpleEntityVisualizer;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
@@ -27,7 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P> {
 
 	@Nullable
-	private NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory;
+	private NonNullSupplier<SimpleEntityVisualizer.Factory<T>> instanceFactory;
 	private NonNullPredicate<T> renderNormally;
 
 	public static <T extends Entity, P> EntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
@@ -38,15 +34,15 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 		super(owner, parent, name, callback, factory, classification);
 	}
 
-	public CreateEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory) {
+	public CreateEntityBuilder<T, P> instance(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> instanceFactory) {
 		return instance(instanceFactory, true);
 	}
 
-	public CreateEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory, boolean renderNormally) {
+	public CreateEntityBuilder<T, P> instance(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> instanceFactory, boolean renderNormally) {
 		return instance(instanceFactory, be -> renderNormally);
 	}
 
-	public CreateEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory, NonNullPredicate<T> renderNormally) {
+	public CreateEntityBuilder<T, P> instance(NonNullSupplier<SimpleEntityVisualizer.Factory<T>> instanceFactory, NonNullPredicate<T> renderNormally) {
 		if (this.instanceFactory == null) {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerInstance);
 		}
@@ -59,10 +55,10 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 
 	protected void registerInstance() {
 		OneTimeEventReceiver.addModListener(Create.REGISTRATE, FMLClientSetupEvent.class, $ -> {
-			NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory = this.instanceFactory;
+			var instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
 				NonNullPredicate<T> renderNormally = this.renderNormally;
-				InstancedRenderRegistry.configure(getEntry())
+				SimpleEntityVisualizer.configure(getEntry())
 					.factory(instanceFactory.get())
 					.skipRender(be -> !renderNormally.test(be))
 					.apply();

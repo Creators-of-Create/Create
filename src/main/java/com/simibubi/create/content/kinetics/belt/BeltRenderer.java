@@ -3,9 +3,9 @@ package com.simibubi.create.content.kinetics.belt;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -53,7 +53,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 	protected void renderSafe(BeltBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (!Backend.canUseInstancing(be.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 
 			BlockState blockState = be.getBlockState();
 			if (!AllBlocks.BELT.has(blockState)) return;
@@ -72,15 +72,15 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			boolean alongX = facing.getAxis() == Direction.Axis.X;
 
 			PoseStack localTransforms = new PoseStack();
-            TransformStack msr = TransformStack.cast(localTransforms);
+            TransformStack msr = TransformStack.of(localTransforms);
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 			float renderTick = AnimationTickHolder.getRenderTime(be.getLevel());
 
-			msr.centre()
+			msr.center()
 					.rotateY(AngleHelper.horizontalAngle(facing) + (upward ? 180 : 0) + (sideways ? 270 : 0))
 					.rotateZ(sideways ? 90 : 0)
 					.rotateX(!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0)
-					.unCentre();
+					.uncenter();
 
 			if (downward || beltSlope == BeltSlope.VERTICAL && axisDirection == AxisDirection.POSITIVE) {
 				boolean b = start;
@@ -130,12 +130,12 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 				Supplier<PoseStack> matrixStackSupplier = () -> {
 					PoseStack stack = new PoseStack();
-                    TransformStack stacker = TransformStack.cast(stack);
-					stacker.centre();
+                    TransformStack stacker = TransformStack.of(stack);
+					stacker.center();
 					if (dir.getAxis() == Direction.Axis.X) stacker.rotateY(90);
 					if (dir.getAxis() == Direction.Axis.Y) stacker.rotateX(90);
 					stacker.rotateX(90);
-					stacker.unCentre();
+					stacker.uncenter();
 					return stack;
 				};
 
@@ -198,7 +198,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 		for (TransportedItemStack transported : be.getInventory()
 			.getTransportedItems()) {
 			ms.pushPose();
-            TransformStack.cast(ms)
+            TransformStack.of(ms)
 				.nudge(transported.angle);
 
 			float offset;

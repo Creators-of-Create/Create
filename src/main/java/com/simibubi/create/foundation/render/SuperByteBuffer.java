@@ -10,14 +10,12 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import com.jozufozu.flywheel.api.vertex.ShadedVertexList;
 import com.jozufozu.flywheel.api.vertex.VertexList;
-import com.jozufozu.flywheel.backend.ShadersModHandler;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
-import com.jozufozu.flywheel.core.vertex.BlockVertexList;
-import com.jozufozu.flywheel.util.DiffuseLightCalculator;
-import com.jozufozu.flywheel.util.transform.TStack;
-import com.jozufozu.flywheel.util.transform.Transform;
+import com.jozufozu.flywheel.lib.math.DiffuseLightCalculator;
+import com.jozufozu.flywheel.lib.math.RenderMath;
+import com.jozufozu.flywheel.lib.transform.Transform;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
+import com.jozufozu.flywheel.lib.util.ShadersModHandler;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -35,7 +33,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<SuperByteBuffer> {
+public class SuperByteBuffer implements Transform<SuperByteBuffer> {
 
 	private final VertexList template;
 	private final IntPredicate shadedPredicate;
@@ -130,23 +128,23 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		if (diffuseCalculator == null) {
 			diffuseCalculator = this.diffuseCalculator;
 			if (diffuseCalculator == null) {
-				diffuseCalculator = DiffuseLightCalculator.forCurrentLevel();
+				diffuseCalculator = DiffuseLightCalculator.forLevel(Minecraft.getInstance().level);
 			}
 		}
 
-		final int vertexCount = template.getVertexCount();
+		final int vertexCount = template.vertexCount();
 		for (int i = 0; i < vertexCount; i++) {
-			float x = template.getX(i);
-			float y = template.getY(i);
-			float z = template.getZ(i);
+			float x = template.x(i);
+			float y = template.y(i);
+			float z = template.y(i);
 
 			pos.set(x, y, z, 1F);
 			pos.mul(modelMat);
 			builder.vertex(pos.x(), pos.y(), pos.z());
 
-			float normalX = template.getNX(i);
-			float normalY = template.getNY(i);
-			float normalZ = template.getNZ(i);
+			float normalX = template.normalX(i);
+			float normalY = template.normalY(i);
+			float normalZ = template.normalZ(i);
 
 			normal.set(normalX, normalY, normalZ);
 			normal.mul(normalMat);
@@ -161,10 +159,10 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 				b = (byte) this.b;
 				a = (byte) this.a;
 			} else {
-				r = template.getR(i);
-				g = template.getG(i);
-				b = template.getB(i);
-				a = template.getA(i);
+				r = RenderMath.unb(template.r(i));
+				g = RenderMath.unb(template.g(i));
+				b = RenderMath.unb(template.b(i));
+				a = RenderMath.unb(template.a(i));
 			}
 			if (disableDiffuseMult) {
 				builder.color(r, g, b, a);
@@ -176,8 +174,8 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 				builder.color(colorR, colorG, colorB, a);
 			}
 
-			float u = template.getU(i);
-			float v = template.getV(i);
+			float u = template.u(i);
+			float v = template.v(i);
 			if (spriteShiftFunc != null) {
 				spriteShiftFunc.shift(builder, u, v);
 			} else {
@@ -203,11 +201,11 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 			} else if (hasCustomLight) {
 				light = packedLightCoords;
 			} else {
-				light = template.getLight(i);
+				light = template.light(i);
 			}
 
 			if (hybridLight) {
-				builder.uv2(maxLight(light, template.getLight(i)));
+				builder.uv2(maxLight(light, template.light(i)));
 			} else {
 				builder.uv2(light);
 			}
@@ -263,7 +261,7 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	@Override
-	public SuperByteBuffer multiply(Quaternionf quaternion) {
+	public SuperByteBuffer rotate(Quaternionf quaternion) {
 		transforms.mulPose(quaternion);
 		return this;
 	}
@@ -274,13 +272,11 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		return this;
 	}
 
-	@Override
 	public SuperByteBuffer pushPose() {
 		transforms.pushPose();
 		return this;
 	}
 
-	@Override
 	public SuperByteBuffer popPose() {
 		transforms.popPose();
 		return this;
@@ -315,13 +311,13 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
-		translate(.5f, .5f, .5f).rotate(axis, radians)
+		translate(.5f, .5f, .5f).rotate(radians, axis)
 			.translate(-.5f, -.5f, -.5f);
 		return this;
 	}
 
 	public SuperByteBuffer rotateCentered(Quaternionf q) {
-		translate(.5f, .5f, .5f).multiply(q)
+		translate(.5f, .5f, .5f).rotate(q)
 			.translate(-.5f, -.5f, -.5f);
 		return this;
 	}

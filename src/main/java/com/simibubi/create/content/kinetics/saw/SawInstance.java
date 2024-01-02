@@ -1,10 +1,11 @@
 package com.simibubi.create.content.kinetics.saw;
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Rotation;
@@ -13,20 +14,20 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class SawInstance extends SingleRotatingInstance<SawBlockEntity> {
 
-	public SawInstance(MaterialManager materialManager, SawBlockEntity blockEntity) {
+	public SawInstance(VisualizationContext materialManager, SawBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 	}
 
 	@Override
-	protected Instancer<RotatingData> getModel() {
+	protected Model model() {
 		if (blockState.getValue(BlockStateProperties.FACING)
-			.getAxis()
-			.isHorizontal()) {
+				.getAxis()
+				.isHorizontal()) {
 			BlockState referenceState = blockState.rotate(blockEntity.getLevel(), blockEntity.getBlockPos(), Rotation.CLOCKWISE_180);
 			Direction facing = referenceState.getValue(BlockStateProperties.FACING);
-			return getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, referenceState, facing);
+			return Models.partial(AllPartialModels.SHAFT_HALF, facing);
 		} else {
-			return getRotatingMaterial().getModel(shaft());
+			return Models.block(shaft());
 		}
 	}
 }

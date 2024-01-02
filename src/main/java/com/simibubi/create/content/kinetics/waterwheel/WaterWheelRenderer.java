@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.jozufozu.flywheel.core.StitchedSprite;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.CreateClient;
@@ -12,6 +11,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.model.BakedModelHelper;
 import com.simibubi.create.foundation.render.BakedModelRenderHelper;
 import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.StitchedSprite;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache.Compartment;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
@@ -100,7 +100,7 @@ public class WaterWheelRenderer<T extends WaterWheelBlockEntity> extends Kinetic
 			String namespace = id.getNamespace();
 			String wood = path.substring(0, path.length() - 7);
 			BlockState logBlockState = getLogBlockState(namespace, wood);
-			
+
 			Map<TextureAtlasSprite, TextureAtlasSprite> map = new Reference2ReferenceOpenHashMap<>();
 			map.put(OAK_PLANKS_TEMPLATE.get(), getSpriteOnSide(planksBlockState, Direction.UP));
 			map.put(OAK_LOG_TEMPLATE.get(), getSpriteOnSide(logBlockState, Direction.SOUTH));

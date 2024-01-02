@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.motor;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
@@ -79,7 +79,7 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 				return;
 			if (getSide() != Direction.UP)
 				return;
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.rotateZ(-AngleHelper.horizontalAngle(facing) + 180);
 		}
 

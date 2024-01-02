@@ -39,7 +39,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 		if (blocksLaunching)
 			renderLaunchedBlocks(blockEntity, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(blockEntity.getLevel()))
+		if (VisualizationManager.supportsVisualization(blockEntity.getLevel()))
 			return;
 
 		BlockPos pos = blockEntity.getBlockPos();

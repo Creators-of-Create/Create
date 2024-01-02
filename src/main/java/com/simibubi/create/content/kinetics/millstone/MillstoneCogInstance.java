@@ -1,19 +1,19 @@
 package com.simibubi.create.content.kinetics.millstone;
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 
 public class MillstoneCogInstance extends SingleRotatingInstance<MillstoneBlockEntity> {
 
-    public MillstoneCogInstance(MaterialManager materialManager, MillstoneBlockEntity blockEntity) {
+    public MillstoneCogInstance(VisualizationContext materialManager, MillstoneBlockEntity blockEntity) {
         super(materialManager, blockEntity);
     }
 
-    @Override
-    protected Instancer<RotatingData> getModel() {
-        return getRotatingMaterial().getModel(AllPartialModels.MILLSTONE_COG, blockEntity.getBlockState());
-    }
+	@Override
+	protected Model model() {
+		return Models.partial(AllPartialModels.MILLSTONE_COG);
+	}
 }

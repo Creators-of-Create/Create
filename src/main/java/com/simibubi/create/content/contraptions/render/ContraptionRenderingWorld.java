@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.jozufozu.flywheel.event.BeginFrameEvent;
-import com.jozufozu.flywheel.event.RenderLayerEvent;
+import com.jozufozu.flywheel.api.event.BeginFrameEvent;
+import com.jozufozu.flywheel.api.event.RenderStageEvent;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
@@ -43,9 +43,11 @@ public abstract class ContraptionRenderingWorld<C extends ContraptionRenderInfo>
 		return false;
 	}
 
-	public void renderLayer(RenderLayerEvent event) {
+	public void renderLayer(RenderStageEvent event) {
+        var position = event.getCamera()
+                .getPosition();
 		for (C c : visible) {
-			c.setupMatrices(event.stack, event.camX, event.camY, event.camZ);
+			c.setupMatrices(event.getStack(), position.x, position.y, position.z);
 		}
 	}
 

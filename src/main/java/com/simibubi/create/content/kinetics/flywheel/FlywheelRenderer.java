@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.flywheel;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -24,7 +24,7 @@ public class FlywheelRenderer extends KineticBlockEntityRenderer<FlywheelBlockEn
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		BlockState blockState = be.getBlockState();

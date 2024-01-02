@@ -1,12 +1,13 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.light.GPULightVolume;
-import com.jozufozu.flywheel.light.LightListener;
-import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
-import com.jozufozu.flywheel.util.box.ImmutableBox;
+import com.jozufozu.flywheel.lib.box.Box;
+import com.jozufozu.flywheel.lib.box.MutableBox;
+import com.jozufozu.flywheel.lib.light.GPULightVolume;
+import com.jozufozu.flywheel.lib.light.LightListener;
+import com.jozufozu.flywheel.lib.light.LightUpdater;
 import com.simibubi.create.content.contraptions.Contraption;
 
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.LightLayer;
 
 public abstract class ContraptionLighter<C extends Contraption> implements LightListener {
@@ -14,7 +15,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
     public final GPULightVolume lightVolume;
 	protected final LightUpdater lightUpdater;
 
-	protected final GridAlignedBB bounds;
+	protected final MutableBox bounds;
 
     protected boolean scheduleRebuild;
 
@@ -33,30 +34,25 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 		lightUpdater.addListener(this);
 	}
 
-	public abstract GridAlignedBB getContraptionBounds();
+	public abstract MutableBox getContraptionBounds();
 
 	@Override
-	public boolean isListenerInvalid() {
-		return lightVolume.isListenerInvalid();
+	public boolean isInvalid() {
+		return lightVolume.isInvalid();
 	}
 
 	@Override
-    public void onLightUpdate(LightLayer type, ImmutableBox changed) {
-        lightVolume.onLightUpdate(type, changed);
-    }
+	public void onLightUpdate(LightLayer type, SectionPos pos) {
+		lightVolume.onLightUpdate(type, pos);
+	}
 
-    @Override
-    public void onLightPacket(int chunkX, int chunkZ) {
-        lightVolume.onLightPacket(chunkX, chunkZ);
-    }
-
-    protected static void growBoundsForEdgeData(GridAlignedBB bounds) {
+    protected static void growBoundsForEdgeData(MutableBox bounds) {
         // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
         bounds.grow(2);
 	}
 
 	@Override
-	public ImmutableBox getVolume() {
+	public Box getVolume() {
 		return bounds;
 	}
 

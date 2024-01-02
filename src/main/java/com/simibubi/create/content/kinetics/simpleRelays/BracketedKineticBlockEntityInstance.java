@@ -1,14 +1,16 @@
 package com.simibubi.create.content.kinetics.simpleRelays;
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,15 +18,15 @@ import net.minecraft.core.Direction.AxisDirection;
 
 public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<BracketedKineticBlockEntity> {
 
-	protected RotatingData additionalShaft;
+	protected RotatingInstance additionalShaft;
 
-	public BracketedKineticBlockEntityInstance(MaterialManager materialManager, BracketedKineticBlockEntity blockEntity) {
+	public BracketedKineticBlockEntityInstance(VisualizationContext materialManager, BracketedKineticBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	public void init(float pt) {
+		super.init(pt);
 		if (!ICogWheel.isLargeCog(blockEntity.getBlockState()))
 			return;
 
@@ -36,7 +38,9 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 		BlockPos pos = blockEntity.getBlockPos();
 		float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
-		Instancer<RotatingData> half = getRotatingMaterial().getModel(AllPartialModels.COGWHEEL_SHAFT, blockState,
+		Instancer<RotatingInstance> half = materialManager.defaultSolid()
+				.material(AllInstanceTypes.ROTATING)
+				.getModel(AllPartialModels.COGWHEEL_SHAFT, blockState,
 			facing, () -> this.rotateToAxis(axis));
 
 		additionalShaft = setup(half.createInstance(), speed);
@@ -44,30 +48,30 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 	}
 
 	@Override
-	protected Instancer<RotatingData> getModel() {
+	protected Model model() {
 		if (!ICogWheel.isLargeCog(blockEntity.getBlockState()))
-			return super.getModel();
+			return super.model();
 
 		Direction.Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
-		return getRotatingMaterial().getModel(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, blockState, facing,
-			() -> this.rotateToAxis(axis));
+		return model(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, blockState, facing,
+				() -> this.rotateToAxis(axis));
 	}
 
 	private PoseStack rotateToAxis(Direction.Axis axis) {
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		PoseStack poseStack = new PoseStack();
-		TransformStack.cast(poseStack)
-				.centre()
+		TransformStack.of(poseStack)
+				.center()
 				.rotateToFace(facing)
 				.multiply(Axis.XN.rotationDegrees(-90))
-				.unCentre();
+				.uncenter();
 		return poseStack;
 	}
 
 	@Override
-	public void update() {
-		super.update();
+	public void update(float pt) {
+		super.update(pt);
 		if (additionalShaft != null) {
 			updateRotation(additionalShaft);
 			additionalShaft.setRotationOffset(BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos));
@@ -82,8 +86,8 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+    protected void _delete() {
+		super._delete();
 		if (additionalShaft != null)
 			additionalShaft.delete();
 	}

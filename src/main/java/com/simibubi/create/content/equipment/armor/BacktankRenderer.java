@@ -1,6 +1,6 @@
 package com.simibubi.create.content.equipment.armor;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
@@ -28,12 +28,12 @@ public class BacktankRenderer extends KineticBlockEntityRenderer<BacktankBlockEn
 
 		BlockState blockState = be.getBlockState();
 		SuperByteBuffer cogs = CachedBufferer.partial(getCogsModel(blockState), blockState);
-		cogs.centre()
+		cogs.center()
 			.rotateY(180 + AngleHelper.horizontalAngle(blockState.getValue(BacktankBlock.HORIZONTAL_FACING)))
-			.unCentre()
+			.uncenter()
 			.translate(0, 6.5f / 16, 11f / 16)
-			.rotate(Direction.EAST,
-				AngleHelper.rad(be.getSpeed() / 4f * AnimationTickHolder.getRenderTime(be.getLevel()) % 360))
+			.rotate(AngleHelper.rad(be.getSpeed() / 4f * AnimationTickHolder.getRenderTime(be.getLevel()) % 360),
+				Direction.EAST)
 			.translate(0, -6.5f / 16, -11f / 16);
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

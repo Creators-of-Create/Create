@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.core.model.ModelUtil;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;

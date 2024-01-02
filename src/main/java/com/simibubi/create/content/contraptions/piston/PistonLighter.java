@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.piston;
 
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
+import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 
 import net.minecraft.core.Vec3i;
@@ -11,8 +11,8 @@ public class PistonLighter extends ContraptionLighter<PistonContraption> {
     }
 
     @Override
-    public GridAlignedBB getContraptionBounds() {
-        GridAlignedBB bounds = GridAlignedBB.from(contraption.bounds);
+    public MutableBox getContraptionBounds() {
+        MutableBox bounds = MutableBox.from(contraption.bounds);
         bounds.translate(contraption.anchor);
 
         int length = contraption.extensionLength;

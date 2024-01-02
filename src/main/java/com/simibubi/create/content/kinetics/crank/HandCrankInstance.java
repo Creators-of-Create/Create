@@ -1,24 +1,24 @@
 package com.simibubi.create.content.kinetics.crank;
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEntity> implements DynamicInstance {
+public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEntity> implements DynamicVisual {
 
-	private ModelData crank;
+	private TransformedInstance crank;
 	private Direction facing;
 
-	public HandCrankInstance(MaterialManager modelManager, HandCrankBlockEntity blockEntity) {
+	public HandCrankInstance(VisualizationContext modelManager, HandCrankBlockEntity blockEntity) {
 		super(modelManager, blockEntity);
 		facing = blockState.getValue(BlockStateProperties.FACING);
-		Instancer<ModelData> model = blockEntity.getRenderedHandleInstance(getTransformMaterial());
+		Model model = blockEntity.getRenderedHandleInstance();
 		crank = model.createInstance();
 		rotateCrank();
 	}
@@ -36,10 +36,10 @@ public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEnti
 		float angle = blockEntity.getIndependentAngle(AnimationTickHolder.getPartialTicks());
 
 		crank.loadIdentity()
-			.translate(getInstancePosition())
-			.centre()
+			.translate(getVisualPosition())
+			.center()
 			.rotate(Direction.get(Direction.AxisDirection.POSITIVE, axis), angle)
-			.unCentre();
+			.uncenter();
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEnti
 	}
 
 	@Override
-	public void remove() {
+	protected void _delete() {
 		if (blockEntity.shouldRenderShaft())
-			super.remove();
+			super._delete();
 		if (crank != null)
 			crank.delete();
 	}

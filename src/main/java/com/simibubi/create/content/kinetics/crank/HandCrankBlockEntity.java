@@ -1,8 +1,7 @@
 package com.simibubi.create.content.kinetics.crank;
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllSoundEvents;
@@ -102,11 +101,11 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public Instancer<ModelData> getRenderedHandleInstance(Material<ModelData> material) {
+	public Model getRenderedHandleInstance() {
 		BlockState blockState = getBlockState();
 		Direction facing = blockState.getOptionalValue(HandCrankBlock.FACING)
 			.orElse(Direction.UP);
-		return material.getModel(AllPartialModels.HAND_CRANK_HANDLE, blockState, facing.getOpposite());
+		return Models.partial(AllPartialModels.HAND_CRANK_HANDLE, facing.getOpposite());
 	}
 
 	@OnlyIn(Dist.CLIENT)

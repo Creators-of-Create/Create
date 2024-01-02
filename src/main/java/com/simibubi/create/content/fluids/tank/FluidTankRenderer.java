@@ -1,6 +1,6 @@
 package com.simibubi.create.content.fluids.tank;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -82,7 +82,7 @@ public class FluidTankRenderer extends SafeBlockEntityRenderer<FluidTankBlockEnt
 		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		ms.pushPose();
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 		msr.translate(be.width / 2f, 0.5, be.width / 2f);
 
 		float dialPivot = 5.75f / 16;
@@ -92,13 +92,13 @@ public class FluidTankRenderer extends SafeBlockEntityRenderer<FluidTankBlockEnt
 			ms.pushPose();
 			CachedBufferer.partial(AllPartialModels.BOILER_GAUGE, blockState)
 				.rotateY(d.toYRot())
-				.unCentre()
+				.uncenter()
 				.translate(be.width / 2f - 6 / 16f, 0, 0)
 				.light(light)
 				.renderInto(ms, vb);
 			CachedBufferer.partial(AllPartialModels.BOILER_GAUGE_DIAL, blockState)
 				.rotateY(d.toYRot())
-				.unCentre()
+				.uncenter()
 				.translate(be.width / 2f - 6 / 16f, 0, 0)
 				.translate(0, dialPivot, dialPivot)
 				.rotateX(-90 * progress)

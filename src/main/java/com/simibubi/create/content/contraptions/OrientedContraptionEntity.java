@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.bearing.StabilizedContraption;
@@ -496,7 +496,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		Vec3 anchorVec = super.getAnchorVec();
 		return anchorVec.subtract(.5, 0, .5);
 	}
-	
+
 	@Override
 	public Vec3 getPrevAnchorVec() {
 		Vec3 prevAnchorVec = super.getPrevAnchorVec();
@@ -538,13 +538,13 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				repositionOnContraption(matrixStack, partialTicks, ridingEntity);
 		}
 
-		TransformStack.cast(matrixStack)
+		TransformStack.of(matrixStack)
 			.nudge(getId())
-			.centre()
+			.center()
 			.rotateY(angleYaw)
 			.rotateZ(anglePitch)
 			.rotateY(angleInitialYaw)
-			.unCentre();
+			.uncenter();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -571,7 +571,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		Vec3 passengerPosition = parent.getPassengerPosition(this, partialTicks);
 		if (passengerPosition == null)
 			return Vec3.ZERO;
-		
+
 		double x = passengerPosition.x - Mth.lerp(partialTicks, this.xOld, this.getX());
 		double y = passengerPosition.y - Mth.lerp(partialTicks, this.yOld, this.getY());
 		double z = passengerPosition.z - Mth.lerp(partialTicks, this.zOld, this.getZ());

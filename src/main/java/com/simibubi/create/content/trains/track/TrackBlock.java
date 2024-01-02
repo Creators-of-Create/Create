@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicates;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
@@ -652,7 +652,7 @@ public class TrackBlock extends Block
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
 		PoseStack ms) {
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction)));
 		return AllPartialModels.TRACK_ASSEMBLING_OVERLAY;
 	}
@@ -661,7 +661,7 @@ public class TrackBlock extends Block
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
 		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack ms, RenderedTrackOverlayType type) {
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 
 		Vec3 axis = null;
 		Vec3 diff = null;
@@ -700,10 +700,10 @@ public class TrackBlock extends Block
 
 		Vec3 angles = TrackRenderer.getModelAngles(normal, diff);
 
-		msr.centre()
+		msr.center()
 			.rotateYRadians(angles.y)
 			.rotateXRadians(angles.x)
-			.unCentre();
+			.uncenter();
 
 		if (axis != null)
 			msr.translate(0, axis.y != 0 ? 7 / 16f : 0, axis.y != 0 ? direction.getStep() * 2.5f / 16f : 0);
@@ -718,9 +718,9 @@ public class TrackBlock extends Block
 			double yOffset = 0;
 			for (BezierConnection bc : trackTE.connections.values())
 				yOffset += bc.starts.getFirst().y - pos.getY();
-			msr.centre()
+			msr.center()
 				.rotateX(-direction.getStep() * trackTE.tilt.smoothingAngle.get())
-				.unCentre()
+				.uncenter()
 				.translate(0, yOffset / 2, 0);
 		}
 

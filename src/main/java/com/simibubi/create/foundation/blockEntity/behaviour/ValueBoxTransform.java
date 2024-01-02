@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -42,7 +42,7 @@ public abstract class ValueBoxTransform {
 	public boolean shouldRender(BlockState state) {
 		return !state.isAir() && getLocalOffset(state) != null;
 	}
-	
+
 	public int getOverrideColor() {
 		return -1;
 	}
@@ -112,7 +112,7 @@ public abstract class ValueBoxTransform {
 		public void rotate(BlockState state, PoseStack ms) {
 			float yRot = AngleHelper.horizontalAngle(getSide()) + 180;
 			float xRot = getSide() == Direction.UP ? 90 : getSide() == Direction.DOWN ? 270 : 0;
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.rotateY(yRot)
 				.rotateX(xRot);
 		}

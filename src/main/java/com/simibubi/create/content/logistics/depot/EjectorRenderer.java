@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.depot;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.Rotate;
-import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.jozufozu.flywheel.util.transform.Translate;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
+import com.jozufozu.flywheel.lib.transform.Rotate;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.Translate;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -45,14 +45,14 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		float lidProgress = be.getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
-		if (!Backend.canUseInstancing(be.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			SuperByteBuffer model = CachedBufferer.partial(AllPartialModels.EJECTOR_TOP, be.getBlockState());
 			applyLidAngle(be, angle, model);
 			model.light(light)
 					.renderInto(ms, vertexBuilder);
 		}
 
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 
 		float maxTime =
 				(float) (be.earlyTarget != null ? be.earlyTargetTime : be.launcher.getTotalFlyingTicks());
@@ -81,10 +81,10 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 
 		ms.pushPose();
 		applyLidAngle(be, angle, msr);
-		msr.centre()
+		msr.center()
 			.rotateY(-180 - AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
-			.unCentre();
+			.uncenter();
 		DepotRenderer.renderItemsOf(be, partialTicks, ms, buffer, light, overlay, behaviour);
 		ms.popPose();
 	}
@@ -94,10 +94,10 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 	}
 
 	static <T extends Translate<T> & Rotate<T>> void applyLidAngle(KineticBlockEntity be, Vec3 rotationOffset, float angle, T tr) {
-		tr.centre()
+		tr.center()
 			.rotateY(180 + AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
-			.unCentre()
+			.uncenter()
 			.translate(rotationOffset)
 			.rotateX(-angle)
 			.translateBack(rotationOffset);

@@ -3,17 +3,19 @@ package com.simibubi.create.content.kinetics.mechanicalArm;
 import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
-import com.jozufozu.flywheel.api.InstanceData;
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.AbstractInstance;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -24,16 +26,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
-public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implements DynamicInstance {
+public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implements DynamicVisual {
 
-	final ModelData base;
-	final ModelData lowerBody;
-	final ModelData upperBody;
-	ModelData claw;
+	final TransformedInstance base;
+	final TransformedInstance lowerBody;
+	final TransformedInstance upperBody;
+	TransformedInstance claw;
 
-	private final ArrayList<ModelData> clawGrips;
-
-	private final ArrayList<ModelData> models;
+	private final ArrayList<TransformedInstance> clawGrips;
+	private final ArrayList<TransformedInstance> models;
 	private final Boolean ceiling;
 
 	private boolean firstRender = true;
@@ -43,25 +44,21 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 	private float upperArmAngle = Float.NaN;
 	private float headAngle = Float.NaN;
 
-	public ArmInstance(MaterialManager materialManager, ArmBlockEntity blockEntity) {
+	public ArmInstance(VisualizationContext materialManager, ArmBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		Material<ModelData> mat = getTransformMaterial();
-
-		base = mat.getModel(AllPartialModels.ARM_BASE, blockState)
+		base = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_BASE), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
-		lowerBody = mat.getModel(AllPartialModels.ARM_LOWER_BODY, blockState)
+		lowerBody = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_LOWER_BODY), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
-		upperBody = mat.getModel(AllPartialModels.ARM_UPPER_BODY, blockState)
+		upperBody = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_UPPER_BODY), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
-		claw = mat
-			.getModel(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE,
-				blockState)
+		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
 
-		ModelData clawGrip1 = mat.getModel(AllPartialModels.ARM_CLAW_GRIP_UPPER, blockState)
+		TransformedInstance clawGrip1 = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_UPPER), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
-		ModelData clawGrip2 = mat.getModel(AllPartialModels.ARM_CLAW_GRIP_LOWER, blockState)
+		TransformedInstance clawGrip2 = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ARM_CLAW_GRIP_LOWER), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
@@ -72,7 +69,7 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		if (blockEntity.phase == ArmBlockEntity.Phase.DANCING && blockEntity.getSpeed() != 0) {
 			animateArm(true);
 			firstRender = true;
@@ -126,9 +123,9 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 		}
 
 		PoseStack msLocal = new PoseStack();
-		TransformStack msr = TransformStack.cast(msLocal);
-		msr.translate(getInstancePosition());
-		msr.centre();
+		TransformStack msr = TransformStack.of(msLocal);
+		msr.translate(getVisualPosition());
+		msr.center();
 
 		if (ceiling)
 			msr.rotateX(180);
@@ -145,12 +142,12 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 			.setColor(color);
 
 		ArmRenderer.transformHead(msr, headAngle);
-		
+
 		if (ceiling && blockEntity.goggles)
 			msr.rotateZ(180);
-		
+
 		claw.setTransform(msLocal);
-		
+
 		if (ceiling && blockEntity.goggles)
 			msr.rotateZ(180);
 
@@ -173,14 +170,12 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 	}
 
 	@Override
-	public void update() {
-		super.update();
+	public void update(float pt) {
+		super.update(pt);
 		models.remove(claw);
 		claw.delete();
-		claw = getTransformMaterial()
-			.getModel(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE,
-				blockState)
-			.createInstance();
+		claw = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(blockEntity.goggles ? AllPartialModels.ARM_CLAW_BASE_GOGGLES : AllPartialModels.ARM_CLAW_BASE), RenderStage.AFTER_BLOCK_ENTITIES)
+				.createInstance();
 		models.add(claw);
 		updateLight();
 		animateArm(false);
@@ -194,14 +189,14 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 	}
 
 	@Override
-	protected Instancer<RotatingData> getModel() {
-		return getRotatingMaterial().getModel(AllPartialModels.ARM_COG, blockEntity.getBlockState());
+	protected Model model() {
+		return Models.partial(AllPartialModels.ARM_COG);
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
-		models.forEach(InstanceData::delete);
+    protected void _delete() {
+		super._delete();
+		models.forEach(AbstractInstance::delete);
 	}
 
 }

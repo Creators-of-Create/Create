@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllShapes;
@@ -154,7 +154,7 @@ public class TrackBlockOutline {
 		Vec3 vec = result.vec()
 			.subtract(camera);
 		Vec3 angles = result.angles();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.pushPose()
 			.translate(vec.x, vec.y + .125f, vec.z)
 			.rotateYRadians(angles.y)
@@ -194,7 +194,7 @@ public class TrackBlockOutline {
 		boolean canConnectFrom = !shape.isJunction()
 			&& !(mc.level.getBlockEntity(pos)instanceof TrackBlockEntity tbe && tbe.isTilted());
 
-		walkShapes(shape, TransformStack.cast(ms), s -> {
+		walkShapes(shape, TransformStack.of(ms), s -> {
 			renderShape(s, ms, vb, holdingTrack ? canConnectFrom : null);
 			event.setCanceled(true);
 		});

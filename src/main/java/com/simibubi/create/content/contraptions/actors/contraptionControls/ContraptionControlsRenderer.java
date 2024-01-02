@@ -2,8 +2,7 @@ package com.simibubi.create.content.contraptions.actors.contraptionControls;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
@@ -14,6 +13,7 @@ import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeRenderer;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
@@ -93,7 +93,7 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		String text = efs.currentShortName;
 		String description = efs.currentLongName;
 		PoseStack ms = matrices.getViewProjection();
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 
 		ms.pushPose();
 		msr.translate(ctx.localPos);

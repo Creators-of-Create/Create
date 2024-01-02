@@ -2,7 +2,7 @@ package com.simibubi.create.content.fluids.pipes;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.fluids.FluidPropagator;
 import com.simibubi.create.content.fluids.pipes.StraightPipeBlockEntity.StraightPipeFluidTransportBehaviour;
@@ -83,7 +83,7 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity {
 		@Override
 		public void rotate(BlockState state, PoseStack ms) {
 			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.rotateY(angleY(state))
 				.rotateX(face == AttachFace.CEILING ? -45 : 45);
 		}

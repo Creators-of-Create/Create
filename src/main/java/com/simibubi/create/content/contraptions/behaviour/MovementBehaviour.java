@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.behaviour;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -41,11 +41,11 @@ public interface MovementBehaviour {
 			return null;
 		return new ItemStack(block);
 	}
-	
+
 	default void onDisabledByControls(MovementContext context) {
 		cancelStall(context);
 	}
-	
+
 	default boolean mustTickWhileDisabled() {
 		return false;
 	}
@@ -63,7 +63,7 @@ public interface MovementBehaviour {
 		Vec3 vec = context.position;
 		if (vec == null)
 			return;
-		
+
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
 		itemEntity.setDeltaMovement(context.motion.add(0, 0.5f, 0)
 			.scale(context.world.random.nextFloat() * .3f));
@@ -73,7 +73,7 @@ public interface MovementBehaviour {
 	default void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {}
 
 	default void stopMoving(MovementContext context) {}
-	
+
 	default void cancelStall(MovementContext context) {
 		context.stall = false;
 	}
@@ -94,7 +94,7 @@ public interface MovementBehaviour {
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+	default ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
 		MovementContext context) {
 		return null;
 	}

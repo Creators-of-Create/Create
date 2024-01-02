@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.light.LightListener;
-import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
-import com.jozufozu.flywheel.util.box.ImmutableBox;
+import com.jozufozu.flywheel.lib.box.Box;
+import com.jozufozu.flywheel.lib.box.MutableBox;
+import com.jozufozu.flywheel.lib.light.LightListener;
+import com.jozufozu.flywheel.lib.light.LightUpdater;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -195,7 +195,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		if (isController())
 			getInventory().ejectAll();
 	}
-	
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
@@ -282,7 +282,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return false;
 		if (level.isClientSide())
 			return true;
-		
+
 		for (BlockPos blockPos : BeltBlock.getBeltChain(level, getController())) {
 			BeltBlockEntity belt = BeltHelper.getSegmentBE(level, blockPos);
 			if (belt == null)
@@ -291,7 +291,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			belt.setChanged();
 			belt.sendData();
 		}
-		
+
 		return true;
 	}
 
@@ -430,7 +430,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 	public void setCasingType(CasingType type) {
 		if (casing == type)
 			return;
-		
+
 		BlockState blockState = getBlockState();
 		boolean shouldBlockHaveCasing = type != CasingType.NONE;
 
@@ -441,7 +441,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 16);
 			return;
 		}
-		
+
 		if (casing != CasingType.NONE)
 			level.levelEvent(2001, worldPosition,
 				Block.getId(casing == CasingType.ANDESITE ? AllBlocks.ANDESITE_CASING.getDefaultState()
@@ -463,7 +463,7 @@ public class BeltBlockEntity extends KineticBlockEntity {
 			return false;
 		return getMovementFacing() != side.getOpposite();
 	}
-	
+
 	private boolean isOccupied(Direction side) {
 		BeltBlockEntity nextBeltController = getControllerBE();
 		if (nextBeltController == null)
@@ -605,9 +605,9 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		}
 
 		@Override
-		public GridAlignedBB getVolume() {
+		public Box getVolume() {
 			BlockPos endPos = BeltHelper.getPositionForOffset(BeltBlockEntity.this, beltLength - 1);
-			GridAlignedBB bb = GridAlignedBB.from(worldPosition, endPos);
+			var bb = MutableBox.from(worldPosition, endPos);
 			bb.fixMinMax();
 			return bb;
 		}
@@ -618,13 +618,13 @@ public class BeltBlockEntity extends KineticBlockEntity {
 		}
 
 		@Override
-		public void onLightUpdate(LightLayer type, ImmutableBox changed) {
+		public void onLightUpdate(LightLayer type, Box changed) {
 			if (remove)
 				return;
 			if (level == null)
 				return;
 
-			GridAlignedBB beltVolume = getVolume();
+			Box beltVolume = getVolume();
 
 			if (beltVolume.intersects(changed)) {
 				if (type == LightLayer.BLOCK)

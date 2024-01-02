@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock;
@@ -109,7 +109,7 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
 			sides.addAll(flaps.keySet());
 		super.read(compound, clientPacket);
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationManager.queueUpdate(this));
 	}
 
 	private LerpedFloat createChasingFlap() {

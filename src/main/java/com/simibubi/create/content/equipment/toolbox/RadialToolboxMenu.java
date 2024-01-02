@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -126,7 +126,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 			for (int slot = 0; slot < 8; slot++) {
 				ms.pushPose();
-				TransformStack.cast(ms)
+				TransformStack.of(ms)
 					.rotateZ(slot * 45 - 45)
 					.translate(0, -40 + (10 * (1 - fade) * (1 - fade)), 0)
 					.rotateZ(-slot * 45 + 45);

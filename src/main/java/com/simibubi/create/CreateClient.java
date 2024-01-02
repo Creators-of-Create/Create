@@ -63,7 +63,8 @@ public class CreateClient {
 		modEventBus.addListener(CreateClient::clientInit);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 		modEventBus.addListener(CreateContexts::flwInit);
-		modEventBus.addListener(ContraptionRenderDispatcher::gatherContext);
+
+
 
 		MODEL_SWAPPER.registerListeners(modEventBus);
 

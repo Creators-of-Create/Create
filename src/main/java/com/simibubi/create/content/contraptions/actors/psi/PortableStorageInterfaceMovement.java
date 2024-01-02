@@ -4,14 +4,14 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -46,7 +46,7 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+	public ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
 		MovementContext context) {
 		return new PSIActorInstance(materialManager, simulationWorld, context);
 	}

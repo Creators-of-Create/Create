@@ -2,11 +2,11 @@ package com.simibubi.create.content.redstone.analogLever;
 
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicVisual;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.Rotate;
-import com.jozufozu.flywheel.util.transform.Translate;
+import com.jozufozu.flywheel.lib.transform.Rotate;
+import com.jozufozu.flywheel.lib.transform.Translate;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -15,7 +15,7 @@ import com.simibubi.create.foundation.utility.Color;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
-public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverBlockEntity> implements DynamicInstance {
+public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverBlockEntity> implements DynamicVisual {
 
 	protected final ModelData handle;
 	protected final ModelData indicator;
@@ -23,10 +23,10 @@ public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverBlockEnt
 	final float rX;
 	final float rY;
 
-	public AnalogLeverInstance(MaterialManager materialManager, AnalogLeverBlockEntity blockEntity) {
+	public AnalogLeverInstance(VisualizationContext materialManager, AnalogLeverBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		Material<ModelData> mat = getTransformMaterial();
+		Material<ModelData> mat = materialManager.defaultSolid().material(InstanceTypes.TRANSFORMED);
 
 		handle = mat.getModel(AllPartialModels.ANALOG_LEVER_HANDLE, blockState)
 			.createInstance();
@@ -71,10 +71,10 @@ public class AnalogLeverInstance extends BlockEntityInstance<AnalogLeverBlockEnt
 	}
 
 	private <T extends Translate<T> & Rotate<T>> T transform(T msr) {
-		return msr.translate(getInstancePosition())
-			.centre()
+		return msr.translate(getVisualPosition())
+			.center()
 			.rotate(Direction.UP, (float) (rY / 180 * Math.PI))
 			.rotate(Direction.EAST, (float) (rX / 180 * Math.PI))
-			.unCentre();
+			.uncenter();
 	}
 }

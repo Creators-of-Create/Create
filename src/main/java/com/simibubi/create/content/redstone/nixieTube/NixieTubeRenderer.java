@@ -2,7 +2,7 @@ package com.simibubi.create.content.redstone.nixieTube;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.redstone.nixieTube.DoubleFaceAttachedBlock.DoubleAttachFace;
@@ -46,11 +46,11 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			+ (face == DoubleAttachFace.WALL_REVERSED ? 180 : 0);
 		float xRot = face == DoubleAttachFace.WALL ? -90 : face == DoubleAttachFace.WALL_REVERSED ? 90 : 0;
 
-		TransformStack msr = TransformStack.cast(ms);
-		msr.centre()
+		TransformStack msr = TransformStack.of(ms);
+		msr.center()
 			.rotateY(yRot)
 			.rotateZ(xRot)
-			.unCentre();
+			.uncenter();
 
 		if (be.signalState != null) {
 			renderAsSignal(be, partialTicks, ms, buffer, light, overlay);
@@ -58,7 +58,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			return;
 		}
 
-		msr.centre();
+		msr.center();
 
 		float height = face == DoubleAttachFace.CEILING ? 5 : 3;
 		float scale = 1 / 20f;
@@ -127,12 +127,12 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		BlockState blockState = be.getBlockState();
 		Direction facing = NixieTubeBlock.getFacing(blockState);
 		Vec3 observerVec = Minecraft.getInstance().cameraEntity.getEyePosition(partialTicks);
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 
 		if (facing == Direction.DOWN)
-			msr.centre()
+			msr.center()
 				.rotateZ(180)
-				.unCentre();
+				.uncenter();
 
 		boolean invertTubes =
 			facing == Direction.DOWN || blockState.getValue(NixieTubeBlock.FACE) == DoubleAttachFace.WALL_REVERSED;
@@ -196,7 +196,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		ms.popPose();
 
 	}
-	
+
 	@Override
 	public int getViewDistance() {
 		return 128;

@@ -80,7 +80,7 @@ import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
-import com.simibubi.create.content.kinetics.belt.BeltInstance;
+import com.simibubi.create.content.kinetics.belt.BeltVisual;
 import com.simibubi.create.content.kinetics.belt.BeltRenderer;
 import com.simibubi.create.content.kinetics.chainDrive.ChainGearshiftBlockEntity;
 import com.simibubi.create.content.kinetics.clock.CuckooClockBlockEntity;
@@ -322,7 +322,7 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.HAND_CRANK)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<ValveHandleBlockEntity> VALVE_HANDLE = REGISTRATE
 		.blockEntity("valve_handle", ValveHandleBlockEntity::new)
 		.instance(() -> HandCrankInstance::new)
@@ -421,7 +421,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BeltBlockEntity> BELT = REGISTRATE
 		.blockEntity("belt", BeltBlockEntity::new)
-		.instance(() -> BeltInstance::new, BeltBlockEntity::shouldRenderNormally)
+		.instance(() -> BeltVisual::new, BeltBlockEntity::shouldRenderNormally)
 		.validBlocks(AllBlocks.BELT)
 		.renderer(() -> BeltRenderer::new)
 		.register();
@@ -708,7 +708,7 @@ public class AllBlockEntityTypes {
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<PlacardBlockEntity> PLACARD = REGISTRATE
 		.blockEntity("placard", PlacardBlockEntity::new)
 		.validBlocks(AllBlocks.PLACARD)
@@ -835,7 +835,7 @@ public class AllBlockEntityTypes {
 		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
 		.register();
-	
+
 	public static final BlockEntityEntry<FakeTrackBlockEntity> FAKE_TRACK = REGISTRATE
 		.blockEntity("fake_track", FakeTrackBlockEntity::new)
 		.validBlocks(AllBlocks.FAKE_TRACK)
@@ -883,7 +883,7 @@ public class AllBlockEntityTypes {
 		.renderer(() -> TrackObserverRenderer::new)
 		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();
-	
+
 	public static final BlockEntityEntry<ClipboardBlockEntity> CLIPBOARD = REGISTRATE
 		.blockEntity("clipboard", ClipboardBlockEntity::new)
 		.validBlocks(AllBlocks.CLIPBOARD)

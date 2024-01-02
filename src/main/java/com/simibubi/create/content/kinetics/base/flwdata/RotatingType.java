@@ -1,55 +1,49 @@
 package com.simibubi.create.content.kinetics.base.flwdata;
 
-import org.joml.Vector3f;
-
-import com.jozufozu.flywheel.api.struct.Batched;
-import com.jozufozu.flywheel.api.struct.Instanced;
-import com.jozufozu.flywheel.api.struct.StructWriter;
-import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
-import com.jozufozu.flywheel.core.layout.BufferLayout;
-import com.jozufozu.flywheel.core.model.ModelTransformer;
-import com.jozufozu.flywheel.util.RenderMath;
-import com.mojang.math.Axis;
-import com.simibubi.create.content.kinetics.KineticDebugger;
-import com.simibubi.create.foundation.render.AllInstanceFormats;
-import com.simibubi.create.foundation.render.AllProgramSpecs;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.jozufozu.flywheel.api.instance.InstanceHandle;
+import com.jozufozu.flywheel.api.instance.InstanceType;
+import com.jozufozu.flywheel.api.instance.InstanceWriter;
+import com.jozufozu.flywheel.api.layout.Layout;
+import com.jozufozu.flywheel.lib.layout.BufferLayout;
+import com.simibubi.create.foundation.render.AllInstanceLayouts;
+import com.simibubi.create.foundation.render.AllInstanceShaders;
 
 import net.minecraft.resources.ResourceLocation;
 
-public class RotatingType implements Instanced<RotatingData>, Batched<RotatingData> {
+public class RotatingType implements InstanceType<RotatingInstance> {
+
 	@Override
-	public RotatingData create() {
-		return new RotatingData();
+	public RotatingInstance create(InstanceHandle instanceHandle) {
+		return new RotatingInstance(this, instanceHandle);
+	}
+
+	@Override
+	public Layout layout() {
+		return null;
+	}
+
+	@Override
+	public InstanceWriter<RotatingInstance> getWriter() {
+		return RotatingWriter.INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation vertexShader() {
+		return null;
+	}
+
+	@Override
+	public ResourceLocation cullShader() {
+		return null;
 	}
 
 	@Override
 	public BufferLayout getLayout() {
-		return AllInstanceFormats.ROTATING;
-	}
-
-	@Override
-	public StructWriter<RotatingData> getWriter(VecBuffer backing) {
-		return new RotatingWriterUnsafe(backing, this);
+		return AllInstanceLayouts.ROTATING;
 	}
 
 	@Override
 	public ResourceLocation getProgramSpec() {
-		return AllProgramSpecs.ROTATING;
-	}
-
-	@Override
-	public void transform(RotatingData d, ModelTransformer.Params b) {
-		float angle = ((AnimationTickHolder.getRenderTime() * d.rotationalSpeed * 3f / 10 + d.rotationOffset) % 360);
-
-		Axis axis = Axis.of(new Vector3f(RenderMath.f(d.rotationAxisX), RenderMath.f(d.rotationAxisY), RenderMath.f(d.rotationAxisZ)));
-		b.light(d.getPackedLight())
-				.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5)
-				.multiply(axis.rotationDegrees(angle))
-				.unCentre();
-
-		if (KineticDebugger.isActive()) {
-			b.color(d.r, d.g, d.b, d.a);
-		}
+		return AllInstanceShaders.ROTATING;
 	}
 }

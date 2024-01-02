@@ -1,17 +1,17 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.LightLayer;
 
 public abstract class ActorInstance {
-    protected final MaterialManager materialManager;
-	protected final VirtualRenderWorld simulationWorld;
+    protected final VisualizationContext materialManager;
+	protected final BlockAndTintGetter simulationWorld;
 	protected final MovementContext context;
 
-    public ActorInstance(MaterialManager materialManager, VirtualRenderWorld world, MovementContext context) {
+    public ActorInstance(VisualizationContext materialManager, BlockAndTintGetter world, MovementContext context) {
         this.materialManager = materialManager;
         this.simulationWorld = world;
         this.context = context;

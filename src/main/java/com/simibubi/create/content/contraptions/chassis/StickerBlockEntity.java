@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.chassis;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
@@ -70,7 +70,7 @@ public class StickerBlockEntity extends SmartBlockEntity {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> playSound(false));
 		piston.chase(target, .4f, Chaser.LINEAR);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationManager.queueUpdate(this));
 	}
 
 	public boolean isAttachedToBlock() {
@@ -85,7 +85,7 @@ public class StickerBlockEntity extends SmartBlockEntity {
 	protected void write(CompoundTag tag, boolean clientPacket) {
 		super.write(tag, clientPacket);
 	}
-	
+
 	@Override
 	protected void read(CompoundTag compound, boolean clientPacket) {
 		super.read(compound, clientPacket);

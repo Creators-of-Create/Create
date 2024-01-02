@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -47,7 +47,7 @@ public class FilteredDetectorFilterSlot extends ValueBoxTransform.Sided {
 			return;
 		if (getSide() != Direction.UP)
 			return;
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateZ(-AngleHelper.horizontalAngle(facing) + 180);
 	}
 

@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.crank;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 
@@ -23,7 +23,7 @@ public class HandCrankRenderer extends KineticBlockEntityRenderer<HandCrankBlock
 		if (be.shouldRenderShaft())
 			super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		Direction facing = be.getBlockState()

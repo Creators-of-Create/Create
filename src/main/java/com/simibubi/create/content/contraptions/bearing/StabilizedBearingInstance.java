@@ -2,16 +2,16 @@ package com.simibubi.create.content.contraptions.bearing;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.OrientedInstance;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
@@ -20,14 +20,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class StabilizedBearingInstance extends ActorInstance {
 
-	final OrientedData topInstance;
-	final RotatingData shaft;
+	final OrientedInstance topInstance;
+	final RotatingInstance shaft;
 
 	final Direction facing;
 	final Axis rotationAxis;
 	final Quaternionf blockOrientation;
 
-	public StabilizedBearingInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
+	public StabilizedBearingInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
 		super(materialManager, simulationWorld, context);
 
 		BlockState blockState = context.state;
@@ -37,9 +37,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 
 		blockOrientation = BearingInstance.getBlockStateOrientation(facing);
 
-        topInstance = materialManager.defaultSolid()
-                .material(Materials.ORIENTED)
-                .getModel(AllPartialModels.BEARING_TOP, blockState)
+        topInstance = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.BEARING_TOP), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 
 		int blockLight = localBlockLight();
@@ -48,7 +46,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 				.setBlockLight(blockLight);
 
 		shaft = materialManager.defaultSolid()
-				.material(AllMaterialSpecs.ROTATING)
+				.material(AllInstanceTypes.ROTATING)
 				.getModel(AllPartialModels.SHAFT_HALF, blockState, blockState.getValue(BlockStateProperties.FACING).getOpposite())
 				.createInstance();
 

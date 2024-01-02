@@ -2,9 +2,8 @@ package com.simibubi.create.content.kinetics.saw;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
@@ -17,6 +16,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringR
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -46,7 +46,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		renderItems(be, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		renderShaft(be, ms, buffer, light, overlay);
@@ -189,7 +189,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		}
 
 		superBuffer.transform(matrices.getModel())
-			.centre()
+			.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing));
 
@@ -197,7 +197,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 			superBuffer.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
 		}
 
-		superBuffer.unCentre()
+		superBuffer.uncenter()
 			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
 	}

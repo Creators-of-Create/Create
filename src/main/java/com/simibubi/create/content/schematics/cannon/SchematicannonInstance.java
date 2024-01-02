@@ -2,25 +2,25 @@ package com.simibubi.create.content.schematics.cannon;
 
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicVisual;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 
-public class SchematicannonInstance extends BlockEntityInstance<SchematicannonBlockEntity> implements DynamicInstance {
+public class SchematicannonInstance extends BlockEntityInstance<SchematicannonBlockEntity> implements DynamicVisual {
 
     private final ModelData connector;
     private final ModelData pipe;
 
-    public SchematicannonInstance(MaterialManager materialManager, SchematicannonBlockEntity blockEntity) {
+    public SchematicannonInstance(VisualizationContext materialManager, SchematicannonBlockEntity blockEntity) {
         super(materialManager, blockEntity);
 
-        Material<ModelData> mat = getTransformMaterial();
+        Material<ModelData> mat = materialManager.defaultSolid().material(InstanceTypes.TRANSFORMED);
 
         connector = mat.getModel(AllPartialModels.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
         pipe = mat.getModel(AllPartialModels.SCHEMATICANNON_PIPE, blockState).createInstance();
@@ -38,14 +38,14 @@ public class SchematicannonInstance extends BlockEntityInstance<SchematicannonBl
         double recoil = SchematicannonRenderer.getRecoil(blockEntity, partialTicks);
 
         PoseStack ms = new PoseStack();
-        TransformStack msr = TransformStack.cast(ms);
+        TransformStack msr = TransformStack.of(ms);
 
-        msr.translate(getInstancePosition());
+        msr.translate(getVisualPosition());
 
         ms.pushPose();
-        msr.centre();
+        msr.center();
         msr.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
-        msr.unCentre();
+        msr.uncenter();
         connector.setTransform(ms);
         ms.popPose();
 

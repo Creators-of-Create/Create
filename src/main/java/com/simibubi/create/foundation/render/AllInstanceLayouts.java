@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.core.layout.BufferLayout;
-import com.jozufozu.flywheel.core.layout.CommonItems;
+import com.jozufozu.flywheel.lib.layout.BufferLayout;
+import com.jozufozu.flywheel.lib.layout.CommonItems;
 
-public class AllInstanceFormats {
+public class AllInstanceLayouts {
 
 	public static final BufferLayout ROTATING = kineticInstance()
 			.addItems(CommonItems.NORMAL)

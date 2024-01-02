@@ -1,6 +1,6 @@
 package com.simibubi.create.content.equipment.bell;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllPartialModels;
 
 import net.minecraft.core.BlockPos;
@@ -33,7 +33,7 @@ public class HauntedBellBlockEntity extends AbstractBellBlockEntity {
 	public PartialModel getBellModel() {
 		return AllPartialModels.HAUNTED_BELL;
 	}
-	
+
 	@Override
 	public boolean ring(Level world, BlockPos pos, Direction direction) {
 		if (isRinging && ringingTicks < RECHARGE_TICKS)

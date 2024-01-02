@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.light.TickingLightListener;
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
-import com.jozufozu.flywheel.util.box.ImmutableBox;
+import com.jozufozu.flywheel.lib.box.Box;
+import com.jozufozu.flywheel.lib.box.MutableBox;
+import com.jozufozu.flywheel.lib.light.TickingLightListener;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -16,7 +16,7 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
 		if (getVolume().volume() > AllConfigs.client().maxContraptionLightVolume.get())
 			return false;
 
-		ImmutableBox contraptionBounds = getContraptionBounds();
+		Box contraptionBounds = getContraptionBounds();
 
 		if (bounds.sameAs(contraptionBounds, 2)) {
 			return false;
@@ -30,8 +30,8 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
 	}
 
 	@Override
-    public GridAlignedBB getContraptionBounds() {
-        GridAlignedBB bb = GridAlignedBB.from(contraption.bounds);
+    public MutableBox getContraptionBounds() {
+        MutableBox bb = MutableBox.from(contraption.bounds);
 
         bb.translate(contraption.entity.blockPosition());
 

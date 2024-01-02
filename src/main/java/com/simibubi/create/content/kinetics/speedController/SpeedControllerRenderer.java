@@ -31,7 +31,7 @@ public class SpeedControllerRenderer extends SmartBlockEntityRenderer<SpeedContr
 		super.renderSafe(blockEntity, partialTicks, ms, buffer, light, overlay);
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		if (!Backend.canUseInstancing(blockEntity.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
 			KineticBlockEntityRenderer.renderRotatingBuffer(blockEntity, getRotatedModel(blockEntity), ms, builder, light);
 		}
 

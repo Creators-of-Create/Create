@@ -2,14 +2,11 @@ package com.simibubi.create.foundation.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
+import com.jozufozu.flywheel.lib.visual.SimpleBlockEntityVisualizer;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockEntityBuilder;
@@ -28,7 +25,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEntityBuilder<T, P> {
 
 	@Nullable
-	private NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory;
+	private NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> instanceFactory;
 	private NonNullPredicate<T> renderNormally;
 
 	private Collection<NonNullSupplier<? extends Collection<NonNullSupplier<? extends Block>>>> deferredValidBlocks =
@@ -60,18 +57,18 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 	}
 
 	public CreateBlockEntityBuilder<T, P> instance(
-		NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory) {
+		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> instanceFactory) {
 		return instance(instanceFactory, true);
 	}
 
 	public CreateBlockEntityBuilder<T, P> instance(
-		NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory,
+		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> instanceFactory,
 		boolean renderNormally) {
 		return instance(instanceFactory, be -> renderNormally);
 	}
 
 	public CreateBlockEntityBuilder<T, P> instance(
-		NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory,
+		NonNullSupplier<SimpleBlockEntityVisualizer.Factory<T>> instanceFactory,
 		NonNullPredicate<T> renderNormally) {
 		if (this.instanceFactory == null) {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerInstance);
@@ -85,11 +82,10 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 
 	protected void registerInstance() {
 		OneTimeEventReceiver.addModListener(Create.REGISTRATE, FMLClientSetupEvent.class, $ -> {
-			NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory =
-				this.instanceFactory;
+			var instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
 				NonNullPredicate<T> renderNormally = this.renderNormally;
-				InstancedRenderRegistry.configure(getEntry())
+				SimpleBlockEntityVisualizer.configure(getEntry())
 					.factory(instanceFactory.get())
 					.skipRender(be -> !renderNormally.test(be))
 					.apply();

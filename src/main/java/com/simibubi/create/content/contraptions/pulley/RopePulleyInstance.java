@@ -1,36 +1,39 @@
 package com.simibubi.create.content.contraptions.pulley;
 
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.OrientedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class RopePulleyInstance extends AbstractPulleyInstance<PulleyBlockEntity> {
-	public RopePulleyInstance(MaterialManager materialManager, PulleyBlockEntity blockEntity) {
+	public RopePulleyInstance(VisualizationContext materialManager, PulleyBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 	}
 
-	protected Instancer<OrientedData> getRopeModel() {
-		return getOrientedMaterial().getModel(AllBlocks.ROPE.getDefaultState());
+	protected Instancer<OrientedInstance> getRopeModel() {
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.block(AllBlocks.ROPE.getDefaultState()), RenderStage.AFTER_BLOCK_ENTITIES);
 	}
 
-	protected Instancer<OrientedData> getMagnetModel() {
-		return getOrientedMaterial().getModel(AllBlocks.PULLEY_MAGNET.getDefaultState());
+	protected Instancer<OrientedInstance> getMagnetModel() {
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.block(AllBlocks.PULLEY_MAGNET.getDefaultState()), RenderStage.AFTER_BLOCK_ENTITIES);
 	}
 
-	protected Instancer<OrientedData> getHalfMagnetModel() {
-		return getOrientedMaterial().getModel(AllPartialModels.ROPE_HALF_MAGNET, blockState);
+	protected Instancer<OrientedInstance> getHalfMagnetModel() {
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF_MAGNET), RenderStage.AFTER_BLOCK_ENTITIES);
 	}
 
-	protected Instancer<OrientedData> getCoilModel() {
-		return getOrientedMaterial().getModel(AllPartialModels.ROPE_COIL, blockState, rotatingAbout);
+	protected Instancer<OrientedInstance> getCoilModel() {
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_COIL, rotatingAbout), RenderStage.AFTER_BLOCK_ENTITIES);
 	}
 
-	protected Instancer<OrientedData> getHalfRopeModel() {
-		return getOrientedMaterial().getModel(AllPartialModels.ROPE_HALF, blockState);
+	protected Instancer<OrientedInstance> getHalfRopeModel() {
+		return instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.ROPE_HALF), RenderStage.AFTER_BLOCK_ENTITIES);
 	}
 
 	protected float getOffset() {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
@@ -117,7 +117,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	private void activateExtractor() {
 		if (invVersionTracker.stillWaiting(invManipulation))
 			return;
-		
+
 		BlockState blockState = getBlockState();
 		Direction facing = AbstractFunnelBlock.getFunnelFacing(blockState);
 
@@ -259,7 +259,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 			new InvManipulationBehaviour(this, (w, p, s) -> new BlockFace(p, AbstractFunnelBlock.getFunnelFacing(s)
 				.getOpposite()));
 		behaviours.add(invManipulation);
-		
+
 		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 
 		filtering = new FilteringBehaviour(this, new FunnelFilterSlotPositioning());
@@ -267,7 +267,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		filtering.onlyActiveWhen(this::supportsFiltering);
 		filtering.withCallback($ -> invVersionTracker.reset());
 		behaviours.add(filtering);
-		
+
 		behaviours.add(new DirectBeltInputBehaviour(this).onlyInsertWhen(this::supportsDirectBeltInput)
 			.setInsertionHandler(this::handleDirectBeltInput));
 		registerAwardables(behaviours, AllAdvancements.FUNNEL);
@@ -363,7 +363,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> VisualizationManager.queueUpdate(this));
 	}
 
 	public void onTransfer(ItemStack stack) {

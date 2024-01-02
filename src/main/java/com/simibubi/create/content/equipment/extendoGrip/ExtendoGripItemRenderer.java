@@ -1,7 +1,7 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.Create;
@@ -30,7 +30,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		TransformStack stacker = TransformStack.cast(ms);
+		TransformStack stacker = TransformStack.of(ms);
 		float animation = 0.25f;
 		boolean leftHand = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
 		boolean rightHand = transformType == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;

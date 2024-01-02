@@ -1,47 +1,49 @@
 package com.simibubi.create.content.contraptions.pulley;
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
-import com.jozufozu.flywheel.core.instancing.GroupInstance;
-import com.jozufozu.flywheel.core.instancing.SelectInstance;
-import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
-import com.jozufozu.flywheel.light.LightPacking;
-import com.jozufozu.flywheel.light.LightVolume;
-import com.jozufozu.flywheel.light.TickingLightListener;
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
-import com.jozufozu.flywheel.util.box.ImmutableBox;
+import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.box.Box;
+import com.jozufozu.flywheel.lib.box.MutableBox;
+import com.jozufozu.flywheel.lib.instance.OrientedInstance;
+import com.jozufozu.flywheel.lib.light.LightPacking;
+import com.jozufozu.flywheel.lib.light.LightVolume;
+import com.jozufozu.flywheel.lib.light.TickingLightListener;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
+import com.simibubi.create.foundation.render.ConditionalInstance;
+import com.simibubi.create.foundation.render.GroupInstance;
+import com.simibubi.create.foundation.render.SelectInstance;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
 
-public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> extends ShaftInstance<T> implements DynamicInstance, TickingLightListener {
+public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> extends ShaftInstance<T> implements DynamicVisual, TickingLightListener {
 
-	final OrientedData coil;
-	final SelectInstance<OrientedData> magnet;
-	final GroupInstance<OrientedData> rope;
-	final ConditionalInstance<OrientedData> halfRope;
+	final OrientedInstance coil;
+	final SelectInstance<OrientedInstance> magnet;
+	final GroupInstance<OrientedInstance> rope;
+	final ConditionalInstance<OrientedInstance> halfRope;
 
 	protected float offset;
 	protected final Direction rotatingAbout;
 	protected final Axis rotationAxis;
 
-	private final GridAlignedBB volume = new GridAlignedBB();
+	private final MutableBox volume = new MutableBox();
 	private final LightVolume light;
 
-	public AbstractPulleyInstance(MaterialManager dispatcher, T blockEntity) {
+	public AbstractPulleyInstance(VisualizationContext dispatcher, T blockEntity) {
 		super(dispatcher, blockEntity);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);
 		rotationAxis = Axis.of(rotatingAbout.step());
 
 		coil = getCoilModel().createInstance()
-				.setPosition(getInstancePosition());
+				.setPosition(getVisualPosition());
 
 		magnet = new SelectInstance<>(this::getMagnetModelIndex);
 		magnet.addModel(getMagnetModel())
@@ -53,12 +55,12 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 		updateOffset();
 		updateVolume();
 
-		light = new LightVolume(world, volume);
+		light = new LightVolume(level, volume);
 		light.initialize();
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		updateOffset();
 		coil.setRotation(rotationAxis.rotationDegrees(offset * 180));
 
@@ -70,8 +72,8 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 				.ifPresent(data -> {
 					int i = Math.max(0, Mth.floor(offset));
 					short packed = light.getPackedLight(pos.getX(), pos.getY() - i, pos.getZ());
-					data.setPosition(getInstancePosition())
-							.nudge(0, -offset, 0)
+					data.setPosition(getVisualPosition())
+							.nudgePosition(0, -offset, 0)
 							.setBlockLight(LightPacking.getBlock(packed))
 							.setSkyLight(LightPacking.getSky(packed));
 				});
@@ -83,8 +85,8 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 					float halfRopeNudge = f > .75f ? f - 1 : f;
 
 					short packed = light.getPackedLight(pos.getX(), pos.getY(), pos.getZ());
-					rope1.setPosition(getInstancePosition())
-							.nudge(0, -halfRopeNudge, 0)
+					rope1.setPosition(getVisualPosition())
+							.nudgePosition(0, -halfRopeNudge, 0)
 							.setBlockLight(LightPacking.getBlock(packed))
 							.setSkyLight(LightPacking.getSky(packed));
 				});
@@ -96,8 +98,8 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 				short packed = light.getPackedLight(pos.getX(), bottomY + i, pos.getZ());
 
 				rope.get(i)
-						.setPosition(getInstancePosition())
-						.nudge(0, -offset + i + 1, 0)
+						.setPosition(getVisualPosition())
+						.nudgePosition(0, -offset + i + 1, 0)
 						.setBlockLight(LightPacking.getBlock(packed))
 						.setSkyLight(LightPacking.getSky(packed));
 			}
@@ -113,8 +115,8 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+    protected void _delete() {
+		super._delete();
 		coil.delete();
 		magnet.delete();
 		rope.clear();
@@ -122,15 +124,15 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 		light.delete();
 	}
 
-	protected abstract Instancer<OrientedData> getRopeModel();
+	protected abstract Instancer<OrientedInstance> getRopeModel();
 
-	protected abstract Instancer<OrientedData> getMagnetModel();
+	protected abstract Instancer<OrientedInstance> getMagnetModel();
 
-	protected abstract Instancer<OrientedData> getHalfMagnetModel();
+	protected abstract Instancer<OrientedInstance> getHalfMagnetModel();
 
-	protected abstract Instancer<OrientedData> getCoilModel();
+	protected abstract Instancer<OrientedInstance> getCoilModel();
 
-	protected abstract Instancer<OrientedData> getHalfRopeModel();
+	protected abstract Instancer<OrientedInstance> getHalfRopeModel();
 
 	protected abstract float getOffset();
 
@@ -149,8 +151,8 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 		int length = Mth.ceil(offset) + 2;
 
 		if (volume.sizeY() < length) {
-			volume.assign(pos.below(length), pos)
-					.fixMinMax();
+			volume.assign(pos.below(length), pos);
+			volume.fixMinMax();
 			return true;
 		}
 		return false;
@@ -178,18 +180,13 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 	}
 
 	@Override
-	public boolean decreaseFramerateWithDistance() {
-		return false;
-	}
-
-	@Override
-	public ImmutableBox getVolume() {
+	public Box getVolume() {
 		return volume;
 	}
 
 	@Override
-	public void onLightUpdate(LightLayer type, ImmutableBox changed) {
-		super.onLightUpdate(type, changed);
-		light.onLightUpdate(type, changed);
+	public void onLightUpdate(LightLayer type, SectionPos pos) {
+		super.onLightUpdate(type, pos);
+		light.onLightUpdate(type, pos);
 	}
 }

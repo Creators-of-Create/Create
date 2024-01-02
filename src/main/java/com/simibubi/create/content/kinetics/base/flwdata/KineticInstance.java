@@ -2,44 +2,48 @@ package com.simibubi.create.content.kinetics.base.flwdata;
 
 import org.joml.Vector3f;
 
-import com.jozufozu.flywheel.core.materials.BasicData;
+import com.jozufozu.flywheel.api.instance.InstanceHandle;
+import com.jozufozu.flywheel.api.instance.InstanceType;
+import com.jozufozu.flywheel.lib.instance.ColoredLitInstance;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.BlockPos;
 
-public class KineticData extends BasicData {
+public class KineticInstance extends ColoredLitInstance {
     float x;
     float y;
     float z;
     float rotationalSpeed;
     float rotationOffset;
 
-    public KineticData setPosition(BlockPos pos) {
+	protected KineticInstance(InstanceType<? extends KineticInstance> type, InstanceHandle handle) {
+		super(type, handle);
+	}
+
+	public KineticInstance setPosition(BlockPos pos) {
         return setPosition(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public KineticData setPosition(Vector3f pos) {
+    public KineticInstance setPosition(Vector3f pos) {
         return setPosition(pos.x(), pos.y(), pos.z());
     }
 
-    public KineticData setPosition(float x, float y, float z) {
+    public KineticInstance setPosition(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
-        markDirty();
         return this;
     }
 
-    public KineticData nudge(float x, float y, float z) {
+    public KineticInstance nudge(float x, float y, float z) {
         this.x += x;
         this.y += y;
         this.z += z;
-        markDirty();
         return this;
     }
 
-    public KineticData setColor(KineticBlockEntity blockEntity) {
+    public KineticInstance setColor(KineticBlockEntity blockEntity) {
         if (blockEntity.hasNetwork()) {
             setColor(Color.generateFromLong(blockEntity.network));
         }else {
@@ -48,17 +52,17 @@ public class KineticData extends BasicData {
         return this;
     }
 
-    public KineticData setColor(Color c) {
+    public KineticInstance setColor(Color c) {
     	setColor(c.getRed(), c.getGreen(), c.getBlue());
     	return this;
     }
 
-    public KineticData setRotationalSpeed(float rotationalSpeed) {
+    public KineticInstance setRotationalSpeed(float rotationalSpeed) {
 		this.rotationalSpeed = rotationalSpeed;
 		return this;
 	}
 
-	public KineticData setRotationOffset(float rotationOffset) {
+	public KineticInstance setRotationOffset(float rotationOffset) {
 		this.rotationOffset = rotationOffset;
 		return this;
 	}

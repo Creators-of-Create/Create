@@ -10,7 +10,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllSpecialTextures;
@@ -58,7 +58,7 @@ public abstract class Outline {
 		float vAngle = AngleHelper.deg(Mth.atan2(hDistance, diff.y())) - 90;
 
 		poseStack.pushPose();
-		TransformStack.cast(poseStack)
+		TransformStack.of(poseStack)
 			.translate(start.x - camera.x, start.y - camera.y, start.z - camera.z)
 			.rotateY(hAngle)
 			.rotateX(vAngle);

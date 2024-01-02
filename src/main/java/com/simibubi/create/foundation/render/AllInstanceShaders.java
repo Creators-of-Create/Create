@@ -4,7 +4,7 @@ import static com.simibubi.create.Create.asResource;
 
 import net.minecraft.resources.ResourceLocation;
 
-public class AllProgramSpecs {
+public class AllInstanceShaders {
 
 	public static final ResourceLocation ROTATING = asResource("rotating");
 	public static final ResourceLocation BELT = asResource("belt");

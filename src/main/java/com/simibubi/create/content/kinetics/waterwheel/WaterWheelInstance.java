@@ -1,11 +1,11 @@
 package com.simibubi.create.content.kinetics.waterwheel;
 
-import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.core.model.BlockModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.CutoutRotatingInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.foundation.render.CachedBufferer;
 
 import net.minecraft.client.resources.model.BakedModel;
@@ -18,17 +18,17 @@ public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutR
 	protected final boolean large;
 	protected final WaterWheelModelKey key;
 
-	public WaterWheelInstance(MaterialManager materialManager, T blockEntity, boolean large) {
+	public WaterWheelInstance(VisualizationContext materialManager, T blockEntity, boolean large) {
 		super(materialManager, blockEntity);
 		this.large = large;
 		key = new WaterWheelModelKey(large, getRenderedBlockState(), blockEntity.material);
 	}
 
-	public static <T extends WaterWheelBlockEntity> WaterWheelInstance<T> standard(MaterialManager materialManager, T blockEntity) {
+	public static <T extends WaterWheelBlockEntity> WaterWheelInstance<T> standard(VisualizationContext materialManager, T blockEntity) {
 		return new WaterWheelInstance<>(materialManager, blockEntity, false);
 	}
 
-	public static <T extends WaterWheelBlockEntity> WaterWheelInstance<T> large(MaterialManager materialManager, T blockEntity) {
+	public static <T extends WaterWheelBlockEntity> WaterWheelInstance<T> large(VisualizationContext materialManager, T blockEntity) {
 		return new WaterWheelInstance<>(materialManager, blockEntity, true);
 	}
 
@@ -38,8 +38,8 @@ public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutR
 	}
 
 	@Override
-	protected Instancer<RotatingData> getModel() {
-		return getRotatingMaterial().model(key, () -> {
+	protected Model model() {
+		return model(key, () -> {
 			BakedModel model = WaterWheelRenderer.generateModel(key);
 			BlockState state = key.state();
 			Direction dir;

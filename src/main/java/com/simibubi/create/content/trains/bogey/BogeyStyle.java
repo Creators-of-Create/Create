@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer.CommonRenderer;
@@ -28,7 +28,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 
 public class BogeyStyle {
-	
+
 	public final ResourceLocation name;
 	public final ResourceLocation cycleGroup;
 	public final Component displayName;
@@ -36,13 +36,13 @@ public class BogeyStyle {
 	public final ParticleOptions contactParticle;
 	public final ParticleOptions smokeParticle;
 	public final CompoundTag defaultData;
-	
+
 	private Optional<Supplier<? extends CommonRenderer>> commonRendererFactory;
 	private Map<BogeySizes.BogeySize, ResourceLocation> sizes;
-	
+
 	@OnlyIn(Dist.CLIENT)
 	private Map<BogeySizes.BogeySize, SizeRenderData> sizeRenderers;
-	
+
 	@OnlyIn(Dist.CLIENT)
 	private Optional<CommonRenderer> commonRenderer;
 
@@ -51,7 +51,7 @@ public class BogeyStyle {
 		CompoundTag defaultData, Map<BogeySizes.BogeySize, ResourceLocation> sizes,
 		Map<BogeySizes.BogeySize, Supplier<SizeRenderData>> sizeRenderers,
 		Optional<Supplier<? extends CommonRenderer>> commonRenderer) {
-		
+
 		this.name = name;
 		this.cycleGroup = cycleGroup;
 		this.displayName = displayName;
@@ -64,7 +64,7 @@ public class BogeyStyle {
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			this.sizeRenderers = new HashMap<>();
 			sizeRenderers.forEach((k, v) -> this.sizeRenderers.put(k, v.get()));
-			
+
 			this.commonRendererFactory = commonRenderer;
 			this.commonRenderer = commonRenderer.map(Supplier::get);
 		});
@@ -116,7 +116,7 @@ public class BogeyStyle {
 		return this.commonRendererFactory.map(Supplier::get);
 	}
 
-	public BogeyInstance createInstance(CarriageBogey bogey, BogeySizes.BogeySize size, MaterialManager materialManager) {
+	public BogeyInstance createInstance(CarriageBogey bogey, BogeySizes.BogeySize size, VisualizationContext materialManager) {
 		return new BogeyInstance(bogey, this, size, materialManager);
 	}
 

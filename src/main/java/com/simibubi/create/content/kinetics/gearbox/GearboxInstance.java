@@ -3,13 +3,15 @@ package com.simibubi.create.content.kinetics.gearbox;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.api.InstanceData;
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.AbstractInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -19,35 +21,32 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class GearboxInstance extends KineticBlockEntityInstance<GearboxBlockEntity> {
 
-    protected final EnumMap<Direction, RotatingData> keys;
+    protected final EnumMap<Direction, RotatingInstance> keys;
     protected Direction sourceFacing;
 
-    public GearboxInstance(MaterialManager materialManager, GearboxBlockEntity blockEntity) {
+    public GearboxInstance(VisualizationContext materialManager, GearboxBlockEntity blockEntity) {
         super(materialManager, blockEntity);
 
         keys = new EnumMap<>(Direction.class);
 
         final Direction.Axis boxAxis = blockState.getValue(BlockStateProperties.AXIS);
 
-        int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
-        int skyLight = world.getBrightness(LightLayer.SKY, pos);
+        int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
+        int skyLight = level.getBrightness(LightLayer.SKY, pos);
         updateSourceFacing();
-
-        Material<RotatingData> rotatingMaterial = getRotatingMaterial();
 
         for (Direction direction : Iterate.directions) {
 			final Direction.Axis axis = direction.getAxis();
 			if (boxAxis == axis)
 				continue;
 
-			Instancer<RotatingData> shaft = rotatingMaterial.getModel(AllPartialModels.SHAFT_HALF, blockState, direction);
-
-			RotatingData key = shaft.createInstance();
+			RotatingInstance key = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF), RenderStage.AFTER_BLOCK_ENTITIES)
+					.createInstance();
 
 			key.setRotationAxis(Direction.get(Direction.AxisDirection.POSITIVE, axis).step())
 					.setRotationalSpeed(getSpeed(direction))
 					.setRotationOffset(getRotationOffset(axis)).setColor(blockEntity)
-					.setPosition(getInstancePosition())
+					.setPosition(getVisualPosition())
 					.setBlockLight(blockLight)
 					.setSkyLight(skyLight);
 
@@ -77,9 +76,9 @@ public class GearboxInstance extends KineticBlockEntityInstance<GearboxBlockEnti
     }
 
     @Override
-    public void update() {
+    public void update(float pt) {
         updateSourceFacing();
-        for (Map.Entry<Direction, RotatingData> key : keys.entrySet()) {
+        for (Map.Entry<Direction, RotatingInstance> key : keys.entrySet()) {
             Direction direction = key.getKey();
             Direction.Axis axis = direction.getAxis();
 
@@ -93,8 +92,8 @@ public class GearboxInstance extends KineticBlockEntityInstance<GearboxBlockEnti
     }
 
     @Override
-    public void remove() {
-        keys.values().forEach(InstanceData::delete);
+    protected void _delete() {
+        keys.values().forEach(AbstractInstance::delete);
         keys.clear();
     }
 }

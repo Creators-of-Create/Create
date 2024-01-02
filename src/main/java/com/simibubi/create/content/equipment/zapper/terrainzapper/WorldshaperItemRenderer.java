@@ -2,7 +2,7 @@ package com.simibubi.create.content.equipment.zapper.terrainzapper;
 
 import static java.lang.Math.max;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.Create;
@@ -44,7 +44,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer {
 
 		// Core glows
 		float multiplier;
-		if (mainHand || offHand) 
+		if (mainHand || offHand)
 			multiplier = animation;
 		else
 			multiplier = Mth.sin(worldTime * 5);

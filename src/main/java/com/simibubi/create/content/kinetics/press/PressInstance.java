@@ -2,26 +2,24 @@ package com.simibubi.create.content.kinetics.press;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicVisual;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedInstance;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> implements DynamicInstance {
+public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> implements DynamicVisual {
 
-	private final OrientedData pressHead;
+	private final OrientedInstance pressHead;
 
-	public PressInstance(MaterialManager materialManager, MechanicalPressBlockEntity blockEntity) {
+	public PressInstance(VisualizationContext materialManager, MechanicalPressBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		pressHead = materialManager.defaultSolid()
-				.material(Materials.ORIENTED)
-				.getModel(AllPartialModels.MECHANICAL_PRESS_HEAD, blockState)
+		pressHead = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(AllPartialModels.MECHANICAL_PRESS_HEAD), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 
 		Quaternionf q = Axis.YP
@@ -40,7 +38,7 @@ public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> imp
 	private void transformModels() {
 		float renderedHeadOffset = getRenderedHeadOffset(blockEntity);
 
-		pressHead.setPosition(getInstancePosition())
+		pressHead.setPosition(getVisualPosition())
 			.nudge(0, -renderedHeadOffset, 0);
 	}
 
@@ -58,8 +56,8 @@ public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> imp
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+    protected void _delete() {
+		super._delete();
 		pressHead.delete();
 	}
 }

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.displayLink;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
@@ -33,7 +33,7 @@ public class DisplayLinkRenderer extends SafeBlockEntityRenderer<DisplayLinkBloc
 		int color = (int) (200 * glow);
 
 		BlockState blockState = be.getBlockState();
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 
 		Direction face = blockState.getOptionalValue(DisplayLinkBlock.FACING)
 			.orElse(Direction.UP);
@@ -44,10 +44,10 @@ public class DisplayLinkRenderer extends SafeBlockEntityRenderer<DisplayLinkBloc
 
 		ms.pushPose();
 
-		msr.centre()
+		msr.center()
 			.rotateY(AngleHelper.horizontalAngle(face))
 			.rotateX(-AngleHelper.verticalAngle(face) - 90)
-			.unCentre();
+			.uncenter();
 
 		CachedBufferer.partial(AllPartialModels.DISPLAY_LINK_TUBE, blockState)
 			.light(LightTexture.FULL_BRIGHT)

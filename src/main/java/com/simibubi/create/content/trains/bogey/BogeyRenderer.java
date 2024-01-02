@@ -11,11 +11,9 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.Transform;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
@@ -27,6 +25,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.ModelData;
 
 /**
  * This is a port of the bogey api from Extended Bogeys, If you are looking to implement your own bogeys you can find some helpful resources below:
@@ -182,7 +181,7 @@ public abstract class BogeyRenderer {
 	 * @param carriageBogey The bogey to create data for
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public abstract void initialiseContraptionModelData(MaterialManager materialManager, CarriageBogey carriageBogey);
+	public abstract void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey);
 
 	/**
 	 * Creates instances of models for in-world rendering to a set length from a provided partial model
@@ -191,11 +190,9 @@ public abstract class BogeyRenderer {
 	 * @param model Partial model to be instanced
 	 * @param count Amount of models neeeded
 	 */
-	public void createModelInstance(MaterialManager materialManager, PartialModel model, int count) {
+	public void createModelInstance(VisualizationContext materialManager, PartialModel model, int count) {
 		BogeyModelData[] modelData = IntStream.range(0, count)
-				.mapToObj(i -> materialManager.defaultSolid()
-						.material(Materials.TRANSFORMED)
-						.getModel(model).createInstance())
+				.mapToObj(i -> instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.block(model).createInstance()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.map(BogeyModelData::new)
 				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(model), modelData);
@@ -208,11 +205,9 @@ public abstract class BogeyRenderer {
 	 * @param state Blockstate of the model to be created
 	 * @param count Amount of models needed
 	 */
-	public void createModelInstance(MaterialManager materialManager, BlockState state, int count) {
+	public void createModelInstance(VisualizationContext materialManager, BlockState state, int count) {
 		BogeyModelData[] modelData = IntStream.range(0, count)
-				.mapToObj(i -> materialManager.defaultSolid()
-						.material(Materials.TRANSFORMED)
-						.getModel(state).createInstance())
+				.mapToObj(i -> instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.block(state).createInstance()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.map(BogeyModelData::new)
 				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(state), modelData);
@@ -224,9 +219,9 @@ public abstract class BogeyRenderer {
 	 * @param materialManager The material manager
 	 * @param states Blockstates of the models to be created
 	 */
-	public void createModelInstance(MaterialManager materialManager, BlockState... states) {
+	public void createModelInstance(VisualizationContext materialManager, BlockState... states) {
 		for (BlockState state : states)
-			this.createModelInstance(materialManager, state, 1);
+			this.createModelInstance(VisualizationContext, state, 1);
 	}
 
 	/**
@@ -235,9 +230,9 @@ public abstract class BogeyRenderer {
 	 * @param materialManager The material manager
 	 * @param models The type of model to create instances of
 	 */
-	public void createModelInstance(MaterialManager materialManager, PartialModel... models) {
+	public void createModelInstance(VisualizationContext materialManager, PartialModel... models) {
 		for (PartialModel model : models)
-			createModelInstance(materialManager, model, 1);
+			createModelInstance(VisualizationContext, model, 1);
 	}
 
 	/**

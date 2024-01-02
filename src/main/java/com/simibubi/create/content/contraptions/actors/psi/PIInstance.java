@@ -1,26 +1,26 @@
 package com.simibubi.create.content.contraptions.actors.psi;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class PIInstance {
-	private final MaterialManager materialManager;
+	private final VisualizationContext materialManager;
 	private final BlockState blockState;
 	private final BlockPos instancePos;
 	private final float angleX;
 	private final float angleY;
 
 	private boolean lit;
-	ModelData middle;
-	ModelData top;
+	TransformedInstance middle;
+	TransformedInstance top;
 
-	public PIInstance(MaterialManager materialManager, BlockState blockState, BlockPos instancePos) {
+	public PIInstance(VisualizationContext materialManager, BlockState blockState, BlockPos instancePos) {
 		this.materialManager = materialManager;
 		this.blockState = blockState;
 		this.instancePos = instancePos;
@@ -32,29 +32,27 @@ public class PIInstance {
 	public void init(boolean lit) {
 		this.lit = lit;
 		middle = materialManager.defaultSolid()
-				.material(Materials.TRANSFORMED)
+				.material(InstanceTypes.TRANSFORMED)
 				.getModel(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit), blockState)
 				.createInstance();
-		top = materialManager.defaultSolid()
-				.material(Materials.TRANSFORMED)
-				.getModel(PortableStorageInterfaceRenderer.getTopForState(blockState), blockState)
+		top = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.block(PortableStorageInterfaceRenderer.getTopForState(blockState), RenderStage.AFTER_BLOCK_ENTITIES), blockState)
 				.createInstance();
 	}
 
 	public void beginFrame(float progress) {
 		middle.loadIdentity()
 				.translate(instancePos)
-				.centre()
+				.center()
 				.rotateY(angleY)
 				.rotateX(angleX)
-				.unCentre();
+				.uncenter();
 
 		top.loadIdentity()
 				.translate(instancePos)
-				.centre()
+				.center()
 				.rotateY(angleY)
 				.rotateX(angleX)
-				.unCentre();
+				.uncenter();
 
 		middle.translate(0, progress * 0.5f + 0.375f, 0);
 		top.translate(0, progress, 0);
@@ -65,7 +63,7 @@ public class PIInstance {
 		if (this.lit != lit) {
 			this.lit = lit;
 			materialManager.defaultSolid()
-					.material(Materials.TRANSFORMED)
+					.material(InstanceTypes.TRANSFORMED)
 					.getModel(PortableStorageInterfaceRenderer.getMiddleForState(blockState, lit), blockState)
 					.stealInstance(middle);
 		}

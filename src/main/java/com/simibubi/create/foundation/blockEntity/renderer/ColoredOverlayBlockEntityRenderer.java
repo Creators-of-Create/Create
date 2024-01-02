@@ -18,7 +18,7 @@ public abstract class ColoredOverlayBlockEntityRenderer<T extends BlockEntity> e
 	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 			int light, int overlay) {
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		SuperByteBuffer render = render(getOverlayBuffer(be), getColor(be, partialTicks), light);
 		render.renderInto(ms, buffer.getBuffer(RenderType.solid()));

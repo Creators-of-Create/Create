@@ -5,19 +5,19 @@ import java.util.function.Supplier;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.InstanceData;
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.AbstractInstance;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.BeltData;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.content.kinetics.base.flwdata.BeltInstance;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.Direction;
@@ -25,7 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.LightLayer;
 
-public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
+public class BeltVisual extends KineticBlockEntityInstance<BeltBlockEntity> {
 
     boolean upward;
     boolean diagonal;
@@ -35,10 +35,10 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
     boolean alongZ;
     BeltSlope beltSlope;
     Direction facing;
-    protected ArrayList<BeltData> keys;
-    protected RotatingData pulleyKey;
+    protected ArrayList<BeltInstance> keys;
+    protected RotatingInstance pulleyKey;
 
-    public BeltInstance(MaterialManager materialManager, BeltBlockEntity blockEntity) {
+    public BeltVisual(VisualizationContext materialManager, BeltBlockEntity blockEntity) {
         super(materialManager, blockEntity);
 
         if (!AllBlocks.BELT.has(blockState))
@@ -64,9 +64,7 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
             PartialModel beltPartial = BeltRenderer.getBeltPartial(diagonal, start, end, bottom);
             SpriteShiftEntry spriteShift = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
 
-            Instancer<BeltData> beltModel = materialManager.defaultSolid()
-                    .material(AllMaterialSpecs.BELTS)
-                    .getModel(beltPartial, blockState);
+            Instancer<BeltInstance> beltModel = instancerProvider.instancer(AllInstanceTypes.BELTS, Models.partial(beltPartial), RenderStage.AFTER_BLOCK_ENTITIES);
 
             keys.add(setup(beltModel.createInstance(), bottom, spriteShift));
 
@@ -74,18 +72,18 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
         }
 
         if (blockEntity.hasPulley()) {
-            Instancer<RotatingData> pulleyModel = getPulleyModel();
+            Instancer<RotatingInstance> pulleyModel = getPulleyModel();
 
             pulleyKey = setup(pulleyModel.createInstance());
         }
     }
 
     @Override
-    public void update() {
+    public void update(float pt) {
         DyeColor color = blockEntity.color.orElse(null);
 
         boolean bottom = true;
-        for (BeltData key : keys) {
+        for (BeltInstance key : keys) {
 
             SpriteShiftEntry spriteShiftEntry = BeltRenderer.getSpriteShiftEntry(color, diagonal, bottom);
             key.setScrollTexture(spriteShiftEntry)
@@ -107,8 +105,8 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
     }
 
     @Override
-    public void remove() {
-        keys.forEach(InstanceData::delete);
+    protected void _delete() {
+        keys.forEach(AbstractInstance::delete);
         keys.clear();
         if (pulleyKey != null) pulleyKey.delete();
         pulleyKey = null;
@@ -126,26 +124,28 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
         return speed;
     }
 
-    private Instancer<RotatingData> getPulleyModel() {
+    private Instancer<RotatingInstance> getPulleyModel() {
         Direction dir = getOrientation();
 
         Direction.Axis axis = dir.getAxis();
 
         Supplier<PoseStack> ms = () -> {
             PoseStack modelTransform = new PoseStack();
-            TransformStack msr = TransformStack.cast(modelTransform);
-            msr.centre();
+            TransformStack msr = TransformStack.of(modelTransform);
+            msr.center();
             if (axis == Direction.Axis.X)
                 msr.rotateY(90);
             if (axis == Direction.Axis.Y)
                 msr.rotateX(90);
             msr.rotateX(90);
-            msr.unCentre();
+            msr.uncenter();
 
             return modelTransform;
         };
 
-        return getRotatingMaterial().getModel(AllPartialModels.BELT_PULLEY, blockState, dir, ms);
+		return materialManager.defaultSolid()
+				.material(AllInstanceTypes.ROTATING)
+				.getModel(AllPartialModels.BELT_PULLEY, blockState, dir, ms);
     }
 
     private Direction getOrientation() {
@@ -157,7 +157,7 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
         return dir;
     }
 
-    private BeltData setup(BeltData key, boolean bottom, SpriteShiftEntry spriteShift) {
+    private BeltInstance setup(BeltInstance key, boolean bottom, SpriteShiftEntry spriteShift) {
         boolean downward = beltSlope == BeltSlope.DOWNWARD;
         float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (downward ? 180 : 0) + (sideways ? 90 : 0) + (vertical && alongZ ? 180 : 0);
         float rotY = facing.toYRot() + ((diagonal ^ alongX) && !downward ? 180 : 0) + (sideways && alongZ ? 180 : 0) + (vertical && alongX ? 90 : 0);
@@ -171,9 +171,9 @@ public class BeltInstance extends KineticBlockEntityInstance<BeltBlockEntity> {
 				.setRotationalSpeed(getScrollSpeed())
 				.setRotationOffset(bottom ? 0.5f : 0f)
                 .setColor(blockEntity)
-                .setPosition(getInstancePosition())
-                .setBlockLight(world.getBrightness(LightLayer.BLOCK, pos))
-                .setSkyLight(world.getBrightness(LightLayer.SKY, pos));
+                .setPosition(getVisualPosition())
+                .setBlockLight(level.getBrightness(LightLayer.BLOCK, pos))
+                .setSkyLight(level.getBrightness(LightLayer.SKY, pos));
 
         return key;
     }

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.trains.schedule;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.Contraption;
@@ -59,7 +59,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		ms.pushPose();
 
 		boolean valid = false;
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 		float scale = 1;
 
 		if (entityModel instanceof AgeableListModel<?> model) {

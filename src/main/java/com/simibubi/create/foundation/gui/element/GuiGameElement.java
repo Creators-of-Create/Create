@@ -2,8 +2,7 @@ package com.simibubi.create.foundation.gui.element;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.model.ModelUtil;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
@@ -291,7 +290,7 @@ public class GuiGameElement {
 			renderer.render(stack, ItemDisplayContext.GUI, false, matrixStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, bakedModel);
 			RenderSystem.disableDepthTest();
 			buffer.endBatch();
-			
+
 			RenderSystem.enableDepthTest();
 			if (useDefaultLighting && flatLighting) {
 				Lighting.setupFor3DItems();

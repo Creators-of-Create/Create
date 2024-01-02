@@ -2,40 +2,40 @@ package com.simibubi.create.content.kinetics.crafter;
 
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
 
 import net.minecraft.core.Direction;
 
 public class ShaftlessCogwheelInstance extends SingleRotatingInstance<KineticBlockEntity> {
 
-    public ShaftlessCogwheelInstance(MaterialManager materialManager, KineticBlockEntity blockEntity) {
+    public ShaftlessCogwheelInstance(VisualizationContext materialManager, KineticBlockEntity blockEntity) {
         super(materialManager, blockEntity);
     }
 
-    @Override
-    protected Instancer<RotatingData> getModel() {
-        Direction facing = blockState.getValue(MechanicalCrafterBlock.HORIZONTAL_FACING);
+	@Override
+	protected Model model() {
+		Direction facing = blockState.getValue(MechanicalCrafterBlock.HORIZONTAL_FACING);
 
-		return getRotatingMaterial().getModel(AllPartialModels.SHAFTLESS_COGWHEEL, blockState, facing, rotateToFace(facing));
-    }
+		return getModel(AllPartialModels.SHAFTLESS_COGWHEEL, blockState, facing, rotateToFace(facing));
+	}
 
 	private Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
-			TransformStack stacker = TransformStack.cast(stack)
-					.centre();
+			TransformStack stacker = TransformStack.of(stack)
+					.center();
 
 			if (facing.getAxis() == Direction.Axis.X) stacker.rotateZ(90);
 			else if (facing.getAxis() == Direction.Axis.Z) stacker.rotateX(90);
 
-			stacker.unCentre();
+			stacker.uncenter();
 			return stack;
 		};
 	}

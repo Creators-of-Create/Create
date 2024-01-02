@@ -20,8 +20,8 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import com.jozufozu.flywheel.util.DiffuseLightCalculator;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.math.DiffuseLightCalculator;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.outliner.Outliner;
@@ -462,7 +462,7 @@ public class PonderScene {
 	public int getBasePlateOffsetZ() {
 		return basePlateOffsetZ;
 	}
-	
+
 	public boolean shouldHidePlatformShadow() {
 		return hidePlatformShadow;
 	}
@@ -524,7 +524,7 @@ public class PonderScene {
 		public PoseStack apply(PoseStack ms, float pt) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.rotateX(-35)
 				.rotateY(55)
 				.translate(offset, 0, 0)

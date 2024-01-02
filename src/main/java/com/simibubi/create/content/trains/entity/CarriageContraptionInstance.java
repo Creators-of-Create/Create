@@ -2,18 +2,19 @@ package com.simibubi.create.content.trains.entity;
 
 import org.joml.Vector3f;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
-import com.jozufozu.flywheel.util.AnimationTickHolder;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
+import com.jozufozu.flywheel.lib.visual.AbstractEntityVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.trains.bogey.BogeyInstance;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
-public class CarriageContraptionInstance extends EntityInstance<CarriageContraptionEntity> implements DynamicInstance {
+public class CarriageContraptionInstance extends AbstractEntityVisual<CarriageContraptionEntity> implements DynamicVisual {
 
 	private final PoseStack ms = new PoseStack();
 
@@ -21,7 +22,7 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 	private Couple<BogeyInstance> bogeys;
 	private Couple<Boolean> bogeyHidden;
 
-	public CarriageContraptionInstance(MaterialManager materialManager, CarriageContraptionEntity entity) {
+	public CarriageContraptionInstance(VisualizationContext materialManager, CarriageContraptionEntity entity) {
 		super(materialManager, entity);
 		bogeyHidden = Couple.create(() -> false);
 		entity.bindInstance(this);
@@ -44,7 +45,7 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		if (bogeys == null) {
 			if (entity.isReadyForRender())
 				init();
@@ -59,8 +60,8 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 
 		ms.pushPose();
 
-		Vector3f instancePosition = getInstancePosition(partialTicks);
-		TransformStack.cast(ms)
+		Vector3f instancePosition = getVisualPosition(partialTicks);
+		TransformStack.of(ms)
 			.translate(instancePosition);
 
 		for (boolean current : Iterate.trueAndFalse) {
@@ -92,12 +93,12 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 
 		bogeys.forEach(instance -> {
 			if (instance != null)
-				instance.updateLight(world, entity);
+				instance.updateLight(level, entity);
 		});
 	}
 
 	@Override
-	public void remove() {
+	public void _delete() {
 		if (bogeys == null)
 			return;
 
@@ -107,10 +108,5 @@ public class CarriageContraptionInstance extends EntityInstance<CarriageContrapt
 				instance.renderer.remove();
 			}
 		});
-	}
-
-	@Override
-	public boolean decreaseFramerateWithDistance() {
-		return false;
 	}
 }

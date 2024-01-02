@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.saw;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -25,7 +25,7 @@ public class SawFilterSlot extends ValueBoxTransform {
 	public void rotate(BlockState state, PoseStack ms) {
 		int yRot = (state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0)
 			+ (state.getValue(SawBlock.FLIPPED) ? 0 : 180);
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateY(yRot)
 			.rotateX(90);
 	}

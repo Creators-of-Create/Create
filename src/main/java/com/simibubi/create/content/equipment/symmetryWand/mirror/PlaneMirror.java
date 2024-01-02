@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Lang;
@@ -93,10 +93,10 @@ public class PlaneMirror extends SymmetryMirror {
 	@Override
 	public void applyModelTransform(PoseStack ms) {
 		super.applyModelTransform(ms);
-		TransformStack.cast(ms)
-			.centre()
+		TransformStack.of(ms)
+			.center()
 			.rotateY(((Align) orientation) == Align.XY ? 0 : 90)
-			.unCentre();
+			.uncenter();
 	}
 
 	@Override

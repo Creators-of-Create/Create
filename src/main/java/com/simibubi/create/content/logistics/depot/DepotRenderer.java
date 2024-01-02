@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.depot;
 
 import java.util.Random;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
@@ -38,7 +38,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 		int light, int overlay, DepotBehaviour depotBehaviour) {
 
 		TransportedItemStack transported = depotBehaviour.heldItem;
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 		Vec3 itemPosition = VecHelper.getCenterOf(be.getBlockPos());
 
 		ms.pushPose();
@@ -102,7 +102,7 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 		int angle, Random r, Vec3 itemPosition) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
 		boolean blockItem = itemRenderer.getModel(itemStack, null, null, 0)

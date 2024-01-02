@@ -6,14 +6,16 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
-import com.jozufozu.flywheel.util.box.ImmutableBox;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.box.Box;
+import com.jozufozu.flywheel.lib.box.MutableBox;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.light.LightUpdater;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
+import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.simibubi.create.AllPartialModels;
@@ -24,38 +26,37 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraftforge.client.model.data.ModelData;
 
-public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
+public class TrackInstance extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
 	private List<BezierTrackInstance> instances;
 
-	public TrackInstance(MaterialManager materialManager, TrackBlockEntity track) {
+	public TrackInstance(VisualizationContext materialManager, TrackBlockEntity track) {
 		super(materialManager, track);
-
-		update();
 	}
 
 	@Override
-	public void update() {
+	public void update(float pt) {
 		if (blockEntity.connections.isEmpty())
 			return;
 
-		remove();
+		_delete();
 		instances = blockEntity.connections.values()
 			.stream()
 			.map(this::createInstance)
 			.filter(Objects::nonNull)
 			.toList();
-		LightUpdater.get(world)
+		LightUpdater.get(level)
 			.addListener(this);
 	}
 
 	@Override
-	public ImmutableBox getVolume() {
+	public Box getVolume() {
 		List<BlockPos> out = new ArrayList<>();
 		out.addAll(blockEntity.connections.keySet());
 		out.addAll(blockEntity.connections.keySet());
-		return GridAlignedBB.containingAll(out);
+		return MutableBox.containingAll(out);
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 	}
 
 	@Override
-	public void remove() {
+	public void _delete() {
 		if (instances == null)
 			return;
 		instances.forEach(BezierTrackInstance::delete);
@@ -81,9 +82,9 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 
 	private class BezierTrackInstance {
 
-		private final ModelData[] ties;
-		private final ModelData[] left;
-		private final ModelData[] right;
+		private final TransformedInstance[] ties;
+		private final TransformedInstance[] left;
+		private final TransformedInstance[] right;
 		private final BlockPos[] tiesLightPos;
 		private final BlockPos[] leftLightPos;
 		private final BlockPos[] rightLightPos;
@@ -95,27 +96,24 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 			girder = bc.hasGirder ? new GirderInstance(bc) : null;
 
 			PoseStack pose = new PoseStack();
-			TransformStack.cast(pose)
-				.translate(getInstancePosition());
-
-			var mat = materialManager.cutout(RenderType.cutoutMipped())
-				.material(Materials.TRANSFORMED);
+			TransformStack.of(pose)
+				.translate(getVisualPosition());
 
 			int segCount = bc.getSegmentCount();
-			ties = new ModelData[segCount];
-			left = new ModelData[segCount];
-			right = new ModelData[segCount];
+			ties = new TransformedInstance[segCount];
+			left = new TransformedInstance[segCount];
+			right = new TransformedInstance[segCount];
 			tiesLightPos = new BlockPos[segCount];
 			leftLightPos = new BlockPos[segCount];
 			rightLightPos = new BlockPos[segCount];
 
 			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
-			mat.getModel(modelHolder.tie())
+			instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.tie()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstances(ties);
-			mat.getModel(modelHolder.segment_left())
+			instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_left()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstances(left);
-			mat.getModel(modelHolder.segment_right())
+			instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_right()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstances(right);
 
 			SegmentAngles[] segments = bc.getBakedSegments();
@@ -141,11 +139,11 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 		}
 
 		void delete() {
-			for (ModelData d : ties)
+			for (var d : ties)
 				d.delete();
-			for (ModelData d : left)
+			for (var d : left)
 				d.delete();
-			for (ModelData d : right)
+			for (var d : right)
 				d.delete();
 			if (girder != null)
 				girder.delete();
@@ -153,39 +151,38 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 
 		void updateLight() {
 			for (int i = 0; i < ties.length; i++)
-				ties[i].updateLight(world, tiesLightPos[i]);
+				ties[i].updateLight(level, tiesLightPos[i]);
 			for (int i = 0; i < left.length; i++)
-				left[i].updateLight(world, leftLightPos[i]);
+				left[i].updateLight(level, leftLightPos[i]);
 			for (int i = 0; i < right.length; i++)
-				right[i].updateLight(world, rightLightPos[i]);
+				right[i].updateLight(level, rightLightPos[i]);
 			if (girder != null)
 				girder.updateLight();
 		}
 
 		private class GirderInstance {
 
-			private final Couple<ModelData[]> beams;
-			private final Couple<Couple<ModelData[]>> beamCaps;
+			private final Couple<TransformedInstance[]> beams;
+			private final Couple<Couple<TransformedInstance[]>> beamCaps;
 			private final BlockPos[] lightPos;
 
 			private GirderInstance(BezierConnection bc) {
 				BlockPos tePosition = bc.tePositions.getFirst();
 				PoseStack pose = new PoseStack();
-				TransformStack.cast(pose)
-					.translate(getInstancePosition())
+				TransformStack.of(pose)
+					.translate(getVisualPosition())
 					.nudge((int) bc.tePositions.getFirst()
 						.asLong());
 
-				var mat = materialManager.cutout(RenderType.cutoutMipped())
-					.material(Materials.TRANSFORMED);
-
 				int segCount = bc.getSegmentCount();
-				beams = Couple.create(() -> new ModelData[segCount]);
-				beamCaps = Couple.create(() -> Couple.create(() -> new ModelData[segCount]));
+				beams = Couple.create(() -> new TransformedInstance[segCount]);
+				beamCaps = Couple.create(() -> Couple.create(() -> new TransformedInstance[segCount]));
 				lightPos = new BlockPos[segCount];
-				beams.forEach(mat.getModel(AllPartialModels.GIRDER_SEGMENT_MIDDLE)::createInstances);
-				beamCaps.forEachWithContext((c, top) -> c.forEach(mat.getModel(top ? AllPartialModels.GIRDER_SEGMENT_TOP
-					: AllPartialModels.GIRDER_SEGMENT_BOTTOM)::createInstances));
+				beams.forEach(instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GIRDER_SEGMENT_MIDDLE), RenderStage.AFTER_BLOCK_ENTITIES)::createInstances);
+				beamCaps.forEachWithContext((c, top) -> {
+					var partialModel = Models.partial(top ? AllPartialModels.GIRDER_SEGMENT_TOP : AllPartialModels.GIRDER_SEGMENT_BOTTOM);
+					c.forEach(instancerProvider.instancerr(InstanceTypes.TRANSFORMED, partialModel, RenderStage.AFTER_BLOCK_ENTITIES)::createInstances);
+				});
 
 				GirderAngles[] bakedGirders = bc.getBakedGirders();
 				for (int i = 1; i < bakedGirders.length; i++) {
@@ -214,11 +211,11 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 
 			void delete() {
 				beams.forEach(arr -> {
-					for (ModelData d : arr)
+					for (var d : arr)
 						d.delete();
 				});
 				beamCaps.forEach(c -> c.forEach(arr -> {
-					for (ModelData d : arr)
+					for (var d : arr)
 						d.delete();
 				}));
 			}
@@ -226,11 +223,11 @@ public class TrackInstance extends BlockEntityInstance<TrackBlockEntity> {
 			void updateLight() {
 				beams.forEach(arr -> {
 					for (int i = 0; i < arr.length; i++)
-						arr[i].updateLight(world, lightPos[i]);
+						arr[i].updateLight(level, lightPos[i]);
 				});
 				beamCaps.forEach(c -> c.forEach(arr -> {
 					for (int i = 0; i < arr.length; i++)
-						arr[i].updateLight(world, lightPos[i]);
+						arr[i].updateLight(level, lightPos[i]);
 				}));
 			}
 

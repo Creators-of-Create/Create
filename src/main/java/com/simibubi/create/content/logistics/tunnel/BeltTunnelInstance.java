@@ -8,29 +8,27 @@ import java.util.Map;
 import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
+import com.jozufozu.flywheel.api.instance.DynamicVisual;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.flwdata.FlapData;
-import com.simibubi.create.foundation.render.AllMaterialSpecs;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 
-public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelBlockEntity> implements DynamicInstance {
+public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelBlockEntity> implements DynamicVisual {
 
     private final Map<Direction, ArrayList<FlapData>> tunnelFlaps;
 
-    public BeltTunnelInstance(MaterialManager materialManager, BeltTunnelBlockEntity blockEntity) {
+    public BeltTunnelInstance(VisualizationContext materialManager, BeltTunnelBlockEntity blockEntity) {
         super(materialManager, blockEntity);
 
         tunnelFlaps = new EnumMap<>(Direction.class);
 
-        Instancer<FlapData> model = materialManager.defaultSolid()
-                .material(AllMaterialSpecs.FLAPS)
-				.getModel(AllPartialModels.BELT_TUNNEL_FLAP, blockState);
+        Instancer<FlapData> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(AllPartialModels.BELT_TUNNEL_FLAP), RenderStage.AFTER_BLOCK_ENTITIES);
 
         int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = world.getBrightness(LightLayer.SKY, pos);
@@ -51,7 +49,7 @@ public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelBlockEntit
 
                 FlapData key = model.createInstance();
 
-                key.setPosition(getInstancePosition())
+                key.setPosition(getVisualPosition())
                    .setSegmentOffset(segmentOffset, 0, 0)
                    .setBlockLight(blockLight)
                    .setSkyLight(skyLight)
@@ -77,7 +75,7 @@ public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelBlockEntit
     public void beginFrame() {
         tunnelFlaps.forEach((direction, keys) -> {
             LerpedFloat lerpedFloat = blockEntity.flaps.get(direction);
-            if (lerpedFloat == null) 
+            if (lerpedFloat == null)
                 return;
 
             float flapness = lerpedFloat.getValue(AnimationTickHolder.getPartialTicks());
@@ -97,6 +95,6 @@ public class BeltTunnelInstance extends BlockEntityInstance<BeltTunnelBlockEntit
         tunnelFlaps.values()
                    .stream()
                    .flatMap(Collection::stream)
-                   .forEach(InstanceData::delete);
+                   .forEach(AbstractInstance::delete);
     }
 }

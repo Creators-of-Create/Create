@@ -2,7 +2,7 @@ package com.simibubi.create.content.schematics.client;
 
 import static java.lang.Math.abs;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -22,7 +22,7 @@ public class SchematicTransformation {
 	private Vec3 chasingPos;
 	private Vec3 prevChasingPos;
 	private BlockPos target;
-	
+
 	private LerpedFloat scaleFrontBack, scaleLeftRight;
 	private LerpedFloat rotation;
 	private double xOrigin;
@@ -61,7 +61,7 @@ public class SchematicTransformation {
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		// Translation
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(VecHelper.lerp(pt, prevChasingPos, chasingPos)
 				.subtract(camera));
 		Vec3 rotationOffset = getRotationOffset(true);
@@ -71,7 +71,7 @@ public class SchematicTransformation {
 		float lr = getScaleLR().getValue(pt);
 		float rot = rotation.getValue(pt) + ((fb < 0 && lr < 0) ? 180 : 0);
 		ms.translate(xOrigin, 0, zOrigin);
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(rotationOffset)
 			.rotateY(rot)
 			.translateBack(rotationOffset);

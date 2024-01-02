@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.chute;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.chute.ChuteBlock.Shape;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
@@ -36,9 +36,9 @@ public class ChuteRenderer extends SafeBlockEntityRenderer<ChuteBlockEntity> {
 		int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 		ms.pushPose();
-		msr.centre();
+		msr.center();
 		float itemScale = .5f;
 		float itemPosition = be.itemPosition.getValue(partialTicks);
 		ms.translate(0, -.5 + itemPosition, 0);

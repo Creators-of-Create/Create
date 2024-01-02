@@ -1,33 +1,35 @@
 package com.simibubi.create.content.contraptions.actors.psi;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.api.instance.TickableInstance;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.TickableVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visual.VisualTickContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-public class PSIInstance extends BlockEntityInstance<PortableStorageInterfaceBlockEntity> implements DynamicInstance, TickableInstance {
+public class PSIInstance extends AbstractBlockEntityVisual<PortableStorageInterfaceBlockEntity> implements DynamicVisual, TickableVisual {
 
 	private final PIInstance instance;
 
-	public PSIInstance(MaterialManager materialManager, PortableStorageInterfaceBlockEntity blockEntity) {
+	public PSIInstance(VisualizationContext materialManager, PortableStorageInterfaceBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		instance = new PIInstance(materialManager, blockState, getInstancePosition());
+		instance = new PIInstance(materialManager, blockState, getVisualPosition());
 	}
 
 	@Override
-	public void init() {
+	public void init(float pt) {
 		instance.init(isLit());
 	}
 
 	@Override
-	public void tick() {
+	public void tick(VisualTickContext ctx) {
 		instance.tick(isLit());
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		instance.beginFrame(blockEntity.getExtensionDistance(AnimationTickHolder.getPartialTicks()));
 	}
 
@@ -37,7 +39,7 @@ public class PSIInstance extends BlockEntityInstance<PortableStorageInterfaceBlo
 	}
 
 	@Override
-	public void remove() {
+	protected void _delete() {
 		instance.remove();
 	}
 

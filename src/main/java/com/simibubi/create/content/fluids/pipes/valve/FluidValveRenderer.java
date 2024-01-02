@@ -1,6 +1,6 @@
 package com.simibubi.create.content.fluids.pipes.valve;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
@@ -26,7 +26,7 @@ public class FluidValveRenderer extends KineticBlockEntityRenderer<FluidValveBlo
 	protected void renderSafe(FluidValveBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 		BlockState blockState = be.getBlockState();
@@ -41,11 +41,11 @@ public class FluidValveRenderer extends KineticBlockEntityRenderer<FluidValveBlo
 		if (pipeAxis.isHorizontal() && shaftAxis == Axis.X || pipeAxis.isVertical())
 			pointerRotationOffset = 90;
 
-		pointer.centre()
+		pointer.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 			.rotateY(pointerRotationOffset + pointerRotation)
-			.unCentre()
+			.uncenter()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}

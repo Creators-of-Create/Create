@@ -1,28 +1,26 @@
 package com.simibubi.create.content.redstone.diodes;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.TickableInstance;
+import com.jozufozu.flywheel.api.instance.TickableVisual;
 import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Color;
 
-public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeBlockEntity> implements TickableInstance {
+public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeBlockEntity> implements TickableVisual {
 
     protected final ModelData indicator;
 
     protected int previousState;
 
-    public BrassDiodeInstance(MaterialManager materialManager, BrassDiodeBlockEntity blockEntity) {
+    public BrassDiodeInstance(VisualizationContext materialManager, BrassDiodeBlockEntity blockEntity) {
         super(materialManager, blockEntity);
 
-        indicator = materialManager.defaultSolid()
-                .material(Materials.TRANSFORMED)
-                .getModel(AllPartialModels.FLEXPEATER_INDICATOR, blockState).createInstance();
+        indicator = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.FLEXPEATER_INDICATOR), RenderStage.AFTER_BLOCK_ENTITIES).createInstance();
 
         indicator.loadIdentity()
-				.translate(getInstancePosition())
+				.translate(getVisualPosition())
 				.setColor(getColor());
 
         previousState = blockEntity.state;

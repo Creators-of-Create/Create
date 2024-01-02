@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.diodes;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -20,7 +20,7 @@ public class BrassDiodeScrollSlot extends ValueBoxTransform {
 	@Override
 	public void rotate(BlockState state, PoseStack ms) {
 		float yRot = AngleHelper.horizontalAngle(state.getValue(BlockStateProperties.HORIZONTAL_FACING)) + 180;
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateY(yRot)
 			.rotateX(90);
 	}
@@ -29,5 +29,5 @@ public class BrassDiodeScrollSlot extends ValueBoxTransform {
 	public int getOverrideColor() {
 		return 0x592424;
 	}
-	
+
 }

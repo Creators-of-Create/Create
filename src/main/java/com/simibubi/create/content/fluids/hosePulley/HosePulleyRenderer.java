@@ -1,6 +1,6 @@
 package com.simibubi.create.content.fluids.hosePulley;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.pulley.AbstractPulleyRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;

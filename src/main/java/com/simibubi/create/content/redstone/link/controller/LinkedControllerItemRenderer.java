@@ -2,8 +2,8 @@ package com.simibubi.create.content.redstone.link.controller;
 
 import java.util.Vector;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
@@ -88,7 +88,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	  	PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
   		int light, RenderType renderType, boolean active, boolean renderDepression) {
 		float pt = AnimationTickHolder.getPartialTicks();
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 
 		ms.pushPose();
 

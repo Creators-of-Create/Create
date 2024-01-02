@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.pulley;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -44,7 +44,7 @@ public abstract class AbstractPulleyRenderer<T extends KineticBlockEntity> exten
 	protected void renderSafe(T be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);

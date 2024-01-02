@@ -1,6 +1,6 @@
 package com.simibubi.create.content.trains.signal;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity.OverlayState;
@@ -53,7 +53,7 @@ public class SignalRenderer extends SafeBlockEntityRenderer<SignalBlockEntity> {
 			return;
 
 		ms.pushPose();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(targetPosition.subtract(pos));
 		RenderedTrackOverlayType type =
 			overlayState == OverlayState.DUAL ? RenderedTrackOverlayType.DUAL_SIGNAL : RenderedTrackOverlayType.SIGNAL;

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.simpleRelays;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
@@ -27,7 +27,7 @@ public class BracketedKineticBlockEntityRenderer extends KineticBlockEntityRende
 	protected void renderSafe(BracketedKineticBlockEntity be, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
 
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		if (!AllBlocks.LARGE_COGWHEEL.has(be.getBlockState())) {

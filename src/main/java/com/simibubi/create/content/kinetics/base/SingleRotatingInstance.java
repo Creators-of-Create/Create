@@ -1,26 +1,31 @@
 package com.simibubi.create.content.kinetics.base;
 
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.model.Model;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SingleRotatingInstance<T extends KineticBlockEntity> extends KineticBlockEntityInstance<T> {
 
-	protected RotatingData rotatingModel;
+	protected RotatingInstance rotatingModel;
 
-	public SingleRotatingInstance(MaterialManager materialManager, T blockEntity) {
+	public SingleRotatingInstance(VisualizationContext materialManager, T blockEntity) {
 		super(materialManager, blockEntity);
 	}
 
 	@Override
-	public void init() {
-		rotatingModel = setup(getModel().createInstance());
+	public void init(float pt) {
+		var instance = getModel().createInstance();
+		rotatingModel = setup(instance);
 	}
 
 	@Override
-	public void update() {
+	public void update(float pt) {
 		updateRotation(rotatingModel);
 	}
 
@@ -30,7 +35,7 @@ public class SingleRotatingInstance<T extends KineticBlockEntity> extends Kineti
 	}
 
 	@Override
-	public void remove() {
+	protected void _delete() {
 		rotatingModel.delete();
 	}
 
@@ -38,7 +43,11 @@ public class SingleRotatingInstance<T extends KineticBlockEntity> extends Kineti
 		return blockState;
 	}
 
-	protected Instancer<RotatingData> getModel() {
-		return getRotatingMaterial().getModel(getRenderedBlockState());
+	protected Instancer<RotatingInstance> getModel() {
+		return instancerProvider.instancerr(AllInstanceTypes.ROTATING, model(), RenderStage.AFTER_BLOCK_ENTITIES);
+	}
+
+	protected Model model() {
+		return Models.block(getRenderedBlockState());
 	}
 }

@@ -1,10 +1,12 @@
 package com.simibubi.create.content.kinetics.steamEngine;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -12,27 +14,22 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraftforge.client.model.data.ModelData;
 
-public class SteamEngineInstance extends BlockEntityInstance<SteamEngineBlockEntity> implements DynamicInstance {
+public class SteamEngineInstance extends AbstractBlockEntityVisual<SteamEngineBlockEntity> implements DynamicVisual {
 
-	protected final ModelData piston;
-	protected final ModelData linkage;
-	protected final ModelData connector;
+	protected final TransformedInstance piston;
+	protected final TransformedInstance linkage;
+	protected final TransformedInstance connector;
 
-	public SteamEngineInstance(MaterialManager materialManager, SteamEngineBlockEntity blockEntity) {
+	public SteamEngineInstance(VisualizationContext materialManager, SteamEngineBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		piston = materialManager.defaultSolid()
-				.material(Materials.TRANSFORMED)
-				.getModel(AllPartialModels.ENGINE_PISTON, blockState)
+		piston = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_PISTON), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
-		linkage = materialManager.defaultSolid()
-				.material(Materials.TRANSFORMED)
-				.getModel(AllPartialModels.ENGINE_LINKAGE, blockState)
+		linkage = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_LINKAGE), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
-		connector = materialManager.defaultSolid()
-				.material(Materials.TRANSFORMED)
-				.getModel(AllPartialModels.ENGINE_CONNECTOR, blockState)
+		connector = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ENGINE_CONNECTOR), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 	}
 
@@ -63,9 +60,9 @@ public class SteamEngineInstance extends BlockEntityInstance<SteamEngineBlockEnt
 			.translate(0, piston, 0);
 
 		transformed(linkage, facing, roll90)
-			.centre()
+			.center()
 			.translate(0, 1, 0)
-			.unCentre()
+			.uncenter()
 			.translate(0, piston, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
 			.rotateX(sine2 * 23f)
@@ -73,19 +70,19 @@ public class SteamEngineInstance extends BlockEntityInstance<SteamEngineBlockEnt
 
 		transformed(connector, facing, roll90)
 			.translate(0, 2, 0)
-			.centre()
+			.center()
 			.rotateXRadians(-angle + Mth.HALF_PI)
-			.unCentre();
+			.uncenter();
 	}
 
-	protected ModelData transformed(ModelData modelData, Direction facing, boolean roll90) {
+	protected TransformedInstance transformed(TransformedInstance modelData, Direction facing, boolean roll90) {
 		return modelData.loadIdentity()
-			.translate(getInstancePosition())
-			.centre()
+			.translate(getVisualPosition())
+			.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing) + 90)
 			.rotateY(roll90 ? -90 : 0)
-			.unCentre();
+			.uncenter();
 	}
 
 	@Override
@@ -94,7 +91,7 @@ public class SteamEngineInstance extends BlockEntityInstance<SteamEngineBlockEnt
 	}
 
 	@Override
-	protected void remove() {
+	protected void _delete() {
 		piston.delete();
 		linkage.delete();
 		connector.delete();

@@ -2,9 +2,8 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
@@ -15,6 +14,7 @@ import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatch
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -35,7 +35,7 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 	@Override
 	protected void renderSafe(PortableStorageInterfaceBlockEntity be, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		BlockState blockState = be.getBlockState();
@@ -80,10 +80,10 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 	}
 
 	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
-		buffer.centre()
+		buffer.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.unCentre();
+			.uncenter();
 	}
 
 	static PortableStorageInterfaceBlockEntity getTargetPSI(MovementContext context) {

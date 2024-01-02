@@ -4,18 +4,14 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.error.GlError;
-import com.jozufozu.flywheel.config.BackendType;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
-import com.jozufozu.flywheel.core.model.WorldModelBuilder;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.event.BeginFrameEvent;
-import com.jozufozu.flywheel.event.GatherContextEvent;
-import com.jozufozu.flywheel.event.ReloadRenderersEvent;
-import com.jozufozu.flywheel.event.RenderLayerEvent;
-import com.jozufozu.flywheel.util.WorldAttached;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.api.event.BeginFrameEvent;
+import com.jozufozu.flywheel.api.event.ReloadLevelRendererEvent;
+import com.jozufozu.flywheel.api.event.RenderStageEvent;
+import com.jozufozu.flywheel.gl.error.GlError;
+import com.jozufozu.flywheel.lib.model.baked.BlockModelBuilder;
+import com.jozufozu.flywheel.lib.model.baked.MultiBlockModelBuilder;
+import com.jozufozu.flywheel.lib.model.baked.TessellatedModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -25,6 +21,8 @@ import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
+import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -70,24 +68,21 @@ public class ContraptionRenderDispatcher {
 
 	@SubscribeEvent
 	public static void beginFrame(BeginFrameEvent event) {
-		WORLDS.get(event.getWorld())
+		WORLDS.get(event.getContext()
+						.level())
 			.beginFrame(event);
 	}
 
 	@SubscribeEvent
-	public static void renderLayer(RenderLayerEvent event) {
-		WORLDS.get(event.getWorld())
+	public static void renderLayer(RenderStageEvent event) {
+		WORLDS.get(event.getLevel())
 			.renderLayer(event);
 
-		GlError.pollAndThrow(() -> "contraption layer: " + event.getLayer());
+		GlError.pollAndThrow(() -> "contraption layer: " + event.getStage());
 	}
 
 	@SubscribeEvent
-	public static void onRendererReload(ReloadRenderersEvent event) {
-		reset();
-	}
-
-	public static void gatherContext(GatherContextEvent e) {
+	public static void onRendererReload(ReloadLevelRendererEvent event) {
 		reset();
 	}
 
@@ -121,7 +116,7 @@ public class ContraptionRenderDispatcher {
 		int height = contraptionWorld.getHeight();
 		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, minBuildHeight, height, origin) {
 			@Override
-			public boolean supportsFlywheel() {
+			public boolean supportsVisualization() {
 				return canInstance();
 			}
 		};
@@ -160,7 +155,7 @@ public class ContraptionRenderDispatcher {
 				if (c.isHiddenInPortal(blockInfo.pos()))
 					continue;
 				m.pushPose();
-				TransformStack.cast(m)
+				TransformStack.of(m)
 					.translate(blockInfo.pos());
 				movementBehaviour.renderInContraption(context, renderWorld, matrices, buffer);
 				m.popPose();
@@ -171,9 +166,8 @@ public class ContraptionRenderDispatcher {
 	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c,
 		RenderType layer) {
 		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
-		ShadeSeparatedBufferedData data = new WorldModelBuilder(layer).withRenderWorld(renderWorld)
-				.withBlocks(values)
-				.withModelData(c.modelData)
+		var build = new MultiBlockModelBuilder(values).renderWorld(renderWorld)
+				.modelDataMap(c.modelData)
 				.build();
 		SuperByteBuffer sbb = new SuperByteBuffer(data);
 		data.release();
@@ -203,14 +197,14 @@ public class ContraptionRenderDispatcher {
 	public static void reset() {
 		WORLDS.empty(ContraptionRenderingWorld::delete);
 
-		if (Backend.isOn()) {
-			WORLDS = new WorldAttached<>(FlwContraptionManager::new);
-		} else {
+//		if (Backend.isOn()) {
+//			WORLDS = new WorldAttached<>(FlwContraptionManager::new);
+//		} else {
 			WORLDS = new WorldAttached<>(SBBContraptionManager::new);
-		}
+//		}
 	}
 
 	public static boolean canInstance() {
-		return Backend.getBackendType() == BackendType.INSTANCING;
+		return false;
 	}
 }

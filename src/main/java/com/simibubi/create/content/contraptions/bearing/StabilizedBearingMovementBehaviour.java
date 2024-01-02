@@ -4,9 +4,8 @@ import javax.annotation.Nullable;
 
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -19,6 +18,7 @@ import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -35,7 +35,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 	public ItemStack canBeDisabledVia(MovementContext context) {
 		return null;
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
@@ -78,7 +78,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+	public ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
 		MovementContext context) {
 		return new StabilizedBearingInstance(materialManager, simulationWorld, context);
 	}

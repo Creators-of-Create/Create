@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.gui.CustomLightingSettings;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public abstract class AnimatedKinetics implements IDrawable {
-	
+
 	public int offset = 0;
 
 	public static final ILightingSettings DEFAULT_LIGHTING = CustomLightingSettings.builder()

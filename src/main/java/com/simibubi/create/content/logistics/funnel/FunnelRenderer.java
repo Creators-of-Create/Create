@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.funnel;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -30,7 +30,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (!be.hasFlap() || Backend.canUseInstancing(be.getLevel()))
+		if (!be.hasFlap() || VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		BlockState blockState = be.getBlockState();
@@ -39,16 +39,16 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 			: AllPartialModels.BELT_FUNNEL_FLAP);
 		SuperByteBuffer flapBuffer = CachedBufferer.partial(partialModel, blockState);
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 9.5f);
-		TransformStack msr = TransformStack.cast(ms);
+		TransformStack msr = TransformStack.of(ms);
 
 		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(blockState)
 			.getOpposite());
 		float f = be.flap.getValue(partialTicks);
 
 		ms.pushPose();
-		msr.centre()
+		msr.center()
 			.rotateY(horizontalAngle)
-			.unCentre();
+			.uncenter();
 		ms.translate(0.075f / 16f, 0, -be.getFlapOffset());
 
 		for (int segment = 0; segment <= 3; segment++) {

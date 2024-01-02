@@ -9,8 +9,7 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity.RollingMode;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -32,6 +31,7 @@ import com.simibubi.create.content.trains.graph.TrackEdge;
 import com.simibubi.create.content.trains.graph.TrackGraph;
 import com.simibubi.create.foundation.damageTypes.CreateDamageSources;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -76,7 +76,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
+	public ActorInstance createInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld,
 		MovementContext context) {
 		return new RollerActorInstance(materialManager, simulationWorld, context);
 	}
@@ -195,7 +195,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		int startingY = 1;
 		if (!getStateToPaveWith(context).isAir()) {
 			FilterItemStack filter = context.getFilterFromBE();
-			if (!ItemHelper	
+			if (!ItemHelper
 				.extract(context.contraption.getSharedInventory(),
 					stack -> filter.test(context.world, stack), 1, true)
 				.isEmpty())
@@ -306,7 +306,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		BlockState stateToPaveWith = getStateToPaveWith(context);
 		BlockState stateToPaveWithAsSlab = getStateToPaveWithAsSlab(context);
 		RollingMode mode = getMode(context);
-		
+
 		if (mode != RollingMode.TUNNEL_PAVE && stateToPaveWith.isAir())
 			return;
 

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.pulley;
 
-import com.jozufozu.flywheel.util.box.GridAlignedBB;
+import com.jozufozu.flywheel.lib.box.MutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 
@@ -13,14 +13,14 @@ public class PulleyLighter extends ContraptionLighter<PulleyContraption> {
     }
 
     @Override
-    public GridAlignedBB getContraptionBounds() {
+    public MutableBox getContraptionBounds() {
 
-        GridAlignedBB bounds = GridAlignedBB.from(contraption.bounds);
+        MutableBox bounds = MutableBox.from(contraption.bounds);
 
         Level world = contraption.entity.level();
 
         BlockPos.MutableBlockPos pos = contraption.anchor.mutable();
-        while (!AllBlocks.ROPE_PULLEY.has(world.getBlockState(pos)) && pos.getY() < world.getMaxBuildHeight()) 
+        while (!AllBlocks.ROPE_PULLEY.has(world.getBlockState(pos)) && pos.getY() < world.getMaxBuildHeight())
             pos.move(0, 1, 0);
 
         bounds.translate(pos);

@@ -1,14 +1,15 @@
 package com.simibubi.create.content.contraptions.elevator;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.light.TickingLightListener;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.light.TickingLightListener;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
 
 // TODO
-public class ElevatorPulleyInstance extends ShaftInstance<ElevatorPulleyBlockEntity> implements DynamicInstance, TickingLightListener {
+public class ElevatorPulleyInstance extends ShaftInstance<ElevatorPulleyBlockEntity> implements DynamicVisual, TickingLightListener {
 
-	public ElevatorPulleyInstance(MaterialManager materialManager, ElevatorPulleyBlockEntity blockEntity) {
+	public ElevatorPulleyInstance(VisualizationContext materialManager, ElevatorPulleyBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 	}
 
@@ -18,7 +19,7 @@ public class ElevatorPulleyInstance extends ShaftInstance<ElevatorPulleyBlockEnt
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 	}
 
 }

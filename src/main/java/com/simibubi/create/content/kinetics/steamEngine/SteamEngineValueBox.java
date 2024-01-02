@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.steamEngine;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -73,7 +73,7 @@ public class SteamEngineValueBox extends ValueBoxTransform.Sided {
 				roll = p.getXRotation();
 
 		float yRot = AngleHelper.horizontalAngle(facing) + (facing == Direction.DOWN ? 180 : 0);
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateY(yRot)
 			.rotateX(facing == Direction.DOWN ? -90 : 90)
 			.rotateY(roll);
