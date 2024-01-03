@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
+import net.minecraft.core.Registry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -94,6 +96,9 @@ public class ItemRequirement {
 		if (block instanceof SnowLayerBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(item, state.getValue(SnowLayerBlock.LAYERS)
 				.intValue()));
+		// FD's rich soil extends FarmBlock so this is to make sure the cost is correct (it should be rich soil not dirt)
+		if (block == Registry.BLOCK.get(Mods.FD.asResource("rich_soil_farmland")))
+			return new ItemRequirement(ItemUseType.CONSUME, Registry.ITEM.get(Mods.FD.asResource("rich_soil")));
 		if (block instanceof FarmBlock || block instanceof DirtPathBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Items.DIRT);
 		if (block instanceof AbstractBannerBlock && be instanceof BannerBlockEntity bannerBE)
