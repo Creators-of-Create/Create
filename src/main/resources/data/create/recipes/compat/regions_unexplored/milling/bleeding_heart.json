@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "regions_unexplored"
+    }
+  ],
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "regions_unexplored:bleeding_heart"
+    }
+  ],
+  "processingTime": 50,
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:magenta_dye"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:pink_dye"
+    }
+  ]
+}

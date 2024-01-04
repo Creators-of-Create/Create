@@ -1,0 +1,24 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "vampirism"
+    }
+  ],
+  "type": "create:pressing",
+  "ingredients": [
+    [
+      {
+        "item": "vampirism:cursed_earth"
+      },
+      {
+        "item": "vampirism:cursed_grass"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "item": "vampirism:cursed_earth_path"
+    }
+  ]
+}
