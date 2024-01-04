@@ -1,13 +1,18 @@
 package com.simibubi.create.content.logistics.funnel;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.InstanceData;
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicVisual;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
+import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.AbstractInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.logistics.flwdata.FlapData;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
@@ -16,9 +21,9 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LightLayer;
 
-public class FunnelInstance extends BlockEntityInstance<FunnelBlockEntity> implements DynamicVisual {
+public class FunnelInstance extends AbstractBlockEntityVisual<FunnelBlockEntity> implements DynamicVisual {
 
-    private final ArrayList<FlapData> flaps;
+	private final ArrayList<FlapData> flaps;
 
     public FunnelInstance(VisualizationContext materialManager, FunnelBlockEntity blockEntity) {
         super(materialManager, blockEntity);
@@ -31,8 +36,8 @@ public class FunnelInstance extends BlockEntityInstance<FunnelBlockEntity> imple
 				: AllPartialModels.BELT_FUNNEL_FLAP);
         Instancer<FlapData> model = instancerProvider.instancer(AllInstanceTypes.FLAPS, Models.partial(flapPartial), RenderStage.AFTER_BLOCK_ENTITIES);
 
-        int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
-        int skyLight = world.getBrightness(LightLayer.SKY, pos);
+        int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
+        int skyLight = level.getBrightness(LightLayer.SKY, pos);
 
         Direction direction = FunnelBlock.getFunnelFacing(blockState);
 
@@ -60,7 +65,7 @@ public class FunnelInstance extends BlockEntityInstance<FunnelBlockEntity> imple
     }
 
     @Override
-    public void beginFrame() {
+    public void beginFrame(VisualFrameContext ctx) {
         if (flaps == null) return;
 
         float flapness = blockEntity.flap.getValue(AnimationTickHolder.getPartialTicks());
@@ -77,9 +82,16 @@ public class FunnelInstance extends BlockEntityInstance<FunnelBlockEntity> imple
     }
 
     @Override
-    public void remove() {
+    protected void _delete() {
         if (flaps == null) return;
 
         flaps.forEach(AbstractInstance::delete);
     }
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		if (flaps == null) return;
+
+		flaps.forEach(consumer);
+	}
 }

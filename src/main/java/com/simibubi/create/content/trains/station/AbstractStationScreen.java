@@ -99,7 +99,7 @@ public abstract class AbstractStationScreen extends AbstractSimiScreen {
 	private void renderAdditional(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, int guiLeft, int guiTop, AllGuiTextures background) {
 		PoseStack ms = graphics.pose();
 		ms.pushPose();
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		msr.pushPose()
 			.translate(guiLeft + background.width + 4, guiTop + background.height + 4, 100)
 			.scale(40)

@@ -53,7 +53,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		BlockState blockState = be.getBlockState();
 
 		PoseStack msLocal = new PoseStack();
-		TransformStack msr = TransformStack.of(msLocal);
+		var msr = TransformStack.of(msLocal);
 
 		float baseAngle;
 		float lowerArmAngle;

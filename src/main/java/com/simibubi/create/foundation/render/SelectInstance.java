@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.render;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -56,7 +57,13 @@ public class SelectInstance<D extends Instance> {
 		if (current != null) current.handle().setDeleted();
 	}
 
-	public interface ModelSelector {
+	public void forEach(Consumer<Instance> consumer) {
+		if (current != null) {
+			consumer.accept(current);
+		}
+	}
+
+    public interface ModelSelector {
 		int modelIndexToShow();
 	}
 }

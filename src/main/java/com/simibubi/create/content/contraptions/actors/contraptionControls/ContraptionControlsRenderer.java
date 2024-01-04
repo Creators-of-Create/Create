@@ -93,14 +93,14 @@ public class ContraptionControlsRenderer extends SmartBlockEntityRenderer<Contra
 		String text = efs.currentShortName;
 		String description = efs.currentLongName;
 		PoseStack ms = matrices.getViewProjection();
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 
 		ms.pushPose();
 		msr.translate(ctx.localPos);
-		msr.rotateCentered(Direction.UP,
-			AngleHelper.rad(AngleHelper.horizontalAngle(ctx.state.getValue(ContraptionControlsBlock.FACING))));
+		msr.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(ctx.state.getValue(ContraptionControlsBlock.FACING))),
+			Direction.UP);
 		ms.translate(0.275f + 0.125f, 1, 0.5f);
-		msr.rotate(Direction.WEST, AngleHelper.rad(67.5f));
+		msr.rotate(AngleHelper.rad(67.5f), Direction.WEST);
 
 		float buttondepth = -.25f;
 		if (ctx.contraption.presentBlockEntities.get(ctx.localPos) instanceof ContraptionControlsBlockEntity cbe)

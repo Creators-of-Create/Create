@@ -1,6 +1,5 @@
 package com.simibubi.create.content.processing.burner;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -8,6 +7,7 @@ import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.foundation.render.VirtualRenderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -34,7 +34,7 @@ public class BlazeBurnerMovementBehaviour implements MovementBehaviour {
 	public boolean renderAsNormalBlockEntity() {
 		return false;
 	}
-	
+
 	@Override
 	public ItemStack canBeDisabledVia(MovementContext context) {
 		return null;

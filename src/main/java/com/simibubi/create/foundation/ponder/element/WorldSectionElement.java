@@ -239,16 +239,16 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			double rotY = Mth.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
 			TransformStack.of(ms)
 				.translate(centerOfRotation)
-				.rotateX(rotX)
-				.rotateZ(rotZ)
-				.rotateY(rotY)
+				.rotateX((float) rotX)
+				.rotateZ((float) rotZ)
+				.rotateY((float) rotY)
 				.translateBack(centerOfRotation);
 			if (stabilizationAnchor != null) {
 				TransformStack.of(ms)
 					.translate(stabilizationAnchor)
-					.rotateX(-rotX)
-					.rotateZ(-rotZ)
-					.rotateY(-rotY)
+					.rotateX((float) -rotX)
+					.rotateZ((float) -rotZ)
+					.rotateY((float) -rotY)
 					.translateBack(stabilizationAnchor);
 			}
 		}

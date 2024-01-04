@@ -1,16 +1,18 @@
 package com.simibubi.create.content.kinetics.belt;
 
 import java.util.ArrayList;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 import org.joml.Quaternionf;
 
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
@@ -127,25 +129,16 @@ public class BeltVisual extends KineticBlockEntityInstance<BeltBlockEntity> {
     private Instancer<RotatingInstance> getPulleyModel() {
         Direction dir = getOrientation();
 
-        Direction.Axis axis = dir.getAxis();
-
-        Supplier<PoseStack> ms = () -> {
-            PoseStack modelTransform = new PoseStack();
-            TransformStack msr = TransformStack.of(modelTransform);
+        var model = Models.partial(AllPartialModels.BELT_PULLEY, dir.getAxis(), (axis11, modelTransform1) -> {
+            var msr = TransformStack.of(modelTransform1);
             msr.center();
-            if (axis == Direction.Axis.X)
-                msr.rotateY(90);
-            if (axis == Direction.Axis.Y)
-                msr.rotateX(90);
+            if (axis11 == Direction.Axis.X) msr.rotateY(90);
+            if (axis11 == Direction.Axis.Y) msr.rotateX(90);
             msr.rotateX(90);
             msr.uncenter();
+        });
 
-            return modelTransform;
-        };
-
-		return materialManager.defaultSolid()
-				.material(AllInstanceTypes.ROTATING)
-				.getModel(AllPartialModels.BELT_PULLEY, blockState, dir, ms);
+		return instancerProvider.instancer(AllInstanceTypes.ROTATING, model, RenderStage.AFTER_BLOCK_ENTITIES);
     }
 
     private Direction getOrientation() {
@@ -178,4 +171,9 @@ public class BeltVisual extends KineticBlockEntityInstance<BeltBlockEntity> {
         return key;
     }
 
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(pulleyKey);
+		keys.forEach(consumer);
+	}
 }

@@ -1,7 +1,11 @@
 package com.simibubi.create.content.kinetics.steamEngine;
 
+import java.util.function.Consumer;
+
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -34,7 +38,7 @@ public class SteamEngineInstance extends AbstractBlockEntityVisual<SteamEngineBl
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		Float angle = blockEntity.getTargetAngle();
 		if (angle == null) {
 			piston.setEmptyTransform();
@@ -65,13 +69,13 @@ public class SteamEngineInstance extends AbstractBlockEntityVisual<SteamEngineBl
 			.uncenter()
 			.translate(0, piston, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
-			.rotateX(sine2 * 23f)
+			.rotateXDegrees(sine2 * 23f)
 			.translate(0, -4 / 16f, -8 / 16f);
 
 		transformed(connector, facing, roll90)
 			.translate(0, 2, 0)
 			.center()
-			.rotateXRadians(-angle + Mth.HALF_PI)
+			.rotateX(-angle + Mth.HALF_PI)
 			.uncenter();
 	}
 
@@ -79,9 +83,9 @@ public class SteamEngineInstance extends AbstractBlockEntityVisual<SteamEngineBl
 		return modelData.loadIdentity()
 			.translate(getVisualPosition())
 			.center()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing) + 90)
-			.rotateY(roll90 ? -90 : 0)
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(AngleHelper.verticalAngle(facing) + 90)
+			.rotateYDegrees(roll90 ? -90 : 0)
 			.uncenter();
 	}
 
@@ -97,4 +101,10 @@ public class SteamEngineInstance extends AbstractBlockEntityVisual<SteamEngineBl
 		connector.delete();
 	}
 
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(piston);
+		consumer.accept(linkage);
+		consumer.accept(connector);
+	}
 }

@@ -3,7 +3,6 @@ package com.simibubi.create.content.kinetics.simpleRelays;
 import java.util.Collections;
 import java.util.List;
 
-import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.simibubi.create.content.decoration.bracket.BracketedBlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 

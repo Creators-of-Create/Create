@@ -1,16 +1,22 @@
 package com.simibubi.create.content.redstone.diodes;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.TickableVisual;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import java.util.function.Consumer;
+
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
+import com.jozufozu.flywheel.api.visual.TickableVisual;
+import com.jozufozu.flywheel.api.visual.VisualTickContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.visual.AbstractBlockEntityVisual;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.utility.Color;
 
-public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeBlockEntity> implements TickableVisual {
+public class BrassDiodeInstance extends AbstractBlockEntityVisual<BrassDiodeBlockEntity> implements TickableVisual {
 
-    protected final ModelData indicator;
+    protected final TransformedInstance indicator;
 
     protected int previousState;
 
@@ -27,7 +33,7 @@ public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeBlockEntit
     }
 
     @Override
-    public void tick() {
+    public void tick(VisualTickContext ctx) {
         if (previousState == blockEntity.state) return;
 
         indicator.setColor(getColor());
@@ -41,11 +47,16 @@ public class BrassDiodeInstance extends BlockEntityInstance<BrassDiodeBlockEntit
     }
 
     @Override
-    public void remove() {
+    protected void _delete() {
         indicator.delete();
     }
 
     protected int getColor() {
         return Color.mixColors(0x2c0300, 0xcd0000, blockEntity.getProgress());
     }
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(indicator);
+	}
 }

@@ -1,11 +1,14 @@
 package com.simibubi.create.content.kinetics.transmission;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.api.InstanceData;
-import com.jozufozu.flywheel.api.Instancer;
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.api.MaterialManager;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
+import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.AbstractInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
@@ -15,6 +18,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class SplitShaftInstance extends KineticBlockEntityInstance<SplitShaftBlockEntity> {
 
@@ -27,21 +31,19 @@ public class SplitShaftInstance extends KineticBlockEntityInstance<SplitShaftBlo
 
         float speed = blockEntity.getSpeed();
 
-		Material<RotatingInstance> rotatingMaterial = materialManager.defaultSolid()
-				.material(AllInstanceTypes.ROTATING);
-
         for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 
-			Instancer<RotatingInstance> half = rotatingMaterial.getModel(AllPartialModels.SHAFT_HALF, blockState, dir);
+            float splitSpeed = speed * blockEntity.getRotationSpeedModifier(dir);
 
-			float splitSpeed = speed * blockEntity.getRotationSpeedModifier(dir);
+			var instance = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, dir), RenderStage.AFTER_BLOCK_ENTITIES)
+                .createInstance();
 
-			keys.add(setup(half.createInstance(), splitSpeed));
+			keys.add(setup(instance, splitSpeed));
 		}
     }
 
     @Override
-    public void update() {
+    public void update(float pt) {
         Block block = blockState.getBlock();
         final Direction.Axis boxAxis = ((IRotate) block).getRotationAxis(blockState);
 
@@ -58,9 +60,13 @@ public class SplitShaftInstance extends KineticBlockEntityInstance<SplitShaftBlo
     }
 
     @Override
-    public void remove() {
+    protected void _delete() {
         keys.forEach(AbstractInstance::delete);
         keys.clear();
     }
 
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		keys.forEach(consumer);
+	}
 }

@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
 
@@ -54,7 +55,13 @@ public class ConditionalInstance<D extends AbstractInstance> {
 		if (instance != null) instance.delete();
 	}
 
-	@FunctionalInterface
+	public void forEach(Consumer<Instance> consumer) {
+		if (instance != null) {
+			consumer.accept(instance);
+		}
+	}
+
+    @FunctionalInterface
 	public interface ICondition {
 		boolean shouldShow();
 	}

@@ -1,8 +1,10 @@
 package com.simibubi.create.content.kinetics.gauge;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -38,7 +40,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
         Instancer<TransformedInstance> headModel = getHeadModel();
 
         ms = new PoseStack();
-        TransformStack msr = TransformStack.of(ms);
+        var msr = TransformStack.of(ms);
         msr.translate(getVisualPosition());
 
         float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), blockEntity.prevDialState, blockEntity.dialState);
@@ -66,7 +68,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
 
         float progress = Mth.lerp(ctx.partialTick(), blockEntity.prevDialState, blockEntity.dialState);
 
-        TransformStack msr = TransformStack.of(ms);
+        var msr = TransformStack.of(ms);
 
         for (DialFace faceEntry : faces) {
             faceEntry.updateTransform(msr, progress);
@@ -88,7 +90,15 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
         faces.forEach(DialFace::delete);
     }
 
-    protected abstract Instancer<TransformedInstance> getHeadModel();
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+        for (DialFace face : faces) {
+            face.forEach(consumer);
+        }
+    }
+
+	protected abstract Instancer<TransformedInstance> getHeadModel();
 
     protected class DialFace extends Couple<TransformedInstance> {
 
@@ -99,7 +109,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
             this.face = face;
         }
 
-        private void setupTransform(TransformStack msr, float progress) {
+        private void setupTransform(TransformStack<?> msr, float progress) {
             float dialPivot = 5.75f / 16;
 
             msr.pushPose();
@@ -116,7 +126,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
             msr.popPose();
         }
 
-        private void updateTransform(TransformStack msr, float progress) {
+        private void updateTransform(TransformStack<?> msr, float progress) {
             float dialPivot = 5.75f / 16;
 
             msr.pushPose();
@@ -131,7 +141,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
             msr.popPose();
         }
 
-        protected TransformStack rotateToFace(TransformStack msr) {
+        protected TransformStack<?> rotateToFace(TransformStack<?> msr) {
             return msr.center()
                       .rotate((float) ((-face.toYRot() - 90) / 180 * Math.PI), Direction.UP)
                       .uncenter();

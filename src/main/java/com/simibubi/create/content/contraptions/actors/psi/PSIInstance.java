@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.actors.psi;
 
+import java.util.function.Consumer;
+
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.TickableVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -12,10 +15,10 @@ public class PSIInstance extends AbstractBlockEntityVisual<PortableStorageInterf
 
 	private final PIInstance instance;
 
-	public PSIInstance(VisualizationContext materialManager, PortableStorageInterfaceBlockEntity blockEntity) {
-		super(materialManager, blockEntity);
+	public PSIInstance(VisualizationContext visualizationContext, PortableStorageInterfaceBlockEntity blockEntity) {
+		super(visualizationContext, blockEntity);
 
-		instance = new PIInstance(materialManager, blockState, getVisualPosition());
+		instance = new PIInstance(visualizationContext.instancerProvider(), blockState, getVisualPosition());
 	}
 
 	@Override
@@ -47,4 +50,8 @@ public class PSIInstance extends AbstractBlockEntityVisual<PortableStorageInterf
 		return blockEntity.isConnected();
 	}
 
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		instance.collectCrumblingInstances(consumer);
+	}
 }

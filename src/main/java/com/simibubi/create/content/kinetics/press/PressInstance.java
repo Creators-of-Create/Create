@@ -1,11 +1,17 @@
 package com.simibubi.create.content.kinetics.press;
 
+import java.util.function.Consumer;
+
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.instance.DynamicVisual;
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.oriented.OrientedInstance;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.OrientedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
@@ -31,7 +37,7 @@ public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> imp
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		transformModels();
 	}
 
@@ -39,7 +45,7 @@ public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> imp
 		float renderedHeadOffset = getRenderedHeadOffset(blockEntity);
 
 		pressHead.setPosition(getVisualPosition())
-			.nudge(0, -renderedHeadOffset, 0);
+			.nudgePosition(0, -renderedHeadOffset, 0);
 	}
 
 	private float getRenderedHeadOffset(MechanicalPressBlockEntity press) {
@@ -59,5 +65,11 @@ public class PressInstance extends ShaftInstance<MechanicalPressBlockEntity> imp
     protected void _delete() {
 		super._delete();
 		pressHead.delete();
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		consumer.accept(pressHead);
 	}
 }

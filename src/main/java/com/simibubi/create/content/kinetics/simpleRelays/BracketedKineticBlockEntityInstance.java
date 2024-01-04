@@ -1,8 +1,13 @@
 package com.simibubi.create.content.kinetics.simpleRelays;
 
+import java.util.function.Consumer;
+
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -37,11 +42,8 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 		Direction.Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
 		BlockPos pos = blockEntity.getBlockPos();
 		float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
-		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
-		Instancer<RotatingInstance> half = materialManager.defaultSolid()
-				.material(AllInstanceTypes.ROTATING)
-				.getModel(AllPartialModels.COGWHEEL_SHAFT, blockState,
-			facing, () -> this.rotateToAxis(axis));
+		var model = Models.partial(AllPartialModels.COGWHEEL_SHAFT, axis, BracketedKineticBlockEntityInstance::rotateToAxis);
+		Instancer<RotatingInstance> half = instancerProvider.instancer(AllInstanceTypes.ROTATING, model, RenderStage.AFTER_BLOCK_ENTITIES);
 
 		additionalShaft = setup(half.createInstance(), speed);
 		additionalShaft.setRotationOffset(offset);
@@ -53,20 +55,16 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 			return super.model();
 
 		Direction.Axis axis = KineticBlockEntityRenderer.getRotationAxisOf(blockEntity);
-		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
-		return model(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, blockState, facing,
-				() -> this.rotateToAxis(axis));
+		return Models.partial(AllPartialModels.SHAFTLESS_LARGE_COGWHEEL, axis, BracketedKineticBlockEntityInstance::rotateToAxis);
 	}
 
-	private PoseStack rotateToAxis(Direction.Axis axis) {
+	private static void rotateToAxis(Direction.Axis axis, PoseStack ms) {
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
-		PoseStack poseStack = new PoseStack();
-		TransformStack.of(poseStack)
+		TransformStack.of(ms)
 				.center()
 				.rotateToFace(facing)
-				.multiply(Axis.XN.rotationDegrees(-90))
+				.rotate(Axis.XN.rotationDegrees(-90))
 				.uncenter();
-		return poseStack;
 	}
 
 	@Override
@@ -92,4 +90,10 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 			additionalShaft.delete();
 	}
 
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		if (additionalShaft != null)
+			consumer.accept(additionalShaft);
+	}
 }

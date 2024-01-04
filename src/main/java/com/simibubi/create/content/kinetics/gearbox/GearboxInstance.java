@@ -2,8 +2,10 @@ package com.simibubi.create.content.kinetics.gearbox;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
@@ -96,4 +98,10 @@ public class GearboxInstance extends KineticBlockEntityInstance<GearboxBlockEnti
         keys.values().forEach(AbstractInstance::delete);
         keys.clear();
     }
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		keys.values()
+				.forEach(consumer);
+	}
 }

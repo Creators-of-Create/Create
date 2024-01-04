@@ -1,6 +1,9 @@
 package com.simibubi.create.content.kinetics.flywheel;
 
+import java.util.function.Consumer;
+
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -52,7 +55,7 @@ public class FlywheelInstance extends KineticBlockEntityInstance<FlywheelBlockEn
 
 	private void animate(float angle) {
 		PoseStack ms = new PoseStack();
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 
 		msr.translate(getVisualPosition());
 		msr.center()
@@ -78,4 +81,9 @@ public class FlywheelInstance extends KineticBlockEntityInstance<FlywheelBlockEn
 		wheel.delete();
 	}
 
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(shaft);
+		consumer.accept(wheel);
+	}
 }

@@ -88,7 +88,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	  	PartialItemModelRenderer renderer, ItemDisplayContext transformType, PoseStack ms,
   		int light, RenderType renderType, boolean active, boolean renderDepression) {
 		float pt = AnimationTickHolder.getPartialTicks();
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 
 		ms.pushPose();
 

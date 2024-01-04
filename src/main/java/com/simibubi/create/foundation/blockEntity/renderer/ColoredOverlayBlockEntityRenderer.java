@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.blockEntity.renderer;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 

@@ -1,9 +1,10 @@
 package com.simibubi.create.content.kinetics.waterwheel;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
-import com.jozufozu.flywheel.core.model.BlockModel;
+import com.jozufozu.flywheel.lib.model.ModelCache;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.model.baked.BakedModelBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.CutoutRotatingInstance;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -15,6 +16,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutRotatingInstance<T> {
+	private static final ModelCache<WaterWheelModelKey> MODEL_CACHE = new ModelCache<>(WaterWheelInstance::createModel);
+
 	protected final boolean large;
 	protected final WaterWheelModelKey key;
 
@@ -39,17 +42,21 @@ public class WaterWheelInstance<T extends WaterWheelBlockEntity> extends CutoutR
 
 	@Override
 	protected Model model() {
-		return model(key, () -> {
-			BakedModel model = WaterWheelRenderer.generateModel(key);
-			BlockState state = key.state();
-			Direction dir;
-			if (key.large()) {
-				dir = Direction.fromAxisAndDirection(state.getValue(LargeWaterWheelBlock.AXIS), AxisDirection.POSITIVE);
-			} else {
-				dir = state.getValue(WaterWheelBlock.FACING);
-			}
-			PoseStack transform = CachedBufferer.rotateToFaceVertical(dir).get();
-			return BlockModel.of(model, Blocks.AIR.defaultBlockState(), transform);
-		});
+		return MODEL_CACHE.get(key);
+	}
+
+	private static Model createModel(WaterWheelModelKey key) {
+		BakedModel model = WaterWheelRenderer.generateModel(key);
+		BlockState state = key.state();
+		Direction dir;
+		if (key.large()) {
+			dir = Direction.fromAxisAndDirection(state.getValue(LargeWaterWheelBlock.AXIS), AxisDirection.POSITIVE);
+		} else {
+			dir = state.getValue(WaterWheelBlock.FACING);
+		}
+		PoseStack transform = CachedBufferer.rotateToFaceVertical(dir).get();
+		return new BakedModelBuilder(model)
+				.poseStack(transform)
+				.build();
 	}
 }

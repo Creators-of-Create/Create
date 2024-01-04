@@ -2,9 +2,11 @@ package com.simibubi.create.content.contraptions.bearing;
 
 import org.joml.Quaternionf;
 
+import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.OrientedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -45,9 +47,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 				.setRotation(blockOrientation)
 				.setBlockLight(blockLight);
 
-		shaft = materialManager.defaultSolid()
-				.material(AllInstanceTypes.ROTATING)
-				.getModel(AllPartialModels.SHAFT_HALF, blockState, blockState.getValue(BlockStateProperties.FACING).getOpposite())
+		shaft = instancerProvider.instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, blockState.getValue(BlockStateProperties.FACING).getOpposite()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 
 		// not rotating so no need to set speed, axis, etc.

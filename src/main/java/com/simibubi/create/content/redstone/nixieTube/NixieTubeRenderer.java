@@ -46,7 +46,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			+ (face == DoubleAttachFace.WALL_REVERSED ? 180 : 0);
 		float xRot = face == DoubleAttachFace.WALL ? -90 : face == DoubleAttachFace.WALL_REVERSED ? 90 : 0;
 
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		msr.center()
 			.rotateY(yRot)
 			.rotateZ(xRot)
@@ -127,7 +127,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		BlockState blockState = be.getBlockState();
 		Direction facing = NixieTubeBlock.getFacing(blockState);
 		Vec3 observerVec = Minecraft.getInstance().cameraEntity.getEyePosition(partialTicks);
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 
 		if (facing == Direction.DOWN)
 			msr.center()

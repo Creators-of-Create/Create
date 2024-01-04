@@ -36,7 +36,7 @@ public class ChuteRenderer extends SafeBlockEntityRenderer<ChuteBlockEntity> {
 		int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		ms.pushPose();
 		msr.center();
 		float itemScale = .5f;

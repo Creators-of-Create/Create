@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.analogLever;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -37,7 +37,7 @@ public class AnalogLeverRenderer extends SafeBlockEntityRenderer<AnalogLeverBloc
 		SuperByteBuffer handle = CachedBufferer.partial(AllPartialModels.ANALOG_LEVER_HANDLE, leverState);
 		float angle = (float) ((state / 15) * 90 / 180 * Math.PI);
 		transform(handle, leverState).translate(1 / 2f, 1 / 16f, 1 / 2f)
-				.rotate(Direction.EAST, angle)
+				.rotate(angle, Direction.EAST)
 				.translate(-1 / 2f, -1 / 16f, -1 / 2f);
 		handle.light(light)
 				.renderInto(ms, vb);

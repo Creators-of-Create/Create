@@ -59,7 +59,7 @@ public class FluidRenderer {
 		if (inbound)
 			direction = direction.getOpposite();
 
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		ms.pushPose();
 		msr.center()
 			.rotateY(AngleHelper.horizontalAngle(direction))

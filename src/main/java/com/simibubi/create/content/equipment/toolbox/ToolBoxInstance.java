@@ -1,8 +1,12 @@
 package com.simibubi.create.content.equipment.toolbox;
 
+import java.util.function.Consumer;
+
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -49,9 +53,8 @@ public class ToolBoxInstance extends AbstractBlockEntityVisual<ToolboxBlockEntit
 	}
 
 	@Override
-	public void beginFrame() {
-
-		float partialTicks = AnimationTickHolder.getPartialTicks();
+	public void beginFrame(VisualFrameContext ctx) {
+		float partialTicks = ctx.partialTick();
 
 		float lidAngle = blockEntity.lid.getValue(partialTicks);
 		float drawerOffset = blockEntity.drawers.getValue(partialTicks);
@@ -79,5 +82,13 @@ public class ToolBoxInstance extends AbstractBlockEntityVisual<ToolboxBlockEntit
 	public void updateLight() {
 		relight(pos, drawers);
 		relight(pos, lid);
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(lid);
+		for (var drawer : drawers) {
+			consumer.accept(drawer);
+		}
 	}
 }

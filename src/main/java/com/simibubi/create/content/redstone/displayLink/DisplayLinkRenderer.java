@@ -33,7 +33,7 @@ public class DisplayLinkRenderer extends SafeBlockEntityRenderer<DisplayLinkBloc
 		int color = (int) (200 * glow);
 
 		BlockState blockState = be.getBlockState();
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 
 		Direction face = blockState.getOptionalValue(DisplayLinkBlock.FACING)
 			.orElse(Direction.UP);

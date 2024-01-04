@@ -1,7 +1,10 @@
 package com.simibubi.create.content.kinetics.mixer;
 
+import java.util.function.Consumer;
+
 import com.jozufozu.flywheel.api.event.RenderStage;
-import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.instance.Instance;
+import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -42,10 +45,8 @@ public class MixerInstance extends EncasedCogInstance implements DynamicVisual {
 	}
 
 	@Override
-	protected Instancer<RotatingInstance> getCogModel() {
-		return materialManager.defaultSolid()
-			.material(AllInstanceTypes.ROTATING)
-			.getModel(AllPartialModels.SHAFTLESS_COGWHEEL, blockEntity.getBlockState());
+	protected Model getCogModel() {
+		return Models.partial(AllPartialModels.SHAFTLESS_COGWHEEL);
 	}
 
 	@Override
@@ -86,5 +87,12 @@ public class MixerInstance extends EncasedCogInstance implements DynamicVisual {
 		super._delete();
 		mixerHead.delete();
 		mixerPole.delete();
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		consumer.accept(mixerHead);
+		consumer.accept(mixerPole);
 	}
 }

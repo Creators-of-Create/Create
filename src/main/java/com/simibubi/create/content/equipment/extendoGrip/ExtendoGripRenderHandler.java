@@ -65,7 +65,7 @@ public class ExtendoGripRenderHandler {
 			return;
 
 		PoseStack ms = event.getPoseStack();
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		AbstractClientPlayer abstractclientplayerentity = mc.player;
 		RenderSystem.setShaderTexture(0, abstractclientplayerentity.getSkinTextureLocation());
 

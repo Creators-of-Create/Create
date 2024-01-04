@@ -79,7 +79,7 @@ public class CouplingRenderer {
 		double connectorPitch = Math.atan2(endPointDiff.y, endPointDiff.multiply(1, 0, 1)
 			.length()) * 180 / Math.PI;
 
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		carts.forEachWithContext((cart, isFirst) -> {
 			CartEndpoint cartTransform = transforms.get(isFirst);
 
@@ -87,7 +87,7 @@ public class CouplingRenderer {
 			cartTransform.apply(ms, camera);
 			attachment.light(lightValues.get(isFirst))
 				.renderInto(ms, builder);
-			msr.rotateY(connectorYaw - cartTransform.yaw);
+			msr.rotateYDegrees((float) connectorYaw - cartTransform.yaw);
 			ring.light(lightValues.get(isFirst))
 				.renderInto(ms, builder);
 			ms.popPose();
@@ -100,8 +100,8 @@ public class CouplingRenderer {
 
 		ms.pushPose();
 		msr.translate(firstEndpoint.subtract(camera))
-			.rotateY(connectorYaw)
-			.rotateZ(connectorPitch);
+			.rotateYDegrees((float) connectorYaw)
+			.rotateZDegrees((float) connectorPitch);
 		ms.scale((float) endPointDiff.length(), 1, 1);
 
 		connector.light(meanSkyLight << 20 | meanBlockLight << 4)

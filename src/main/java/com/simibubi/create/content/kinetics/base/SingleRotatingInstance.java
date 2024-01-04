@@ -1,6 +1,9 @@
 package com.simibubi.create.content.kinetics.base;
 
+import java.util.function.Consumer;
+
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -44,10 +47,15 @@ public class SingleRotatingInstance<T extends KineticBlockEntity> extends Kineti
 	}
 
 	protected Instancer<RotatingInstance> getModel() {
-		return instancerProvider.instancerr(AllInstanceTypes.ROTATING, model(), RenderStage.AFTER_BLOCK_ENTITIES);
+		return instancerProvider.instancer(AllInstanceTypes.ROTATING, model(), RenderStage.AFTER_BLOCK_ENTITIES);
 	}
 
 	protected Model model() {
 		return Models.block(getRenderedBlockState());
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(rotatingModel);
 	}
 }

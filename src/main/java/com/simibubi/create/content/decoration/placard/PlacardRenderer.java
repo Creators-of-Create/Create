@@ -39,10 +39,10 @@ public class PlacardRenderer extends SafeBlockEntityRenderer<PlacardBlockEntity>
 		ms.pushPose();
 		TransformStack.of(ms)
 			.center()
-			.rotate(Direction.UP,
-				(face == AttachFace.CEILING ? Mth.PI : 0) + AngleHelper.rad(180 + AngleHelper.horizontalAngle(facing)))
-			.rotate(Direction.EAST,
-				face == AttachFace.CEILING ? -Mth.PI / 2 : face == AttachFace.FLOOR ? Mth.PI / 2 : 0)
+			.rotate((face == AttachFace.CEILING ? Mth.PI : 0) + AngleHelper.rad(180 + AngleHelper.horizontalAngle(facing)),
+				Direction.UP)
+			.rotate(face == AttachFace.CEILING ? -Mth.PI / 2 : face == AttachFace.FLOOR ? Mth.PI / 2 : 0,
+				Direction.EAST)
 			.translate(0, 0, 4.5 / 16f)
 			.scale(blockItem ? .5f : .375f);
 

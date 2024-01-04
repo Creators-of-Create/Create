@@ -43,15 +43,14 @@ public class GaugeRenderer extends ShaftRenderer<GaugeBlockEntity> {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
 		BlockState gaugeState = be.getBlockState();
-		GaugeBlockEntity gaugeBE = (GaugeBlockEntity) be;
 
-		PartialModel partialModel = (type == Type.SPEED ? AllPartialModels.GAUGE_HEAD_SPEED : AllPartialModels.GAUGE_HEAD_STRESS);
+        PartialModel partialModel = (type == Type.SPEED ? AllPartialModels.GAUGE_HEAD_SPEED : AllPartialModels.GAUGE_HEAD_STRESS);
 		SuperByteBuffer headBuffer =
 				CachedBufferer.partial(partialModel, gaugeState);
 		SuperByteBuffer dialBuffer = CachedBufferer.partial(AllPartialModels.GAUGE_DIAL, gaugeState);
 
 		float dialPivot = 5.75f / 16;
-		float progress = Mth.lerp(partialTicks, gaugeBE.prevDialState, gaugeBE.dialState);
+		float progress = Mth.lerp(partialTicks, be.prevDialState, be.dialState);
 
 		for (Direction facing : Iterate.directions) {
 			if (!((GaugeBlock) gaugeState.getBlock()).shouldRenderHeadOnFace(be.getLevel(), be.getBlockPos(), gaugeState,
@@ -60,7 +59,7 @@ public class GaugeRenderer extends ShaftRenderer<GaugeBlockEntity> {
 
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 			rotateBufferTowards(dialBuffer, facing).translate(0, dialPivot, dialPivot)
-				.rotate(Direction.EAST, (float) (Math.PI / 2 * -progress))
+				.rotate((float) (Math.PI / 2 * -progress), Direction.EAST)
 				.translate(0, -dialPivot, -dialPivot)
 				.light(light)
 				.renderInto(ms, vb);

@@ -14,7 +14,7 @@ public class PSIActorInstance extends ActorInstance {
 	public PSIActorInstance(VisualizationContext materialManager, VirtualRenderWorld world, MovementContext context) {
 		super(materialManager, world, context);
 
-		instance = new PIInstance(materialManager, context.state, context.localPos);
+		instance = new PIInstance(materialManager.instancerProvider(), context.state, context.localPos);
 
 		instance.init(false);
 		instance.middle.setBlockLight(localBlockLight());

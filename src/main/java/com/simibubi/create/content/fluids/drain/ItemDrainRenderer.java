@@ -47,7 +47,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 		if (transported == null)
 			return;
 
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		Vec3 itemPosition = VecHelper.getCenterOf(be.getBlockPos());
 
 		Direction insertedFrom = transported.insertedFrom;

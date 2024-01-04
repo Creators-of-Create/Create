@@ -52,7 +52,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 					.renderInto(ms, vertexBuilder);
 		}
 
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 
 		float maxTime =
 				(float) (be.earlyTarget != null ? be.earlyTargetTime : be.launcher.getTotalFlyingTicks());
@@ -82,7 +82,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		ms.pushPose();
 		applyLidAngle(be, angle, msr);
 		msr.center()
-			.rotateY(-180 - AngleHelper.horizontalAngle(be.getBlockState()
+			.rotateYDegrees(-180 - AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
 			.uncenter();
 		DepotRenderer.renderItemsOf(be, partialTicks, ms, buffer, light, overlay, behaviour);

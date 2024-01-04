@@ -29,14 +29,14 @@ public class CarriageContraptionInstance extends AbstractEntityVisual<CarriageCo
 	}
 
 	@Override
-	public void init() {
+	public void init(float pt) {
 		carriage = entity.getCarriage();
 
 		if (carriage == null)
 			return;
 
 		bogeys = carriage.bogeys.mapNotNullWithParam((bogey, manager) ->
-				bogey.getStyle().createInstance(bogey, bogey.type.getSize(), manager), materialManager);
+				bogey.getStyle().createInstance(bogey, bogey.type.getSize(), manager), visualizationContext);
 		updateLight();
 	}
 
@@ -48,7 +48,7 @@ public class CarriageContraptionInstance extends AbstractEntityVisual<CarriageCo
 	public void beginFrame(VisualFrameContext ctx) {
 		if (bogeys == null) {
 			if (entity.isReadyForRender())
-				init();
+				init(ctx.partialTick());
 			return;
 		}
 

@@ -82,7 +82,7 @@ public class FluidTankRenderer extends SafeBlockEntityRenderer<FluidTankBlockEnt
 		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		ms.pushPose();
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		msr.translate(be.width / 2f, 0.5, be.width / 2f);
 
 		float dialPivot = 5.75f / 16;

@@ -1,8 +1,15 @@
 package com.simibubi.create.content.logistics.depot;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicVisual;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+import java.util.function.Consumer;
+
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
+import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
+import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -11,7 +18,7 @@ import net.minecraft.util.Mth;
 
 public class EjectorInstance extends ShaftInstance<EjectorBlockEntity> implements DynamicVisual {
 
-	protected final ModelData plate;
+	protected final TransformedInstance plate;
 
 	private float lastProgress = Float.NaN;
 
@@ -24,10 +31,12 @@ public class EjectorInstance extends ShaftInstance<EjectorBlockEntity> implement
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		float lidProgress = getLidProgress();
 
-		if (Mth.equal(lidProgress, lastProgress)) return;
+		if (lidProgress == lastProgress) {
+			return;
+		}
 
 		pivotPlate(lidProgress);
 		lastProgress = lidProgress;
@@ -57,5 +66,11 @@ public class EjectorInstance extends ShaftInstance<EjectorBlockEntity> implement
 		float angle = lidProgress * 70;
 
 		EjectorRenderer.applyLidAngle(blockEntity, angle, plate.loadIdentity().translate(getVisualPosition()));
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		consumer.accept(plate);
 	}
 }

@@ -94,7 +94,7 @@ public class DeployerActorInstance extends ActorInstance {
 
         Vec3 offset = Vec3.atLowerCornerOf(facing.getNormal()).scale(factor);
 
-        TransformStack tstack = TransformStack.of(stack);
+        var tstack = TransformStack.of(stack);
         stack.setIdentity();
         tstack.translate(context.localPos)
 				.translate(offset);
@@ -103,7 +103,7 @@ public class DeployerActorInstance extends ActorInstance {
     }
 
     static void transformModel(PoseStack stack, TransformedInstance pole, TransformedInstance hand, float yRot, float xRot, float zRot) {
-        TransformStack tstack = TransformStack.of(stack);
+        var tstack = TransformStack.of(stack);
 
         tstack.center();
         tstack.rotate((float) ((yRot) / 180 * Math.PI), Direction.UP);

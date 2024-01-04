@@ -1,6 +1,9 @@
 package com.simibubi.create.content.fluids.pipes.valve;
 
+import java.util.function.Consumer;
+
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -61,8 +64,8 @@ public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> imp
         pointer.loadIdentity()
 				 .translate(getVisualPosition())
 				 .center()
-				 .rotateY(yRot)
-				 .rotateX(xRot)
+				 .rotateY((float) yRot)
+				 .rotateX((float) xRot)
 				 .rotateY(pointerRotationOffset + pointerRotation)
 				 .uncenter();
 	}
@@ -78,4 +81,10 @@ public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> imp
         super._delete();
         pointer.delete();
     }
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		consumer.accept(pointer);
+	}
 }

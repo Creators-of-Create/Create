@@ -34,13 +34,13 @@ public class LecternControllerRenderer extends SafeBlockEntityRenderer<LecternCo
 		boolean renderDepression = be.isUsedBy(Minecraft.getInstance().player);
 
 		Direction facing = be.getBlockState().getValue(LecternControllerBlock.FACING);
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 
 		ms.pushPose();
 		msr.translate(0.5, 1.45, 0.5);
-		msr.rotateY(AngleHelper.horizontalAngle(facing) - 90);
+		msr.rotateYDegrees(AngleHelper.horizontalAngle(facing) - 90);
 		msr.translate(0.28, 0, 0);
-		msr.rotateZ(-22.0);
+		msr.rotateZDegrees(-22.0f);
 		LinkedControllerItemRenderer.renderInLectern(stack, mainModel, renderer, transformType, ms, light, active, renderDepression);
 		ms.popPose();
 	}

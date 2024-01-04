@@ -62,9 +62,6 @@ public class CreateClient {
 	public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
-		modEventBus.addListener(CreateContexts::flwInit);
-
-
 
 		MODEL_SWAPPER.registerListeners(modEventBus);
 

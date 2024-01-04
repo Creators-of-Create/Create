@@ -1,8 +1,14 @@
 package com.simibubi.create.content.kinetics.crank;
 
+import java.util.function.Consumer;
+
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -19,12 +25,13 @@ public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEnti
 		super(modelManager, blockEntity);
 		facing = blockState.getValue(BlockStateProperties.FACING);
 		Model model = blockEntity.getRenderedHandleInstance();
-		crank = model.createInstance();
+		crank = instancerProvider.instancer(InstanceTypes.TRANSFORMED, model, RenderStage.AFTER_BLOCK_ENTITIES)
+				.createInstance();
 		rotateCrank();
 	}
 
 	@Override
-	public void beginFrame() {
+	public void beginFrame(VisualFrameContext ctx) {
 		if (crank == null)
 			return;
 
@@ -38,14 +45,14 @@ public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEnti
 		crank.loadIdentity()
 			.translate(getVisualPosition())
 			.center()
-			.rotate(Direction.get(Direction.AxisDirection.POSITIVE, axis), angle)
+			.rotate(angle, Direction.get(Direction.AxisDirection.POSITIVE, axis))
 			.uncenter();
 	}
 
 	@Override
-	public void init() {
+	public void init(float pt) {
 		if (blockEntity.shouldRenderShaft())
-			super.init();
+			super.init(pt);
 	}
 
 	@Override
@@ -57,9 +64,9 @@ public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEnti
 	}
 
 	@Override
-	public void update() {
+	public void update(float pt) {
 		if (blockEntity.shouldRenderShaft())
-			super.update();
+			super.update(pt);
 	}
 
 	@Override
@@ -68,5 +75,13 @@ public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEnti
 			super.updateLight();
 		if (crank != null)
 			relight(pos, crank);
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		if (crank != null) {
+			consumer.accept(crank);
+		}
 	}
 }

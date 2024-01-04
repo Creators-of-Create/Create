@@ -100,7 +100,7 @@ public class CuckooClockRenderer extends KineticBlockEntityRenderer<CuckooClockB
 		float pivotZ = 8 / 16f;
 		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
 		buffer.translate(pivotX, pivotY, pivotZ);
-		buffer.rotate(Direction.EAST, AngleHelper.rad(angle));
+		buffer.rotate(AngleHelper.rad(angle), Direction.EAST);
 		buffer.translate(-pivotX, -pivotY, -pivotZ);
 		return buffer;
 	}
@@ -111,7 +111,7 @@ public class CuckooClockRenderer extends KineticBlockEntityRenderer<CuckooClockB
 		float pivotZ = (left ? 6 : 10) / 16f;
 		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
 		buffer.translate(pivotX, pivotY, pivotZ);
-		buffer.rotate(Direction.UP, AngleHelper.rad(angle) * (left ? -1 : 1));
+		buffer.rotate(AngleHelper.rad(angle) * (left ? -1 : 1), Direction.UP);
 		buffer.translate(-pivotX, -pivotY, -pivotZ);
 		return buffer;
 	}

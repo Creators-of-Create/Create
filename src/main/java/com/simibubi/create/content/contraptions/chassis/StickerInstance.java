@@ -1,7 +1,11 @@
 package com.simibubi.create.content.contraptions.chassis;
 
+import java.util.function.Consumer;
+
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
+import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
@@ -37,8 +41,8 @@ public class StickerInstance extends AbstractBlockEntityVisual<StickerBlockEntit
 	}
 
 	@Override
-	public void beginFrame() {
-		float offset = blockEntity.piston.getValue(AnimationTickHolder.getPartialTicks());
+	public void beginFrame(VisualFrameContext ctx) {
+		float offset = blockEntity.piston.getValue(ctx.partialTick());
 
 		if (fakeWorld)
 			offset = this.offset;
@@ -70,5 +74,10 @@ public class StickerInstance extends AbstractBlockEntityVisual<StickerBlockEntit
 	@Override
 	protected void _delete() {
 		head.delete();
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(head);
 	}
 }

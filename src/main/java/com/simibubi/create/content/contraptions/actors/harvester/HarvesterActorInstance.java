@@ -1,7 +1,10 @@
 package com.simibubi.create.content.contraptions.actors.harvester;
 
+import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -32,14 +35,12 @@ public class HarvesterActorInstance extends ActorInstance {
     public HarvesterActorInstance(VisualizationContext materialManager, VirtualRenderWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
-		Material<ModelData> material = materialManager.defaultCutout()
-				.material(InstanceTypes.TRANSFORMED);
-
         BlockState state = context.state;
 
         facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
-        harvester = material.getModel(getRollingPartial(), state).createInstance();
+        harvester = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(getRollingPartial()), RenderStage.AFTER_BLOCK_ENTITIES)
+				.createInstance();
 
         horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
@@ -86,10 +87,10 @@ public class HarvesterActorInstance extends ActorInstance {
         harvester.loadIdentity()
 				.translate(context.localPos)
 				.center()
-				.rotateY(horizontalAngle)
+				.rotateYDegrees(horizontalAngle)
 				.uncenter()
 				.translate(getRotationOffset())
-				.rotateX(getRotation())
+				.rotateXDegrees((float) getRotation())
 				.translateBack(getRotationOffset());
 	}
 

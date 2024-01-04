@@ -653,7 +653,7 @@ public class TrackBlock extends Block
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
 		PoseStack ms) {
 		TransformStack.of(ms)
-			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction)));
+			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(direction)), Direction.UP);
 		return AllPartialModels.TRACK_ASSEMBLING_OVERLAY;
 	}
 
@@ -661,7 +661,7 @@ public class TrackBlock extends Block
 	@OnlyIn(Dist.CLIENT)
 	public PartialModel prepareTrackOverlay(BlockGetter world, BlockPos pos, BlockState state,
 		BezierTrackPointLocation bezierPoint, AxisDirection direction, PoseStack ms, RenderedTrackOverlayType type) {
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 
 		Vec3 axis = null;
 		Vec3 diff = null;
@@ -701,8 +701,8 @@ public class TrackBlock extends Block
 		Vec3 angles = TrackRenderer.getModelAngles(normal, diff);
 
 		msr.center()
-			.rotateYRadians(angles.y)
-			.rotateXRadians(angles.x)
+			.rotateY((float) angles.y)
+			.rotateX((float) angles.x)
 			.uncenter();
 
 		if (axis != null)
@@ -710,7 +710,7 @@ public class TrackBlock extends Block
 		else {
 			msr.translate(0, 4 / 16f, 0);
 			if (direction == AxisDirection.NEGATIVE)
-				msr.rotateCentered(Direction.UP, Mth.PI);
+				msr.rotateCentered(Mth.PI, Direction.UP);
 		}
 
 		if (bezierPoint == null && world.getBlockEntity(pos) instanceof TrackBlockEntity trackTE
@@ -719,7 +719,7 @@ public class TrackBlock extends Block
 			for (BezierConnection bc : trackTE.connections.values())
 				yOffset += bc.starts.getFirst().y - pos.getY();
 			msr.center()
-				.rotateX(-direction.getStep() * trackTE.tilt.smoothingAngle.get())
+				.rotateXDegrees((float) (-direction.getStep() * trackTE.tilt.smoothingAngle.get()))
 				.uncenter()
 				.translate(0, yOffset / 2, 0);
 		}

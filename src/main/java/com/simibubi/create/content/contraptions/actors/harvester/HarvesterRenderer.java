@@ -66,7 +66,7 @@ public class HarvesterRenderer extends SafeBlockEntityRenderer<HarvesterBlockEnt
 
 		superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing)))
 			.translate(rotOffset.x, rotOffset.y, rotOffset.z)
-			.rotate(Direction.WEST, AngleHelper.rad(angle))
+			.rotate(AngleHelper.rad(angle), Direction.WEST)
 			.translate(-rotOffset.x, -rotOffset.y, -rotOffset.z);
 	}
 }

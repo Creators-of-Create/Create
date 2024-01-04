@@ -2,7 +2,12 @@ package com.simibubi.create.content.kinetics.fan;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
+import java.util.function.Consumer;
+
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingInstance;
@@ -43,7 +48,7 @@ public class FanInstance extends KineticBlockEntityInstance<EncasedFanBlockEntit
     }
 
     @Override
-    public void update() {
+    public void update(float pt) {
         updateRotation(shaft);
         updateRotation(fan, getFanSpeed());
     }
@@ -58,8 +63,14 @@ public class FanInstance extends KineticBlockEntityInstance<EncasedFanBlockEntit
     }
 
     @Override
-    public void remove() {
+    protected void _delete() {
         shaft.delete();
         fan.delete();
     }
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(shaft);
+		consumer.accept(fan);
+	}
 }

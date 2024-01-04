@@ -1,9 +1,12 @@
 package com.simibubi.create.content.kinetics.simpleRelays.encased;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
+import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.instance.AbstractInstance;
 import com.jozufozu.flywheel.lib.model.Models;
@@ -48,8 +51,9 @@ public class EncasedCogInstance extends KineticBlockEntityInstance<KineticBlockE
 	}
 
 	@Override
-	public void init() {
-		rotatingModel = setup(getCogModel().createInstance());
+	public void init(float pt) {
+        var instancer = instancerProvider.instancer(AllInstanceTypes.ROTATING, getCogModel(), RenderStage.AFTER_BLOCK_ENTITIES);
+		rotatingModel = setup(instancer.createInstance());
 
 		Block block = blockState.getBlock();
 		if (!(block instanceof IRotate def))
@@ -93,23 +97,27 @@ public class EncasedCogInstance extends KineticBlockEntityInstance<KineticBlockE
 		rotatingBottomShaft.ifPresent(AbstractInstance::delete);
 	}
 
-	protected Instancer<RotatingInstance> getCogModel() {
+	protected Model getCogModel() {
 		BlockState referenceState = blockEntity.getBlockState();
 		Direction facing =
 			Direction.fromAxisAndDirection(referenceState.getValue(BlockStateProperties.AXIS), AxisDirection.POSITIVE);
 		PartialModel partial = large ? AllPartialModels.SHAFTLESS_LARGE_COGWHEEL : AllPartialModels.SHAFTLESS_COGWHEEL;
 
-		return materialManager.defaultSolid()
-				.material(AllInstanceTypes.ROTATING)
-				.getModel(partial, referenceState, facing, () -> {
-			PoseStack poseStack = new PoseStack();
-			TransformStack.of(poseStack)
-				.center()
-				.rotateToFace(facing)
-				.rotate(Axis.XN.rotationDegrees(90))
-				.uncenter();
-			return poseStack;
-		});
+		return Models.partial(partial, facing, EncasedCogInstance::transformCog);
 	}
 
+	private static void transformCog(Direction dir, PoseStack stack) {
+		TransformStack.of(stack)
+				.center()
+				.rotateToFace(dir)
+				.rotate(Axis.XN.rotationDegrees(90))
+				.uncenter();
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		consumer.accept(rotatingModel);
+		rotatingTopShaft.ifPresent(consumer);
+		rotatingBottomShaft.ifPresent(consumer);
+	}
 }

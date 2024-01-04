@@ -1,9 +1,11 @@
 package com.simibubi.create.content.kinetics.mechanicalArm;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.model.Model;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -123,7 +125,7 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 		}
 
 		PoseStack msLocal = new PoseStack();
-		TransformStack msr = TransformStack.of(msLocal);
+		var msr = TransformStack.of(msLocal);
 		msr.translate(getVisualPosition());
 		msr.center();
 
@@ -199,4 +201,9 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 		models.forEach(AbstractInstance::delete);
 	}
 
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		models.forEach(consumer);
+	}
 }

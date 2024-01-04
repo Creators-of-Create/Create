@@ -3,10 +3,12 @@ package com.simibubi.create.content.trains.track;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
 import com.jozufozu.flywheel.lib.box.Box;
 import com.jozufozu.flywheel.lib.box.MutableBox;
@@ -80,6 +82,15 @@ public class TrackInstance extends AbstractBlockEntityVisual<TrackBlockEntity> {
 		instances.forEach(BezierTrackInstance::delete);
 	}
 
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		if (instances == null)
+			return;
+        for (BezierTrackInstance instance : instances) {
+            instance.collectCrumblingInstances(consumer);
+        }
+    }
+
 	private class BezierTrackInstance {
 
 		private final TransformedInstance[] ties;
@@ -109,11 +120,11 @@ public class TrackInstance extends AbstractBlockEntityVisual<TrackBlockEntity> {
 
 			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
-			instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.tie()), RenderStage.AFTER_BLOCK_ENTITIES)
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.tie()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstances(ties);
-			instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_left()), RenderStage.AFTER_BLOCK_ENTITIES)
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_left()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstances(left);
-			instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_right()), RenderStage.AFTER_BLOCK_ENTITIES)
+			instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(modelHolder.segment_right()), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstances(right);
 
 			SegmentAngles[] segments = bc.getBakedSegments();
@@ -160,6 +171,17 @@ public class TrackInstance extends AbstractBlockEntityVisual<TrackBlockEntity> {
 				girder.updateLight();
 		}
 
+		public void collectCrumblingInstances(Consumer<Instance> consumer) {
+			for (var d : ties)
+				consumer.accept(d);
+			for (var d : left)
+				consumer.accept(d);
+			for (var d : right)
+				consumer.accept(d);
+			if (girder != null)
+				girder.collectCrumblingInstances(consumer);
+		}
+
 		private class GirderInstance {
 
 			private final Couple<TransformedInstance[]> beams;
@@ -178,10 +200,10 @@ public class TrackInstance extends AbstractBlockEntityVisual<TrackBlockEntity> {
 				beams = Couple.create(() -> new TransformedInstance[segCount]);
 				beamCaps = Couple.create(() -> Couple.create(() -> new TransformedInstance[segCount]));
 				lightPos = new BlockPos[segCount];
-				beams.forEach(instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GIRDER_SEGMENT_MIDDLE), RenderStage.AFTER_BLOCK_ENTITIES)::createInstances);
+				beams.forEach(instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GIRDER_SEGMENT_MIDDLE), RenderStage.AFTER_BLOCK_ENTITIES)::createInstances);
 				beamCaps.forEachWithContext((c, top) -> {
 					var partialModel = Models.partial(top ? AllPartialModels.GIRDER_SEGMENT_TOP : AllPartialModels.GIRDER_SEGMENT_BOTTOM);
-					c.forEach(instancerProvider.instancerr(InstanceTypes.TRANSFORMED, partialModel, RenderStage.AFTER_BLOCK_ENTITIES)::createInstances);
+					c.forEach(instancerProvider.instancer(InstanceTypes.TRANSFORMED, partialModel, RenderStage.AFTER_BLOCK_ENTITIES)::createInstances);
 				});
 
 				GirderAngles[] bakedGirders = bc.getBakedGirders();
@@ -231,6 +253,16 @@ public class TrackInstance extends AbstractBlockEntityVisual<TrackBlockEntity> {
 				}));
 			}
 
+			public void collectCrumblingInstances(Consumer<Instance> consumer) {
+				beams.forEach(arr -> {
+					for (var d : arr)
+						consumer.accept(d);
+				});
+				beamCaps.forEach(c -> c.forEach(arr -> {
+					for (var d : arr)
+						consumer.accept(d);
+				}));
+			}
 		}
 
 	}

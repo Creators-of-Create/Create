@@ -11,7 +11,12 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
+import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
+import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.lib.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -191,8 +196,10 @@ public abstract class BogeyRenderer {
 	 * @param count Amount of models neeeded
 	 */
 	public void createModelInstance(VisualizationContext materialManager, PartialModel model, int count) {
+		var instancer = materialManager.instancerProvider()
+				.instancer(InstanceTypes.TRANSFORMED, Models.partial(model), RenderStage.AFTER_BLOCK_ENTITIES);
 		BogeyModelData[] modelData = IntStream.range(0, count)
-				.mapToObj(i -> instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.block(model).createInstance()), RenderStage.AFTER_BLOCK_ENTITIES)
+				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)
 				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(model), modelData);
@@ -206,8 +213,10 @@ public abstract class BogeyRenderer {
 	 * @param count Amount of models needed
 	 */
 	public void createModelInstance(VisualizationContext materialManager, BlockState state, int count) {
+		var instancer = materialManager.instancerProvider()
+				.instancer(InstanceTypes.TRANSFORMED, Models.block(state), RenderStage.AFTER_BLOCK_ENTITIES);
 		BogeyModelData[] modelData = IntStream.range(0, count)
-				.mapToObj(i -> instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.block(state).createInstance()), RenderStage.AFTER_BLOCK_ENTITIES)
+				.mapToObj(i -> instancer.createInstance())
 				.map(BogeyModelData::new)
 				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(state), modelData);
@@ -221,7 +230,7 @@ public abstract class BogeyRenderer {
 	 */
 	public void createModelInstance(VisualizationContext materialManager, BlockState... states) {
 		for (BlockState state : states)
-			this.createModelInstance(VisualizationContext, state, 1);
+			this.createModelInstance(materialManager, state, 1);
 	}
 
 	/**
@@ -232,7 +241,7 @@ public abstract class BogeyRenderer {
 	 */
 	public void createModelInstance(VisualizationContext materialManager, PartialModel... models) {
 		for (PartialModel model : models)
-			createModelInstance(VisualizationContext, model, 1);
+			createModelInstance(materialManager, model, 1);
 	}
 
 	/**
@@ -333,25 +342,25 @@ public abstract class BogeyRenderer {
 		}
 
 		public BogeyModelData setTransform(PoseStack ms) {
-			if (this.transform instanceof ModelData model)
+			if (this.transform instanceof TransformedInstance model)
 				model.setTransform(ms);
 			return this;
 		}
 
 		public BogeyModelData setEmptyTransform() {
-			if (this.transform instanceof ModelData model)
+			if (this.transform instanceof TransformedInstance model)
 				model.setEmptyTransform();
 			return this;
 		}
 
 		public BogeyModelData delete() {
-			if (this.transform instanceof ModelData model)
+			if (this.transform instanceof TransformedInstance model)
 				model.delete();
 			return this;
 		}
 
 		public BogeyModelData updateLight(int blockLight, int skyLight) {
-			if (this.transform instanceof ModelData model)
+			if (this.transform instanceof TransformedInstance model)
 				model.setBlockLight(blockLight).setSkyLight(skyLight);
 			return this;
 		}
@@ -369,8 +378,8 @@ public abstract class BogeyRenderer {
 		}
 
 		@Override
-		public BogeyModelData multiply(Quaternionf quaternion) {
-			this.transform.multiply(quaternion);
+		public BogeyModelData rotate(Quaternionf quaternion) {
+			this.transform.rotate(quaternion);
 			return this;
 		}
 

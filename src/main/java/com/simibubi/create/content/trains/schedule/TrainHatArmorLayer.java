@@ -59,7 +59,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		ms.pushPose();
 
 		boolean valid = false;
-		TransformStack msr = TransformStack.of(ms);
+		var msr = TransformStack.of(ms);
 		float scale = 1;
 
 		if (entityModel instanceof AgeableListModel<?> model) {

@@ -1,6 +1,9 @@
 package com.simibubi.create.content.contraptions.gantry;
 
+import java.util.function.Consumer;
+
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -33,7 +36,7 @@ public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEnt
 	public GantryCarriageInstance(VisualizationContext materialManager, GantryCarriageBlockEntity blockEntity) {
 		super(materialManager, blockEntity);
 
-		gantryCogs = instancerProvider.instancerr(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GANTRY_COGS), RenderStage.AFTER_BLOCK_ENTITIES)
+		gantryCogs = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.GANTRY_COGS), RenderStage.AFTER_BLOCK_ENTITIES)
 								 .createInstance();
 
 		facing = blockState.getValue(GantryCarriageBlock.FACING);
@@ -104,5 +107,11 @@ public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEnt
     protected void _delete() {
 		super._delete();
 		gantryCogs.delete();
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		consumer.accept(gantryCogs);
 	}
 }

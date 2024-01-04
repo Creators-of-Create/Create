@@ -23,7 +23,7 @@ public class StandardBogeyRenderer {
 	public static class CommonStandardBogeyRenderer extends BogeyRenderer.CommonRenderer {
 		@Override
 		public void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(VisualizationContext, AllBlocks.SHAFT.getDefaultState()
+			createModelInstance(materialManager, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.Z), 2);
 		}
 
@@ -46,8 +46,8 @@ public class StandardBogeyRenderer {
 	public static class SmallStandardBogeyRenderer extends BogeyRenderer {
 		@Override
 		public void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(VisualizationContext, SMALL_BOGEY_WHEELS, 2);
-			createModelInstance(VisualizationContext, BOGEY_FRAME);
+			createModelInstance(materialManager, SMALL_BOGEY_WHEELS, 2);
+			createModelInstance(materialManager, BOGEY_FRAME);
 		}
 
 
@@ -79,8 +79,8 @@ public class StandardBogeyRenderer {
 	public static class LargeStandardBogeyRenderer extends BogeyRenderer {
 		@Override
 		public void initialiseContraptionModelData(VisualizationContext materialManager, CarriageBogey carriageBogey) {
-			createModelInstance(VisualizationContext, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
-			createModelInstance(VisualizationContext, AllBlocks.SHAFT.getDefaultState()
+			createModelInstance(materialManager, LARGE_BOGEY_WHEELS, BOGEY_DRIVE, BOGEY_PISTON, BOGEY_PIN);
+			createModelInstance(materialManager, AllBlocks.SHAFT.getDefaultState()
 					.setValue(ShaftBlock.AXIS, Direction.Axis.X), 2);
 		}
 

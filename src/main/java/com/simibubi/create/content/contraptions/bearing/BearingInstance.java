@@ -1,8 +1,11 @@
 package com.simibubi.create.content.contraptions.bearing;
 
+import java.util.function.Consumer;
+
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.event.RenderStage;
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
@@ -37,7 +40,7 @@ public class BearingInstance<B extends KineticBlockEntity & IBearingBlockEntity>
 		PartialModel top =
 				blockEntity.isWoodenTop() ? AllPartialModels.BEARING_TOP_WOODEN : AllPartialModels.BEARING_TOP;
 
-		topInstance = instancerProvider.instancerr(InstanceTypes.ORIENTED, Models.partial(top), RenderStage.AFTER_BLOCK_ENTITIES)
+		topInstance = instancerProvider.instancer(InstanceTypes.ORIENTED, Models.partial(top), RenderStage.AFTER_BLOCK_ENTITIES)
 				.createInstance();
 
 		topInstance.setPosition(getVisualPosition()).setRotation(blockOrientation);
@@ -76,5 +79,11 @@ public class BearingInstance<B extends KineticBlockEntity & IBearingBlockEntity>
 
 		orientation.mul(Axis.XP.rotationDegrees(-90 - AngleHelper.verticalAngle(facing)));
 		return orientation;
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		consumer.accept(topInstance);
 	}
 }

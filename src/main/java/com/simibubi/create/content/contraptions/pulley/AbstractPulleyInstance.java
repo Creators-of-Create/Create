@@ -1,5 +1,8 @@
 package com.simibubi.create.content.contraptions.pulley;
 
+import java.util.function.Consumer;
+
+import com.jozufozu.flywheel.api.instance.Instance;
 import com.jozufozu.flywheel.api.instance.Instancer;
 import com.jozufozu.flywheel.api.visual.DynamicVisual;
 import com.jozufozu.flywheel.api.visual.VisualFrameContext;
@@ -188,5 +191,14 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 	public void onLightUpdate(LightLayer type, SectionPos pos) {
 		super.onLightUpdate(type, pos);
 		light.onLightUpdate(type, pos);
+	}
+
+	@Override
+	public void collectCrumblingInstances(Consumer<Instance> consumer) {
+		super.collectCrumblingInstances(consumer);
+		consumer.accept(coil);
+		magnet.forEach(consumer);
+		rope.forEach(consumer);
+		halfRope.forEach(consumer);
 	}
 }

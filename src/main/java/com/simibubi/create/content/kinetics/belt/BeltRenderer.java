@@ -72,7 +72,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 			boolean alongX = facing.getAxis() == Direction.Axis.X;
 
 			PoseStack localTransforms = new PoseStack();
-            TransformStack msr = TransformStack.of(localTransforms);
+            var msr = TransformStack.of(localTransforms);
 			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 			float renderTick = AnimationTickHolder.getRenderTime(be.getLevel());
 
@@ -130,7 +130,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 
 				Supplier<PoseStack> matrixStackSupplier = () -> {
 					PoseStack stack = new PoseStack();
-                    TransformStack stacker = TransformStack.of(stack);
+                    var stacker = TransformStack.of(stack);
 					stacker.center();
 					if (dir.getAxis() == Direction.Axis.X) stacker.rotateY(90);
 					if (dir.getAxis() == Direction.Axis.Y) stacker.rotateX(90);

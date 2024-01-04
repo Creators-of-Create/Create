@@ -1,7 +1,10 @@
 package com.simibubi.create.content.contraptions.actors.roller;
 
+import com.jozufozu.flywheel.api.event.RenderStage;
 import com.jozufozu.flywheel.api.visualization.VisualizationContext;
+import com.jozufozu.flywheel.lib.instance.InstanceTypes;
 import com.jozufozu.flywheel.lib.instance.TransformedInstance;
+import com.jozufozu.flywheel.lib.model.Models;
 import com.jozufozu.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterActorInstance;
@@ -19,9 +22,7 @@ public class RollerActorInstance extends HarvesterActorInstance {
 		MovementContext context) {
 		super(materialManager, simulationWorld, context);
 
-		Material<ModelData> material = materialManager.defaultCutout()
-			.material(InstanceTypes.TRANSFORMED);
-		frame = material.getModel(AllPartialModels.ROLLER_FRAME, context.state)
+		frame = instancerProvider.instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.ROLLER_FRAME), RenderStage.AFTER_BLOCK_ENTITIES)
 			.createInstance();
 		frame.setBlockLight(localBlockLight());
 	}
@@ -31,17 +32,17 @@ public class RollerActorInstance extends HarvesterActorInstance {
 		harvester.loadIdentity()
 			.translate(context.localPos)
 			.center()
-			.rotateY(horizontalAngle)
+			.rotateYDegrees(horizontalAngle)
 			.uncenter()
 			.translate(0, -.25, 17 / 16f)
-			.rotateX(getRotation())
+			.rotateXDegrees((float) getRotation())
 			.translate(0, -.5, .5)
-			.rotateY(90);
+			.rotateYDegrees(90);
 
 		frame.loadIdentity()
 			.translate(context.localPos)
 			.center()
-			.rotateY(horizontalAngle + 180)
+			.rotateYDegrees(horizontalAngle + 180)
 			.uncenter();
 	}
 
