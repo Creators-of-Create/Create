@@ -50,11 +50,13 @@ public class WrenchItem extends Item {
 			return super.useOn(context);
 		}
 
-		IWrenchable actor = (IWrenchable) block;
-		if (player.isShiftKeyDown())
-			return actor.onSneakWrenched(state, context);
-		return actor.onWrenched(state, context);
-	}
+/**
+*		IWrenchable actor = (IWrenchable) block;
+*		if (player.isShiftKeyDown())
+*			return actor.onSneakWrenched(state, context);
+*		return actor.onWrenched(state, context);
+*/
+}
 
 	private boolean canWrenchPickup(BlockState state) {
 		return AllTags.AllBlockTags.WRENCH_PICKUP.matches(state);
