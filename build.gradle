@@ -41,6 +41,13 @@ mixin {
     debug.export = true
 }
 
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
 minecraft {
     if (Boolean.parseBoolean(use_parchment)) {
         mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"

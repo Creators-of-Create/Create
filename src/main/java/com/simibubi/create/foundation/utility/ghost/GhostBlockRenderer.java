@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
+import com.simibubi.create.foundation.render.ModelUtil;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.client.Minecraft;

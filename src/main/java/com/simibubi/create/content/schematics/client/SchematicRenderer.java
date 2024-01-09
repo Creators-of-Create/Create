@@ -3,11 +3,8 @@ package com.simibubi.create.content.schematics.client;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.jozufozu.flywheel.core.model.ModelUtil;
-import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
-import com.jozufozu.flywheel.core.model.ShadeSeparatingVertexConsumer;
+import com.jozufozu.flywheel.lib.model.baked.MultiBlockModelBuilder;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.content.schematics.SchematicWorld;
@@ -92,58 +89,59 @@ public class SchematicRenderer {
 	}
 
 	protected SuperByteBuffer drawLayer(RenderType layer) {
-		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
-		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
-		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
-
-		PoseStack poseStack = objects.poseStack;
-		RandomSource random = objects.random;
-		BlockPos.MutableBlockPos mutableBlockPos = objects.mutableBlockPos;
-		SchematicWorld renderWorld = schematic;
-		renderWorld.renderMode = true;
-		BoundingBox bounds = renderWorld.getBounds();
-
-		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		BufferBuilder shadedBuilder = objects.shadedBuilder;
-		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
-
-		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
-
-		ModelBlockRenderer.enableCaching();
-		for (BlockPos localPos : BlockPos.betweenClosed(bounds.minX(), bounds.minY(), bounds.minZ(), bounds.maxX(), bounds.maxY(), bounds.maxZ())) {
-			BlockPos pos = mutableBlockPos.setWithOffset(localPos, anchor);
-			BlockState state = renderWorld.getBlockState(pos);
-
-			if (state.getRenderShape() == RenderShape.MODEL) {
-				BakedModel model = dispatcher.getBlockModel(state);
-				BlockEntity blockEntity = renderWorld.getBlockEntity(localPos);
-				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
-				modelData = model.getModelData(renderWorld, pos, state, modelData);
-				long seed = state.getSeed(pos);
-				random.setSeed(seed);
-				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
-					poseStack.pushPose();
-					poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
-
-					renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, shadeSeparatingWrapper, true,
-						random, seed, OverlayTexture.NO_OVERLAY, modelData, layer);
-
-					poseStack.popPose();
-				}
-			}
-		}
-		ModelBlockRenderer.clearCache();
-
-		shadeSeparatingWrapper.clear();
-		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
-
-		renderWorld.renderMode = false;
-
-		SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
-		bufferedData.release();
-		return sbb;
+		// FIXME: use flywheel buffering utilities?
+//		BlockRenderDispatcher dispatcher = ModelUtil.VANILLA_RENDERER;
+//		ModelBlockRenderer renderer = dispatcher.getModelRenderer();
+//		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
+//
+//		PoseStack poseStack = objects.poseStack;
+//		RandomSource random = objects.random;
+//		BlockPos.MutableBlockPos mutableBlockPos = objects.mutableBlockPos;
+//		SchematicWorld renderWorld = schematic;
+//		renderWorld.renderMode = true;
+//		BoundingBox bounds = renderWorld.getBounds();
+//
+//		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
+//		BufferBuilder shadedBuilder = objects.shadedBuilder;
+//		BufferBuilder unshadedBuilder = objects.unshadedBuilder;
+//
+//		shadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+//		unshadedBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+//		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+//
+//		ModelBlockRenderer.enableCaching();
+//		for (BlockPos localPos : BlockPos.betweenClosed(bounds.minX(), bounds.minY(), bounds.minZ(), bounds.maxX(), bounds.maxY(), bounds.maxZ())) {
+//			BlockPos pos = mutableBlockPos.setWithOffset(localPos, anchor);
+//			BlockState state = renderWorld.getBlockState(pos);
+//
+//			if (state.getRenderShape() == RenderShape.MODEL) {
+//				BakedModel model = dispatcher.getBlockModel(state);
+//				BlockEntity blockEntity = renderWorld.getBlockEntity(localPos);
+//				ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
+//				modelData = model.getModelData(renderWorld, pos, state, modelData);
+//				long seed = state.getSeed(pos);
+//				random.setSeed(seed);
+//				if (model.getRenderTypes(state, random, modelData).contains(layer)) {
+//					poseStack.pushPose();
+//					poseStack.translate(localPos.getX(), localPos.getY(), localPos.getZ());
+//
+//					renderer.tesselateBlock(renderWorld, model, state, pos, poseStack, shadeSeparatingWrapper, true,
+//						random, seed, OverlayTexture.NO_OVERLAY, modelData, layer);
+//
+//					poseStack.popPose();
+//				}
+//			}
+//		}
+//		ModelBlockRenderer.clearCache();
+//
+//		shadeSeparatingWrapper.clear();
+//		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
+//
+//		renderWorld.renderMode = false;
+//
+//		SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
+//		bufferedData.release();
+		return null;
 	}
 
 	private static int getLayerCount() {
@@ -155,7 +153,7 @@ public class SchematicRenderer {
 		public final PoseStack poseStack = new PoseStack();
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
 		public final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+//		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
 		public final BufferBuilder shadedBuilder = new BufferBuilder(512);
 		public final BufferBuilder unshadedBuilder = new BufferBuilder(512);
 	}

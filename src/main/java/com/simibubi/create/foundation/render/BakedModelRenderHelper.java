@@ -1,5 +1,9 @@
 package com.simibubi.create.foundation.render;
 
+import com.jozufozu.flywheel.api.model.Mesh;
+import com.jozufozu.flywheel.lib.model.Models;
+import com.jozufozu.flywheel.lib.model.baked.BakedModelBuilder;
+import com.jozufozu.flywheel.lib.model.baked.TessellatedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -19,11 +23,20 @@ public class BakedModelRenderHelper {
 		return standardModelRender(model, referenceState, new PoseStack());
 	}
 
-	public static SuperByteBuffer standardModelRender(BakedModel model, BlockState referenceState, PoseStack ms) {
-		ShadeSeparatedBufferedData data = ModelUtil.getBufferedData(model, referenceState, ms);
-		SuperByteBuffer sbb = new SuperByteBuffer(data);
-		data.release();
-		return sbb;
+	public static SuperByteBuffer standardModelRender(BakedModel bakedModel, BlockState referenceState, PoseStack ms) {
+		var model = new BakedModelBuilder(bakedModel).blockState(referenceState)
+				.poseStack(ms)
+				.disableShadeSeparation()
+				.build();
+
+		SuperByteBuffer out = null;
+		for (Mesh value : model.meshes()
+				.values()) {
+			out = new SuperByteBuffer(value);
+			break;
+		}
+		model.delete();
+		return out;
 	}
 
 }

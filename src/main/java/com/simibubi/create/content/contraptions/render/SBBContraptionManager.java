@@ -22,12 +22,12 @@ public class SBBContraptionManager extends ContraptionRenderingWorld<Contraption
 	@Override
 	public void renderLayer(RenderStageEvent event) {
 		super.renderLayer(event);
-		RenderType type = event.getType();
-		VertexConsumer consumer = event.buffers.bufferSource()
-				.getBuffer(type);
-		visible.forEach(info -> renderContraptionLayerSBB(info, type, consumer));
-
-		event.buffers.bufferSource().endBatch(type);
+//		RenderType type = event.getType();
+//		VertexConsumer consumer = event.buffers.bufferSource()
+//				.getBuffer(type);
+//		visible.forEach(info -> renderContraptionLayerSBB(info, type, consumer));
+//
+//		event.buffers.bufferSource().endBatch(type);
 	}
 
 	@Override

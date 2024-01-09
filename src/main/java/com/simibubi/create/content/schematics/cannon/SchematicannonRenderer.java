@@ -11,6 +11,7 @@ import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.cannon.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.ModelUtil;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.Minecraft;

@@ -7,10 +7,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.jozufozu.flywheel.api.event.BeginFrameEvent;
 import com.jozufozu.flywheel.api.event.ReloadLevelRendererEvent;
 import com.jozufozu.flywheel.api.event.RenderStageEvent;
-import com.jozufozu.flywheel.gl.error.GlError;
-import com.jozufozu.flywheel.lib.model.baked.BlockModelBuilder;
+import com.jozufozu.flywheel.backend.gl.error.GlError;
 import com.jozufozu.flywheel.lib.model.baked.MultiBlockModelBuilder;
-import com.jozufozu.flywheel.lib.model.baked.TessellatedModel;
 import com.jozufozu.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
@@ -165,13 +163,13 @@ public class ContraptionRenderDispatcher {
 
 	public static SuperByteBuffer buildStructureBuffer(VirtualRenderWorld renderWorld, Contraption c,
 		RenderType layer) {
-		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
-		var build = new MultiBlockModelBuilder(values).renderWorld(renderWorld)
-				.modelDataMap(c.modelData)
-				.build();
-		SuperByteBuffer sbb = new SuperByteBuffer(data);
-		data.release();
-		return sbb;
+//		Collection<StructureTemplate.StructureBlockInfo> values = c.getRenderedBlocks();
+//		var build = new MultiBlockModelBuilder(values).renderWorld(renderWorld)
+//				.modelDataMap(c.modelData)
+//				.build();
+//		SuperByteBuffer sbb = new SuperByteBuffer(data);
+//		build.delete();
+		return null;
 	}
 
 	public static int getLight(Level world, float lx, float ly, float lz) {

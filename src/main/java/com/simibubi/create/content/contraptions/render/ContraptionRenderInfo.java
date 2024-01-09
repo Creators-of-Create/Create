@@ -34,9 +34,10 @@ public class ContraptionRenderInfo {
 
 		AbstractContraptionEntity entity = contraption.entity;
 
-		visible = event.getFrustum()
-			.isVisible(entity.getBoundingBoxForCulling()
-				.inflate(2));
+		visible = false;
+//		visible = event.getFrustum()
+//			.isVisible(entity.getBoundingBoxForCulling()
+//				.inflate(2));
 	}
 
 	public boolean isVisible() {
